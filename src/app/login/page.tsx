@@ -13,7 +13,7 @@ type ProfileType = "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, uploadAvatar } = useAuth();
   const [mode, setMode] = useState<Mode>("login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -92,7 +92,13 @@ export default function LoginPage() {
         if (err) {
           setError(err.message);
         } else {
-          setSuccess("Registrazione completata! Controlla la tua email per confermare l'account.");
+          // Upload avatar if selected
+          if (avatarFile) {
+            await uploadAvatar(avatarFile);
+          }
+          // Save profile type to localStorage too
+          try { localStorage.setItem("bq_profile", profileType); } catch {}
+          router.push("/");
         }
       }
     } catch {
