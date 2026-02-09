@@ -417,13 +417,13 @@ function PlayingView({
         )}
 
         {/* Bridge Table + Bidding Panel side by side on desktop */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
+        <div className="flex flex-col lg:flex-row gap-4 lg:items-start items-stretch justify-center">
           {/* Bridge Table - rotated so declarer=South, dummy=North */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-1 max-w-2xl"
+            className="flex-1 w-full max-w-2xl"
           >
             {hands ? (
               <BridgeTable
