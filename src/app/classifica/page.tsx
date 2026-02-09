@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { createClient } from "@/lib/supabase/client";
 
 const mockPlayers = [
   { name: "MarioBridge", xp: 2450 },
@@ -110,8 +111,16 @@ function getWeeklyCountdown() {
   return { days, hours };
 }
 
+interface AsdRanking {
+  asd_name: string;
+  total_xp: number;
+  member_count: number;
+}
+
 export default function ClassificaPage() {
   const [xp, setXp] = useState(0);
+  const [asdRankings, setAsdRankings] = useState<AsdRanking[]>([]);
+  const [asdLoading, setAsdLoading] = useState(false);
   const countdown = getWeeklyCountdown();
 
   useEffect(() => {
@@ -119,6 +128,33 @@ export default function ClassificaPage() {
       setXp(parseInt(localStorage.getItem("bq_xp") || "0", 10));
     } catch {}
   }, []);
+
+  const fetchAsdRankings = async () => {
+    if (asdRankings.length > 0) return; // already fetched
+    setAsdLoading(true);
+    const supabase = createClient();
+    const { data } = await supabase
+      .from("profiles")
+      .select("xp, asd_id, asd:asd_id(name)")
+      .not("asd_id", "is", null);
+
+    if (data) {
+      const asdMap = new Map<string, { total_xp: number; member_count: number }>();
+      for (const row of data as unknown as Array<{ xp: number; asd_id: number; asd: { name: string } | null }>) {
+        const asdName = row.asd?.name;
+        if (!asdName) continue;
+        const existing = asdMap.get(asdName) || { total_xp: 0, member_count: 0 };
+        existing.total_xp += row.xp || 0;
+        existing.member_count += 1;
+        asdMap.set(asdName, existing);
+      }
+      const rankings = Array.from(asdMap.entries())
+        .map(([name, stats]) => ({ asd_name: name, ...stats }))
+        .sort((a, b) => b.total_xp - a.total_xp);
+      setAsdRankings(rankings);
+    }
+    setAsdLoading(false);
+  };
 
   const userLevel = getLevel(xp);
   const league = getLeague(xp);
@@ -204,6 +240,9 @@ export default function ClassificaPage() {
             <TabsTrigger value="sempre" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
               Sempre
             </TabsTrigger>
+            <TabsTrigger value="asd" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm" onClick={fetchAsdRankings}>
+              Per ASD
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="settimana" className="mt-4">
@@ -231,6 +270,65 @@ export default function ClassificaPage() {
               userLevel={userLevel}
               league={league}
             />
+          </TabsContent>
+
+          <TabsContent value="asd" className="mt-4">
+            {asdLoading ? (
+              <div className="space-y-2">
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-elevated">
+                    <div className="h-4 w-2/3 bg-gray-100 rounded mb-2" />
+                    <div className="h-3 w-1/3 bg-gray-50 rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : asdRankings.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-12"
+              >
+                <span className="text-4xl block mb-3">🏛️</span>
+                <p className="text-sm text-gray-500">
+                  Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione
+                </p>
+              </motion.div>
+            ) : (
+              <div className="space-y-2">
+                {asdRankings.map((asd, i) => (
+                  <motion.div
+                    key={asd.asd_name}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    className="card-elevated rounded-2xl bg-white p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="w-8 text-center text-base font-black">
+                        {i < 3 ? medals[i] : <span className="text-gray-400 text-sm">{i + 1}</span>}
+                      </span>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-700 text-lg font-black flex-shrink-0">
+                        {asd.asd_name[0]}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-sm text-gray-900 truncate">
+                          {asd.asd_name}
+                        </p>
+                        <p className="text-[11px] text-gray-500">
+                          {asd.member_count} {asd.member_count === 1 ? "membro" : "membri"}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-extrabold text-sm text-gray-900">
+                          {asd.total_xp.toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-gray-400">XP totali</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

@@ -165,7 +165,13 @@ export default function ContaVelocePage() {
       if (correctHCP + i <= 37) opts.add(correctHCP + i);
       if (opts.size < numOptions && correctHCP - i >= 0) opts.add(correctHCP - i);
     }
-    return Array.from(opts).sort((a, b) => a - b);
+    // Fisher-Yates shuffle to randomize position of correct answer
+    const arr = Array.from(opts);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }, [correctHCP, config]);
 
   // Profile-aware settings
