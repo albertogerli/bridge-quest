@@ -1,6 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// Pages accessible without login
+const PUBLIC_ROUTES = ["/login"];
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -25,15 +28,28 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh session (important for keeping auth state alive)
-  await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+  const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
+
+  // Not logged in and trying to access a protected page → redirect to login
+  if (!user && !isPublicRoute) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // Logged in and on login page → redirect to home
+  if (user && pathname === "/login") {
+    const homeUrl = new URL("/", request.url);
+    return NextResponse.redirect(homeUrl);
+  }
 
   return supabaseResponse;
 }
 
 export const config = {
   matcher: [
-    // Match all routes except static files, images, and API routes
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|ico)$).*)",
   ],
 };
