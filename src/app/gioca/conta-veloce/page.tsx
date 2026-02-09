@@ -190,7 +190,7 @@ export default function ContaVelocePage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-5xl shadow-xl shadow-amber-400/30 mb-6">
               🧮
             </div>
-            <h1 className="text-3xl font-extrabold text-gray-900">Conta Veloce</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Conta Veloce</h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
               Vedi una mano, conta i punti onori il piu' veloce possibile!
             </p>
@@ -253,10 +253,10 @@ export default function ContaVelocePage() {
               ))}
             </div>
 
-            <h1 className="text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
               {stars === 3 ? "Perfetto!" : stars === 2 ? "Ottimo!" : stars === 1 ? "Bene!" : "Riprova!"}
             </h1>
-            <p className="text-2xl font-black text-amber-500 mt-2">{score} punti</p>
+            <p className="text-xl sm:text-2xl font-black text-amber-500 mt-2">{score} punti</p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-elevated rounded-xl bg-white p-3">

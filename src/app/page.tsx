@@ -256,7 +256,7 @@ export default function Home() {
         )}
       </AnimatePresence>
       {/* ===== HERO ===== */}
-      <section className="relative overflow-hidden hero-gradient px-5 pb-10 pt-14">
+      <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-10 pt-14">
         {/* Decorative blobs */}
         <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/5 blur-3xl" />
         <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
@@ -291,7 +291,7 @@ export default function Home() {
               )}
             </motion.div>
 
-            <h1 className="text-[2.5rem] font-extrabold tracking-tight text-white leading-none">
+            <h1 className="text-3xl sm:text-[2.5rem] font-extrabold tracking-tight text-white leading-none">
               BridgeQuest
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">
@@ -405,7 +405,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ===== DAILY CHALLENGE + STREAK ===== */}
-      <section className="px-5 -mt-1">
+      <section className="px-4 sm:px-5 -mt-1">
         <div className="mx-auto max-w-lg">
           <div className="grid grid-cols-2 gap-3">
             {/* Daily Challenge */}
@@ -481,7 +481,7 @@ export default function Home() {
       </section>
 
       {/* ===== DAILY QUESTS ===== */}
-      <section className="px-5 pt-6">
+      <section className="px-4 sm:px-5 pt-6">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-extrabold text-gray-900">
@@ -501,7 +501,7 @@ export default function Home() {
 
       {/* ===== SPACED REVIEW ===== */}
       {reviewCount > 0 && (
-        <section className="px-5 pt-6">
+        <section className="px-4 sm:px-5 pt-6">
           <div className="mx-auto max-w-lg">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -534,7 +534,7 @@ export default function Home() {
       )}
 
       {/* ===== TREASURE CHESTS ===== */}
-      <section className="px-5 pt-6">
+      <section className="px-4 sm:px-5 pt-6">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-extrabold text-gray-900">
@@ -552,10 +552,10 @@ export default function Home() {
       <CoursesSection completedModules={stats.completedModules} />
 
       {/* ===== WORLDS (All Courses) ===== */}
-      <section className="px-5 pt-4 pb-6">
+      <section className="px-4 sm:px-5 pt-4 pb-6">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-extrabold text-gray-900">
+            <h2 className="text-lg sm:text-xl font-extrabold text-gray-900">
               Il tuo percorso
             </h2>
             <Link href="/lezioni">
@@ -614,7 +614,7 @@ export default function Home() {
       </section>
 
       {/* ===== FIGB FOOTER ===== */}
-      <section className="px-5 pb-6">
+      <section className="px-4 sm:px-5 pb-6">
         <div className="mx-auto max-w-lg">
           <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-5 text-center">
             <p className="text-xs font-bold text-emerald uppercase tracking-wider mb-1">
@@ -990,7 +990,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
   if (availableCourses.length <= 1) return null; // Don't show if only Fiori
 
   return (
-    <section className="px-5 pt-6">
+    <section className="px-4 sm:px-5 pt-6">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-extrabold text-gray-900">

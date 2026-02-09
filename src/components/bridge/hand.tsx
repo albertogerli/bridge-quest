@@ -18,12 +18,13 @@ export function Hand({
   onSelectCard?: (index: number) => void;
   faceDown?: boolean;
   position?: "north" | "south" | "east" | "west";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   highlightedCards?: CardData[];
   disabled?: boolean;
 }) {
   const isVertical = position === "east" || position === "west";
   const overlap = {
+    xs: isVertical ? -25 : -16,
     sm: isVertical ? -35 : -24,
     md: isVertical ? -55 : -38,
     lg: isVertical ? -70 : -50,
