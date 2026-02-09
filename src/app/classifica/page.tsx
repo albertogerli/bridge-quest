@@ -1,0 +1,414 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const mockPlayers = [
+  { name: "MarioBridge", xp: 2450 },
+  { name: "LuciaCards", xp: 2180 },
+  { name: "PaoloAces", xp: 1920 },
+  { name: "GiuliaSlam", xp: 1750 },
+  { name: "MarcoNT", xp: 1680 },
+  { name: "AnnaFinesse", xp: 1540 },
+  { name: "FrancoDummy", xp: 1320 },
+  { name: "ElenaDouble", xp: 1100 },
+  { name: "StefanoTrump", xp: 890 },
+  { name: "ChiaraVoid", xp: 720 },
+  { name: "DavideRuff", xp: 580 },
+  { name: "SaraSqueeze", xp: 410 },
+];
+
+const monthlyPlayers = [
+  { name: "LuciaCards", xp: 8650 },
+  { name: "MarioBridge", xp: 7980 },
+  { name: "GiuliaSlam", xp: 6450 },
+  { name: "PaoloAces", xp: 5820 },
+  { name: "AnnaFinesse", xp: 5200 },
+  { name: "MarcoNT", xp: 4750 },
+  { name: "StefanoTrump", xp: 3900 },
+  { name: "FrancoDummy", xp: 3420 },
+  { name: "ElenaDouble", xp: 2980 },
+  { name: "ChiaraVoid", xp: 2100 },
+];
+
+const allTimePlayers = [
+  { name: "MarioBridge", xp: 24500 },
+  { name: "PaoloAces", xp: 21800 },
+  { name: "LuciaCards", xp: 19200 },
+  { name: "GiuliaSlam", xp: 15400 },
+  { name: "AnnaFinesse", xp: 13200 },
+  { name: "MarcoNT", xp: 11800 },
+  { name: "FrancoDummy", xp: 9600 },
+  { name: "ElenaDouble", xp: 8400 },
+  { name: "StefanoTrump", xp: 6800 },
+  { name: "ChiaraVoid", xp: 5200 },
+];
+
+const medals = ["🥇", "🥈", "🥉"];
+
+const avatarColors = [
+  "bg-emerald-100 text-emerald-700",
+  "bg-indigo-100 text-indigo-700",
+  "bg-rose-100 text-rose-700",
+  "bg-amber-100 text-amber-700",
+  "bg-cyan-100 text-cyan-700",
+  "bg-purple-100 text-purple-700",
+  "bg-orange-100 text-orange-700",
+  "bg-teal-100 text-teal-700",
+  "bg-sky-100 text-sky-700",
+  "bg-lime-100 text-lime-700",
+  "bg-fuchsia-100 text-fuchsia-700",
+  "bg-red-100 text-red-700",
+];
+
+const levelNames = [
+  "Principiante", "Novizio", "Apprendista", "Giocatore",
+  "Esperto", "Dichiarante", "Stratega", "Campione",
+  "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
+];
+
+function getLevel(xp: number) {
+  const level = Math.floor(xp / 100) + 1;
+  return { level, name: levelNames[Math.min(level - 1, levelNames.length - 1)] };
+}
+
+const leagues = [
+  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-100", textColor: "text-emerald-dark", iconBg: "bg-emerald", next: "Lega Quadri ♦" },
+  { name: "Lega Quadri", icon: "♦", minXp: 1000, color: "from-orange-50 to-orange-100/50", border: "border-orange-100", textColor: "text-orange-700", iconBg: "bg-orange-500", next: "Lega Cuori ♥" },
+  { name: "Lega Cuori", icon: "♥", minXp: 3000, color: "from-rose-50 to-rose-100/50", border: "border-rose-100", textColor: "text-rose-700", iconBg: "bg-rose-500", next: "Lega Picche ♠" },
+  { name: "Lega Picche", icon: "♠", minXp: 6000, color: "from-indigo-50 to-indigo-100/50", border: "border-indigo-100", textColor: "text-indigo-700", iconBg: "bg-indigo-600", next: "Lega SA" },
+  { name: "Lega SA", icon: "NT", minXp: 10000, color: "from-slate-100 to-slate-200/50", border: "border-slate-200", textColor: "text-slate-800", iconBg: "bg-slate-800", next: null },
+];
+
+function getLeague(xp: number) {
+  for (let i = leagues.length - 1; i >= 0; i--) {
+    if (xp >= leagues[i].minXp) return leagues[i];
+  }
+  return leagues[0];
+}
+
+function buildLeaderboard(players: { name: string; xp: number }[], userXp: number) {
+  const all = [...players, { name: "__user__", xp: userXp }];
+  all.sort((a, b) => b.xp - a.xp);
+  return all.map((p, i) => ({ ...p, rank: i + 1 }));
+}
+
+// Calculate time until next Sunday midnight (end of week)
+function getWeeklyCountdown() {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0=Sun
+  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+  const endOfWeek = new Date(now);
+  endOfWeek.setDate(now.getDate() + daysUntilSunday);
+  endOfWeek.setHours(23, 59, 59, 999);
+  const diff = endOfWeek.getTime() - now.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  return { days, hours };
+}
+
+export default function ClassificaPage() {
+  const [xp, setXp] = useState(0);
+  const countdown = getWeeklyCountdown();
+
+  useEffect(() => {
+    try {
+      setXp(parseInt(localStorage.getItem("bq_xp") || "0", 10));
+    } catch {}
+  }, []);
+
+  const userLevel = getLevel(xp);
+  const league = getLeague(xp);
+  const nextLeague = leagues.find((l) => l.minXp > xp);
+
+  return (
+    <div className="pt-6 px-5 pb-24">
+      <div className="mx-auto max-w-lg">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className="text-2xl font-extrabold text-gray-900">Classifica</h1>
+          <p className="text-sm text-gray-500 mt-1">Scala le leghe e diventa Campione Azzurro</p>
+        </motion.div>
+
+        {/* Weekly countdown */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mt-4 flex items-center justify-between bg-white card-elevated rounded-xl p-3"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-lg">⏰</span>
+            <div>
+              <p className="text-xs font-bold text-gray-900">Fine settimana</p>
+              <p className="text-[10px] text-gray-400">Top 3 promossi!</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="bg-gray-900 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
+              <p className="text-sm font-black">{countdown.days}</p>
+              <p className="text-[8px] text-gray-400">GG</p>
+            </div>
+            <span className="text-gray-300 font-bold">:</span>
+            <div className="bg-gray-900 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
+              <p className="text-sm font-black">{countdown.hours}</p>
+              <p className="text-[8px] text-gray-400">ORE</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* League progress */}
+        {nextLeague && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08 }}
+            className="mt-3 bg-white card-elevated rounded-xl p-3"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-gray-700">
+                Prossima lega: {nextLeague.name} {nextLeague.icon}
+              </p>
+              <p className="text-[11px] font-bold text-gray-400">
+                {xp}/{nextLeague.minXp} XP
+              </p>
+            </div>
+            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+              <motion.div
+                className={`h-full rounded-full bg-gradient-to-r ${league.color.replace("50", "400").replace("100/50", "500")}`}
+                style={{ background: `linear-gradient(to right, #059669, #34d399)` }}
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.min((xp / nextLeague.minXp) * 100, 100)}%` }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+              />
+            </div>
+            <p className="text-[10px] text-gray-400 mt-1">
+              Mancano {nextLeague.minXp - xp} XP per la promozione
+            </p>
+          </motion.div>
+        )}
+
+        <Tabs defaultValue="settimana" className="w-full mt-4">
+          <TabsList className="w-full bg-gray-100 p-1 rounded-xl">
+            <TabsTrigger value="settimana" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Settimana
+            </TabsTrigger>
+            <TabsTrigger value="mese" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Mese
+            </TabsTrigger>
+            <TabsTrigger value="sempre" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Sempre
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="settimana" className="mt-4">
+            <LeaderboardTab
+              players={mockPlayers}
+              userXp={xp}
+              userLevel={userLevel}
+              league={league}
+            />
+          </TabsContent>
+
+          <TabsContent value="mese" className="mt-4">
+            <LeaderboardTab
+              players={monthlyPlayers}
+              userXp={Math.floor(xp * 3.5)}
+              userLevel={userLevel}
+              league={league}
+            />
+          </TabsContent>
+
+          <TabsContent value="sempre" className="mt-4">
+            <LeaderboardTab
+              players={allTimePlayers}
+              userXp={xp}
+              userLevel={userLevel}
+              league={league}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}
+
+function LeaderboardTab({
+  players,
+  userXp,
+  userLevel,
+  league,
+}: {
+  players: { name: string; xp: number }[];
+  userXp: number;
+  userLevel: { level: number; name: string };
+  league: (typeof leagues)[0];
+}) {
+  const leaderboard = buildLeaderboard(players, userXp);
+  const userEntry = leaderboard.find((p) => p.name === "__user__")!;
+  const totalPlayers = leaderboard.length;
+
+  return (
+    <>
+      {/* League card */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className={`card-elevated rounded-2xl bg-gradient-to-r ${league.color} border ${league.border} p-4 mb-4`}
+      >
+        <div className="flex items-center gap-3">
+          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-2xl font-black shadow-md`}>
+            {league.icon}
+          </div>
+          <div className="flex-1">
+            <p className={`font-extrabold text-lg ${league.textColor}`}>
+              {league.name}
+            </p>
+            {league.next && (
+              <p className={`text-xs ${league.textColor} opacity-60`}>
+                Top 3 promossi a {league.next}
+              </p>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Promotion / Relegation zone legend */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15 }}
+        className="flex items-center gap-4 mb-3 px-1"
+      >
+        <div className="flex items-center gap-1.5">
+          <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+          <span className="text-[10px] font-bold text-gray-400">Promozione</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="h-2.5 w-2.5 rounded-full bg-rose-400" />
+          <span className="text-[10px] font-bold text-gray-400">Retrocessione</span>
+        </div>
+        <div className="flex-1" />
+        <span className="text-[10px] font-bold text-gray-300">{totalPlayers} giocatori</span>
+      </motion.div>
+
+      {/* Your position - sticky highlight */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="mb-4 card-elevated rounded-2xl bg-white border-2 border-amber/30 p-4"
+      >
+        <div className="flex items-center gap-3">
+          <span className="w-8 text-center text-sm font-black text-amber-500">
+            {userEntry.rank}
+          </span>
+          <Avatar className="h-10 w-10">
+            <AvatarFallback className="bg-gradient-to-br from-emerald to-emerald-dark text-white text-xs font-bold">
+              TU
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <p className="font-bold text-sm text-amber-600">Tu</p>
+            <p className="text-[11px] text-gray-500">
+              Lv.{userLevel.level} {userLevel.name}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="font-extrabold text-gray-900">{userXp.toLocaleString()}</p>
+            <p className="text-[10px] text-gray-400">XP</p>
+          </div>
+        </div>
+        {/* Distance to next rank */}
+        {userEntry.rank > 1 && (
+          <div className="mt-2 pt-2 border-t border-gray-100">
+            <p className="text-[10px] text-gray-400 text-center">
+              {(() => {
+                const above = leaderboard.find((p) => p.rank === userEntry.rank - 1);
+                if (!above) return "";
+                const diff = above.xp - userXp;
+                return `${diff} XP per superare ${above.name === "__user__" ? "Te" : above.name}`;
+              })()}
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Leaderboard */}
+      <div className="space-y-2">
+        {leaderboard.map((player, index) => {
+          const isUser = player.name === "__user__";
+          const pl = getLevel(player.xp);
+
+          // Promotion zone (top 3), relegation zone (bottom 3)
+          const isPromotion = player.rank <= 3;
+          const isRelegation = player.rank > totalPlayers - 3;
+
+          return (
+            <motion.div
+              key={player.name + player.rank}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + index * 0.03 }}
+            >
+              <div className={`card-elevated rounded-2xl bg-white p-3.5 ${
+                isUser ? "ring-2 ring-amber/40" : ""
+              } ${isPromotion ? "border-l-[3px] border-l-emerald-400" : ""} ${
+                isRelegation ? "border-l-[3px] border-l-rose-300" : ""
+              }`}>
+                <div className="flex items-center gap-3">
+                  <span className="w-8 text-center text-base font-black">
+                    {player.rank <= 3
+                      ? medals[player.rank - 1]
+                      : <span className="text-gray-400 text-sm">{player.rank}</span>}
+                  </span>
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className={`text-xs font-bold ${isUser ? "bg-gradient-to-br from-emerald to-emerald-dark text-white" : avatarColors[index % avatarColors.length]}`}>
+                      {isUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-bold text-sm truncate ${isUser ? "text-amber-600" : "text-gray-900"}`}>
+                      {isUser ? "Tu" : player.name}
+                    </p>
+                    <p className="text-[11px] text-gray-500">
+                      Lv.{pl.level} · {pl.name}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-extrabold text-sm text-gray-900">
+                      {player.xp.toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-gray-400">XP</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Promotion/Relegation divider */}
+              {player.rank === 3 && (
+                <div className="flex items-center gap-2 my-2 px-2">
+                  <div className="flex-1 h-px bg-emerald-200" />
+                  <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">zona promozione</span>
+                  <div className="flex-1 h-px bg-emerald-200" />
+                </div>
+              )}
+              {player.rank === totalPlayers - 3 && (
+                <div className="flex items-center gap-2 my-2 px-2">
+                  <div className="flex-1 h-px bg-rose-200" />
+                  <span className="text-[9px] font-bold text-rose-400 uppercase tracking-wider">zona retrocessione</span>
+                  <div className="flex-1 h-px bg-rose-200" />
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
