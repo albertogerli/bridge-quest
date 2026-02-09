@@ -12,6 +12,7 @@ export function Hand({
   size = "md",
   highlightedCards = [],
   disabled = false,
+  noHover = false,
 }: {
   cards: CardData[];
   selectedIndex?: number;
@@ -21,6 +22,7 @@ export function Hand({
   size?: "xs" | "sm" | "md" | "lg";
   highlightedCards?: CardData[];
   disabled?: boolean;
+  noHover?: boolean;
 }) {
   const isVertical = position === "east" || position === "west";
   const overlap = {
@@ -57,6 +59,7 @@ export function Hand({
             disabled={disabled || (highlightedCards.length > 0 && !isHighlighted(card))}
             onClick={() => onSelectCard?.(index)}
             size={size}
+            noHover={noHover}
           />
         </motion.div>
       ))}
