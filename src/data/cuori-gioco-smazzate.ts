@@ -1005,8 +1005,8 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     hands: {
       north: hand(["A", "K", "Q", "10", "9", "8", "6"], ["9", "6", "3"], ["8", "5", "2"], []),
       east: hand(["J"], ["A", "K", "Q", "10"], ["9", "7", "6", "3"], ["9", "7", "4", "2"]),
-      south: hand(["7", "4", "2"], ["J", "8", "7", "4"], ["K", "Q", "J", "10"], []),
-      west: hand(["5", "3"], ["5", "2"], ["A", "4"], ["A", "K", "Q", "J", "10", "8", "6", "5", "3"]),
+      south: hand(["7", "4", "2"], ["J", "8", "7", "4"], ["K", "Q", "J", "10"], ["8", "5"]),
+      west: hand(["5", "3"], ["5", "2"], ["A", "4"], ["A", "K", "Q", "J", "10", "6", "3"]),
     },
     commentary: "Est gioca A, K e Q di Cuori ed ancora Cuori per il taglio e surtaglio di Nord (non con il 6, per favore: se cade il J del morto puo essere ingresso un ingresso). Nord ha 10 prese Nord ha 2 strade: a) fare l'impasse al K di quadri e poi tagliare una al morto; b) affrancare le fiori con un impasse di taglio. Quale strada seguire? Se un solo colore ci fornisce le prese che mancano guardiamo solo quello.",
     bidding: { dealer: "south", bids: ["1C", "P", "1S", "P", "1NT", "P", "4S", "P", "P", "P"] },
