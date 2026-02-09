@@ -6,12 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { courses, levelInfo } from "@/data/courses";
+import { useAuth } from "@/hooks/use-auth";
 import type { UserProfile } from "@/hooks/use-profile";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const allWorlds = courses.flatMap(c => c.worlds);
 
 export default function ProfiloPage() {
+  const { user, profile: authProfile, signOut } = useAuth();
   const [xp, setXp] = useState(0);
   const [streak, setStreak] = useState(0);
   const [handsPlayed, setHandsPlayed] = useState(0);
@@ -88,6 +91,32 @@ export default function ProfiloPage() {
   return (
     <div className="pt-6 px-5">
       <div className="mx-auto max-w-lg">
+        {/* Login/Register CTA */}
+        {!user && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 bg-gradient-to-r from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border border-emerald-100"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white text-lg">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-gray-900">Accedi per salvare i progressi</p>
+                <p className="text-[11px] text-gray-500">Sincronizza su tutti i dispositivi</p>
+              </div>
+              <Link href="/login">
+                <Button className="h-9 px-4 rounded-xl bg-emerald-600 font-bold text-xs shadow-md">
+                  Accedi
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        )}
+
         {/* Profile header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -95,14 +124,21 @@ export default function ProfiloPage() {
           className="flex items-center gap-4"
         >
           <Avatar className="h-18 w-18 shadow-lg shadow-emerald/20">
-            <AvatarFallback className="h-18 w-18 bg-gradient-to-br from-emerald to-emerald-dark text-white text-2xl font-extrabold">
-              BQ
-            </AvatarFallback>
+            {user && authProfile?.avatar_url ? (
+              <img src={authProfile.avatar_url} alt="" className="h-18 w-18 rounded-full object-cover" />
+            ) : (
+              <AvatarFallback className="h-18 w-18 bg-gradient-to-br from-emerald to-emerald-dark text-white text-2xl font-extrabold">
+                {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "BQ"}
+              </AvatarFallback>
+            )}
           </Avatar>
           <div className="flex-1">
             <h1 className="text-2xl font-extrabold text-gray-900">
-              Bridgista
+              {user && authProfile?.display_name ? authProfile.display_name : "Bridgista"}
             </h1>
+            {user && authProfile?.bbo_username && (
+              <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
+            )}
             <div className="flex items-center gap-2 mt-1.5">
               <Badge className="bg-emerald text-white font-bold text-xs">
                 Livello {level}
@@ -342,6 +378,23 @@ export default function ProfiloPage() {
             <p className="text-3xl font-extrabold text-amber-dark">{Math.floor(xp / 10)}</p>
           </div>
         </motion.div>
+
+        {/* Logout */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mb-6"
+          >
+            <button
+              onClick={() => signOut()}
+              className="w-full py-3 text-sm font-bold text-red-500 hover:text-red-600 transition-colors"
+            >
+              Esci dall'account
+            </button>
+          </motion.div>
+        )}
       </div>
     </div>
   );
