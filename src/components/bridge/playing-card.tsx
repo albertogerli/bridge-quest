@@ -26,6 +26,7 @@ export function PlayingCard({
   disabled = false,
   highlighted = false,
   size = "md",
+  noHover = false,
 }: {
   card: CardData;
   faceDown?: boolean;
@@ -34,6 +35,7 @@ export function PlayingCard({
   disabled?: boolean;
   highlighted?: boolean;
   size?: "xs" | "sm" | "md" | "lg";
+  noHover?: boolean;
 }) {
   const dimensions = {
     xs: "w-9 h-[50px]",
@@ -76,14 +78,14 @@ export function PlayingCard({
       disabled={disabled}
       className={`
         ${dimensions[size]} relative rounded-lg bg-white
-        border shadow-md transition-all
-        ${selected ? "ring-2 ring-amber -translate-y-3 shadow-amber/30 border-amber" : "border-gray-300"}
+        border shadow-md transition-all touch-manipulation
+        ${selected ? `ring-2 ring-amber shadow-amber/30 border-amber ${noHover ? "" : "-translate-y-3"}` : "border-gray-300"}
         ${highlighted && !selected ? "ring-2 ring-emerald/50 border-emerald shadow-emerald/20" : ""}
         ${disabled && !highlighted ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
         ${!disabled && !selected ? "active:scale-95" : ""}
-        ${highlighted && !disabled ? "hover:shadow-lg hover:-translate-y-1" : ""}
+        ${highlighted && !disabled && !noHover ? "hover:shadow-lg hover:-translate-y-1" : ""}
       `}
-      whileHover={disabled && !highlighted ? {} : { y: selected ? -12 : -6, scale: 1.02 }}
+      whileHover={noHover || (disabled && !highlighted) ? {} : { y: selected ? -12 : -6, scale: 1.02 }}
       whileTap={disabled ? {} : { scale: 0.97 }}
     >
       <div className={`flex h-full flex-col justify-between p-1 ${suitColors[card.suit]}`}>

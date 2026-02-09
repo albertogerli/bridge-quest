@@ -332,12 +332,12 @@ function PlayingView({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-3"
+          className="mb-2"
         >
-          <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1">
             <button
               onClick={onBack}
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
             >
               <svg
                 className="h-4 w-4"
@@ -349,17 +349,21 @@ function PlayingView({
                 <polyline points="15,18 9,12 15,6" />
               </svg>
             </button>
-            <Badge
-              variant="outline"
-              className="text-[10px] font-bold text-emerald border-emerald/30 bg-emerald-50"
-            >
-              Lez. {smazzata.lesson} · Board {smazzata.board}
-            </Badge>
-            <BenStatus available={game.benAvailable} />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant="outline"
+                  className="text-[10px] font-bold text-emerald border-emerald/30 bg-emerald-50 shrink-0"
+                >
+                  Lez. {smazzata.lesson} · Board {smazzata.board}
+                </Badge>
+                <BenStatus available={game.benAvailable} />
+              </div>
+              <h1 className={`${isMobile ? "text-sm" : "text-lg"} font-extrabold text-gray-900 truncate`}>
+                {smazzata.title}
+              </h1>
+            </div>
           </div>
-          <h1 className="text-lg font-extrabold text-gray-900">
-            {smazzata.title}
-          </h1>
         </motion.div>
 
         {/* Contract bar */}
@@ -367,14 +371,14 @@ function PlayingView({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-4 flex items-center justify-center"
+          className="mb-3 flex items-center justify-center"
         >
-          <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
+          <div className={`card-elevated rounded-xl bg-white flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}>
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Contratto
               </p>
-              <p className="text-lg font-black text-emerald-dark">
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-black text-emerald-dark`}>
                 {smazzata.contract}
               </p>
             </div>
@@ -383,7 +387,7 @@ function PlayingView({
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Obiettivo
               </p>
-              <p className="text-lg font-black text-gray-900">
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}>
                 {tricksNeeded} prese
               </p>
             </div>
@@ -392,13 +396,25 @@ function PlayingView({
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 N-S / E-O
               </p>
-              <p className="text-lg font-black text-gray-900">
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}>
                 {game.gameState?.trickCount.ns ?? 0} /{" "}
                 {game.gameState?.trickCount.ew ?? 0}
               </p>
             </div>
           </div>
         </motion.div>
+
+        {/* Start button - shown above table on mobile so it's visible */}
+        {isMobile && game.phase === "ready" && (
+          <div className="mb-3 flex justify-center">
+            <Button
+              onClick={game.startGame}
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg shadow-emerald/25"
+            >
+              Inizia a giocare
+            </Button>
+          </div>
+        )}
 
         {/* Bridge Table + Bidding Panel side by side on desktop */}
         <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
@@ -450,8 +466,8 @@ function PlayingView({
             )}
           </motion.div>
 
-          {/* Bidding Panel - side on desktop, below on mobile */}
-          {smazzata.bidding && (
+          {/* Bidding Panel - side on desktop, hidden on mobile during play */}
+          {smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -464,7 +480,7 @@ function PlayingView({
         </div>
 
         {/* Message */}
-        <div className="mt-4 text-center">
+        <div className={`mt-3 text-center ${isMobile ? "sticky bottom-16 z-20 bg-white/90 backdrop-blur-sm rounded-xl py-2 mx-auto max-w-xs shadow-sm" : ""}`}>
           <AnimatePresence mode="wait">
             <motion.p
               key={game.message}
@@ -488,7 +504,7 @@ function PlayingView({
 
         {/* Actions */}
         <div className="mt-4 flex justify-center gap-3">
-          {game.phase === "ready" && (
+          {game.phase === "ready" && !isMobile && (
             <Button
               onClick={game.startGame}
               className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"

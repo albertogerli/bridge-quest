@@ -125,7 +125,7 @@ export function BridgeTable({
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto no-select" style={{ aspectRatio: "1 / 1" }}>
+    <div className="relative w-full max-w-2xl mx-auto no-select" style={{ aspectRatio: "1 / 1", touchAction: "manipulation" }}>
       {/* Felt background */}
       <div
         className={`absolute inset-0 rounded-3xl felt-bg border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
@@ -218,6 +218,7 @@ export function BridgeTable({
             onSelectCard={(i) => onPlayCard?.("north", i)}
             highlightedCards={activePosition === "north" ? highlightedCards : []}
             disabled={disabled || activePosition !== "north"}
+            noHover={compact}
           />
         )}
       </div>
@@ -240,6 +241,7 @@ export function BridgeTable({
             onSelectCard={(i) => onPlayCard?.("south", i)}
             highlightedCards={activePosition === "south" ? highlightedCards : []}
             disabled={disabled || activePosition !== "south"}
+            noHover={compact}
           />
         )}
         <div className="text-center mt-1">
