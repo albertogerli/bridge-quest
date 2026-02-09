@@ -33,15 +33,17 @@ export function PlayingCard({
   selected?: boolean;
   disabled?: boolean;
   highlighted?: boolean;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 }) {
   const dimensions = {
+    xs: "w-9 h-[50px]",
     sm: "w-12 h-[68px]",
     md: "w-[72px] h-[100px]",
     lg: "w-24 h-[132px]",
   };
 
   const textSizes = {
+    xs: "text-[10px]",
     sm: "text-sm",
     md: "text-base",
     lg: "text-lg",
@@ -88,11 +90,11 @@ export function PlayingCard({
         {/* Top-left rank + suit */}
         <div className="flex flex-col items-start leading-none">
           <span className={`${textSizes[size]} font-bold`}>{card.rank}</span>
-          <SuitSymbol suit={card.suit} size={size === "lg" ? "md" : "sm"} />
+          <SuitSymbol suit={card.suit} size={size === "lg" ? "md" : size === "xs" ? "xs" : "sm"} />
         </div>
         {/* Center suit (large) */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`${size === "lg" ? "text-3xl" : size === "md" ? "text-2xl" : "text-lg"} opacity-20`}>
+          <span className={`${size === "lg" ? "text-3xl" : size === "md" ? "text-2xl" : size === "xs" ? "text-sm" : "text-lg"} opacity-20`}>
             {card.suit === "spade" && "♠"}
             {card.suit === "heart" && "♥"}
             {card.suit === "diamond" && "♦"}
@@ -102,7 +104,7 @@ export function PlayingCard({
         {/* Bottom-right rank + suit (rotated) */}
         <div className="flex flex-col items-end leading-none rotate-180">
           <span className={`${textSizes[size]} font-bold`}>{card.rank}</span>
-          <SuitSymbol suit={card.suit} size={size === "lg" ? "md" : "sm"} />
+          <SuitSymbol suit={card.suit} size={size === "lg" ? "md" : size === "xs" ? "xs" : "sm"} />
         </div>
       </div>
     </motion.button>

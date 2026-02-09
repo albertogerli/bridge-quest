@@ -238,7 +238,7 @@ export default function DichiaraPage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-5xl shadow-xl shadow-indigo-400/30 mb-6">
               🗣️
             </div>
-            <h1 className="text-3xl font-extrabold text-gray-900">Dichiara!</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Dichiara!</h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
               Vedi una mano e scegli l'apertura corretta. Velocita' e precisione!
             </p>
@@ -301,7 +301,7 @@ export default function DichiaraPage() {
                 </motion.span>
               ))}
             </div>
-            <h1 className="text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
               {stars === 3 ? "Maestro!" : stars === 2 ? "Ottimo!" : stars === 1 ? "Non male!" : "Studia ancora!"}
             </h1>
             <p className="text-lg font-bold text-gray-500 mt-1">{correct}/{TOTAL_ROUNDS} corrette ({accuracy}%)</p>

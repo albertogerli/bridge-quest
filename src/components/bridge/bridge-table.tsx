@@ -29,6 +29,7 @@ export interface BridgeTableProps {
   highlightedCards?: CardData[];
   activePosition?: string;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 const suitSymbol: Record<string, string> = {
@@ -44,6 +45,26 @@ const suitColorClass: Record<string, string> = {
   diamond: "text-[#FF6F00]",
   club: "text-[#2E7D32]",
 };
+
+/** Compact face-down card stack for mobile E/W positions */
+function CompactFaceDown({ count }: { count: number }) {
+  return (
+    <div className="relative w-9 h-16 flex items-center justify-center">
+      {/* Stacked card backs */}
+      {[0, 1, 2].map((i) => (
+        <div
+          key={i}
+          className="absolute w-9 h-[50px] rounded-md bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm"
+          style={{ top: i * 2, left: i * 1 }}
+        />
+      ))}
+      {/* Count badge */}
+      <div className="absolute -bottom-1 -right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-white/90 text-[9px] font-black text-emerald-dark shadow-sm">
+        {count}
+      </div>
+    </div>
+  );
+}
 
 export function BridgeTable({
   north,
@@ -64,6 +85,7 @@ export function BridgeTable({
   highlightedCards = [],
   activePosition,
   disabled = false,
+  compact = false,
 }: BridgeTableProps) {
   const vulColor = {
     none: "border-white/10",
@@ -113,11 +135,11 @@ export function BridgeTable({
 
       {/* Center: trick area + compass */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="relative w-48 h-48">
+        <div className={`relative ${compact ? "w-32 h-32" : "w-48 h-48"}`}>
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-20 h-20 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center">
-              <div className="grid grid-cols-3 grid-rows-3 gap-0 text-white/50 text-[10px] font-bold">
+            <div className={`${compact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}>
+              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/50 ${compact ? "text-[8px]" : "text-[10px]"} font-bold`}>
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
                 <div />
@@ -136,12 +158,19 @@ export function BridgeTable({
           {/* Current trick cards */}
           <AnimatePresence>
             {currentTrick.map((play) => {
-              const trickPositions: Record<string, string> = {
-                north: "-top-14 left-1/2 -translate-x-1/2",
-                south: "-bottom-14 left-1/2 -translate-x-1/2",
-                east: "top-1/2 -right-14 -translate-y-1/2",
-                west: "top-1/2 -left-14 -translate-y-1/2",
-              };
+              const trickPositions: Record<string, string> = compact
+                ? {
+                    north: "-top-10 left-1/2 -translate-x-1/2",
+                    south: "-bottom-10 left-1/2 -translate-x-1/2",
+                    east: "top-1/2 -right-10 -translate-y-1/2",
+                    west: "top-1/2 -left-10 -translate-y-1/2",
+                  }
+                : {
+                    north: "-top-14 left-1/2 -translate-x-1/2",
+                    south: "-bottom-14 left-1/2 -translate-x-1/2",
+                    east: "top-1/2 -right-14 -translate-y-1/2",
+                    west: "top-1/2 -left-14 -translate-y-1/2",
+                  };
               return (
                 <motion.div
                   key={`trick-${play.position}`}
@@ -151,11 +180,11 @@ export function BridgeTable({
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <div className={`w-14 h-[76px] rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
-                    <span className="text-lg font-black leading-none">
+                  <div className={`${compact ? "w-10 h-[56px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
+                    <span className={`${compact ? "text-sm" : "text-lg"} font-black leading-none`}>
                       {play.card.rank}
                     </span>
-                    <span className="text-lg leading-none">
+                    <span className={`${compact ? "text-sm" : "text-lg"} leading-none`}>
                       {suitSymbol[play.card.suit]}
                     </span>
                   </div>
@@ -184,7 +213,7 @@ export function BridgeTable({
           <Hand
             cards={north}
             faceDown={northFaceDown}
-            size="sm"
+            size={compact ? "xs" : "sm"}
             position="north"
             onSelectCard={(i) => onPlayCard?.("north", i)}
             highlightedCards={activePosition === "north" ? highlightedCards : []}
@@ -206,7 +235,7 @@ export function BridgeTable({
           <Hand
             cards={south}
             faceDown={southFaceDown}
-            size="md"
+            size={compact ? "sm" : "md"}
             position="south"
             onSelectCard={(i) => onPlayCard?.("south", i)}
             highlightedCards={activePosition === "south" ? highlightedCards : []}
@@ -223,13 +252,17 @@ export function BridgeTable({
       {/* East hand */}
       <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
         <div className="flex items-center gap-1">
-          <Hand
-            cards={east}
-            faceDown={eastFaceDown}
-            size="sm"
-            position="east"
-            disabled={true}
-          />
+          {compact && eastFaceDown ? (
+            <CompactFaceDown count={east.length} />
+          ) : (
+            <Hand
+              cards={east}
+              faceDown={eastFaceDown}
+              size={compact ? "xs" : "sm"}
+              position="east"
+              disabled={true}
+            />
+          )}
           <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/50"}`}>
             Est
           </span>
@@ -242,13 +275,17 @@ export function BridgeTable({
           <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/50"}`}>
             Ovest
           </span>
-          <Hand
-            cards={west}
-            faceDown={westFaceDown}
-            size="sm"
-            position="west"
-            disabled={true}
-          />
+          {compact && westFaceDown ? (
+            <CompactFaceDown count={west.length} />
+          ) : (
+            <Hand
+              cards={west}
+              faceDown={westFaceDown}
+              size={compact ? "xs" : "sm"}
+              position="west"
+              disabled={true}
+            />
+          )}
         </div>
       </div>
     </div>

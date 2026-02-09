@@ -18,6 +18,7 @@ import { parseContract, toDisplayPosition, toGamePosition, cardToString } from "
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
+import { useMobile } from "@/hooks/use-mobile";
 import Link from "next/link";
 
 export default function SmazzataBrowserPage() {
@@ -75,7 +76,7 @@ function SmazzataBrowserContent() {
   }
 
   return (
-    <div className="pt-6 px-5">
+    <div className="pt-6 px-4 sm:px-5">
       <div className="mx-auto max-w-lg">
         {/* Header */}
         <motion.div
@@ -247,6 +248,7 @@ function PlayingView({
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const [xpSaved, setXpSaved] = useState(false);
+  const isMobile = useMobile();
 
   // Player controls declarer + dummy (dummy = north display position)
   const dummyGamePos = toGamePosition("north", declarer);
@@ -324,7 +326,7 @@ function PlayingView({
     : undefined;
 
   return (
-    <div className="pt-4 px-4">
+    <div className={`pt-4 ${isMobile ? "px-2" : "px-4"}`}>
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <motion.div
@@ -426,6 +428,7 @@ function PlayingView({
                 highlightedCards={game.validCards as CardData[]}
                 activePosition={activeDisplayPos}
                 disabled={!game.isPlayerTurn}
+                compact={isMobile}
               />
             ) : (
               <BridgeTable
@@ -442,6 +445,7 @@ function PlayingView({
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
+                compact={isMobile}
               />
             )}
           </motion.div>
