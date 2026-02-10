@@ -10,7 +10,7 @@ export function BottomNav() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
       <div className="bg-white border-t-3 border-[#e5e0d5] shadow-[0_-2px_12px_rgba(0,0,0,0.08)]">
         <div className="mx-auto flex max-w-lg items-center justify-around px-0.5 py-1 safe-area-bottom">
           <NavItem href="/" icon="home" label="Home" active={isActive("/")} color="indigo" />
@@ -30,6 +30,7 @@ function PlayButton({ active }: { active: boolean }) {
     <Link
       href="/gioca"
       className="relative -mt-6 flex flex-col items-center"
+      aria-label="Gioca"
     >
       <div
         className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 ${
@@ -118,6 +119,7 @@ function NavItem({
           ? colors.active
           : "text-gray-400 hover:text-gray-600 active:scale-95"
       }`}
+      aria-label={label}
     >
       {icons[icon]}
       <span className={`text-[10px] ${active ? "font-extrabold" : "font-semibold"}`}>

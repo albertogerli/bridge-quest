@@ -17,7 +17,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   useSupabaseSync();
 
   if (isFullScreen) {
-    return <div className="min-h-svh">{children}</div>;
+    return <main id="main-content" className="min-h-svh">{children}</main>;
   }
 
   return (
@@ -27,7 +27,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
 
       {/* Center: main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 pb-20 lg:pb-6">{children}</main>
+        <main id="main-content" className="flex-1 pb-20 lg:pb-6">{children}</main>
         <BottomNav />
       </div>
 

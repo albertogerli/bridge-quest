@@ -136,7 +136,7 @@ export default function ProfiloPage() {
         >
           <Avatar className="h-18 w-18 shadow-lg shadow-indigo-500/20">
             {user && authProfile?.avatar_url ? (
-              <img src={authProfile.avatar_url} alt="" className="h-18 w-18 rounded-full object-cover" />
+              <img src={authProfile.avatar_url} alt="Foto profilo" className="h-18 w-18 rounded-full object-cover" />
             ) : (
               <AvatarFallback className="h-18 w-18 bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl font-extrabold">
                 {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "BQ"}
@@ -374,9 +374,9 @@ export default function ProfiloPage() {
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative h-16 w-16 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
                       {editAvatarPreview ? (
-                        <img src={editAvatarPreview} alt="" className="h-full w-full object-cover" />
+                        <img src={editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
                       ) : authProfile?.avatar_url ? (
-                        <img src={authProfile.avatar_url} alt="" className="h-full w-full object-cover" />
+                        <img src={authProfile.avatar_url} alt="Foto profilo" className="h-full w-full object-cover" />
                       ) : (
                         <span className="text-2xl">{(authProfile?.display_name || "B")[0].toUpperCase()}</span>
                       )}

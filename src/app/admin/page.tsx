@@ -206,7 +206,7 @@ export default function AdminPage() {
               <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">
                 XP totale piattaforma
               </h2>
-              <div className="text-3xl font-extrabold text-emerald-600">
+              <div className="text-3xl font-extrabold text-indigo-600">
                 {(stats?.totalXp ?? 0).toLocaleString("it-IT")} XP
               </div>
             </div>
@@ -222,7 +222,7 @@ export default function AdminPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Cerca utente..."
-                  className="w-60 h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-60 h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div className="overflow-x-auto">
@@ -254,7 +254,7 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-gray-500">
                           {u.bbo_username || "—"}
                         </td>
-                        <td className="px-5 py-3 text-right font-bold text-emerald-600">
+                        <td className="px-5 py-3 text-right font-bold text-indigo-600">
                           {u.xp.toLocaleString("it-IT")}
                         </td>
                         <td className="px-5 py-3 text-right">

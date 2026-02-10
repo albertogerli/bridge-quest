@@ -35,7 +35,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#059669",
+  themeColor: "#6366f1",
 };
 
 export default function RootLayout({
@@ -46,6 +46,7 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
+        <a href="#main-content" className="skip-link">Vai al contenuto</a>
         <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
