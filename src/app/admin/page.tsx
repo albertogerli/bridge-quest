@@ -11,7 +11,7 @@ interface UserRow {
   id: string;
   display_name: string | null;
   bbo_username: string | null;
-  profile_type: "giovane" | "adulto" | "senior";
+  profile_type: "junior" | "giovane" | "adulto" | "senior";
   xp: number;
   streak: number;
   hands_played: number;
@@ -35,11 +35,14 @@ export default function AdminPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [authTimeout, setAuthTimeout] = useState(false);
 
   const supabase = createClient();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setFetchError(null);
 
     try {
       const { data: profiles, error } = await supabase
@@ -49,6 +52,7 @@ export default function AdminPage() {
 
       if (error) {
         console.error("Admin fetch error:", error);
+        setFetchError(`Errore DB: ${error.message}`);
         setLoading(false);
         return;
       }
@@ -85,6 +89,7 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error("Admin fetch error:", err);
+      setFetchError(`Errore: ${err instanceof Error ? err.message : String(err)}`);
     }
 
     setLoading(false);
@@ -96,11 +101,37 @@ export default function AdminPage() {
     }
   }, [authLoading, user, fetchData]);
 
+  // Auth timeout - don't spin forever
+  useEffect(() => {
+    if (authLoading) {
+      const t = setTimeout(() => setAuthTimeout(true), 8000);
+      return () => clearTimeout(t);
+    }
+  }, [authLoading]);
+
   // Auth check
-  if (authLoading) {
+  if (authLoading && !authTimeout) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-gray-400 mt-4">Caricamento autenticazione...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (authTimeout && !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Errore di connessione</h1>
+          <p className="text-gray-500 mb-4">Impossibile connettersi a Supabase. Controlla la connessione e riprova.</p>
+          <Link href="/login" className="text-emerald-600 font-bold hover:underline">
+            Vai al login
+          </Link>
+        </div>
       </div>
     );
   }
@@ -129,6 +160,7 @@ export default function AdminPage() {
     : users;
 
   const profileEmoji: Record<string, string> = {
+    junior: "🧒",
     giovane: "🎮",
     adulto: "🃏",
     senior: "🏆",
@@ -167,6 +199,17 @@ export default function AdminPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-6">
+        {fetchError && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+            <p className="text-sm font-bold text-red-700">{fetchError}</p>
+            <button
+              onClick={fetchData}
+              className="mt-2 text-xs bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+            >
+              Riprova
+            </button>
+          </div>
+        )}
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
@@ -187,7 +230,7 @@ export default function AdminPage() {
                 Per tipo profilo
               </h2>
               <div className="flex gap-6">
-                {["giovane", "adulto", "senior"].map((type) => (
+                {["junior", "giovane", "adulto", "senior"].map((type) => (
                   <div key={type} className="flex items-center gap-2">
                     <span className="text-2xl">{profileEmoji[type]}</span>
                     <div>
@@ -247,7 +290,7 @@ export default function AdminPage() {
                         </td>
                         <td className="px-5 py-3">
                           <span className="inline-flex items-center gap-1">
-                            {profileEmoji[u.profile_type]}
+                            {profileEmoji[u.profile_type] || "❓"}
                             <span className="capitalize text-gray-600">{u.profile_type}</span>
                           </span>
                         </td>
