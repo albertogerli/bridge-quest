@@ -262,7 +262,7 @@ export default function Home() {
         )}
       </AnimatePresence>
       {/* ===== HERO ===== */}
-      <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-10 pt-14 lg:pb-6 lg:pt-8">
+      <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-16 pt-14 lg:pb-12 lg:pt-8">
         {/* Decorative blobs */}
         <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" aria-hidden="true" />
         <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" aria-hidden="true" />
@@ -380,15 +380,8 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Bottom wave - mobile only */}
-        <div className="absolute bottom-0 left-0 right-0 lg:hidden">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-            <path
-              d="M0 60V30C240 0 480 0 720 30C960 60 1200 60 1440 30V60H0Z"
-              fill="#F7F5F0"
-            />
-          </svg>
-        </div>
+        {/* Smooth gradient fade to background */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#F7F5F0]" aria-hidden="true" />
       </section>
 
       {/* Daily login XP toast */}
@@ -411,7 +404,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ===== DAILY CHALLENGE + STREAK ===== (hidden on desktop, sidebar shows these) */}
-      <section className="px-4 sm:px-5 -mt-1 lg:hidden">
+      <section className="px-4 sm:px-5 -mt-6 relative z-10 lg:hidden">
         <div className="mx-auto max-w-lg">
           <div className="grid grid-cols-2 gap-3">
             {/* Daily Challenge */}
@@ -423,8 +416,8 @@ export default function Home() {
               <Link href="/gioca/sfida" className="block">
                 <div className={`rounded-2xl p-4 cursor-pointer transition-all ${
                   stats.dailyDone
-                    ? "bg-emerald-50 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
-                    : "bg-white card-bold-amber"
+                    ? "bg-emerald-50 border-2 border-emerald-200"
+                    : "bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
                 }`}>
                   <div className="flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200">
@@ -452,7 +445,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="rounded-2xl bg-white p-4 card-bold-blue">
+              <div className="rounded-2xl bg-white p-4 border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]">
                 <div className="flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200">
                     <span className="text-2xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
@@ -487,7 +480,7 @@ export default function Home() {
       </section>
 
       {/* ===== DAILY QUESTS ===== */}
-      <section className="px-4 sm:px-5 pt-6">
+      <section className="px-4 sm:px-5 pt-5">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-extrabold text-gray-900">
@@ -510,14 +503,14 @@ export default function Home() {
 
       {/* ===== INSTALL APP BANNER ===== (mobile only) */}
       {!isInstalled && !installDismissed && (canInstall || isIOS) && (
-        <section className="px-4 sm:px-5 pt-6 lg:hidden">
+        <section className="px-4 sm:px-5 pt-4 lg:hidden">
           <div className="mx-auto max-w-lg">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="rounded-2xl bg-gradient-to-r from-violet-50 to-fuchsia-50 border-2 border-purple-300 shadow-[0_4px_0_#c084fc] p-4">
+              <div className="rounded-2xl bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-purple-200 p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
                     <span className="text-2xl">📲</span>
@@ -632,7 +625,7 @@ export default function Home() {
 
       {/* ===== SPACED REVIEW ===== (hidden on desktop, sidebar shows it) */}
       {reviewCount > 0 && (
-        <section className="px-4 sm:px-5 pt-6 lg:hidden">
+        <section className="px-4 sm:px-5 pt-4 lg:hidden">
           <div className="mx-auto max-w-lg">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -640,7 +633,7 @@ export default function Home() {
               transition={{ delay: 0.9 }}
             >
               <Link href="/lezioni">
-                <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 shadow-[0_4px_0_#c084fc] p-4 cursor-pointer hover:translate-y-[-2px] transition-all">
+                <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
                       <span className="text-2xl">🧠</span>
@@ -665,7 +658,7 @@ export default function Home() {
       )}
 
       {/* ===== TREASURE CHESTS ===== */}
-      <section className="px-4 sm:px-5 pt-6">
+      <section className="px-4 sm:px-5 pt-4">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-extrabold text-gray-900">
@@ -755,7 +748,7 @@ export default function Home() {
       {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}
       <section className="px-4 sm:px-5 pb-6 lg:hidden">
         <div className="mx-auto max-w-lg">
-          <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 shadow-[0_4px_0_#a5b4fc] p-5 text-center">
+          <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200/60 p-5 text-center">
             <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-1">
               Un progetto della
             </p>
@@ -784,7 +777,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
   const card = (
     <div
-      className="group relative overflow-hidden rounded-2xl bg-white transition-all border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] cursor-pointer hover:translate-y-[-2px] hover:shadow-[0_6px_0_#e5e0d5] active:translate-y-[2px] active:shadow-[0_1px_0_#e5e0d5]"
+      className="group relative overflow-hidden rounded-2xl bg-white transition-all border border-[#e5e0d5] shadow-sm cursor-pointer hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] active:shadow-none"
     >
       <div
         className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`}
@@ -915,7 +908,7 @@ function DailyQuests({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 + i * 0.05 }}
             className={`flex items-center gap-3 p-3 rounded-xl ${
-              done ? "bg-emerald-50 border-2 border-emerald-200" : "bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
+              done ? "bg-emerald-50 border border-emerald-200" : "bg-white border border-[#e5e0d5]"
             }`}
           >
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
@@ -955,8 +948,8 @@ function DailyQuests({
         transition={{ delay: 1.1 }}
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
-            ? "bg-gradient-to-r from-amber-100 to-amber-50 border-2 border-amber-300 shadow-[0_3px_0_#fbbf24]"
-            : "bg-gray-50 border-2 border-gray-200"
+            ? "bg-gradient-to-r from-amber-50 to-amber-100/60 border border-amber-200"
+            : "bg-gray-50 border border-gray-200"
         }`}
       >
         <span className="text-lg">{allDone ? "🎁" : "🎯"}</span>
@@ -1055,7 +1048,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       )}
     </AnimatePresence>
 
-    <div className="rounded-2xl bg-white p-4 card-bold-amber">
+    <div className="rounded-2xl bg-white p-4 border border-[#e5e0d5]">
       {/* Chest progress bar */}
       <div className="flex items-center gap-2 mb-4">
         {chestMilestones.map((chest, i) => {
@@ -1129,7 +1122,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
   if (availableCourses.length <= 1) return null; // Don't show if only Fiori
 
   return (
-    <section className="px-4 sm:px-5 pt-6">
+    <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-extrabold text-gray-900">
@@ -1151,7 +1144,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                 transition={{ delay: 0.7 + i * 0.08 }}
               >
                 <Link href={`/lezioni?corso=${course.id}`}>
-                  <div className="rounded-2xl bg-white p-4 cursor-pointer border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#e5e0d5] active:translate-y-[2px] active:shadow-[0_1px_0_#e5e0d5] transition-all">
+                  <div className="rounded-2xl bg-white p-4 cursor-pointer border border-[#e5e0d5] hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all">
                     <div className="flex items-center gap-2 mb-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-black text-lg`}>
                         {course.icon}
@@ -1204,7 +1197,7 @@ function WeeklyObjectivesSection() {
   };
 
   return (
-    <section className="px-4 sm:px-5 pt-6">
+    <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -1225,7 +1218,7 @@ function WeeklyObjectivesSection() {
           </Link>
         </div>
 
-        <div className="rounded-2xl bg-white p-4 card-bold-indigo">
+        <div className="rounded-2xl bg-white p-4 border border-[#e5e0d5]">
           <div className="space-y-2.5">
             {objectives.map((obj, i) => (
               <div
@@ -1327,7 +1320,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
   const nextCard = collectibleCards.find((c) => !c.checkUnlock(playerStats));
 
   return (
-    <section className="px-4 sm:px-5 pt-6">
+    <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -1349,7 +1342,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
         </div>
 
         <Link href="/collezione">
-          <div className="rounded-2xl bg-white p-4 cursor-pointer card-bold-amber hover:translate-y-[-2px] transition-all">
+          <div className="rounded-2xl bg-white p-4 cursor-pointer border border-[#e5e0d5] hover:translate-y-[-2px] hover:shadow-md transition-all">
             {/* Mini card preview - show last 4 unlocked or first 4 locked */}
             <div className="flex items-center gap-2 mb-3">
               {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {

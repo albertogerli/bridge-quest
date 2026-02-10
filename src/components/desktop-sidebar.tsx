@@ -34,7 +34,7 @@ export function DesktopSidebar() {
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
-        <div className="rounded-2xl bg-white border-2 border-indigo-200 shadow-[0_4px_0_#a5b4fc] p-4">
+        <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 border border-indigo-200">
@@ -62,7 +62,7 @@ export function DesktopSidebar() {
         </div>
 
         {/* Streak */}
-        <div className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] p-4">
+        <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
@@ -94,10 +94,10 @@ export function DesktopSidebar() {
 
         {/* Daily Challenge */}
         <Link href="/gioca/sfida" aria-label="Sfida del Giorno">
-          <div className={`rounded-2xl p-4 transition-all hover:translate-y-[-2px] cursor-pointer ${
+          <div className={`rounded-2xl p-4 transition-all hover:translate-y-[-1px] hover:shadow-md cursor-pointer ${
             stats.dailyDone
-              ? "bg-emerald-50 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
-              : "bg-white card-bold-amber"
+              ? "bg-emerald-50 border border-emerald-200"
+              : "bg-white border border-[#e5e0d5] shadow-sm"
           }`}>
             <div className="flex items-center gap-3">
               <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${
@@ -123,7 +123,7 @@ export function DesktopSidebar() {
         {/* Spaced Review */}
         {reviewCount > 0 && (
           <Link href="/lezioni">
-            <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 shadow-[0_4px_0_#c084fc] p-4 cursor-pointer hover:translate-y-[-2px] transition-all">
+            <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 border border-purple-200">
                   <span className="text-xl">🧠</span>
@@ -145,7 +145,7 @@ export function DesktopSidebar() {
         {/* Continue CTA */}
         {stats.nextModule && (
           <Link href={`/lezioni/${stats.nextModule.lessonId}/${stats.nextModule.moduleId}`}>
-            <div className="rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 p-4 text-white shadow-[0_4px_0_#6d28d9] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#6d28d9] active:translate-y-[2px] active:shadow-[0_1px_0_#6d28d9] transition-all cursor-pointer">
+            <div className="rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 p-4 text-white shadow-md hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px] active:shadow-sm transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
                 <div className="flex-1 min-w-0">
@@ -161,12 +161,12 @@ export function DesktopSidebar() {
         )}
 
         {/* Quick Links - Mini Games */}
-        <div className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] p-4">
+        <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4">
           <p className="text-xs font-extrabold text-gray-900 mb-3 uppercase tracking-wider">Mini-Giochi</p>
           <div className="grid grid-cols-2 gap-2">
             {miniGames.map((game) => (
               <Link key={game.href} href={game.href}>
-                <div className={`flex items-center gap-2 p-2.5 rounded-xl border-2 text-xs font-bold transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer ${game.color}`}>
+                <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer ${game.color}`}>
                   <span className="text-base">{game.emoji}</span>
                   <span>{game.label}</span>
                 </div>
@@ -177,7 +177,7 @@ export function DesktopSidebar() {
 
         {/* Collectible Cards */}
         <Link href="/collezione" aria-label="Collezione carte">
-          <div className="rounded-2xl bg-white border-2 border-amber-200 shadow-[0_4px_0_#fcd34d] p-4 cursor-pointer hover:translate-y-[-2px] transition-all">
+          <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
             <div className="flex items-center gap-3">
               <div className="flex gap-1">
                 {(unlockedCards.length > 0 ? unlockedCards.slice(-3) : collectibleCards.slice(0, 3)).map((card) => {

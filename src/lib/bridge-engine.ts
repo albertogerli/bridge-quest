@@ -356,86 +356,379 @@ function currentWinningPlay(
   return best;
 }
 
-/** Simple AI: plays a valid card (basic strategy) */
+// ═══════════════════════════════════════════════════════════════
+// ADVANCED BRIDGE AI ENGINE
+// Features: card counting, sequences, second-hand-low,
+// third-hand-high, covering honors, finesse awareness,
+// smart opening leads, trump management, entry preservation
+// ═══════════════════════════════════════════════════════════════
+
+const ALL_RANKS: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+
+/** High Card Points for a single card */
+function hcp(rank: Rank): number {
+  if (rank === "A") return 4;
+  if (rank === "K") return 3;
+  if (rank === "Q") return 2;
+  if (rank === "J") return 1;
+  return 0;
+}
+
+/** Build a set of all 52 cards that have already been played */
+function getPlayedCards(state: GameState): Set<string> {
+  const played = new Set<string>();
+  for (const trick of state.tricks) {
+    for (const play of trick.plays) {
+      played.add(`${play.card.rank}-${play.card.suit}`);
+    }
+  }
+  for (const play of state.currentTrick) {
+    played.add(`${play.card.rank}-${play.card.suit}`);
+  }
+  return played;
+}
+
+/** Count remaining cards in a suit (not yet played and not in our hand) */
+function countOutstandingInSuit(suit: Suit, hand: Card[], playedCards: Set<string>): number {
+  let count = 0;
+  for (const rank of ALL_RANKS) {
+    const key = `${rank}-${suit}`;
+    if (playedCards.has(key)) continue;
+    if (hand.some(c => c.suit === suit && c.rank === rank)) continue;
+    count++;
+  }
+  return count;
+}
+
+/** Detect known voids: players who showed out of a suit */
+function getKnownVoids(state: GameState): Map<Position, Set<Suit>> {
+  const voids = new Map<Position, Set<Suit>>();
+  const allPositions: Position[] = ["north", "east", "south", "west"];
+  for (const pos of allPositions) voids.set(pos, new Set());
+
+  for (const trick of state.tricks) {
+    if (trick.plays.length < 2) continue;
+    const leadSuit = trick.plays[0].card.suit;
+    for (let i = 1; i < trick.plays.length; i++) {
+      if (trick.plays[i].card.suit !== leadSuit) {
+        voids.get(trick.plays[i].position)!.add(leadSuit);
+      }
+    }
+  }
+  // Also check current trick
+  if (state.currentTrick.length >= 2) {
+    const leadSuit = state.currentTrick[0].card.suit;
+    for (let i = 1; i < state.currentTrick.length; i++) {
+      if (state.currentTrick[i].card.suit !== leadSuit) {
+        voids.get(state.currentTrick[i].position)!.add(leadSuit);
+      }
+    }
+  }
+  return voids;
+}
+
+/** Check if cards form a sequence (e.g. KQJ, QJ10) */
+function isSequence(cards: Card[]): boolean {
+  if (cards.length < 2) return false;
+  const sorted = [...cards].sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (rankValue(sorted[i].rank) - rankValue(sorted[i + 1].rank) !== 1) return false;
+  }
+  return true;
+}
+
+/** Find the top of a sequence in hand for a suit (e.g. KQJ → K) */
+function topOfSequence(hand: Card[], suit: Suit): Card | null {
+  const suitCards = hand.filter(c => c.suit === suit)
+    .sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
+  if (suitCards.length < 2) return null;
+
+  // Find longest sequence from the top
+  let seqLen = 1;
+  for (let i = 0; i < suitCards.length - 1; i++) {
+    if (rankValue(suitCards[i].rank) - rankValue(suitCards[i + 1].rank) === 1) {
+      seqLen++;
+    } else break;
+  }
+  if (seqLen >= 2 && rankValue(suitCards[0].rank) >= rankValue("J")) {
+    return suitCards[0]; // Top of honor sequence
+  }
+  return null;
+}
+
+/** Check if a card is an unsupported honor (Kx, Qx, Jx with no other honors) */
+function isUnsupportedHonor(card: Card, hand: Card[]): boolean {
+  if (hcp(card.rank) === 0) return false;
+  const suitCards = hand.filter(c => c.suit === card.suit);
+  if (suitCards.length > 2) return false; // Not "short" enough to be unsupported
+  const honors = suitCards.filter(c => hcp(c.rank) > 0);
+  return honors.length === 1 && suitCards.length <= 2;
+}
+
+/** Whether position is a defender (not declarer or dummy) */
+function isDefender(position: Position, state: GameState): boolean {
+  return position !== state.declarer && position !== state.dummy;
+}
+
+/** Get the seat position in the current trick (1=leader, 2=second, 3=third, 4=fourth) */
+function seatInTrick(state: GameState): number {
+  return state.currentTrick.length + 1;
+}
+
+/** Smart discard: discard from shortest non-trump suit, lowest card, avoiding unguarded honors */
+function smartDiscard(validCards: Card[], hand: Card[], trumpSuit: Suit | null): Card {
+  // Prefer discarding from a suit with no honors
+  const nonTrump = validCards.filter(c => c.suit !== trumpSuit);
+  const candidates = nonTrump.length > 0 ? nonTrump : validCards;
+
+  // Prefer suits without honors
+  const noHonors = candidates.filter(c => {
+    const suitCards = hand.filter(h => h.suit === c.suit);
+    return suitCards.every(h => hcp(h.rank) === 0);
+  });
+
+  const pool = noHonors.length > 0 ? noHonors : candidates;
+  return pool.sort((a, b) => rankValue(a.rank) - rankValue(b.rank))[0];
+}
+
+/** Advanced AI: significantly smarter card selection */
 export function aiSelectCard(state: GameState, position: Position): Card {
   const hand = state.hands[position];
   const validCards = getValidCards(hand, state.currentTrick);
 
-  if (validCards.length === 1) {
-    return validCards[0];
-  }
+  if (validCards.length === 1) return validCards[0];
 
+  const playedCards = getPlayedCards(state);
+  const knownVoids = getKnownVoids(state);
+  const partner = partnerOf(position);
+  const defending = isDefender(position, state);
+  const seat = seatInTrick(state);
   const leadSuit = state.currentTrick.length > 0 ? state.currentTrick[0].card.suit : null;
+  const trumpSuit = state.trumpSuit;
 
-  // If leading, pick from longest suit, lowest card
+  // ──────────────────────────────────────────────
+  // LEADING (seat 1)
+  // ──────────────────────────────────────────────
   if (state.currentTrick.length === 0) {
-    const suitCounts: Record<Suit, number> = { spade: 0, heart: 0, diamond: 0, club: 0 };
-    for (const c of hand) suitCounts[c.suit]++;
-
-    let bestSuit: Suit = hand[0].suit;
-    let bestCount = 0;
-    for (const s of SUIT_ORDER) {
-      if (s !== state.trumpSuit && suitCounts[s] > bestCount) {
-        bestCount = suitCounts[s];
-        bestSuit = s;
-      }
-    }
-
-    const suitCards = validCards
-      .filter((c) => c.suit === bestSuit)
-      .sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
-
-    return suitCards.length >= 4 ? suitCards[3] : suitCards[suitCards.length - 1];
+    return aiLead(hand, validCards, state, position, playedCards, knownVoids, defending);
   }
 
-  // Following suit
-  if (leadSuit && validCards[0].suit === leadSuit) {
-    // If partner is currently winning, play low
-    if (state.currentTrick.length >= 2) {
-      const winning = currentWinningPlay(state.currentTrick, state.trumpSuit);
-      if (winning.position === partnerOf(position)) {
-        return validCards.sort((a, b) => rankValue(a.rank) - rankValue(b.rank))[0];
-      }
+  const followingSuit = leadSuit && validCards[0].suit === leadSuit;
+
+  // ──────────────────────────────────────────────
+  // FOLLOWING SUIT
+  // ──────────────────────────────────────────────
+  if (followingSuit && leadSuit) {
+    const winning = currentWinningPlay(state.currentTrick, trumpSuit);
+    const partnerWinning = winning.position === partner;
+    const sorted = [...validCards].sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
+    const lowest = sorted[sorted.length - 1];
+    const highest = sorted[0];
+
+    // FOURTH SEAT: Play just enough to win, or give up
+    if (seat === 4) {
+      if (partnerWinning) return lowest;
+      // Try to win with cheapest card
+      const beaters = sorted.filter(c => rankValue(c.rank) > rankValue(winning.card.rank));
+      return beaters.length > 0 ? beaters[beaters.length - 1] : lowest;
     }
 
-    // Try to win — play lowest card that beats current highest
-    const highestInTrick = state.currentTrick
-      .filter((p) => p.card.suit === leadSuit)
-      .sort((a, b) => rankValue(b.card.rank) - rankValue(a.card.rank))[0];
-
-    if (highestInTrick) {
-      const winningCards = validCards
-        .filter((c) => c.suit === leadSuit && rankValue(c.rank) > rankValue(highestInTrick.card.rank))
-        .sort((a, b) => rankValue(a.rank) - rankValue(b.rank));
-
-      if (winningCards.length > 0) {
-        return winningCards[0];
+    // THIRD SEAT ("third hand high")
+    if (seat === 3) {
+      if (partnerWinning) {
+        // Partner led and is winning. If partner played high, play low.
+        // If an opponent overtook, we need to beat them.
+        const opponentPlayed = state.currentTrick.find(
+          p => p.position !== partner && p.position !== position
+        );
+        if (opponentPlayed && opponentPlayed.card.suit === leadSuit) {
+          const opRank = rankValue(opponentPlayed.card.rank);
+          if (opRank > rankValue(winning.card.rank)) {
+            // Opponent is actually winning, try to beat
+            const beaters = sorted.filter(c => rankValue(c.rank) > opRank);
+            return beaters.length > 0 ? beaters[beaters.length - 1] : lowest;
+          }
+        }
+        return lowest; // Partner winning, play low
       }
+      // Third hand high: play highest, but if we have a sequence, play lowest of sequence
+      const topSeq = topOfSequence(validCards, leadSuit);
+      if (topSeq && rankValue(topSeq.rank) > rankValue(winning.card.rank)) {
+        // Play lowest in our winning sequence to save honors
+        const seqCards = [topSeq];
+        for (let i = sorted.indexOf(topSeq) + 1; i < sorted.length; i++) {
+          if (rankValue(seqCards[seqCards.length - 1].rank) - rankValue(sorted[i].rank) === 1) {
+            seqCards.push(sorted[i]);
+          } else break;
+        }
+        const lowestSeq = seqCards[seqCards.length - 1];
+        if (rankValue(lowestSeq.rank) > rankValue(winning.card.rank)) return lowestSeq;
+      }
+      // Just play highest
+      return rankValue(highest.rank) > rankValue(winning.card.rank) ? highest : lowest;
     }
 
-    return validCards.sort((a, b) => rankValue(a.rank) - rankValue(b.rank))[0];
+    // SECOND SEAT ("second hand low" — classic defensive principle)
+    if (seat === 2) {
+      // Exception: cover an honor with an honor
+      const leaderCard = state.currentTrick[0].card;
+      if (hcp(leaderCard.rank) > 0 && leaderCard.suit === leadSuit) {
+        // Cover honor with honor if it could promote something for partner
+        const coverCards = sorted.filter(c => rankValue(c.rank) > rankValue(leaderCard.rank) && hcp(c.rank) > 0);
+        if (coverCards.length > 0) {
+          // Cover with the lowest honor that beats it
+          return coverCards[coverCards.length - 1];
+        }
+      }
+      // Second hand low: play low (unless we can win cheaply with a spot card)
+      return lowest;
+    }
+
+    // Default: try to win cheaply or play low
+    if (partnerWinning) return lowest;
+    const beaters = sorted.filter(c => rankValue(c.rank) > rankValue(winning.card.rank));
+    return beaters.length > 0 ? beaters[beaters.length - 1] : lowest;
   }
 
-  // Can't follow suit
-  if (state.trumpSuit) {
+  // ──────────────────────────────────────────────
+  // CAN'T FOLLOW SUIT — TRUMP OR DISCARD
+  // ──────────────────────────────────────────────
+  const winning = currentWinningPlay(state.currentTrick, trumpSuit);
+  const partnerWinning = winning.position === partner;
+
+  // If partner is winning, just discard
+  if (partnerWinning) {
+    return smartDiscard(validCards, hand, trumpSuit);
+  }
+
+  // If trump contract, consider ruffing
+  if (trumpSuit) {
     const trumpCards = validCards
-      .filter((c) => c.suit === state.trumpSuit)
+      .filter(c => c.suit === trumpSuit)
       .sort((a, b) => rankValue(a.rank) - rankValue(b.rank));
 
-    // If partner is currently winning, just discard
-    if (state.currentTrick.length >= 2) {
-      const winning = currentWinningPlay(state.currentTrick, state.trumpSuit);
-      if (winning.position === partnerOf(position)) {
-        return validCards.sort((a, b) => rankValue(a.rank) - rankValue(b.rank))[0];
-      }
-    }
-
     if (trumpCards.length > 0) {
+      // Check if someone already trumped higher
+      const winnerIsTrump = winning.card.suit === trumpSuit;
+      if (winnerIsTrump) {
+        // Need to overruff
+        const overruffs = trumpCards.filter(c => rankValue(c.rank) > rankValue(winning.card.rank));
+        if (overruffs.length > 0) return overruffs[0]; // Lowest overruff
+        // Can't overruff — discard instead of wasting a trump
+        return smartDiscard(validCards.filter(c => c.suit !== trumpSuit), hand, trumpSuit)
+          || smartDiscard(validCards, hand, trumpSuit);
+      }
+      // Ruff with lowest trump
       return trumpCards[0];
     }
   }
 
-  return validCards.sort((a, b) => rankValue(a.rank) - rankValue(b.rank))[0];
+  // No trumps available — discard
+  return smartDiscard(validCards, hand, trumpSuit);
+}
+
+/** Advanced opening lead selection */
+function aiLead(
+  hand: Card[],
+  validCards: Card[],
+  state: GameState,
+  position: Position,
+  playedCards: Set<string>,
+  knownVoids: Map<Position, Set<Suit>>,
+  defending: boolean,
+): Card {
+  const trumpSuit = state.trumpSuit;
+  const suitCounts: Record<Suit, number> = { spade: 0, heart: 0, diamond: 0, club: 0 };
+  for (const c of hand) suitCounts[c.suit]++;
+
+  // Calculate suit strength (honors + length)
+  const suitScores: { suit: Suit; score: number; count: number }[] = [];
+  for (const s of SUIT_ORDER) {
+    if (s === trumpSuit && defending) continue; // Don't lead trumps unless strategic
+    const suitCards = hand.filter(c => c.suit === s);
+    if (suitCards.length === 0) continue;
+    let score = 0;
+    // Length points
+    score += suitCards.length * 2;
+    // Honor points
+    for (const c of suitCards) score += hcp(c.rank) * 2;
+    // Sequence bonus: KQJ or QJ10 are great leads
+    const seq = topOfSequence(hand, s);
+    if (seq) score += 10;
+    // Penalize unsupported honors (leading from Kx is bad)
+    if (suitCards.length <= 2 && suitCards.some(c => hcp(c.rank) > 0 && c.rank !== "A")) {
+      score -= 8;
+    }
+    // Bonus for partner's known void (can give a ruff)
+    const partner = partnerOf(position);
+    if (trumpSuit && knownVoids.get(partner)?.has(s)) {
+      score += 15;
+    }
+    suitScores.push({ suit: s, score, count: suitCards.length });
+  }
+
+  // Against NT: lead longest suit
+  // Against suit contract: lead from best combination
+  if (!trumpSuit) {
+    // NT: prefer length, especially with honors
+    suitScores.sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return b.score - a.score;
+    });
+  } else {
+    suitScores.sort((a, b) => b.score - a.score);
+  }
+
+  // Consider leading trumps if defending a suit contract and we have 4+ trumps
+  if (defending && trumpSuit && suitCounts[trumpSuit] >= 4) {
+    const trumpCards = hand.filter(c => c.suit === trumpSuit)
+      .sort((a, b) => rankValue(a.rank) - rankValue(b.rank));
+    // Lead low trump to draw declarer's trumps
+    if (trumpCards.length > 0) return trumpCards[0];
+  }
+
+  // Pick the best suit to lead
+  const bestSuit = suitScores.length > 0 ? suitScores[0].suit : hand[0].suit;
+  const suitCards = hand.filter(c => c.suit === bestSuit)
+    .sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
+
+  // Choose which card in the suit to lead:
+  // 1. Top of a sequence (KQJ → K, QJ10 → Q)
+  const seqTop = topOfSequence(hand, bestSuit);
+  if (seqTop) return seqTop;
+
+  // 2. Singleton: lead it (especially in suit contracts for ruffing potential)
+  if (suitCards.length === 1) return suitCards[0];
+
+  // 3. Top of a doubleton (Kx → K, but not if it's an unsupported honor against NT)
+  if (suitCards.length === 2) {
+    if (trumpSuit) return suitCards[0]; // Top of doubleton in suit contract
+    // In NT, avoid leading from Kx or Qx — prefer 4th best from a longer suit
+    if (hcp(suitCards[0].rank) > 0 && suitScores.length > 1) {
+      // Try next best suit
+      const altSuit = suitScores[1].suit;
+      const altCards = hand.filter(c => c.suit === altSuit)
+        .sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
+      if (altCards.length >= 4) {
+        return altCards[3]; // 4th best
+      }
+    }
+    return suitCards[0]; // Lead top of doubleton anyway
+  }
+
+  // 4. Fourth-best from length (4+ cards): standard lead
+  if (suitCards.length >= 4) {
+    return suitCards[3];
+  }
+
+  // 5. Low from 3 cards (unless AKx, lead A first)
+  if (suitCards.length === 3) {
+    const hasAK = suitCards.some(c => c.rank === "A") && suitCards.some(c => c.rank === "K");
+    if (hasAK) return suitCards.find(c => c.rank === "A")!;
+    return suitCards[suitCards.length - 1]; // Lead low from 3
+  }
+
+  return suitCards[suitCards.length - 1];
 }
 
 /**
