@@ -262,10 +262,10 @@ export default function Home() {
         )}
       </AnimatePresence>
       {/* ===== HERO ===== */}
-      <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-10 pt-14">
+      <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-10 pt-14 lg:pb-6 lg:pt-8">
         {/* Decorative blobs */}
-        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
+        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" aria-hidden="true" />
+        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" aria-hidden="true" />
 
         <div className="relative mx-auto max-w-lg">
           {/* Logo + Title */}
@@ -302,19 +302,19 @@ export default function Home() {
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">
               <div className="h-px w-8 bg-white/30" />
-              <p className="text-sm font-semibold tracking-widest text-white/70 uppercase">
+              <p className="text-sm font-semibold tracking-widest text-white/90 uppercase">
                 Corsi FIGB
               </p>
               <div className="h-px w-8 bg-white/30" />
             </div>
           </motion.div>
 
-          {/* XP Card */}
+          {/* XP Card - hidden on desktop (sidebar shows it) */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 rounded-2xl glass-dark px-5 py-4"
+            className="mt-8 rounded-2xl glass-dark px-5 py-4 lg:hidden"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -323,12 +323,12 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white">Livello {stats.level}</p>
-                  <p className="text-[11px] text-white/50">{stats.levelName}</p>
+                  <p className="text-[11px] text-white/80">{stats.levelName}</p>
                 </div>
               </div>
               <div className="text-right">
                 <p className="text-lg font-extrabold text-white">{stats.xpInLevel}</p>
-                <p className="text-[11px] text-white/50">/ 100 XP</p>
+                <p className="text-[11px] text-white/80">/ 100 XP</p>
               </div>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
@@ -341,12 +341,12 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* CTA - Riprendi or Start */}
+          {/* CTA - Riprendi or Start - hidden on desktop (sidebar shows it) */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="mt-5"
+            className="mt-5 lg:hidden"
           >
             {hasStarted && nextModule ? (
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
@@ -380,8 +380,8 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
+        {/* Bottom wave - mobile only */}
+        <div className="absolute bottom-0 left-0 right-0 lg:hidden">
           <svg viewBox="0 0 1440 60" fill="none" className="w-full">
             <path
               d="M0 60V30C240 0 480 0 720 30C960 60 1200 60 1440 30V60H0Z"
@@ -410,8 +410,8 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ===== DAILY CHALLENGE + STREAK ===== */}
-      <section className="px-4 sm:px-5 -mt-1">
+      {/* ===== DAILY CHALLENGE + STREAK ===== (hidden on desktop, sidebar shows these) */}
+      <section className="px-4 sm:px-5 -mt-1 lg:hidden">
         <div className="mx-auto max-w-lg">
           <div className="grid grid-cols-2 gap-3">
             {/* Daily Challenge */}
@@ -508,9 +508,9 @@ export default function Home() {
       {/* ===== WEEKLY OBJECTIVES ===== */}
       <WeeklyObjectivesSection />
 
-      {/* ===== INSTALL APP BANNER ===== */}
+      {/* ===== INSTALL APP BANNER ===== (mobile only) */}
       {!isInstalled && !installDismissed && (canInstall || isIOS) && (
-        <section className="px-4 sm:px-5 pt-6">
+        <section className="px-4 sm:px-5 pt-6 lg:hidden">
           <div className="mx-auto max-w-lg">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -548,9 +548,10 @@ export default function Home() {
                     ) : null}
                     <button
                       onClick={() => setInstallDismissed(true)}
-                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                      aria-label="Chiudi banner installazione"
+                      className="p-2.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
                     >
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                         <path d="M18 6L6 18M6 6l12 12" />
                       </svg>
                     </button>
@@ -629,9 +630,9 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ===== SPACED REVIEW ===== */}
+      {/* ===== SPACED REVIEW ===== (hidden on desktop, sidebar shows it) */}
       {reviewCount > 0 && (
-        <section className="px-4 sm:px-5 pt-6">
+        <section className="px-4 sm:px-5 pt-6 lg:hidden">
           <div className="mx-auto max-w-lg">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -751,8 +752,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== FIGB FOOTER ===== */}
-      <section className="px-4 sm:px-5 pb-6">
+      {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}
+      <section className="px-4 sm:px-5 pb-6 lg:hidden">
         <div className="mx-auto max-w-lg">
           <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 shadow-[0_4px_0_#a5b4fc] p-5 text-center">
             <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-1">
@@ -1712,7 +1713,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               disabled={isProfileStep && !selectedProfile}
               className={`w-full h-14 rounded-2xl font-extrabold text-base shadow-xl shadow-black/15 transition-all active:scale-[0.98] ${
                 isProfileStep && !selectedProfile
-                  ? "bg-white/30 text-white/50 cursor-not-allowed"
+                  ? "bg-white/30 text-white/80 cursor-not-allowed"
                   : "bg-white text-indigo-700 hover:bg-white/90"
               }`}
             >
@@ -1723,7 +1724,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
           {!isLast && (
             <button
               onClick={handleSkip}
-              className="w-full text-center text-sm font-semibold text-white/50 hover:text-white/80 transition-colors py-2"
+              className="w-full text-center text-sm font-semibold text-white/80 hover:text-white/80 transition-colors py-2"
             >
               Salta introduzione
             </button>

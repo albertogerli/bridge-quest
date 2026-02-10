@@ -93,7 +93,7 @@ export function DesktopSidebar() {
         </div>
 
         {/* Daily Challenge */}
-        <Link href="/gioca/sfida">
+        <Link href="/gioca/sfida" aria-label="Sfida del Giorno">
           <div className={`rounded-2xl p-4 transition-all hover:translate-y-[-2px] cursor-pointer ${
             stats.dailyDone
               ? "bg-emerald-50 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
@@ -176,7 +176,7 @@ export function DesktopSidebar() {
         </div>
 
         {/* Collectible Cards */}
-        <Link href="/collezione">
+        <Link href="/collezione" aria-label="Collezione carte">
           <div className="rounded-2xl bg-white border-2 border-amber-200 shadow-[0_4px_0_#fcd34d] p-4 cursor-pointer hover:translate-y-[-2px] transition-all">
             <div className="flex items-center gap-3">
               <div className="flex gap-1">

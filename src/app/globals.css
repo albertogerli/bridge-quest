@@ -288,6 +288,39 @@
   min-width: 44px;
 }
 
+/* Reduced motion: disable animations for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible focus indicator for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 12px 24px;
+  background: #1a1a2e;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 16px;
+}
+
 /* Desktop enhanced background gradients */
 @media (min-width: 1024px) {
   body {

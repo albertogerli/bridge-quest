@@ -69,7 +69,7 @@ export function DesktopNav() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white border-r-2 border-[#e5e0d5]">
+    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white border-r-2 border-[#e5e0d5]" aria-label="Navigazione principale">
       {/* Logo */}
       <div className="px-5 pt-6 pb-4">
         <div className="flex items-center gap-2.5">
@@ -129,7 +129,7 @@ export function DesktopNav() {
       {/* Settings at bottom */}
       <div className="px-3 pb-4">
         <div className="h-px bg-[#e5e0d5] mb-3" />
-        <Link href="/impostazioni">
+        <Link href="/impostazioni" aria-label="Impostazioni">
           <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
             pathname === "/impostazioni"
               ? "bg-gray-100 text-gray-700"

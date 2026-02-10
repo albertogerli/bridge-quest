@@ -132,7 +132,7 @@ export default function NuovoPostPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={200}
-                className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                 placeholder="Di cosa vuoi parlare?"
               />
             </div>
@@ -146,7 +146,7 @@ export default function NuovoPostPage() {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 rows={8}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
                 placeholder="Scrivi il tuo messaggio..."
               />
             </div>

@@ -338,7 +338,7 @@ export default function CollezionePage() {
                 transition={{ delay: 0.12 + i * 0.03, type: "spring", stiffness: 260, damping: 22 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleCardTap(card)}
-                className="relative text-left focus:outline-none"
+                className="relative text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 {/* New card sparkle indicator */}
                 {isNew && (

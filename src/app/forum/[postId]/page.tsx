@@ -206,7 +206,7 @@ export default function PostDetailPage() {
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden">
               {post.profiles?.avatar_url ? (
-                <img src={post.profiles.avatar_url} alt="" className="h-full w-full object-cover" />
+                <img src={post.profiles.avatar_url} alt="Avatar utente" className="h-full w-full object-cover" />
               ) : (
                 (post.profiles?.display_name || "?")[0].toUpperCase()
               )}
@@ -285,7 +285,7 @@ export default function PostDetailPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <div className="h-7 w-7 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden">
                       {comment.profiles?.avatar_url ? (
-                        <img src={comment.profiles.avatar_url} alt="" className="h-full w-full object-cover" />
+                        <img src={comment.profiles.avatar_url} alt="Avatar utente" className="h-full w-full object-cover" />
                       ) : (
                         (comment.profiles?.display_name || "?")[0].toUpperCase()
                       )}

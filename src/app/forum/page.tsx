@@ -185,7 +185,7 @@ export default function ForumPage() {
                         {/* Avatar */}
                         <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
                           {post.profiles?.avatar_url ? (
-                            <img src={post.profiles.avatar_url} alt="" className="h-full w-full object-cover" />
+                            <img src={post.profiles.avatar_url} alt="Avatar utente" className="h-full w-full object-cover" />
                           ) : (
                             (post.profiles?.display_name || "?")[0].toUpperCase()
                           )}
