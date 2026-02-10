@@ -6,13 +6,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { ASD_LIST } from "@/data/asd-list";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
 type Mode = "login" | "signup";
 type ProfileType = "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
-  const router = useRouter();
   const { signIn, signUp, uploadAvatar } = useAuth();
   const [mode, setMode] = useState<Mode>("login");
   const [loading, setLoading] = useState(false);
@@ -61,7 +58,8 @@ export default function LoginPage() {
             ? "Email o password errati"
             : err.message);
         } else {
-          router.push("/");
+          window.location.href = "/";
+          return;
         }
       } else {
         if (!displayName.trim()) {
@@ -98,7 +96,8 @@ export default function LoginPage() {
           }
           // Save profile type to localStorage too
           try { localStorage.setItem("bq_profile", profileType); } catch {}
-          router.push("/");
+          window.location.href = "/";
+          return;
         }
       }
     } catch {
