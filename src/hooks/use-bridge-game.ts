@@ -136,7 +136,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             // Update message for new trick
             const leader = newState.currentPlayer;
             if (isPlayerPosition(leader)) {
-              setMessage("E il tuo turno. Scegli una carta da giocare.");
+              const isDummyTurn = leader === partnerOf(configRef.current.declarer);
+              setMessage(isDummyTurn
+                ? `Gioca dal morto (${positionName(leader)}). Tocca le carte evidenziate.`
+                : "È il tuo turno. Scegli una carta da giocare."
+              );
             } else {
               setMessage(`${positionName(leader)} sta giocando...`);
             }
@@ -150,7 +154,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
               newState.currentTrick
             );
             setHighlightedCards(valid);
-            setMessage("Scegli una carta da giocare.");
+            const isDummyTurn = next === partnerOf(configRef.current.declarer);
+            setMessage(isDummyTurn
+              ? `Gioca dal morto (${positionName(next)}). Tocca le carte evidenziate.`
+              : "Scegli una carta da giocare."
+            );
           } else {
             setHighlightedCards([]);
             setMessage(`${positionName(newState.currentPlayer)} sta giocando...`);
@@ -249,7 +257,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
 
     const leader = state.currentPlayer;
     if (isPlayerPosition(leader)) {
-      setMessage("Sei il primo a giocare. Scegli una carta.");
+      const isDummyTurn = leader === partnerOf(config.declarer);
+      setMessage(isDummyTurn
+        ? `Gioca dal morto (${positionName(leader)}).`
+        : "Sei il primo a giocare. Scegli una carta."
+      );
       setHighlightedCards(
         getValidCards(state.hands[leader], state.currentTrick)
       );
