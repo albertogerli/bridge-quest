@@ -106,7 +106,7 @@ export default function GiocaPage() {
           <div className="space-y-2.5">
             {/* Mano del Giorno */}
             <Link href="/gioca/mano-del-giorno" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-amber rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
                   📅
                 </div>
@@ -125,7 +125,7 @@ export default function GiocaPage() {
 
             {/* Quiz Lampo */}
             <Link href="/gioca/quiz-lampo" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-rose rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-2xl shadow-md shadow-rose-400/20">
                   ⚡
                 </div>
@@ -144,7 +144,7 @@ export default function GiocaPage() {
 
             {/* Trova l'Errore */}
             <Link href="/gioca/trova-errore" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-rose rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-2xl shadow-md shadow-red-400/20">
                   🔍
                 </div>
@@ -163,7 +163,7 @@ export default function GiocaPage() {
 
             {/* Impasse o Drop */}
             <Link href="/gioca/impasse" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-cyan rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-2xl shadow-md shadow-cyan-400/20">
                   🎯
                 </div>
@@ -182,7 +182,7 @@ export default function GiocaPage() {
 
             {/* Conta Veloce */}
             <Link href="/gioca/conta-veloce" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-green rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-2xl shadow-md shadow-emerald-400/20">
                   🔢
                 </div>
@@ -201,7 +201,7 @@ export default function GiocaPage() {
 
             {/* Dichiara! */}
             <Link href="/gioca/dichiara" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-orange rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
                   📢
                 </div>
@@ -220,7 +220,7 @@ export default function GiocaPage() {
 
             {/* Memory Bridge */}
             <Link href="/gioca/memory" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+              <div className="card-bold-purple rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-2xl shadow-md shadow-purple-400/20">
                   🧠
                 </div>
@@ -248,7 +248,7 @@ export default function GiocaPage() {
             transition={{ delay: 0.25 }}
           >
             <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block">
-              <div className="card-elevated rounded-2xl bg-white p-5 cursor-pointer hover:shadow-lg transition-all h-full">
+              <div className="rounded-2xl bg-white p-5 cursor-pointer border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 mb-3">
                   <span className="text-2xl">🃏</span>
                 </div>
@@ -274,7 +274,7 @@ export default function GiocaPage() {
             transition={{ delay: 0.3 }}
           >
             <Link href="/gioca/smazzata" className="block">
-              <div className="card-elevated rounded-2xl bg-white p-5 cursor-pointer hover:shadow-lg transition-all h-full">
+              <div className="rounded-2xl bg-white p-5 cursor-pointer border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 mb-3">
                   <span className="text-2xl">📚</span>
                 </div>
@@ -301,7 +301,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.35 }}
           className="mt-4"
         >
-          <div className="card-elevated rounded-2xl bg-white p-5">
+          <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-extrabold text-gray-900">Le tue statistiche</h3>
               <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200">
@@ -334,7 +334,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.45 }}
           className="mt-4"
         >
-          <div className="card-elevated rounded-2xl bg-white p-5">
+          <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
             <h3 className="font-extrabold text-gray-900 mb-3">Per corso</h3>
             <div className="space-y-4">
               {/* Fiori */}
@@ -343,7 +343,7 @@ export default function GiocaPage() {
                 <div className="grid grid-cols-4 gap-2">
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((lesson) => (
                     <Link key={`f-${lesson}`} href={`/gioca/smazzata?lesson=${lesson}`}>
-                      <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 hover:bg-emerald-50 hover:text-emerald transition-colors p-2.5 cursor-pointer">
+                      <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-emerald-50 hover:text-emerald transition-colors p-2.5 cursor-pointer">
                         <span className="text-sm font-extrabold text-gray-700">{lesson}</span>
                         <span className="text-[9px] text-gray-400 font-bold mt-0.5">8 mani</span>
                       </div>
@@ -360,7 +360,7 @@ export default function GiocaPage() {
                       const count = quadriSmazzate.filter(s => s.lesson === lesson).length;
                       return (
                         <Link key={`q-${lesson}`} href={`/gioca/smazzata?lesson=${lesson}`}>
-                          <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 hover:bg-orange-50 hover:text-orange-600 transition-colors p-2.5 cursor-pointer">
+                          <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-orange-50 hover:text-orange-600 transition-colors p-2.5 cursor-pointer">
                             <span className="text-sm font-extrabold text-gray-700">{lesson}</span>
                             <span className="text-[9px] text-gray-400 font-bold mt-0.5">{count} mani</span>
                           </div>
@@ -379,7 +379,7 @@ export default function GiocaPage() {
                       const count = cuoriGiocoSmazzate.filter(s => s.lesson === lesson).length;
                       return (
                         <Link key={`cg-${lesson}`} href={`/gioca/smazzata?lesson=${lesson}`}>
-                          <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 hover:bg-red-50 hover:text-red-600 transition-colors p-2.5 cursor-pointer">
+                          <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-red-50 hover:text-red-600 transition-colors p-2.5 cursor-pointer">
                             <span className="text-sm font-extrabold text-gray-700">{lesson}</span>
                             <span className="text-[9px] text-gray-400 font-bold mt-0.5">{count} mani</span>
                           </div>
@@ -400,7 +400,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.55 }}
           className="mt-4 mb-6"
         >
-          <div className="card-elevated rounded-2xl bg-white p-5">
+          <div className="card-bold-green rounded-2xl bg-white p-5">
             <div className="flex items-start gap-3.5">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md shadow-emerald/30">
                 M

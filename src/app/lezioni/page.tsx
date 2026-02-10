@@ -100,8 +100,8 @@ export default function LezioniPage() {
                   onClick={() => handleCourseChange(course.id)}
                   className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-[0.97] ${
                     isActive
-                      ? `${colors.active} shadow-md`
-                      : `bg-white border ${colors.border} ${colors.inactive}`
+                      ? `${colors.active} shadow-[0_3px_0_rgba(0,0,0,0.15)]`
+                      : `bg-white border-2 ${colors.border} ${colors.inactive} shadow-[0_3px_0_#e5e0d5]`
                   }`}
                 >
                   <span className="text-lg">{course.icon}</span>
@@ -138,7 +138,7 @@ export default function LezioniPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-3 rounded-full bg-gray-100 overflow-hidden">
+            <div className="flex-1 h-4 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
               <motion.div
                 className={`h-full rounded-full bg-gradient-to-r ${currentCourse.gradient}`}
                 initial={{ width: 0 }}
@@ -179,7 +179,7 @@ export default function LezioniPage() {
           >
             {/* Vertical connector line */}
             {courseWorlds.length > 0 && (
-              <div className="absolute left-[39px] top-8 bottom-8 w-1 bg-gray-100 rounded-full" />
+              <div className="absolute left-[39px] top-8 bottom-8 w-1.5 bg-[#e5e0d5] rounded-full" />
             )}
 
             {courseWorlds.map((world, worldIdx) => {
@@ -223,7 +223,7 @@ export default function LezioniPage() {
                     <div className={`flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full text-2xl font-black z-10 ${
                       isLocked
                         ? "bg-gray-200 text-gray-400"
-                        : `bg-gradient-to-br ${world.gradient} text-white shadow-lg`
+                        : `bg-gradient-to-br ${world.gradient} text-white shadow-lg border-2 border-white`
                     }`}>
                       {isLocked ? "🔒" : world.icon}
                     </div>
@@ -241,7 +241,7 @@ export default function LezioniPage() {
                       </p>
                       {!isLocked && (
                         <div className="flex items-center gap-2 mt-1.5">
-                          <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden max-w-[120px]">
+                          <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden max-w-[120px]">
                             <div
                               className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
                               style={{ width: `${worldProgress}%` }}
@@ -304,7 +304,7 @@ export default function LezioniPage() {
                             <Link href={`/lezioni/${lesson.id}`}>
                               <div className={`group flex items-center gap-3 p-3 rounded-2xl transition-all active:scale-[0.97] ${
                                 isCurrent
-                                  ? "bg-white card-elevated shadow-lg"
+                                  ? "bg-white border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
                                   : isComplete
                                     ? "bg-white/60"
                                     : "bg-white/40"
@@ -312,10 +312,10 @@ export default function LezioniPage() {
                                 {/* Node circle */}
                                 <div className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-xl z-10 transition-all ${
                                   isComplete
-                                    ? `${colors.bg} text-white shadow-md`
+                                    ? `${colors.bg} text-white shadow-md border-2 border-white`
                                     : isCurrent
                                       ? `${colors.bg} text-white shadow-lg ${colors.glow} ring-4 ${colors.ring} ring-opacity-50`
-                                      : "bg-gray-100 text-gray-400"
+                                      : "bg-gray-100 text-gray-400 border-2 border-gray-200"
                                 }`}>
                                   {isComplete ? (
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
@@ -411,7 +411,7 @@ export default function LezioniPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 + worldIdx * 0.15 }}
-                      className="ml-10 rounded-2xl bg-gray-50 border border-dashed border-gray-200 p-4 text-center"
+                      className="ml-10 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300 p-4 text-center"
                     >
                       <p className="text-sm text-gray-400 font-medium">
                         🔒 Completa il mondo precedente al 50% per sbloccare
@@ -424,7 +424,7 @@ export default function LezioniPage() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="ml-10 mt-2 flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl p-3 border border-amber-100"
+                      className="ml-10 mt-2 flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl p-3 border-2 border-amber-300 shadow-[0_3px_0_#fbbf24]"
                     >
                       <span className="text-2xl">🏆</span>
                       <div>
@@ -448,8 +448,8 @@ export default function LezioniPage() {
                 >
                   <div className={`flex h-20 w-20 items-center justify-center rounded-full text-3xl ${
                     overallProgress === 100
-                      ? "bg-gradient-to-br from-amber-400 to-amber-500 shadow-xl shadow-amber-400/30 text-white"
-                      : "bg-gray-100 text-gray-300"
+                      ? "bg-gradient-to-br from-amber-400 to-amber-500 shadow-xl shadow-amber-400/30 text-white border-3 border-amber-300"
+                      : "bg-gray-100 text-gray-300 border-2 border-gray-200"
                   }`}>
                     {overallProgress === 100 ? "👑" : "🎯"}
                   </div>

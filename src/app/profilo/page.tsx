@@ -107,7 +107,7 @@ export default function ProfiloPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 bg-gradient-to-r from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border border-emerald-100"
+            className="mb-4 bg-gradient-to-r from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
           >
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white text-lg">
@@ -175,7 +175,7 @@ export default function ProfiloPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-6 card-elevated rounded-2xl bg-white p-5"
+          className="mt-6 card-bold-green rounded-2xl bg-white p-5"
         >
           <div className="flex items-center justify-between mb-3">
             <div>
@@ -189,7 +189,7 @@ export default function ProfiloPage() {
               <p className="text-[11px] text-gray-400">/ 100 XP</p>
             </div>
           </div>
-          <div className="h-3 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-3.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-emerald to-emerald-light"
               initial={{ width: 0 }}
@@ -208,7 +208,7 @@ export default function ProfiloPage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.15 + i * 0.05 }}
             >
-              <div className="card-elevated rounded-2xl bg-white p-3.5 text-center">
+              <div className="rounded-2xl bg-white p-3.5 text-center border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]">
                 <span className="text-xl">{stat.icon}</span>
                 <p className="text-xl font-extrabold text-gray-900 mt-0.5">
                   {stat.value}
@@ -221,7 +221,7 @@ export default function ProfiloPage() {
           ))}
         </div>
 
-        <Separator className="my-6 bg-gray-100" />
+        <Separator className="my-6 bg-[#e5e0d5]" />
 
         {/* Badges */}
         <motion.div
@@ -251,7 +251,7 @@ export default function ProfiloPage() {
                   !badge.earned ? "opacity-25 grayscale" : ""
                 }`}
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white card-elevated text-2xl">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] text-2xl">
                   {badge.icon}
                 </div>
                 <span className="text-[10px] text-center text-gray-500 font-semibold leading-tight">
@@ -262,7 +262,7 @@ export default function ProfiloPage() {
           </div>
         </motion.div>
 
-        <Separator className="my-6 bg-gray-100" />
+        <Separator className="my-6 bg-[#e5e0d5]" />
 
         {/* Course progress by world */}
         <motion.div
@@ -295,7 +295,7 @@ export default function ProfiloPage() {
                       );
                       const wPercent = wModules > 0 ? Math.round((wCompleted / wModules) * 100) : 0;
                       return (
-                        <div key={w.id} className="card-elevated rounded-xl bg-white p-3.5">
+                        <div key={w.id} className="rounded-xl bg-white p-3.5 border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]">
                           <div className="flex items-center gap-3">
                             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg ${w.iconBg}`}>
                               {w.icon}
@@ -307,7 +307,7 @@ export default function ProfiloPage() {
                                   {wCompleted}/{wModules}
                                 </span>
                               </div>
-                              <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                              <div className="h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
                                 <div
                                   className={`h-full rounded-full bg-gradient-to-r ${w.gradient}`}
                                   style={{ width: `${wPercent}%` }}
@@ -328,7 +328,7 @@ export default function ProfiloPage() {
         {/* Edit Profile */}
         {user && (
           <>
-            <Separator className="my-6 bg-gray-100" />
+            <Separator className="my-6 bg-[#e5e0d5]" />
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -344,7 +344,7 @@ export default function ProfiloPage() {
                     setEditAvatarPreview("");
                     setEditing(true);
                   }}
-                  className="w-full card-elevated rounded-2xl bg-white p-4 text-left hover:shadow-lg transition-shadow"
+                  className="w-full rounded-2xl bg-white p-4 text-left border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
@@ -366,7 +366,7 @@ export default function ProfiloPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="card-elevated rounded-2xl bg-white p-5"
+                  className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
                 >
                   <h3 className="text-sm font-bold text-gray-900 mb-4">Modifica profilo</h3>
 
@@ -500,7 +500,7 @@ export default function ProfiloPage() {
           </>
         )}
 
-        <Separator className="my-6 bg-gray-100" />
+        <Separator className="my-6 bg-[#e5e0d5]" />
 
         {/* Profile selector */}
         <motion.div
@@ -525,8 +525,8 @@ export default function ProfiloPage() {
                 }}
                 className={`rounded-xl p-3 text-center transition-all active:scale-95 ${
                   currentProfile === opt.id
-                    ? "bg-emerald-50 border-2 border-emerald shadow-sm"
-                    : "bg-white border-2 border-gray-100 card-elevated"
+                    ? "bg-emerald-50 border-[3px] border-emerald-500 shadow-[0_3px_0_#059669]"
+                    : "bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
                 }`}
               >
                 <span className="text-2xl">{opt.emoji}</span>
@@ -540,14 +540,14 @@ export default function ProfiloPage() {
           </div>
         </motion.div>
 
-        <Separator className="my-6 bg-gray-100" />
+        <Separator className="my-6 bg-[#e5e0d5]" />
 
         {/* Fiches */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
-          className="card-elevated rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-100 p-5 mb-6"
+          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border-2 border-amber-300 shadow-[0_4px_0_#fbbf24] p-5 mb-6"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">

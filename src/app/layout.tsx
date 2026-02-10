@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-        <div className="flex min-h-svh flex-col bg-[#fafbfc]">
+        <div className="flex min-h-svh flex-col bg-[#F7F5F0]">
           <main className="flex-1 pb-20">{children}</main>
           <BottomNav />
         </div>
