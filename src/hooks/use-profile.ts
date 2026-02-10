@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export type UserProfile = "giovane" | "adulto" | "senior";
+export type UserProfile = "junior" | "giovane" | "adulto" | "senior";
 
 export interface ProfileConfig {
   profile: UserProfile;
@@ -29,6 +29,19 @@ export interface ProfileConfig {
 }
 
 const configs: Record<UserProfile, ProfileConfig> = {
+  junior: {
+    profile: "junior",
+    animSpeed: 0.4,
+    fontBump: 0,
+    showTimer: true,
+    timerSeconds: 25,
+    showCombo: true,
+    showEncouragement: true,
+    xpLabel: "Stelle ⭐",
+    contentClasses: "",
+    quizTransition: "scale",
+    showHints: true,
+  },
   giovane: {
     profile: "giovane",
     animSpeed: 0.6,

@@ -11,7 +11,7 @@ export interface Profile {
   bbo_username: string | null;
   avatar_url: string | null;
   asd_id: number | null;
-  profile_type: "giovane" | "adulto" | "senior";
+  profile_type: "junior" | "giovane" | "adulto" | "senior";
   xp: number;
   streak: number;
   last_login: string | null;
@@ -93,7 +93,7 @@ export function useAuth() {
     displayName: string;
     bboUsername?: string;
     asdId?: number;
-    profileType?: "giovane" | "adulto" | "senior";
+    profileType?: "junior" | "giovane" | "adulto" | "senior";
   }) => {
     const { data, error } = await supabase.auth.signUp({
       email,

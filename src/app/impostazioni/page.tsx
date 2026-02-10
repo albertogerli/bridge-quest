@@ -20,6 +20,12 @@ const ANIM_SPEEDS = [
 
 const PROFILES = [
   {
+    key: "junior",
+    label: "Explorer",
+    description: "Super divertente! Animazioni pazze, tanti premi",
+    color: "bg-pink-500",
+  },
+  {
     key: "giovane",
     label: "Dinamico",
     description: "Gamification completa, animazioni vivaci, sfide intense",

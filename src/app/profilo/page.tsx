@@ -511,8 +511,9 @@ export default function ProfiloPage() {
           <h2 className="text-lg font-extrabold text-gray-900 mb-3">
             Stile di gioco
           </h2>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {([
+              { id: "junior" as const, emoji: "🎮", label: "Explorer" },
               { id: "giovane" as const, emoji: "⚡", label: "Dinamico" },
               { id: "adulto" as const, emoji: "🃏", label: "Classico" },
               { id: "senior" as const, emoji: "☕", label: "Rilassato" },

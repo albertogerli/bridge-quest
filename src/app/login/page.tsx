@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { ASD_LIST } from "@/data/asd-list";
 import Link from "next/link";
 type Mode = "login" | "signup";
-type ProfileType = "giovane" | "adulto" | "senior";
+type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
   const { signIn, signUp, uploadAvatar } = useAuth();
@@ -230,11 +230,12 @@ export default function LoginPage() {
                   <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
                     Profilo
                   </label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {([
-                      { key: "giovane" as ProfileType, label: "Giovane", emoji: "🎮", desc: "< 26 anni" },
-                      { key: "adulto" as ProfileType, label: "Adulto", emoji: "🃏", desc: "26-64 anni" },
-                      { key: "senior" as ProfileType, label: "Senior", emoji: "🏆", desc: "65+ anni" },
+                      { key: "junior" as ProfileType, label: "Explorer", emoji: "🎮", desc: "8–17 anni" },
+                      { key: "giovane" as ProfileType, label: "Dinamico", emoji: "⚡", desc: "18–35 anni" },
+                      { key: "adulto" as ProfileType, label: "Classico", emoji: "🃏", desc: "36–55 anni" },
+                      { key: "senior" as ProfileType, label: "Rilassato", emoji: "☕", desc: "55+ anni" },
                     ]).map(({ key, label, emoji, desc }) => (
                       <button
                         key={key}
