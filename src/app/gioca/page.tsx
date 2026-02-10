@@ -100,15 +100,91 @@ export default function GiocaPage() {
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-lg font-extrabold text-gray-900">Mini-Giochi</h2>
             <Badge className="bg-purple-50 text-purple-600 text-[10px] font-bold border-0">
-              Nuovo
+              7 giochi
             </Badge>
           </div>
           <div className="space-y-2.5">
+            {/* Mano del Giorno */}
+            <Link href="/gioca/mano-del-giorno" className="block">
+              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
+                  📅
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-gray-900 text-[15px]">Mano del Giorno</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">Una mano al giorno, uguale per tutti. Classifica!</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
+                    +50 XP
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* Quiz Lampo */}
+            <Link href="/gioca/quiz-lampo" className="block">
+              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-2xl shadow-md shadow-rose-400/20">
+                  ⚡
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-gray-900 text-[15px]">Quiz Lampo</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">Raffica di domande, 30 secondi! Combo multiplier</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-rose-600 bg-rose-50 rounded-full px-2 py-0.5">
+                    +100 XP
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* Trova l'Errore */}
+            <Link href="/gioca/trova-errore" className="block">
+              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-2xl shadow-md shadow-red-400/20">
+                  🔍
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-gray-900 text-[15px]">Trova l&apos;Errore</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">Trova l&apos;errore nella dichiarazione o giocata</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-red-600 bg-red-50 rounded-full px-2 py-0.5">
+                    +80 XP
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* Impasse o Drop */}
+            <Link href="/gioca/impasse" className="block">
+              <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-2xl shadow-md shadow-cyan-400/20">
+                  🎯
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-gray-900 text-[15px]">Impasse o Drop?</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">Decidi in 5 secondi: impasse o caduta?</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-cyan-600 bg-cyan-50 rounded-full px-2 py-0.5">
+                    +70 XP
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
             {/* Conta Veloce */}
             <Link href="/gioca/conta-veloce" className="block">
               <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.98] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-2xl shadow-md shadow-emerald-400/20">
-                  ⚡
+                  🔢
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-extrabold text-gray-900 text-[15px]">Conta Veloce</h3>

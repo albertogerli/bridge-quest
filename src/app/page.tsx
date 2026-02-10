@@ -10,6 +10,8 @@ import { courses, getAvailableCourses, getCourseStats, getGlobalStats, levelInfo
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
+import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
+import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 
 // Derive world cards from ALL courses
 const allWorldsData = courses.flatMap(c => c.worlds);
@@ -503,6 +505,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== WEEKLY OBJECTIVES ===== */}
+      <WeeklyObjectivesSection />
+
       {/* ===== INSTALL APP BANNER ===== */}
       {!isInstalled && !installDismissed && (canInstall || isIOS) && (
         <section className="px-4 sm:px-5 pt-6">
@@ -672,6 +677,14 @@ export default function Home() {
           <TreasureChests modulesCompleted={totalModulesCompleted} />
         </div>
       </section>
+
+      {/* ===== COLLEZIONE CARTE ===== */}
+      <CollectionTeaser
+        xp={stats.xp}
+        streak={stats.streak}
+        handsPlayed={handsPlayed}
+        completedModules={totalModulesCompleted}
+      />
 
       {/* ===== COURSES ===== */}
       <CoursesSection completedModules={stats.completedModules} />
@@ -1167,6 +1180,215 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
             );
           })}
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ===== WEEKLY OBJECTIVES SECTION =====
+function WeeklyObjectivesSection() {
+  const { objectives, allCompleted, bonusClaimed, claimBonus } = useWeeklyObjectives();
+  const [showBonus, setShowBonus] = useState(false);
+
+  if (objectives.length === 0) return null;
+
+  const completedCount = objectives.filter((o) => o.completed).length;
+
+  const handleClaimBonus = () => {
+    const bonus = claimBonus();
+    if (bonus) {
+      setShowBonus(true);
+      setTimeout(() => setShowBonus(false), 3000);
+    }
+  };
+
+  return (
+    <section className="px-4 sm:px-5 pt-6">
+      <div className="mx-auto max-w-lg">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-extrabold text-gray-900">
+              Obiettivi settimanali
+            </h2>
+            <Badge className="bg-indigo-50 text-indigo-600 text-[10px] font-bold border-0">
+              {completedCount}/3
+            </Badge>
+          </div>
+          <Link href="/obiettivi">
+            <Badge
+              variant="outline"
+              className="text-[10px] font-semibold text-indigo-500 border-indigo-200 cursor-pointer hover:bg-indigo-50 transition-colors"
+            >
+              Dettagli →
+            </Badge>
+          </Link>
+        </div>
+
+        <div className="card-elevated rounded-2xl bg-white p-4">
+          <div className="space-y-2.5">
+            {objectives.map((obj, i) => (
+              <div
+                key={obj.id}
+                className={`flex items-center gap-3 p-2.5 rounded-xl ${
+                  obj.completed ? "bg-emerald-50" : "bg-gray-50"
+                }`}
+              >
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
+                  obj.completed ? "bg-emerald-100" : "bg-white"
+                }`}>
+                  {obj.completed ? "✅" : obj.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-bold ${
+                    obj.completed ? "text-emerald-700 line-through" : "text-gray-900"
+                  }`}>
+                    {obj.title}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex-1 h-1.5 rounded-full bg-gray-200 overflow-hidden max-w-[100px]">
+                      <div
+                        className={`h-full rounded-full transition-all ${
+                          obj.completed ? "bg-emerald" : "bg-indigo-400"
+                        }`}
+                        style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400">
+                      {obj.current}/{obj.target}
+                    </span>
+                  </div>
+                </div>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  obj.completed ? "bg-emerald-100 text-emerald-700" : "bg-indigo-50 text-indigo-600"
+                }`}>
+                  +{obj.xpReward} XP
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Bonus bar */}
+          {allCompleted && !bonusClaimed && (
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              onClick={handleClaimBonus}
+              className="mt-3 w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-sm shadow-lg shadow-indigo-300/30 active:scale-[0.98] transition-transform"
+            >
+              🎁 Riscuoti bonus +100 XP!
+            </motion.button>
+          )}
+
+          {bonusClaimed && (
+            <div className="mt-3 py-2.5 rounded-xl bg-indigo-50 text-center">
+              <p className="text-xs font-bold text-indigo-600">✅ Bonus riscosso! Torna la prossima settimana</p>
+            </div>
+          )}
+        </div>
+
+        {/* Bonus awarded toast */}
+        <AnimatePresence>
+          {showBonus && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
+            >
+              <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl">
+                🎁 +100 XP Bonus settimanale!
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}
+
+// ===== COLLECTION TEASER =====
+function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
+  xp: number; streak: number; handsPlayed: number; completedModules: number;
+}) {
+  const playerStats = {
+    xp,
+    streak,
+    handsPlayed,
+    completedModules,
+    badges: [],
+    quizLampoBest: 0,
+    memoryBest: 0,
+    dailyHandsTotal: 0,
+  };
+
+  const unlocked = collectibleCards.filter((c) => c.checkUnlock(playerStats));
+  const total = collectibleCards.length;
+  const nextCard = collectibleCards.find((c) => !c.checkUnlock(playerStats));
+
+  return (
+    <section className="px-4 sm:px-5 pt-6">
+      <div className="mx-auto max-w-lg">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-extrabold text-gray-900">
+              Collezione Carte
+            </h2>
+            <Badge className="bg-amber-50 text-amber-600 text-[10px] font-bold border-0">
+              {unlocked.length}/{total}
+            </Badge>
+          </div>
+          <Link href="/collezione">
+            <Badge
+              variant="outline"
+              className="text-[10px] font-semibold text-amber-500 border-amber-200 cursor-pointer hover:bg-amber-50 transition-colors"
+            >
+              Vedi tutte →
+            </Badge>
+          </Link>
+        </div>
+
+        <Link href="/collezione">
+          <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-shadow">
+            {/* Mini card preview - show last 4 unlocked or first 4 locked */}
+            <div className="flex items-center gap-2 mb-3">
+              {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {
+                const isUnlocked = unlocked.includes(card);
+                const rarityConf = RARITY_CONFIG[card.rarity];
+                return (
+                  <div
+                    key={card.id}
+                    className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl ${
+                      isUnlocked
+                        ? `bg-gradient-to-br ${card.gradient} shadow-sm`
+                        : "bg-gray-100 grayscale opacity-40"
+                    }`}
+                  >
+                    {isUnlocked ? card.emoji : "❓"}
+                  </div>
+                );
+              })}
+              <div className="flex-1 text-right">
+                <p className="text-2xl font-extrabold text-gray-900">{unlocked.length}</p>
+                <p className="text-[10px] text-gray-400 font-bold">sbloccate</p>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
+                style={{ width: `${(unlocked.length / total) * 100}%` }}
+              />
+            </div>
+
+            {nextCard && (
+              <p className="text-[11px] text-gray-500 mt-2">
+                Prossima: <span className="font-bold text-gray-700">{nextCard.emoji} {nextCard.name}</span>
+                <span className="text-gray-400"> — {nextCard.unlockCondition}</span>
+              </p>
+            )}
+          </div>
+        </Link>
       </div>
     </section>
   );
