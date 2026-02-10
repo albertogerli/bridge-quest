@@ -225,19 +225,19 @@ export default function Home() {
               <p className="text-sm text-gray-500 mt-1">Ecco i tuoi progressi!</p>
 
               <div className="grid grid-cols-2 gap-3 mt-6">
-                <div className="bg-emerald-50 rounded-xl p-3">
+                <div className="bg-emerald-50 rounded-xl p-3 border-2 border-emerald-200">
                   <p className="text-2xl font-extrabold text-emerald-600">+{weeklyData.xpEarned}</p>
                   <p className="text-[10px] font-bold text-emerald-700">XP guadagnati</p>
                 </div>
-                <div className="bg-amber-50 rounded-xl p-3">
+                <div className="bg-amber-50 rounded-xl p-3 border-2 border-amber-200">
                   <p className="text-2xl font-extrabold text-amber-600">{weeklyData.modulesCompleted}</p>
                   <p className="text-[10px] font-bold text-amber-700">Moduli completati</p>
                 </div>
-                <div className="bg-indigo-50 rounded-xl p-3">
+                <div className="bg-indigo-50 rounded-xl p-3 border-2 border-indigo-200">
                   <p className="text-2xl font-extrabold text-indigo-600">{weeklyData.handsPlayed}</p>
                   <p className="text-[10px] font-bold text-indigo-700">Mani giocate</p>
                 </div>
-                <div className="bg-orange-50 rounded-xl p-3">
+                <div className="bg-orange-50 rounded-xl p-3 border-2 border-orange-200">
                   <p className="text-2xl font-extrabold text-orange-600">{weeklyData.streakDays}</p>
                   <p className="text-[10px] font-bold text-orange-700">Giorni streak</p>
                 </div>
@@ -264,8 +264,8 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-10 pt-14">
         {/* Decorative blobs */}
-        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
+        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-lg">
           {/* Logo + Title */}
@@ -289,7 +289,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + i * 0.1 }}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm border border-white/20"
                   >
                     <SuitSymbol suit={suit} size="lg" />
                   </motion.div>
@@ -352,7 +352,7 @@ export default function Home() {
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
                 <Button
                   size="lg"
-                  className="w-full h-auto rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] py-3.5 px-5"
+                  className="w-full h-auto rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d py-3.5 px-5"
                 >
                   <div className="flex items-center gap-3 w-full">
                     <span className="text-2xl">{nextModule.lessonIcon}</span>
@@ -370,7 +370,7 @@ export default function Home() {
               <Link href="/lezioni">
                 <Button
                   size="lg"
-                  className="w-full h-14 rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98]"
+                  className="w-full h-14 rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d"
                 >
                   <span className="mr-2 text-xl">🎯</span>
                   Inizia il tuo viaggio
@@ -385,7 +385,7 @@ export default function Home() {
           <svg viewBox="0 0 1440 60" fill="none" className="w-full">
             <path
               d="M0 60V30C240 0 480 0 720 30C960 60 1200 60 1440 30V60H0Z"
-              fill="#fafbfc"
+              fill="#F7F5F0"
             />
           </svg>
         </div>
@@ -421,13 +421,13 @@ export default function Home() {
               transition={{ delay: 0.7 }}
             >
               <Link href="/gioca/sfida" className="block">
-                <div className={`card-elevated rounded-2xl p-4 cursor-pointer hover:shadow-lg transition-shadow ${
+                <div className={`rounded-2xl p-4 cursor-pointer transition-all ${
                   stats.dailyDone
-                    ? "bg-emerald-50 border border-emerald-200"
-                    : "bg-white"
+                    ? "bg-emerald-50 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
+                    : "bg-white card-bold-amber"
                 }`}>
                   <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200">
                       <span className="text-2xl">{stats.dailyDone ? "✅" : "🔥"}</span>
                     </div>
                     {!stats.dailyDone && (
@@ -452,9 +452,9 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="card-elevated rounded-2xl bg-white p-4">
+              <div className="rounded-2xl bg-white p-4 card-bold-green">
                 <div className="flex items-center justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200">
                     <span className="text-2xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
                   </div>
                   {stats.streak > 0 && (
@@ -470,10 +470,10 @@ export default function Home() {
                   {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
                     <div
                       key={i}
-                      className={`flex h-6 w-6 items-center justify-center rounded-md text-[9px] font-bold ${
+                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-extrabold ${
                         i < Math.min(stats.streak, 7)
-                          ? "bg-emerald text-white"
-                          : "bg-gray-100 text-gray-400"
+                          ? "bg-emerald-500 text-white border border-emerald-600"
+                          : "bg-gray-100 text-gray-400 border border-gray-200"
                       }`}
                     >
                       {day}
@@ -517,7 +517,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="card-elevated rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-4">
+              <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7] p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
                     <span className="text-2xl">📲</span>
@@ -639,7 +639,7 @@ export default function Home() {
               transition={{ delay: 0.9 }}
             >
               <Link href="/lezioni">
-                <div className="card-elevated rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-4 cursor-pointer hover:shadow-lg transition-shadow">
+                <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 shadow-[0_4px_0_#c084fc] p-4 cursor-pointer hover:translate-y-[-2px] transition-all">
                   <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
                       <span className="text-2xl">🧠</span>
@@ -754,7 +754,7 @@ export default function Home() {
       {/* ===== FIGB FOOTER ===== */}
       <section className="px-4 sm:px-5 pb-6">
         <div className="mx-auto max-w-lg">
-          <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-5 text-center">
+          <div className="rounded-2xl bg-emerald-50 border-2 border-emerald-200 shadow-[0_4px_0_#a7f3d0] p-5 text-center">
             <p className="text-xs font-bold text-emerald uppercase tracking-wider mb-1">
               Un progetto della
             </p>
@@ -783,10 +783,10 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
   const card = (
     <div
-      className="group relative overflow-hidden rounded-2xl bg-white transition-all card-elevated cursor-pointer hover:shadow-lg active:scale-[0.99]"
+      className="group relative overflow-hidden rounded-2xl bg-white transition-all border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] cursor-pointer hover:translate-y-[-2px] hover:shadow-[0_6px_0_#e5e0d5] active:translate-y-[2px] active:shadow-[0_1px_0_#e5e0d5]"
     >
       <div
-        className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl bg-gradient-to-b ${world.gradient}`}
+        className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`}
       />
 
       <div className="flex items-center gap-4 p-4 pl-5">
@@ -807,7 +807,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
           </div>
           <p className="text-[13px] text-gray-500 mt-0.5">{world.subtitle}</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
               <motion.div
                 className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
                 initial={{ width: 0 }}
@@ -815,7 +815,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
                 transition={{ delay: 1, duration: 0.8 }}
               />
             </div>
-            <span className="text-[11px] font-bold text-gray-400 tabular-nums">
+            <span className="text-[11px] font-bold text-gray-500 tabular-nums">
               {completedModules}/{world.totalModules}
             </span>
           </div>
@@ -914,7 +914,7 @@ function DailyQuests({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 + i * 0.05 }}
             className={`flex items-center gap-3 p-3 rounded-xl ${
-              done ? "bg-emerald-50" : "bg-white card-elevated"
+              done ? "bg-emerald-50 border-2 border-emerald-200" : "bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
             }`}
           >
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
@@ -927,9 +927,9 @@ function DailyQuests({
                 {quest.label}
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden max-w-[80px]">
+                <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden max-w-[80px]">
                   <div
-                    className={`h-full rounded-full ${done ? "bg-emerald" : "bg-amber-400"}`}
+                    className={`h-full rounded-full ${done ? "bg-emerald-500" : "bg-amber-400"}`}
                     style={{ width: `${(quest.progress / quest.target) * 100}%` }}
                   />
                 </div>
@@ -954,8 +954,8 @@ function DailyQuests({
         transition={{ delay: 1.1 }}
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
-            ? "bg-gradient-to-r from-amber-100 to-amber-50 border border-amber-200"
-            : "bg-gray-50"
+            ? "bg-gradient-to-r from-amber-100 to-amber-50 border-2 border-amber-300 shadow-[0_3px_0_#fbbf24]"
+            : "bg-gray-50 border-2 border-gray-200"
         }`}
       >
         <span className="text-lg">{allDone ? "🎁" : "🎯"}</span>
@@ -1054,7 +1054,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       )}
     </AnimatePresence>
 
-    <div className="card-elevated rounded-2xl bg-white p-4">
+    <div className="rounded-2xl bg-white p-4 card-bold-amber">
       {/* Chest progress bar */}
       <div className="flex items-center gap-2 mb-4">
         {chestMilestones.map((chest, i) => {
@@ -1096,7 +1096,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
               {modulesCompleted}/{nextChest.modules}
             </p>
           </div>
-          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
               initial={{ width: 0 }}
@@ -1150,7 +1150,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                 transition={{ delay: 0.7 + i * 0.08 }}
               >
                 <Link href={`/lezioni?corso=${course.id}`}>
-                  <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-shadow active:scale-[0.98]">
+                  <div className="rounded-2xl bg-white p-4 cursor-pointer border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#e5e0d5] active:translate-y-[2px] active:shadow-[0_1px_0_#e5e0d5] transition-all">
                     <div className="flex items-center gap-2 mb-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-black text-lg`}>
                         {course.icon}
@@ -1166,13 +1166,13 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                       {course.lessonCount} lezioni
                     </p>
                     <div className="mt-2.5 flex items-center gap-2">
-                      <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                      <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
                         <div
                           className={`h-full rounded-full bg-gradient-to-r ${course.gradient}`}
                           style={{ width: `${stats.progress}%` }}
                         />
                       </div>
-                      <span className="text-[10px] font-bold text-gray-400">{stats.progress}%</span>
+                      <span className="text-[10px] font-bold text-gray-500">{stats.progress}%</span>
                     </div>
                   </div>
                 </Link>
@@ -1224,13 +1224,13 @@ function WeeklyObjectivesSection() {
           </Link>
         </div>
 
-        <div className="card-elevated rounded-2xl bg-white p-4">
+        <div className="rounded-2xl bg-white p-4 card-bold-indigo">
           <div className="space-y-2.5">
             {objectives.map((obj, i) => (
               <div
                 key={obj.id}
                 className={`flex items-center gap-3 p-2.5 rounded-xl ${
-                  obj.completed ? "bg-emerald-50" : "bg-gray-50"
+                  obj.completed ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50 border border-gray-200"
                 }`}
               >
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
@@ -1245,7 +1245,7 @@ function WeeklyObjectivesSection() {
                     {obj.title}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-1.5 rounded-full bg-gray-200 overflow-hidden max-w-[100px]">
+                    <div className="flex-1 h-2.5 rounded-full bg-gray-200 border border-gray-300 overflow-hidden max-w-[100px]">
                       <div
                         className={`h-full rounded-full transition-all ${
                           obj.completed ? "bg-emerald" : "bg-indigo-400"
@@ -1348,7 +1348,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
         </div>
 
         <Link href="/collezione">
-          <div className="card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-shadow">
+          <div className="rounded-2xl bg-white p-4 cursor-pointer card-bold-amber hover:translate-y-[-2px] transition-all">
             {/* Mini card preview - show last 4 unlocked or first 4 locked */}
             <div className="flex items-center gap-2 mb-3">
               {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {
@@ -1374,7 +1374,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
                 style={{ width: `${(unlocked.length / total) * 100}%` }}

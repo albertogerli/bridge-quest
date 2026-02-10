@@ -69,24 +69,24 @@
 }
 
 :root {
-  --radius: 0.875rem;
-  --background: #fafbfc;
-  --foreground: #0f172a;
+  --radius: 1rem;
+  --background: #F7F5F0;
+  --foreground: #1a1a2e;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #1a1a2e;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
+  --popover-foreground: #1a1a2e;
   --primary: #059669;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
+  --secondary: #f0ede6;
+  --secondary-foreground: #1a1a2e;
+  --muted: #f0ede6;
   --muted-foreground: #64748b;
   --accent: #f59e0b;
-  --accent-foreground: #0f172a;
+  --accent-foreground: #1a1a2e;
   --destructive: #e11d48;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: #e5e0d5;
+  --input: #e5e0d5;
   --ring: #059669;
   --chart-1: #059669;
   --chart-2: #4f46e5;
@@ -94,12 +94,12 @@
   --chart-4: #e11d48;
   --chart-5: #06b6d4;
   --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
+  --sidebar-foreground: #1a1a2e;
   --sidebar-primary: #059669;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: #e2e8f0;
+  --sidebar-accent: #f0ede6;
+  --sidebar-accent-foreground: #1a1a2e;
+  --sidebar-border: #e5e0d5;
   --sidebar-ring: #059669;
 }
 
@@ -122,11 +122,11 @@
 
 /* Premium gradient backgrounds */
 .hero-gradient {
-  background: linear-gradient(135deg, #059669 0%, #047857 40%, #065f46 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 40%, #047857 100%);
 }
 
 .hero-gradient-warm {
-  background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%);
+  background: linear-gradient(135deg, #10b981 0%, #0d9488 50%, #06b6d4 100%);
 }
 
 /* Card table felt - for the play area only */
@@ -134,35 +134,75 @@
   background: radial-gradient(ellipse at 50% 40%, #16a34a 0%, #15803d 40%, #14532d 100%);
 }
 
-/* Elevated card with premium shadow */
+/* Elevated card - bold style with visible border */
 .card-elevated {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 4px 12px rgba(0, 0, 0, 0.06),
-    0 12px 36px rgba(0, 0, 0, 0.04);
+  border: 2px solid #e5e0d5;
+  box-shadow: 0 4px 0 #e5e0d5;
 }
 
 .card-elevated-lg {
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.04),
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 24px 48px rgba(0, 0, 0, 0.06);
+  border: 2px solid #e5e0d5;
+  box-shadow: 0 6px 0 #d5d0c5;
+}
+
+/* Bold card with colored border */
+.card-bold-green {
+  border: 2.5px solid #34d399;
+  box-shadow: 0 4px 0 #10b981;
+}
+.card-bold-amber {
+  border: 2.5px solid #fbbf24;
+  box-shadow: 0 4px 0 #f59e0b;
+}
+.card-bold-purple {
+  border: 2.5px solid #a78bfa;
+  box-shadow: 0 4px 0 #7c3aed;
+}
+.card-bold-rose {
+  border: 2.5px solid #fb7185;
+  box-shadow: 0 4px 0 #e11d48;
+}
+.card-bold-blue {
+  border: 2.5px solid #60a5fa;
+  box-shadow: 0 4px 0 #3b82f6;
+}
+.card-bold-orange {
+  border: 2.5px solid #fb923c;
+  box-shadow: 0 4px 0 #ea580c;
+}
+.card-bold-cyan {
+  border: 2.5px solid #22d3ee;
+  box-shadow: 0 4px 0 #06b6d4;
+}
+.card-bold-indigo {
+  border: 2.5px solid #818cf8;
+  box-shadow: 0 4px 0 #4f46e5;
+}
+
+/* 3D button effect (Duolingo style) */
+.btn-3d {
+  border-bottom: 4px solid rgba(0, 0, 0, 0.2);
+  transition: all 0.1s ease;
+}
+.btn-3d:active {
+  border-bottom-width: 2px;
+  transform: translateY(2px);
 }
 
 /* Glassmorphism - light version */
 .glass-light {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.9);
 }
 
 /* Glassmorphism - on dark/green backgrounds */
 .glass-dark {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.35);
 }
 
 /* Shimmer animation for loading states */
@@ -179,12 +219,12 @@
 
 /* Pulse glow for CTA buttons */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  50% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
 }
 
 .pulse-glow {
-  animation: pulse-glow 2.5s ease-in-out infinite;
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Float animation for decorative elements */
