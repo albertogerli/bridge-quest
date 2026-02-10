@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { BottomNav } from "@/components/bottom-nav";
 import "./globals.css";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
           <main className="flex-1 pb-20">{children}</main>
           <BottomNav />
         </div>
+        <Analytics />
       </body>
     </html>
   );
