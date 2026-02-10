@@ -13,6 +13,7 @@ export function Hand({
   highlightedCards = [],
   disabled = false,
   noHover = false,
+  overlapOverride,
 }: {
   cards: CardData[];
   selectedIndex?: number;
@@ -23,14 +24,18 @@ export function Hand({
   highlightedCards?: CardData[];
   disabled?: boolean;
   noHover?: boolean;
+  overlapOverride?: number;
 }) {
   const isVertical = position === "east" || position === "west";
-  const overlap = {
+  const defaultOverlap = {
     xs: isVertical ? -22 : -20,
     sm: isVertical ? -32 : -28,
     md: isVertical ? -55 : -38,
     lg: isVertical ? -70 : -50,
   };
+  const overlap = overlapOverride !== undefined
+    ? { xs: overlapOverride, sm: overlapOverride, md: overlapOverride, lg: overlapOverride }
+    : defaultOverlap;
 
   const isHighlighted = (card: CardData) =>
     highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
