@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getLessonById, getModuleById, worlds, type ContentBlock } from "@/data/lessons";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
+import { ComprehensionQuiz } from "@/components/comprehension-quiz";
 import Link from "next/link";
 
 // SVG icons for block types
@@ -71,6 +72,7 @@ export default function ModulePage({
   const [xpMultiplier, setXpMultiplier] = useState(1); // streak multiplier
   const [showLevelUp, setShowLevelUp] = useState(false); // level up popup
   const [showConfetti, setShowConfetti] = useState(false); // big confetti on completion
+  const [showComprehension, setShowComprehension] = useState(true); // comprehension quiz gate
   const [floatingXp, setFloatingXp] = useState<{ id: number; amount: number; x: number; y: number }[]>([]); // flying XP
   const floatingXpId = useRef(0);
 
@@ -1685,6 +1687,27 @@ export default function ModulePage({
                 )}
               </div>
             </div>
+
+            {/* Comprehension Quiz (for theory modules) */}
+            {mod.type === "theory" && showComprehension && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 }}
+              >
+                <ComprehensionQuiz
+                  lessonId={lesson.id}
+                  onComplete={(score, total) => {
+                    setShowComprehension(false);
+                    if (score === total) {
+                      // Bonus XP for perfect comprehension
+                      awardXp(15);
+                    }
+                  }}
+                  onSkip={() => setShowComprehension(false)}
+                />
+              </motion.div>
+            )}
 
             {/* Next module / lesson preview card */}
             {nextModule && (
