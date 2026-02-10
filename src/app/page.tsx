@@ -9,6 +9,7 @@ import Link from "next/link";
 import { courses, getAvailableCourses, getCourseStats, getGlobalStats, levelInfo, type CourseId } from "@/data/courses";
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
+import { usePwaInstall } from "@/hooks/use-pwa-install";
 
 // Derive world cards from ALL courses
 const allWorldsData = courses.flatMap(c => c.worlds);
@@ -87,6 +88,9 @@ function useLocalStats() {
 export default function Home() {
   const stats = useLocalStats();
   const { reviewCount } = useSpacedReview();
+  const { canInstall, isInstalled, isIOS, install } = usePwaInstall();
+  const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const [installDismissed, setInstallDismissed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWeeklyRecap, setShowWeeklyRecap] = useState(false);
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
@@ -498,6 +502,127 @@ export default function Home() {
           />
         </div>
       </section>
+
+      {/* ===== INSTALL APP BANNER ===== */}
+      {!isInstalled && !installDismissed && (canInstall || isIOS) && (
+        <section className="px-4 sm:px-5 pt-6">
+          <div className="mx-auto max-w-lg">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <div className="card-elevated rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
+                    <span className="text-2xl">📲</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-extrabold text-gray-900">
+                      Installa BridgeQuest
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Aggiungila alla schermata Home
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {canInstall ? (
+                      <button
+                        onClick={() => install()}
+                        className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-sm hover:bg-emerald-700 transition-colors"
+                      >
+                        Installa
+                      </button>
+                    ) : isIOS ? (
+                      <button
+                        onClick={() => setShowIOSGuide(true)}
+                        className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-sm hover:bg-emerald-700 transition-colors"
+                      >
+                        Come fare
+                      </button>
+                    ) : null}
+                    <button
+                      onClick={() => setInstallDismissed(true)}
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <path d="M18 6L6 18M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* iOS Install Guide Modal */}
+      <AnimatePresence>
+        {showIOSGuide && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowIOSGuide(false)}
+          >
+            <motion.div
+              initial={{ y: 200 }}
+              animate={{ y: 0 }}
+              exit={{ y: 200 }}
+              transition={{ type: "spring", stiffness: 200, damping: 25 }}
+              className="bg-white rounded-t-3xl p-6 w-full max-w-md shadow-2xl pb-10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+              <h3 className="text-lg font-extrabold text-gray-900 text-center mb-4">
+                Installa su iPhone/iPad
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-lg flex-shrink-0">
+                    1
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Tocca il pulsante <strong>Condividi</strong>{" "}
+                    <span className="inline-block align-middle">
+                      <svg className="w-5 h-5 inline text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                      </svg>
+                    </span>{" "}
+                    in basso
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-lg flex-shrink-0">
+                    2
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Scorri e tocca <strong>&quot;Aggiungi a schermata Home&quot;</strong>
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-lg flex-shrink-0">
+                    3
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Tocca <strong>&quot;Aggiungi&quot;</strong> in alto a destra
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowIOSGuide(false)}
+                className="mt-6 w-full py-3 rounded-2xl bg-emerald-600 text-white font-bold text-sm"
+              >
+                Ho capito
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ===== SPACED REVIEW ===== */}
       {reviewCount > 0 && (
