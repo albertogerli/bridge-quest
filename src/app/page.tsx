@@ -1389,9 +1389,10 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
 }
 
 // ===== USER PROFILE TYPES =====
-export type UserProfile = "giovane" | "adulto" | "senior";
+export type UserProfile = "junior" | "giovane" | "adulto" | "senior";
 
 const profileOptions: { id: UserProfile; emoji: string; label: string; age: string; desc: string }[] = [
+  { id: "junior", emoji: "🎮", label: "Explorer", age: "8–17", desc: "Super divertente! Animazioni pazze, tanti premi e sfide" },
   { id: "giovane", emoji: "⚡", label: "Dinamico", age: "18–35", desc: "Ritmo veloce, sfide competitive, animazioni rapide" },
   { id: "adulto", emoji: "🃏", label: "Classico", age: "36–55", desc: "Equilibrato, giochi 2D, progressione graduale" },
   { id: "senior", emoji: "☕", label: "Rilassato", age: "55+", desc: "Testi grandi, ritmo calmo, guida passo-passo" },
@@ -1472,7 +1473,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-indigo-700 via-purple-600 to-fuchsia-700 overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center bg-gradient-to-br from-indigo-700 via-purple-600 to-fuchsia-700 overflow-y-auto py-12">
       {/* Animated background suits */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {["♠", "♥", "♦", "♣", "♠", "♥", "♦", "♣"].map((suit, i) => (
@@ -1499,7 +1500,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
         ))}
       </div>
 
-      <div className="relative z-10 w-full max-w-md px-6">
+      <div className="relative z-10 w-full max-w-md px-6 my-auto">
         {/* Progress dots */}
         <div className="flex items-center justify-center gap-2 mb-10">
           {onboardingSteps.map((_, i) => (
