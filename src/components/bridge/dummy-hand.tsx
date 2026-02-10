@@ -4,8 +4,12 @@ import { motion } from "motion/react";
 import type { CardData } from "./playing-card";
 
 /**
- * Dummy hand displayed as columns by suit (bridge-style morto layout)
- * Cards shown as mini-cards stacked vertically in suit columns
+ * Dummy hand displayed as rows by suit (bridge diagram style)
+ * ♠ A J 7 4
+ * ♥ J 10 7
+ * ♦ Q 6
+ * ♣ K 8 5 2
+ * Each rank is a clickable button for card selection.
  */
 
 const SUIT_ORDER: Array<CardData["suit"]> = ["spade", "heart", "diamond", "club"];
@@ -50,53 +54,57 @@ export function DummyHand({
     highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
 
   return (
-    <div className="flex gap-1 justify-center">
-      {SUIT_ORDER.map((suit) => {
-        const suitCards = bySuit[suit];
-        if (suitCards.length === 0) return null;
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl px-2.5 py-1.5 shadow-md border border-white/50">
+      <div className={`flex flex-col ${compact ? "gap-0" : "gap-0.5"}`}>
+        {SUIT_ORDER.map((suit) => {
+          const suitCards = bySuit[suit];
+          if (suitCards.length === 0) return null;
 
-        return (
-          <div key={suit} className="flex flex-col items-center">
-            {/* Suit column - mini cards stacked */}
-            <div className="flex flex-col" style={{ gap: "-2px" }}>
-              {suitCards.map(({ card, originalIndex }, i) => {
-                const highlighted = isHighlighted(card);
-                const cardDisabled = disabled || (highlightedCards.length > 0 && !highlighted);
+          return (
+            <div key={suit} className="flex items-center gap-1">
+              {/* Suit symbol */}
+              <span className={`${compact ? "text-base" : "text-lg"} font-black ${suitColor[suit]} w-5 text-center shrink-0`}>
+                {suitSymbol[suit]}
+              </span>
+              {/* Rank buttons */}
+              <div className="flex gap-0.5">
+                {suitCards.map(({ card, originalIndex }, i) => {
+                  const highlighted = isHighlighted(card);
+                  const cardDisabled = disabled || (highlightedCards.length > 0 && !highlighted);
 
-                return (
-                  <motion.button
-                    key={`${card.suit}-${card.rank}`}
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    onClick={() => !cardDisabled && onSelectCard?.(originalIndex)}
-                    disabled={cardDisabled}
-                    style={{ marginTop: i > 0 ? "-4px" : 0, zIndex: i }}
-                    className={`
-                      relative ${compact ? "w-10 h-7" : "w-12 h-9"} rounded bg-white border shadow-sm
-                      flex items-center justify-center gap-0.5
-                      ${compact ? "text-sm" : "text-base"} font-black leading-none
-                      transition-all
-                      ${suitColor[suit]}
-                      ${highlighted
-                        ? "ring-2 ring-emerald border-emerald shadow-emerald/30 z-20 scale-105"
-                        : "border-gray-200"
-                      }
-                      ${cardDisabled
-                        ? "opacity-60 cursor-not-allowed"
-                        : "hover:scale-110 hover:shadow-md hover:z-30 cursor-pointer active:scale-95"
-                      }
-                    `}
-                  >
-                    <span>{card.rank}</span>
-                    <span className={compact ? "text-xs" : "text-sm"}>{suitSymbol[suit]}</span>
-                  </motion.button>
-                );
-              })}
+                  return (
+                    <motion.button
+                      key={`${card.suit}-${card.rank}`}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.03 }}
+                      onClick={() => !cardDisabled && onSelectCard?.(originalIndex)}
+                      disabled={cardDisabled}
+                      className={`
+                        ${compact ? "w-7 h-7 text-sm" : "w-8 h-8 text-base"} rounded-md
+                        font-extrabold leading-none
+                        flex items-center justify-center
+                        transition-all touch-manipulation
+                        ${suitColor[suit]}
+                        ${highlighted
+                          ? "bg-emerald-100 ring-2 ring-emerald border-emerald shadow-md shadow-emerald/30 scale-110 z-10"
+                          : "bg-gray-50 border border-gray-200"
+                        }
+                        ${cardDisabled
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:bg-white hover:shadow-md hover:scale-110 hover:z-10 cursor-pointer active:scale-95"
+                        }
+                      `}
+                    >
+                      {card.rank}
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
