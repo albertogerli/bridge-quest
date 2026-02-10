@@ -553,7 +553,7 @@ export default function QuizLampoPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">4.</span>
-                  Piu' rispondi veloce, piu' punti guadagni!
+                  Più rispondi veloce, più punti guadagni!
                 </li>
               </ul>
             </div>
@@ -574,7 +574,7 @@ export default function QuizLampoPage() {
             {/* Difficulty selection */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-gray-900 text-left">
-                Scegli difficolta'
+                Scegli difficoltà
               </h3>
               {(
                 Object.entries(difficultyConfig) as [
@@ -734,7 +734,7 @@ export default function QuizLampoPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Bonus velocita'</span>
+                  <span className="text-gray-500">Bonus velocità</span>
                   <span className="font-bold text-blue-500">
                     +{totalSpeedBonus}
                   </span>
@@ -1025,7 +1025,7 @@ export default function QuizLampoPage() {
                       {Math.floor(
                         Math.max(0, timeLeft) * 2
                       )}{" "}
-                      velocita'
+                      velocità
                     </span>
                   )}
                   {combo > 1 && (

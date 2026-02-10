@@ -224,7 +224,7 @@ export default function MemoryPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 font-bold">3.</span>
-                  Meno mosse fai, più XP guadagni!
+                  Meno mosse fai, più {prof.xpLabel} guadagni!
                 </li>
               </ul>
             </div>

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { UserProfile } from "@/hooks/use-profile";
+import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { errorScenarios, type ErrorScenario } from "@/data/trova-errore-data";
 
 type Difficulty = "facile" | "medio" | "difficile";
@@ -57,6 +57,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 export default function TrovaErrorePage() {
+  const profileConfig = useProfile();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("facile");
@@ -289,7 +290,7 @@ export default function TrovaErrorePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">3.</span>
-                  Piu&apos; veloce rispondi, piu&apos; punti guadagni
+                  Più veloce rispondi, più punti guadagni
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">4.</span>
@@ -301,7 +302,7 @@ export default function TrovaErrorePage() {
             {/* Difficulty selection */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-gray-900 text-left">
-                Scegli difficolta&apos;
+                Scegli difficoltà
               </h3>
               {(
                 Object.entries(difficultyConfig) as [
@@ -432,7 +433,7 @@ export default function TrovaErrorePage() {
                 <p className="text-lg font-black text-rose-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">XP</p>
+                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 

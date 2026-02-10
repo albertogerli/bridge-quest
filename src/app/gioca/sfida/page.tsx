@@ -14,6 +14,7 @@ import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
 import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
+import { useProfile } from "@/hooks/use-profile";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(): Smazzata {
@@ -50,6 +51,7 @@ export default function SfidaDelGiornoPage() {
   const xpSaved = useRef(false);
   const [alreadyCompleted] = useState(() => isDailyChallengeCompleted());
   const isMobile = useMobile();
+  const profile = useProfile();
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -198,7 +200,7 @@ export default function SfidaDelGiornoPage() {
           >
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-4 py-1.5">
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-amber-700">+40 XP Bonus Giornaliero</span>
+              <span className="text-xs font-bold text-amber-700">+40 {profile.xpLabel} Bonus Giornaliero</span>
             </div>
           </motion.div>
         )}
@@ -351,13 +353,13 @@ export default function SfidaDelGiornoPage() {
                   <div className="inline-flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-2">
                     <span className="text-lg">⚡</span>
                     <span className="text-sm font-bold text-amber-700">
-                      +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10} XP
+                      +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10} {profile.xpLabel}
                     </span>
                   </div>
                   {!alreadyCompleted && (
                     <div className="inline-flex items-center gap-2 bg-orange-50 rounded-xl px-4 py-2">
                       <span className="text-lg">🔥</span>
-                      <span className="text-sm font-bold text-orange-700">+40 XP Bonus</span>
+                      <span className="text-sm font-bold text-orange-700">+40 {profile.xpLabel} Bonus</span>
                     </div>
                   )}
                 </div>

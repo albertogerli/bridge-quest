@@ -115,7 +115,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
               setMessage(
                 res.result === 0
                   ? `Contratto mantenuto! ${res.tricksMade} prese.`
-                  : `Contratto fatto con ${res.result} presa/e in piu!`
+                  : `Contratto fatto con ${res.result} presa/e in più!`
               );
             } else {
               setMessage(

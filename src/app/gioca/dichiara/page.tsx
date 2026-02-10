@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { UserProfile } from "@/hooks/use-profile";
+import { useProfile, type UserProfile } from "@/hooks/use-profile";
 
 const suitSymbols: Record<string, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
 const suitColors: Record<string, string> = {
@@ -78,13 +78,13 @@ const scenarios: HandScenario[] = [
   {
     hand: "♠ AK832  ♥ Q74  ♦ K95  ♣ J3",
     hcp: 13, distribution: "5-3-3-2",
-    correctBid: "1♠", explanation: "13 HCP, 5 picche: apri 1♠ nel seme piu' lungo",
+    correctBid: "1♠", explanation: "13 HCP, 5 picche: apri 1♠ nel seme più lungo",
     options: ["Passo", "1♠", "1NT", "1♣"],
   },
   {
     hand: "♠ AQJ74  ♥ K5  ♦ Q83  ♣ 962",
     hcp: 12, distribution: "5-2-3-3",
-    correctBid: "1♠", explanation: "12 HCP, 5 picche: si apre nel seme piu' lungo, 1♠",
+    correctBid: "1♠", explanation: "12 HCP, 5 picche: si apre nel seme più lungo, 1♠",
     options: ["1♠", "Passo", "1♦", "1NT"],
   },
   {
@@ -97,7 +97,7 @@ const scenarios: HandScenario[] = [
   {
     hand: "♠ 84  ♥ AKJ63  ♦ Q72  ♣ K95",
     hcp: 13, distribution: "2-5-3-3",
-    correctBid: "1♥", explanation: "13 HCP, 5 cuori: apri 1♥ nel seme piu' lungo",
+    correctBid: "1♥", explanation: "13 HCP, 5 cuori: apri 1♥ nel seme più lungo",
     options: ["1♥", "1NT", "Passo", "1♣"],
   },
   {
@@ -109,39 +109,39 @@ const scenarios: HandScenario[] = [
   {
     hand: "♠ 5  ♥ AQJ84  ♦ K73  ♣ AQ92",
     hcp: 16, distribution: "1-5-3-4",
-    correctBid: "1♥", explanation: "16 HCP, 5 cuori: sbilanciata, si apre nel seme piu' lungo 1♥",
+    correctBid: "1♥", explanation: "16 HCP, 5 cuori: sbilanciata, si apre nel seme più lungo 1♥",
     options: ["1♥", "1♣", "1NT", "2♥"],
   },
   // === 1♦ (3 scenarios) ===
   {
     hand: "♠ K84  ♥ A53  ♦ KJ952  ♣ Q7",
     hcp: 13, distribution: "3-3-5-2",
-    correctBid: "1♦", explanation: "13 HCP, 5 quadri: apri nel seme piu' lungo, 1♦",
+    correctBid: "1♦", explanation: "13 HCP, 5 quadri: apri nel seme più lungo, 1♦",
     options: ["1♦", "1♣", "1NT", "Passo"],
   },
   {
     hand: "♠ AQ73  ♥ K84  ♦ QJ95  ♣ 62",
     hcp: 12, distribution: "4-3-4-2",
-    correctBid: "1♦", explanation: "12 HCP, 4♠ e 4♦: con due quarti si apre nel piu' basso di rango, 1♦",
+    correctBid: "1♦", explanation: "12 HCP, 4♠ e 4♦: con due quarti si apre nel più basso di rango, 1♦",
     options: ["1♠", "1♦", "1♣", "Passo"],
   },
   {
     hand: "♠ K83  ♥ Q5  ♦ AKJ74  ♣ 962",
     hcp: 13, distribution: "3-2-5-3",
-    correctBid: "1♦", explanation: "13 HCP, 5 quadri: si apre nel seme piu' lungo",
+    correctBid: "1♦", explanation: "13 HCP, 5 quadri: si apre nel seme più lungo",
     options: ["1♦", "1♣", "Passo", "1NT"],
   },
   // === 1♣ (3 scenarios) ===
   {
     hand: "♠ QJ5  ♥ K84  ♦ A73  ♣ KJ62",
     hcp: 14, distribution: "3-3-3-4",
-    correctBid: "1♣", explanation: "14 HCP, bilanciata 3-3-3-4: non 15-17 per 1NT, apri nel seme piu' lungo 1♣",
+    correctBid: "1♣", explanation: "14 HCP, bilanciata 3-3-3-4: non 15-17 per 1NT, apri nel seme più lungo 1♣",
     options: ["1♣", "1NT", "1♦", "Passo"],
   },
   {
     hand: "♠ K42  ♥ Q73  ♦ A85  ♣ KJ94",
     hcp: 13, distribution: "3-3-3-4",
-    correctBid: "1♣", explanation: "13 HCP, bilanciata 3-3-3-4: con 12-14 bilanciata apri nel piu' lungo, 1♣",
+    correctBid: "1♣", explanation: "13 HCP, bilanciata 3-3-3-4: con 12-14 bilanciata apri nel più lungo, 1♣",
     options: ["1♣", "1♦", "1NT", "Passo"],
   },
   {
@@ -188,6 +188,7 @@ const dichiaraDiffConfig = {
 };
 
 export default function DichiaraPage() {
+  const profileConfig = useProfile();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const [phase, setPhase] = useState<"menu" | "playing" | "gameover">("menu");
   const [dichiaraDiff, setDichiaraDiff] = useState<DichiaraDifficulty>("facile");
@@ -303,11 +304,11 @@ export default function DichiaraPage() {
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Dichiara!</h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
-              Vedi una mano e scegli l'apertura corretta. Velocita' e precisione!
+              Vedi una mano e scegli l'apertura corretta. Velocità e precisione!
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <Badge className="bg-indigo-50 text-indigo-700 text-xs font-bold border-0">{TOTAL_ROUNDS} mani</Badge>
-              <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">+20-70 XP</Badge>
+              <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">+20-70 {profileConfig.xpLabel}</Badge>
             </div>
 
             <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
@@ -322,7 +323,7 @@ export default function DichiaraPage() {
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficolta'</h3>
+              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficoltà</h3>
               {(Object.entries(dichiaraDiffConfig) as [DichiaraDifficulty, typeof dichiaraDiffConfig.facile][]).map(([key, cfg]) => (
                 <button
                   key={key}
@@ -381,7 +382,7 @@ export default function DichiaraPage() {
               </div>
               <div className="card-elevated rounded-xl bg-white p-3">
                 <p className="text-lg font-black text-indigo-500">+{xpEarned}</p>
-                <p className="text-[10px] text-gray-400 font-bold">XP</p>
+                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
