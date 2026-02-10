@@ -430,11 +430,11 @@ export const smazzate9to12: Smazzata[] = [
     board: 7,
     title: "L'Apertore descrive",
     contract: "4H",
-    declarer: "north",
+    declarer: "south",
     openingLead: { suit: "diamond", rank: "A" },
     vulnerability: "all",
     hands: {
-      north: [S("A"), S("6"), S("5"), S("3"), H("A"), H("Q"), H("J"), H("9"), H("8"), H("6"), D("Q"), D("6"), D("4")],
+      north: [S("A"), S("6"), S("5"), S("3"), H("A"), H("Q"), H("J"), H("9"), H("8"), H("6"), C("Q"), C("6"), C("4")],
       west:  [S("J"), S("9"), S("7"), H("7"), H("4"), H("2"), D("9"), D("7"), D("6"), D("2"), C("10"), C("8"), C("5")],
       east:  [S("Q"), S("10"), S("8"), S("2"), H("K"), D("A"), D("K"), D("10"), D("3"), C("J"), C("9"), C("7"), C("2")],
       south: [S("K"), S("4"), H("10"), H("5"), H("3"), D("Q"), D("J"), D("8"), D("5"), D("4"), C("A"), C("K"), C("3")],
@@ -542,7 +542,7 @@ export const smazzate9to12: Smazzata[] = [
     board: 3,
     title: "L'intervento",
     contract: "2H",
-    declarer: "south",
+    declarer: "north",
     openingLead: { suit: "diamond", rank: "Q" },
     vulnerability: "ew",
     hands: {

@@ -163,8 +163,8 @@ export const quadriSmazzate: Smazzata[] = [
     vulnerability: "ew",
     hands: {
       north: hand(["A", "Q", "2"], ["5", "3"], ["A", "6", "5", "3"], ["A", "K", "7", "4"]),
-      east: hand(["J", "10", "9", "8", "5"], ["8", "4"], ["K", "7", "4"], ["J", "9", "3"]),
-      west: hand(["K", "7"], ["J", "10", "9", "6"], ["Q", "J", "10"], ["Q", "9", "5", "2"]),
+      east: hand(["J", "10", "9", "8", "5"], ["8", "4"], ["K", "7", "4"], ["10", "8", "3"]),
+      west: hand(["K", "7"], ["J", "10", "9", "6"], ["Q", "J", "10"], ["Q", "J", "9", "5"]),
       south: hand(["6", "4", "3"], ["A", "K", "Q", "7", "2"], ["9", "8", "2"], ["6", "2"]),
     },
     commentary:
@@ -378,7 +378,7 @@ export const quadriSmazzate: Smazzata[] = [
     hands: {
       north: hand(["K", "Q", "7"], ["10", "8", "3", "2"], ["10", "6", "4", "3"], ["J", "9"]),
       east: hand(["J", "10", "8", "4"], ["K", "J", "6"], ["5", "2"], ["A", "8", "7", "4"]),
-      west: hand(["A", "5", "3"], ["5"], ["A", "Q", "J", "9", "7", "6"], ["K", "Q", "2"]),
+      west: hand(["A", "5", "3"], ["5"], ["A", "Q", "J", "9", "8", "7"], ["K", "Q", "2"]),
       south: hand(["9", "6", "2"], ["A", "Q", "9", "7", "4"], ["K"], ["10", "6", "5", "3"]),
     },
     commentary:
@@ -481,7 +481,7 @@ export const quadriSmazzate: Smazzata[] = [
     board: 5,
     title: "Contratti ad atout: tempo e controllo",
     contract: "2♥",
-    declarer: "west",
+    declarer: "east",
     openingLead: c("club", "10"),
     vulnerability: "ns",
     hands: {
@@ -575,7 +575,7 @@ export const quadriSmazzate: Smazzata[] = [
     hands: {
       north: hand(["A", "10", "6", "5", "4"], ["A", "Q", "10", "5", "2"], ["9"], ["A", "6"]),
       east: hand(["Q", "8", "7", "3"], ["6", "3"], ["K", "10", "5", "3"], ["8", "4", "2"]),
-      west: hand(["J", "9"], ["9", "8", "4"], ["Q", "10", "7", "6", "4"], ["K", "J", "3"]),
+      west: hand(["J", "9"], ["9", "8", "4"], ["Q", "8", "7", "6", "4"], ["K", "J", "3"]),
       south: hand(["K", "2"], ["K", "J", "7"], ["A", "J", "2"], ["Q", "10", "9", "7", "5"]),
     },
     commentary:
@@ -595,8 +595,8 @@ export const quadriSmazzate: Smazzata[] = [
     vulnerability: "ns",
     hands: {
       north: hand(["4", "2"], ["A", "9", "7", "5", "3"], ["10", "8", "4", "2"], ["10", "9"]),
-      east: hand(["Q", "8"], ["8"], ["K", "6"], ["A", "K", "J", "7", "4", "2"]),
-      west: hand(["A", "10", "7", "6", "3"], ["K", "Q", "10"], ["Q", "J", "7", "5"], ["Q", "8", "6"]),
+      east: hand(["Q", "8"], ["8"], ["Q", "J", "7", "5"], ["A", "K", "J", "7", "4", "2"]),
+      west: hand(["A", "10", "7", "6", "3"], ["K", "Q", "10"], ["K", "6"], ["Q", "8", "6"]),
       south: hand(["K", "J", "9", "5"], ["J", "6", "4", "2"], ["A", "9", "3"], ["5", "3"]),
     },
     commentary:
@@ -1060,7 +1060,7 @@ export const quadriSmazzate: Smazzata[] = [
     board: 8,
     title: "Le aperture di 2, 3, 4",
     contract: "3♥",
-    declarer: "west",
+    declarer: "south",
     openingLead: c("spade", "A"),
     vulnerability: "none",
     hands: {
@@ -1196,7 +1196,7 @@ export const quadriSmazzate: Smazzata[] = [
     hands: {
       north: hand(["J", "9", "8"], ["K", "J"], ["K", "7", "6", "4"], ["A", "K", "J", "9"]),
       east: hand(["A", "7", "5", "4"], ["7", "6", "2"], ["A", "Q", "9", "8"], ["5", "3"]),
-      west: hand(["K", "Q", "10", "6", "2"], ["8", "3"], ["10", "2"], ["Q", "10", "4"]),
+      west: hand(["K", "Q", "10", "6", "2"], ["8", "3"], ["10", "2"], ["Q", "10", "4", "2"]),
       south: hand(["3"], ["A", "Q", "10", "9", "5", "4"], ["J", "5", "3"], ["8", "7", "6"]),
     },
     commentary:
@@ -1367,8 +1367,8 @@ export const quadriSmazzate: Smazzata[] = [
     vulnerability: "ew",
     hands: {
       north: hand(["6", "5", "4"], ["A", "7", "6", "3", "2"], ["K"], ["A", "Q", "J", "9"]),
-      east: hand(["K", "Q", "J", "9"], ["J", "8"], ["J", "9", "6", "3"], ["6", "5"]),
-      west: hand(["10", "2"], ["Q", "10", "9"], ["A", "10", "5", "4"], ["K", "J", "9", "3"]),
+      east: hand(["K", "Q", "J", "9"], ["J", "8"], ["J", "9", "6", "3"], ["10", "4", "2"]),
+      west: hand(["10", "2"], ["Q", "10", "9"], ["A", "10", "5", "4"], ["8", "7", "6", "5"]),
       south: hand(["A", "8", "7", "3"], ["K", "5", "4"], ["Q", "8", "7", "2"], ["K", "3"]),
     },
     commentary:
@@ -1453,8 +1453,8 @@ export const quadriSmazzate: Smazzata[] = [
     vulnerability: "ns",
     hands: {
       north: hand(["10", "5", "4", "3", "2"], ["8", "4"], ["6", "3"], ["J", "10", "5", "2"]),
-      east: hand(["K"], ["Q", "J", "10", "9", "6", "3"], ["Q", "10", "8", "2"], ["K", "8", "3"]),
-      west: hand(["A", "8", "7", "6"], ["A", "5"], ["J", "7", "5"], ["A", "Q", "9"]),
+      east: hand(["K"], ["Q", "J", "10", "9", "6", "3"], ["J", "7", "5"], ["K", "8", "3"]),
+      west: hand(["A", "8", "7", "6"], ["A", "5"], ["Q", "10", "8", "2"], ["A", "Q", "9"]),
       south: hand(["Q", "J", "9"], ["K", "7", "2"], ["A", "K", "9", "4"], ["7", "6", "4"]),
     },
     commentary:
@@ -1473,9 +1473,9 @@ export const quadriSmazzate: Smazzata[] = [
     vulnerability: "ew",
     hands: {
       north: hand(["A", "Q", "J", "6", "5"], ["A", "6"], ["K", "J", "9", "7"], ["J", "6"]),
-      east: hand(["K", "7"], ["10", "3", "2"], ["Q", "3"], ["9", "7", "4", "2"]),
+      east: hand(["K", "7"], ["10", "3", "2"], ["10", "8", "4", "2"], ["9", "7", "4", "2"]),
       west: hand(["8", "4"], ["K", "Q", "7", "5", "4"], ["A", "3"], ["K", "10", "8", "3"]),
-      south: hand(["10", "9", "3", "2"], ["J", "9", "8"], ["10", "8", "4", "2"], ["A", "5"]),
+      south: hand(["10", "9", "3", "2"], ["J", "9", "8"], ["Q", "6", "5"], ["A", "Q", "5"]),
     },
     commentary:
       "Quando scopre di avere fit Nord mette in pista un tentativo, chiedendo a Sud di… guardarsi le quadri; Sud ha i requisiti per accettare l'invito. L'attacco di Est deve essere ♥, e deve essere in Conto: da 3 carte, senza sequenze, la più piccola. Sull'8 del morto (il J sarebbe un inutile fanticidio) Ovest è costretto a impegnare la Q e Nord vince la presa. Che Ovest non abbia il 10♥ è evidente: con KQ10xx, o K10xxx, o Q10xxx, avrebbe giocato il 10 e non l'onore. Quindi, le cuori daranno una seconda presa, ed è opportuno rigiocare ♥ subito (il 6 per il 9); comunque vada l'impasse a ♠ Nord si eviterà di dover fare l'impasse a ♣, destinato probabilmente ad andare male. L'AVVERSARIO NON DISINTEGRA I PROPRI ONORI SE PUÒ EVITARLO.",

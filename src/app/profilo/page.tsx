@@ -107,10 +107,10 @@ export default function ProfiloPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 bg-gradient-to-r from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
+            className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-4 border-2 border-indigo-300 shadow-[0_4px_0_#a5b4fc]"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white text-lg">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-white text-lg">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
@@ -120,7 +120,7 @@ export default function ProfiloPage() {
                 <p className="text-[11px] text-gray-500">Sincronizza su tutti i dispositivi</p>
               </div>
               <Link href="/login">
-                <Button className="h-9 px-4 rounded-xl bg-emerald-600 font-bold text-xs shadow-md">
+                <Button className="h-9 px-4 rounded-xl bg-indigo-600 font-bold text-xs shadow-md">
                   Accedi
                 </Button>
               </Link>
@@ -134,11 +134,11 @@ export default function ProfiloPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4"
         >
-          <Avatar className="h-18 w-18 shadow-lg shadow-emerald/20">
+          <Avatar className="h-18 w-18 shadow-lg shadow-indigo-500/20">
             {user && authProfile?.avatar_url ? (
               <img src={authProfile.avatar_url} alt="" className="h-18 w-18 rounded-full object-cover" />
             ) : (
-              <AvatarFallback className="h-18 w-18 bg-gradient-to-br from-emerald to-emerald-dark text-white text-2xl font-extrabold">
+              <AvatarFallback className="h-18 w-18 bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl font-extrabold">
                 {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "BQ"}
               </AvatarFallback>
             )}
@@ -151,7 +151,7 @@ export default function ProfiloPage() {
               <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
             )}
             <div className="flex items-center gap-2 mt-1.5">
-              <Badge className="bg-emerald text-white font-bold text-xs">
+              <Badge className="bg-indigo-600 text-white font-bold text-xs">
                 Livello {level}
               </Badge>
               <Badge
@@ -175,7 +175,7 @@ export default function ProfiloPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-6 card-bold-green rounded-2xl bg-white p-5"
+          className="mt-6 card-bold-indigo rounded-2xl bg-white p-5"
         >
           <div className="flex items-center justify-between mb-3">
             <div>
@@ -185,13 +185,13 @@ export default function ProfiloPage() {
               <p className="text-xs text-gray-500">Livello {level + 1}: {nextLevelName}</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-extrabold text-emerald">{xpInLevel}</p>
+              <p className="text-2xl font-extrabold text-indigo-600">{xpInLevel}</p>
               <p className="text-[11px] text-gray-400">/ 100 XP</p>
             </div>
           </div>
           <div className="h-3.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-emerald to-emerald-light"
+              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
               initial={{ width: 0 }}
               animate={{ width: `${xpInLevel}%` }}
               transition={{ delay: 0.3, duration: 0.8 }}
@@ -409,7 +409,7 @@ export default function ProfiloPage() {
                       type="text"
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -421,7 +421,7 @@ export default function ProfiloPage() {
                       value={editBbo}
                       onChange={(e) => setEditBbo(e.target.value)}
                       placeholder="Il tuo username su BridgeBase Online"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -438,7 +438,7 @@ export default function ProfiloPage() {
                       }}
                       onFocus={() => setShowAsdDropdown(true)}
                       placeholder="Cerca la tua associazione..."
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     {showAsdDropdown && !editAsdSelected && (
                       <>
@@ -489,7 +489,7 @@ export default function ProfiloPage() {
                         setEditing(false);
                       }}
                       disabled={saving}
-                      className="flex-1 h-10 rounded-xl bg-emerald-600 font-bold text-xs shadow-md disabled:opacity-50"
+                      className="flex-1 h-10 rounded-xl bg-indigo-600 font-bold text-xs shadow-md disabled:opacity-50"
                     >
                       {saving ? "Salvataggio..." : "Salva"}
                     </Button>
@@ -525,13 +525,13 @@ export default function ProfiloPage() {
                 }}
                 className={`rounded-xl p-3 text-center transition-all active:scale-95 ${
                   currentProfile === opt.id
-                    ? "bg-emerald-50 border-[3px] border-emerald-500 shadow-[0_3px_0_#059669]"
+                    ? "bg-indigo-50 border-[3px] border-indigo-500 shadow-[0_3px_0_#4f46e5]"
                     : "bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
                 }`}
               >
                 <span className="text-2xl">{opt.emoji}</span>
                 <p className={`text-xs font-bold mt-1 ${
-                  currentProfile === opt.id ? "text-emerald-700" : "text-gray-600"
+                  currentProfile === opt.id ? "text-indigo-700" : "text-gray-600"
                 }`}>
                   {opt.label}
                 </p>

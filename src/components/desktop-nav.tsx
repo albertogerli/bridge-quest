@@ -5,15 +5,16 @@ import { usePathname } from "next/navigation";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 
 const navItems = [
-  { href: "/", icon: "home", label: "Home", color: "emerald" as const },
+  { href: "/", icon: "home", label: "Home", color: "indigo" as const },
   { href: "/lezioni", icon: "book", label: "Lezioni", color: "blue" as const },
-  { href: "/gioca", icon: "play", label: "Gioca", color: "emerald" as const },
+  { href: "/gioca", icon: "play", label: "Gioca", color: "purple" as const },
   { href: "/forum", icon: "forum", label: "Forum", color: "purple" as const },
   { href: "/classifica", icon: "trophy", label: "Classifica", color: "amber" as const },
   { href: "/profilo", icon: "user", label: "Profilo", color: "rose" as const },
 ];
 
 const colorStyles = {
+  indigo: { active: "bg-indigo-50 text-indigo-600 border-indigo-300", icon: "text-indigo-500" },
   emerald: { active: "bg-emerald-50 text-emerald-600 border-emerald-300", icon: "text-emerald-500" },
   blue: { active: "bg-blue-50 text-blue-600 border-blue-300", icon: "text-blue-500" },
   purple: { active: "bg-purple-50 text-purple-600 border-purple-300", icon: "text-purple-500" },
@@ -98,8 +99,8 @@ export function DesktopNav() {
               <Link key={item.href} href={item.href}>
                 <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-extrabold text-sm transition-all active:scale-[0.97] mt-2 mb-2 ${
                   active
-                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-400/30"
-                    : "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-[0_4px_0_#047857] hover:shadow-[0_3px_0_#047857] hover:translate-y-[1px] active:shadow-[0_1px_0_#047857] active:translate-y-[3px]"
+                    ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-md shadow-purple-400/30"
+                    : "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-[0_4px_0_#6d28d9] hover:shadow-[0_3px_0_#6d28d9] hover:translate-y-[1px] active:shadow-[0_1px_0_#6d28d9] active:translate-y-[3px]"
                 }`}>
                   {icons[item.icon](active)}
                   <span>{item.label}</span>

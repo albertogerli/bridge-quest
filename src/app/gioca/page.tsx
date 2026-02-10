@@ -47,7 +47,7 @@ export default function GiocaPage() {
           <Link href="/gioca/sfida" className="block">
             <div className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl ${
               dailyDone
-                ? "bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200"
+                ? "bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200"
                 : "hero-gradient"
             }`}>
               {!dailyDone && (
@@ -310,7 +310,7 @@ export default function GiocaPage() {
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <p className="text-2xl font-extrabold text-emerald">{handsPlayed}</p>
+                <p className="text-2xl font-extrabold text-indigo-600">{handsPlayed}</p>
                 <p className="text-[11px] text-gray-500 font-medium">Mani giocate</p>
               </div>
               <div>

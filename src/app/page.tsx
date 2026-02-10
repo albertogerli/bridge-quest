@@ -253,7 +253,7 @@ export default function Home() {
 
               <Button
                 onClick={() => setShowWeeklyRecap(false)}
-                className="mt-5 w-full h-12 rounded-xl bg-gradient-to-r from-emerald to-emerald-dark font-extrabold shadow-lg"
+                className="mt-5 w-full h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 font-extrabold shadow-lg"
               >
                 Andiamo!
               </Button>
@@ -352,15 +352,15 @@ export default function Home() {
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
                 <Button
                   size="lg"
-                  className="w-full h-auto rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d py-3.5 px-5"
+                  className="w-full h-auto rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d py-3.5 px-5"
                 >
                   <div className="flex items-center gap-3 w-full">
                     <span className="text-2xl">{nextModule.lessonIcon}</span>
                     <div className="flex-1 text-left">
-                      <p className="text-[10px] font-bold text-emerald/70 uppercase tracking-wider">Riprendi</p>
-                      <p className="text-sm font-extrabold text-emerald-dark truncate">{nextModule.moduleTitle}</p>
+                      <p className="text-[10px] font-bold text-purple-500/70 uppercase tracking-wider">Riprendi</p>
+                      <p className="text-sm font-extrabold text-indigo-700 truncate">{nextModule.moduleTitle}</p>
                     </div>
-                    <svg className="h-5 w-5 text-emerald/60 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="h-5 w-5 text-purple-500/60 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
@@ -370,7 +370,7 @@ export default function Home() {
               <Link href="/lezioni">
                 <Button
                   size="lg"
-                  className="w-full h-14 rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d"
+                  className="w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d"
                 >
                   <span className="mr-2 text-xl">🎯</span>
                   Inizia il tuo viaggio
@@ -452,13 +452,13 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="rounded-2xl bg-white p-4 card-bold-green">
+              <div className="rounded-2xl bg-white p-4 card-bold-blue">
                 <div className="flex items-center justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200">
                     <span className="text-2xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
                   </div>
                   {stats.streak > 0 && (
-                    <span className="text-[10px] font-bold text-emerald bg-emerald-50 rounded-full px-2 py-0.5">
+                    <span className="text-[10px] font-bold text-blue-600 bg-blue-50 rounded-full px-2 py-0.5">
                       +{Math.min(stats.streak * 5, 50)} XP/giorno
                     </span>
                   )}
@@ -472,7 +472,7 @@ export default function Home() {
                       key={i}
                       className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-extrabold ${
                         i < Math.min(stats.streak, 7)
-                          ? "bg-emerald-500 text-white border border-emerald-600"
+                          ? "bg-blue-500 text-white border border-blue-600"
                           : "bg-gray-100 text-gray-400 border border-gray-200"
                       }`}
                     >
@@ -517,9 +517,9 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7] p-4">
+              <div className="rounded-2xl bg-gradient-to-r from-violet-50 to-fuchsia-50 border-2 border-purple-300 shadow-[0_4px_0_#c084fc] p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
                     <span className="text-2xl">📲</span>
                   </div>
                   <div className="flex-1">
@@ -534,14 +534,14 @@ export default function Home() {
                     {canInstall ? (
                       <button
                         onClick={() => install()}
-                        className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-sm hover:bg-emerald-700 transition-colors"
+                        className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm hover:bg-purple-700 transition-colors"
                       >
                         Installa
                       </button>
                     ) : isIOS ? (
                       <button
                         onClick={() => setShowIOSGuide(true)}
-                        className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-sm hover:bg-emerald-700 transition-colors"
+                        className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm hover:bg-purple-700 transition-colors"
                       >
                         Come fare
                       </button>
@@ -620,7 +620,7 @@ export default function Home() {
               </div>
               <button
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-6 w-full py-3 rounded-2xl bg-emerald-600 text-white font-bold text-sm"
+                className="mt-6 w-full py-3 rounded-2xl bg-purple-600 text-white font-bold text-sm"
               >
                 Ho capito
               </button>
@@ -699,7 +699,7 @@ export default function Home() {
             <Link href="/lezioni">
               <Badge
                 variant="outline"
-                className="text-[11px] font-semibold text-emerald border-emerald/30 cursor-pointer hover:bg-emerald-50 transition-colors"
+                className="text-[11px] font-semibold text-indigo-500 border-indigo-300/50 cursor-pointer hover:bg-indigo-50 transition-colors"
               >
                 Vedi tutto →
               </Badge>
@@ -717,7 +717,7 @@ export default function Home() {
                   <Link href={`/lezioni?corso=${course.id}`}>
                     <div className="flex items-center gap-2 mb-3 cursor-pointer group">
                       <span className="text-lg">{course.icon}</span>
-                      <h3 className="text-sm font-extrabold text-gray-700 group-hover:text-emerald transition-colors">
+                      <h3 className="text-sm font-extrabold text-gray-700 group-hover:text-indigo-600 transition-colors">
                         {course.name}
                       </h3>
                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
@@ -754,14 +754,14 @@ export default function Home() {
       {/* ===== FIGB FOOTER ===== */}
       <section className="px-4 sm:px-5 pb-6">
         <div className="mx-auto max-w-lg">
-          <div className="rounded-2xl bg-emerald-50 border-2 border-emerald-200 shadow-[0_4px_0_#a7f3d0] p-5 text-center">
-            <p className="text-xs font-bold text-emerald uppercase tracking-wider mb-1">
+          <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 shadow-[0_4px_0_#a5b4fc] p-5 text-center">
+            <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-1">
               Un progetto della
             </p>
-            <p className="text-lg font-extrabold text-emerald-dark">
+            <p className="text-lg font-extrabold text-indigo-700">
               Federazione Italiana Gioco Bridge
             </p>
-            <p className="mt-2 text-xs text-emerald-dark/60">
+            <p className="mt-2 text-xs text-indigo-700/60">
               Commissione Insegnamento · Corsi Fiori, Quadri, Cuori
             </p>
           </div>
@@ -802,7 +802,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
               {world.name}
             </h3>
             {progress === 100 && (
-              <span className="text-emerald text-lg">✓</span>
+              <span className="text-emerald-500 text-lg">✓</span>
             )}
           </div>
           <p className="text-[13px] text-gray-500 mt-0.5">{world.subtitle}</p>
@@ -822,7 +822,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
         </div>
 
         <svg
-          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
+          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -1478,7 +1478,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-emerald-dark via-emerald to-emerald-dark overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-indigo-700 via-purple-600 to-fuchsia-700 overflow-hidden">
       {/* Animated background suits */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {["♠", "♥", "♦", "♣", "♠", "♥", "♦", "♣"].map((suit, i) => (
@@ -1579,7 +1579,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                     }}
                     className={`absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-all ${
                       videoMuted
-                        ? "bg-white/90 text-emerald-dark shadow-lg animate-pulse"
+                        ? "bg-white/90 text-indigo-700 shadow-lg animate-pulse"
                         : "bg-white/30 text-white"
                     }`}
                   >
@@ -1645,20 +1645,20 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                   >
                     <div className="flex items-center gap-4">
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl ${
-                        selectedProfile === opt.id ? "bg-emerald-100" : "bg-white/10"
+                        selectedProfile === opt.id ? "bg-purple-100" : "bg-white/10"
                       }`}>
                         {opt.emoji}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className={`font-extrabold text-lg ${
-                            selectedProfile === opt.id ? "text-emerald-dark" : "text-white"
+                            selectedProfile === opt.id ? "text-indigo-700" : "text-white"
                           }`}>
                             {opt.label}
                           </p>
                           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                             selectedProfile === opt.id
-                              ? "bg-emerald-100 text-emerald-700"
+                              ? "bg-purple-100 text-purple-700"
                               : "bg-white/10 text-white/60"
                           }`}>
                             {opt.age}
@@ -1674,7 +1674,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald text-white"
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-600 text-white"
                         >
                           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
                             <polyline points="20,6 9,17 4,12" />
@@ -1700,7 +1700,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
             <Button
               onClick={onComplete}
               size="lg"
-              className="w-full h-14 rounded-2xl bg-white text-emerald-dark font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 transition-all active:scale-[0.98]"
+              className="w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 transition-all active:scale-[0.98]"
             >
               <span className="mr-2 text-xl">🎯</span>
               Inizia il viaggio!
@@ -1713,7 +1713,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               className={`w-full h-14 rounded-2xl font-extrabold text-base shadow-xl shadow-black/15 transition-all active:scale-[0.98] ${
                 isProfileStep && !selectedProfile
                   ? "bg-white/30 text-white/50 cursor-not-allowed"
-                  : "bg-white text-emerald-dark hover:bg-white/90"
+                  : "bg-white text-indigo-700 hover:bg-white/90"
               }`}
             >
               Continua

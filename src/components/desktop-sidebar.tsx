@@ -34,10 +34,10 @@ export function DesktopSidebar() {
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
-        <div className="rounded-2xl bg-white border-2 border-emerald-200 shadow-[0_4px_0_#a7f3d0] p-4">
+        <div className="rounded-2xl bg-white border-2 border-indigo-200 shadow-[0_4px_0_#a5b4fc] p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 border border-indigo-200">
                 <span className="text-lg">⚡</span>
               </div>
               <div>
@@ -46,13 +46,13 @@ export function DesktopSidebar() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xl font-extrabold text-emerald-600">{stats.xpInLevel}</p>
+              <p className="text-xl font-extrabold text-indigo-600">{stats.xpInLevel}</p>
               <p className="text-[10px] text-gray-400 font-bold">/ 100 XP</p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 transition-all"
               style={{ width: `${stats.xpInLevel}%` }}
             />
           </div>
@@ -71,7 +71,7 @@ export function DesktopSidebar() {
               </p>
             </div>
             {stats.streak > 0 && (
-              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
+              <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5">
                 +{Math.min(stats.streak * 5, 50)} XP/giorno
               </span>
             )}
@@ -82,7 +82,7 @@ export function DesktopSidebar() {
                 key={i}
                 className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-extrabold ${
                   i < Math.min(stats.streak, 7)
-                    ? "bg-emerald-500 text-white border border-emerald-600"
+                    ? "bg-blue-500 text-white border border-blue-600"
                     : "bg-gray-100 text-gray-400 border border-gray-200"
                 }`}
               >
@@ -145,7 +145,7 @@ export function DesktopSidebar() {
         {/* Continue CTA */}
         {stats.nextModule && (
           <Link href={`/lezioni/${stats.nextModule.lessonId}/${stats.nextModule.moduleId}`}>
-            <div className="rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 p-4 text-white shadow-[0_4px_0_#047857] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#047857] active:translate-y-[2px] active:shadow-[0_1px_0_#047857] transition-all cursor-pointer">
+            <div className="rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 p-4 text-white shadow-[0_4px_0_#6d28d9] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#6d28d9] active:translate-y-[2px] active:shadow-[0_1px_0_#6d28d9] transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
                 <div className="flex-1 min-w-0">
@@ -210,11 +210,11 @@ export function DesktopSidebar() {
         </Link>
 
         {/* FIGB badge */}
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-center">
-          <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+        <div className="rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 p-3 text-center">
+          <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
             Un progetto della FIGB
           </p>
-          <p className="text-[10px] text-emerald-500 mt-0.5">
+          <p className="text-[10px] text-indigo-500 mt-0.5">
             Commissione Insegnamento
           </p>
         </div>
