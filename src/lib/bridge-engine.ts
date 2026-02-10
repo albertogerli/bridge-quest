@@ -738,8 +738,8 @@ function aiLead(
 const ROTATIONS: Record<Position, Record<Position, Position>> = {
   south: { north: "north", south: "south", east: "east", west: "west" },
   north: { north: "south", south: "north", east: "west", west: "east" },
-  east:  { north: "west",  south: "east",  east: "south", west: "north" },
-  west:  { north: "east",  south: "west",  east: "north", west: "south" },
+  east:  { north: "east",  south: "west",  east: "south", west: "north" },
+  west:  { north: "west",  south: "east",  east: "north", west: "south" },
 };
 
 /** Map a game position to a display position given the declarer */
