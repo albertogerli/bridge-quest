@@ -198,8 +198,8 @@ export default function ImpostazioniPage() {
               <span className="text-purple-600 text-xl">✦</span>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 text-base">Velocita Animazioni</h2>
-              <p className="text-xs text-gray-500">Controlla la rapidita delle transizioni</p>
+              <h2 className="font-extrabold text-gray-900 text-base">Velocità Animazioni</h2>
+              <p className="text-xs text-gray-500">Controlla la rapidità delle transizioni</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">

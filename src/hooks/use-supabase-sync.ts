@@ -83,7 +83,7 @@ export function useSupabaseSync() {
             xp,
             streak,
             hands_played: handsPlayed,
-            profile_type: profileType as "giovane" | "adulto" | "senior",
+            profile_type: profileType as "junior" | "giovane" | "adulto" | "senior",
             memory_best: memoryBest ? parseInt(memoryBest, 10) : null,
             text_size: textSize,
             anim_speed: animSpeed,
@@ -232,6 +232,8 @@ export function useSupabaseSync() {
           }
 
           lastSyncedSnapshot = getLocalSnapshot();
+          // Notify components that stats have been updated from Supabase
+          window.dispatchEvent(new Event("bq_stats_updated"));
           return;
         }
 

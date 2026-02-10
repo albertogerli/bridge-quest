@@ -11,7 +11,7 @@ export function useStats() {
   const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
   const [dailyDone, setDailyDone] = useState(false);
 
-  useEffect(() => {
+  const readStats = () => {
     try {
       setXp(parseInt(localStorage.getItem("bq_xp") || "0", 10));
       setStreak(parseInt(localStorage.getItem("bq_streak") || "0", 10));
@@ -21,6 +21,14 @@ export function useStats() {
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
     } catch {}
+  };
+
+  useEffect(() => {
+    readStats();
+    // Re-read when Supabase sync updates localStorage
+    const handleSyncUpdate = () => readStats();
+    window.addEventListener("bq_stats_updated", handleSyncUpdate);
+    return () => window.removeEventListener("bq_stats_updated", handleSyncUpdate);
   }, []);
 
   const level = Math.floor(xp / 100) + 1;
