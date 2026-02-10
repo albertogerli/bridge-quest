@@ -175,16 +175,23 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     const cfg = configRef.current;
     const useBen = benAvailable === true;
 
-    // For didactic smazzate: use specified opening lead if available
+    // For didactic smazzate: use specified opening lead if available AND valid
     const isOpeningLead =
       currentState.tricks.length === 0 && currentState.currentTrick.length === 0;
     if (isOpeningLead && cfg.openingLead) {
-      aiTimerRef.current = setTimeout(() => {
-        executePlay(currentState, currentPlayer, cfg.openingLead!);
-      }, AI_DELAY);
-      return () => {
-        if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
-      };
+      const leaderHand = currentState.hands[currentPlayer];
+      const hasCard = leaderHand.some(
+        (c) => c.suit === cfg.openingLead!.suit && c.rank === cfg.openingLead!.rank
+      );
+      if (hasCard) {
+        aiTimerRef.current = setTimeout(() => {
+          executePlay(currentState, currentPlayer, cfg.openingLead!);
+        }, AI_DELAY);
+        return () => {
+          if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
+        };
+      }
+      // Opening lead card not in leader's hand — fall through to AI selection
     }
 
     // AI's turn

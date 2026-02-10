@@ -13,7 +13,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
       <div className="bg-white border-t-3 border-[#e5e0d5] shadow-[0_-2px_12px_rgba(0,0,0,0.08)]">
         <div className="mx-auto flex max-w-lg items-center justify-around px-0.5 py-1 safe-area-bottom">
-          <NavItem href="/" icon="home" label="Home" active={isActive("/")} color="emerald" />
+          <NavItem href="/" icon="home" label="Home" active={isActive("/")} color="indigo" />
           <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} color="blue" />
           <PlayButton active={isActive("/gioca")} />
           <NavItem href="/forum" icon="forum" label="Forum" active={isActive("/forum")} color="purple" />
@@ -35,15 +35,15 @@ function PlayButton({ active }: { active: boolean }) {
         className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 ${
           active
             ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-400/40 border-2 border-amber-300"
-            : "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-400/40 border-2 border-emerald-300 pulse-glow"
+            : "bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-400/40 border-2 border-violet-400 pulse-glow"
         }`}
-        style={{ borderBottom: active ? "4px solid #d97706" : "4px solid #047857" }}
+        style={{ borderBottom: active ? "4px solid #d97706" : "4px solid #6d28d9" }}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 ml-0.5">
           <path d="M8 5v14l11-7z" />
         </svg>
       </div>
-      <span className={`mt-1 text-[10px] font-extrabold ${active ? "text-amber-600" : "text-emerald-600"}`}>
+      <span className={`mt-1 text-[10px] font-extrabold ${active ? "text-amber-600" : "text-purple-600"}`}>
         Gioca
       </span>
     </Link>
@@ -52,6 +52,7 @@ function PlayButton({ active }: { active: boolean }) {
 
 const colorMap = {
   emerald: { active: "text-emerald-600 bg-emerald-50", dot: "bg-emerald-500" },
+  indigo: { active: "text-indigo-600 bg-indigo-50", dot: "bg-indigo-500" },
   blue: { active: "text-blue-600 bg-blue-50", dot: "bg-blue-500" },
   purple: { active: "text-purple-600 bg-purple-50", dot: "bg-purple-500" },
   amber: { active: "text-amber-600 bg-amber-50", dot: "bg-amber-500" },

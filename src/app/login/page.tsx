@@ -88,7 +88,13 @@ export default function LoginPage() {
         });
 
         if (err) {
-          setError(err.message);
+          if (err.message.toLowerCase().includes("rate limit")) {
+            setError("Troppe richieste. Attendi qualche minuto e riprova.");
+          } else if (err.message.includes("already registered")) {
+            setError("Questa email e gia registrata. Prova ad accedere.");
+          } else {
+            setError(err.message);
+          }
         } else {
           // Upload avatar if selected
           if (avatarFile) {
@@ -108,7 +114,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50/50 to-white flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -117,7 +123,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-white text-3xl font-black shadow-lg shadow-emerald-500/30 mb-3">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-700 text-white text-3xl font-black shadow-lg shadow-indigo-500/30 mb-3">
               B
             </div>
           </Link>
@@ -161,7 +167,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               placeholder="la-tua@email.com"
             />
           </div>
@@ -177,7 +183,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               placeholder={mode === "signup" ? "Minimo 6 caratteri" : "La tua password"}
             />
           </div>
@@ -200,7 +206,7 @@ export default function LoginPage() {
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     placeholder="Come vuoi essere chiamato"
                   />
                 </div>
@@ -214,7 +220,7 @@ export default function LoginPage() {
                     type="text"
                     value={bboUsername}
                     onChange={(e) => setBboUsername(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     placeholder="Il tuo username su BridgeBase Online"
                   />
                 </div>
@@ -236,7 +242,7 @@ export default function LoginPage() {
                         onClick={() => setProfileType(key)}
                         className={`p-3 rounded-xl border-2 text-center transition-all ${
                           profileType === key
-                            ? "border-emerald-500 bg-emerald-50"
+                            ? "border-indigo-500 bg-indigo-50"
                             : "border-gray-100 bg-white hover:border-gray-200"
                         }`}
                       >
@@ -262,7 +268,7 @@ export default function LoginPage() {
                       setShowAsdDropdown(true);
                     }}
                     onFocus={() => setShowAsdDropdown(true)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     placeholder="Cerca la tua associazione..."
                   />
                   {selectedAsd && (
@@ -323,7 +329,7 @@ export default function LoginPage() {
                       )}
                     </div>
                     <label className="cursor-pointer">
-                      <span className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+                      <span className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
                         {avatarPreview ? "Cambia foto" : "Carica foto"}
                       </span>
                       <input
@@ -363,7 +369,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl transition-all disabled:opacity-50"
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 hover:shadow-xl transition-all disabled:opacity-50"
           >
             {loading ? (
               <div className="flex items-center gap-2">

@@ -15,6 +15,39 @@ export type { Smazzata } from "./smazzate";
 
 type Vulnerability = "none" | "ns" | "ew" | "both";
 
+const POSITIONS: Position[] = ["north", "south", "east", "west"];
+
+function nextPos(p: Position): Position {
+  const order: Position[] = ["north", "east", "south", "west"];
+  return order[(order.indexOf(p) + 1) % 4];
+}
+
+/** Filter out smazzate with data issues (wrong hand sizes, duplicates, bad opening leads) */
+function validateSmazzate(hands: Smazzata[]): Smazzata[] {
+  return hands.filter((s) => {
+    // Check each hand has exactly 13 cards
+    for (const pos of POSITIONS) {
+      if (s.hands[pos].length !== 13) return false;
+    }
+    // Check no duplicate cards
+    const seen = new Set<string>();
+    for (const pos of POSITIONS) {
+      for (const c of s.hands[pos]) {
+        const key = `${c.suit}-${c.rank}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+      }
+    }
+    // Check opening lead is in the leader's hand
+    const leader = nextPos(s.declarer);
+    const hasLead = s.hands[leader].some(
+      (c) => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank
+    );
+    if (!hasLead) return false;
+    return true;
+  });
+}
+
 // Normalize vulnerability values ("all" -> "both")
 function normalizeVul(v: string): Vulnerability {
   if (v === "all" || v === "both") return "both";
@@ -57,13 +90,13 @@ export const fioriSmazzate: Smazzata[] = [
   ...normalized9to12,
 ];
 
-/** All practice hands from all courses */
-export const allSmazzate: Smazzata[] = [
+/** All practice hands from all courses (validated: correct hand sizes, no duplicates, valid opening lead) */
+export const allSmazzate: Smazzata[] = validateSmazzate([
   ...fioriSmazzate,
   ...quadriSmazzate,
   ...cuoriGiocoSmazzate,
   ...cuoriLicitaSmazzate,
-];
+]);
 
 /** Get smazzate for a specific lesson */
 export function getSmazzateByLesson(lesson: number): Smazzata[] {

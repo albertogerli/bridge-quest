@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { BottomNav } from "@/components/bottom-nav";
-import { DesktopNav } from "@/components/desktop-nav";
-import { DesktopSidebar } from "@/components/desktop-sidebar";
+import { LayoutShell } from "@/components/layout-shell";
 import "./globals.css";
 
 const inter = Inter({
@@ -48,21 +46,7 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-        <div className="flex min-h-svh bg-[#F7F5F0]">
-          {/* Left nav - desktop only */}
-          <DesktopNav />
-
-          {/* Center: main content */}
-          <div className="flex-1 flex flex-col min-w-0">
-            <main className="flex-1 pb-20 lg:pb-6">{children}</main>
-            <BottomNav />
-          </div>
-
-          {/* Right sidebar - desktop only */}
-          <div className="hidden lg:block px-6 pt-6">
-            <DesktopSidebar />
-          </div>
-        </div>
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );
