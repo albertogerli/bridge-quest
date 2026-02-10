@@ -182,8 +182,8 @@ export function BridgeTable({
         <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')]" />
       </div>
 
-      {/* Center: trick area + compass — z-20 so played cards always appear above face-down hands */}
-      <div className="absolute inset-0 flex items-center justify-center z-20">
+      {/* Center: trick area + compass — z-20 so played cards appear above face-down hands, pointer-events-none so it doesn't block hand clicks */}
+      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
         <div className={`relative ${isCompact ? "w-32 h-32" : "w-48 h-48"}`}>
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
