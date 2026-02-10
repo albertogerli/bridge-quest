@@ -133,8 +133,8 @@ export function BridgeTable({
         <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')]" />
       </div>
 
-      {/* Center: trick area + compass */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
+      {/* Center: trick area + compass — z-20 so played cards always appear above face-down hands */}
+      <div className="absolute inset-0 flex items-center justify-center z-20">
         <div className={`relative ${compact ? "w-32 h-32" : "w-48 h-48"}`}>
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
@@ -160,10 +160,10 @@ export function BridgeTable({
             {currentTrick.map((play) => {
               const trickPositions: Record<string, string> = compact
                 ? {
-                    north: "-top-10 left-1/2 -translate-x-1/2",
-                    south: "-bottom-10 left-1/2 -translate-x-1/2",
-                    east: "top-1/2 -right-10 -translate-y-1/2",
-                    west: "top-1/2 -left-10 -translate-y-1/2",
+                    north: "-top-12 left-1/2 -translate-x-1/2",
+                    south: "-bottom-12 left-1/2 -translate-x-1/2",
+                    east: "top-1/2 -right-11 -translate-y-1/2",
+                    west: "top-1/2 -left-11 -translate-y-1/2",
                   }
                 : {
                     north: "-top-14 left-1/2 -translate-x-1/2",
@@ -180,11 +180,11 @@ export function BridgeTable({
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <div className={`${compact ? "w-9 h-[48px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
-                    <span className={`${compact ? "text-sm" : "text-lg"} font-black leading-none`}>
+                  <div className={`${compact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
+                    <span className={`${compact ? "text-base" : "text-lg"} font-black leading-none`}>
                       {play.card.rank}
                     </span>
-                    <span className={`${compact ? "text-sm" : "text-lg"} leading-none`}>
+                    <span className={`${compact ? "text-base" : "text-lg"} leading-none`}>
                       {suitSymbol[play.card.suit]}
                     </span>
                   </div>
