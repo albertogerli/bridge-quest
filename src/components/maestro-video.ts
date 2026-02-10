@@ -66,8 +66,9 @@ export const CUORI_LICITA_VIDEOS: Record<number, string> = {
   213: "/videos/maestro-cuori-licita-lezione213.mp4",
 };
 
-// Get video path for a Fiori lesson (1-12)
+// Get video path for a Fiori lesson (0-12)
 export function getLessonVideo(lessonNum: number): string | null {
+  if (lessonNum === 0) return MAESTRO_VIDEOS.intro;
   const key = `lesson${lessonNum}` as keyof typeof MAESTRO_VIDEOS;
   return MAESTRO_VIDEOS[key] ?? null;
 }

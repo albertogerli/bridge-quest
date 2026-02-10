@@ -8,6 +8,7 @@ import { getLessonById, getModuleById, worlds, type ContentBlock } from "@/data/
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
 import { ComprehensionQuiz } from "@/components/comprehension-quiz";
+import { getVideoForLesson } from "@/components/maestro-video";
 import Link from "next/link";
 
 // SVG icons for block types
@@ -1477,6 +1478,9 @@ export default function ModulePage({
           )}
         </AnimatePresence>
 
+        {/* Maestro video - first module of each lesson, shown at start */}
+        <MaestroVideoInline lessonId={lesson.id} moduleIndex={moduleIndex} currentStep={currentStep} />
+
         {/* Content blocks */}
         <div>
           {mod.content.slice(0, currentStep + 1).map((block, idx) =>
@@ -1489,10 +1493,10 @@ export default function ModulePage({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="fixed bottom-24 left-0 right-0 px-5 z-40"
+          className="fixed bottom-0 left-0 right-0 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+5rem)] lg:pb-6 z-40"
         >
           <div className="mx-auto max-w-lg">
-            <div className="bg-white/80 backdrop-blur-lg rounded-2xl border border-gray-100 shadow-lg p-3 flex gap-3">
+            <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-[#e5e0d5] shadow-sm p-3 flex gap-3">
               {currentStep > 0 && (
                 <Button
                   variant="outline"
@@ -1793,5 +1797,84 @@ export default function ModulePage({
         )}
       </div>
     </div>
+  );
+}
+
+/** Maestro video inline: shows on the first module of each lesson, at step 0 */
+function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
+  lessonId: number; moduleIndex: number; currentStep: number;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  const [dismissed, setDismissed] = useState(false);
+
+  const videoPath = getVideoForLesson(lessonId);
+
+  // Only show on first module, at beginning
+  if (moduleIndex !== 0 || currentStep > 1 || !videoPath || dismissed) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+      className="mb-6 rounded-2xl bg-white border border-[#e5e0d5] shadow-sm overflow-hidden"
+    >
+      <div className="relative">
+        <video
+          ref={videoRef}
+          src={videoPath}
+          className="w-full aspect-video object-cover"
+          autoPlay
+          muted={muted}
+          playsInline
+          loop={false}
+        />
+        <div className="absolute bottom-3 right-3 flex gap-2">
+          <button
+            onClick={() => {
+              setMuted(!muted);
+              if (videoRef.current) {
+                videoRef.current.muted = !muted;
+                if (muted) {
+                  videoRef.current.currentTime = 0;
+                  videoRef.current.play();
+                }
+              }
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
+            aria-label={muted ? "Attiva audio" : "Disattiva audio"}
+          >
+            {muted ? (
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                <line x1="23" y1="9" x2="17" y2="15" />
+                <line x1="17" y1="9" x2="23" y2="15" />
+              </svg>
+            ) : (
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+              </svg>
+            )}
+          </button>
+          <button
+            onClick={() => setDismissed(true)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
+            aria-label="Chiudi video"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div className="p-3 flex items-center gap-2">
+        <span className="text-lg">🎓</span>
+        <p className="text-sm font-bold text-gray-700">
+          Il Maestro introduce la lezione
+        </p>
+      </div>
+    </motion.div>
   );
 }
