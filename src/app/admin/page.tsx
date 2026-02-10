@@ -41,40 +41,50 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
 
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, created_at, last_login")
-      .order("created_at", { ascending: false });
+    try {
+      const { data: profiles, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, created_at, last_login")
+        .order("created_at", { ascending: false });
 
-    if (profiles) {
-      setUsers(profiles as UserRow[]);
-
-      const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-      const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-      const byType: Record<string, number> = {};
-      let totalXp = 0;
-      let totalHands = 0;
-      let today = 0;
-      let week = 0;
-
-      for (const u of profiles) {
-        byType[u.profile_type] = (byType[u.profile_type] || 0) + 1;
-        totalXp += u.xp || 0;
-        totalHands += u.hands_played || 0;
-        if (u.created_at >= todayStart) today++;
-        if (u.created_at >= weekStart) week++;
+      if (error) {
+        console.error("Admin fetch error:", error);
+        setLoading(false);
+        return;
       }
 
-      setStats({
-        total: profiles.length,
-        today,
-        week,
-        byType,
-        totalXp,
-        totalHands,
-      });
+      if (profiles) {
+        setUsers(profiles as UserRow[]);
+
+        const now = new Date();
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+        const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+        const byType: Record<string, number> = {};
+        let totalXp = 0;
+        let totalHands = 0;
+        let today = 0;
+        let week = 0;
+
+        for (const u of profiles) {
+          byType[u.profile_type] = (byType[u.profile_type] || 0) + 1;
+          totalXp += u.xp || 0;
+          totalHands += u.hands_played || 0;
+          if (u.created_at >= todayStart) today++;
+          if (u.created_at >= weekStart) week++;
+        }
+
+        setStats({
+          total: profiles.length,
+          today,
+          week,
+          byType,
+          totalXp,
+          totalHands,
+        });
+      }
+    } catch (err) {
+      console.error("Admin fetch error:", err);
     }
 
     setLoading(false);
