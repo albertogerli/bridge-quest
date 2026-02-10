@@ -54,7 +54,7 @@ export function PlayingCard({
   if (faceDown) {
     return (
       <motion.div
-        className={`${dimensions[size]} rounded-lg bg-gradient-to-br from-emerald to-emerald-dark border-2 border-white/20 shadow-md cursor-default`}
+        className={`${dimensions[size]} rounded bg-gradient-to-br from-emerald to-emerald-dark border-2 border-white/20 shadow-md cursor-default`}
         style={{
           backgroundImage: `repeating-linear-gradient(
             45deg,
@@ -77,11 +77,11 @@ export function PlayingCard({
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       className={`
-        ${dimensions[size]} relative rounded-lg bg-white
+        ${dimensions[size]} relative rounded bg-white
         border shadow-md transition-all touch-manipulation
         ${selected ? `ring-2 ring-amber shadow-amber/30 border-amber ${noHover ? "" : "-translate-y-3"}` : "border-gray-300"}
         ${highlighted && !selected ? "ring-2 ring-emerald/50 border-emerald shadow-emerald/20" : ""}
-        ${disabled && !highlighted ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
+        ${disabled && !highlighted ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}
         ${!disabled && !selected ? "active:scale-95" : ""}
         ${highlighted && !disabled && !noHover ? "hover:shadow-lg hover:-translate-y-1" : ""}
       `}

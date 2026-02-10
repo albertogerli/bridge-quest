@@ -55,7 +55,7 @@ function CompactFaceDown({ count }: { count: number }) {
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="absolute w-8 h-[44px] rounded-md bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm"
+          className="absolute w-8 h-[44px] rounded bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm"
           style={{ top: i * 2, left: i * 1 }}
         />
       ))}
@@ -229,7 +229,7 @@ export function BridgeTable({
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <div className={`${isCompact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
+                  <div className={`${isCompact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
                     <span className={`${isCompact ? "text-base" : "text-lg"} font-black leading-none`}>
                       {play.card.rank}
                     </span>
