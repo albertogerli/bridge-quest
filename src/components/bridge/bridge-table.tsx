@@ -49,17 +49,17 @@ const suitColorClass: Record<string, string> = {
 /** Compact face-down card stack for mobile E/W positions */
 function CompactFaceDown({ count }: { count: number }) {
   return (
-    <div className="relative w-9 h-16 flex items-center justify-center">
+    <div className="relative w-8 h-14 flex items-center justify-center">
       {/* Stacked card backs */}
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="absolute w-9 h-[50px] rounded-md bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm"
+          className="absolute w-8 h-[44px] rounded-md bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm"
           style={{ top: i * 2, left: i * 1 }}
         />
       ))}
       {/* Count badge */}
-      <div className="absolute -bottom-1 -right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-white/90 text-[9px] font-black text-emerald-dark shadow-sm">
+      <div className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[8px] font-black text-emerald-dark shadow-sm">
         {count}
       </div>
     </div>
@@ -125,7 +125,7 @@ export function BridgeTable({
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto no-select" style={{ aspectRatio: "1 / 1", touchAction: "manipulation" }}>
+    <div className={`relative w-full max-w-2xl mx-auto no-select ${compact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: compact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
       {/* Felt background */}
       <div
         className={`absolute inset-0 rounded-3xl felt-bg border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
@@ -180,7 +180,7 @@ export function BridgeTable({
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <div className={`${compact ? "w-10 h-[56px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
+                  <div className={`${compact ? "w-9 h-[48px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
                     <span className={`${compact ? "text-sm" : "text-lg"} font-black leading-none`}>
                       {play.card.rank}
                     </span>
@@ -208,6 +208,7 @@ export function BridgeTable({
             onSelectCard={(i) => onPlayCard?.("north", i)}
             highlightedCards={activePosition === "north" ? highlightedCards : []}
             disabled={disabled || activePosition !== "north"}
+            compact={compact}
           />
         ) : (
           <Hand
@@ -231,6 +232,7 @@ export function BridgeTable({
             onSelectCard={(i) => onPlayCard?.("south", i)}
             highlightedCards={activePosition === "south" ? highlightedCards : []}
             disabled={disabled || activePosition !== "south"}
+            compact={compact}
           />
         ) : (
           <Hand

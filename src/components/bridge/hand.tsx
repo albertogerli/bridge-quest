@@ -26,8 +26,8 @@ export function Hand({
 }) {
   const isVertical = position === "east" || position === "west";
   const overlap = {
-    xs: isVertical ? -25 : -16,
-    sm: isVertical ? -35 : -24,
+    xs: isVertical ? -22 : -20,
+    sm: isVertical ? -32 : -28,
     md: isVertical ? -55 : -38,
     lg: isVertical ? -70 : -50,
   };

@@ -29,11 +29,13 @@ export function DummyHand({
   onSelectCard,
   highlightedCards = [],
   disabled = false,
+  compact = false,
 }: {
   cards: CardData[];
   onSelectCard?: (index: number) => void;
   highlightedCards?: CardData[];
   disabled?: boolean;
+  compact?: boolean;
 }) {
   // Group cards by suit
   const bySuit: Record<string, { card: CardData; originalIndex: number }[]> = {};
@@ -71,9 +73,9 @@ export function DummyHand({
                     disabled={cardDisabled}
                     style={{ marginTop: i > 0 ? "-4px" : 0, zIndex: i }}
                     className={`
-                      relative w-10 h-7 rounded bg-white border shadow-sm
+                      relative ${compact ? "w-8 h-6" : "w-10 h-7"} rounded bg-white border shadow-sm
                       flex items-center justify-center gap-0.5
-                      text-sm font-black leading-none
+                      ${compact ? "text-xs" : "text-sm"} font-black leading-none
                       transition-all
                       ${suitColor[suit]}
                       ${highlighted
@@ -87,7 +89,7 @@ export function DummyHand({
                     `}
                   >
                     <span>{card.rank}</span>
-                    <span className="text-xs">{suitSymbol[suit]}</span>
+                    <span className={compact ? "text-[9px]" : "text-xs"}>{suitSymbol[suit]}</span>
                   </motion.button>
                 );
               })}
