@@ -4,12 +4,8 @@ import { motion } from "motion/react";
 import type { CardData } from "./playing-card";
 
 /**
- * Dummy hand displayed as rows by suit (bridge diagram style)
- * ♠ A J 7 4
- * ♥ J 10 7
- * ♦ Q 6
- * ♣ K 8 5 2
- * Each rank is a clickable button for card selection.
+ * Dummy hand displayed as vertical columns by suit (classic bridge style)
+ * Each suit is a column with cards stacked vertically, slightly overlapping.
  */
 
 const SUIT_ORDER: Array<CardData["suit"]> = ["spade", "heart", "diamond", "club"];
@@ -53,58 +49,59 @@ export function DummyHand({
   const isHighlighted = (card: CardData) =>
     highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
 
+  const cardW = compact ? "w-9" : "w-11";
+  const cardH = compact ? "h-7" : "h-8";
+  const fontSize = compact ? "text-xs" : "text-sm";
+  const suitSize = compact ? "text-[10px]" : "text-xs";
+  const overlapY = compact ? -3 : -2;
+
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-xl px-2.5 py-1.5 shadow-md border border-white/50">
-      <div className={`flex flex-col ${compact ? "gap-0" : "gap-0.5"}`}>
-        {SUIT_ORDER.map((suit) => {
-          const suitCards = bySuit[suit];
-          if (suitCards.length === 0) return null;
+    <div className="flex gap-0.5 justify-center">
+      {SUIT_ORDER.map((suit) => {
+        const suitCards = bySuit[suit];
+        if (suitCards.length === 0) return null;
 
-          return (
-            <div key={suit} className="flex items-center gap-1">
-              {/* Suit symbol */}
-              <span className={`${compact ? "text-base" : "text-lg"} font-black ${suitColor[suit]} w-5 text-center shrink-0`}>
-                {suitSymbol[suit]}
-              </span>
-              {/* Rank buttons */}
-              <div className="flex gap-0.5">
-                {suitCards.map(({ card, originalIndex }, i) => {
-                  const highlighted = isHighlighted(card);
-                  const cardDisabled = disabled || (highlightedCards.length > 0 && !highlighted);
+        return (
+          <div key={suit} className="flex flex-col items-center">
+            <div className="flex flex-col">
+              {suitCards.map(({ card, originalIndex }, i) => {
+                const highlighted = isHighlighted(card);
+                const cardDisabled = disabled || (highlightedCards.length > 0 && !highlighted);
 
-                  return (
-                    <motion.button
-                      key={`${card.suit}-${card.rank}`}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      onClick={() => !cardDisabled && onSelectCard?.(originalIndex)}
-                      disabled={cardDisabled}
-                      className={`
-                        ${compact ? "w-7 h-7 text-sm" : "w-8 h-8 text-base"} rounded-md
-                        font-extrabold leading-none
-                        flex items-center justify-center
-                        transition-all touch-manipulation
-                        ${suitColor[suit]}
-                        ${highlighted
-                          ? "bg-emerald-100 ring-2 ring-emerald border-emerald shadow-md shadow-emerald/30 scale-110 z-10"
-                          : "bg-gray-50 border border-gray-200"
-                        }
-                        ${cardDisabled
-                          ? "opacity-50 cursor-not-allowed"
-                          : "hover:bg-white hover:shadow-md hover:scale-110 hover:z-10 cursor-pointer active:scale-95"
-                        }
-                      `}
-                    >
-                      {card.rank}
-                    </motion.button>
-                  );
-                })}
-              </div>
+                return (
+                  <motion.button
+                    key={`${card.suit}-${card.rank}`}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    onClick={() => !cardDisabled && onSelectCard?.(originalIndex)}
+                    disabled={cardDisabled}
+                    style={{ marginTop: i > 0 ? overlapY : 0, zIndex: i }}
+                    className={`
+                      relative ${cardW} ${cardH} rounded-sm bg-white
+                      border flex items-center justify-center gap-0.5
+                      ${fontSize} font-extrabold leading-none
+                      transition-all touch-manipulation
+                      ${suitColor[suit]}
+                      ${highlighted
+                        ? "ring-2 ring-emerald border-emerald shadow-md shadow-emerald/30 z-20 scale-110"
+                        : "border-gray-300 shadow-sm"
+                      }
+                      ${cardDisabled
+                        ? "opacity-60 cursor-not-allowed"
+                        : "hover:scale-110 hover:shadow-md hover:z-30 cursor-pointer active:scale-95"
+                      }
+                    `}
+                  >
+                    <span>{card.rank}</span>
+                    <span className={suitSize}>{suitSymbol[suit]}</span>
+                  </motion.button>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
