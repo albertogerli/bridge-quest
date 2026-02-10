@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useAuth } from "./use-auth";
 import { createClient } from "@/lib/supabase/client";
 
@@ -19,66 +19,97 @@ const LS_KEYS = {
   reviewItems: "bq_review_items",
 } as const;
 
+/** Snapshot of last-synced values to skip unnecessary pushes */
+let lastSyncedSnapshot = "";
+
+function getLocalSnapshot(): string {
+  try {
+    return JSON.stringify({
+      xp: localStorage.getItem(LS_KEYS.xp) || "0",
+      streak: localStorage.getItem(LS_KEYS.streak) || "0",
+      handsPlayed: localStorage.getItem(LS_KEYS.handsPlayed) || "0",
+      profile: localStorage.getItem(LS_KEYS.profile) || "adulto",
+      memoryBest: localStorage.getItem(LS_KEYS.memoryBest) || "",
+      textSize: localStorage.getItem(LS_KEYS.textSize) || "medio",
+      animSpeed: localStorage.getItem(LS_KEYS.animSpeed) || "normale",
+      sound: localStorage.getItem(LS_KEYS.sound) ?? "true",
+      completedModules: localStorage.getItem(LS_KEYS.completedModules) || "{}",
+      badges: localStorage.getItem(LS_KEYS.badges) || "[]",
+    });
+  } catch {
+    return "";
+  }
+}
+
 /**
- * Syncs localStorage data to Supabase when user logs in for the first time.
- * After migration, Supabase becomes the source of truth for logged-in users.
+ * Continuous Supabase sync.
+ *
+ * - On first login: bidirectional sync (Supabase wins if it has data, else localStorage migrates up)
+ * - Every 30 seconds: push localStorage changes to Supabase (only if something changed)
+ * - On tab focus: immediate push
+ * - On page close: best-effort push
  */
 export function useSupabaseSync() {
   const { user, profile } = useAuth();
-  const hasSynced = useRef(false);
+  const hasDoneInitialSync = useRef(false);
+  const userIdRef = useRef<string | null>(null);
   const supabase = createClient();
 
+  // Keep user id in ref for event handlers
   useEffect(() => {
-    if (!user || !profile || hasSynced.current) return;
-    hasSynced.current = true;
+    userIdRef.current = user?.id ?? null;
+  }, [user]);
 
-    const syncToSupabase = async () => {
+  // Push current localStorage state to Supabase
+  const pushToSupabase = useCallback(
+    async (userId: string, force = false) => {
       try {
-        // Check if user already has data in Supabase (xp > 0 means already migrated)
-        if (profile.xp > 0) {
-          // Supabase already has data, sync FROM Supabase TO localStorage
-          syncToLocalStorage(profile);
-          return;
-        }
+        const snapshot = getLocalSnapshot();
+        if (!force && snapshot === lastSyncedSnapshot) return;
 
-        // Migrate FROM localStorage TO Supabase
-        const localXp = parseInt(localStorage.getItem(LS_KEYS.xp) || "0", 10);
-        const localStreak = parseInt(localStorage.getItem(LS_KEYS.streak) || "0", 10);
-        const localHandsPlayed = parseInt(localStorage.getItem(LS_KEYS.handsPlayed) || "0", 10);
-        const localProfile = localStorage.getItem(LS_KEYS.profile) || "adulto";
-        const localMemoryBest = localStorage.getItem(LS_KEYS.memoryBest);
-        const localTextSize = localStorage.getItem(LS_KEYS.textSize) || "medio";
-        const localAnimSpeed = localStorage.getItem(LS_KEYS.animSpeed) || "normale";
-        const localSound = localStorage.getItem(LS_KEYS.sound);
+        const xp = parseInt(localStorage.getItem(LS_KEYS.xp) || "0", 10);
+        const streak = parseInt(localStorage.getItem(LS_KEYS.streak) || "0", 10);
+        const handsPlayed = parseInt(localStorage.getItem(LS_KEYS.handsPlayed) || "0", 10);
+        const profileType = localStorage.getItem(LS_KEYS.profile) || "adulto";
+        const memoryBest = localStorage.getItem(LS_KEYS.memoryBest);
+        const textSize = localStorage.getItem(LS_KEYS.textSize) || "medio";
+        const animSpeed = localStorage.getItem(LS_KEYS.animSpeed) || "normale";
+        const sound = localStorage.getItem(LS_KEYS.sound);
 
-        // Only migrate if there's actual data
-        if (localXp > 0 || localStreak > 0 || localHandsPlayed > 0) {
-          await supabase
-            .from("profiles")
-            .update({
-              xp: localXp,
-              streak: localStreak,
-              hands_played: localHandsPlayed,
-              profile_type: localProfile as "giovane" | "adulto" | "senior",
-              memory_best: localMemoryBest ? parseInt(localMemoryBest, 10) : null,
-              text_size: localTextSize,
-              anim_speed: localAnimSpeed,
-              sound_on: localSound !== "false",
-              last_login: new Date().toISOString().split("T")[0],
-            })
-            .eq("id", user.id);
-        }
+        // Push profile data
+        await supabase
+          .from("profiles")
+          .update({
+            xp,
+            streak,
+            hands_played: handsPlayed,
+            profile_type: profileType as "giovane" | "adulto" | "senior",
+            memory_best: memoryBest ? parseInt(memoryBest, 10) : null,
+            text_size: textSize,
+            anim_speed: animSpeed,
+            sound_on: sound !== "false",
+            last_login: new Date().toISOString().split("T")[0],
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", userId);
 
-        // Migrate completed modules
+        // Push completed modules (stored as Record<string, boolean>)
         const completedRaw = localStorage.getItem(LS_KEYS.completedModules);
         if (completedRaw) {
           try {
-            const completed: string[] = JSON.parse(completedRaw);
-            const rows = completed.map((moduleKey) => {
+            const parsed = JSON.parse(completedRaw);
+            // Handle both object {"1-1": true} and legacy array ["1-1"] formats
+            const keys: string[] = Array.isArray(parsed)
+              ? parsed
+              : typeof parsed === "object"
+                ? Object.keys(parsed)
+                : [];
+
+            const rows = keys.map((moduleKey: string) => {
               const parts = moduleKey.split("-");
               const lessonId = parts.slice(0, -1).join("-");
               const moduleId = parts[parts.length - 1];
-              return { user_id: user.id, lesson_id: lessonId, module_id: moduleId };
+              return { user_id: userId, lesson_id: lessonId, module_id: moduleId };
             });
             if (rows.length > 0) {
               await supabase.from("completed_modules").upsert(rows, {
@@ -88,13 +119,13 @@ export function useSupabaseSync() {
           } catch {}
         }
 
-        // Migrate badges
+        // Push badges
         const badgesRaw = localStorage.getItem(LS_KEYS.badges);
         if (badgesRaw) {
           try {
             const badges: string[] = JSON.parse(badgesRaw);
             const rows = badges.map((badgeId) => ({
-              user_id: user.id,
+              user_id: userId,
               badge_id: badgeId,
             }));
             if (rows.length > 0) {
@@ -105,7 +136,7 @@ export function useSupabaseSync() {
           } catch {}
         }
 
-        // Migrate review items
+        // Push review items
         const reviewRaw = localStorage.getItem(LS_KEYS.reviewItems);
         if (reviewRaw) {
           try {
@@ -117,27 +148,135 @@ export function useSupabaseSync() {
               lastReview?: string;
               nextReview?: string;
             }> = JSON.parse(reviewRaw);
-            const rows = items.map((item) => ({
-              user_id: user.id,
-              lesson_id: item.lessonId,
-              module_id: item.moduleId,
-              question: item.question || null,
-              wrong_count: item.wrongCount,
-              last_review: item.lastReview || null,
-              next_review: item.nextReview || null,
-            }));
-            if (rows.length > 0) {
+
+            // Delete old items and re-insert (simpler than diffing)
+            await supabase.from("review_items").delete().eq("user_id", userId);
+
+            if (items.length > 0) {
+              const rows = items.map((item) => ({
+                user_id: userId,
+                lesson_id: item.lessonId,
+                module_id: item.moduleId,
+                question: item.question || null,
+                wrong_count: item.wrongCount,
+                last_review: item.lastReview || null,
+                next_review: item.nextReview || null,
+              }));
               await supabase.from("review_items").insert(rows);
             }
           } catch {}
         }
+
+        lastSyncedSnapshot = snapshot;
       } catch (err) {
-        console.error("Sync error:", err);
+        console.error("[Sync] Push error:", err);
+      }
+    },
+    [supabase]
+  );
+
+  // Initial bidirectional sync (once per session)
+  useEffect(() => {
+    if (!user || !profile || hasDoneInitialSync.current) return;
+    hasDoneInitialSync.current = true;
+
+    const initialSync = async () => {
+      try {
+        if (profile.xp > 0) {
+          // Supabase has data → pull to localStorage
+          syncToLocalStorage(profile);
+
+          // Also pull completed modules from Supabase
+          const { data: modules } = await supabase
+            .from("completed_modules")
+            .select("lesson_id, module_id")
+            .eq("user_id", user.id);
+
+          if (modules && modules.length > 0) {
+            const map: Record<string, boolean> = {};
+            for (const m of modules) {
+              map[`${m.lesson_id}-${m.module_id}`] = true;
+            }
+            localStorage.setItem(LS_KEYS.completedModules, JSON.stringify(map));
+          }
+
+          // Pull badges
+          const { data: badges } = await supabase
+            .from("badges")
+            .select("badge_id")
+            .eq("user_id", user.id);
+
+          if (badges && badges.length > 0) {
+            localStorage.setItem(
+              LS_KEYS.badges,
+              JSON.stringify(badges.map((b) => b.badge_id))
+            );
+          }
+
+          // Pull review items
+          const { data: reviews } = await supabase
+            .from("review_items")
+            .select("*")
+            .eq("user_id", user.id);
+
+          if (reviews && reviews.length > 0) {
+            const items = reviews.map((r) => ({
+              lessonId: r.lesson_id,
+              moduleId: r.module_id,
+              question: r.question,
+              wrongCount: r.wrong_count,
+              lastReview: r.last_review,
+              nextReview: r.next_review,
+            }));
+            localStorage.setItem(LS_KEYS.reviewItems, JSON.stringify(items));
+          }
+
+          lastSyncedSnapshot = getLocalSnapshot();
+          return;
+        }
+
+        // Supabase is empty → push localStorage up (first-time migration)
+        await pushToSupabase(user.id, true);
+      } catch (err) {
+        console.error("[Sync] Initial sync error:", err);
       }
     };
 
-    syncToSupabase();
-  }, [user, profile, supabase]);
+    initialSync();
+  }, [user, profile, supabase, pushToSupabase]);
+
+  // Continuous sync: periodic push + visibility change + beforeunload
+  useEffect(() => {
+    if (!user) return;
+
+    const userId = user.id;
+
+    // Push every 30 seconds if there are changes
+    const intervalId = setInterval(() => {
+      pushToSupabase(userId);
+    }, 30_000);
+
+    // Push when tab becomes visible again
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        pushToSupabase(userId);
+      }
+    };
+
+    // Best-effort push on page close
+    const handleBeforeUnload = () => {
+      pushToSupabase(userId);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [user, pushToSupabase]);
 }
 
 function syncToLocalStorage(profile: {
