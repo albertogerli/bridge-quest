@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/lib/supabase/client";
+import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 
 const mockPlayers = [
   { name: "MarioBridge", xp: 2450 },
@@ -65,15 +66,11 @@ const avatarColors = [
   "bg-red-100 text-red-700",
 ];
 
-const levelNames = [
-  "Principiante", "Novizio", "Apprendista", "Giocatore",
-  "Esperto", "Dichiarante", "Stratega", "Campione",
-  "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
-];
-
 function getLevel(xp: number) {
   const level = Math.floor(xp / 100) + 1;
-  return { level, name: levelNames[Math.min(level - 1, levelNames.length - 1)] };
+  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
+  const names = getProfileConfig(profileKey || "adulto").levelNames;
+  return { level, name: names[Math.min(level - 1, names.length - 1)] };
 }
 
 const leagues = [

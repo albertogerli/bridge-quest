@@ -276,11 +276,11 @@ export default function ModulePage({
       if (timerRef.current) clearInterval(timerRef.current);
 
       // Achievement triggers
-      if (streak === 3) showAchievement("Tris! 3 risposte consecutive 🔥");
-      if (streak === 5) showAchievement("FUOCO! 5 di fila — 3x XP! 🔥🔥🔥");
-      if (streak === 7) showAchievement("LEGGENDARIO! 7 risposte perfette! 👑");
+      if (streak === 3) showAchievement(profile.streak3);
+      if (streak === 5) showAchievement(profile.streak5);
+      if (streak === 7) showAchievement(profile.streak7);
       if (correctAnswers + 1 === totalQuizzes && totalQuizzes >= 3) {
-        showAchievement("PUNTEGGIO PERFETTO! Tutti i quiz corretti! 🏆");
+        showAchievement(profile.perfectScore);
       }
     } else {
       setCorrectStreak(0);
@@ -700,7 +700,7 @@ export default function ModulePage({
                           </div>
                           <div>
                             <p className="text-sm font-bold text-emerald-800">
-                              {["Bravo! Ben ragionato.", "Esatto! Ottima risposta.", "Perfetto! Continua cosi.", "Giusto! Stai imparando veloce."][correctStreak % 4]} +20 {profile.xpLabel}
+                              {profile.correctMessages[correctStreak % profile.correctMessages.length]} +20 {profile.xpLabel}
                             </p>
                             {correctStreak >= 2 && (
                               <p className="text-xs text-emerald-600 mt-0.5">Serie di {correctStreak} risposte!</p>
@@ -744,7 +744,7 @@ export default function ModulePage({
                         <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
                           <span className="text-lg">💥</span>
                           <p className="text-sm font-bold text-red-800">
-                            Sbagliato! Streak persa. Riprova al prossimo!
+                            {profile.wrongMessage}
                           </p>
                         </div>
                       ) : (
@@ -1234,7 +1234,7 @@ export default function ModulePage({
                 >
                   🎉
                 </motion.div>
-                <h3 className="text-2xl font-black text-amber-900">LEVEL UP!</h3>
+                <h3 className="text-2xl font-black text-amber-900">{profile.levelUpTitle}</h3>
                 <p className="text-amber-800 font-bold mt-2 text-lg">
                   Livello {Math.floor(xpEarned / 100) + 1}
                 </p>

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { courses } from "@/data/courses";
 import type { ContentBlock } from "@/data/courses";
-import type { UserProfile } from "@/hooks/use-profile";
+import { useProfile, type UserProfile } from "@/hooks/use-profile";
 
 // ===== Types =====
 
@@ -181,6 +181,7 @@ function getTypeBadge(type: QuizQuestion["type"]) {
 
 export default function QuizLampoPage() {
   const [profile, setProfile] = useState<UserProfile>("adulto");
+  const profileConfig = useProfile();
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
 
@@ -548,7 +549,7 @@ export default function QuizLampoPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">3.</span>
-                  Combo: risposte consecutive corrette = bonus XP
+                  {`Combo: risposte consecutive corrette = bonus ${profileConfig.xpLabel}`}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">4.</span>
@@ -703,7 +704,7 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-black text-emerald-600">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">XP</p>
+                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -715,7 +716,7 @@ export default function QuizLampoPage() {
               className="mt-4 card-elevated rounded-2xl bg-white p-4"
             >
               <h3 className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">
-                Dettaglio XP
+                {`Dettaglio ${profileConfig.xpLabel}`}
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -749,7 +750,7 @@ export default function QuizLampoPage() {
                 <div className="border-t border-gray-100 pt-2 flex justify-between text-base">
                   <span className="font-extrabold text-gray-900">Totale</span>
                   <span className="font-extrabold text-emerald-600">
-                    +{xpEarned} XP
+                    +{xpEarned} {profileConfig.xpLabel}
                   </span>
                 </div>
               </div>
@@ -1007,7 +1008,7 @@ export default function QuizLampoPage() {
                       : "Corretto!"
                     : timeLeft <= 0
                       ? "Tempo scaduto!"
-                      : "Sbagliato!"}
+                      : profileConfig.wrongMessage}
                 </p>
               </div>
               {currentQuestion.explanation && !wasCorrect && (

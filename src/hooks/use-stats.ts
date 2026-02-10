@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { courses } from "@/data/courses";
-
-const levelNames = [
-  "Principiante", "Novizio", "Apprendista", "Giocatore",
-  "Esperto", "Dichiarante", "Stratega", "Campione",
-  "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
-];
+import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 
 export function useStats() {
   const [xp, setXp] = useState(0);
@@ -30,7 +25,9 @@ export function useStats() {
 
   const level = Math.floor(xp / 100) + 1;
   const xpInLevel = xp % 100;
-  const levelName = levelNames[Math.min(level - 1, levelNames.length - 1)];
+  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
+  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
+  const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
   const totalModulesCompleted = Object.keys(completedModules).length;
   const totalModulesAvailable = courses.reduce(
     (sum, c) => sum + c.worlds.reduce(

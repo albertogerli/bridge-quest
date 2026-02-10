@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useStats } from "@/hooks/use-stats";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { collectibleCards } from "@/data/collectible-cards";
+import { useProfile } from "@/hooks/use-profile";
 
 const miniGames = [
   { href: "/gioca/quiz-lampo", emoji: "⚡", label: "Quiz Lampo", color: "bg-rose-50 border-rose-200 text-rose-700" },
@@ -14,6 +15,7 @@ const miniGames = [
 
 export function DesktopSidebar() {
   const stats = useStats();
+  const profile = useProfile();
   const { reviewCount } = useSpacedReview();
 
   const playerStats = {
@@ -47,7 +49,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-right">
               <p className="text-xl font-extrabold text-indigo-600">{stats.xpInLevel}</p>
-              <p className="text-[10px] text-gray-400 font-bold">/ 100 XP</p>
+              <p className="text-[10px] text-gray-400 font-bold">{`/ 100 ${profile.xpLabel}`}</p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
@@ -57,7 +59,7 @@ export function DesktopSidebar() {
             />
           </div>
           <p className="text-[10px] text-gray-400 mt-1.5 font-bold">
-            {stats.xp} XP totali · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
+            {stats.xp} {profile.xpLabel} totali · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
           </p>
         </div>
 
@@ -72,7 +74,7 @@ export function DesktopSidebar() {
             </div>
             {stats.streak > 0 && (
               <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5">
-                +{Math.min(stats.streak * 5, 50)} XP/giorno
+                {`+${Math.min(stats.streak * 5, 50)} ${profile.xpLabel}/giorno`}
               </span>
             )}
           </div>
@@ -113,7 +115,7 @@ export function DesktopSidebar() {
               </div>
               {!stats.dailyDone && (
                 <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
-                  +40 XP
+                  {`+40 ${profile.xpLabel}`}
                 </span>
               )}
             </div>
