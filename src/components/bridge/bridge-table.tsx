@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Hand } from "./hand";
 import { DummyHand } from "./dummy-hand";
@@ -66,6 +67,29 @@ function CompactFaceDown({ count }: { count: number }) {
   );
 }
 
+// Card pixel widths matching Tailwind classes in playing-card.tsx
+const CARD_PX: Record<string, number> = { xs: 32, sm: 44, md: 72, lg: 96 };
+
+/** Pick the largest card size that fits, and compute exact overlap */
+function fitCards(
+  availableWidth: number,
+  numCards: number,
+  candidates: Array<"md" | "sm" | "xs"> = ["md", "sm", "xs"]
+): { size: "xs" | "sm" | "md"; overlap: number } {
+  if (numCards <= 1) return { size: candidates[0], overlap: 0 };
+  for (const sz of candidates) {
+    const w = CARD_PX[sz];
+    const needed = w * numCards;
+    if (needed <= availableWidth) return { size: sz, overlap: 0 };
+    const perCard = (needed - availableWidth) / (numCards - 1);
+    // Allow up to 65% overlap
+    if (perCard <= w * 0.65) return { size: sz, overlap: -Math.ceil(perCard) };
+  }
+  // Extreme fallback: xs with max overlap
+  const w = CARD_PX.xs;
+  return { size: "xs", overlap: -Math.ceil(w * 0.65) };
+}
+
 export function BridgeTable({
   north,
   south,
@@ -87,6 +111,31 @@ export function BridgeTable({
   disabled = false,
   compact = false,
 }: BridgeTableProps) {
+  // ── Self-measuring: adapt to actual rendered width ──
+  const tableRef = useRef<HTMLDivElement>(null);
+  const [tableWidth, setTableWidth] = useState(0);
+
+  useEffect(() => {
+    const el = tableRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) setTableWidth(Math.round(e.contentRect.width));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Auto-detect compact when table is narrow (< 500px)
+  const isCompact = compact || (tableWidth > 0 && tableWidth < 500);
+
+  // Compute optimal South card size from actual table width
+  const southAvailable = tableWidth > 0 ? tableWidth - 40 : 600; // 40px side padding
+  const southFit = fitCards(southAvailable, south.length, isCompact ? ["sm", "xs"] : ["md", "sm", "xs"]);
+
+  // North (non-dummy) also adapts
+  const northAvailable = tableWidth > 0 ? tableWidth - 60 : 500;
+  const northFit = fitCards(northAvailable, north.length, isCompact ? ["xs"] : ["sm", "xs"]);
+
   const vulColor = {
     none: "border-white/10",
     ns: "border-y-red-400/50 border-x-white/10",
@@ -125,7 +174,7 @@ export function BridgeTable({
   };
 
   return (
-    <div className={`relative w-full max-w-2xl mx-auto no-select ${compact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: compact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
+    <div ref={tableRef} className={`relative w-full max-w-2xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
       {/* Felt background */}
       <div
         className={`absolute inset-0 rounded-3xl felt-bg border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
@@ -135,11 +184,11 @@ export function BridgeTable({
 
       {/* Center: trick area + compass — z-20 so played cards always appear above face-down hands */}
       <div className="absolute inset-0 flex items-center justify-center z-20">
-        <div className={`relative ${compact ? "w-32 h-32" : "w-48 h-48"}`}>
+        <div className={`relative ${isCompact ? "w-32 h-32" : "w-48 h-48"}`}>
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className={`${compact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}>
-              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/50 ${compact ? "text-[8px]" : "text-[10px]"} font-bold`}>
+            <div className={`${isCompact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}>
+              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/50 ${isCompact ? "text-[8px]" : "text-[10px]"} font-bold`}>
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
                 <div />
@@ -158,7 +207,7 @@ export function BridgeTable({
           {/* Current trick cards */}
           <AnimatePresence>
             {currentTrick.map((play) => {
-              const trickPositions: Record<string, string> = compact
+              const trickPositions: Record<string, string> = isCompact
                 ? {
                     north: "-top-12 left-1/2 -translate-x-1/2",
                     south: "-bottom-12 left-1/2 -translate-x-1/2",
@@ -180,11 +229,11 @@ export function BridgeTable({
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <div className={`${compact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
-                    <span className={`${compact ? "text-base" : "text-lg"} font-black leading-none`}>
+                  <div className={`${isCompact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded-lg bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
+                    <span className={`${isCompact ? "text-base" : "text-lg"} font-black leading-none`}>
                       {play.card.rank}
                     </span>
-                    <span className={`${compact ? "text-base" : "text-lg"} leading-none`}>
+                    <span className={`${isCompact ? "text-base" : "text-lg"} leading-none`}>
                       {suitSymbol[play.card.suit]}
                     </span>
                   </div>
@@ -208,18 +257,19 @@ export function BridgeTable({
             onSelectCard={(i) => onPlayCard?.("north", i)}
             highlightedCards={activePosition === "north" ? highlightedCards : []}
             disabled={disabled || activePosition !== "north"}
-            compact={compact}
+            compact={isCompact}
           />
         ) : (
           <Hand
             cards={north}
             faceDown={northFaceDown}
-            size={compact ? "xs" : "sm"}
+            size={northFit.size}
             position="north"
             onSelectCard={(i) => onPlayCard?.("north", i)}
             highlightedCards={activePosition === "north" ? highlightedCards : []}
             disabled={disabled || activePosition !== "north"}
-            noHover={compact}
+            noHover={isCompact}
+            overlapOverride={northFit.overlap || undefined}
           />
         )}
       </div>
@@ -232,18 +282,19 @@ export function BridgeTable({
             onSelectCard={(i) => onPlayCard?.("south", i)}
             highlightedCards={activePosition === "south" ? highlightedCards : []}
             disabled={disabled || activePosition !== "south"}
-            compact={compact}
+            compact={isCompact}
           />
         ) : (
           <Hand
             cards={south}
             faceDown={southFaceDown}
-            size={compact ? "sm" : "md"}
+            size={southFit.size}
             position="south"
             onSelectCard={(i) => onPlayCard?.("south", i)}
             highlightedCards={activePosition === "south" ? highlightedCards : []}
             disabled={disabled || activePosition !== "south"}
-            noHover={compact}
+            noHover={isCompact}
+            overlapOverride={southFit.overlap || undefined}
           />
         )}
         <div className="text-center mt-1">
@@ -256,13 +307,13 @@ export function BridgeTable({
       {/* East hand */}
       <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
         <div className="flex items-center gap-1">
-          {compact && eastFaceDown ? (
+          {isCompact && eastFaceDown ? (
             <CompactFaceDown count={east.length} />
           ) : (
             <Hand
               cards={east}
               faceDown={eastFaceDown}
-              size={compact ? "xs" : "sm"}
+              size={isCompact ? "xs" : "sm"}
               position="east"
               disabled={true}
             />
@@ -279,13 +330,13 @@ export function BridgeTable({
           <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/50"}`}>
             Ovest
           </span>
-          {compact && westFaceDown ? (
+          {isCompact && westFaceDown ? (
             <CompactFaceDown count={west.length} />
           ) : (
             <Hand
               cards={west}
               faceDown={westFaceDown}
-              size={compact ? "xs" : "sm"}
+              size={isCompact ? "xs" : "sm"}
               position="west"
               disabled={true}
             />
