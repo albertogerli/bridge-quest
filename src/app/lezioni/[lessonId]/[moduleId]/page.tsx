@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getLessonById, getModuleById, worlds, type ContentBlock } from "@/data/lessons";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
+import { useAppunti } from "@/hooks/use-appunti";
 import { ComprehensionQuiz } from "@/components/comprehension-quiz";
 import { getVideoForLesson } from "@/components/maestro-video";
 import Link from "next/link";
@@ -83,6 +84,7 @@ export default function ModulePage({
 
   // Profile-based gamification config
   const profile = useProfile();
+  const { saveRules } = useAppunti();
 
   // Quiz timer for "giovane" profile
   useEffect(() => {
@@ -144,8 +146,24 @@ export default function ModulePage({
           localStorage.setItem("bq_last_login", today);
         }
       } catch {}
+
+      // Auto-save rules to appunti (bloc notes) for senior users
+      if (mod && lesson) {
+        const ruleTexts = mod.content
+          .filter((b) => b.type === "rule")
+          .map((b) => b.content);
+        if (ruleTexts.length > 0) {
+          saveRules({
+            lessonId: lesson.id,
+            moduleId: mod.id,
+            lessonTitle: lesson.title,
+            moduleTitle: mod.title,
+            rules: ruleTexts,
+          });
+        }
+      }
     }
-  }, [currentStep, contentLength, lessonId, moduleId]);
+  }, [currentStep, contentLength, lessonId, moduleId, mod, lesson, saveRules]);
 
   // Count quizzes for scoring (all interactive types)
   const quizTypes = ["quiz", "true-false", "card-select", "hand-eval", "bid-select"];
@@ -1763,6 +1781,44 @@ export default function ModulePage({
                 )}
               </div>
             </div>
+
+            {/* "Cosa hai imparato" - rules summary card (shown for all profiles, senior-friendly) */}
+            {(() => {
+              const ruleBlocks = mod.content.filter((b) => b.type === "rule");
+              if (ruleBlocks.length === 0) return null;
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0 }}
+                  className="rounded-2xl bg-gradient-to-br from-blue-50 via-white to-indigo-50/30 border border-blue-200 p-5"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">📝</span>
+                    <h4 className="text-base font-extrabold text-blue-900">Cosa hai imparato</h4>
+                  </div>
+                  <ul className="space-y-2">
+                    {ruleBlocks.map((rule, i) => (
+                      <li key={i} className="flex gap-2 items-start">
+                        <span className="text-blue-400 mt-0.5 shrink-0">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </span>
+                        <span className={`text-blue-800 leading-snug ${profile.profile === "senior" ? "text-base" : "text-sm"}`}>
+                          {rule.content}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 pt-3 border-t border-blue-100">
+                    <Link href="/appunti" className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">
+                      Vedi tutti i tuoi appunti →
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            })()}
 
             {/* Comprehension Quiz (for theory modules) */}
             {mod.type === "theory" && showComprehension && (
