@@ -10,6 +10,7 @@ import { courses, getAvailableCourses, getCourseStats, getGlobalStats, levelInfo
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
+import { useProfile, getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 
@@ -77,18 +78,16 @@ function useLocalStats() {
 
   const level = Math.floor(xp / 100) + 1;
   const xpInLevel = xp % 100;
-  const levelNames = [
-    "Principiante", "Novizio", "Apprendista", "Giocatore",
-    "Esperto", "Dichiarante", "Stratega", "Campione",
-    "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
-  ];
-  const levelName = levelNames[Math.min(level - 1, levelNames.length - 1)];
+  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
+  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
+  const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
 
   return { xp, streak, completedModules, level, xpInLevel, levelName, dailyDone, dailyLoginAwarded };
 }
 
 export default function Home() {
   const stats = useLocalStats();
+  const profile = useProfile();
   const { reviewCount } = useSpacedReview();
   const { canInstall, isInstalled, isIOS, install } = usePwaInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
@@ -221,7 +220,7 @@ export default function Home() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-5xl mb-3">📊</div>
-              <h2 className="text-2xl font-extrabold text-gray-900">Riepilogo settimanale</h2>
+              <h2 className="text-2xl font-extrabold text-gray-900">{profile.weeklyRecapTitle}</h2>
               <p className="text-sm text-gray-500 mt-1">Ecco i tuoi progressi!</p>
 
               <div className="grid grid-cols-2 gap-3 mt-6">
@@ -303,7 +302,7 @@ export default function Home() {
             <div className="mt-2 flex items-center justify-center gap-2">
               <div className="h-px w-8 bg-white/30" />
               <p className="text-sm font-semibold tracking-widest text-white/90 uppercase">
-                Corsi FIGB
+                {profile.heroSubtitle}
               </p>
               <div className="h-px w-8 bg-white/30" />
             </div>
@@ -396,7 +395,7 @@ export default function Home() {
           >
             <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl shadow-amber/30">
               <span className="text-lg">⚡</span>
-              Login giornaliero: +{10 + Math.min(stats.streak * 5, 50)} XP
+              Login giornaliero: +{10 + Math.min(stats.streak * 5, 50)} {profile.xpLabel}
               {stats.streak > 1 && <span className="ml-1 text-amber-100">(streak x{stats.streak})</span>}
             </div>
           </motion.div>
@@ -430,7 +429,7 @@ export default function Home() {
                     )}
                   </div>
                   <p className="mt-3 text-sm font-bold text-gray-900">
-                    Sfida del Giorno
+                    {profile.dailyChallengeLabel}
                   </p>
                   <p className="mt-0.5 text-xs text-gray-500">
                     {stats.dailyDone ? "Completata!" : "Gioca la mano quotidiana"}
@@ -970,6 +969,7 @@ const chestMilestones = [
 ];
 
 function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
+  const profile = useProfile();
   const [showChestPopup, setShowChestPopup] = useState<typeof chestMilestones[0] | null>(null);
 
   // Check for newly earned chest
@@ -1021,7 +1021,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
             >
               {showChestPopup.icon}
             </motion.div>
-            <h2 className="text-2xl font-extrabold text-gray-900">Baule sbloccato!</h2>
+            <h2 className="text-2xl font-extrabold text-gray-900">{profile.chestTitle}</h2>
             <p className="text-lg font-bold text-amber-600 mt-2">{showChestPopup.label}</p>
             <p className="text-sm text-gray-500 mt-1">{showChestPopup.reward}</p>
             <div className="mt-4 flex justify-center gap-1">
@@ -1388,9 +1388,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
   );
 }
 
-// ===== USER PROFILE TYPES =====
-export type UserProfile = "junior" | "giovane" | "adulto" | "senior";
-
+// ===== USER PROFILE OPTIONS =====
 const profileOptions: { id: UserProfile; emoji: string; label: string; age: string; desc: string }[] = [
   { id: "junior", emoji: "🎮", label: "Explorer", age: "8–17", desc: "Super divertente! Animazioni pazze, tanti premi e sfide" },
   { id: "giovane", emoji: "⚡", label: "Dinamico", age: "18–35", desc: "Ritmo veloce, sfide competitive, animazioni rapide" },

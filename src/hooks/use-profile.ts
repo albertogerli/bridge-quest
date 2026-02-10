@@ -26,7 +26,44 @@ export interface ProfileConfig {
   quizTransition: "slide" | "fade" | "scale";
   /** Show step-by-step hints */
   showHints: boolean;
+  /** Level names (12 levels) */
+  levelNames: string[];
+  /** Correct answer messages (rotated) */
+  correctMessages: string[];
+  /** Wrong answer message */
+  wrongMessage: string;
+  /** Achievement: 3 correct in a row */
+  streak3: string;
+  /** Achievement: 5 correct in a row */
+  streak5: string;
+  /** Achievement: 7 correct in a row */
+  streak7: string;
+  /** Achievement: perfect score */
+  perfectScore: string;
+  /** Level up title text */
+  levelUpTitle: string;
+  /** Treasure chest unlock title */
+  chestTitle: string;
+  /** Celebration scale (1.0 normal, 1.5 bigger for junior) */
+  celebrationScale: number;
+  /** Hero subtitle on homepage */
+  heroSubtitle: string;
+  /** Daily challenge label */
+  dailyChallengeLabel: string;
+  /** Weekly recap title */
+  weeklyRecapTitle: string;
 }
+
+const defaultLevelNames = [
+  "Principiante", "Novizio", "Apprendista", "Giocatore",
+  "Esperto", "Dichiarante", "Stratega", "Campione",
+  "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
+];
+
+const defaultCorrectMessages = [
+  "Bravo! Ben ragionato.", "Esatto! Ottima risposta.",
+  "Perfetto! Continua cosi.", "Giusto! Stai imparando veloce.",
+];
 
 const configs: Record<UserProfile, ProfileConfig> = {
   junior: {
@@ -41,6 +78,26 @@ const configs: Record<UserProfile, ProfileConfig> = {
     contentClasses: "",
     quizTransition: "scale",
     showHints: true,
+    levelNames: [
+      "Piccolo Bridgista", "Esploratore", "Avventuriero", "Sfidante",
+      "Tattico", "Stratega", "Campione", "Super Campione",
+      "Eroe del Bridge", "Leggenda", "Mito Vivente", "Campione Galattico",
+    ],
+    correctMessages: [
+      "SPACCA! 💥", "SEI UN MITO! 🌟", "PERFETTO! 🔥",
+      "GENIALE! ⚡", "BOOM! 💣", "INCREDIBILE! 🚀",
+    ],
+    wrongMessage: "Oops! Non mollare, il prossimo e' tuo! 💪",
+    streak3: "🔥 TRIS INFUOCATO! 3 di fila!",
+    streak5: "🚀 SEI INARRESTABILE! 5 di fila! 3x Stelle!",
+    streak7: "👑 LEGGENDA ASSOLUTA! 7 risposte perfette!",
+    perfectScore: "⭐ STELLE PIENE! Tutti i quiz corretti! Il Maestro ti applaude!",
+    levelUpTitle: "SEI SALITO DI LIVELLO!",
+    chestTitle: "WOW! BAULE APERTO!",
+    celebrationScale: 1.5,
+    heroSubtitle: "La Tua Avventura!",
+    dailyChallengeLabel: "Sfida Speciale di Oggi!",
+    weeklyRecapTitle: "La Tua Settimana Pazzesca!",
   },
   giovane: {
     profile: "giovane",
@@ -54,6 +111,19 @@ const configs: Record<UserProfile, ProfileConfig> = {
     contentClasses: "",
     quizTransition: "slide",
     showHints: false,
+    levelNames: defaultLevelNames,
+    correctMessages: defaultCorrectMessages,
+    wrongMessage: "Sbagliato! Streak persa. Riprova al prossimo!",
+    streak3: "Tris! 3 risposte consecutive 🔥",
+    streak5: "FUOCO! 5 di fila — 3x XP! 🔥🔥🔥",
+    streak7: "LEGGENDARIO! 7 risposte perfette! 👑",
+    perfectScore: "PUNTEGGIO PERFETTO! Tutti i quiz corretti! 🏆",
+    levelUpTitle: "LEVEL UP!",
+    chestTitle: "Baule sbloccato!",
+    celebrationScale: 1.0,
+    heroSubtitle: "Corsi FIGB",
+    dailyChallengeLabel: "Sfida del Giorno",
+    weeklyRecapTitle: "Riepilogo settimanale",
   },
   adulto: {
     profile: "adulto",
@@ -67,6 +137,19 @@ const configs: Record<UserProfile, ProfileConfig> = {
     contentClasses: "",
     quizTransition: "fade",
     showHints: false,
+    levelNames: defaultLevelNames,
+    correctMessages: defaultCorrectMessages,
+    wrongMessage: "Sbagliato! Streak persa. Riprova al prossimo!",
+    streak3: "Tris! 3 risposte consecutive 🔥",
+    streak5: "FUOCO! 5 di fila — 3x XP! 🔥🔥🔥",
+    streak7: "LEGGENDARIO! 7 risposte perfette! 👑",
+    perfectScore: "PUNTEGGIO PERFETTO! Tutti i quiz corretti! 🏆",
+    levelUpTitle: "LEVEL UP!",
+    chestTitle: "Baule sbloccato!",
+    celebrationScale: 1.0,
+    heroSubtitle: "Corsi FIGB",
+    dailyChallengeLabel: "Sfida del Giorno",
+    weeklyRecapTitle: "Riepilogo settimanale",
   },
   senior: {
     profile: "senior",
@@ -80,6 +163,22 @@ const configs: Record<UserProfile, ProfileConfig> = {
     contentClasses: "text-[1.0625rem] leading-relaxed",
     quizTransition: "fade",
     showHints: true,
+    levelNames: defaultLevelNames,
+    correctMessages: [
+      "Ottimo lavoro!", "Risposta corretta!",
+      "Ben fatto!", "Esatto, complimenti!",
+    ],
+    wrongMessage: "Nessun problema! Leggi la spiegazione e la prossima volta andra' meglio.",
+    streak3: "Tre risposte corrette di fila! 👏",
+    streak5: "Cinque di fila — complimenti! 🌟",
+    streak7: "Sette risposte perfette! Straordinario! 🏆",
+    perfectScore: "Punteggio perfetto! Tutti i quiz corretti! 🏆",
+    levelUpTitle: "Nuovo livello raggiunto!",
+    chestTitle: "Baule sbloccato!",
+    celebrationScale: 1.0,
+    heroSubtitle: "Corsi FIGB",
+    dailyChallengeLabel: "Sfida del Giorno",
+    weeklyRecapTitle: "Riepilogo settimanale",
   },
 };
 

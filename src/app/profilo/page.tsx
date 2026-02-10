@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { courses, levelInfo } from "@/data/courses";
 import { useAuth } from "@/hooks/use-auth";
 import { ASD_LIST } from "@/data/asd-list";
-import type { UserProfile } from "@/hooks/use-profile";
+import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "motion/react";
@@ -46,13 +46,10 @@ export default function ProfiloPage() {
 
   const level = Math.floor(xp / 100) + 1;
   const xpInLevel = xp % 100;
-  const levelNames = [
-    "Principiante", "Novizio", "Apprendista", "Giocatore",
-    "Esperto", "Dichiarante", "Stratega", "Campione",
-    "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
-  ];
-  const levelName = levelNames[Math.min(level - 1, levelNames.length - 1)];
-  const nextLevelName = levelNames[Math.min(level, levelNames.length - 1)];
+  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
+  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
+  const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
+  const nextLevelName = profileLevelNames[Math.min(level, profileLevelNames.length - 1)];
 
   const totalModulesCompleted = Object.keys(completedModules).length;
   const totalModulesAvailable = allWorlds.reduce(

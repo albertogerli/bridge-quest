@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { UserProfile } from "@/hooks/use-profile";
+import { useProfile, type UserProfile } from "@/hooks/use-profile";
 
 // Card generation
 const suits = ["spade", "heart", "diamond", "club"] as const;
@@ -55,6 +55,7 @@ const difficultyConfig = {
 
 export default function ContaVelocePage() {
   const [profile, setProfile] = useState<UserProfile>("adulto");
+  const profileConfig = useProfile();
   const [phase, setPhase] = useState<"menu" | "playing" | "result" | "gameover">("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
   const [hand, setHand] = useState<Card[]>([]);
@@ -275,7 +276,7 @@ export default function ContaVelocePage() {
               </div>
               <div className="card-elevated rounded-xl bg-white p-3">
                 <p className="text-lg font-black text-amber-500">+{xpEarned}</p>
-                <p className="text-[10px] text-gray-400 font-bold">XP</p>
+                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
