@@ -37,6 +37,7 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [authTimeout, setAuthTimeout] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const supabase = createClient();
 
@@ -93,11 +94,15 @@ export default function AdminPage() {
     }
 
     setLoading(false);
+    setLastUpdated(new Date());
   }, [supabase]);
 
   useEffect(() => {
     if (!authLoading && user) {
       fetchData();
+      // Auto-refresh every 30 seconds
+      const interval = setInterval(fetchData, 30000);
+      return () => clearInterval(interval);
     }
   }, [authLoading, user, fetchData]);
 
@@ -186,14 +191,30 @@ export default function AdminPage() {
               <h1 className="text-2xl font-extrabold flex items-center gap-2">
                 ⚙️ Admin BridgeQuest
               </h1>
-              <p className="text-slate-400 text-sm mt-1">Dashboard amministratore</p>
+              <p className="text-slate-400 text-sm mt-1">
+                Dashboard amministratore
+                {lastUpdated && (
+                  <span className="ml-2 text-slate-500">
+                    · aggiornato {lastUpdated.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                  </span>
+                )}
+              </p>
             </div>
-            <Link
-              href="/"
-              className="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
-            >
-              ← App
-            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={fetchData}
+                className="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
+                title="Aggiorna dati"
+              >
+                🔄 Aggiorna
+              </button>
+              <Link
+                href="/"
+                className="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
+              >
+                ← App
+              </Link>
+            </div>
           </div>
         </div>
       </div>
