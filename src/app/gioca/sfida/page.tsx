@@ -13,6 +13,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
 import Link from "next/link";
+import { useMobile } from "@/hooks/use-mobile";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(): Smazzata {
@@ -48,6 +49,7 @@ export default function SfidaDelGiornoPage() {
   const dummyGamePos = toGamePosition("north", declarer);
   const xpSaved = useRef(false);
   const [alreadyCompleted] = useState(() => isDailyChallengeCompleted());
+  const isMobile = useMobile();
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -228,6 +230,7 @@ export default function SfidaDelGiornoPage() {
                 highlightedCards={game.validCards as CardData[]}
                 activePosition={activeDisplayPos}
                 disabled={!game.isPlayerTurn}
+                compact={isMobile}
               />
             ) : (
               <BridgeTable
@@ -244,11 +247,12 @@ export default function SfidaDelGiornoPage() {
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
+                compact={isMobile}
               />
             )}
           </motion.div>
 
-          {smazzata.bidding && (
+          {smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}

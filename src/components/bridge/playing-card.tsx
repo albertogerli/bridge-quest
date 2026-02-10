@@ -38,8 +38,8 @@ export function PlayingCard({
   noHover?: boolean;
 }) {
   const dimensions = {
-    xs: "w-9 h-[50px]",
-    sm: "w-12 h-[68px]",
+    xs: "w-8 h-[44px]",
+    sm: "w-11 h-[60px]",
     md: "w-[72px] h-[100px]",
     lg: "w-24 h-[132px]",
   };
