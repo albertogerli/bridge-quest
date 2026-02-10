@@ -73,9 +73,9 @@ export function DummyHand({
                     disabled={cardDisabled}
                     style={{ marginTop: i > 0 ? "-4px" : 0, zIndex: i }}
                     className={`
-                      relative ${compact ? "w-8 h-6" : "w-10 h-7"} rounded bg-white border shadow-sm
+                      relative ${compact ? "w-10 h-7" : "w-12 h-9"} rounded bg-white border shadow-sm
                       flex items-center justify-center gap-0.5
-                      ${compact ? "text-xs" : "text-sm"} font-black leading-none
+                      ${compact ? "text-sm" : "text-base"} font-black leading-none
                       transition-all
                       ${suitColor[suit]}
                       ${highlighted
@@ -83,13 +83,13 @@ export function DummyHand({
                         : "border-gray-200"
                       }
                       ${cardDisabled
-                        ? "opacity-40 cursor-not-allowed"
+                        ? "opacity-60 cursor-not-allowed"
                         : "hover:scale-110 hover:shadow-md hover:z-30 cursor-pointer active:scale-95"
                       }
                     `}
                   >
                     <span>{card.rank}</span>
-                    <span className={compact ? "text-[9px]" : "text-xs"}>{suitSymbol[suit]}</span>
+                    <span className={compact ? "text-xs" : "text-sm"}>{suitSymbol[suit]}</span>
                   </motion.button>
                 );
               })}
