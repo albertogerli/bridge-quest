@@ -8,46 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 
-const mockPlayers = [
-  { name: "MarioBridge", xp: 2450 },
-  { name: "LuciaCards", xp: 2180 },
-  { name: "PaoloAces", xp: 1920 },
-  { name: "GiuliaSlam", xp: 1750 },
-  { name: "MarcoNT", xp: 1680 },
-  { name: "AnnaFinesse", xp: 1540 },
-  { name: "FrancoDummy", xp: 1320 },
-  { name: "ElenaDouble", xp: 1100 },
-  { name: "StefanoTrump", xp: 890 },
-  { name: "ChiaraVoid", xp: 720 },
-  { name: "DavideRuff", xp: 580 },
-  { name: "SaraSqueeze", xp: 410 },
-];
-
-const monthlyPlayers = [
-  { name: "LuciaCards", xp: 8650 },
-  { name: "MarioBridge", xp: 7980 },
-  { name: "GiuliaSlam", xp: 6450 },
-  { name: "PaoloAces", xp: 5820 },
-  { name: "AnnaFinesse", xp: 5200 },
-  { name: "MarcoNT", xp: 4750 },
-  { name: "StefanoTrump", xp: 3900 },
-  { name: "FrancoDummy", xp: 3420 },
-  { name: "ElenaDouble", xp: 2980 },
-  { name: "ChiaraVoid", xp: 2100 },
-];
-
-const allTimePlayers = [
-  { name: "MarioBridge", xp: 24500 },
-  { name: "PaoloAces", xp: 21800 },
-  { name: "LuciaCards", xp: 19200 },
-  { name: "GiuliaSlam", xp: 15400 },
-  { name: "AnnaFinesse", xp: 13200 },
-  { name: "MarcoNT", xp: 11800 },
-  { name: "FrancoDummy", xp: 9600 },
-  { name: "ElenaDouble", xp: 8400 },
-  { name: "StefanoTrump", xp: 6800 },
-  { name: "ChiaraVoid", xp: 5200 },
-];
+// No more mock data - real leaderboard from Supabase
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -116,6 +77,8 @@ interface AsdRanking {
 
 export default function ClassificaPage() {
   const [xp, setXp] = useState(0);
+  const [realPlayers, setRealPlayers] = useState<{ name: string; xp: number }[]>([]);
+  const [playersLoading, setPlayersLoading] = useState(true);
   const [asdRankings, setAsdRankings] = useState<AsdRanking[]>([]);
   const [asdLoading, setAsdLoading] = useState(false);
   const countdown = getWeeklyCountdown();
@@ -124,6 +87,28 @@ export default function ClassificaPage() {
     try {
       setXp(parseInt(localStorage.getItem("bq_xp") || "0", 10));
     } catch {}
+
+    // Fetch real leaderboard from Supabase
+    const fetchLeaderboard = async () => {
+      try {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("profiles")
+          .select("display_name, xp")
+          .order("xp", { ascending: false })
+          .limit(50);
+
+        if (data && data.length > 0) {
+          setRealPlayers(
+            data
+              .filter((u) => u.display_name)
+              .map((u) => ({ name: u.display_name!, xp: u.xp || 0 }))
+          );
+        }
+      } catch {}
+      setPlayersLoading(false);
+    };
+    fetchLeaderboard();
   }, []);
 
   const fetchAsdRankings = async () => {
@@ -243,30 +228,42 @@ export default function ClassificaPage() {
           </TabsList>
 
           <TabsContent value="settimana" className="mt-4">
-            <LeaderboardTab
-              players={mockPlayers}
-              userXp={xp}
-              userLevel={userLevel}
-              league={league}
-            />
+            {playersLoading ? (
+              <LeaderboardSkeleton />
+            ) : (
+              <LeaderboardTab
+                players={realPlayers}
+                userXp={xp}
+                userLevel={userLevel}
+                league={league}
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="mese" className="mt-4">
-            <LeaderboardTab
-              players={monthlyPlayers}
-              userXp={Math.floor(xp * 3.5)}
-              userLevel={userLevel}
-              league={league}
-            />
+            {playersLoading ? (
+              <LeaderboardSkeleton />
+            ) : (
+              <LeaderboardTab
+                players={realPlayers}
+                userXp={xp}
+                userLevel={userLevel}
+                league={league}
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="sempre" className="mt-4">
-            <LeaderboardTab
-              players={allTimePlayers}
-              userXp={xp}
-              userLevel={userLevel}
-              league={league}
-            />
+            {playersLoading ? (
+              <LeaderboardSkeleton />
+            ) : (
+              <LeaderboardTab
+                players={realPlayers}
+                userXp={xp}
+                userLevel={userLevel}
+                league={league}
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="asd" className="mt-4">
@@ -347,6 +344,17 @@ function LeaderboardTab({
   const leaderboard = buildLeaderboard(players, userXp);
   const userEntry = leaderboard.find((p) => p.name === "__user__")!;
   const totalPlayers = leaderboard.length;
+
+  // If no other players, show empty state
+  if (players.length === 0 && userXp === 0) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
+        <span className="text-5xl block mb-4">🏆</span>
+        <p className="text-base font-bold text-gray-700">La classifica e ancora vuota</p>
+        <p className="text-sm text-gray-500 mt-1">Completa lezioni e sfide per scalare le posizioni!</p>
+      </motion.div>
+    );
+  }
 
   return (
     <>
@@ -505,5 +513,25 @@ function LeaderboardTab({
         })}
       </div>
     </>
+  );
+}
+
+function LeaderboardSkeleton() {
+  return (
+    <div className="space-y-2">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-elevated">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-4 bg-gray-100 rounded" />
+            <div className="h-10 w-10 bg-gray-100 rounded-full" />
+            <div className="flex-1">
+              <div className="h-4 w-24 bg-gray-100 rounded mb-1" />
+              <div className="h-3 w-16 bg-gray-50 rounded" />
+            </div>
+            <div className="h-4 w-12 bg-gray-100 rounded" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
