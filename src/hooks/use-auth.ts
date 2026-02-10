@@ -75,6 +75,14 @@ export function useAuth() {
         if (session?.user) {
           const profile = await fetchProfile(session.user.id);
           setState({ user: session.user, profile, session, loading: false });
+          // Update last_login on sign-in or token refresh
+          if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+            supabase
+              .from("profiles")
+              .update({ last_login: new Date().toISOString() })
+              .eq("id", session.user.id)
+              .then(() => {});
+          }
         } else {
           setState({ user: null, profile: null, session: null, loading: false });
         }
@@ -83,6 +91,45 @@ export function useAuth() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Inactivity timeout: auto-logout after 30 minutes of no interaction
+  useEffect(() => {
+    if (!state.user) return;
+
+    const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+    let timer: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        console.log("Session timeout: auto-logout due to inactivity");
+        await supabase.auth.signOut();
+        setState({ user: null, profile: null, session: null, loading: false });
+      }, INACTIVITY_TIMEOUT);
+    };
+
+    const events = ["mousedown", "keydown", "touchstart", "scroll"];
+    events.forEach((e) => window.addEventListener(e, resetTimer, { passive: true }));
+    resetTimer();
+
+    return () => {
+      clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, resetTimer));
+    };
+  }, [state.user, supabase]);
+
+  // Refresh session periodically (every 10 min) to keep token alive while active
+  useEffect(() => {
+    if (!state.session) return;
+    const interval = setInterval(async () => {
+      const { data } = await supabase.auth.refreshSession();
+      if (!data.session) {
+        // Session expired server-side
+        setState({ user: null, profile: null, session: null, loading: false });
+      }
+    }, 10 * 60 * 1000); // every 10 minutes
+    return () => clearInterval(interval);
+  }, [state.session, supabase]);
 
   // Sign up with email/password
   const signUp = async ({
