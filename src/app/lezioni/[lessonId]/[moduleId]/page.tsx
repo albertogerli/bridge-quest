@@ -370,6 +370,8 @@ export default function ModulePage({
     });
   }
 
+  const isJunior = profile.profile === "junior";
+
   const renderBlock = (block: ContentBlock, blockIndex: number) => {
     const delay = 0.05 * Math.min(blockIndex, 3);
 
@@ -380,12 +382,12 @@ export default function ModulePage({
             key={blockIndex}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-5"
+            className={isJunior ? "mb-6" : "mb-5"}
           >
-            <h2 className="text-[22px] font-extrabold text-gray-900 leading-tight">
-              {block.content}
+            <h2 className={`font-extrabold text-gray-900 leading-tight ${isJunior ? "text-[24px]" : "text-[22px]"}`}>
+              {isJunior && "🎯 "}{block.content}
             </h2>
-            <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-emerald to-emerald-light" />
+            <div className={`mt-2 h-1 rounded-full bg-gradient-to-r ${isJunior ? "w-20 from-pink-400 via-purple-400 to-indigo-400" : "w-12 from-emerald to-emerald-light"}`} />
           </motion.div>
         );
 
@@ -396,7 +398,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: delay * profile.animSpeed }}
-            className={`text-gray-700 leading-relaxed mb-4 ${profile.contentClasses || "text-[15px]"}`}
+            className={`text-gray-700 leading-relaxed ${isJunior ? "mb-5 text-[15.5px]" : "mb-4"} ${profile.contentClasses || "text-[15px]"}`}
           >
             {renderTextWithCards(block.content)}
           </motion.div>
@@ -409,18 +411,28 @@ export default function ModulePage({
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: delay * profile.animSpeed, type: "spring", stiffness: 300, damping: 25 }}
-            className={`rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200/60 p-4 mb-5 relative overflow-hidden ${profile.contentClasses}`}
+            className={`rounded-2xl border p-4 mb-5 relative overflow-hidden ${profile.contentClasses} ${
+              isJunior
+                ? "bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200/60"
+                : "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200/60"
+            }`}
           >
             <div className="absolute top-3 right-3 opacity-10">
-              <ShieldIcon className="h-16 w-16 text-emerald" />
+              <ShieldIcon className={`h-16 w-16 ${isJunior ? "text-purple-400" : "text-emerald"}`} />
             </div>
             <div className="relative flex gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald text-white shadow-sm">
-                <ShieldIcon className="h-4 w-4" />
+              <div className={`flex shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${
+                isJunior ? "h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-500 text-lg" : "h-8 w-8 bg-emerald"
+              }`}>
+                {isJunior ? "📌" : <ShieldIcon className="h-4 w-4" />}
               </div>
               <div>
-                <p className="text-[10px] font-bold text-emerald uppercase tracking-widest mb-1">Regola</p>
-                <p className="text-[14px] font-semibold text-emerald-900 leading-relaxed">
+                <p className={`font-bold uppercase tracking-widest mb-1 ${
+                  isJunior ? "text-[11px] text-purple-600" : "text-[10px] text-emerald"
+                }`}>{isJunior ? "Regola Importante!" : "Regola"}</p>
+                <p className={`font-semibold leading-relaxed ${
+                  isJunior ? "text-[15px] text-purple-900" : "text-[14px] text-emerald-900"
+                }`}>
                   {block.content}
                 </p>
               </div>
@@ -435,15 +447,25 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 p-4 mb-5"
+            className={`rounded-2xl border p-4 mb-5 ${
+              isJunior
+                ? "bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200"
+                : "bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-100"
+            }`}
           >
             <div className="flex items-start gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-500 text-white shadow-sm">
-                <CardsIcon className="h-4 w-4" />
+              <div className={`flex shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${
+                isJunior ? "h-10 w-10 bg-gradient-to-br from-amber-400 to-orange-500 text-lg" : "h-8 w-8 bg-indigo-500"
+              }`}>
+                {isJunior ? "👀" : <CardsIcon className="h-4 w-4" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">Esempio</p>
-                <p className="text-[14px] text-indigo-900 leading-relaxed mb-2">{block.content}</p>
+                <p className={`font-bold uppercase tracking-widest mb-1 ${
+                  isJunior ? "text-[11px] text-amber-600" : "text-[10px] text-indigo-500"
+                }`}>{isJunior ? "Guarda Qui!" : "Esempio"}</p>
+                <p className={`leading-relaxed mb-2 ${
+                  isJunior ? "text-[15px] text-amber-900" : "text-[14px] text-indigo-900"
+                }`}>{block.content}</p>
                 {block.cards && (
                   <div className="mt-2">
                     <CardDisplay cards={block.cards} size="md" />
@@ -461,24 +483,32 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 p-4 mb-5"
+            className={`rounded-2xl border p-4 mb-5 ${
+              isJunior
+                ? "bg-gradient-to-br from-sky-50 to-cyan-50 border-sky-200/60"
+                : "bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200/60"
+            }`}
           >
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md shadow-emerald/30">
-                M
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl font-extrabold text-sm shadow-md ${
+                isJunior
+                  ? "bg-gradient-to-br from-sky-400 to-blue-500 text-white shadow-sky-300/30 text-lg"
+                  : "bg-gradient-to-br from-emerald to-emerald-dark text-white shadow-emerald/30"
+              }`}>
+                {isJunior ? "💡" : "M"}
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="font-bold text-sm text-gray-900">
-                    Maestro Fiori
+                  <p className={`font-bold text-sm ${isJunior ? "text-sky-800" : "text-gray-900"}`}>
+                    {isJunior ? "Il Maestro ti svela un segreto!" : "Maestro Fiori"}
                   </p>
-                  <LightbulbIcon className="h-3.5 w-3.5 text-amber-500" />
+                  {!isJunior && <LightbulbIcon className="h-3.5 w-3.5 text-amber-500" />}
                 </div>
-                <p className="text-[13px] font-medium text-gray-800 mb-1">
+                <p className={`font-medium text-[13px] mb-1 ${isJunior ? "text-sky-900" : "text-gray-800"}`}>
                   {block.content}
                 </p>
                 {block.explanation && (
-                  <p className="text-[13px] text-amber-900/80 leading-relaxed">
+                  <p className={`text-[13px] leading-relaxed ${isJunior ? "text-sky-800/80" : "text-amber-900/80"}`}>
                     {block.explanation}
                   </p>
                 )}
@@ -525,14 +555,18 @@ export default function ModulePage({
             </div>
 
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
-                <BrainIcon className="h-4 w-4" />
+              <div className={`flex items-center justify-center rounded-xl ${
+                isJunior ? "h-10 w-10 bg-gradient-to-br from-pink-400 to-purple-500 text-lg" : "h-8 w-8 bg-violet-100 text-violet-600"
+              }`}>
+                {isJunior ? "🧠" : <BrainIcon className="h-4 w-4" />}
               </div>
               <div>
-                <p className="font-bold text-gray-900 text-[15px]">Quiz</p>
+                <p className={`font-bold text-gray-900 ${isJunior ? "text-[16px]" : "text-[15px]"}`}>
+                  {isJunior ? "Mettiti alla Prova!" : "Quiz"}
+                </p>
                 {totalQuizzes > 1 && (
                   <p className="text-[10px] text-gray-400 font-medium">
-                    +20 XP per risposta corretta
+                    +20 {profile.xpLabel} per risposta corretta
                   </p>
                 )}
               </div>
@@ -625,10 +659,12 @@ export default function ModulePage({
                     onClick={() => !answered && handleQuizAnswer(blockIndex, optIdx)}
                     disabled={answered}
                     className={`w-full text-left rounded-xl border-2 font-medium transition-all ${optionClass} ${
-                      profile.profile === "senior" ? "p-4 text-base" : "p-3 text-[14px]"
+                      isJunior ? "p-4 text-[15px] font-semibold" : profile.profile === "senior" ? "p-4 text-base" : "p-3 text-[14px]"
                     } ${
                       !answered
-                        ? "hover:border-emerald/50 hover:bg-emerald-50/50 cursor-pointer"
+                        ? isJunior
+                          ? "hover:border-purple-400 hover:bg-purple-50/50 hover:scale-[1.01] cursor-pointer"
+                          : "hover:border-emerald/50 hover:bg-emerald-50/50 cursor-pointer"
                         : ""
                     }`}
                   >
@@ -671,8 +707,29 @@ export default function ModulePage({
                       transition={{ type: "spring", stiffness: 400, damping: 15 }}
                       className="space-y-2"
                     >
-                      {/* Giovane: big flashy correct */}
-                      {profile.profile === "giovane" ? (
+                      {/* Junior: HUGE celebration */}
+                      {isJunior ? (
+                        <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 p-4 flex items-center gap-3 shadow-lg shadow-purple-300">
+                          <motion.span
+                            className="text-3xl"
+                            animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.5, 1] }}
+                            transition={{ duration: 0.6, repeat: 1 }}
+                          >
+                            🌟
+                          </motion.span>
+                          <div>
+                            <p className="text-base font-black text-white">
+                              {profile.correctMessages[correctStreak % profile.correctMessages.length]} +20 {profile.xpLabel}
+                            </p>
+                            {correctStreak >= 2 && (
+                              <p className="text-sm font-bold text-pink-100">
+                                🔥 COMBO x{correctStreak}! +{correctStreak >= 3 ? 15 : 10} bonus!
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ) : profile.profile === "giovane" ? (
+                        /* Giovane: big flashy correct */
                         <div className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 p-3 flex items-center gap-3 shadow-lg shadow-amber-200">
                           <motion.span
                             className="text-2xl"
@@ -728,15 +785,30 @@ export default function ModulePage({
                       animate={{ x: 0 }}
                       className="space-y-2"
                     >
-                      {profile.profile === "senior" ? (
+                      {isJunior ? (
+                        <div className="rounded-2xl bg-gradient-to-r from-orange-100 to-amber-50 border border-orange-200 p-4 flex items-center gap-3">
+                          <motion.span
+                            className="text-2xl"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.4 }}
+                          >
+                            💪
+                          </motion.span>
+                          <div>
+                            <p className="text-sm font-bold text-orange-800">
+                              {profile.wrongMessage}
+                            </p>
+                            <p className="text-xs text-orange-600 mt-0.5">
+                              Leggi la spiegazione — imparerai qualcosa di nuovo!
+                            </p>
+                          </div>
+                        </div>
+                      ) : profile.profile === "senior" ? (
                         <div className="rounded-xl bg-orange-50 border border-orange-200 p-4 flex items-center gap-3">
                           <span className="text-2xl">🤗</span>
                           <div>
                             <p className="text-base font-semibold text-orange-800">
-                              Nessun problema!
-                            </p>
-                            <p className="text-sm text-orange-700">
-                              Leggi la spiegazione qui sotto, e la prossima volta andra meglio.
+                              {profile.wrongMessage}
                             </p>
                           </div>
                         </div>
@@ -753,7 +825,7 @@ export default function ModulePage({
                             M
                           </div>
                           <p className="text-sm font-semibold text-red-800">
-                            Non preoccuparti! Il Maestro Fiori spiega tutto qui sotto.
+                            {profile.wrongMessage}
                           </p>
                         </div>
                       )}
