@@ -199,20 +199,20 @@ export default function ContaVelocePage() {
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Conta Veloce</h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
-              Vedi una mano, conta i punti onori il piu' veloce possibile!
+              Vedi una mano, conta i punti onori il più veloce possibile!
             </p>
             <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">Come si gioca?</h3>
               <ul className="text-xs text-gray-500 space-y-1.5">
                 <li>A = 4, K = 3, Q = 2, J = 1 punto</li>
                 <li>Conta i punti onori (HCP) della mano</li>
-                <li>Piu' sei veloce, piu' punti guadagni</li>
+                <li>Più sei veloce, più punti guadagni</li>
                 <li>Mantieni la streak per bonus extra!</li>
               </ul>
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficolta'</h3>
+              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficoltà</h3>
               {(Object.entries(difficultyConfig) as [Difficulty, typeof difficultyConfig.facile][]).map(([key, cfg]) => (
                 <button
                   key={key}

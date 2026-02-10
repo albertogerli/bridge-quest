@@ -19,6 +19,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
 import { useMobile } from "@/hooks/use-mobile";
+import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 
 export default function SmazzataBrowserPage() {
@@ -30,6 +31,7 @@ export default function SmazzataBrowserPage() {
 }
 
 function SmazzataBrowserContent() {
+  const profile = useProfile();
   const searchParams = useSearchParams();
   const lessonParam = searchParams.get("lesson");
   const randomParam = searchParams.get("random");
@@ -249,6 +251,7 @@ function PlayingView({
   const declarer = smazzata.declarer;
   const [xpSaved, setXpSaved] = useState(false);
   const isMobile = useMobile();
+  const profile = useProfile();
 
   // Player controls declarer + dummy (dummy = north display position)
   const dummyGamePos = toGamePosition("north", declarer);
@@ -621,7 +624,7 @@ function PlayingView({
                     <p className="text-lg font-extrabold text-amber-600">
                       +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10}
                     </p>
-                    <p className="text-[9px] font-bold text-gray-500 uppercase">XP</p>
+                    <p className="text-[9px] font-bold text-gray-500 uppercase">{profile.xpLabel}</p>
                   </div>
                 </div>
 

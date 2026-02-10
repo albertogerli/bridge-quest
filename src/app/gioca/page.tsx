@@ -7,8 +7,10 @@ import Link from "next/link";
 import { allSmazzate, fioriSmazzate } from "@/data/all-smazzate";
 import { quadriSmazzate } from "@/data/quadri-smazzate";
 import { cuoriGiocoSmazzate } from "@/data/cuori-gioco-smazzate";
+import { useProfile } from "@/hooks/use-profile";
 
 export default function GiocaPage() {
+  const profile = useProfile();
   const [dailyDone, setDailyDone] = useState(false);
   const [handsPlayed, setHandsPlayed] = useState(0);
 
@@ -66,14 +68,14 @@ export default function GiocaPage() {
                     </h2>
                     {!dailyDone && (
                       <Badge className="bg-amber/20 text-amber-light text-[10px] font-bold border-0">
-                        +40 XP
+                        +40 {profile.xpLabel}
                       </Badge>
                     )}
                   </div>
                   <p className={`text-sm ${dailyDone ? "text-emerald-dark/60" : "text-white/70"}`}>
                     {dailyDone
                       ? "Sfida completata! Torna domani per una nuova mano."
-                      : "Una nuova mano ogni giorno. Gioca e guadagna XP bonus!"}
+                      : `Una nuova mano ogni giorno. Gioca e guadagna ${profile.xpLabel} bonus!`}
                   </p>
                 </div>
                 <svg
@@ -116,7 +118,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
-                    +50 XP
+                    +50 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -135,7 +137,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-rose-600 bg-rose-50 rounded-full px-2 py-0.5">
-                    +100 XP
+                    +100 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -154,7 +156,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-red-600 bg-red-50 rounded-full px-2 py-0.5">
-                    +80 XP
+                    +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -173,7 +175,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-cyan-600 bg-cyan-50 rounded-full px-2 py-0.5">
-                    +70 XP
+                    +70 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -192,7 +194,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-emerald bg-emerald-50 rounded-full px-2 py-0.5">
-                    +80 XP
+                    +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -211,7 +213,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
-                    +80 XP
+                    +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -230,7 +232,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-purple-600 bg-purple-50 rounded-full px-2 py-0.5">
-                    +60 XP
+                    +60 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
@@ -260,7 +262,7 @@ export default function GiocaPage() {
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
                   <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 rounded-full px-2 py-0.5">
-                    +30 XP
+                    +30 {profile.xpLabel}
                   </span>
                 </div>
               </div>

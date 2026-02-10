@@ -18,6 +18,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
 import { useMobile } from "@/hooks/use-mobile";
+import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 
 // ─── Date Helpers ────────────────────────────────────────────────────────────
@@ -229,6 +230,7 @@ function HandFanPreview({ cards }: { cards: Card[] }) {
 
 export default function ManoDelGiornoPage() {
   const isMobile = useMobile();
+  const profile = useProfile();
   const today = getToday();
   const yesterday = getYesterday();
 
@@ -298,6 +300,7 @@ export default function ManoDelGiornoPage() {
         onFinish={handleGameFinished}
         onBack={() => setIsPlaying(false)}
         isMobile={isMobile}
+        profile={profile}
       />
     );
   }
@@ -311,6 +314,7 @@ export default function ManoDelGiornoPage() {
         onFinish={() => {}}
         onBack={() => setPlayingYesterday(false)}
         isMobile={isMobile}
+        profile={profile}
       />
     );
   }
@@ -462,7 +466,7 @@ export default function ManoDelGiornoPage() {
                   className="mt-4 flex items-center gap-2"
                 >
                   <div className="inline-flex items-center gap-1.5 bg-amber-100/80 rounded-full px-3 py-1">
-                    <span className="text-xs">+50 XP</span>
+                    <span className="text-xs">+50 {profile.xpLabel}</span>
                     <span className="text-[10px] font-bold text-amber-700">
                       Bonus Giornaliero
                     </span>
@@ -579,7 +583,7 @@ export default function ManoDelGiornoPage() {
                 <div className="mt-5 flex items-center justify-center gap-3">
                   <div className="inline-flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-2">
                     <span className="text-sm font-bold text-amber-700">
-                      +{todayResult.xpEarned} XP guadagnati
+                      +{todayResult.xpEarned} {profile.xpLabel} guadagnati
                     </span>
                   </div>
                 </div>
@@ -784,7 +788,7 @@ export default function ManoDelGiornoPage() {
                   </Badge>
                 </div>
                 <p className="text-[13px] text-gray-600 leading-relaxed">
-                  La Mano del Giorno e uguale per tutti i giocatori! Gioca
+                  La Mano del Giorno è uguale per tutti i giocatori! Gioca
                   ogni giorno per mantenere la tua serie e guadagnare bonus
                   XP. Presto potrai confrontare il tuo risultato con gli
                   altri.
@@ -809,6 +813,7 @@ function PlayingView({
   onFinish,
   onBack,
   isMobile,
+  profile,
 }: {
   smazzata: Smazzata;
   isDaily: boolean;
@@ -816,6 +821,7 @@ function PlayingView({
   onFinish: (tricks: number, result: number, made: boolean) => void;
   onBack: () => void;
   isMobile: boolean;
+  profile: import("@/hooks/use-profile").ProfileConfig;
 }) {
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
@@ -1006,7 +1012,7 @@ function PlayingView({
           >
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-4 py-1.5">
               <span className="text-xs font-bold text-amber-700">
-                +50 XP Bonus Giornaliero
+                +50 {profile.xpLabel} Bonus Giornaliero
               </span>
             </div>
           </motion.div>
@@ -1280,7 +1286,7 @@ function PlayingView({
                           Math.max(0, game.result.result) * 10}
                     </p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">
-                      XP
+                      {profile.xpLabel}
                     </p>
                   </div>
                 </div>
@@ -1294,7 +1300,7 @@ function PlayingView({
                     className="mt-3 inline-flex items-center gap-2 bg-amber-50 rounded-full px-4 py-1.5"
                   >
                     <span className="text-xs font-bold text-amber-700">
-                      +50 XP Bonus Mano del Giorno incluso!
+                      +50 {profile.xpLabel} Bonus Mano del Giorno incluso!
                     </span>
                   </motion.div>
                 )}
@@ -1315,7 +1321,7 @@ function PlayingView({
                   }`}
                 >
                   {game.result.result > 0
-                    ? "Eccellente! Piu' prese del necessario"
+                    ? "Eccellente! Più prese del necessario"
                     : game.result.result === 0
                       ? "Ben giocato! Contratto esatto"
                       : game.result.result === -1
@@ -1373,7 +1379,7 @@ function PlayingView({
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Vulnerabilita</span>
+                    <span className="text-gray-500">Vulnerabilità</span>
                     <span className="font-bold text-gray-900">
                       {smazzata.vulnerability === "none"
                         ? "Nessuna"

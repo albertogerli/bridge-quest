@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { impasseScenarios, type ImpasseScenario } from "@/data/impasse-data";
+import { useProfile } from "@/hooks/use-profile";
 
 // ── Types ──────────────────────────────────────────────────────
 type Phase = "menu" | "playing" | "gameover";
@@ -98,6 +99,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 // ── Main component ─────────────────────────────────────────────
 export default function ImpassePage() {
+  const profileConfig = useProfile();
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
   const [round, setRound] = useState(0);
@@ -382,7 +384,7 @@ export default function ImpassePage() {
             {/* Difficulty buttons */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-gray-900 text-left">
-                Scegli difficolta'
+                Scegli difficoltà
               </h3>
               {(
                 Object.entries(diffConfig) as [
@@ -490,7 +492,7 @@ export default function ImpassePage() {
                 <p className="text-lg font-black text-blue-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">XP</p>
+                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -772,7 +774,7 @@ export default function ImpassePage() {
                     : "DROP"}
                 </span>
                 <span className="text-sm font-bold text-gray-500">
-                  Probabilita': {feedback.scenario.probability}%
+                  Probabilità: {feedback.scenario.probability}%
                 </span>
               </div>
 
