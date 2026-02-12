@@ -49,21 +49,21 @@ export function DummyHand({
   const isHighlighted = (card: CardData) =>
     highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
 
-  const cardW = compact ? "w-9" : "w-11";
-  const cardH = compact ? "h-7" : "h-8";
-  const fontSize = compact ? "text-xs" : "text-sm";
-  const suitSize = compact ? "text-[10px]" : "text-xs";
-  const overlapY = compact ? -3 : -2;
+  const cardW = compact ? "w-10" : "w-12";
+  const cardH = compact ? "h-8" : "h-9";
+  const fontSize = compact ? "text-sm" : "text-base";
+  const suitSize = compact ? "text-xs" : "text-sm";
+  const overlapY = compact ? -4 : -3;
 
   return (
-    <div className="flex gap-0.5 justify-center">
+    <div className="flex w-full justify-evenly">
       {SUIT_ORDER.map((suit) => {
         const suitCards = bySuit[suit];
         if (suitCards.length === 0) return null;
 
         return (
-          <div key={suit} className="flex flex-col items-center">
-            <div className="flex flex-col">
+          <div key={suit} className="flex flex-col items-center flex-1 max-w-[80px]">
+            <div className="flex flex-col items-center">
               {suitCards.map(({ card, originalIndex }, i) => {
                 const highlighted = isHighlighted(card);
                 const cardDisabled = disabled || (highlightedCards.length > 0 && !highlighted);

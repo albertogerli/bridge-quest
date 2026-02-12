@@ -128,12 +128,12 @@ export function BridgeTable({
   // Auto-detect compact when table is narrow (< 500px)
   const isCompact = compact || (tableWidth > 0 && tableWidth < 500);
 
-  // Compute optimal South card size from actual table width
-  const southAvailable = tableWidth > 0 ? tableWidth - 40 : 600; // 40px side padding
+  // Compute optimal South card size from actual table width (inset-x-3 = 24px total)
+  const southAvailable = tableWidth > 0 ? tableWidth - 24 : 600;
   const southFit = fitCards(southAvailable, south.length, isCompact ? ["sm", "xs"] : ["md", "sm", "xs"]);
 
-  // North (non-dummy) also adapts
-  const northAvailable = tableWidth > 0 ? tableWidth - 60 : 500;
+  // North (non-dummy) also adapts (inset-x-4 = 32px total)
+  const northAvailable = tableWidth > 0 ? tableWidth - 32 : 500;
   const northFit = fitCards(northAvailable, north.length, isCompact ? ["xs"] : ["sm", "xs"]);
 
   const vulColor = {
@@ -245,7 +245,7 @@ export function BridgeTable({
       </div>
 
       {/* North hand */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10">
+      <div className="absolute top-2 inset-x-4 z-10">
         <div className="text-center mb-1">
           <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/50"}`}>
             {posLabel("north", "N")}
@@ -275,7 +275,7 @@ export function BridgeTable({
       </div>
 
       {/* South hand - player's main hand, bigger cards */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
+      <div className="absolute bottom-2 inset-x-3 z-10">
         {isDummy("south") && !southFaceDown ? (
           <DummyHand
             cards={south}
