@@ -67,28 +67,6 @@ function CompactFaceDown({ count }: { count: number }) {
   );
 }
 
-// Card pixel widths matching Tailwind classes in playing-card.tsx
-const CARD_PX: Record<string, number> = { xs: 32, sm: 44, md: 72, lg: 96 };
-
-/** Pick the largest card size that fits, and compute exact overlap */
-function fitCards(
-  availableWidth: number,
-  numCards: number,
-  candidates: Array<"md" | "sm" | "xs"> = ["md", "sm", "xs"]
-): { size: "xs" | "sm" | "md"; overlap: number } {
-  if (numCards <= 1) return { size: candidates[0], overlap: 0 };
-  for (const sz of candidates) {
-    const w = CARD_PX[sz];
-    const needed = w * numCards;
-    if (needed <= availableWidth) return { size: sz, overlap: 0 };
-    const perCard = (needed - availableWidth) / (numCards - 1);
-    // Allow up to 65% overlap
-    if (perCard <= w * 0.65) return { size: sz, overlap: -Math.ceil(perCard) };
-  }
-  // Extreme fallback: xs with max overlap
-  const w = CARD_PX.xs;
-  return { size: "xs", overlap: -Math.ceil(w * 0.65) };
-}
 
 export function BridgeTable({
   north,
@@ -128,13 +106,9 @@ export function BridgeTable({
   // Auto-detect compact when table is narrow (< 500px)
   const isCompact = compact || (tableWidth > 0 && tableWidth < 500);
 
-  // Compute optimal South card size from actual table width (inset-x-3 = 24px total)
+  // Available width for South (inset-x-3 = 24px total) and North (inset-x-4 = 32px total)
   const southAvailable = tableWidth > 0 ? tableWidth - 24 : 600;
-  const southFit = fitCards(southAvailable, south.length, isCompact ? ["sm", "xs"] : ["md", "sm", "xs"]);
-
-  // North (non-dummy) also adapts (inset-x-4 = 32px total)
   const northAvailable = tableWidth > 0 ? tableWidth - 32 : 500;
-  const northFit = fitCards(northAvailable, north.length, isCompact ? ["xs"] : ["sm", "xs"]);
 
   const vulColor = {
     none: "border-white/10",
@@ -263,13 +237,12 @@ export function BridgeTable({
           <Hand
             cards={north}
             faceDown={northFaceDown}
-            size={northFit.size}
             position="north"
             onSelectCard={(i) => onPlayCard?.("north", i)}
             highlightedCards={activePosition === "north" ? highlightedCards : []}
             disabled={disabled || activePosition !== "north"}
             noHover={isCompact}
-            overlapOverride={northFit.overlap || undefined}
+            containerWidth={northAvailable}
           />
         )}
       </div>
@@ -288,13 +261,12 @@ export function BridgeTable({
           <Hand
             cards={south}
             faceDown={southFaceDown}
-            size={southFit.size}
             position="south"
             onSelectCard={(i) => onPlayCard?.("south", i)}
             highlightedCards={activePosition === "south" ? highlightedCards : []}
             disabled={disabled || activePosition !== "south"}
             noHover={isCompact}
-            overlapOverride={southFit.overlap || undefined}
+            containerWidth={southAvailable}
           />
         )}
         <div className="text-center mt-1">
