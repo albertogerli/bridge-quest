@@ -33,6 +33,7 @@ export function PlayingCard({
   highlighted = false,
   size = "md",
   noHover = false,
+  cardWidth,
 }: {
   card: CardData;
   faceDown?: boolean;
@@ -42,6 +43,8 @@ export function PlayingCard({
   highlighted?: boolean;
   size?: "xs" | "sm" | "md" | "lg";
   noHover?: boolean;
+  /** When set, overrides size prop with exact pixel width (height auto-calculated) */
+  cardWidth?: number;
 }) {
   const dimensions = {
     xs: "w-8 h-[44px]",
@@ -49,6 +52,11 @@ export function PlayingCard({
     md: "w-[72px] h-[100px]",
     lg: "w-24 h-[132px]",
   };
+
+  // Determine effective size tier from cardWidth for font scaling
+  const effectiveSize: "xs" | "sm" | "md" | "lg" = cardWidth
+    ? cardWidth >= 55 ? "md" : cardWidth >= 35 ? "sm" : "xs"
+    : size;
 
   const rankSizes = {
     xs: "text-sm",
@@ -64,11 +72,19 @@ export function PlayingCard({
     lg: "text-xl",
   };
 
+  // Dynamic inline style when cardWidth is set
+  const dynamicStyle = cardWidth
+    ? { width: cardWidth, height: Math.round(cardWidth * 1.4) }
+    : undefined;
+
+  const dimClass = cardWidth ? "" : dimensions[size];
+
   if (faceDown) {
     return (
       <motion.div
-        className={`${dimensions[size]} rounded bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm cursor-default`}
+        className={`${dimClass} rounded bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm cursor-default`}
         style={{
+          ...dynamicStyle,
           backgroundImage: `repeating-linear-gradient(
             45deg,
             transparent,
@@ -90,7 +106,7 @@ export function PlayingCard({
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       className={`
-        ${dimensions[size]} relative rounded bg-white
+        ${dimClass} relative rounded bg-white
         border border-gray-200 shadow-sm transition-all touch-manipulation
         ${selected ? `ring-2 ring-amber shadow-amber/30 border-amber ${noHover ? "" : "-translate-y-3"}` : ""}
         ${highlighted && !selected ? "ring-2 ring-emerald/50 border-emerald shadow-emerald/20" : ""}
@@ -98,13 +114,14 @@ export function PlayingCard({
         ${!disabled && !selected ? "active:scale-95" : ""}
         ${highlighted && !disabled && !noHover ? "hover:shadow-lg hover:-translate-y-1" : ""}
       `}
+      style={dynamicStyle}
       whileHover={noHover || (disabled && !highlighted) ? {} : { y: selected ? -12 : -6, scale: 1.02 }}
       whileTap={disabled ? {} : { scale: 0.97 }}
     >
       {/* Simple clean layout: rank + suit, centered */}
       <div className={`flex h-full flex-col items-center justify-center ${suitColors[card.suit]}`}>
-        <span className={`${rankSizes[size]} font-black leading-none`}>{card.rank}</span>
-        <span className={`${suitSizes[size]} leading-none`}>{suitSymbols[card.suit]}</span>
+        <span className={`${rankSizes[effectiveSize]} font-black leading-none`}>{card.rank}</span>
+        <span className={`${suitSizes[effectiveSize]} leading-none`}>{suitSymbols[card.suit]}</span>
       </div>
     </motion.button>
   );

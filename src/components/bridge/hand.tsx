@@ -3,6 +3,8 @@
 import { motion } from "motion/react";
 import { PlayingCard, type CardData } from "./playing-card";
 
+const GAP = 2; // px gap between cards in fluid mode
+
 export function Hand({
   cards,
   selectedIndex,
@@ -14,6 +16,7 @@ export function Hand({
   disabled = false,
   noHover = false,
   overlapOverride,
+  containerWidth,
 }: {
   cards: CardData[];
   selectedIndex?: number;
@@ -25,8 +28,52 @@ export function Hand({
   disabled?: boolean;
   noHover?: boolean;
   overlapOverride?: number;
+  /** When set, cards distribute evenly across this width with no overlap */
+  containerWidth?: number;
 }) {
   const isVertical = position === "east" || position === "west";
+
+  // Fluid mode: compute exact card pixel width from container
+  const cardWidth =
+    containerWidth && cards.length > 0 && !isVertical
+      ? Math.floor((containerWidth - GAP * (cards.length - 1)) / cards.length)
+      : undefined;
+
+  const isHighlighted = (card: CardData) =>
+    highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
+
+  // Fluid horizontal layout: no overlap, cards fill the width
+  if (cardWidth) {
+    return (
+      <div
+        className="flex items-end justify-center"
+        style={{ gap: GAP }}
+      >
+        {cards.map((card, index) => (
+          <motion.div
+            key={`${card.suit}-${card.rank}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.03, duration: 0.2 }}
+            style={{ zIndex: index }}
+          >
+            <PlayingCard
+              card={card}
+              faceDown={faceDown}
+              selected={selectedIndex === index}
+              highlighted={!faceDown && isHighlighted(card)}
+              disabled={disabled || (highlightedCards.length > 0 && !isHighlighted(card))}
+              onClick={() => onSelectCard?.(index)}
+              cardWidth={cardWidth}
+              noHover={noHover}
+            />
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
+
+  // Legacy overlap mode for vertical (E/W) or when containerWidth not provided
   const defaultOverlap = {
     xs: isVertical ? -22 : -20,
     sm: isVertical ? -32 : -28,
@@ -36,9 +83,6 @@ export function Hand({
   const overlap = overlapOverride !== undefined
     ? { xs: overlapOverride, sm: overlapOverride, md: overlapOverride, lg: overlapOverride }
     : defaultOverlap;
-
-  const isHighlighted = (card: CardData) =>
-    highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
 
   return (
     <div
