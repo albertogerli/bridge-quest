@@ -30,13 +30,20 @@ export function DummyHand({
   highlightedCards = [],
   disabled = false,
   compact = false,
+  trumpSuit,
 }: {
   cards: CardData[];
   onSelectCard?: (index: number) => void;
   highlightedCards?: CardData[];
   disabled?: boolean;
   compact?: boolean;
+  trumpSuit?: string | null;
 }) {
+  // Put trump suit first when playing a suit contract
+  const displayOrder = trumpSuit
+    ? [trumpSuit as CardData["suit"], ...SUIT_ORDER.filter((s) => s !== trumpSuit)]
+    : SUIT_ORDER;
+
   // Group cards by suit
   const bySuit: Record<string, { card: CardData; originalIndex: number }[]> = {};
   for (const suit of SUIT_ORDER) {
@@ -57,7 +64,7 @@ export function DummyHand({
 
   return (
     <div className="flex w-full justify-evenly">
-      {SUIT_ORDER.map((suit) => {
+      {displayOrder.map((suit) => {
         const suitCards = bySuit[suit];
         if (suitCards.length === 0) return null;
 

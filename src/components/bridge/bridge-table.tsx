@@ -31,6 +31,7 @@ export interface BridgeTableProps {
   activePosition?: string;
   disabled?: boolean;
   compact?: boolean;
+  trumpSuit?: string | null;
 }
 
 const suitSymbol: Record<string, string> = {
@@ -88,6 +89,7 @@ export function BridgeTable({
   activePosition,
   disabled = false,
   compact = false,
+  trumpSuit,
 }: BridgeTableProps) {
   // ── Self-measuring: adapt to actual rendered width ──
   const tableRef = useRef<HTMLDivElement>(null);
@@ -240,6 +242,7 @@ export function BridgeTable({
             highlightedCards={activePosition === "north" ? highlightedCards : []}
             disabled={disabled || activePosition !== "north"}
             compact={isCompact}
+            trumpSuit={trumpSuit}
           />
         ) : (
           <Hand
@@ -264,6 +267,7 @@ export function BridgeTable({
             highlightedCards={activePosition === "south" ? highlightedCards : []}
             disabled={disabled || activePosition !== "south"}
             compact={isCompact}
+            trumpSuit={trumpSuit}
           />
         ) : (
           <Hand

@@ -64,10 +64,14 @@ export function suitSymbol(suit: Suit): string {
   return SUIT_SYMBOLS[suit];
 }
 
-/** Sort cards by suit (S > H > D > C), then by rank within suit */
-export function sortHand(cards: Card[]): Card[] {
+/** Sort cards by suit (S > H > D > C), then by rank within suit.
+ *  If trumpSuit is provided, that suit comes first (leftmost). */
+export function sortHand(cards: Card[], trumpSuit?: Suit | null): Card[] {
+  const order = trumpSuit
+    ? [trumpSuit, ...SUIT_ORDER.filter((s) => s !== trumpSuit)]
+    : SUIT_ORDER;
   return [...cards].sort((a, b) => {
-    const suitDiff = SUIT_ORDER.indexOf(a.suit) - SUIT_ORDER.indexOf(b.suit);
+    const suitDiff = order.indexOf(a.suit) - order.indexOf(b.suit);
     if (suitDiff !== 0) return suitDiff;
     return RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank);
   });
@@ -214,12 +218,12 @@ export function createGame(
   // Opening leader is to the left of declarer
   const leader = nextPlayer(declarer);
 
-  // Sort all hands
+  // Sort all hands (trump suit first when playing a suit contract)
   const sortedHands: Record<Position, Card[]> = {
-    north: sortHand(hands.north),
-    south: sortHand(hands.south),
-    east: sortHand(hands.east),
-    west: sortHand(hands.west),
+    north: sortHand(hands.north, trumpSuit),
+    south: sortHand(hands.south, trumpSuit),
+    east: sortHand(hands.east, trumpSuit),
+    west: sortHand(hands.west, trumpSuit),
   };
 
   return {
