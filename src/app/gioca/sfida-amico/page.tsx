@@ -536,6 +536,7 @@ function ActiveChallenge({
                 activePosition={activeDisplayPos}
                 disabled={!game.isPlayerTurn}
                 compact={isMobile}
+                trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
               <BridgeTable
@@ -553,6 +554,7 @@ function ActiveChallenge({
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
                 compact={isMobile}
+                trumpSuit={parseContract(smazzata.contract).trumpSuit}
               />
             )}
             {game.phase === "playing" && <GameTutorial />}

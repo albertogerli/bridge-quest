@@ -237,6 +237,7 @@ export default function SfidaDelGiornoPage() {
                 activePosition={activeDisplayPos}
                 disabled={!game.isPlayerTurn}
                 compact={isMobile}
+                trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
               <BridgeTable
@@ -254,6 +255,7 @@ export default function SfidaDelGiornoPage() {
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
                 compact={isMobile}
+                trumpSuit={parseContract(smazzata.contract).trumpSuit}
               />
             )}
             {game.phase === "playing" && <GameTutorial />}
