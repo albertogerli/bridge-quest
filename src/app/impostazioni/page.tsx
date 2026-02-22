@@ -151,8 +151,10 @@ export default function ImpostazioniPage() {
         );
         keys.forEach((k) => localStorage.removeItem(k));
       }
+      // Always clear guest flag so landing page shows
+      try { localStorage.removeItem("bq_guest"); } catch {}
       await signOut();
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       console.error("Logout error:", err);
       setLoggingOut(false);
@@ -612,80 +614,103 @@ export default function ImpostazioniPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Logout */}
-        {user && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.35 }}
-            className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
+        {/* Logout / Login */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.35 }}
+          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+        >
+          {user ? (
+            <>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Esci dall&apos;account</h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Disconnettiti da BridgeQuest</p>
+                </div>
               </div>
-              <div>
-                <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Esci dall&apos;account</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Disconnettiti da BridgeQuest</p>
-              </div>
-            </div>
 
-            <AnimatePresence mode="wait">
-              {showLogoutConfirm ? (
-                <motion.div
-                  key="logout-confirm"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="bg-rose-50 border border-rose-200 rounded-xl p-4"
-                >
-                  <p className="text-rose-700 text-sm font-semibold mb-1">Vuoi anche cancellare i dati locali?</p>
-                  <p className="text-rose-600/80 text-xs mb-4">
-                    Puoi scegliere se mantenere i progressi salvati localmente o cancellarli insieme al logout.
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    <Button
-                      onClick={() => handleLogout(true)}
-                      disabled={loggingOut}
-                      className="w-full bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-bold h-10 disabled:opacity-50"
-                    >
-                      {loggingOut ? "Uscita..." : "Esci e cancella dati locali"}
-                    </Button>
-                    <Button
-                      onClick={() => handleLogout(false)}
-                      disabled={loggingOut}
-                      variant="outline"
-                      className="w-full rounded-xl text-sm font-bold h-10 border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-50"
-                    >
-                      {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
-                    </Button>
-                    <Button
-                      onClick={() => setShowLogoutConfirm(false)}
-                      variant="outline"
-                      className="w-full rounded-xl text-sm font-bold h-10 border-gray-300 text-gray-600"
-                    >
-                      Annulla
-                    </Button>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div key="logout-button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <Button
-                    onClick={() => setShowLogoutConfirm(true)}
-                    variant="outline"
-                    className="w-full rounded-xl border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-bold h-11 text-sm"
+              <AnimatePresence mode="wait">
+                {showLogoutConfirm ? (
+                  <motion.div
+                    key="logout-confirm"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="bg-rose-50 border border-rose-200 rounded-xl p-4"
                   >
-                    Esci dall&apos;account
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )}
+                    <p className="text-rose-700 text-sm font-semibold mb-1">Vuoi anche cancellare i dati locali?</p>
+                    <p className="text-rose-600/80 text-xs mb-4">
+                      Puoi scegliere se mantenere i progressi salvati localmente o cancellarli insieme al logout.
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        onClick={() => handleLogout(true)}
+                        disabled={loggingOut}
+                        className="w-full bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-bold h-10 disabled:opacity-50"
+                      >
+                        {loggingOut ? "Uscita..." : "Esci e cancella dati locali"}
+                      </Button>
+                      <Button
+                        onClick={() => handleLogout(false)}
+                        disabled={loggingOut}
+                        variant="outline"
+                        className="w-full rounded-xl text-sm font-bold h-10 border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+                      >
+                        {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
+                      </Button>
+                      <Button
+                        onClick={() => setShowLogoutConfirm(false)}
+                        variant="outline"
+                        className="w-full rounded-xl text-sm font-bold h-10 border-gray-300 text-gray-600"
+                      >
+                        Annulla
+                      </Button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div key="logout-button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <Button
+                      onClick={() => setShowLogoutConfirm(true)}
+                      variant="outline"
+                      className="w-full rounded-xl border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-bold h-11 text-sm"
+                    >
+                      Esci dall&apos;account
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Account</h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Accedi per salvare i progressi su tutti i dispositivi</p>
+                </div>
+              </div>
+              <Link href="/login">
+                <Button className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold h-11 text-sm shadow-lg shadow-indigo-500/30">
+                  Accedi o Registrati
+                </Button>
+              </Link>
+            </>
+          )}
+        </motion.div>
 
         {/* App Version */}
         <motion.div

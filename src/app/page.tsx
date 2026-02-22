@@ -14,6 +14,7 @@ import { useProfile, getProfileConfig, type UserProfile } from "@/hooks/use-prof
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
+import { useAuth } from "@/hooks/use-auth";
 
 // Derive world cards from ALL courses
 const allWorldsData = courses.flatMap(c => c.worlds);
@@ -87,6 +88,7 @@ function useLocalStats() {
 }
 
 export default function Home() {
+  const { user, loading: authLoading } = useAuth();
   const stats = useLocalStats();
   const profile = useProfile();
   const { reviewCount } = useSpacedReview();
@@ -98,9 +100,11 @@ export default function Home() {
   const [showWeeklyRecap, setShowWeeklyRecap] = useState(false);
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
   const [handsPlayed, setHandsPlayed] = useState(0);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     try {
+      setIsGuest(localStorage.getItem("bq_guest") === "1");
       if (!localStorage.getItem("bq_onboarded")) {
         setShowOnboarding(true);
       }
@@ -201,6 +205,14 @@ export default function Home() {
   })();
 
   const hasStarted = totalModulesCompleted > 0;
+
+  // Show landing page for non-authenticated visitors (not guest, not logged in)
+  if (!authLoading && !user && !isGuest) {
+    return <LandingPage onContinueAsGuest={() => {
+      try { localStorage.setItem("bq_guest", "1"); } catch {}
+      setIsGuest(true);
+    }} />;
+  }
 
   if (showOnboarding) {
     return <OnboardingFlow onComplete={handleOnboardingComplete} />;
@@ -1745,6 +1757,212 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
           </p>
         </motion.div>
       </div>
+    </div>
+  );
+}
+
+// ===== LANDING PAGE =====
+function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
+  const features = [
+    { icon: "🎓", title: "49 Lezioni", desc: "4 corsi FIGB completi, dalla base all'avanzato" },
+    { icon: "🃏", title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
+    { icon: "🧠", title: "Quiz & Mini-giochi", desc: "6 tipi di quiz, 9 mini-giochi, ripasso intelligente" },
+    { icon: "🏆", title: "Tornei & Sfide", desc: "Torneo settimanale, sfida amici, classifica" },
+    { icon: "📊", title: "Analisi DDS", desc: "Analisi double-dummy post-mano professionale" },
+    { icon: "🔥", title: "Gamification", desc: "XP, streak, badge, premi e collezionabili" },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#F7F5F0] overflow-y-auto">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-700 px-5 pt-16 pb-20">
+        {/* Decorative blobs */}
+        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
+
+        {/* Floating suits */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {["♠", "♥", "♦", "♣", "♠", "♥"].map((suit, i) => (
+            <motion.span
+              key={i}
+              className="absolute text-white/[0.05] font-black select-none"
+              style={{
+                fontSize: `${50 + i * 15}px`,
+                left: `${(i * 18) % 90}%`,
+                top: `${(i * 15 + 5) % 80}%`,
+              }}
+              animate={{
+                y: [0, -15, 0],
+                rotate: [0, i % 2 === 0 ? 8 : -8, 0],
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              {suit}
+            </motion.span>
+          ))}
+        </div>
+
+        <div className="relative mx-auto max-w-lg text-center">
+          {/* Suit icons */}
+          <motion.div
+            className="mb-5 flex items-center justify-center gap-3"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            {(["club", "diamond", "heart", "spade"] as const).map((suit, i) => (
+              <motion.div
+                key={suit}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+                className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm border border-white/20"
+              >
+                <SuitSymbol suit={suit} size="lg" />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight"
+          >
+            BridgeQuest
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mt-3 text-base sm:text-lg text-white/80 max-w-md mx-auto"
+          >
+            Impara il bridge giocando. Il corso ufficiale della Federazione Italiana Gioco Bridge, gamificato.
+          </motion.p>
+
+          {/* CTA buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-8 flex flex-col gap-3 max-w-xs mx-auto"
+          >
+            <Link href="/login">
+              <Button className="w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all">
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+                Accedi o Registrati
+              </Button>
+            </Link>
+            <button
+              onClick={onContinueAsGuest}
+              className="w-full h-12 rounded-2xl bg-white/15 backdrop-blur-sm text-white font-bold text-sm hover:bg-white/25 border border-white/20 active:scale-[0.98] transition-all"
+            >
+              Prova senza account
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Fade to content */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#F7F5F0]" />
+      </section>
+
+      {/* Features */}
+      <section className="px-5 -mt-4 pb-8 relative z-10">
+        <div className="mx-auto max-w-lg">
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="text-lg font-extrabold text-gray-900 mb-4 text-center"
+          >
+            Tutto quello che serve per imparare il bridge
+          </motion.h2>
+
+          <div className="grid grid-cols-2 gap-3">
+            {features.map((feat, i) => (
+              <motion.div
+                key={feat.title}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + i * 0.07 }}
+                className="rounded-2xl bg-white p-4 border border-[#e5e0d5] shadow-sm"
+              >
+                <div className="text-2xl mb-2">{feat.icon}</div>
+                <p className="text-sm font-extrabold text-gray-900">{feat.title}</p>
+                <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{feat.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="px-5 pb-8">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+            className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200/60 p-6 text-center"
+          >
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div>
+                <p className="text-2xl font-extrabold text-indigo-700">49</p>
+                <p className="text-[10px] font-bold text-indigo-500 uppercase">Lezioni</p>
+              </div>
+              <div>
+                <p className="text-2xl font-extrabold text-purple-700">4</p>
+                <p className="text-[10px] font-bold text-purple-500 uppercase">Corsi</p>
+              </div>
+              <div>
+                <p className="text-2xl font-extrabold text-fuchsia-700">200+</p>
+                <p className="text-[10px] font-bold text-fuchsia-500 uppercase">Mani</p>
+              </div>
+            </div>
+            <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-1">
+              Un progetto della
+            </p>
+            <p className="text-lg font-extrabold text-indigo-700">
+              Federazione Italiana Gioco Bridge
+            </p>
+            <p className="mt-1 text-xs text-indigo-700/60">
+              Commissione Insegnamento
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="px-5 pb-12">
+        <div className="mx-auto max-w-xs">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3 }}
+            className="flex flex-col gap-3"
+          >
+            <Link href="/login">
+              <Button className="w-full h-12 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30">
+                Inizia gratis
+              </Button>
+            </Link>
+            <button
+              onClick={onContinueAsGuest}
+              className="w-full text-center text-sm font-semibold text-gray-400 hover:text-gray-600 transition-colors py-2"
+            >
+              Continua senza account
+            </button>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
