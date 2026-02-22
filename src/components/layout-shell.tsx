@@ -21,7 +21,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-svh bg-[#F7F5F0]">
+    <div className="flex min-h-svh bg-[#F7F5F0] dark:bg-[#0f1219]">
       {/* Left nav - desktop only */}
       <DesktopNav />
 

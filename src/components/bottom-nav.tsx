@@ -11,7 +11,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
-      <div className="bg-white border-t-3 border-[#e5e0d5] shadow-[0_-2px_12px_rgba(0,0,0,0.08)]">
+      <div className="bg-white dark:bg-[#141821] border-t-3 border-[#e5e0d5] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
         <div className="mx-auto flex max-w-lg items-center justify-around px-0.5 py-1 safe-area-bottom">
           <NavItem href="/" icon="home" label="Home" active={isActive("/")} color="indigo" />
           <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} color="blue" />

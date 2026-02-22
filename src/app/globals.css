@@ -103,6 +103,40 @@
   --sidebar-ring: #059669;
 }
 
+.dark {
+  --background: #0f1219;
+  --foreground: #e2e8f0;
+  --card: #1a1f2e;
+  --card-foreground: #e2e8f0;
+  --popover: #1a1f2e;
+  --popover-foreground: #e2e8f0;
+  --primary: #34d399;
+  --primary-foreground: #0f1219;
+  --secondary: #1e2433;
+  --secondary-foreground: #e2e8f0;
+  --muted: #1e2433;
+  --muted-foreground: #94a3b8;
+  --accent: #fbbf24;
+  --accent-foreground: #0f1219;
+  --destructive: #fb7185;
+  --border: #2a3040;
+  --input: #2a3040;
+  --ring: #34d399;
+  --chart-1: #34d399;
+  --chart-2: #818cf8;
+  --chart-3: #fbbf24;
+  --chart-4: #fb7185;
+  --chart-5: #22d3ee;
+  --sidebar: #141821;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #34d399;
+  --sidebar-primary-foreground: #0f1219;
+  --sidebar-accent: #1e2433;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: #2a3040;
+  --sidebar-ring: #34d399;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -125,6 +159,8 @@
 .suit-diamond { color: #ea580c; }
 .suit-club { color: #059669; }
 
+.dark .suit-spade { color: #e2e8f0; }
+
 /* Premium gradient backgrounds */
 .hero-gradient {
   background: linear-gradient(135deg, #6366f1 0%, #7c3aed 35%, #a855f7 70%, #c026d3 100%);
@@ -144,10 +180,18 @@
   border: 2px solid #e5e0d5;
   box-shadow: 0 4px 0 #e5e0d5;
 }
+.dark .card-elevated {
+  border-color: #2a3040;
+  box-shadow: 0 4px 0 #1a1f2e;
+}
 
 .card-elevated-lg {
   border: 2px solid #e5e0d5;
   box-shadow: 0 6px 0 #d5d0c5;
+}
+.dark .card-elevated-lg {
+  border-color: #2a3040;
+  box-shadow: 0 6px 0 #141821;
 }
 
 /* Bold card with colored border */
@@ -200,6 +244,10 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 2px solid rgba(255, 255, 255, 0.9);
+}
+.dark .glass-light {
+  background: rgba(26, 31, 46, 0.85);
+  border-color: rgba(42, 48, 64, 0.9);
 }
 
 /* Glassmorphism - on dark/green backgrounds */
@@ -321,6 +369,14 @@
   top: 16px;
 }
 
+/* Dark mode body background gradients */
+.dark body {
+  background-image:
+    radial-gradient(ellipse at 15% 5%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 25%, rgba(168, 85, 247, 0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 75%, rgba(52, 211, 153, 0.03) 0%, transparent 40%);
+}
+
 /* Desktop enhanced background gradients */
 @media (min-width: 1024px) {
   body {
@@ -330,5 +386,11 @@
       radial-gradient(ellipse at 70% 60%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
       radial-gradient(ellipse at 20% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 35%),
       radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
+  }
+  .dark body {
+    background-image:
+      radial-gradient(ellipse at 10% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 45%),
+      radial-gradient(ellipse at 90% 20%, rgba(168, 85, 247, 0.04) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 50%, rgba(52, 211, 153, 0.02) 0%, transparent 50%);
   }
 }

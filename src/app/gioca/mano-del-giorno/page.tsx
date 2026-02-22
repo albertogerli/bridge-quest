@@ -17,8 +17,11 @@ import {
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
+import { GameTutorial } from "@/components/bridge/game-tutorial";
+import { ShareResult } from "@/components/bridge/share-result";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
+import { updateLastActivity } from "@/hooks/use-notifications";
 import Link from "next/link";
 
 // ─── Date Helpers ────────────────────────────────────────────────────────────
@@ -280,6 +283,7 @@ export default function ManoDelGiornoPage() {
             10
           );
           localStorage.setItem("bq_hands_played", String(hp + 1));
+          updateLastActivity();
         } catch {}
       }
 
@@ -598,6 +602,17 @@ export default function ManoDelGiornoPage() {
                   Torna domani per una nuova mano!
                 </motion.p>
               </div>
+
+              {/* Share Result */}
+              <div className="mt-4">
+                <ShareResult
+                  contract={todayHand.contract}
+                  tricksMade={todayResult.tricks}
+                  tricksNeeded={tricksNeeded}
+                  result={todayResult.result}
+                  stars={todayResult.stars}
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -905,6 +920,7 @@ function PlayingView({
             10
           );
           localStorage.setItem("bq_hands_played", String(hp + 1));
+          updateLastActivity();
         } catch {}
       }
     }
@@ -945,7 +961,7 @@ function PlayingView({
                 <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0 shrink-0">
                   {isDaily ? "Mano del Giorno" : "Mano di Ieri"}
                 </Badge>
-                <BenStatus available={game.benAvailable} />
+                <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
               <h1
                 className={`${isMobile ? "text-sm" : "text-lg"} font-extrabold text-gray-900 truncate`}
@@ -1036,7 +1052,7 @@ function PlayingView({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-1 w-full max-w-2xl"
+            className="flex-1 w-full max-w-2xl relative"
           >
             {hands ? (
               <BridgeTable
@@ -1093,6 +1109,7 @@ function PlayingView({
                 compact={isMobile}
               />
             )}
+            {game.phase === "playing" && <GameTutorial />}
           </motion.div>
 
           {/* Bidding Panel */}
@@ -1398,6 +1415,15 @@ function PlayingView({
                   </div>
                 </div>
               </motion.div>
+
+              {/* Share Result */}
+              <ShareResult
+                contract={smazzata.contract}
+                tricksMade={game.result.tricksMade}
+                tricksNeeded={game.result.tricksNeeded}
+                result={game.result.result}
+                stars={calcStars(game.result.result)}
+              />
             </motion.div>
           )}
         </AnimatePresence>

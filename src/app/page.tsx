@@ -13,6 +13,7 @@ import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useProfile, getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
+import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 
 // Derive world cards from ALL courses
 const allWorldsData = courses.flatMap(c => c.worlds);
@@ -90,6 +91,7 @@ export default function Home() {
   const profile = useProfile();
   const { reviewCount } = useSpacedReview();
   const { canInstall, isInstalled, isIOS, install } = usePwaInstall();
+  const { checkReminders, scheduleReminder } = useNotifications();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -138,6 +140,14 @@ export default function Home() {
       }
     } catch {}
   }, []);
+
+  // Check notification reminders on page load and schedule future reminders
+  useEffect(() => {
+    checkReminders();
+    updateLastActivity();
+    const cleanup = scheduleReminder();
+    return cleanup;
+  }, [checkReminders, scheduleReminder]);
 
   const handleOnboardingComplete = () => {
     try {
@@ -216,12 +226,12 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.8, y: 30 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+              className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-5xl mb-3">📊</div>
-              <h2 className="text-2xl font-extrabold text-gray-900">{profile.weeklyRecapTitle}</h2>
-              <p className="text-sm text-gray-500 mt-1">Ecco i tuoi progressi!</p>
+              <h2 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{profile.weeklyRecapTitle}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Ecco i tuoi progressi!</p>
 
               <div className="grid grid-cols-2 gap-3 mt-6">
                 <div className="bg-emerald-50 rounded-xl p-3 border-2 border-emerald-200">
@@ -247,7 +257,7 @@ export default function Home() {
               ) : weeklyData.xpEarned > 0 ? (
                 <p className="mt-4 text-sm font-bold text-amber-600">Buon lavoro! Punta piu' in alto questa settimana!</p>
               ) : (
-                <p className="mt-4 text-sm font-bold text-gray-500">Nuova settimana, nuove sfide!</p>
+                <p className="mt-4 text-sm font-bold text-gray-500 dark:text-gray-400">Nuova settimana, nuove sfide!</p>
               )}
 
               <Button
@@ -351,7 +361,7 @@ export default function Home() {
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
                 <Button
                   size="lg"
-                  className="w-full h-auto rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d py-3.5 px-5"
+                  className="w-full h-auto rounded-2xl bg-white dark:bg-[#1a1f2e] text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d py-3.5 px-5"
                 >
                   <div className="flex items-center gap-3 w-full">
                     <span className="text-2xl">{nextModule.lessonIcon}</span>
@@ -369,7 +379,7 @@ export default function Home() {
               <Link href="/lezioni">
                 <Button
                   size="lg"
-                  className="w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d"
+                  className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d"
                 >
                   <span className="mr-2 text-xl">🎯</span>
                   Inizia il tuo viaggio
@@ -380,7 +390,7 @@ export default function Home() {
         </div>
 
         {/* Smooth gradient fade to background */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#F7F5F0]" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#F7F5F0] dark:to-[#0f1219]" aria-hidden="true" />
       </section>
 
       {/* Daily login XP toast */}
@@ -415,8 +425,8 @@ export default function Home() {
               <Link href="/gioca/sfida" className="block">
                 <div className={`rounded-2xl p-4 cursor-pointer transition-all ${
                   stats.dailyDone
-                    ? "bg-emerald-50 border-2 border-emerald-200"
-                    : "bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-800"
+                    : "bg-white dark:bg-[#1a1f2e] border-2 border-[#e5e0d5] dark:border-[#2a3040] shadow-[0_3px_0_#e5e0d5] dark:shadow-[0_3px_0_#141821]"
                 }`}>
                   <div className="flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200">
@@ -428,10 +438,10 @@ export default function Home() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-3 text-sm font-bold text-gray-900">
+                  <p className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-100">
                     {profile.dailyChallengeLabel}
                   </p>
-                  <p className="mt-0.5 text-xs text-gray-500">
+                  <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                     {stats.dailyDone ? "Completata!" : "Gioca la mano quotidiana"}
                   </p>
                 </div>
@@ -444,7 +454,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="rounded-2xl bg-white p-4 border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5]">
+              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border-2 border-[#e5e0d5] dark:border-[#2a3040] shadow-[0_3px_0_#e5e0d5] dark:shadow-[0_3px_0_#141821]">
                 <div className="flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200">
                     <span className="text-2xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
@@ -455,7 +465,7 @@ export default function Home() {
                     </span>
                   )}
                 </div>
-                <p className="mt-3 text-sm font-bold text-gray-900">
+                <p className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-100">
                   Streak: {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
                 </p>
                 <div className="mt-2 flex gap-1">
@@ -465,7 +475,7 @@ export default function Home() {
                       className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-extrabold ${
                         i < Math.min(stats.streak, 7)
                           ? "bg-blue-500 text-white border border-blue-600"
-                          : "bg-gray-100 text-gray-400 border border-gray-200"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-400 border border-gray-200 dark:border-gray-700"
                       }`}
                     >
                       {day}
@@ -482,10 +492,10 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-5">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-extrabold text-gray-900">
+            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
               Obiettivi del giorno
             </h2>
-            <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200">
+            <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200 dark:border-gray-700">
               Bonus XP
             </Badge>
           </div>
@@ -515,10 +525,10 @@ export default function Home() {
                     <span className="text-2xl">📲</span>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-extrabold text-gray-900">
+                    <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">
                       Installa BridgeQuest
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       Aggiungila alla schermata Home
                     </p>
                   </div>
@@ -541,7 +551,7 @@ export default function Home() {
                     <button
                       onClick={() => setInstallDismissed(true)}
                       aria-label="Chiudi banner installazione"
-                      className="p-2.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                      className="p-2.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:bg-gray-800 transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                         <path d="M18 6L6 18M6 6l12 12" />
@@ -570,11 +580,11 @@ export default function Home() {
               animate={{ y: 0 }}
               exit={{ y: 200 }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              className="bg-white rounded-t-3xl p-6 w-full max-w-md shadow-2xl pb-10"
+              className="bg-white dark:bg-[#1a1f2e] rounded-t-3xl p-6 w-full max-w-md shadow-2xl pb-10"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
-              <h3 className="text-lg font-extrabold text-gray-900 text-center mb-4">
+              <h3 className="text-lg font-extrabold text-gray-900 dark:text-gray-100 text-center mb-4">
                 Installa su iPhone/iPad
               </h3>
               <div className="space-y-4">
@@ -638,10 +648,10 @@ export default function Home() {
                       <span className="text-2xl">🧠</span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-extrabold text-gray-900">
+                      <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">
                         Ripasso del giorno
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {reviewCount} {reviewCount === 1 ? "domanda" : "domande"} da ripassare
                       </p>
                     </div>
@@ -660,7 +670,7 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-4">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-extrabold text-gray-900">
+            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
               Prossimo premio
             </h2>
             <span className="text-xs font-bold text-amber-500">
@@ -686,7 +696,7 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-4 pb-6">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg sm:text-xl font-extrabold text-gray-900">
+            <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-gray-100">
               Il tuo percorso
             </h2>
             <Link href="/lezioni">
@@ -776,7 +786,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
   const card = (
     <div
-      className="group relative overflow-hidden rounded-2xl bg-white transition-all border border-[#e5e0d5] shadow-sm cursor-pointer hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] active:shadow-none"
+      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1f2e] transition-all border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm cursor-pointer hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] active:shadow-none"
     >
       <div
         className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`}
@@ -791,16 +801,16 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-extrabold text-gray-900 truncate">
+            <h3 className="font-extrabold text-gray-900 dark:text-gray-100 truncate">
               {world.name}
             </h3>
             {progress === 100 && (
               <span className="text-emerald-500 text-lg">✓</span>
             )}
           </div>
-          <p className="text-[13px] text-gray-500 mt-0.5">{world.subtitle}</p>
+          <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-0.5">{world.subtitle}</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+            <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
               <motion.div
                 className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
                 initial={{ width: 0 }}
@@ -808,7 +818,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
                 transition={{ delay: 1, duration: 0.8 }}
               />
             </div>
-            <span className="text-[11px] font-bold text-gray-500 tabular-nums">
+            <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400 tabular-nums">
               {completedModules}/{world.totalModules}
             </span>
           </div>
@@ -907,20 +917,20 @@ function DailyQuests({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 + i * 0.05 }}
             className={`flex items-center gap-3 p-3 rounded-xl ${
-              done ? "bg-emerald-50 border border-emerald-200" : "bg-white border border-[#e5e0d5]"
+              done ? "bg-emerald-50 border border-emerald-200" : "bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040]"
             }`}
           >
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-              done ? "bg-emerald-100" : "bg-gray-50"
+              done ? "bg-emerald-100" : "bg-gray-50 dark:bg-gray-800/50"
             }`}>
               {done ? "✅" : quest.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className={`text-sm font-bold ${done ? "text-emerald-700 line-through" : "text-gray-900"}`}>
+              <p className={`text-sm font-bold ${done ? "text-emerald-700 line-through" : "text-gray-900 dark:text-gray-100"}`}>
                 {quest.label}
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden max-w-[80px]">
+                <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden max-w-[80px]">
                   <div
                     className={`h-full rounded-full ${done ? "bg-emerald-500" : "bg-amber-400"}`}
                     style={{ width: `${(quest.progress / quest.target) * 100}%` }}
@@ -948,7 +958,7 @@ function DailyQuests({
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
             ? "bg-gradient-to-r from-amber-50 to-amber-100/60 border border-amber-200"
-            : "bg-gray-50 border border-gray-200"
+            : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
         }`}
       >
         <span className="text-lg">{allDone ? "🎁" : "🎯"}</span>
@@ -1011,7 +1021,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+            className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <motion.div
@@ -1021,9 +1031,9 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
             >
               {showChestPopup.icon}
             </motion.div>
-            <h2 className="text-2xl font-extrabold text-gray-900">{profile.chestTitle}</h2>
+            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{profile.chestTitle}</h2>
             <p className="text-lg font-bold text-amber-600 mt-2">{showChestPopup.label}</p>
-            <p className="text-sm text-gray-500 mt-1">{showChestPopup.reward}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{showChestPopup.reward}</p>
             <div className="mt-4 flex justify-center gap-1">
               {[...Array(5)].map((_, i) => (
                 <motion.span
@@ -1048,7 +1058,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       )}
     </AnimatePresence>
 
-    <div className="rounded-2xl bg-white p-4 border border-[#e5e0d5]">
+    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e0d5] dark:border-[#2a3040]">
       {/* Chest progress bar */}
       <div className="flex items-center gap-2 mb-4">
         {chestMilestones.map((chest, i) => {
@@ -1062,7 +1072,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
                     ? "bg-amber-100 shadow-sm"
                     : isCurrent
                       ? "bg-amber-50 ring-2 ring-amber-300"
-                      : "bg-gray-50"
+                      : "bg-gray-50 dark:bg-gray-800/50"
                 }`}
                 animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
                 transition={isCurrent ? { duration: 2, repeat: Infinity } : {}}
@@ -1090,7 +1100,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
               {modulesCompleted}/{nextChest.modules}
             </p>
           </div>
-          <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+          <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
               initial={{ width: 0 }}
@@ -1125,10 +1135,10 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
     <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-extrabold text-gray-900">
+          <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
             I Corsi FIGB
           </h2>
-          <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200">
+          <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200 dark:border-gray-700">
             {availableCourses.length} corsi
           </Badge>
         </div>
@@ -1144,7 +1154,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                 transition={{ delay: 0.7 + i * 0.08 }}
               >
                 <Link href={`/lezioni?corso=${course.id}`}>
-                  <div className="rounded-2xl bg-white p-4 cursor-pointer border border-[#e5e0d5] hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all">
+                  <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e0d5] dark:border-[#2a3040] hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all">
                     <div className="flex items-center gap-2 mb-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-black text-lg`}>
                         {course.icon}
@@ -1153,20 +1163,20 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                         {info.label}
                       </span>
                     </div>
-                    <p className="text-sm font-extrabold text-gray-900 truncate">
+                    <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100 truncate">
                       {course.name.replace("Corso ", "")}
                     </p>
                     <p className="text-[11px] text-gray-400 mt-0.5 truncate">
                       {course.lessonCount} lezioni
                     </p>
                     <div className="mt-2.5 flex items-center gap-2">
-                      <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+                      <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div
                           className={`h-full rounded-full bg-gradient-to-r ${course.gradient}`}
                           style={{ width: `${stats.progress}%` }}
                         />
                       </div>
-                      <span className="text-[10px] font-bold text-gray-500">{stats.progress}%</span>
+                      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">{stats.progress}%</span>
                     </div>
                   </div>
                 </Link>
@@ -1201,7 +1211,7 @@ function WeeklyObjectivesSection() {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-extrabold text-gray-900">
+            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
               Obiettivi settimanali
             </h2>
             <Badge className="bg-indigo-50 text-indigo-600 text-[10px] font-bold border-0">
@@ -1218,13 +1228,13 @@ function WeeklyObjectivesSection() {
           </Link>
         </div>
 
-        <div className="rounded-2xl bg-white p-4 border border-[#e5e0d5]">
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e0d5] dark:border-[#2a3040]">
           <div className="space-y-2.5">
             {objectives.map((obj, i) => (
               <div
                 key={obj.id}
                 className={`flex items-center gap-3 p-2.5 rounded-xl ${
-                  obj.completed ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50 border border-gray-200"
+                  obj.completed ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
                 }`}
               >
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
@@ -1234,7 +1244,7 @@ function WeeklyObjectivesSection() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold ${
-                    obj.completed ? "text-emerald-700 line-through" : "text-gray-900"
+                    obj.completed ? "text-emerald-700 line-through" : "text-gray-900 dark:text-gray-100"
                   }`}>
                     {obj.title}
                   </p>
@@ -1324,7 +1334,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-extrabold text-gray-900">
+            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
               Collezione Carte
             </h2>
             <Badge className="bg-amber-50 text-amber-600 text-[10px] font-bold border-0">
@@ -1342,7 +1352,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
         </div>
 
         <Link href="/collezione">
-          <div className="rounded-2xl bg-white p-4 cursor-pointer border border-[#e5e0d5] hover:translate-y-[-2px] hover:shadow-md transition-all">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e0d5] dark:border-[#2a3040] hover:translate-y-[-2px] hover:shadow-md transition-all">
             {/* Mini card preview - show last 4 unlocked or first 4 locked */}
             <div className="flex items-center gap-2 mb-3">
               {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {
@@ -1354,7 +1364,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
                     className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl ${
                       isUnlocked
                         ? `bg-gradient-to-br ${card.gradient} shadow-sm`
-                        : "bg-gray-100 grayscale opacity-40"
+                        : "bg-gray-100 dark:bg-gray-800 grayscale opacity-40"
                     }`}
                   >
                     {isUnlocked ? card.emoji : "❓"}
@@ -1362,13 +1372,13 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
                 );
               })}
               <div className="flex-1 text-right">
-                <p className="text-2xl font-extrabold text-gray-900">{unlocked.length}</p>
+                <p className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{unlocked.length}</p>
                 <p className="text-[10px] text-gray-400 font-bold">sbloccate</p>
               </div>
             </div>
 
             {/* Progress bar */}
-            <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+            <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
                 style={{ width: `${(unlocked.length / total) * 100}%` }}
@@ -1376,7 +1386,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
             </div>
 
             {nextCard && (
-              <p className="text-[11px] text-gray-500 mt-2">
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-2">
                 Prossima: <span className="font-bold text-gray-700">{nextCard.emoji} {nextCard.name}</span>
                 <span className="text-gray-400"> — {nextCard.unlockCondition}</span>
               </p>
@@ -1506,7 +1516,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               key={i}
               className={`h-2 rounded-full transition-all ${
                 i === step
-                  ? "bg-white w-8"
+                  ? "bg-white dark:bg-[#1a1f2e] w-8"
                   : i < step
                     ? "bg-white/50 w-2"
                     : "bg-white/20 w-2"
@@ -1632,7 +1642,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                     onClick={() => handleProfileSelect(opt.id)}
                     className={`w-full rounded-2xl p-4 text-left transition-all active:scale-[0.98] ${
                       selectedProfile === opt.id
-                        ? "bg-white shadow-xl shadow-white/20 ring-2 ring-white"
+                        ? "bg-white dark:bg-[#1a1f2e] shadow-xl shadow-white/20 ring-2 ring-white"
                         : "bg-white/10 backdrop-blur-sm hover:bg-white/20"
                     }`}
                   >
@@ -1693,7 +1703,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
             <Button
               onClick={onComplete}
               size="lg"
-              className="w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 transition-all active:scale-[0.98]"
+              className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 transition-all active:scale-[0.98]"
             >
               <span className="mr-2 text-xl">🎯</span>
               Inizia il viaggio!
@@ -1706,7 +1716,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               className={`w-full h-14 rounded-2xl font-extrabold text-base shadow-xl shadow-black/15 transition-all active:scale-[0.98] ${
                 isProfileStep && !selectedProfile
                   ? "bg-white/30 text-white/80 cursor-not-allowed"
-                  : "bg-white text-indigo-700 hover:bg-white/90"
+                  : "bg-white dark:bg-[#1a1f2e] text-indigo-700 hover:bg-white/90"
               }`}
             >
               Continua

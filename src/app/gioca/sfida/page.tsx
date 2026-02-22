@@ -12,9 +12,12 @@ import { parseContract, toDisplayPosition, toGamePosition } from "@/lib/bridge-e
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
+import { GameTutorial } from "@/components/bridge/game-tutorial";
+import { ShareResult } from "@/components/bridge/share-result";
 import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
+import { updateLastActivity } from "@/hooks/use-notifications";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(): Smazzata {
@@ -116,6 +119,7 @@ export default function SfidaDelGiornoPage() {
         localStorage.setItem("bq_xp", String(prev + totalEarned));
         const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
         localStorage.setItem("bq_hands_played", String(hp + 1));
+        updateLastActivity();
       } catch {}
       if (!alreadyCompleted) markDailyCompleted();
     }
@@ -148,7 +152,7 @@ export default function SfidaDelGiornoPage() {
             <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
               Sfida del Giorno
             </Badge>
-            <BenStatus available={game.benAvailable} />
+            <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
             {alreadyCompleted && (
               <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-0">
                 Completata
@@ -211,7 +215,7 @@ export default function SfidaDelGiornoPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-1 max-w-2xl"
+            className="flex-1 max-w-2xl relative"
           >
             {hands ? (
               <BridgeTable
@@ -252,6 +256,7 @@ export default function SfidaDelGiornoPage() {
                 compact={isMobile}
               />
             )}
+            {game.phase === "playing" && <GameTutorial />}
           </motion.div>
 
           {smazzata.bidding && (!isMobile || game.phase === "ready") && (
@@ -363,6 +368,17 @@ export default function SfidaDelGiornoPage() {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Share Result */}
+              <div className="mt-4 mx-auto max-w-lg">
+                <ShareResult
+                  contract={smazzata.contract}
+                  tricksMade={game.result.tricksMade}
+                  tricksNeeded={game.result.tricksNeeded}
+                  result={game.result.result}
+                  stars={game.result.result > 0 ? 3 : game.result.result === 0 ? 2 : game.result.result === -1 ? 1 : 0}
+                />
               </div>
             </motion.div>
           )}

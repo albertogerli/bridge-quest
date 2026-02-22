@@ -8,15 +8,16 @@ import {
   type TrickPlay,
   createGame,
   playCard,
-  aiSelectCard,
   getValidCards,
   getResult,
   partnerOf,
   partnershipOf,
   toDisplayPosition,
 } from "@/lib/bridge-engine";
+import { useSounds } from "@/hooks/use-sounds";
 import type { Vulnerability, BiddingData } from "@/data/smazzate";
 import { checkBenHealth, benPlay } from "@/lib/ben-client";
+import { getAILevel, aiSelectWithDifficulty, type AILevel } from "@/lib/ai-difficulty";
 
 export type GamePhase = "ready" | "playing" | "trick-complete" | "finished";
 
@@ -32,6 +33,7 @@ export interface BridgeGameHook {
   isPlayerTurn: boolean;
   highlightedCards: Card[];
   benAvailable: boolean | null; // null = checking, true/false = result
+  aiLevel: AILevel;
 }
 
 interface GameConfig {
@@ -57,6 +59,9 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const [message, setMessage] = useState("Premi Gioca per iniziare");
   const [highlightedCards, setHighlightedCards] = useState<Card[]>([]);
   const [benAvailable, setBenAvailable] = useState<boolean | null>(null);
+  const [aiLevel, setAiLevel] = useState<AILevel>(() => getAILevel());
+
+  const { playSound } = useSounds();
 
   const aiTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const trickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -105,10 +110,22 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
         const newState = playCard(state, position, card);
         setGameState(newState);
 
+        // Sound: card played
+        playSound("cardPlay");
+
         // Check if trick just completed
         if (newState.currentTrick.length === 0 && state.currentTrick.length === 3) {
           const completedTrick = newState.tricks[newState.tricks.length - 1];
           setLastTrick(completedTrick.plays);
+
+          // Sound: trick won or lost (from declarer's perspective)
+          if (completedTrick.winner) {
+            const winnerSide = partnershipOf(completedTrick.winner);
+            const declarerSide = partnershipOf(configRef.current.declarer);
+            setTimeout(() => {
+              playSound(winnerSide === declarerSide ? "trickWon" : "trickLost");
+            }, 200);
+          }
 
           if (newState.phase === "finished") {
             const res = getResult(newState);
@@ -170,7 +187,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
         setMessage("Mossa non valida. Riprova.");
       }
     },
-    [isPlayerPosition]
+    [isPlayerPosition, playSound]
   );
 
   // AI auto-play logic (with BEN integration)
@@ -182,7 +199,8 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     const currentState = gameState;
     const currentPlayer = gameState.currentPlayer;
     const cfg = configRef.current;
-    const useBen = benAvailable === true;
+    const currentAiLevel = getAILevel();
+    const useBen = benAvailable === true && currentAiLevel === "esperto";
 
     // For didactic smazzate: use specified opening lead if available AND valid
     const isOpeningLead =
@@ -221,14 +239,14 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
           if (!response.fallback && response.card) {
             aiCard = response.card;
           } else {
-            aiCard = aiSelectCard(currentState, currentPlayer);
+            aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
           }
         } catch {
-          aiCard = aiSelectCard(currentState, currentPlayer);
+          aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
           setBenAvailable(false); // Stop trying after failure
         }
       } else {
-        aiCard = aiSelectCard(currentState, currentPlayer);
+        aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
       }
 
       executePlay(currentState, currentPlayer, aiCard);
@@ -253,7 +271,8 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     setLastTrick(null);
     setHighlightedCards([]);
 
-    // Re-check BEN on new game start
+    // Re-read AI level and re-check BEN on new game start
+    setAiLevel(getAILevel());
     checkBenHealth().then((res) => setBenAvailable(res.available));
 
     const leader = state.currentPlayer;
@@ -293,6 +312,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     isPlayerTurn,
     highlightedCards,
     benAvailable,
+    aiLevel,
   };
 }
 

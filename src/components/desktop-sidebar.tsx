@@ -36,15 +36,15 @@ export function DesktopSidebar() {
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
-        <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 border border-indigo-200">
                 <span className="text-lg">⚡</span>
               </div>
               <div>
-                <p className="text-sm font-extrabold text-gray-900">Livello {stats.level}</p>
-                <p className="text-[11px] text-gray-500 font-bold">{stats.levelName}</p>
+                <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Livello {stats.level}</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-bold">{stats.levelName}</p>
               </div>
             </div>
             <div className="text-right">
@@ -64,11 +64,11 @@ export function DesktopSidebar() {
         </div>
 
         {/* Streak */}
-        <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
-              <p className="text-sm font-extrabold text-gray-900">
+              <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">
                 Streak: {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
               </p>
             </div>
@@ -108,8 +108,8 @@ export function DesktopSidebar() {
                 {stats.dailyDone ? "✅" : "🔥"}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-extrabold text-gray-900">Sfida del Giorno</p>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Sfida del Giorno</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">
                   {stats.dailyDone ? "Completata! Torna domani" : "Gioca la mano quotidiana"}
                 </p>
               </div>
@@ -131,8 +131,8 @@ export function DesktopSidebar() {
                   <span className="text-xl">🧠</span>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-extrabold text-gray-900">Ripasso del giorno</p>
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Ripasso del giorno</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
                     {reviewCount} {reviewCount === 1 ? "domanda" : "domande"} da ripassare
                   </p>
                 </div>
@@ -163,8 +163,8 @@ export function DesktopSidebar() {
         )}
 
         {/* Quick Links - Mini Games */}
-        <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4">
-          <p className="text-xs font-extrabold text-gray-900 mb-3 uppercase tracking-wider">Mini-Giochi</p>
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
+          <p className="text-xs font-extrabold text-gray-900 dark:text-gray-100 mb-3 uppercase tracking-wider">Mini-Giochi</p>
           <div className="grid grid-cols-2 gap-2">
             {miniGames.map((game) => (
               <Link key={game.href} href={game.href}>
@@ -179,7 +179,7 @@ export function DesktopSidebar() {
 
         {/* Collectible Cards */}
         <Link href="/collezione" aria-label="Collezione carte">
-          <div className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
             <div className="flex items-center gap-3">
               <div className="flex gap-1">
                 {(unlockedCards.length > 0 ? unlockedCards.slice(-3) : collectibleCards.slice(0, 3)).map((card) => {
@@ -199,8 +199,8 @@ export function DesktopSidebar() {
                 })}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-extrabold text-gray-900">Collezione</p>
-                <p className="text-[11px] text-gray-500 font-bold">
+                <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Collezione</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-bold">
                   {unlockedCards.length}/{totalCards} sbloccate
                 </p>
               </div>

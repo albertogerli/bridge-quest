@@ -13,12 +13,17 @@ export default function GiocaPage() {
   const profile = useProfile();
   const [dailyDone, setDailyDone] = useState(false);
   const [handsPlayed, setHandsPlayed] = useState(0);
+  const [tournamentDone, setTournamentDone] = useState(false);
 
   useEffect(() => {
     try {
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
       setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
+      // Check tournament completion for current week
+      const EPOCH_START = new Date("2024-01-01T00:00:00Z").getTime();
+      const weekNum = Math.floor((Date.now() - EPOCH_START) / (7 * 24 * 60 * 60 * 1000));
+      setTournamentDone(!!localStorage.getItem(`bq_tournament_week_${weekNum}`));
     } catch {}
   }, []);
 
@@ -92,6 +97,59 @@ export default function GiocaPage() {
           </Link>
         </motion.div>
 
+        {/* Torneo Settimanale */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="mt-4"
+        >
+          <Link href="/gioca/torneo" className="block">
+            <div className={`relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl ${
+              tournamentDone
+                ? "bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200"
+                : "bg-gradient-to-br from-indigo-600 to-purple-700"
+            }`}>
+              {!tournamentDone && (
+                <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+              )}
+              <div className="relative flex items-center gap-4">
+                <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl ${
+                  tournamentDone ? "bg-indigo-100" : "bg-white/15"
+                }`}>
+                  {tournamentDone ? "✅" : "🏆"}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className={`text-lg font-extrabold ${tournamentDone ? "text-indigo-700" : "text-white"}`}>
+                      Torneo Settimanale
+                    </h2>
+                    {!tournamentDone && (
+                      <Badge className="bg-white/15 text-white/90 text-[10px] font-bold border-0">
+                        +150 {profile.xpLabel}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className={`text-sm ${tournamentDone ? "text-indigo-600/60" : "text-white/70"}`}>
+                    {tournamentDone
+                      ? "Torneo completato! Nuove mani la prossima settimana."
+                      : "5 mani, stessa sfida per tutti. Entra in classifica!"}
+                  </p>
+                </div>
+                <svg
+                  className={`h-6 w-6 shrink-0 ${tournamentDone ? "text-indigo-400" : "text-white/60"}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <polyline points="9,6 15,12 9,18" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+
         {/* Mini-Games Section */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -102,7 +160,7 @@ export default function GiocaPage() {
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-lg font-extrabold text-gray-900">Mini-Giochi</h2>
             <Badge className="bg-purple-50 text-purple-600 text-[10px] font-bold border-0">
-              7 giochi
+              9 giochi
             </Badge>
           </div>
           <div className="space-y-2.5">
@@ -220,6 +278,25 @@ export default function GiocaPage() {
               </div>
             </Link>
 
+            {/* Pratica Licita */}
+            <Link href="/gioca/pratica-licita" className="block">
+              <div className="card-bold-purple rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl shadow-md shadow-indigo-400/20">
+                  🗣️
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-gray-900 text-[15px]">Pratica Licita</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">Esercitati nella dichiarazione: Texas, Stayman e altro</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 rounded-full px-2 py-0.5">
+                    +20-70 {profile.xpLabel}
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
             {/* Memory Bridge */}
             <Link href="/gioca/memory" className="block">
               <div className="card-bold-purple rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
@@ -233,6 +310,25 @@ export default function GiocaPage() {
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-purple-600 bg-purple-50 rounded-full px-2 py-0.5">
                     +60 {profile.xpLabel}
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* Sfida un Amico */}
+            <Link href="/gioca/sfida-amico" className="block">
+              <div className="card-bold-purple rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 text-2xl shadow-md shadow-violet-400/20">
+                  {"\u2694\uFE0F"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-extrabold text-gray-900 text-[15px]">Sfida un Amico</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">Gioca la stessa mano e confronta i risultati</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 rounded-full px-2 py-0.5">
+                    +30 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>

@@ -13,13 +13,19 @@ import {
   lessonTitles,
   type Smazzata,
 } from "@/data/all-smazzate";
+import { updateLastActivity } from "@/hooks/use-notifications";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, cardToString } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
+import { GameTutorial } from "@/components/bridge/game-tutorial";
+import { HandReplay } from "@/components/bridge/hand-replay";
+import { ShareResult } from "@/components/bridge/share-result";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
+import { useDDS, type DDSAnalysis } from "@/hooks/use-dds";
+import { addGameRecordDirect } from "@/hooks/use-game-history";
 import Link from "next/link";
 
 export default function SmazzataBrowserPage() {
@@ -250,8 +256,12 @@ function PlayingView({
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const [xpSaved, setXpSaved] = useState(false);
+  const [showReplay, setShowReplay] = useState(false);
+  const [ddsResult, setDdsResult] = useState<DDSAnalysis | null>(null);
+  const [ddsLoading, setDdsLoading] = useState(false);
   const isMobile = useMobile();
   const profile = useProfile();
+  const dds = useDDS();
 
   // Player controls declarer + dummy (dummy = north display position)
   const dummyGamePos = toGamePosition("north", declarer);
@@ -309,7 +319,7 @@ function PlayingView({
     };
   };
 
-  // Save XP and track hands played when game finishes
+  // Save XP, track hands played, and record game history when game finishes
   useEffect(() => {
     if (game.phase === "finished" && game.result && !xpSaved) {
       setXpSaved(true);
@@ -319,9 +329,58 @@ function PlayingView({
         localStorage.setItem("bq_xp", String(prev + earned));
         const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
         localStorage.setItem("bq_hands_played", String(hp + 1));
+        updateLastActivity();
+      } catch {}
+
+      // Record game in history for advanced stats
+      try {
+        addGameRecordDirect({
+          date: new Date().toISOString(),
+          contract: smazzata.contract,
+          declarer: smazzata.declarer,
+          tricksMade: game.result.tricksMade,
+          tricksNeeded: game.result.tricksNeeded,
+          result: game.result.result,
+          course: `Lezione ${smazzata.lesson}`,
+          lessonId: String(smazzata.lesson),
+        });
       } catch {}
     }
-  }, [game.phase, game.result, xpSaved]);
+  }, [game.phase, game.result, xpSaved, smazzata]);
+
+  // Run DDS analysis when game finishes
+  useEffect(() => {
+    if (game.phase === "finished" && !ddsResult && !ddsLoading) {
+      setDdsLoading(true);
+      dds.analyzeHand(
+        smazzata.hands,
+        smazzata.contract,
+        smazzata.declarer,
+        smazzata.openingLead,
+      ).then((result) => {
+        setDdsResult(result);
+        setDdsLoading(false);
+      }).catch(() => {
+        setDdsLoading(false);
+      });
+    }
+  }, [game.phase, ddsResult, ddsLoading, dds, smazzata]);
+
+  // Compute DDS-based star rating (1-5 scale)
+  const ddTricks = ddsResult?.ddTricks ?? null;
+  const ddsStars = (() => {
+    if (!game.result) return 0;
+    if (ddTricks === null) {
+      // Fallback to old logic if DDS not available
+      return game.result.result > 0 ? 3 : game.result.result === 0 ? 2 : game.result.result === -1 ? 1 : 0;
+    }
+    const diff = game.result.tricksMade - ddTricks;
+    if (diff >= 0) return 5;       // Matched or exceeded DD
+    if (diff === -1) return 4;     // DD - 1
+    if (diff === -2) return 3;     // DD - 2
+    if (diff === -3) return 2;     // DD - 3
+    return 1;                      // Worse
+  })();
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos = game.isPlayerTurn && game.gameState
@@ -360,7 +419,7 @@ function PlayingView({
                 >
                   Lez. {smazzata.lesson} · Board {smazzata.board}
                 </Badge>
-                <BenStatus available={game.benAvailable} />
+                <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
               <h1 className={`${isMobile ? "text-sm" : "text-lg"} font-extrabold text-gray-900 truncate`}>
                 {smazzata.title}
@@ -426,7 +485,7 @@ function PlayingView({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-1 w-full max-w-2xl"
+            className="flex-1 w-full max-w-2xl relative"
           >
             {hands ? (
               <BridgeTable
@@ -467,6 +526,7 @@ function PlayingView({
                 compact={isMobile}
               />
             )}
+            {game.phase === "playing" && <GameTutorial />}
           </motion.div>
 
           {/* Bidding Panel - side on desktop, hidden on mobile during play */}
@@ -551,22 +611,19 @@ function PlayingView({
                     : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
                 }`}
               >
-                {/* Star Rating */}
+                {/* Star Rating (DDS-based, 1-5) */}
                 <div className="flex justify-center gap-1 mb-3">
-                  {[1, 2, 3].map((star) => {
-                    const stars = game.result!.result > 0 ? 3 : game.result!.result === 0 ? 2 : game.result!.result === -1 ? 1 : 0;
-                    return (
-                      <motion.span
-                        key={star}
-                        initial={{ opacity: 0, scale: 0, rotate: -30 }}
-                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                        transition={{ delay: 0.3 + star * 0.15, type: "spring", stiffness: 300 }}
-                        className={`text-3xl ${star <= stars ? "" : "grayscale opacity-30"}`}
-                      >
-                        ⭐
-                      </motion.span>
-                    );
-                  })}
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <motion.span
+                      key={star}
+                      initial={{ opacity: 0, scale: 0, rotate: -30 }}
+                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.3 + star * 0.1, type: "spring", stiffness: 300 }}
+                      className={`text-2xl ${star <= ddsStars ? "" : "grayscale opacity-30"}`}
+                    >
+                      ⭐
+                    </motion.span>
+                  ))}
                 </div>
 
                 <h3
@@ -606,7 +663,61 @@ function PlayingView({
                       style={{ left: `${(game.result.tricksNeeded / 13) * 100}%` }}
                     />
                   </div>
+                  {/* DD target line (if available and different from contract) */}
+                  {ddTricks !== null && ddTricks !== game.result.tricksNeeded && (
+                    <div className="relative h-0">
+                      <div
+                        className="absolute -top-3 w-0.5 h-3 bg-indigo-500/60"
+                        style={{ left: `${(ddTricks / 13) * 100}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
+
+                {/* DDS Analysis */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="mt-4 rounded-xl bg-indigo-50/80 border border-indigo-200/60 p-3"
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-indigo-500 text-white">
+                      <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <span className="text-xs font-bold text-indigo-700">Analisi Double-Dummy</span>
+                    {ddsLoading && (
+                      <span className="text-[10px] text-indigo-400 animate-pulse">Calcolo...</span>
+                    )}
+                    {ddsResult && !ddsResult.isExact && (
+                      <span className="text-[10px] text-indigo-400">(stima)</span>
+                    )}
+                  </div>
+                  {ddTricks !== null ? (
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-indigo-900">
+                        {ddTricks} prese ottimali
+                      </p>
+                      <p className={`text-xs font-semibold ${
+                        game.result.tricksMade >= ddTricks
+                          ? "text-emerald-600"
+                          : game.result.tricksMade >= ddTricks - 1
+                            ? "text-amber-600"
+                            : "text-red-500"
+                      }`}>
+                        {game.result.tricksMade >= ddTricks
+                          ? game.result.tricksMade === ddTricks
+                            ? `Hai raggiunto il risultato ottimale!`
+                            : `Hai superato il risultato ottimale di ${game.result.tricksMade - ddTricks}!`
+                          : `Hai fatto ${game.result.tricksMade}/${ddTricks} prese possibili`}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-indigo-400">Analisi in corso...</p>
+                  )}
+                </motion.div>
 
                 {/* Score detail grid */}
                 <div className="grid grid-cols-3 gap-2 mt-6">
@@ -628,29 +739,53 @@ function PlayingView({
                   </div>
                 </div>
 
-                {/* Performance verdict */}
+                {/* Performance verdict (DDS-aware) */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8 }}
                   className={`mt-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold ${
-                    game.result.result > 0
+                    ddsStars >= 5
                       ? "bg-emerald-100 text-emerald-700"
-                      : game.result.result === 0
+                      : ddsStars >= 4
                         ? "bg-blue-100 text-blue-700"
-                        : game.result.result === -1
+                        : ddsStars >= 3
                           ? "bg-amber-100 text-amber-700"
                           : "bg-red-100 text-red-700"
                   }`}
                 >
-                  {game.result.result > 0
-                    ? "Eccellente! Piu' prese del necessario"
-                    : game.result.result === 0
-                      ? "Ben giocato! Contratto esatto"
-                      : game.result.result === -1
-                        ? "Quasi! Solo una presa in meno"
-                        : "Da rivedere - riprova la mano!"}
+                  {ddsStars >= 5
+                    ? "Perfetto! Gioco ottimale double-dummy"
+                    : ddsStars >= 4
+                      ? "Ottimo! Solo 1 presa sotto il risultato ottimale"
+                      : ddsStars >= 3
+                        ? "Buono! 2 prese sotto il risultato ottimale"
+                        : ddsStars >= 2
+                          ? "Da migliorare - riprova la mano!"
+                          : "Da rivedere - studia la lezione e riprova!"}
                 </motion.div>
+
+                {/* Replay button */}
+                {game.gameState && game.gameState.tricks.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="mt-4"
+                  >
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowReplay(true)}
+                      className="rounded-xl text-xs font-bold h-9 px-5 border-gray-300 text-gray-600 hover:text-gray-900 hover:border-gray-400"
+                    >
+                      <svg className="h-3.5 w-3.5 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                        <polyline points="1,4 1,10 7,10" />
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                      </svg>
+                      Rivedi la mano
+                    </Button>
+                  </motion.div>
+                )}
               </div>
 
               {/* Commentary / Maestro tip */}
@@ -700,9 +835,36 @@ function PlayingView({
                     <span className="text-gray-500">Attacco</span>
                     <span className="font-bold text-gray-900">{cardToString(smazzata.openingLead)}</span>
                   </div>
+                  {ddTricks !== null && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">DD Ottimale</span>
+                      <span className="font-bold text-indigo-600">
+                        {ddTricks} prese{ddsResult && !ddsResult.isExact ? " (stima)" : ""}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </motion.div>
+
+              {/* Share Result */}
+              <ShareResult
+                contract={smazzata.contract}
+                tricksMade={game.result.tricksMade}
+                tricksNeeded={game.result.tricksNeeded}
+                result={game.result.result}
+                stars={ddsStars}
+              />
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Hand Replay Modal */}
+        <AnimatePresence>
+          {showReplay && game.gameState && (
+            <HandReplay
+              gameState={game.gameState}
+              onClose={() => setShowReplay(false)}
+            />
           )}
         </AnimatePresence>
       </div>

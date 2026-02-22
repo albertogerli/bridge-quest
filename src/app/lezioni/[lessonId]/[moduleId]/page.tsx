@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { getLessonById, getModuleById, worlds, type ContentBlock } from "@/data/lessons";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
+import { useSounds } from "@/hooks/use-sounds";
 import { useAppunti } from "@/hooks/use-appunti";
+import { updateLastActivity } from "@/hooks/use-notifications";
 import { ComprehensionQuiz } from "@/components/comprehension-quiz";
 import { getVideoForLesson } from "@/components/maestro-video";
 import Link from "next/link";
@@ -84,6 +86,7 @@ export default function ModulePage({
 
   // Profile-based gamification config
   const profile = useProfile();
+  const { playSound } = useSounds();
   const { saveRules } = useAppunti();
 
   // Quiz timer for "giovane" profile
@@ -145,6 +148,9 @@ export default function ModulePage({
           localStorage.setItem("bq_streak", String(lastDay === yesterday ? streak + 1 : 1));
           localStorage.setItem("bq_last_login", today);
         }
+
+        // Update last activity for notification reminders
+        updateLastActivity();
       } catch {}
 
       // Auto-save rules to appunti (bloc notes) for senior users
@@ -241,6 +247,7 @@ export default function ModulePage({
       if (newLevel > oldLevel) {
         // Level up!
         setTimeout(() => {
+          playSound("levelUp");
           setShowLevelUp(true);
           setTimeout(() => setShowLevelUp(false), 3000);
         }, 500);
@@ -283,6 +290,7 @@ export default function ModulePage({
     setShowExplanation((prev) => ({ ...prev, [blockIndex]: true }));
 
     if (correct) {
+      playSound("correct");
       const streak = correctStreak + 1;
       setCorrectStreak(streak);
       if (streak > bestStreak) setBestStreak(streak);
@@ -301,6 +309,7 @@ export default function ModulePage({
         showAchievement(profile.perfectScore);
       }
     } else {
+      playSound("wrong");
       setCorrectStreak(0);
       if (timerRef.current) clearInterval(timerRef.current);
       // Lose a life
