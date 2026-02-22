@@ -33,16 +33,18 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
-  // Protected route without login → redirect to login
+  // Protected route without login → redirect to login with return URL
   if (!user && isProtected) {
     const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Logged in and on login page → redirect to home
+  // Logged in and on login page → redirect to home (or intended destination)
   if (user && pathname === "/login") {
-    const homeUrl = new URL("/", request.url);
-    return NextResponse.redirect(homeUrl);
+    const redirect = request.nextUrl.searchParams.get("redirect") || "/";
+    const destUrl = new URL(redirect, request.url);
+    return NextResponse.redirect(destUrl);
   }
 
   return supabaseResponse;
