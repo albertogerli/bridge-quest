@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -10,6 +12,16 @@ type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50/50 to-white flex items-center justify-center"><div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const { signIn, signUp, uploadAvatar } = useAuth();
   const [mode, setMode] = useState<Mode>("login");
   const [loading, setLoading] = useState(false);
@@ -58,7 +70,7 @@ export default function LoginPage() {
             ? "Email o password errati"
             : err.message);
         } else {
-          window.location.href = "/";
+          window.location.href = redirectTo;
           return;
         }
       } else {
@@ -102,7 +114,7 @@ export default function LoginPage() {
           }
           // Save profile type to localStorage too
           try { localStorage.setItem("bq_profile", profileType); } catch {}
-          window.location.href = "/";
+          window.location.href = redirectTo;
           return;
         }
       }
