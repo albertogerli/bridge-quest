@@ -25,7 +25,7 @@ export default function AppuntiPage() {
   const totalRules = appunti.reduce((sum, a) => sum + a.rules.length, 0);
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] pb-28 lg:pb-8">
+    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pb-28 lg:pb-8">
       {/* Header */}
       <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 px-5 pt-14 pb-8 lg:pt-8">
         <div className="mx-auto max-w-lg">

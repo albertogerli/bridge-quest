@@ -107,14 +107,14 @@ export default function ObiettiviPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center">
+      <div className="min-h-screen bg-[#fafbfc] dark:bg-[#0f1219] flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#fafbfc]">
+    <div className="min-h-screen bg-[#fafbfc] dark:bg-[#0f1219]">
       {/* Header with gradient */}
       <div className="bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 px-4 pt-12 pb-10">
         <div className="max-w-lg mx-auto">

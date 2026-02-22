@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -9,15 +9,23 @@ import { courses, levelInfo } from "@/data/courses";
 import { useAuth } from "@/hooks/use-auth";
 import { ASD_LIST } from "@/data/asd-list";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { useGameHistory } from "@/hooks/use-game-history";
+import { StatsDashboard } from "@/components/stats-dashboard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "motion/react";
+import { useRouter } from "next/navigation";
 
 const allWorlds = courses.flatMap(c => c.worlds);
 
+const BQ_KEYS_PREFIX = "bq_";
+
 export default function ProfiloPage() {
+  const router = useRouter();
   const { user, profile: authProfile, signOut, updateProfile, uploadAvatar, refreshProfile } = useAuth();
   const [editing, setEditing] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [editName, setEditName] = useState("");
   const [editBbo, setEditBbo] = useState("");
   const [editAsdSearch, setEditAsdSearch] = useState("");
@@ -31,6 +39,9 @@ export default function ProfiloPage() {
   const [handsPlayed, setHandsPlayed] = useState(0);
   const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
   const [currentProfile, setCurrentProfile] = useState<UserProfile>("adulto");
+  const [advancedStatsOpen, setAdvancedStatsOpen] = useState(false);
+  const { getStats } = useGameHistory();
+  const gameStats = getStats();
 
   useEffect(() => {
     try {
@@ -43,6 +54,24 @@ export default function ProfiloPage() {
       if (p) setCurrentProfile(p);
     } catch {}
   }, []);
+
+  const handleLogout = useCallback(async (clearData: boolean) => {
+    setLoggingOut(true);
+    try {
+      if (clearData) {
+        const keys = Object.keys(localStorage).filter((k) =>
+          k.startsWith(BQ_KEYS_PREFIX)
+        );
+        keys.forEach((k) => localStorage.removeItem(k));
+      }
+      await signOut();
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout error:", err);
+      setLoggingOut(false);
+      setShowLogoutConfirm(false);
+    }
+  }, [signOut, router]);
 
   const level = Math.floor(xp / 100) + 1;
   const xpInLevel = xp % 100;
@@ -217,6 +246,59 @@ export default function ProfiloPage() {
             </motion.div>
           ))}
         </div>
+
+        {/* Advanced Stats - Expandable */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.22 }}
+          className="mt-4"
+        >
+          <button
+            onClick={() => setAdvancedStatsOpen(!advancedStatsOpen)}
+            className="w-full rounded-2xl bg-white p-4 text-left border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] hover:shadow-lg transition-shadow"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-lg">
+                📊
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-gray-900">Statistiche Avanzate</p>
+                <p className="text-[11px] text-gray-500">
+                  {gameStats.totalGames > 0
+                    ? `${gameStats.totalGames} partite · ${gameStats.winRate}% vittorie`
+                    : "Gioca per sbloccare le statistiche"}
+                </p>
+              </div>
+              <motion.svg
+                animate={{ rotate: advancedStatsOpen ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="w-5 h-5 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <polyline points="9,6 15,12 9,18" />
+              </motion.svg>
+            </div>
+          </button>
+          <AnimatePresence>
+            {advancedStatsOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="pt-3">
+                  <StatsDashboard stats={gameStats} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
         <Separator className="my-6 bg-[#e5e0d5]" />
 
@@ -566,17 +648,75 @@ export default function ProfiloPage() {
         {/* Logout */}
         {user && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="mb-6"
           >
-            <button
-              onClick={() => signOut()}
-              className="w-full py-3 text-sm font-bold text-red-500 hover:text-red-600 transition-colors"
-            >
-              Esci dall'account
-            </button>
+            <AnimatePresence mode="wait">
+              {showLogoutConfirm ? (
+                <motion.div
+                  key="logout-confirm"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="rounded-2xl bg-white border-2 border-rose-200 shadow-[0_3px_0_#fecdd3] p-5"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">Vuoi anche cancellare i dati locali?</p>
+                      <p className="text-[11px] text-gray-500">I progressi locali possono essere mantenuti o rimossi</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      onClick={() => handleLogout(true)}
+                      disabled={loggingOut}
+                      className="w-full bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-bold h-10 shadow-md disabled:opacity-50"
+                    >
+                      {loggingOut ? "Uscita..." : "Esci e cancella dati locali"}
+                    </Button>
+                    <Button
+                      onClick={() => handleLogout(false)}
+                      disabled={loggingOut}
+                      variant="outline"
+                      className="w-full rounded-xl text-sm font-bold h-10 border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+                    >
+                      {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
+                    </Button>
+                    <Button
+                      onClick={() => setShowLogoutConfirm(false)}
+                      variant="outline"
+                      className="w-full rounded-xl text-sm font-bold h-10 border-gray-300 text-gray-600"
+                    >
+                      Annulla
+                    </Button>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div key="logout-button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <Button
+                    onClick={() => setShowLogoutConfirm(true)}
+                    variant="outline"
+                    className="w-full rounded-xl border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-bold h-12 text-sm border-2 shadow-[0_3px_0_#fecdd3]"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Esci dall&apos;account
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </div>

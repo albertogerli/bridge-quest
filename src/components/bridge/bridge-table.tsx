@@ -194,12 +194,20 @@ export function BridgeTable({
                     east: "top-1/2 -right-14 -translate-y-1/2",
                     west: "top-1/2 -left-14 -translate-y-1/2",
                   };
+              // Card flies in from the direction of the hand that played it
+              const flyFrom: Record<string, { x: number; y: number; rotate: number }> = {
+                north: { x: 0, y: -60, rotate: -10 },
+                south: { x: 0, y: 60, rotate: 10 },
+                east:  { x: 60, y: 0, rotate: 10 },
+                west:  { x: -60, y: 0, rotate: -10 },
+              };
+              const origin = flyFrom[play.position] ?? { x: 0, y: 0, rotate: 0 };
               return (
                 <motion.div
                   key={`trick-${play.position}`}
                   className={`absolute ${trickPositions[play.position]}`}
-                  initial={{ opacity: 0, scale: 0.3 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.3, x: origin.x, y: origin.y, rotate: origin.rotate }}
+                  animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
