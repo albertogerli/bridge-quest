@@ -91,7 +91,7 @@ export function DummyHand({
                       transition-all touch-manipulation
                       ${suitColor[suit]}
                       ${highlighted
-                        ? "ring-2 ring-emerald border-emerald shadow-md shadow-emerald/30 z-20 scale-110"
+                        ? "ring-2 ring-amber-400 border-amber-400 shadow-md shadow-amber-400/40 z-20 scale-110 animate-pulse"
                         : "border-gray-300 shadow-sm"
                       }
                       ${cardDisabled
