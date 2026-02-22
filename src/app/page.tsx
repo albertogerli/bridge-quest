@@ -1851,16 +1851,17 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             transition={{ delay: 0.6 }}
             className="mt-8 flex flex-col gap-3 max-w-xs mx-auto"
           >
-            <Link href="/login">
-              <Button className="w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all">
-                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                  <polyline points="10 17 15 12 10 7" />
-                  <line x1="15" y1="12" x2="3" y2="12" />
-                </svg>
-                Accedi o Registrati
-              </Button>
-            </Link>
+            <a
+              href="/login"
+              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
+            >
+              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+              Accedi o Registrati
+            </a>
             <button
               onClick={onContinueAsGuest}
               className="w-full h-12 rounded-2xl bg-white/15 backdrop-blur-sm text-white font-bold text-sm hover:bg-white/25 border border-white/20 active:scale-[0.98] transition-all"
@@ -1949,11 +1950,12 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             transition={{ delay: 1.3 }}
             className="flex flex-col gap-3"
           >
-            <Link href="/login">
-              <Button className="w-full h-12 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30">
-                Inizia gratis
-              </Button>
-            </Link>
+            <a
+              href="/login"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 hover:opacity-90 transition-opacity"
+            >
+              Inizia gratis
+            </a>
             <button
               onClick={onContinueAsGuest}
               className="w-full text-center text-sm font-semibold text-gray-400 hover:text-gray-600 transition-colors py-2"

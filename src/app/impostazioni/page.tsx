@@ -703,11 +703,12 @@ export default function ImpostazioniPage() {
                   <p className="text-xs text-gray-500 dark:text-gray-400">Accedi per salvare i progressi su tutti i dispositivi</p>
                 </div>
               </div>
-              <Link href="/login">
-                <Button className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold h-11 text-sm shadow-lg shadow-indigo-500/30">
-                  Accedi o Registrati
-                </Button>
-              </Link>
+              <a
+                href="/login"
+                className="flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold h-11 text-sm shadow-lg shadow-indigo-500/30 hover:opacity-90 transition-opacity"
+              >
+                Accedi o Registrati
+              </a>
             </>
           )}
         </motion.div>

@@ -147,11 +147,9 @@ export default function ProfiloPage() {
                 <p className="text-sm font-bold text-gray-900">Accedi per salvare i progressi</p>
                 <p className="text-[11px] text-gray-500">Sincronizza su tutti i dispositivi</p>
               </div>
-              <Link href="/login">
-                <Button className="h-9 px-4 rounded-xl bg-indigo-600 font-bold text-xs shadow-md">
-                  Accedi
-                </Button>
-              </Link>
+              <a href="/login" className="inline-flex h-9 px-4 items-center rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-md hover:bg-indigo-700 transition-colors">
+                Accedi
+              </a>
             </div>
           </motion.div>
         )}
@@ -720,18 +718,17 @@ export default function ProfiloPage() {
               )}
             </AnimatePresence>
           ) : (
-            <Link href="/login">
-              <Button
-                className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold h-12 text-sm shadow-lg shadow-indigo-500/30"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                  <polyline points="10 17 15 12 10 7" />
-                  <line x1="15" y1="12" x2="3" y2="12" />
-                </svg>
-                Accedi o Registrati
-              </Button>
-            </Link>
+            <a
+              href="/login"
+              className="flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold h-12 text-sm shadow-lg shadow-indigo-500/30 hover:opacity-90 transition-opacity"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+              Accedi o Registrati
+            </a>
           )}
         </motion.div>
       </div>
