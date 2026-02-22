@@ -146,6 +146,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
 
           // Brief pause to show trick, then clear
           setPhase("trick-complete");
+          setMessage("Presa completata...");
           trickTimerRef.current = setTimeout(() => {
             setLastTrick(null);
             setPhase("playing");
@@ -224,37 +225,84 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     // AI's turn
     const delay = useBen ? BEN_DELAY : AI_DELAY;
     aiTimerRef.current = setTimeout(async () => {
-      let aiCard: Card;
+      try {
+        let aiCard: Card;
 
-      if (useBen && cfg.dealer && cfg.vulnerability !== undefined) {
-        try {
-          const response = await benPlay({
-            gameState: currentState,
-            position: currentPlayer,
-            dealer: cfg.dealer,
-            vulnerability: cfg.vulnerability,
-            bidding: cfg.bidding,
-          });
+        if (useBen && cfg.dealer && cfg.vulnerability !== undefined) {
+          try {
+            const response = await benPlay({
+              gameState: currentState,
+              position: currentPlayer,
+              dealer: cfg.dealer,
+              vulnerability: cfg.vulnerability,
+              bidding: cfg.bidding,
+            });
 
-          if (!response.fallback && response.card) {
-            aiCard = response.card;
-          } else {
+            if (!response.fallback && response.card) {
+              aiCard = response.card;
+            } else {
+              aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
+            }
+          } catch {
             aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
+            setBenAvailable(false); // Stop trying after failure
           }
-        } catch {
+        } else {
           aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
-          setBenAvailable(false); // Stop trying after failure
         }
-      } else {
-        aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
-      }
 
-      executePlay(currentState, currentPlayer, aiCard);
+        executePlay(currentState, currentPlayer, aiCard);
+      } catch (err) {
+        console.error("AI play error:", err);
+        // Fallback: play any valid card to avoid freezing
+        try {
+          const hand = currentState.hands[currentPlayer];
+          const valid = getValidCards(hand, currentState.currentTrick);
+          if (valid.length > 0) {
+            executePlay(currentState, currentPlayer, valid[0]);
+          }
+        } catch (fallbackErr) {
+          console.error("AI fallback also failed:", fallbackErr);
+          setMessage("Errore AI. Tocca per riprovare.");
+        }
+      }
     }, delay);
 
     return () => {
       if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState?.currentPlayer, gameState?.currentTrick.length, phase]);
+
+  // Watchdog: recover from stuck states (AI didn't play within 5s, or trick-complete stuck)
+  useEffect(() => {
+    if (!gameState || gameState.phase === "finished") return;
+
+    const watchdog = setTimeout(() => {
+      // If stuck in trick-complete, force transition to playing
+      if (phase === "trick-complete") {
+        console.warn("Watchdog: trick-complete stuck, forcing playing");
+        setLastTrick(null);
+        setPhase("playing");
+        setHighlightedCards([]);
+        return;
+      }
+      // If AI should play but hasn't, retry
+      if (phase === "playing" && !isPlayerPosition(gameState.currentPlayer)) {
+        console.warn("Watchdog: AI stuck, forcing play for", gameState.currentPlayer);
+        try {
+          const hand = gameState.hands[gameState.currentPlayer];
+          const valid = getValidCards(hand, gameState.currentTrick);
+          if (valid.length > 0) {
+            executePlay(gameState, gameState.currentPlayer, valid[0]);
+          }
+        } catch (err) {
+          console.error("Watchdog recovery failed:", err);
+        }
+      }
+    }, 5000);
+
+    return () => clearTimeout(watchdog);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState?.currentPlayer, gameState?.currentTrick.length, phase]);
 
