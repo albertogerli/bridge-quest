@@ -14,6 +14,7 @@ import {
   type Smazzata,
 } from "@/data/all-smazzate";
 import { updateLastActivity } from "@/hooks/use-notifications";
+import { awardGameXp } from "@/lib/xp-utils";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, cardToString } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
@@ -324,13 +325,10 @@ function PlayingView({
     if (game.phase === "finished" && game.result && !xpSaved) {
       setXpSaved(true);
       const earned = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
-      try {
-        const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-        localStorage.setItem("bq_xp", String(prev + earned));
-        const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-        localStorage.setItem("bq_hands_played", String(hp + 1));
-        updateLastActivity();
-      } catch {}
+      // Only award XP on first completion of this hand
+      const gameId = `smazzata-${smazzata.id}`;
+      awardGameXp(gameId, earned);
+      try { updateLastActivity(); } catch {}
 
       // Record game in history for advanced stats
       try {
