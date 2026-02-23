@@ -19,6 +19,7 @@ import { BenStatus } from "@/components/bridge/ben-status";
 import { GameTutorial } from "@/components/bridge/game-tutorial";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
+import { awardGameXp } from "@/lib/xp-utils";
 import Link from "next/link";
 
 // ─── Tournament Helpers ─────────────────────────────────────────────────────
@@ -250,15 +251,12 @@ export default function TorneoSettimanale() {
       saveTournamentResult(result);
       saveTournamentToSupabase(result);
 
-      // Award XP
+      // Award XP (only once per week via awardGameXp)
+      awardGameXp(`torneo-week-${weekNum}`, result.xpEarned);
+      // Tournament plays 5 hands — awardGameXp already counted 1, add remaining 4
       try {
-        const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-        localStorage.setItem("bq_xp", String(prev + result.xpEarned));
-        const hp = parseInt(
-          localStorage.getItem("bq_hands_played") || "0",
-          10
-        );
-        localStorage.setItem("bq_hands_played", String(hp + TOURNAMENT_HAND_COUNT));
+        const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
+        localStorage.setItem("bq_hands_played", String(hp + TOURNAMENT_HAND_COUNT - 1));
       } catch {}
 
       // Refresh leaderboard

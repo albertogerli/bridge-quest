@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
+import { awardGameXp } from "@/lib/xp-utils";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(): Smazzata {
@@ -114,13 +115,9 @@ export default function SfidaDelGiornoPage() {
       const gameXp = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
       const dailyBonus = alreadyCompleted ? 0 : 40;
       const totalEarned = gameXp + dailyBonus;
-      try {
-        const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-        localStorage.setItem("bq_xp", String(prev + totalEarned));
-        const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-        localStorage.setItem("bq_hands_played", String(hp + 1));
-        updateLastActivity();
-      } catch {}
+      const today = new Date().toISOString().slice(0, 10);
+      awardGameXp(`sfida-${today}`, totalEarned);
+      try { updateLastActivity(); } catch {}
       if (!alreadyCompleted) markDailyCompleted();
     }
   }, [game.phase, game.result, alreadyCompleted]);

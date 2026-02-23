@@ -22,6 +22,7 @@ import { ShareResult } from "@/components/bridge/share-result";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
+import { awardGameXp } from "@/lib/xp-utils";
 import Link from "next/link";
 
 // ─── Date Helpers ────────────────────────────────────────────────────────────
@@ -275,16 +276,8 @@ export default function ManoDelGiornoPage() {
 
       if (!todayResult) {
         saveDailyResult(today, result);
-        try {
-          const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          localStorage.setItem("bq_xp", String(prev + xpEarned));
-          const hp = parseInt(
-            localStorage.getItem("bq_hands_played") || "0",
-            10
-          );
-          localStorage.setItem("bq_hands_played", String(hp + 1));
-          updateLastActivity();
-        } catch {}
+        awardGameXp(`mano-giorno-${today}`, xpEarned);
+        try { updateLastActivity(); } catch {}
       }
 
       setTodayResult(result);
@@ -907,21 +900,13 @@ function PlayingView({
           game.result.result >= 0
         );
       } else {
-        // Yesterday's hand: just save generic XP
+        // Yesterday's hand: save XP (only first time)
         const earned =
           30 +
           (game.result.result >= 0 ? 20 : 0) +
           Math.max(0, game.result.result) * 10;
-        try {
-          const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          localStorage.setItem("bq_xp", String(prev + earned));
-          const hp = parseInt(
-            localStorage.getItem("bq_hands_played") || "0",
-            10
-          );
-          localStorage.setItem("bq_hands_played", String(hp + 1));
-          updateLastActivity();
-        } catch {}
+        awardGameXp(`mano-${smazzata.id}`, earned);
+        try { updateLastActivity(); } catch {}
       }
     }
   }, [game.phase, game.result, isDaily, onFinish]);

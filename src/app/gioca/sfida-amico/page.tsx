@@ -16,6 +16,7 @@ import { GameTutorial } from "@/components/bridge/game-tutorial";
 import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
+import { awardGameXp } from "@/lib/xp-utils";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -355,12 +356,7 @@ function ActiveChallenge({
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
       const gameXp = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
-      try {
-        const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-        localStorage.setItem("bq_xp", String(prev + gameXp));
-        const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-        localStorage.setItem("bq_hands_played", String(hp + 1));
-      } catch {}
+      awardGameXp(`sfida-amico-${smazzata.id}`, gameXp);
 
       if (mode === "creating") {
         // Generate challenge code

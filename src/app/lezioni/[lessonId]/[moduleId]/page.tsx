@@ -68,6 +68,11 @@ export default function ModulePage({
   const [stepsViewed, setStepsViewed] = useState<Set<number>>(new Set([0]));
   const [quizTimer, setQuizTimer] = useState(0);
 
+  // Minimum reading time per step (prevents clicking "Avanti" instantly for XP)
+  const MIN_READ_SECONDS = 5;
+  const [canAdvance, setCanAdvance] = useState(false);
+  const stepEnteredAt = useRef(Date.now());
+
   // === GAMIFICATION STATE ===
   const [lives, setLives] = useState(3); // ❤️ lives system
   const [livesLost, setLivesLost] = useState(false); // shake animation trigger
@@ -88,6 +93,22 @@ export default function ModulePage({
   const profile = useProfile();
   const { playSound } = useSounds();
   const { saveRules } = useAppunti();
+
+  // Minimum reading time: disable Avanti for MIN_READ_SECONDS on each new step
+  useEffect(() => {
+    if (!mod) return;
+    const block = mod.content[currentStep];
+    const isQuiz = block && ["quiz", "true-false", "card-select", "hand-eval", "bid-select"].includes(block.type);
+    // Already-viewed steps or quiz steps don't need the timer
+    if (stepsViewed.has(currentStep) || isQuiz) {
+      setCanAdvance(true);
+      return;
+    }
+    setCanAdvance(false);
+    stepEnteredAt.current = Date.now();
+    const readTimer = setTimeout(() => setCanAdvance(true), MIN_READ_SECONDS * 1000);
+    return () => clearTimeout(readTimer);
+  }, [currentStep, mod]);
 
   // Quiz timer for "giovane" profile
   useEffect(() => {
@@ -1608,7 +1629,12 @@ export default function ModulePage({
               {!isLastStep ? (
                 <Button
                   onClick={() => handleStepAdvance(currentStep + 1)}
-                  className={`flex-1 rounded-xl bg-emerald hover:bg-emerald-dark font-bold shadow-lg shadow-emerald/25 ${profile.profile === "senior" ? "h-14 text-base" : "h-12"}`}
+                  disabled={!canAdvance}
+                  className={`flex-1 rounded-xl font-bold shadow-lg ${
+                    canAdvance
+                      ? "bg-emerald hover:bg-emerald-dark shadow-emerald/25"
+                      : "bg-gray-300 cursor-not-allowed shadow-none"
+                  } ${profile.profile === "senior" ? "h-14 text-base" : "h-12"}`}
                 >
                   {profile.profile === "senior" ? "Avanti →" : "Avanti"}
                 </Button>
