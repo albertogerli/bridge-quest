@@ -42,7 +42,7 @@ const difficultyConfig = {
 };
 
 const categoryConfig = {
-  licita: { label: "Licita", icon: "🗣️", bg: "bg-indigo-50", text: "text-indigo-700" },
+  licita: { label: "Licita", icon: "🗣️", bg: "bg-[#003DA5]/10", text: "text-[#003DA5]" },
   gioco: { label: "Gioco", icon: "🃏", bg: "bg-emerald-50", text: "text-emerald-700" },
   difesa: { label: "Difesa", icon: "🛡️", bg: "bg-rose-50", text: "text-rose-700" },
 };
@@ -254,7 +254,7 @@ export default function TrovaErrorePage() {
               🔍
             </div>
             <h1
-              className={`font-extrabold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               Trova l&apos;Errore
             </h1>
@@ -273,7 +273,7 @@ export default function TrovaErrorePage() {
             </div>
 
             {/* How to play */}
-            <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">
                 Come si gioca?
               </h3>
@@ -316,7 +316,7 @@ export default function TrovaErrorePage() {
                   className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
                 >
                   <div className="text-left">
-                    <p className="font-extrabold">{cfg.label}</p>
+                    <p className="font-semibold">{cfg.label}</p>
                     <p className="text-white/70 text-sm">{cfg.desc}</p>
                   </div>
                   <svg
@@ -381,7 +381,7 @@ export default function TrovaErrorePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className={`font-extrabold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               {stars === 3
                 ? "Detective perfetto!"
@@ -403,7 +403,7 @@ export default function TrovaErrorePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-2xl font-black text-rose-500 mt-2"
+              className="text-2xl font-bold text-rose-500 mt-2"
             >
               {score} punti
             </motion.p>
@@ -415,22 +415,22 @@ export default function TrovaErrorePage() {
               transition={{ delay: 0.85 }}
               className="grid grid-cols-3 gap-3 mt-6"
             >
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">
                   {correctCount}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">
                   {bestStreak}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">
                   Streak max
                 </p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-rose-500">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-rose-500">
                   +{xpEarned}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
@@ -536,7 +536,7 @@ export default function TrovaErrorePage() {
                 />
               </svg>
               <span
-                className={`absolute inset-0 flex items-center justify-center text-xs font-black tabular-nums ${
+                className={`absolute inset-0 flex items-center justify-center text-xs font-bold tabular-nums ${
                   timerUrgent ? "text-red-500" : "text-gray-700"
                 }`}
               >
@@ -561,13 +561,13 @@ export default function TrovaErrorePage() {
               className="flex items-center gap-1 bg-rose-50 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-black text-rose-600">
+              <span className="text-xs font-bold text-rose-600">
                 x{streak}
               </span>
             </motion.div>
           )}
 
-          <span className="text-sm font-black text-rose-500">
+          <span className="text-sm font-bold text-rose-500">
             {score} pts
           </span>
         </div>
@@ -579,7 +579,7 @@ export default function TrovaErrorePage() {
               key={round}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="card-elevated rounded-2xl bg-white p-5 mb-4"
+              className="card-clean rounded-2xl bg-white p-5 mb-4"
             >
               {/* Category + Difficulty badges */}
               <div className="flex items-center gap-2 mb-3">
@@ -675,7 +675,7 @@ export default function TrovaErrorePage() {
             <div className="space-y-2">
               {scenario.options.map((option, idx) => {
                 let btnClass =
-                  "bg-white card-elevated hover:shadow-lg border-2 border-transparent";
+                  "bg-white card-clean hover:shadow-lg border-2 border-transparent";
                 if (showFeedback) {
                   if (idx === scenario.correctAnswer) {
                     btnClass =
@@ -800,7 +800,7 @@ export default function TrovaErrorePage() {
                 className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-extrabold text-gray-900">
+                <h2 className="text-2xl font-semibold text-gray-900">
                   Pausa
                 </h2>
                 <p className="text-sm text-gray-500 mt-2">
@@ -823,7 +823,7 @@ export default function TrovaErrorePage() {
                         });
                       }, 1000);
                     }}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-extrabold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-semibold shadow-lg"
                   >
                     Riprendi
                   </Button>

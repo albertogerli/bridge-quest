@@ -218,7 +218,7 @@ export default function PostDetailPage() {
               <p className="text-[11px] text-gray-400">{timeAgo(post.created_at)}</p>
             </div>
             {post.pinned && (
-              <span className="ml-auto text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">
+              <span className="ml-auto text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">
                 PINNED
               </span>
             )}
@@ -230,7 +230,7 @@ export default function PostDetailPage() {
           </span>
 
           {/* Title + Body */}
-          <h1 className="text-lg font-extrabold text-gray-900 mb-3">{post.title}</h1>
+          <h1 className="text-lg font-bold text-gray-900 mb-3">{post.title}</h1>
           <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
             {post.body}
           </div>

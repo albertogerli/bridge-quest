@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { Clock, Trophy, Landmark } from "lucide-react";
 
 // No more mock data - real leaderboard from Supabase
 
@@ -14,7 +15,7 @@ const medals = ["🥇", "🥈", "🥉"];
 
 const avatarColors = [
   "bg-emerald-100 text-emerald-700",
-  "bg-indigo-100 text-indigo-700",
+  "bg-[#003DA5]/10 text-[#003DA5]",
   "bg-rose-100 text-rose-700",
   "bg-amber-100 text-amber-700",
   "bg-cyan-100 text-cyan-700",
@@ -149,7 +150,7 @@ export default function ClassificaPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-2xl font-extrabold text-gray-900">Classifica</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Classifica</h1>
           <p className="text-sm text-gray-500 mt-1">Scala le leghe e diventa Campione Azzurro</p>
         </motion.div>
 
@@ -158,10 +159,10 @@ export default function ClassificaPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="mt-4 flex items-center justify-between bg-white card-elevated rounded-xl p-3"
+          className="mt-4 flex items-center justify-between bg-white card-clean rounded-xl p-3"
         >
           <div className="flex items-center gap-2">
-            <span className="text-lg">⏰</span>
+            <Clock className="w-5 h-5 text-gray-600" />
             <div>
               <p className="text-xs font-bold text-gray-900">Fine settimana</p>
               <p className="text-[10px] text-gray-400">Top 3 promossi!</p>
@@ -169,12 +170,12 @@ export default function ClassificaPage() {
           </div>
           <div className="flex items-center gap-1.5">
             <div className="bg-gray-900 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
-              <p className="text-sm font-black">{countdown.days}</p>
+              <p className="text-sm font-bold">{countdown.days}</p>
               <p className="text-[8px] text-gray-400">GG</p>
             </div>
             <span className="text-gray-300 font-bold">:</span>
             <div className="bg-gray-900 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
-              <p className="text-sm font-black">{countdown.hours}</p>
+              <p className="text-sm font-bold">{countdown.hours}</p>
               <p className="text-[8px] text-gray-400">ORE</p>
             </div>
           </div>
@@ -186,7 +187,7 @@ export default function ClassificaPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="mt-3 bg-white card-elevated rounded-xl p-3"
+            className="mt-3 bg-white card-clean rounded-xl p-3"
           >
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-bold text-gray-700">
@@ -270,7 +271,7 @@ export default function ClassificaPage() {
             {asdLoading ? (
               <div className="space-y-2">
                 {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-elevated">
+                  <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-clean">
                     <div className="h-4 w-2/3 bg-gray-100 rounded mb-2" />
                     <div className="h-3 w-1/3 bg-gray-50 rounded" />
                   </div>
@@ -282,7 +283,7 @@ export default function ClassificaPage() {
                 animate={{ opacity: 1 }}
                 className="text-center py-12"
               >
-                <span className="text-4xl block mb-3">🏛️</span>
+                <span className="flex justify-center mb-3"><Landmark className="w-10 h-10 text-gray-400" /></span>
                 <p className="text-sm text-gray-500">
                   Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione
                 </p>
@@ -295,13 +296,13 @@ export default function ClassificaPage() {
                     initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.03 }}
-                    className="card-elevated rounded-2xl bg-white p-4"
+                    className="card-clean rounded-2xl bg-white p-4"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-8 text-center text-base font-black">
+                      <span className="w-8 text-center text-base font-bold">
                         {i < 3 ? medals[i] : <span className="text-gray-400 text-sm">{i + 1}</span>}
                       </span>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-700 text-lg font-black flex-shrink-0">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 text-[#003DA5] text-lg font-bold flex-shrink-0">
                         {asd.asd_name[0]}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -313,7 +314,7 @@ export default function ClassificaPage() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-extrabold text-sm text-gray-900">
+                        <p className="font-bold text-sm text-gray-900">
                           {asd.total_xp.toLocaleString()}
                         </p>
                         <p className="text-[10px] text-gray-400">XP totali</p>
@@ -349,7 +350,7 @@ function LeaderboardTab({
   if (players.length === 0 && userXp === 0) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
-        <span className="text-5xl block mb-4">🏆</span>
+        <span className="flex justify-center mb-4"><Trophy className="w-12 h-12 text-amber-400" /></span>
         <p className="text-base font-bold text-gray-700">La classifica e ancora vuota</p>
         <p className="text-sm text-gray-500 mt-1">Completa lezioni e sfide per scalare le posizioni!</p>
       </motion.div>
@@ -363,14 +364,14 @@ function LeaderboardTab({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className={`card-elevated rounded-2xl bg-gradient-to-r ${league.color} border ${league.border} p-4 mb-4`}
+        className={`card-clean rounded-2xl bg-gradient-to-r ${league.color} border ${league.border} p-4 mb-4`}
       >
         <div className="flex items-center gap-3">
-          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-2xl font-black shadow-md`}>
+          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-2xl font-bold shadow-md`}>
             {league.icon}
           </div>
           <div className="flex-1">
-            <p className={`font-extrabold text-lg ${league.textColor}`}>
+            <p className={`font-semibold text-lg ${league.textColor}`}>
               {league.name}
             </p>
             {league.next && (
@@ -406,10 +407,10 @@ function LeaderboardTab({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="mb-4 card-elevated rounded-2xl bg-white border-2 border-amber/30 p-4"
+        className="mb-4 card-clean rounded-2xl bg-white border-2 border-amber/30 p-4"
       >
         <div className="flex items-center gap-3">
-          <span className="w-8 text-center text-sm font-black text-amber-500">
+          <span className="w-8 text-center text-sm font-bold text-amber-500">
             {userEntry.rank}
           </span>
           <Avatar className="h-10 w-10">
@@ -424,7 +425,7 @@ function LeaderboardTab({
             </p>
           </div>
           <div className="text-right">
-            <p className="font-extrabold text-gray-900">{userXp.toLocaleString()}</p>
+            <p className="font-bold text-gray-900">{userXp.toLocaleString()}</p>
             <p className="text-[10px] text-gray-400">XP</p>
           </div>
         </div>
@@ -460,13 +461,13 @@ function LeaderboardTab({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.03 }}
             >
-              <div className={`card-elevated rounded-2xl bg-white p-3.5 ${
+              <div className={`card-clean rounded-2xl bg-white p-3.5 ${
                 isUser ? "ring-2 ring-amber/40" : ""
               } ${isPromotion ? "border-l-[3px] border-l-emerald-400" : ""} ${
                 isRelegation ? "border-l-[3px] border-l-rose-300" : ""
               }`}>
                 <div className="flex items-center gap-3">
-                  <span className="w-8 text-center text-base font-black">
+                  <span className="w-8 text-center text-base font-bold">
                     {player.rank <= 3
                       ? medals[player.rank - 1]
                       : <span className="text-gray-400 text-sm">{player.rank}</span>}
@@ -485,7 +486,7 @@ function LeaderboardTab({
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-extrabold text-sm text-gray-900">
+                    <p className="font-bold text-sm text-gray-900">
                       {player.xp.toLocaleString()}
                     </p>
                     <p className="text-[10px] text-gray-400">XP</p>
@@ -520,7 +521,7 @@ function LeaderboardSkeleton() {
   return (
     <div className="space-y-2">
       {[0, 1, 2, 3, 4].map((i) => (
-        <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-elevated">
+        <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-clean">
           <div className="flex items-center gap-3">
             <div className="w-8 h-4 bg-gray-100 rounded" />
             <div className="h-10 w-10 bg-gray-100 rounded-full" />

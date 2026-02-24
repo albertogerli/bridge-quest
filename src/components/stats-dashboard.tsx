@@ -73,7 +73,7 @@ function WinRateRing({ rate }: { rate: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-extrabold" style={{ color }}>
+        <span className="text-3xl font-bold" style={{ color }}>
           {rate}%
         </span>
         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
@@ -151,7 +151,7 @@ function ContractBars({ stats }: { stats: GameStats }) {
                 </span>
               </div>
               <span
-                className="text-xs font-extrabold"
+                className="text-xs font-bold"
                 style={{ color: winRateColor(cs.winRate) }}
               >
                 {cs.winRate}%
@@ -193,7 +193,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
 
   if (stats.totalGames === 0) {
     return (
-      <div className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-6 text-center">
+      <div className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-6 text-center">
         <span className="text-4xl mb-3 block">🃏</span>
         <p className="text-sm font-bold text-gray-900 mb-1">
           Nessuna partita registrata
@@ -214,7 +214,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-4 flex flex-col items-center justify-center"
+          className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-4 flex flex-col items-center justify-center"
         >
           <WinRateRing rate={stats.winRate} />
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1">
@@ -229,9 +229,9 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
-            className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-3.5 flex-1 flex flex-col justify-center"
+            className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-3.5 flex-1 flex flex-col justify-center"
           >
-            <p className="text-2xl font-extrabold text-indigo-600">{stats.avgTricks}</p>
+            <p className="text-2xl font-bold text-[#003DA5]">{stats.avgTricks}</p>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               Prese medie
             </p>
@@ -242,10 +242,10 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-3.5 flex-1 flex flex-col justify-center"
+            className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-3.5 flex-1 flex flex-col justify-center"
           >
             <div className="flex items-center gap-1.5">
-              <p className="text-2xl font-extrabold text-amber-600">{stats.bestStreak}</p>
+              <p className="text-2xl font-bold text-amber-600">{stats.bestStreak}</p>
               {stats.currentStreak > 0 && (
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
                   ora {stats.currentStreak}
@@ -264,9 +264,9 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25 }}
-        className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-4"
+        className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-4"
       >
-        <h4 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider mb-3">
+        <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">
           Per tipo di contratto
         </h4>
         <ContractBars stats={stats} />
@@ -278,10 +278,10 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-4"
+          className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-4"
         >
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider">
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">
               Ultime {stats.last10.length} partite
             </h4>
             <div className="flex items-center gap-2 text-[9px] font-bold text-gray-400">
@@ -306,10 +306,10 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className={`rounded-2xl border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-4 ${trendDisplay.bg}`}
+          className={`rounded-2xl border-2 border-[#e5e7eb] shadow-sm p-4 ${trendDisplay.bg}`}
         >
           <span className="text-3xl block mb-1">{trendDisplay.icon}</span>
-          <p className={`text-sm font-extrabold ${trendDisplay.color}`}>
+          <p className={`text-sm font-semibold ${trendDisplay.color}`}>
             {trendDisplay.label}
           </p>
           <p className="text-[10px] text-gray-500 font-semibold mt-0.5">
@@ -322,12 +322,12 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_3px_0_#e5e0d5] p-4"
+          className="rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm p-4"
         >
           {stats.weakSuits.length > 0 ? (
             <>
               <span className="text-xl block mb-1">⚠️</span>
-              <p className="text-[10px] font-extrabold text-gray-900 uppercase tracking-wider mb-1.5">
+              <p className="text-[10px] font-semibold text-gray-900 uppercase tracking-wider mb-1.5">
                 Punti deboli
               </p>
               <div className="space-y-1">
@@ -341,7 +341,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           ) : (
             <>
               <span className="text-3xl block mb-1">💪</span>
-              <p className="text-sm font-extrabold text-emerald-600">
+              <p className="text-sm font-semibold text-emerald-600">
                 Ottimo lavoro!
               </p>
               <p className="text-[10px] text-gray-500 font-semibold mt-0.5">

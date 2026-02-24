@@ -147,7 +147,7 @@ function SfidaAmicoContent() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-2xl font-extrabold text-gray-900">Sfida un Amico</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Sfida un Amico</h1>
                 <p className="text-sm text-gray-500 mt-0.5">Gioca la stessa mano e confronta i risultati</p>
               </div>
             </div>
@@ -161,14 +161,14 @@ function SfidaAmicoContent() {
             className="mb-4"
           >
             <button onClick={startCreate} className="w-full text-left">
-              <div className="relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-violet-600 to-indigo-700">
+              <div className="relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-[#003DA5] to-[#002E7A]">
                 <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
                 <div className="relative flex items-center gap-5">
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-3xl">
                     {"\u2694\uFE0F"}
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-extrabold text-white mb-1">Crea una Sfida</h2>
+                    <h2 className="text-xl font-bold text-white mb-1">Crea una Sfida</h2>
                     <p className="text-sm text-white/70">
                       Gioca una mano casuale, poi condividi il link con un amico per sfidarlo!
                     </p>
@@ -194,10 +194,10 @@ function SfidaAmicoContent() {
             transition={{ delay: 0.2 }}
           >
             <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
-              <h3 className="font-extrabold text-gray-900 mb-4">Come funziona</h3>
+              <h3 className="font-bold text-gray-900 mb-4">Come funziona</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-extrabold text-violet-600">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#003DA5]/10 text-sm font-bold text-[#003DA5]">
                     1
                   </div>
                   <div>
@@ -206,7 +206,7 @@ function SfidaAmicoContent() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-extrabold text-violet-600">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#003DA5]/10 text-sm font-bold text-[#003DA5]">
                     2
                   </div>
                   <div>
@@ -215,7 +215,7 @@ function SfidaAmicoContent() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-extrabold text-violet-600">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#003DA5]/10 text-sm font-bold text-[#003DA5]">
                     3
                   </div>
                   <div>
@@ -416,7 +416,7 @@ function ActiveChallenge({
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
-          title: "BridgeQuest - Sfida un Amico",
+          title: "FIGB Bridge LAB - Sfida un Amico",
           text,
         });
         return;
@@ -464,12 +464,12 @@ function ActiveChallenge({
                 <polyline points="15,18 9,12 15,6" />
               </svg>
             </Link>
-            <Badge className="bg-violet-50 text-violet-700 text-[10px] font-bold border-0">
+            <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
               {mode === "creating" || mode === "finished-create" ? "Crea Sfida" : "Sfida Ricevuta"}
             </Badge>
             <BenStatus available={game.benAvailable} />
           </div>
-          <h1 className="text-lg font-extrabold text-gray-900">
+          <h1 className="text-lg font-bold text-gray-900">
             {smazzata.title}
           </h1>
           <p className="text-xs text-gray-500 mt-1">
@@ -487,17 +487,17 @@ function ActiveChallenge({
           <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
-              <p className="text-lg font-black text-emerald-dark">{smazzata.contract}</p>
+              <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-              <p className="text-lg font-black text-gray-900">{tricksNeeded} prese</p>
+              <p className="text-lg font-bold text-gray-900">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">N-S / E-O</p>
-              <p className="text-lg font-black text-gray-900">
+              <p className="text-lg font-bold text-gray-900">
                 {game.gameState?.trickCount.ns ?? 0} / {game.gameState?.trickCount.ew ?? 0}
               </p>
             </div>
@@ -596,7 +596,7 @@ function ActiveChallenge({
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-violet-600 hover:bg-violet-700 text-sm font-bold h-12 px-8 shadow-lg shadow-violet-600/25"
+              className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-sm font-bold h-12 px-8 shadow-lg shadow-[#003DA5]/20"
             >
               {mode === "playing-challenge" ? "Accetta la sfida" : "Gioca la sfida"}
             </Button>
@@ -610,7 +610,7 @@ function ActiveChallenge({
               </Link>
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
-                className="rounded-xl bg-violet-600 hover:bg-violet-700 text-sm font-bold h-12 px-6 shadow-lg shadow-violet-600/25"
+                className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-sm font-bold h-12 px-6 shadow-lg shadow-[#003DA5]/20"
               >
                 Rigioca
               </Button>
@@ -639,7 +639,7 @@ function ActiveChallenge({
                   {game.result.result >= 0 ? "\uD83C\uDF89" : "\uD83D\uDE14"}
                 </div>
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
                   }`}
                 >
@@ -667,9 +667,9 @@ function ActiveChallenge({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-6 text-center text-white">
+                  <div className="rounded-2xl bg-gradient-to-br from-[#003DA5] to-[#002E7A] p-6 text-center text-white">
                     <div className="text-3xl mb-2">{"\u2694\uFE0F"}</div>
-                    <h3 className="text-lg font-extrabold mb-1">Sfida Pronta!</h3>
+                    <h3 className="text-lg font-bold mb-1">Sfida Pronta!</h3>
                     <p className="text-sm text-white/70 mb-5">
                       Condividi il link e vedi se il tuo amico riesce a fare meglio!
                     </p>
@@ -735,9 +735,9 @@ function ActiveChallenge({
               {/* Comparison card */}
               <div className="card-elevated rounded-2xl overflow-hidden border border-gray-200">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-violet-600 to-indigo-700 px-5 py-4 text-center">
+                <div className="bg-gradient-to-r from-[#003DA5] to-[#002E7A] px-5 py-4 text-center">
                   <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
-                  <h3 className="text-lg font-extrabold text-white">Risultato Sfida</h3>
+                  <h3 className="text-lg font-bold text-white">Risultato Sfida</h3>
                   <p className="text-xs text-white/60 mt-1">
                     Contratto: {smazzata.contract} {"\u00B7"} Obiettivo: {tricksNeeded} prese
                   </p>
@@ -749,7 +749,7 @@ function ActiveChallenge({
                     {/* Your result */}
                     <div className="text-center rounded-2xl bg-gray-50 p-4 border border-gray-100">
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tu</p>
-                      <p className="text-4xl font-black text-gray-900">{myTricks}</p>
+                      <p className="text-4xl font-bold text-gray-900">{myTricks}</p>
                       <p className="text-xs text-gray-500 mt-1">prese</p>
                       <div className="mt-2">
                         {game.result.result >= 0 ? (
@@ -767,7 +767,7 @@ function ActiveChallenge({
                     {/* Challenger result */}
                     <div className="text-center rounded-2xl bg-gray-50 p-4 border border-gray-100">
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Sfidante</p>
-                      <p className="text-4xl font-black text-gray-900">{challengerTricks}</p>
+                      <p className="text-4xl font-bold text-gray-900">{challengerTricks}</p>
                       <p className="text-xs text-gray-500 mt-1">prese</p>
                       <div className="mt-2">
                         {challengerTricks! - (challengerNeeded ?? tricksNeeded) >= 0 ? (
@@ -802,7 +802,7 @@ function ActiveChallenge({
                       <span className="text-xl">
                         {myTricks > challengerTricks! ? "\uD83C\uDFC6" : myTricks < challengerTricks! ? "\uD83D\uDE14" : "\uD83E\uDD1D"}
                       </span>
-                      <span className={`text-sm font-extrabold ${challengeVerdictColor}`}>
+                      <span className={`text-sm font-bold ${challengeVerdictColor}`}>
                         {challengeVerdict}
                       </span>
                     </div>
@@ -828,7 +828,7 @@ function ActiveChallenge({
               >
                 <button
                   onClick={onNewChallenge}
-                  className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-bold transition-colors shadow-lg shadow-violet-600/25"
+                  className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white text-sm font-bold transition-colors shadow-lg shadow-[#003DA5]/20"
                 >
                   {"\u2694\uFE0F"} Crea la tua sfida
                 </button>
@@ -847,7 +847,7 @@ function ActiveChallenge({
           >
             <div className="card-elevated rounded-2xl bg-white p-5">
               <div className="flex items-start gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md shadow-emerald/30">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
                   M
                 </div>
                 <div className="flex-1">
@@ -892,7 +892,7 @@ function PastChallenges() {
     >
       <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-extrabold text-gray-900">Sfide Create</h3>
+          <h3 className="font-bold text-gray-900">Sfide Create</h3>
           <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200">
             {challenges.length} sfide
           </Badge>
@@ -909,7 +909,7 @@ function PastChallenges() {
                 key={ch.id + i}
                 className="flex items-center gap-3 rounded-xl bg-gray-50 p-3"
               >
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-extrabold ${
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
                   result >= 0
                     ? "bg-emerald-100 text-emerald-700"
                     : "bg-red-100 text-red-600"

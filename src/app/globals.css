@@ -46,61 +46,63 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  /* BridgeQuest Brand */
-  --color-emerald: #059669;
-  --color-emerald-light: #34d399;
-  --color-emerald-dark: #047857;
-  --color-emerald-50: #ecfdf5;
-  --color-emerald-100: #d1fae5;
+  /* FIGB Bridge LAB Brand */
+  --color-figb: #003DA5;
+  --color-figb-light: #0052CC;
+  --color-figb-dark: #002E7A;
+  --color-gold: #c8a44e;
+  --color-gold-light: #d4b76a;
+  --color-gold-dark: #a88a3a;
   --color-amber: #f59e0b;
   --color-amber-light: #fbbf24;
   --color-amber-dark: #d97706;
   --color-amber-50: #fffbeb;
   --color-rose: #e11d48;
   --color-rose-light: #fb7185;
-  --color-indigo: #4f46e5;
-  --color-indigo-light: #818cf8;
   --color-slate-900: #0f172a;
   --color-slate-800: #1e293b;
   --color-slate-700: #334155;
   --color-felt: #15803d;
   --color-felt-light: #16a34a;
   --color-felt-dark: #14532d;
+  --color-emerald: #059669;
+  --color-emerald-light: #34d399;
+  --color-emerald-dark: #047857;
 }
 
 :root {
   --radius: 1rem;
-  --background: #F7F5F0;
+  --background: #FAFAFA;
   --foreground: #1a1a2e;
   --card: #ffffff;
   --card-foreground: #1a1a2e;
   --popover: #ffffff;
   --popover-foreground: #1a1a2e;
-  --primary: #059669;
+  --primary: #003DA5;
   --primary-foreground: #ffffff;
-  --secondary: #f0ede6;
+  --secondary: #f0f1f4;
   --secondary-foreground: #1a1a2e;
-  --muted: #f0ede6;
+  --muted: #f0f1f4;
   --muted-foreground: #64748b;
-  --accent: #f59e0b;
+  --accent: #c8a44e;
   --accent-foreground: #1a1a2e;
   --destructive: #e11d48;
-  --border: #e5e0d5;
-  --input: #e5e0d5;
-  --ring: #059669;
-  --chart-1: #059669;
-  --chart-2: #4f46e5;
-  --chart-3: #f59e0b;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #003DA5;
+  --chart-1: #003DA5;
+  --chart-2: #0052CC;
+  --chart-3: #c8a44e;
   --chart-4: #e11d48;
   --chart-5: #06b6d4;
   --sidebar: #ffffff;
   --sidebar-foreground: #1a1a2e;
-  --sidebar-primary: #059669;
+  --sidebar-primary: #003DA5;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0ede6;
+  --sidebar-accent: #f0f1f4;
   --sidebar-accent-foreground: #1a1a2e;
-  --sidebar-border: #e5e0d5;
-  --sidebar-ring: #059669;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #003DA5;
 }
 
 .dark {
@@ -110,31 +112,31 @@
   --card-foreground: #e2e8f0;
   --popover: #1a1f2e;
   --popover-foreground: #e2e8f0;
-  --primary: #34d399;
+  --primary: #4d8fe6;
   --primary-foreground: #0f1219;
   --secondary: #1e2433;
   --secondary-foreground: #e2e8f0;
   --muted: #1e2433;
   --muted-foreground: #94a3b8;
-  --accent: #fbbf24;
+  --accent: #d4b76a;
   --accent-foreground: #0f1219;
   --destructive: #fb7185;
   --border: #2a3040;
   --input: #2a3040;
-  --ring: #34d399;
-  --chart-1: #34d399;
-  --chart-2: #818cf8;
-  --chart-3: #fbbf24;
+  --ring: #4d8fe6;
+  --chart-1: #4d8fe6;
+  --chart-2: #6da3f0;
+  --chart-3: #d4b76a;
   --chart-4: #fb7185;
   --chart-5: #22d3ee;
   --sidebar: #141821;
   --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #34d399;
+  --sidebar-primary: #4d8fe6;
   --sidebar-primary-foreground: #0f1219;
   --sidebar-accent: #1e2433;
   --sidebar-accent-foreground: #e2e8f0;
   --sidebar-border: #2a3040;
-  --sidebar-ring: #34d399;
+  --sidebar-ring: #4d8fe6;
 }
 
 @layer base {
@@ -145,11 +147,6 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-image:
-      radial-gradient(ellipse at 15% 5%, rgba(99, 102, 241, 0.07) 0%, transparent 50%),
-      radial-gradient(ellipse at 85% 25%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
-      radial-gradient(ellipse at 50% 75%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
-      radial-gradient(ellipse at 10% 90%, rgba(236, 72, 153, 0.04) 0%, transparent 35%);
   }
 }
 
@@ -161,13 +158,13 @@
 
 .dark .suit-spade { color: #e2e8f0; }
 
-/* Premium gradient backgrounds */
+/* FIGB gradient backgrounds */
 .hero-gradient {
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 35%, #a855f7 70%, #c026d3 100%);
+  background: linear-gradient(135deg, #003DA5 0%, #0052CC 100%);
 }
 
 .hero-gradient-warm {
-  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #003DA5 0%, #0052CC 60%, #1a6adf 100%);
 }
 
 /* Card table felt - for the play area only */
@@ -175,67 +172,14 @@
   background: radial-gradient(ellipse at 50% 40%, #16a34a 0%, #15803d 40%, #14532d 100%);
 }
 
-/* Elevated card - bold style with visible border */
-.card-elevated {
-  border: 2px solid #e5e0d5;
-  box-shadow: 0 4px 0 #e5e0d5;
+/* Clean card - subtle border, light shadow */
+.card-clean {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
-.dark .card-elevated {
+.dark .card-clean {
   border-color: #2a3040;
-  box-shadow: 0 4px 0 #1a1f2e;
-}
-
-.card-elevated-lg {
-  border: 2px solid #e5e0d5;
-  box-shadow: 0 6px 0 #d5d0c5;
-}
-.dark .card-elevated-lg {
-  border-color: #2a3040;
-  box-shadow: 0 6px 0 #141821;
-}
-
-/* Bold card with colored border */
-.card-bold-green {
-  border: 2.5px solid #34d399;
-  box-shadow: 0 4px 0 #10b981;
-}
-.card-bold-amber {
-  border: 2.5px solid #fbbf24;
-  box-shadow: 0 4px 0 #f59e0b;
-}
-.card-bold-purple {
-  border: 2.5px solid #a78bfa;
-  box-shadow: 0 4px 0 #7c3aed;
-}
-.card-bold-rose {
-  border: 2.5px solid #fb7185;
-  box-shadow: 0 4px 0 #e11d48;
-}
-.card-bold-blue {
-  border: 2.5px solid #60a5fa;
-  box-shadow: 0 4px 0 #3b82f6;
-}
-.card-bold-orange {
-  border: 2.5px solid #fb923c;
-  box-shadow: 0 4px 0 #ea580c;
-}
-.card-bold-cyan {
-  border: 2.5px solid #22d3ee;
-  box-shadow: 0 4px 0 #06b6d4;
-}
-.card-bold-indigo {
-  border: 2.5px solid #818cf8;
-  box-shadow: 0 4px 0 #4f46e5;
-}
-
-/* 3D button effect (Duolingo style) */
-.btn-3d {
-  border-bottom: 4px solid rgba(0, 0, 0, 0.2);
-  transition: all 0.1s ease;
-}
-.btn-3d:active {
-  border-bottom-width: 2px;
-  transform: translateY(2px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* Glassmorphism - light version */
@@ -243,7 +187,7 @@
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 }
 .dark .glass-light {
   background: rgba(26, 31, 46, 0.85);
@@ -255,7 +199,7 @@
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 /* Shimmer animation for loading states */
@@ -268,16 +212,6 @@
   background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.4) 50%, transparent 75%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
-}
-
-/* Pulse glow for CTA buttons */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.5); }
-  50% { box-shadow: 0 0 0 14px rgba(124, 58, 237, 0); }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Float animation for decorative elements */
@@ -348,7 +282,7 @@
 
 /* Visible focus indicator for keyboard navigation */
 :focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #003DA5;
   outline-offset: 2px;
 }
 
@@ -367,30 +301,4 @@
 }
 .skip-link:focus {
   top: 16px;
-}
-
-/* Dark mode body background gradients */
-.dark body {
-  background-image:
-    radial-gradient(ellipse at 15% 5%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 25%, rgba(168, 85, 247, 0.04) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 75%, rgba(52, 211, 153, 0.03) 0%, transparent 40%);
-}
-
-/* Desktop enhanced background gradients */
-@media (min-width: 1024px) {
-  body {
-    background-image:
-      radial-gradient(ellipse at 10% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 45%),
-      radial-gradient(ellipse at 90% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 40%),
-      radial-gradient(ellipse at 70% 60%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
-      radial-gradient(ellipse at 20% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 35%),
-      radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
-  }
-  .dark body {
-    background-image:
-      radial-gradient(ellipse at 10% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 45%),
-      radial-gradient(ellipse at 90% 20%, rgba(168, 85, 247, 0.04) 0%, transparent 40%),
-      radial-gradient(ellipse at 50% 50%, rgba(52, 211, 153, 0.02) 0%, transparent 50%);
-  }
 }

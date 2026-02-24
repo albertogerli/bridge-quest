@@ -432,7 +432,7 @@ export default function ModulePage({
             animate={{ opacity: 1, y: 0 }}
             className={isJunior ? "mb-6" : "mb-5"}
           >
-            <h2 className={`font-extrabold text-gray-900 leading-tight ${isJunior ? "text-[24px]" : "text-[22px]"}`}>
+            <h2 className={`font-bold text-gray-900 leading-tight ${isJunior ? "text-[24px]" : "text-[22px]"}`}>
               {isJunior && "🎯 "}{block.content}
             </h2>
             <div className={`mt-2 h-1 rounded-full bg-gradient-to-r ${isJunior ? "w-20 from-pink-400 via-purple-400 to-indigo-400" : "w-12 from-emerald to-emerald-light"}`} />
@@ -498,18 +498,18 @@ export default function ModulePage({
             className={`rounded-2xl border p-4 mb-5 ${
               isJunior
                 ? "bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200"
-                : "bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-100"
+                : "bg-gradient-to-br from-[#003DA5]/10 to-blue-50 border-[#003DA5]/20"
             }`}
           >
             <div className="flex items-start gap-3">
               <div className={`flex shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${
-                isJunior ? "h-10 w-10 bg-gradient-to-br from-amber-400 to-orange-500 text-lg" : "h-8 w-8 bg-indigo-500"
+                isJunior ? "h-10 w-10 bg-gradient-to-br from-amber-400 to-orange-500 text-lg" : "h-8 w-8 bg-[#003DA5]"
               }`}>
                 {isJunior ? "👀" : <CardsIcon className="h-4 w-4" />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className={`font-bold uppercase tracking-widest mb-1 ${
-                  isJunior ? "text-[11px] text-amber-600" : "text-[10px] text-indigo-500"
+                  isJunior ? "text-[11px] text-amber-600" : "text-[10px] text-[#003DA5]"
                 }`}>{isJunior ? "Guarda Qui!" : "Esempio"}</p>
                 <p className={`leading-relaxed mb-2 ${
                   isJunior ? "text-[15px] text-amber-900" : "text-[14px] text-indigo-900"
@@ -538,7 +538,7 @@ export default function ModulePage({
             }`}
           >
             <div className="flex items-start gap-3">
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl font-extrabold text-sm shadow-md ${
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl font-bold text-sm shadow-md ${
                 isJunior
                   ? "bg-gradient-to-br from-sky-400 to-blue-500 text-white shadow-sky-300/30 text-lg"
                   : "bg-gradient-to-br from-emerald to-emerald-dark text-white shadow-emerald/30"
@@ -575,7 +575,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-elevated p-5 mb-5 relative overflow-hidden"
+            className="rounded-2xl bg-white card-clean p-5 mb-5 relative overflow-hidden"
           >
             {/* Timer (giovane) + Streak indicator */}
             <div className="absolute top-3 right-3 flex items-center gap-2">
@@ -766,7 +766,7 @@ export default function ModulePage({
                             🌟
                           </motion.span>
                           <div>
-                            <p className="text-base font-black text-white">
+                            <p className="text-base font-bold text-white">
                               {profile.correctMessages[correctStreak % profile.correctMessages.length]} +20 {profile.xpLabel}
                             </p>
                             {correctStreak >= 2 && (
@@ -787,7 +787,7 @@ export default function ModulePage({
                             ⚡
                           </motion.span>
                           <div>
-                            <p className="text-sm font-black text-white">
+                            <p className="text-sm font-bold text-white">
                               CORRETTO! +20 {profile.xpLabel}
                             </p>
                             {correctStreak >= 2 && (
@@ -800,7 +800,7 @@ export default function ModulePage({
                       ) : profile.profile === "adulto" ? (
                         /* Adulto: Maestro Fiori encouragement */
                         <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 flex items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md">
                             M
                           </div>
                           <div>
@@ -869,7 +869,7 @@ export default function ModulePage({
                         </div>
                       ) : (
                         <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md">
                             M
                           </div>
                           <p className="text-sm font-semibold text-red-800">
@@ -903,7 +903,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-elevated p-5 mb-5"
+            className="rounded-2xl bg-white card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600">
@@ -973,7 +973,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-elevated p-5 mb-5"
+            className="rounded-2xl bg-white card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
@@ -1021,7 +1021,7 @@ export default function ModulePage({
                     className={`w-14 h-20 rounded-xl border-2 flex flex-col items-center justify-center shadow-sm transition-all cursor-pointer ${cardCls}`}
                   >
                     <span className={`text-lg font-bold ${color}`}>{suitCh}</span>
-                    <span className={`text-base font-black ${color}`}>{rank}</span>
+                    <span className={`text-base font-bold ${color}`}>{rank}</span>
                   </motion.button>
                 );
               })}
@@ -1043,7 +1043,7 @@ export default function ModulePage({
                     <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
                       <span className="text-lg">💪</span>
                       <p className="text-sm font-semibold text-red-800">
-                        La carta corretta era <span className="font-black">{block.correctCard}</span>
+                        La carta corretta era <span className="font-bold">{block.correctCard}</span>
                       </p>
                     </div>
                   )}
@@ -1069,7 +1069,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-elevated p-5 mb-5"
+            className="rounded-2xl bg-white card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
@@ -1113,7 +1113,7 @@ export default function ModulePage({
               </div>
             ) : (
               <div className={`rounded-xl p-4 text-center ${heCorrect ? "bg-emerald-50 border border-emerald-200" : "bg-red-50 border border-red-200"}`}>
-                <p className={`text-2xl font-black ${heCorrect ? "text-emerald-700" : "text-red-600"}`}>
+                <p className={`text-2xl font-bold ${heCorrect ? "text-emerald-700" : "text-red-600"}`}>
                   {heCorrect ? "✓" : "✗"} {block.correctValue} punti
                 </p>
                 {!heCorrect && (
@@ -1152,7 +1152,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-elevated p-5 mb-5"
+            className="rounded-2xl bg-white card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
@@ -1235,7 +1235,7 @@ export default function ModulePage({
                     <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
                       <span className="text-lg">💪</span>
                       <p className="text-sm font-semibold text-red-800">
-                        La risposta corretta era <span className="font-black">{bidOptions[block.correctAnswer ?? 0]}</span>
+                        La risposta corretta era <span className="font-bold">{bidOptions[block.correctAnswer ?? 0]}</span>
                       </p>
                     </div>
                   )}
@@ -1259,7 +1259,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-elevated p-5 mb-5"
+            className="rounded-2xl bg-white card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
@@ -1320,7 +1320,7 @@ export default function ModulePage({
         {floatingXp.map((f) => (
           <motion.div
             key={f.id}
-            className="fixed pointer-events-none z-[70] font-black text-amber-500 text-lg"
+            className="fixed pointer-events-none z-[70] font-bold text-amber-500 text-lg"
             style={{ left: `${f.x}%`, top: `${f.y}%` }}
             initial={{ opacity: 1, scale: 1, y: 0 }}
             animate={{ opacity: 0, scale: 1.5, y: -80 }}
@@ -1354,7 +1354,7 @@ export default function ModulePage({
                 >
                   🎉
                 </motion.div>
-                <h3 className="text-2xl font-black text-amber-900">{profile.levelUpTitle}</h3>
+                <h3 className="text-2xl font-bold text-amber-900">{profile.levelUpTitle}</h3>
                 <p className="text-amber-800 font-bold mt-2 text-lg">
                   Livello {Math.floor(xpEarned / 100) + 1}
                 </p>
@@ -1438,7 +1438,7 @@ export default function ModulePage({
                 animate={{ scale: 1, rotate: 0 }}
                 className="flex items-center gap-0.5 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full px-2 py-0.5 shadow-lg shadow-orange-200"
               >
-                <span className="text-[10px] text-white font-black">{correctStreak}x</span>
+                <span className="text-[10px] text-white font-bold">{correctStreak}x</span>
                 <span className="text-[10px]">🔥</span>
               </motion.div>
             )}
@@ -1519,7 +1519,7 @@ export default function ModulePage({
               <motion.div
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1, rotate: 0 }}
-                className={`flex items-center gap-1 rounded-full px-3 py-1 font-black text-sm shadow-lg ${
+                className={`flex items-center gap-1 rounded-full px-3 py-1 font-bold text-sm shadow-lg ${
                   xpMultiplier >= 3
                     ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-red-200"
                     : "bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-amber-200"
@@ -1538,7 +1538,7 @@ export default function ModulePage({
             {/* Power-ups */}
             <div className="flex items-center gap-1.5">
               {powerups.fiftyFifty > 0 && (
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-xs font-black text-violet-700 cursor-pointer" title="50/50">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-xs font-bold text-violet-700 cursor-pointer" title="50/50">
                   50
                 </div>
               )}
@@ -1576,7 +1576,7 @@ export default function ModulePage({
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.8 }}
-              className="fixed top-20 right-5 z-50 bg-amber-400 text-white font-extrabold text-lg px-4 py-2 rounded-2xl shadow-xl"
+              className="fixed top-20 right-5 z-50 bg-amber-400 text-white font-bold text-lg px-4 py-2 rounded-2xl shadow-xl"
             >
               ⚡ +{xpPopAmount} {profile.xpLabel}
             </motion.div>
@@ -1590,7 +1590,7 @@ export default function ModulePage({
               initial={{ opacity: 0, y: 40, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.9 }}
-              className="fixed top-32 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-violet-500 to-purple-600 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2"
+              className="fixed top-32 left-1/2 -translate-x-1/2 z-50 bg-[#003DA5] text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2"
             >
               <span className="text-xl">🏅</span>
               {achievement}
@@ -1616,7 +1616,7 @@ export default function ModulePage({
           className="fixed bottom-0 left-0 right-0 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+5rem)] lg:pb-6 z-40"
         >
           <div className="mx-auto max-w-lg">
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-[#e5e0d5] shadow-sm p-3 flex gap-3">
+            <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-[#e5e7eb] shadow-sm p-3 flex gap-3">
               {currentStep > 0 && (
                 <Button
                   variant="outline"
@@ -1715,7 +1715,7 @@ export default function ModulePage({
               >
                 {isLessonComplete ? "🎓" : "🏆"}
               </motion.div>
-              <h3 className="text-xl font-extrabold text-emerald-dark">
+              <h3 className="text-xl font-semibold text-emerald-dark">
                 {isLessonComplete ? "Lezione completata!" : "Modulo completato!"}
               </h3>
 
@@ -1762,18 +1762,18 @@ export default function ModulePage({
               {/* Stats grid */}
               <div className={`grid gap-3 mt-4 ${totalQuizzes > 0 && bestStreak >= 2 ? "grid-cols-3" : totalQuizzes > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
                 <div className="rounded-xl bg-amber-50 p-3">
-                  <p className="text-2xl font-black text-amber-600">{xpEarned + mod.xpReward}</p>
+                  <p className="text-2xl font-bold text-amber-600">{xpEarned + mod.xpReward}</p>
                   <p className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">{profile.xpLabel} Totali</p>
                 </div>
                 {totalQuizzes > 0 && (
                   <div className="rounded-xl bg-emerald-50 p-3">
-                    <p className="text-2xl font-black text-emerald-600">{correctAnswers}/{totalQuizzes}</p>
+                    <p className="text-2xl font-bold text-emerald-600">{correctAnswers}/{totalQuizzes}</p>
                     <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Quiz</p>
                   </div>
                 )}
                 {bestStreak >= 2 && (
                   <div className="rounded-xl bg-orange-50 p-3">
-                    <p className="text-2xl font-black text-orange-600">{bestStreak}</p>
+                    <p className="text-2xl font-bold text-orange-600">{bestStreak}</p>
                     <p className="text-[10px] font-bold text-orange-500 uppercase tracking-wider">Best Streak</p>
                   </div>
                 )}
@@ -1826,11 +1826,11 @@ export default function ModulePage({
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.0 }}
-                  className="rounded-2xl bg-gradient-to-br from-blue-50 via-white to-indigo-50/30 border border-blue-200 p-5"
+                  className="rounded-2xl bg-gradient-to-br from-blue-50 via-white to-[#003DA5]/5 border border-blue-200 p-5"
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-2xl">📝</span>
-                    <h4 className="text-base font-extrabold text-blue-900">Cosa hai imparato</h4>
+                    <h4 className="text-base font-semibold text-blue-900">Cosa hai imparato</h4>
                   </div>
                   <ul className="space-y-2">
                     {ruleBlocks.map((rule, i) => (
@@ -1884,7 +1884,7 @@ export default function ModulePage({
                 transition={{ delay: 0.8 }}
               >
                 <Link href={`/lezioni/${lessonId}/${nextModule.id}`}>
-                  <div className="group card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
+                  <div className="group card-clean rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
                     <p className="text-[10px] font-bold text-emerald uppercase tracking-wider mb-2">
                       Prossimo modulo
                     </p>
@@ -1918,12 +1918,12 @@ export default function ModulePage({
                 transition={{ delay: 0.8 }}
               >
                 <Link href={`/lezioni/${nextLesson.id}`}>
-                  <div className="group card-elevated rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 border border-emerald-200 p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
+                  <div className="group card-clean rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 border border-emerald-200 p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
                     <p className="text-[10px] font-bold text-emerald-dark uppercase tracking-wider mb-2">
                       Prossima lezione
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald to-emerald-dark text-white text-xl font-black shadow-md shadow-emerald/30">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald to-emerald-dark text-white text-xl font-bold shadow-md shadow-emerald/30">
                         {nextLesson.icon}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1952,7 +1952,7 @@ export default function ModulePage({
                 className="rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-5 text-center"
               >
                 <span className="text-3xl">🎓</span>
-                <h4 className="text-lg font-extrabold text-amber-800 mt-2">Corso Fiori Completato!</h4>
+                <h4 className="text-lg font-semibold text-amber-800 mt-2">Corso Fiori Completato!</h4>
                 <p className="text-sm text-amber-700 mt-1">Sei pronto per il circolo FIGB!</p>
               </motion.div>
             )}
@@ -1981,7 +1981,7 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="mb-6 rounded-2xl bg-white border border-[#e5e0d5] shadow-sm overflow-hidden"
+      className="mb-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
     >
       <div className="relative">
         <video

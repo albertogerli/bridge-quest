@@ -6,6 +6,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
+import {
+  Trophy, Gift, Sparkles, FileText, Spade, Star, BookOpen,
+  Flame, Gamepad2, CalendarDays, Target as TargetIcon
+} from "lucide-react";
+
+// Map weekly objective IDs to Lucide icons
+const objectiveIcons: Record<string, React.ReactNode> = {
+  quiz: <FileText className="w-6 h-6 text-indigo-500" />,
+  hands: <Spade className="w-6 h-6 text-gray-700" />,
+  xp: <Star className="w-6 h-6 text-amber-500" />,
+  modules: <BookOpen className="w-6 h-6 text-blue-500" />,
+  streak: <Flame className="w-6 h-6 text-orange-500" />,
+  minigames: <Gamepad2 className="w-6 h-6 text-purple-500" />,
+  daily: <CalendarDays className="w-6 h-6 text-teal-500" />,
+  perfect: <TargetIcon className="w-6 h-6 text-rose-500" />,
+};
 
 // Sparkle particle for confetti effect
 function Sparkle({ delay, x, y }: { delay: number; x: number; y: number }) {
@@ -143,7 +159,7 @@ export default function ObiettiviPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="text-3xl font-extrabold text-white tracking-tight"
+                className="text-3xl font-bold text-white tracking-tight"
               >
                 Obiettivi Settimanali
               </motion.h1>
@@ -161,7 +177,7 @@ export default function ObiettiviPage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.15 }}
             >
-              <Badge className="bg-white/20 text-white font-extrabold text-sm px-3 py-1.5 backdrop-blur-sm border border-white/10 hover:bg-white/20">
+              <Badge className="bg-white/20 text-white font-semibold text-sm px-3 py-1.5 backdrop-blur-sm border border-white/10 hover:bg-white/20">
                 {weekDisplay}
               </Badge>
             </motion.div>
@@ -177,15 +193,15 @@ export default function ObiettiviPage() {
             <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/10">
               <span className="text-white/70 text-xs font-medium">Tempo rimasto:</span>
               <div className="flex items-center gap-1">
-                <span className="bg-white/20 text-white font-black text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
+                <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
                   {timeRemaining.days}g
                 </span>
                 <span className="text-white/50 text-xs">:</span>
-                <span className="bg-white/20 text-white font-black text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
+                <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
                   {timeRemaining.hours}h
                 </span>
                 <span className="text-white/50 text-xs">:</span>
-                <span className="bg-white/20 text-white font-black text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
+                <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
                   {timeRemaining.minutes}m
                 </span>
               </div>
@@ -204,10 +220,10 @@ export default function ObiettiviPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.1 }}
-          className="card-elevated bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
+          className="card-clean bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
         >
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-extrabold text-gray-900">Progresso Globale</p>
+            <p className="text-sm font-semibold text-gray-900">Progresso Globale</p>
             <p className="text-xs font-bold text-gray-400">
               {completedCount} di 3 completati
             </p>
@@ -240,7 +256,7 @@ export default function ObiettiviPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
-              className={`card-elevated rounded-2xl bg-white p-5 shadow-sm border transition-all duration-300 ${
+              className={`card-clean rounded-2xl bg-white p-5 shadow-sm border transition-all duration-300 ${
                 obj.completed
                   ? "border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50"
                   : "border-gray-100"
@@ -256,7 +272,7 @@ export default function ObiettiviPage() {
                         : "bg-gray-50"
                     }`}
                   >
-                    {obj.emoji}
+                    {objectiveIcons[obj.id] || obj.emoji}
                   </div>
                   {obj.completed && (
                     <motion.div
@@ -285,7 +301,7 @@ export default function ObiettiviPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-0.5">
                     <h3
-                      className={`font-extrabold text-base ${
+                      className={`font-semibold text-base ${
                         obj.completed ? "text-emerald-700" : "text-gray-900"
                       }`}
                     >
@@ -348,7 +364,7 @@ export default function ObiettiviPage() {
           className="relative"
         >
           <div
-            className={`card-elevated rounded-2xl overflow-hidden transition-all duration-500 ${
+            className={`card-clean rounded-2xl overflow-hidden transition-all duration-500 ${
               bonusClaimed
                 ? "bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200"
                 : allCompleted
@@ -384,24 +400,26 @@ export default function ObiettiviPage() {
                       initial={{ scale: 0, rotate: -180 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="flex items-center justify-center"
                     >
-                      🏆
+                      <Trophy className="w-8 h-8 text-emerald-700" />
                     </motion.span>
                   ) : allCompleted ? (
                     <motion.span
                       animate={{ rotate: [0, -10, 10, -10, 0] }}
                       transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2 }}
+                      className="flex items-center justify-center"
                     >
-                      🎁
+                      <Gift className="w-8 h-8 text-amber-600" />
                     </motion.span>
                   ) : (
-                    <span className="opacity-40">🎁</span>
+                    <span className="opacity-40 flex items-center justify-center"><Gift className="w-8 h-8 text-gray-400" /></span>
                   )}
                 </div>
 
                 <div className="flex-1">
                   <h3
-                    className={`font-extrabold text-lg ${
+                    className={`font-semibold text-lg ${
                       bonusClaimed
                         ? "text-emerald-700"
                         : allCompleted
@@ -456,9 +474,9 @@ export default function ObiettiviPage() {
                   >
                     <Button
                       onClick={handleClaimBonus}
-                      className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-extrabold text-base shadow-lg shadow-amber-300/40 transition-all duration-200 active:scale-[0.98]"
+                      className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-semibold text-base shadow-lg shadow-amber-300/40 transition-all duration-200 active:scale-[0.98]"
                     >
-                      <span className="mr-2">🎉</span>
+                      <Sparkles className="w-5 h-5 mr-2" />
                       Riscuoti +100 XP Bonus
                     </Button>
                   </motion.div>
@@ -511,7 +529,7 @@ export default function ObiettiviPage() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-10"
               >
-                <span className="text-3xl font-black text-amber-500 drop-shadow-lg">
+                <span className="text-3xl font-bold text-amber-500 drop-shadow-lg">
                   +{bonusXp} XP
                 </span>
               </motion.div>

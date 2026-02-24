@@ -131,7 +131,7 @@ export default function AdminPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="text-center">
           <div className="text-6xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Errore di connessione</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Errore di connessione</h1>
           <p className="text-gray-500 mb-4">Impossibile connettersi a Supabase. Controlla la connessione e riprova.</p>
           <Link href="/login" className="text-emerald-600 font-bold hover:underline">
             Vai al login
@@ -146,7 +146,7 @@ export default function AdminPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="text-center">
           <div className="text-6xl mb-4">🔒</div>
-          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Accesso negato</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Accesso negato</h1>
           <p className="text-gray-500 mb-6">Questa pagina e riservata agli amministratori.</p>
           <Link href="/" className="text-emerald-600 font-bold hover:underline">
             Torna alla home
@@ -188,8 +188,8 @@ export default function AdminPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                ⚙️ Admin BridgeQuest
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                ⚙️ Admin FIGB Bridge LAB
               </h1>
               <p className="text-slate-400 text-sm mt-1">
                 Dashboard amministratore
@@ -255,7 +255,7 @@ export default function AdminPage() {
                   <div key={type} className="flex items-center gap-2">
                     <span className="text-2xl">{profileEmoji[type]}</span>
                     <div>
-                      <div className="text-xl font-extrabold text-gray-900">
+                      <div className="text-xl font-bold text-gray-900">
                         {stats?.byType[type] || 0}
                       </div>
                       <div className="text-xs text-gray-500 capitalize">{type}</div>
@@ -270,7 +270,7 @@ export default function AdminPage() {
               <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">
                 XP totale piattaforma
               </h2>
-              <div className="text-3xl font-extrabold text-indigo-600">
+              <div className="text-3xl font-bold text-[#003DA5]">
                 {(stats?.totalXp ?? 0).toLocaleString("it-IT")} XP
               </div>
             </div>
@@ -278,7 +278,7 @@ export default function AdminPage() {
             {/* Users table */}
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
               <div className="p-5 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="text-lg font-extrabold text-gray-900">
+                <h2 className="text-lg font-semibold text-gray-900">
                   Utenti ({filteredUsers.length})
                 </h2>
                 <input
@@ -286,7 +286,7 @@ export default function AdminPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Cerca utente..."
-                  className="w-60 h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-60 h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
                 />
               </div>
               <div className="overflow-x-auto">
@@ -318,7 +318,7 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-gray-500">
                           {u.bbo_username || "—"}
                         </td>
-                        <td className="px-5 py-3 text-right font-bold text-indigo-600">
+                        <td className="px-5 py-3 text-right font-bold text-[#003DA5]">
                           {u.xp.toLocaleString("it-IT")}
                         </td>
                         <td className="px-5 py-3 text-right">
@@ -374,7 +374,7 @@ function StatCard({
         </div>
         <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">{label}</div>
       </div>
-      <div className="text-3xl font-extrabold text-gray-900">{value.toLocaleString("it-IT")}</div>
+      <div className="text-3xl font-bold text-gray-900">{value.toLocaleString("it-IT")}</div>
     </div>
   );
 }

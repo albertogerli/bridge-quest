@@ -97,7 +97,7 @@ function CardChip({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-sm font-extrabold leading-none
+      className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-sm font-bold leading-none
         ${highlight ? "bg-amber-100 ring-1 ring-amber-300" : "bg-gray-50"}
         ${SUIT_COLORS[card.suit]}`}
     >
@@ -293,7 +293,7 @@ export function HandReplay({
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div>
-            <h3 className="text-lg font-extrabold text-gray-900">
+            <h3 className="text-lg font-semibold text-gray-900">
               Rivedi la mano
             </h3>
             <p className="text-xs text-gray-500">
@@ -316,7 +316,7 @@ export function HandReplay({
         {/* Trick number + score bar */}
         <div className="px-5 pb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 px-2 text-xs font-extrabold text-emerald-700">
+            <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 px-2 text-xs font-bold text-emerald-700">
               {currentTrickIdx + 1}/{totalTricks}
             </span>
             <span className="text-xs font-bold text-gray-400">Presa</span>

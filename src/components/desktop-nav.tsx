@@ -5,22 +5,13 @@ import { usePathname } from "next/navigation";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 
 const navItems = [
-  { href: "/", icon: "home", label: "Home", color: "indigo" as const },
-  { href: "/lezioni", icon: "book", label: "Lezioni", color: "blue" as const },
-  { href: "/gioca", icon: "play", label: "Gioca", color: "purple" as const },
-  { href: "/forum", icon: "forum", label: "Forum", color: "purple" as const },
-  { href: "/classifica", icon: "trophy", label: "Classifica", color: "amber" as const },
-  { href: "/profilo", icon: "user", label: "Profilo", color: "rose" as const },
+  { href: "/", icon: "home", label: "Home" },
+  { href: "/lezioni", icon: "book", label: "Lezioni" },
+  { href: "/gioca", icon: "play", label: "Gioca" },
+  { href: "/forum", icon: "forum", label: "Forum" },
+  { href: "/classifica", icon: "trophy", label: "Classifica" },
+  { href: "/profilo", icon: "user", label: "Profilo" },
 ];
-
-const colorStyles = {
-  indigo: { active: "bg-indigo-50 text-indigo-600 border-indigo-300", icon: "text-indigo-500" },
-  emerald: { active: "bg-emerald-50 text-emerald-600 border-emerald-300", icon: "text-emerald-500" },
-  blue: { active: "bg-blue-50 text-blue-600 border-blue-300", icon: "text-blue-500" },
-  purple: { active: "bg-purple-50 text-purple-600 border-purple-300", icon: "text-purple-500" },
-  amber: { active: "bg-amber-50 text-amber-600 border-amber-300", icon: "text-amber-500" },
-  rose: { active: "bg-rose-50 text-rose-600 border-rose-300", icon: "text-rose-500" },
-};
 
 const icons: Record<string, (active: boolean) => React.ReactNode> = {
   home: (a) => (
@@ -35,7 +26,7 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
     </svg>
   ),
-  play: (a) => (
+  play: () => (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-0.5">
       <path d="M8 5v14l11-7z" />
     </svg>
@@ -69,7 +60,7 @@ export function DesktopNav() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white dark:bg-[#141821] border-r-2 border-[#e5e0d5] dark:border-[#2a3040]" aria-label="Navigazione principale">
+    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white dark:bg-[#141821] border-r border-[#e5e7eb] dark:border-[#2a3040]" aria-label="Navigazione principale">
       {/* Logo */}
       <div className="px-5 pt-6 pb-4">
         <div className="flex items-center gap-2.5">
@@ -81,26 +72,25 @@ export function DesktopNav() {
             ))}
           </div>
         </div>
-        <h1 className="text-lg font-extrabold text-gray-900 dark:text-gray-100 mt-2">BridgeQuest</h1>
-        <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Corsi FIGB</p>
+        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2">FIGB Bridge LAB</h1>
+        <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">Corsi FIGB</p>
       </div>
 
-      <div className="h-px bg-[#e5e0d5] dark:bg-[#2a3040] mx-4" />
+      <div className="h-px bg-[#e5e7eb] dark:bg-[#2a3040] mx-4" />
 
       {/* Nav items */}
       <div className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => {
           const active = isActive(item.href);
-          const colors = colorStyles[item.color];
           const isPlay = item.icon === "play";
 
           if (isPlay) {
             return (
               <Link key={item.href} href={item.href}>
-                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-extrabold text-sm transition-all active:scale-[0.97] mt-2 mb-2 ${
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.97] mt-2 mb-2 ${
                   active
-                    ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-md shadow-purple-400/30"
-                    : "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-[0_4px_0_#6d28d9] hover:shadow-[0_3px_0_#6d28d9] hover:translate-y-[1px] active:shadow-[0_1px_0_#6d28d9] active:translate-y-[3px]"
+                    ? "bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20"
+                    : "bg-[#003DA5] text-white shadow-sm hover:shadow-md"
                 }`}>
                   {icons[item.icon](active)}
                   <span>{item.label}</span>
@@ -113,8 +103,8 @@ export function DesktopNav() {
             <Link key={item.href} href={item.href}>
               <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all active:scale-[0.97] ${
                 active
-                  ? `${colors.active} border-2 font-extrabold`
-                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-700 dark:hover:text-gray-300 font-bold border-2 border-transparent"
+                  ? "bg-[#003DA5]/10 text-[#003DA5] font-semibold"
+                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
               }`}>
                 <span className={active ? "" : "text-gray-400"}>
                   {icons[item.icon](active)}
@@ -128,9 +118,9 @@ export function DesktopNav() {
 
       {/* Settings at bottom */}
       <div className="px-3 pb-4">
-        <div className="h-px bg-[#e5e0d5] dark:bg-[#2a3040] mb-3" />
+        <div className="h-px bg-[#e5e7eb] dark:bg-[#2a3040] mb-3" />
         <Link href="/impostazioni" aria-label="Impostazioni">
-          <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+          <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
             pathname === "/impostazioni"
               ? "bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300"
               : "text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-600 dark:hover:text-gray-300"

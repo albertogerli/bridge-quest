@@ -15,6 +15,24 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
+import {
+  Zap, CheckCircle2, Flame, Target, BarChart3, Brain,
+  Smartphone, BookOpen, Spade, CalendarDays, Gift,
+  Gamepad2, Coffee, Crown, GraduationCap, Trophy,
+  Sparkles, Package, Wrench, Star, FileText
+} from "lucide-react";
+
+// Map weekly objective IDs to Lucide icons
+const objectiveIcons: Record<string, React.ReactNode> = {
+  quiz: <FileText className="w-4 h-4 text-indigo-500" />,
+  hands: <Spade className="w-4 h-4 text-gray-700" />,
+  xp: <Star className="w-4 h-4 text-amber-500" />,
+  modules: <BookOpen className="w-4 h-4 text-blue-500" />,
+  streak: <Flame className="w-4 h-4 text-orange-500" />,
+  minigames: <Gamepad2 className="w-4 h-4 text-purple-500" />,
+  daily: <CalendarDays className="w-4 h-4 text-teal-500" />,
+  perfect: <Target className="w-4 h-4 text-rose-500" />,
+};
 
 // Derive world cards from ALL courses
 const allWorldsData = courses.flatMap(c => c.worlds);
@@ -241,26 +259,26 @@ export default function Home() {
               className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="text-5xl mb-3">📊</div>
-              <h2 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{profile.weeklyRecapTitle}</h2>
+              <div className="flex justify-center mb-3"><BarChart3 className="w-12 h-12 text-indigo-500" /></div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{profile.weeklyRecapTitle}</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Ecco i tuoi progressi!</p>
 
               <div className="grid grid-cols-2 gap-3 mt-6">
-                <div className="bg-emerald-50 rounded-xl p-3 border-2 border-emerald-200">
-                  <p className="text-2xl font-extrabold text-emerald-600">+{weeklyData.xpEarned}</p>
-                  <p className="text-[10px] font-bold text-emerald-700">XP guadagnati</p>
+                <div className="bg-emerald-50 rounded-xl p-3 border border-emerald-200">
+                  <p className="text-2xl font-bold text-emerald-600">+{weeklyData.xpEarned}</p>
+                  <p className="text-[10px] font-medium text-emerald-700">XP guadagnati</p>
                 </div>
-                <div className="bg-amber-50 rounded-xl p-3 border-2 border-amber-200">
-                  <p className="text-2xl font-extrabold text-amber-600">{weeklyData.modulesCompleted}</p>
-                  <p className="text-[10px] font-bold text-amber-700">Moduli completati</p>
+                <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
+                  <p className="text-2xl font-bold text-amber-600">{weeklyData.modulesCompleted}</p>
+                  <p className="text-[10px] font-medium text-amber-700">Moduli completati</p>
                 </div>
-                <div className="bg-indigo-50 rounded-xl p-3 border-2 border-indigo-200">
-                  <p className="text-2xl font-extrabold text-indigo-600">{weeklyData.handsPlayed}</p>
-                  <p className="text-[10px] font-bold text-indigo-700">Mani giocate</p>
+                <div className="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+                  <p className="text-2xl font-bold text-indigo-600">{weeklyData.handsPlayed}</p>
+                  <p className="text-[10px] font-medium text-indigo-700">Mani giocate</p>
                 </div>
-                <div className="bg-orange-50 rounded-xl p-3 border-2 border-orange-200">
-                  <p className="text-2xl font-extrabold text-orange-600">{weeklyData.streakDays}</p>
-                  <p className="text-[10px] font-bold text-orange-700">Giorni streak</p>
+                <div className="bg-orange-50 rounded-xl p-3 border border-orange-200">
+                  <p className="text-2xl font-bold text-orange-600">{weeklyData.streakDays}</p>
+                  <p className="text-[10px] font-medium text-orange-700">Giorni streak</p>
                 </div>
               </div>
 
@@ -274,7 +292,7 @@ export default function Home() {
 
               <Button
                 onClick={() => setShowWeeklyRecap(false)}
-                className="mt-5 w-full h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 font-extrabold shadow-lg"
+                className="mt-5 w-full h-12 rounded-xl bg-[#003DA5] font-semibold shadow-lg"
               >
                 Andiamo!
               </Button>
@@ -284,10 +302,6 @@ export default function Home() {
       </AnimatePresence>
       {/* ===== HERO ===== */}
       <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-16 pt-14 lg:pb-12 lg:pt-8">
-        {/* Decorative blobs */}
-        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" aria-hidden="true" />
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" aria-hidden="true" />
-
         <div className="relative mx-auto max-w-lg">
           {/* Logo + Title */}
           <motion.div
@@ -318,8 +332,8 @@ export default function Home() {
               )}
             </motion.div>
 
-            <h1 className="text-3xl sm:text-[2.5rem] font-extrabold tracking-tight text-white leading-none">
-              BridgeQuest
+            <h1 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-white leading-none">
+              FIGB Bridge LAB
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">
               <div className="h-px w-8 bg-white/30" />
@@ -340,7 +354,7 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber/20">
-                  <span className="text-base">⚡</span>
+                  <Zap className="w-4 h-4 text-amber-300" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white">Livello {stats.level}</p>
@@ -348,7 +362,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-lg font-extrabold text-white">{stats.xpInLevel}</p>
+                <p className="text-lg font-bold text-white">{stats.xpInLevel}</p>
                 <p className="text-[11px] text-white/80">/ 100 XP</p>
               </div>
             </div>
@@ -373,15 +387,15 @@ export default function Home() {
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
                 <Button
                   size="lg"
-                  className="w-full h-auto rounded-2xl bg-white dark:bg-[#1a1f2e] text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d py-3.5 px-5"
+                  className="w-full h-auto rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] py-3.5 px-5"
                 >
                   <div className="flex items-center gap-3 w-full">
                     <span className="text-2xl">{nextModule.lessonIcon}</span>
                     <div className="flex-1 text-left">
-                      <p className="text-[10px] font-bold text-purple-500/70 uppercase tracking-wider">Riprendi</p>
-                      <p className="text-sm font-extrabold text-indigo-700 truncate">{nextModule.moduleTitle}</p>
+                      <p className="text-[10px] font-bold text-[#003DA5]/60 uppercase tracking-wider">Riprendi</p>
+                      <p className="text-sm font-bold text-[#003DA5] truncate">{nextModule.moduleTitle}</p>
                     </div>
-                    <svg className="h-5 w-5 text-purple-500/60 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="h-5 w-5 text-[#003DA5]/50 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
@@ -391,9 +405,9 @@ export default function Home() {
               <Link href="/lezioni">
                 <Button
                   size="lg"
-                  className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] btn-3d"
+                  className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98]"
                 >
-                  <span className="mr-2 text-xl">🎯</span>
+                  <Target className="w-5 h-5 mr-2" />
                   Inizia il tuo viaggio
                 </Button>
               </Link>
@@ -402,8 +416,35 @@ export default function Home() {
         </div>
 
         {/* Smooth gradient fade to background */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#F7F5F0] dark:to-[#0f1219]" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#FAFAFA] dark:to-[#0f1219]" aria-hidden="true" />
       </section>
+
+      {/* Guest login reminder */}
+      {!user && isGuest && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto max-w-lg px-4 mb-4"
+        >
+          <a
+            href="/login"
+            className="flex items-center gap-3 rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-3.5 hover:bg-[#003DA5]/8 transition-colors"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003DA5] text-white shrink-0">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-gray-900">Crea un account gratuito</p>
+              <p className="text-[11px] text-gray-500">Salva i progressi e sincronizza su tutti i dispositivi</p>
+            </div>
+            <svg className="w-4 h-4 text-[#003DA5] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </a>
+        </motion.div>
+      )}
 
       {/* Daily login XP toast */}
       <AnimatePresence>
@@ -416,7 +457,7 @@ export default function Home() {
             className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
           >
             <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl shadow-amber/30">
-              <span className="text-lg">⚡</span>
+              <Zap className="w-5 h-5" />
               Login giornaliero: +{10 + Math.min(stats.streak * 5, 50)} {profile.xpLabel}
               {stats.streak > 1 && <span className="ml-1 text-amber-100">(streak x{stats.streak})</span>}
             </div>
@@ -438,11 +479,11 @@ export default function Home() {
                 <div className={`rounded-2xl p-4 cursor-pointer transition-all ${
                   stats.dailyDone
                     ? "bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-800"
-                    : "bg-white dark:bg-[#1a1f2e] border-2 border-[#e5e0d5] dark:border-[#2a3040] shadow-[0_3px_0_#e5e0d5] dark:shadow-[0_3px_0_#141821]"
+                    : "bg-white dark:bg-[#1a1f2e] border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm dark:shadow-[0_3px_0_#141821]"
                 }`}>
                   <div className="flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200">
-                      <span className="text-2xl">{stats.dailyDone ? "✅" : "🔥"}</span>
+                      {stats.dailyDone ? <CheckCircle2 className="w-6 h-6 text-emerald-600" /> : <Flame className="w-6 h-6 text-amber-600" />}
                     </div>
                     {!stats.dailyDone && (
                       <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
@@ -466,10 +507,10 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border-2 border-[#e5e0d5] dark:border-[#2a3040] shadow-[0_3px_0_#e5e0d5] dark:shadow-[0_3px_0_#141821]">
+              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm dark:shadow-[0_3px_0_#141821]">
                 <div className="flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200">
-                    <span className="text-2xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
+                    {stats.streak >= 7 ? <Flame className="w-6 h-6 text-blue-600" /> : <CalendarDays className="w-6 h-6 text-blue-600" />}
                   </div>
                   {stats.streak > 0 && (
                     <span className="text-[10px] font-bold text-blue-600 bg-blue-50 rounded-full px-2 py-0.5">
@@ -484,7 +525,7 @@ export default function Home() {
                   {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
                     <div
                       key={i}
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-extrabold ${
+                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold ${
                         i < Math.min(stats.streak, 7)
                           ? "bg-blue-500 text-white border border-blue-600"
                           : "bg-gray-100 dark:bg-gray-800 text-gray-400 border border-gray-200 dark:border-gray-700"
@@ -504,7 +545,7 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-5">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Obiettivi del giorno
             </h2>
             <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200 dark:border-gray-700">
@@ -531,14 +572,14 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="rounded-2xl bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-purple-200 p-4">
+              <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
-                    <span className="text-2xl">📲</span>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
+                    <Smartphone className="w-6 h-6 text-[#003DA5]" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">
-                      Installa BridgeQuest
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      Installa Bridge LAB
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
                       Aggiungila alla schermata Home
@@ -548,14 +589,14 @@ export default function Home() {
                     {canInstall ? (
                       <button
                         onClick={() => install()}
-                        className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm hover:bg-purple-700 transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-bold shadow-sm hover:bg-[#002E7A] transition-colors"
                       >
                         Installa
                       </button>
                     ) : isIOS ? (
                       <button
                         onClick={() => setShowIOSGuide(true)}
-                        className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm hover:bg-purple-700 transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-bold shadow-sm hover:bg-[#002E7A] transition-colors"
                       >
                         Come fare
                       </button>
@@ -596,7 +637,7 @@ export default function Home() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
-              <h3 className="text-lg font-extrabold text-gray-900 dark:text-gray-100 text-center mb-4">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
                 Installa su iPhone/iPad
               </h3>
               <div className="space-y-4">
@@ -635,7 +676,7 @@ export default function Home() {
               </div>
               <button
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-6 w-full py-3 rounded-2xl bg-purple-600 text-white font-bold text-sm"
+                className="mt-6 w-full py-3 rounded-2xl bg-[#003DA5] text-white font-bold text-sm"
               >
                 Ho capito
               </button>
@@ -654,20 +695,20 @@ export default function Home() {
               transition={{ delay: 0.9 }}
             >
               <Link href="/lezioni">
-                <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
+                <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
-                      <span className="text-2xl">🧠</span>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
+                      <Brain className="w-6 h-6 text-[#003DA5]" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         Ripasso del giorno
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         {reviewCount} {reviewCount === 1 ? "domanda" : "domande"} da ripassare
                       </p>
                     </div>
-                    <Badge className="bg-purple-500 text-white text-xs font-bold hover:bg-purple-500">
+                    <Badge className="bg-[#003DA5] text-white text-xs font-bold hover:bg-[#003DA5]">
                       {reviewCount}
                     </Badge>
                   </div>
@@ -682,7 +723,7 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-4">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Prossimo premio
             </h2>
             <span className="text-xs font-bold text-amber-500">
@@ -708,7 +749,7 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-4 pb-6">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100">
               Il tuo percorso
             </h2>
             <Link href="/lezioni">
@@ -732,7 +773,7 @@ export default function Home() {
                   <Link href={`/lezioni?corso=${course.id}`}>
                     <div className="flex items-center gap-2 mb-3 cursor-pointer group">
                       <span className="text-lg">{course.icon}</span>
-                      <h3 className="text-sm font-extrabold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                      <h3 className="text-sm font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
                         {course.name}
                       </h3>
                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
@@ -769,14 +810,14 @@ export default function Home() {
       {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}
       <section className="px-4 sm:px-5 pb-6 lg:hidden">
         <div className="mx-auto max-w-lg">
-          <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200/60 p-5 text-center">
-            <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-1">
+          <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-5 text-center">
+            <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
               Un progetto della
             </p>
-            <p className="text-lg font-extrabold text-indigo-700">
+            <p className="text-lg font-bold text-[#003DA5]">
               Federazione Italiana Gioco Bridge
             </p>
-            <p className="mt-2 text-xs text-indigo-700/60">
+            <p className="mt-2 text-xs text-[#003DA5]/60">
               Commissione Insegnamento · Corsi Fiori, Quadri, Cuori
             </p>
           </div>
@@ -798,7 +839,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
   const card = (
     <div
-      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1f2e] transition-all border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm cursor-pointer hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] active:shadow-none"
+      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1f2e] transition-all border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm cursor-pointer hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] active:shadow-none"
     >
       <div
         className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`}
@@ -806,14 +847,14 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
       <div className="flex items-center gap-4 p-4 pl-5">
         <div
-          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl font-black ${world.iconBg}`}
+          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold ${world.iconBg}`}
         >
           {world.icon}
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-extrabold text-gray-900 dark:text-gray-100 truncate">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
               {world.name}
             </h3>
             {progress === 100 && (
@@ -837,7 +878,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
         </div>
 
         <svg
-          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all"
+          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-[#003DA5] group-hover:translate-x-0.5 transition-all"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -892,7 +933,7 @@ function DailyQuests({
   const quests = [
     {
       id: "study",
-      icon: "📖",
+      icon: <BookOpen className="w-5 h-5 text-indigo-500" />,
       label: "Completa 2 moduli",
       progress: Math.min(dailyModules, 2),
       target: 2,
@@ -900,7 +941,7 @@ function DailyQuests({
     },
     {
       id: "play",
-      icon: "🃏",
+      icon: <Spade className="w-5 h-5 text-gray-700" />,
       label: "Gioca 1 mano",
       progress: Math.min(dailyHands, 1),
       target: 1,
@@ -908,7 +949,7 @@ function DailyQuests({
     },
     {
       id: "challenge",
-      icon: "🔥",
+      icon: <Flame className="w-5 h-5 text-orange-500" />,
       label: "Sfida del giorno",
       progress: dailyDone ? 1 : 0,
       target: 1,
@@ -935,7 +976,7 @@ function DailyQuests({
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
               done ? "bg-emerald-100" : "bg-gray-50 dark:bg-gray-800/50"
             }`}>
-              {done ? "✅" : quest.icon}
+              {done ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : quest.icon}
             </div>
             <div className="flex-1 min-w-0">
               <p className={`text-sm font-bold ${done ? "text-emerald-700 line-through" : "text-gray-900 dark:text-gray-100"}`}>
@@ -973,7 +1014,7 @@ function DailyQuests({
             : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
         }`}
       >
-        <span className="text-lg">{allDone ? "🎁" : "🎯"}</span>
+        {allDone ? <Gift className="w-5 h-5 text-amber-600" /> : <Target className="w-5 h-5 text-gray-400" />}
         <p className={`text-xs font-bold ${allDone ? "text-amber-700" : "text-gray-400"}`}>
           {allDone ? "Bonus completamento: +50 XP!" : "Completa tutti per +50 XP bonus"}
         </p>
@@ -983,11 +1024,18 @@ function DailyQuests({
 }
 
 // ===== TREASURE CHESTS =====
+const chestMilestoneIcons = {
+  3: (size: string) => <Gift className={`${size} text-amber-700`} />,
+  10: (size: string) => <Package className={`${size} text-gray-600`} />,
+  25: (size: string) => <Wrench className={`${size} text-amber-500`} />,
+  50: (size: string) => <Crown className={`${size} text-amber-400`} />,
+} as Record<number, (size: string) => React.ReactNode>;
+
 const chestMilestones = [
-  { modules: 3, icon: "🎁", label: "Chest Bronzo", reward: "50 XP + Badge" },
-  { modules: 10, icon: "📦", label: "Chest Argento", reward: "150 XP + Badge" },
-  { modules: 25, icon: "🧰", label: "Chest Oro", reward: "300 XP + Dorso carte" },
-  { modules: 50, icon: "👑", label: "Chest Diamante", reward: "500 XP + Feltro esclusivo" },
+  { modules: 3, label: "Chest Bronzo", reward: "50 XP + Badge" },
+  { modules: 10, label: "Chest Argento", reward: "150 XP + Badge" },
+  { modules: 25, label: "Chest Oro", reward: "300 XP + Dorso carte" },
+  { modules: 50, label: "Chest Diamante", reward: "500 XP + Feltro esclusivo" },
 ];
 
 function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
@@ -1039,11 +1087,11 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
             <motion.div
               animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
               transition={{ duration: 0.8 }}
-              className="text-7xl mb-4"
+              className="flex justify-center mb-4"
             >
-              {showChestPopup.icon}
+              {chestMilestoneIcons[showChestPopup.modules]?.("w-16 h-16")}
             </motion.div>
-            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{profile.chestTitle}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{profile.chestTitle}</h2>
             <p className="text-lg font-bold text-amber-600 mt-2">{showChestPopup.label}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{showChestPopup.reward}</p>
             <div className="mt-4 flex justify-center gap-1">
@@ -1053,15 +1101,15 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + i * 0.1 }}
-                  className="text-2xl"
+                  className="flex items-center"
                 >
-                  ✨
+                  <Sparkles className="w-6 h-6 text-amber-400" />
                 </motion.span>
               ))}
             </div>
             <Button
               onClick={() => setShowChestPopup(null)}
-              className="mt-6 w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-extrabold shadow-lg"
+              className="mt-6 w-full h-12 rounded-xl bg-[#c8a44e] font-semibold shadow-lg"
             >
               Fantastico!
             </Button>
@@ -1089,7 +1137,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
                 animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
                 transition={isCurrent ? { duration: 2, repeat: Infinity } : {}}
               >
-                {isEarned ? "✅" : chest.icon}
+                {isEarned ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : chestMilestoneIcons[chest.modules]?.("w-5 h-5")}
               </motion.div>
               <span className={`text-[9px] font-bold ${
                 isEarned ? "text-amber-600" : isCurrent ? "text-amber-500" : "text-gray-400"
@@ -1105,8 +1153,8 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       {nextChest && (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-xs font-bold text-gray-700">
-              {nextChest.icon} {nextChest.label}
+            <p className="text-xs font-bold text-gray-700 flex items-center gap-1">
+              {chestMilestoneIcons[nextChest.modules]?.("w-4 h-4")} {nextChest.label}
             </p>
             <p className="text-[11px] font-bold text-amber-500">
               {modulesCompleted}/{nextChest.modules}
@@ -1128,7 +1176,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
 
       {!nextChest && (
         <div className="text-center py-2">
-          <p className="text-sm font-bold text-amber-700">Tutti i bauli aperti! 👑</p>
+          <p className="text-sm font-bold text-amber-700 flex items-center justify-center gap-1">Tutti i bauli aperti! <Crown className="w-4 h-4" /></p>
           <p className="text-xs text-amber-500 mt-0.5">Sei un vero campione</p>
         </div>
       )}
@@ -1147,7 +1195,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
     <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
             I Corsi FIGB
           </h2>
           <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200 dark:border-gray-700">
@@ -1166,16 +1214,16 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                 transition={{ delay: 0.7 + i * 0.08 }}
               >
                 <Link href={`/lezioni?corso=${course.id}`}>
-                  <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e0d5] dark:border-[#2a3040] hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all">
+                  <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e7eb] dark:border-[#2a3040] hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-black text-lg`}>
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-bold text-lg`}>
                         {course.icon}
                       </div>
                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${info.bg} ${info.color}`}>
                         {info.label}
                       </span>
                     </div>
-                    <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100 truncate">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                       {course.name.replace("Corso ", "")}
                     </p>
                     <p className="text-[11px] text-gray-400 mt-0.5 truncate">
@@ -1223,24 +1271,24 @@ function WeeklyObjectivesSection() {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Obiettivi settimanali
             </h2>
-            <Badge className="bg-indigo-50 text-indigo-600 text-[10px] font-bold border-0">
+            <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
               {completedCount}/3
             </Badge>
           </div>
           <Link href="/obiettivi">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold text-indigo-500 border-indigo-200 cursor-pointer hover:bg-indigo-50 transition-colors"
+              className="text-[10px] font-semibold text-[#003DA5] border-[#003DA5]/20 cursor-pointer hover:bg-[#003DA5]/5 transition-colors"
             >
               Dettagli →
             </Badge>
           </Link>
         </div>
 
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e0d5] dark:border-[#2a3040]">
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e7eb] dark:border-[#2a3040]">
           <div className="space-y-2.5">
             {objectives.map((obj, i) => (
               <div
@@ -1252,7 +1300,7 @@ function WeeklyObjectivesSection() {
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
                   obj.completed ? "bg-emerald-100" : "bg-white"
                 }`}>
-                  {obj.completed ? "✅" : obj.emoji}
+                  {obj.completed ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : (objectiveIcons[obj.id] || obj.emoji)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold ${
@@ -1264,7 +1312,7 @@ function WeeklyObjectivesSection() {
                     <div className="flex-1 h-2.5 rounded-full bg-gray-200 border border-gray-300 overflow-hidden max-w-[100px]">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          obj.completed ? "bg-emerald" : "bg-indigo-400"
+                          obj.completed ? "bg-emerald" : "bg-[#003DA5]"
                         }`}
                         style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
                       />
@@ -1275,7 +1323,7 @@ function WeeklyObjectivesSection() {
                   </div>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  obj.completed ? "bg-emerald-100 text-emerald-700" : "bg-indigo-50 text-indigo-600"
+                  obj.completed ? "bg-emerald-100 text-emerald-700" : "bg-[#003DA5]/10 text-[#003DA5]"
                 }`}>
                   +{obj.xpReward} XP
                 </span>
@@ -1289,15 +1337,15 @@ function WeeklyObjectivesSection() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               onClick={handleClaimBonus}
-              className="mt-3 w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-sm shadow-lg shadow-indigo-300/30 active:scale-[0.98] transition-transform"
+              className="mt-3 w-full py-3 rounded-xl bg-[#003DA5] text-white font-bold text-sm shadow-lg shadow-[#003DA5]/20 active:scale-[0.98] transition-transform"
             >
-              🎁 Riscuoti bonus +100 XP!
+              <Gift className="w-4 h-4 inline mr-1" /> Riscuoti bonus +100 XP!
             </motion.button>
           )}
 
           {bonusClaimed && (
-            <div className="mt-3 py-2.5 rounded-xl bg-indigo-50 text-center">
-              <p className="text-xs font-bold text-indigo-600">✅ Bonus riscosso! Torna la prossima settimana</p>
+            <div className="mt-3 py-2.5 rounded-xl bg-[#003DA5]/8 text-center">
+              <p className="text-xs font-bold text-[#003DA5] flex items-center justify-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Bonus riscosso! Torna la prossima settimana</p>
             </div>
           )}
         </div>
@@ -1311,8 +1359,8 @@ function WeeklyObjectivesSection() {
               exit={{ opacity: 0, y: -20 }}
               className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
             >
-              <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl">
-                🎁 +100 XP Bonus settimanale!
+              <div className="flex items-center gap-2 bg-[#003DA5] text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl">
+                <Gift className="w-4 h-4" /> +100 XP Bonus settimanale!
               </div>
             </motion.div>
           )}
@@ -1346,7 +1394,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-extrabold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Collezione Carte
             </h2>
             <Badge className="bg-amber-50 text-amber-600 text-[10px] font-bold border-0">
@@ -1364,7 +1412,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
         </div>
 
         <Link href="/collezione">
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e0d5] dark:border-[#2a3040] hover:translate-y-[-2px] hover:shadow-md transition-all">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e7eb] dark:border-[#2a3040] hover:translate-y-[-2px] hover:shadow-md transition-all">
             {/* Mini card preview - show last 4 unlocked or first 4 locked */}
             <div className="flex items-center gap-2 mb-3">
               {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {
@@ -1384,7 +1432,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
                 );
               })}
               <div className="flex-1 text-right">
-                <p className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{unlocked.length}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{unlocked.length}</p>
                 <p className="text-[10px] text-gray-400 font-bold">sbloccate</p>
               </div>
             </div>
@@ -1411,26 +1459,32 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
 }
 
 // ===== USER PROFILE OPTIONS =====
-const profileOptions: { id: UserProfile; emoji: string; label: string; age: string; desc: string }[] = [
-  { id: "junior", emoji: "🎮", label: "Explorer", age: "8–17", desc: "Super divertente! Animazioni pazze, tanti premi e sfide" },
-  { id: "giovane", emoji: "⚡", label: "Dinamico", age: "18–35", desc: "Ritmo veloce, sfide competitive, animazioni rapide" },
-  { id: "adulto", emoji: "🃏", label: "Classico", age: "36–55", desc: "Equilibrato, giochi 2D, progressione graduale" },
-  { id: "senior", emoji: "☕", label: "Rilassato", age: "55+", desc: "Testi grandi, ritmo calmo, guida passo-passo" },
+const profileOptions: { id: UserProfile; icon: React.ReactNode; label: string; age: string; desc: string }[] = [
+  { id: "junior", icon: <Gamepad2 className="w-6 h-6" />, label: "Explorer", age: "8–17", desc: "Super divertente! Animazioni pazze, tanti premi e sfide" },
+  { id: "giovane", icon: <Zap className="w-6 h-6" />, label: "Dinamico", age: "18–35", desc: "Ritmo veloce, sfide competitive, animazioni rapide" },
+  { id: "adulto", icon: <Spade className="w-6 h-6" />, label: "Classico", age: "36–55", desc: "Equilibrato, giochi 2D, progressione graduale" },
+  { id: "senior", icon: <Coffee className="w-6 h-6" />, label: "Rilassato", age: "55+", desc: "Testi grandi, ritmo calmo, guida passo-passo" },
 ];
 
 // ===== ONBOARDING FLOW =====
-const onboardingSteps: { id: string; emoji: string; title: string; subtitle: string; description: string; video?: string }[] = [
+const onboardingStepIcons: Record<string, React.ReactNode> = {
+  welcome: null, // uses SuitSymbol components
+  profile: <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}><path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>,
+  how: <Target className="w-10 h-10 text-white" />,
+  maestro: <GraduationCap className="w-10 h-10 text-white" />,
+  ready: <Sparkles className="w-10 h-10 text-white" />,
+};
+
+const onboardingSteps: { id: string; title: string; subtitle: string; description: string; video?: string }[] = [
   {
     id: "welcome",
-    emoji: "♠ ♥ ♦ ♣",
-    title: "Benvenuto in BridgeQuest",
+    title: "Benvenuto in Bridge LAB",
     subtitle: "Il tuo viaggio nel bridge inizia qui",
     description:
-      "Il bridge è il gioco di carte più bello e stimolante del mondo. Con BridgeQuest imparerai a giocare divertendoti, passo dopo passo.",
+      "Il bridge è il gioco di carte più bello e stimolante del mondo. Con Bridge LAB imparerai a giocare divertendoti, passo dopo passo.",
   },
   {
     id: "profile",
-    emoji: "👤",
     title: "Come preferisci imparare?",
     subtitle: "Personalizziamo la tua esperienza",
     description:
@@ -1438,7 +1492,6 @@ const onboardingSteps: { id: string; emoji: string; title: string; subtitle: str
   },
   {
     id: "how",
-    emoji: "🎯",
     title: "Come funziona?",
     subtitle: "Impara, gioca, migliora",
     description:
@@ -1446,7 +1499,6 @@ const onboardingSteps: { id: string; emoji: string; title: string; subtitle: str
   },
   {
     id: "maestro",
-    emoji: "🎓",
     title: "Il Maestro Fiori",
     subtitle: "La tua guida personale",
     description:
@@ -1455,7 +1507,6 @@ const onboardingSteps: { id: string; emoji: string; title: string; subtitle: str
   },
   {
     id: "ready",
-    emoji: "🚀",
     title: "Pronto a partire?",
     subtitle: "Il ponte verso una nuova passione",
     description:
@@ -1493,13 +1544,13 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center bg-gradient-to-br from-indigo-700 via-purple-600 to-fuchsia-700 overflow-y-auto py-12">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center bg-gradient-to-br from-[#002E7A] via-[#003DA5] to-[#0052CC] overflow-y-auto py-12">
       {/* Animated background suits */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {["♠", "♥", "♦", "♣", "♠", "♥", "♦", "♣"].map((suit, i) => (
           <motion.span
             key={i}
-            className="absolute text-white/[0.04] font-black select-none"
+            className="absolute text-white/[0.04] font-bold select-none"
             style={{
               fontSize: `${60 + i * 20}px`,
               left: `${(i * 13) % 90}%`,
@@ -1594,7 +1645,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                     }}
                     className={`absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-all ${
                       videoMuted
-                        ? "bg-white/90 text-indigo-700 shadow-lg animate-pulse"
+                        ? "bg-white/90 text-[#003DA5] shadow-lg animate-pulse"
                         : "bg-white/30 text-white"
                     }`}
                   >
@@ -1614,13 +1665,13 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                 </div>
               ) : (
                 <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-white/15 backdrop-blur-sm">
-                  <span className="text-4xl">{current.emoji}</span>
+                  {onboardingStepIcons[current.id]}
                 </div>
               )}
             </motion.div>
 
             {/* Title */}
-            <h1 className="text-3xl font-extrabold text-white leading-tight">
+            <h1 className="text-3xl font-bold text-white leading-tight">
               {current.title}
             </h1>
             <p className="text-sm font-semibold text-white/60 mt-2 tracking-wide uppercase">
@@ -1660,20 +1711,20 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                   >
                     <div className="flex items-center gap-4">
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl ${
-                        selectedProfile === opt.id ? "bg-purple-100" : "bg-white/10"
+                        selectedProfile === opt.id ? "bg-[#003DA5]/15" : "bg-white/10"
                       }`}>
-                        {opt.emoji}
+                        {opt.icon}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className={`font-extrabold text-lg ${
-                            selectedProfile === opt.id ? "text-indigo-700" : "text-white"
+                          <p className={`font-bold text-lg ${
+                            selectedProfile === opt.id ? "text-[#003DA5]" : "text-white"
                           }`}>
                             {opt.label}
                           </p>
                           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                             selectedProfile === opt.id
-                              ? "bg-purple-100 text-purple-700"
+                              ? "bg-[#003DA5]/15 text-[#003DA5]"
                               : "bg-white/10 text-white/60"
                           }`}>
                             {opt.age}
@@ -1689,7 +1740,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-600 text-white"
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#003DA5] text-white"
                         >
                           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
                             <polyline points="20,6 9,17 4,12" />
@@ -1715,9 +1766,9 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
             <Button
               onClick={onComplete}
               size="lg"
-              className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 transition-all active:scale-[0.98]"
+              className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 transition-all active:scale-[0.98]"
             >
-              <span className="mr-2 text-xl">🎯</span>
+              <Target className="w-5 h-5 mr-2" />
               Inizia il viaggio!
             </Button>
           ) : (
@@ -1725,10 +1776,10 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               onClick={handleNext}
               size="lg"
               disabled={isProfileStep && !selectedProfile}
-              className={`w-full h-14 rounded-2xl font-extrabold text-base shadow-xl shadow-black/15 transition-all active:scale-[0.98] ${
+              className={`w-full h-14 rounded-2xl font-semibold text-base shadow-xl shadow-black/15 transition-all active:scale-[0.98] ${
                 isProfileStep && !selectedProfile
                   ? "bg-white/30 text-white/80 cursor-not-allowed"
-                  : "bg-white dark:bg-[#1a1f2e] text-indigo-700 hover:bg-white/90"
+                  : "bg-white dark:bg-[#1a1f2e] text-[#003DA5] hover:bg-white/90"
               }`}
             >
               Continua
@@ -1764,48 +1815,18 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
 // ===== LANDING PAGE =====
 function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
   const features = [
-    { icon: "🎓", title: "49 Lezioni", desc: "4 corsi FIGB completi, dalla base all'avanzato" },
-    { icon: "🃏", title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
-    { icon: "🧠", title: "Quiz & Mini-giochi", desc: "6 tipi di quiz, 9 mini-giochi, ripasso intelligente" },
-    { icon: "🏆", title: "Tornei & Sfide", desc: "Torneo settimanale, sfida amici, classifica" },
-    { icon: "📊", title: "Analisi DDS", desc: "Analisi double-dummy post-mano professionale" },
-    { icon: "🔥", title: "Gamification", desc: "XP, streak, badge, premi e collezionabili" },
+    { icon: <GraduationCap className="w-6 h-6 text-indigo-600" />, title: "49 Lezioni", desc: "4 corsi FIGB completi, dalla base all'avanzato" },
+    { icon: <Spade className="w-6 h-6 text-gray-700" />, title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
+    { icon: <Brain className="w-6 h-6 text-purple-600" />, title: "Quiz & Mini-giochi", desc: "6 tipi di quiz, 9 mini-giochi, ripasso intelligente" },
+    { icon: <Trophy className="w-6 h-6 text-amber-600" />, title: "Tornei & Sfide", desc: "Torneo settimanale, sfida amici, classifica" },
+    { icon: <BarChart3 className="w-6 h-6 text-blue-600" />, title: "Analisi DDS", desc: "Analisi double-dummy post-mano professionale" },
+    { icon: <Flame className="w-6 h-6 text-orange-500" />, title: "Gamification", desc: "XP, streak, badge, premi e collezionabili" },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#F7F5F0] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#FAFAFA] overflow-y-auto">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-700 px-5 pt-16 pb-20">
-        {/* Decorative blobs */}
-        <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
-
-        {/* Floating suits */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {["♠", "♥", "♦", "♣", "♠", "♥"].map((suit, i) => (
-            <motion.span
-              key={i}
-              className="absolute text-white/[0.05] font-black select-none"
-              style={{
-                fontSize: `${50 + i * 15}px`,
-                left: `${(i * 18) % 90}%`,
-                top: `${(i * 15 + 5) % 80}%`,
-              }}
-              animate={{
-                y: [0, -15, 0],
-                rotate: [0, i % 2 === 0 ? 8 : -8, 0],
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              {suit}
-            </motion.span>
-          ))}
-        </div>
-
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#002E7A] via-[#003DA5] to-[#0052CC] px-5 pt-16 pb-20">
         <div className="relative mx-auto max-w-lg text-center">
           {/* Suit icons */}
           <motion.div
@@ -1831,9 +1852,9 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight"
+            className="text-4xl sm:text-5xl font-bold text-white tracking-tight"
           >
-            BridgeQuest
+            FIGB Bridge LAB
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -1853,7 +1874,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
           >
             <a
               href="/login"
-              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
+              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
@@ -1872,7 +1893,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
         </div>
 
         {/* Fade to content */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#F7F5F0]" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#FAFAFA]" />
       </section>
 
       {/* Features */}
@@ -1882,7 +1903,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="text-lg font-extrabold text-gray-900 mb-4 text-center"
+            className="text-lg font-bold text-gray-900 mb-4 text-center"
           >
             Tutto quello che serve per imparare il bridge
           </motion.h2>
@@ -1894,10 +1915,10 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.07 }}
-                className="rounded-2xl bg-white p-4 border border-[#e5e0d5] shadow-sm"
+                className="rounded-2xl bg-white p-4 border border-[#e5e7eb] shadow-sm"
               >
-                <div className="text-2xl mb-2">{feat.icon}</div>
-                <p className="text-sm font-extrabold text-gray-900">{feat.title}</p>
+                <div className="mb-2">{feat.icon}</div>
+                <p className="text-sm font-semibold text-gray-900">{feat.title}</p>
                 <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{feat.desc}</p>
               </motion.div>
             ))}
@@ -1912,29 +1933,29 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
-            className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200/60 p-6 text-center"
+            className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-6 text-center"
           >
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div>
-                <p className="text-2xl font-extrabold text-indigo-700">49</p>
-                <p className="text-[10px] font-bold text-indigo-500 uppercase">Lezioni</p>
+                <p className="text-2xl font-bold text-[#003DA5]">49</p>
+                <p className="text-[10px] font-bold text-[#003DA5]/80 uppercase">Lezioni</p>
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-purple-700">4</p>
-                <p className="text-[10px] font-bold text-purple-500 uppercase">Corsi</p>
+                <p className="text-2xl font-bold text-[#003DA5]">4</p>
+                <p className="text-[10px] font-bold text-[#003DA5]/70 uppercase">Corsi</p>
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-fuchsia-700">200+</p>
-                <p className="text-[10px] font-bold text-fuchsia-500 uppercase">Mani</p>
+                <p className="text-2xl font-bold text-[#003DA5]">200+</p>
+                <p className="text-[10px] font-bold text-[#003DA5]/70 uppercase">Mani</p>
               </div>
             </div>
-            <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-1">
+            <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
               Un progetto della
             </p>
-            <p className="text-lg font-extrabold text-indigo-700">
+            <p className="text-lg font-bold text-[#003DA5]">
               Federazione Italiana Gioco Bridge
             </p>
-            <p className="mt-1 text-xs text-indigo-700/60">
+            <p className="mt-1 text-xs text-[#003DA5]/60">
               Commissione Insegnamento
             </p>
           </motion.div>
@@ -1952,7 +1973,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
           >
             <a
               href="/login"
-              className="flex items-center justify-center w-full h-12 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-[#003DA5] text-white font-semibold text-sm shadow-lg shadow-[#003DA5]/20 hover:opacity-90 transition-opacity"
             >
               Inizia gratis
             </a>

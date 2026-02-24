@@ -50,34 +50,34 @@ function colorizeCards(text: string): React.ReactNode {
     if (ch === "\u2660") {
       // spade
       parts.push(
-        <span key={i} className="text-gray-900 font-black">
+        <span key={i} className="text-gray-900 font-bold">
           {ch}
         </span>
       );
     } else if (ch === "\u2665") {
       // heart
       parts.push(
-        <span key={i} className="text-red-500 font-black">
+        <span key={i} className="text-red-500 font-bold">
           {ch}
         </span>
       );
     } else if (ch === "\u2666") {
       // diamond
       parts.push(
-        <span key={i} className="text-orange-500 font-black">
+        <span key={i} className="text-orange-500 font-bold">
           {ch}
         </span>
       );
     } else if (ch === "\u2663") {
       // club
       parts.push(
-        <span key={i} className="text-emerald-600 font-black">
+        <span key={i} className="text-emerald-600 font-bold">
           {ch}
         </span>
       );
     } else {
       parts.push(
-        <span key={i} className="font-extrabold">
+        <span key={i} className="font-bold">
           {ch}
         </span>
       );
@@ -322,7 +322,7 @@ export default function ImpassePage() {
               </svg>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Impasse o Drop?
             </h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
@@ -331,7 +331,7 @@ export default function ImpassePage() {
             </p>
 
             {/* Rules */}
-            <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">
                 Come si gioca?
               </h3>
@@ -357,7 +357,7 @@ export default function ImpassePage() {
             </div>
 
             {/* Quick reference */}
-            <div className="mt-4 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-4 bg-white card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">
                 Regole d'oro
               </h3>
@@ -398,7 +398,7 @@ export default function ImpassePage() {
                   className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${c.color} text-white shadow-lg ${c.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
-                    <p className="font-extrabold">{c.label}</p>
+                    <p className="font-semibold">{c.label}</p>
                     <p className="text-white/70 text-sm">{c.desc}</p>
                   </div>
                   <svg
@@ -456,7 +456,7 @@ export default function ImpassePage() {
               ))}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {stars === 3
                 ? "Esperto di Manovre!"
                 : stars === 2
@@ -468,28 +468,28 @@ export default function ImpassePage() {
             <p className="text-lg font-bold text-gray-500 mt-1">
               {correctCount}/{TOTAL_ROUNDS} corrette ({accuracy}%)
             </p>
-            <p className="text-2xl font-black text-blue-500 mt-2">
+            <p className="text-2xl font-bold text-blue-500 mt-2">
               {score} punti
             </p>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">
                   {correctCount}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">
                   {bestStreak}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">
                   Streak max
                 </p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-blue-500">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-blue-500">
                   +{xpEarned}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
@@ -497,7 +497,7 @@ export default function ImpassePage() {
             </div>
 
             {/* Recap hint */}
-            <div className="mt-4 card-elevated rounded-xl bg-blue-50 p-3">
+            <div className="mt-4 card-clean rounded-xl bg-blue-50 p-3">
               <p className="text-xs text-blue-700 font-bold">
                 Ricorda: "con 8, impasse il Re" e "con 9, drop la Donna"
               </p>
@@ -565,7 +565,7 @@ export default function ImpassePage() {
 
         {/* Streak + Score row */}
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-black text-gray-400">
+          <div className="text-sm font-bold text-gray-400">
             {correctCount}/{round} corrette
           </div>
           {streak > 1 && (
@@ -575,12 +575,12 @@ export default function ImpassePage() {
               className="flex items-center gap-1 bg-blue-50 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-black text-blue-600">
+              <span className="text-xs font-bold text-blue-600">
                 x{streak}
               </span>
             </motion.div>
           )}
-          <span className="text-sm font-black text-blue-500">{score} pts</span>
+          <span className="text-sm font-bold text-blue-500">{score} pts</span>
         </div>
 
         {/* Timer bar */}
@@ -600,7 +600,7 @@ export default function ImpassePage() {
           </div>
           <div className="absolute right-0 -top-5">
             <span
-              className={`text-xs font-black tabular-nums ${
+              className={`text-xs font-bold tabular-nums ${
                 timerDanger
                   ? "text-red-500"
                   : timerWarn
@@ -618,14 +618,14 @@ export default function ImpassePage() {
           key={round}
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="card-elevated rounded-2xl bg-white p-5 mb-5"
+          className="card-clean rounded-2xl bg-white p-5 mb-5"
         >
           {/* Missing honor badge */}
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
               Manca:
             </span>
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 text-red-600 font-extrabold text-sm">
+            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 text-red-600 font-bold text-sm">
               {colorizeCards(scenario.missingHonor)}
             </span>
           </div>
@@ -693,7 +693,7 @@ export default function ImpassePage() {
                 <path d="M8 24 L16 8 L24 24" />
                 <path d="M12 18 L20 18" />
               </svg>
-              <p className="text-xl font-extrabold">IMPASSE</p>
+              <p className="text-xl font-bold">IMPASSE</p>
               <p className="text-[10px] text-white/70 font-bold mt-1">
                 Finesse
               </p>
@@ -717,7 +717,7 @@ export default function ImpassePage() {
                 <path d="M10 16 L16 22 L22 16" />
                 <line x1="8" y1="26" x2="24" y2="26" />
               </svg>
-              <p className="text-xl font-extrabold">DROP</p>
+              <p className="text-xl font-bold">DROP</p>
               <p className="text-[10px] text-white/70 font-bold mt-1">
                 Gioca dall'alto
               </p>
@@ -748,7 +748,7 @@ export default function ImpassePage() {
                       : "❌"}
                 </span>
                 <span
-                  className={`text-lg font-extrabold ${
+                  className={`text-lg font-bold ${
                     feedback.correct ? "text-emerald-700" : "text-red-600"
                   }`}
                 >
@@ -763,7 +763,7 @@ export default function ImpassePage() {
               {/* Correct answer + probability */}
               <div className="flex items-center gap-3 mb-2">
                 <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-extrabold ${
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
                     feedback.scenario.correctAnswer === "impasse"
                       ? "bg-blue-100 text-blue-700"
                       : "bg-amber-100 text-amber-700"

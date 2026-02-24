@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Lesson Content Data (Lessons 9-12)
+ * FIGB Bridge LAB - Lesson Content Data (Lessons 9-12)
  * Extracted from FIGB Corso Fiori 2022 official course material
  * World 4: La Dichiarazione (lessons 9, 10)
  * World 5: La Competizione (lessons 11, 12)

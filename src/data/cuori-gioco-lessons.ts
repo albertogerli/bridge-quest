@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Cuori Gioco Lesson Content Data
+ * FIGB Bridge LAB - Cuori Gioco Lesson Content Data
  * Extracted from FIGB Corso Cuori Gioco (advanced card play course)
  * World 10: Tecniche Base (lessons 1-4)
  * World 11: Probabilita e Strategia (lessons 5-7)

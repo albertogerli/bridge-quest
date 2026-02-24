@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Cuori Licita (Advanced Bidding) Lesson Content Data
+ * FIGB Bridge LAB - Cuori Licita (Advanced Bidding) Lesson Content Data
  * Extracted from FIGB Corso Cuori Licita official course material
  * 14 lessons organized into 4 worlds (IDs 20-23)
  *

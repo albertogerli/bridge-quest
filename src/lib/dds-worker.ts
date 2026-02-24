@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - DDS Web Worker
+ * FIGB Bridge LAB - DDS Web Worker
  *
  * Runs the Double Dummy Solver off the main thread to avoid blocking the UI.
  * Communicates via postMessage with the use-dds hook.

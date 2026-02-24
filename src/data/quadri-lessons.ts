@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Quadri Course Lesson Content Data
+ * FIGB Bridge LAB - Quadri Course Lesson Content Data
  * Extracted from FIGB Corso Quadri 2022 official course material
  * "Bridge: Approfondimenti" - Second level course
  */

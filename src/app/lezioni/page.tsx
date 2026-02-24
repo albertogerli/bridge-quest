@@ -12,6 +12,7 @@ import {
   type CourseId,
 } from "@/data/courses";
 import Link from "next/link";
+import { Lock, Trophy, Target, Crown, Spade, Construction } from "lucide-react";
 
 // Colors for the path nodes per world
 const worldColors = [
@@ -74,7 +75,7 @@ export default function LezioniPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-2"
         >
-          <h1 className="text-2xl font-extrabold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900">
             Il Percorso
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -101,12 +102,12 @@ export default function LezioniPage() {
                   className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-[0.97] ${
                     isActive
                       ? `${colors.active} shadow-[0_3px_0_rgba(0,0,0,0.15)]`
-                      : `bg-white border-2 ${colors.border} ${colors.inactive} shadow-[0_3px_0_#e5e0d5]`
+                      : `bg-white border-2 ${colors.border} ${colors.inactive} shadow-sm`
                   }`}
                 >
                   <span className="text-lg">{course.icon}</span>
                   <div className="text-left">
-                    <div className="text-[13px] font-extrabold leading-tight">{course.name.replace("Corso ", "")}</div>
+                    <div className="text-[13px] font-semibold leading-tight">{course.name.replace("Corso ", "")}</div>
                     <div className={`text-[10px] leading-tight ${isActive ? "text-white/70" : "text-gray-400"}`}>
                       {stats.progress}%
                     </div>
@@ -146,7 +147,7 @@ export default function LezioniPage() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
             </div>
-            <span className="text-sm font-extrabold text-gray-600">{overallProgress}%</span>
+            <span className="text-sm font-bold text-gray-600">{overallProgress}%</span>
           </div>
         </motion.div>
 
@@ -157,8 +158,8 @@ export default function LezioniPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-16"
           >
-            <div className="text-5xl mb-4">🚧</div>
-            <h3 className="text-lg font-extrabold text-gray-700 mb-2">
+            <div className="flex justify-center mb-4"><Construction className="w-12 h-12 text-amber-500" /></div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">
               In arrivo!
             </h3>
             <p className="text-sm text-gray-400 max-w-xs mx-auto">
@@ -179,7 +180,7 @@ export default function LezioniPage() {
           >
             {/* Vertical connector line */}
             {courseWorlds.length > 0 && (
-              <div className="absolute left-[39px] top-8 bottom-8 w-1.5 bg-[#e5e0d5] rounded-full" />
+              <div className="absolute left-[39px] top-8 bottom-8 w-1.5 bg-[#e5e7eb] rounded-full" />
             )}
 
             {courseWorlds.map((world, worldIdx) => {
@@ -220,16 +221,16 @@ export default function LezioniPage() {
                     transition={{ delay: worldIdx * 0.15 }}
                     className="flex items-center gap-3 mb-4 ml-1"
                   >
-                    <div className={`flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full text-2xl font-black z-10 ${
+                    <div className={`flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full text-2xl font-bold z-10 ${
                       isLocked
                         ? "bg-gray-200 text-gray-400"
                         : `bg-gradient-to-br ${world.gradient} text-white shadow-lg border-2 border-white`
                     }`}>
-                      {isLocked ? "🔒" : world.icon}
+                      {isLocked ? <Lock className="w-6 h-6" /> : world.icon}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h2 className={`text-lg font-extrabold ${isLocked ? "text-gray-400" : "text-gray-900"}`}>
+                        <h2 className={`text-lg font-semibold ${isLocked ? "text-gray-400" : "text-gray-900"}`}>
                           {world.name}
                         </h2>
                         {worldProgress === 100 && (
@@ -370,7 +371,7 @@ export default function LezioniPage() {
                                     </Badge>
                                     {lesson.smazzateIds.length > 0 && (
                                       <span className="text-[10px] font-bold text-amber-500">
-                                        {lesson.smazzateIds.length} 🃏
+                                        {lesson.smazzateIds.length} <Spade className="w-3 h-3 inline ml-0.5" />
                                       </span>
                                     )}
                                   </div>
@@ -413,8 +414,8 @@ export default function LezioniPage() {
                       transition={{ delay: 0.3 + worldIdx * 0.15 }}
                       className="ml-10 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300 p-4 text-center"
                     >
-                      <p className="text-sm text-gray-400 font-medium">
-                        🔒 Completa il mondo precedente al 50% per sbloccare
+                      <p className="text-sm text-gray-400 font-medium flex items-center justify-center gap-1.5">
+                        <Lock className="w-4 h-4" /> Completa il mondo precedente al 50% per sbloccare
                       </p>
                     </motion.div>
                   )}
@@ -426,7 +427,7 @@ export default function LezioniPage() {
                       animate={{ opacity: 1, scale: 1 }}
                       className="ml-10 mt-2 flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl p-3 border-2 border-amber-300 shadow-[0_3px_0_#fbbf24]"
                     >
-                      <span className="text-2xl">🏆</span>
+                      <Trophy className="w-6 h-6 text-amber-700" />
                       <div>
                         <p className="text-sm font-bold text-amber-700">Mondo completato!</p>
                         <p className="text-[11px] text-amber-600/60">+200 XP bonus</p>
@@ -451,12 +452,12 @@ export default function LezioniPage() {
                       ? "bg-gradient-to-br from-amber-400 to-amber-500 shadow-xl shadow-amber-400/30 text-white border-3 border-amber-300"
                       : "bg-gray-100 text-gray-300 border-2 border-gray-200"
                   }`}>
-                    {overallProgress === 100 ? "👑" : "🎯"}
+                    {overallProgress === 100 ? <Crown className="w-8 h-8" /> : <Target className="w-8 h-8" />}
                   </div>
                 </motion.div>
                 <p className="text-center text-xs text-gray-400 mt-2 font-semibold">
                   {overallProgress === 100
-                    ? `${currentCourse.name} completato! 🏆`
+                    ? `${currentCourse.name} completato!`
                     : `Diplomato ${currentCourse.name} FIGB`}
                 </p>
               </>

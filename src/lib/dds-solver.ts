@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Double Dummy Solver (DDS)
+ * FIGB Bridge LAB - Double Dummy Solver (DDS)
  *
  * A pure TypeScript minimax/alpha-beta solver for bridge card play.
  * - Full exact search for positions with <= 6 cards per hand (endgame)

@@ -54,7 +54,7 @@ const PROFILES = [
     key: "giovane",
     label: "Dinamico",
     description: "Gamification completa, animazioni vivaci, sfide intense",
-    color: "bg-emerald-500",
+    color: "bg-[#003DA5]",
   },
   {
     key: "adulto",
@@ -165,7 +165,7 @@ export default function ImpostazioniPage() {
   if (!mounted) {
     return (
       <div className="min-h-screen bg-[#fafbfc] dark:bg-[#0f1219] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -173,7 +173,7 @@ export default function ImpostazioniPage() {
   return (
     <div className="min-h-screen bg-[#fafbfc] dark:bg-[#0f1219]">
       {/* Header */}
-      <div className="bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 px-4 pt-12 pb-8">
+      <div className="bg-gradient-to-br from-[#002E7A] via-[#003DA5] to-[#0052CC] px-4 pt-12 pb-8">
         <div className="max-w-lg mx-auto">
           <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -185,7 +185,7 @@ export default function ImpostazioniPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="text-3xl font-extrabold text-white tracking-tight"
+            className="text-3xl font-bold text-white tracking-tight"
           >
             Impostazioni
           </motion.h1>
@@ -193,9 +193,9 @@ export default function ImpostazioniPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-emerald-100 mt-1 text-sm"
+            className="text-white/80 mt-1 text-sm"
           >
-            Personalizza la tua esperienza BridgeQuest
+            Personalizza la tua esperienza Bridge LAB
           </motion.p>
         </div>
       </div>
@@ -206,14 +206,14 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.1 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <span className="text-emerald-600 font-bold text-lg">Aa</span>
+            <div className="w-10 h-10 rounded-xl bg-[#003DA5]/8 flex items-center justify-center">
+              <span className="text-[#003DA5] font-bold text-lg">Aa</span>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Dimensione Testo</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Dimensione Testo</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Regola la grandezza dei caratteri</p>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function ImpostazioniPage() {
                 onClick={() => updateTextSize(size.key)}
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   textSize === size.key
-                    ? "border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 text-[#003DA5] shadow-sm"
                     : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
@@ -233,7 +233,7 @@ export default function ImpostazioniPage() {
                 {textSize === size.key && (
                   <motion.div
                     layoutId="textSizeIndicator"
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center"
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-[#003DA5] rounded-full flex items-center justify-center"
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
@@ -250,14 +250,14 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.15 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
               <span className="text-purple-600 text-xl">✦</span>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Velocità Animazioni</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Velocità Animazioni</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Controlla la rapidità delle transizioni</p>
             </div>
           </div>
@@ -268,7 +268,7 @@ export default function ImpostazioniPage() {
                 onClick={() => updateAnimSpeed(speed.key)}
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   animSpeed === speed.key
-                    ? "border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 text-[#003DA5] shadow-sm"
                     : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
@@ -277,7 +277,7 @@ export default function ImpostazioniPage() {
                 {animSpeed === speed.key && (
                   <motion.div
                     layoutId="animSpeedIndicator"
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center"
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-[#003DA5] rounded-full flex items-center justify-center"
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
@@ -294,7 +294,7 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.2 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -302,14 +302,14 @@ export default function ImpostazioniPage() {
                 <span className="text-amber-600 text-xl">{sound ? "🔊" : "🔇"}</span>
               </div>
               <div>
-                <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Suoni</h2>
+                <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Suoni</h2>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Effetti sonori e feedback audio</p>
               </div>
             </div>
             <button
               onClick={toggleSound}
               className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
-                sound ? "bg-emerald-500" : "bg-gray-300"
+                sound ? "bg-[#003DA5]" : "bg-gray-300"
               }`}
             >
               <motion.div
@@ -324,7 +324,7 @@ export default function ImpostazioniPage() {
               variant={sound ? "default" : "secondary"}
               className={`text-xs ${
                 sound
-                  ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                  ? "bg-[#003DA5]/15 text-[#003DA5] hover:bg-[#003DA5]/15"
                   : "bg-gray-100 text-gray-500 hover:bg-gray-100"
               }`}
             >
@@ -338,14 +338,14 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.21 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center">
-              <span className="text-indigo-600 dark:text-indigo-400 text-xl">🎨</span>
+            <div className="w-10 h-10 rounded-xl bg-[#003DA5]/10 dark:bg-[#003DA5]/20 flex items-center justify-center">
+              <span className="text-[#003DA5] dark:text-blue-400 text-xl">🎨</span>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Tema</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Tema</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Scegli l&apos;aspetto dell&apos;app</p>
             </div>
           </div>
@@ -356,7 +356,7 @@ export default function ImpostazioniPage() {
                 onClick={() => setTheme(opt.key)}
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   theme === opt.key
-                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/15 text-[#003DA5] dark:text-[#003DA5]/70 shadow-sm"
                     : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
@@ -365,7 +365,7 @@ export default function ImpostazioniPage() {
                 {theme === opt.key && (
                   <motion.div
                     layoutId="themeIndicator"
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center"
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-[#003DA5] rounded-full flex items-center justify-center"
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
@@ -383,25 +383,25 @@ export default function ImpostazioniPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: 0.22 }}
-            className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+            className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-10 h-10 rounded-xl bg-[#003DA5]/10 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#003DA5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                     <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                   </svg>
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Notifiche</h2>
+                  <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Notifiche</h2>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Promemoria streak e lezioni</p>
                 </div>
               </div>
               <button
                 onClick={() => notifications.toggle()}
                 className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
-                  notifications.enabled ? "bg-emerald-500" : "bg-gray-300"
+                  notifications.enabled ? "bg-[#003DA5]" : "bg-gray-300"
                 }`}
               >
                 <motion.div
@@ -416,7 +416,7 @@ export default function ImpostazioniPage() {
                 variant={notifications.enabled ? "default" : "secondary"}
                 className={`text-xs ${
                   notifications.enabled
-                    ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                    ? "bg-[#003DA5]/15 text-[#003DA5] hover:bg-[#003DA5]/15"
                     : "bg-gray-100 text-gray-500 hover:bg-gray-100"
                 }`}
               >
@@ -436,7 +436,7 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.24 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/50 flex items-center justify-center">
@@ -445,7 +445,7 @@ export default function ImpostazioniPage() {
               </svg>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Livello AI Avversari</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Livello AI Avversari</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Scegli la difficolta degli avversari AI</p>
             </div>
           </div>
@@ -456,17 +456,17 @@ export default function ImpostazioniPage() {
                 onClick={() => updateAiLevel(level)}
                 className={`relative w-full text-left rounded-xl p-4 transition-all duration-200 border-2 ${
                   aiLevel === level
-                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/10 shadow-sm"
                     : "border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 hover:border-gray-200 dark:hover:border-gray-600"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-base">{AI_LEVEL_ICONS[level]}</span>
-                  <span className={`font-bold text-sm ${aiLevel === level ? "text-emerald-700 dark:text-emerald-400" : "text-gray-800 dark:text-gray-200"}`}>
+                  <span className={`font-bold text-sm ${aiLevel === level ? "text-[#003DA5] dark:text-[#003DA5]/70" : "text-gray-800 dark:text-gray-200"}`}>
                     {AI_LEVEL_LABELS[level]}
                   </span>
                   {aiLevel === level && (
-                    <Badge className="ml-auto bg-emerald-500 text-white text-[10px] hover:bg-emerald-500">
+                    <Badge className="ml-auto bg-[#003DA5] text-white text-[10px] hover:bg-[#003DA5]">
                       Attivo
                     </Badge>
                   )}
@@ -475,7 +475,7 @@ export default function ImpostazioniPage() {
                 {aiLevel === level && (
                   <motion.div
                     layoutId="aiLevelIndicator"
-                    className="absolute inset-0 rounded-xl border-2 border-emerald-500 pointer-events-none"
+                    className="absolute inset-0 rounded-xl border-2 border-[#003DA5] pointer-events-none"
                   />
                 )}
               </button>
@@ -488,7 +488,7 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.25 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
@@ -498,7 +498,7 @@ export default function ImpostazioniPage() {
               </svg>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Profilo Giocatore</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Profilo Giocatore</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Scegli lo stile di gioco che preferisci</p>
             </div>
           </div>
@@ -509,17 +509,17 @@ export default function ImpostazioniPage() {
                 onClick={() => updateProfile(p.key)}
                 className={`relative w-full text-left rounded-xl p-4 transition-all duration-200 border-2 ${
                   profile === p.key
-                    ? "border-emerald-500 bg-emerald-50/50 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 shadow-sm"
                     : "border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 hover:border-gray-200 dark:hover:border-gray-600"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${p.color}`} />
-                  <span className={`font-bold text-sm ${profile === p.key ? "text-emerald-700 dark:text-emerald-400" : "text-gray-800 dark:text-gray-200"}`}>
+                  <span className={`font-bold text-sm ${profile === p.key ? "text-[#003DA5] dark:text-[#003DA5]/70" : "text-gray-800 dark:text-gray-200"}`}>
                     {p.label}
                   </span>
                   {profile === p.key && (
-                    <Badge className="ml-auto bg-emerald-500 text-white text-[10px] hover:bg-emerald-500">
+                    <Badge className="ml-auto bg-[#003DA5] text-white text-[10px] hover:bg-[#003DA5]">
                       Attivo
                     </Badge>
                   )}
@@ -528,7 +528,7 @@ export default function ImpostazioniPage() {
                 {profile === p.key && (
                   <motion.div
                     layoutId="profileIndicator"
-                    className="absolute inset-0 rounded-xl border-2 border-emerald-500 pointer-events-none"
+                    className="absolute inset-0 rounded-xl border-2 border-[#003DA5] pointer-events-none"
                   />
                 )}
               </button>
@@ -541,7 +541,7 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.3 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
@@ -554,7 +554,7 @@ export default function ImpostazioniPage() {
               </svg>
             </div>
             <div>
-              <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Reset Progressi</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Reset Progressi</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Cancella tutti i dati e ricomincia da zero</p>
             </div>
           </div>
@@ -566,9 +566,9 @@ export default function ImpostazioniPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center"
+                className="bg-[#003DA5]/8 border border-[#003DA5]/25 rounded-xl p-4 text-center"
               >
-                <span className="text-emerald-600 font-semibold text-sm">
+                <span className="text-[#003DA5] font-semibold text-sm">
                   Progressi resettati con successo
                 </span>
               </motion.div>
@@ -619,7 +619,7 @@ export default function ImpostazioniPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.35 }}
-          className="card-elevated bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
+          className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           {user ? (
             <>
@@ -632,8 +632,8 @@ export default function ImpostazioniPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Esci dall&apos;account</h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Disconnettiti da BridgeQuest</p>
+                  <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Esci dall&apos;account</h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Disconnettiti da Bridge LAB</p>
                 </div>
               </div>
 
@@ -691,21 +691,21 @@ export default function ImpostazioniPage() {
           ) : (
             <>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-10 h-10 rounded-xl bg-[#003DA5]/10 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#003DA5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                     <polyline points="10 17 15 12 10 7" />
                     <line x1="15" y1="12" x2="3" y2="12" />
                   </svg>
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-gray-900 dark:text-gray-100 text-base">Account</h2>
+                  <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Account</h2>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Accedi per salvare i progressi su tutti i dispositivi</p>
                 </div>
               </div>
               <a
                 href="/login"
-                className="flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold h-11 text-sm shadow-lg shadow-indigo-500/30 hover:opacity-90 transition-opacity"
+                className="flex items-center justify-center w-full rounded-xl bg-[#003DA5] text-white font-bold h-11 text-sm shadow-sm hover:opacity-90 transition-opacity"
               >
                 Accedi o Registrati
               </a>
@@ -721,7 +721,7 @@ export default function ImpostazioniPage() {
           className="text-center pt-4 pb-8"
         >
           <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-[#1a1f2e]/80 border border-gray-100 dark:border-[#2a3040] rounded-full px-4 py-2 shadow-sm">
-            <span className="text-emerald-600 font-bold text-sm">BridgeQuest</span>
+            <span className="text-[#003DA5] font-bold text-sm">Bridge LAB</span>
             <Badge variant="secondary" className="bg-gray-100 text-gray-500 text-[10px] hover:bg-gray-100">
               v{APP_VERSION}
             </Badge>

@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Lesson Content Data
+ * FIGB Bridge LAB - Lesson Content Data
  * Extracted from FIGB Corso Fiori 2022 official course material
  */
 

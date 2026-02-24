@@ -189,16 +189,16 @@ export default function CollezionePage() {
           className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-2xl font-extrabold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900">
               Collezione
             </h1>
             <p className="text-sm text-gray-500 mt-0.5">
               Sblocca tutte le carte leggendarie
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-white card-elevated rounded-xl px-3 py-2">
+          <div className="flex items-center gap-1.5 bg-white card-clean rounded-xl px-3 py-2">
             <span className="text-lg">🃏</span>
-            <span className="text-sm font-extrabold text-gray-900">
+            <span className="text-sm font-bold text-gray-900">
               {unlockedCount}
             </span>
             <span className="text-sm text-gray-400 font-bold">
@@ -212,13 +212,13 @@ export default function CollezionePage() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="mt-4 card-elevated rounded-xl bg-white p-4"
+          className="mt-4 card-clean rounded-xl bg-white p-4"
         >
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-gray-700">
               Progresso collezione
             </p>
-            <p className="text-xs font-extrabold text-emerald-600">
+            <p className="text-xs font-bold text-emerald-600">
               {Math.round((unlockedCount / totalCards) * 100)}%
             </p>
           </div>
@@ -338,7 +338,7 @@ export default function CollezionePage() {
                 transition={{ delay: 0.12 + i * 0.03, type: "spring", stiffness: 260, damping: 22 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleCardTap(card)}
-                className="relative text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                className="relative text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#003DA5]"
               >
                 {/* New card sparkle indicator */}
                 {isNew && (
@@ -363,7 +363,7 @@ export default function CollezionePage() {
                 <div
                   className={`relative z-10 aspect-[3/4] rounded-2xl overflow-hidden flex flex-col items-center justify-center transition-all ${
                     isUnlocked
-                      ? `bg-gradient-to-br ${card.gradient} card-elevated-lg`
+                      ? `bg-gradient-to-br ${card.gradient} card-clean-lg`
                       : "bg-gray-100 border-2 border-dashed border-gray-200"
                   }`}
                 >
@@ -375,7 +375,7 @@ export default function CollezionePage() {
                       {/* Rarity badge top-right */}
                       <div className="absolute top-2 right-2">
                         <span
-                          className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wide ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border`}
+                          className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wide ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border`}
                         >
                           {rarityConf.label[0]}
                         </span>
@@ -407,7 +407,7 @@ export default function CollezionePage() {
                       </motion.span>
 
                       {/* Name */}
-                      <p className="text-xs font-extrabold text-gray-800 text-center px-2 leading-tight relative z-10">
+                      <p className="text-xs font-semibold text-gray-800 text-center px-2 leading-tight relative z-10">
                         {card.name}
                       </p>
 
@@ -465,11 +465,11 @@ export default function CollezionePage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-6 card-elevated rounded-2xl bg-white p-5"
+          className="mt-6 card-clean rounded-2xl bg-white p-5"
         >
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">📊</span>
-            <h3 className="text-sm font-extrabold text-gray-900">
+            <h3 className="text-sm font-semibold text-gray-900">
               Riepilogo collezione
             </h3>
           </div>
@@ -479,7 +479,7 @@ export default function CollezionePage() {
             <span className="text-xs text-gray-500 font-medium">
               Totale sbloccate
             </span>
-            <span className="text-sm font-extrabold text-gray-900">
+            <span className="text-sm font-bold text-gray-900">
               {unlockedCount}/{totalCards}
             </span>
           </div>
@@ -494,7 +494,7 @@ export default function CollezionePage() {
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wide ${conf.bg} ${conf.color} ${conf.border} border`}
+                    className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wide ${conf.bg} ${conf.color} ${conf.border} border`}
                   >
                     {conf.label}
                   </span>
@@ -651,7 +651,7 @@ export default function CollezionePage() {
 
                       {/* Rarity badge */}
                       <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border mb-4 relative z-10`}
+                        className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border mb-4 relative z-10`}
                       >
                         {rarityConf.label}
                       </span>
@@ -688,7 +688,7 @@ export default function CollezionePage() {
 
                       {/* Name */}
                       <h2
-                        className={`text-xl font-extrabold mt-3 relative z-10 ${
+                        className={`text-xl font-semibold mt-3 relative z-10 ${
                           isUnlocked ? "text-gray-800" : "text-gray-400"
                         }`}
                       >

@@ -100,7 +100,7 @@ function SmazzataBrowserContent() {
             <span>/</span>
             <span className="text-emerald font-semibold">Smazzate</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900">
             Smazzate del Corso
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -142,7 +142,7 @@ function SmazzataBrowserContent() {
           animate={{ opacity: 1, x: 0 }}
           className="mb-4"
         >
-          <h2 className="text-lg font-extrabold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900">
             Lezione {selectedLesson}
           </h2>
           <p className="text-sm text-gray-500">
@@ -178,7 +178,7 @@ function SmazzataBrowserContent() {
                     >
                       Board {smazzata.board}
                     </Badge>
-                    <span className="text-lg font-black text-emerald-dark">
+                    <span className="text-lg font-bold text-emerald-dark">
                       {smazzata.contract}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ function SmazzataBrowserContent() {
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h3 className="font-extrabold text-gray-900">
+                  <h3 className="font-bold text-gray-900">
                     Smazzata {selectedSmazzata.id}
                   </h3>
                   <p className="text-xs text-gray-500">
@@ -419,7 +419,7 @@ function PlayingView({
                 </Badge>
                 <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
-              <h1 className={`${isMobile ? "text-sm" : "text-lg"} font-extrabold text-gray-900 truncate`}>
+              <h1 className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-gray-900 truncate`}>
                 {smazzata.title}
               </h1>
             </div>
@@ -438,7 +438,7 @@ function PlayingView({
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Contratto
               </p>
-              <p className={`${isMobile ? "text-base" : "text-lg"} font-black text-emerald-dark`}>
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}>
                 {smazzata.contract}
               </p>
             </div>
@@ -447,7 +447,7 @@ function PlayingView({
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Obiettivo
               </p>
-              <p className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}>
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}>
                 {tricksNeeded} prese
               </p>
             </div>
@@ -456,7 +456,7 @@ function PlayingView({
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 N-S / E-O
               </p>
-              <p className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}>
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}>
                 {game.gameState?.trickCount.ns ?? 0} /{" "}
                 {game.gameState?.trickCount.ew ?? 0}
               </p>
@@ -627,7 +627,7 @@ function PlayingView({
                 </div>
 
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
                   }`}
                 >
@@ -722,17 +722,17 @@ function PlayingView({
                 {/* Score detail grid */}
                 <div className="grid grid-cols-3 gap-2 mt-6">
                   <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className="text-lg font-extrabold text-gray-900">{game.result.tricksMade}</p>
+                    <p className="text-lg font-bold text-gray-900">{game.result.tricksMade}</p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">Prese</p>
                   </div>
                   <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className={`text-lg font-extrabold ${game.result.result >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    <p className={`text-lg font-bold ${game.result.result >= 0 ? "text-emerald-600" : "text-red-600"}`}>
                       {game.result.result >= 0 ? `+${game.result.result}` : game.result.result}
                     </p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">Risultato</p>
                   </div>
                   <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className="text-lg font-extrabold text-amber-600">
+                    <p className="text-lg font-bold text-amber-600">
                       +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10}
                     </p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">{profile.xpLabel}</p>
@@ -800,7 +800,7 @@ function PlayingView({
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-xs">
                       M
                     </div>
-                    <h4 className="text-sm font-extrabold text-gray-900">Analisi del Maestro</h4>
+                    <h4 className="text-sm font-bold text-gray-900">Analisi del Maestro</h4>
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">
                     {smazzata.commentary}
@@ -815,7 +815,7 @@ function PlayingView({
                 transition={{ delay: 0.8 }}
                 className="card-elevated rounded-2xl bg-white p-5 border border-gray-100"
               >
-                <h4 className="text-sm font-extrabold text-gray-900 mb-3">Riepilogo mano</h4>
+                <h4 className="text-sm font-bold text-gray-900 mb-3">Riepilogo mano</h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Contratto</span>

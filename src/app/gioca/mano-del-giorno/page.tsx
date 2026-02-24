@@ -360,19 +360,19 @@ export default function ManoDelGiornoPage() {
                 <div className="flex items-center gap-3">
                   {/* Calendar icon */}
                   <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-white shadow-md shadow-amber-200/50 border border-amber-100">
-                    <span className="text-[9px] font-extrabold text-amber-600 uppercase tracking-widest leading-none">
+                    <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest leading-none">
                       {mounted
                         ? new Date().toLocaleDateString("it-IT", {
                             weekday: "short",
                           })
                         : ""}
                     </span>
-                    <span className="text-2xl font-black text-gray-900 leading-none mt-0.5">
+                    <span className="text-2xl font-bold text-gray-900 leading-none mt-0.5">
                       {mounted ? new Date().getDate() : ""}
                     </span>
                   </div>
                   <div>
-                    <h1 className="text-xl font-extrabold text-gray-900">
+                    <h1 className="text-xl font-bold text-gray-900">
                       Mano del Giorno
                     </h1>
                     <p className="text-xs text-gray-500 mt-0.5">
@@ -397,7 +397,7 @@ export default function ManoDelGiornoPage() {
                       <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
                         Contratto
                       </p>
-                      <p className="text-lg font-black text-emerald-dark leading-tight">
+                      <p className="text-lg font-bold text-emerald-dark leading-tight">
                         {todayHand.contract}
                       </p>
                     </div>
@@ -406,7 +406,7 @@ export default function ManoDelGiornoPage() {
                       <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
                         Dichiarante
                       </p>
-                      <p className="text-lg font-black text-gray-900 leading-tight">
+                      <p className="text-lg font-bold text-gray-900 leading-tight">
                         {todayHand.declarer === "north"
                           ? "Nord"
                           : todayHand.declarer === "south"
@@ -476,7 +476,7 @@ export default function ManoDelGiornoPage() {
                 {!alreadyPlayed ? (
                   <Button
                     onClick={() => setIsPlaying(true)}
-                    className="w-full rounded-2xl bg-emerald hover:bg-emerald-dark text-base font-extrabold h-14 shadow-lg shadow-emerald/25 transition-all hover:shadow-xl hover:shadow-emerald/30"
+                    className="w-full rounded-2xl bg-emerald hover:bg-emerald-dark text-base font-bold h-14 shadow-lg shadow-emerald/25 transition-all hover:shadow-xl hover:shadow-emerald/30"
                   >
                     Gioca la Mano del Giorno
                   </Button>
@@ -534,7 +534,7 @@ export default function ManoDelGiornoPage() {
                 </div>
 
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     todayResult.made ? "text-emerald-dark" : "text-red-600"
                   }`}
                 >
@@ -623,7 +623,7 @@ export default function ManoDelGiornoPage() {
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
                   Nuova mano tra
                 </p>
-                <p className="text-2xl font-black text-gray-900 tabular-nums mt-0.5">
+                <p className="text-2xl font-bold text-gray-900 tabular-nums mt-0.5">
                   {mounted ? countdown : "--:--:--"}
                 </p>
               </div>
@@ -651,12 +651,12 @@ export default function ManoDelGiornoPage() {
           className="mt-4"
         >
           <div className="card-elevated rounded-2xl bg-white p-5">
-            <h3 className="font-extrabold text-gray-900 mb-3">
+            <h3 className="font-bold text-gray-900 mb-3">
               Le tue statistiche giornaliere
             </h3>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <p className="text-2xl font-extrabold text-emerald">
+                <p className="text-2xl font-bold text-emerald">
                   {mounted ? streak : 0}
                 </p>
                 <p className="text-[11px] text-gray-500 font-medium">
@@ -664,7 +664,7 @@ export default function ManoDelGiornoPage() {
                 </p>
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-gray-900">
+                <p className="text-2xl font-bold text-gray-900">
                   {mounted ? total : 0}
                 </p>
                 <p className="text-[11px] text-gray-500 font-medium">
@@ -672,7 +672,7 @@ export default function ManoDelGiornoPage() {
                 </p>
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-amber-500">
+                <p className="text-2xl font-bold text-amber-500">
                   {alreadyPlayed && todayResult
                     ? `${todayResult.stars}/3`
                     : "--"}
@@ -707,7 +707,7 @@ export default function ManoDelGiornoPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-sm font-extrabold text-gray-900">
+                  <h3 className="text-sm font-bold text-gray-900">
                     Mano di Ieri
                   </h3>
                   <p className="text-[11px] text-gray-400">
@@ -783,7 +783,7 @@ export default function ManoDelGiornoPage() {
         >
           <div className="card-elevated rounded-2xl bg-white p-5">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md shadow-emerald/30">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
                 M
               </div>
               <div className="flex-1">
@@ -949,7 +949,7 @@ function PlayingView({
                 <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
               <h1
-                className={`${isMobile ? "text-sm" : "text-lg"} font-extrabold text-gray-900 truncate`}
+                className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-gray-900 truncate`}
               >
                 {smazzata.title}
               </h1>
@@ -972,7 +972,7 @@ function PlayingView({
                 Contratto
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-black text-emerald-dark`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}
               >
                 {smazzata.contract}
               </p>
@@ -983,7 +983,7 @@ function PlayingView({
                 Obiettivo
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
               >
                 {tricksNeeded} prese
               </p>
@@ -994,7 +994,7 @@ function PlayingView({
                 N-S / E-O
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
               >
                 {game.gameState?.trickCount.ns ?? 0} /{" "}
                 {game.gameState?.trickCount.ew ?? 0}
@@ -1209,7 +1209,7 @@ function PlayingView({
                 </div>
 
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     game.result.result >= 0
                       ? "text-emerald-dark"
                       : "text-red-600"
@@ -1258,7 +1258,7 @@ function PlayingView({
                 {/* Score grid */}
                 <div className="grid grid-cols-3 gap-2 mt-6">
                   <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className="text-lg font-extrabold text-gray-900">
+                    <p className="text-lg font-bold text-gray-900">
                       {game.result.tricksMade}
                     </p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">
@@ -1267,7 +1267,7 @@ function PlayingView({
                   </div>
                   <div className="bg-white/60 rounded-xl p-2.5">
                     <p
-                      className={`text-lg font-extrabold ${game.result.result >= 0 ? "text-emerald-600" : "text-red-600"}`}
+                      className={`text-lg font-bold ${game.result.result >= 0 ? "text-emerald-600" : "text-red-600"}`}
                     >
                       {game.result.result >= 0
                         ? `+${game.result.result}`
@@ -1278,7 +1278,7 @@ function PlayingView({
                     </p>
                   </div>
                   <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className="text-lg font-extrabold text-amber-600">
+                    <p className="text-lg font-bold text-amber-600">
                       +
                       {isDaily && !alreadyPlayed
                         ? 30 +
@@ -1346,7 +1346,7 @@ function PlayingView({
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-xs">
                       M
                     </div>
-                    <h4 className="text-sm font-extrabold text-gray-900">
+                    <h4 className="text-sm font-bold text-gray-900">
                       Analisi del Maestro
                     </h4>
                   </div>
@@ -1363,7 +1363,7 @@ function PlayingView({
                 transition={{ delay: 0.8 }}
                 className="card-elevated rounded-2xl bg-white p-5 border border-gray-100"
               >
-                <h4 className="text-sm font-extrabold text-gray-900 mb-3">
+                <h4 className="text-sm font-bold text-gray-900 mb-3">
                   Riepilogo mano
                 </h4>
                 <div className="space-y-2">

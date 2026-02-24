@@ -32,7 +32,7 @@ function buildShareText({
       : `Caduto di ${Math.abs(result)}`;
 
   const lines = [
-    "\uD83C\uDCCF BridgeQuest - Sfida del Bridge!",
+    "\uD83C\uDCCF FIGB Bridge LAB - Sfida del Bridge!",
     `Contratto: ${contract} \u00B7 Risultato: ${tricksMade}/${tricksNeeded} prese ${resultEmoji}`,
     `${starString}${grayStars} ${verdict}`,
     "Riesci a fare meglio? \uD83D\uDC49 bridge-quest.vercel.app",
@@ -71,7 +71,7 @@ export function ShareResult(props: ShareResultProps) {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
-          title: "BridgeQuest - Il mio risultato",
+          title: "FIGB Bridge LAB - Il mio risultato",
           text: shareText,
         });
       } catch (err: unknown) {
@@ -99,10 +99,10 @@ export function ShareResult(props: ShareResultProps) {
       {/* Card Preview */}
       <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
         {/* Gradient header */}
-        <div className="bg-gradient-to-r from-emerald-600 to-indigo-600 px-5 py-4 text-white">
+        <div className="bg-gradient-to-r from-[#003DA5] to-[#002E7A] px-5 py-4 text-white">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-lg">{"\uD83C\uDCCF"}</span>
-            <span className="text-sm font-extrabold tracking-wide">BridgeQuest</span>
+            <span className="text-sm font-bold tracking-wide">FIGB Bridge LAB</span>
           </div>
           <p className="text-[11px] text-white/70 font-medium">Sfida del Bridge</p>
         </div>
@@ -153,7 +153,7 @@ export function ShareResult(props: ShareResultProps) {
       <div className="flex gap-3 mt-3">
         <button
           onClick={handleShare}
-          className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition-colors shadow-sm"
+          className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white text-sm font-bold transition-colors shadow-sm"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
             <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />

@@ -27,7 +27,7 @@ export default function AppuntiPage() {
   return (
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pb-28 lg:pb-8">
       {/* Header */}
-      <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 px-5 pt-14 pb-8 lg:pt-8">
+      <div className="bg-[#003DA5] px-5 pt-14 pb-8 lg:pt-8">
         <div className="mx-auto max-w-lg">
           <Link href="/" className="text-white/70 text-sm font-medium hover:text-white transition-colors">
             ← Home
@@ -35,7 +35,7 @@ export default function AppuntiPage() {
           <div className="flex items-center gap-3 mt-3">
             <span className="text-4xl">📝</span>
             <div>
-              <h1 className={`font-extrabold text-white ${isSenior ? "text-2xl" : "text-xl"}`}>
+              <h1 className={`font-bold text-white ${isSenior ? "text-2xl" : "text-xl"}`}>
                 I Miei Appunti
               </h1>
               <p className={`text-white/70 ${isSenior ? "text-base" : "text-sm"}`}>
@@ -53,7 +53,7 @@ export default function AppuntiPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm p-8 text-center"
+            className="rounded-2xl bg-white border border-[#e5e7eb] shadow-sm p-8 text-center"
           >
             <span className="text-5xl block mb-4">📖</span>
             <h3 className={`font-bold text-gray-700 ${isSenior ? "text-lg" : "text-base"}`}>
@@ -63,7 +63,7 @@ export default function AppuntiPage() {
               Completa i moduli delle lezioni e le regole importanti verranno salvate automaticamente qui.
             </p>
             <Link href="/lezioni">
-              <Button className="mt-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 font-bold">
+              <Button className="mt-4 rounded-xl bg-[#003DA5] hover:bg-[#003DA5]/90 font-bold">
                 Vai alle lezioni
               </Button>
             </Link>
@@ -82,14 +82,14 @@ export default function AppuntiPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="rounded-2xl bg-white border border-[#e5e0d5] shadow-sm overflow-hidden"
+                  className="rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
                 >
                   {/* Lesson header - clickable accordion */}
                   <button
                     onClick={() => setExpandedLesson(isExpanded ? null : lid)}
                     className="w-full px-5 py-4 flex items-center gap-3 text-left hover:bg-gray-50/50 transition-colors"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm shadow-md">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#003DA5] text-white font-bold text-sm shadow-md">
                       {lid}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -126,8 +126,8 @@ export default function AppuntiPage() {
                           {lessonAppunti.map((entry, mi) => (
                             <div key={mi}>
                               <div className="flex items-center gap-2 mb-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
-                                <span className={`font-semibold text-indigo-700 ${isSenior ? "text-base" : "text-sm"}`}>
+                                <div className="h-1.5 w-1.5 rounded-full bg-[#003DA5]/60" />
+                                <span className={`font-semibold text-[#003DA5] ${isSenior ? "text-base" : "text-sm"}`}>
                                   {entry.moduleTitle}
                                 </span>
                                 <span className="text-[10px] text-gray-400 ml-auto">{entry.date}</span>
