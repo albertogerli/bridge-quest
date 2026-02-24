@@ -197,11 +197,11 @@ export default function ContaVelocePage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-5xl shadow-xl shadow-amber-400/30 mb-6">
               🧮
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Conta Veloce</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Conta Veloce</h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
               Vedi una mano, conta i punti onori il più veloce possibile!
             </p>
-            <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">Come si gioca?</h3>
               <ul className="text-xs text-gray-500 space-y-1.5">
                 <li>A = 4, K = 3, Q = 2, J = 1 punto</li>
@@ -220,7 +220,7 @@ export default function ContaVelocePage() {
                   className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
-                    <p className="font-extrabold">{cfg.label}</p>
+                    <p className="font-semibold">{cfg.label}</p>
                     <p className="text-white/70 text-sm">{cfg.rounds} mani · {cfg.options} opzioni</p>
                   </div>
                   <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -260,22 +260,22 @@ export default function ContaVelocePage() {
               ))}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {stars === 3 ? "Perfetto!" : stars === 2 ? "Ottimo!" : stars === 1 ? "Bene!" : "Riprova!"}
             </h1>
-            <p className="text-xl sm:text-2xl font-black text-amber-500 mt-2">{score} punti</p>
+            <p className="text-xl sm:text-2xl font-bold text-amber-500 mt-2">{score} punti</p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">{avgTime}s</p>
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">{avgTime}s</p>
                 <p className="text-[10px] text-gray-400 font-bold">Media</p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">{bestStreak}</p>
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">{bestStreak}</p>
                 <p className="text-[10px] text-gray-400 font-bold">Streak max</p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-amber-500">+{xpEarned}</p>
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-amber-500">+{xpEarned}</p>
                 <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
@@ -331,7 +331,7 @@ export default function ContaVelocePage() {
 
         {/* Timer + Streak */}
         <div className="flex items-center justify-between mb-4">
-          <div className={`text-sm font-black tabular-nums ${timerColor}`}>
+          <div className={`text-sm font-bold tabular-nums ${timerColor}`}>
             {(timer / 10).toFixed(1)}s
           </div>
           {streak > 0 && (
@@ -341,10 +341,10 @@ export default function ContaVelocePage() {
               className="flex items-center gap-1 bg-orange-50 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-black text-orange-600">x{streak}</span>
+              <span className="text-xs font-bold text-orange-600">x{streak}</span>
             </motion.div>
           )}
-          <div className="text-sm font-black text-amber-500">{score} pts</div>
+          <div className="text-sm font-bold text-amber-500">{score} pts</div>
         </div>
 
         {/* Hand display */}
@@ -352,7 +352,7 @@ export default function ContaVelocePage() {
           key={round}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="card-elevated rounded-2xl bg-white p-4 mb-6"
+          className="card-clean rounded-2xl bg-white p-4 mb-6"
         >
           <p className="text-center text-xs font-bold text-gray-400 mb-3">
             Quanti punti onori?
@@ -365,7 +365,7 @@ export default function ContaVelocePage() {
               if (suitCards.length === 0) return null;
               return (
                 <div key={suit} className="flex items-center gap-2">
-                  <span className={`${suitColors[suit]} text-lg w-6 text-center font-black`}>
+                  <span className={`${suitColors[suit]} text-lg w-6 text-center font-bold`}>
                     {suitSymbols[suit]}
                   </span>
                   <div className="flex flex-wrap gap-1">
@@ -416,11 +416,11 @@ export default function ContaVelocePage() {
               <button
                 key={opt}
                 onClick={() => handleAnswer(opt)}
-                className={`card-elevated rounded-2xl bg-white p-4 text-center active:scale-95 transition-transform hover:shadow-lg ${
+                className={`card-clean rounded-2xl bg-white p-4 text-center active:scale-95 transition-transform hover:shadow-lg ${
                   profile === "senior" ? "py-5" : ""
                 }`}
               >
-                <p className={`font-black ${profile === "senior" ? "text-3xl" : "text-2xl"} text-gray-900`}>{opt}</p>
+                <p className={`font-bold ${profile === "senior" ? "text-3xl" : "text-2xl"} text-gray-900`}>{opt}</p>
                 <p className="text-[10px] text-gray-400 font-bold mt-1">HCP</p>
               </button>
             ))}
@@ -450,7 +450,7 @@ export default function ContaVelocePage() {
                 className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-extrabold text-gray-900">Pausa</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">Pausa</h2>
                 <p className="text-sm text-gray-500 mt-2">Round {round}/{config.rounds} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
@@ -461,7 +461,7 @@ export default function ContaVelocePage() {
                         setTimer(Math.floor((Date.now() - startTimeRef.current) / 100));
                       }, 100);
                     }}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-extrabold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg"
                   >
                     Riprendi
                   </Button>

@@ -19,7 +19,7 @@ const bidSuitColor = (bid: string): string => {
   if (bid.includes("\u2663")) return "text-emerald-700"; // clubs
   if (bid === "Passo") return "text-gray-500";
   if (bid === "Contro") return "text-red-600";
-  return "text-indigo-600";
+  return "text-[#003DA5]";
 };
 
 const bidBgGradient = (bid: string): string => {
@@ -29,7 +29,7 @@ const bidBgGradient = (bid: string): string => {
   if (bid.includes("\u2663")) return "from-emerald-50 to-green-50";
   if (bid === "Passo") return "from-gray-50 to-gray-100";
   if (bid === "Contro") return "from-red-50 to-rose-50";
-  return "from-indigo-50 to-purple-50";
+  return "from-[#003DA5]/10 to-[#003DA5]/5";
 };
 
 type Difficulty = "facile" | "medio" | "difficile";
@@ -204,7 +204,7 @@ export default function PraticaLicitaPage() {
               Gioca
             </Link>
             <span>/</span>
-            <span className="text-indigo-600 font-semibold">
+            <span className="text-[#003DA5] font-semibold">
               Pratica Licita
             </span>
           </div>
@@ -214,10 +214,10 @@ export default function PraticaLicitaPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white text-5xl shadow-xl shadow-indigo-400/30 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-[#003DA5] text-white text-5xl shadow-xl shadow-[#003DA5]/20 mb-6">
               🗣️
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Pratica Licita
             </h1>
             <p className="text-gray-500 mt-2 max-w-xs mx-auto">
@@ -225,7 +225,7 @@ export default function PraticaLicitaPage() {
               fai tu?
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
-              <Badge className="bg-indigo-50 text-indigo-700 text-xs font-bold border-0">
+              <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-xs font-bold border-0">
                 {TOTAL_ROUNDS} scenari
               </Badge>
               <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">
@@ -234,7 +234,7 @@ export default function PraticaLicitaPage() {
             </div>
 
             {/* Rules card */}
-            <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">
                 Come funziona
               </h3>
@@ -249,7 +249,7 @@ export default function PraticaLicitaPage() {
             </div>
 
             {/* Topic preview */}
-            <div className="mt-4 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-4 bg-white card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-gray-900 mb-2">
                 Argomenti
               </h3>
@@ -266,7 +266,7 @@ export default function PraticaLicitaPage() {
                 ].map((t) => (
                   <span
                     key={t}
-                    className="text-[10px] font-bold text-indigo-600 bg-indigo-50 rounded-full px-2.5 py-1"
+                    className="text-[10px] font-bold text-[#003DA5] bg-[#003DA5]/10 rounded-full px-2.5 py-1"
                   >
                     {t}
                   </span>
@@ -291,7 +291,7 @@ export default function PraticaLicitaPage() {
                   className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
-                    <p className="font-extrabold">{cfg.label}</p>
+                    <p className="font-semibold">{cfg.label}</p>
                     <p className="text-white/70 text-sm">{cfg.desc}</p>
                   </div>
                   <svg
@@ -337,7 +337,7 @@ export default function PraticaLicitaPage() {
                 </motion.span>
               ))}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {stars === 3
                 ? "Maestro Dichiarante!"
                 : stars === 2
@@ -349,25 +349,25 @@ export default function PraticaLicitaPage() {
             <p className="text-lg font-bold text-gray-500 mt-1">
               {correct}/{TOTAL_ROUNDS} corrette ({accuracy}%)
             </p>
-            <p className="text-2xl font-black text-indigo-500 mt-2">
+            <p className="text-2xl font-bold text-[#003DA5] mt-2">
               {score} punti
             </p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">{correct}</p>
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">{correct}</p>
                 <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">
                   {bestStreak}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">
                   Streak max
                 </p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-indigo-500">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-[#003DA5]">
                   +{xpEarned}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">
@@ -387,7 +387,7 @@ export default function PraticaLicitaPage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 font-bold shadow-lg"
+                className="flex-1 h-12 rounded-xl bg-[#003DA5] font-bold shadow-lg"
               >
                 Rigioca
               </Button>
@@ -420,7 +420,7 @@ export default function PraticaLicitaPage() {
           <div className="flex-1 mx-3">
             <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-violet-500"
+                className="h-full rounded-full bg-[#003DA5]"
                 animate={{
                   width: `${((roundIdx + 1) / TOTAL_ROUNDS) * 100}%`,
                 }}
@@ -434,7 +434,7 @@ export default function PraticaLicitaPage() {
 
         {/* Timer + Streak + Score */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-black tabular-nums text-gray-400">
+          <span className="text-sm font-bold tabular-nums text-gray-400">
             {(timer / 10).toFixed(1)}s
           </span>
           {streak > 0 && (
@@ -444,12 +444,12 @@ export default function PraticaLicitaPage() {
               className="flex items-center gap-1 bg-purple-50 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-black text-purple-600">
+              <span className="text-xs font-bold text-purple-600">
                 x{streak}
               </span>
             </motion.div>
           )}
-          <span className="text-sm font-black text-indigo-500">
+          <span className="text-sm font-bold text-[#003DA5]">
             {score} pts
           </span>
         </div>
@@ -458,7 +458,7 @@ export default function PraticaLicitaPage() {
           <>
             {/* Topic badge */}
             <div className="flex items-center gap-2 mb-3">
-              <Badge className="bg-indigo-50 text-indigo-600 text-[10px] font-bold border-0">
+              <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
                 {scenario.topic}
               </Badge>
               <Badge
@@ -477,7 +477,7 @@ export default function PraticaLicitaPage() {
                 key={`hist-${roundIdx}`}
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="card-elevated rounded-2xl bg-white p-4 mb-3"
+                className="card-clean rounded-2xl bg-white p-4 mb-3"
               >
                 <p className="text-xs font-bold text-gray-400 mb-2">
                   Dichiarazione finora:
@@ -489,7 +489,7 @@ export default function PraticaLicitaPage() {
                         {entry.seat}
                       </span>
                       <span
-                        className={`text-sm font-extrabold ${bidSuitColor(entry.bid)}`}
+                        className={`text-sm font-bold ${bidSuitColor(entry.bid)}`}
                       >
                         {entry.bid}
                       </span>
@@ -499,10 +499,10 @@ export default function PraticaLicitaPage() {
                     </div>
                   ))}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 rounded px-1.5 py-0.5 animate-pulse">
+                    <span className="text-[10px] font-bold text-[#003DA5] bg-[#003DA5]/10 rounded px-1.5 py-0.5 animate-pulse">
                       {scenario.position}
                     </span>
-                    <span className="text-sm font-extrabold text-indigo-500">
+                    <span className="text-sm font-bold text-[#003DA5]">
                       ?
                     </span>
                   </div>
@@ -515,7 +515,7 @@ export default function PraticaLicitaPage() {
               key={`hand-${roundIdx}`}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="card-elevated rounded-2xl bg-white p-5 mb-4"
+              className="card-clean rounded-2xl bg-white p-5 mb-4"
             >
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs font-bold text-gray-400">
@@ -559,7 +559,7 @@ export default function PraticaLicitaPage() {
             {/* Bid options — bidding box style */}
             <div className="grid grid-cols-2 gap-3">
               {shuffledOptions.map((bid) => {
-                let btnClass = `bg-gradient-to-br ${bidBgGradient(bid)} border-2 border-gray-200 hover:shadow-lg hover:border-indigo-300`;
+                let btnClass = `bg-gradient-to-br ${bidBgGradient(bid)} border-2 border-gray-200 hover:shadow-lg hover:border-[#003DA5]/30`;
                 if (showFeedback) {
                   if (bid === scenario.correctBid) {
                     btnClass =
@@ -583,7 +583,7 @@ export default function PraticaLicitaPage() {
                     }`}
                   >
                     <p
-                      className={`font-black ${profile === "senior" ? "text-2xl" : "text-xl"} ${bidSuitColor(bid)}`}
+                      className={`font-bold ${profile === "senior" ? "text-2xl" : "text-xl"} ${bidSuitColor(bid)}`}
                     >
                       {bid}
                     </p>
@@ -606,14 +606,14 @@ export default function PraticaLicitaPage() {
                       {lastCorrect ? "✅" : "❌"}
                     </span>
                     <p
-                      className={`text-sm font-extrabold ${lastCorrect ? "text-emerald-700" : "text-red-600"}`}
+                      className={`text-sm font-bold ${lastCorrect ? "text-emerald-700" : "text-red-600"}`}
                     >
                       {lastCorrect ? "Corretto!" : "Sbagliato!"}
                     </p>
                     {!lastCorrect && (
                       <span className="text-xs font-bold text-gray-500">
                         Era:{" "}
-                        <span className="text-indigo-600 font-extrabold">
+                        <span className="text-[#003DA5] font-bold">
                           {scenario.correctBid}
                         </span>
                       </span>
@@ -644,7 +644,7 @@ export default function PraticaLicitaPage() {
                 className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-extrabold text-gray-900">
+                <h2 className="text-2xl font-semibold text-gray-900">
                   Pausa
                 </h2>
                 <p className="text-sm text-gray-500 mt-2">
@@ -664,7 +664,7 @@ export default function PraticaLicitaPage() {
                         );
                       }, 100);
                     }}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 font-extrabold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-[#003DA5] font-semibold shadow-lg"
                   >
                     Riprendi
                   </Button>

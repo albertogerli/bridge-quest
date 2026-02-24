@@ -171,7 +171,7 @@ function getTypeBadge(type: QuizQuestion["type"]) {
     case "true-false":
       return { label: "Vero/Falso", bg: "bg-violet-50", text: "text-violet-600" };
     case "bid-select":
-      return { label: "Dichiarazione", bg: "bg-indigo-50", text: "text-indigo-600" };
+      return { label: "Dichiarazione", bg: "bg-[#003DA5]/10", text: "text-[#003DA5]" };
     case "hand-eval":
       return { label: "Valutazione", bg: "bg-amber-50", text: "text-amber-700" };
   }
@@ -509,7 +509,7 @@ export default function QuizLampoPage() {
             </div>
 
             <h1
-              className={`font-extrabold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               Quiz Lampo
             </h1>
@@ -530,7 +530,7 @@ export default function QuizLampoPage() {
             </div>
 
             {/* How to play */}
-            <div className="mt-6 bg-white card-elevated rounded-2xl p-4 text-left">
+            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
               <h3
                 className={`font-bold text-gray-900 mb-2 ${isSenior ? "text-base" : "text-sm"}`}
               >
@@ -588,7 +588,7 @@ export default function QuizLampoPage() {
                   className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
-                    <p className="font-extrabold">{cfg.label}</p>
+                    <p className="font-semibold">{cfg.label}</p>
                     <p className="text-white/70 text-sm">{cfg.desc}</p>
                   </div>
                   <svg
@@ -642,7 +642,7 @@ export default function QuizLampoPage() {
             </div>
 
             <h1
-              className={`font-extrabold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               {stars === 3
                 ? "Fulmine!"
@@ -657,7 +657,7 @@ export default function QuizLampoPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="text-xl sm:text-2xl font-black text-amber-500 mt-2"
+              className="text-xl sm:text-2xl font-bold text-amber-500 mt-2"
             >
               {score} punti
             </motion.p>
@@ -667,7 +667,7 @@ export default function QuizLampoPage() {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7, type: "spring" }}
-                className="mt-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-extrabold shadow-lg shadow-amber-300/40"
+                className="mt-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-semibold shadow-lg shadow-amber-300/40"
               >
                 <span>🏆</span> Nuovo record!
               </motion.div>
@@ -680,28 +680,28 @@ export default function QuizLampoPage() {
               transition={{ delay: 0.6 }}
               className="grid grid-cols-4 gap-2 mt-6"
             >
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">
                   {correctCount}/{cfg.rounds}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-gray-900">{pct}%</p>
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-gray-900">{pct}%</p>
                 <p className="text-[10px] text-gray-400 font-bold">
                   Precisione
                 </p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-orange-500">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-orange-500">
                   x{maxCombo}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">
                   Max combo
                 </p>
               </div>
-              <div className="card-elevated rounded-xl bg-white p-3">
-                <p className="text-lg font-black text-emerald-600">
+              <div className="card-clean rounded-xl bg-white p-3">
+                <p className="text-lg font-bold text-emerald-600">
                   +{xpEarned}
                 </p>
                 <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
@@ -713,7 +713,7 @@ export default function QuizLampoPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.75 }}
-              className="mt-4 card-elevated rounded-2xl bg-white p-4"
+              className="mt-4 card-clean rounded-2xl bg-white p-4"
             >
               <h3 className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">
                 {`Dettaglio ${profileConfig.xpLabel}`}
@@ -748,8 +748,8 @@ export default function QuizLampoPage() {
                   </span>
                 </div>
                 <div className="border-t border-gray-100 pt-2 flex justify-between text-base">
-                  <span className="font-extrabold text-gray-900">Totale</span>
-                  <span className="font-extrabold text-emerald-600">
+                  <span className="font-bold text-gray-900">Totale</span>
+                  <span className="font-bold text-emerald-600">
                     +{xpEarned} {profileConfig.xpLabel}
                   </span>
                 </div>
@@ -850,7 +850,7 @@ export default function QuizLampoPage() {
         {/* Score + Timer + Combo row */}
         <div className="flex items-center justify-between mb-4">
           <div
-            className={`text-sm font-black tabular-nums ${
+            className={`text-sm font-bold tabular-nums ${
               timerFraction <= 0.2 ? "text-red-500" : "text-gray-400"
             }`}
           >
@@ -869,14 +869,14 @@ export default function QuizLampoPage() {
                 className="flex items-center gap-1.5 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200/50 rounded-full px-3 py-1"
               >
                 <span className="text-sm">🔥</span>
-                <span className="text-xs font-black text-orange-600">
+                <span className="text-xs font-bold text-orange-600">
                   x{combo}
                 </span>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <div className="text-sm font-black text-amber-500">{score} pts</div>
+          <div className="text-sm font-bold text-amber-500">{score} pts</div>
         </div>
 
         {/* Question card */}
@@ -887,7 +887,7 @@ export default function QuizLampoPage() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -40, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="card-elevated rounded-2xl bg-white p-5 mb-4"
+            className="card-clean rounded-2xl bg-white p-5 mb-4"
           >
             {/* Type badge + course */}
             <div className="flex items-center justify-between mb-3">
@@ -941,7 +941,7 @@ export default function QuizLampoPage() {
         >
           {currentQuestion.options.map((option, idx) => {
             let btnStyle =
-              "bg-white card-elevated hover:shadow-lg active:scale-[0.96]";
+              "bg-white card-clean hover:shadow-lg active:scale-[0.96]";
             let textColor = "text-gray-900";
             let borderExtra = "";
 
@@ -971,7 +971,7 @@ export default function QuizLampoPage() {
                 }`}
               >
                 <p
-                  className={`font-extrabold ${
+                  className={`font-semibold ${
                     isSenior ? "text-xl" : "text-lg"
                   } ${textColor}`}
                 >
@@ -1049,7 +1049,7 @@ export default function QuizLampoPage() {
               transition={{ duration: 1.2 }}
               className="fixed left-1/2 top-1/3 -translate-x-1/2 pointer-events-none z-50"
             >
-              <span className="text-4xl font-black text-orange-500 drop-shadow-lg">
+              <span className="text-4xl font-bold text-orange-500 drop-shadow-lg">
                 🔥 x{combo}
               </span>
             </motion.div>

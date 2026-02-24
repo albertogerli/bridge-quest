@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Core Bridge Game Engine
+ * FIGB Bridge LAB - Core Bridge Game Engine
  * Handles trick-by-trick play logic, card validation, winner determination
  */
 

@@ -198,10 +198,10 @@ export default function MemoryPage() {
 
           <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-center mb-8">
-              <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 text-4xl shadow-lg shadow-purple-400/30 mb-4">
+              <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-[#003DA5] text-4xl shadow-lg shadow-[#003DA5]/20 mb-4">
                 🧠
               </div>
-              <h1 className={`font-extrabold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl"}`}>
+              <h1 className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl"}`}>
                 Memory Bridge
               </h1>
               <p className={`text-gray-500 mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
@@ -211,8 +211,8 @@ export default function MemoryPage() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <div className="card-elevated rounded-2xl bg-white p-5 mb-4">
-              <h3 className="font-extrabold text-gray-900 mb-3">Come si gioca</h3>
+            <div className="card-clean rounded-2xl bg-white p-5 mb-4">
+              <h3 className="font-semibold text-gray-900 mb-3">Come si gioca</h3>
               <ul className={`space-y-2 text-gray-600 ${isSenior ? "text-base" : "text-sm"}`}>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 font-bold">1.</span>
@@ -231,8 +231,8 @@ export default function MemoryPage() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <div className="card-elevated rounded-2xl bg-white p-5 mb-6">
-              <h3 className="font-extrabold text-gray-900 mb-3">Scegli difficoltà</h3>
+            <div className="card-clean rounded-2xl bg-white p-5 mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Scegli difficoltà</h3>
               <div className="space-y-2">
                 {([
                   { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "from-green-500 to-emerald-500", shadow: "shadow-green-400/30" },
@@ -245,7 +245,7 @@ export default function MemoryPage() {
                     className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${color} text-white shadow-lg ${shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
                   >
                     <div className="text-left">
-                      <p className="font-extrabold">{label}</p>
+                      <p className="font-semibold">{label}</p>
                       <p className="text-white/70 text-sm">{desc}</p>
                     </div>
                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -298,7 +298,7 @@ export default function MemoryPage() {
           {/* Progress bar */}
           <div className="h-2 rounded-full bg-gray-100 overflow-hidden mb-4">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-purple-500 to-violet-500"
+              className="h-full rounded-full bg-[#003DA5]"
               animate={{ width: `${(matchedPairs / pairs) * 100}%` }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             />
@@ -351,8 +351,8 @@ export default function MemoryPage() {
                           : faceUp
                             ? card.type === "card"
                               ? "bg-white border-2 border-purple-300 shadow-lg shadow-purple-200/50"
-                              : "bg-white border-2 border-indigo-300 shadow-lg shadow-indigo-200/50"
-                            : "bg-gradient-to-br from-purple-500 to-violet-600 border-2 border-purple-400 shadow-md cursor-pointer active:scale-95"
+                              : "bg-white border-2 border-[#003DA5]/20 shadow-lg shadow-[#003DA5]/20"
+                            : "bg-[#003DA5] border-2 border-[#003DA5]/60 shadow-md cursor-pointer active:scale-95"
                     }`}
                     style={{ perspective: 1000 }}
                   >
@@ -362,13 +362,13 @@ export default function MemoryPage() {
                         <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
                           card.type === "card"
                             ? "bg-purple-50 text-purple-500"
-                            : "bg-indigo-50 text-indigo-500"
+                            : "bg-[#003DA5]/10 text-[#003DA5]"
                         }`}>
                           {card.type === "card" ? "🃏 Carta" : "📖 Concetto"}
                         </span>
                         <span className={`text-center leading-tight ${
                           isSenior ? "text-sm" : "text-[11px]"
-                        } ${isMatched ? "text-emerald-700" : "text-gray-800"} font-extrabold`}>
+                        } ${isMatched ? "text-emerald-700" : "text-gray-800"} font-semibold`}>
                           {card.content}
                         </span>
                         {isMatched && <span className="text-lg">✓</span>}
@@ -433,7 +433,7 @@ export default function MemoryPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className={`font-extrabold text-gray-900 mb-2 ${isSenior ? "text-3xl" : "text-2xl"}`}
+            className={`font-bold text-gray-900 mb-2 ${isSenior ? "text-3xl" : "text-2xl"}`}
           >
             {stars === 3 ? "Memoria Perfetta!" : stars === 2 ? "Ottimo lavoro!" : "Completato!"}
           </motion.h1>
@@ -443,7 +443,7 @@ export default function MemoryPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-purple-50 text-purple-600 font-extrabold text-lg">
+            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-purple-50 text-purple-600 font-bold text-lg">
               +{earned} {prof.xpLabel}
             </span>
           </motion.div>
@@ -455,21 +455,21 @@ export default function MemoryPage() {
             transition={{ delay: 0.8 }}
             className="mt-6"
           >
-            <div className="card-elevated rounded-2xl bg-white p-5">
+            <div className="card-clean rounded-2xl bg-white p-5">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-2xl font-extrabold text-purple-600">⏱️</p>
-                  <p className="text-lg font-extrabold text-gray-900 mt-1">{formatTime(timer)}</p>
+                  <p className="text-2xl font-bold text-purple-600">⏱️</p>
+                  <p className="text-lg font-bold text-gray-900 mt-1">{formatTime(timer)}</p>
                   <p className="text-[11px] text-gray-500 font-medium">Tempo</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-extrabold text-amber-500">👆</p>
-                  <p className="text-lg font-extrabold text-gray-900 mt-1">{moves}</p>
+                  <p className="text-2xl font-bold text-amber-500">👆</p>
+                  <p className="text-lg font-bold text-gray-900 mt-1">{moves}</p>
                   <p className="text-[11px] text-gray-500 font-medium">Mosse</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-extrabold text-orange-500">🔥</p>
-                  <p className="text-lg font-extrabold text-gray-900 mt-1">{maxStreak}</p>
+                  <p className="text-2xl font-bold text-orange-500">🔥</p>
+                  <p className="text-lg font-bold text-gray-900 mt-1">{maxStreak}</p>
                   <p className="text-[11px] text-gray-500 font-medium">Max streak</p>
                 </div>
               </div>
@@ -477,13 +477,13 @@ export default function MemoryPage() {
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500 font-medium">Efficienza</span>
-                  <span className="font-extrabold text-gray-900">
+                  <span className="font-bold text-gray-900">
                     {Math.round((pairs / moves) * 100)}%
                   </span>
                 </div>
                 <div className="h-2 rounded-full bg-gray-100 overflow-hidden mt-1.5">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-purple-500 to-violet-500"
+                    className="h-full rounded-full bg-[#003DA5]"
                     style={{ width: `${Math.min(100, Math.round((pairs / moves) * 100))}%` }}
                   />
                 </div>
@@ -508,12 +508,12 @@ export default function MemoryPage() {
           >
             <button
               onClick={() => startGame(difficulty)}
-              className={`w-full py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-violet-600 text-white font-extrabold shadow-lg shadow-purple-400/30 active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+              className={`w-full py-4 rounded-2xl bg-[#003DA5] text-white font-semibold shadow-lg shadow-[#003DA5]/20 active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
             >
               Gioca ancora
             </button>
             <Link href="/gioca" className="block">
-              <button className={`w-full py-4 rounded-2xl bg-gray-100 text-gray-700 font-extrabold active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}>
+              <button className={`w-full py-4 rounded-2xl bg-gray-100 text-gray-700 font-semibold active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}>
                 Torna al menu
               </button>
             </Link>

@@ -65,7 +65,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
         <div className="text-5xl mb-3">
           {stars === 3 ? "🌟" : stars === 2 ? "⭐" : "💪"}
         </div>
-        <h3 className="text-xl font-extrabold text-gray-900">
+        <h3 className="text-xl font-semibold text-gray-900">
           {stars === 3 ? "Perfetto!" : stars === 2 ? "Ben fatto!" : "Continua a studiare!"}
         </h3>
         <p className="text-sm text-gray-500 mt-1">

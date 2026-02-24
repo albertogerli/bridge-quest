@@ -36,44 +36,44 @@ export function DesktopSidebar() {
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 border border-indigo-200">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
                 <span className="text-lg">⚡</span>
               </div>
               <div>
-                <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Livello {stats.level}</p>
-                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-bold">{stats.levelName}</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Livello {stats.level}</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">{stats.levelName}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xl font-extrabold text-indigo-600">{stats.xpInLevel}</p>
-              <p className="text-[10px] text-gray-400 font-bold">{`/ 100 ${profile.xpLabel}`}</p>
+              <p className="text-xl font-bold text-[#003DA5]">{stats.xpInLevel}</p>
+              <p className="text-[10px] text-gray-400 font-medium">{`/ 100 ${profile.xpLabel}`}</p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-[#003DA5] to-[#0052CC] transition-all"
               style={{ width: `${stats.xpInLevel}%` }}
             />
           </div>
-          <p className="text-[10px] text-gray-400 mt-1.5 font-bold">
+          <p className="text-[10px] text-gray-400 mt-1.5 font-medium">
             {stats.xp} {profile.xpLabel} totali · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
           </p>
         </div>
 
         {/* Streak */}
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
-              <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 Streak: {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
               </p>
             </div>
             {stats.streak > 0 && (
-              <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-full px-2 py-0.5">
+              <span className="text-[10px] font-medium text-[#003DA5] bg-[#003DA5]/8 border border-[#003DA5]/20 rounded-full px-2 py-0.5">
                 {`+${Math.min(stats.streak * 5, 50)} ${profile.xpLabel}/giorno`}
               </span>
             )}
@@ -82,9 +82,9 @@ export function DesktopSidebar() {
             {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
               <div
                 key={i}
-                className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-extrabold ${
+                className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-bold ${
                   i < Math.min(stats.streak, 7)
-                    ? "bg-blue-500 text-white border border-blue-600"
+                    ? "bg-[#003DA5] text-white"
                     : "bg-gray-100 text-gray-400 border border-gray-200"
                 }`}
               >
@@ -99,22 +99,22 @@ export function DesktopSidebar() {
           <div className={`rounded-2xl p-4 transition-all hover:translate-y-[-1px] hover:shadow-md cursor-pointer ${
             stats.dailyDone
               ? "bg-emerald-50 border border-emerald-200"
-              : "bg-white border border-[#e5e0d5] shadow-sm"
+              : "bg-white card-clean"
           }`}>
             <div className="flex items-center gap-3">
               <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${
-                stats.dailyDone ? "bg-emerald-100" : "bg-amber-100 border border-amber-200"
+                stats.dailyDone ? "bg-emerald-100" : "bg-[#c8a44e]/15 border border-[#c8a44e]/25"
               }`}>
                 {stats.dailyDone ? "✅" : "🔥"}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Sfida del Giorno</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Sfida del Giorno</p>
                 <p className="text-[11px] text-gray-500 dark:text-gray-400">
                   {stats.dailyDone ? "Completata! Torna domani" : "Gioca la mano quotidiana"}
                 </p>
               </div>
               {!stats.dailyDone && (
-                <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
+                <span className="text-[10px] font-medium text-[#c8a44e] bg-[#c8a44e]/10 border border-[#c8a44e]/20 rounded-full px-2 py-0.5">
                   {`+40 ${profile.xpLabel}`}
                 </span>
               )}
@@ -125,18 +125,18 @@ export function DesktopSidebar() {
         {/* Spaced Review */}
         {reviewCount > 0 && (
           <Link href="/lezioni">
-            <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+            <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 border border-purple-200">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
                   <span className="text-xl">🧠</span>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Ripasso del giorno</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Ripasso del giorno</p>
                   <p className="text-[11px] text-gray-500 dark:text-gray-400">
                     {reviewCount} {reviewCount === 1 ? "domanda" : "domande"} da ripassare
                   </p>
                 </div>
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-500 text-white text-xs font-extrabold">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#003DA5] text-white text-xs font-bold">
                   {reviewCount}
                 </span>
               </div>
@@ -147,12 +147,12 @@ export function DesktopSidebar() {
         {/* Continue CTA */}
         {stats.nextModule && (
           <Link href={`/lezioni/${stats.nextModule.lessonId}/${stats.nextModule.moduleId}`}>
-            <div className="rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 p-4 text-white shadow-md hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px] active:shadow-sm transition-all cursor-pointer">
+            <div className="rounded-2xl bg-[#003DA5] p-4 text-white shadow-sm hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-white/70 uppercase tracking-wider">Riprendi</p>
-                  <p className="text-sm font-extrabold truncate">{stats.nextModule.moduleTitle}</p>
+                  <p className="text-[10px] font-medium text-white/70 uppercase tracking-wider">Riprendi</p>
+                  <p className="text-sm font-semibold truncate">{stats.nextModule.moduleTitle}</p>
                 </div>
                 <svg className="h-5 w-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7z" />
@@ -163,12 +163,12 @@ export function DesktopSidebar() {
         )}
 
         {/* Quick Links - Mini Games */}
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
-          <p className="text-xs font-extrabold text-gray-900 dark:text-gray-100 mb-3 uppercase tracking-wider">Mini-Giochi</p>
+        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
+          <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-3 uppercase tracking-wider">Mini-Giochi</p>
           <div className="grid grid-cols-2 gap-2">
             {miniGames.map((game) => (
               <Link key={game.href} href={game.href}>
-                <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer ${game.color}`}>
+                <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer ${game.color}`}>
                   <span className="text-base">{game.emoji}</span>
                   <span>{game.label}</span>
                 </div>
@@ -179,7 +179,7 @@ export function DesktopSidebar() {
 
         {/* Collectible Cards */}
         <Link href="/collezione" aria-label="Collezione carte">
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
             <div className="flex items-center gap-3">
               <div className="flex gap-1">
                 {(unlockedCards.length > 0 ? unlockedCards.slice(-3) : collectibleCards.slice(0, 3)).map((card) => {
@@ -199,8 +199,8 @@ export function DesktopSidebar() {
                 })}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100">Collezione</p>
-                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-bold">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Collezione</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">
                   {unlockedCards.length}/{totalCards} sbloccate
                 </p>
               </div>
@@ -212,11 +212,11 @@ export function DesktopSidebar() {
         </Link>
 
         {/* FIGB badge */}
-        <div className="rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 p-3 text-center">
-          <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
+        <div className="rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-3 text-center">
+          <p className="text-[10px] font-medium text-[#003DA5] uppercase tracking-wider">
             Un progetto della FIGB
           </p>
-          <p className="text-[10px] text-indigo-500 mt-0.5">
+          <p className="text-[10px] text-[#003DA5]/70 mt-0.5">
             Commissione Insegnamento
           </p>
         </div>

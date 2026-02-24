@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Combined index of all Smazzate (practice hands)
+ * FIGB Bridge LAB - Combined index of all Smazzate (practice hands)
  * From FIGB Corso Fiori, Quadri, Cuori Gioco, Cuori Licita
  */
 

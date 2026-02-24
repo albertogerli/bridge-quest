@@ -111,7 +111,7 @@ export function AchievementPopup({
           className="fixed top-4 left-1/2 -translate-x-1/2 z-[60]"
           onClick={onDismiss}
         >
-          <div className="flex items-center gap-3 bg-white rounded-2xl card-elevated-lg px-5 py-3.5 cursor-pointer border border-amber-200">
+          <div className="flex items-center gap-3 bg-white rounded-2xl card-clean px-5 py-3.5 cursor-pointer border border-amber-200">
             {/* Badge icon with glow */}
             <div className="relative">
               <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-md" />
@@ -123,7 +123,7 @@ export function AchievementPopup({
               <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">
                 Nuovo Achievement!
               </p>
-              <p className="text-sm font-extrabold text-gray-900">{badge.name}</p>
+              <p className="text-sm font-bold text-gray-900">{badge.name}</p>
               <p className="text-[11px] text-gray-500">{badge.desc}</p>
             </div>
           </div>

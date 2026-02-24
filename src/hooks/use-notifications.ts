@@ -60,21 +60,21 @@ function showNotification(title: string, body: string, icon?: string) {
           body,
           icon: icon || "/icons/icon-192x192.png",
           badge: "/icons/icon-192x192.png",
-          tag: "bridgequest-reminder",
+          tag: "bridgelab-reminder",
         } as NotificationOptions);
       }).catch(() => {
         // Fallback to basic Notification API
         new Notification(title, {
           body,
           icon: icon || "/icons/icon-192x192.png",
-          tag: "bridgequest-reminder",
+          tag: "bridgelab-reminder",
         });
       });
     } else {
       new Notification(title, {
         body,
         icon: icon || "/icons/icon-192x192.png",
-        tag: "bridgequest-reminder",
+        tag: "bridgelab-reminder",
       });
     }
   } catch {

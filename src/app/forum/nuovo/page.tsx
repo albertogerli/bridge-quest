@@ -95,7 +95,7 @@ export default function NuovoPostPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-2xl font-extrabold text-gray-900 mb-6">Nuovo post</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Nuovo post</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category */}
@@ -172,7 +172,7 @@ export default function NuovoPostPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-extrabold shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold shadow-lg shadow-emerald-500/20 disabled:opacity-50"
               >
                 {loading ? "Pubblicazione..." : "Pubblica"}
               </Button>

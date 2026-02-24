@@ -1,6 +1,6 @@
 /**
  * BEN (Bridge Engine Neural) format conversion utilities
- * Converts between BridgeQuest's internal types and BEN's PBN-style notation
+ * Converts between FIGB Bridge LAB's internal types and BEN's PBN-style notation
  */
 
 import type { Card, Suit, Rank, Position, GameState } from "./bridge-engine";

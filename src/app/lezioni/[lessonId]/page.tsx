@@ -80,7 +80,7 @@ export default function LessonDetailPage({
                 {totalDuration} min
               </Badge>
             </div>
-            <h1 className="text-2xl font-extrabold text-white">{lesson.title}</h1>
+            <h1 className="text-2xl font-bold text-white">{lesson.title}</h1>
             <p className="text-sm text-white/70 mt-1">{lesson.subtitle}</p>
 
             <div className="mt-4 flex items-center gap-3">
@@ -103,7 +103,7 @@ export default function LessonDetailPage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="card-elevated rounded-2xl bg-white overflow-hidden mb-4"
+            className="card-clean rounded-2xl bg-white overflow-hidden mb-4"
           >
             <div className="relative">
               <video
@@ -156,7 +156,7 @@ export default function LessonDetailPage({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="card-elevated rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-100 p-4 mb-6"
+          className="card-clean rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-100 p-4 mb-6"
         >
           <div className="flex items-center gap-3">
             <span className="text-2xl">⚡</span>
@@ -199,7 +199,7 @@ export default function LessonDetailPage({
                       : `/lezioni/${lesson.id}/${module.id}`
                   }
                 >
-                  <div className="group card-elevated rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
+                  <div className="group card-clean rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
                     <div className="flex items-center gap-4">
                       {/* Step number */}
                       <div

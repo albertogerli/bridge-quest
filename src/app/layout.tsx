@@ -11,14 +11,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "BridgeQuest - Impara il Bridge giocando",
+  title: "FIGB Bridge LAB - Impara il Bridge giocando",
   description:
     "La piattaforma interattiva della FIGB per imparare il bridge. Gamification, AI e divertimento. Il tuo viaggio nel bridge inizia qui.",
-  keywords: ["bridge", "FIGB", "corso fiori", "impara bridge", "gioco carte"],
+  keywords: ["bridge", "FIGB", "corso fiori", "impara bridge", "gioco carte", "bridge lab"],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "BridgeQuest",
+    title: "Bridge LAB",
   },
   icons: {
     icon: [
@@ -39,7 +39,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#059669",
+  themeColor: "#003DA5",
 };
 
 // Inline script to apply dark mode class before first paint to prevent flash

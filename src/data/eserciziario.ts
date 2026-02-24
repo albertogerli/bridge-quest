@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Eserciziario FIGB Corso Fiori
+ * FIGB Bridge LAB - Eserciziario FIGB Corso Fiori
  * Extracted from "Eserciziario per il Corso Fiori" (FIGB Commissione Insegnamento, Luglio 2017)
  * All 12 Temas with exercises and solutions.
  */

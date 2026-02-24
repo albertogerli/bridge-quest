@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { ASD_LIST } from "@/data/asd-list";
 import Link from "next/link";
+import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
+import { type ReactNode } from "react";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50/50 to-white flex items-center justify-center"><div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-[#003DA5]/5 via-[#003DA5]/3 to-white flex items-center justify-center"><div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" /></div>}>
       <LoginContent />
     </Suspense>
   );
@@ -126,7 +129,7 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50/50 to-white flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#003DA5]/5 via-[#003DA5]/3 to-white flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -135,11 +138,18 @@ function LoginContent() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-700 text-white text-3xl font-black shadow-lg shadow-indigo-500/30 mb-3">
-              B
+            <div className="inline-flex items-center gap-2 mb-3">
+              {(["club", "diamond", "heart", "spade"] as const).map((suit) => (
+                <div
+                  key={suit}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#003DA5] to-[#002E7A] shadow-lg shadow-[#003DA5]/20"
+                >
+                  <SuitSymbol suit={suit} size="md" />
+                </div>
+              ))}
             </div>
           </Link>
-          <h1 className="text-2xl font-extrabold text-gray-900">BridgeQuest</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Bridge LAB</h1>
           <p className="text-sm text-gray-500 mt-1">Impara il bridge giocando</p>
         </div>
 
@@ -147,7 +157,7 @@ function LoginContent() {
         <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
           <button
             onClick={() => { setMode("login"); setError(""); setSuccess(""); }}
-            className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
               mode === "login"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-500"
@@ -157,7 +167,7 @@ function LoginContent() {
           </button>
           <button
             onClick={() => { setMode("signup"); setError(""); setSuccess(""); }}
-            className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
               mode === "signup"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-500"
@@ -171,7 +181,7 @@ function LoginContent() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
-            <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
               Email
             </label>
             <input
@@ -179,14 +189,14 @@ function LoginContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
               placeholder="la-tua@email.com"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
               Password
             </label>
             <input
@@ -195,10 +205,22 @@ function LoginContent() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
               placeholder={mode === "signup" ? "Minimo 6 caratteri" : "La tua password"}
             />
           </div>
+
+          {mode === "login" && (
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => {/* TODO: implement password reset */}}
+                className="text-xs font-semibold text-[#003DA5] hover:text-[#003DA5]/80 transition-colors"
+              >
+                Password dimenticata?
+              </button>
+            </div>
+          )}
 
           {/* Signup-only fields */}
           <AnimatePresence mode="wait">
@@ -211,56 +233,56 @@ function LoginContent() {
               >
                 {/* Display Name */}
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
                     Nome visualizzato *
                   </label>
                   <input
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
                     placeholder="Come vuoi essere chiamato"
                   />
                 </div>
 
                 {/* BBO Username */}
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
                     Username BBO <span className="text-gray-300 normal-case">(opzionale)</span>
                   </label>
                   <input
                     type="text"
                     value={bboUsername}
                     onChange={(e) => setBboUsername(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
                     placeholder="Il tuo username su BridgeBase Online"
                   />
                 </div>
 
                 {/* Profile Type */}
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
                     Profilo
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {([
-                      { key: "junior" as ProfileType, label: "Explorer", emoji: "🎮", desc: "8–17 anni" },
-                      { key: "giovane" as ProfileType, label: "Dinamico", emoji: "⚡", desc: "18–35 anni" },
-                      { key: "adulto" as ProfileType, label: "Classico", emoji: "🃏", desc: "36–55 anni" },
-                      { key: "senior" as ProfileType, label: "Rilassato", emoji: "☕", desc: "55+ anni" },
-                    ]).map(({ key, label, emoji, desc }) => (
+                      { key: "junior" as ProfileType, label: "Explorer", icon: <Gamepad2 className="w-6 h-6 text-pink-500" />, desc: "8–17 anni" },
+                      { key: "giovane" as ProfileType, label: "Dinamico", icon: <Zap className="w-6 h-6 text-emerald-500" />, desc: "18–35 anni" },
+                      { key: "adulto" as ProfileType, label: "Classico", icon: <Spade className="w-6 h-6 text-blue-500" />, desc: "36–55 anni" },
+                      { key: "senior" as ProfileType, label: "Rilassato", icon: <Coffee className="w-6 h-6 text-amber-500" />, desc: "55+ anni" },
+                    ] as { key: ProfileType; label: string; icon: ReactNode; desc: string }[]).map(({ key, label, icon, desc }) => (
                       <button
                         key={key}
                         type="button"
                         onClick={() => setProfileType(key)}
                         className={`p-3 rounded-xl border-2 text-center transition-all ${
                           profileType === key
-                            ? "border-indigo-500 bg-indigo-50"
+                            ? "border-[#003DA5] bg-[#003DA5]/8"
                             : "border-gray-100 bg-white hover:border-gray-200"
                         }`}
                       >
-                        <span className="text-2xl block">{emoji}</span>
-                        <span className="text-xs font-bold text-gray-900 block mt-1">{label}</span>
+                        <div className="flex justify-center">{icon}</div>
+                        <span className="text-xs font-semibold text-gray-900 block mt-1">{label}</span>
                         <span className="text-[10px] text-gray-400 block">{desc}</span>
                       </button>
                     ))}
@@ -269,7 +291,7 @@ function LoginContent() {
 
                 {/* ASD Selection */}
                 <div className="relative">
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
                     Associazione (ASD) <span className="text-gray-300 normal-case">(opzionale)</span>
                   </label>
                   <input
@@ -281,7 +303,7 @@ function LoginContent() {
                       setShowAsdDropdown(true);
                     }}
                     onFocus={() => setShowAsdDropdown(true)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
                     placeholder="Cerca la tua associazione..."
                   />
                   {selectedAsd && (
@@ -315,7 +337,7 @@ function LoginContent() {
                                 setAsdSearch("");
                                 setShowAsdDropdown(false);
                               }}
-                              className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                              className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-[#003DA5]/8 hover:text-[#003DA5] transition-colors"
                             >
                               {asd}
                             </button>
@@ -328,7 +350,7 @@ function LoginContent() {
 
                 {/* Avatar Upload */}
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
                     Foto profilo <span className="text-gray-300 normal-case">(opzionale)</span>
                   </label>
                   <div className="flex items-center gap-4">
@@ -342,7 +364,7 @@ function LoginContent() {
                       )}
                     </div>
                     <label className="cursor-pointer">
-                      <span className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
+                      <span className="text-sm font-semibold text-[#003DA5] hover:text-[#003DA5]/80 transition-colors">
                         {avatarPreview ? "Cambia foto" : "Carica foto"}
                       </span>
                       <input
@@ -382,7 +404,7 @@ function LoginContent() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 hover:shadow-xl transition-all disabled:opacity-50"
+            className="w-full h-12 rounded-xl bg-[#003DA5] text-white font-semibold text-sm shadow-lg shadow-[#003DA5]/20 hover:shadow-xl transition-all disabled:opacity-50"
           >
             {loading ? (
               <div className="flex items-center gap-2">

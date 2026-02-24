@@ -328,7 +328,7 @@ export default function TorneoSettimanale() {
                     <span className="text-2xl">🏆</span>
                   </div>
                   <div>
-                    <h1 className="text-xl font-extrabold text-gray-900">
+                    <h1 className="text-xl font-bold text-gray-900">
                       Torneo Settimanale
                     </h1>
                     <p className="text-xs text-gray-500 mt-0.5">
@@ -352,7 +352,7 @@ export default function TorneoSettimanale() {
                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
                       Mani
                     </p>
-                    <p className="text-lg font-black text-indigo-600 leading-tight">
+                    <p className="text-lg font-bold text-indigo-600 leading-tight">
                       {TOURNAMENT_HAND_COUNT}
                     </p>
                   </div>
@@ -361,7 +361,7 @@ export default function TorneoSettimanale() {
                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
                       Prese necessarie
                     </p>
-                    <p className="text-lg font-black text-gray-900 leading-tight">
+                    <p className="text-lg font-bold text-gray-900 leading-tight">
                       {totalNeeded}
                     </p>
                   </div>
@@ -370,7 +370,7 @@ export default function TorneoSettimanale() {
                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
                       Tempo rimasto
                     </p>
-                    <p className="text-sm font-black text-purple-600 leading-tight tabular-nums">
+                    <p className="text-sm font-bold text-purple-600 leading-tight tabular-nums">
                       {mounted ? countdown : "--"}
                     </p>
                   </div>
@@ -405,7 +405,7 @@ export default function TorneoSettimanale() {
                         <p className="text-[10px] font-bold text-gray-400">
                           #{i + 1}
                         </p>
-                        <p className="text-sm font-black text-gray-900 leading-tight">
+                        <p className="text-sm font-bold text-gray-900 leading-tight">
                           {h.contract}
                         </p>
                         <p className="text-[9px] text-gray-500">
@@ -450,7 +450,7 @@ export default function TorneoSettimanale() {
                 {!alreadyPlayed ? (
                   <Button
                     onClick={() => setIsPlaying(true)}
-                    className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-extrabold h-14 shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30"
+                    className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30"
                   >
                     Gioca il Torneo
                   </Button>
@@ -511,7 +511,7 @@ export default function TorneoSettimanale() {
                 </div>
 
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     existingResult.totalTricks >= existingResult.totalNeeded
                       ? "text-emerald-dark"
                       : "text-red-600"
@@ -568,7 +568,7 @@ export default function TorneoSettimanale() {
                         #{i + 1}
                       </p>
                       <p
-                        className={`text-sm font-extrabold ${
+                        className={`text-sm font-bold ${
                           hr.result >= 0
                             ? "text-emerald-700"
                             : "text-red-600"
@@ -611,7 +611,7 @@ export default function TorneoSettimanale() {
         >
           <div className="card-elevated rounded-2xl bg-white p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-extrabold text-gray-900">Classifica</h3>
+              <h3 className="font-bold text-gray-900">Classifica</h3>
               <Badge
                 variant="outline"
                 className="text-[10px] font-bold text-gray-400 border-gray-200"
@@ -637,7 +637,7 @@ export default function TorneoSettimanale() {
                               : "bg-gray-50/50"
                       }`}
                     >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-gray-700 shadow-sm">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold text-gray-700 shadow-sm">
                         {i === 0
                           ? "\uD83E\uDD47"
                           : i === 1
@@ -652,7 +652,7 @@ export default function TorneoSettimanale() {
                         </p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-sm font-extrabold text-gray-900">
+                        <p className="text-sm font-bold text-gray-900">
                           {entry.totalTricks}/{entry.totalNeeded}
                         </p>
                         <p
@@ -704,7 +704,7 @@ export default function TorneoSettimanale() {
         >
           <div className="card-elevated rounded-2xl bg-white p-5">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md shadow-emerald/30">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
                 M
               </div>
               <div className="flex-1">
@@ -900,7 +900,7 @@ function TournamentPlayView({
               </div>
 
               <h2
-                className={`text-2xl font-extrabold ${
+                className={`text-2xl font-bold ${
                   totalDelta >= 0 ? "text-emerald-dark" : "text-red-600"
                 }`}
               >
@@ -970,7 +970,7 @@ function TournamentPlayView({
                       {hands[i].contract}
                     </p>
                     <p
-                      className={`text-lg font-extrabold ${
+                      className={`text-lg font-bold ${
                         hr.result >= 0
                           ? "text-emerald-700"
                           : "text-red-600"
@@ -1000,7 +1000,7 @@ function TournamentPlayView({
                   className="mt-6 space-y-2"
                 >
                   <div className="inline-flex items-center gap-2 bg-indigo-50 rounded-xl px-5 py-2.5">
-                    <span className="text-base font-extrabold text-indigo-700">
+                    <span className="text-base font-bold text-indigo-700">
                       +{xpEarned} {profile.xpLabel}
                     </span>
                   </div>
@@ -1078,7 +1078,7 @@ function TournamentPlayView({
                 Mano #{completedCount}
               </p>
               <p
-                className={`text-2xl font-extrabold ${
+                className={`text-2xl font-bold ${
                   lastResult.result >= 0
                     ? "text-emerald-700"
                     : "text-red-600"
@@ -1108,14 +1108,14 @@ function TournamentPlayView({
               </p>
               <div className="flex items-center justify-center gap-4">
                 <div className="text-center">
-                  <p className="text-lg font-extrabold text-gray-900">
+                  <p className="text-lg font-bold text-gray-900">
                     {handResults.reduce((s, r) => s + r.tricksMade, 0)}
                   </p>
                   <p className="text-[10px] text-gray-500">Prese fatte</p>
                 </div>
                 <div className="h-8 w-px bg-gray-200" />
                 <div className="text-center">
-                  <p className="text-lg font-extrabold text-gray-900">
+                  <p className="text-lg font-bold text-gray-900">
                     {handResults.reduce((s, r) => s + r.tricksNeeded, 0)}
                   </p>
                   <p className="text-[10px] text-gray-500">Necessarie</p>
@@ -1128,7 +1128,7 @@ function TournamentPlayView({
                       handResults.reduce((s, r) => s + r.tricksNeeded, 0);
                     return (
                       <p
-                        className={`text-lg font-extrabold ${
+                        className={`text-lg font-bold ${
                           delta >= 0
                             ? "text-emerald-600"
                             : "text-red-600"
@@ -1148,7 +1148,7 @@ function TournamentPlayView({
               <p className="text-xs font-bold text-indigo-500 mb-2">
                 Prossima mano: #{completedCount + 1} di {TOURNAMENT_HAND_COUNT}
               </p>
-              <p className="text-lg font-extrabold text-gray-900">
+              <p className="text-lg font-bold text-gray-900">
                 {hands[completedCount].title}
               </p>
               <p className="text-sm text-gray-600 mt-1">
@@ -1160,7 +1160,7 @@ function TournamentPlayView({
 
             <Button
               onClick={handleNextHand}
-              className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-extrabold h-14 shadow-lg shadow-indigo-600/25"
+              className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25"
             >
               Gioca Mano #{completedCount + 1}
             </Button>
@@ -1320,7 +1320,7 @@ function SingleHandView({
                 <BenStatus available={game.benAvailable} />
               </div>
               <h1
-                className={`${isMobile ? "text-sm" : "text-lg"} font-extrabold text-gray-900 truncate`}
+                className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-gray-900 truncate`}
               >
                 {smazzata.title}
               </h1>
@@ -1361,7 +1361,7 @@ function SingleHandView({
                 Contratto
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-black text-emerald-dark`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}
               >
                 {smazzata.contract}
               </p>
@@ -1372,7 +1372,7 @@ function SingleHandView({
                 Obiettivo
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
               >
                 {tricksNeeded} prese
               </p>
@@ -1383,7 +1383,7 @@ function SingleHandView({
                 N-S / E-O
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-black text-gray-900`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
               >
                 {game.gameState?.trickCount.ns ?? 0} /{" "}
                 {game.gameState?.trickCount.ew ?? 0}
@@ -1538,7 +1538,7 @@ function SingleHandView({
                 }`}
               >
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     game.result.result >= 0
                       ? "text-emerald-dark"
                       : "text-red-600"

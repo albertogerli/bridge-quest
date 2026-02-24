@@ -1,5 +1,5 @@
 /**
- * BridgeQuest - Multi-Course Architecture
+ * FIGB Bridge LAB - Multi-Course Architecture
  * Combines Corso Fiori, Corso Quadri, Corso Cuori Licita, Corso Cuori Gioco
  * into a unified course system with shared types.
  */

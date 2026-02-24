@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * BridgeQuest - useDDS Hook
+ * FIGB Bridge LAB - useDDS Hook
  *
  * Manages the DDS Web Worker for background double-dummy analysis.
  * Features:

@@ -90,7 +90,7 @@ export default function ForumPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-extrabold text-gray-900">Forum</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Forum</h1>
             <p className="text-sm text-gray-500 mt-0.5">La community dei bridgisti</p>
           </div>
           <Link href="/forum/nuovo">
@@ -178,7 +178,7 @@ export default function ForumPage() {
                   transition={{ delay: i * 0.03 }}
                 >
                   <Link href={`/forum/${post.id}`}>
-                    <div className={`bg-white rounded-2xl p-4 card-elevated hover:shadow-lg transition-shadow ${
+                    <div className={`bg-white rounded-2xl p-4 card-clean hover:shadow-lg transition-shadow ${
                       post.pinned ? "ring-2 ring-amber-400/50" : ""
                     }`}>
                       <div className="flex items-start gap-3">
@@ -195,7 +195,7 @@ export default function ForumPage() {
                           {/* Pinned + Category */}
                           <div className="flex items-center gap-1.5 mb-1">
                             {post.pinned && (
-                              <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                              <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
                                 PINNED
                               </span>
                             )}

@@ -156,7 +156,7 @@ export default function SfidaDelGiornoPage() {
               </Badge>
             )}
           </div>
-          <h1 className="text-lg font-extrabold text-gray-900">
+          <h1 className="text-lg font-bold text-gray-900">
             {smazzata.title}
           </h1>
           <p className="text-xs text-gray-500 mt-1">
@@ -174,17 +174,17 @@ export default function SfidaDelGiornoPage() {
           <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
-              <p className="text-lg font-black text-emerald-dark">{smazzata.contract}</p>
+              <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-              <p className="text-lg font-black text-gray-900">{tricksNeeded} prese</p>
+              <p className="text-lg font-bold text-gray-900">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">N-S / E-O</p>
-              <p className="text-lg font-black text-gray-900">
+              <p className="text-lg font-bold text-gray-900">
                 {game.gameState?.trickCount.ns ?? 0} / {game.gameState?.trickCount.ew ?? 0}
               </p>
             </div>
@@ -340,7 +340,7 @@ export default function SfidaDelGiornoPage() {
                   {game.result.result >= 0 ? "🎉" : "😔"}
                 </div>
                 <h3
-                  className={`text-xl font-extrabold ${
+                  className={`text-xl font-bold ${
                     game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
                   }`}
                 >
@@ -393,7 +393,7 @@ export default function SfidaDelGiornoPage() {
           >
             <div className="card-elevated rounded-2xl bg-white p-5">
               <div className="flex items-start gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-extrabold text-sm shadow-md shadow-emerald/30">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
                   M
                 </div>
                 <div className="flex-1">

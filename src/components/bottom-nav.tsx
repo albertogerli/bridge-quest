@@ -11,14 +11,14 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
-      <div className="bg-white dark:bg-[#141821] border-t-3 border-[#e5e0d5] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
+      <div className="bg-white dark:bg-[#141821] border-t border-[#e5e7eb] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
         <div className="mx-auto flex max-w-lg items-center justify-around px-0.5 py-1 safe-area-bottom">
-          <NavItem href="/" icon="home" label="Home" active={isActive("/")} color="indigo" />
-          <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} color="blue" />
+          <NavItem href="/" icon="home" label="Home" active={isActive("/")} />
+          <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} />
           <PlayButton active={isActive("/gioca")} />
-          <NavItem href="/forum" icon="forum" label="Forum" active={isActive("/forum")} color="purple" />
-          <NavItem href="/classifica" icon="trophy" label="Classifica" active={isActive("/classifica")} color="amber" />
-          <NavItem href="/profilo" icon="user" label="Profilo" active={isActive("/profilo")} color="rose" />
+          <NavItem href="/forum" icon="forum" label="Forum" active={isActive("/forum")} />
+          <NavItem href="/classifica" icon="trophy" label="Classifica" active={isActive("/classifica")} />
+          <NavItem href="/profilo" icon="user" label="Profilo" active={isActive("/profilo")} />
         </div>
       </div>
     </nav>
@@ -35,43 +35,31 @@ function PlayButton({ active }: { active: boolean }) {
       <div
         className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 ${
           active
-            ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-400/40 border-2 border-amber-300"
-            : "bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-400/40 border-2 border-violet-400 pulse-glow"
+            ? "bg-[#003DA5] shadow-lg shadow-[#003DA5]/30 border border-[#0052CC]"
+            : "bg-[#003DA5] shadow-lg shadow-[#003DA5]/30 border border-[#0052CC]"
         }`}
-        style={{ borderBottom: active ? "4px solid #d97706" : "4px solid #6d28d9" }}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 ml-0.5">
           <path d="M8 5v14l11-7z" />
         </svg>
       </div>
-      <span className={`mt-1 text-[10px] font-extrabold ${active ? "text-amber-600" : "text-purple-600"}`}>
+      <span className={`mt-1 text-[10px] font-bold ${active ? "text-[#003DA5]" : "text-[#003DA5]"}`}>
         Gioca
       </span>
     </Link>
   );
 }
 
-const colorMap = {
-  emerald: { active: "text-emerald-600 bg-emerald-50", dot: "bg-emerald-500" },
-  indigo: { active: "text-indigo-600 bg-indigo-50", dot: "bg-indigo-500" },
-  blue: { active: "text-blue-600 bg-blue-50", dot: "bg-blue-500" },
-  purple: { active: "text-purple-600 bg-purple-50", dot: "bg-purple-500" },
-  amber: { active: "text-amber-600 bg-amber-50", dot: "bg-amber-500" },
-  rose: { active: "text-rose-600 bg-rose-50", dot: "bg-rose-500" },
-};
-
 function NavItem({
   href,
   icon,
   label,
   active,
-  color,
 }: {
   href: string;
   icon: string;
   label: string;
   active: boolean;
-  color: keyof typeof colorMap;
 }) {
   const icons: Record<string, React.ReactNode> = {
     home: (
@@ -109,24 +97,22 @@ function NavItem({
     ),
   };
 
-  const colors = colorMap[color];
-
   return (
     <Link
       href={href}
       className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
         active
-          ? colors.active
+          ? "text-[#003DA5] bg-[#003DA5]/8"
           : "text-gray-400 hover:text-gray-600 active:scale-95"
       }`}
       aria-label={label}
     >
       {icons[icon]}
-      <span className={`text-[10px] ${active ? "font-extrabold" : "font-semibold"}`}>
+      <span className={`text-[10px] ${active ? "font-bold" : "font-semibold"}`}>
         {label}
       </span>
       {active && (
-        <div className={`absolute -bottom-1 w-5 h-1 rounded-full ${colors.dot}`} />
+        <div className="absolute -bottom-1 w-5 h-1 rounded-full bg-[#003DA5]" />
       )}
     </Link>
   );

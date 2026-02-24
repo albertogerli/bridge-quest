@@ -1,5 +1,5 @@
 /**
- * AI Difficulty System for BridgeQuest
+ * AI Difficulty System for FIGB Bridge LAB
  * Provides three difficulty levels for AI opponents:
  * - Base: makes random mistakes 20% of the time
  * - Intermedio: standard heuristic AI (default)
