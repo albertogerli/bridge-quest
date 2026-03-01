@@ -11,7 +11,9 @@ import ssl
 import time
 import urllib.request
 
-API_KEY = "sk_V2_hgu_kkTAIaL7IDS_q9wuCHxCeBxnIXX07IdecaQRRBKjxLFq"
+API_KEY = os.environ.get("HEYGEN_API_KEY", "")
+if not API_KEY:
+    raise SystemExit("Set HEYGEN_API_KEY environment variable")
 AVATAR_ID = "8734f8e7c55647498a62a88d6810f2ea"
 VOICE_ID = "915ddcfeebea4e86a94d48a6e142fb8a"
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "videos")

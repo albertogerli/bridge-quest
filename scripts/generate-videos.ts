@@ -10,7 +10,8 @@ import type { World } from "../src/data/lessons";
 import * as fs from "fs";
 import * as path from "path";
 
-const API_KEY = "sk_V2_hgu_kkTAIaL7IDS_q9wuCHxCeBxnIXX07IdecaQRRBKjxLFq";
+const API_KEY = process.env.HEYGEN_API_KEY || "";
+if (!API_KEY) throw new Error("Set HEYGEN_API_KEY environment variable");
 const AVATAR_ID = "8734f8e7c55647498a62a88d6810f2ea";
 const VOICE_ID = "915ddcfeebea4e86a94d48a6e142fb8a";
 const OUTPUT_DIR = path.join(__dirname, "../public/videos");

@@ -13,7 +13,9 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
-API_KEY = "AIzaSyAB_VB1vU6eqJLf5OE_5OYeE5Gr571wUKs"
+API_KEY = os.environ.get("GEMINI_API_KEY", "")
+if not API_KEY:
+    raise SystemExit("Set GEMINI_API_KEY environment variable")
 MODEL = "gemini-3-pro-image-preview"
 ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/" + MODEL + ":generateContent?key=" + API_KEY
 
