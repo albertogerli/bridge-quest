@@ -1,0 +1,158 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:3.29,Default,,0000,0000,0000,,Bentornato nella nostra \navventura nel mondo del 
+Dialogue: 0,0:0:3.29,0:0:3.77,Default,,0000,0000,0000,,bridge! 
+Dialogue: 0,0:0:3.77,0:0:6.05,Default,,0000,0000,0000,,Oggi parliamo di \nqualcosa di davvero 
+Dialogue: 0,0:0:6.05,0:0:8.32,Default,,0000,0000,0000,,entusiasmante: il gioco \ncon l'atout. 
+Dialogue: 0,0:0:8.32,0:0:11.26,Default,,0000,0000,0000,,Fino ad ora abbiamo \ngiocato a Senza Atout, dove 
+Dialogue: 0,0:0:11.26,0:0:14.19,Default,,0000,0000,0000,,l'unica cosa che contava \nera avere la carta piu 
+Dialogue: 0,0:0:14.19,0:0:14.55,Default,,0000,0000,0000,,alta. 
+Dialogue: 0,0:0:14.55,0:0:17.43,Default,,0000,0000,0000,,Ma adesso cambia tutto, \nperche con l'atout hai 
+Dialogue: 0,0:0:17.43,0:0:18.80,Default,,0000,0000,0000,,un superpotere in piu! 
+Dialogue: 0,0:0:18.80,0:0:21.44,Default,,0000,0000,0000,,Immagina di giocare una \npartita di calcio. 
+Dialogue: 0,0:0:21.44,0:0:24.25,Default,,0000,0000,0000,,A Senza Atout, puoi \nsegnare solo con i piedi. 
+Dialogue: 0,0:0:24.25,0:0:26.77,Default,,0000,0000,0000,,Ma quando hai l'atout, e \ncome se potessi 
+Dialogue: 0,0:0:26.77,0:0:28.21,Default,,0000,0000,0000,,segnare anche di testa! 
+Dialogue: 0,0:0:28.21,0:0:30.90,Default,,0000,0000,0000,,Hai un'arma in piu, e \nquesto rende il gioco 
+Dialogue: 0,0:0:30.90,0:0:33.65,Default,,0000,0000,0000,,molto piu divertente e \nricco di possibilita. 
+Dialogue: 0,0:0:33.65,0:0:35.57,Default,,0000,0000,0000,,Ma cos' e esattamente \nl'atout? 
+Dialogue: 0,0:0:35.57,0:0:37.91,Default,,0000,0000,0000,,E un seme speciale, \nscelto durante la 
+Dialogue: 0,0:0:37.91,0:0:40.54,Default,,0000,0000,0000,,dichiarazione, che ha il \npotere di taglio. 
+Dialogue: 0,0:0:40.54,0:0:41.50,Default,,0000,0000,0000,,Cosa vuol dire? 
+Dialogue: 0,0:0:41.50,0:0:44.19,Default,,0000,0000,0000,,Che se non hai carte del \nseme giocato, puoi 
+Dialogue: 0,0:0:44.19,0:0:47.07,Default,,0000,0000,0000,,giocare una carta di \natout e vincere la presa, 
+Dialogue: 0,0:0:47.07,0:0:49.46,Default,,0000,0000,0000,,anche se la tua carta e \nun misero Due! 
+Dialogue: 0,0:0:49.46,0:0:52.40,Default,,0000,0000,0000,,E come se il Due di \natout battesse l'Asso di un 
+Dialogue: 0,0:0:52.40,0:0:53.12,Default,,0000,0000,0000,,altro seme. 
+Dialogue: 0,0:0:53.12,0:0:53.78,Default,,0000,0000,0000,,Forte, no? 
+Dialogue: 0,0:0:53.78,0:0:56.65,Default,,0000,0000,0000,,Pero attenzione: puoi \ntagliare solo se non hai 
+Dialogue: 0,0:0:56.65,0:0:59.11,Default,,0000,0000,0000,,piu carte del seme che e \nstato giocato. 
+Dialogue: 0,0:0:59.11,0:1:2.04,Default,,0000,0000,0000,,Se hai ancora carte di \nquel seme, sei obbligato 
+Dialogue: 0,0:1:2.04,0:1:3.48,Default,,0000,0000,0000,,a rispondere al colore. 
+Dialogue: 0,0:1:3.48,0:1:6.29,Default,,0000,0000,0000,,E un'altra cosa \nimportante: tagliare non e un 
+Dialogue: 0,0:1:6.29,0:1:6.83,Default,,0000,0000,0000,,obbligo. 
+Dialogue: 0,0:1:6.83,0:1:9.64,Default,,0000,0000,0000,,Se non hai il seme \ngiocato, puoi scegliere se 
+Dialogue: 0,0:1:9.64,0:1:12.58,Default,,0000,0000,0000,,tagliare con una carta \ndi atout oppure scartare 
+Dialogue: 0,0:1:12.58,0:1:14.32,Default,,0000,0000,0000,,una carta di un altro \nseme. 
+Dialogue: 0,0:1:14.32,0:1:16.71,Default,,0000,0000,0000,,La scelta dipende dalla \ntua strategia! 
+Dialogue: 0,0:1:16.71,0:1:19.59,Default,,0000,0000,0000,,E se due giocatori \ntagliano nella stessa presa 
+Dialogue: 0,0:1:19.59,0:1:19.71,Default,,0000,0000,0000,,? 
+Dialogue: 0,0:1:19.71,0:1:22.58,Default,,0000,0000,0000,,Semplice: vince chi ha \nusato la carta di atout 
+Dialogue: 0,0:1:22.58,0:1:23.18,Default,,0000,0000,0000,,piu alta. 
+Dialogue: 0,0:1:23.18,0:1:26.11,Default,,0000,0000,0000,,Quindi anche tra le \natout conta il valore della 
+Dialogue: 0,0:1:26.11,0:1:26.53,Default,,0000,0000,0000,,carta. 
+Dialogue: 0,0:1:26.53,0:1:29.41,Default,,0000,0000,0000,,Adesso parliamo di una \nparola importantissima: 
+Dialogue: 0,0:1:29.41,0:1:29.89,Default,,0000,0000,0000,,il FIT. 
+Dialogue: 0,0:1:29.89,0:1:32.52,Default,,0000,0000,0000,,Il fit e quando tu e il \ntuo compagno avete 
+Dialogue: 0,0:1:32.52,0:1:35.10,Default,,0000,0000,0000,,insieme almeno 8 carte \nnello stesso seme. 
+Dialogue: 0,0:1:35.10,0:1:37.55,Default,,0000,0000,0000,,Per esempio, se tu hai 5 \nCuori e il tuo 
+Dialogue: 0,0:1:37.55,0:1:40.25,Default,,0000,0000,0000,,compagno ne ha 3, avete \nun fit di 8 carte a 
+Dialogue: 0,0:1:40.25,0:1:40.66,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:1:40.66,0:1:41.38,Default,,0000,0000,0000,,Fantastico! 
+Dialogue: 0,0:1:41.38,0:1:43.96,Default,,0000,0000,0000,,Il fit e il segnale che \nquel seme sara un 
+Dialogue: 0,0:1:43.96,0:1:44.80,Default,,0000,0000,0000,,ottimo atout. 
+Dialogue: 0,0:1:44.80,0:1:46.83,Default,,0000,0000,0000,,Perche il fit e cosi \nimportante? 
+Dialogue: 0,0:1:46.83,0:1:49.65,Default,,0000,0000,0000,,Perche se avete tante \ncarte di atout insieme, 
+Dialogue: 0,0:1:49.65,0:1:52.46,Default,,0000,0000,0000,,gli avversari ne avranno \npoche, e voi potrete 
+Dialogue: 0,0:1:52.46,0:1:53.78,Default,,0000,0000,0000,,controllare il gioco. 
+Dialogue: 0,0:1:53.78,0:1:56.59,Default,,0000,0000,0000,,E come in una squadra di \nbasket: se avete piu 
+Dialogue: 0,0:1:56.59,0:1:59.23,Default,,0000,0000,0000,,giocatori alti sotto \ncanestro, dominate il 
+Dialogue: 0,0:1:59.23,0:1:57.43,Default,,0000,0000,0000,,gioco! 
+Dialogue: 0,0:1:57.43,0:1:59.93,Default,,0000,0000,0000,,Ora vediamo i tre \nsuperpoteri dell'atout. 
+Dialogue: 0,0:1:59.93,0:2:2.19,Default,,0000,0000,0000,,Si, hai capito bene: tre \nsuperpoteri! 
+Dialogue: 0,0:2:2.19,0:2:4.57,Default,,0000,0000,0000,,Il primo si chiama \nPotere di Controllo. 
+Dialogue: 0,0:2:4.57,0:2:7.41,Default,,0000,0000,0000,,Immagina che gli \navversari stiano incassando le 
+Dialogue: 0,0:2:7.41,0:2:10.08,Default,,0000,0000,0000,,loro carte vincenti in \nun colore dove tu non 
+Dialogue: 0,0:2:10.08,0:2:10.95,Default,,0000,0000,0000,,hai piu carte. 
+Dialogue: 0,0:2:10.95,0:2:13.62,Default,,0000,0000,0000,,A Senza Atout non \npotresti fare niente, solo 
+Dialogue: 0,0:2:13.62,0:2:14.20,Default,,0000,0000,0000,,guardare. 
+Dialogue: 0,0:2:14.20,0:2:16.00,Default,,0000,0000,0000,,Ma con l'atout puoi \ntagliare! 
+Dialogue: 0,0:2:16.00,0:2:18.73,Default,,0000,0000,0000,,Puoi interrompere la \nloro serie di vincenti e 
+Dialogue: 0,0:2:18.73,0:2:20.82,Default,,0000,0000,0000,,riprendere il controllo \ndel gioco. 
+Dialogue: 0,0:2:20.82,0:2:23.14,Default,,0000,0000,0000,,E come mettere un muro \ndavanti al tiro 
+Dialogue: 0,0:2:23.14,0:2:24.13,Default,,0000,0000,0000,,dell'avversario. 
+Dialogue: 0,0:2:24.13,0:2:26.39,Default,,0000,0000,0000,,Il secondo superpotere e \nil Potere di 
+Dialogue: 0,0:2:26.39,0:2:27.20,Default,,0000,0000,0000,,Allungamento. 
+Dialogue: 0,0:2:27.20,0:2:29.87,Default,,0000,0000,0000,,Questo e un po' piu \navanzato ma molto bello. 
+Dialogue: 0,0:2:29.87,0:2:32.54,Default,,0000,0000,0000,,Normalmente, se hai per \nesempio sei carte di 
+Dialogue: 0,0:2:32.54,0:2:35.21,Default,,0000,0000,0000,,atout tra te e il morto \npuoi fare al massimo 
+Dialogue: 0,0:2:35.21,0:2:36.37,Default,,0000,0000,0000,,sei prese di atout. 
+Dialogue: 0,0:2:36.37,0:2:39.22,Default,,0000,0000,0000,,Ma se riesci a tagliare \ncon la mano che ha meno 
+Dialogue: 0,0:2:39.22,0:2:41.02,Default,,0000,0000,0000,,atout, puoi fare prese \nextra! 
+Dialogue: 0,0:2:41.02,0:2:43.86,Default,,0000,0000,0000,,Per esempio, se al morto \nhai tre carte di atout 
+Dialogue: 0,0:2:43.86,0:2:46.53,Default,,0000,0000,0000,,e riesci a tagliare una \nvolta, hai fatto una 
+Dialogue: 0,0:2:46.53,0:2:49.08,Default,,0000,0000,0000,,presa in piu rispetto al \nsemplice incasso. 
+Dialogue: 0,0:2:49.08,0:2:49.96,Default,,0000,0000,0000,,Geniale, vero? 
+Dialogue: 0,0:2:49.96,0:2:52.10,Default,,0000,0000,0000,,Il terzo superpotere e \nil Potere di 
+Dialogue: 0,0:2:52.10,0:2:52.97,Default,,0000,0000,0000,,Affrancamento. 
+Dialogue: 0,0:2:52.97,0:2:55.82,Default,,0000,0000,0000,,A volte hai un colore \nlungo, tipo otto carte di 
+Dialogue: 0,0:2:55.82,0:2:58.60,Default,,0000,0000,0000,,Fiori tra te e il morto \nma gli avversari hanno 
+Dialogue: 0,0:2:58.60,0:3:0.40,Default,,0000,0000,0000,,ancora qualche Fiori in \ngiro. 
+Dialogue: 0,0:3:0.40,0:3:3.01,Default,,0000,0000,0000,,Invece di cedere prese \nper affrancare, puoi 
+Dialogue: 0,0:3:3.01,0:3:5.57,Default,,0000,0000,0000,,tagliare le Fiori \navversarie con le atout! 
+Dialogue: 0,0:3:5.57,0:3:8.41,Default,,0000,0000,0000,,Cosi le tue cartine di \nFiori diventano vincenti 
+Dialogue: 0,0:3:8.41,0:3:10.56,Default,,0000,0000,0000,,senza aver perso neanche \nuna presa. 
+Dialogue: 0,0:3:10.56,0:3:12.88,Default,,0000,0000,0000,,Ma c' e una cosa \nfondamentale che devi 
+Dialogue: 0,0:3:12.88,0:3:15.72,Default,,0000,0000,0000,,ricordare: prima di \ngoderti le tue vincenti nei 
+Dialogue: 0,0:3:15.72,0:3:18.10,Default,,0000,0000,0000,,colori laterali, devi \nbattere le atout! 
+Dialogue: 0,0:3:18.10,0:3:19.03,Default,,0000,0000,0000,,Cosa vuol dire? 
+Dialogue: 0,0:3:19.03,0:3:21.88,Default,,0000,0000,0000,,Devi giocare il colore \ndi atout per togliere le 
+Dialogue: 0,0:3:21.88,0:3:23.91,Default,,0000,0000,0000,,atout dalle mani degli \navversari. 
+Dialogue: 0,0:3:23.91,0:3:26.64,Default,,0000,0000,0000,,Altrimenti, quando \ncerchi di incassare il tuo 
+Dialogue: 0,0:3:26.64,0:3:29.25,Default,,0000,0000,0000,,bell'Asso di Quadri, un \navversario potrebbe 
+Dialogue: 0,0:3:29.25,0:3:29.89,Default,,0000,0000,0000,,tagliarlo! 
+Dialogue: 0,0:3:29.89,0:3:29.42,Default,,0000,0000,0000,,Immagina la delusione. 
+Dialogue: 0,0:3:29.42,0:3:31.24,Default,,0000,0000,0000,,Facciamo un esempio \npratico. 
+Dialogue: 0,0:3:31.24,0:3:34.16,Default,,0000,0000,0000,,Diciamo che il contratto \ne 4 Cuori e tu sei il 
+Dialogue: 0,0:3:34.16,0:3:34.77,Default,,0000,0000,0000,,Giocante. 
+Dialogue: 0,0:3:34.77,0:3:36.16,Default,,0000,0000,0000,,Le Cuori sono l'atout. 
+Dialogue: 0,0:3:36.16,0:3:39.08,Default,,0000,0000,0000,,Tu hai Cuori Asso, Re, \nDonna, Fante, e il Due. 
+Dialogue: 0,0:3:39.08,0:3:41.51,Default,,0000,0000,0000,,Il morto ha Cuori Dieci \nNove e Cinque. 
+Dialogue: 0,0:3:41.51,0:3:44.24,Default,,0000,0000,0000,,Insieme avete otto Cuori \ne gli avversari ne 
+Dialogue: 0,0:3:44.24,0:3:47.10,Default,,0000,0000,0000,,hanno cinque, \nprobabilmente divise tre e due. 
+Dialogue: 0,0:3:47.10,0:3:50.01,Default,,0000,0000,0000,,Come prima cosa, giochi \nCuori: Asso, Re, Donna 
+Dialogue: 0,0:3:50.01,0:3:50.13,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:50.13,0:3:52.87,Default,,0000,0000,0000,,Dopo tre giri, se le \natout erano divise 3-2 
+Dialogue: 0,0:3:52.87,0:3:55.84,Default,,0000,0000,0000,,come e probabile, hai \ntolto tutte le atout agli 
+Dialogue: 0,0:3:55.84,0:3:56.51,Default,,0000,0000,0000,,avversari. 
+Dialogue: 0,0:3:56.51,0:3:59.12,Default,,0000,0000,0000,,Ora puoi incassare \ntranquillamente le tue 
+Dialogue: 0,0:3:59.12,0:4:1.86,Default,,0000,0000,0000,,vincenti negli altri \ncolori senza paura che 
+Dialogue: 0,0:4:1.86,0:4:2.83,Default,,0000,0000,0000,,qualcuno tagli. 
+Dialogue: 0,0:4:2.83,0:4:5.50,Default,,0000,0000,0000,,Facciamo un altro \nesempio con il potere di 
+Dialogue: 0,0:4:5.50,0:4:6.35,Default,,0000,0000,0000,,allungamento. 
+Dialogue: 0,0:4:6.35,0:4:9.21,Default,,0000,0000,0000,,Hai Picche Asso, Re, \nDonna, Fante, Sette, Tre 
+Dialogue: 0,0:4:9.21,0:4:12.18,Default,,0000,0000,0000,,come atout in mano tua, \ne al morto Picche Dieci 
+Dialogue: 0,0:4:12.18,0:4:13.03,Default,,0000,0000,0000,,Nove, Cinque. 
+Dialogue: 0,0:4:13.03,0:4:15.34,Default,,0000,0000,0000,,Al morto hai anche un \nvuoto a Cuori. 
+Dialogue: 0,0:4:15.34,0:4:18.26,Default,,0000,0000,0000,,Giocando una Cuori e \ntagliando al morto con il 
+Dialogue: 0,0:4:18.26,0:4:20.93,Default,,0000,0000,0000,,Dieci di Picche, ottieni \nuna presa in piu! 
+Dialogue: 0,0:4:20.93,0:4:23.66,Default,,0000,0000,0000,,Invece di sei prese di \nPicche ne fai sette, 
+Dialogue: 0,0:4:23.66,0:4:26.40,Default,,0000,0000,0000,,perche il taglio del \nmorto si aggiunge alle 
+Dialogue: 0,0:4:26.40,0:4:27.31,Default,,0000,0000,0000,,prese normali. 
+Dialogue: 0,0:4:27.31,0:4:30.22,Default,,0000,0000,0000,,Ricorda: l'atout rende \nle tue cartine preziose 
+Dialogue: 0,0:4:30.22,0:4:30.35,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:30.35,0:4:32.96,Default,,0000,0000,0000,,Una mano che a Senza \nAtout vale poco, con 
+Dialogue: 0,0:4:32.96,0:4:35.51,Default,,0000,0000,0000,,l'atout giusto puo \ndiventare fortissima. 
+Dialogue: 0,0:4:35.51,0:4:38.18,Default,,0000,0000,0000,,Per esempio, se hai sei \nCuori piccole e un 
+Dialogue: 0,0:4:38.18,0:4:40.91,Default,,0000,0000,0000,,singolo a Fiori, a Senza \nvale quasi niente. 
+Dialogue: 0,0:4:40.91,0:4:43.89,Default,,0000,0000,0000,,Ma se Cuori e l'atout, \nquelle sei carte valgono 
+Dialogue: 0,0:4:43.89,0:4:46.56,Default,,0000,0000,0000,,tantissimo perche puoi \ntagliare le Fiori e 
+Dialogue: 0,0:4:46.56,0:4:49.11,Default,,0000,0000,0000,,usare le Cuori per \ncontrollare il gioco. 
+Dialogue: 0,0:4:49.11,0:4:51.79,Default,,0000,0000,0000,,Hai imparato i tre \nsuperpoteri dell'atout: 
+Dialogue: 0,0:4:51.79,0:4:54.34,Default,,0000,0000,0000,,Controllo, Allungamento \ne Affrancamento. 
+Dialogue: 0,0:4:54.34,0:4:57.32,Default,,0000,0000,0000,,E hai capito \nl'importanza del fit e del battere 
+Dialogue: 0,0:4:57.32,0:4:57.92,Default,,0000,0000,0000,,le atout. 
+Dialogue: 0,0:4:57.92,0:5:0.35,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida, dove 
+Dialogue: 0,0:5:0.35,0:5:3.33,Default,,0000,0000,0000,,impareremo a fare il \npiano di gioco con l'atout 
+Dialogue: 0,0:5:3.33,0:5:3.45,Default,,0000,0000,0000,,! 

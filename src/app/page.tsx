@@ -1873,19 +1873,25 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             className="mt-8 flex flex-col gap-3 max-w-xs mx-auto"
           >
             <a
-              href="/login"
+              href="/login?mode=signup"
               className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
             >
-              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              Inizia gratis
+            </a>
+            <a
+              href="/login?mode=login"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-white/15 backdrop-blur-sm text-white font-bold text-sm hover:bg-white/25 border border-white/20 active:scale-[0.98] transition-all"
+            >
+              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                 <polyline points="10 17 15 12 10 7" />
                 <line x1="15" y1="12" x2="3" y2="12" />
               </svg>
-              Accedi o Registrati
+              Accedi
             </a>
             <button
               onClick={onContinueAsGuest}
-              className="w-full h-12 rounded-2xl bg-white/15 backdrop-blur-sm text-white font-bold text-sm hover:bg-white/25 border border-white/20 active:scale-[0.98] transition-all"
+              className="w-full text-center text-sm font-semibold text-white/60 hover:text-white/80 transition-colors py-2"
             >
               Prova senza account
             </button>
@@ -1972,10 +1978,16 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             className="flex flex-col gap-3"
           >
             <a
-              href="/login"
+              href="/login?mode=signup"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-[#003DA5] text-white font-semibold text-sm shadow-lg shadow-[#003DA5]/20 hover:opacity-90 transition-opacity"
             >
               Inizia gratis
+            </a>
+            <a
+              href="/login?mode=login"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-white text-[#003DA5] font-semibold text-sm border-2 border-[#003DA5]/20 hover:border-[#003DA5]/40 transition-all"
+            >
+              Accedi
             </a>
             <button
               onClick={onContinueAsGuest}

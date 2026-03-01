@@ -9,8 +9,6 @@ import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { Clock, Trophy, Landmark } from "lucide-react";
 
-// No more mock data - real leaderboard from Supabase
-
 const medals = ["🥇", "🥈", "🥉"];
 
 const avatarColors = [
@@ -50,16 +48,9 @@ function getLeague(xp: number) {
   return leagues[0];
 }
 
-function buildLeaderboard(players: { name: string; xp: number }[], userXp: number) {
-  const all = [...players, { name: "__user__", xp: userXp }];
-  all.sort((a, b) => b.xp - a.xp);
-  return all.map((p, i) => ({ ...p, rank: i + 1 }));
-}
-
-// Calculate time until next Sunday midnight (end of week)
 function getWeeklyCountdown() {
   const now = new Date();
-  const dayOfWeek = now.getDay(); // 0=Sun
+  const dayOfWeek = now.getDay();
   const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
   const endOfWeek = new Date(now);
   endOfWeek.setDate(now.getDate() + daysUntilSunday);
@@ -70,6 +61,13 @@ function getWeeklyCountdown() {
   return { days, hours };
 }
 
+interface PlayerEntry {
+  id: string;
+  name: string;
+  xp: number;
+  updated_at: string;
+}
+
 interface AsdRanking {
   asd_name: string;
   total_xp: number;
@@ -77,71 +75,90 @@ interface AsdRanking {
 }
 
 export default function ClassificaPage() {
-  const [xp, setXp] = useState(0);
-  const [realPlayers, setRealPlayers] = useState<{ name: string; xp: number }[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [allPlayers, setAllPlayers] = useState<PlayerEntry[]>([]);
   const [playersLoading, setPlayersLoading] = useState(true);
   const [asdRankings, setAsdRankings] = useState<AsdRanking[]>([]);
   const [asdLoading, setAsdLoading] = useState(false);
   const countdown = getWeeklyCountdown();
 
   useEffect(() => {
-    try {
-      setXp(parseInt(localStorage.getItem("bq_xp") || "0", 10));
-    } catch {}
-
-    // Fetch real leaderboard from Supabase
-    const fetchLeaderboard = async () => {
+    const fetchData = async () => {
       try {
         const supabase = createClient();
+
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) setCurrentUserId(user.id);
+
+        // Fetch all profiles
         const { data } = await supabase
           .from("profiles")
-          .select("display_name, xp")
+          .select("id, display_name, xp, updated_at")
           .order("xp", { ascending: false })
           .limit(50);
 
         if (data && data.length > 0) {
-          setRealPlayers(
+          setAllPlayers(
             data
               .filter((u) => u.display_name)
-              .map((u) => ({ name: u.display_name!, xp: u.xp || 0 }))
+              .map((u) => ({
+                id: u.id,
+                name: u.display_name!,
+                xp: u.xp || 0,
+                updated_at: u.updated_at,
+              }))
           );
         }
       } catch {}
       setPlayersLoading(false);
     };
-    fetchLeaderboard();
+    fetchData();
   }, []);
 
   const fetchAsdRankings = async () => {
-    if (asdRankings.length > 0) return; // already fetched
+    if (asdRankings.length > 0) return;
     setAsdLoading(true);
-    const supabase = createClient();
-    const { data } = await supabase
-      .from("profiles")
-      .select("xp, asd_id, asd:asd_id(name)")
-      .not("asd_id", "is", null);
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("profiles")
+        .select("xp, asd_id, asd:asd_id(name)")
+        .not("asd_id", "is", null);
 
-    if (data) {
-      const asdMap = new Map<string, { total_xp: number; member_count: number }>();
-      for (const row of data as unknown as Array<{ xp: number; asd_id: number; asd: { name: string } | null }>) {
-        const asdName = row.asd?.name;
-        if (!asdName) continue;
-        const existing = asdMap.get(asdName) || { total_xp: 0, member_count: 0 };
-        existing.total_xp += row.xp || 0;
-        existing.member_count += 1;
-        asdMap.set(asdName, existing);
+      if (data) {
+        const asdMap = new Map<string, { total_xp: number; member_count: number }>();
+        for (const row of data as unknown as Array<{ xp: number; asd_id: number; asd: { name: string } | null }>) {
+          const asdName = row.asd?.name;
+          if (!asdName) continue;
+          const existing = asdMap.get(asdName) || { total_xp: 0, member_count: 0 };
+          existing.total_xp += row.xp || 0;
+          existing.member_count += 1;
+          asdMap.set(asdName, existing);
+        }
+        const rankings = Array.from(asdMap.entries())
+          .map(([name, stats]) => ({ asd_name: name, ...stats }))
+          .sort((a, b) => b.total_xp - a.total_xp);
+        setAsdRankings(rankings);
       }
-      const rankings = Array.from(asdMap.entries())
-        .map(([name, stats]) => ({ asd_name: name, ...stats }))
-        .sort((a, b) => b.total_xp - a.total_xp);
-      setAsdRankings(rankings);
-    }
+    } catch {}
     setAsdLoading(false);
   };
 
-  const userLevel = getLevel(xp);
-  const league = getLeague(xp);
-  const nextLeague = leagues.find((l) => l.minXp > xp);
+  // Current user info from Supabase data
+  const currentPlayer = allPlayers.find((p) => p.id === currentUserId);
+  const userXp = currentPlayer?.xp ?? 0;
+  const userLevel = getLevel(userXp);
+  const league = getLeague(userXp);
+  const nextLeague = leagues.find((l) => l.minXp > userXp);
+
+  // Filter players by activity period
+  const now = new Date();
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  const weeklyPlayers = allPlayers.filter((p) => new Date(p.updated_at) >= weekAgo);
+  const monthlyPlayers = allPlayers.filter((p) => new Date(p.updated_at) >= monthAgo);
 
   return (
     <div className="pt-6 px-5 pb-24">
@@ -194,25 +211,25 @@ export default function ClassificaPage() {
                 Prossima lega: {nextLeague.name} {nextLeague.icon}
               </p>
               <p className="text-[11px] font-bold text-gray-400">
-                {xp}/{nextLeague.minXp} XP
+                {userXp}/{nextLeague.minXp} XP
               </p>
             </div>
             <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
               <motion.div
-                className={`h-full rounded-full bg-gradient-to-r ${league.color.replace("50", "400").replace("100/50", "500")}`}
+                className="h-full rounded-full"
                 style={{ background: `linear-gradient(to right, #059669, #34d399)` }}
                 initial={{ width: 0 }}
-                animate={{ width: `${Math.min((xp / nextLeague.minXp) * 100, 100)}%` }}
+                animate={{ width: `${Math.min((userXp / nextLeague.minXp) * 100, 100)}%` }}
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
             </div>
             <p className="text-[10px] text-gray-400 mt-1">
-              Mancano {nextLeague.minXp - xp} XP per la promozione
+              Mancano {nextLeague.minXp - userXp} XP per la promozione
             </p>
           </motion.div>
         )}
 
-        <Tabs defaultValue="settimana" className="w-full mt-4">
+        <Tabs defaultValue="sempre" className="w-full mt-4">
           <TabsList className="w-full bg-gray-100 p-1 rounded-xl">
             <TabsTrigger value="settimana" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
               Settimana
@@ -231,11 +248,12 @@ export default function ClassificaPage() {
           <TabsContent value="settimana" className="mt-4">
             {playersLoading ? (
               <LeaderboardSkeleton />
+            ) : weeklyPlayers.length === 0 ? (
+              <EmptyState message="Nessun giocatore attivo questa settimana" />
             ) : (
-              <LeaderboardTab
-                players={realPlayers}
-                userXp={xp}
-                userLevel={userLevel}
+              <LeaderboardList
+                players={weeklyPlayers}
+                currentUserId={currentUserId}
                 league={league}
               />
             )}
@@ -244,11 +262,12 @@ export default function ClassificaPage() {
           <TabsContent value="mese" className="mt-4">
             {playersLoading ? (
               <LeaderboardSkeleton />
+            ) : monthlyPlayers.length === 0 ? (
+              <EmptyState message="Nessun giocatore attivo questo mese" />
             ) : (
-              <LeaderboardTab
-                players={realPlayers}
-                userXp={xp}
-                userLevel={userLevel}
+              <LeaderboardList
+                players={monthlyPlayers}
+                currentUserId={currentUserId}
                 league={league}
               />
             )}
@@ -257,11 +276,12 @@ export default function ClassificaPage() {
           <TabsContent value="sempre" className="mt-4">
             {playersLoading ? (
               <LeaderboardSkeleton />
+            ) : allPlayers.length === 0 ? (
+              <EmptyState message="La classifica e ancora vuota" />
             ) : (
-              <LeaderboardTab
-                players={realPlayers}
-                userXp={xp}
-                userLevel={userLevel}
+              <LeaderboardList
+                players={allPlayers}
+                currentUserId={currentUserId}
                 league={league}
               />
             )}
@@ -269,14 +289,7 @@ export default function ClassificaPage() {
 
           <TabsContent value="asd" className="mt-4">
             {asdLoading ? (
-              <div className="space-y-2">
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-clean">
-                    <div className="h-4 w-2/3 bg-gray-100 rounded mb-2" />
-                    <div className="h-3 w-1/3 bg-gray-50 rounded" />
-                  </div>
-                ))}
-              </div>
+              <LeaderboardSkeleton />
             ) : asdRankings.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -331,31 +344,21 @@ export default function ClassificaPage() {
   );
 }
 
-function LeaderboardTab({
+function LeaderboardList({
   players,
-  userXp,
-  userLevel,
+  currentUserId,
   league,
 }: {
-  players: { name: string; xp: number }[];
-  userXp: number;
-  userLevel: { level: number; name: string };
+  players: PlayerEntry[];
+  currentUserId: string | null;
   league: (typeof leagues)[0];
 }) {
-  const leaderboard = buildLeaderboard(players, userXp);
-  const userEntry = leaderboard.find((p) => p.name === "__user__")!;
-  const totalPlayers = leaderboard.length;
+  // Sort by XP and assign ranks
+  const sorted = [...players].sort((a, b) => b.xp - a.xp);
+  const ranked = sorted.map((p, i) => ({ ...p, rank: i + 1 }));
+  const totalPlayers = ranked.length;
 
-  // If no other players, show empty state
-  if (players.length === 0 && userXp === 0) {
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
-        <span className="flex justify-center mb-4"><Trophy className="w-12 h-12 text-amber-400" /></span>
-        <p className="text-base font-bold text-gray-700">La classifica e ancora vuota</p>
-        <p className="text-sm text-gray-500 mt-1">Completa lezioni e sfide per scalare le posizioni!</p>
-      </motion.div>
-    );
-  }
+  const currentEntry = ranked.find((p) => p.id === currentUserId);
 
   return (
     <>
@@ -402,67 +405,65 @@ function LeaderboardTab({
         <span className="text-[10px] font-bold text-gray-300">{totalPlayers} giocatori</span>
       </motion.div>
 
-      {/* Your position - sticky highlight */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="mb-4 card-clean rounded-2xl bg-white border-2 border-amber/30 p-4"
-      >
-        <div className="flex items-center gap-3">
-          <span className="w-8 text-center text-sm font-bold text-amber-500">
-            {userEntry.rank}
-          </span>
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className="bg-gradient-to-br from-emerald to-emerald-dark text-white text-xs font-bold">
-              TU
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <p className="font-bold text-sm text-amber-600">Tu</p>
-            <p className="text-[11px] text-gray-500">
-              Lv.{userLevel.level} {userLevel.name}
-            </p>
+      {/* Your position - sticky highlight (only if logged in) */}
+      {currentEntry && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-4 card-clean rounded-2xl bg-white border-2 border-amber/30 p-4"
+        >
+          <div className="flex items-center gap-3">
+            <span className="w-8 text-center text-sm font-bold text-amber-500">
+              {currentEntry.rank}
+            </span>
+            <Avatar className="h-10 w-10">
+              <AvatarFallback className="bg-gradient-to-br from-emerald to-emerald-dark text-white text-xs font-bold">
+                TU
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <p className="font-bold text-sm text-amber-600">{currentEntry.name}</p>
+              <p className="text-[11px] text-gray-500">
+                Lv.{getLevel(currentEntry.xp).level} {getLevel(currentEntry.xp).name}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-bold text-gray-900">{currentEntry.xp.toLocaleString()}</p>
+              <p className="text-[10px] text-gray-400">XP</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="font-bold text-gray-900">{userXp.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">XP</p>
-          </div>
-        </div>
-        {/* Distance to next rank */}
-        {userEntry.rank > 1 && (
-          <div className="mt-2 pt-2 border-t border-gray-100">
-            <p className="text-[10px] text-gray-400 text-center">
-              {(() => {
-                const above = leaderboard.find((p) => p.rank === userEntry.rank - 1);
-                if (!above) return "";
-                const diff = above.xp - userXp;
-                return `${diff} XP per superare ${above.name === "__user__" ? "Te" : above.name}`;
-              })()}
-            </p>
-          </div>
-        )}
-      </motion.div>
+          {currentEntry.rank > 1 && (
+            <div className="mt-2 pt-2 border-t border-gray-100">
+              <p className="text-[10px] text-gray-400 text-center">
+                {(() => {
+                  const above = ranked.find((p) => p.rank === currentEntry.rank - 1);
+                  if (!above) return "";
+                  return `${above.xp - currentEntry.xp} XP per superare ${above.name}`;
+                })()}
+              </p>
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Leaderboard */}
       <div className="space-y-2">
-        {leaderboard.map((player, index) => {
-          const isUser = player.name === "__user__";
+        {ranked.map((player, index) => {
+          const isCurrentUser = player.id === currentUserId;
           const pl = getLevel(player.xp);
-
-          // Promotion zone (top 3), relegation zone (bottom 3)
           const isPromotion = player.rank <= 3;
-          const isRelegation = player.rank > totalPlayers - 3;
+          const isRelegation = totalPlayers > 6 && player.rank > totalPlayers - 3;
 
           return (
             <motion.div
-              key={player.name + player.rank}
+              key={player.id}
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.03 }}
             >
               <div className={`card-clean rounded-2xl bg-white p-3.5 ${
-                isUser ? "ring-2 ring-amber/40" : ""
+                isCurrentUser ? "ring-2 ring-amber/40" : ""
               } ${isPromotion ? "border-l-[3px] border-l-emerald-400" : ""} ${
                 isRelegation ? "border-l-[3px] border-l-rose-300" : ""
               }`}>
@@ -473,13 +474,13 @@ function LeaderboardTab({
                       : <span className="text-gray-400 text-sm">{player.rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback className={`text-xs font-bold ${isUser ? "bg-gradient-to-br from-emerald to-emerald-dark text-white" : avatarColors[index % avatarColors.length]}`}>
-                      {isUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-emerald to-emerald-dark text-white" : avatarColors[index % avatarColors.length]}`}>
+                      {isCurrentUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-bold text-sm truncate ${isUser ? "text-amber-600" : "text-gray-900"}`}>
-                      {isUser ? "Tu" : player.name}
+                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
+                      {isCurrentUser ? `${player.name} (Tu)` : player.name}
                     </p>
                     <p className="text-[11px] text-gray-500">
                       Lv.{pl.level} · {pl.name}
@@ -494,15 +495,14 @@ function LeaderboardTab({
                 </div>
               </div>
 
-              {/* Promotion/Relegation divider */}
-              {player.rank === 3 && (
+              {player.rank === 3 && totalPlayers > 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
                   <div className="flex-1 h-px bg-emerald-200" />
                   <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">zona promozione</span>
                   <div className="flex-1 h-px bg-emerald-200" />
                 </div>
               )}
-              {player.rank === totalPlayers - 3 && (
+              {totalPlayers > 6 && player.rank === totalPlayers - 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
                   <div className="flex-1 h-px bg-rose-200" />
                   <span className="text-[9px] font-bold text-rose-400 uppercase tracking-wider">zona retrocessione</span>
@@ -514,6 +514,16 @@ function LeaderboardTab({
         })}
       </div>
     </>
+  );
+}
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
+      <span className="flex justify-center mb-4"><Trophy className="w-12 h-12 text-amber-400" /></span>
+      <p className="text-base font-bold text-gray-700">{message}</p>
+      <p className="text-sm text-gray-500 mt-1">Completa lezioni e sfide per scalare le posizioni!</p>
+    </motion.div>
   );
 }
 

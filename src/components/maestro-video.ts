@@ -1,5 +1,6 @@
 // Maestro video paths for all courses
 // Videos are stored in public/videos/ and served statically
+import { getCourseForLesson } from "@/data/courses";
 
 // ===== Corso Fiori (Base) =====
 export const MAESTRO_VIDEOS = {
@@ -65,6 +66,38 @@ export const CUORI_LICITA_VIDEOS: Record<number, string> = {
   212: "/videos/maestro-cuori-licita-lezione212.mp4",
   213: "/videos/maestro-cuori-licita-lezione213.mp4",
 };
+
+// ===== Infographic/Dispensa Paths =====
+
+const MAESTRO_NAMES: Record<string, string> = {
+  junior: "Maestro Franci",
+  giovane: "Maestra Carla",
+  adulto: "Maestro Andrea",
+  senior: "Maestro Claudio",
+};
+
+export function getMaestroName(profile: string): string {
+  return MAESTRO_NAMES[profile] || "Maestro Andrea";
+}
+
+/** Get infographic image path for a lesson + profile */
+export function getInfographicForLesson(
+  lessonId: number,
+  profile: string
+): { image: string; pdf: string; coursePdf: string } | null {
+  const course = getCourseForLesson(lessonId);
+  if (!course) return null;
+
+  const courseFolder = course.id; // "fiori" | "quadri" | "cuori-gioco" | "cuori-licita"
+  const formattedId = String(lessonId).padStart(2, "0");
+  const p = profile || "junior";
+
+  return {
+    image: `/infografiche/${courseFolder}/lezione-${formattedId}-${p}.jpg`,
+    pdf: `/infografiche/${courseFolder}/lezione-${formattedId}-${p}.pdf`,
+    coursePdf: `/infografiche/${courseFolder}/corso-${courseFolder}-${p}.pdf`,
+  };
+}
 
 // Get video path for a Fiori lesson (0-12)
 export function getLessonVideo(lessonNum: number): string | null {

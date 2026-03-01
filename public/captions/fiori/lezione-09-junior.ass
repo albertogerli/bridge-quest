@@ -1,0 +1,220 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:3.34,Default,,0000,0000,0000,,Oggi parliamo di una \ndelle cose piu importanti 
+Dialogue: 0,0:0:3.34,0:0:5.88,Default,,0000,0000,0000,,nel bridge: come \nrispondi quando il tuo 
+Dialogue: 0,0:0:5.88,0:0:7.87,Default,,0000,0000,0000,,compagno apre di uno a \ncolore. 
+Dialogue: 0,0:0:7.87,0:0:10.71,Default,,0000,0000,0000,,Immagina che il tuo \ncompagno ti abbia appena 
+Dialogue: 0,0:0:10.71,0:0:13.56,Default,,0000,0000,0000,,mandato un messaggio \ndicendo `` Ho una buona 
+Dialogue: 0,0:0:13.56,0:0:16.54,Default,,0000,0000,0000,,mano, ho almeno 12 punti \ne un bel colore lungo 
+Dialogue: 0,0:0:16.54,0:0:16.66,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:0:16.66,0:0:18.89,Default,,0000,0000,0000,,'' e adesso tocca a te \nrispondere. 
+Dialogue: 0,0:0:18.89,0:0:19.82,Default,,0000,0000,0000,,Cosa gli dici? 
+Dialogue: 0,0:0:19.82,0:0:22.73,Default,,0000,0000,0000,,Dipende tutto da quanti \npunti hai tu e da che 
+Dialogue: 0,0:0:22.73,0:0:24.40,Default,,0000,0000,0000,,carte ti ritrovi in mano . 
+Dialogue: 0,0:0:24.40,0:0:27.25,Default,,0000,0000,0000,,Partiamo dalla regola \npiu semplice di tutte. 
+Dialogue: 0,0:0:27.25,0:0:30.16,Default,,0000,0000,0000,,Se hai da zero a quattro \npunti, la risposta e 
+Dialogue: 0,0:0:30.16,0:0:31.21,Default,,0000,0000,0000,,una sola: Passo. 
+Dialogue: 0,0:0:31.21,0:0:32.82,Default,,0000,0000,0000,,Non c' e niente da fare . 
+Dialogue: 0,0:0:32.82,0:0:35.73,Default,,0000,0000,0000,,Il tuo compagno ha al \nmassimo venti punti, tu 
+Dialogue: 0,0:0:35.73,0:0:38.03,Default,,0000,0000,0000,,ne hai quattro, fanno \nventiquattro. 
+Dialogue: 0,0:0:38.03,0:0:40.44,Default,,0000,0000,0000,,Per la manche ne servono \nventicinque. 
+Dialogue: 0,0:0:40.44,0:0:43.48,Default,,0000,0000,0000,,Quindi la manche non e \nraggiungibile e non vale 
+Dialogue: 0,0:0:43.48,0:0:44.65,Default,,0000,0000,0000,,la pena insistere. 
+Dialogue: 0,0:0:44.65,0:0:47.38,Default,,0000,0000,0000,,E come in una partita di \ncalcio quando sei 
+Dialogue: 0,0:0:47.38,0:0:50.23,Default,,0000,0000,0000,,sotto di tre gol a \ncinque minuti dalla fine: 
+Dialogue: 0,0:0:50.23,0:0:52.27,Default,,0000,0000,0000,,meglio accettare la \nsituazione. 
+Dialogue: 0,0:0:52.27,0:0:53.20,Default,,0000,0000,0000,,Ma attenzione! 
+Dialogue: 0,0:0:53.20,0:0:56.11,Default,,0000,0000,0000,,Se hai cinque punti o \npiu, devi assolutamente 
+Dialogue: 0,0:0:56.11,0:0:56.85,Default,,0000,0000,0000,,rispondere. 
+Dialogue: 0,0:0:56.85,0:0:57.35,Default,,0000,0000,0000,,Sempre. 
+Dialogue: 0,0:0:57.35,0:0:59.89,Default,,0000,0000,0000,,Anche se la tua mano non \nti entusiasma. 
+Dialogue: 0,0:0:59.89,0:1:0.38,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:1:0.38,0:1:3.23,Default,,0000,0000,0000,,Perche il tuo compagno \npotrebbe avere fino a 
+Dialogue: 0,0:1:3.23,0:1:4.04,Default,,0000,0000,0000,,venti punti. 
+Dialogue: 0,0:1:4.04,0:1:6.88,Default,,0000,0000,0000,,Se lui ne ha venti e tu \nne hai cinque, fanno 
+Dialogue: 0,0:1:6.88,0:1:7.69,Default,,0000,0000,0000,,venticinque. 
+Dialogue: 0,0:1:7.69,0:1:10.29,Default,,0000,0000,0000,,Ed ecco che la manche \ndiventa possibile! 
+Dialogue: 0,0:1:10.29,0:1:13.08,Default,,0000,0000,0000,,Passare con cinque o piu \npunti sarebbe come 
+Dialogue: 0,0:1:13.08,0:1:15.56,Default,,0000,0000,0000,,rinunciare a un rigore: \nnon si fa mai. 
+Dialogue: 0,0:1:15.56,0:1:18.59,Default,,0000,0000,0000,,Adesso vediamo il caso \npiu bello: quando hai il 
+Dialogue: 0,0:1:18.59,0:1:19.89,Default,,0000,0000,0000,,fit con il compagno. 
+Dialogue: 0,0:1:19.89,0:1:22.86,Default,,0000,0000,0000,,Il fit, ricordati, e \nquando tra le tue carte e 
+Dialogue: 0,0:1:22.86,0:1:25.65,Default,,0000,0000,0000,,quelle del compagno \navete almeno otto carte 
+Dialogue: 0,0:1:25.65,0:1:26.95,Default,,0000,0000,0000,,nello stesso colore. 
+Dialogue: 0,0:1:26.95,0:1:29.92,Default,,0000,0000,0000,,Se il compagno apre di \nuno Cuori, lui promette 
+Dialogue: 0,0:1:29.92,0:1:31.22,Default,,0000,0000,0000,,almeno cinque Cuori. 
+Dialogue: 0,0:1:31.22,0:1:33.21,Default,,0000,0000,0000,,Se tu ne hai tre, ecco \nil fit! 
+Dialogue: 0,0:1:33.21,0:1:34.38,Default,,0000,0000,0000,,Otto carte totali. 
+Dialogue: 0,0:1:34.38,0:1:37.42,Default,,0000,0000,0000,,Se il compagno apre di \nuno Quadri, lui promette 
+Dialogue: 0,0:1:37.42,0:1:38.84,Default,,0000,0000,0000,,almeno quattro Quadri. 
+Dialogue: 0,0:1:38.84,0:1:41.69,Default,,0000,0000,0000,,Per il fit te ne servono \nquattro anche a te. 
+Dialogue: 0,0:1:41.69,0:1:44.29,Default,,0000,0000,0000,,Con il fit e da cinque a \nnove punti, dai 
+Dialogue: 0,0:1:44.29,0:1:45.96,Default,,0000,0000,0000,,l'appoggio a livello due . 
+Dialogue: 0,0:1:45.96,0:1:48.81,Default,,0000,0000,0000,,Esempio: il compagno \napre uno Cuori e tu hai 
+Dialogue: 0,0:1:48.81,0:1:50.55,Default,,0000,0000,0000,,tre Cuori con sette \npunti. 
+Dialogue: 0,0:1:50.55,0:1:51.78,Default,,0000,0000,0000,,Rispondi due Cuori. 
+Dialogue: 0,0:1:51.78,0:1:54.57,Default,,0000,0000,0000,,Stai dicendo: `` Ho il \nfit, ma pochi punti. 
+Dialogue: 0,0:1:54.57,0:1:57.61,Default,,0000,0000,0000,,Se hai una mano normale \nda dodici o tredici, la 
+Dialogue: 0,0:1:57.61,0:1:58.72,Default,,0000,0000,0000,,manche e lontana. 
+Dialogue: 0,0:1:58.72,0:2:1.38,Default,,0000,0000,0000,,'' E una risposta che \nmette un limite, si 
+Dialogue: 0,0:2:1.38,0:2:3.18,Default,,0000,0000,0000,,chiama risposta \nlimitativa. 
+Dialogue: 0,0:2:3.18,0:2:6.09,Default,,0000,0000,0000,,Il compagno capisce \nsubito dove stai e decide 
+Dialogue: 0,0:2:6.09,0:2:7.95,Default,,0000,0000,0000,,se andare avanti o \nfermarsi. 
+Dialogue: 0,0:2:7.95,0:2:10.80,Default,,0000,0000,0000,,Se invece hai il fit e \ndieci o undici punti, 
+Dialogue: 0,0:2:10.80,0:2:12.10,Default,,0000,0000,0000,,puoi alzare la voce! 
+Dialogue: 0,0:2:12.10,0:2:14.02,Default,,0000,0000,0000,,Dai l'appoggio a livello \ntre. 
+Dialogue: 0,0:2:14.02,0:2:16.93,Default,,0000,0000,0000,,Esempio: il compagno \napre uno Picche e tu hai 
+Dialogue: 0,0:2:16.93,0:2:18.79,Default,,0000,0000,0000,,tre Picche con undici \npunti. 
+Dialogue: 0,0:2:18.79,0:2:20.09,Default,,0000,0000,0000,,Rispondi tre Picche. 
+Dialogue: 0,0:2:20.09,0:2:22.81,Default,,0000,0000,0000,,Stai dicendo: `` La \nmanche e possibile, ma 
+Dialogue: 0,0:2:22.81,0:2:25.78,Default,,0000,0000,0000,,serve che tu abbia \nqualcosa in piu del minimo, 
+Dialogue: 0,0:2:25.78,0:2:27.46,Default,,0000,0000,0000,,almeno quattordici punti . 
+Dialogue: 0,0:2:27.46,0:2:30.43,Default,,0000,0000,0000,,'' Questa si chiama \nrisposta invitante: e come 
+Dialogue: 0,0:2:30.43,0:2:33.28,Default,,0000,0000,0000,,dire `` Dai, se sei \nforte, andiamo a manche! 
+Dialogue: 0,0:2:33.28,0:2:29.38,Default,,0000,0000,0000,,''
+Dialogue: 0,0:2:29.38,0:2:31.88,Default,,0000,0000,0000,,Bene, adesso affrontiamo \nun caso speciale e 
+Dialogue: 0,0:2:31.88,0:2:34.54,Default,,0000,0000,0000,,molto divertente: \nl'appoggio a livello quattro 
+Dialogue: 0,0:2:34.54,0:2:35.60,Default,,0000,0000,0000,,nel colore nobile. 
+Dialogue: 0,0:2:35.60,0:2:38.32,Default,,0000,0000,0000,,Se il compagno apre di \nuno Cuori o uno Picche e 
+Dialogue: 0,0:2:38.32,0:2:41.04,Default,,0000,0000,0000,,tu hai almeno quattro \ncarte di appoggio con una 
+Dialogue: 0,0:2:41.04,0:2:43.31,Default,,0000,0000,0000,,distribuzione \nsbilanciata, puoi sparare 
+Dialogue: 0,0:2:43.31,0:2:45.86,Default,,0000,0000,0000,,direttamente quattro \nCuori o quattro Picche. 
+Dialogue: 0,0:2:45.86,0:2:48.53,Default,,0000,0000,0000,,Attenzione: questo non \nvuol dire che hai tanti 
+Dialogue: 0,0:2:48.53,0:2:48.92,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:2:48.92,0:2:51.47,Default,,0000,0000,0000,,In realta hai al massimo \nundici punti onori, 
+Dialogue: 0,0:2:51.47,0:2:53.80,Default,,0000,0000,0000,,pero la tua mano e \nperfetta per i tagli. 
+Dialogue: 0,0:2:53.80,0:2:56.52,Default,,0000,0000,0000,,Hai un colore corto o un \nvuoto da qualche parte 
+Dialogue: 0,0:2:56.52,0:2:57.35,Default,,0000,0000,0000,,e tante atout. 
+Dialogue: 0,0:2:57.35,0:2:59.63,Default,,0000,0000,0000,,E come un giocatore di \nbasket che non e 
+Dialogue: 0,0:2:59.63,0:3:1.79,Default,,0000,0000,0000,,altissimo ma e \nvelocissimo e segna in 
+Dialogue: 0,0:3:1.79,0:3:2.51,Default,,0000,0000,0000,,contropiede. 
+Dialogue: 0,0:3:2.51,0:3:4.79,Default,,0000,0000,0000,,E qui entra in gioco la \nfamosa Legge di 
+Dialogue: 0,0:3:4.79,0:3:5.62,Default,,0000,0000,0000,,Rivalutazione. 
+Dialogue: 0,0:3:5.62,0:3:8.01,Default,,0000,0000,0000,,Quando hai trovato il \nfit e la tua mano e 
+Dialogue: 0,0:3:8.01,0:3:10.01,Default,,0000,0000,0000,,sbilanciata, cioe non e \nuna noiosa 
+Dialogue: 0,0:3:10.01,0:3:12.67,Default,,0000,0000,0000,,quattro-tre-tre-tre, \npuoi aggiungere dei punti 
+Dialogue: 0,0:3:12.67,0:3:13.06,Default,,0000,0000,0000,,extra. 
+Dialogue: 0,0:3:13.06,0:3:14.11,Default,,0000,0000,0000,,Come si calcolano? 
+Dialogue: 0,0:3:14.11,0:3:16.67,Default,,0000,0000,0000,,Prendi il numero di \ncarte di atout che hai e 
+Dialogue: 0,0:3:16.67,0:3:19.28,Default,,0000,0000,0000,,sottrai il numero di \ncarte del tuo colore piu 
+Dialogue: 0,0:3:19.28,0:3:19.67,Default,,0000,0000,0000,,corto. 
+Dialogue: 0,0:3:19.67,0:3:22.00,Default,,0000,0000,0000,,Il risultato sono i \npunti da aggiungere. 
+Dialogue: 0,0:3:22.00,0:3:24.72,Default,,0000,0000,0000,,Esempio: hai cinque \ncarte di atout e un singolo 
+Dialogue: 0,0:3:24.72,0:3:26.66,Default,,0000,0000,0000,,cioe una sola carta in \nun colore. 
+Dialogue: 0,0:3:26.66,0:3:28.93,Default,,0000,0000,0000,,Cinque meno uno fa \nquattro punti extra! 
+Dialogue: 0,0:3:28.93,0:3:31.49,Default,,0000,0000,0000,,Questi punti \nrappresentano il potenziale dei 
+Dialogue: 0,0:3:31.49,0:3:33.76,Default,,0000,0000,0000,,tagli che potrai fare \ndurante il gioco. 
+Dialogue: 0,0:3:33.76,0:3:36.26,Default,,0000,0000,0000,,Passiamo ora ai colori \nnuovi a livello uno. 
+Dialogue: 0,0:3:36.26,0:3:38.59,Default,,0000,0000,0000,,Questa e la risposta piu \nfrequente e piu 
+Dialogue: 0,0:3:38.59,0:3:39.87,Default,,0000,0000,0000,,potente che puoi dare. 
+Dialogue: 0,0:3:39.87,0:3:42.31,Default,,0000,0000,0000,,Se il compagno apre e tu \nhai almeno cinque 
+Dialogue: 0,0:3:42.31,0:3:44.92,Default,,0000,0000,0000,,punti e un colore con \nquattro o piu carte che 
+Dialogue: 0,0:3:44.92,0:3:47.08,Default,,0000,0000,0000,,puoi dichiarare a \nlivello uno, fallo! 
+Dialogue: 0,0:3:47.08,0:3:49.58,Default,,0000,0000,0000,,E una risposta forzante \nil compagno non puo 
+Dialogue: 0,0:3:49.58,0:3:51.69,Default,,0000,0000,0000,,passare e deve \ncontinuare a parlare. 
+Dialogue: 0,0:3:51.69,0:3:54.41,Default,,0000,0000,0000,,E come lanciare la palla \nal compagno di squadra 
+Dialogue: 0,0:3:54.41,0:3:56.07,Default,,0000,0000,0000,,lui deve per forza \ngiocarla. 
+Dialogue: 0,0:3:56.07,0:3:58.63,Default,,0000,0000,0000,,La priorita assoluta e \nsempre cercare il fit 
+Dialogue: 0,0:3:58.63,0:3:59.68,Default,,0000,0000,0000,,nei colori nobili. 
+Dialogue: 0,0:3:59.68,0:4:2.24,Default,,0000,0000,0000,,Prima Picche e Cuori, \npoi si pensa al resto. 
+Dialogue: 0,0:4:2.24,0:4:4.57,Default,,0000,0000,0000,,Se hai due colori quarti \ndichiari il piu 
+Dialogue: 0,0:4:4.57,0:4:5.18,Default,,0000,0000,0000,,economico. 
+Dialogue: 0,0:4:5.18,0:4:7.84,Default,,0000,0000,0000,,Se hai due colori di \ncinque carte, dichiari il 
+Dialogue: 0,0:4:7.84,0:4:10.06,Default,,0000,0000,0000,,piu alto di rango, \nesattamente come fa 
+Dialogue: 0,0:4:10.06,0:4:10.73,Default,,0000,0000,0000,,l'apertore. 
+Dialogue: 0,0:4:10.73,0:4:13.17,Default,,0000,0000,0000,,Ricordati che i colori \nin risposta possono 
+Dialogue: 0,0:4:13.17,0:4:15.67,Default,,0000,0000,0000,,essere anche solo quarti \nnon servono cinque 
+Dialogue: 0,0:4:15.67,0:4:17.22,Default,,0000,0000,0000,,carte come per \nl'apertura. 
+Dialogue: 0,0:4:17.22,0:4:19.83,Default,,0000,0000,0000,,Uno Cuori o uno Picche \nin risposta promettono 
+Dialogue: 0,0:4:19.83,0:4:21.77,Default,,0000,0000,0000,,almeno quattro carte, \nnon cinque. 
+Dialogue: 0,0:4:21.77,0:4:24.33,Default,,0000,0000,0000,,Infine, quando non puoi \nfare niente di tutto 
+Dialogue: 0,0:4:24.33,0:4:26.77,Default,,0000,0000,0000,,questo, la risposta di \nripiego e uno Senza 
+Dialogue: 0,0:4:26.77,0:4:27.16,Default,,0000,0000,0000,,Atout. 
+Dialogue: 0,0:4:27.16,0:4:29.82,Default,,0000,0000,0000,,Uno Senza in risposta \nmostra da cinque a dieci 
+Dialogue: 0,0:4:29.82,0:4:32.37,Default,,0000,0000,0000,,punti e nega di avere \nquattro o piu carte in 
+Dialogue: 0,0:4:32.37,0:4:35.04,Default,,0000,0000,0000,,qualsiasi colore che \navresti potuto dichiarare 
+Dialogue: 0,0:4:35.04,0:4:35.87,Default,,0000,0000,0000,,a livello uno. 
+Dialogue: 0,0:4:35.87,0:4:38.37,Default,,0000,0000,0000,,Non e una risposta \nentusiasmante, e piu una 
+Dialogue: 0,0:4:38.37,0:4:40.92,Default,,0000,0000,0000,,risposta obbligata, tipo \n`` Non ho niente di 
+Dialogue: 0,0:4:40.92,0:4:43.58,Default,,0000,0000,0000,,meglio da dirti, pero \nnon posso passare perche 
+Dialogue: 0,0:4:43.58,0:4:44.75,Default,,0000,0000,0000,,ho abbastanza punti. 
+Dialogue: 0,0:4:44.75,0:4:47.30,Default,,0000,0000,0000,,'' Non confonderla mai \ncon l'apertura di uno 
+Dialogue: 0,0:4:47.30,0:4:46.80,Default,,0000,0000,0000,,Senza che mostra \nquindici-diciassette! 
+Dialogue: 0,0:4:46.80,0:4:49.51,Default,,0000,0000,0000,,Adesso le risposte per i \npiu forti: i colori 
+Dialogue: 0,0:4:49.51,0:4:50.75,Default,,0000,0000,0000,,nuovi a livello due. 
+Dialogue: 0,0:4:50.75,0:4:53.52,Default,,0000,0000,0000,,Se devi salire al \nlivello due per mostrare il 
+Dialogue: 0,0:4:53.52,0:4:56.17,Default,,0000,0000,0000,,tuo colore, per esempio \nrispondi due Quadri 
+Dialogue: 0,0:4:56.17,0:4:58.94,Default,,0000,0000,0000,,sull'apertura di uno \nPicche, stai facendo una 
+Dialogue: 0,0:4:58.94,0:5:0.35,Default,,0000,0000,0000,,cosa molto impegnativa. 
+Dialogue: 0,0:5:0.35,0:5:3.18,Default,,0000,0000,0000,,Queste risposte si \nchiamano `` due su uno '' e 
+Dialogue: 0,0:5:3.18,0:5:4.95,Default,,0000,0000,0000,,sono forzanti fino a \nmanche. 
+Dialogue: 0,0:5:4.95,0:5:5.89,Default,,0000,0000,0000,,Cosa significa? 
+Dialogue: 0,0:5:5.89,0:5:8.37,Default,,0000,0000,0000,,Che una volta che dici \nun colore nuovo a 
+Dialogue: 0,0:5:8.37,0:5:11.08,Default,,0000,0000,0000,,livello due, ne tu ne il \ntuo compagno potete 
+Dialogue: 0,0:5:11.08,0:5:12.84,Default,,0000,0000,0000,,fermarvi prima della \nmanche. 
+Dialogue: 0,0:5:12.84,0:5:15.67,Default,,0000,0000,0000,,La coppia ha almeno \nventiquattro punti, dodici 
+Dialogue: 0,0:5:15.67,0:5:18.56,Default,,0000,0000,0000,,i tuoi piu almeno dodici \ndel compagno, e quindi 
+Dialogue: 0,0:5:18.56,0:5:21.04,Default,,0000,0000,0000,,la manche va cercata con \ndeterminazione. 
+Dialogue: 0,0:5:21.04,0:5:23.69,Default,,0000,0000,0000,,Per fare una risposta \ndue su uno ti servono 
+Dialogue: 0,0:5:23.69,0:5:24.92,Default,,0000,0000,0000,,almeno dodici punti. 
+Dialogue: 0,0:5:24.92,0:5:26.46,Default,,0000,0000,0000,,Hai capito bene: dodici . 
+Dialogue: 0,0:5:26.46,0:5:29.34,Default,,0000,0000,0000,,E anche le carte nel \ncolore devono essere serie 
+Dialogue: 0,0:5:29.34,0:5:29.46,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:5:29.46,0:5:32.05,Default,,0000,0000,0000,,Due Quadri promette \nalmeno quattro Quadri. 
+Dialogue: 0,0:5:32.05,0:5:34.94,Default,,0000,0000,0000,,Due Fiori su uno Quadri \npromette almeno quattro 
+Dialogue: 0,0:5:34.94,0:5:35.35,Default,,0000,0000,0000,,Fiori. 
+Dialogue: 0,0:5:35.35,0:5:38.18,Default,,0000,0000,0000,,Due Cuori su uno Picche \npromette almeno cinque 
+Dialogue: 0,0:5:38.18,0:5:38.60,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:5:38.60,0:5:41.36,Default,,0000,0000,0000,,Queste risposte sono \npotenti perche aprono un 
+Dialogue: 0,0:5:41.36,0:5:42.96,Default,,0000,0000,0000,,dialogo che non si ferma . 
+Dialogue: 0,0:5:42.96,0:5:45.84,Default,,0000,0000,0000,,Poi abbiamo la risposta \ndi due Senza Atout, che 
+Dialogue: 0,0:5:45.84,0:5:48.44,Default,,0000,0000,0000,,mostra esattamente \nundici punti e una mano 
+Dialogue: 0,0:5:48.44,0:5:50.44,Default,,0000,0000,0000,,bilanciata senza fit nei \nnobili. 
+Dialogue: 0,0:5:50.44,0:5:53.15,Default,,0000,0000,0000,,E una risposta invitante \ndice al compagno `` 
+Dialogue: 0,0:5:53.15,0:5:56.04,Default,,0000,0000,0000,,Siamo vicini alla manche \nse hai qualcosa in piu 
+Dialogue: 0,0:5:56.04,0:5:57.33,Default,,0000,0000,0000,,del minimo andiamoci. 
+Dialogue: 0,0:5:57.33,0:5:59.81,Default,,0000,0000,0000,,'' E infine tre Senza \nAtout, la risposta 
+Dialogue: 0,0:5:59.81,0:6:2.40,Default,,0000,0000,0000,,conclusiva con \ndodici-quindici punti, mano 
+Dialogue: 0,0:6:2.40,0:6:4.40,Default,,0000,0000,0000,,bilanciata e certezza di \nmanche. 
+Dialogue: 0,0:6:4.40,0:6:7.23,Default,,0000,0000,0000,,Facciamo un riepilogo \nveloce per fissare tutto 
+Dialogue: 0,0:6:7.23,0:6:7.35,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:6:7.35,0:6:10.18,Default,,0000,0000,0000,,Con zero a quattro punti \nPasso, niente da fare 
+Dialogue: 0,0:6:10.18,0:6:10.30,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:6:10.30,0:6:12.83,Default,,0000,0000,0000,,Con cinque a nove punti \ne fit: appoggio a 
+Dialogue: 0,0:6:12.83,0:6:14.89,Default,,0000,0000,0000,,livello due, risposta \nlimitativa. 
+Dialogue: 0,0:6:14.89,0:6:17.37,Default,,0000,0000,0000,,Con dieci-undici punti e \nfit: appoggio a 
+Dialogue: 0,0:6:17.37,0:6:18.78,Default,,0000,0000,0000,,livello tre, invitante. 
+Dialogue: 0,0:6:18.78,0:6:21.37,Default,,0000,0000,0000,,Con cinque o piu punti e \nun colore nuovo a 
+Dialogue: 0,0:6:21.37,0:6:24.03,Default,,0000,0000,0000,,livello uno: risposta \nforzante, il compagno 
+Dialogue: 0,0:6:24.03,0:6:24.85,Default,,0000,0000,0000,,deve parlare. 
+Dialogue: 0,0:6:24.85,0:6:27.74,Default,,0000,0000,0000,,Con dodici o piu punti e \ncolore nuovo a livello 
+Dialogue: 0,0:6:27.74,0:6:30.45,Default,,0000,0000,0000,,due: forzante a manche, \nsi va fino in fondo. 
+Dialogue: 0,0:6:30.45,0:6:33.28,Default,,0000,0000,0000,,Con cinque a dieci senza \nalternative migliori: 
+Dialogue: 0,0:6:33.28,0:6:34.28,Default,,0000,0000,0000,,uno Senza Atout. 
+Dialogue: 0,0:6:34.28,0:6:36.64,Default,,0000,0000,0000,,Con undici punti \nbilanciata: due Senza 
+Dialogue: 0,0:6:36.64,0:6:37.28,Default,,0000,0000,0000,,invitante. 
+Dialogue: 0,0:6:37.28,0:6:39.82,Default,,0000,0000,0000,,Con dodici-quindici \nbilanciata: tre Senza 
+Dialogue: 0,0:6:39.82,0:6:40.53,Default,,0000,0000,0000,,conclusivo. 
+Dialogue: 0,0:6:40.53,0:6:43.00,Default,,0000,0000,0000,,La mano sbilanciata con \nfit si rivaluta: 
+Dialogue: 0,0:6:43.00,0:6:45.71,Default,,0000,0000,0000,,aggiungi la differenza \ntra le tue atout e il 
+Dialogue: 0,0:6:45.71,0:6:46.77,Default,,0000,0000,0000,,colore piu corto. 
+Dialogue: 0,0:6:46.77,0:6:49.66,Default,,0000,0000,0000,,Questa legge di \nrivalutazione e importantissima 
+Dialogue: 0,0:6:49.66,0:6:52.55,Default,,0000,0000,0000,,perche trasforma mani \napparentemente modeste in 
+Dialogue: 0,0:6:52.55,0:6:53.25,Default,,0000,0000,0000,,mani forti. 
+Dialogue: 0,0:6:53.25,0:6:55.85,Default,,0000,0000,0000,,Fantastico, hai imparato \na rispondere alle 
+Dialogue: 0,0:6:55.85,0:6:56.97,Default,,0000,0000,0000,,aperture a colore! 
+Dialogue: 0,0:6:56.97,0:6:59.32,Default,,0000,0000,0000,,Nella prossima lezione \nvedremo cosa fa 
+Dialogue: 0,0:6:59.32,0:7:1.80,Default,,0000,0000,0000,,l'apertore quando sente \nla tua risposta. 
+Dialogue: 0,0:7:1.80,0:7:4.15,Default,,0000,0000,0000,,Continua cosi, stai \ndiventando un vero 
+Dialogue: 0,0:7:4.15,0:7:5.39,Default,,0000,0000,0000,,giocatore di bridge! 

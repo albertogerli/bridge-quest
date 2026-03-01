@@ -1,0 +1,168 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.40,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.40,0:0:3.11,Default,,0000,0000,0000,,Nella lezione precedente \nhai imparato a 
+Dialogue: 0,0:0:3.11,0:0:5.82,Default,,0000,0000,0000,,valutare la tua mano con \ni Punti Onori. 
+Dialogue: 0,0:0:5.82,0:0:8.40,Default,,0000,0000,0000,,Oggi scopriamo una delle \naperture piu 
+Dialogue: 0,0:0:8.40,0:0:10.99,Default,,0000,0000,0000,,importanti del bridge: 1 \nSenza Atout. 
+Dialogue: 0,0:0:10.99,0:0:13.37,Default,,0000,0000,0000,,E anche come il compagno \nrisponde! 
+Dialogue: 0,0:0:13.37,0:0:13.96,Default,,0000,0000,0000,,Ricordi? 
+Dialogue: 0,0:0:13.96,0:0:17.14,Default,,0000,0000,0000,,Se hai una mano \nbilanciata con esattamente 15, 
+Dialogue: 0,0:0:17.14,0:0:19.52,Default,,0000,0000,0000,,16 o 17 punti, apri 1 \nSenza Atout. 
+Dialogue: 0,0:0:19.52,0:0:22.17,Default,,0000,0000,0000,,Bilanciata significa che \nle carte sono 
+Dialogue: 0,0:0:22.17,0:0:25.28,Default,,0000,0000,0000,,distribuite abbastanza \nuniformemente: quattro 
+Dialogue: 0,0:0:25.28,0:0:28.46,Default,,0000,0000,0000,,tre tre tre, quattro \nquattro tre due, o cinque 
+Dialogue: 0,0:0:28.46,0:0:29.32,Default,,0000,0000,0000,,tre tre due. 
+Dialogue: 0,0:0:29.32,0:0:32.16,Default,,0000,0000,0000,,Nessun colore troppo \nlungo, nessun vuoto, 
+Dialogue: 0,0:0:32.16,0:0:33.22,Default,,0000,0000,0000,,nessun singolo. 
+Dialogue: 0,0:0:33.22,0:0:36.13,Default,,0000,0000,0000,,In pratica, una mano \nequilibrata con tanti 
+Dialogue: 0,0:0:36.13,0:0:36.60,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:0:36.60,0:0:39.84,Default,,0000,0000,0000,,La cosa bella \ndell'apertura 1 Senza Atout e che 
+Dialogue: 0,0:0:39.84,0:0:43.02,Default,,0000,0000,0000,,dice al compagno \nesattamente quanto sei forte. 
+Dialogue: 0,0:0:43.02,0:0:45.99,Default,,0000,0000,0000,,Non 12-20 come con un \ncolore, dove potrebbe 
+Dialogue: 0,0:0:45.99,0:0:47.52,Default,,0000,0000,0000,,essere qualsiasi cosa. 
+Dialogue: 0,0:0:47.52,0:0:50.10,Default,,0000,0000,0000,,No, qui e preciso: 15, \n16 o 17 punti. 
+Dialogue: 0,0:0:50.10,0:0:51.62,Default,,0000,0000,0000,,E una mano bilanciata. 
+Dialogue: 0,0:0:51.62,0:0:53.41,Default,,0000,0000,0000,,Il tuo compagno sa tutto ! 
+Dialogue: 0,0:0:53.41,0:0:56.52,Default,,0000,0000,0000,,E per questo il compagno \ndiventa il Capitano. 
+Dialogue: 0,0:0:56.52,0:0:58.90,Default,,0000,0000,0000,,Sai cos' e il Capitano \nnel bridge? 
+Dialogue: 0,0:0:58.90,0:1:1.22,Default,,0000,0000,0000,,E quello che prende le \ndecisioni. 
+Dialogue: 0,0:1:1.22,0:1:4.19,Default,,0000,0000,0000,,Quando tu apri 1 Senza \nAtout, hai gia detto 
+Dialogue: 0,0:1:4.19,0:1:4.66,Default,,0000,0000,0000,,tutto. 
+Dialogue: 0,0:1:4.66,0:1:7.77,Default,,0000,0000,0000,,Il tuo compagno conosce \ni tuoi punti e la tua 
+Dialogue: 0,0:1:7.77,0:1:10.68,Default,,0000,0000,0000,,distribuzione, e puo \ncalcolare: se io ho X 
+Dialogue: 0,0:1:10.68,0:1:13.86,Default,,0000,0000,0000,,punti e il mio compagno \nne ha 15-17, in coppia 
+Dialogue: 0,0:1:13.86,0:1:16.24,Default,,0000,0000,0000,,abbiamo ... E decide il \ncontratto. 
+Dialogue: 0,0:1:16.24,0:1:19.41,Default,,0000,0000,0000,,Adesso vediamo cosa puo \nrispondere il compagno 
+Dialogue: 0,0:1:19.41,0:1:19.55,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:19.55,0:1:22.52,Default,,0000,0000,0000,,Ci sono le decisioni \nfacili, quelle dove il 
+Dialogue: 0,0:1:22.52,0:1:24.51,Default,,0000,0000,0000,,compagno sa gia dove \nandare. 
+Dialogue: 0,0:1:24.51,0:1:27.62,Default,,0000,0000,0000,,Se hai 5 o piu Picche e \nalmeno 10 punti, dici 
+Dialogue: 0,0:1:27.62,0:1:29.14,Default,,0000,0000,0000,,direttamente 4 Picche. 
+Dialogue: 0,0:1:29.14,0:1:32.32,Default,,0000,0000,0000,,Hai il fit sicuro perche \nil compagno ha almeno 
+Dialogue: 0,0:1:32.32,0:1:35.30,Default,,0000,0000,0000,,2 Picche, e la somma dei \npunti e almeno 25: 
+Dialogue: 0,0:1:35.30,0:1:35.83,Default,,0000,0000,0000,,manche! 
+Dialogue: 0,0:1:35.83,0:1:38.87,Default,,0000,0000,0000,,Lo stesso vale con 5 o \npiu Cuori e almeno 10 
+Dialogue: 0,0:1:38.87,0:1:40.26,Default,,0000,0000,0000,,punti: dici 4 Cuori. 
+Dialogue: 0,0:1:40.26,0:1:43.24,Default,,0000,0000,0000,,Se hai almeno 10 punti \nma non hai un colore 
+Dialogue: 0,0:1:43.24,0:1:46.22,Default,,0000,0000,0000,,nobile di 5 o piu carte \ndici 3 Senza Atout. 
+Dialogue: 0,0:1:46.22,0:1:49.33,Default,,0000,0000,0000,,La coppia ha almeno 25 \npunti: manche a Senza. 
+Dialogue: 0,0:1:49.33,0:1:52.57,Default,,0000,0000,0000,,Se hai pochi punti, tipo \n0-7, e un colore lungo 
+Dialogue: 0,0:1:52.57,0:1:55.55,Default,,0000,0000,0000,,di 5 o piu carte in \nCuori, Quadri o Picche, 
+Dialogue: 0,0:1:55.55,0:1:57.07,Default,,0000,0000,0000,,dici 2 di quel colore. 
+Dialogue: 0,0:1:57.07,0:1:59.72,Default,,0000,0000,0000,,Per esempio 2 Cuori con \ncinque Cuori e 
+Dialogue: 0,0:1:59.72,0:2:0.91,Default,,0000,0000,0000,,pochissimi punti. 
+Dialogue: 0,0:2:0.91,0:2:4.02,Default,,0000,0000,0000,,E una proposta di \nparziale, e l'apertore deve 
+Dialogue: 0,0:2:4.02,0:2:4.61,Default,,0000,0000,0000,,passare. 
+Dialogue: 0,0:2:4.61,0:2:5.81,Default,,0000,0000,0000,,Non puo rialzare! 
+Dialogue: 0,0:2:5.81,0:2:8.98,Default,,0000,0000,0000,,E come dire: giochiamo \nqui tranquilli e basta. 
+Dialogue: 0,0:2:8.98,0:2:12.16,Default,,0000,0000,0000,,E se non hai niente di \nspeciale e pochi punti? 
+Dialogue: 0,0:2:12.16,0:2:13.55,Default,,0000,0000,0000,,Semplicemente passi. 
+Dialogue: 0,0:2:13.55,0:2:15.80,Default,,0000,0000,0000,,1 Senza Atout sara il \ncontratto. 
+Dialogue: 0,0:2:15.80,0:2:19.04,Default,,0000,0000,0000,,Non e il massimo, ma con \npochi punti non si puo 
+Dialogue: 0,0:2:19.04,0:2:17.78,Default,,0000,0000,0000,,pretendere di piu. 
+Dialogue: 0,0:2:17.78,0:2:20.28,Default,,0000,0000,0000,,Poi ci sono le risposte \ninvitanti. 
+Dialogue: 0,0:2:20.28,0:2:23.20,Default,,0000,0000,0000,,Invitante vuol dire: non \nsono sicuro che 
+Dialogue: 0,0:2:23.20,0:2:25.84,Default,,0000,0000,0000,,possiamo fare la manche \nma forse si. 
+Dialogue: 0,0:2:25.84,0:2:26.88,Default,,0000,0000,0000,,Dipende da te! 
+Dialogue: 0,0:2:26.88,0:2:30.22,Default,,0000,0000,0000,,Se hai 5 o piu Cuori e \ncirca 8-9 punti, dici 3 
+Dialogue: 0,0:2:30.22,0:2:30.70,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:2:30.70,0:2:33.83,Default,,0000,0000,0000,,Stai dicendo al compagno \ngiochiamo a Cuori. 
+Dialogue: 0,0:2:33.83,0:2:37.02,Default,,0000,0000,0000,,Se hai il massimo, cioe \n17 punti, rialza a 4 
+Dialogue: 0,0:2:37.02,0:2:38.48,Default,,0000,0000,0000,,Cuori per la manche. 
+Dialogue: 0,0:2:38.48,0:2:40.91,Default,,0000,0000,0000,,Se hai il minimo, cioe \n15, passa. 
+Dialogue: 0,0:2:40.91,0:2:43.90,Default,,0000,0000,0000,,Lo stesso con 3 Picche: \ninvito con cinque 
+Dialogue: 0,0:2:43.90,0:2:44.46,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:2:44.46,0:2:47.79,Default,,0000,0000,0000,,Se hai 8-9 punti ma \nnessun colore lungo nobile 
+Dialogue: 0,0:2:47.79,0:2:49.18,Default,,0000,0000,0000,,dici 2 Senza Atout. 
+Dialogue: 0,0:2:49.18,0:2:52.31,Default,,0000,0000,0000,,E un invito: se hai 17 \nvai a 3NT, se hai 15 
+Dialogue: 0,0:2:52.31,0:2:52.79,Default,,0000,0000,0000,,passa. 
+Dialogue: 0,0:2:52.79,0:2:55.50,Default,,0000,0000,0000,,E come chiedere: ce la \nfacciamo o no? 
+Dialogue: 0,0:2:55.50,0:2:58.42,Default,,0000,0000,0000,,E adesso arriva la parte \npiu geniale: la 
+Dialogue: 0,0:2:58.42,0:2:59.88,Default,,0000,0000,0000,,convenzione Stayman! 
+Dialogue: 0,0:2:59.88,0:3:3.15,Default,,0000,0000,0000,,La Stayman e un trucco \nfantastico che risolve 
+Dialogue: 0,0:3:3.15,0:3:4.74,Default,,0000,0000,0000,,un problema specifico. 
+Dialogue: 0,0:3:4.74,0:3:7.45,Default,,0000,0000,0000,,Immagina di avere 4 \nCuori e 10 punti. 
+Dialogue: 0,0:3:7.45,0:3:10.79,Default,,0000,0000,0000,,Sai che la coppia ha i \npunti per la manche, ma 
+Dialogue: 0,0:3:10.79,0:3:13.15,Default,,0000,0000,0000,,non sai se avete il fit \na Cuori. 
+Dialogue: 0,0:3:13.15,0:3:16.41,Default,,0000,0000,0000,,Il compagno potrebbe \navere 4 Cuori anche lui, 
+Dialogue: 0,0:3:16.41,0:3:17.18,Default,,0000,0000,0000,,oppure no. 
+Dialogue: 0,0:3:17.18,0:3:18.71,Default,,0000,0000,0000,,Come fai a scoprirlo? 
+Dialogue: 0,0:3:18.71,0:3:19.68,Default,,0000,0000,0000,,Dici 2 Fiori! 
+Dialogue: 0,0:3:19.68,0:3:22.53,Default,,0000,0000,0000,,Ma non perche hai le \nFiori, attenzione. 
+Dialogue: 0,0:3:22.53,0:3:25.72,Default,,0000,0000,0000,,Il 2 Fiori sulla \napertura di 1NT non c'entra 
+Dialogue: 0,0:3:25.72,0:3:27.18,Default,,0000,0000,0000,,niente con le Fiori. 
+Dialogue: 0,0:3:27.18,0:3:30.38,Default,,0000,0000,0000,,E una domanda \nconvenzionale: compagno, hai 4 
+Dialogue: 0,0:3:30.38,0:3:32.32,Default,,0000,0000,0000,,carte in un colore \nnobile? 
+Dialogue: 0,0:3:32.32,0:3:34.27,Default,,0000,0000,0000,,Il compagno risponde \ncosi. 
+Dialogue: 0,0:3:34.27,0:3:37.67,Default,,0000,0000,0000,,Se non ha ne 4 Cuori ne \n4 Picche, dice 2 Quadri 
+Dialogue: 0,0:3:37.67,0:3:37.81,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:37.81,0:3:39.90,Default,,0000,0000,0000,,Se ha 4 Cuori, dice 2 \nCuori. 
+Dialogue: 0,0:3:39.90,0:3:42.12,Default,,0000,0000,0000,,Se ha 4 Picche, dice 2 \nPicche. 
+Dialogue: 0,0:3:42.12,0:3:45.45,Default,,0000,0000,0000,,E se ha sia 4 Cuori che \n4 Picche, dice 2 Senza 
+Dialogue: 0,0:3:45.45,0:3:45.94,Default,,0000,0000,0000,,Atout. 
+Dialogue: 0,0:3:45.94,0:3:49.27,Default,,0000,0000,0000,,Per usare la Stayman ti \nservono almeno 8 punti 
+Dialogue: 0,0:3:49.27,0:3:51.29,Default,,0000,0000,0000,,e 4 o 5 carte in un \nnobile. 
+Dialogue: 0,0:3:51.29,0:3:54.55,Default,,0000,0000,0000,,Se hai 6 o piu carte nel \nnobile non ti serve: 
+Dialogue: 0,0:3:54.55,0:3:57.82,Default,,0000,0000,0000,,il fit c' e gia di \nsicuro, perche il compagno 
+Dialogue: 0,0:3:57.82,0:3:58.03,Default,,0000,0000,0000,,ha almeno 2 carte \novunque. 
+Dialogue: 0,0:3:58.03,0:4:1.24,Default,,0000,0000,0000,,Facciamo un esempio \npratico con la Stayman. 
+Dialogue: 0,0:4:1.24,0:4:4.45,Default,,0000,0000,0000,,Tu hai: Picche Re Donna \nOtto Quattro, Cuori 
+Dialogue: 0,0:4:4.45,0:4:7.88,Default,,0000,0000,0000,,Sette Sei, Quadri Asso \nCinque Tre, Fiori Dieci 
+Dialogue: 0,0:4:7.88,0:4:8.59,Default,,0000,0000,0000,,Otto Tre. 
+Dialogue: 0,0:4:8.59,0:4:10.73,Default,,0000,0000,0000,,Sono 9 punti e hai 4 \nPicche. 
+Dialogue: 0,0:4:10.73,0:4:12.30,Default,,0000,0000,0000,,Il compagno apre 1NT. 
+Dialogue: 0,0:4:12.30,0:4:13.94,Default,,0000,0000,0000,,Dici 2 Fiori, Stayman! 
+Dialogue: 0,0:4:13.94,0:4:17.15,Default,,0000,0000,0000,,Il compagno risponde 2 \nPicche: ha 4 Picche. 
+Dialogue: 0,0:4:17.15,0:4:18.86,Default,,0000,0000,0000,,Perfetto, avete il fit! 
+Dialogue: 0,0:4:18.86,0:4:22.36,Default,,0000,0000,0000,,Con 9 punti tuoi piu \n15-17 suoi, avete 24-26 in 
+Dialogue: 0,0:4:22.36,0:4:22.93,Default,,0000,0000,0000,,coppia. 
+Dialogue: 0,0:4:22.93,0:4:25.00,Default,,0000,0000,0000,,Sei nella zona \ndell'invito. 
+Dialogue: 0,0:4:25.00,0:4:28.28,Default,,0000,0000,0000,,Dici 3 Picche: se hai 17 \nvai a 4, se hai 15, 
+Dialogue: 0,0:4:28.28,0:4:28.92,Default,,0000,0000,0000,,fermati. 
+Dialogue: 0,0:4:28.92,0:4:32.34,Default,,0000,0000,0000,,Se invece il compagno \navesse risposto 2 Quadri 
+Dialogue: 0,0:4:32.34,0:4:33.42,Default,,0000,0000,0000,,niente Picche. 
+Dialogue: 0,0:4:33.42,0:4:34.41,Default,,0000,0000,0000,,Non c' e fit. 
+Dialogue: 0,0:4:34.41,0:4:37.62,Default,,0000,0000,0000,,Con i tuoi 9 punti \ndiresti 2NT, invitando a 
+Dialogue: 0,0:4:37.62,0:4:38.12,Default,,0000,0000,0000,,Senza. 
+Dialogue: 0,0:4:38.12,0:4:41.55,Default,,0000,0000,0000,,Parliamo anche \ndell'apertura di 2 Senza Atout. 
+Dialogue: 0,0:4:41.55,0:4:44.76,Default,,0000,0000,0000,,E simile a 1NT ma piu \nforte: serve una mano 
+Dialogue: 0,0:4:44.76,0:4:47.26,Default,,0000,0000,0000,,bilanciata con 21, 22 o \n23 punti. 
+Dialogue: 0,0:4:47.26,0:4:50.68,Default,,0000,0000,0000,,Nessun singolo, nessun \nvuoto, nessun colore di 
+Dialogue: 0,0:4:50.68,0:4:51.89,Default,,0000,0000,0000,,sei o piu carte. 
+Dialogue: 0,0:4:51.89,0:4:55.32,Default,,0000,0000,0000,,Le risposte funzionano \nin modo simile ma tutto 
+Dialogue: 0,0:4:55.32,0:4:56.96,Default,,0000,0000,0000,,scalato di un livello. 
+Dialogue: 0,0:4:56.96,0:5:0.31,Default,,0000,0000,0000,,Su 2NT, praticamente \nqualsiasi risposta porta 
+Dialogue: 0,0:5:0.31,0:5:3.59,Default,,0000,0000,0000,,alla manche perche la \ncoppia ha tanti punti. 
+Dialogue: 0,0:5:3.59,0:5:6.59,Default,,0000,0000,0000,,L'unico modo per \nfermarsi prima e Passo. 
+Dialogue: 0,0:5:6.59,0:5:9.66,Default,,0000,0000,0000,,Se hai 5 o piu carte in \nun nobile e forza 
+Dialogue: 0,0:5:9.66,0:5:12.94,Default,,0000,0000,0000,,almeno da manche, dici 3 \nQuadri, 3 Cuori o 3 
+Dialogue: 0,0:5:12.94,0:5:13.51,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:5:13.51,0:5:16.93,Default,,0000,0000,0000,,Il compagno con fit \nrialza a manche, senza fit 
+Dialogue: 0,0:5:16.93,0:5:17.65,Default,,0000,0000,0000,,va a 3NT. 
+Dialogue: 0,0:5:17.65,0:5:19.14,Default,,0000,0000,0000,,E la Stayman su 2NT? 
+Dialogue: 0,0:5:19.14,0:5:21.36,Default,,0000,0000,0000,,Funziona uguale ma e 3 \nFiori! 
+Dialogue: 0,0:5:21.36,0:5:24.64,Default,,0000,0000,0000,,Le risposte \ndell'apertore sono: 3 Quadri per 
+Dialogue: 0,0:5:24.64,0:5:27.78,Default,,0000,0000,0000,,nessuna quarta nobile, 3 \nCuori per quattro 
+Dialogue: 0,0:5:27.78,0:5:31.13,Default,,0000,0000,0000,,Cuori, 3 Picche per \nquattro Picche, e 3 Senza 
+Dialogue: 0,0:5:31.13,0:5:33.27,Default,,0000,0000,0000,,Atout per entrambi i \nnobili. 
+Dialogue: 0,0:5:33.27,0:5:36.12,Default,,0000,0000,0000,,Ricapitoliamo: 1NT e \n15-17 bilanciata. 
+Dialogue: 0,0:5:36.12,0:5:38.34,Default,,0000,0000,0000,,Il rispondente e il \nCapitano. 
+Dialogue: 0,0:5:38.34,0:5:41.40,Default,,0000,0000,0000,,Con punti per la manche \ne fit va diretto. 
+Dialogue: 0,0:5:41.40,0:5:42.97,Default,,0000,0000,0000,,Con 8-9 punti invita. 
+Dialogue: 0,0:5:42.97,0:5:45.68,Default,,0000,0000,0000,,Con 0-7 passa o corregge \na parziale. 
+Dialogue: 0,0:5:45.68,0:5:48.89,Default,,0000,0000,0000,,La Stayman 2 Fiori cerca \nil fit nei nobili. 
+Dialogue: 0,0:5:48.89,0:5:52.03,Default,,0000,0000,0000,,E 2NT e la stessa cosa \nma con 21-23 punti. 
+Dialogue: 0,0:5:52.03,0:5:54.53,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida? 
+Dialogue: 0,0:5:54.53,0:5:57.67,Default,,0000,0000,0000,,Nella prossima lezione \nvedremo le risposte 
+Dialogue: 0,0:5:57.67,0:5:59.52,Default,,0000,0000,0000,,sulle aperture a colore ! 

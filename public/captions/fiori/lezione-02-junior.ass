@@ -1,0 +1,160 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:3.20,Default,,0000,0000,0000,,Oggi cambiamo \nprospettiva e vediamo il Bridge 
+Dialogue: 0,0:0:3.20,0:0:5.31,Default,,0000,0000,0000,,dal punto di vista dei \ndifensori. 
+Dialogue: 0,0:0:5.31,0:0:8.21,Default,,0000,0000,0000,,Sai, nel Bridge non sei \nsempre tu a giocare il 
+Dialogue: 0,0:0:8.21,0:0:8.88,Default,,0000,0000,0000,,contratto. 
+Dialogue: 0,0:0:8.88,0:0:11.41,Default,,0000,0000,0000,,Spesso sei dalla parte \nopposta, e il tuo 
+Dialogue: 0,0:0:11.41,0:0:14.37,Default,,0000,0000,0000,,compito e impedire al \nGiocante di fare le prese 
+Dialogue: 0,0:0:14.37,0:0:15.40,Default,,0000,0000,0000,,che ha promesso. 
+Dialogue: 0,0:0:15.40,0:0:18.12,Default,,0000,0000,0000,,E come essere il \nportiere in una partita di 
+Dialogue: 0,0:0:18.12,0:0:20.47,Default,,0000,0000,0000,,calcio: devi cercare di \nparare tutto! 
+Dialogue: 0,0:0:20.47,0:0:23.13,Default,,0000,0000,0000,,Prima cosa: qual e lo \nscopo dei difensori? 
+Dialogue: 0,0:0:23.13,0:0:25.12,Default,,0000,0000,0000,,Semplice: battere il \ncontratto! 
+Dialogue: 0,0:0:25.12,0:0:28.02,Default,,0000,0000,0000,,Se il Giocante ha \ndichiarato 3 Senza Atout, si 
+Dialogue: 0,0:0:28.02,0:0:29.77,Default,,0000,0000,0000,,e impegnato a fare 9 \nprese. 
+Dialogue: 0,0:0:29.77,0:0:32.55,Default,,0000,0000,0000,,Le prese totali sono 13 \nquindi voi difensori 
+Dialogue: 0,0:0:32.55,0:0:34.78,Default,,0000,0000,0000,,dovete farne almeno 5 \nper batterlo. 
+Dialogue: 0,0:0:34.78,0:0:35.81,Default,,0000,0000,0000,,Come si calcola? 
+Dialogue: 0,0:0:35.81,0:0:38.77,Default,,0000,0000,0000,,Si prende il numero 14 e \nsi toglie il numero di 
+Dialogue: 0,0:0:38.77,0:0:41.30,Default,,0000,0000,0000,,prese del contratto: 14 \nmeno 9 uguale 5. 
+Dialogue: 0,0:0:41.30,0:0:41.79,Default,,0000,0000,0000,,Facile! 
+Dialogue: 0,0:0:41.79,0:0:44.63,Default,,0000,0000,0000,,Ora, il momento piu \nimportante della difesa e 
+Dialogue: 0,0:0:44.63,0:0:45.89,Default,,0000,0000,0000,,il primo: l'attacco! 
+Dialogue: 0,0:0:45.89,0:0:48.49,Default,,0000,0000,0000,,La prima carta che \ngiochi quando sei alla 
+Dialogue: 0,0:0:48.49,0:0:51.27,Default,,0000,0000,0000,,sinistra del Giocante \npuo fare la differenza 
+Dialogue: 0,0:0:51.27,0:0:53.20,Default,,0000,0000,0000,,tra battere il contratto \no no. 
+Dialogue: 0,0:0:53.20,0:0:55.98,Default,,0000,0000,0000,,Contro un contratto a \nSenza Atout, la regola 
+Dialogue: 0,0:0:55.98,0:0:58.82,Default,,0000,0000,0000,,principale e: scegli il \ntuo colore piu lungo. 
+Dialogue: 0,0:0:58.82,0:0:59.30,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:0:59.30,0:1:2.14,Default,,0000,0000,0000,,Perche se hai tante \ncarte in un seme, ci sono 
+Dialogue: 0,0:1:2.14,0:1:5.04,Default,,0000,0000,0000,,buone probabilita che \ngli avversari ne abbiano 
+Dialogue: 0,0:1:5.04,0:1:7.51,Default,,0000,0000,0000,,poche, e alla fine le \ntue carte piccole 
+Dialogue: 0,0:1:7.51,0:1:8.90,Default,,0000,0000,0000,,diventeranno vincenti! 
+Dialogue: 0,0:1:8.90,0:1:11.50,Default,,0000,0000,0000,,Se hai due colori della \nstessa lunghezza, 
+Dialogue: 0,0:1:11.50,0:1:14.34,Default,,0000,0000,0000,,scegli quello piu \nonorato, cioe quello che ha 
+Dialogue: 0,0:1:14.34,0:1:15.30,Default,,0000,0000,0000,,carte piu alte. 
+Dialogue: 0,0:1:15.30,0:1:18.26,Default,,0000,0000,0000,,Adesso impariamo le due \nregole fondamentali per 
+Dialogue: 0,0:1:18.26,0:1:18.92,Default,,0000,0000,0000,,l'attacco. 
+Dialogue: 0,0:1:18.92,0:1:21.88,Default,,0000,0000,0000,,La prima regola dice: \nattacco dall'alto, quando 
+Dialogue: 0,0:1:21.88,0:1:22.97,Default,,0000,0000,0000,,hai una sequenza. 
+Dialogue: 0,0:1:22.97,0:1:25.87,Default,,0000,0000,0000,,Una sequenza e quando \nhai almeno due onori uno 
+Dialogue: 0,0:1:25.87,0:1:28.47,Default,,0000,0000,0000,,accanto all'altro, piu \nuna terza carta di 
+Dialogue: 0,0:1:28.47,0:1:29.07,Default,,0000,0000,0000,,rinforzo. 
+Dialogue: 0,0:1:29.07,0:1:31.67,Default,,0000,0000,0000,,Ad esempio, \nRe-Donna-Fante e una sequenza 
+Dialogue: 0,0:1:31.67,0:1:32.27,Default,,0000,0000,0000,,perfetta. 
+Dialogue: 0,0:1:32.27,0:1:35.11,Default,,0000,0000,0000,,In questo caso attacchi \ncon la carta piu alta 
+Dialogue: 0,0:1:35.11,0:1:36.50,Default,,0000,0000,0000,,della sequenza: il Re. 
+Dialogue: 0,0:1:36.50,0:1:38.97,Default,,0000,0000,0000,,Giocare il Re nega \nl'Asso, cioe dice al 
+Dialogue: 0,0:1:38.97,0:1:41.63,Default,,0000,0000,0000,,compagno che non hai \nl'Asso, e promette la 
+Dialogue: 0,0:1:41.63,0:1:42.05,Default,,0000,0000,0000,,Donna. 
+Dialogue: 0,0:1:42.05,0:1:44.83,Default,,0000,0000,0000,,Alcuni esempi: con \nRe-Donna-Fante-Dieci-Tre, 
+Dialogue: 0,0:1:44.83,0:1:46.04,Default,,0000,0000,0000,,attacchi con il Re. 
+Dialogue: 0,0:1:46.04,0:1:48.94,Default,,0000,0000,0000,,Con Donna-Fante-Nove-Tre \nattacchi con la Donna 
+Dialogue: 0,0:1:48.94,0:1:51.53,Default,,0000,0000,0000,,che dice al compagno che \nnon hai il Re ma 
+Dialogue: 0,0:1:51.53,0:1:52.68,Default,,0000,0000,0000,,prometti il Fante. 
+Dialogue: 0,0:1:52.68,0:1:55.52,Default,,0000,0000,0000,,Con \nFante-Dieci-Nove-Quattro, attacchi con il 
+Dialogue: 0,0:1:55.52,0:1:56.42,Default,,0000,0000,0000,,Fante, che nega la Donna \ne promette il Dieci. 
+Dialogue: 0,0:1:56.42,0:1:59.01,Default,,0000,0000,0000,,La seconda regola dice: \nattacco dal basso, 
+Dialogue: 0,0:1:59.01,0:2:0.77,Default,,0000,0000,0000,,quando non hai una \nsequenza. 
+Dialogue: 0,0:2:0.77,0:2:3.42,Default,,0000,0000,0000,,Se non hai due onori \ncontigui con rinforzo, 
+Dialogue: 0,0:2:3.42,0:2:6.24,Default,,0000,0000,0000,,attacchi con la cartina \npiu piccola del colore 
+Dialogue: 0,0:2:6.24,0:2:6.36,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:6.36,0:2:9.12,Default,,0000,0000,0000,,Ad esempio, con \nRe-Dieci-Cinque-Quattro- Tre, 
+Dialogue: 0,0:2:9.12,0:2:10.36,Default,,0000,0000,0000,,attacchi con il Tre. 
+Dialogue: 0,0:2:10.36,0:2:13.12,Default,,0000,0000,0000,,Con \nAsso-Fante-Nove-Cinque-D ue, attacchi con 
+Dialogue: 0,0:2:13.12,0:2:13.59,Default,,0000,0000,0000,,il Due. 
+Dialogue: 0,0:2:13.59,0:2:16.47,Default,,0000,0000,0000,,L'idea e che attaccando \ndal basso non sprechi i 
+Dialogue: 0,0:2:16.47,0:2:18.59,Default,,0000,0000,0000,,tuoi onori e li conservi \nper dopo. 
+Dialogue: 0,0:2:18.59,0:2:20.47,Default,,0000,0000,0000,,C' e un caso \ninteressante: con 
+Dialogue: 0,0:2:20.47,0:2:23.06,Default,,0000,0000,0000,,Re-Donna-Quattro-Tre-Due \nti manca il terzo 
+Dialogue: 0,0:2:23.06,0:2:24.18,Default,,0000,0000,0000,,onore di rinforzo. 
+Dialogue: 0,0:2:24.18,0:2:26.71,Default,,0000,0000,0000,,Conviene attaccare dal \nbasso, con il Due, 
+Dialogue: 0,0:2:26.71,0:2:28.00,Default,,0000,0000,0000,,invece che con il Re. 
+Dialogue: 0,0:2:28.00,0:2:30.59,Default,,0000,0000,0000,,Mentre con \nRe-Donna-Dieci-Quattro-T re, il 
+Dialogue: 0,0:2:30.59,0:2:33.47,Default,,0000,0000,0000,,Dieci fa da rinforzo e \npuoi attaccare dall'alto 
+Dialogue: 0,0:2:33.47,0:2:34.12,Default,,0000,0000,0000,,con il Re. 
+Dialogue: 0,0:2:34.12,0:2:36.71,Default,,0000,0000,0000,,Adesso parliamo del \nterzo di mano, cioe il 
+Dialogue: 0,0:2:36.71,0:2:38.53,Default,,0000,0000,0000,,compagno di chi ha \nattaccato. 
+Dialogue: 0,0:2:38.53,0:2:41.41,Default,,0000,0000,0000,,Il terzo di mano ha un \ncompito preciso: cercare 
+Dialogue: 0,0:2:41.41,0:2:42.65,Default,,0000,0000,0000,,di vincere la presa! 
+Dialogue: 0,0:2:42.65,0:2:45.35,Default,,0000,0000,0000,,Se il suo compagno ha \nattaccato e la carta e 
+Dialogue: 0,0:2:45.35,0:2:48.06,Default,,0000,0000,0000,,arrivata fino a lui, \ndeve provare a metterci 
+Dialogue: 0,0:2:48.06,0:2:48.47,Default,,0000,0000,0000,,sopra. 
+Dialogue: 0,0:2:48.47,0:2:51.00,Default,,0000,0000,0000,,A volte deve sacrificare \ni suoi onori per 
+Dialogue: 0,0:2:51.00,0:2:53.64,Default,,0000,0000,0000,,aiutare il compagno ad \naffrancare i propri. 
+Dialogue: 0,0:2:53.64,0:2:56.41,Default,,0000,0000,0000,,Ma ecco una regola \nimportantissima: quando il 
+Dialogue: 0,0:2:56.41,0:2:59.11,Default,,0000,0000,0000,,terzo di mano ha carte \nequivalenti, gioca la 
+Dialogue: 0,0:2:59.11,0:3:0.70,Default,,0000,0000,0000,,piu bassa della sequenza ! 
+Dialogue: 0,0:3:0.70,0:3:3.52,Default,,0000,0000,0000,,Questo e il contrario di \nchi attacca per primo 
+Dialogue: 0,0:3:3.52,0:3:3.64,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:3.64,0:3:6.52,Default,,0000,0000,0000,,Se chi muove per primo \ncon Re-Donna-Fante gioca 
+Dialogue: 0,0:3:6.52,0:3:9.35,Default,,0000,0000,0000,,il Re, il terzo di mano \ncon la stessa sequenza 
+Dialogue: 0,0:3:9.35,0:3:10.64,Default,,0000,0000,0000,,giocherebbe il Fante. 
+Dialogue: 0,0:3:10.64,0:3:11.11,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:3:11.11,0:3:13.23,Default,,0000,0000,0000,,Per dare informazioni al \ncompagno! 
+Dialogue: 0,0:3:13.23,0:3:16.05,Default,,0000,0000,0000,,Se il compagno vede il \nFante, sa che hai anche 
+Dialogue: 0,0:3:16.05,0:3:17.46,Default,,0000,0000,0000,,la Donna e il Re sopra. 
+Dialogue: 0,0:3:17.46,0:3:20.23,Default,,0000,0000,0000,,Facciamo altri esempi: \ncon Asso-Re-Donna come 
+Dialogue: 0,0:3:20.23,0:3:21.64,Default,,0000,0000,0000,,terzo, giochi la Donna. 
+Dialogue: 0,0:3:21.64,0:3:24.52,Default,,0000,0000,0000,,Con Fante-Dieci-Nove \ncome terzo, giochi il Nove 
+Dialogue: 0,0:3:24.52,0:3:24.64,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:24.64,0:3:27.40,Default,,0000,0000,0000,,La regola fondamentale e \nla carta giocata dal 
+Dialogue: 0,0:3:27.40,0:3:30.28,Default,,0000,0000,0000,,terzo, quando sta \ncercando di prendere, esclude 
+Dialogue: 0,0:3:30.28,0:3:32.64,Default,,0000,0000,0000,,il possesso della carta \nimmediatamente 
+Dialogue: 0,0:3:32.64,0:3:33.28,Default,,0000,0000,0000,,inferiore. 
+Dialogue: 0,0:3:33.28,0:3:36.17,Default,,0000,0000,0000,,Se giochi il Fante, stai \ndicendo che non hai il 
+Dialogue: 0,0:3:36.17,0:3:34.46,Default,,0000,0000,0000,,Dieci. 
+Dialogue: 0,0:3:34.46,0:3:37.24,Default,,0000,0000,0000,,Ora un'altra regola \nsuper utile per quando sei 
+Dialogue: 0,0:3:37.24,0:3:40.09,Default,,0000,0000,0000,,in seconda posizione, \ncioe quando un avversario 
+Dialogue: 0,0:3:40.09,0:3:42.93,Default,,0000,0000,0000,,ha giocato e tocca a te \nprima che giochi il tuo 
+Dialogue: 0,0:3:42.93,0:3:43.51,Default,,0000,0000,0000,,compagno. 
+Dialogue: 0,0:3:43.51,0:3:45.94,Default,,0000,0000,0000,,La regola e semplice: se \nl'avversario ha 
+Dialogue: 0,0:3:45.94,0:3:48.73,Default,,0000,0000,0000,,giocato una cartina \npiccola, tu gioca piccola. 
+Dialogue: 0,0:3:48.73,0:3:51.45,Default,,0000,0000,0000,,Se l'avversario ha \ngiocato un onore, tu copri 
+Dialogue: 0,0:3:51.45,0:3:53.95,Default,,0000,0000,0000,,con il tuo onore se ne \nhai uno superiore! 
+Dialogue: 0,0:3:53.95,0:3:55.22,Default,,0000,0000,0000,,Perche funziona cosi? 
+Dialogue: 0,0:3:55.22,0:3:57.89,Default,,0000,0000,0000,,Se l'avversario gioca \npiccola, probabilmente 
+Dialogue: 0,0:3:57.89,0:4:0.38,Default,,0000,0000,0000,,sta facendo un'impasse, \ncioe spera che tu 
+Dialogue: 0,0:4:0.38,0:4:2.47,Default,,0000,0000,0000,,giochi i tuoi onori per \nsprecarli. 
+Dialogue: 0,0:4:2.47,0:4:3.28,Default,,0000,0000,0000,,Non cascarci! 
+Dialogue: 0,0:4:3.28,0:4:5.83,Default,,0000,0000,0000,,Gioca piccola e lascia \nche il tuo compagno 
+Dialogue: 0,0:4:5.83,0:4:7.11,Default,,0000,0000,0000,,faccia il suo lavoro. 
+Dialogue: 0,0:4:7.11,0:4:9.66,Default,,0000,0000,0000,,Ma se l'avversario gioca \nun onore, tipo la 
+Dialogue: 0,0:4:9.66,0:4:12.10,Default,,0000,0000,0000,,Donna, e tu hai il Re, \nallora si: copri! 
+Dialogue: 0,0:4:12.10,0:4:14.71,Default,,0000,0000,0000,,Perche costringi il \nGiocante a usare il suo 
+Dialogue: 0,0:4:14.71,0:4:17.49,Default,,0000,0000,0000,,Asso per prendere, e il \ntuo Re ha fatto il suo 
+Dialogue: 0,0:4:17.49,0:4:20.10,Default,,0000,0000,0000,,lavoro portando via due \nonori con uno solo. 
+Dialogue: 0,0:4:20.10,0:4:22.36,Default,,0000,0000,0000,,Ricapitoliamo i punti \nchiave di oggi. 
+Dialogue: 0,0:4:22.36,0:4:24.97,Default,,0000,0000,0000,,I difensori devono fare \nil complemento a 14 
+Dialogue: 0,0:4:24.97,0:4:26.60,Default,,0000,0000,0000,,delle prese del \ncontratto. 
+Dialogue: 0,0:4:26.60,0:4:29.26,Default,,0000,0000,0000,,L'attacco a Senza Atout \nsi fa nel colore piu 
+Dialogue: 0,0:4:29.26,0:4:29.67,Default,,0000,0000,0000,,lungo. 
+Dialogue: 0,0:4:29.67,0:4:32.34,Default,,0000,0000,0000,,Con una sequenza si \nattacca dall'alto, senza 
+Dialogue: 0,0:4:32.34,0:4:35.01,Default,,0000,0000,0000,,sequenza si attacca dal \nbasso con la cartina 
+Dialogue: 0,0:4:35.01,0:4:35.76,Default,,0000,0000,0000,,piu piccola. 
+Dialogue: 0,0:4:35.76,0:4:38.43,Default,,0000,0000,0000,,Il terzo di mano cerca \ndi vincere e gioca la 
+Dialogue: 0,0:4:38.43,0:4:40.51,Default,,0000,0000,0000,,piu bassa delle carte \nequivalenti. 
+Dialogue: 0,0:4:40.51,0:4:43.36,Default,,0000,0000,0000,,In seconda posizione: \npiccola su piccola, onore 
+Dialogue: 0,0:4:43.36,0:4:43.94,Default,,0000,0000,0000,,su onore. 
+Dialogue: 0,0:4:43.94,0:4:46.78,Default,,0000,0000,0000,,Queste regole sembrano \ntante, ma vedrai che con 
+Dialogue: 0,0:4:46.78,0:4:48.98,Default,,0000,0000,0000,,la pratica diventeranno \nautomatiche. 
+Dialogue: 0,0:4:48.98,0:4:51.77,Default,,0000,0000,0000,,E la cosa bella e che \nogni presa difensiva che 
+Dialogue: 0,0:4:51.77,0:4:54.38,Default,,0000,0000,0000,,riesci a fare ha un \nsapore speciale, perche 
+Dialogue: 0,0:4:54.38,0:4:56.98,Default,,0000,0000,0000,,devi ragionare senza \nvedere tutte le carte! 
+Dialogue: 0,0:4:56.98,0:4:59.01,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida? 
+Dialogue: 0,0:4:59.01,0:5:1.28,Default,,0000,0000,0000,,Nella prossima lezione \nscopriremo gli 
+Dialogue: 0,0:5:1.28,0:5:3.77,Default,,0000,0000,0000,,affrancamenti di lunga e \ndi posizione: le 
+Dialogue: 0,0:5:3.77,0:5:5.05,Default,,0000,0000,0000,,impasse e le expasse. 
+Dialogue: 0,0:5:5.05,0:5:7.48,Default,,0000,0000,0000,,Sono le manovre piu \neleganti del Bridge! 

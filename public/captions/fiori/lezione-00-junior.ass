@@ -1,0 +1,193 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.39,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.39,0:0:3.49,Default,,0000,0000,0000,,Oggi facciamo una cosa \nfichissima: impariamo a 
+Dialogue: 0,0:0:3.49,0:0:4.66,Default,,0000,0000,0000,,giocare a Bridge! 
+Dialogue: 0,0:0:4.66,0:0:7.63,Default,,0000,0000,0000,,Sai, il Bridge e uno dei \ngiochi di carte piu 
+Dialogue: 0,0:0:7.63,0:0:8.67,Default,,0000,0000,0000,,belli al mondo. 
+Dialogue: 0,0:0:8.67,0:0:11.84,Default,,0000,0000,0000,,Lo giocano milioni di \npersone, dai ragazzi come 
+Dialogue: 0,0:0:11.84,0:0:14.23,Default,,0000,0000,0000,,te fino ai campioni \ninternazionali. 
+Dialogue: 0,0:0:14.23,0:0:16.69,Default,,0000,0000,0000,,E tipo gli scacchi, ma \ncon le carte. 
+Dialogue: 0,0:0:16.69,0:0:17.72,Default,,0000,0000,0000,,Fantastico, no? 
+Dialogue: 0,0:0:17.72,0:0:19.67,Default,,0000,0000,0000,,Allora, partiamo dalle \nbasi. 
+Dialogue: 0,0:0:19.67,0:0:22.71,Default,,0000,0000,0000,,Il Bridge si gioca con \nun mazzo normale da 52 
+Dialogue: 0,0:0:22.71,0:0:24.13,Default,,0000,0000,0000,,carte, senza i jolly. 
+Dialogue: 0,0:0:24.13,0:0:27.23,Default,,0000,0000,0000,,Le carte sono divise in \n4 semi: Picche, Cuori, 
+Dialogue: 0,0:0:27.23,0:0:28.27,Default,,0000,0000,0000,,Quadri e Fiori. 
+Dialogue: 0,0:0:28.27,0:0:31.31,Default,,0000,0000,0000,,Ogni seme ha 13 carte, \ndall'Asso che e il piu 
+Dialogue: 0,0:0:31.31,0:0:33.96,Default,,0000,0000,0000,,forte, fino al Due che e \nil piu debole. 
+Dialogue: 0,0:0:33.96,0:0:37.13,Default,,0000,0000,0000,,Ricordati: Asso, Re, \nDonna, Fante, Dieci, e poi 
+Dialogue: 0,0:0:37.13,0:0:38.23,Default,,0000,0000,0000,,dal Nove al Due. 
+Dialogue: 0,0:0:38.23,0:0:41.34,Default,,0000,0000,0000,,Le prime cinque, cioe \nAsso, Re, Donna, Fante e 
+Dialogue: 0,0:0:41.34,0:0:43.08,Default,,0000,0000,0000,,Dieci, si chiamano Onori . 
+Dialogue: 0,0:0:43.08,0:0:45.99,Default,,0000,0000,0000,,Le altre, dal Nove al \nDue, sono le cartine. 
+Dialogue: 0,0:0:45.99,0:0:49.03,Default,,0000,0000,0000,,Si gioca in quattro, \ndivisi in due coppie che 
+Dialogue: 0,0:0:49.03,0:0:52.01,Default,,0000,0000,0000,,si siedono una di fronte \nall'altra: Nord con 
+Dialogue: 0,0:0:52.01,0:0:53.76,Default,,0000,0000,0000,,Sud contro Est con Ovest . 
+Dialogue: 0,0:0:53.76,0:0:56.21,Default,,0000,0000,0000,,Ognuno riceve 13 carte: \nla tua mano. 
+Dialogue: 0,0:0:56.21,0:0:59.06,Default,,0000,0000,0000,,E tutte le 52 carte \ndistribuite insieme si 
+Dialogue: 0,0:0:59.06,0:1:0.48,Default,,0000,0000,0000,,chiamano la smazzata. 
+Dialogue: 0,0:1:0.48,0:1:2.29,Default,,0000,0000,0000,,Ma come funziona il \ngioco? 
+Dialogue: 0,0:1:2.29,0:1:5.14,Default,,0000,0000,0000,,E semplice: si fa a \nturno, e ogni turno si 
+Dialogue: 0,0:1:5.14,0:1:6.05,Default,,0000,0000,0000,,chiama presa. 
+Dialogue: 0,0:1:6.05,0:1:8.96,Default,,0000,0000,0000,,Il giocatore che inizia \nmette una carta sul 
+Dialogue: 0,0:1:8.96,0:1:9.48,Default,,0000,0000,0000,,tavolo. 
+Dialogue: 0,0:1:9.48,0:1:12.45,Default,,0000,0000,0000,,Poi, in senso orario, \ntutti gli altri devono 
+Dialogue: 0,0:1:12.45,0:1:14.91,Default,,0000,0000,0000,,mettere una carta dello \nstesso seme. 
+Dialogue: 0,0:1:14.91,0:1:17.82,Default,,0000,0000,0000,,Questo e importantissimo \ndevi rispondere al 
+Dialogue: 0,0:1:17.82,0:1:18.34,Default,,0000,0000,0000,,colore! 
+Dialogue: 0,0:1:18.34,0:1:21.38,Default,,0000,0000,0000,,Se il primo gioca una \ncarta di Cuori, tu devi 
+Dialogue: 0,0:1:21.38,0:1:22.61,Default,,0000,0000,0000,,giocare una Cuori. 
+Dialogue: 0,0:1:22.61,0:1:25.71,Default,,0000,0000,0000,,Chi mette la carta piu \nalta di quel seme vince 
+Dialogue: 0,0:1:25.71,0:1:26.36,Default,,0000,0000,0000,,la presa. 
+Dialogue: 0,0:1:26.36,0:1:27.20,Default,,0000,0000,0000,,E chi vince? 
+Dialogue: 0,0:1:27.20,0:1:29.92,Default,,0000,0000,0000,,Beh, tocca a lui \niniziare la presa dopo. 
+Dialogue: 0,0:1:29.92,0:1:32.37,Default,,0000,0000,0000,,E se non hai carte del \nseme giocato? 
+Dialogue: 0,0:1:32.37,0:1:35.54,Default,,0000,0000,0000,,Allora puoi scartare una \ncarta di un altro seme 
+Dialogue: 0,0:1:35.54,0:1:38.58,Default,,0000,0000,0000,,ma attenzione: se scarti \nnon puoi mai vincere 
+Dialogue: 0,0:1:38.58,0:1:39.49,Default,,0000,0000,0000,,quella presa. 
+Dialogue: 0,0:1:39.49,0:1:42.66,Default,,0000,0000,0000,,Non importa quanto sia \nalta la carta che scarti 
+Dialogue: 0,0:1:42.66,0:1:42.79,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:42.79,0:1:45.77,Default,,0000,0000,0000,,Questo e un punto \nfondamentale da ricordare. 
+Dialogue: 0,0:1:45.77,0:1:48.87,Default,,0000,0000,0000,,E poi c' e il concetto \ndi Atout, che e tipo un 
+Dialogue: 0,0:1:48.87,0:1:49.71,Default,,0000,0000,0000,,superpotere! 
+Dialogue: 0,0:1:49.71,0:1:52.88,Default,,0000,0000,0000,,Un seme puo essere \nscelto come Atout, e in quel 
+Dialogue: 0,0:1:52.88,0:1:55.99,Default,,0000,0000,0000,,caso le carte di quel \nseme possono tagliare le 
+Dialogue: 0,0:1:55.99,0:1:57.54,Default,,0000,0000,0000,,carte degli altri semi. 
+Dialogue: 0,0:1:57.54,0:2:0.38,Default,,0000,0000,0000,,Funziona cosi: se non \nhai il seme giocato, 
+Dialogue: 0,0:2:0.38,0:2:3.36,Default,,0000,0000,0000,,invece di scartare puoi \ngiocare una carta di 
+Dialogue: 0,0:2:3.36,0:2:4.91,Default,,0000,0000,0000,,Atout e vinci la presa! 
+Dialogue: 0,0:2:4.91,0:2:6.08,Default,,0000,0000,0000,,Si chiama taglio. 
+Dialogue: 0,0:2:6.08,0:2:9.18,Default,,0000,0000,0000,,Pero attenzione: non sei \nobbligato a tagliare, 
+Dialogue: 0,0:2:9.18,0:2:10.54,Default,,0000,0000,0000,,puoi anche scartare. 
+Dialogue: 0,0:2:10.54,0:2:13.71,Default,,0000,0000,0000,,E se due giocatori \ntagliano, vince chi ha usato 
+Dialogue: 0,0:2:13.71,0:2:15.59,Default,,0000,0000,0000,,la carta di Atout piu \nalta. 
+Dialogue: 0,0:2:15.59,0:2:18.56,Default,,0000,0000,0000,,Esiste anche un modo di \ngiocare Senza Atout, 
+Dialogue: 0,0:2:18.56,0:2:21.47,Default,,0000,0000,0000,,cioe senza nessun \nsuperpotere: in quel caso 
+Dialogue: 0,0:2:21.47,0:2:24.38,Default,,0000,0000,0000,,l'unica opzione per chi \nnon ha il seme e lo 
+Dialogue: 0,0:2:24.38,0:2:27.04,Default,,0000,0000,0000,,scarto, e non puoi mai \nvincere la presa 
+Dialogue: 0,0:2:27.04,0:2:27.75,Default,,0000,0000,0000,,scartando. 
+Dialogue: 0,0:2:27.75,0:2:25.87,Default,,0000,0000,0000,,Semplice! 
+Dialogue: 0,0:2:25.87,0:2:28.76,Default,,0000,0000,0000,,Ora parliamo di una cosa \nsuper importante: la 
+Dialogue: 0,0:2:28.76,0:2:29.98,Default,,0000,0000,0000,,gerarchia dei semi. 
+Dialogue: 0,0:2:29.98,0:2:31.89,Default,,0000,0000,0000,,Non tutti i semi sono \nuguali! 
+Dialogue: 0,0:2:31.89,0:2:34.71,Default,,0000,0000,0000,,C' e un ordine preciso, \ndal piu forte al piu 
+Dialogue: 0,0:2:34.71,0:2:37.54,Default,,0000,0000,0000,,debole: Senza Atout e il \npiu forte di tutti, 
+Dialogue: 0,0:2:37.54,0:2:40.30,Default,,0000,0000,0000,,poi Picche, poi Cuori, \npoi Quadri, e infine 
+Dialogue: 0,0:2:40.30,0:2:40.73,Default,,0000,0000,0000,,Fiori. 
+Dialogue: 0,0:2:40.73,0:2:43.49,Default,,0000,0000,0000,,Ricordalo come una scala \nSA, Picche, Cuori, 
+Dialogue: 0,0:2:43.49,0:2:44.41,Default,,0000,0000,0000,,Quadri, Fiori. 
+Dialogue: 0,0:2:44.41,0:2:47.42,Default,,0000,0000,0000,,Adesso ti spiego come si \narriva a decidere cosa 
+Dialogue: 0,0:2:47.42,0:2:47.98,Default,,0000,0000,0000,,giocare. 
+Dialogue: 0,0:2:47.98,0:2:50.98,Default,,0000,0000,0000,,Prima di giocare le \ncarte, c' e una fase che si 
+Dialogue: 0,0:2:50.98,0:2:53.69,Default,,0000,0000,0000,,chiama dichiarazione, o \nanche licitazione. 
+Dialogue: 0,0:2:53.69,0:2:56.69,Default,,0000,0000,0000,,E come un'asta: i \ngiocatori dicono quante prese 
+Dialogue: 0,0:2:56.69,0:2:57.74,Default,,0000,0000,0000,,pensano di fare. 
+Dialogue: 0,0:2:57.74,0:3:0.75,Default,,0000,0000,0000,,Quando dici un numero, \ntipo `` 2 Cuori '', vuol 
+Dialogue: 0,0:3:0.75,0:3:3.76,Default,,0000,0000,0000,,dire che la tua coppia \nsi impegna a fare almeno 
+Dialogue: 0,0:3:3.76,0:3:5.66,Default,,0000,0000,0000,,8 prese con Cuori come \nAtout. 
+Dialogue: 0,0:3:5.66,0:3:6.76,Default,,0000,0000,0000,,Perche 8 e non 2? 
+Dialogue: 0,0:3:6.76,0:3:9.53,Default,,0000,0000,0000,,Perche le prime 6 prese \nsono considerate la 
+Dialogue: 0,0:3:9.53,0:3:12.54,Default,,0000,0000,0000,,base, e il numero che \ndici si aggiunge a quelle 
+Dialogue: 0,0:3:12.54,0:3:12.72,Default,,0000,0000,0000,,6. 
+Dialogue: 0,0:3:12.72,0:3:14.01,Default,,0000,0000,0000,,Quindi 2 piu 6 fa 8! 
+Dialogue: 0,0:3:14.01,0:3:16.90,Default,,0000,0000,0000,,Ogni nuova offerta deve \nessere piu alta della 
+Dialogue: 0,0:3:16.90,0:3:17.63,Default,,0000,0000,0000,,precedente. 
+Dialogue: 0,0:3:17.63,0:3:20.52,Default,,0000,0000,0000,,Per fare un'offerta piu \nalta puoi o aumentare 
+Dialogue: 0,0:3:20.52,0:3:23.47,Default,,0000,0000,0000,,il numero, oppure dire \nlo stesso numero ma con 
+Dialogue: 0,0:3:23.47,0:3:25.68,Default,,0000,0000,0000,,un seme piu forte nella \ngerarchia. 
+Dialogue: 0,0:3:25.68,0:3:28.69,Default,,0000,0000,0000,,Ad esempio, se qualcuno \ndice `` 2 Quadri '', tu 
+Dialogue: 0,0:3:28.69,0:3:31.39,Default,,0000,0000,0000,,puoi dire `` 2 Cuori '' \nperche Cuori e piu 
+Dialogue: 0,0:3:31.39,0:3:34.27,Default,,0000,0000,0000,,forte di Quadri, oppure \npuoi dire `` 3 Quadri 
+Dialogue: 0,0:3:34.27,0:3:36.18,Default,,0000,0000,0000,,'' che e un livello piu \nalto. 
+Dialogue: 0,0:3:36.18,0:3:39.06,Default,,0000,0000,0000,,Quando un giocatore fa \nun'offerta e gli altri 
+Dialogue: 0,0:3:39.06,0:3:41.83,Default,,0000,0000,0000,,tre dicono tutti `` \nPasso '', quell'offerta 
+Dialogue: 0,0:3:41.83,0:3:43.18,Default,,0000,0000,0000,,diventa il Contratto. 
+Dialogue: 0,0:3:43.18,0:3:46.06,Default,,0000,0000,0000,,Quello che ha proposto \nper primo quel tipo di 
+Dialogue: 0,0:3:46.06,0:3:47.78,Default,,0000,0000,0000,,gioco diventa il \nGiocante. 
+Dialogue: 0,0:3:47.78,0:3:50.55,Default,,0000,0000,0000,,Il suo compagno diventa \nil Morto e mette le 
+Dialogue: 0,0:3:50.55,0:3:52.26,Default,,0000,0000,0000,,carte scoperte sul \ntavolo. 
+Dialogue: 0,0:3:52.26,0:3:55.15,Default,,0000,0000,0000,,L'avversario alla \nsinistra del Giocante fa la 
+Dialogue: 0,0:3:55.15,0:3:57.42,Default,,0000,0000,0000,,prima mossa, che si \nchiama Attacco. 
+Dialogue: 0,0:3:57.42,0:3:58.40,Default,,0000,0000,0000,,E il punteggio? 
+Dialogue: 0,0:3:58.40,0:4:1.35,Default,,0000,0000,0000,,Ogni presa dichiarata \nvale dei punti: 30 punti 
+Dialogue: 0,0:4:1.35,0:4:4.36,Default,,0000,0000,0000,,se giochi con Cuori o \nPicche come Atout, oppure 
+Dialogue: 0,0:4:4.36,0:4:4.91,Default,,0000,0000,0000,,a Senza. 
+Dialogue: 0,0:4:4.91,0:4:7.68,Default,,0000,0000,0000,,La prima presa a Senza \nvale addirittura 40. 
+Dialogue: 0,0:4:7.68,0:4:10.69,Default,,0000,0000,0000,,Se invece giochi con \nFiori o Quadri, ogni presa 
+Dialogue: 0,0:4:10.69,0:4:11.91,Default,,0000,0000,0000,,vale solo 20 punti. 
+Dialogue: 0,0:4:11.91,0:4:14.80,Default,,0000,0000,0000,,I contratti piu ambiti \nsono quelli di Manche, 
+Dialogue: 0,0:4:14.80,0:4:17.75,Default,,0000,0000,0000,,dove la somma dei punti \ndelle prese dichiarate 
+Dialogue: 0,0:4:17.75,0:4:19.04,Default,,0000,0000,0000,,arriva almeno a 100. 
+Dialogue: 0,0:4:19.04,0:4:21.98,Default,,0000,0000,0000,,Per arrivarci ti servono \n3 Senza Atout, oppure 
+Dialogue: 0,0:4:21.98,0:4:24.93,Default,,0000,0000,0000,,4 Cuori o 4 Picche, \noppure 5 Fiori o 5 Quadri. 
+Dialogue: 0,0:4:24.93,0:4:27.69,Default,,0000,0000,0000,,Fare la Manche ti da un \nbonus enorme: 300 o 
+Dialogue: 0,0:4:27.69,0:4:29.11,Default,,0000,0000,0000,,addirittura 500 punti! 
+Dialogue: 0,0:4:29.11,0:4:31.93,Default,,0000,0000,0000,,E poi ci sono gli Slam: \nse dichiari e fai 12 
+Dialogue: 0,0:4:31.93,0:4:34.82,Default,,0000,0000,0000,,prese e il Piccolo Slam \ncon un bonus extra di 
+Dialogue: 0,0:4:34.82,0:4:35.49,Default,,0000,0000,0000,,500 o 750. 
+Dialogue: 0,0:4:35.49,0:4:38.26,Default,,0000,0000,0000,,Se ne fai 13 su 13 e il \nGrande Slam, con un 
+Dialogue: 0,0:4:38.26,0:4:39.61,Default,,0000,0000,0000,,bonus di 1000 o 1500! 
+Dialogue: 0,0:4:39.61,0:4:40.59,Default,,0000,0000,0000,,Pazzesco, vero? 
+Dialogue: 0,0:4:40.59,0:4:43.17,Default,,0000,0000,0000,,Ma se non riesci a fare \nle prese che hai 
+Dialogue: 0,0:4:43.17,0:4:45.69,Default,,0000,0000,0000,,promesso, perdi 50 punti \nper ogni presa 
+Dialogue: 0,0:4:45.69,0:4:46.30,Default,,0000,0000,0000,,mancante. 
+Dialogue: 0,0:4:46.30,0:4:49.19,Default,,0000,0000,0000,,Quindi bisogna stare \nattenti a non promettere 
+Dialogue: 0,0:4:49.19,0:4:46.05,Default,,0000,0000,0000,,troppo! 
+Dialogue: 0,0:4:46.05,0:4:48.50,Default,,0000,0000,0000,,Ricapitoliamo tutto, che \ne importante. 
+Dialogue: 0,0:4:48.50,0:4:51.32,Default,,0000,0000,0000,,I contratti migliori \nsono quelli a Cuori o a 
+Dialogue: 0,0:4:51.32,0:4:54.32,Default,,0000,0000,0000,,Picche, che si chiamano \nsemi nobili: valgono 30 
+Dialogue: 0,0:4:54.32,0:4:57.26,Default,,0000,0000,0000,,punti a presa e bastano \n4 prese dichiarate per 
+Dialogue: 0,0:4:57.26,0:4:57.94,Default,,0000,0000,0000,,la Manche. 
+Dialogue: 0,0:4:57.94,0:5:0.82,Default,,0000,0000,0000,,Al secondo posto c' e il \nSenza Atout: vale 30 
+Dialogue: 0,0:5:0.82,0:5:3.63,Default,,0000,0000,0000,,punti a presa, 40 la \nprima, e bastano solo 3 
+Dialogue: 0,0:5:3.63,0:5:4.37,Default,,0000,0000,0000,,dichiarate. 
+Dialogue: 0,0:5:4.37,0:5:7.25,Default,,0000,0000,0000,,Al terzo posto ci sono \nFiori e Quadri, i semi 
+Dialogue: 0,0:5:7.25,0:5:10.25,Default,,0000,0000,0000,,minori: valgono solo 20 \npunti a presa e servono 
+Dialogue: 0,0:5:10.25,0:5:12.64,Default,,0000,0000,0000,,ben 5 prese dichiarate \nper la Manche. 
+Dialogue: 0,0:5:12.64,0:5:15.64,Default,,0000,0000,0000,,Per questo si cerca \nsempre prima di giocare nei 
+Dialogue: 0,0:5:15.64,0:5:16.44,Default,,0000,0000,0000,,semi nobili! 
+Dialogue: 0,0:5:16.44,0:5:19.38,Default,,0000,0000,0000,,Ecco un trucchetto per \nricordare: cerca sempre 
+Dialogue: 0,0:5:19.38,0:5:22.32,Default,,0000,0000,0000,,di giocare con Cuori o \nPicche come Atout se la 
+Dialogue: 0,0:5:22.32,0:5:25.26,Default,,0000,0000,0000,,tua coppia ha tante \ncarte in quel seme, almeno 
+Dialogue: 0,0:5:25.26,0:5:26.43,Default,,0000,0000,0000,,8 tra le due mani. 
+Dialogue: 0,0:5:26.43,0:5:29.18,Default,,0000,0000,0000,,Se non avete 8 carte in \nnessun seme nobile, 
+Dialogue: 0,0:5:29.18,0:5:30.65,Default,,0000,0000,0000,,provate il Senza Atout. 
+Dialogue: 0,0:5:30.65,0:5:33.53,Default,,0000,0000,0000,,E solo come ultima \nspiaggia giocate a Fiori o 
+Dialogue: 0,0:5:33.53,0:5:34.02,Default,,0000,0000,0000,,Quadri. 
+Dialogue: 0,0:5:34.02,0:5:35.80,Default,,0000,0000,0000,,Facciamo un esempio \nveloce. 
+Dialogue: 0,0:5:35.80,0:5:38.43,Default,,0000,0000,0000,,Immagina che tu e il tuo \ncompagno abbiate 
+Dialogue: 0,0:5:38.43,0:5:40.09,Default,,0000,0000,0000,,insieme 9 carte di Cuori . 
+Dialogue: 0,0:5:40.09,0:5:40.82,Default,,0000,0000,0000,,Fantastico! 
+Dialogue: 0,0:5:40.82,0:5:43.70,Default,,0000,0000,0000,,Cuori sara il vostro \nAtout, e dovrete cercare 
+Dialogue: 0,0:5:43.70,0:5:46.34,Default,,0000,0000,0000,,di dichiarare 4 Cuori \nper fare la Manche. 
+Dialogue: 0,0:5:46.34,0:5:49.28,Default,,0000,0000,0000,,Se invece avete tante \ncarte ma solo in Quadri, 
+Dialogue: 0,0:5:49.28,0:5:52.22,Default,,0000,0000,0000,,dovrete dichiarare 5 \nQuadri per la Manche, che 
+Dialogue: 0,0:5:52.22,0:5:53.63,Default,,0000,0000,0000,,e molto piu difficile. 
+Dialogue: 0,0:5:53.63,0:5:55.90,Default,,0000,0000,0000,,Allora, cosa abbiamo \nimparato oggi? 
+Dialogue: 0,0:5:55.90,0:5:58.78,Default,,0000,0000,0000,,Primo: il Bridge si \ngioca in 4, a coppie, con 
+Dialogue: 0,0:5:58.78,0:5:59.39,Default,,0000,0000,0000,,52 carte. 
+Dialogue: 0,0:5:59.39,0:6:1.96,Default,,0000,0000,0000,,Secondo: devi rispondere \nal colore, cioe 
+Dialogue: 0,0:6:1.96,0:6:3.43,Default,,0000,0000,0000,,giocare lo stesso seme. 
+Dialogue: 0,0:6:3.43,0:6:6.43,Default,,0000,0000,0000,,Terzo: l'Atout e il \nsuperpotere che ti permette 
+Dialogue: 0,0:6:6.43,0:6:7.23,Default,,0000,0000,0000,,di tagliare. 
+Dialogue: 0,0:6:7.23,0:6:10.17,Default,,0000,0000,0000,,Quarto: i semi hanno una \ngerarchia, con Picche 
+Dialogue: 0,0:6:10.17,0:6:11.21,Default,,0000,0000,0000,,e Cuori in cima. 
+Dialogue: 0,0:6:11.21,0:6:13.60,Default,,0000,0000,0000,,Quinto: il contratto si \ndecide con la 
+Dialogue: 0,0:6:13.60,0:6:16.42,Default,,0000,0000,0000,,dichiarazione, e chi \nvince l'asta diventa il 
+Dialogue: 0,0:6:16.42,0:6:17.03,Default,,0000,0000,0000,,Giocante. 
+Dialogue: 0,0:6:17.03,0:6:19.18,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida? 
+Dialogue: 0,0:6:19.18,0:6:22.00,Default,,0000,0000,0000,,Nella prossima lezione \nparleremo delle carte 
+Dialogue: 0,0:6:22.00,0:6:24.94,Default,,0000,0000,0000,,vincenti e di come \ncreare vincenti partendo da 
+Dialogue: 0,0:6:24.94,0:6:27.08,Default,,0000,0000,0000,,carte che all'inizio non \nlo sono. 
+Dialogue: 0,0:6:27.08,0:6:28.86,Default,,0000,0000,0000,,Sara ancora piu \navvincente! 

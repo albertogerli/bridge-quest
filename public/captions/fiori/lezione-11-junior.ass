@@ -1,0 +1,157 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.35,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.35,0:0:3.16,Default,,0000,0000,0000,,Finora abbiamo sempre \nparlato di dichiarazione 
+Dialogue: 0,0:0:3.16,0:0:5.79,Default,,0000,0000,0000,,tra compagni: uno apre, \nl'altro risponde, e 
+Dialogue: 0,0:0:5.79,0:0:8.13,Default,,0000,0000,0000,,insieme cercano il \ncontratto migliore. 
+Dialogue: 0,0:0:8.13,0:0:10.88,Default,,0000,0000,0000,,Ma il bridge non e un \ndialogo tra due persone 
+Dialogue: 0,0:0:10.88,0:0:12.99,Default,,0000,0000,0000,,sole, ci sono anche gli \navversari! 
+Dialogue: 0,0:0:12.99,0:0:15.86,Default,,0000,0000,0000,,E gli avversari possono \ndecidere di intervenire 
+Dialogue: 0,0:0:15.86,0:0:17.09,Default,,0000,0000,0000,,nella dichiarazione. 
+Dialogue: 0,0:0:17.09,0:0:19.72,Default,,0000,0000,0000,,Oggi scopriamo cosa \nsignifica e come si fa. 
+Dialogue: 0,0:0:19.72,0:0:22.47,Default,,0000,0000,0000,,L'intervento e la prima \ndichiarazione diversa 
+Dialogue: 0,0:0:22.47,0:0:25.10,Default,,0000,0000,0000,,da Passo fatta da un \ngiocatore della coppia 
+Dialogue: 0,0:0:25.10,0:0:27.50,Default,,0000,0000,0000,,avversaria dopo che \nqualcuno ha aperto. 
+Dialogue: 0,0:0:27.50,0:0:30.02,Default,,0000,0000,0000,,E una scelta libera: \nnessuno ti obbliga a 
+Dialogue: 0,0:0:30.02,0:0:30.78,Default,,0000,0000,0000,,intervenire. 
+Dialogue: 0,0:0:30.78,0:0:33.53,Default,,0000,0000,0000,,Pero se hai le carte \ngiuste, farlo puo essere 
+Dialogue: 0,0:0:33.53,0:0:34.64,Default,,0000,0000,0000,,molto vantaggioso. 
+Dialogue: 0,0:0:34.64,0:0:37.51,Default,,0000,0000,0000,,Puoi rubare il contratto \nagli avversari, oppure 
+Dialogue: 0,0:0:37.51,0:0:40.32,Default,,0000,0000,0000,,almeno dare informazioni \nutili al tuo compagno 
+Dialogue: 0,0:0:40.32,0:0:41.20,Default,,0000,0000,0000,,per la difesa. 
+Dialogue: 0,0:0:41.20,0:0:43.24,Default,,0000,0000,0000,,Ci sono tre modi per \nintervenire. 
+Dialogue: 0,0:0:43.24,0:0:45.70,Default,,0000,0000,0000,,Il primo e il piu \nparticolare: il Contro 
+Dialogue: 0,0:0:45.70,0:0:46.46,Default,,0000,0000,0000,,informativo. 
+Dialogue: 0,0:0:46.46,0:0:49.21,Default,,0000,0000,0000,,Il secondo e \nl'intervento di uno Senza Atout. 
+Dialogue: 0,0:0:49.21,0:0:51.26,Default,,0000,0000,0000,,Il terzo e l'intervento \na colore. 
+Dialogue: 0,0:0:51.26,0:0:52.61,Default,,0000,0000,0000,,Vediamoli uno per uno. 
+Dialogue: 0,0:0:52.61,0:0:55.12,Default,,0000,0000,0000,,Il Contro informativo e \nuna dichiarazione 
+Dialogue: 0,0:0:55.12,0:0:55.71,Default,,0000,0000,0000,,speciale. 
+Dialogue: 0,0:0:55.71,0:0:58.46,Default,,0000,0000,0000,,Quando dici `` Contro '' \nnon stai cercando di 
+Dialogue: 0,0:0:58.46,0:0:59.74,Default,,0000,0000,0000,,punire gli avversari. 
+Dialogue: 0,0:0:59.74,0:1:2.50,Default,,0000,0000,0000,,Stai dicendo al tuo \ncompagno: `` Ho una buona 
+Dialogue: 0,0:1:2.50,0:1:5.01,Default,,0000,0000,0000,,mano e mi piacerebbe \ngiocare in un colore 
+Dialogue: 0,0:1:5.01,0:1:7.41,Default,,0000,0000,0000,,diverso da quello che \nhanno detto loro. 
+Dialogue: 0,0:1:7.41,0:1:8.41,Default,,0000,0000,0000,,Scegli tu quale! 
+Dialogue: 0,0:1:8.41,0:1:11.21,Default,,0000,0000,0000,,'' E come alzare la mano \ne dire `` Io ci sono, 
+Dialogue: 0,0:1:11.21,0:1:12.62,Default,,0000,0000,0000,,dimmi dove vuoi andare. 
+Dialogue: 0,0:1:12.62,0:1:15.31,Default,,0000,0000,0000,,'' Per fare un Contro \ninformativo ti servono 
+Dialogue: 0,0:1:15.31,0:1:17.83,Default,,0000,0000,0000,,almeno dodici punti, \nfino a un massimo di 
+Dialogue: 0,0:1:17.83,0:1:18.29,Default,,0000,0000,0000,,sedici. 
+Dialogue: 0,0:1:18.29,0:1:21.16,Default,,0000,0000,0000,,Ma non basta avere i \npunti: devi anche avere le 
+Dialogue: 0,0:1:21.16,0:1:23.91,Default,,0000,0000,0000,,carte giuste nei colori \nnobili non dichiarati 
+Dialogue: 0,0:1:23.91,0:1:24.91,Default,,0000,0000,0000,,dall'avversario. 
+Dialogue: 0,0:1:24.91,0:1:27.60,Default,,0000,0000,0000,,Se l'avversario ha \naperto di uno Fiori o uno 
+Dialogue: 0,0:1:27.60,0:1:30.41,Default,,0000,0000,0000,,Quadri, per il Contro \ndevi avere quattro Cuori 
+Dialogue: 0,0:1:30.41,0:1:32.92,Default,,0000,0000,0000,,e quattro Picche, o \nalmeno quattro e tre. 
+Dialogue: 0,0:1:32.92,0:1:35.50,Default,,0000,0000,0000,,Se l'avversario ha \naperto di uno Cuori, ti 
+Dialogue: 0,0:1:35.50,0:1:36.90,Default,,0000,0000,0000,,servono quattro Picche. 
+Dialogue: 0,0:1:36.90,0:1:39.71,Default,,0000,0000,0000,,Se ha aperto di uno \nPicche, ti servono quattro 
+Dialogue: 0,0:1:39.71,0:1:40.12,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:1:40.12,0:1:42.87,Default,,0000,0000,0000,,La mano perfetta per il \nContro e una mano con 
+Dialogue: 0,0:1:42.87,0:1:44.86,Default,,0000,0000,0000,,tante carte nei colori \nnon detti 
+Dialogue: 0,0:1:44.86,0:1:47.32,Default,,0000,0000,0000,,dall'avversario e poche \ncarte, meglio se 
+Dialogue: 0,0:1:47.32,0:1:49.54,Default,,0000,0000,0000,,nessuna, nel colore \ndell'avversario. 
+Dialogue: 0,0:1:49.54,0:1:52.41,Default,,0000,0000,0000,,Pero attenzione: se hai \ndiciassette o piu punti 
+Dialogue: 0,0:1:52.41,0:1:55.16,Default,,0000,0000,0000,,puoi fare Contro anche \nsenza questi requisiti 
+Dialogue: 0,0:1:55.16,0:1:58.03,Default,,0000,0000,0000,,distribuzionali, perche \nla forza compensa tutto 
+Dialogue: 0,0:1:58.03,0:1:58.14,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:58.14,0:2:0.78,Default,,0000,0000,0000,,E il compagno del \ncontrante cosa deve fare? 
+Dialogue: 0,0:2:0.78,0:2:3.18,Default,,0000,0000,0000,,Deve scegliere un colore \ne dichiararlo. 
+Dialogue: 0,0:2:3.18,0:2:3.94,Default,,0000,0000,0000,,E obbligato! 
+Dialogue: 0,0:2:3.94,0:2:6.39,Default,,0000,0000,0000,,Non puo passare, anche \nse ha zero punti. 
+Dialogue: 0,0:2:6.39,0:2:9.20,Default,,0000,0000,0000,,Se ha pochissimo, \nsceglie al livello piu basso 
+Dialogue: 0,0:2:9.20,0:2:9.85,Default,,0000,0000,0000,,possibile. 
+Dialogue: 0,0:2:9.85,0:2:12.60,Default,,0000,0000,0000,,Se ha circa dodici punti \ne il fit nei nobili, 
+Dialogue: 0,0:2:12.60,0:2:14.70,Default,,0000,0000,0000,,puo saltare direttamente \na manche. 
+Dialogue: 0,0:2:14.70,0:2:17.45,Default,,0000,0000,0000,,Se ha un buon punteggio \nsenza fit nobile, puo 
+Dialogue: 0,0:2:17.45,0:2:15.82,Default,,0000,0000,0000,,proporre tre Senza Atout . 
+Dialogue: 0,0:2:15.82,0:2:18.17,Default,,0000,0000,0000,,Passiamo al secondo tipo \ndi intervento: 
+Dialogue: 0,0:2:18.17,0:2:20.11,Default,,0000,0000,0000,,l'intervento di uno \nSenza Atout. 
+Dialogue: 0,0:2:20.11,0:2:22.92,Default,,0000,0000,0000,,Questo e simile \nall'apertura di uno Senza Atout 
+Dialogue: 0,0:2:22.92,0:2:23.03,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:23.03,0:2:25.61,Default,,0000,0000,0000,,Promette quindici a \ndiciassette punti e una 
+Dialogue: 0,0:2:25.61,0:2:26.58,Default,,0000,0000,0000,,mano bilanciata. 
+Dialogue: 0,0:2:26.58,0:2:29.04,Default,,0000,0000,0000,,Ma c' e una differenza \nimportante: quando 
+Dialogue: 0,0:2:29.04,0:2:31.84,Default,,0000,0000,0000,,intervieni di uno Senza \ndevi avere il fermo nel 
+Dialogue: 0,0:2:31.84,0:2:33.22,Default,,0000,0000,0000,,colore dell'avversario. 
+Dialogue: 0,0:2:33.22,0:2:35.79,Default,,0000,0000,0000,,Il fermo significa che \nhai carte abbastanza 
+Dialogue: 0,0:2:35.79,0:2:38.54,Default,,0000,0000,0000,,alte in quel colore da \nimpedire all'avversario 
+Dialogue: 0,0:2:38.54,0:2:40.43,Default,,0000,0000,0000,,di correre con le sue \nvincenti. 
+Dialogue: 0,0:2:40.43,0:2:43.12,Default,,0000,0000,0000,,Per esempio, se \nl'avversario ha aperto di uno 
+Dialogue: 0,0:2:43.12,0:2:45.69,Default,,0000,0000,0000,,Cuori, tu per \nintervenire di uno Senza devi 
+Dialogue: 0,0:2:45.69,0:2:48.38,Default,,0000,0000,0000,,avere il Re o la Donna \ndi Cuori ben protetti. 
+Dialogue: 0,0:2:48.38,0:2:51.13,Default,,0000,0000,0000,,E adesso il terzo tipo: \nl'intervento a colore. 
+Dialogue: 0,0:2:51.13,0:2:52.50,Default,,0000,0000,0000,,Questo e il piu comune. 
+Dialogue: 0,0:2:52.50,0:2:54.97,Default,,0000,0000,0000,,Intervieni mostrando il \ntuo colore lungo, 
+Dialogue: 0,0:2:54.97,0:2:57.60,Default,,0000,0000,0000,,dicendo per esempio uno \nPicche sull'apertura 
+Dialogue: 0,0:2:57.60,0:2:59.09,Default,,0000,0000,0000,,avversaria di uno Cuori . 
+Dialogue: 0,0:2:59.09,0:3:1.72,Default,,0000,0000,0000,,La forza richiesta e da \notto a sedici punti. 
+Dialogue: 0,0:3:1.72,0:3:4.29,Default,,0000,0000,0000,,E una fascia molto ampia \nquindi il compagno 
+Dialogue: 0,0:3:4.29,0:3:5.61,Default,,0000,0000,0000,,dovra essere prudente. 
+Dialogue: 0,0:3:5.61,0:3:8.30,Default,,0000,0000,0000,,Per intervenire a colore \na livello uno, il `` 
+Dialogue: 0,0:3:8.30,0:3:10.99,Default,,0000,0000,0000,,uno su uno '', ti \nservono almeno cinque carte 
+Dialogue: 0,0:3:10.99,0:3:13.79,Default,,0000,0000,0000,,con almeno un onore \nimportante, cioe Asso, Re o 
+Dialogue: 0,0:3:13.79,0:3:14.20,Default,,0000,0000,0000,,Donna. 
+Dialogue: 0,0:3:14.20,0:3:16.71,Default,,0000,0000,0000,,Con sei carte puoi \nintervenire anche se il 
+Dialogue: 0,0:3:16.71,0:3:18.37,Default,,0000,0000,0000,,colore e un po' piu \nbrutto. 
+Dialogue: 0,0:3:18.37,0:3:21.06,Default,,0000,0000,0000,,Se hai solo sette o otto \npunti, devono essere 
+Dialogue: 0,0:3:21.06,0:3:23.87,Default,,0000,0000,0000,,quasi tutti concentrati \nnel colore che dichiari 
+Dialogue: 0,0:3:23.87,0:3:23.98,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:23.98,0:3:26.67,Default,,0000,0000,0000,,E come dire: `` Non ho \nuna grande mano, ma in 
+Dialogue: 0,0:3:26.67,0:3:29.08,Default,,0000,0000,0000,,questo colore specifico \nsono fortissimo. 
+Dialogue: 0,0:3:29.08,0:3:31.82,Default,,0000,0000,0000,,'' Per intervenire a \nlivello due, il `` due su 
+Dialogue: 0,0:3:31.82,0:3:33.60,Default,,0000,0000,0000,,uno '', le richieste \nsalgono. 
+Dialogue: 0,0:3:33.60,0:3:36.40,Default,,0000,0000,0000,,Ti servono almeno dieci \npunti e normalmente sei 
+Dialogue: 0,0:3:36.40,0:3:37.43,Default,,0000,0000,0000,,carte nel colore. 
+Dialogue: 0,0:3:37.43,0:3:40.24,Default,,0000,0000,0000,,Se il colore e Cuori e \nintervieni su uno Picche 
+Dialogue: 0,0:3:40.24,0:3:42.93,Default,,0000,0000,0000,,puoi farcela con cinque \ncarte purche tu abbia 
+Dialogue: 0,0:3:42.93,0:3:44.18,Default,,0000,0000,0000,,almeno tredici punti. 
+Dialogue: 0,0:3:44.18,0:3:46.99,Default,,0000,0000,0000,,Come si comporta il \ncompagno dell'interveniente 
+Dialogue: 0,0:3:46.99,0:3:47.56,Default,,0000,0000,0000,,a colore? 
+Dialogue: 0,0:3:47.56,0:3:50.25,Default,,0000,0000,0000,,Si basa sul minimo \ngarantito, cioe otto-dieci 
+Dialogue: 0,0:3:50.25,0:3:50.65,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:3:50.65,0:3:53.17,Default,,0000,0000,0000,,Con nove o piu punti non \ndeve mai passare, 
+Dialogue: 0,0:3:53.17,0:3:55.92,Default,,0000,0000,0000,,perche sedici piu nove \nfa venticinque, cioe la 
+Dialogue: 0,0:3:55.92,0:3:56.37,Default,,0000,0000,0000,,manche. 
+Dialogue: 0,0:3:56.37,0:3:58.95,Default,,0000,0000,0000,,Con meno punti, da \nl'appoggio se ha il fit, 
+Dialogue: 0,0:3:58.95,0:4:0.50,Default,,0000,0000,0000,,anche con sole tre carte . 
+Dialogue: 0,0:4:0.50,0:4:2.90,Default,,0000,0000,0000,,L'appoggio e importante \nper sostenere il 
+Dialogue: 0,0:4:2.90,0:4:3.47,Default,,0000,0000,0000,,compagno. 
+Dialogue: 0,0:4:3.47,0:4:6.05,Default,,0000,0000,0000,,C' e un consiglio d'oro \nsull'intervento che 
+Dialogue: 0,0:4:6.05,0:4:8.34,Default,,0000,0000,0000,,devi sempre ricordare: \nquando stai per 
+Dialogue: 0,0:4:8.34,0:4:11.14,Default,,0000,0000,0000,,dichiarare un colore, \npensa al fatto che il tuo 
+Dialogue: 0,0:4:11.14,0:4:13.60,Default,,0000,0000,0000,,compagno ci attacchera \nquasi sicuramente. 
+Dialogue: 0,0:4:13.60,0:4:16.12,Default,,0000,0000,0000,,Se ti viene da \nrabbrividire all'idea di un 
+Dialogue: 0,0:4:16.12,0:4:18.75,Default,,0000,0000,0000,,attacco nel colore che \nvuoi dichiarare, vuol 
+Dialogue: 0,0:4:18.75,0:4:20.81,Default,,0000,0000,0000,,dire che l'intervento e \nsbagliato! 
+Dialogue: 0,0:4:20.81,0:4:23.27,Default,,0000,0000,0000,,Se il tuo colore e \nbrutto, tieni la bocca 
+Dialogue: 0,0:4:23.27,0:4:23.73,Default,,0000,0000,0000,,chiusa. 
+Dialogue: 0,0:4:23.73,0:4:26.36,Default,,0000,0000,0000,,Un ultimo punto: circa \nil settanta per cento 
+Dialogue: 0,0:4:26.36,0:4:29.11,Default,,0000,0000,0000,,delle volte il contratto \nfinisce alla linea di 
+Dialogue: 0,0:4:29.11,0:4:29.97,Default,,0000,0000,0000,,chi ha aperto. 
+Dialogue: 0,0:4:29.97,0:4:32.72,Default,,0000,0000,0000,,Questo significa che \nspesso non giocherete voi 
+Dialogue: 0,0:4:32.72,0:4:32.83,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:32.83,0:4:35.23,Default,,0000,0000,0000,,Ma l'intervento non e \ninutile: influenza 
+Dialogue: 0,0:4:35.23,0:4:36.89,Default,,0000,0000,0000,,enormemente il \ncontrogioco. 
+Dialogue: 0,0:4:36.89,0:4:39.70,Default,,0000,0000,0000,,Se dichiari le Picche, \nil tuo compagno sapra di 
+Dialogue: 0,0:4:39.70,0:4:42.45,Default,,0000,0000,0000,,attaccare in quel colore \nquando sara in difesa 
+Dialogue: 0,0:4:42.45,0:4:42.56,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:42.56,0:4:45.36,Default,,0000,0000,0000,,Benissimo, ora conosci i \ntre tipi di intervento 
+Dialogue: 0,0:4:45.36,0:4:45.48,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:4:45.48,0:4:48.05,Default,,0000,0000,0000,,Nella prossima lezione \nvedremo cosa succede 
+Dialogue: 0,0:4:48.05,0:4:50.80,Default,,0000,0000,0000,,quando gli avversari \nintervengono sulla nostra 
+Dialogue: 0,0:4:50.80,0:4:51.37,Default,,0000,0000,0000,,apertura. 
+Dialogue: 0,0:4:51.37,0:4:53.15,Default,,0000,0000,0000,,Come cambia la \ndichiarazione? 
+Dialogue: 0,0:4:53.15,0:4:54.35,Default,,0000,0000,0000,,Lo scoprirai presto. 
+Dialogue: 0,0:4:54.35,0:4:55.21,Default,,0000,0000,0000,,Continua cosi! 

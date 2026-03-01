@@ -1,0 +1,181 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:3.11,Default,,0000,0000,0000,,Oggi impariamo le \nmanovre piu eleganti del 
+Dialogue: 0,0:0:3.11,0:0:3.61,Default,,0000,0000,0000,,Bridge. 
+Dialogue: 0,0:0:3.61,0:0:6.60,Default,,0000,0000,0000,,Ti ricordi che nella \nlezione 1 abbiamo parlato 
+Dialogue: 0,0:0:6.60,0:0:8.34,Default,,0000,0000,0000,,di affrancamento di \nforza? 
+Dialogue: 0,0:0:8.34,0:0:11.33,Default,,0000,0000,0000,,Bene, oggi scopriamo \naltri due modi per creare 
+Dialogue: 0,0:0:11.33,0:0:14.07,Default,,0000,0000,0000,,carte vincenti: \nl'affrancamento di lunga e 
+Dialogue: 0,0:0:14.07,0:0:16.00,Default,,0000,0000,0000,,l'affrancamento di \nposizione. 
+Dialogue: 0,0:0:16.00,0:0:18.73,Default,,0000,0000,0000,,Sono tipo mosse speciali \nin un videogioco! 
+Dialogue: 0,0:0:18.73,0:0:21.16,Default,,0000,0000,0000,,Partiamo \ndall'affrancamento di lunga. 
+Dialogue: 0,0:0:21.16,0:0:24.21,Default,,0000,0000,0000,,L'idea e geniale: se hai \ntante carte in un seme 
+Dialogue: 0,0:0:24.21,0:0:27.20,Default,,0000,0000,0000,,anche se sono piccole, \ndopo un po' di giri gli 
+Dialogue: 0,0:0:27.20,0:0:29.94,Default,,0000,0000,0000,,avversari finiranno le \nloro e le tue carte 
+Dialogue: 0,0:0:29.94,0:0:31.93,Default,,0000,0000,0000,,rimaste diventeranno \nvincenti. 
+Dialogue: 0,0:0:31.93,0:0:32.36,Default,,0000,0000,0000,,Magia? 
+Dialogue: 0,0:0:32.36,0:0:33.36,Default,,0000,0000,0000,,No, matematica! 
+Dialogue: 0,0:0:33.36,0:0:34.29,Default,,0000,0000,0000,,Funziona cosi. 
+Dialogue: 0,0:0:34.29,0:0:36.60,Default,,0000,0000,0000,,Le carte totali in un \nseme sono 13. 
+Dialogue: 0,0:0:36.60,0:0:39.58,Default,,0000,0000,0000,,Se tra te e il Morto ne \navete 8, gli avversari 
+Dialogue: 0,0:0:39.58,0:0:40.64,Default,,0000,0000,0000,,ne hanno solo 5. 
+Dialogue: 0,0:0:40.64,0:0:43.13,Default,,0000,0000,0000,,Se quelle 5 sono divise \n3 e 2, cioe un 
+Dialogue: 0,0:0:43.13,0:0:45.99,Default,,0000,0000,0000,,avversario ne ha 3 e \nl'altro ne ha 2, dopo 3 
+Dialogue: 0,0:0:45.99,0:0:48.67,Default,,0000,0000,0000,,giri del seme entrambi \nli avranno finiti. 
+Dialogue: 0,0:0:48.67,0:0:50.17,Default,,0000,0000,0000,,E le tue carte rimaste? 
+Dialogue: 0,0:0:50.17,0:0:50.79,Default,,0000,0000,0000,,Vincenti! 
+Dialogue: 0,0:0:50.79,0:0:52.72,Default,,0000,0000,0000,,Facciamo un esempio \nconcreto. 
+Dialogue: 0,0:0:52.72,0:0:54.96,Default,,0000,0000,0000,,Il Morto ha \nSette-Sei-Due e tu hai 
+Dialogue: 0,0:0:54.96,0:0:56.76,Default,,0000,0000,0000,,Asso-Re-Donna-Quattro-Tr \ne. 
+Dialogue: 0,0:0:56.76,0:0:59.75,Default,,0000,0000,0000,,In tutto avete 8 carte, \ngli avversari ne hanno 
+Dialogue: 0,0:0:59.75,0:0:59.94,Default,,0000,0000,0000,,5. 
+Dialogue: 0,0:0:59.94,0:1:2.80,Default,,0000,0000,0000,,Giochi l'Asso: tutti \nseguono, restano 3 agli 
+Dialogue: 0,0:1:2.80,0:1:3.48,Default,,0000,0000,0000,,avversari. 
+Dialogue: 0,0:1:3.48,0:1:6.35,Default,,0000,0000,0000,,Giochi il Re: tutti \nseguono, ne resta 1 a un 
+Dialogue: 0,0:1:6.35,0:1:7.09,Default,,0000,0000,0000,,avversario. 
+Dialogue: 0,0:1:7.09,0:1:10.02,Default,,0000,0000,0000,,Giochi la Donna: \nl'ultimo avversario gioca la 
+Dialogue: 0,0:1:10.02,0:1:11.14,Default,,0000,0000,0000,,sua ultima carta. 
+Dialogue: 0,0:1:11.14,0:1:13.82,Default,,0000,0000,0000,,Adesso il Quattro e il \nTre sono vincenti! 
+Dialogue: 0,0:1:13.82,0:1:16.06,Default,,0000,0000,0000,,Due prese in piu create \ndal nulla! 
+Dialogue: 0,0:1:16.06,0:1:19.04,Default,,0000,0000,0000,,La regola e: piu carte \nhai nel lato lungo, piu 
+Dialogue: 0,0:1:19.04,0:1:20.10,Default,,0000,0000,0000,,prese puoi fare. 
+Dialogue: 0,0:1:20.10,0:1:22.90,Default,,0000,0000,0000,,E la cosa pazzesca e che \nfunziona anche con 
+Dialogue: 0,0:1:22.90,0:1:24.09,Default,,0000,0000,0000,,carte bruttissime! 
+Dialogue: 0,0:1:24.09,0:1:26.70,Default,,0000,0000,0000,,Tipo \nDieci-Nove-Sette-Sei-Due al Morto e 
+Dialogue: 0,0:1:26.70,0:1:28.82,Default,,0000,0000,0000,,Otto-Cinque-Quattro-Tre \nin mano. 
+Dialogue: 0,0:1:28.82,0:1:30.50,Default,,0000,0000,0000,,Non hai neanche un onore ! 
+Dialogue: 0,0:1:30.50,0:1:33.23,Default,,0000,0000,0000,,Ma se giochi il seme due \nvolte e perdi due 
+Dialogue: 0,0:1:33.23,0:1:36.28,Default,,0000,0000,0000,,prese, le tue carte \nrimaste si affrancano e fai 
+Dialogue: 0,0:1:36.28,0:1:36.84,Default,,0000,0000,0000,,3 prese. 
+Dialogue: 0,0:1:36.84,0:1:37.90,Default,,0000,0000,0000,,Incredibile, no? 
+Dialogue: 0,0:1:37.90,0:1:40.39,Default,,0000,0000,0000,,Ma c' e un problema: una \nvolta che hai 
+Dialogue: 0,0:1:40.39,0:1:42.88,Default,,0000,0000,0000,,affrancato le cartine, \ncome ci arrivi? 
+Dialogue: 0,0:1:42.88,0:1:45.93,Default,,0000,0000,0000,,Se le carte vincenti \nsono al Morto ma tu sei in 
+Dialogue: 0,0:1:45.93,0:1:47.67,Default,,0000,0000,0000,,mano, come fai a \ngiocarle? 
+Dialogue: 0,0:1:47.67,0:1:50.72,Default,,0000,0000,0000,,Ecco che entrano in \ngioco le comunicazioni, che 
+Dialogue: 0,0:1:50.72,0:1:51.91,Default,,0000,0000,0000,,sono fondamentali. 
+Dialogue: 0,0:1:51.91,0:1:54.52,Default,,0000,0000,0000,,Un rientro o ingresso e \nuna carta che ti 
+Dialogue: 0,0:1:54.52,0:1:57.26,Default,,0000,0000,0000,,permette di far vincere \nla presa alla mano 
+Dialogue: 0,0:1:57.26,0:1:59.00,Default,,0000,0000,0000,,giusta nel momento \ngiusto. 
+Dialogue: 0,0:1:59.00,0:2:1.80,Default,,0000,0000,0000,,Per esempio, se le carte \naffrancate sono al 
+Dialogue: 0,0:2:1.80,0:2:4.85,Default,,0000,0000,0000,,Morto, ti serve un Asso \no una carta vincente al 
+Dialogue: 0,0:2:4.85,0:2:7.65,Default,,0000,0000,0000,,Morto in un altro seme \nper poterci tornare. 
+Dialogue: 0,0:2:7.65,0:2:10.45,Default,,0000,0000,0000,,La regola d'oro e: \nsalvaguarda gli ingressi 
+Dialogue: 0,0:2:10.45,0:2:13.01,Default,,0000,0000,0000,,accanto alla lunga che \nvuoi affrancare! 
+Dialogue: 0,0:2:13.01,0:2:15.99,Default,,0000,0000,0000,,Se le carte lunghe sono \nal Morto, non sprecare 
+Dialogue: 0,0:2:15.99,0:2:18.67,Default,,0000,0000,0000,,le carte alte del Morto \nnegli altri semi. 
+Dialogue: 0,0:2:18.67,0:2:17.74,Default,,0000,0000,0000,,Ti serviranno per \nrientrare. 
+Dialogue: 0,0:2:17.74,0:2:20.55,Default,,0000,0000,0000,,Ora passiamo \nall'affrancamento di posizione, 
+Dialogue: 0,0:2:20.55,0:2:21.95,Default,,0000,0000,0000,,che e ancora piu cool. 
+Dialogue: 0,0:2:21.95,0:2:24.87,Default,,0000,0000,0000,,Qui sfruttiamo la \nposizione degli avversari al 
+Dialogue: 0,0:2:24.87,0:2:25.36,Default,,0000,0000,0000,,tavolo. 
+Dialogue: 0,0:2:25.36,0:2:28.11,Default,,0000,0000,0000,,Ci sono due manovre \nprincipali: l'impasse e 
+Dialogue: 0,0:2:28.11,0:2:28.78,Default,,0000,0000,0000,,l'expasse. 
+Dialogue: 0,0:2:28.78,0:2:30.36,Default,,0000,0000,0000,,L'impasse funziona cosi . 
+Dialogue: 0,0:2:30.36,0:2:33.29,Default,,0000,0000,0000,,Immagina che il Morto \nabbia Asso e Donna di un 
+Dialogue: 0,0:2:33.29,0:2:36.22,Default,,0000,0000,0000,,seme, e tu in mano abbia \nsolo cartine piccole. 
+Dialogue: 0,0:2:36.22,0:2:38.96,Default,,0000,0000,0000,,La Donna non e vincente \nperche manca il Re. 
+Dialogue: 0,0:2:38.96,0:2:40.18,Default,,0000,0000,0000,,Ma dove sara il Re? 
+Dialogue: 0,0:2:40.18,0:2:43.17,Default,,0000,0000,0000,,Se ce l'ha l'avversario \nalla sinistra del Morto 
+Dialogue: 0,0:2:43.17,0:2:45.61,Default,,0000,0000,0000,,cioe Ovest, puoi fare \nuna mossa furba. 
+Dialogue: 0,0:2:45.61,0:2:48.60,Default,,0000,0000,0000,,Giochi una cartina \npiccola dalla tua mano verso 
+Dialogue: 0,0:2:48.60,0:2:49.21,Default,,0000,0000,0000,,il Morto. 
+Dialogue: 0,0:2:49.21,0:2:52.07,Default,,0000,0000,0000,,Se Ovest non ha il Re, o \nse ce l'ha ma non lo 
+Dialogue: 0,0:2:52.07,0:2:54.09,Default,,0000,0000,0000,,gioca, metti la Donna al \nMorto. 
+Dialogue: 0,0:2:54.09,0:2:57.07,Default,,0000,0000,0000,,E se il Re era davvero \nin Ovest, la Donna vince 
+Dialogue: 0,0:2:57.07,0:2:57.20,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:2:57.20,0:3:0.12,Default,,0000,0000,0000,,Se invece il Re era in \nEst, l'impasse fallisce 
+Dialogue: 0,0:3:0.12,0:3:0.24,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:0.24,0:3:1.22,Default,,0000,0000,0000,,Le probabilita? 
+Dialogue: 0,0:3:1.22,0:3:4.21,Default,,0000,0000,0000,,Cinquanta e cinquanta, \ncome lanciare una moneta 
+Dialogue: 0,0:3:4.21,0:3:4.33,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:3:4.33,0:3:7.20,Default,,0000,0000,0000,,La chiave dell'impasse e \nla direzione: giochi 
+Dialogue: 0,0:3:7.20,0:3:9.82,Default,,0000,0000,0000,,sempre verso l'onore che \nvuoi promuovere. 
+Dialogue: 0,0:3:9.82,0:3:12.75,Default,,0000,0000,0000,,Dalla tua mano verso la \nDonna al Morto, non il 
+Dialogue: 0,0:3:12.75,0:3:13.42,Default,,0000,0000,0000,,contrario. 
+Dialogue: 0,0:3:13.42,0:3:16.16,Default,,0000,0000,0000,,L'expasse e la sorella \ndell'impasse, ma piu 
+Dialogue: 0,0:3:16.16,0:3:16.77,Default,,0000,0000,0000,,semplice. 
+Dialogue: 0,0:3:16.77,0:3:18.84,Default,,0000,0000,0000,,Funziona con onori non \nprotetti. 
+Dialogue: 0,0:3:18.84,0:3:21.83,Default,,0000,0000,0000,,Immagina che il Morto \nabbia il Re-Otto-Cinque e 
+Dialogue: 0,0:3:21.83,0:3:23.78,Default,,0000,0000,0000,,tu in mano abbia solo \npiccole. 
+Dialogue: 0,0:3:23.78,0:3:26.41,Default,,0000,0000,0000,,Il Re non e vincente \nperche manca l'Asso. 
+Dialogue: 0,0:3:26.41,0:3:29.33,Default,,0000,0000,0000,,Ma se l'Asso e in Ovest \ncioe alla sinistra del 
+Dialogue: 0,0:3:29.33,0:3:32.20,Default,,0000,0000,0000,,Morto, tu giochi piccola \ndalla tua mano verso 
+Dialogue: 0,0:3:32.20,0:3:32.63,Default,,0000,0000,0000,,il Re. 
+Dialogue: 0,0:3:32.63,0:3:35.61,Default,,0000,0000,0000,,Ovest deve decidere: se \ngioca l'Asso, il tuo Re 
+Dialogue: 0,0:3:35.61,0:3:37.75,Default,,0000,0000,0000,,si salva e diventa \nvincente dopo. 
+Dialogue: 0,0:3:37.75,0:3:40.55,Default,,0000,0000,0000,,Se non gioca l'Asso, il \ntuo Re vince subito! 
+Dialogue: 0,0:3:40.55,0:3:43.54,Default,,0000,0000,0000,,C' e una regola \nfondamentale per capire se devi 
+Dialogue: 0,0:3:43.54,0:3:45.43,Default,,0000,0000,0000,,fare un'impasse o \nun'expasse. 
+Dialogue: 0,0:3:45.43,0:3:47.99,Default,,0000,0000,0000,,Chiediti: sarei contento \nse l'avversario 
+Dialogue: 0,0:3:47.99,0:3:49.40,Default,,0000,0000,0000,,coprisse il mio onore? 
+Dialogue: 0,0:3:49.40,0:3:52.32,Default,,0000,0000,0000,,Se la risposta e: non ci \nguadagneremmo niente, 
+Dialogue: 0,0:3:52.32,0:3:54.58,Default,,0000,0000,0000,,allora giocare l'onore e \nsbagliato. 
+Dialogue: 0,0:3:54.58,0:3:57.57,Default,,0000,0000,0000,,Devi giocare piccola \nverso l'onore, non l'onore 
+Dialogue: 0,0:3:57.57,0:3:56.04,Default,,0000,0000,0000,,stesso. 
+Dialogue: 0,0:3:56.04,0:3:59.07,Default,,0000,0000,0000,,Facciamo degli esempi \npratici per capire meglio 
+Dialogue: 0,0:3:59.07,0:3:59.19,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:59.19,0:4:1.54,Default,,0000,0000,0000,,Primo esempio di impasse \nil Morto ha 
+Dialogue: 0,0:4:1.54,0:4:4.27,Default,,0000,0000,0000,,Asso-Re-Fante-Quattro e \ntu hai Otto-Sette. 
+Dialogue: 0,0:4:4.27,0:4:5.44,Default,,0000,0000,0000,,Ti manca la Donna. 
+Dialogue: 0,0:4:5.44,0:4:8.22,Default,,0000,0000,0000,,Se la Donna e in Ovest, \nl'impasse funziona. 
+Dialogue: 0,0:4:8.22,0:4:11.13,Default,,0000,0000,0000,,Giochi l'Otto dalla tua \nmano, e quando arrivi 
+Dialogue: 0,0:4:11.13,0:4:12.80,Default,,0000,0000,0000,,al Morto giochi il Fante . 
+Dialogue: 0,0:4:12.80,0:4:15.65,Default,,0000,0000,0000,,Se Ovest ha la Donna, o \nla gioca e tu prendi 
+Dialogue: 0,0:4:15.65,0:4:18.49,Default,,0000,0000,0000,,con l'Asso, o non la \ngioca e il Fante vince. 
+Dialogue: 0,0:4:18.49,0:4:21.03,Default,,0000,0000,0000,,In entrambi i casi, \nguadagni una presa! 
+Dialogue: 0,0:4:21.03,0:4:24.00,Default,,0000,0000,0000,,Secondo esempio: il \nMorto ha Sette-Quattro-Tre 
+Dialogue: 0,0:4:24.00,0:4:25.73,Default,,0000,0000,0000,,e tu hai \nAsso-Donna-Fante. 
+Dialogue: 0,0:4:25.73,0:4:27.46,Default,,0000,0000,0000,,La carta mancante e il \nRe. 
+Dialogue: 0,0:4:27.46,0:4:30.30,Default,,0000,0000,0000,,Giochi piccola dal Morto \nverso la tua Donna. 
+Dialogue: 0,0:4:30.30,0:4:32.41,Default,,0000,0000,0000,,Se Est ha il Re, la \nDonna perde. 
+Dialogue: 0,0:4:32.41,0:4:34.82,Default,,0000,0000,0000,,Ma se Ovest ha il Re, la \nDonna vince! 
+Dialogue: 0,0:4:34.82,0:4:37.85,Default,,0000,0000,0000,,Aspetta, ma qui abbiamo \ngiocato verso la nostra 
+Dialogue: 0,0:4:37.85,0:4:39.52,Default,,0000,0000,0000,,mano, non verso il Morto . 
+Dialogue: 0,0:4:39.52,0:4:40.02,Default,,0000,0000,0000,,Esatto! 
+Dialogue: 0,0:4:40.02,0:4:42.98,Default,,0000,0000,0000,,La direzione dipende da \ndove sono gli onori da 
+Dialogue: 0,0:4:42.98,0:4:43.73,Default,,0000,0000,0000,,promuovere. 
+Dialogue: 0,0:4:43.73,0:4:46.63,Default,,0000,0000,0000,,Giochi sempre dalla mano \nopposta verso quella 
+Dialogue: 0,0:4:46.63,0:4:47.75,Default,,0000,0000,0000,,che ha gli onori. 
+Dialogue: 0,0:4:47.75,0:4:50.65,Default,,0000,0000,0000,,Ora parliamo anche della \ndifesa contro queste 
+Dialogue: 0,0:4:50.65,0:4:51.21,Default,,0000,0000,0000,,manovre. 
+Dialogue: 0,0:4:51.21,0:4:54.12,Default,,0000,0000,0000,,Se sei un difensore e \nvedi un colore lungo al 
+Dialogue: 0,0:4:54.12,0:4:56.16,Default,,0000,0000,0000,,Morto, devi stare \nattentissimo. 
+Dialogue: 0,0:4:56.16,0:4:59.13,Default,,0000,0000,0000,,La regola per difendersi \ndall'affrancamento di 
+Dialogue: 0,0:4:59.13,0:5:1.91,Default,,0000,0000,0000,,lunga si chiama tenuta, \no arresto, o fermo. 
+Dialogue: 0,0:5:1.91,0:5:4.20,Default,,0000,0000,0000,,E una figura di carte \nche si oppone 
+Dialogue: 0,0:5:4.20,0:5:5.37,Default,,0000,0000,0000,,all'affrancamento. 
+Dialogue: 0,0:5:5.37,0:5:8.40,Default,,0000,0000,0000,,Se vedi un colore lungo \nal Morto e pensi che il 
+Dialogue: 0,0:5:8.40,0:5:11.19,Default,,0000,0000,0000,,tuo compagno abbia meno \ncarte di te in quel 
+Dialogue: 0,0:5:11.19,0:5:13.29,Default,,0000,0000,0000,,seme, non scartarne \nneanche una! 
+Dialogue: 0,0:5:13.29,0:5:16.32,Default,,0000,0000,0000,,Se butti via le tue \ncarte, stai regalando prese 
+Dialogue: 0,0:5:16.32,0:5:17.12,Default,,0000,0000,0000,,al Giocante. 
+Dialogue: 0,0:5:17.12,0:5:20.09,Default,,0000,0000,0000,,Per difenderti \ndall'affrancamento di posizione 
+Dialogue: 0,0:5:20.09,0:5:23.00,Default,,0000,0000,0000,,vale la regola che gia \nconosciamo: in seconda 
+Dialogue: 0,0:5:23.00,0:5:25.97,Default,,0000,0000,0000,,posizione, piccola su \npiccola e onore su onore 
+Dialogue: 0,0:5:25.97,0:5:26.09,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:5:26.09,0:5:29.12,Default,,0000,0000,0000,,Se l'avversario gioca \npiccola verso un onore al 
+Dialogue: 0,0:5:29.12,0:5:30.73,Default,,0000,0000,0000,,Morto, tu gioca piccola . 
+Dialogue: 0,0:5:30.73,0:5:33.70,Default,,0000,0000,0000,,Se gioca un onore verso \nil Morto, copri con il 
+Dialogue: 0,0:5:33.70,0:5:34.38,Default,,0000,0000,0000,,tuo onore. 
+Dialogue: 0,0:5:34.38,0:5:37.23,Default,,0000,0000,0000,,Ricapitoliamo: tre modi \nper creare vincenti. 
+Dialogue: 0,0:5:37.23,0:5:38.71,Default,,0000,0000,0000,,Di forza, con sequenze. 
+Dialogue: 0,0:5:38.71,0:5:40.44,Default,,0000,0000,0000,,Di lunga, con tante \ncarte. 
+Dialogue: 0,0:5:40.44,0:5:42.79,Default,,0000,0000,0000,,Di posizione, con \nimpasse e expasse. 
+Dialogue: 0,0:5:42.79,0:5:45.45,Default,,0000,0000,0000,,Ogni mano di Bridge e un \npuzzle dove devi 
+Dialogue: 0,0:5:45.45,0:5:47.31,Default,,0000,0000,0000,,scegliere la manovra \ngiusta. 
+Dialogue: 0,0:5:47.31,0:5:49.47,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida? 
+Dialogue: 0,0:5:49.47,0:5:52.50,Default,,0000,0000,0000,,Nella prossima lezione \nmettiamo tutto insieme e 
+Dialogue: 0,0:5:52.50,0:5:55.53,Default,,0000,0000,0000,,impariamo a costruire un \npiano di gioco a Senza 
+Dialogue: 0,0:5:55.53,0:5:55.97,Default,,0000,0000,0000,,Atout! 
