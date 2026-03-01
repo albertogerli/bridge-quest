@@ -12,7 +12,9 @@ import ssl
 import os
 import time
 
-API_KEY = "***RIMOSSO***"
+API_KEY = os.environ.get("GEMINI_API_KEY", "")
+if not API_KEY:
+    raise SystemExit("Set GEMINI_API_KEY environment variable")
 MODEL = "gemini-3-pro-image-preview"
 BASE_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={API_KEY}"
 
