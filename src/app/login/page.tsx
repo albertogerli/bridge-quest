@@ -25,8 +25,9 @@ export default function LoginPage() {
 function LoginContent() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
+  const initialMode = searchParams.get("mode") === "signup" ? "signup" : "login";
   const { signIn, signUp, uploadAvatar } = useAuth();
-  const [mode, setMode] = useState<Mode>("login");
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");

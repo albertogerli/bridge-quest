@@ -4,7 +4,8 @@ import { use, useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { getLessonById } from "@/data/courses";
-import { getVideoForLesson } from "@/components/maestro-video";
+import { getVideoForLesson, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
+import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 
 export default function LessonDetailPage({
@@ -37,6 +38,10 @@ export default function LessonDetailPage({
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoMuted, setVideoMuted] = useState(true);
+  const [infographicLoaded, setInfographicLoaded] = useState(false);
+  const profileConfig = useProfile();
+  const maestroName = getMaestroName(profileConfig.profile);
+  const infographic = getInfographicForLesson(lesson.id, profileConfig.profile);
 
   const completedModules = lesson.modules.filter(
     (m) => completedMap[`${lesson.id}-${m.id}`]
@@ -145,8 +150,49 @@ export default function LessonDetailPage({
             <div className="p-3 flex items-center gap-2">
               <span className="text-lg">🎓</span>
               <p className="text-sm font-bold text-gray-700">
-                Il Maestro Fiori introduce la lezione
+                {maestroName} introduce la lezione
               </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Infografica / Dispensa */}
+        {infographic && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: infographicLoaded ? 1 : 0, y: infographicLoaded ? 0 : 8 }}
+            transition={{ delay: 0.12 }}
+            className={`card-clean rounded-2xl bg-white overflow-hidden mb-4 ${infographicLoaded ? "" : "hidden"}`}
+          >
+            <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={infographic.image}
+                alt={`Infografica Lezione ${lesson.id}`}
+                className="w-full"
+                onLoad={() => setInfographicLoaded(true)}
+                onError={() => setInfographicLoaded(false)}
+              />
+            </div>
+            <div className="p-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">📋</span>
+                <p className="text-sm font-bold text-gray-700">
+                  Dispensa — {maestroName}
+                </p>
+              </div>
+              <a
+                href={infographic.pdf}
+                download
+                className="flex items-center gap-1.5 rounded-xl bg-[#0098D4]/10 px-3 py-1.5 text-xs font-bold text-[#0098D4] hover:bg-[#0098D4]/20 transition-colors active:scale-95"
+              >
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7,10 12,15 17,10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                PDF
+              </a>
             </div>
           </motion.div>
         )}

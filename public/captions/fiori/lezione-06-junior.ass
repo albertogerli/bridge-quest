@@ -1,0 +1,162 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.35,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.35,0:0:2.95,Default,,0000,0000,0000,,Nella lezione precedente \nhai scoperto i tre 
+Dialogue: 0,0:0:2.95,0:0:5.78,Default,,0000,0000,0000,,superpoteri dell'atout: \ncontrollo, allungamento 
+Dialogue: 0,0:0:5.78,0:0:6.76,Default,,0000,0000,0000,,e affrancamento. 
+Dialogue: 0,0:0:6.76,0:0:9.53,Default,,0000,0000,0000,,Oggi facciamo il passo \nsuccessivo: impariamo a 
+Dialogue: 0,0:0:9.53,0:0:12.36,Default,,0000,0000,0000,,costruire un piano di \ngioco quando c' e l'atout 
+Dialogue: 0,0:0:12.36,0:0:12.48,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:12.48,0:0:14.90,Default,,0000,0000,0000,,E un po' come essere \nl'allenatore di una 
+Dialogue: 0,0:0:14.90,0:0:17.62,Default,,0000,0000,0000,,squadra prima della \npartita: devi decidere la 
+Dialogue: 0,0:0:17.62,0:0:20.33,Default,,0000,0000,0000,,strategia giusta prima \ndi iniziare a giocare! 
+Dialogue: 0,0:0:20.33,0:0:23.10,Default,,0000,0000,0000,,La domanda fondamentale \ne: devo battere subito 
+Dialogue: 0,0:0:23.10,0:0:24.26,Default,,0000,0000,0000,,le atout oppure no? 
+Dialogue: 0,0:0:24.26,0:0:26.97,Default,,0000,0000,0000,,Sembra semplice, ma e \nuna delle decisioni piu 
+Dialogue: 0,0:0:26.97,0:0:28.30,Default,,0000,0000,0000,,importanti del bridge. 
+Dialogue: 0,0:0:28.30,0:0:31.13,Default,,0000,0000,0000,,E la risposta dipende \ndal tipo di prese che hai 
+Dialogue: 0,0:0:31.13,0:0:32.06,Default,,0000,0000,0000,,a disposizione. 
+Dialogue: 0,0:0:32.06,0:0:34.83,Default,,0000,0000,0000,,Ecco la regola d'oro, \nfacilissima da ricordare 
+Dialogue: 0,0:0:34.83,0:0:34.94,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:34.94,0:0:37.72,Default,,0000,0000,0000,,Se le tue prese vengono \nda colori lunghi, cioe 
+Dialogue: 0,0:0:37.72,0:0:40.49,Default,,0000,0000,0000,,da vincenti e \naffrancabili che stanno nei semi 
+Dialogue: 0,0:0:40.49,0:0:43.03,Default,,0000,0000,0000,,diversi dall'atout, \nallora DEVI battere le 
+Dialogue: 0,0:0:43.03,0:0:44.01,Default,,0000,0000,0000,,atout per prime. 
+Dialogue: 0,0:0:44.01,0:0:44.47,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:0:44.47,0:0:47.25,Default,,0000,0000,0000,,Perche se non lo fai, \nquando provi a incassare 
+Dialogue: 0,0:0:47.25,0:0:49.73,Default,,0000,0000,0000,,le tue belle carte negli \naltri colori, un 
+Dialogue: 0,0:0:49.73,0:0:51.52,Default,,0000,0000,0000,,avversario potrebbe \ntagliare! 
+Dialogue: 0,0:0:51.52,0:0:54.24,Default,,0000,0000,0000,,Immagina di avere cinque \nFiori franche, ma un 
+Dialogue: 0,0:0:54.24,0:0:57.01,Default,,0000,0000,0000,,avversario ha ancora \ndelle atout e zero Fiori: 
+Dialogue: 0,0:0:57.01,0:0:59.66,Default,,0000,0000,0000,,tagliera la tua prima \nFiori e addio piano di 
+Dialogue: 0,0:0:59.66,0:1:0.07,Default,,0000,0000,0000,,gioco. 
+Dialogue: 0,0:1:0.07,0:1:2.90,Default,,0000,0000,0000,,Invece, se le tue prese \nvengono dai tagli, cioe 
+Dialogue: 0,0:1:2.90,0:1:5.67,Default,,0000,0000,0000,,hai bisogno di tagliare \ncon le atout del morto 
+Dialogue: 0,0:1:5.67,0:1:8.21,Default,,0000,0000,0000,,per fare abbastanza \nprese, allora NON devi 
+Dialogue: 0,0:1:8.21,0:1:9.71,Default,,0000,0000,0000,,battere subito le atout . 
+Dialogue: 0,0:1:9.71,0:1:12.49,Default,,0000,0000,0000,,Se lo fai, togli le \natout dal morto e non puoi 
+Dialogue: 0,0:1:12.49,0:1:13.30,Default,,0000,0000,0000,,piu tagliare! 
+Dialogue: 0,0:1:13.30,0:1:16.01,Default,,0000,0000,0000,,E come se l'allenatore \ntogliesse dal campo il 
+Dialogue: 0,0:1:16.01,0:1:18.61,Default,,0000,0000,0000,,giocatore che deve \nsegnare il gol decisivo. 
+Dialogue: 0,0:1:18.61,0:1:20.40,Default,,0000,0000,0000,,Facciamo un esempio \nsemplice. 
+Dialogue: 0,0:1:20.40,0:1:22.02,Default,,0000,0000,0000,,Sei il Giocante a 4 \nCuori. 
+Dialogue: 0,0:1:22.02,0:1:24.62,Default,,0000,0000,0000,,Hai Cuori Asso Re Donna \nFante Due in mano e 
+Dialogue: 0,0:1:24.62,0:1:26.41,Default,,0000,0000,0000,,Cuori Sette Sei Tre al \nmorto. 
+Dialogue: 0,0:1:26.41,0:1:29.24,Default,,0000,0000,0000,,Negli altri colori hai \nl'Asso di Picche, l'Asso 
+Dialogue: 0,0:1:29.24,0:1:31.20,Default,,0000,0000,0000,,di Quadri, e l'Asso Re \ndi Fiori. 
+Dialogue: 0,0:1:31.20,0:1:33.80,Default,,0000,0000,0000,,Contiamo: cinque prese \ndi Cuori se batti le 
+Dialogue: 0,0:1:33.80,0:1:36.46,Default,,0000,0000,0000,,atout, piu Asso di \nPicche, Asso di Quadri, e 
+Dialogue: 0,0:1:36.46,0:1:38.59,Default,,0000,0000,0000,,Asso Re di Fiori, fanno \nnove prese. 
+Dialogue: 0,0:1:38.59,0:1:39.98,Default,,0000,0000,0000,,Te ne serve una in piu! 
+Dialogue: 0,0:1:39.98,0:1:42.29,Default,,0000,0000,0000,,Ma al morto hai un \ndoubleton a Quadri. 
+Dialogue: 0,0:1:42.29,0:1:44.77,Default,,0000,0000,0000,,Se giochi Asso di Quadri \ne poi una Quadri 
+Dialogue: 0,0:1:44.77,0:1:47.60,Default,,0000,0000,0000,,piccola, puoi tagliare \nla terza Quadri al morto 
+Dialogue: 0,0:1:47.60,0:1:47.72,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:47.72,0:1:46.68,Default,,0000,0000,0000,,Ecco la decima presa! 
+Dialogue: 0,0:1:46.68,0:1:49.33,Default,,0000,0000,0000,,Ma attenzione: in questo \ncaso devi tagliare 
+Dialogue: 0,0:1:49.33,0:1:52.15,Default,,0000,0000,0000,,PRIMA di battere tutte \nle atout, altrimenti al 
+Dialogue: 0,0:1:52.15,0:1:54.85,Default,,0000,0000,0000,,morto non ci saranno piu \nCuori per tagliare. 
+Dialogue: 0,0:1:54.85,0:1:57.20,Default,,0000,0000,0000,,Vedi come cambia tutto a \nseconda della 
+Dialogue: 0,0:1:57.20,0:1:57.91,Default,,0000,0000,0000,,situazione? 
+Dialogue: 0,0:1:57.91,0:2:0.32,Default,,0000,0000,0000,,Ora parliamo di come \ncostruire i tagli. 
+Dialogue: 0,0:2:0.32,0:2:2.96,Default,,0000,0000,0000,,Il taglio non e sempre \npronto: a volte devi 
+Dialogue: 0,0:2:2.96,0:2:3.67,Default,,0000,0000,0000,,prepararlo. 
+Dialogue: 0,0:2:3.67,0:2:6.55,Default,,0000,0000,0000,,Per esempio, hai Fiori \nAsso Sette Tre in mano e 
+Dialogue: 0,0:2:6.55,0:2:8.19,Default,,0000,0000,0000,,Fiori Cinque Due al \nmorto. 
+Dialogue: 0,0:2:8.19,0:2:10.54,Default,,0000,0000,0000,,Vuoi tagliare la terza \nFiori al morto. 
+Dialogue: 0,0:2:10.54,0:2:11.13,Default,,0000,0000,0000,,Come fai? 
+Dialogue: 0,0:2:11.13,0:2:13.89,Default,,0000,0000,0000,,Giochi l'Asso di Fiori, \npoi una Fiori piccola 
+Dialogue: 0,0:2:13.89,0:2:14.95,Default,,0000,0000,0000,,cedendo la presa. 
+Dialogue: 0,0:2:14.95,0:2:17.83,Default,,0000,0000,0000,,Quando riprendi la mano \ngiochi la terza Fiori e 
+Dialogue: 0,0:2:17.83,0:2:18.95,Default,,0000,0000,0000,,la tagli al morto. 
+Dialogue: 0,0:2:18.95,0:2:21.65,Default,,0000,0000,0000,,Hai dovuto cedere una \npresa per costruire il 
+Dialogue: 0,0:2:21.65,0:2:22.12,Default,,0000,0000,0000,,taglio. 
+Dialogue: 0,0:2:22.12,0:2:23.24,Default,,0000,0000,0000,,E un investimento! 
+Dialogue: 0,0:2:23.24,0:2:25.59,Default,,0000,0000,0000,,Ma quando cedi la presa \ncosa fanno gli 
+Dialogue: 0,0:2:25.59,0:2:26.24,Default,,0000,0000,0000,,avversari? 
+Dialogue: 0,0:2:26.24,0:2:28.53,Default,,0000,0000,0000,,Questa e una domanda \nimportantissima. 
+Dialogue: 0,0:2:28.53,0:2:31.29,Default,,0000,0000,0000,,Ogni volta che il tuo \npiano prevede di cedere 
+Dialogue: 0,0:2:31.29,0:2:34.00,Default,,0000,0000,0000,,una presa, devi pensare \ncosa fara il nemico? 
+Dialogue: 0,0:2:34.00,0:2:36.82,Default,,0000,0000,0000,,Se l'avversario e furbo \npotrebbe giocare atout 
+Dialogue: 0,0:2:36.82,0:2:39.35,Default,,0000,0000,0000,,per toglierti la \npossibilita di tagliare! 
+Dialogue: 0,0:2:39.35,0:2:42.05,Default,,0000,0000,0000,,Per questo a volte devi \nessere veloce: prima 
+Dialogue: 0,0:2:42.05,0:2:44.46,Default,,0000,0000,0000,,costruisci i tagli, poi \nbatti le atout. 
+Dialogue: 0,0:2:44.46,0:2:47.22,Default,,0000,0000,0000,,Adesso qualche consiglio \nper quando sei tu il 
+Dialogue: 0,0:2:47.22,0:2:49.87,Default,,0000,0000,0000,,difensore, cioe quando \ncerchi di battere il 
+Dialogue: 0,0:2:49.87,0:2:52.63,Default,,0000,0000,0000,,contratto \ndell'avversario che gioca ad atout. 
+Dialogue: 0,0:2:52.63,0:2:55.10,Default,,0000,0000,0000,,Difendere contro un \ncontratto ad atout e 
+Dialogue: 0,0:2:55.10,0:2:56.92,Default,,0000,0000,0000,,diverso da difendere a \nSenza. 
+Dialogue: 0,0:2:56.92,0:2:59.51,Default,,0000,0000,0000,,A Senza cerchi di \naffrancare il tuo colore 
+Dialogue: 0,0:2:59.51,0:3:2.39,Default,,0000,0000,0000,,lungo, ma ad atout non \nserve a niente perche il 
+Dialogue: 0,0:3:2.39,0:3:3.39,Default,,0000,0000,0000,,Giocante taglia! 
+Dialogue: 0,0:3:3.39,0:3:6.15,Default,,0000,0000,0000,,Quando attacchi contro \nun contratto ad atout, 
+Dialogue: 0,0:3:6.15,0:3:8.91,Default,,0000,0000,0000,,cerca prese rapide: \ncarte che vincono subito. 
+Dialogue: 0,0:3:8.91,0:3:11.79,Default,,0000,0000,0000,,E per l'attacco da una \nsequenza, ti bastano due 
+Dialogue: 0,0:3:11.79,0:3:14.67,Default,,0000,0000,0000,,onori contigui, come Re \nDonna, o Donna Fante, o 
+Dialogue: 0,0:3:14.67,0:3:15.44,Default,,0000,0000,0000,,Fante Dieci. 
+Dialogue: 0,0:3:15.44,0:3:18.26,Default,,0000,0000,0000,,Ricorda anche questo: \nmai attaccare sotto Asso 
+Dialogue: 0,0:3:18.26,0:3:18.84,Default,,0000,0000,0000,,ad atout! 
+Dialogue: 0,0:3:18.84,0:3:21.49,Default,,0000,0000,0000,,Se hai l'Asso di un \ncolore, non giocare una 
+Dialogue: 0,0:3:21.49,0:3:24.31,Default,,0000,0000,0000,,cartina di quel colore \nsperando di fare l'Asso 
+Dialogue: 0,0:3:24.31,0:3:24.66,Default,,0000,0000,0000,,dopo. 
+Dialogue: 0,0:3:24.66,0:3:24.84,Default,,0000,0000,0000,,Rischi di regalare una \npresa. 
+Dialogue: 0,0:3:24.84,0:3:27.92,Default,,0000,0000,0000,,Un trucco furbo dei \ndifensori: attaccare da un 
+Dialogue: 0,0:3:27.92,0:3:28.82,Default,,0000,0000,0000,,colore corto. 
+Dialogue: 0,0:3:28.82,0:3:31.90,Default,,0000,0000,0000,,Se hai solo una o due \ncarte in un colore, puoi 
+Dialogue: 0,0:3:31.90,0:3:32.99,Default,,0000,0000,0000,,attaccare da li. 
+Dialogue: 0,0:3:32.99,0:3:35.95,Default,,0000,0000,0000,,Quando il compagno \nvincera una presa in quel 
+Dialogue: 0,0:3:35.95,0:3:39.03,Default,,0000,0000,0000,,colore, potra rigiocare \nil seme e tu taglierai 
+Dialogue: 0,0:3:39.03,0:3:39.16,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:3:39.16,0:3:42.11,Default,,0000,0000,0000,,E lo stesso superpotere \ndell'atout, ma usato 
+Dialogue: 0,0:3:42.11,0:3:43.01,Default,,0000,0000,0000,,dalla difesa. 
+Dialogue: 0,0:3:43.01,0:3:46.16,Default,,0000,0000,0000,,Quando attacchi da due \ncarte, ricorda: si gioca 
+Dialogue: 0,0:3:46.16,0:3:47.44,Default,,0000,0000,0000,,sempre la piu alta. 
+Dialogue: 0,0:3:47.44,0:3:49.95,Default,,0000,0000,0000,,Con Sette e Quattro, \ngiochi il Sette. 
+Dialogue: 0,0:3:49.95,0:3:52.19,Default,,0000,0000,0000,,Con Dieci e Due, giochi \nil Dieci. 
+Dialogue: 0,0:3:52.19,0:3:54.31,Default,,0000,0000,0000,,Con Asso e Nove, giochi \nl'Asso. 
+Dialogue: 0,0:3:54.31,0:3:57.39,Default,,0000,0000,0000,,Questa e la regola per \nl'attacco da doubleton. 
+Dialogue: 0,0:3:57.39,0:4:0.47,Default,,0000,0000,0000,,Facciamo un esempio \ncompleto di piano di gioco 
+Dialogue: 0,0:4:0.47,0:4:0.60,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:0.60,0:4:2.47,Default,,0000,0000,0000,,Sei il Giocante a 4 \nPicche. 
+Dialogue: 0,0:4:2.47,0:4:5.42,Default,,0000,0000,0000,,Le tue Picche sono Asso \nRe Donna Otto Tre in 
+Dialogue: 0,0:4:5.42,0:4:7.73,Default,,0000,0000,0000,,mano e Sette Sei Quattro \nal morto. 
+Dialogue: 0,0:4:7.73,0:4:10.68,Default,,0000,0000,0000,,Otto atout in totale, \ngli avversari ne hanno 
+Dialogue: 0,0:4:10.68,0:4:11.20,Default,,0000,0000,0000,,cinque. 
+Dialogue: 0,0:4:11.20,0:4:14.34,Default,,0000,0000,0000,,Hai anche Cuori Asso \nCinque Due in mano e Cuori 
+Dialogue: 0,0:4:14.34,0:4:15.37,Default,,0000,0000,0000,,Sette al morto. 
+Dialogue: 0,0:4:15.37,0:4:18.32,Default,,0000,0000,0000,,A Quadri hai Re Quattro \nin mano e Tre Due al 
+Dialogue: 0,0:4:18.32,0:4:18.77,Default,,0000,0000,0000,,morto. 
+Dialogue: 0,0:4:18.77,0:4:21.79,Default,,0000,0000,0000,,Le Fiori sono Asso Sei \nin mano e Sette Cinque 
+Dialogue: 0,0:4:21.79,0:4:22.69,Default,,0000,0000,0000,,Tre al morto. 
+Dialogue: 0,0:4:22.69,0:4:24.17,Default,,0000,0000,0000,,Piano: conti le prese. 
+Dialogue: 0,0:4:24.17,0:4:27.12,Default,,0000,0000,0000,,Tre di Picche se batti \natout, Asso di Cuori, 
+Dialogue: 0,0:4:27.12,0:4:29.63,Default,,0000,0000,0000,,forse il Re di Quadri, \nAsso di Fiori. 
+Dialogue: 0,0:4:29.63,0:4:32.51,Default,,0000,0000,0000,,Sono sei prese sicure, \nte ne servono dieci! 
+Dialogue: 0,0:4:32.51,0:4:33.93,Default,,0000,0000,0000,,Devi cercare i tagli. 
+Dialogue: 0,0:4:33.93,0:4:36.75,Default,,0000,0000,0000,,Al morto Cuori e singola \ndopo l'Asso, puoi 
+Dialogue: 0,0:4:36.75,0:4:38.61,Default,,0000,0000,0000,,tagliare le Cuori al \nmorto. 
+Dialogue: 0,0:4:38.61,0:4:40.09,Default,,0000,0000,0000,,Ecco due prese in piu. 
+Dialogue: 0,0:4:40.09,0:4:43.11,Default,,0000,0000,0000,,La decisione: prima fai \ni tagli di Cuori, poi 
+Dialogue: 0,0:4:43.11,0:4:44.14,Default,,0000,0000,0000,,batti le atout. 
+Dialogue: 0,0:4:44.14,0:4:47.03,Default,,0000,0000,0000,,Se battessi le atout \nprima, sprecheresti le 
+Dialogue: 0,0:4:47.03,0:4:49.98,Default,,0000,0000,0000,,atout del morto e non \npotresti piu tagliare. 
+Dialogue: 0,0:4:49.98,0:4:50.94,Default,,0000,0000,0000,,Ricapitoliamo. 
+Dialogue: 0,0:4:50.94,0:4:52.03,Default,,0000,0000,0000,,Vincenti lunghe? 
+Dialogue: 0,0:4:52.03,0:4:53.45,Default,,0000,0000,0000,,Batti le atout prima. 
+Dialogue: 0,0:4:53.45,0:4:54.60,Default,,0000,0000,0000,,Bisogno di tagli? 
+Dialogue: 0,0:4:54.60,0:4:57.17,Default,,0000,0000,0000,,Fai i tagli prima di \nbattere le atout. 
+Dialogue: 0,0:4:57.17,0:4:59.87,Default,,0000,0000,0000,,Quando cedi una presa, \npensa a cosa fara 
+Dialogue: 0,0:4:59.87,0:5:0.77,Default,,0000,0000,0000,,l'avversario. 
+Dialogue: 0,0:5:0.77,0:5:3.85,Default,,0000,0000,0000,,E come difensore, cerca \nprese rapide e attacca 
+Dialogue: 0,0:5:3.85,0:5:6.03,Default,,0000,0000,0000,,da corti per provare a \ntagliare. 
+Dialogue: 0,0:5:6.03,0:5:8.28,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida? 

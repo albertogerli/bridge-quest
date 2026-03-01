@@ -131,6 +131,34 @@ export default function LezioniPage() {
           <span className="text-xs text-gray-400">{currentCourse.subtitle}</span>
         </motion.div>
 
+        {/* Dispense link */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.09 }}
+          className="mb-4"
+        >
+          <Link href="/dispense">
+            <div className="card-clean rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-[#003DA5]/10 border border-[#003DA5]/15 p-3.5 flex items-center gap-3 hover:shadow-md transition-all active:scale-[0.99] cursor-pointer">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#003DA5]/10">
+                <svg className="h-5 w-5 text-[#003DA5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                  <polyline points="14,2 14,8 20,8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-gray-800">Dispense & Infografiche</p>
+                <p className="text-[11px] text-gray-500">Scarica il materiale didattico</p>
+              </div>
+              <svg className="h-5 w-5 text-gray-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <polyline points="9,6 15,12 9,18" />
+              </svg>
+            </div>
+          </Link>
+        </motion.div>
+
         {/* Overall progress bar */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}

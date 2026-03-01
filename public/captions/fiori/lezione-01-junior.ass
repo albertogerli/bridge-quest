@@ -1,0 +1,168 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:3.35,Default,,0000,0000,0000,,Oggi scopriamo una cosa \nfondamentale nel Bridge 
+Dialogue: 0,0:0:3.35,0:0:6.28,Default,,0000,0000,0000,,come si contano le carte \nche vincono e come si 
+Dialogue: 0,0:0:6.28,0:0:9.15,Default,,0000,0000,0000,,trasformano le carte che \nnon vincono in carte 
+Dialogue: 0,0:0:9.15,0:0:9.76,Default,,0000,0000,0000,,vincenti. 
+Dialogue: 0,0:0:9.76,0:0:12.26,Default,,0000,0000,0000,,Fidati, e tipo imparare \nun superpotere! 
+Dialogue: 0,0:0:12.26,0:0:15.06,Default,,0000,0000,0000,,Partiamo dal concetto \nbase: cos' e una carta 
+Dialogue: 0,0:0:15.06,0:0:15.67,Default,,0000,0000,0000,,vincente? 
+Dialogue: 0,0:0:15.67,0:0:18.54,Default,,0000,0000,0000,,Una carta vincente, o \nfranca, e una carta che 
+Dialogue: 0,0:0:18.54,0:0:21.47,Default,,0000,0000,0000,,se la giochi adesso, in \nquesto preciso momento 
+Dialogue: 0,0:0:21.47,0:0:24.09,Default,,0000,0000,0000,,vince la presa sicuro al \ncento per cento. 
+Dialogue: 0,0:0:24.09,0:0:25.43,Default,,0000,0000,0000,,Nessuno puo batterla. 
+Dialogue: 0,0:0:25.43,0:0:26.71,Default,,0000,0000,0000,,L'esempio piu ovvio? 
+Dialogue: 0,0:0:26.71,0:0:27.20,Default,,0000,0000,0000,,L'Asso! 
+Dialogue: 0,0:0:27.20,0:0:30.13,Default,,0000,0000,0000,,L'Asso e sempre vincente \nperche e la carta piu 
+Dialogue: 0,0:0:30.13,0:0:31.04,Default,,0000,0000,0000,,alta del seme. 
+Dialogue: 0,0:0:31.04,0:0:32.39,Default,,0000,0000,0000,,Nessuno puo batterlo. 
+Dialogue: 0,0:0:32.39,0:0:32.94,Default,,0000,0000,0000,,E il Re? 
+Dialogue: 0,0:0:32.94,0:0:35.62,Default,,0000,0000,0000,,Il Re e vincente solo se \nil suo Asso e gia 
+Dialogue: 0,0:0:35.62,0:0:37.81,Default,,0000,0000,0000,,stato giocato o se lo \npossiedi tu. 
+Dialogue: 0,0:0:37.81,0:0:40.56,Default,,0000,0000,0000,,Se hai Asso e Re nello \nstesso seme, hai due 
+Dialogue: 0,0:0:40.56,0:0:41.17,Default,,0000,0000,0000,,vincenti. 
+Dialogue: 0,0:0:41.17,0:0:43.24,Default,,0000,0000,0000,,Se hai Asso, Re e Donna \ninsieme? 
+Dialogue: 0,0:0:43.24,0:0:44.10,Default,,0000,0000,0000,,Tre vincenti. 
+Dialogue: 0,0:0:44.10,0:0:46.96,Default,,0000,0000,0000,,E se addirittura hai \nAsso, Re, Donna e Fante? 
+Dialogue: 0,0:0:46.96,0:0:48.06,Default,,0000,0000,0000,,Quattro vincenti! 
+Dialogue: 0,0:0:48.06,0:0:50.87,Default,,0000,0000,0000,,Il Fante in quel caso e \nforte quanto l'Asso, 
+Dialogue: 0,0:0:50.87,0:0:53.73,Default,,0000,0000,0000,,perche tutte le carte \nsopra di lui sono nelle 
+Dialogue: 0,0:0:53.73,0:0:54.34,Default,,0000,0000,0000,,tue mani. 
+Dialogue: 0,0:0:54.34,0:0:57.27,Default,,0000,0000,0000,,Questo ci porta a un \nconcetto importantissimo: 
+Dialogue: 0,0:0:57.27,0:0:58.61,Default,,0000,0000,0000,,le carte equivalenti. 
+Dialogue: 0,0:0:58.61,0:1:1.30,Default,,0000,0000,0000,,Sono carte di valore \ncontiguo, una accanto 
+Dialogue: 0,0:1:1.30,0:1:3.43,Default,,0000,0000,0000,,all'altra, come \nRe-Donna-Fante, o 
+Dialogue: 0,0:1:3.43,0:1:4.89,Default,,0000,0000,0000,,Donna-Fante-Dieci-Nove. 
+Dialogue: 0,0:1:4.89,0:1:7.88,Default,,0000,0000,0000,,Se le hai tutte tu, \nfunzionano come una squadra 
+Dialogue: 0,0:1:7.88,0:1:10.63,Default,,0000,0000,0000,,la piu alta vince la \npresa, e le altre sono 
+Dialogue: 0,0:1:10.63,0:1:12.64,Default,,0000,0000,0000,,pronte a vincere le \nsuccessive. 
+Dialogue: 0,0:1:12.64,0:1:14.65,Default,,0000,0000,0000,,Ora, come contiamo le \nvincenti? 
+Dialogue: 0,0:1:14.65,0:1:17.58,Default,,0000,0000,0000,,Dobbiamo guardare le \ncarte di entrambe le mani 
+Dialogue: 0,0:1:17.58,0:1:20.51,Default,,0000,0000,0000,,della coppia, quella del \nGiocante e quella del 
+Dialogue: 0,0:1:20.51,0:1:23.13,Default,,0000,0000,0000,,Morto, seme per seme, e \ncontarle insieme. 
+Dialogue: 0,0:1:23.13,0:1:25.88,Default,,0000,0000,0000,,Se il Morto ha Asso e Re \ndi Picche, e tu in 
+Dialogue: 0,0:1:25.88,0:1:28.50,Default,,0000,0000,0000,,mano hai Donna e Fante \ndi Picche, non hai 
+Dialogue: 0,0:1:28.50,0:1:30.94,Default,,0000,0000,0000,,quattro vincenti \nseparate: le carte si 
+Dialogue: 0,0:1:30.94,0:1:31.61,Default,,0000,0000,0000,,integrano. 
+Dialogue: 0,0:1:31.61,0:1:34.41,Default,,0000,0000,0000,,Asso, Re, Donna, Fante \ntutti insieme formano 
+Dialogue: 0,0:1:34.41,0:1:36.37,Default,,0000,0000,0000,,un'unica sequenza di \nvincenti. 
+Dialogue: 0,0:1:36.37,0:1:38.68,Default,,0000,0000,0000,,E qui c' e una regola \nd'oro che devi 
+Dialogue: 0,0:1:38.68,0:1:41.43,Default,,0000,0000,0000,,memorizzare: il numero \nmassimo di prese che 
+Dialogue: 0,0:1:41.43,0:1:44.23,Default,,0000,0000,0000,,puoi fare in un seme non \npuo mai superare il 
+Dialogue: 0,0:1:44.23,0:1:46.92,Default,,0000,0000,0000,,numero di carte del lato \nche ne ha di piu. 
+Dialogue: 0,0:1:46.92,0:1:49.85,Default,,0000,0000,0000,,Ad esempio: se il Morto \nha Asso, Re e Donna di 
+Dialogue: 0,0:1:49.85,0:1:52.65,Default,,0000,0000,0000,,Cuori ma solo quelle tre \ncarte, e tu in mano 
+Dialogue: 0,0:1:52.65,0:1:55.64,Default,,0000,0000,0000,,hai Fante, Dieci e Nove \ndi Cuori ma solo quelle 
+Dialogue: 0,0:1:55.64,0:1:58.08,Default,,0000,0000,0000,,tre, in teoria hai sei \ncarte vincenti. 
+Dialogue: 0,0:1:58.08,0:2:0.64,Default,,0000,0000,0000,,Ma ne farai solo tre di \nprese, perche il 
+Dialogue: 0,0:2:0.64,0:2:0.34,Default,,0000,0000,0000,,massimo e tre carte per \nlato! 
+Dialogue: 0,0:2:0.34,0:2:3.12,Default,,0000,0000,0000,,Adesso passiamo alle \ncarte affrancabili, che 
+Dialogue: 0,0:2:3.12,0:2:4.99,Default,,0000,0000,0000,,sono ancora piu \ninteressanti. 
+Dialogue: 0,0:2:4.99,0:2:7.84,Default,,0000,0000,0000,,Una carta affrancabile e \nuna carta che adesso 
+Dialogue: 0,0:2:7.84,0:2:10.68,Default,,0000,0000,0000,,non vince, ma che puo \ndiventare vincente dopo 
+Dialogue: 0,0:2:10.68,0:2:12.31,Default,,0000,0000,0000,,una manovra intelligente . 
+Dialogue: 0,0:2:12.31,0:2:14.73,Default,,0000,0000,0000,,E qui che entra in gioco \nla strategia! 
+Dialogue: 0,0:2:14.73,0:2:17.57,Default,,0000,0000,0000,,Immagina di avere Re, \nDonna, Fante e Dieci di 
+Dialogue: 0,0:2:17.57,0:2:18.90,Default,,0000,0000,0000,,Fiori, ma non l'Asso. 
+Dialogue: 0,0:2:18.90,0:2:21.56,Default,,0000,0000,0000,,Nessuna di queste carte \ne vincente adesso, 
+Dialogue: 0,0:2:21.56,0:2:24.10,Default,,0000,0000,0000,,perche l'Asso e in mano \na un avversario. 
+Dialogue: 0,0:2:24.10,0:2:27.06,Default,,0000,0000,0000,,Ma se giochi il Re, \nl'avversario sara costretto 
+Dialogue: 0,0:2:27.06,0:2:28.45,Default,,0000,0000,0000,,a prendere con l'Asso. 
+Dialogue: 0,0:2:28.45,0:2:29.72,Default,,0000,0000,0000,,E cosa succede dopo? 
+Dialogue: 0,0:2:29.72,0:2:32.56,Default,,0000,0000,0000,,La Donna, il Fante e il \nDieci diventano tutti 
+Dialogue: 0,0:2:32.56,0:2:33.17,Default,,0000,0000,0000,,vincenti! 
+Dialogue: 0,0:2:33.17,0:2:34.38,Default,,0000,0000,0000,,Si sono affrancati. 
+Dialogue: 0,0:2:34.38,0:2:37.16,Default,,0000,0000,0000,,Questo si chiama \naffrancamento di forza: fai 
+Dialogue: 0,0:2:37.16,0:2:40.12,Default,,0000,0000,0000,,cadere la carta \navversaria piu alta e le tue si 
+Dialogue: 0,0:2:40.12,0:2:40.72,Default,,0000,0000,0000,,liberano. 
+Dialogue: 0,0:2:40.72,0:2:43.69,Default,,0000,0000,0000,,Attenzione pero: le \ncarte appena affrancate non 
+Dialogue: 0,0:2:43.69,0:2:45.74,Default,,0000,0000,0000,,sono disponibili \nimmediatamente. 
+Dialogue: 0,0:2:45.74,0:2:48.64,Default,,0000,0000,0000,,Dopo che l'avversario ha \npreso con il suo Asso 
+Dialogue: 0,0:2:48.64,0:2:49.91,Default,,0000,0000,0000,,tocca a lui giocare. 
+Dialogue: 0,0:2:49.91,0:2:52.81,Default,,0000,0000,0000,,Dovrai aspettare di \nvincere un'altra presa per 
+Dialogue: 0,0:2:52.81,0:2:55.60,Default,,0000,0000,0000,,poter incassare le carte \nche hai affrancato. 
+Dialogue: 0,0:2:55.60,0:2:58.26,Default,,0000,0000,0000,,Quindi ricordati: \naffrancare non significa 
+Dialogue: 0,0:2:58.26,0:2:59.22,Default,,0000,0000,0000,,vincere subito! 
+Dialogue: 0,0:2:59.22,0:3:2.00,Default,,0000,0000,0000,,Anche per le \naffrancabili vale la regola del 
+Dialogue: 0,0:3:2.00,0:3:2.73,Default,,0000,0000,0000,,lato lungo. 
+Dialogue: 0,0:3:2.73,0:3:5.63,Default,,0000,0000,0000,,Se hai Re, Donna e Fante \nal Morto, che ha solo 
+Dialogue: 0,0:3:5.63,0:3:8.59,Default,,0000,0000,0000,,tre carte, e Dieci, Tre \ne Due in mano, anche se 
+Dialogue: 0,0:3:8.59,0:3:11.07,Default,,0000,0000,0000,,perdi l'Asso fai tre \nprese, non di piu. 
+Dialogue: 0,0:3:11.07,0:3:13.91,Default,,0000,0000,0000,,Ma se al Morto avessi Re \nDonna, Fante, Nove e 
+Dialogue: 0,0:3:13.91,0:3:16.57,Default,,0000,0000,0000,,Cinque, cioe cinque \ncarte, dopo aver perso 
+Dialogue: 0,0:3:16.57,0:3:19.35,Default,,0000,0000,0000,,l'Asso faresti quattro \nprese, perche il lato 
+Dialogue: 0,0:3:19.35,0:3:22.20,Default,,0000,0000,0000,,lungo ha cinque carte e \nne perdi solo una con 
+Dialogue: 0,0:3:22.20,0:3:22.68,Default,,0000,0000,0000,,l'Asso. 
+Dialogue: 0,0:3:22.68,0:3:25.64,Default,,0000,0000,0000,,E adesso il consiglio \nstrategico piu importante 
+Dialogue: 0,0:3:25.64,0:3:28.48,Default,,0000,0000,0000,,della lezione: non \naffrettarti a incassare le 
+Dialogue: 0,0:3:28.48,0:3:29.09,Default,,0000,0000,0000,,vincenti! 
+Dialogue: 0,0:3:29.09,0:3:30.96,Default,,0000,0000,0000,,Lo so, la tentazione e \nforte. 
+Dialogue: 0,0:3:30.96,0:3:31.75,Default,,0000,0000,0000,,Hai un Asso? 
+Dialogue: 0,0:3:31.75,0:3:33.08,Default,,0000,0000,0000,,Vuoi subito giocarlo. 
+Dialogue: 0,0:3:33.08,0:3:33.80,Default,,0000,0000,0000,,Ma aspetta! 
+Dialogue: 0,0:3:33.80,0:3:36.70,Default,,0000,0000,0000,,La strategia giusta e \ngiocare prima nei colori 
+Dialogue: 0,0:3:36.70,0:3:38.58,Default,,0000,0000,0000,,dove hai carte da \naffrancare. 
+Dialogue: 0,0:3:38.58,0:3:39.06,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:3:39.06,0:3:41.48,Default,,0000,0000,0000,,Perche una volta \naffrancate le avrai a 
+Dialogue: 0,0:3:41.48,0:3:43.84,Default,,0000,0000,0000,,disposizione per il \nresto della mano. 
+Dialogue: 0,0:3:43.84,0:3:46.32,Default,,0000,0000,0000,,Se incassi subito le \nvincenti, perdi le 
+Dialogue: 0,0:3:46.32,0:3:48.80,Default,,0000,0000,0000,,comunicazioni e magari \nnon riesci piu a 
+Dialogue: 0,0:3:48.80,0:3:48.92,Default,,0000,0000,0000,,raggiungere le carte \naffrancate. 
+Dialogue: 0,0:3:48.92,0:3:51.99,Default,,0000,0000,0000,,Facciamo un esempio \nconcreto per capire tutto 
+Dialogue: 0,0:3:51.99,0:3:52.51,Default,,0000,0000,0000,,meglio. 
+Dialogue: 0,0:3:52.51,0:3:55.65,Default,,0000,0000,0000,,Immagina questa \nsituazione: il Morto ha Asso e 
+Dialogue: 0,0:3:55.65,0:3:58.65,Default,,0000,0000,0000,,Sette di Picche, e tu in \nmano hai Re, Donna, 
+Dialogue: 0,0:3:58.65,0:4:0.68,Default,,0000,0000,0000,,Fante, Dieci e Due di \nPicche. 
+Dialogue: 0,0:4:0.68,0:4:3.88,Default,,0000,0000,0000,,Le vincenti sono Asso, \nRe, Donna, Fante e Dieci 
+Dialogue: 0,0:4:3.88,0:4:5.77,Default,,0000,0000,0000,,cioe cinque carte \nvincenti. 
+Dialogue: 0,0:4:5.77,0:4:7.14,Default,,0000,0000,0000,,Ma quante prese fai? 
+Dialogue: 0,0:4:7.14,0:4:10.21,Default,,0000,0000,0000,,Il lato lungo e la tua \nmano con cinque carte, 
+Dialogue: 0,0:4:10.21,0:4:12.30,Default,,0000,0000,0000,,quindi puoi fare cinque \nprese. 
+Dialogue: 0,0:4:12.30,0:4:13.87,Default,,0000,0000,0000,,Perfetto, qui coincide! 
+Dialogue: 0,0:4:13.87,0:4:17.00,Default,,0000,0000,0000,,Ora un altro esempio: il \nMorto ha Fante, Dieci 
+Dialogue: 0,0:4:17.00,0:4:20.07,Default,,0000,0000,0000,,e Nove di Cuori, e tu \nhai Asso, Re e Donna di 
+Dialogue: 0,0:4:20.07,0:4:20.53,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:4:20.53,0:4:23.60,Default,,0000,0000,0000,,Hai sei carte vincenti \nintegrate, ma solo tre 
+Dialogue: 0,0:4:23.60,0:4:24.64,Default,,0000,0000,0000,,carte per lato. 
+Dialogue: 0,0:4:24.64,0:4:26.41,Default,,0000,0000,0000,,Farai tre prese, non sei . 
+Dialogue: 0,0:4:26.41,0:4:27.58,Default,,0000,0000,0000,,Ricordalo sempre! 
+Dialogue: 0,0:4:27.58,0:4:29.08,Default,,0000,0000,0000,,E per le affrancabili? 
+Dialogue: 0,0:4:29.08,0:4:32.28,Default,,0000,0000,0000,,Prendiamo questo caso: \nil Morto ha Fante, Dieci 
+Dialogue: 0,0:4:32.28,0:4:35.16,Default,,0000,0000,0000,,e Tre di Quadri, e tu \nhai Re, Donna, Nove, 
+Dialogue: 0,0:4:35.16,0:4:36.72,Default,,0000,0000,0000,,Cinque e Due di Quadri. 
+Dialogue: 0,0:4:36.72,0:4:39.79,Default,,0000,0000,0000,,Le vincenti immediate \nsono zero, perche manca 
+Dialogue: 0,0:4:39.79,0:4:40.32,Default,,0000,0000,0000,,l'Asso. 
+Dialogue: 0,0:4:40.32,0:4:41.62,Default,,0000,0000,0000,,Ma le affrancabili? 
+Dialogue: 0,0:4:41.62,0:4:44.50,Default,,0000,0000,0000,,Se giochi e forzi l'Asso \nti restano Fante, 
+Dialogue: 0,0:4:44.50,0:4:46.39,Default,,0000,0000,0000,,Dieci, Donna, Nove, \nCinque. 
+Dialogue: 0,0:4:46.39,0:4:49.59,Default,,0000,0000,0000,,Il lato lungo ha cinque \ncarte, ne perdi una con 
+Dialogue: 0,0:4:49.59,0:4:52.46,Default,,0000,0000,0000,,l'Asso: puoi fare \nquattro prese di Quadri! 
+Dialogue: 0,0:4:52.46,0:4:54.88,Default,,0000,0000,0000,,Ecco il riassunto dei \npunti chiave. 
+Dialogue: 0,0:4:54.88,0:4:57.88,Default,,0000,0000,0000,,Primo: una carta \nvincente vince la presa con 
+Dialogue: 0,0:4:57.88,0:4:59.71,Default,,0000,0000,0000,,certezza assoluta, \nadesso. 
+Dialogue: 0,0:4:59.71,0:5:2.85,Default,,0000,0000,0000,,Secondo: le carte \nequivalenti formano sequenze 
+Dialogue: 0,0:5:2.85,0:5:5.39,Default,,0000,0000,0000,,e si contano insieme tra \nle due mani. 
+Dialogue: 0,0:5:5.39,0:5:8.59,Default,,0000,0000,0000,,Terzo: il numero di \nprese in un seme non supera 
+Dialogue: 0,0:5:8.59,0:5:10.55,Default,,0000,0000,0000,,mai le carte del lato \nlungo. 
+Dialogue: 0,0:5:10.55,0:5:13.69,Default,,0000,0000,0000,,Quarto: l'affrancamento \ndi forza significa far 
+Dialogue: 0,0:5:13.69,0:5:16.89,Default,,0000,0000,0000,,cadere le carte alte \navversarie per liberare le 
+Dialogue: 0,0:5:16.89,0:5:17.21,Default,,0000,0000,0000,,tue. 
+Dialogue: 0,0:5:17.21,0:5:20.28,Default,,0000,0000,0000,,Quinto: gioca prima nei \ncolori da affrancare, 
+Dialogue: 0,0:5:20.28,0:5:21.98,Default,,0000,0000,0000,,poi incassa le vincenti . 
+Dialogue: 0,0:5:21.98,0:5:24.27,Default,,0000,0000,0000,,Sei pronto per la \nprossima sfida? 
+Dialogue: 0,0:5:24.27,0:5:27.34,Default,,0000,0000,0000,,Nella prossima lezione \ncambiamo prospettiva e 
+Dialogue: 0,0:5:27.34,0:5:30.01,Default,,0000,0000,0000,,vediamo il gioco dal \npunto di vista dei 
+Dialogue: 0,0:5:30.01,0:5:30.73,Default,,0000,0000,0000,,difensori. 
+Dialogue: 0,0:5:30.73,0:5:33.74,Default,,0000,0000,0000,,Sara come guardare il \nBridge dall'altro lato 
+Dialogue: 0,0:5:33.74,0:5:34.78,Default,,0000,0000,0000,,dello specchio! 

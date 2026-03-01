@@ -45,3 +45,14 @@ next-env.d.ts
 public/sw.js
 public/sw.js.map
 public/swe-worker-*.js
+
+# Large video files (stored externally, not in git)
+public/videos/*.mp4
+public/videos/**/*.mp4
+
+# Large PDF course compilations
+public/infografiche/*/corso-*.pdf
+
+# Temp files
+*.tmp
+.gitignore.tmp

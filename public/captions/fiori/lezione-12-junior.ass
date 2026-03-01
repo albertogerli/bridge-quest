@@ -1,0 +1,160 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.34,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.34,0:0:2.94,Default,,0000,0000,0000,,Nella lezione scorsa \nabbiamo visto come fare 
+Dialogue: 0,0:0:2.94,0:0:5.37,Default,,0000,0000,0000,,l'intervento quando gli \navversari aprono. 
+Dialogue: 0,0:0:5.37,0:0:8.09,Default,,0000,0000,0000,,Oggi capovolgiamo la \nsituazione: siamo noi che 
+Dialogue: 0,0:0:8.09,0:0:10.69,Default,,0000,0000,0000,,abbiamo aperto e gli \navversari intervengono. 
+Dialogue: 0,0:0:10.69,0:0:12.84,Default,,0000,0000,0000,,Come cambia la nostra \ndichiarazione? 
+Dialogue: 0,0:0:12.84,0:0:15.21,Default,,0000,0000,0000,,Cambia parecchio, e te \nlo spiego subito! 
+Dialogue: 0,0:0:15.21,0:0:17.76,Default,,0000,0000,0000,,La prima cosa da capire \ne la differenza tra 
+Dialogue: 0,0:0:17.76,0:0:20.47,Default,,0000,0000,0000,,dichiarazioni obbligate \ne dichiarazioni libere 
+Dialogue: 0,0:0:20.47,0:0:20.58,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:20.58,0:0:23.30,Default,,0000,0000,0000,,Quando il dialogo e solo \ntra te e il compagno, 
+Dialogue: 0,0:0:23.30,0:0:25.90,Default,,0000,0000,0000,,le tue risposte sono \nspesso obbligate: se il 
+Dialogue: 0,0:0:25.90,0:0:28.33,Default,,0000,0000,0000,,compagno apre e tu hai \ncinque punti, devi 
+Dialogue: 0,0:0:28.33,0:0:30.93,Default,,0000,0000,0000,,rispondere perche \naltrimenti il compagno non 
+Dialogue: 0,0:0:30.93,0:0:33.08,Default,,0000,0000,0000,,avra mai piu l'occasione \ndi parlare. 
+Dialogue: 0,0:0:33.08,0:0:35.57,Default,,0000,0000,0000,,Ma quando un avversario \ninterviene, il tuo 
+Dialogue: 0,0:0:35.57,0:0:38.00,Default,,0000,0000,0000,,compagno avra comunque \nmodo di dichiarare 
+Dialogue: 0,0:0:38.00,0:0:39.64,Default,,0000,0000,0000,,perche il giro torna a \nlui. 
+Dialogue: 0,0:0:39.64,0:0:42.30,Default,,0000,0000,0000,,Quindi tu non sei piu \nobbligato a parlare per 
+Dialogue: 0,0:0:42.30,0:0:43.82,Default,,0000,0000,0000,,tenergli aperta la porta . 
+Dialogue: 0,0:0:43.82,0:0:45.01,Default,,0000,0000,0000,,Questo cambia tutto! 
+Dialogue: 0,0:0:45.01,0:0:47.78,Default,,0000,0000,0000,,Se prima dovevi per \nforza rispondere con cinque 
+Dialogue: 0,0:0:47.78,0:0:50.49,Default,,0000,0000,0000,,punti, adesso con una \nmano debole puoi passare 
+Dialogue: 0,0:0:50.49,0:0:51.46,Default,,0000,0000,0000,,tranquillamente. 
+Dialogue: 0,0:0:51.46,0:0:53.89,Default,,0000,0000,0000,,Una dichiarazione fatta \nliberamente, cioe 
+Dialogue: 0,0:0:53.89,0:0:56.60,Default,,0000,0000,0000,,quando potresti passare \nsenza problemi, mostra 
+Dialogue: 0,0:0:56.60,0:0:59.26,Default,,0000,0000,0000,,sempre una mano che e \ncontenta di dichiarare. 
+Dialogue: 0,0:0:59.26,0:1:1.86,Default,,0000,0000,0000,,Non stai parlando per \nobbligo, stai parlando 
+Dialogue: 0,0:1:1.86,0:1:4.46,Default,,0000,0000,0000,,perche hai qualcosa di \ninteressante da dire. 
+Dialogue: 0,0:1:4.46,0:1:6.50,Default,,0000,0000,0000,,Vediamo cosa cambia \nconcretamente. 
+Dialogue: 0,0:1:6.50,0:1:8.99,Default,,0000,0000,0000,,Primo: con mani molto \ndeboli, da quattro a 
+Dialogue: 0,0:1:8.99,0:1:11.02,Default,,0000,0000,0000,,cinque punti, adesso \npuoi passare. 
+Dialogue: 0,0:1:11.02,0:1:13.28,Default,,0000,0000,0000,,Non sei piu costretto a \ndire qualcosa. 
+Dialogue: 0,0:1:13.28,0:1:15.83,Default,,0000,0000,0000,,Secondo: se dici Senza \nAtout, non e piu una 
+Dialogue: 0,0:1:15.83,0:1:18.43,Default,,0000,0000,0000,,risposta di ripiego, ma \nuna vera proposta di 
+Dialogue: 0,0:1:18.43,0:1:20.92,Default,,0000,0000,0000,,contratto che promette \nil fermo nel colore 
+Dialogue: 0,0:1:20.92,0:1:21.88,Default,,0000,0000,0000,,dell'avversario. 
+Dialogue: 0,0:1:21.88,0:1:24.65,Default,,0000,0000,0000,,Terzo: qualsiasi colore \nnuovo che dichiari deve 
+Dialogue: 0,0:1:24.65,0:1:27.02,Default,,0000,0000,0000,,essere almeno quinto, \ncioe cinque carte. 
+Dialogue: 0,0:1:27.02,0:1:29.74,Default,,0000,0000,0000,,Quarto: si aggiungono \ndue nuove dichiarazioni, 
+Dialogue: 0,0:1:29.74,0:1:32.00,Default,,0000,0000,0000,,il Contro e il Surcontro \nche prima non 
+Dialogue: 0,0:1:32.00,0:1:33.36,Default,,0000,0000,0000,,esistevano nel dialogo. 
+Dialogue: 0,0:1:33.36,0:1:36.13,Default,,0000,0000,0000,,Adesso vediamo i due \nscenari principali: quando 
+Dialogue: 0,0:1:36.13,0:1:38.73,Default,,0000,0000,0000,,l'avversario fa Contro e \nquando l'avversario 
+Dialogue: 0,0:1:38.73,0:1:39.92,Default,,0000,0000,0000,,interviene a colore. 
+Dialogue: 0,0:1:39.92,0:1:42.69,Default,,0000,0000,0000,,Se l'avversario fa \nContro sulla nostra apertura 
+Dialogue: 0,0:1:42.69,0:1:45.34,Default,,0000,0000,0000,,il compagno del \ncontrante deve dichiarare, ma 
+Dialogue: 0,0:1:45.34,0:1:47.89,Default,,0000,0000,0000,,noi come rispondenti \nabbiamo nuove opzioni. 
+Dialogue: 0,0:1:47.89,0:1:49.87,Default,,0000,0000,0000,,La piu importante e il \nSurcontro. 
+Dialogue: 0,0:1:49.87,0:1:52.36,Default,,0000,0000,0000,,Se hai undici o piu \npunti, dici Surcontro. 
+Dialogue: 0,0:1:52.36,0:1:54.67,Default,,0000,0000,0000,,E l'unica dichiarazione \nforte in questa 
+Dialogue: 0,0:1:54.67,0:1:55.35,Default,,0000,0000,0000,,situazione. 
+Dialogue: 0,0:1:55.35,0:1:58.12,Default,,0000,0000,0000,,Non stai descrivendo la \ntua distribuzione, stai 
+Dialogue: 0,0:1:58.12,0:2:0.61,Default,,0000,0000,0000,,solo comunicando: `` Ho \nuna bella mano con 
+Dialogue: 0,0:2:0.61,0:2:3.21,Default,,0000,0000,0000,,almeno undici punti, ne \nparliamo al prossimo 
+Dialogue: 0,0:2:3.21,0:2:3.55,Default,,0000,0000,0000,,giro. 
+Dialogue: 0,0:2:3.55,0:2:6.21,Default,,0000,0000,0000,,'' Se invece di fare \nSurcontro dici un colore 
+Dialogue: 0,0:2:6.21,0:2:8.92,Default,,0000,0000,0000,,nuovo, stai mostrando un \nbuon colore di almeno 
+Dialogue: 0,0:2:8.92,0:2:11.69,Default,,0000,0000,0000,,cinque o sei carte, ma \ncon meno di undici punti 
+Dialogue: 0,0:2:11.69,0:2:11.81,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:11.81,0:2:13.79,Default,,0000,0000,0000,,Non e una dichiarazione \nforzante. 
+Dialogue: 0,0:2:13.79,0:2:16.33,Default,,0000,0000,0000,,Puoi anche dare \nl'appoggio al compagno come 
+Dialogue: 0,0:2:16.33,0:2:18.99,Default,,0000,0000,0000,,faresti normalmente, ma \nin ogni caso con meno 
+Dialogue: 0,0:2:18.99,0:2:21.53,Default,,0000,0000,0000,,di undici punti, perche \nse ne avessi di piu 
+Dialogue: 0,0:2:21.53,0:2:22.61,Default,,0000,0000,0000,,faresti Surcontro. 
+Dialogue: 0,0:2:22.61,0:2:25.15,Default,,0000,0000,0000,,Uno Senza Atout in \nquesta situazione mostra 
+Dialogue: 0,0:2:25.15,0:2:27.87,Default,,0000,0000,0000,,sette a dieci punti e \ndice che sei contento di 
+Dialogue: 0,0:2:27.87,0:2:30.58,Default,,0000,0000,0000,,giocare a Senza, con i \nfermi nei colori che il 
+Dialogue: 0,0:2:30.58,0:2:31.88,Default,,0000,0000,0000,,contrante ha promesso. 
+Dialogue: 0,0:2:31.88,0:2:34.59,Default,,0000,0000,0000,,E se non ti ritrovi in \nnessuno di questi casi, 
+Dialogue: 0,0:2:34.59,0:2:31.82,Default,,0000,0000,0000,,passi. 
+Dialogue: 0,0:2:31.82,0:2:34.63,Default,,0000,0000,0000,,Adesso vediamo cosa \nsuccede quando l'avversario 
+Dialogue: 0,0:2:34.63,0:2:37.09,Default,,0000,0000,0000,,interviene a colore, per \nesempio dice uno 
+Dialogue: 0,0:2:37.09,0:2:39.61,Default,,0000,0000,0000,,Picche sulla nostra \napertura di uno Cuori. 
+Dialogue: 0,0:2:39.61,0:2:42.13,Default,,0000,0000,0000,,Anche qui le regole \ncambiano rispetto alla 
+Dialogue: 0,0:2:42.13,0:2:43.44,Default,,0000,0000,0000,,dichiarazione normale. 
+Dialogue: 0,0:2:43.44,0:2:46.08,Default,,0000,0000,0000,,Un colore nuovo e sempre \nforzante e promette 
+Dialogue: 0,0:2:46.08,0:2:47.28,Default,,0000,0000,0000,,almeno cinque carte. 
+Dialogue: 0,0:2:47.28,0:2:49.74,Default,,0000,0000,0000,,Questa e una differenza \nimportante: nella 
+Dialogue: 0,0:2:49.74,0:2:52.38,Default,,0000,0000,0000,,dichiarazione senza \nintervento, un colore in 
+Dialogue: 0,0:2:52.38,0:2:55.18,Default,,0000,0000,0000,,risposta a livello uno \npoteva essere anche solo 
+Dialogue: 0,0:2:55.18,0:2:55.64,Default,,0000,0000,0000,,quarto. 
+Dialogue: 0,0:2:55.64,0:2:58.05,Default,,0000,0000,0000,,Con l'intervento, \ndiventa almeno quinto. 
+Dialogue: 0,0:2:58.05,0:3:0.68,Default,,0000,0000,0000,,Il motivo e che non sei \nobbligato a parlare, 
+Dialogue: 0,0:3:0.68,0:3:3.49,Default,,0000,0000,0000,,quindi se decidi di \nmostrare un colore nuovo lo 
+Dialogue: 0,0:3:3.49,0:3:6.29,Default,,0000,0000,0000,,fai perche e un colore \nvero e serio, con cinque 
+Dialogue: 0,0:3:6.29,0:3:6.69,Default,,0000,0000,0000,,carte. 
+Dialogue: 0,0:3:6.69,0:3:9.33,Default,,0000,0000,0000,,Il Contro in questa \nsituazione e diverso dal 
+Dialogue: 0,0:3:9.33,0:3:11.45,Default,,0000,0000,0000,,Contro informativo \ndell'intervento. 
+Dialogue: 0,0:3:11.45,0:3:14.14,Default,,0000,0000,0000,,Lo usi quando hai punti \nalmeno otto, e la tua 
+Dialogue: 0,0:3:14.14,0:3:16.89,Default,,0000,0000,0000,,dichiarazione e stata \nimpedita dall'intervento 
+Dialogue: 0,0:3:16.89,0:3:17.57,Default,,0000,0000,0000,,avversario. 
+Dialogue: 0,0:3:17.57,0:3:20.21,Default,,0000,0000,0000,,Per esempio, il compagno \napre di uno Quadri, 
+Dialogue: 0,0:3:20.21,0:3:22.96,Default,,0000,0000,0000,,l'avversario dice uno \nPicche, e tu hai quattro 
+Dialogue: 0,0:3:22.96,0:3:24.27,Default,,0000,0000,0000,,Cuori con dieci punti. 
+Dialogue: 0,0:3:24.27,0:3:27.08,Default,,0000,0000,0000,,Non puoi dire uno Cuori \nperche uno Picche e piu 
+Dialogue: 0,0:3:27.08,0:3:27.42,Default,,0000,0000,0000,,alto. 
+Dialogue: 0,0:3:27.42,0:3:29.71,Default,,0000,0000,0000,,Fai Contro per dire: `` \nHo i punti per 
+Dialogue: 0,0:3:29.71,0:3:32.00,Default,,0000,0000,0000,,dichiarare e cerco un \nfit, aiutami tu. 
+Dialogue: 0,0:3:32.00,0:3:34.70,Default,,0000,0000,0000,,'' Gli appoggi al \ncompagno restano invariati. 
+Dialogue: 0,0:3:34.70,0:3:37.04,Default,,0000,0000,0000,,Se hai il fit e i punti \ngiusti, appoggi 
+Dialogue: 0,0:3:37.04,0:3:39.56,Default,,0000,0000,0000,,esattamente come faresti \nsenza intervento. 
+Dialogue: 0,0:3:39.56,0:3:42.25,Default,,0000,0000,0000,,I Senza Atout cambiano \nsignificato perche ora 
+Dialogue: 0,0:3:42.25,0:3:44.77,Default,,0000,0000,0000,,promettono il fermo nel \ncolore avversario. 
+Dialogue: 0,0:3:44.77,0:3:47.52,Default,,0000,0000,0000,,Uno Senza Atout mostra \nsette a dieci punti con 
+Dialogue: 0,0:3:47.52,0:3:48.10,Default,,0000,0000,0000,,il fermo. 
+Dialogue: 0,0:3:48.10,0:3:50.73,Default,,0000,0000,0000,,Due Senza mostra \nundici-dodici con il fermo. 
+Dialogue: 0,0:3:50.73,0:3:53.31,Default,,0000,0000,0000,,Tre Senza mostra \ntredici-quattordici con il 
+Dialogue: 0,0:3:53.31,0:3:53.71,Default,,0000,0000,0000,,fermo. 
+Dialogue: 0,0:3:53.71,0:3:56.00,Default,,0000,0000,0000,,Se dici Senza, stai \nproponendo un vero 
+Dialogue: 0,0:3:56.00,0:3:58.63,Default,,0000,0000,0000,,contratto a Senza e \ngarantisci che il colore 
+Dialogue: 0,0:3:58.63,0:4:0.58,Default,,0000,0000,0000,,dell'avversario non ti \nfa paura. 
+Dialogue: 0,0:4:0.58,0:4:3.27,Default,,0000,0000,0000,,Ultimo argomento \nimportante: l'intervento del 
+Dialogue: 0,0:4:3.27,0:4:5.79,Default,,0000,0000,0000,,quarto di mano e come \nreagisce l'apertore. 
+Dialogue: 0,0:4:5.79,0:4:8.37,Default,,0000,0000,0000,,Il tuo compagno ha \nrisposto con un colore a 
+Dialogue: 0,0:4:8.37,0:4:11.00,Default,,0000,0000,0000,,livello uno, forzante, e \nadesso l'avversario 
+Dialogue: 0,0:4:11.00,0:4:11.69,Default,,0000,0000,0000,,interviene. 
+Dialogue: 0,0:4:11.69,0:4:14.21,Default,,0000,0000,0000,,Bene, adesso tu come \napertore puoi passare 
+Dialogue: 0,0:4:14.21,0:4:14.95,Default,,0000,0000,0000,,liberamente! 
+Dialogue: 0,0:4:14.95,0:4:17.53,Default,,0000,0000,0000,,Il compagno avra \ncomunque la possibilita di 
+Dialogue: 0,0:4:17.53,0:4:19.08,Default,,0000,0000,0000,,parlare al prossimo giro . 
+Dialogue: 0,0:4:19.08,0:4:21.25,Default,,0000,0000,0000,,Con mani normali, sia \nbilanciate che 
+Dialogue: 0,0:4:21.25,0:4:23.71,Default,,0000,0000,0000,,sbilanciate di Diritto, \nl'apertore passa. 
+Dialogue: 0,0:4:23.71,0:4:26.23,Default,,0000,0000,0000,,Con mani sbilanciate di \nRovescio, dichiara 
+Dialogue: 0,0:4:26.23,0:4:28.35,Default,,0000,0000,0000,,normalmente ignorando \nl'intervento. 
+Dialogue: 0,0:4:28.35,0:4:30.87,Default,,0000,0000,0000,,E con una bilanciata \nforte, diciotto-venti 
+Dialogue: 0,0:4:30.87,0:4:33.56,Default,,0000,0000,0000,,punti e fermo nel colore \navversario, dichiara 
+Dialogue: 0,0:4:33.56,0:4:34.31,Default,,0000,0000,0000,,Senza Atout. 
+Dialogue: 0,0:4:34.31,0:4:36.83,Default,,0000,0000,0000,,Un colore che ridichiari \nspontaneamente in 
+Dialogue: 0,0:4:36.83,0:4:39.18,Default,,0000,0000,0000,,questa situazione deve \nessere un colore 
+Dialogue: 0,0:4:39.18,0:4:41.98,Default,,0000,0000,0000,,eccellente, perche lo \nstai mostrando per libera 
+Dialogue: 0,0:4:41.98,0:4:42.44,Default,,0000,0000,0000,,scelta. 
+Dialogue: 0,0:4:42.44,0:4:45.19,Default,,0000,0000,0000,,E se hai il fit con il \ncompagno, l'appoggio ha 
+Dialogue: 0,0:4:45.19,0:4:46.45,Default,,0000,0000,0000,,la priorita su tutto. 
+Dialogue: 0,0:4:46.45,0:4:48.22,Default,,0000,0000,0000,,Facciamo un riepilogo \nveloce. 
+Dialogue: 0,0:4:48.22,0:4:50.74,Default,,0000,0000,0000,,Dopo l'intervento: non \nsei piu obbligato a 
+Dialogue: 0,0:4:50.74,0:4:53.43,Default,,0000,0000,0000,,parlare con mani deboli \ni Senza promettono il 
+Dialogue: 0,0:4:53.43,0:4:56.07,Default,,0000,0000,0000,,fermo, i colori nuovi \nsono almeno quinti, il 
+Dialogue: 0,0:4:56.07,0:4:58.82,Default,,0000,0000,0000,,Surcontro mostra undici \no piu, il Contro cerca 
+Dialogue: 0,0:4:58.82,0:4:59.79,Default,,0000,0000,0000,,il fit impedito. 
+Dialogue: 0,0:4:59.79,0:5:2.54,Default,,0000,0000,0000,,L'apertore in quarta \nposizione puo passare con 
+Dialogue: 0,0:5:2.54,0:5:3.34,Default,,0000,0000,0000,,mani normali. 
+Dialogue: 0,0:5:3.34,0:5:5.98,Default,,0000,0000,0000,,Complimenti, hai \ncompletato tutta la sezione 
+Dialogue: 0,0:5:5.98,0:5:8.15,Default,,0000,0000,0000,,sulla dichiarazione del \nCorso Fiori! 
+Dialogue: 0,0:5:8.15,0:5:10.90,Default,,0000,0000,0000,,Adesso conosci le basi \nper aprire, rispondere, 
+Dialogue: 0,0:5:10.90,0:5:13.71,Default,,0000,0000,0000,,ridichiarare e gestire \ngli interventi avversari 
+Dialogue: 0,0:5:13.71,0:5:13.82,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:5:13.82,0:5:16.28,Default,,0000,0000,0000,,E un traguardo \nimportante, continua cosi! 
