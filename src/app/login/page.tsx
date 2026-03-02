@@ -26,7 +26,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const initialMode = searchParams.get("mode") === "signup" ? "signup" : "login";
-  const { signIn, signUp, uploadAvatar } = useAuth();
+  const { signIn, signUp, uploadAvatar, resetPassword } = useAuth();
   const [mode, setMode] = useState<Mode>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -70,9 +70,16 @@ function LoginContent() {
       if (mode === "login") {
         const { error: err } = await signIn(email, password);
         if (err) {
-          setError(err.message === "Invalid login credentials"
-            ? "Email o password errati"
-            : err.message);
+          const msg = err.message.toLowerCase();
+          if (msg.includes("invalid login credentials") || msg.includes("invalid_credentials")) {
+            setError("Email o password errati");
+          } else if (msg.includes("email not confirmed")) {
+            setError("Devi confermare la tua email prima di accedere. Controlla la casella di posta.");
+          } else if (msg.includes("rate limit") || msg.includes("too many")) {
+            setError("Troppi tentativi. Attendi qualche minuto e riprova.");
+          } else {
+            setError("Errore di accesso. Riprova.");
+          }
         } else {
           window.location.href = redirectTo;
           return;
@@ -215,7 +222,21 @@ function LoginContent() {
             <div className="text-right">
               <button
                 type="button"
-                onClick={() => {/* TODO: implement password reset */}}
+                onClick={async () => {
+                  if (!email.trim()) {
+                    setError("Inserisci la tua email prima di richiedere il reset");
+                    return;
+                  }
+                  setError("");
+                  setLoading(true);
+                  const { error: err } = await resetPassword(email.trim());
+                  setLoading(false);
+                  if (err) {
+                    setError("Errore nell'invio dell'email di reset. Riprova.");
+                  } else {
+                    setSuccess("Email di reset inviata! Controlla la tua casella di posta.");
+                  }
+                }}
                 className="text-xs font-semibold text-[#003DA5] hover:text-[#003DA5]/80 transition-colors"
               >
                 Password dimenticata?
@@ -422,12 +443,16 @@ function LoginContent() {
 
         {/* Continue without account */}
         <div className="mt-6 text-center">
-          <Link
-            href="/"
+          <button
+            type="button"
+            onClick={() => {
+              try { localStorage.setItem("bq_guest", "1"); } catch {}
+              window.location.href = "/";
+            }}
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
           >
             Continua senza account
-          </Link>
+          </button>
         </div>
 
         {/* Close ASD dropdown on outside click */}

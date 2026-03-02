@@ -154,13 +154,14 @@ export default function ImpostazioniPage() {
       // Always clear guest flag so landing page shows
       try { localStorage.removeItem("bq_guest"); } catch {}
       await signOut();
-      router.push("/");
+      // Hard redirect to force full page reload and clean auth state
+      window.location.href = "/";
     } catch (err) {
       console.error("Logout error:", err);
       setLoggingOut(false);
       setShowLogoutConfirm(false);
     }
-  }, [signOut, router]);
+  }, [signOut]);
 
   if (!mounted) {
     return (
