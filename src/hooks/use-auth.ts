@@ -157,17 +157,17 @@ export function useAuth() {
 
     if (error) return { error };
 
-    // Update profile with additional info
+    // Upsert profile with additional info (handles case where auto-trigger hasn't created row yet)
     if (data.user) {
       await supabase
         .from("profiles")
-        .update({
+        .upsert({
+          id: data.user.id,
           display_name: displayName,
           bbo_username: bboUsername || null,
           asd_id: asdId || null,
           profile_type: profileType || "adulto",
-        })
-        .eq("id", data.user.id);
+        }, { onConflict: "id" });
     }
 
     return { data, error: null };
@@ -180,6 +180,14 @@ export function useAuth() {
       password,
     });
     return { data, error };
+  };
+
+  // Reset password
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/login`,
+    });
+    return { error };
   };
 
   // Sign out
@@ -237,6 +245,7 @@ export function useAuth() {
     signUp,
     signIn,
     signOut,
+    resetPassword,
     updateProfile,
     uploadAvatar,
     refreshProfile: async () => {
