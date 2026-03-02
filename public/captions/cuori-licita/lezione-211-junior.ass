@@ -1,0 +1,125 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.39,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.39,0:0:3.42,Default,,0000,0000,0000,,Oggi continuiamo a \nparlare di come gestire le 
+Dialogue: 0,0:0:3.42,0:0:6.52,Default,,0000,0000,0000,,mani di fit nel nobile, \nma con un approccio un 
+Dialogue: 0,0:0:6.52,0:0:8.77,Default,,0000,0000,0000,,po' diverso dalla \nlezione scorsa. 
+Dialogue: 0,0:0:8.77,0:0:11.16,Default,,0000,0000,0000,,Ci concentreremo \nsull'1NT Forzante, 
+Dialogue: 0,0:0:11.16,0:0:14.26,Default,,0000,0000,0000,,sull'appoggio \ncostruttivo a livello 2, sul 2NT 
+Dialogue: 0,0:0:14.26,0:0:17.10,Default,,0000,0000,0000,,Truscott e su cosa fare \ndopo un intervento 
+Dialogue: 0,0:0:17.10,0:0:17.87,Default,,0000,0000,0000,,avversario. 
+Dialogue: 0,0:0:17.87,0:0:18.39,Default,,0000,0000,0000,,Pronto? 
+Dialogue: 0,0:0:18.39,0:0:18.97,Default,,0000,0000,0000,,Andiamo! 
+Dialogue: 0,0:0:18.97,0:0:22.00,Default,,0000,0000,0000,,Partiamo dal concetto \npiu' importante: quando 
+Dialogue: 0,0:0:22.00,0:0:24.90,Default,,0000,0000,0000,,il compagno apre 1 Cuori \no 1 Picche, la tua 
+Dialogue: 0,0:0:24.90,0:0:27.55,Default,,0000,0000,0000,,risposta di 1NT ha un \nsignificato molto 
+Dialogue: 0,0:0:27.55,0:0:28.19,Default,,0000,0000,0000,,speciale. 
+Dialogue: 0,0:0:28.19,0:0:31.23,Default,,0000,0000,0000,,In questo sistema si \nchiama `` Senza Forzante 
+Dialogue: 0,0:0:31.23,0:0:34.32,Default,,0000,0000,0000,,'' e copre un campo di \nforza enorme: da 5 a 11 
+Dialogue: 0,0:0:34.32,0:0:34.77,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:0:34.77,0:0:37.81,Default,,0000,0000,0000,,Si', hai capito bene: \nanche con 11 punti puoi 
+Dialogue: 0,0:0:37.81,0:0:38.84,Default,,0000,0000,0000,,rispondere 1NT! 
+Dialogue: 0,0:0:38.84,0:0:42.00,Default,,0000,0000,0000,,Questo perche' le \nrisposte 2 su 1 sono forzanti 
+Dialogue: 0,0:0:42.00,0:0:44.77,Default,,0000,0000,0000,,di manche, quindi se non \nhai la forza per 
+Dialogue: 0,0:0:44.77,0:0:47.74,Default,,0000,0000,0000,,impegnare la coppia alla \nmanche devi trovare 
+Dialogue: 0,0:0:47.74,0:0:48.84,Default,,0000,0000,0000,,un'altra strada. 
+Dialogue: 0,0:0:48.84,0:0:51.10,Default,,0000,0000,0000,,E questa strada e' \nproprio l'1NT. 
+Dialogue: 0,0:0:51.10,0:0:53.93,Default,,0000,0000,0000,,Puo' anche nascondere il \nfit nel nobile di 
+Dialogue: 0,0:0:53.93,0:0:54.58,Default,,0000,0000,0000,,apertura! 
+Dialogue: 0,0:0:54.58,0:0:57.68,Default,,0000,0000,0000,,Per esempio, se il \ncompagno apre 1 Picche e tu 
+Dialogue: 0,0:0:57.68,0:1:0.84,Default,,0000,0000,0000,,hai tre piccole picche e \n6 punti, dici 1NT e al 
+Dialogue: 0,0:1:0.84,0:1:2.84,Default,,0000,0000,0000,,giro dopo riporti a 2 \nPicche. 
+Dialogue: 0,0:1:2.84,0:1:5.93,Default,,0000,0000,0000,,Il compagno capisce: `` \nAh, ha il fit terzo ma 
+Dialogue: 0,0:1:5.93,0:1:6.64,Default,,0000,0000,0000,,e' debole. 
+Dialogue: 0,0:1:6.64,0:1:9.42,Default,,0000,0000,0000,,'' Ma l'apertore, quando \nriceve 1NT, deve 
+Dialogue: 0,0:1:9.42,0:1:10.32,Default,,0000,0000,0000,,ridichiarare. 
+Dialogue: 0,0:1:10.32,0:1:13.42,Default,,0000,0000,0000,,Non puo' passare, tranne \nin un caso specifico: 
+Dialogue: 0,0:1:13.42,0:1:16.00,Default,,0000,0000,0000,,se ha una 5-3-3-2 con 11 \npunti brutti. 
+Dialogue: 0,0:1:16.00,0:1:18.06,Default,,0000,0000,0000,,Altrimenti deve dire \nqualcosa. 
+Dialogue: 0,0:1:18.06,0:1:20.90,Default,,0000,0000,0000,,E se non ha un secondo \ncolore da mostrare? 
+Dialogue: 0,0:1:20.90,0:1:23.74,Default,,0000,0000,0000,,Inventa un minore terzo \nquello piu' basso. 
+Dialogue: 0,0:1:23.74,0:1:26.77,Default,,0000,0000,0000,,Tipo: se ha 3 fiori e 2 \nquadri, dice 2 Fiori; 
+Dialogue: 0,0:1:26.77,0:1:29.87,Default,,0000,0000,0000,,se ha 3 quadri e 2 fiori \ndice comunque 2 Fiori 
+Dialogue: 0,0:1:29.87,0:1:30.00,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:30.00,0:1:31.80,Default,,0000,0000,0000,,Dice sempre il piu' \nbasso. 
+Dialogue: 0,0:1:31.80,0:1:33.87,Default,,0000,0000,0000,,Adesso l'appoggio a \nlivello 2. 
+Dialogue: 0,0:1:33.87,0:1:37.03,Default,,0000,0000,0000,,In questo sistema, \nquando rispondi direttamente 
+Dialogue: 0,0:1:37.03,0:1:40.00,Default,,0000,0000,0000,,2 nel nobile, stai \ndicendo: `` Ho 8-10 punti 
+Dialogue: 0,0:1:40.00,0:1:40.97,Default,,0000,0000,0000,,con fit terzo. 
+Dialogue: 0,0:1:40.97,0:1:44.13,Default,,0000,0000,0000,,'' Non e' un appoggio \nqualsiasi, e' costruttivo 
+Dialogue: 0,0:1:44.13,0:1:44.26,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:44.26,0:1:47.35,Default,,0000,0000,0000,,Normalmente avrai fit \nterzo, ma non e' escluso 
+Dialogue: 0,0:1:47.35,0:1:50.26,Default,,0000,0000,0000,,un fit quarto con \ndistribuzione bilanciata. 
+Dialogue: 0,0:1:50.26,0:1:53.16,Default,,0000,0000,0000,,L'apertore sa che hai \nalmeno 8 punti e puo' 
+Dialogue: 0,0:1:53.16,0:1:52.32,Default,,0000,0000,0000,,valutare il tentativo di \nmanche. 
+Dialogue: 0,0:1:52.32,0:1:54.88,Default,,0000,0000,0000,,Passiamo al 2NT Truscott \nuno strumento 
+Dialogue: 0,0:1:54.88,0:1:55.77,Default,,0000,0000,0000,,potentissimo. 
+Dialogue: 0,0:1:55.77,0:1:58.52,Default,,0000,0000,0000,,Quando rispondi 2NT \nall'apertura di 1 nel 
+Dialogue: 0,0:1:58.52,0:2:1.59,Default,,0000,0000,0000,,nobile, non stai \nproponendo di giocare a senza 
+Dialogue: 0,0:2:1.59,0:2:2.04,Default,,0000,0000,0000,,atout! 
+Dialogue: 0,0:2:2.04,0:2:5.17,Default,,0000,0000,0000,,Stai dicendo: `` Ho fit \nquarto nel tuo nobile e 
+Dialogue: 0,0:2:5.17,0:2:8.30,Default,,0000,0000,0000,,sono invitante a manche \ncioe' ho da 10 brutti a 
+Dialogue: 0,0:2:8.30,0:2:9.39,Default,,0000,0000,0000,,12 brutti punti. 
+Dialogue: 0,0:2:9.39,0:2:12.39,Default,,0000,0000,0000,,'' Attenzione: il 2NT \nTruscott parla solo del 
+Dialogue: 0,0:2:12.39,0:2:12.71,Default,,0000,0000,0000,,fit. 
+Dialogue: 0,0:2:12.71,0:2:15.78,Default,,0000,0000,0000,,Non serve avere fermi \nnei colori laterali, non 
+Dialogue: 0,0:2:15.78,0:2:17.70,Default,,0000,0000,0000,,serve avere mano \nbilanciata. 
+Dialogue: 0,0:2:17.70,0:2:19.61,Default,,0000,0000,0000,,Puoi anche avere un \nsingolo! 
+Dialogue: 0,0:2:19.61,0:2:22.49,Default,,0000,0000,0000,,L'unica cosa che conta e \nil fit quarto e la 
+Dialogue: 0,0:2:22.49,0:2:23.39,Default,,0000,0000,0000,,forza giusta. 
+Dialogue: 0,0:2:23.39,0:2:25.56,Default,,0000,0000,0000,,E se hai addirittura fit \nquinto? 
+Dialogue: 0,0:2:25.56,0:2:26.33,Default,,0000,0000,0000,,Fantastico! 
+Dialogue: 0,0:2:26.33,0:2:29.20,Default,,0000,0000,0000,,Usi comunque il 2NT \nTruscott e poi rialzi a 
+Dialogue: 0,0:2:29.20,0:2:32.27,Default,,0000,0000,0000,,manche qualsiasi cosa \ndica il compagno: con 10 
+Dialogue: 0,0:2:32.27,0:2:35.40,Default,,0000,0000,0000,,carte di atout in linea \nla manche la giochi per 
+Dialogue: 0,0:2:35.40,0:2:37.32,Default,,0000,0000,0000,,la Legge delle Prese \nTotali. 
+Dialogue: 0,0:2:37.32,0:2:40.20,Default,,0000,0000,0000,,Anche con 9 punti e fit \nquinto con due Assi 
+Dialogue: 0,0:2:40.20,0:2:41.41,Default,,0000,0000,0000,,puoi usare il 2NT. 
+Dialogue: 0,0:2:41.41,0:2:44.16,Default,,0000,0000,0000,,Come risponde l'apertore \nal 2NT Truscott? 
+Dialogue: 0,0:2:44.16,0:2:47.23,Default,,0000,0000,0000,,Se e' minimo, riporta a \n3 nel nobile e rifiuta 
+Dialogue: 0,0:2:47.23,0:2:47.87,Default,,0000,0000,0000,,l'invito. 
+Dialogue: 0,0:2:47.87,0:2:50.17,Default,,0000,0000,0000,,Se e' massimo, dichiara \nla manche. 
+Dialogue: 0,0:2:50.17,0:2:52.98,Default,,0000,0000,0000,,Puo' anche mostrare un \ncolore laterale per 
+Dialogue: 0,0:2:52.98,0:2:56.11,Default,,0000,0000,0000,,chiedere aiuto: `` Ho \nbisogno di valori qui per 
+Dialogue: 0,0:2:56.11,0:2:57.33,Default,,0000,0000,0000,,giocare la manche. 
+Dialogue: 0,0:2:57.33,0:3:0.40,Default,,0000,0000,0000,,'' Adesso la parte \ncruciale: cosa succede dopo 
+Dialogue: 0,0:3:0.40,0:3:2.12,Default,,0000,0000,0000,,un intervento avversario ? 
+Dialogue: 0,0:3:2.12,0:3:3.98,Default,,0000,0000,0000,,Le cose cambiano \nparecchio. 
+Dialogue: 0,0:3:3.98,0:3:7.11,Default,,0000,0000,0000,,Se l'avversario \ninterviene a colore, l'appoggio 
+Dialogue: 0,0:3:7.11,0:3:9.92,Default,,0000,0000,0000,,a 2 si allarga e copre \ntutto il campo 5-10 
+Dialogue: 0,0:3:9.92,0:3:12.67,Default,,0000,0000,0000,,punti, perche' il \nmeccanismo dell'1NT poi 
+Dialogue: 0,0:3:12.67,0:3:15.29,Default,,0000,0000,0000,,riporto non e' piu' \npraticabile: troppo 
+Dialogue: 0,0:3:15.29,0:3:18.36,Default,,0000,0000,0000,,pericoloso con \nl'avversario che ha dichiarato. 
+Dialogue: 0,0:3:18.36,0:3:21.17,Default,,0000,0000,0000,,Il 2NT Truscott diventa \nillimitato: mostra 
+Dialogue: 0,0:3:21.17,0:3:24.11,Default,,0000,0000,0000,,almeno 11 punti con fit \nquarto o piu', senza 
+Dialogue: 0,0:3:24.11,0:3:24.56,Default,,0000,0000,0000,,tetto. 
+Dialogue: 0,0:3:24.56,0:3:27.37,Default,,0000,0000,0000,,E la surlicita, cioe' \ndichiarare il colore 
+Dialogue: 0,0:3:27.37,0:3:30.51,Default,,0000,0000,0000,,dell'avversario, mostra \nfit terzo con almeno 11 
+Dialogue: 0,0:3:30.51,0:3:32.42,Default,,0000,0000,0000,,punti, anche lei \nillimitata. 
+Dialogue: 0,0:3:32.42,0:3:34.34,Default,,0000,0000,0000,,Facciamo un esempio \npratico. 
+Dialogue: 0,0:3:34.34,0:3:36.83,Default,,0000,0000,0000,,Il compagno apre 1 Cuori \nl'avversario 
+Dialogue: 0,0:3:36.83,0:3:38.18,Default,,0000,0000,0000,,interviene 1 Picche. 
+Dialogue: 0,0:3:38.18,0:3:40.80,Default,,0000,0000,0000,,Tu hai K-x-x / Q-x-x-x / \nA-x-x / x-x-x. 
+Dialogue: 0,0:3:40.80,0:3:43.93,Default,,0000,0000,0000,,Hai fit quarto cuori e \ncirca 10 punti: dici 2NT 
+Dialogue: 0,0:3:43.93,0:3:46.49,Default,,0000,0000,0000,,Truscott( illimitata \ndopo intervento). 
+Dialogue: 0,0:3:46.49,0:3:49.55,Default,,0000,0000,0000,,Se invece hai K-x-x / \nQ-x-x / A-J-x / x-x-x-x, 
+Dialogue: 0,0:3:49.55,0:3:52.56,Default,,0000,0000,0000,,fit terzo e 10 punti: \nusi la surlicita, cioe' 
+Dialogue: 0,0:3:52.56,0:3:53.52,Default,,0000,0000,0000,,dici 2 Picche. 
+Dialogue: 0,0:3:53.52,0:3:56.59,Default,,0000,0000,0000,,Ricapitolando: 1NT Senza \nForzante copre da 5 a 
+Dialogue: 0,0:3:56.59,0:3:59.53,Default,,0000,0000,0000,,11 e puo' nascondere il \nfit; appoggio a 2 e' 
+Dialogue: 0,0:3:59.53,0:4:2.59,Default,,0000,0000,0000,,costruttivo con 8-10 e \nfit terzo; 2NT Truscott 
+Dialogue: 0,0:4:2.59,0:4:5.21,Default,,0000,0000,0000,,e' invito a manche con \nfit quarto; dopo 
+Dialogue: 0,0:4:5.21,0:4:7.96,Default,,0000,0000,0000,,intervento il 2NT \ndiventa illimitato e la 
+Dialogue: 0,0:4:7.96,0:4:10.20,Default,,0000,0000,0000,,surlicita mostra fit \nterzo forte. 
+Dialogue: 0,0:4:10.20,0:4:12.18,Default,,0000,0000,0000,,Un sistema completo e \nlogico. 
+Dialogue: 0,0:4:12.18,0:4:13.91,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

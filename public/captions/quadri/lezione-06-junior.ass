@@ -1,0 +1,141 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:2.04,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:2.04,0:0:4.39,Default,,0000,0000,0000,,Oggi entriamo in un \nterritorio molto 
+Dialogue: 0,0:0:4.39,0:0:7.30,Default,,0000,0000,0000,,interessante: le \naperture oltre il livello 1. 
+Dialogue: 0,0:0:7.30,0:0:10.33,Default,,0000,0000,0000,,Fino ad ora abbiamo \nsempre aperto di 1 a colore 
+Dialogue: 0,0:0:10.33,0:0:11.38,Default,,0000,0000,0000,,o 1 Senza Atout. 
+Dialogue: 0,0:0:11.38,0:0:14.41,Default,,0000,0000,0000,,Ma cosa fai quando hai \nuna mano cosi' forte che 
+Dialogue: 0,0:0:14.41,0:0:16.94,Default,,0000,0000,0000,,il tuo compagno potrebbe \npassare su 1 e 
+Dialogue: 0,0:0:16.94,0:0:18.86,Default,,0000,0000,0000,,perdereste una manche \nsicura? 
+Dialogue: 0,0:0:18.86,0:0:20.03,Default,,0000,0000,0000,,Apri piu' in alto! 
+Dialogue: 0,0:0:20.03,0:0:23.06,Default,,0000,0000,0000,,Partiamo dalle aperture \ndi 2 a colore: 2 Quadri 
+Dialogue: 0,0:0:23.06,0:0:24.24,Default,,0000,0000,0000,,2 Cuori, 2 Picche. 
+Dialogue: 0,0:0:24.24,0:0:27.21,Default,,0000,0000,0000,,Queste aperture \ncomunicano un messaggio chiaro 
+Dialogue: 0,0:0:27.21,0:0:30.18,Default,,0000,0000,0000,,`` Ho una mano \nfortissima, sbilanciata, con un 
+Dialogue: 0,0:0:30.18,0:0:33.02,Default,,0000,0000,0000,,colore almeno quinto, e \nnon voglio rischiare 
+Dialogue: 0,0:0:33.02,0:0:33.89,Default,,0000,0000,0000,,che tu passi! 
+Dialogue: 0,0:0:33.89,0:0:36.61,Default,,0000,0000,0000,,'' Servono circa 20-21 \npunti onori, oppure 
+Dialogue: 0,0:0:36.61,0:0:39.39,Default,,0000,0000,0000,,anche meno punti ma una \nmano con tantissime 
+Dialogue: 0,0:0:39.39,0:0:42.05,Default,,0000,0000,0000,,vincenti, tipo otto \nprese e mezzo che fai 
+Dialogue: 0,0:0:42.05,0:0:43.41,Default,,0000,0000,0000,,praticamente da solo. 
+Dialogue: 0,0:0:43.41,0:0:46.38,Default,,0000,0000,0000,,La cosa piu' importante \ne' che queste aperture 
+Dialogue: 0,0:0:46.38,0:0:47.30,Default,,0000,0000,0000,,sono forzanti! 
+Dialogue: 0,0:0:47.30,0:0:50.15,Default,,0000,0000,0000,,Nessuno dei due compagni \npuo' abbandonare la 
+Dialogue: 0,0:0:50.15,0:0:52.87,Default,,0000,0000,0000,,licita fino a `` 3 nel \ncolore di apertura. 
+Dialogue: 0,0:0:52.87,0:0:55.59,Default,,0000,0000,0000,,'' Questo si chiama il \nlivello di guardia. 
+Dialogue: 0,0:0:55.59,0:0:58.62,Default,,0000,0000,0000,,Per esempio, se apri 2 \nCuori, la licita non puo 
+Dialogue: 0,0:0:58.62,0:1:0.10,Default,,0000,0000,0000,,fermarsi sotto 3 Cuori. 
+Dialogue: 0,0:1:0.10,0:1:2.70,Default,,0000,0000,0000,,Il compagno non puo' \npassare su 2 Cuori, 
+Dialogue: 0,0:1:2.70,0:1:4.19,Default,,0000,0000,0000,,neanche con zero punti! 
+Dialogue: 0,0:1:4.19,0:1:5.05,Default,,0000,0000,0000,,E' un ordine! 
+Dialogue: 0,0:1:5.05,0:1:7.96,Default,,0000,0000,0000,,E c' e' un'altra \nparticolarita' unica: con le 
+Dialogue: 0,0:1:7.96,0:1:10.80,Default,,0000,0000,0000,,aperture di 2 a colore, \nil Capitanato spetta 
+Dialogue: 0,0:1:10.80,0:1:11.67,Default,,0000,0000,0000,,all'Apertore. 
+Dialogue: 0,0:1:11.67,0:1:14.08,Default,,0000,0000,0000,,Normalmente e' il \ncontrario, ricordi? 
+Dialogue: 0,0:1:14.08,0:1:16.61,Default,,0000,0000,0000,,Di solito e' il \nrispondente che diventa 
+Dialogue: 0,0:1:16.61,0:1:17.23,Default,,0000,0000,0000,,Capitano. 
+Dialogue: 0,0:1:17.23,0:1:20.14,Default,,0000,0000,0000,,Ma qui no: chi apre di 2 \nha una mano talmente 
+Dialogue: 0,0:1:20.14,0:1:21.93,Default,,0000,0000,0000,,forte che sa lui cosa \nfare. 
+Dialogue: 0,0:1:21.93,0:1:24.16,Default,,0000,0000,0000,,Il compagno deve solo \ndescriversi. 
+Dialogue: 0,0:1:24.16,0:1:25.89,Default,,0000,0000,0000,,Come risponde il \ncompagno? 
+Dialogue: 0,0:1:25.89,0:1:28.92,Default,,0000,0000,0000,,Se ha un colore di \nalmeno 4 carte, puo' dirlo a 
+Dialogue: 0,0:1:28.92,0:1:30.96,Default,,0000,0000,0000,,livello 2 anche con zero \npunti. 
+Dialogue: 0,0:1:30.96,0:1:33.93,Default,,0000,0000,0000,,Per esempio, su 2 Cuori \npuo' dire 2 Picche con 
+Dialogue: 0,0:1:33.93,0:1:34.55,Default,,0000,0000,0000,,4 picche. 
+Dialogue: 0,0:1:34.55,0:1:37.58,Default,,0000,0000,0000,,Se ha un colore quinto e \nvuole forzare a manche 
+Dialogue: 0,0:1:37.58,0:1:38.87,Default,,0000,0000,0000,,lo dice a livello 3. 
+Dialogue: 0,0:1:38.87,0:1:41.84,Default,,0000,0000,0000,,Se ha un fit con \nl'apertore e visuale di slam, 
+Dialogue: 0,0:1:41.84,0:1:44.07,Default,,0000,0000,0000,,rialza a 3 nel colore di \napertura. 
+Dialogue: 0,0:1:44.07,0:1:46.85,Default,,0000,0000,0000,,E se ha una mano minima \ndisperata, rialza a 
+Dialogue: 0,0:1:46.85,0:1:49.76,Default,,0000,0000,0000,,manche, tipo 4 Cuori, \nche vuol dire: `` Spero 
+Dialogue: 0,0:1:49.76,0:1:51.92,Default,,0000,0000,0000,,di portare UNA presa, \narrangiati! 
+Dialogue: 0,0:1:51.92,0:1:54.64,Default,,0000,0000,0000,,'' E se non ha niente di \nspeciale da dire? 
+Dialogue: 0,0:1:54.64,0:1:57.55,Default,,0000,0000,0000,,Allora dice 2 Senza \nAtout, che e' la risposta 
+Dialogue: 0,0:1:57.55,0:1:58.23,Default,,0000,0000,0000,,di attesa. 
+Dialogue: 0,0:1:58.23,0:2:1.14,Default,,0000,0000,0000,,Non promette ne' punti \nne' colori, dice solo: 
+Dialogue: 0,0:2:1.14,0:2:3.05,Default,,0000,0000,0000,,`` Vai avanti tu, io \nascolto. 
+Dialogue: 0,0:2:3.05,0:2:5.84,Default,,0000,0000,0000,,'' Se poi dopo il 2 \nSenza Atout riporta nel 
+Dialogue: 0,0:2:5.84,0:2:8.62,Default,,0000,0000,0000,,colore dell'apertore, \nsta dicendo: `` Ho la 
+Dialogue: 0,0:2:8.62,0:2:11.09,Default,,0000,0000,0000,,mano piu' brutta del \nmondo, mi spiace! 
+Dialogue: 0,0:2:11.09,0:2:7.75,Default,,0000,0000,0000,,''
+Dialogue: 0,0:2:7.75,0:2:10.33,Default,,0000,0000,0000,,Ora parliamo \ndell'apertura di 2 Fiori. 
+Dialogue: 0,0:2:10.33,0:2:13.30,Default,,0000,0000,0000,,Questa e' speciale \nperche' e' un contenitore 
+Dialogue: 0,0:2:13.30,0:2:13.88,Default,,0000,0000,0000,,ambiguo. 
+Dialogue: 0,0:2:13.88,0:2:15.88,Default,,0000,0000,0000,,Puo' essere due cose \ndiverse! 
+Dialogue: 0,0:2:15.88,0:2:19.04,Default,,0000,0000,0000,,Primo: una mano \nbilanciata fortissima, con 23 o 
+Dialogue: 0,0:2:19.04,0:2:19.81,Default,,0000,0000,0000,,piu' punti. 
+Dialogue: 0,0:2:19.81,0:2:22.78,Default,,0000,0000,0000,,Secondo: una mano a base \nfiori, monocolore o 
+Dialogue: 0,0:2:22.78,0:2:24.26,Default,,0000,0000,0000,,bicolore con le fiori. 
+Dialogue: 0,0:2:24.26,0:2:27.17,Default,,0000,0000,0000,,L'ambiguita' si risolve \nal secondo giro: se 
+Dialogue: 0,0:2:27.17,0:2:30.20,Default,,0000,0000,0000,,l'apertore dice 2 Senza \nAtout, era bilanciata 
+Dialogue: 0,0:2:30.20,0:2:30.65,Default,,0000,0000,0000,,forte. 
+Dialogue: 0,0:2:30.65,0:2:33.75,Default,,0000,0000,0000,,Se dice un colore nuovo \no ripete le fiori, era 
+Dialogue: 0,0:2:33.75,0:2:35.88,Default,,0000,0000,0000,,una mano sbilanciata con \nfiori. 
+Dialogue: 0,0:2:35.88,0:2:38.33,Default,,0000,0000,0000,,Le risposte su 2 Fiori \nsono diverse. 
+Dialogue: 0,0:2:38.33,0:2:41.42,Default,,0000,0000,0000,,La risposta d'attesa \nconvenzionale e' 2 Quadri 
+Dialogue: 0,0:2:41.42,0:2:41.55,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:41.55,0:2:43.94,Default,,0000,0000,0000,,Attenzione: non promette \nle quadri! 
+Dialogue: 0,0:2:43.94,0:2:46.78,Default,,0000,0000,0000,,E' solo un modo per dire \n`` vai avanti, ti 
+Dialogue: 0,0:2:46.78,0:2:47.36,Default,,0000,0000,0000,,ascolto. 
+Dialogue: 0,0:2:47.36,0:2:50.45,Default,,0000,0000,0000,,'' Se hai un colore \nquinto con almeno un onore 
+Dialogue: 0,0:2:50.45,0:2:53.42,Default,,0000,0000,0000,,puoi dirlo a livello 2( \n2 Cuori o 2 Picche). 
+Dialogue: 0,0:2:53.42,0:2:56.52,Default,,0000,0000,0000,,Se hai un colore quinto \ncon due onori, lo dici 
+Dialogue: 0,0:2:56.52,0:2:58.78,Default,,0000,0000,0000,,a livello 3( 3 Fiori o 3 \nQuadri). 
+Dialogue: 0,0:2:58.78,0:3:1.61,Default,,0000,0000,0000,,E se l'apertore poi dice \n2 Senza Atout, si 
+Dialogue: 0,0:3:1.61,0:3:4.58,Default,,0000,0000,0000,,prosegue come dopo una \nnormale apertura di 2 
+Dialogue: 0,0:3:4.58,0:3:5.42,Default,,0000,0000,0000,,Senza Atout. 
+Dialogue: 0,0:3:5.42,0:3:8.52,Default,,0000,0000,0000,,Adesso un argomento che \nti piacera' tantissimo 
+Dialogue: 0,0:3:8.52,0:3:10.45,Default,,0000,0000,0000,,il Roman Key Card \nBlackwood! 
+Dialogue: 0,0:3:10.45,0:3:13.16,Default,,0000,0000,0000,,E' il famoso 4 Senza \nAtout che serve per 
+Dialogue: 0,0:3:13.16,0:3:14.39,Default,,0000,0000,0000,,chiedere gli Assi. 
+Dialogue: 0,0:3:14.39,0:3:17.16,Default,,0000,0000,0000,,Ma non e' il Blackwood \nsemplice che forse 
+Dialogue: 0,0:3:17.16,0:3:19.35,Default,,0000,0000,0000,,conosci: e' la versione \nevoluta! 
+Dialogue: 0,0:3:19.35,0:3:22.26,Default,,0000,0000,0000,,Nel Roman Key Card ci \nsono 5 chiavi, non 4. 
+Dialogue: 0,0:3:22.26,0:3:24.58,Default,,0000,0000,0000,,Le 4 chiavi normali sono \ni 4 Assi. 
+Dialogue: 0,0:3:24.58,0:3:27.74,Default,,0000,0000,0000,,La quinta chiave e' il \nRe dell'atout concordato 
+Dialogue: 0,0:3:27.74,0:3:27.87,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:27.87,0:3:28.45,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:3:28.45,0:3:31.61,Default,,0000,0000,0000,,Perche' il Re dell'atout \nvale tantissimo in uno 
+Dialogue: 0,0:3:31.61,0:3:33.48,Default,,0000,0000,0000,,slam, quasi quanto un \nAsso! 
+Dialogue: 0,0:3:33.48,0:3:36.64,Default,,0000,0000,0000,,Le risposte sono facili \n5 Fiori significa 0 o 3 
+Dialogue: 0,0:3:36.64,0:3:37.16,Default,,0000,0000,0000,,chiavi. 
+Dialogue: 0,0:3:37.16,0:3:39.35,Default,,0000,0000,0000,,5 Quadri significa 1 o 4 \nchiavi. 
+Dialogue: 0,0:3:39.35,0:3:42.32,Default,,0000,0000,0000,,5 Cuori significa 2 \nchiavi senza la Donna di 
+Dialogue: 0,0:3:42.32,0:3:42.77,Default,,0000,0000,0000,,atout. 
+Dialogue: 0,0:3:42.77,0:3:45.67,Default,,0000,0000,0000,,5 Picche significa 2 \nchiavi con la Donna di 
+Dialogue: 0,0:3:45.67,0:3:46.12,Default,,0000,0000,0000,,atout. 
+Dialogue: 0,0:3:46.12,0:3:48.96,Default,,0000,0000,0000,,Come fai a sapere se il \ncompagno ha 0 o 3, 
+Dialogue: 0,0:3:48.96,0:3:49.87,Default,,0000,0000,0000,,oppure 1 o 4? 
+Dialogue: 0,0:3:49.87,0:3:52.70,Default,,0000,0000,0000,,Facile: ci sono 12 punti \ndi differenza tra 
+Dialogue: 0,0:3:52.70,0:3:55.80,Default,,0000,0000,0000,,queste mani, quindi \ndalla licita precedente lo 
+Dialogue: 0,0:3:55.80,0:3:56.83,Default,,0000,0000,0000,,capisci subito! 
+Dialogue: 0,0:3:56.83,0:3:59.93,Default,,0000,0000,0000,,E dopo gli Assi puoi \nchiedere anche i Re con 5 
+Dialogue: 0,0:3:59.93,0:4:3.03,Default,,0000,0000,0000,,Senza Atout, ma solo se \nhai gia' tutti e 5 gli 
+Dialogue: 0,0:4:3.03,0:4:3.41,Default,,0000,0000,0000,,Assi! 
+Dialogue: 0,0:4:3.41,0:4:6.51,Default,,0000,0000,0000,,Le risposte sono a \ngradino: 6 Fiori zero Re, 6 
+Dialogue: 0,0:4:6.51,0:4:9.61,Default,,0000,0000,0000,,Quadri un Re, 6 Cuori \ndue Re, 6 Picche tre Re. 
+Dialogue: 0,0:4:9.61,0:4:12.70,Default,,0000,0000,0000,,Ultimo argomento \nspeciale: il Gambling 3 Senza 
+Dialogue: 0,0:4:12.70,0:4:13.15,Default,,0000,0000,0000,,Atout. 
+Dialogue: 0,0:4:13.15,0:4:15.99,Default,,0000,0000,0000,,E' un'apertura che \nmostra un colore minore 
+Dialogue: 0,0:4:15.99,0:4:19.15,Default,,0000,0000,0000,,settimo `` chiuso '', \ncioe' con Asso, Re, Donna 
+Dialogue: 0,0:4:19.15,0:4:22.31,Default,,0000,0000,0000,,Fante in testa, e \nnessun'altra carta alta fuori 
+Dialogue: 0,0:4:22.31,0:4:23.35,Default,,0000,0000,0000,,da quel colore. 
+Dialogue: 0,0:4:23.35,0:4:26.31,Default,,0000,0000,0000,,Il compagno passa se ha \ni fermi in tutti gli 
+Dialogue: 0,0:4:26.31,0:4:27.22,Default,,0000,0000,0000,,altri colori. 
+Dialogue: 0,0:4:27.22,0:4:30.25,Default,,0000,0000,0000,,Se non ce li ha, dice 4 \nFiori, che significa: 
+Dialogue: 0,0:4:30.25,0:4:33.34,Default,,0000,0000,0000,,`` Passa se il tuo \ncolore e' fiori, altrimenti 
+Dialogue: 0,0:4:33.34,0:4:34.70,Default,,0000,0000,0000,,correggi a 4 Quadri. 
+Dialogue: 0,0:4:34.70,0:4:35.73,Default,,0000,0000,0000,,'' Geniale, no? 
+Dialogue: 0,0:4:35.73,0:4:37.47,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

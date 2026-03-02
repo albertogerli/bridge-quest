@@ -1,0 +1,138 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.34,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.34,0:0:2.92,Default,,0000,0000,0000,,Oggi entriamo in un \nargomento che e' un po' 
+Dialogue: 0,0:0:2.92,0:0:5.50,Default,,0000,0000,0000,,come salire di livello \nin un videogioco: la 
+Dialogue: 0,0:0:5.50,0:0:7.67,Default,,0000,0000,0000,,risposta 2 su 1 e cosa \nsuccede dopo. 
+Dialogue: 0,0:0:7.67,0:0:10.42,Default,,0000,0000,0000,,Sembra complicato, ma ti \nguido io passo passo. 
+Dialogue: 0,0:0:10.42,0:0:13.17,Default,,0000,0000,0000,,La regola base e' questa \nquando il rispondente 
+Dialogue: 0,0:0:13.17,0:0:15.68,Default,,0000,0000,0000,,dichiara un nuovo colore \na livello 2 sulla 
+Dialogue: 0,0:0:15.68,0:0:18.32,Default,,0000,0000,0000,,apertura del compagno a \nlivello 1, cioe' per 
+Dialogue: 0,0:0:18.32,0:0:21.12,Default,,0000,0000,0000,,esempio 1 Picche dal \ncompagno e tu dici 2 Fiori 
+Dialogue: 0,0:0:21.12,0:0:23.41,Default,,0000,0000,0000,,questa risposta e' \nforzante di manche. 
+Dialogue: 0,0:0:23.41,0:0:26.05,Default,,0000,0000,0000,,Significa che la coppia \nnon puo' smettere di 
+Dialogue: 0,0:0:26.05,0:0:28.56,Default,,0000,0000,0000,,dichiarare finche' non \nraggiunge almeno la 
+Dialogue: 0,0:0:28.56,0:0:29.02,Default,,0000,0000,0000,,manche. 
+Dialogue: 0,0:0:29.02,0:0:31.77,Default,,0000,0000,0000,,E' un impegno serio, \ncome firmare un contratto 
+Dialogue: 0,0:0:31.77,0:0:31.88,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:31.88,0:0:34.69,Default,,0000,0000,0000,,Pero' ci sono tre \neccezioni importanti che devi 
+Dialogue: 0,0:0:34.69,0:0:35.32,Default,,0000,0000,0000,,conoscere. 
+Dialogue: 0,0:0:35.32,0:0:37.90,Default,,0000,0000,0000,,Prima eccezione: se il \nrispondente era gia' 
+Dialogue: 0,0:0:37.90,0:0:40.47,Default,,0000,0000,0000,,passato, cioe' aveva \ndetto Passo come prima 
+Dialogue: 0,0:0:40.47,0:0:43.22,Default,,0000,0000,0000,,dichiarazione e poi in \nun giro successivo dice 
+Dialogue: 0,0:0:43.22,0:0:45.97,Default,,0000,0000,0000,,2 su 1, la forza e' \nridotta a 8-11 punti e non 
+Dialogue: 0,0:0:45.97,0:0:47.11,Default,,0000,0000,0000,,e' forzante manche. 
+Dialogue: 0,0:0:47.11,0:0:49.86,Default,,0000,0000,0000,,Seconda eccezione: se un \navversario interviene 
+Dialogue: 0,0:0:49.86,0:0:52.61,Default,,0000,0000,0000,,a colore tra l'apertura \ne la risposta, il 2 su 
+Dialogue: 0,0:0:52.61,0:0:55.24,Default,,0000,0000,0000,,1 mostra 10 o piu' punti \ned e' forzante solo 
+Dialogue: 0,0:0:55.24,0:0:57.24,Default,,0000,0000,0000,,fino alla ripetizione \ndel colore. 
+Dialogue: 0,0:0:57.24,0:1:0.05,Default,,0000,0000,0000,,Terza eccezione: se un \navversario fa Contro, la 
+Dialogue: 0,0:1:0.05,0:1:2.74,Default,,0000,0000,0000,,risposta a livello 2 \nmostra una buona sesta o 
+Dialogue: 0,0:1:2.74,0:1:5.14,Default,,0000,0000,0000,,un'ottima quinta ed e' \nun messaggio `` a 
+Dialogue: 0,0:1:5.14,0:1:7.09,Default,,0000,0000,0000,,giocare '', non forzante \nmanche. 
+Dialogue: 0,0:1:7.09,0:1:9.61,Default,,0000,0000,0000,,Adesso vediamo cosa fa \nl'apertore dopo una 
+Dialogue: 0,0:1:9.61,0:1:12.41,Default,,0000,0000,0000,,risposta 2 Fiori su \nun'apertura a colore minore 
+Dialogue: 0,0:1:12.41,0:1:12.53,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:12.53,0:1:15.10,Default,,0000,0000,0000,,Prendiamo la sequenza 1 \nFiori - 2 Fiori o 1 
+Dialogue: 0,0:1:15.10,0:1:16.13,Default,,0000,0000,0000,,Quadri - 2 Fiori. 
+Dialogue: 0,0:1:16.13,0:1:18.88,Default,,0000,0000,0000,,L'apertore ridichiara \ncosi': dice 2 Quadri con 
+Dialogue: 0,0:1:18.88,0:1:21.46,Default,,0000,0000,0000,,tutte le mani di Diritto \nsia bilanciate che 
+Dialogue: 0,0:1:21.46,0:1:24.21,Default,,0000,0000,0000,,sbilanciate, a \nprescindere dal fatto che abbia 
+Dialogue: 0,0:1:24.21,0:1:25.24,Default,,0000,0000,0000,,o meno le quadri. 
+Dialogue: 0,0:1:25.24,0:1:27.30,Default,,0000,0000,0000,,E' la dichiarazione piu \nfrequente. 
+Dialogue: 0,0:1:27.30,0:1:30.10,Default,,0000,0000,0000,,Dice 2 Cuori o 2 Picche \ncon mani di Rever, cioe 
+Dialogue: 0,0:1:30.10,0:1:32.73,Default,,0000,0000,0000,,mani forti con una \nquarta nobile e il minore 
+Dialogue: 0,0:1:32.73,0:1:33.14,Default,,0000,0000,0000,,lungo. 
+Dialogue: 0,0:1:33.14,0:1:35.83,Default,,0000,0000,0000,,Dice 2 Senza Atout con \nun Rever a senz'atout. 
+Dialogue: 0,0:1:35.83,0:1:38.63,Default,,0000,0000,0000,,Dice 3 Fiori o 3 Quadri \ncon il rispettivo Rever 
+Dialogue: 0,0:1:38.63,0:1:39.32,Default,,0000,0000,0000,,nel minore. 
+Dialogue: 0,0:1:39.32,0:1:41.44,Default,,0000,0000,0000,,Perche' 2 Quadri e' cosi \nversatile? 
+Dialogue: 0,0:1:41.44,0:1:44.13,Default,,0000,0000,0000,,Perche' in una \nsituazione di forzante manche, 
+Dialogue: 0,0:1:44.13,0:1:45.16,Default,,0000,0000,0000,,non c' e' fretta. 
+Dialogue: 0,0:1:45.16,0:1:47.68,Default,,0000,0000,0000,,Si dichiara a livello \nbasso per avere piu' 
+Dialogue: 0,0:1:47.68,0:1:50.02,Default,,0000,0000,0000,,spazio per descrivere la \ndistribuzione. 
+Dialogue: 0,0:1:50.02,0:1:52.54,Default,,0000,0000,0000,,La forza si chiarira' \nnei giri successivi. 
+Dialogue: 0,0:1:52.54,0:1:55.29,Default,,0000,0000,0000,,Un punto importante: \nsiccome siamo in forzante 
+Dialogue: 0,0:1:55.29,0:1:57.69,Default,,0000,0000,0000,,manche, le dichiarazioni \nche normalmente 
+Dialogue: 0,0:1:57.69,0:2:0.21,Default,,0000,0000,0000,,sarebbero `` di \npassaggio '', come 2 Senza 
+Dialogue: 0,0:2:0.21,0:2:2.90,Default,,0000,0000,0000,,Atout o il riporto al \ncolore di apertura, qui 
+Dialogue: 0,0:2:2.90,0:2:5.48,Default,,0000,0000,0000,,vengono liberate e \npossono essere usate per 
+Dialogue: 0,0:2:5.48,0:2:7.37,Default,,0000,0000,0000,,trasmettere altre \ninformazioni. 
+Dialogue: 0,0:2:7.37,0:2:10.17,Default,,0000,0000,0000,,Nessuno passera' mai, \nquindi ogni dichiarazione 
+Dialogue: 0,0:2:10.17,0:2:12.35,Default,,0000,0000,0000,,descrive qualcosa di \nspecifico sulla 
+Dialogue: 0,0:2:12.35,0:2:10.34,Default,,0000,0000,0000,,distribuzione. 
+Dialogue: 0,0:2:10.34,0:2:13.29,Default,,0000,0000,0000,,Adesso guardiamo cosa \nsuccede dopo l'apertura 
+Dialogue: 0,0:2:13.29,0:2:16.30,Default,,0000,0000,0000,,di 1 in un colore \nmaggiore e una risposta 2 su 
+Dialogue: 0,0:2:16.30,0:2:16.49,Default,,0000,0000,0000,,1. 
+Dialogue: 0,0:2:16.49,0:2:19.57,Default,,0000,0000,0000,,Per esempio: 1 Picche - \n2 Fiori, oppure 1 Cuori 
+Dialogue: 0,0:2:19.57,0:2:20.32,Default,,0000,0000,0000,,- 2 Quadri. 
+Dialogue: 0,0:2:20.32,0:2:23.39,Default,,0000,0000,0000,,Qui le ridichiarazioni \ndell'apertore sono un po 
+Dialogue: 0,0:2:23.39,0:2:23.96,Default,,0000,0000,0000,,diverse. 
+Dialogue: 0,0:2:23.96,0:2:26.60,Default,,0000,0000,0000,,Prima opzione: colore \nnuovo a livello 2. 
+Dialogue: 0,0:2:26.60,0:2:28.98,Default,,0000,0000,0000,,Mostra 11-21 punti, cioe \nla forza e' 
+Dialogue: 0,0:2:28.98,0:2:29.92,Default,,0000,0000,0000,,indeterminata. 
+Dialogue: 0,0:2:29.92,0:2:32.93,Default,,0000,0000,0000,,La distribuzione ha la \nprecedenza sulla forza. 
+Dialogue: 0,0:2:32.93,0:2:35.95,Default,,0000,0000,0000,,Se l'apertore ha un \nsecondo colore da mostrare 
+Dialogue: 0,0:2:35.95,0:2:38.71,Default,,0000,0000,0000,,a livello 2, lo dichiara \na prescindere dal 
+Dialogue: 0,0:2:38.71,0:2:39.40,Default,,0000,0000,0000,,punteggio. 
+Dialogue: 0,0:2:39.40,0:2:42.10,Default,,0000,0000,0000,,Seconda opzione: \nripetizione del nobile a 
+Dialogue: 0,0:2:42.10,0:2:42.79,Default,,0000,0000,0000,,livello 2. 
+Dialogue: 0,0:2:42.79,0:2:45.55,Default,,0000,0000,0000,,Attenzione, questa e' \nuna trappola comune! 
+Dialogue: 0,0:2:45.55,0:2:48.31,Default,,0000,0000,0000,,La ripetizione non \nallunga il colore e non 
+Dialogue: 0,0:2:48.31,0:2:49.31,Default,,0000,0000,0000,,limita la mano. 
+Dialogue: 0,0:2:49.31,0:2:52.14,Default,,0000,0000,0000,,L'apertore si `` \nparcheggia '' anche con un 
+Dialogue: 0,0:2:52.14,0:2:53.52,Default,,0000,0000,0000,,colore quinto brutto. 
+Dialogue: 0,0:2:53.52,0:2:56.03,Default,,0000,0000,0000,,E' semplicemente la \ndichiarazione piu' 
+Dialogue: 0,0:2:56.03,0:2:58.98,Default,,0000,0000,0000,,economica quando non c' \ne' altro di specifico 
+Dialogue: 0,0:2:58.98,0:2:59.54,Default,,0000,0000,0000,,da dire. 
+Dialogue: 0,0:2:59.54,0:3:2.18,Default,,0000,0000,0000,,Raramente, la \nripetizione a salto, cioe' 
+Dialogue: 0,0:3:2.18,0:3:5.07,Default,,0000,0000,0000,,saltando un livello, \nmostra un colore di 6 o 
+Dialogue: 0,0:3:5.07,0:3:8.08,Default,,0000,0000,0000,,piu' carte con almeno 4 \ndei 5 onori piu' alti: 
+Dialogue: 0,0:3:8.08,0:3:9.90,Default,,0000,0000,0000,,Asso, Re, Donna, Fante, \n10. 
+Dialogue: 0,0:3:9.90,0:3:11.85,Default,,0000,0000,0000,,Terza opzione: 2 Senza \nAtout. 
+Dialogue: 0,0:3:11.85,0:3:14.61,Default,,0000,0000,0000,,Questa e' l'unica \ndichiarazione che limita 
+Dialogue: 0,0:3:14.61,0:3:17.31,Default,,0000,0000,0000,,davvero la mano: mostra \nuna bilanciata di 
+Dialogue: 0,0:3:17.31,0:3:19.38,Default,,0000,0000,0000,,Diritto con fermi, 12-14 \npunti. 
+Dialogue: 0,0:3:19.38,0:3:22.26,Default,,0000,0000,0000,,Mostra anche attitudine \nal Senza Atout dalla 
+Dialogue: 0,0:3:22.26,0:3:23.21,Default,,0000,0000,0000,,propria parte. 
+Dialogue: 0,0:3:23.21,0:3:25.90,Default,,0000,0000,0000,,Quarta opzione: colore \nnuovo a livello 3. 
+Dialogue: 0,0:3:25.90,0:3:28.79,Default,,0000,0000,0000,,Mostra una mano buona, \nalmeno 15 punti o una 
+Dialogue: 0,0:3:28.79,0:3:29.98,Default,,0000,0000,0000,,distribuzione 5-5. 
+Dialogue: 0,0:3:29.98,0:3:33.00,Default,,0000,0000,0000,,Include anche l'appoggio \nal minore di risposta 
+Dialogue: 0,0:3:33.00,0:3:33.12,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:33.12,0:3:35.82,Default,,0000,0000,0000,,Passiamo alle indagini \ndel rispondente al 
+Dialogue: 0,0:3:35.82,0:3:36.70,Default,,0000,0000,0000,,secondo giro. 
+Dialogue: 0,0:3:36.70,0:3:39.08,Default,,0000,0000,0000,,Il rispondente ha \nstrumenti potenti. 
+Dialogue: 0,0:3:39.08,0:3:42.16,Default,,0000,0000,0000,,Un colore `` morto '' \ndal rispondente indica un 
+Dialogue: 0,0:3:42.16,0:3:44.36,Default,,0000,0000,0000,,problema di fermi in \nquel colore. 
+Dialogue: 0,0:3:44.36,0:3:47.37,Default,,0000,0000,0000,,2 Senza Atout mostra \ndisinteresse per i fermi. 
+Dialogue: 0,0:3:47.37,0:3:50.13,Default,,0000,0000,0000,,Il riporto a 2 nel seme \ndi apertura mostra 
+Dialogue: 0,0:3:50.13,0:3:52.83,Default,,0000,0000,0000,,almeno tolleranza, cioe \n2 o piu' carte, e 
+Dialogue: 0,0:3:52.83,0:3:55.09,Default,,0000,0000,0000,,chiede all'apertore di \ndescriversi 
+Dialogue: 0,0:3:55.09,0:3:57.28,Default,,0000,0000,0000,,ulteriormente: non fissa \nl'atout! 
+Dialogue: 0,0:3:57.28,0:4:0.30,Default,,0000,0000,0000,,Il rialzo a 3 nel colore \ndell'apertore, invece 
+Dialogue: 0,0:4:0.30,0:4:3.37,Default,,0000,0000,0000,,e' diverso: mostra \nvelleita' di Slam con almeno 
+Dialogue: 0,0:4:3.37,0:4:4.19,Default,,0000,0000,0000,,15-16 punti. 
+Dialogue: 0,0:4:4.19,0:4:5.13,Default,,0000,0000,0000,,E il 4 colore? 
+Dialogue: 0,0:4:5.13,0:4:7.95,Default,,0000,0000,0000,,Serve a chiedere il \nfermo nell'unico colore 
+Dialogue: 0,0:4:7.95,0:4:9.08,Default,,0000,0000,0000,,rimasto scoperto. 
+Dialogue: 0,0:4:9.08,0:4:11.91,Default,,0000,0000,0000,,Se il rispondente ha gia \nconcluso a 3 Senza 
+Dialogue: 0,0:4:11.91,0:4:14.98,Default,,0000,0000,0000,,Atout e l'apertore ha \nmano extra, 4 Senza Atout 
+Dialogue: 0,0:4:14.98,0:4:16.99,Default,,0000,0000,0000,,dall'apertore e' \nquantitativo. 
+Dialogue: 0,0:4:16.99,0:4:19.94,Default,,0000,0000,0000,,Ma se il rispondente ha \nconcluso a manche nel 
+Dialogue: 0,0:4:19.94,0:4:22.89,Default,,0000,0000,0000,,nobile e l'apertore non \nsi e' mai limitato, 4 
+Dialogue: 0,0:4:22.89,0:4:25.97,Default,,0000,0000,0000,,Senza Atout e' Blackwood \nperche' il fit c' e' e 
+Dialogue: 0,0:4:25.97,0:4:28.29,Default,,0000,0000,0000,,le prospettive di slam \nsono aperte. 
+Dialogue: 0,0:4:28.29,0:4:30.61,Default,,0000,0000,0000,,Tanti concetti, lo so, \nma col tempo 
+Dialogue: 0,0:4:30.61,0:4:32.05,Default,,0000,0000,0000,,diventeranno naturali. 
+Dialogue: 0,0:4:32.05,0:4:33.50,Default,,0000,0000,0000,,Alla prossima lezione! 

@@ -1,0 +1,131 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.34,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.34,0:0:2.95,Default,,0000,0000,0000,,Oggi parliamo di come \ngiocare i contratti ad 
+Dialogue: 0,0:0:2.95,0:0:4.65,Default,,0000,0000,0000,,atout come un vero \ncampione. 
+Dialogue: 0,0:0:4.65,0:0:7.36,Default,,0000,0000,0000,,Sai cosa rende il gioco \nad atout cosi speciale 
+Dialogue: 0,0:0:7.36,0:0:7.48,Default,,0000,0000,0000,,? 
+Dialogue: 0,0:0:7.48,0:0:9.12,Default,,0000,0000,0000,,La possibilita di \ntagliare! 
+Dialogue: 0,0:0:9.12,0:0:11.44,Default,,0000,0000,0000,,Ma attenzione, perche \ntagliare nel modo 
+Dialogue: 0,0:0:11.44,0:0:13.60,Default,,0000,0000,0000,,sbagliato puo costarti \nil contratto. 
+Dialogue: 0,0:0:13.60,0:0:15.92,Default,,0000,0000,0000,,Oggi impariamo a farlo \nnel modo giusto. 
+Dialogue: 0,0:0:15.92,0:0:18.69,Default,,0000,0000,0000,,Partiamo da due concetti \nfondamentali: il tempo 
+Dialogue: 0,0:0:18.69,0:0:19.60,Default,,0000,0000,0000,,e il controllo. 
+Dialogue: 0,0:0:19.60,0:0:22.26,Default,,0000,0000,0000,,Il tempo e l'opportunita \ndi muovere un colore 
+Dialogue: 0,0:0:22.26,0:0:23.34,Default,,0000,0000,0000,,nel tuo interesse. 
+Dialogue: 0,0:0:23.34,0:0:26.12,Default,,0000,0000,0000,,Ogni volta che giochi \nuna carta, stai usando un 
+Dialogue: 0,0:0:26.12,0:0:26.51,Default,,0000,0000,0000,,tempo. 
+Dialogue: 0,0:0:26.51,0:0:29.06,Default,,0000,0000,0000,,Il controllo e la \ncapacita di impedire agli 
+Dialogue: 0,0:0:29.06,0:0:31.61,Default,,0000,0000,0000,,avversari di incassare \nil loro colore: puoi 
+Dialogue: 0,0:0:31.61,0:0:34.39,Default,,0000,0000,0000,,avere il controllo \ngrazie a carte alte come gli 
+Dialogue: 0,0:0:34.39,0:0:37.05,Default,,0000,0000,0000,,Assi, oppure grazie \nall'atout che ti permette 
+Dialogue: 0,0:0:37.05,0:0:37.79,Default,,0000,0000,0000,,di tagliare. 
+Dialogue: 0,0:0:37.79,0:0:40.28,Default,,0000,0000,0000,,La regola piu importante \ndi oggi e questa: 
+Dialogue: 0,0:0:40.28,0:0:43.00,Default,,0000,0000,0000,,quando il tuo piano \nprevede di cedere la presa 
+Dialogue: 0,0:0:43.00,0:0:45.66,Default,,0000,0000,0000,,all'avversario, chiediti \nsempre cosa fara lui 
+Dialogue: 0,0:0:45.66,0:0:47.02,Default,,0000,0000,0000,,quando avra il comando. 
+Dialogue: 0,0:0:47.02,0:0:49.80,Default,,0000,0000,0000,,Se l'avversario puo fare \nqualcosa di pericoloso 
+Dialogue: 0,0:0:49.80,0:0:52.34,Default,,0000,0000,0000,,devi prepararti prima di \ncedergli la presa! 
+Dialogue: 0,0:0:52.34,0:0:55.01,Default,,0000,0000,0000,,Vediamo la prima manovra \nscartare su vincenti 
+Dialogue: 0,0:0:55.01,0:0:55.57,Default,,0000,0000,0000,,laterali. 
+Dialogue: 0,0:0:55.57,0:0:58.12,Default,,0000,0000,0000,,Immagina di giocare 6 \nPicche e l'avversario 
+Dialogue: 0,0:0:58.12,0:0:59.60,Default,,0000,0000,0000,,attacca Donna di Quadri . 
+Dialogue: 0,0:0:59.60,0:1:2.09,Default,,0000,0000,0000,,Hai una carta perdente a \nQuadri e non vuoi 
+Dialogue: 0,0:1:2.09,0:1:2.65,Default,,0000,0000,0000,,perderla. 
+Dialogue: 0,0:1:2.65,0:1:3.22,Default,,0000,0000,0000,,Cosa fai? 
+Dialogue: 0,0:1:3.22,0:1:5.71,Default,,0000,0000,0000,,Se al Morto hai tre \nvincenti a Cuori, puoi 
+Dialogue: 0,0:1:5.71,0:1:8.15,Default,,0000,0000,0000,,scartare la tua Quadri \nperdente su una di 
+Dialogue: 0,0:1:8.15,0:1:8.94,Default,,0000,0000,0000,,quelle Cuori! 
+Dialogue: 0,0:1:8.94,0:1:11.66,Default,,0000,0000,0000,,Ma ecco il punto \ncruciale: devi farlo prima di 
+Dialogue: 0,0:1:11.66,0:1:12.68,Default,,0000,0000,0000,,battere le atout. 
+Dialogue: 0,0:1:12.68,0:1:13.13,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:1:13.13,0:1:15.29,Default,,0000,0000,0000,,Perche se batti le atout \nper prime e 
+Dialogue: 0,0:1:15.29,0:1:17.61,Default,,0000,0000,0000,,l'avversario ha l'Asso \ndi atout, quando 
+Dialogue: 0,0:1:17.61,0:1:20.05,Default,,0000,0000,0000,,prendera l'Asso giochera \nQuadri e ti fara 
+Dialogue: 0,0:1:20.05,0:1:22.48,Default,,0000,0000,0000,,perdere quella carta che \nvolevi scartare. 
+Dialogue: 0,0:1:22.48,0:1:25.26,Default,,0000,0000,0000,,Questo e il concetto di \nurgenza: alcune manovre 
+Dialogue: 0,0:1:25.26,0:1:27.86,Default,,0000,0000,0000,,devono essere fatte \nsubito, prima di battere 
+Dialogue: 0,0:1:27.86,0:1:30.64,Default,,0000,0000,0000,,atout, perche dopo \npotrebbe essere troppo tardi 
+Dialogue: 0,0:1:30.64,0:1:30.75,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:30.75,0:1:33.53,Default,,0000,0000,0000,,Non e sempre cosi, ma \nquando hai carte perdenti 
+Dialogue: 0,0:1:33.53,0:1:36.08,Default,,0000,0000,0000,,che possono essere \nscartate su vincenti del 
+Dialogue: 0,0:1:36.08,0:1:38.17,Default,,0000,0000,0000,,Morto, fallo prima di \ndare il tempo 
+Dialogue: 0,0:1:38.17,0:1:40.84,Default,,0000,0000,0000,,all'avversario di \nattaccarti dove sei debole. 
+Dialogue: 0,0:1:40.84,0:1:43.44,Default,,0000,0000,0000,,Un'altra situazione: non \nhai vincenti su cui 
+Dialogue: 0,0:1:43.44,0:1:45.48,Default,,0000,0000,0000,,scartare, ma puoi fare \nun impasse. 
+Dialogue: 0,0:1:45.48,0:1:48.03,Default,,0000,0000,0000,,Se il down e sicuro \nsenza rischiare, allora 
+Dialogue: 0,0:1:48.03,0:1:49.11,Default,,0000,0000,0000,,rischia l'impasse! 
+Dialogue: 0,0:1:49.11,0:1:51.77,Default,,0000,0000,0000,,E meglio avere il 50 per \ncento di probabilita 
+Dialogue: 0,0:1:51.77,0:1:54.15,Default,,0000,0000,0000,,di fare il contratto che \nzero per cento. 
+Dialogue: 0,0:1:54.15,0:1:56.87,Default,,0000,0000,0000,,Il Bridge e un gioco di \nprobabilita, e a volte 
+Dialogue: 0,0:1:56.87,0:1:56.47,Default,,0000,0000,0000,,rischiare e la scelta \nmigliore. 
+Dialogue: 0,0:1:56.47,0:1:58.39,Default,,0000,0000,0000,,Adesso parliamo di una \ndifferenza 
+Dialogue: 0,0:1:58.39,0:2:0.75,Default,,0000,0000,0000,,importantissima: l'atout \nlegittima contro 
+Dialogue: 0,0:2:0.75,0:2:1.90,Default,,0000,0000,0000,,l'atout illegittima. 
+Dialogue: 0,0:2:1.90,0:2:4.48,Default,,0000,0000,0000,,Suona complicato, ma e \npiu semplice di quanto 
+Dialogue: 0,0:2:4.48,0:2:4.87,Default,,0000,0000,0000,,pensi! 
+Dialogue: 0,0:2:4.87,0:2:7.28,Default,,0000,0000,0000,,L'atout legittima e una \npresa di atout che 
+Dialogue: 0,0:2:7.28,0:2:9.20,Default,,0000,0000,0000,,spettava comunque \nall'avversario. 
+Dialogue: 0,0:2:9.20,0:2:11.78,Default,,0000,0000,0000,,Se l'avversario ha la \nDonna di atout e tu hai 
+Dialogue: 0,0:2:11.78,0:2:14.47,Default,,0000,0000,0000,,Asso e Re, quella Donna \nprima o poi vincera una 
+Dialogue: 0,0:2:14.47,0:2:14.86,Default,,0000,0000,0000,,presa. 
+Dialogue: 0,0:2:14.86,0:2:17.44,Default,,0000,0000,0000,,Che la vinca battendo le \natout o tagliando un 
+Dialogue: 0,0:2:17.44,0:2:20.02,Default,,0000,0000,0000,,colore laterale, la \npresa era sua di diritto. 
+Dialogue: 0,0:2:20.02,0:2:21.28,Default,,0000,0000,0000,,Non puoi farci niente. 
+Dialogue: 0,0:2:21.28,0:2:23.80,Default,,0000,0000,0000,,L'atout illegittima e \ntutta un'altra storia. 
+Dialogue: 0,0:2:23.80,0:2:26.49,Default,,0000,0000,0000,,E un taglio fatto \ndall'avversario con una carta 
+Dialogue: 0,0:2:26.49,0:2:29.02,Default,,0000,0000,0000,,che non gli avrebbe dato \nnessuna presa se tu 
+Dialogue: 0,0:2:29.02,0:2:30.99,Default,,0000,0000,0000,,avessi battuto le atout \nper tempo. 
+Dialogue: 0,0:2:30.99,0:2:33.63,Default,,0000,0000,0000,,Se l'avversario taglia \ncon un Due di atout che 
+Dialogue: 0,0:2:33.63,0:2:36.21,Default,,0000,0000,0000,,avresti potuto \nraccogliere battendo le atout, 
+Dialogue: 0,0:2:36.21,0:2:38.24,Default,,0000,0000,0000,,hai regalato una presa \nillegittima. 
+Dialogue: 0,0:2:38.24,0:2:39.06,Default,,0000,0000,0000,,Brutta storia! 
+Dialogue: 0,0:2:39.06,0:2:41.48,Default,,0000,0000,0000,,Quindi la strategia e: \nquando hai vincenti 
+Dialogue: 0,0:2:41.48,0:2:43.89,Default,,0000,0000,0000,,laterali con cui \nscartare le tue perdenti, 
+Dialogue: 0,0:2:43.89,0:2:46.53,Default,,0000,0000,0000,,prima incassa le atout \nalte come Asso e Re per 
+Dialogue: 0,0:2:46.53,0:2:49.16,Default,,0000,0000,0000,,raccogliere le piccole \natout avversarie, e poi 
+Dialogue: 0,0:2:49.16,0:2:50.59,Default,,0000,0000,0000,,gioca i colori laterali . 
+Dialogue: 0,0:2:50.59,0:2:52.68,Default,,0000,0000,0000,,Cosi l'avversario non \npuo fare tagli 
+Dialogue: 0,0:2:52.68,0:2:53.39,Default,,0000,0000,0000,,illegittimi. 
+Dialogue: 0,0:2:53.39,0:2:56.08,Default,,0000,0000,0000,,Ma quando le cose sono \nurgenti, cioe quando non 
+Dialogue: 0,0:2:56.08,0:2:58.55,Default,,0000,0000,0000,,puoi permetterti di \nbattere le atout perche 
+Dialogue: 0,0:2:58.55,0:3:0.96,Default,,0000,0000,0000,,l'avversario ti \nattaccherebbe in un colore 
+Dialogue: 0,0:3:0.96,0:3:3.54,Default,,0000,0000,0000,,debole, allora inverti \nl'ordine: prima scarti 
+Dialogue: 0,0:3:3.54,0:3:6.18,Default,,0000,0000,0000,,le perdenti sulle \nvincenti, poi batti le atout 
+Dialogue: 0,0:3:6.18,0:3:6.29,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:6.29,0:3:8.92,Default,,0000,0000,0000,,Ora il concetto di \ntagliare dalla parte corta. 
+Dialogue: 0,0:3:8.92,0:3:11.28,Default,,0000,0000,0000,,Tagliare significa \nguadagnare prese extra 
+Dialogue: 0,0:3:11.28,0:3:13.64,Default,,0000,0000,0000,,usando l'atout dalla \nmano che ne ha meno. 
+Dialogue: 0,0:3:13.64,0:3:16.11,Default,,0000,0000,0000,,Se hai cinque atout in \nmano e tre al Morto, 
+Dialogue: 0,0:3:16.11,0:3:18.80,Default,,0000,0000,0000,,tagliare al Morto ti da \nprese in piu, perche le 
+Dialogue: 0,0:3:18.80,0:3:21.38,Default,,0000,0000,0000,,cinque atout in mano \nvincono comunque le loro 
+Dialogue: 0,0:3:21.38,0:3:21.77,Default,,0000,0000,0000,,prese. 
+Dialogue: 0,0:3:21.77,0:3:22.70,Default,,0000,0000,0000,,E come un bonus! 
+Dialogue: 0,0:3:22.70,0:3:24.84,Default,,0000,0000,0000,,Il fit 4-4 e il piu \npotente di tutti. 
+Dialogue: 0,0:3:24.84,0:3:25.28,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:3:25.28,0:3:27.58,Default,,0000,0000,0000,,Perche con quattro atout \nper parte, puoi 
+Dialogue: 0,0:3:27.58,0:3:30.16,Default,,0000,0000,0000,,scegliere da quale lato \ntagliare in base alle 
+Dialogue: 0,0:3:30.16,0:3:31.32,Default,,0000,0000,0000,,esigenze della mano. 
+Dialogue: 0,0:3:31.32,0:3:33.84,Default,,0000,0000,0000,,Non c' e un lato \npredeterminato per i tagli: 
+Dialogue: 0,0:3:33.84,0:3:36.31,Default,,0000,0000,0000,,sei tu che decidi \nguardando dove ti servono 
+Dialogue: 0,0:3:36.31,0:3:37.03,Default,,0000,0000,0000,,prese extra. 
+Dialogue: 0,0:3:37.03,0:3:39.71,Default,,0000,0000,0000,,Ma attenzione a un \nerrore micidiale: se l'unico 
+Dialogue: 0,0:3:39.71,0:3:42.18,Default,,0000,0000,0000,,collegamento tra le tue \nmani e il colore di 
+Dialogue: 0,0:3:42.18,0:3:44.38,Default,,0000,0000,0000,,atout, non tagliare \ndalla parte corta! 
+Dialogue: 0,0:3:44.38,0:3:47.07,Default,,0000,0000,0000,,Accorceresti le atout e \nperderesti il passaggio 
+Dialogue: 0,0:3:47.07,0:3:49.05,Default,,0000,0000,0000,,verso le vincenti \ndell'altra mano. 
+Dialogue: 0,0:3:49.05,0:3:50.97,Default,,0000,0000,0000,,Meglio usare le atout \ncome ponte. 
+Dialogue: 0,0:3:50.97,0:3:53.66,Default,,0000,0000,0000,,Nella prossima lezione \nparleremo del capitanato 
+Dialogue: 0,0:3:53.66,0:3:56.29,Default,,0000,0000,0000,,nella dichiarazione, \ncioe di chi comanda e chi 
+Dialogue: 0,0:3:56.29,0:3:58.60,Default,,0000,0000,0000,,obbedisce nella \nconversazione di coppia. 
+Dialogue: 0,0:3:58.60,0:3:59.64,Default,,0000,0000,0000,,Sara fondamentale! 

@@ -1,0 +1,120 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.41,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.41,0:0:3.71,Default,,0000,0000,0000,,Siamo all'ultima lezione \ndel corso Cuori Licita 
+Dialogue: 0,0:0:3.71,0:0:6.69,Default,,0000,0000,0000,,e parliamo di un \nargomento che i giocatori 
+Dialogue: 0,0:0:6.69,0:0:9.86,Default,,0000,0000,0000,,bravi conoscono \nbenissimo: i casi particolari 
+Dialogue: 0,0:0:9.86,0:0:11.61,Default,,0000,0000,0000,,dopo le risposte 1 su 1 . 
+Dialogue: 0,0:0:11.61,0:0:14.59,Default,,0000,0000,0000,,Cosa succede quando \nl'apertore ha una mano 
+Dialogue: 0,0:0:14.59,0:0:16.68,Default,,0000,0000,0000,,speciale e deve \nridichiarare? 
+Dialogue: 0,0:0:16.68,0:0:19.92,Default,,0000,0000,0000,,E cosa cambia quando un \navversario interviene? 
+Dialogue: 0,0:0:19.92,0:0:21.34,Default,,0000,0000,0000,,Andiamo a scoprirlo! 
+Dialogue: 0,0:0:21.34,0:0:23.30,Default,,0000,0000,0000,,Partiamo dal Rever a \nSenza. 
+Dialogue: 0,0:0:23.30,0:0:25.32,Default,,0000,0000,0000,,Ti ricordi cos' e' il \nRever? 
+Dialogue: 0,0:0:25.32,0:0:28.56,Default,,0000,0000,0000,,E' quando l'apertore ha \npiu' punti del minimo, 
+Dialogue: 0,0:0:28.56,0:0:29.64,Default,,0000,0000,0000,,una mano forte. 
+Dialogue: 0,0:0:29.64,0:0:32.89,Default,,0000,0000,0000,,Bene, il Rever a Senza \nsi fa quando l'apertore 
+Dialogue: 0,0:0:32.89,0:0:36.13,Default,,0000,0000,0000,,ha una distribuzione \n5-3-3-2 e 17 o piu' punti 
+Dialogue: 0,0:0:36.13,0:0:36.26,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:36.26,0:0:39.50,Default,,0000,0000,0000,,Se l'apertore ha 17-18 \npunti con 5-3-3-2, dopo 
+Dialogue: 0,0:0:39.50,0:0:42.81,Default,,0000,0000,0000,,la risposta 1 su 1 del \nrispondente, salta a 2NT 
+Dialogue: 0,0:0:42.81,0:0:42.95,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:42.95,0:0:45.18,Default,,0000,0000,0000,,Se ha 19-20 punti, salta \na 3NT. 
+Dialogue: 0,0:0:45.18,0:0:46.12,Default,,0000,0000,0000,,Semplice, no? 
+Dialogue: 0,0:0:46.12,0:0:49.23,Default,,0000,0000,0000,,Ma c' e' una conseguenza \nimportantissima: se 
+Dialogue: 0,0:0:49.23,0:0:52.54,Default,,0000,0000,0000,,l'apertore con 17-18 a \n5-3-3-2 dice 2NT dopo la 
+Dialogue: 0,0:0:52.54,0:0:55.03,Default,,0000,0000,0000,,risposta, vuol dire che \nquando apre 
+Dialogue: 0,0:0:55.03,0:0:58.01,Default,,0000,0000,0000,,direttamente 1NT con \nnobile quinto, ha per 
+Dialogue: 0,0:0:58.01,0:1:0.77,Default,,0000,0000,0000,,forza il punteggio \nminimo, cioe' 15-16. 
+Dialogue: 0,0:1:0.77,0:1:3.95,Default,,0000,0000,0000,,Logico: se avesse avuto \n17-18, avrebbe aperto 
+Dialogue: 0,0:1:3.95,0:1:5.43,Default,,0000,0000,0000,,di 1 e poi detto 2NT. 
+Dialogue: 0,0:1:5.43,0:1:8.74,Default,,0000,0000,0000,,C' e' un caso speciale: \nse l'apertore ha aperto 
+Dialogue: 0,0:1:8.74,0:1:11.65,Default,,0000,0000,0000,,di un minore, ha fit \nquarto nel nobile di 
+Dialogue: 0,0:1:11.65,0:1:14.28,Default,,0000,0000,0000,,risposta, e 17-18 punti \nnon dice 2NT! 
+Dialogue: 0,0:1:14.28,0:1:15.83,Default,,0000,0000,0000,,Dice direttamente 3NT. 
+Dialogue: 0,0:1:15.83,0:1:16.44,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:1:16.44,0:1:19.61,Default,,0000,0000,0000,,Perche' il 2NT \nescluderebbe il fit quarto nel 
+Dialogue: 0,0:1:19.61,0:1:20.15,Default,,0000,0000,0000,,nobile. 
+Dialogue: 0,0:1:20.15,0:1:22.79,Default,,0000,0000,0000,,Se dice 3NT da \nun'apertura minore, il 
+Dialogue: 0,0:1:22.79,0:1:25.02,Default,,0000,0000,0000,,rispondente sa che c' e \nil fit. 
+Dialogue: 0,0:1:25.02,0:1:28.05,Default,,0000,0000,0000,,E il salto diretto a \nmanche nel nobile dopo 
+Dialogue: 0,0:1:28.05,0:1:29.61,Default,,0000,0000,0000,,apertura di un minore? 
+Dialogue: 0,0:1:29.61,0:1:32.85,Default,,0000,0000,0000,,Quello mostra sempre una \nmano sbilanciata, non 
+Dialogue: 0,0:1:32.85,0:1:33.66,Default,,0000,0000,0000,,bilanciata. 
+Dialogue: 0,0:1:33.66,0:1:36.70,Default,,0000,0000,0000,,Adesso vediamo cosa puo \nfare il rispondente 
+Dialogue: 0,0:1:36.70,0:1:38.25,Default,,0000,0000,0000,,dopo il Rever a Senza. 
+Dialogue: 0,0:1:38.25,0:1:41.49,Default,,0000,0000,0000,,Se il compagno ha detto \n2NT e tu vuoi fermarti 
+Dialogue: 0,0:1:41.49,0:1:44.73,Default,,0000,0000,0000,,ripeti il tuo colore: e \n`` a passare '', cioe' 
+Dialogue: 0,0:1:44.73,0:1:46.56,Default,,0000,0000,0000,,il compagno puo' passare . 
+Dialogue: 0,0:1:46.56,0:1:49.73,Default,,0000,0000,0000,,Se dici un colore nuovo \ne' forzante e allunga 
+Dialogue: 0,0:1:49.73,0:1:52.03,Default,,0000,0000,0000,,il primo colore che \navevi detto. 
+Dialogue: 0,0:1:52.03,0:1:55.13,Default,,0000,0000,0000,,E se dici 3 Fiori, e' \nuna specie di Stayman: 
+Dialogue: 0,0:1:55.13,0:1:55.20,Default,,0000,0000,0000,,chiedi al compagno se ha \nle nobili. 
+Dialogue: 0,0:1:55.20,0:1:58.09,Default,,0000,0000,0000,,Dopo 1 Fiori - 1 Cuori - \n2NT, se dici 3 Fiori 
+Dialogue: 0,0:1:58.09,0:1:59.20,Default,,0000,0000,0000,,chiedi le nobili. 
+Dialogue: 0,0:1:59.20,0:2:2.16,Default,,0000,0000,0000,,L'apertore risponde: 3 \nQuadri se ha 4 Picche e 
+Dialogue: 0,0:2:2.16,0:2:5.11,Default,,0000,0000,0000,,3 Cuori; 3 Cuori se ha 3 \nCuori ma non 4 Picche 
+Dialogue: 0,0:2:5.11,0:2:8.07,Default,,0000,0000,0000,,3 Picche se ha 4 Picche \nma non 3 Cuori; 3NT se 
+Dialogue: 0,0:2:8.07,0:2:10.16,Default,,0000,0000,0000,,non ha ne' 4 Picche ne' \n3 Cuori. 
+Dialogue: 0,0:2:10.16,0:2:13.12,Default,,0000,0000,0000,,Adesso arriviamo alla \nparte piu' affascinante: 
+Dialogue: 0,0:2:13.12,0:2:14.23,Default,,0000,0000,0000,,l'effetto sponda. 
+Dialogue: 0,0:2:14.23,0:2:16.75,Default,,0000,0000,0000,,Quando un avversario \ninterviene dopo la 
+Dialogue: 0,0:2:16.75,0:2:19.28,Default,,0000,0000,0000,,risposta 1 su 1, \nl'apertore non e' piu' 
+Dialogue: 0,0:2:19.28,0:2:20.94,Default,,0000,0000,0000,,obbligato a ridichiarare ! 
+Dialogue: 0,0:2:20.94,0:2:23.53,Default,,0000,0000,0000,,L'intervento avversario \nlo `` libera ''. 
+Dialogue: 0,0:2:23.53,0:2:26.54,Default,,0000,0000,0000,,Quindi se l'apertore \ndecide comunque di parlare 
+Dialogue: 0,0:2:26.54,0:2:28.70,Default,,0000,0000,0000,,sta dicendo qualcosa di \nspeciale. 
+Dialogue: 0,0:2:28.70,0:2:31.72,Default,,0000,0000,0000,,Ecco le dichiarazioni \nlibere dell'apertore dopo 
+Dialogue: 0,0:2:31.72,0:2:34.73,Default,,0000,0000,0000,,intervento: L'appoggio \nimmediato nel nobile del 
+Dialogue: 0,0:2:34.73,0:2:37.26,Default,,0000,0000,0000,,rispondente promette \nsempre fit quarto. 
+Dialogue: 0,0:2:37.26,0:2:39.78,Default,,0000,0000,0000,,2 Cuori e' mano normale \ncon fit quarto. 
+Dialogue: 0,0:2:39.78,0:2:42.12,Default,,0000,0000,0000,,3 Cuori e' un piccolo \nRever con mano 
+Dialogue: 0,0:2:42.12,0:2:42.92,Default,,0000,0000,0000,,sbilanciata. 
+Dialogue: 0,0:2:42.92,0:2:44.65,Default,,0000,0000,0000,,4 Cuori e' forza in \nprese. 
+Dialogue: 0,0:2:44.65,0:2:46.87,Default,,0000,0000,0000,,La surlicita, cioe' dire \nil colore 
+Dialogue: 0,0:2:46.87,0:2:49.51,Default,,0000,0000,0000,,dell'avversario, e' il \nmodo piu' forte di 
+Dialogue: 0,0:2:49.51,0:2:52.28,Default,,0000,0000,0000,,mostrare fit quarto e \npuo' essere anche una 
+Dialogue: 0,0:2:52.28,0:2:53.58,Default,,0000,0000,0000,,bilanciata di Rever. 
+Dialogue: 0,0:2:53.58,0:2:56.47,Default,,0000,0000,0000,,Dire 1NT liberamente \nmostra una bilanciata di 
+Dialogue: 0,0:2:56.47,0:2:59.24,Default,,0000,0000,0000,,Rever, 18-20 punti, con \nil fermo nel colore 
+Dialogue: 0,0:2:59.24,0:3:0.29,Default,,0000,0000,0000,,dell'avversario. 
+Dialogue: 0,0:3:0.29,0:3:3.12,Default,,0000,0000,0000,,Non serve saltare a 2NT \nbasta 1NT perche' il 
+Dialogue: 0,0:3:3.12,0:3:5.83,Default,,0000,0000,0000,,compagno sa che stai \nparlando liberamente. 
+Dialogue: 0,0:3:5.83,0:3:8.73,Default,,0000,0000,0000,,Ripetere il proprio \ncolore liberamente mostra 
+Dialogue: 0,0:3:8.73,0:3:11.62,Default,,0000,0000,0000,,un ottimo colore sesto: \nse lo dici quando non 
+Dialogue: 0,0:3:11.62,0:3:14.39,Default,,0000,0000,0000,,eri obbligato, deve \nessere veramente bello. 
+Dialogue: 0,0:3:14.39,0:3:17.35,Default,,0000,0000,0000,,Dire un colore nuovo \nmostra una buona bicolore 
+Dialogue: 0,0:3:17.35,0:3:17.47,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:17.47,0:3:20.37,Default,,0000,0000,0000,,Dire un colore nuovo in \nRovescio mostra molta 
+Dialogue: 0,0:3:20.37,0:3:21.41,Default,,0000,0000,0000,,forza giocabile. 
+Dialogue: 0,0:3:21.41,0:3:22.21,Default,,0000,0000,0000,,E il Contro? 
+Dialogue: 0,0:3:22.21,0:3:25.23,Default,,0000,0000,0000,,E' la dichiarazione `` \ntutto-fare '': qualsiasi 
+Dialogue: 0,0:3:25.23,0:3:27.94,Default,,0000,0000,0000,,mano da 16 a 20 punti \nche non sia adatta a 
+Dialogue: 0,0:3:27.94,0:3:30.46,Default,,0000,0000,0000,,nessuna delle \ndichiarazioni precedenti. 
+Dialogue: 0,0:3:30.46,0:3:32.56,Default,,0000,0000,0000,,E dopo che l'apertore e \npassato? 
+Dialogue: 0,0:3:32.56,0:3:34.71,Default,,0000,0000,0000,,Il rispondente ha le sue \nopzioni. 
+Dialogue: 0,0:3:34.71,0:3:37.61,Default,,0000,0000,0000,,Colore nuovo forzante un \ngiro, vecchio colore 
+Dialogue: 0,0:3:37.61,0:3:39.52,Default,,0000,0000,0000,,naturale, 1NT e 2NT \nnaturali. 
+Dialogue: 0,0:3:39.52,0:3:41.92,Default,,0000,0000,0000,,Ma la cosa piu' utile e \nil Contro del 
+Dialogue: 0,0:3:41.92,0:3:44.94,Default,,0000,0000,0000,,rispondente: chiede \nall'apertore di descriversi 
+Dialogue: 0,0:3:44.94,0:3:46.29,Default,,0000,0000,0000,,con almeno 7-8 punti. 
+Dialogue: 0,0:3:46.29,0:3:49.25,Default,,0000,0000,0000,,E la surlicita del \nrispondente mostra una mano 
+Dialogue: 0,0:3:49.25,0:3:50.66,Default,,0000,0000,0000,,da manche sbilanciata. 
+Dialogue: 0,0:3:50.66,0:3:53.56,Default,,0000,0000,0000,,Ultimo concetto: quando \nl'apertore contra, il 
+Dialogue: 0,0:3:53.56,0:3:56.57,Default,,0000,0000,0000,,suo Contro non \ngarantisce tolleranza del colore 
+Dialogue: 0,0:3:56.57,0:3:57.38,Default,,0000,0000,0000,,di risposta. 
+Dialogue: 0,0:3:57.38,0:4:0.27,Default,,0000,0000,0000,,Tanto minore e' la \ntolleranza, tanto maggiore 
+Dialogue: 0,0:4:0.27,0:4:1.62,Default,,0000,0000,0000,,deve essere la forza. 
+Dialogue: 0,0:4:1.62,0:4:2.42,Default,,0000,0000,0000,,Complimenti! 
+Dialogue: 0,0:4:2.42,0:4:5.20,Default,,0000,0000,0000,,Hai completato tutto il \ncorso Cuori Licita! 
+Dialogue: 0,0:4:5.20,0:4:6.80,Default,,0000,0000,0000,,Alla prossima avventura ! 

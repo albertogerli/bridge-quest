@@ -1,0 +1,139 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.35,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.35,0:0:3.17,Default,,0000,0000,0000,,Oggi parliamo di una \ndelle cose piu avvincenti 
+Dialogue: 0,0:0:3.17,0:0:5.34,Default,,0000,0000,0000,,del Bridge: il gioco a \nSenza Atout. 
+Dialogue: 0,0:0:5.34,0:0:7.81,Default,,0000,0000,0000,,E come una gara di \nvelocita tra te e gli 
+Dialogue: 0,0:0:7.81,0:0:10.68,Default,,0000,0000,0000,,avversari, e per \nvincerla devi essere piu furbo 
+Dialogue: 0,0:0:10.68,0:0:11.21,Default,,0000,0000,0000,,di loro! 
+Dialogue: 0,0:0:11.21,0:0:13.44,Default,,0000,0000,0000,,Nel gioco a Senza non ci \nsono atout. 
+Dialogue: 0,0:0:13.44,0:0:16.20,Default,,0000,0000,0000,,Questo significa che non \npuoi tagliare nulla: 
+Dialogue: 0,0:0:16.20,0:0:19.08,Default,,0000,0000,0000,,l'unico modo per vincere \nle prese e avere carte 
+Dialogue: 0,0:0:19.08,0:0:21.31,Default,,0000,0000,0000,,piu alte o affrancare le \ntue lunghe. 
+Dialogue: 0,0:0:21.31,0:0:23.89,Default,,0000,0000,0000,,E qui arriva il bello: \nanche gli avversari 
+Dialogue: 0,0:0:23.89,0:0:26.30,Default,,0000,0000,0000,,stanno cercando di fare \nla stessa cosa! 
+Dialogue: 0,0:0:26.30,0:0:28.41,Default,,0000,0000,0000,,Appena gli cedi una \npresa, loro ne 
+Dialogue: 0,0:0:28.41,0:0:31.11,Default,,0000,0000,0000,,approfitteranno per \nlavorare sul loro colore 
+Dialogue: 0,0:0:31.11,0:0:31.52,Default,,0000,0000,0000,,lungo. 
+Dialogue: 0,0:0:31.52,0:0:33.87,Default,,0000,0000,0000,,E una corsa, e chi \narriva primo vince. 
+Dialogue: 0,0:0:33.87,0:0:36.63,Default,,0000,0000,0000,,La prima cosa da fare \nquando giochi a Senza e 
+Dialogue: 0,0:0:36.63,0:0:38.80,Default,,0000,0000,0000,,scegliere la tua \nsorgente di prese. 
+Dialogue: 0,0:0:38.80,0:0:40.62,Default,,0000,0000,0000,,Cos' e una sorgente di \nprese? 
+Dialogue: 0,0:0:40.62,0:0:43.44,Default,,0000,0000,0000,,E il colore dove puoi \ncreare il maggior numero 
+Dialogue: 0,0:0:43.44,0:0:44.20,Default,,0000,0000,0000,,di vincenti. 
+Dialogue: 0,0:0:44.20,0:0:46.38,Default,,0000,0000,0000,,Non puoi lavorare su \ntutti i colori 
+Dialogue: 0,0:0:46.38,0:0:49.19,Default,,0000,0000,0000,,contemporaneamente, \nperche ogni volta che cedi 
+Dialogue: 0,0:0:49.19,0:0:51.72,Default,,0000,0000,0000,,una presa gli avversari \navanzano nel loro 
+Dialogue: 0,0:0:51.72,0:0:52.19,Default,,0000,0000,0000,,colore. 
+Dialogue: 0,0:0:52.19,0:0:54.83,Default,,0000,0000,0000,,Devi concentrarti su un \ncolore solo e farlo 
+Dialogue: 0,0:0:54.83,0:0:56.06,Default,,0000,0000,0000,,fruttare al massimo. 
+Dialogue: 0,0:0:56.06,0:0:58.00,Default,,0000,0000,0000,,Come scegli la sorgente \ngiusta? 
+Dialogue: 0,0:0:58.00,0:1:0.82,Default,,0000,0000,0000,,Devi contare due cose: \nquante prese ti servono 
+Dialogue: 0,0:1:0.82,0:1:3.34,Default,,0000,0000,0000,,e quanti tempi devi \ncedere per ottenerle. 
+Dialogue: 0,0:1:3.34,0:1:6.04,Default,,0000,0000,0000,,Un tempo e ogni volta \nche devi dare la presa 
+Dialogue: 0,0:1:6.04,0:1:8.74,Default,,0000,0000,0000,,all'avversario per \naffrancare il tuo colore. 
+Dialogue: 0,0:1:8.74,0:1:11.32,Default,,0000,0000,0000,,Se hai un solo fermo nel \ncolore di attacco 
+Dialogue: 0,0:1:11.32,0:1:14.20,Default,,0000,0000,0000,,avversario, puoi cedere \nla presa solo una volta 
+Dialogue: 0,0:1:14.20,0:1:14.32,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:14.32,0:1:16.78,Default,,0000,0000,0000,,Se hai due fermi, puoi \ncedere due volte. 
+Dialogue: 0,0:1:16.78,0:1:17.61,Default,,0000,0000,0000,,Semplice, no? 
+Dialogue: 0,0:1:17.61,0:1:18.84,Default,,0000,0000,0000,,Facciamo un esempio. 
+Dialogue: 0,0:1:18.84,0:1:21.66,Default,,0000,0000,0000,,Giochi 3 Senza Atout e \ngli avversari attaccano 
+Dialogue: 0,0:1:21.66,0:1:22.13,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:1:22.13,0:1:24.00,Default,,0000,0000,0000,,Tu hai un solo fermo a \nPicche. 
+Dialogue: 0,0:1:24.00,0:1:26.82,Default,,0000,0000,0000,,Guardi le tue carte e \nvedi due possibilita: le 
+Dialogue: 0,0:1:26.82,0:1:29.58,Default,,0000,0000,0000,,Cuori ti danno quattro \nprese cedendo una sola 
+Dialogue: 0,0:1:29.58,0:1:32.16,Default,,0000,0000,0000,,volta, le Fiori te ne \ndanno cinque ma devi 
+Dialogue: 0,0:1:32.16,0:1:33.22,Default,,0000,0000,0000,,cedere due volte. 
+Dialogue: 0,0:1:33.22,0:1:34.04,Default,,0000,0000,0000,,Quale scegli? 
+Dialogue: 0,0:1:34.04,0:1:34.63,Default,,0000,0000,0000,,Le Cuori! 
+Dialogue: 0,0:1:34.63,0:1:37.51,Default,,0000,0000,0000,,Perche hai un solo fermo \na Picche e puoi cedere 
+Dialogue: 0,0:1:37.51,0:1:38.45,Default,,0000,0000,0000,,una volta sola. 
+Dialogue: 0,0:1:38.45,0:1:41.32,Default,,0000,0000,0000,,Se provi le Fiori, dopo \nla prima volta che cedi 
+Dialogue: 0,0:1:41.32,0:1:44.14,Default,,0000,0000,0000,,gli avversari tolgono il \ntuo fermo a Picche, e 
+Dialogue: 0,0:1:44.14,0:1:46.96,Default,,0000,0000,0000,,la seconda volta che \ncedi ti fanno un sacco di 
+Dialogue: 0,0:1:46.96,0:1:47.90,Default,,0000,0000,0000,,prese a Picche. 
+Dialogue: 0,0:1:47.90,0:1:48.78,Default,,0000,0000,0000,,Brutta storia. 
+Dialogue: 0,0:1:48.78,0:1:51.59,Default,,0000,0000,0000,,Quindi ricorda: non \nscegliere il colore che da 
+Dialogue: 0,0:1:51.59,0:1:52.94,Default,,0000,0000,0000,,piu prese in assoluto. 
+Dialogue: 0,0:1:52.94,0:1:55.65,Default,,0000,0000,0000,,Scegli il colore che da \nabbastanza prese nel 
+Dialogue: 0,0:1:55.65,0:1:55.70,Default,,0000,0000,0000,,numero di tempi che puoi \npermetterti! 
+Dialogue: 0,0:1:55.70,0:1:58.50,Default,,0000,0000,0000,,Adesso parliamo di \nqualcosa di importantissimo 
+Dialogue: 0,0:1:58.50,0:1:59.32,Default,,0000,0000,0000,,gli ingressi. 
+Dialogue: 0,0:1:59.32,0:2:1.71,Default,,0000,0000,0000,,Un ingresso e una carta \nvincente che ti 
+Dialogue: 0,0:2:1.71,0:2:4.51,Default,,0000,0000,0000,,permette di passare da \nuna mano all'altra, dal 
+Dialogue: 0,0:2:4.51,0:2:6.38,Default,,0000,0000,0000,,Giocante al Morto o \nviceversa. 
+Dialogue: 0,0:2:6.38,0:2:9.18,Default,,0000,0000,0000,,Senza ingressi, puoi \navere il colore piu lungo 
+Dialogue: 0,0:2:9.18,0:2:11.57,Default,,0000,0000,0000,,del mondo ma non riesci \na raggiungerlo! 
+Dialogue: 0,0:2:11.57,0:2:14.08,Default,,0000,0000,0000,,Ecco la regola d'oro: le \ntue vincenti non 
+Dialogue: 0,0:2:14.08,0:2:16.12,Default,,0000,0000,0000,,servono solo per \nincassare prese. 
+Dialogue: 0,0:2:16.12,0:2:18.92,Default,,0000,0000,0000,,Servono anche come \ningressi per raggiungere il 
+Dialogue: 0,0:2:18.92,0:2:20.68,Default,,0000,0000,0000,,colore che stai \naffrancando. 
+Dialogue: 0,0:2:20.68,0:2:23.07,Default,,0000,0000,0000,,Se hai l'Asso di Quadri \nal Morto e stai 
+Dialogue: 0,0:2:23.07,0:2:25.87,Default,,0000,0000,0000,,affrancando le Cuori al \nMorto, quell'Asso e il 
+Dialogue: 0,0:2:25.87,0:2:28.73,Default,,0000,0000,0000,,tuo biglietto d'ingresso \nper incassare le Cuori 
+Dialogue: 0,0:2:28.73,0:2:29.43,Default,,0000,0000,0000,,affrancate. 
+Dialogue: 0,0:2:29.43,0:2:30.30,Default,,0000,0000,0000,,Non sprecarlo! 
+Dialogue: 0,0:2:30.30,0:2:33.10,Default,,0000,0000,0000,,Quando vinci l'attacco \niniziale, devi vincerlo 
+Dialogue: 0,0:2:33.10,0:2:34.27,Default,,0000,0000,0000,,dalla parte giusta. 
+Dialogue: 0,0:2:34.27,0:2:36.90,Default,,0000,0000,0000,,Se il colore da \naffrancare e al Morto, devi 
+Dialogue: 0,0:2:36.90,0:2:39.23,Default,,0000,0000,0000,,stare attento a non \nbloccarti in mano. 
+Dialogue: 0,0:2:39.23,0:2:42.03,Default,,0000,0000,0000,,Ragiona subito su quale \nmano deve manovrare il 
+Dialogue: 0,0:2:42.03,0:2:44.48,Default,,0000,0000,0000,,colore e assicurati di \npoterci arrivare. 
+Dialogue: 0,0:2:44.48,0:2:46.93,Default,,0000,0000,0000,,Ora parliamo delle \npercentuali, che sono 
+Dialogue: 0,0:2:46.93,0:2:47.63,Default,,0000,0000,0000,,utilissime. 
+Dialogue: 0,0:2:47.63,0:2:50.49,Default,,0000,0000,0000,,Se tu e il Morto avete \nsette carte in un colore 
+Dialogue: 0,0:2:50.49,0:2:53.12,Default,,0000,0000,0000,,le altre sei sono divise \ntra gli avversari. 
+Dialogue: 0,0:2:53.12,0:2:54.17,Default,,0000,0000,0000,,Come si dividono? 
+Dialogue: 0,0:2:54.17,0:2:56.85,Default,,0000,0000,0000,,La divisione 3-3 capita \nsolo il 36 per cento 
+Dialogue: 0,0:2:56.85,0:2:57.61,Default,,0000,0000,0000,,delle volte. 
+Dialogue: 0,0:2:57.61,0:2:59.48,Default,,0000,0000,0000,,La 4-2 capita il 48 per \ncento! 
+Dialogue: 0,0:2:59.48,0:3:2.34,Default,,0000,0000,0000,,Quindi se speri nella \n3-3 per affrancare la tua 
+Dialogue: 0,0:3:2.34,0:3:5.08,Default,,0000,0000,0000,,settima carta, sappi che \nfunziona poco piu di 
+Dialogue: 0,0:3:5.08,0:3:6.13,Default,,0000,0000,0000,,una volta su tre. 
+Dialogue: 0,0:3:6.13,0:3:6.89,Default,,0000,0000,0000,,E l'impasse? 
+Dialogue: 0,0:3:6.89,0:3:9.58,Default,,0000,0000,0000,,L'impasse ha il 50 per \ncento di probabilita. 
+Dialogue: 0,0:3:9.58,0:3:12.38,Default,,0000,0000,0000,,Se devi scegliere tra \nsperare nella 3-3 o fare 
+Dialogue: 0,0:3:12.38,0:3:14.94,Default,,0000,0000,0000,,un impasse, \nmatematicamente l'impasse e la 
+Dialogue: 0,0:3:14.94,0:3:15.94,Default,,0000,0000,0000,,scelta migliore! 
+Dialogue: 0,0:3:15.94,0:3:18.39,Default,,0000,0000,0000,,Pero l'impasse costa un \ntempo, perche se 
+Dialogue: 0,0:3:18.39,0:3:20.66,Default,,0000,0000,0000,,fallisce dai la presa \nall'avversario. 
+Dialogue: 0,0:3:20.66,0:3:21.83,Default,,0000,0000,0000,,Quindi valuta bene. 
+Dialogue: 0,0:3:21.83,0:3:24.34,Default,,0000,0000,0000,,Parliamo anche del \nconcetto di avversario 
+Dialogue: 0,0:3:24.34,0:3:25.04,Default,,0000,0000,0000,,pericoloso. 
+Dialogue: 0,0:3:25.04,0:3:27.78,Default,,0000,0000,0000,,A volte hai un fermo che \nfunziona solo contro 
+Dialogue: 0,0:3:27.78,0:3:29.12,Default,,0000,0000,0000,,uno dei due avversari. 
+Dialogue: 0,0:3:29.12,0:3:31.92,Default,,0000,0000,0000,,Per esempio, se hai Re e \npiccola di un colore, 
+Dialogue: 0,0:3:31.92,0:3:34.67,Default,,0000,0000,0000,,il Re tiene solo se chi \nattacca e seduto alla 
+Dialogue: 0,0:3:34.67,0:3:36.94,Default,,0000,0000,0000,,tua destra, perche gioca \nprima di te. 
+Dialogue: 0,0:3:36.94,0:3:39.80,Default,,0000,0000,0000,,Se invece attacca chi \nsta alla tua sinistra, il 
+Dialogue: 0,0:3:39.80,0:3:41.38,Default,,0000,0000,0000,,suo Asso batte il tuo Re . 
+Dialogue: 0,0:3:41.38,0:3:44.18,Default,,0000,0000,0000,,In questo caso, \nl'avversario alla tua sinistra 
+Dialogue: 0,0:3:44.18,0:3:46.98,Default,,0000,0000,0000,,e quello pericoloso: non \ndeve entrare in presa 
+Dialogue: 0,0:3:46.98,0:3:47.10,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:3:47.10,0:3:49.08,Default,,0000,0000,0000,,Infine, la tecnica del \nlisciare. 
+Dialogue: 0,0:3:49.08,0:3:51.88,Default,,0000,0000,0000,,Significa rifiutare di \nprendere al primo giro, 
+Dialogue: 0,0:3:51.88,0:3:52.99,Default,,0000,0000,0000,,anche se potresti. 
+Dialogue: 0,0:3:52.99,0:3:53.81,Default,,0000,0000,0000,,Perche farlo? 
+Dialogue: 0,0:3:53.81,0:3:56.20,Default,,0000,0000,0000,,Per tagliare le \ncomunicazioni tra i due 
+Dialogue: 0,0:3:56.20,0:3:56.84,Default,,0000,0000,0000,,avversari. 
+Dialogue: 0,0:3:56.84,0:3:59.70,Default,,0000,0000,0000,,Se lisci al primo e al \nsecondo giro e prendi al 
+Dialogue: 0,0:3:59.70,0:4:2.44,Default,,0000,0000,0000,,terzo, chi ha attaccato \nnon avra piu carte di 
+Dialogue: 0,0:4:2.44,0:4:4.89,Default,,0000,0000,0000,,quel colore per \ncomunicare col compagno. 
+Dialogue: 0,0:4:4.89,0:4:7.70,Default,,0000,0000,0000,,Cosi il colore lungo \navversario resta bloccato 
+Dialogue: 0,0:4:7.70,0:4:7.81,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:4:7.81,0:4:10.61,Default,,0000,0000,0000,,Alla prossima lezione \nscopriremo come valutare 
+Dialogue: 0,0:4:10.61,0:4:12.89,Default,,0000,0000,0000,,la tua mano per decidere \nse aprire la 
+Dialogue: 0,0:4:12.89,0:4:13.76,Default,,0000,0000,0000,,dichiarazione. 
+Dialogue: 0,0:4:13.76,0:4:16.56,Default,,0000,0000,0000,,Sara un altro passo \navanti nella tua avventura 
+Dialogue: 0,0:4:16.56,0:4:17.27,Default,,0000,0000,0000,,nel Bridge! 

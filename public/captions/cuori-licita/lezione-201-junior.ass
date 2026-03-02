@@ -1,0 +1,128 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:2.61,Default,,0000,0000,0000,,Oggi affrontiamo un tema \nche cambia 
+Dialogue: 0,0:0:2.61,0:0:5.28,Default,,0000,0000,0000,,completamente il modo in \ncui guardi le tue 
+Dialogue: 0,0:0:5.28,0:0:8.19,Default,,0000,0000,0000,,carte: la differenza tra \nle lunghe e le corte, 
+Dialogue: 0,0:0:8.19,0:0:10.56,Default,,0000,0000,0000,,e come valutarle nella \ndichiarazione. 
+Dialogue: 0,0:0:10.56,0:0:13.53,Default,,0000,0000,0000,,Preparati, perche' \nquesta lezione sfata un mito 
+Dialogue: 0,0:0:13.53,0:0:16.44,Default,,0000,0000,0000,,che quasi tutti i \nprincipianti hanno in testa. 
+Dialogue: 0,0:0:16.44,0:0:19.42,Default,,0000,0000,0000,,Partiamo dal mito: `` Ho \nun singolo, fantastico 
+Dialogue: 0,0:0:19.42,0:0:19.54,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:0:19.54,0:0:21.11,Default,,0000,0000,0000,,Faro' delle prese extra ! 
+Dialogue: 0,0:0:21.11,0:0:21.96,Default,,0000,0000,0000,,'' Sbagliato. 
+Dialogue: 0,0:0:21.96,0:0:24.75,Default,,0000,0000,0000,,O meglio, non e' il \nsingolo che fa la presa. 
+Dialogue: 0,0:0:24.75,0:0:27.73,Default,,0000,0000,0000,,E' la carta di atout che \ntaglia a fare la presa 
+Dialogue: 0,0:0:27.73,0:0:27.85,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:27.85,0:0:30.76,Default,,0000,0000,0000,,Il singolo, di per se', \nnon produce niente: e' 
+Dialogue: 0,0:0:30.76,0:0:33.43,Default,,0000,0000,0000,,solo una carta che \nsparisce al primo giro. 
+Dialogue: 0,0:0:33.43,0:0:36.16,Default,,0000,0000,0000,,La presa la fa l'atout \nche usi per tagliare 
+Dialogue: 0,0:0:36.16,0:0:38.28,Default,,0000,0000,0000,,quando il colore viene \nrigiocato. 
+Dialogue: 0,0:0:38.28,0:0:40.83,Default,,0000,0000,0000,,Questa distinzione \nsembra sottile, ma e' 
+Dialogue: 0,0:0:40.83,0:0:41.86,Default,,0000,0000,0000,,importantissima. 
+Dialogue: 0,0:0:41.86,0:0:44.78,Default,,0000,0000,0000,,E c' e' un altro punto \nfondamentale: chi ha il 
+Dialogue: 0,0:0:44.78,0:0:47.51,Default,,0000,0000,0000,,singolo non e' nella \nposizione migliore per 
+Dialogue: 0,0:0:47.51,0:0:48.84,Default,,0000,0000,0000,,giudicarne il valore. 
+Dialogue: 0,0:0:48.84,0:0:49.39,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:0:49.39,0:0:52.24,Default,,0000,0000,0000,,Perche' il valore del \nsingolo dipende da cosa 
+Dialogue: 0,0:0:52.24,0:0:54.18,Default,,0000,0000,0000,,ha il compagno in quel \ncolore. 
+Dialogue: 0,0:0:54.18,0:0:56.91,Default,,0000,0000,0000,,Se il compagno ha l'Asso \nil singolo e' oro: 
+Dialogue: 0,0:0:56.91,0:0:59.58,Default,,0000,0000,0000,,puoi tagliare dalla \nseconda volta in poi e 
+Dialogue: 0,0:0:59.58,0:1:1.40,Default,,0000,0000,0000,,l'Asso incassa la sua \npresa. 
+Dialogue: 0,0:1:1.40,0:1:4.19,Default,,0000,0000,0000,,Se il compagno ha \nRe-Donna, il singolo e' un 
+Dialogue: 0,0:1:4.19,0:1:7.10,Default,,0000,0000,0000,,disastro: quei due onori \nnon faranno mai presa 
+Dialogue: 0,0:1:7.10,0:1:9.47,Default,,0000,0000,0000,,perche' davanti a loro c \ne' il vuoto. 
+Dialogue: 0,0:1:9.47,0:1:12.38,Default,,0000,0000,0000,,L'unico onore che \nfunziona davvero di fronte a 
+Dialogue: 0,0:1:12.38,0:1:14.44,Default,,0000,0000,0000,,un singolo del partner e \nl'Asso. 
+Dialogue: 0,0:1:14.44,0:1:17.11,Default,,0000,0000,0000,,Ecco la regola: i \nsingoli si raccontano al 
+Dialogue: 0,0:1:17.11,0:1:19.60,Default,,0000,0000,0000,,compagno e il compagno \nvaluta e decide. 
+Dialogue: 0,0:1:19.60,0:1:21.91,Default,,0000,0000,0000,,Tu mostri la tua \ndistribuzione nella 
+Dialogue: 0,0:1:21.91,0:1:24.82,Default,,0000,0000,0000,,dichiarazione, e il \npartner, conoscendo le sue 
+Dialogue: 0,0:1:24.82,0:1:27.79,Default,,0000,0000,0000,,carte in quel colore, \ndecidera' se il singolo e 
+Dialogue: 0,0:1:27.79,0:1:28.82,Default,,0000,0000,0000,,utile o dannoso. 
+Dialogue: 0,0:1:28.82,0:1:30.10,Default,,0000,0000,0000,,Facciamo un esempio. 
+Dialogue: 0,0:1:30.10,0:1:33.01,Default,,0000,0000,0000,,L'apertore ha una mano \nforte con la sequenza 1 
+Dialogue: 0,0:1:33.01,0:1:35.50,Default,,0000,0000,0000,,Quadri - 1 Cuori - 1 \nPicche - 2 Picche. 
+Dialogue: 0,0:1:35.50,0:1:36.59,Default,,0000,0000,0000,,Poi dice 3 Fiori. 
+Dialogue: 0,0:1:36.59,0:1:38.96,Default,,0000,0000,0000,,Quel 3 Fiori mostra il \nsingolo cuori! 
+Dialogue: 0,0:1:38.96,0:1:39.32,Default,,0000,0000,0000,,Come? 
+Dialogue: 0,0:1:39.32,0:1:42.17,Default,,0000,0000,0000,,Perche' ha detto tre \ncolori: quadri, picche e 
+Dialogue: 0,0:1:42.17,0:1:42.60,Default,,0000,0000,0000,,fiori. 
+Dialogue: 0,0:1:42.60,0:1:45.33,Default,,0000,0000,0000,,Il quarto, cuori, e' \nautomaticamente corto. 
+Dialogue: 0,0:1:45.33,0:1:47.94,Default,,0000,0000,0000,,Il rispondente ora sa \ndove sta la corta e 
+Dialogue: 0,0:1:47.94,0:1:50.24,Default,,0000,0000,0000,,rivaluta la sua mano di \nconseguenza. 
+Dialogue: 0,0:1:50.24,0:1:52.85,Default,,0000,0000,0000,,Se ha l'Asso di cuori e \ntanti punti nelle 
+Dialogue: 0,0:1:52.85,0:1:54.19,Default,,0000,0000,0000,,picche, la mano vola. 
+Dialogue: 0,0:1:54.19,0:1:56.67,Default,,0000,0000,0000,,Se ha Re-Donna di cuori \nquei punti sono 
+Dialogue: 0,0:1:56.67,0:1:54.79,Default,,0000,0000,0000,,sprecati. 
+Dialogue: 0,0:1:54.79,0:1:57.92,Default,,0000,0000,0000,,Adesso parliamo \ndell'altro grande protagonista 
+Dialogue: 0,0:1:57.92,0:2:0.33,Default,,0000,0000,0000,,di questa lezione: i \ncolori lunghi. 
+Dialogue: 0,0:2:0.33,0:2:3.06,Default,,0000,0000,0000,,E qui la regola e' tanto \nsemplice quanto 
+Dialogue: 0,0:2:3.06,0:2:6.26,Default,,0000,0000,0000,,rivoluzionaria: con 7 o \npiu' carte in un colore 
+Dialogue: 0,0:2:6.26,0:2:8.34,Default,,0000,0000,0000,,quel colore deve essere \natout. 
+Dialogue: 0,0:2:8.34,0:2:10.43,Default,,0000,0000,0000,,Quasi sempre, senza \neccezioni. 
+Dialogue: 0,0:2:10.43,0:2:13.42,Default,,0000,0000,0000,,Pensa a un colore di 7 \ncarte come a un fiume 
+Dialogue: 0,0:2:13.42,0:2:16.55,Default,,0000,0000,0000,,lungo: ha una forza sua \nuna corrente che va in 
+Dialogue: 0,0:2:16.55,0:2:17.53,Default,,0000,0000,0000,,una direzione. 
+Dialogue: 0,0:2:17.53,0:2:20.52,Default,,0000,0000,0000,,Se lo fai atout, tutte \nquelle carte lavorano 
+Dialogue: 0,0:2:20.52,0:2:22.28,Default,,0000,0000,0000,,per te, una dopo l'altra . 
+Dialogue: 0,0:2:22.28,0:2:25.15,Default,,0000,0000,0000,,Se scegli un altro \ncolore come atout, quel 
+Dialogue: 0,0:2:25.15,0:2:28.21,Default,,0000,0000,0000,,fiume diventa \nirraggiungibile: le carte della 
+Dialogue: 0,0:2:28.21,0:2:31.14,Default,,0000,0000,0000,,settima sono la' ma non \nriesci ad arrivarci 
+Dialogue: 0,0:2:31.14,0:2:33.55,Default,,0000,0000,0000,,perche' non hai \nabbastanza rientri. 
+Dialogue: 0,0:2:33.55,0:2:36.16,Default,,0000,0000,0000,,Le mani 7-4 e a volte le \n7-5 sono mani 
+Dialogue: 0,0:2:36.16,0:2:36.94,Default,,0000,0000,0000,,monocolori. 
+Dialogue: 0,0:2:36.94,0:2:40.07,Default,,0000,0000,0000,,Anche se hai un bel \nsecondo colore di 4 carte, 
+Dialogue: 0,0:2:40.07,0:2:41.37,Default,,0000,0000,0000,,la settima comanda. 
+Dialogue: 0,0:2:41.37,0:2:42.48,Default,,0000,0000,0000,,E con un'ottava? 
+Dialogue: 0,0:2:42.48,0:2:45.67,Default,,0000,0000,0000,,Con 8 carte in un colore \nignora completamente i 
+Dialogue: 0,0:2:45.67,0:2:46.52,Default,,0000,0000,0000,,punti onori. 
+Dialogue: 0,0:2:46.52,0:2:49.58,Default,,0000,0000,0000,,Una mano con 8 carte di \npicche e 2 punti puo' 
+Dialogue: 0,0:2:49.58,0:2:52.58,Default,,0000,0000,0000,,fare piu' prese di una \nmano con 5 carte e 15 
+Dialogue: 0,0:2:52.58,0:2:53.03,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:2:53.03,0:2:56.10,Default,,0000,0000,0000,,Prendi il toro per le \ncorna e dichiara il tuo 
+Dialogue: 0,0:2:56.10,0:2:59.22,Default,,0000,0000,0000,,colore al livello che ti \nsembra giusto in base 
+Dialogue: 0,0:2:59.22,0:3:0.98,Default,,0000,0000,0000,,alle prese, non ai punti . 
+Dialogue: 0,0:3:0.98,0:3:3.98,Default,,0000,0000,0000,,Un esempio spettacolare \nhai 7-6-3 di picche, 
+Dialogue: 0,0:3:3.98,0:3:6.98,Default,,0000,0000,0000,,Fante-10-7-6-5-4-2 di \ncuori, niente quadri e 
+Dialogue: 0,0:3:6.98,0:3:8.02,Default,,0000,0000,0000,,8-6-4 di fiori. 
+Dialogue: 0,0:3:8.02,0:3:8.93,Default,,0000,0000,0000,,Solo 1 punto! 
+Dialogue: 0,0:3:8.93,0:3:12.06,Default,,0000,0000,0000,,Ma il compagno apre 2 \nSenza Atout, cioe' 20-21 
+Dialogue: 0,0:3:12.06,0:3:13.23,Default,,0000,0000,0000,,punti bilanciati. 
+Dialogue: 0,0:3:13.23,0:3:13.95,Default,,0000,0000,0000,,Cosa dici? 
+Dialogue: 0,0:3:13.95,0:3:14.53,Default,,0000,0000,0000,,4 Cuori! 
+Dialogue: 0,0:3:14.53,0:3:17.66,Default,,0000,0000,0000,,Con quella settima \nnobile e il compagno che ha 
+Dialogue: 0,0:3:17.66,0:3:20.85,Default,,0000,0000,0000,,valori ovunque, la \nmanche ha ottime possibilita 
+Dialogue: 0,0:3:20.85,0:3:20.98,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:20.98,0:3:23.85,Default,,0000,0000,0000,,Non ti far frenare dal \npunteggio ridicolo. 
+Dialogue: 0,0:3:23.85,0:3:27.04,Default,,0000,0000,0000,,Altro errore grave: \nnascondere le lunghe dietro 
+Dialogue: 0,0:3:27.04,0:3:28.28,Default,,0000,0000,0000,,il Contro Sputnik. 
+Dialogue: 0,0:3:28.28,0:3:31.41,Default,,0000,0000,0000,,Se il compagno apre 1 \nFiori, l'avversario dice 
+Dialogue: 0,0:3:31.41,0:3:34.47,Default,,0000,0000,0000,,1 Picche e tu hai \nRe-9-7-6-5-4-3-2 di picche, 
+Dialogue: 0,0:3:34.47,0:3:37.47,Default,,0000,0000,0000,,Asso-5-2 di cuori, 4 di \nquadri e 2 di fiori, 
+Dialogue: 0,0:3:37.47,0:3:39.16,Default,,0000,0000,0000,,non dire Contro Sputnik ! 
+Dialogue: 0,0:3:39.16,0:3:41.70,Default,,0000,0000,0000,,Devi dire le tue picche \ndirettamente. 
+Dialogue: 0,0:3:41.70,0:3:44.76,Default,,0000,0000,0000,,Il Contro nasconde il \ncolore lungo e porta la 
+Dialogue: 0,0:3:44.76,0:3:46.65,Default,,0000,0000,0000,,coppia su binari \nsbagliati. 
+Dialogue: 0,0:3:46.65,0:3:49.45,Default,,0000,0000,0000,,La lunga e' la tua forza \nmostrala subito. 
+Dialogue: 0,0:3:49.45,0:3:52.58,Default,,0000,0000,0000,,Un ultimo consiglio: \nl'unica quarta a lato che 
+Dialogue: 0,0:3:52.58,0:3:55.58,Default,,0000,0000,0000,,non devi mai nascondere \ne' Cuori, perche' la 
+Dialogue: 0,0:3:55.58,0:3:58.64,Default,,0000,0000,0000,,manche a cuori e' a \nlivello 4, un'alternativa 
+Dialogue: 0,0:3:58.64,0:3:59.29,Default,,0000,0000,0000,,preziosa. 
+Dialogue: 0,0:3:59.29,0:4:2.42,Default,,0000,0000,0000,,Con una sesta di picche \ne una quarta di cuori, 
+Dialogue: 0,0:4:2.42,0:4:4.31,Default,,0000,0000,0000,,di solito ripeti le \npicche. 
+Dialogue: 0,0:4:4.31,0:4:7.24,Default,,0000,0000,0000,,Ma se la quarta e' cuori \nmostrala: potreste 
+Dialogue: 0,0:4:7.24,0:4:10.04,Default,,0000,0000,0000,,trovare li' il vostro \ncontratto migliore. 
+Dialogue: 0,0:4:10.04,0:4:13.17,Default,,0000,0000,0000,,Ricorda: le lunghe sono \npotenza pura, le corte 
+Dialogue: 0,0:4:13.17,0:4:14.67,Default,,0000,0000,0000,,si raccontano e basta. 
+Dialogue: 0,0:4:14.67,0:4:16.16,Default,,0000,0000,0000,,Alla prossima lezione! 

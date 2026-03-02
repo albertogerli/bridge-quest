@@ -1,0 +1,138 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.41,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.41,0:0:2.24,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:2.24,0:0:5.49,Default,,0000,0000,0000,,Oggi parliamo di \nqualcosa che riguarda il lato 
+Dialogue: 0,0:0:5.49,0:0:7.94,Default,,0000,0000,0000,,oscuro del bridge: il \ncontrogioco! 
+Dialogue: 0,0:0:7.94,0:0:10.78,Default,,0000,0000,0000,,Quando sei un difensore \ncioe' non sei il 
+Dialogue: 0,0:0:10.78,0:0:13.50,Default,,0000,0000,0000,,Giocante, il tuo compito \ne' fermare il 
+Dialogue: 0,0:0:13.50,0:0:14.99,Default,,0000,0000,0000,,contratto avversario. 
+Dialogue: 0,0:0:14.99,0:0:18.31,Default,,0000,0000,0000,,Ma come fai se non puoi \nvedere le carte del tuo 
+Dialogue: 0,0:0:18.31,0:0:18.99,Default,,0000,0000,0000,,compagno? 
+Dialogue: 0,0:0:18.99,0:0:22.11,Default,,0000,0000,0000,,Semplice: vi parlate \nattraverso le carte che 
+Dialogue: 0,0:0:22.11,0:0:22.72,Default,,0000,0000,0000,,giocate! 
+Dialogue: 0,0:0:22.72,0:0:25.71,Default,,0000,0000,0000,,Oggi impariamo il \nsistema di comunicazione 
+Dialogue: 0,0:0:25.71,0:0:27.60,Default,,0000,0000,0000,,usato in Italia: il \nBusso. 
+Dialogue: 0,0:0:27.60,0:0:30.79,Default,,0000,0000,0000,,Quando devi attaccare, \ncioe' giocare la prima 
+Dialogue: 0,0:0:30.79,0:0:33.57,Default,,0000,0000,0000,,carta della mano, devi \nfare due scelte. 
+Dialogue: 0,0:0:33.57,0:0:35.74,Default,,0000,0000,0000,,Prima scelta: in quale \ncolore? 
+Dialogue: 0,0:0:35.74,0:0:39.00,Default,,0000,0000,0000,,Seconda scelta: con \nquale carta di quel colore 
+Dialogue: 0,0:0:39.00,0:0:39.13,Default,,0000,0000,0000,,? 
+Dialogue: 0,0:0:39.13,0:0:42.39,Default,,0000,0000,0000,,Cominciamo dalla seconda \nperche' e' qui che il 
+Dialogue: 0,0:0:42.39,0:0:43.88,Default,,0000,0000,0000,,Busso entra in gioco. 
+Dialogue: 0,0:0:43.88,0:0:46.93,Default,,0000,0000,0000,,Il Busso funziona cosi' \nla carta che giochi 
+Dialogue: 0,0:0:46.93,0:0:50.05,Default,,0000,0000,0000,,racconta al compagno se \nhai un onore in quel 
+Dialogue: 0,0:0:50.05,0:0:51.27,Default,,0000,0000,0000,,colore oppure no. 
+Dialogue: 0,0:0:51.27,0:0:54.39,Default,,0000,0000,0000,,Se giochi una carta \npiccola, cioe' una delle 
+Dialogue: 0,0:0:54.39,0:0:57.51,Default,,0000,0000,0000,,cartine basse, stai \ndicendo: `` Ho almeno un 
+Dialogue: 0,0:0:57.51,0:0:59.14,Default,,0000,0000,0000,,onore in questo colore! 
+Dialogue: 0,0:0:59.14,0:1:1.99,Default,,0000,0000,0000,,Per favore, prendi la \npresa e tornamelo! 
+Dialogue: 0,0:1:1.99,0:1:4.84,Default,,0000,0000,0000,,'' E' come dire al \ncompagno: `` Ehi, sto 
+Dialogue: 0,0:1:4.84,0:1:7.48,Default,,0000,0000,0000,,investendo in questo \ncolore, aiutami! 
+Dialogue: 0,0:1:7.48,0:1:10.40,Default,,0000,0000,0000,,'' Se invece giochi una \ncarta alta tra le 
+Dialogue: 0,0:1:10.40,0:1:13.39,Default,,0000,0000,0000,,cartine, stai dicendo: \n`` Non ho niente di 
+Dialogue: 0,0:1:13.39,0:1:14.13,Default,,0000,0000,0000,,buono qui. 
+Dialogue: 0,0:1:14.13,0:1:17.05,Default,,0000,0000,0000,,Sei libero di prendere e \ncambiare colore. 
+Dialogue: 0,0:1:17.05,0:1:20.03,Default,,0000,0000,0000,,'' In pratica: piccola \ncon interesse, alta 
+Dialogue: 0,0:1:20.03,0:1:21.19,Default,,0000,0000,0000,,senza interesse. 
+Dialogue: 0,0:1:21.19,0:1:22.61,Default,,0000,0000,0000,,Facile da ricordare! 
+Dialogue: 0,0:1:22.61,0:1:25.87,Default,,0000,0000,0000,,Ma quali carte sono `` \ncartine '' e quali sono 
+Dialogue: 0,0:1:25.87,0:1:26.75,Default,,0000,0000,0000,,`` onori ''? 
+Dialogue: 0,0:1:26.75,0:1:29.12,Default,,0000,0000,0000,,Gli onori che promettono \nla carta 
+Dialogue: 0,0:1:29.12,0:1:32.38,Default,,0000,0000,0000,,immediatamente inferiore \nsono: Asso, Re, Donna 
+Dialogue: 0,0:1:32.38,0:1:33.80,Default,,0000,0000,0000,,Fante, Dieci e Nove. 
+Dialogue: 0,0:1:33.80,0:1:35.16,Default,,0000,0000,0000,,Si', anche il Nove! 
+Dialogue: 0,0:1:35.16,0:1:38.28,Default,,0000,0000,0000,,Il Nove non e' una \ncartina, promette l'Otto. 
+Dialogue: 0,0:1:38.28,0:1:41.19,Default,,0000,0000,0000,,La carta piu' alta che \npuo' essere una `` 
+Dialogue: 0,0:1:41.19,0:1:44.25,Default,,0000,0000,0000,,cartina '' e' l'Otto, e \nl'Otto non promette 
+Dialogue: 0,0:1:44.25,0:1:44.79,Default,,0000,0000,0000,,niente. 
+Dialogue: 0,0:1:44.79,0:1:46.35,Default,,0000,0000,0000,,Facciamo degli esempi. 
+Dialogue: 0,0:1:46.35,0:1:48.99,Default,,0000,0000,0000,,Hai Re, Nove, Sette, \nCinque, Quattro. 
+Dialogue: 0,0:1:48.99,0:1:50.49,Default,,0000,0000,0000,,Quale carta attacchi? 
+Dialogue: 0,0:1:50.49,0:1:51.30,Default,,0000,0000,0000,,Il Quattro! 
+Dialogue: 0,0:1:51.30,0:1:54.35,Default,,0000,0000,0000,,E' la piu' piccola delle \ncartine, e dice al 
+Dialogue: 0,0:1:54.35,0:1:56.25,Default,,0000,0000,0000,,compagno che hai un \nonore. 
+Dialogue: 0,0:1:56.25,0:1:58.90,Default,,0000,0000,0000,,Hai Nove, Sette, Cinque \nQuattro, Due. 
+Dialogue: 0,0:1:58.90,0:1:59.98,Default,,0000,0000,0000,,Quale attacchi? 
+Dialogue: 0,0:1:59.98,0:2:0.66,Default,,0000,0000,0000,,Il Sette! 
+Dialogue: 0,0:2:0.66,0:2:3.78,Default,,0000,0000,0000,,E' la piu' alta delle \ncartine senza onore, e 
+Dialogue: 0,0:2:3.78,0:2:6.97,Default,,0000,0000,0000,,dice al compagno che non \nhai niente di buono. 
+Dialogue: 0,0:2:6.97,0:2:9.54,Default,,0000,0000,0000,,Hai Donna, Dieci, Otto, \nSei, Cinque. 
+Dialogue: 0,0:2:9.54,0:2:10.90,Default,,0000,0000,0000,,Attacchi il Cinque! 
+Dialogue: 0,0:2:10.90,0:2:9.41,Default,,0000,0000,0000,,Hai l'onore e attacchi \npiccola. 
+Dialogue: 0,0:2:9.41,0:2:12.02,Default,,0000,0000,0000,,Ma c' e' un'eccezione \nimportante: quando 
+Dialogue: 0,0:2:12.02,0:2:14.45,Default,,0000,0000,0000,,attacchi nel colore del \ntuo compagno! 
+Dialogue: 0,0:2:14.45,0:2:17.37,Default,,0000,0000,0000,,Se il tuo compagno ha \naperto o ha intervenuto 
+Dialogue: 0,0:2:17.37,0:2:20.36,Default,,0000,0000,0000,,in un colore, e tu \ndecidi di attaccare in quel 
+Dialogue: 0,0:2:20.36,0:2:22.10,Default,,0000,0000,0000,,colore, il Busso \nscompare. 
+Dialogue: 0,0:2:22.10,0:2:25.15,Default,,0000,0000,0000,,Al suo posto entra il \nConto, cioe' comunichi al 
+Dialogue: 0,0:2:25.15,0:2:27.82,Default,,0000,0000,0000,,compagno quante carte \nhai in quel colore. 
+Dialogue: 0,0:2:27.82,0:2:30.74,Default,,0000,0000,0000,,Con il Conto funziona \ncosi': se hai un numero 
+Dialogue: 0,0:2:30.74,0:2:33.60,Default,,0000,0000,0000,,pari di carte( 2 o 4), \ngiochi una carta alta 
+Dialogue: 0,0:2:33.60,0:2:35.35,Default,,0000,0000,0000,,seguita da una piu' \nbassa. 
+Dialogue: 0,0:2:35.35,0:2:38.27,Default,,0000,0000,0000,,Se hai un numero dispari \ndi carte( 1, 3 o 5), 
+Dialogue: 0,0:2:38.27,0:2:39.76,Default,,0000,0000,0000,,giochi la piu' piccola. 
+Dialogue: 0,0:2:39.76,0:2:42.68,Default,,0000,0000,0000,,Per esempio: hai Otto, \nQuattro nel colore del 
+Dialogue: 0,0:2:42.68,0:2:43.31,Default,,0000,0000,0000,,compagno. 
+Dialogue: 0,0:2:43.31,0:2:46.23,Default,,0000,0000,0000,,Attacchi l'Otto, perche \nhai un numero pari di 
+Dialogue: 0,0:2:46.23,0:2:46.66,Default,,0000,0000,0000,,carte. 
+Dialogue: 0,0:2:46.66,0:2:47.72,Default,,0000,0000,0000,,Hai Re, Quattro. 
+Dialogue: 0,0:2:47.72,0:2:50.65,Default,,0000,0000,0000,,Attacchi il Re, perche' \ne' la piu' alta e hai 
+Dialogue: 0,0:2:50.65,0:2:51.64,Default,,0000,0000,0000,,un numero pari. 
+Dialogue: 0,0:2:51.64,0:2:52.82,Default,,0000,0000,0000,,Hai Re, Nove, Tre. 
+Dialogue: 0,0:2:52.82,0:2:55.81,Default,,0000,0000,0000,,Attacchi il Tre, perche \nhai un numero dispari. 
+Dialogue: 0,0:2:55.81,0:2:58.48,Default,,0000,0000,0000,,Pero' attenzione: se hai \nuna sequenza nel 
+Dialogue: 0,0:2:58.48,0:3:1.53,Default,,0000,0000,0000,,colore del compagno, la \nsequenza prevale sempre 
+Dialogue: 0,0:3:1.53,0:3:2.21,Default,,0000,0000,0000,,sul conto! 
+Dialogue: 0,0:3:2.21,0:3:5.01,Default,,0000,0000,0000,,Se hai Donna, Fante, Tre \nattacchi la Donna. 
+Dialogue: 0,0:3:5.01,0:3:8.00,Default,,0000,0000,0000,,Se hai Fante, Dieci, \nSette, attacchi il Fante. 
+Dialogue: 0,0:3:8.00,0:3:10.67,Default,,0000,0000,0000,,La sequenza e' piu' \nimportante del conto. 
+Dialogue: 0,0:3:10.67,0:3:12.54,Default,,0000,0000,0000,,Adesso parliamo dei \nsegnali. 
+Dialogue: 0,0:3:12.54,0:3:15.46,Default,,0000,0000,0000,,I segnali sono le carte \nche giochi quando NON 
+Dialogue: 0,0:3:15.46,0:3:18.32,Default,,0000,0000,0000,,sei tu ad attaccare ma \ndevi rispondere a una 
+Dialogue: 0,0:3:18.32,0:3:19.81,Default,,0000,0000,0000,,presa del tuo compagno. 
+Dialogue: 0,0:3:19.81,0:3:22.05,Default,,0000,0000,0000,,Si chiamano segnali di \ngradimento. 
+Dialogue: 0,0:3:22.05,0:3:24.73,Default,,0000,0000,0000,,In Italia usiamo il \nsistema Pari-Dispari. 
+Dialogue: 0,0:3:24.73,0:3:27.59,Default,,0000,0000,0000,,E' semplicissimo: una \ncarta dispari, tipo il 
+Dialogue: 0,0:3:27.59,0:3:30.57,Default,,0000,0000,0000,,Tre, il Cinque, il Sette \no il Nove, dice `` Mi 
+Dialogue: 0,0:3:30.57,0:3:31.01,Default,,0000,0000,0000,,piace! 
+Dialogue: 0,0:3:31.01,0:3:32.75,Default,,0000,0000,0000,,Continua in questo \ncolore! 
+Dialogue: 0,0:3:32.75,0:3:35.74,Default,,0000,0000,0000,,'' Una carta pari, tipo \nil Due, il Quattro, il 
+Dialogue: 0,0:3:35.74,0:3:38.47,Default,,0000,0000,0000,,Sei o l'Otto, dice `` \nNon mi piace, cambia 
+Dialogue: 0,0:3:38.47,0:3:38.97,Default,,0000,0000,0000,,colore. 
+Dialogue: 0,0:3:38.97,0:3:41.83,Default,,0000,0000,0000,,'' Pero' il gradimento \nsi da' SOLO quando il 
+Dialogue: 0,0:3:41.83,0:3:44.69,Default,,0000,0000,0000,,colore e' mosso dai \ndifensori, cioe' da te o 
+Dialogue: 0,0:3:44.69,0:3:45.81,Default,,0000,0000,0000,,dal tuo compagno. 
+Dialogue: 0,0:3:45.81,0:3:48.86,Default,,0000,0000,0000,,Se il colore lo muove il \nGiocante, non si danno 
+Dialogue: 0,0:3:48.86,0:3:50.29,Default,,0000,0000,0000,,segnali di gradimento. 
+Dialogue: 0,0:3:50.29,0:3:53.34,Default,,0000,0000,0000,,Sarebbe come dare \ninformazioni gratis al nemico 
+Dialogue: 0,0:3:53.34,0:3:53.46,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:3:53.46,0:3:55.89,Default,,0000,0000,0000,,L'ultimo argomento e' il \nPrimo Scarto 
+Dialogue: 0,0:3:55.89,0:3:56.76,Default,,0000,0000,0000,,all'Italiana. 
+Dialogue: 0,0:3:56.76,0:3:59.74,Default,,0000,0000,0000,,Quando devi scartare per \nla prima volta, cioe' 
+Dialogue: 0,0:3:59.74,0:4:2.36,Default,,0000,0000,0000,,non puoi rispondere al \ncolore e non vuoi 
+Dialogue: 0,0:4:2.36,0:4:5.40,Default,,0000,0000,0000,,tagliare, la carta che \nscarti comunica qualcosa 
+Dialogue: 0,0:4:5.40,0:4:5.53,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:5.53,0:4:8.58,Default,,0000,0000,0000,,Se scarti una carta \ndispari, stai chiamando: `` 
+Dialogue: 0,0:4:8.58,0:4:10.63,Default,,0000,0000,0000,,Ho dei valori in questo \ncolore! 
+Dialogue: 0,0:4:10.63,0:4:13.55,Default,,0000,0000,0000,,'' Se scarti una carta \npari, stai rifiutando: 
+Dialogue: 0,0:4:13.55,0:4:14.92,Default,,0000,0000,0000,,`` Non ho niente qui. 
+Dialogue: 0,0:4:14.92,0:4:17.78,Default,,0000,0000,0000,,'' Quindi se vuoi far \ncapire al compagno che 
+Dialogue: 0,0:4:17.78,0:4:20.58,Default,,0000,0000,0000,,hai l'Asso di Quadri, \nscarti un Cinque o un 
+Dialogue: 0,0:4:20.58,0:4:21.64,Default,,0000,0000,0000,,Sette di Quadri. 
+Dialogue: 0,0:4:21.64,0:4:24.68,Default,,0000,0000,0000,,Se vuoi dire che non hai \nniente a Fiori, scarti 
+Dialogue: 0,0:4:24.68,0:4:26.61,Default,,0000,0000,0000,,un Quattro o un Sei di \nFiori. 
+Dialogue: 0,0:4:26.61,0:4:29.41,Default,,0000,0000,0000,,Con questi segnali, tu e \nil compagno potete 
+Dialogue: 0,0:4:29.41,0:4:32.09,Default,,0000,0000,0000,,coordinarvi anche senza \nvedervi le carte. 
+Dialogue: 0,0:4:32.09,0:4:33.83,Default,,0000,0000,0000,,E' come un codice \nsegreto! 
+Dialogue: 0,0:4:33.83,0:4:36.00,Default,,0000,0000,0000,,Ci vediamo alla prossima \nlezione! 

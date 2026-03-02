@@ -1,0 +1,132 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.38,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.38,0:0:2.07,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:2.07,0:0:5.08,Default,,0000,0000,0000,,Oggi impariamo una \ntecnica che ti fara sentire 
+Dialogue: 0,0:0:5.08,0:0:7.91,Default,,0000,0000,0000,,un vero stratega: i \ngiochi di eliminazione! 
+Dialogue: 0,0:0:7.91,0:0:10.98,Default,,0000,0000,0000,,L'idea e' geniale: metti \nun avversario in presa 
+Dialogue: 0,0:0:10.98,0:0:14.00,Default,,0000,0000,0000,,dopo avergli tolto ogni \npossibilita' di uscita 
+Dialogue: 0,0:0:14.00,0:0:16.88,Default,,0000,0000,0000,,cosi' qualsiasi cosa \ngiochi ti fa un favore. 
+Dialogue: 0,0:0:16.88,0:0:19.83,Default,,0000,0000,0000,,E' come intrappolare \nqualcuno in un labirinto 
+Dialogue: 0,0:0:19.83,0:0:22.47,Default,,0000,0000,0000,,dove tutte le uscite \nportano a casa tua! 
+Dialogue: 0,0:0:22.47,0:0:24.10,Default,,0000,0000,0000,,Ma partiamo dall'inizio . 
+Dialogue: 0,0:0:24.10,0:0:26.30,Default,,0000,0000,0000,,Cos' e' un gioco di \neliminazione? 
+Dialogue: 0,0:0:26.30,0:0:28.18,Default,,0000,0000,0000,,E' una manovra in tre \npassi. 
+Dialogue: 0,0:0:28.18,0:0:30.94,Default,,0000,0000,0000,,Primo: elimini tutte le \ncarte `` neutre '' 
+Dialogue: 0,0:0:30.94,0:0:33.95,Default,,0000,0000,0000,,dalle mani \ndell'avversario, cioe' le carte con 
+Dialogue: 0,0:0:33.95,0:0:36.53,Default,,0000,0000,0000,,cui potrebbe uscire \nsenza farti regali. 
+Dialogue: 0,0:0:36.53,0:0:39.47,Default,,0000,0000,0000,,Secondo: batti le atout \navversarie, cosi' non 
+Dialogue: 0,0:0:39.47,0:0:41.29,Default,,0000,0000,0000,,possono salvarsi \ntagliando. 
+Dialogue: 0,0:0:41.29,0:0:43.68,Default,,0000,0000,0000,,Terzo: cedi la presa \nall'avversario. 
+Dialogue: 0,0:0:43.68,0:0:45.94,Default,,0000,0000,0000,,E a quel punto lui e' in \ntrappola! 
+Dialogue: 0,0:0:45.94,0:0:48.89,Default,,0000,0000,0000,,La prima situazione \nmagica si chiama taglio e 
+Dialogue: 0,0:0:48.89,0:0:49.39,Default,,0000,0000,0000,,scarto. 
+Dialogue: 0,0:0:49.39,0:0:52.47,Default,,0000,0000,0000,,Funziona cosi': quando \nun difensore e' in presa 
+Dialogue: 0,0:0:52.47,0:0:55.35,Default,,0000,0000,0000,,e deve giocare un colore \nche e' esaurito sia 
+Dialogue: 0,0:0:55.35,0:0:58.24,Default,,0000,0000,0000,,nella tua mano che al \nmorto, tu tagli da una 
+Dialogue: 0,0:0:58.24,0:1:1.19,Default,,0000,0000,0000,,parte e scarti una carta \nperdente dall'altra. 
+Dialogue: 0,0:1:1.19,0:1:1.94,Default,,0000,0000,0000,,Fantastico! 
+Dialogue: 0,0:1:1.94,0:1:4.33,Default,,0000,0000,0000,,Stai eliminando una \nperdente gratis. 
+Dialogue: 0,0:1:4.33,0:1:5.65,Default,,0000,0000,0000,,Facciamo un esempio. 
+Dialogue: 0,0:1:5.65,0:1:6.71,Default,,0000,0000,0000,,Sei in 4 Picche. 
+Dialogue: 0,0:1:6.71,0:1:9.66,Default,,0000,0000,0000,,Hai eliminato le fiori \ngiocando Asso-Re e poi 
+Dialogue: 0,0:1:9.66,0:1:10.92,Default,,0000,0000,0000,,tagliando la terza. 
+Dialogue: 0,0:1:10.92,0:1:12.30,Default,,0000,0000,0000,,Hai battuto le atout. 
+Dialogue: 0,0:1:12.30,0:1:15.37,Default,,0000,0000,0000,,Adesso giochi la terza \ncuori cedendo la presa a 
+Dialogue: 0,0:1:15.37,0:1:15.81,Default,,0000,0000,0000,,Ovest. 
+Dialogue: 0,0:1:15.81,0:1:17.19,Default,,0000,0000,0000,,Ovest e' in trappola! 
+Dialogue: 0,0:1:17.19,0:1:20.21,Default,,0000,0000,0000,,Se gioca cuori, tu tagli \nal morto e scarti una 
+Dialogue: 0,0:1:20.21,0:1:22.03,Default,,0000,0000,0000,,quadri perdente dalla \nmano. 
+Dialogue: 0,0:1:22.03,0:1:24.91,Default,,0000,0000,0000,,Se gioca quadri, ti \nregala l'impasse perche' 
+Dialogue: 0,0:1:24.91,0:1:27.05,Default,,0000,0000,0000,,deve giocare verso le \ntue carte. 
+Dialogue: 0,0:1:27.05,0:1:29.18,Default,,0000,0000,0000,,Qualunque cosa faccia, \ntu vinci! 
+Dialogue: 0,0:1:29.18,0:1:30.37,Default,,0000,0000,0000,,Non e' fantastico? 
+Dialogue: 0,0:1:30.37,0:1:33.32,Default,,0000,0000,0000,,L'altra situazione sono \nle figure `` delicate 
+Dialogue: 0,0:1:33.32,0:1:36.33,Default,,0000,0000,0000,,'', cioe' combinazioni \ndi carte dove chi muove 
+Dialogue: 0,0:1:36.33,0:1:37.40,Default,,0000,0000,0000,,per primo perde. 
+Dialogue: 0,0:1:37.40,0:1:40.29,Default,,0000,0000,0000,,Per esempio: \nAsso-Dieci-Tre nella tua mano e 
+Dialogue: 0,0:1:40.29,0:1:41.79,Default,,0000,0000,0000,,Fante-Sei-Tre al morto. 
+Dialogue: 0,0:1:41.79,0:1:44.87,Default,,0000,0000,0000,,Se muovi tu questo \ncolore, devi indovinare dove 
+Dialogue: 0,0:1:44.87,0:1:46.25,Default,,0000,0000,0000,,sta la Donna o il Re. 
+Dialogue: 0,0:1:46.25,0:1:49.26,Default,,0000,0000,0000,,Ma se l'avversario e' \ncostretto a muoverlo, ti 
+Dialogue: 0,0:1:49.26,0:1:50.39,Default,,0000,0000,0000,,regala una presa! 
+Dialogue: 0,0:1:50.39,0:1:53.40,Default,,0000,0000,0000,,Se Est muove, tu stai \nbasso e catturi un onore 
+Dialogue: 0,0:1:53.40,0:1:53.53,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:53.53,0:1:56.54,Default,,0000,0000,0000,,Se Ovest muove, stai \nbasso e ripeti l'impasse. 
+Dialogue: 0,0:1:56.54,0:1:59.62,Default,,0000,0000,0000,,In entrambi i casi, fai \ndue prese invece di una 
+Dialogue: 0,0:1:59.62,0:1:56.86,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:1:56.86,0:1:59.47,Default,,0000,0000,0000,,Adesso vediamo come \npreparare un gioco di 
+Dialogue: 0,0:1:59.47,0:2:0.32,Default,,0000,0000,0000,,eliminazione. 
+Dialogue: 0,0:2:0.32,0:2:3.29,Default,,0000,0000,0000,,Ci sono delle fasi \nprecise, come una ricetta di 
+Dialogue: 0,0:2:3.29,0:2:3.78,Default,,0000,0000,0000,,cucina. 
+Dialogue: 0,0:2:3.78,0:2:6.08,Default,,0000,0000,0000,,Fase uno: elimina i \ncolori laterali. 
+Dialogue: 0,0:2:6.08,0:2:8.75,Default,,0000,0000,0000,,Devi togliere tutte le \ncarte dei colori `` 
+Dialogue: 0,0:2:8.75,0:2:11.18,Default,,0000,0000,0000,,innocui '' dalla mano \ndell'avversario. 
+Dialogue: 0,0:2:11.18,0:2:11.54,Default,,0000,0000,0000,,Come? 
+Dialogue: 0,0:2:11.54,0:2:14.45,Default,,0000,0000,0000,,Incassando le vincenti e \npoi tagliando i resti 
+Dialogue: 0,0:2:14.45,0:2:14.57,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:14.57,0:2:17.55,Default,,0000,0000,0000,,Per esempio, se hai \nAsso-Re di fiori e al morto 
+Dialogue: 0,0:2:17.55,0:2:20.34,Default,,0000,0000,0000,,piccola-piccola, giochi \nAsso e Re, poi tagli 
+Dialogue: 0,0:2:20.34,0:2:21.55,Default,,0000,0000,0000,,una fiori al morto. 
+Dialogue: 0,0:2:21.55,0:2:23.79,Default,,0000,0000,0000,,Adesso il morto non ha \npiu' fiori e 
+Dialogue: 0,0:2:23.79,0:2:26.64,Default,,0000,0000,0000,,l'avversario, se gioca \nfiori, ti da' taglio e 
+Dialogue: 0,0:2:26.64,0:2:27.13,Default,,0000,0000,0000,,scarto. 
+Dialogue: 0,0:2:27.13,0:2:29.43,Default,,0000,0000,0000,,Fase due: batti le atout \navversarie. 
+Dialogue: 0,0:2:29.43,0:2:30.89,Default,,0000,0000,0000,,Questo e' fondamentale! 
+Dialogue: 0,0:2:30.89,0:2:33.74,Default,,0000,0000,0000,,Se lasci delle atout in \ngiro, l'avversario in 
+Dialogue: 0,0:2:33.74,0:2:36.65,Default,,0000,0000,0000,,presa potrebbe uscire \ncon un'atout senza farti 
+Dialogue: 0,0:2:36.65,0:2:37.56,Default,,0000,0000,0000,,nessun regalo. 
+Dialogue: 0,0:2:37.56,0:2:40.23,Default,,0000,0000,0000,,Elimina le atout prima \ndi cedere la presa. 
+Dialogue: 0,0:2:40.23,0:2:41.81,Default,,0000,0000,0000,,Fase tre: cedi la presa . 
+Dialogue: 0,0:2:41.81,0:2:44.78,Default,,0000,0000,0000,,Gioca il colore dove \nl'avversario deve prendere 
+Dialogue: 0,0:2:44.78,0:2:44.90,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:44.90,0:2:46.97,Default,,0000,0000,0000,,E a quel punto, e' \nintrappolato. 
+Dialogue: 0,0:2:46.97,0:2:48.78,Default,,0000,0000,0000,,Vediamo un esempio \ncompleto. 
+Dialogue: 0,0:2:48.78,0:2:49.82,Default,,0000,0000,0000,,Sei in 4 Picche. 
+Dialogue: 0,0:2:49.82,0:2:52.67,Default,,0000,0000,0000,,Le atout sono \nAsso-Re-Donna-piccola nella tua 
+Dialogue: 0,0:2:52.67,0:2:55.21,Default,,0000,0000,0000,,mano e \npiccola-piccola-piccola al morto. 
+Dialogue: 0,0:2:55.21,0:2:58.13,Default,,0000,0000,0000,,Hai Asso-Re di fiori in \nmano e piccola-piccola 
+Dialogue: 0,0:2:58.13,0:2:58.73,Default,,0000,0000,0000,,al morto. 
+Dialogue: 0,0:2:58.73,0:3:0.07,Default,,0000,0000,0000,,Cuori Asso e piccola. 
+Dialogue: 0,0:3:0.07,0:3:3.04,Default,,0000,0000,0000,,E a quadri hai Dieci-Tre \nin mano e Donna-Sei al 
+Dialogue: 0,0:3:3.04,0:3:3.46,Default,,0000,0000,0000,,morto. 
+Dialogue: 0,0:3:3.46,0:3:5.89,Default,,0000,0000,0000,,Ecco il piano: batti tre \ngiri di atout 
+Dialogue: 0,0:3:5.89,0:3:7.95,Default,,0000,0000,0000,,eliminando le picche \navversarie. 
+Dialogue: 0,0:3:7.95,0:3:10.62,Default,,0000,0000,0000,,Incassa Asso-Re di fiori \ne taglia la terza 
+Dialogue: 0,0:3:10.62,0:3:11.59,Default,,0000,0000,0000,,fiori al morto. 
+Dialogue: 0,0:3:11.59,0:3:13.47,Default,,0000,0000,0000,,Adesso nessuno ha piu' \nfiori. 
+Dialogue: 0,0:3:13.47,0:3:16.45,Default,,0000,0000,0000,,Gioca Asso di cuori e \npoi piccola cuori cedendo 
+Dialogue: 0,0:3:16.45,0:3:17.05,Default,,0000,0000,0000,,la presa. 
+Dialogue: 0,0:3:17.05,0:3:19.72,Default,,0000,0000,0000,,L'avversario che prende \ne' in trappola: se 
+Dialogue: 0,0:3:19.72,0:3:22.51,Default,,0000,0000,0000,,gioca cuori o fiori, ti \nda' taglio e scarto. 
+Dialogue: 0,0:3:22.51,0:3:25.42,Default,,0000,0000,0000,,Se gioca quadri, gioca \nverso Donna del morto o 
+Dialogue: 0,0:3:25.42,0:3:28.09,Default,,0000,0000,0000,,verso il Dieci della tua \nmano, regalandoti 
+Dialogue: 0,0:3:28.09,0:3:28.76,Default,,0000,0000,0000,,l'impasse. 
+Dialogue: 0,0:3:28.76,0:3:30.58,Default,,0000,0000,0000,,Ricorda tre cose \nimportanti. 
+Dialogue: 0,0:3:30.58,0:3:33.25,Default,,0000,0000,0000,,Prima: il taglio e \nscarto NON e' un regalo 
+Dialogue: 0,0:3:33.25,0:3:36.16,Default,,0000,0000,0000,,quando il giocante ha \nesaurito le atout in una 
+Dialogue: 0,0:3:36.16,0:3:38.22,Default,,0000,0000,0000,,mano, perche' non puo' \ntagliare. 
+Dialogue: 0,0:3:38.22,0:3:40.95,Default,,0000,0000,0000,,Seconda: non cedere la \npresa troppo presto! 
+Dialogue: 0,0:3:40.95,0:3:43.68,Default,,0000,0000,0000,,Se non hai ancora \neliminato tutti i colori, 
+Dialogue: 0,0:3:43.68,0:3:45.87,Default,,0000,0000,0000,,l'avversario esce \ntranquillamente. 
+Dialogue: 0,0:3:45.87,0:3:48.53,Default,,0000,0000,0000,,Terza: taglia i resti \ndel morto nei colori 
+Dialogue: 0,0:3:48.53,0:3:51.26,Default,,0000,0000,0000,,eliminati, cosi' il \nmorto e' `` pulito '' e 
+Dialogue: 0,0:3:51.26,0:3:54.18,Default,,0000,0000,0000,,qualsiasi ritorno \ndell'avversario ti favorisce 
+Dialogue: 0,0:3:54.18,0:3:54.30,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:54.30,0:3:57.27,Default,,0000,0000,0000,,I giochi di eliminazione \nsono fantastici perche 
+Dialogue: 0,0:3:57.27,0:4:0.18,Default,,0000,0000,0000,,trasformano un contratto \nincerto in uno sicuro 
+Dialogue: 0,0:4:0.18,0:4:1.39,Default,,0000,0000,0000,,al cento per cento. 
+Dialogue: 0,0:4:1.39,0:4:4.31,Default,,0000,0000,0000,,Invece di affidarti alla \nfortuna di un impasse 
+Dialogue: 0,0:4:4.31,0:4:6.73,Default,,0000,0000,0000,,al cinquanta, costringi \nl'avversario a 
+Dialogue: 0,0:4:6.73,0:4:7.95,Default,,0000,0000,0000,,regalarti la presa! 
+Dialogue: 0,0:4:7.95,0:4:10.07,Default,,0000,0000,0000,,Ci vediamo alla prossima \nlezione! 

@@ -1,0 +1,131 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.38,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.38,0:0:3.04,Default,,0000,0000,0000,,Oggi impariamo a \nriconoscere tre tipi di 
+Dialogue: 0,0:0:3.04,0:0:5.45,Default,,0000,0000,0000,,dichiarazioni che \nfunzionano in modo 
+Dialogue: 0,0:0:5.45,0:0:8.17,Default,,0000,0000,0000,,completamente diverso: \nle competitive, le 
+Dialogue: 0,0:0:8.17,0:0:10.20,Default,,0000,0000,0000,,costruttive e le \ninterdittive. 
+Dialogue: 0,0:0:10.20,0:0:13.11,Default,,0000,0000,0000,,Capire la differenza e' \nfondamentale per non 
+Dialogue: 0,0:0:13.11,0:0:14.76,Default,,0000,0000,0000,,fare pasticci al tavolo ! 
+Dialogue: 0,0:0:14.76,0:0:17.48,Default,,0000,0000,0000,,Partiamo dalle \ndichiarazioni competitive. 
+Dialogue: 0,0:0:17.48,0:0:20.27,Default,,0000,0000,0000,,Sono quelle che fai \nquando vuoi vincere la 
+Dialogue: 0,0:0:20.27,0:0:23.31,Default,,0000,0000,0000,,lotta per il parziale, \nma non hai ambizioni di 
+Dialogue: 0,0:0:23.31,0:0:23.82,Default,,0000,0000,0000,,manche. 
+Dialogue: 0,0:0:23.82,0:0:26.48,Default,,0000,0000,0000,,Stai dicendo: `` Voglio \ngiocare a questo 
+Dialogue: 0,0:0:26.48,0:0:28.76,Default,,0000,0000,0000,,livello, ma non ho una \nmano forte. 
+Dialogue: 0,0:0:28.76,0:0:31.73,Default,,0000,0000,0000,,'' Le dichiarazioni \ncompetitive corrispondono 
+Dialogue: 0,0:0:31.73,0:0:34.14,Default,,0000,0000,0000,,SEMPRE a colori che \nintendi giocare. 
+Dialogue: 0,0:0:34.14,0:0:36.99,Default,,0000,0000,0000,,Non sono convenzionali: \nse dici 3 Picche in 
+Dialogue: 0,0:0:36.99,0:0:40.09,Default,,0000,0000,0000,,modo competitivo, vuoi \ndavvero giocare a picche 
+Dialogue: 0,0:0:40.09,0:0:40.22,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:40.22,0:0:41.55,Default,,0000,0000,0000,,E come le riconosci? 
+Dialogue: 0,0:0:41.55,0:0:42.31,Default,,0000,0000,0000,,Tre indizi. 
+Dialogue: 0,0:0:42.31,0:0:45.35,Default,,0000,0000,0000,,Primo: il sistema le \ndefinisce come tali, cioe 
+Dialogue: 0,0:0:45.35,0:0:46.87,Default,,0000,0000,0000,,le regole te lo dicono. 
+Dialogue: 0,0:0:46.87,0:0:49.47,Default,,0000,0000,0000,,Secondo: avevi \nalternative piu' forti a 
+Dialogue: 0,0:0:49.47,0:0:52.38,Default,,0000,0000,0000,,disposizione, come il \nContro o la surlicita. 
+Dialogue: 0,0:0:52.38,0:0:55.36,Default,,0000,0000,0000,,Se potevi usare quegli \nstrumenti e non li hai 
+Dialogue: 0,0:0:55.36,0:0:58.21,Default,,0000,0000,0000,,usati, la tua \ndichiarazione e' competitiva. 
+Dialogue: 0,0:0:58.21,0:1:1.25,Default,,0000,0000,0000,,Terzo: la coppia ha gia \nstabilito di non avere 
+Dialogue: 0,0:1:1.25,0:1:2.77,Default,,0000,0000,0000,,la forza per la manche. 
+Dialogue: 0,0:1:2.77,0:1:5.81,Default,,0000,0000,0000,,Esempio: la sequenza e' \n1 Picche - 2 Cuori - 2 
+Dialogue: 0,0:1:5.81,0:1:7.71,Default,,0000,0000,0000,,Picche - 3 Cuori - 3 \nPicche. 
+Dialogue: 0,0:1:7.71,0:1:9.67,Default,,0000,0000,0000,,Quel 3 Picche e' \ncompetitivo. 
+Dialogue: 0,0:1:9.67,0:1:11.45,Default,,0000,0000,0000,,Non e' un invito a \nmanche! 
+Dialogue: 0,0:1:11.45,0:1:14.17,Default,,0000,0000,0000,,Sta solo dicendo: `` \nPreferisco giocare 3 
+Dialogue: 0,0:1:14.17,0:1:17.21,Default,,0000,0000,0000,,Picche piuttosto che \nlasciarli giocare 3 Cuori 
+Dialogue: 0,0:1:17.21,0:1:17.34,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:17.34,0:1:20.19,Default,,0000,0000,0000,,'' Passiamo alle \ndichiarazioni costruttive. 
+Dialogue: 0,0:1:20.19,0:1:23.29,Default,,0000,0000,0000,,Queste sono il contrario \nhai carte per un serio 
+Dialogue: 0,0:1:23.29,0:1:26.08,Default,,0000,0000,0000,,tentativo di manche o \naddirittura di slam. 
+Dialogue: 0,0:1:26.08,0:1:28.49,Default,,0000,0000,0000,,Promettono valori \nesterni e prese di 
+Dialogue: 0,0:1:28.49,0:1:29.31,Default,,0000,0000,0000,,controgioco. 
+Dialogue: 0,0:1:29.31,0:1:32.16,Default,,0000,0000,0000,,La cosa importante e' \nche una dichiarazione 
+Dialogue: 0,0:1:32.16,0:1:35.14,Default,,0000,0000,0000,,costruttiva NON coincide \nmai con una proposta 
+Dialogue: 0,0:1:35.14,0:1:35.77,Default,,0000,0000,0000,,di gioco. 
+Dialogue: 0,0:1:35.77,0:1:38.81,Default,,0000,0000,0000,,Lo scopo e' che la \nlicita prosegua, non che si 
+Dialogue: 0,0:1:38.81,0:1:39.25,Default,,0000,0000,0000,,fermi! 
+Dialogue: 0,0:1:39.25,0:1:41.79,Default,,0000,0000,0000,,I mezzi espressivi delle \ndichiarazioni 
+Dialogue: 0,0:1:41.79,0:1:44.76,Default,,0000,0000,0000,,costruttive sono: il \nContro, il Surcontro, la 
+Dialogue: 0,0:1:44.76,0:1:47.49,Default,,0000,0000,0000,,Surlicita e il cambio di \ncolore forzante. 
+Dialogue: 0,0:1:47.49,0:1:50.59,Default,,0000,0000,0000,,Sono tutti strumenti che \ndicono al compagno: `` 
+Dialogue: 0,0:1:50.59,0:1:52.62,Default,,0000,0000,0000,,Ho una mano seria, \nparliamone. 
+Dialogue: 0,0:1:52.62,0:1:55.66,Default,,0000,0000,0000,,'' Esempio: la sequenza \ne' 1 Fiori - Passo - 1 
+Dialogue: 0,0:1:55.66,0:1:58.19,Default,,0000,0000,0000,,Cuori - 1 Picche - 2 \nCuori - 2 Picche. 
+Dialogue: 0,0:1:58.19,0:2:1.23,Default,,0000,0000,0000,,Il compagno ha 6-3 / \nA-Q-8-7 / K-J-5 / 9-8-6-5 
+Dialogue: 0,0:2:1.23,0:2:1.36,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:1.36,0:2:2.05,Default,,0000,0000,0000,,Fa Contro! 
+Dialogue: 0,0:2:2.05,0:2:4.72,Default,,0000,0000,0000,,Non sta dicendo `` \npuniamoli a 2 Picche. 
+Dialogue: 0,0:2:4.72,0:2:7.50,Default,,0000,0000,0000,,'' Sta dicendo: `` Ho un \ngran bel 3 Cuori, 
+Dialogue: 0,0:2:7.50,0:2:9.53,Default,,0000,0000,0000,,voglio che la licita \ncontinui. 
+Dialogue: 0,0:2:9.53,0:2:12.19,Default,,0000,0000,0000,,'' Se avesse detto \ndirettamente 3 Cuori, 
+Dialogue: 0,0:2:12.19,0:2:13.96,Default,,0000,0000,0000,,sarebbe stato \ncompetitivo. 
+Dialogue: 0,0:2:13.96,0:2:12.70,Default,,0000,0000,0000,,Con il Contro comunica \nforza costruttiva. 
+Dialogue: 0,0:2:12.70,0:2:15.27,Default,,0000,0000,0000,,Ora le dichiarazioni \ninterdittive. 
+Dialogue: 0,0:2:15.27,0:2:18.47,Default,,0000,0000,0000,,Queste sono le piu' \nsemplici da riconoscere 
+Dialogue: 0,0:2:18.47,0:2:21.75,Default,,0000,0000,0000,,perche' hanno una \ncaratteristica unica: sono 
+Dialogue: 0,0:2:21.75,0:2:22.89,Default,,0000,0000,0000,,SEMPRE a salto! 
+Dialogue: 0,0:2:22.89,0:2:26.39,Default,,0000,0000,0000,,Le interdittive \ndescrivono mani con molte prese 
+Dialogue: 0,0:2:26.39,0:2:29.02,Default,,0000,0000,0000,,in attacco ma pochissime \nin difesa. 
+Dialogue: 0,0:2:29.02,0:2:32.45,Default,,0000,0000,0000,,Stai dicendo: `` Il mio \ncolore fa tante prese, 
+Dialogue: 0,0:2:32.45,0:2:35.87,Default,,0000,0000,0000,,ma se gli avversari \ngiocano il loro contratto, 
+Dialogue: 0,0:2:35.87,0:2:37.86,Default,,0000,0000,0000,,non ho nulla per \nfermarli. 
+Dialogue: 0,0:2:37.86,0:2:40.86,Default,,0000,0000,0000,,'' Per questo vuoi \ndichiarare al massimo 
+Dialogue: 0,0:2:40.86,0:2:44.07,Default,,0000,0000,0000,,livello possibile alla \nprima occasione, per 
+Dialogue: 0,0:2:44.07,0:2:47.34,Default,,0000,0000,0000,,rubare piu' spazio \npossibile agli avversari. 
+Dialogue: 0,0:2:47.34,0:2:50.70,Default,,0000,0000,0000,,Regola fondamentale: chi \nfa una dichiarazione 
+Dialogue: 0,0:2:50.70,0:2:53.76,Default,,0000,0000,0000,,interdittiva DEMANDA al \ncompagno tutte le 
+Dialogue: 0,0:2:53.76,0:2:55.33,Default,,0000,0000,0000,,decisioni successive. 
+Dialogue: 0,0:2:55.33,0:2:58.68,Default,,0000,0000,0000,,Hai detto la tua, hai \nfatto la tua barricata, 
+Dialogue: 0,0:2:58.68,0:3:1.96,Default,,0000,0000,0000,,ora tocca al compagno \ngestire la situazione. 
+Dialogue: 0,0:3:1.96,0:3:5.24,Default,,0000,0000,0000,,Non ti e' permesso \nrialzare ancora dopo aver 
+Dialogue: 0,0:3:5.24,0:3:6.81,Default,,0000,0000,0000,,fatto l'interdittiva! 
+Dialogue: 0,0:3:6.81,0:3:10.16,Default,,0000,0000,0000,,Esempio: hai 8 / \nA-K-J-9-8-6-5-2 / 7-6-2 / 4. 
+Dialogue: 0,0:3:10.16,0:3:10.80,Default,,0000,0000,0000,,Che fai? 
+Dialogue: 0,0:3:10.80,0:3:12.79,Default,,0000,0000,0000,,Apri 4 Cuori, non 3 \nCuori! 
+Dialogue: 0,0:3:12.79,0:3:16.22,Default,,0000,0000,0000,,Con otto carte e una \nmano puramente di attacco 
+Dialogue: 0,0:3:16.22,0:3:19.07,Default,,0000,0000,0000,,devi andare al massimo \nlivello subito. 
+Dialogue: 0,0:3:19.07,0:3:21.99,Default,,0000,0000,0000,,Aprire 3 Cuori sarebbe \nsottodichiarare. 
+Dialogue: 0,0:3:21.99,0:3:25.41,Default,,0000,0000,0000,,Un errore classico e' \nconfondere il 3 in atout 
+Dialogue: 0,0:3:25.41,0:3:27.69,Default,,0000,0000,0000,,dopo un'apertura del \ncompagno. 
+Dialogue: 0,0:3:27.69,0:3:31.19,Default,,0000,0000,0000,,La sequenza 1 Cuori - \nPasso - 2 Cuori - Passo - 
+Dialogue: 0,0:3:31.19,0:3:34.32,Default,,0000,0000,0000,,3 Cuori: questo NON e' \nun invito a manche! 
+Dialogue: 0,0:3:34.32,0:3:35.53,Default,,0000,0000,0000,,E' interdittivo. 
+Dialogue: 0,0:3:35.53,0:3:38.31,Default,,0000,0000,0000,,L'apertore ha una carta \nin piu' e sta 
+Dialogue: 0,0:3:38.31,0:3:41.24,Default,,0000,0000,0000,,applicando la Legge \ndelle Prese Totali. 
+Dialogue: 0,0:3:41.24,0:3:44.66,Default,,0000,0000,0000,,Stesso discorso per 1 \nCuori - Passo - 1 Picche 
+Dialogue: 0,0:3:44.66,0:3:47.51,Default,,0000,0000,0000,,- Passo - 2 Picche - \nPasso - 3 Picche: 
+Dialogue: 0,0:3:47.51,0:3:49.43,Default,,0000,0000,0000,,interdittivo, non invito . 
+Dialogue: 0,0:3:49.43,0:3:52.86,Default,,0000,0000,0000,,Facciamo un riepilogo \ncon un esempio completo. 
+Dialogue: 0,0:3:52.86,0:3:56.28,Default,,0000,0000,0000,,La sequenza e' 1 Picche \n- 2 Cuori - 2 Picche - 
+Dialogue: 0,0:3:56.28,0:3:56.92,Default,,0000,0000,0000,,3 Cuori. 
+Dialogue: 0,0:3:56.92,0:3:59.77,Default,,0000,0000,0000,,Ora tocca all'apertore \ncon varie mani. 
+Dialogue: 0,0:3:59.77,0:4:2.98,Default,,0000,0000,0000,,Con K-Q-J-7-6 / 7-5 / \nK-Q-J-9 / 3-2: dice 3 
+Dialogue: 0,0:4:2.98,0:4:4.48,Default,,0000,0000,0000,,Picche, competitivo. 
+Dialogue: 0,0:4:4.48,0:4:6.47,Default,,0000,0000,0000,,Vuole vincere il \nparziale. 
+Dialogue: 0,0:4:6.47,0:4:9.68,Default,,0000,0000,0000,,Con A-K-Q-8-7-6 / 2 / \nK-Q-9-2 / 3-2: dice 4 
+Dialogue: 0,0:4:9.68,0:4:11.25,Default,,0000,0000,0000,,Picche, interdittivo. 
+Dialogue: 0,0:4:11.25,0:4:14.67,Default,,0000,0000,0000,,Tante prese in attacco, \npoche in difesa, va al 
+Dialogue: 0,0:4:14.67,0:4:16.38,Default,,0000,0000,0000,,massimo livello subito. 
+Dialogue: 0,0:4:16.38,0:4:19.80,Default,,0000,0000,0000,,Con A-8-7-6-2 / A-5 / \nA-Q-2 / K-J-2: fa Contro 
+Dialogue: 0,0:4:19.80,0:4:20.73,Default,,0000,0000,0000,,costruttivo. 
+Dialogue: 0,0:4:20.73,0:4:24.08,Default,,0000,0000,0000,,Ha una mano forte e \nvuole sentire il compagno 
+Dialogue: 0,0:4:24.08,0:4:25.43,Default,,0000,0000,0000,,prima di decidere. 
+Dialogue: 0,0:4:25.43,0:4:28.57,Default,,0000,0000,0000,,Ricorda: se puoi dire \nContro o surlicita e 
+Dialogue: 0,0:4:28.57,0:4:31.85,Default,,0000,0000,0000,,invece dichiari \ndirettamente il colore, stai 
+Dialogue: 0,0:4:31.85,0:4:33.70,Default,,0000,0000,0000,,facendo una competitiva . 
+Dialogue: 0,0:4:33.70,0:4:36.91,Default,,0000,0000,0000,,Se usi Contro o \nsurlicita, stai facendo una 
+Dialogue: 0,0:4:36.91,0:4:37.84,Default,,0000,0000,0000,,costruttiva. 
+Dialogue: 0,0:4:37.84,0:4:41.19,Default,,0000,0000,0000,,Se vai a salto, stai \nfacendo un'interdittiva. 
+Dialogue: 0,0:4:41.19,0:4:42.19,Default,,0000,0000,0000,,Semplice, no? 
+Dialogue: 0,0:4:42.19,0:4:44.11,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

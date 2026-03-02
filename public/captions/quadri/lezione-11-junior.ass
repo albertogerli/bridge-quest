@@ -1,0 +1,137 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.35,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.35,0:0:3.11,Default,,0000,0000,0000,,Oggi parliamo di una \ndelle cose piu difficili 
+Dialogue: 0,0:0:3.11,0:0:5.46,Default,,0000,0000,0000,,ma anche piu divertenti \ndel bridge: il 
+Dialogue: 0,0:0:5.46,0:0:6.22,Default,,0000,0000,0000,,controgioco. 
+Dialogue: 0,0:0:6.22,0:0:8.81,Default,,0000,0000,0000,,Quando sei in difesa, \nnon stai giocando il 
+Dialogue: 0,0:0:8.81,0:0:11.27,Default,,0000,0000,0000,,contratto, ma stai \ncercando di fermarlo. 
+Dialogue: 0,0:0:11.27,0:0:13.50,Default,,0000,0000,0000,,E come essere un \ninvestigatore: devi 
+Dialogue: 0,0:0:13.50,0:0:15.91,Default,,0000,0000,0000,,raccogliere indizi, \nragionare e battere 
+Dialogue: 0,0:0:15.91,0:0:17.90,Default,,0000,0000,0000,,l'avversario con \nl'intelligenza! 
+Dialogue: 0,0:0:17.90,0:0:20.13,Default,,0000,0000,0000,,La prima regola del buon \ndifensore e 
+Dialogue: 0,0:0:20.13,0:0:22.95,Default,,0000,0000,0000,,semplicissima: gira la \ntesta e guarda il morto 
+Dialogue: 0,0:0:22.95,0:0:23.07,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:0:23.07,0:0:25.95,Default,,0000,0000,0000,,Quando il morto viene \nposato sul tavolo, hai un 
+Dialogue: 0,0:0:25.95,0:0:28.53,Default,,0000,0000,0000,,tesoro di informazioni \ndavanti agli occhi. 
+Dialogue: 0,0:0:28.53,0:0:30.47,Default,,0000,0000,0000,,Quante carte ha in ogni \ncolore? 
+Dialogue: 0,0:0:30.47,0:0:32.11,Default,,0000,0000,0000,,Quali onori sono \nvisibili? 
+Dialogue: 0,0:0:32.11,0:0:34.69,Default,,0000,0000,0000,,Dove sono i punti di \nforza e di debolezza? 
+Dialogue: 0,0:0:34.69,0:0:37.45,Default,,0000,0000,0000,,E poi, cosa altrettanto \nimportante: ricordati 
+Dialogue: 0,0:0:37.45,0:0:38.51,Default,,0000,0000,0000,,la dichiarazione! 
+Dialogue: 0,0:0:38.51,0:0:41.09,Default,,0000,0000,0000,,Quello che il Giocante \nha detto durante la 
+Dialogue: 0,0:0:41.09,0:0:43.85,Default,,0000,0000,0000,,licita ti racconta \nmoltissimo sulla sua mano. 
+Dialogue: 0,0:0:43.85,0:0:46.67,Default,,0000,0000,0000,,Se ha dichiarato cinque \nCuori e quattro Quadri 
+Dialogue: 0,0:0:46.67,0:0:49.19,Default,,0000,0000,0000,,e al morto vedi tre \nPicche, sai che ha al 
+Dialogue: 0,0:0:49.19,0:0:50.31,Default,,0000,0000,0000,,massimo una Fiori. 
+Dialogue: 0,0:0:50.31,0:0:52.66,Default,,0000,0000,0000,,E un calcolo semplice ma \npotentissimo. 
+Dialogue: 0,0:0:52.66,0:0:54.42,Default,,0000,0000,0000,,Facciamo un esempio \npratico. 
+Dialogue: 0,0:0:54.42,0:0:56.88,Default,,0000,0000,0000,,L'avversario ha aperto \nuno Senza, poi il 
+Dialogue: 0,0:0:56.88,0:0:59.47,Default,,0000,0000,0000,,compagno ha chiesto \nStayman con due Fiori, 
+Dialogue: 0,0:0:59.47,0:1:2.05,Default,,0000,0000,0000,,l'apertore ha risposto \ndue Cuori mostrando 
+Dialogue: 0,0:1:2.05,0:1:4.81,Default,,0000,0000,0000,,quattro Cuori, e il \ncompagno ha detto quattro 
+Dialogue: 0,0:1:4.81,0:1:5.28,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:1:5.28,0:1:5.86,Default,,0000,0000,0000,,Cosa sai? 
+Dialogue: 0,0:1:5.86,0:1:8.74,Default,,0000,0000,0000,,Che il Giocante ha \nquattro Cuori ma non quattro 
+Dialogue: 0,0:1:8.74,0:1:9.21,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:1:9.21,0:1:11.97,Default,,0000,0000,0000,,Se avesse avuto anche \nquattro Picche, avrebbe 
+Dialogue: 0,0:1:11.97,0:1:13.32,Default,,0000,0000,0000,,risposto diversamente. 
+Dialogue: 0,0:1:13.32,0:1:16.08,Default,,0000,0000,0000,,Queste deduzioni dalla \nlicita sono gratuite e 
+Dialogue: 0,0:1:16.08,0:1:17.19,Default,,0000,0000,0000,,devi sempre farle! 
+Dialogue: 0,0:1:17.19,0:1:19.95,Default,,0000,0000,0000,,Adesso parliamo della \nprima presa, un momento 
+Dialogue: 0,0:1:19.95,0:1:21.48,Default,,0000,0000,0000,,magico per il difensore . 
+Dialogue: 0,0:1:21.48,0:1:24.30,Default,,0000,0000,0000,,Le carte giocate nella \nprima presa sono sempre 
+Dialogue: 0,0:1:24.30,0:1:25.06,Default,,0000,0000,0000,,illuminanti. 
+Dialogue: 0,0:1:25.06,0:1:27.70,Default,,0000,0000,0000,,Immagina: il tuo \ncompagno attacca il tre di 
+Dialogue: 0,0:1:27.70,0:1:30.28,Default,,0000,0000,0000,,Quadri, al morto c' e il \nnove, tu metti il 
+Dialogue: 0,0:1:30.28,0:1:32.75,Default,,0000,0000,0000,,Fante e il Giocante \nprende con il Dieci. 
+Dialogue: 0,0:1:32.75,0:1:33.87,Default,,0000,0000,0000,,Cosa puoi dedurre? 
+Dialogue: 0,0:1:33.87,0:1:36.74,Default,,0000,0000,0000,,Che il tuo compagno ha \nprobabilmente Asso-Re in 
+Dialogue: 0,0:1:36.74,0:1:39.15,Default,,0000,0000,0000,,Quadri, perche ha \nattaccato piccola con 
+Dialogue: 0,0:1:39.15,0:1:39.79,Default,,0000,0000,0000,,interesse. 
+Dialogue: 0,0:1:39.79,0:1:42.44,Default,,0000,0000,0000,,Il Giocante ha il Dieci \ntu hai il Fante, il 
+Dialogue: 0,0:1:42.44,0:1:43.43,Default,,0000,0000,0000,,Nove e al morto. 
+Dialogue: 0,0:1:43.43,0:1:45.55,Default,,0000,0000,0000,,Puoi ricostruire il \ncolore intero! 
+Dialogue: 0,0:1:45.55,0:1:48.13,Default,,0000,0000,0000,,Queste deduzioni dalla \nprima presa sono un 
+Dialogue: 0,0:1:48.13,0:1:49.77,Default,,0000,0000,0000,,superpotere del \ndifensore. 
+Dialogue: 0,0:1:49.77,0:1:52.59,Default,,0000,0000,0000,,Ma attenzione: piu \naspetti a fare le deduzioni 
+Dialogue: 0,0:1:52.59,0:1:54.12,Default,,0000,0000,0000,,piu diventano difficili . 
+Dialogue: 0,0:1:54.12,0:1:56.70,Default,,0000,0000,0000,,Man mano che il gioco \nprocede, le carte si 
+Dialogue: 0,0:1:56.70,0:1:59.40,Default,,0000,0000,0000,,mescolano e diventa piu \ncomplicato ricordare 
+Dialogue: 0,0:1:59.40,0:2:0.63,Default,,0000,0000,0000,,chi ha giocato cosa. 
+Dialogue: 0,0:2:0.63,0:2:3.28,Default,,0000,0000,0000,,Ecco perche la prima \npresa e cosi preziosa: 
+Dialogue: 0,0:2:3.28,0:2:2.69,Default,,0000,0000,0000,,tutto e ancora fresco e \nchiaro. 
+Dialogue: 0,0:2:2.69,0:2:5.49,Default,,0000,0000,0000,,Adesso parliamo di una \nregola fondamentale: non 
+Dialogue: 0,0:2:5.49,0:2:7.26,Default,,0000,0000,0000,,affrancare carte al \nGiocante! 
+Dialogue: 0,0:2:7.26,0:2:10.00,Default,,0000,0000,0000,,Se hai una vincente in \nun colore dove il morto 
+Dialogue: 0,0:2:10.00,0:2:12.79,Default,,0000,0000,0000,,ha delle carte che \ndiventerebbero buone dopo la 
+Dialogue: 0,0:2:12.79,0:2:13.99,Default,,0000,0000,0000,,tua, non incassarla. 
+Dialogue: 0,0:2:13.99,0:2:15.53,Default,,0000,0000,0000,,Per esempio, al morto c \ne 
+Dialogue: 0,0:2:15.53,0:2:18.33,Default,,0000,0000,0000,,Asso-Fante-piccola-picco \nla-piccola e tu hai il 
+Dialogue: 0,0:2:18.33,0:2:18.56,Default,,0000,0000,0000,,Re. 
+Dialogue: 0,0:2:18.56,0:2:21.01,Default,,0000,0000,0000,,Se giochi il Re, l'Asso \nprende e il Fante 
+Dialogue: 0,0:2:21.01,0:2:22.04,Default,,0000,0000,0000,,diventa vincente. 
+Dialogue: 0,0:2:22.04,0:2:24.84,Default,,0000,0000,0000,,Se invece tieni il Re in \ntasca, il Giocante non 
+Dialogue: 0,0:2:24.84,0:2:27.52,Default,,0000,0000,0000,,potra mai sfruttare il \nFante senza affrancare 
+Dialogue: 0,0:2:27.52,0:2:28.49,Default,,0000,0000,0000,,anche il tuo Re. 
+Dialogue: 0,0:2:28.49,0:2:31.29,Default,,0000,0000,0000,,L'unica eccezione: se \nincassare quella vincente 
+Dialogue: 0,0:2:31.29,0:2:33.00,Default,,0000,0000,0000,,ti da il down, allora \nfallo! 
+Dialogue: 0,0:2:33.00,0:2:35.80,Default,,0000,0000,0000,,Ma se non e la presa \ndecisiva, trattieni la tua 
+Dialogue: 0,0:2:35.80,0:2:36.48,Default,,0000,0000,0000,,carta alta. 
+Dialogue: 0,0:2:36.48,0:2:38.94,Default,,0000,0000,0000,,Un'altra regola \nimportantissima: cerca di 
+Dialogue: 0,0:2:38.94,0:2:40.71,Default,,0000,0000,0000,,capire il piano del \nGiocante. 
+Dialogue: 0,0:2:40.71,0:2:43.33,Default,,0000,0000,0000,,Se noti che sta giocando \nverso un colore per 
+Dialogue: 0,0:2:43.33,0:2:45.67,Default,,0000,0000,0000,,preparare dei tagli al \nmorto, reagisci! 
+Dialogue: 0,0:2:45.67,0:2:48.41,Default,,0000,0000,0000,,Gioca subito atout per \ntogliergli le atout del 
+Dialogue: 0,0:2:48.41,0:2:50.92,Default,,0000,0000,0000,,morto prima che possa \nusarle per tagliare. 
+Dialogue: 0,0:2:50.92,0:2:53.49,Default,,0000,0000,0000,,E come vedere \nl'avversario che si prepara a 
+Dialogue: 0,0:2:53.49,0:2:56.00,Default,,0000,0000,0000,,tirare un rigore e tu \ngli togli il pallone 
+Dialogue: 0,0:2:56.00,0:2:57.14,Default,,0000,0000,0000,,prima che lo calci. 
+Dialogue: 0,0:2:57.14,0:2:59.48,Default,,0000,0000,0000,,Parliamo anche del \nconteggio dei punti. 
+Dialogue: 0,0:2:59.48,0:3:2.22,Default,,0000,0000,0000,,Se il Giocante ha aperto \ne tu vedi certi onori 
+Dialogue: 0,0:3:2.22,0:3:5.02,Default,,0000,0000,0000,,al morto e certi nella \ntua mano, puoi calcolare 
+Dialogue: 0,0:3:5.02,0:3:6.73,Default,,0000,0000,0000,,quanti punti ha il \nGiocante. 
+Dialogue: 0,0:3:6.73,0:3:9.53,Default,,0000,0000,0000,,Se il totale dei punti \nvisibili e trentuno, tra 
+Dialogue: 0,0:3:9.53,0:3:12.33,Default,,0000,0000,0000,,morto, la tua mano e \nquelli che ha gia mostrato 
+Dialogue: 0,0:3:12.33,0:3:14.95,Default,,0000,0000,0000,,il Giocante, i restanti \nnove sono divisi tra 
+Dialogue: 0,0:3:14.95,0:3:16.15,Default,,0000,0000,0000,,Giocante e compagno. 
+Dialogue: 0,0:3:16.15,0:3:18.72,Default,,0000,0000,0000,,Questo ti aiuta a capire \ndove sono le carte 
+Dialogue: 0,0:3:18.72,0:3:19.29,Default,,0000,0000,0000,,mancanti. 
+Dialogue: 0,0:3:19.29,0:3:22.09,Default,,0000,0000,0000,,Quando scarti, mantieni \nla stessa lunghezza dei 
+Dialogue: 0,0:3:22.09,0:3:23.12,Default,,0000,0000,0000,,colori del morto. 
+Dialogue: 0,0:3:23.12,0:3:25.86,Default,,0000,0000,0000,,Se al morto ci sono \nRe-nove-due di Quadri e tu 
+Dialogue: 0,0:3:25.86,0:3:28.60,Default,,0000,0000,0000,,hai \nFante-Dieci-piccola-picc ola, non scartare 
+Dialogue: 0,0:3:28.60,0:3:29.05,Default,,0000,0000,0000,,Quadri! 
+Dialogue: 0,0:3:29.05,0:3:31.79,Default,,0000,0000,0000,,Se lo fai, il colore del \nmorto si affranchera. 
+Dialogue: 0,0:3:31.79,0:3:34.59,Default,,0000,0000,0000,,Tieni le tue Quadri e \nscarta da un altro colore 
+Dialogue: 0,0:3:34.59,0:3:34.70,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:34.70,0:3:37.44,Default,,0000,0000,0000,,E come tenere i soldati \nnella posizione giusta 
+Dialogue: 0,0:3:37.44,0:3:39.04,Default,,0000,0000,0000,,per difendere il \ncastello. 
+Dialogue: 0,0:3:39.04,0:3:41.04,Default,,0000,0000,0000,,Infine, evita il taglio \ne scarto. 
+Dialogue: 0,0:3:41.04,0:3:43.78,Default,,0000,0000,0000,,Non giocare un colore \ndove il morto e vuoto, a 
+Dialogue: 0,0:3:43.78,0:3:46.40,Default,,0000,0000,0000,,meno che tu sia sicuro \nche anche il Giocante 
+Dialogue: 0,0:3:46.40,0:3:48.46,Default,,0000,0000,0000,,abbia ancora carte in \nquel colore. 
+Dialogue: 0,0:3:48.46,0:3:51.26,Default,,0000,0000,0000,,Se il morto e vuoto e il \nGiocante ha ancora una 
+Dialogue: 0,0:3:51.26,0:3:52.17,Default,,0000,0000,0000,,carta, va bene. 
+Dialogue: 0,0:3:52.17,0:3:54.91,Default,,0000,0000,0000,,Ma se anche il Giocante \ne vuoto, taglia da una 
+Dialogue: 0,0:3:54.91,0:3:57.42,Default,,0000,0000,0000,,parte e scarta una \nperdente dall'altra: un 
+Dialogue: 0,0:3:57.42,0:3:58.39,Default,,0000,0000,0000,,disastro per te! 
+Dialogue: 0,0:3:58.39,0:4:0.90,Default,,0000,0000,0000,,Ricapitolando: guarda il \nmorto, ricorda la 
+Dialogue: 0,0:4:0.90,0:4:3.70,Default,,0000,0000,0000,,licita, analizza la \nprima presa, non affrancare 
+Dialogue: 0,0:4:3.70,0:4:6.44,Default,,0000,0000,0000,,carte al Giocante, \ncapisci il suo piano, conta 
+Dialogue: 0,0:4:6.44,0:4:8.55,Default,,0000,0000,0000,,i punti e non dare \ntaglio e scarto. 
+Dialogue: 0,0:4:8.55,0:4:11.29,Default,,0000,0000,0000,,Sei pronto per diventare \nun difensore temibile 
+Dialogue: 0,0:4:11.29,0:4:11.41,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:4:11.41,0:4:14.15,Default,,0000,0000,0000,,Nella prossima lezione \nparleremo di interventi 
+Dialogue: 0,0:4:14.15,0:4:14.94,Default,,0000,0000,0000,,e riaperture. 
+Dialogue: 0,0:4:14.94,0:4:15.63,Default,,0000,0000,0000,,Ci vediamo! 

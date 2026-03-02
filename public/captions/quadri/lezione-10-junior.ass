@@ -1,0 +1,144 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:2.75,Default,,0000,0000,0000,,Oggi entriamo in un \nterritorio super 
+Dialogue: 0,0:0:2.75,0:0:5.43,Default,,0000,0000,0000,,interessante: il Contro \ne la Surlicita in 
+Dialogue: 0,0:0:5.43,0:0:6.30,Default,,0000,0000,0000,,competizione. 
+Dialogue: 0,0:0:6.30,0:0:8.98,Default,,0000,0000,0000,,Sono due armi speciali \nche usi quando gli 
+Dialogue: 0,0:0:8.98,0:0:11.85,Default,,0000,0000,0000,,avversari si \nintromettono nella tua licita o 
+Dialogue: 0,0:0:11.85,0:0:14.54,Default,,0000,0000,0000,,quando sei tu a \nintrometterti nella loro. 
+Dialogue: 0,0:0:14.54,0:0:17.41,Default,,0000,0000,0000,,Se impari a usarle bene \ndiventi un giocatore 
+Dialogue: 0,0:0:17.41,0:0:18.47,Default,,0000,0000,0000,,molto piu forte! 
+Dialogue: 0,0:0:18.47,0:0:19.78,Default,,0000,0000,0000,,Partiamo dalle basi. 
+Dialogue: 0,0:0:19.78,0:0:22.83,Default,,0000,0000,0000,,Il Contro, che si chiama \nanche `` Double '', lo 
+Dialogue: 0,0:0:22.83,0:0:25.89,Default,,0000,0000,0000,,puoi usare solo quando \nl'ultima dichiarazione e 
+Dialogue: 0,0:0:25.89,0:0:27.83,Default,,0000,0000,0000,,stata fatta da un \navversario. 
+Dialogue: 0,0:0:27.83,0:0:30.88,Default,,0000,0000,0000,,E come un cartellino \ngiallo nel calcio: lo puoi 
+Dialogue: 0,0:0:30.88,0:0:33.50,Default,,0000,0000,0000,,mostrare solo \nall'avversario, non al tuo 
+Dialogue: 0,0:0:33.50,0:0:34.13,Default,,0000,0000,0000,,compagno! 
+Dialogue: 0,0:0:34.13,0:0:37.18,Default,,0000,0000,0000,,La Surlicita invece e \ndiversa: e quando rilanci 
+Dialogue: 0,0:0:37.18,0:0:38.93,Default,,0000,0000,0000,,il colore \ndell'avversario. 
+Dialogue: 0,0:0:38.93,0:0:41.92,Default,,0000,0000,0000,,Per esempio, se \nl'avversario dice uno Picche e 
+Dialogue: 0,0:0:41.92,0:0:44.42,Default,,0000,0000,0000,,tu dici due Picche, stai \nsurlicitando. 
+Dialogue: 0,0:0:44.42,0:0:47.10,Default,,0000,0000,0000,,La cosa pazzesca e che \nnon vuoi giocare a 
+Dialogue: 0,0:0:47.10,0:0:50.16,Default,,0000,0000,0000,,Picche: stai usando il \nloro colore come segnale 
+Dialogue: 0,0:0:50.16,0:0:50.29,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:0:50.29,0:0:53.28,Default,,0000,0000,0000,,Ora la regola d'oro, \nfacilissima da ricordare. 
+Dialogue: 0,0:0:53.28,0:0:56.21,Default,,0000,0000,0000,,Quando puoi scegliere \ntra Contro e Surlicita, 
+Dialogue: 0,0:0:56.21,0:0:57.90,Default,,0000,0000,0000,,significano cose diverse . 
+Dialogue: 0,0:0:57.90,0:1:0.45,Default,,0000,0000,0000,,Il Contro dice: `` Sto \ncercando il fit, 
+Dialogue: 0,0:1:0.45,0:1:2.39,Default,,0000,0000,0000,,compagno dimmi i tuoi \ncolori! 
+Dialogue: 0,0:1:2.39,0:1:5.38,Default,,0000,0000,0000,,'' La Surlicita dice: `` \nIl fit ce l'ho gia, e 
+Dialogue: 0,0:1:5.38,0:1:6.57,Default,,0000,0000,0000,,ho una mano forte! 
+Dialogue: 0,0:1:6.57,0:1:9.44,Default,,0000,0000,0000,,'' Pensala cosi: il \nContro e una domanda, la 
+Dialogue: 0,0:1:9.44,0:1:11.12,Default,,0000,0000,0000,,Surlicita e una risposta . 
+Dialogue: 0,0:1:11.12,0:1:12.37,Default,,0000,0000,0000,,Vediamo un esempio. 
+Dialogue: 0,0:1:12.37,0:1:15.30,Default,,0000,0000,0000,,Il tuo compagno apre uno \nQuadri, l'avversario 
+Dialogue: 0,0:1:15.30,0:1:16.36,Default,,0000,0000,0000,,dice uno Picche. 
+Dialogue: 0,0:1:16.36,0:1:17.86,Default,,0000,0000,0000,,Tu hai doppia di Picche \n
+Dialogue: 0,0:1:17.86,0:1:20.29,Default,,0000,0000,0000,,Asso-Fante-piccola-picco \nla di Cuori, 
+Dialogue: 0,0:1:20.29,0:1:22.48,Default,,0000,0000,0000,,Donna-piccola-piccola di \nQuadri e 
+Dialogue: 0,0:1:22.48,0:1:24.91,Default,,0000,0000,0000,,Re-piccola-piccola-picco \nla di Fiori. 
+Dialogue: 0,0:1:24.91,0:1:25.53,Default,,0000,0000,0000,,Cosa fai? 
+Dialogue: 0,0:1:25.53,0:1:26.47,Default,,0000,0000,0000,,Dai il Contro! 
+Dialogue: 0,0:1:26.47,0:1:29.28,Default,,0000,0000,0000,,Stai dicendo al compagno \n`` Ho delle Cuori, 
+Dialogue: 0,0:1:29.28,0:1:30.90,Default,,0000,0000,0000,,forse abbiamo un fit la . 
+Dialogue: 0,0:1:30.90,0:1:31.90,Default,,0000,0000,0000,,Dimmi qualcosa! 
+Dialogue: 0,0:1:31.90,0:1:34.71,Default,,0000,0000,0000,,'' Non hai abbastanza \nQuadri per appoggiare 
+Dialogue: 0,0:1:34.71,0:1:37.45,Default,,0000,0000,0000,,direttamente, e non vuoi \ngiocare a Picche. 
+Dialogue: 0,0:1:37.45,0:1:40.20,Default,,0000,0000,0000,,Il Contro chiede al \ncompagno di aiutarti a 
+Dialogue: 0,0:1:40.20,0:1:41.82,Default,,0000,0000,0000,,trovare il posto giusto . 
+Dialogue: 0,0:1:41.82,0:1:43.63,Default,,0000,0000,0000,,Adesso cambiamo \nsituazione. 
+Dialogue: 0,0:1:43.63,0:1:46.56,Default,,0000,0000,0000,,Stessa apertura uno \nQuadri, stesso intervento 
+Dialogue: 0,0:1:46.56,0:1:47.31,Default,,0000,0000,0000,,uno Picche. 
+Dialogue: 0,0:1:47.31,0:1:50.12,Default,,0000,0000,0000,,Ma stavolta tu hai \nFante-piccola di Picche, 
+Dialogue: 0,0:1:50.12,0:1:52.55,Default,,0000,0000,0000,,Asso-Donna-piccola-picco \nla di Cuori, 
+Dialogue: 0,0:1:52.55,0:1:54.92,Default,,0000,0000,0000,,Re-Fante-piccola-piccola \ndi Quadri e 
+Dialogue: 0,0:1:54.92,0:1:56.92,Default,,0000,0000,0000,,Asso-piccola-piccola di \nFiori. 
+Dialogue: 0,0:1:56.92,0:1:57.54,Default,,0000,0000,0000,,Cosa fai? 
+Dialogue: 0,0:1:57.54,0:1:58.23,Default,,0000,0000,0000,,Surliciti! 
+Dialogue: 0,0:1:58.23,0:1:59.29,Default,,0000,0000,0000,,Dici due Picche. 
+Dialogue: 0,0:1:59.29,0:2:2.34,Default,,0000,0000,0000,,Stai dicendo: `` \nCompagno, ho il fit a Quadri e 
+Dialogue: 0,0:2:2.34,0:2:4.53,Default,,0000,0000,0000,,una mano forte, almeno \nda manche! 
+Dialogue: 0,0:2:4.53,0:2:7.46,Default,,0000,0000,0000,,'' La Surlicita qui e \npiu forte dell'appoggio 
+Dialogue: 0,0:2:7.46,0:2:10.33,Default,,0000,0000,0000,,diretto, perche un \nsemplice due o tre Quadri 
+Dialogue: 0,0:2:10.33,0:2:8.83,Default,,0000,0000,0000,,sarebbe troppo debole \nper la tua mano. 
+Dialogue: 0,0:2:8.83,0:2:11.56,Default,,0000,0000,0000,,Bene, adesso vediamo \ncosa succede quando e il 
+Dialogue: 0,0:2:11.56,0:2:13.25,Default,,0000,0000,0000,,tuo compagno a \nintervenire. 
+Dialogue: 0,0:2:13.25,0:2:15.63,Default,,0000,0000,0000,,Immagina che \nl'avversario apra e il tuo 
+Dialogue: 0,0:2:15.63,0:2:18.25,Default,,0000,0000,0000,,compagno faccia un \nintervento a colore, per 
+Dialogue: 0,0:2:18.25,0:2:19.36,Default,,0000,0000,0000,,esempio uno Cuori. 
+Dialogue: 0,0:2:19.36,0:2:22.03,Default,,0000,0000,0000,,Se poi il terzo \ngiocatore dichiara qualcosa, 
+Dialogue: 0,0:2:22.03,0:2:24.42,Default,,0000,0000,0000,,hai a disposizione sia \nil Contro che la 
+Dialogue: 0,0:2:24.42,0:2:25.06,Default,,0000,0000,0000,,Surlicita. 
+Dialogue: 0,0:2:25.06,0:2:27.85,Default,,0000,0000,0000,,Ma se il terzo giocatore \npassa, puoi fare solo 
+Dialogue: 0,0:2:27.85,0:2:28.66,Default,,0000,0000,0000,,la Surlicita. 
+Dialogue: 0,0:2:28.66,0:2:31.34,Default,,0000,0000,0000,,E in quel caso, la \nSurlicita si fa carico di 
+Dialogue: 0,0:2:31.34,0:2:33.96,Default,,0000,0000,0000,,tutto: sia delle mani \ncon fit che di quelle 
+Dialogue: 0,0:2:33.96,0:2:34.94,Default,,0000,0000,0000,,forti senza fit! 
+Dialogue: 0,0:2:34.94,0:2:36.81,Default,,0000,0000,0000,,Attenzione ai punti \nnecessari. 
+Dialogue: 0,0:2:36.81,0:2:39.54,Default,,0000,0000,0000,,Se surliciti e hai il \nfit con il compagno, ti 
+Dialogue: 0,0:2:39.54,0:2:40.82,Default,,0000,0000,0000,,bastano undici punti. 
+Dialogue: 0,0:2:40.82,0:2:43.49,Default,,0000,0000,0000,,Ma se surliciti senza \nfit, ne servono almeno 
+Dialogue: 0,0:2:43.49,0:2:44.25,Default,,0000,0000,0000,,quattordici. 
+Dialogue: 0,0:2:44.25,0:2:44.72,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:2:44.72,0:2:47.51,Default,,0000,0000,0000,,Perche senza fit la \nsituazione e piu rischiosa 
+Dialogue: 0,0:2:47.51,0:2:49.54,Default,,0000,0000,0000,,e serve piu forza per \ncompensare. 
+Dialogue: 0,0:2:49.54,0:2:51.40,Default,,0000,0000,0000,,E come in un videogioco \nse hai 
+Dialogue: 0,0:2:51.40,0:2:53.73,Default,,0000,0000,0000,,l'equipaggiamento giusto \nti basta meno 
+Dialogue: 0,0:2:53.73,0:2:54.43,Default,,0000,0000,0000,,esperienza. 
+Dialogue: 0,0:2:54.43,0:2:57.16,Default,,0000,0000,0000,,Se non ce l'hai, devi \nessere molto piu forte. 
+Dialogue: 0,0:2:57.16,0:2:59.60,Default,,0000,0000,0000,,Dopo la Surlicita, la \ncoppia e forzata a 
+Dialogue: 0,0:2:59.60,0:3:2.05,Default,,0000,0000,0000,,dichiarare fino al \nriporto nel colore di 
+Dialogue: 0,0:3:2.05,0:3:2.74,Default,,0000,0000,0000,,intervento. 
+Dialogue: 0,0:3:2.74,0:3:5.54,Default,,0000,0000,0000,,Per esempio, se il \ncompagno ha detto uno Cuori 
+Dialogue: 0,0:3:5.54,0:3:8.27,Default,,0000,0000,0000,,e tu surliciti, nessuno \npuo fermarsi prima di 
+Dialogue: 0,0:3:8.27,0:3:11.00,Default,,0000,0000,0000,,aver raggiunto almeno il \nlivello di due o tre 
+Dialogue: 0,0:3:11.00,0:3:11.41,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:3:11.41,0:3:14.03,Default,,0000,0000,0000,,Sotto quel livello, ogni \ndichiarazione e `` 
+Dialogue: 0,0:3:14.03,0:3:16.24,Default,,0000,0000,0000,,gratis '': non promette \nforza extra. 
+Dialogue: 0,0:3:16.24,0:3:19.03,Default,,0000,0000,0000,,Sopra quel livello, chi \nparla ancora mostra un 
+Dialogue: 0,0:3:19.03,0:3:21.53,Default,,0000,0000,0000,,intervento buono con \nalmeno dodici punti. 
+Dialogue: 0,0:3:21.53,0:3:24.32,Default,,0000,0000,0000,,Parliamo adesso di un \ncaso speciale: il Contro 
+Dialogue: 0,0:3:24.32,0:3:26.88,Default,,0000,0000,0000,,e la Surlicita del \ncompagno del Contrante. 
+Dialogue: 0,0:3:26.88,0:3:29.27,Default,,0000,0000,0000,,Se il tuo compagno ha \ndato il Contro su 
+Dialogue: 0,0:3:29.27,0:3:32.06,Default,,0000,0000,0000,,un'apertura avversaria, \nla Surlicita e l'unica 
+Dialogue: 0,0:3:32.06,0:3:34.33,Default,,0000,0000,0000,,dichiarazione forzante \nche puoi fare. 
+Dialogue: 0,0:3:34.33,0:3:37.00,Default,,0000,0000,0000,,Con undici o piu punti, \ndevi surlicitare per 
+Dialogue: 0,0:3:37.00,0:3:39.44,Default,,0000,0000,0000,,dire al compagno che hai \nuna mano forte. 
+Dialogue: 0,0:3:39.44,0:3:42.06,Default,,0000,0000,0000,,Se invece hai pochi \npunti, da zero a dieci, 
+Dialogue: 0,0:3:42.06,0:3:44.74,Default,,0000,0000,0000,,rispondi al minimo \nlivello possibile nel tuo 
+Dialogue: 0,0:3:44.74,0:3:45.73,Default,,0000,0000,0000,,colore migliore. 
+Dialogue: 0,0:3:45.73,0:3:48.52,Default,,0000,0000,0000,,Con otto-dieci punti e \nun bel colore di cinque 
+Dialogue: 0,0:3:48.52,0:3:51.31,Default,,0000,0000,0000,,o piu carte, puoi \nsaltare un livello, ma senza 
+Dialogue: 0,0:3:51.31,0:3:52.36,Default,,0000,0000,0000,,forzare a manche. 
+Dialogue: 0,0:3:52.36,0:3:55.21,Default,,0000,0000,0000,,Infine, l'Apertore puo \nusare Contro e Surlicita 
+Dialogue: 0,0:3:55.21,0:3:55.85,Default,,0000,0000,0000,,anche lui! 
+Dialogue: 0,0:3:55.85,0:3:58.58,Default,,0000,0000,0000,,Se il tuo compagno ha \nrisposto e l'avversario 
+Dialogue: 0,0:3:58.58,0:4:1.20,Default,,0000,0000,0000,,si e intromesso, la \nSurlicita dell'Apertore 
+Dialogue: 0,0:4:1.20,0:4:4.05,Default,,0000,0000,0000,,mostra fit quarto con il \nrispondente e una mano 
+Dialogue: 0,0:4:4.05,0:4:6.84,Default,,0000,0000,0000,,forte, piu forte di un \nsemplice appoggio a tre 
+Dialogue: 0,0:4:6.84,0:4:7.48,Default,,0000,0000,0000,,o quattro. 
+Dialogue: 0,0:4:7.48,0:4:10.27,Default,,0000,0000,0000,,Il Contro dell'Apertore \nmostra invece una mano 
+Dialogue: 0,0:4:10.27,0:4:13.06,Default,,0000,0000,0000,,di Rever senza fit e \nsenza una licita migliore 
+Dialogue: 0,0:4:13.06,0:4:13.18,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:13.18,0:4:15.68,Default,,0000,0000,0000,,Ricapitolando: il Contro \ncerca il fit, la 
+Dialogue: 0,0:4:15.68,0:4:17.31,Default,,0000,0000,0000,,Surlicita lo promette \ngia. 
+Dialogue: 0,0:4:17.31,0:4:19.98,Default,,0000,0000,0000,,Con undici punti e fit \npuoi surlicitare, con 
+Dialogue: 0,0:4:19.98,0:4:21.73,Default,,0000,0000,0000,,quattordici anche senza \nfit. 
+Dialogue: 0,0:4:21.73,0:4:24.11,Default,,0000,0000,0000,,E un sistema potente che \nti permette di 
+Dialogue: 0,0:4:24.11,0:4:26.50,Default,,0000,0000,0000,,comunicare con \nprecisione in situazioni 
+Dialogue: 0,0:4:26.50,0:4:27.19,Default,,0000,0000,0000,,complicate. 
+Dialogue: 0,0:4:27.19,0:4:29.99,Default,,0000,0000,0000,,Nella prossima lezione \nimparerai a ragionare e 
+Dialogue: 0,0:4:29.99,0:4:31.50,Default,,0000,0000,0000,,dedurre nel controgioco . 
+Dialogue: 0,0:4:31.50,0:4:32.20,Default,,0000,0000,0000,,Ci vediamo! 
