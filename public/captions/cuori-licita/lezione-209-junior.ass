@@ -1,0 +1,125 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:3.03,Default,,0000,0000,0000,,Oggi parliamo di come \ndichiarare quando il 
+Dialogue: 0,0:0:3.03,0:0:5.63,Default,,0000,0000,0000,,compagno apre 1 Cuori o \n1 Picche e tu hai 
+Dialogue: 0,0:0:5.63,0:0:7.33,Default,,0000,0000,0000,,l'appoggio nel suo \ncolore. 
+Dialogue: 0,0:0:7.33,0:0:10.18,Default,,0000,0000,0000,,Sembra facile, ma ci \nsono un sacco di opzioni 
+Dialogue: 0,0:0:10.18,0:0:12.97,Default,,0000,0000,0000,,diverse e ognuna manda \nun messaggio preciso! 
+Dialogue: 0,0:0:12.97,0:0:15.75,Default,,0000,0000,0000,,Partiamo dagli appoggi \nbarrage, cioe' quelli 
+Dialogue: 0,0:0:15.75,0:0:18.24,Default,,0000,0000,0000,,che servono a disturbare \ngli avversari. 
+Dialogue: 0,0:0:18.24,0:0:20.84,Default,,0000,0000,0000,,Se hai fit quarto, cioe \nquattro carte nel 
+Dialogue: 0,0:0:20.84,0:0:23.75,Default,,0000,0000,0000,,colore del compagno, e \nuna mano debole fra 0 e 
+Dialogue: 0,0:0:23.75,0:0:26.54,Default,,0000,0000,0000,,7 punti con \ndistribuzione sbilanciata, salti 
+Dialogue: 0,0:0:26.54,0:0:28.17,Default,,0000,0000,0000,,direttamente a livello 3 . 
+Dialogue: 0,0:0:28.17,0:0:31.14,Default,,0000,0000,0000,,Per esempio, il compagno \napre 1 Picche e tu hai 
+Dialogue: 0,0:0:31.14,0:0:34.11,Default,,0000,0000,0000,,quattro picche, 5 punti \ne un singoletto: dici 3 
+Dialogue: 0,0:0:34.11,0:0:34.60,Default,,0000,0000,0000,,Picche! 
+Dialogue: 0,0:0:34.60,0:0:37.38,Default,,0000,0000,0000,,Stai applicando la Legge \ndelle Prese Totali: 
+Dialogue: 0,0:0:37.38,0:0:40.11,Default,,0000,0000,0000,,nove carte in linea, \nnove prese, livello 3. 
+Dialogue: 0,0:0:40.11,0:0:43.02,Default,,0000,0000,0000,,Se hai addirittura fit \nquinto, cinque carte, e 
+Dialogue: 0,0:0:43.02,0:0:45.99,Default,,0000,0000,0000,,sempre 0-7 punti \nsbilanciati, salti a livello 4 
+Dialogue: 0,0:0:45.99,0:0:46.11,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:46.11,0:0:48.29,Default,,0000,0000,0000,,Dieci carte, dieci prese \n4 Picche! 
+Dialogue: 0,0:0:48.29,0:0:51.08,Default,,0000,0000,0000,,Questi appoggi \nraccontano l'esatta lunghezza 
+Dialogue: 0,0:0:51.08,0:0:53.80,Default,,0000,0000,0000,,del fit, e questo e' \nimportantissimo per il 
+Dialogue: 0,0:0:53.80,0:0:54.41,Default,,0000,0000,0000,,compagno. 
+Dialogue: 0,0:0:54.41,0:0:56.17,Default,,0000,0000,0000,,Attenzione a due \neccezioni. 
+Dialogue: 0,0:0:56.17,0:0:58.89,Default,,0000,0000,0000,,Se hai fit quinto ma \ndistribuzione 5-3-3-2, 
+Dialogue: 0,0:0:58.89,0:1:1.38,Default,,0000,0000,0000,,cioe' piatta, devi \nscontare una presa e 
+Dialogue: 0,0:1:1.38,0:1:4.35,Default,,0000,0000,0000,,appoggiare solo a \nlivello 3, come se avessi fit 
+Dialogue: 0,0:1:4.35,0:1:4.83,Default,,0000,0000,0000,,quarto. 
+Dialogue: 0,0:1:4.83,0:1:7.68,Default,,0000,0000,0000,,Se hai fit quarto ma \n4-3-3-3, comportati come 
+Dialogue: 0,0:1:7.68,0:1:10.47,Default,,0000,0000,0000,,se avessi fit terzo: la \ndistribuzione piatta 
+Dialogue: 0,0:1:10.47,0:1:12.04,Default,,0000,0000,0000,,non produce prese extra . 
+Dialogue: 0,0:1:12.04,0:1:13.92,Default,,0000,0000,0000,,Ora il 2 Senz'Atout \nTruscott. 
+Dialogue: 0,0:1:13.92,0:1:16.59,Default,,0000,0000,0000,,Questo non c'entra nulla \ncon il senz'atout 
+Dialogue: 0,0:1:16.59,0:1:17.19,Default,,0000,0000,0000,,naturale! 
+Dialogue: 0,0:1:17.19,0:1:20.10,Default,,0000,0000,0000,,E' una convenzione che \ndice: `` Ho fit nel tuo 
+Dialogue: 0,0:1:20.10,0:1:22.83,Default,,0000,0000,0000,,nobile, terzo o quarto, \ne sono nella fascia 
+Dialogue: 0,0:1:22.83,0:1:25.55,Default,,0000,0000,0000,,invitante a manche, cioe \n10 belli fino a 12 
+Dialogue: 0,0:1:25.55,0:1:26.04,Default,,0000,0000,0000,,brutti. 
+Dialogue: 0,0:1:26.04,0:1:29.01,Default,,0000,0000,0000,,'' Non richiede fermi \nnei colori e non richiede 
+Dialogue: 0,0:1:29.01,0:1:30.04,Default,,0000,0000,0000,,mano bilanciata. 
+Dialogue: 0,0:1:30.04,0:1:32.64,Default,,0000,0000,0000,,E' solo un modo per dire \n`` fit e invito. 
+Dialogue: 0,0:1:32.64,0:1:35.55,Default,,0000,0000,0000,,'' Con fit solo terzo \nper dire 2 Senz'Atout ti 
+Dialogue: 0,0:1:35.55,0:1:38.22,Default,,0000,0000,0000,,serve anche una corta e \npunteggio vicino a 
+Dialogue: 0,0:1:38.22,0:1:38.64,Default,,0000,0000,0000,,11-12. 
+Dialogue: 0,0:1:38.64,0:1:41.37,Default,,0000,0000,0000,,Con fit quarto, se non \nhai la distribuzione 
+Dialogue: 0,0:1:41.37,0:1:44.03,Default,,0000,0000,0000,,4-3-3-3, puoi scendere \nanche a 10 punti, a 
+Dialogue: 0,0:1:44.03,0:1:45.79,Default,,0000,0000,0000,,volte 9 con carte di \ntesta. 
+Dialogue: 0,0:1:45.79,0:1:48.52,Default,,0000,0000,0000,,L'apertore dopo 2 \nSenz'Atout ha tre scelte: 
+Dialogue: 0,0:1:48.52,0:1:51.30,Default,,0000,0000,0000,,riportare a 3 nel colore \ndi atout se rifiuta 
+Dialogue: 0,0:1:51.30,0:1:54.21,Default,,0000,0000,0000,,l'invito, dichiarare \nmanche se accetta, oppure 
+Dialogue: 0,0:1:54.21,0:1:57.12,Default,,0000,0000,0000,,mostrare un colore \nlaterale chiedendo aiuto al 
+Dialogue: 0,0:1:57.12,0:1:55.85,Default,,0000,0000,0000,,compagno per decidere. 
+Dialogue: 0,0:1:55.85,0:1:57.95,Default,,0000,0000,0000,,Adesso la risposta 1 \nSenz'Atout. 
+Dialogue: 0,0:1:57.95,0:2:0.91,Default,,0000,0000,0000,,Nel sistema standard, 1 \nSenz'Atout in risposta 
+Dialogue: 0,0:2:0.91,0:2:3.94,Default,,0000,0000,0000,,a 1 nel nobile e' \nsemiforzante e copre un campo 
+Dialogue: 0,0:2:3.94,0:2:5.42,Default,,0000,0000,0000,,largo: da 5 a 11 punti. 
+Dialogue: 0,0:2:5.42,0:2:8.32,Default,,0000,0000,0000,,Puo' nascondere mani \ndiverse: mani deboli con 
+Dialogue: 0,0:2:8.32,0:2:11.04,Default,,0000,0000,0000,,fit terzo, mani senza \nfit, mani con colori 
+Dialogue: 0,0:2:11.04,0:2:12.40,Default,,0000,0000,0000,,laterali da mostrare. 
+Dialogue: 0,0:2:12.40,0:2:15.12,Default,,0000,0000,0000,,L'apertore su 1 \nSenz'Atout con una 5-3-3-2 
+Dialogue: 0,0:2:15.12,0:2:16.41,Default,,0000,0000,0000,,minima puo' passare. 
+Dialogue: 0,0:2:16.41,0:2:19.13,Default,,0000,0000,0000,,Ma con 13 belli o 14 \npunti tiene aperta la 
+Dialogue: 0,0:2:19.13,0:2:20.06,Default,,0000,0000,0000,,dichiarazione. 
+Dialogue: 0,0:2:20.06,0:2:22.71,Default,,0000,0000,0000,,Se non ha nulla da dire \ninventa un colore 
+Dialogue: 0,0:2:22.71,0:2:25.55,Default,,0000,0000,0000,,minore terzo: dichiara \nil piu' basso, non il 
+Dialogue: 0,0:2:25.55,0:2:26.29,Default,,0000,0000,0000,,piu' bello. 
+Dialogue: 0,0:2:26.29,0:2:29.32,Default,,0000,0000,0000,,Per esempio, con tre \nfiori e tre quadri, dice 2 
+Dialogue: 0,0:2:29.32,0:2:29.75,Default,,0000,0000,0000,,Fiori. 
+Dialogue: 0,0:2:29.75,0:2:32.78,Default,,0000,0000,0000,,L'appoggio diretto a \nlivello 2, cioe' 2 Cuori o 
+Dialogue: 0,0:2:32.78,0:2:35.43,Default,,0000,0000,0000,,2 Picche, copre la \nfascia 5-9 o 10 punti. 
+Dialogue: 0,0:2:35.43,0:2:38.40,Default,,0000,0000,0000,,Lo usi con fit terzo \nquando non hai abbastanza 
+Dialogue: 0,0:2:38.40,0:2:41.24,Default,,0000,0000,0000,,per il 2 Senz'Atout \nTruscott, oppure con fit 
+Dialogue: 0,0:2:41.24,0:2:43.83,Default,,0000,0000,0000,,quarto quando la \ndistribuzione e' troppo 
+Dialogue: 0,0:2:43.83,0:2:46.06,Default,,0000,0000,0000,,bilanciata per \nl'appoggio barrage. 
+Dialogue: 0,0:2:46.06,0:2:49.02,Default,,0000,0000,0000,,Con bilanciata e fit \nterzo al minimo del range 
+Dialogue: 0,0:2:49.02,0:2:52.05,Default,,0000,0000,0000,,puoi anche considerare \nla risposta 1 Senz'Atout 
+Dialogue: 0,0:2:52.05,0:2:52.17,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:52.17,0:2:55.20,Default,,0000,0000,0000,,Se hai una mano da \nmanche o piu' con fit, cambi 
+Dialogue: 0,0:2:55.20,0:2:57.54,Default,,0000,0000,0000,,colore prima e poi \nappoggi a manche. 
+Dialogue: 0,0:2:57.54,0:3:0.32,Default,,0000,0000,0000,,Con apertura 1 Cuori, \nfit e quarta picche e 
+Dialogue: 0,0:3:0.32,0:3:3.35,Default,,0000,0000,0000,,solo prospettive di \nmanche, puoi dire le picche 
+Dialogue: 0,0:3:3.35,0:3:3.47,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:3.47,0:3:6.37,Default,,0000,0000,0000,,Con carte da slam, parti \ncon 2 Fiori generico 
+Dialogue: 0,0:3:6.37,0:3:7.98,Default,,0000,0000,0000,,forte, non con 1 Picche . 
+Dialogue: 0,0:3:7.98,0:3:10.51,Default,,0000,0000,0000,,Adesso, cosa cambia \nquando l'avversario 
+Dialogue: 0,0:3:10.51,0:3:11.25,Default,,0000,0000,0000,,interviene? 
+Dialogue: 0,0:3:11.25,0:3:14.22,Default,,0000,0000,0000,,Se interviene a colore, \nl'appoggio a livello 2 
+Dialogue: 0,0:3:14.22,0:3:14.96,Default,,0000,0000,0000,,non cambia. 
+Dialogue: 0,0:3:14.96,0:3:17.43,Default,,0000,0000,0000,,Gli appoggi a 3 e a 4 \nrestano barrage. 
+Dialogue: 0,0:3:17.43,0:3:20.39,Default,,0000,0000,0000,,Ma il 2 Senz'Atout \nTruscott diventa piu' forte 
+Dialogue: 0,0:3:20.39,0:3:23.36,Default,,0000,0000,0000,,richiede almeno QUATTRO \ncarte di fit e diventa 
+Dialogue: 0,0:3:23.36,0:3:25.58,Default,,0000,0000,0000,,illimitato, cioe' 11 \npunti o piu'. 
+Dialogue: 0,0:3:25.58,0:3:28.05,Default,,0000,0000,0000,,La surlicita, invece, \nmostra fit TERZO 
+Dialogue: 0,0:3:28.05,0:3:29.84,Default,,0000,0000,0000,,illimitato, 11 punti in \nsu. 
+Dialogue: 0,0:3:29.84,0:3:32.80,Default,,0000,0000,0000,,Se l'avversario \ninterviene con il Contro, il 2 
+Dialogue: 0,0:3:32.80,0:3:35.64,Default,,0000,0000,0000,,Senz'Atout mantiene il \nsignificato Truscott. 
+Dialogue: 0,0:3:35.64,0:3:38.24,Default,,0000,0000,0000,,Il Surcontro mostra 11 \npunti in su e non 
+Dialogue: 0,0:3:38.24,0:3:40.89,Default,,0000,0000,0000,,esclude il fit: tutti i \nContro successivi 
+Dialogue: 0,0:3:40.89,0:3:42.99,Default,,0000,0000,0000,,diventano proposta di \npunizione. 
+Dialogue: 0,0:3:42.99,0:3:45.96,Default,,0000,0000,0000,,Il colore nuovo diventa \n`` a passare '', cioe' 
+Dialogue: 0,0:3:45.96,0:3:46.82,Default,,0000,0000,0000,,non forzante. 
+Dialogue: 0,0:3:46.82,0:3:49.85,Default,,0000,0000,0000,,E 1 Senz'Atout diventa \nnaturale, 8-10 punti con 
+Dialogue: 0,0:3:49.85,0:3:51.89,Default,,0000,0000,0000,,fermi nei colori del \ncontrante. 
+Dialogue: 0,0:3:51.89,0:3:54.85,Default,,0000,0000,0000,,Errore numero uno: \nappoggiare a 3 credendo che 
+Dialogue: 0,0:3:54.85,0:3:55.78,Default,,0000,0000,0000,,sia un invito. 
+Dialogue: 0,0:3:55.78,0:3:56.52,Default,,0000,0000,0000,,E' barrage! 
+Dialogue: 0,0:3:56.52,0:3:59.42,Default,,0000,0000,0000,,Errore numero due: \nconfondere il 2 Senz'Atout 
+Dialogue: 0,0:3:59.42,0:4:2.32,Default,,0000,0000,0000,,Truscott con un invito \nnaturale a senz'atout. 
+Dialogue: 0,0:4:2.32,0:4:5.04,Default,,0000,0000,0000,,Errore numero tre: non \ninventare il colore 
+Dialogue: 0,0:4:5.04,0:4:7.57,Default,,0000,0000,0000,,minore terzo quando \nl'apertore riceve 1 
+Dialogue: 0,0:4:7.57,0:4:9.18,Default,,0000,0000,0000,,Senz'Atout semiforzante . 
+Dialogue: 0,0:4:9.18,0:4:10.84,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

@@ -1,0 +1,127 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.38,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.38,0:0:3.29,Default,,0000,0000,0000,,Oggi entriamo nel mondo \ndelle Texas, che nel 
+Dialogue: 0,0:0:3.29,0:0:5.57,Default,,0000,0000,0000,,bridge si chiamano anche \nTransfer. 
+Dialogue: 0,0:0:5.57,0:0:8.55,Default,,0000,0000,0000,,Sono delle convenzioni \ngeniali che rendono la 
+Dialogue: 0,0:0:8.55,0:0:11.02,Default,,0000,0000,0000,,tua dichiarazione molto \npiu' potente. 
+Dialogue: 0,0:0:11.02,0:0:12.92,Default,,0000,0000,0000,,Ti spiego tutto passo \npasso. 
+Dialogue: 0,0:0:12.92,0:0:15.64,Default,,0000,0000,0000,,L'idea base e' semplice \nma brillante: per 
+Dialogue: 0,0:0:15.64,0:0:18.56,Default,,0000,0000,0000,,mostrare un colore, \ndichiari quello di rango 
+Dialogue: 0,0:0:18.56,0:0:20.27,Default,,0000,0000,0000,,immediatamente inferiore . 
+Dialogue: 0,0:0:20.27,0:0:21.79,Default,,0000,0000,0000,,Vuoi mostrare le Cuori? 
+Dialogue: 0,0:0:21.79,0:0:22.74,Default,,0000,0000,0000,,Dici 2 Quadri. 
+Dialogue: 0,0:0:22.74,0:0:24.38,Default,,0000,0000,0000,,Vuoi mostrare le Picche ? 
+Dialogue: 0,0:0:24.38,0:0:25.27,Default,,0000,0000,0000,,Dici 2 Cuori. 
+Dialogue: 0,0:0:25.27,0:0:28.31,Default,,0000,0000,0000,,E' come un codice \nsegreto tra te e il compagno 
+Dialogue: 0,0:0:28.31,0:0:28.44,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:28.44,0:0:29.70,Default,,0000,0000,0000,,Perche' fare cosi'? 
+Dialogue: 0,0:0:29.70,0:0:30.46,Default,,0000,0000,0000,,Due motivi. 
+Dialogue: 0,0:0:30.46,0:0:33.25,Default,,0000,0000,0000,,Primo: il gioco viene \norientato dalla mano 
+Dialogue: 0,0:0:33.25,0:0:36.36,Default,,0000,0000,0000,,forte, cioe' quella che \nha aperto 1 Senza Atout 
+Dialogue: 0,0:0:36.36,0:0:37.62,Default,,0000,0000,0000,,che resta nascosta. 
+Dialogue: 0,0:0:37.62,0:0:40.54,Default,,0000,0000,0000,,Le sue carte restano \ncoperte e gli avversari 
+Dialogue: 0,0:0:40.54,0:0:42.18,Default,,0000,0000,0000,,hanno meno informazioni . 
+Dialogue: 0,0:0:42.18,0:0:45.10,Default,,0000,0000,0000,,Secondo: il Transfer ti \npermette di fare una 
+Dialogue: 0,0:0:45.10,0:0:48.14,Default,,0000,0000,0000,,seconda dichiarazione, \ndandoti piu' spazio per 
+Dialogue: 0,0:0:48.14,0:0:49.66,Default,,0000,0000,0000,,descrivere la tua mano. 
+Dialogue: 0,0:0:49.66,0:0:52.51,Default,,0000,0000,0000,,Ecco le Jacoby Transfer \nsu apertura 1 Senza 
+Dialogue: 0,0:0:52.51,0:0:52.95,Default,,0000,0000,0000,,Atout. 
+Dialogue: 0,0:0:52.95,0:0:56.05,Default,,0000,0000,0000,,Se rispondi 2 Quadri, \nstai dicendo `` ho almeno 
+Dialogue: 0,0:0:56.05,0:0:57.38,Default,,0000,0000,0000,,5 carte di Cuori ''. 
+Dialogue: 0,0:0:57.38,0:0:59.35,Default,,0000,0000,0000,,L'apertore deve dire 2 \nCuori. 
+Dialogue: 0,0:0:59.35,0:1:2.39,Default,,0000,0000,0000,,Se rispondi 2 Cuori, \nstai dicendo `` ho almeno 
+Dialogue: 0,0:1:2.39,0:1:3.78,Default,,0000,0000,0000,,5 carte di Picche ''. 
+Dialogue: 0,0:1:3.78,0:1:5.81,Default,,0000,0000,0000,,L'apertore deve dire 2 \nPicche. 
+Dialogue: 0,0:1:5.81,0:1:8.78,Default,,0000,0000,0000,,L'apertore obbedisce al \nTransfer praticamente 
+Dialogue: 0,0:1:8.78,0:1:11.82,Default,,0000,0000,0000,,sempre: deve rispettarlo \ncon tutte le mani con 
+Dialogue: 0,0:1:11.82,0:1:14.74,Default,,0000,0000,0000,,cui, se avessi detto il \ncolore direttamente, 
+Dialogue: 0,0:1:14.74,0:1:15.81,Default,,0000,0000,0000,,sarebbe passato. 
+Dialogue: 0,0:1:15.81,0:1:18.60,Default,,0000,0000,0000,,E, cosa importante, \nobbedisce specialmente 
+Dialogue: 0,0:1:18.60,0:1:20.94,Default,,0000,0000,0000,,quando non gli piace il \ntuo colore! 
+Dialogue: 0,0:1:20.94,0:1:23.03,Default,,0000,0000,0000,,Non e' un invito, e' un \nordine. 
+Dialogue: 0,0:1:23.03,0:1:25.82,Default,,0000,0000,0000,,Ma c' e' un'eccezione \nbellissima: la super 
+Dialogue: 0,0:1:25.82,0:1:26.71,Default,,0000,0000,0000,,accettazione. 
+Dialogue: 0,0:1:26.71,0:1:29.81,Default,,0000,0000,0000,,Se l'apertore ha il fit \nquarto nel tuo colore e 
+Dialogue: 0,0:1:29.81,0:1:32.85,Default,,0000,0000,0000,,la mano massima, puo' \nsaltare direttamente a 3 
+Dialogue: 0,0:1:32.85,0:1:33.86,Default,,0000,0000,0000,,nel tuo colore. 
+Dialogue: 0,0:1:33.86,0:1:36.78,Default,,0000,0000,0000,,Per esempio, su 1 Senza \nAtout - 2 Quadri, se 
+Dialogue: 0,0:1:36.78,0:1:39.69,Default,,0000,0000,0000,,l'apertore ha 4 cuori e \nmano massima, dice 3 
+Dialogue: 0,0:1:39.69,0:1:40.90,Default,,0000,0000,0000,,Cuori invece di 2. 
+Dialogue: 0,0:1:40.90,0:1:43.30,Default,,0000,0000,0000,,Questo segnala 9 atout e \nmano forte. 
+Dialogue: 0,0:1:43.30,0:1:46.22,Default,,0000,0000,0000,,Dopo che il Transfer e' \nstato accettato, hai 
+Dialogue: 0,0:1:46.22,0:1:47.17,Default,,0000,0000,0000,,tante opzioni. 
+Dialogue: 0,0:1:47.17,0:1:49.70,Default,,0000,0000,0000,,Con una mano debole, \npassi: fine della 
+Dialogue: 0,0:1:49.70,0:1:52.74,Default,,0000,0000,0000,,dichiarazione, giocate \nil parziale nel colore. 
+Dialogue: 0,0:1:52.74,0:1:55.84,Default,,0000,0000,0000,,Con un monocolore \ninvitante puoi dire 3 nel tuo 
+Dialogue: 0,0:1:55.84,0:1:56.35,Default,,0000,0000,0000,,colore. 
+Dialogue: 0,0:1:56.35,0:1:58.95,Default,,0000,0000,0000,,Con un monocolore da \nmanche, salti a 4. 
+Dialogue: 0,0:1:58.95,0:2:1.99,Default,,0000,0000,0000,,Con una mano bilanciata \ninvitante dici 2 Senza 
+Dialogue: 0,0:2:1.99,0:2:2.43,Default,,0000,0000,0000,,Atout. 
+Dialogue: 0,0:2:2.43,0:2:5.34,Default,,0000,0000,0000,,Con una bilanciata da \nmanche, 3 Senza Atout. 
+Dialogue: 0,0:2:5.34,0:2:8.38,Default,,0000,0000,0000,,E attenzione: 4 Senza \nAtout dopo il Transfer e 
+Dialogue: 0,0:2:8.38,0:2:11.36,Default,,0000,0000,0000,,quantitativo, cioe' un \ninvito a Slam, non una 
+Dialogue: 0,0:2:11.36,0:2:12.56,Default,,0000,0000,0000,,richiesta di assi! 
+Dialogue: 0,0:2:12.56,0:2:12.12,Default,,0000,0000,0000,,Questo e' un punto che \ntanti sbagliano. 
+Dialogue: 0,0:2:12.12,0:2:14.88,Default,,0000,0000,0000,,Adesso complichiamo un \npo' le cose, ma niente 
+Dialogue: 0,0:2:14.88,0:2:16.29,Default,,0000,0000,0000,,paura: e' tutto logico. 
+Dialogue: 0,0:2:16.29,0:2:19.06,Default,,0000,0000,0000,,Dopo il Transfer, puoi \nanche cambiare colore: 
+Dialogue: 0,0:2:19.06,0:2:20.76,Default,,0000,0000,0000,,dichiarare un colore \nnuovo. 
+Dialogue: 0,0:2:20.76,0:2:23.46,Default,,0000,0000,0000,,Questo mostra una mano \nsbilanciata con circa 
+Dialogue: 0,0:2:23.46,0:2:25.28,Default,,0000,0000,0000,,7-8 punti, un invito \nleggero. 
+Dialogue: 0,0:2:25.28,0:2:28.16,Default,,0000,0000,0000,,Dice al compagno `` il \nSenza Atout non mi piace 
+Dialogue: 0,0:2:28.16,0:2:30.10,Default,,0000,0000,0000,,ho una distribuzione \nstrana ''. 
+Dialogue: 0,0:2:30.10,0:2:32.28,Default,,0000,0000,0000,,L'apertore dopo un \ncambio di colore 
+Dialogue: 0,0:2:32.28,0:2:34.92,Default,,0000,0000,0000,,post-Transfer non \nconcludera' mai a 3 Senza 
+Dialogue: 0,0:2:34.92,0:2:37.74,Default,,0000,0000,0000,,Atout, perche' il \nmessaggio del rispondente e' 
+Dialogue: 0,0:2:37.74,0:2:40.51,Default,,0000,0000,0000,,chiaro: `` l'ultimo \ncontratto che vorrei e' 3 
+Dialogue: 0,0:2:40.51,0:2:41.45,Default,,0000,0000,0000,,Senza Atout ''. 
+Dialogue: 0,0:2:41.45,0:2:44.03,Default,,0000,0000,0000,,Passiamo ora alla \nStayman a 6 gradini su 1 
+Dialogue: 0,0:2:44.03,0:2:46.56,Default,,0000,0000,0000,,Senza Atout, che e' piu \ndettagliata della 
+Dialogue: 0,0:2:46.56,0:2:47.62,Default,,0000,0000,0000,,Stayman classica. 
+Dialogue: 0,0:2:47.62,0:2:50.50,Default,,0000,0000,0000,,Quando rispondi 2 Fiori \nl'apertore puo' dire: 2 
+Dialogue: 0,0:2:50.50,0:2:53.14,Default,,0000,0000,0000,,Quadri se non ha nessuna \nquarta maggiore, 2 
+Dialogue: 0,0:2:53.14,0:2:55.90,Default,,0000,0000,0000,,Cuori se ha 4 cuori ma \nnon 4 picche, 2 Picche 
+Dialogue: 0,0:2:55.90,0:2:57.79,Default,,0000,0000,0000,,se ha 4 picche ma non 4 \ncuori. 
+Dialogue: 0,0:2:57.79,0:2:59.67,Default,,0000,0000,0000,,Fin qui e' la Stayman \nnormale. 
+Dialogue: 0,0:2:59.67,0:3:2.31,Default,,0000,0000,0000,,Ma ecco i gradini extra \n2 Senza Atout se ha 
+Dialogue: 0,0:3:2.31,0:3:4.90,Default,,0000,0000,0000,,entrambe le quarte \nnobili e mano minima, 3 
+Dialogue: 0,0:3:4.90,0:3:7.78,Default,,0000,0000,0000,,Fiori se ha 4 cuori piu \n4 picche piu' 3 fiori e 
+Dialogue: 0,0:3:7.78,0:3:10.42,Default,,0000,0000,0000,,mano massima, 3 Quadri \nse ha 4 cuori piu' 4 
+Dialogue: 0,0:3:10.42,0:3:12.65,Default,,0000,0000,0000,,picche piu' 3 quadri e \nmano massima. 
+Dialogue: 0,0:3:12.65,0:3:15.36,Default,,0000,0000,0000,,Questi gradini in piu' \nti danno informazioni 
+Dialogue: 0,0:3:15.36,0:3:17.59,Default,,0000,0000,0000,,preziose sulla \ndistribuzione esatta. 
+Dialogue: 0,0:3:17.59,0:3:18.71,Default,,0000,0000,0000,,E i colori minori? 
+Dialogue: 0,0:3:18.71,0:3:20.53,Default,,0000,0000,0000,,Anche loro hanno il \nTransfer! 
+Dialogue: 0,0:3:20.53,0:3:23.12,Default,,0000,0000,0000,,Su 1 Senza Atout, 2 \nPicche mostra almeno 6 
+Dialogue: 0,0:3:23.12,0:3:25.94,Default,,0000,0000,0000,,carte di Fiori e 2 Senza \nAtout mostra almeno 6 
+Dialogue: 0,0:3:25.94,0:3:26.94,Default,,0000,0000,0000,,carte di Quadri. 
+Dialogue: 0,0:3:26.94,0:3:29.64,Default,,0000,0000,0000,,Per accettare il \nTransfer minore, l'apertore 
+Dialogue: 0,0:3:29.64,0:3:31.87,Default,,0000,0000,0000,,usa un gradino \nintermedio come super 
+Dialogue: 0,0:3:31.87,0:3:34.58,Default,,0000,0000,0000,,accettazione quando ha \nun onore maggiore nel 
+Dialogue: 0,0:3:34.58,0:3:37.40,Default,,0000,0000,0000,,colore del rispondente, \ncioe' Asso, Re o Donna 
+Dialogue: 0,0:3:37.40,0:3:37.51,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:37.51,0:3:40.22,Default,,0000,0000,0000,,Senza quell'onore, \nrispetta semplicemente il 
+Dialogue: 0,0:3:40.22,0:3:41.98,Default,,0000,0000,0000,,Transfer al gradino \nnormale. 
+Dialogue: 0,0:3:41.98,0:3:44.45,Default,,0000,0000,0000,,Infine, i Transfer \nfunzionano anche dopo 
+Dialogue: 0,0:3:44.45,0:3:45.86,Default,,0000,0000,0000,,apertura 2 Senza Atout! 
+Dialogue: 0,0:3:45.86,0:3:48.45,Default,,0000,0000,0000,,Le regole sono: 2 Senza \nAtout - 3 Fiori e' 
+Dialogue: 0,0:3:48.45,0:3:51.15,Default,,0000,0000,0000,,Stayman, 2 Senza Atout - \n3 Quadri mostra 5 o 
+Dialogue: 0,0:3:51.15,0:3:53.97,Default,,0000,0000,0000,,piu' cuori, 2 Senza \nAtout - 3 Cuori mostra 5 o 
+Dialogue: 0,0:3:53.97,0:3:56.67,Default,,0000,0000,0000,,piu' picche, 2 Senza \nAtout - 3 Picche mostra 
+Dialogue: 0,0:3:56.67,0:3:59.50,Default,,0000,0000,0000,,una mano almeno da \nmanche orientata sui minori 
+Dialogue: 0,0:3:59.50,0:3:59.61,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:59.61,0:4:2.26,Default,,0000,0000,0000,,I Transfer sono uno \nstrumento potentissimo. 
+Dialogue: 0,0:4:2.26,0:4:4.67,Default,,0000,0000,0000,,Esercitati a usarli e \nvedrai che le tue 
+Dialogue: 0,0:4:4.67,0:4:7.49,Default,,0000,0000,0000,,dichiarazioni \ndiventeranno molto piu' precise. 
+Dialogue: 0,0:4:7.49,0:4:8.37,Default,,0000,0000,0000,,Alla prossima! 

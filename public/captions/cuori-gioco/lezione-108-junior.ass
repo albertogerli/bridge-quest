@@ -1,0 +1,129 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:1.97,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:1.97,0:0:4.71,Default,,0000,0000,0000,,Oggi impariamo una \nfilosofia di gioco che ti 
+Dialogue: 0,0:0:4.71,0:0:7.51,Default,,0000,0000,0000,,cambiera' la vita al \ntavolo: giocare come se! 
+Dialogue: 0,0:0:7.51,0:0:10.20,Default,,0000,0000,0000,,E' un modo di pensare \nche i grandi campioni 
+Dialogue: 0,0:0:10.20,0:0:13.06,Default,,0000,0000,0000,,usano continuamente e \nche trasforma situazioni 
+Dialogue: 0,0:0:13.06,0:0:14.91,Default,,0000,0000,0000,,disperate in contratti \nfatti. 
+Dialogue: 0,0:0:14.91,0:0:16.81,Default,,0000,0000,0000,,L'idea e' semplice ma \npotente. 
+Dialogue: 0,0:0:16.81,0:0:19.74,Default,,0000,0000,0000,,Se una certa condizione \nDEVE essere vera perche 
+Dialogue: 0,0:0:19.74,0:0:22.66,Default,,0000,0000,0000,,il tuo contratto riesca \nallora dai per scontato 
+Dialogue: 0,0:0:22.66,0:0:24.92,Default,,0000,0000,0000,,che SIA vera e gioca di \nconseguenza. 
+Dialogue: 0,0:0:24.92,0:0:27.49,Default,,0000,0000,0000,,Non perdere tempo a \npreoccuparti: agisci! 
+Dialogue: 0,0:0:27.49,0:0:30.23,Default,,0000,0000,0000,,Come disse un grande \ngiocatore: `` Se il tuo 
+Dialogue: 0,0:0:30.23,0:0:32.74,Default,,0000,0000,0000,,aereo e' in fiamme, \nprova a buttarti col 
+Dialogue: 0,0:0:32.74,0:0:33.45,Default,,0000,0000,0000,,paracadute. 
+Dialogue: 0,0:0:33.45,0:0:36.01,Default,,0000,0000,0000,,Se non funziona, prova \nquello di riserva. 
+Dialogue: 0,0:0:36.01,0:0:38.70,Default,,0000,0000,0000,,Se non funziona, prova \nalmeno a sbattere le 
+Dialogue: 0,0:0:38.70,0:0:39.23,Default,,0000,0000,0000,,braccia. 
+Dialogue: 0,0:0:39.23,0:0:41.92,Default,,0000,0000,0000,,'' L'idea e' che non ti \narrendi mai e provi 
+Dialogue: 0,0:0:41.92,0:0:44.24,Default,,0000,0000,0000,,ogni possibilita' \nnell'ordine giusto. 
+Dialogue: 0,0:0:44.24,0:0:45.50,Default,,0000,0000,0000,,Facciamo un esempio. 
+Dialogue: 0,0:0:45.50,0:0:48.24,Default,,0000,0000,0000,,Sei in 7 Senza Atout, il \ncontratto piu' alto 
+Dialogue: 0,0:0:48.24,0:0:48.89,Default,,0000,0000,0000,,possibile! 
+Dialogue: 0,0:0:48.89,0:0:51.76,Default,,0000,0000,0000,,A picche hai \nAsso-Donna-Dieci nella tua mano e 
+Dialogue: 0,0:0:51.76,0:0:53.72,Default,,0000,0000,0000,,Nove-Otto-Quattro-Tre al \nmorto. 
+Dialogue: 0,0:0:53.72,0:0:56.59,Default,,0000,0000,0000,,Nei colori rossi e nelle \nfiori hai dieci prese 
+Dialogue: 0,0:0:56.59,0:0:57.06,Default,,0000,0000,0000,,sicure. 
+Dialogue: 0,0:0:57.06,0:0:59.63,Default,,0000,0000,0000,,Le tre prese mancanti \ndevono venire dalle 
+Dialogue: 0,0:0:59.63,0:1:0.10,Default,,0000,0000,0000,,picche. 
+Dialogue: 0,0:1:0.10,0:1:2.73,Default,,0000,0000,0000,,L'unico modo e' che il \nRe e il Fante siano 
+Dialogue: 0,0:1:2.73,0:1:3.74,Default,,0000,0000,0000,,entrambi in Sud. 
+Dialogue: 0,0:1:3.74,0:1:4.76,Default,,0000,0000,0000,,La probabilita'? 
+Dialogue: 0,0:1:4.76,0:1:7.26,Default,,0000,0000,0000,,Solo il venticinque per \ncento, un doppio 
+Dialogue: 0,0:1:7.26,0:1:7.80,Default,,0000,0000,0000,,impasse. 
+Dialogue: 0,0:1:7.80,0:1:9.11,Default,,0000,0000,0000,,Ma e' l'unica chance! 
+Dialogue: 0,0:1:9.11,0:1:11.55,Default,,0000,0000,0000,,Non ha senso \npreoccuparsi che il Re sia 
+Dialogue: 0,0:1:11.55,0:1:14.30,Default,,0000,0000,0000,,dall'altra parte, perche \nin quel caso andrai 
+Dialogue: 0,0:1:14.30,0:1:15.25,Default,,0000,0000,0000,,sotto comunque. 
+Dialogue: 0,0:1:15.25,0:1:18.05,Default,,0000,0000,0000,,Quindi gioca COME SE il \nRe e il Fante fossero 
+Dialogue: 0,0:1:18.05,0:1:20.97,Default,,0000,0000,0000,,in Sud: piccola al Dieci \npoi piccola alla Donna 
+Dialogue: 0,0:1:20.97,0:1:21.09,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:21.09,0:1:24.01,Default,,0000,0000,0000,,Se sono dove devono \nessere, hai fatto il Grande 
+Dialogue: 0,0:1:24.01,0:1:24.37,Default,,0000,0000,0000,,Slam! 
+Dialogue: 0,0:1:24.37,0:1:27.17,Default,,0000,0000,0000,,Altro esempio: sei in 6 \nPicche e ti attaccano 
+Dialogue: 0,0:1:27.17,0:1:28.25,Default,,0000,0000,0000,,Asso-Re di cuori. 
+Dialogue: 0,0:1:28.25,0:1:31.17,Default,,0000,0000,0000,,Hai Asso-Donna-Fante di \npicche nella tua mano e 
+Dialogue: 0,0:1:31.17,0:1:33.14,Default,,0000,0000,0000,,Re-Cinque-Quattro-Tre al \nmorto. 
+Dialogue: 0,0:1:33.14,0:1:35.94,Default,,0000,0000,0000,,Se le picche non sono \ntre-tre, non c' e' modo 
+Dialogue: 0,0:1:35.94,0:1:37.25,Default,,0000,0000,0000,,di fare dodici prese. 
+Dialogue: 0,0:1:37.25,0:1:39.70,Default,,0000,0000,0000,,Quindi le picche DEVONO \nessere tre-tre! 
+Dialogue: 0,0:1:39.70,0:1:42.38,Default,,0000,0000,0000,,Non preoccuparti della \ndivisione: taglia la 
+Dialogue: 0,0:1:42.38,0:1:44.53,Default,,0000,0000,0000,,cuori e incassa tre giri \ndi atout. 
+Dialogue: 0,0:1:44.53,0:1:47.33,Default,,0000,0000,0000,,Se sono effettivamente \ntre-tre, come hai dato 
+Dialogue: 0,0:1:47.33,0:1:47.45,Default,,0000,0000,0000,,per scontato, il \ncontratto e' fatto. 
+Dialogue: 0,0:1:47.45,0:1:50.36,Default,,0000,0000,0000,,Adesso vediamo il \nconcetto piu' importante: non 
+Dialogue: 0,0:1:50.36,0:1:51.91,Default,,0000,0000,0000,,prendere rischi inutili ! 
+Dialogue: 0,0:1:51.91,0:1:54.28,Default,,0000,0000,0000,,Se un impasse DEVE \nriuscire perche' il 
+Dialogue: 0,0:1:54.28,0:1:56.78,Default,,0000,0000,0000,,contratto funzioni, non \nc' e' bisogno di 
+Dialogue: 0,0:1:56.78,0:1:59.63,Default,,0000,0000,0000,,prendere un ALTRO \nimpasse che potrebbe fallire 
+Dialogue: 0,0:1:59.63,0:1:59.75,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:59.75,0:2:1.29,Default,,0000,0000,0000,,Esempio: sei in 6 Cuori . 
+Dialogue: 0,0:2:1.29,0:2:4.14,Default,,0000,0000,0000,,Hai Re-Quattro di picche \ne Donna-Fante-Nove di 
+Dialogue: 0,0:2:4.14,0:2:4.56,Default,,0000,0000,0000,,atout. 
+Dialogue: 0,0:2:4.56,0:2:7.29,Default,,0000,0000,0000,,Per fare il contratto, \nl'Asso di picche deve 
+Dialogue: 0,0:2:7.29,0:2:10.20,Default,,0000,0000,0000,,essere ceduto e non puoi \npermetterti di perdere 
+Dialogue: 0,0:2:10.20,0:2:11.81,Default,,0000,0000,0000,,anche una presa in atout . 
+Dialogue: 0,0:2:11.81,0:2:14.54,Default,,0000,0000,0000,,L'impasse alla Donna di \ncuori DEVE riuscire. 
+Dialogue: 0,0:2:14.54,0:2:16.68,Default,,0000,0000,0000,,Bene, dai per scontato \nche riesca. 
+Dialogue: 0,0:2:16.68,0:2:19.53,Default,,0000,0000,0000,,Ma poi guardi le fiori: \nhai Asso al morto e Re 
+Dialogue: 0,0:2:19.53,0:2:20.06,Default,,0000,0000,0000,,in mano. 
+Dialogue: 0,0:2:20.06,0:2:22.50,Default,,0000,0000,0000,,Se facessi un impasse a \nfiori, potresti 
+Dialogue: 0,0:2:22.50,0:2:24.34,Default,,0000,0000,0000,,guadagnare una presa in \npiu'. 
+Dialogue: 0,0:2:24.34,0:2:25.65,Default,,0000,0000,0000,,Ma perche' rischiare? 
+Dialogue: 0,0:2:25.65,0:2:28.02,Default,,0000,0000,0000,,Se l'impasse a fiori va \nmale, perdi il 
+Dialogue: 0,0:2:28.02,0:2:29.33,Default,,0000,0000,0000,,contratto per niente! 
+Dialogue: 0,0:2:29.33,0:2:31.23,Default,,0000,0000,0000,,Non serve quell'impasse \nextra. 
+Dialogue: 0,0:2:31.23,0:2:34.02,Default,,0000,0000,0000,,Gioca Asso di fiori, poi \nAsso di cuori, e poi 
+Dialogue: 0,0:2:34.02,0:2:34.97,Default,,0000,0000,0000,,cuori al Fante. 
+Dialogue: 0,0:2:34.97,0:2:37.77,Default,,0000,0000,0000,,L'impasse necessario e' \na cuori, non a fiori. 
+Dialogue: 0,0:2:37.77,0:2:40.02,Default,,0000,0000,0000,,Non prendere rischi che \nnon servono! 
+Dialogue: 0,0:2:40.02,0:2:42.88,Default,,0000,0000,0000,,Un altro principio \nfondamentale: non rimandare 
+Dialogue: 0,0:2:42.88,0:2:42.99,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:2:42.99,0:2:45.85,Default,,0000,0000,0000,,Se un impasse deve \nessere fatto, fallo SUBITO. 
+Dialogue: 0,0:2:45.85,0:2:48.64,Default,,0000,0000,0000,,La paura del down e' una \npessima consigliera. 
+Dialogue: 0,0:2:48.64,0:2:51.25,Default,,0000,0000,0000,,Se aspetti e incassi \ntutte le tue vincenti 
+Dialogue: 0,0:2:51.25,0:2:54.16,Default,,0000,0000,0000,,prima di fare l'impasse \npotresti trovarti senza 
+Dialogue: 0,0:2:54.16,0:2:56.60,Default,,0000,0000,0000,,ingressi per tornare \nnella mano giusta. 
+Dialogue: 0,0:2:56.60,0:2:58.50,Default,,0000,0000,0000,,Esempio: sei in 3 Senza \nAtout. 
+Dialogue: 0,0:2:58.50,0:3:1.29,Default,,0000,0000,0000,,L'impasse a fiori deve \nriuscire e deve essere 
+Dialogue: 0,0:3:1.29,0:3:3.91,Default,,0000,0000,0000,,fatto DUE VOLTE perche' \nhai bisogno di due 
+Dialogue: 0,0:3:3.91,0:3:4.97,Default,,0000,0000,0000,,prese dal colore. 
+Dialogue: 0,0:3:4.97,0:3:7.89,Default,,0000,0000,0000,,Se prima incassi tutte \nle quadri franche per `` 
+Dialogue: 0,0:3:7.89,0:3:10.80,Default,,0000,0000,0000,,assicurarti '' quelle \nprese, potresti non avere 
+Dialogue: 0,0:3:10.80,0:3:13.59,Default,,0000,0000,0000,,piu' il modo di tornare \nal morto per ripetere 
+Dialogue: 0,0:3:13.59,0:3:14.72,Default,,0000,0000,0000,,l'impasse a fiori. 
+Dialogue: 0,0:3:14.72,0:3:17.51,Default,,0000,0000,0000,,Fai l'impasse subito, \nripetilo, e poi incassa 
+Dialogue: 0,0:3:17.51,0:3:18.10,Default,,0000,0000,0000,,il resto! 
+Dialogue: 0,0:3:18.10,0:3:20.54,Default,,0000,0000,0000,,Ultimo concetto: \nl'ordine dei colori da 
+Dialogue: 0,0:3:20.54,0:3:21.19,Default,,0000,0000,0000,,incassare. 
+Dialogue: 0,0:3:21.19,0:3:24.04,Default,,0000,0000,0000,,Se per fare il contratto \nun colore DEVE essere 
+Dialogue: 0,0:3:24.04,0:3:26.60,Default,,0000,0000,0000,,diviso in un certo modo \ninizia da quello! 
+Dialogue: 0,0:3:26.60,0:3:28.62,Default,,0000,0000,0000,,Parti dal colore piu' \nrischioso. 
+Dialogue: 0,0:3:28.62,0:3:31.17,Default,,0000,0000,0000,,Se scopri che la \ndivisione e' favorevole, 
+Dialogue: 0,0:3:31.17,0:3:32.42,Default,,0000,0000,0000,,procedi con fiducia. 
+Dialogue: 0,0:3:32.42,0:3:35.33,Default,,0000,0000,0000,,Se hai bisogno che il \ngiocante abbia almeno tre 
+Dialogue: 0,0:3:35.33,0:3:38.24,Default,,0000,0000,0000,,cuori per passare tre \ngiri senza tagli, incassa 
+Dialogue: 0,0:3:38.24,0:3:40.02,Default,,0000,0000,0000,,le cuori PRIMA delle \nquadri. 
+Dialogue: 0,0:3:40.02,0:3:42.82,Default,,0000,0000,0000,,Se scopri che ne ha \nquattro, incassa anche la 
+Dialogue: 0,0:3:42.82,0:3:44.84,Default,,0000,0000,0000,,quarta prima di cambiare \ncolore. 
+Dialogue: 0,0:3:44.84,0:3:47.69,Default,,0000,0000,0000,,Giocare come se \nsignifica avere il coraggio di 
+Dialogue: 0,0:3:47.69,0:3:50.42,Default,,0000,0000,0000,,dare per scontato cio' \nche deve essere vero. 
+Dialogue: 0,0:3:50.42,0:3:52.86,Default,,0000,0000,0000,,Non e' ottimismo cieco, \ne' logica pura! 
+Dialogue: 0,0:3:52.86,0:3:55.77,Default,,0000,0000,0000,,Se una condizione e' \nnecessaria, agisci come se 
+Dialogue: 0,0:3:55.77,0:3:56.54,Default,,0000,0000,0000,,fosse reale. 
+Dialogue: 0,0:3:56.54,0:3:59.45,Default,,0000,0000,0000,,Se poi non lo e', \nsaresti andato sotto comunque 
+Dialogue: 0,0:3:59.45,0:3:59.57,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:59.57,0:4:1.17,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

@@ -1,0 +1,140 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:2.02,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:2.02,0:0:4.95,Default,,0000,0000,0000,,Oggi parliamo di un \ndilemma che ogni difensore 
+Dialogue: 0,0:0:4.95,0:0:7.82,Default,,0000,0000,0000,,affronta decine di volte \na partita: coprire o 
+Dialogue: 0,0:0:7.82,0:0:8.62,Default,,0000,0000,0000,,non coprire? 
+Dialogue: 0,0:0:8.62,0:0:11.55,Default,,0000,0000,0000,,Il giocante gioca una \ncarta e tu devi decidere 
+Dialogue: 0,0:0:11.55,0:0:14.48,Default,,0000,0000,0000,,in una frazione di \nsecondo: metto il mio onore 
+Dialogue: 0,0:0:14.48,0:0:15.40,Default,,0000,0000,0000,,o resto basso? 
+Dialogue: 0,0:0:15.40,0:0:18.39,Default,,0000,0000,0000,,Sembra semplice, ma le \nregole sono piu' sottili 
+Dialogue: 0,0:0:18.39,0:0:19.43,Default,,0000,0000,0000,,di quanto pensi! 
+Dialogue: 0,0:0:19.43,0:0:22.36,Default,,0000,0000,0000,,Partiamo dalla regola \nbase: piccola su piccola 
+Dialogue: 0,0:0:22.36,0:0:22.49,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:22.49,0:0:25.05,Default,,0000,0000,0000,,Quando il giocante gioca \nuna cartina, tu 
+Dialogue: 0,0:0:25.05,0:0:26.64,Default,,0000,0000,0000,,generalmente stai basso . 
+Dialogue: 0,0:0:26.64,0:0:28.54,Default,,0000,0000,0000,,Non buttare via i tuoi \nonori! 
+Dialogue: 0,0:0:28.54,0:0:31.41,Default,,0000,0000,0000,,E' una tentazione \nfortissima, lo so, ma quasi 
+Dialogue: 0,0:0:31.41,0:0:32.51,Default,,0000,0000,0000,,sempre sbagliata. 
+Dialogue: 0,0:0:32.51,0:0:34.65,Default,,0000,0000,0000,,Vediamo perche' con \ndegli esempi. 
+Dialogue: 0,0:0:34.65,0:0:37.58,Default,,0000,0000,0000,,Immagina di avere \nFante-Cinque e al morto c' e 
+Dialogue: 0,0:0:37.58,0:0:38.56,Default,,0000,0000,0000,,Asso-Dieci-Tre. 
+Dialogue: 0,0:0:38.56,0:0:40.88,Default,,0000,0000,0000,,Il giocante gioca \npiccola dal morto. 
+Dialogue: 0,0:0:40.88,0:0:43.75,Default,,0000,0000,0000,,Se tu metti il Fante, \nl'avversario prende con 
+Dialogue: 0,0:0:43.75,0:0:46.01,Default,,0000,0000,0000,,l'Asso e il Dieci \ndiventa vincente. 
+Dialogue: 0,0:0:46.01,0:0:47.78,Default,,0000,0000,0000,,Ma se il tuo compagno \naveva 
+Dialogue: 0,0:0:47.78,0:0:50.60,Default,,0000,0000,0000,,Donna-piccola-piccola, \nmettendo il Fante gli 
+Dialogue: 0,0:0:50.60,0:0:52.06,Default,,0000,0000,0000,,hai regalato una presa! 
+Dialogue: 0,0:0:52.06,0:0:54.69,Default,,0000,0000,0000,,Il compagno avrebbe \npotuto fare la Donna. 
+Dialogue: 0,0:0:54.69,0:0:57.38,Default,,0000,0000,0000,,Quindi: piccola su \npiccola, stai basso col 
+Dialogue: 0,0:0:57.38,0:0:57.81,Default,,0000,0000,0000,,Fante. 
+Dialogue: 0,0:0:57.81,0:1:0.62,Default,,0000,0000,0000,,Altro esempio: hai \nRe-Sette e al morto c' e' 
+Dialogue: 0,0:1:0.62,0:1:2.27,Default,,0000,0000,0000,,Asso-Donna-Dieci-Sei-Due . 
+Dialogue: 0,0:1:2.27,0:1:4.71,Default,,0000,0000,0000,,Il giocante attacca \npiccola dal morto. 
+Dialogue: 0,0:1:4.71,0:1:7.64,Default,,0000,0000,0000,,Se metti il Re, \nl'avversario prende con l'Asso 
+Dialogue: 0,0:1:7.64,0:1:9.78,Default,,0000,0000,0000,,e la Donna e il Dieci \nsono buoni. 
+Dialogue: 0,0:1:9.78,0:1:12.78,Default,,0000,0000,0000,,Ma se stai basso, \nl'avversario potrebbe battere 
+Dialogue: 0,0:1:12.78,0:1:15.34,Default,,0000,0000,0000,,l'Asso comunque e le tue \nchances restano 
+Dialogue: 0,0:1:15.34,0:1:15.89,Default,,0000,0000,0000,,intatte. 
+Dialogue: 0,0:1:15.89,0:1:18.28,Default,,0000,0000,0000,,Non risolvere i problemi \nal giocante! 
+Dialogue: 0,0:1:18.28,0:1:21.15,Default,,0000,0000,0000,,Un caso insidioso: hai \nRe-Nove-Tre e al morto 
+Dialogue: 0,0:1:21.15,0:1:22.43,Default,,0000,0000,0000,,Donna-Sette-Quattro. 
+Dialogue: 0,0:1:22.43,0:1:25.43,Default,,0000,0000,0000,,Se metti il Nove sulla \npiccola, il giocante puo 
+Dialogue: 0,0:1:25.43,0:1:27.87,Default,,0000,0000,0000,,impassare il Dieci \ncontro il tuo Nove. 
+Dialogue: 0,0:1:27.87,0:1:29.82,Default,,0000,0000,0000,,Tieniti il Nove, gioca \nil Tre! 
+Dialogue: 0,0:1:29.82,0:1:32.64,Default,,0000,0000,0000,,Il giocante dovra' \nindovinare dove stanno le 
+Dialogue: 0,0:1:32.64,0:1:33.06,Default,,0000,0000,0000,,carte. 
+Dialogue: 0,0:1:33.06,0:1:35.20,Default,,0000,0000,0000,,Ma c' e' un'eccezione \nimportante! 
+Dialogue: 0,0:1:35.20,0:1:37.28,Default,,0000,0000,0000,,Se hai una sequenza \nsolida, come 
+Dialogue: 0,0:1:37.28,0:1:40.03,Default,,0000,0000,0000,,Donna-Fante-Dieci-Otto, \ne il giocante gioca 
+Dialogue: 0,0:1:40.03,0:1:42.96,Default,,0000,0000,0000,,piccola dal morto, \nallora SI', metti la Donna! 
+Dialogue: 0,0:1:42.96,0:1:45.77,Default,,0000,0000,0000,,E' come in attacco: la \ncarta piu' alta della 
+Dialogue: 0,0:1:45.77,0:1:46.38,Default,,0000,0000,0000,,sequenza. 
+Dialogue: 0,0:1:46.38,0:1:49.26,Default,,0000,0000,0000,,Con Re-Donna-Fante, \nDonna-Fante-Dieci-Nove, o 
+Dialogue: 0,0:1:49.26,0:1:52.01,Default,,0000,0000,0000,,Fante-Dieci-Nove-Otto, \ngioca sempre la piu' 
+Dialogue: 0,0:1:52.01,0:1:53.29,Default,,0000,0000,0000,,alta della sequenza. 
+Dialogue: 0,0:1:53.29,0:1:56.22,Default,,0000,0000,0000,,Pero' attenzione: con \nFante-Dieci-Sette-Quattr 
+Dialogue: 0,0:1:56.22,0:1:59.16,Default,,0000,0000,0000,,o puoi mettere il Fante \nperche' Fante-Dieci e' 
+Dialogue: 0,0:1:59.16,0:2:0.01,Default,,0000,0000,0000,,una sequenza. 
+Dialogue: 0,0:2:0.01,0:2:3.00,Default,,0000,0000,0000,,Ma con \nFante-Dieci-Sette-Quattr o dove manca il 
+Dialogue: 0,0:2:3.00,0:2:5.82,Default,,0000,0000,0000,,Nove, fermati a pensare \nil giocante potrebbe 
+Dialogue: 0,0:2:5.82,0:2:8.69,Default,,0000,0000,0000,,avere la Donna e \nimpasserebbe il Dieci al tuo 
+Dialogue: 0,0:2:8.69,0:2:9.12,Default,,0000,0000,0000,,Fante. 
+Dialogue: 0,0:2:9.12,0:2:11.74,Default,,0000,0000,0000,,Meglio stare bassi se il \nbuco tra Fante e 
+Dialogue: 0,0:2:11.74,0:2:10.70,Default,,0000,0000,0000,,cartine e' troppo grande . 
+Dialogue: 0,0:2:10.70,0:2:13.60,Default,,0000,0000,0000,,Adesso arriviamo alla \nparte piu' famosa: onore 
+Dialogue: 0,0:2:13.60,0:2:14.20,Default,,0000,0000,0000,,su onore! 
+Dialogue: 0,0:2:14.20,0:2:17.09,Default,,0000,0000,0000,,Tutti hanno sentito la \nregola `` copri l'onore 
+Dialogue: 0,0:2:17.09,0:2:17.88,Default,,0000,0000,0000,,con l'onore. 
+Dialogue: 0,0:2:17.88,0:2:20.29,Default,,0000,0000,0000,,'' Ma questa regola NON \ne' automatica! 
+Dialogue: 0,0:2:20.29,0:2:22.76,Default,,0000,0000,0000,,Si copre solo quando c' \ne' una speranza 
+Dialogue: 0,0:2:22.76,0:2:25.66,Default,,0000,0000,0000,,ragionevole di \naffrancare una carta piu' bassa 
+Dialogue: 0,0:2:25.66,0:2:28.19,Default,,0000,0000,0000,,nella tua mano o in \nquella del compagno. 
+Dialogue: 0,0:2:28.19,0:2:30.91,Default,,0000,0000,0000,,Facciamo un esempio dove \ncoprire e' giusto. 
+Dialogue: 0,0:2:30.91,0:2:33.44,Default,,0000,0000,0000,,Hai Donna-Nove-Otto-Tre \ne al morto c' e' 
+Dialogue: 0,0:2:33.44,0:2:34.71,Default,,0000,0000,0000,,Asso-Re-Sei-Quattro. 
+Dialogue: 0,0:2:34.71,0:2:37.36,Default,,0000,0000,0000,,Il giocante gioca il \nFante verso il morto. 
+Dialogue: 0,0:2:37.36,0:2:38.57,Default,,0000,0000,0000,,COPRI con la Donna! 
+Dialogue: 0,0:2:38.57,0:2:39.11,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:2:39.11,0:2:42.01,Default,,0000,0000,0000,,Perche' dopo che il \ngiocante prende con Asso o 
+Dialogue: 0,0:2:42.01,0:2:44.48,Default,,0000,0000,0000,,Re, il tuo Nove e il tuo \nOtto diventano 
+Dialogue: 0,0:2:44.48,0:2:45.20,Default,,0000,0000,0000,,importanti. 
+Dialogue: 0,0:2:45.20,0:2:48.10,Default,,0000,0000,0000,,La quarta presa del \ncolore sara' tua grazie al 
+Dialogue: 0,0:2:48.10,0:2:48.46,Default,,0000,0000,0000,,Nove! 
+Dialogue: 0,0:2:48.46,0:2:51.12,Default,,0000,0000,0000,,Altro caso positivo: hai \nRe-Dieci-Tre e al 
+Dialogue: 0,0:2:51.12,0:2:53.05,Default,,0000,0000,0000,,morto c' e' \nAsso-Otto-Quattro. 
+Dialogue: 0,0:2:53.05,0:2:54.85,Default,,0000,0000,0000,,Il giocante avanza la \nDonna. 
+Dialogue: 0,0:2:54.85,0:2:55.70,Default,,0000,0000,0000,,Copri col Re! 
+Dialogue: 0,0:2:55.70,0:2:58.41,Default,,0000,0000,0000,,Il tuo Dieci resta \nvincente alle spalle del 
+Dialogue: 0,0:2:58.41,0:2:59.50,Default,,0000,0000,0000,,Fante avversario. 
+Dialogue: 0,0:2:59.50,0:3:0.34,Default,,0000,0000,0000,,Ottima mossa! 
+Dialogue: 0,0:3:0.34,0:3:3.30,Default,,0000,0000,0000,,Ma ecco quando NON \ncoprire: hai Donna-Tre-Due e 
+Dialogue: 0,0:3:3.30,0:3:5.11,Default,,0000,0000,0000,,al morto \nAsso-Re-Dieci-Nove. 
+Dialogue: 0,0:3:5.11,0:3:6.86,Default,,0000,0000,0000,,Il giocante gioca il \nFante. 
+Dialogue: 0,0:3:6.86,0:3:9.75,Default,,0000,0000,0000,,Se copri con la Donna, \nl'avversario prende con 
+Dialogue: 0,0:3:9.75,0:3:12.53,Default,,0000,0000,0000,,Asso o Re e poi il \nDieci-Nove cattura tutto. 
+Dialogue: 0,0:3:12.53,0:3:15.36,Default,,0000,0000,0000,,Il tuo sacrificio e' \nstato inutile perche' al 
+Dialogue: 0,0:3:15.36,0:3:18.02,Default,,0000,0000,0000,,morto ci sono abbastanza \ncarte intermedie. 
+Dialogue: 0,0:3:18.02,0:3:18.80,Default,,0000,0000,0000,,Non coprire! 
+Dialogue: 0,0:3:18.80,0:3:21.64,Default,,0000,0000,0000,,E adesso la regola d'oro \nper il morto con due 
+Dialogue: 0,0:3:21.64,0:3:22.06,Default,,0000,0000,0000,,onori. 
+Dialogue: 0,0:3:22.06,0:3:24.23,Default,,0000,0000,0000,,Quando il morto ha DUE \nonori, tipo 
+Dialogue: 0,0:3:24.23,0:3:27.13,Default,,0000,0000,0000,,Donna-Fante-Quattro, e \ntu hai il Re, la regola 
+Dialogue: 0,0:3:27.13,0:3:29.90,Default,,0000,0000,0000,,e': non coprire MAI il \nprimo onore, copri il 
+Dialogue: 0,0:3:29.90,0:3:30.44,Default,,0000,0000,0000,,secondo! 
+Dialogue: 0,0:3:30.44,0:3:32.92,Default,,0000,0000,0000,,Se il morto gioca la \nDonna, stai basso. 
+Dialogue: 0,0:3:32.92,0:3:35.45,Default,,0000,0000,0000,,Quando poi gioca il \nFante, copri col Re. 
+Dialogue: 0,0:3:35.45,0:3:35.99,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:3:35.99,0:3:38.47,Default,,0000,0000,0000,,Se il giocante ha il \nNove e l'Otto, non 
+Dialogue: 0,0:3:38.47,0:3:40.88,Default,,0000,0000,0000,,coprendo la Donna il \ncolore si blocca! 
+Dialogue: 0,0:3:40.88,0:3:43.59,Default,,0000,0000,0000,,Il giocante fa la Donna \nma poi non riesce a 
+Dialogue: 0,0:3:43.59,0:3:46.49,Default,,0000,0000,0000,,passare il Fante perche \ntu copri e il compagno 
+Dialogue: 0,0:3:46.49,0:3:48.06,Default,,0000,0000,0000,,vince con le intermedie . 
+Dialogue: 0,0:3:48.06,0:3:50.83,Default,,0000,0000,0000,,Se invece il morto ha un \nsolo onore, come la 
+Dialogue: 0,0:3:50.83,0:3:53.55,Default,,0000,0000,0000,,Donna senza il Fante, \ncoprilo subito quando 
+Dialogue: 0,0:3:53.55,0:3:54.45,Default,,0000,0000,0000,,viene giocato. 
+Dialogue: 0,0:3:54.45,0:3:57.35,Default,,0000,0000,0000,,Con un solo onore non c \ne' motivo di aspettare 
+Dialogue: 0,0:3:57.35,0:3:57.47,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:57.47,0:4:0.42,Default,,0000,0000,0000,,Un ultimo fattore \nimportantissimo: la lunghezza 
+Dialogue: 0,0:4:0.42,0:4:0.54,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:0.54,0:4:3.32,Default,,0000,0000,0000,,Se al morto ci sono \nDonna-Cinque-Quattro-Tre 
+Dialogue: 0,0:4:3.32,0:4:6.15,Default,,0000,0000,0000,,-Due e tu hai il \nRe-Sette, non sacrificare il 
+Dialogue: 0,0:4:6.15,0:4:8.39,Default,,0000,0000,0000,,Re vedendo l'Asso \nsecondo al morto. 
+Dialogue: 0,0:4:8.39,0:4:9.95,Default,,0000,0000,0000,,Lo prenderesti comunque ! 
+Dialogue: 0,0:4:9.95,0:4:12.61,Default,,0000,0000,0000,,E non coprire il Fante \nse il compagno puo' 
+Dialogue: 0,0:4:12.61,0:4:15.56,Default,,0000,0000,0000,,avere al massimo tre \ncarte: cadrebbero comunque 
+Dialogue: 0,0:4:15.56,0:4:16.77,Default,,0000,0000,0000,,sotto i tuoi onori. 
+Dialogue: 0,0:4:16.77,0:4:19.42,Default,,0000,0000,0000,,Pensa sempre a quante \ncarte ha il compagno 
+Dialogue: 0,0:4:19.42,0:4:20.57,Default,,0000,0000,0000,,prima di decidere. 
+Dialogue: 0,0:4:20.57,0:4:22.20,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

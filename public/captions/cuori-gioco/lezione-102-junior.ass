@@ -1,0 +1,130 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:3.07,Default,,0000,0000,0000,,Oggi parliamo di un \nargomento che ti fara' 
+Dialogue: 0,0:0:3.07,0:0:5.83,Default,,0000,0000,0000,,sentire come un agente \nsegreto al tavolo da 
+Dialogue: 0,0:0:5.83,0:0:7.97,Default,,0000,0000,0000,,bridge: i segnali di \ncontrogioco! 
+Dialogue: 0,0:0:7.97,0:0:10.42,Default,,0000,0000,0000,,Quando sei in difesa, \ncioe' quando gli 
+Dialogue: 0,0:0:10.42,0:0:13.00,Default,,0000,0000,0000,,avversari giocano il \ncontratto e tu devi 
+Dialogue: 0,0:0:13.00,0:0:15.82,Default,,0000,0000,0000,,cercare di batterli, hai \nun problema enorme: 
+Dialogue: 0,0:0:15.82,0:0:18.09,Default,,0000,0000,0000,,non vedi le carte del \ntuo compagno. 
+Dialogue: 0,0:0:18.09,0:0:19.56,Default,,0000,0000,0000,,Come fate a comunicare? 
+Dialogue: 0,0:0:19.56,0:0:20.85,Default,,0000,0000,0000,,Con le carte stesse! 
+Dialogue: 0,0:0:20.85,0:0:23.67,Default,,0000,0000,0000,,Il primo sistema si \nchiama `` Il Conto della 
+Dialogue: 0,0:0:23.67,0:0:24.28,Default,,0000,0000,0000,,carta ''. 
+Dialogue: 0,0:0:24.28,0:0:27.29,Default,,0000,0000,0000,,Funziona cosi': l'ordine \nin cui giochi le carte 
+Dialogue: 0,0:0:27.29,0:0:30.17,Default,,0000,0000,0000,,dice al compagno quante \ncarte hai nel colore. 
+Dialogue: 0,0:0:30.17,0:0:33.11,Default,,0000,0000,0000,,Carta alta e poi carta \nbassa significa che hai 
+Dialogue: 0,0:0:33.11,0:0:34.70,Default,,0000,0000,0000,,un numero PARI di carte . 
+Dialogue: 0,0:0:34.70,0:0:37.65,Default,,0000,0000,0000,,Carta bassa e poi carta \nalta significa che hai 
+Dialogue: 0,0:0:37.65,0:0:38.81,Default,,0000,0000,0000,,un numero DISPARI. 
+Dialogue: 0,0:0:38.81,0:0:39.98,Default,,0000,0000,0000,,Pari = alto-basso. 
+Dialogue: 0,0:0:39.98,0:0:41.33,Default,,0000,0000,0000,,Dispari = basso-alto. 
+Dialogue: 0,0:0:41.33,0:0:43.41,Default,,0000,0000,0000,,Semplice come un codice \nbinario! 
+Dialogue: 0,0:0:43.41,0:0:46.29,Default,,0000,0000,0000,,Ma perche' e' utile \nsapere quante carte ha il 
+Dialogue: 0,0:0:46.29,0:0:46.91,Default,,0000,0000,0000,,compagno? 
+Dialogue: 0,0:0:46.91,0:0:49.73,Default,,0000,0000,0000,,Perche' se tu sai quante \nne ha il compagno e 
+Dialogue: 0,0:0:49.73,0:0:52.73,Default,,0000,0000,0000,,vedi quante ce ne sono \nal morto, puoi calcolare 
+Dialogue: 0,0:0:52.73,0:0:54.39,Default,,0000,0000,0000,,quante ne ha il giocante ! 
+Dialogue: 0,0:0:54.39,0:0:57.33,Default,,0000,0000,0000,,E sapere la \ndistribuzione del giocante ti dice 
+Dialogue: 0,0:0:57.33,0:1:0.21,Default,,0000,0000,0000,,quando prendere una \npresa e quando aspettare. 
+Dialogue: 0,0:1:0.21,0:1:1.50,Default,,0000,0000,0000,,Facciamo un esempio. 
+Dialogue: 0,0:1:1.50,0:1:4.08,Default,,0000,0000,0000,,L'avversario gioca 3 \nSenza e il morto ha 
+Dialogue: 0,0:1:4.08,0:1:7.08,Default,,0000,0000,0000,,Re-Donna-Fante-10-7 di \nun colore senza ingressi 
+Dialogue: 0,0:1:7.08,0:1:7.69,Default,,0000,0000,0000,,laterali. 
+Dialogue: 0,0:1:7.69,0:1:10.64,Default,,0000,0000,0000,,Tu hai l'Asso e devi \ndecidere: prendo subito o 
+Dialogue: 0,0:1:10.64,0:1:11.19,Default,,0000,0000,0000,,aspetto? 
+Dialogue: 0,0:1:11.19,0:1:14.19,Default,,0000,0000,0000,,Se il compagno gioca \nalto-basso, ti dice che ha 
+Dialogue: 0,0:1:14.19,0:1:16.52,Default,,0000,0000,0000,,un numero pari di carte \ncioe' 2 o 4. 
+Dialogue: 0,0:1:16.52,0:1:19.22,Default,,0000,0000,0000,,Se ne ha 2, il giocante \nne ha 3, e tu puoi 
+Dialogue: 0,0:1:19.22,0:1:21.61,Default,,0000,0000,0000,,aspettare al secondo \ngiro a prendere. 
+Dialogue: 0,0:1:21.61,0:1:24.43,Default,,0000,0000,0000,,Se il compagno gioca \nbasso-alto, ha dispari, 
+Dialogue: 0,0:1:24.43,0:1:27.31,Default,,0000,0000,0000,,cioe' 1 o 3, e devi \nadattarti di conseguenza. 
+Dialogue: 0,0:1:27.31,0:1:30.26,Default,,0000,0000,0000,,Pero' attenzione: non \ndare il conto quando puo 
+Dialogue: 0,0:1:30.26,0:1:32.22,Default,,0000,0000,0000,,essere utile SOLO al \ngiocante! 
+Dialogue: 0,0:1:32.22,0:1:35.22,Default,,0000,0000,0000,,Se la lunghezza e' gia' \nnota dalla licita, dare 
+Dialogue: 0,0:1:35.22,0:1:37.55,Default,,0000,0000,0000,,il conto non serve a \nniente e regala 
+Dialogue: 0,0:1:37.55,0:1:39.82,Default,,0000,0000,0000,,informazioni gratis \nall'avversario. 
+Dialogue: 0,0:1:39.82,0:1:42.70,Default,,0000,0000,0000,,Inoltre, le sequenze \nprevalgono sul conto: se 
+Dialogue: 0,0:1:42.70,0:1:45.46,Default,,0000,0000,0000,,hai Donna-Fante-5, \ngiochi la Donna, non una 
+Dialogue: 0,0:1:45.46,0:1:46.02,Default,,0000,0000,0000,,cartina. 
+Dialogue: 0,0:1:46.02,0:1:47.61,Default,,0000,0000,0000,,Con 10-9-6 giochi il 10 . 
+Dialogue: 0,0:1:47.61,0:1:49.02,Default,,0000,0000,0000,,Con 9-8-5 giochi il 9. 
+Dialogue: 0,0:1:49.02,0:1:51.84,Default,,0000,0000,0000,,La sequenza e' come un \ncartello stradale: e' 
+Dialogue: 0,0:1:51.84,0:1:54.42,Default,,0000,0000,0000,,piu' importante del \nmessaggio in codice. 
+Dialogue: 0,0:1:54.42,0:1:57.42,Default,,0000,0000,0000,,Ci sono quattro \nsituazioni standard in cui dare 
+Dialogue: 0,0:1:57.42,0:1:58.03,Default,,0000,0000,0000,,il conto. 
+Dialogue: 0,0:1:58.03,0:2:0.73,Default,,0000,0000,0000,,Prima: quando il \ncompagno ha attaccato nel 
+Dialogue: 0,0:2:0.73,0:2:3.74,Default,,0000,0000,0000,,colore pilotato dalla \nsua apertura o intervento 
+Dialogue: 0,0:2:3.74,0:2:3.86,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:3.86,0:2:6.80,Default,,0000,0000,0000,,Seconda: quando rigiochi \nun colore gia' mosso, 
+Dialogue: 0,0:2:6.80,0:2:9.68,Default,,0000,0000,0000,,dai il conto delle carte \nche ti sono rimaste. 
+Dialogue: 0,0:2:9.68,0:2:11.95,Default,,0000,0000,0000,,Terza: quando il morto \nha un colore 
+Dialogue: 0,0:2:11.95,0:2:14.34,Default,,0000,0000,0000,,affrancabile senza \ningressi laterali. 
+Dialogue: 0,0:2:14.34,0:2:16.98,Default,,0000,0000,0000,,Quarta: sull'attacco di \nAsso con la Donna 
+Dialogue: 0,0:2:16.98,0:2:19.68,Default,,0000,0000,0000,,visibile al morto, il \nterzo di mano da' il 
+Dialogue: 0,0:2:19.68,0:2:20.11,Default,,0000,0000,0000,,conto. 
+Dialogue: 0,0:2:20.11,0:2:22.50,Default,,0000,0000,0000,,Memorizzale e diventerai \nun difensore 
+Dialogue: 0,0:2:22.50,0:2:20.35,Default,,0000,0000,0000,,formidabile! 
+Dialogue: 0,0:2:20.35,0:2:22.66,Default,,0000,0000,0000,,Adesso passiamo al \nsecondo sistema: il 
+Dialogue: 0,0:2:22.66,0:2:24.17,Default,,0000,0000,0000,,Messaggio Preferenziale . 
+Dialogue: 0,0:2:24.17,0:2:26.71,Default,,0000,0000,0000,,Se il conto dice `` \nquante carte ho '', il 
+Dialogue: 0,0:2:26.71,0:2:29.43,Default,,0000,0000,0000,,preferenziale dice `` \nquale colore voglio ''. 
+Dialogue: 0,0:2:29.43,0:2:32.20,Default,,0000,0000,0000,,E' come puntare il dito \nverso la porta giusta! 
+Dialogue: 0,0:2:32.20,0:2:34.86,Default,,0000,0000,0000,,Il codice e' semplice: \ncarta ALTA chiama nel 
+Dialogue: 0,0:2:34.86,0:2:37.64,Default,,0000,0000,0000,,colore piu' ALTO di \nrango tra quelli restanti. 
+Dialogue: 0,0:2:37.64,0:2:40.12,Default,,0000,0000,0000,,Carta BASSA chiama nel \ncolore piu' BASSO. 
+Dialogue: 0,0:2:40.12,0:2:42.78,Default,,0000,0000,0000,,Per esempio, se si sta \ngiocando a cuori e il 
+Dialogue: 0,0:2:42.78,0:2:45.62,Default,,0000,0000,0000,,colore in questione e' \nfiori, i colori restanti 
+Dialogue: 0,0:2:45.62,0:2:46.89,Default,,0000,0000,0000,,sono picche e quadri. 
+Dialogue: 0,0:2:46.89,0:2:49.72,Default,,0000,0000,0000,,Se giochi una carta alta \ndi fiori, stai dicendo 
+Dialogue: 0,0:2:49.72,0:2:52.27,Default,,0000,0000,0000,,`` voglio picche ''( il \ncolore piu' alto). 
+Dialogue: 0,0:2:52.27,0:2:55.04,Default,,0000,0000,0000,,Se giochi bassa, stai \ndicendo `` voglio quadri 
+Dialogue: 0,0:2:55.04,0:2:56.60,Default,,0000,0000,0000,,''( il colore piu' basso . 
+Dialogue: 0,0:2:56.60,0:2:59.38,Default,,0000,0000,0000,,Ma attenzione a una \nregola importantissima: il 
+Dialogue: 0,0:2:59.38,0:3:2.04,Default,,0000,0000,0000,,preferenziale si puo' \nusare solo DOPO che la 
+Dialogue: 0,0:3:2.04,0:3:4.35,Default,,0000,0000,0000,,situazione del colore e \ngia' chiarita. 
+Dialogue: 0,0:3:4.35,0:3:6.95,Default,,0000,0000,0000,,Non puoi mandare un \npreferenziale quando il 
+Dialogue: 0,0:3:6.95,0:3:9.79,Default,,0000,0000,0000,,compagno sta ancora \ncercando di capire il conto 
+Dialogue: 0,0:3:9.79,0:3:10.48,Default,,0000,0000,0000,,nel colore. 
+Dialogue: 0,0:3:10.48,0:3:12.73,Default,,0000,0000,0000,,Prima il conto, poi il \npreferenziale! 
+Dialogue: 0,0:3:12.73,0:3:15.34,Default,,0000,0000,0000,,Ci sono diverse \nsituazioni in cui si usa il 
+Dialogue: 0,0:3:15.34,0:3:16.20,Default,,0000,0000,0000,,preferenziale. 
+Dialogue: 0,0:3:16.20,0:3:18.86,Default,,0000,0000,0000,,Quando offri un taglio \nal compagno: giocando 
+Dialogue: 0,0:3:18.86,0:3:21.70,Default,,0000,0000,0000,,una carta piccola nel \ncolore che tagli, dici `` 
+Dialogue: 0,0:3:21.70,0:3:24.24,Default,,0000,0000,0000,,dopo il taglio, torna \nnel colore basso ''; 
+Dialogue: 0,0:3:24.24,0:3:27.02,Default,,0000,0000,0000,,giocando alta dici `` \ntorna nel colore alto '' 
+Dialogue: 0,0:3:27.02,0:3:27.13,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:27.13,0:3:29.56,Default,,0000,0000,0000,,E' come dire al compagno \ndove trovare il 
+Dialogue: 0,0:3:29.56,0:3:31.64,Default,,0000,0000,0000,,rientro per farti \ntagliare ancora! 
+Dialogue: 0,0:3:31.64,0:3:34.19,Default,,0000,0000,0000,,Un altro caso: quando il \ncompagno resta in 
+Dialogue: 0,0:3:34.19,0:3:37.02,Default,,0000,0000,0000,,presa e al morto c' e' \nevidenza di un cambio di 
+Dialogue: 0,0:3:37.02,0:3:39.85,Default,,0000,0000,0000,,colore necessario, il \nterzo di mano segnala con 
+Dialogue: 0,0:3:39.85,0:3:42.28,Default,,0000,0000,0000,,la sua carta dove \npreferisce il ritorno. 
+Dialogue: 0,0:3:42.28,0:3:44.94,Default,,0000,0000,0000,,Oppure quando scarti in \nun colore che non ti 
+Dialogue: 0,0:3:44.94,0:3:47.66,Default,,0000,0000,0000,,interessa: l'ordine \ndelle carte scartate dice 
+Dialogue: 0,0:3:47.66,0:3:48.76,Default,,0000,0000,0000,,dove hai i valori. 
+Dialogue: 0,0:3:48.76,0:3:51.36,Default,,0000,0000,0000,,Se scarti cuori \ndall'alto, 10 e poi 9, stai 
+Dialogue: 0,0:3:51.36,0:3:54.19,Default,,0000,0000,0000,,dicendo `` ho qualcosa \nnei colori alti '', cioe 
+Dialogue: 0,0:3:54.19,0:3:55.00,Default,,0000,0000,0000,,nelle picche. 
+Dialogue: 0,0:3:55.00,0:3:57.66,Default,,0000,0000,0000,,Un punto fondamentale: \nla preferenza alta e' 
+Dialogue: 0,0:3:57.66,0:3:58.59,Default,,0000,0000,0000,,inequivocabile. 
+Dialogue: 0,0:3:58.59,0:4:1.36,Default,,0000,0000,0000,,Se giochi alto, stai \nsicuramente chiamando nel 
+Dialogue: 0,0:4:1.36,0:4:2.11,Default,,0000,0000,0000,,colore alto. 
+Dialogue: 0,0:4:2.11,0:4:4.77,Default,,0000,0000,0000,,La preferenza bassa, \ninvece, e' piu' dubbia: 
+Dialogue: 0,0:4:4.77,0:4:7.32,Default,,0000,0000,0000,,puo' significare che \nvuoi il colore basso, 
+Dialogue: 0,0:4:7.32,0:4:9.63,Default,,0000,0000,0000,,oppure che non hai \nnessuna preferenza. 
+Dialogue: 0,0:4:9.63,0:4:12.35,Default,,0000,0000,0000,,Di sicuro NON stai \nchiamando nel colore alto. 
+Dialogue: 0,0:4:12.35,0:4:15.12,Default,,0000,0000,0000,,Ricorda questa \ndifferenza e non sbaglierai mai 
+Dialogue: 0,0:4:15.12,0:4:16.22,Default,,0000,0000,0000,,l'interpretazione! 
+Dialogue: 0,0:4:16.22,0:4:17.78,Default,,0000,0000,0000,,Ci vediamo alla prossima ! 

@@ -1,0 +1,134 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:3.29,Default,,0000,0000,0000,,Oggi entriamo nel \nterritorio piu' emozionante 
+Dialogue: 0,0:0:3.29,0:0:4.60,Default,,0000,0000,0000,,del bridge: lo Slam! 
+Dialogue: 0,0:0:4.60,0:0:6.90,Default,,0000,0000,0000,,Ma non parleremo di come \ndichiarare 
+Dialogue: 0,0:0:6.90,0:0:9.88,Default,,0000,0000,0000,,direttamente 6 o 7, \nparleremo di come iniziare 
+Dialogue: 0,0:0:9.88,0:0:11.55,Default,,0000,0000,0000,,il cammino verso lo Slam . 
+Dialogue: 0,0:0:11.55,0:0:13.92,Default,,0000,0000,0000,,E il primo passo e' \nfissare l'atout. 
+Dialogue: 0,0:0:13.92,0:0:14.41,Default,,0000,0000,0000,,Pronti? 
+Dialogue: 0,0:0:14.41,0:0:14.97,Default,,0000,0000,0000,,Andiamo! 
+Dialogue: 0,0:0:14.97,0:0:17.95,Default,,0000,0000,0000,,Fissare l'atout \nsignifica dire al compagno: `` 
+Dialogue: 0,0:0:17.95,0:0:20.87,Default,,0000,0000,0000,,Questo colore sara' il \nnostro atout, e adesso 
+Dialogue: 0,0:0:20.87,0:0:22.30,Default,,0000,0000,0000,,puntiamo allo Slam ''. 
+Dialogue: 0,0:0:22.30,0:0:24.85,Default,,0000,0000,0000,,E' diverso dal semplice \ntrovare il fit. 
+Dialogue: 0,0:0:24.85,0:0:27.83,Default,,0000,0000,0000,,Trovare il fit vuol dire \n`` abbiamo abbastanza 
+Dialogue: 0,0:0:27.83,0:0:30.07,Default,,0000,0000,0000,,carte insieme in questo \ncolore ''. 
+Dialogue: 0,0:0:30.07,0:0:32.99,Default,,0000,0000,0000,,Fissare l'atout vuol \ndire `` OK, il colore e' 
+Dialogue: 0,0:0:32.99,0:0:35.91,Default,,0000,0000,0000,,deciso, ora vediamo se \npossiamo fare Slam ''. 
+Dialogue: 0,0:0:35.91,0:0:38.64,Default,,0000,0000,0000,,E' come la differenza \ntra trovare la porta 
+Dialogue: 0,0:0:38.64,0:0:40.94,Default,,0000,0000,0000,,giusta e decidere di \nattraversarla. 
+Dialogue: 0,0:0:40.94,0:0:43.67,Default,,0000,0000,0000,,Ma ecco il punto chiave \ndella lezione: non 
+Dialogue: 0,0:0:43.67,0:0:45.78,Default,,0000,0000,0000,,tutte le situazioni sono \nuguali. 
+Dialogue: 0,0:0:45.78,0:0:48.83,Default,,0000,0000,0000,,Esiste una grande \ndifferenza tra terreno solido 
+Dialogue: 0,0:0:48.83,0:0:51.50,Default,,0000,0000,0000,,e terreno non solido, e \nquesta differenza 
+Dialogue: 0,0:0:51.50,0:0:54.17,Default,,0000,0000,0000,,cambia completamente il \nsignificato delle 
+Dialogue: 0,0:0:54.17,0:0:55.10,Default,,0000,0000,0000,,dichiarazioni. 
+Dialogue: 0,0:0:55.10,0:0:58.02,Default,,0000,0000,0000,,Terreno solido significa \nche le dichiarazioni 
+Dialogue: 0,0:0:58.02,0:1:0.94,Default,,0000,0000,0000,,iniziali hanno \nindividuato almeno 21-22 punti 
+Dialogue: 0,0:1:0.94,0:1:2.87,Default,,0000,0000,0000,,in linea, cioe' nella \ncoppia. 
+Dialogue: 0,0:1:2.87,0:1:5.35,Default,,0000,0000,0000,,A quel punto la manche e \nassicurata, e 
+Dialogue: 0,0:1:5.35,0:1:8.40,Default,,0000,0000,0000,,qualsiasi dichiarazione \ndell'atout appena sotto 
+Dialogue: 0,0:1:8.40,0:1:11.19,Default,,0000,0000,0000,,la manche e' forzante: \nil compagno non puo' 
+Dialogue: 0,0:1:11.19,0:1:13.80,Default,,0000,0000,0000,,passare, perche' lo Slam \ne' l'obiettivo. 
+Dialogue: 0,0:1:13.80,0:1:16.54,Default,,0000,0000,0000,,Terreno non solido \nsignifica che non c' e' 
+Dialogue: 0,0:1:16.54,0:1:18.65,Default,,0000,0000,0000,,questa certezza sui \n21-22 punti. 
+Dialogue: 0,0:1:18.65,0:1:21.19,Default,,0000,0000,0000,,In questo caso, la \nstessa dichiarazione 
+Dialogue: 0,0:1:21.19,0:1:23.87,Default,,0000,0000,0000,,dell'atout appena sotto \nla manche e' solo 
+Dialogue: 0,0:1:23.87,0:1:26.72,Default,,0000,0000,0000,,invitante: il compagno \npuo' passare se ha il 
+Dialogue: 0,0:1:26.72,0:1:27.22,Default,,0000,0000,0000,,minimo. 
+Dialogue: 0,0:1:27.22,0:1:29.46,Default,,0000,0000,0000,,Facciamo esempi per \ncapire meglio. 
+Dialogue: 0,0:1:29.46,0:1:32.31,Default,,0000,0000,0000,,Primo esempio di terreno \nsolido: 1 Cuori - 2 
+Dialogue: 0,0:1:32.31,0:1:34.05,Default,,0000,0000,0000,,Fiori - 2 Cuori - 3 \nCuori. 
+Dialogue: 0,0:1:34.05,0:1:36.91,Default,,0000,0000,0000,,Il 2 su 1 ha gia' creato \nla forzante manche, 
+Dialogue: 0,0:1:36.91,0:1:39.15,Default,,0000,0000,0000,,quindi almeno 21-22 \npunti ci sono. 
+Dialogue: 0,0:1:39.15,0:1:41.88,Default,,0000,0000,0000,,Il 3 Cuori che fissa \nl'atout e' forzante e 
+Dialogue: 0,0:1:41.88,0:1:42.94,Default,,0000,0000,0000,,punta allo Slam. 
+Dialogue: 0,0:1:42.94,0:1:45.67,Default,,0000,0000,0000,,Secondo esempio: 2 \nPicche dal compagno, il 
+Dialogue: 0,0:1:45.67,0:1:47.41,Default,,0000,0000,0000,,rispondente dice 3 \nPicche. 
+Dialogue: 0,0:1:47.41,0:1:50.39,Default,,0000,0000,0000,,L'apertura di 2 Picche \npromette da sola almeno 
+Dialogue: 0,0:1:50.39,0:1:52.88,Default,,0000,0000,0000,,21 punti, quindi 3 \nPicche e' forzante. 
+Dialogue: 0,0:1:52.88,0:1:55.86,Default,,0000,0000,0000,,Terzo esempio: 1 Quadri \n- 1 Picche - 2 Cuori - 
+Dialogue: 0,0:1:55.86,0:1:56.42,Default,,0000,0000,0000,,3 Cuori. 
+Dialogue: 0,0:1:56.42,0:1:59.40,Default,,0000,0000,0000,,Il Rever dell'apertore \nmostra almeno 16 punti, 
+Dialogue: 0,0:1:59.40,0:2:2.13,Default,,0000,0000,0000,,piu' la risposta del \nrispondente che ne ha 
+Dialogue: 0,0:2:2.13,0:2:3.81,Default,,0000,0000,0000,,almeno 5: arriviamo a 21 . 
+Dialogue: 0,0:2:3.81,0:2:4.43,Default,,0000,0000,0000,,Forzante. 
+Dialogue: 0,0:2:4.43,0:2:7.48,Default,,0000,0000,0000,,Quarto esempio: 1 Senza \nAtout - 2 Fiori Stayman 
+Dialogue: 0,0:2:7.48,0:2:8.90,Default,,0000,0000,0000,,- 2 Picche - 3 Picche. 
+Dialogue: 0,0:2:8.90,0:2:11.76,Default,,0000,0000,0000,,L'apertura di 1 Senza \nAtout mostra almeno 15 
+Dialogue: 0,0:2:11.76,0:2:14.68,Default,,0000,0000,0000,,punti, il rispondente \ncon la Stayman e poi il 
+Dialogue: 0,0:2:14.68,0:2:17.42,Default,,0000,0000,0000,,rialzo ne ha almeno 8: \nalmeno 23 in linea. 
+Dialogue: 0,0:2:17.42,0:2:14.50,Default,,0000,0000,0000,,Forzante. 
+Dialogue: 0,0:2:14.50,0:2:17.61,Default,,0000,0000,0000,,Adesso vediamo gli \nesempi di terreno non solido 
+Dialogue: 0,0:2:17.61,0:2:20.65,Default,,0000,0000,0000,,dove la stessa \ndichiarazione ha un significato 
+Dialogue: 0,0:2:20.65,0:2:22.10,Default,,0000,0000,0000,,completamente diverso. 
+Dialogue: 0,0:2:22.10,0:2:25.02,Default,,0000,0000,0000,,Primo caso: 1 Cuori - 1 \nPicche - 2 Cuori - 3 
+Dialogue: 0,0:2:25.02,0:2:25.46,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:2:25.46,0:2:28.31,Default,,0000,0000,0000,,Dopo 1 Cuori - 1 Picche \n- 2 Cuori non c' e' 
+Dialogue: 0,0:2:28.31,0:2:31.42,Default,,0000,0000,0000,,certezza di 21 punti: \nl'apertore potrebbe avere 
+Dialogue: 0,0:2:31.42,0:2:32.88,Default,,0000,0000,0000,,12 e il rispondente 6. 
+Dialogue: 0,0:2:32.88,0:2:35.66,Default,,0000,0000,0000,,Il 3 Cuori e' quindi \npassabile, e' solo un 
+Dialogue: 0,0:2:35.66,0:2:36.17,Default,,0000,0000,0000,,invito. 
+Dialogue: 0,0:2:36.17,0:2:39.28,Default,,0000,0000,0000,,Secondo caso: 1 Quadri - \n1 Cuori - 1 Picche - 3 
+Dialogue: 0,0:2:39.28,0:2:39.78,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:2:39.78,0:2:42.64,Default,,0000,0000,0000,,Anche qui il conteggio \nnon raggiunge 21 con 
+Dialogue: 0,0:2:42.64,0:2:43.27,Default,,0000,0000,0000,,certezza. 
+Dialogue: 0,0:2:43.27,0:2:43.97,Default,,0000,0000,0000,,Passabile. 
+Dialogue: 0,0:2:43.97,0:2:46.94,Default,,0000,0000,0000,,Terzo caso: 1 Cuori - 1 \nPicche - 2 Quadri - 3 
+Dialogue: 0,0:2:46.94,0:2:47.39,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:2:47.39,0:2:48.08,Default,,0000,0000,0000,,Passabile. 
+Dialogue: 0,0:2:48.08,0:2:51.19,Default,,0000,0000,0000,,Quarto caso: 1 Quadri - \n1 Cuori - 1 Senza Atout 
+Dialogue: 0,0:2:51.19,0:2:51.95,Default,,0000,0000,0000,,- 3 Quadri. 
+Dialogue: 0,0:2:51.95,0:2:52.65,Default,,0000,0000,0000,,Passabile. 
+Dialogue: 0,0:2:52.65,0:2:53.72,Default,,0000,0000,0000,,Vedi il pattern? 
+Dialogue: 0,0:2:53.72,0:2:56.83,Default,,0000,0000,0000,,La domanda che devi \nfarti e' sempre: `` In base 
+Dialogue: 0,0:2:56.83,0:2:59.81,Default,,0000,0000,0000,,a quello che abbiamo \ndichiarato finora, siamo 
+Dialogue: 0,0:2:59.81,0:3:2.72,Default,,0000,0000,0000,,sicuri di avere almeno \n21-22 punti in linea? 
+Dialogue: 0,0:3:2.72,0:3:5.38,Default,,0000,0000,0000,,'' Se si', il terreno e \nsolido e fissare 
+Dialogue: 0,0:3:5.38,0:3:7.60,Default,,0000,0000,0000,,l'atout sotto manche e' \nforzante. 
+Dialogue: 0,0:3:7.60,0:3:10.52,Default,,0000,0000,0000,,Se no, il terreno non e \nsolido ed e' solo un 
+Dialogue: 0,0:3:10.52,0:3:11.02,Default,,0000,0000,0000,,invito. 
+Dialogue: 0,0:3:11.02,0:3:13.75,Default,,0000,0000,0000,,C' e' un trucco che puoi \nusare per creare 
+Dialogue: 0,0:3:13.75,0:3:16.73,Default,,0000,0000,0000,,terreno solido anche \nquando non lo e' ancora: 
+Dialogue: 0,0:3:16.73,0:3:17.55,Default,,0000,0000,0000,,il 4 colore. 
+Dialogue: 0,0:3:17.55,0:3:20.66,Default,,0000,0000,0000,,Se hai risposto 1 su 1 e \nvuoi puntare allo slam 
+Dialogue: 0,0:3:20.66,0:3:23.57,Default,,0000,0000,0000,,ma il terreno non e' \nsolido, usa il 4 colore 
+Dialogue: 0,0:3:23.57,0:3:26.36,Default,,0000,0000,0000,,per creare quello che si \nchiama `` terreno 
+Dialogue: 0,0:3:26.36,0:3:27.69,Default,,0000,0000,0000,,solido ritardato ''. 
+Dialogue: 0,0:3:27.69,0:3:30.60,Default,,0000,0000,0000,,Prima il 4 colore, che \ncrea forza, poi fissi 
+Dialogue: 0,0:3:30.60,0:3:33.14,Default,,0000,0000,0000,,l'atout sotto manche e a \nquel punto la 
+Dialogue: 0,0:3:33.14,0:3:34.91,Default,,0000,0000,0000,,dichiarazione e' \nforzante. 
+Dialogue: 0,0:3:34.91,0:3:38.02,Default,,0000,0000,0000,,Quando si tratta di \nfissare un colore minore, c 
+Dialogue: 0,0:3:38.02,0:3:40.93,Default,,0000,0000,0000,,e' una complicazione: il \nlivello di manche a 
+Dialogue: 0,0:3:40.93,0:3:42.20,Default,,0000,0000,0000,,minore e' 5, non 4. 
+Dialogue: 0,0:3:42.20,0:3:44.74,Default,,0000,0000,0000,,Quindi lo spazio sotto \nmanche e' poco. 
+Dialogue: 0,0:3:44.74,0:3:47.65,Default,,0000,0000,0000,,Le dichiarazioni sotto 3 \nSenza Atout vengono 
+Dialogue: 0,0:3:47.65,0:3:49.36,Default,,0000,0000,0000,,usate per mostrare fermi . 
+Dialogue: 0,0:3:49.36,0:3:52.15,Default,,0000,0000,0000,,Solo le dichiarazioni \nche superano 3 Senza 
+Dialogue: 0,0:3:52.15,0:3:55.13,Default,,0000,0000,0000,,Atout iniziano \nufficialmente l'accostamento a 
+Dialogue: 0,0:3:55.13,0:3:56.20,Default,,0000,0000,0000,,Slam nel minore. 
+Dialogue: 0,0:3:56.20,0:3:59.18,Default,,0000,0000,0000,,Per esempio, 1 Cuori - 2 \nFiori - 2 Quadri - 4 
+Dialogue: 0,0:3:59.18,0:4:1.84,Default,,0000,0000,0000,,Quadri e' un modo \nbrutale ma efficace di 
+Dialogue: 0,0:4:1.84,0:4:3.87,Default,,0000,0000,0000,,fissare le quadri per lo \nSlam. 
+Dialogue: 0,0:4:3.87,0:4:6.85,Default,,0000,0000,0000,,Un ultimo punto: in \ncompetizione, ogni rialzo 
+Dialogue: 0,0:4:6.85,0:4:8.75,Default,,0000,0000,0000,,diretto e' solo \ncompetitivo! 
+Dialogue: 0,0:4:8.75,0:4:11.22,Default,,0000,0000,0000,,Per fissare l'atout con \nmano forte in 
+Dialogue: 0,0:4:11.22,0:4:14.20,Default,,0000,0000,0000,,competizione, devi fare \nla surlicita prima, e 
+Dialogue: 0,0:4:14.20,0:4:15.53,Default,,0000,0000,0000,,poi fissare l'atout. 
+Dialogue: 0,0:4:15.53,0:4:17.50,Default,,0000,0000,0000,,Non saltare questo \npassaggio! 
+Dialogue: 0,0:4:17.50,0:4:20.54,Default,,0000,0000,0000,,Lo Slam e' il traguardo \npiu' bello del bridge. 
+Dialogue: 0,0:4:20.54,0:4:23.52,Default,,0000,0000,0000,,Imparare a fissare \nl'atout nel modo giusto e' 
+Dialogue: 0,0:4:23.52,0:4:25.67,Default,,0000,0000,0000,,il primo passo per \nraggiungerlo. 
+Dialogue: 0,0:4:25.67,0:4:27.13,Default,,0000,0000,0000,,Alla prossima lezione! 

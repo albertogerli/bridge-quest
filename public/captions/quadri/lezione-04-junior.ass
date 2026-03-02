@@ -1,0 +1,132 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:3.25,Default,,0000,0000,0000,,Oggi impariamo una delle \nregole piu importanti 
+Dialogue: 0,0:0:3.25,0:0:6.08,Default,,0000,0000,0000,,della dichiarazione nel \nBridge: chi comanda e 
+Dialogue: 0,0:0:6.08,0:0:6.98,Default,,0000,0000,0000,,chi obbedisce. 
+Dialogue: 0,0:0:6.98,0:0:9.63,Default,,0000,0000,0000,,Sembra una cosa da \nesercito, e in un certo 
+Dialogue: 0,0:0:9.63,0:0:10.35,Default,,0000,0000,0000,,senso lo e! 
+Dialogue: 0,0:0:10.35,0:0:13.23,Default,,0000,0000,0000,,Nel Bridge si parla di \nCapitano e Subordinato, 
+Dialogue: 0,0:0:13.23,0:0:15.46,Default,,0000,0000,0000,,e capire questi ruoli \ncambia tutto. 
+Dialogue: 0,0:0:15.46,0:0:17.21,Default,,0000,0000,0000,,Partiamo dal concetto \nbase. 
+Dialogue: 0,0:0:17.21,0:0:19.97,Default,,0000,0000,0000,,In ogni momento della \ndichiarazione, uno dei 
+Dialogue: 0,0:0:19.97,0:0:22.14,Default,,0000,0000,0000,,due compagni sa di piu \ndell'altro. 
+Dialogue: 0,0:0:22.14,0:0:25.09,Default,,0000,0000,0000,,Quello che sa di piu, \ncioe che conosce la forza 
+Dialogue: 0,0:0:25.09,0:0:27.61,Default,,0000,0000,0000,,combinata della coppia e \npuo fare scelte 
+Dialogue: 0,0:0:27.61,0:0:29.36,Default,,0000,0000,0000,,ragionevoli, e il \nCapitano. 
+Dialogue: 0,0:0:29.36,0:0:32.31,Default,,0000,0000,0000,,L'altro, quello che ha \ngia descritto la propria 
+Dialogue: 0,0:0:32.31,0:0:35.19,Default,,0000,0000,0000,,mano e non ha piu nulla \nda aggiungere di nuovo 
+Dialogue: 0,0:0:35.19,0:0:36.28,Default,,0000,0000,0000,,e il Subordinato. 
+Dialogue: 0,0:0:36.28,0:0:38.74,Default,,0000,0000,0000,,Quando apri di 1 in un \ncolore, chi e il 
+Dialogue: 0,0:0:38.74,0:0:39.34,Default,,0000,0000,0000,,Capitano? 
+Dialogue: 0,0:0:39.34,0:0:41.39,Default,,0000,0000,0000,,Il tuo compagno, il \nRispondente! 
+Dialogue: 0,0:0:41.39,0:0:41.87,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:0:41.87,0:0:44.52,Default,,0000,0000,0000,,Perche tu hai detto solo \nche hai almeno 12 
+Dialogue: 0,0:0:44.52,0:0:47.41,Default,,0000,0000,0000,,punti e un certo colore \nma il Rispondente vede 
+Dialogue: 0,0:0:47.41,0:0:50.11,Default,,0000,0000,0000,,le sue carte e sa anche \nqualcosa delle tue. 
+Dialogue: 0,0:0:50.11,0:0:52.28,Default,,0000,0000,0000,,Tu invece non sai nulla \ndelle sue. 
+Dialogue: 0,0:0:52.28,0:0:54.99,Default,,0000,0000,0000,,Quindi il Capitano e il \nRispondente, almeno 
+Dialogue: 0,0:0:54.99,0:0:56.97,Default,,0000,0000,0000,,finche non si limita \nanche lui. 
+Dialogue: 0,0:0:56.97,0:0:59.68,Default,,0000,0000,0000,,La regola d'oro del \nSubordinato e semplice: 
+Dialogue: 0,0:0:59.68,0:1:1.30,Default,,0000,0000,0000,,descriviti, non decidere ! 
+Dialogue: 0,0:1:1.30,0:1:4.01,Default,,0000,0000,0000,,Se sei il Subordinato, \nil tuo lavoro e dare 
+Dialogue: 0,0:1:4.01,0:1:5.63,Default,,0000,0000,0000,,informazioni al Capitano . 
+Dialogue: 0,0:1:5.63,0:1:8.46,Default,,0000,0000,0000,,Non sta a te decidere a \nche livello giocare o 
+Dialogue: 0,0:1:8.46,0:1:10.27,Default,,0000,0000,0000,,in quale contratto \nfermarti. 
+Dialogue: 0,0:1:10.27,0:1:12.43,Default,,0000,0000,0000,,Devi solo mostrare \nquello che hai. 
+Dialogue: 0,0:1:12.43,0:1:13.45,Default,,0000,0000,0000,,Esempio pratico. 
+Dialogue: 0,0:1:13.45,0:1:16.10,Default,,0000,0000,0000,,Il Capitano chiede \ninformazioni con le sue 
+Dialogue: 0,0:1:16.10,0:1:18.63,Default,,0000,0000,0000,,dichiarazioni, e il \nSubordinato risponde 
+Dialogue: 0,0:1:18.63,0:1:19.41,Default,,0000,0000,0000,,onestamente. 
+Dialogue: 0,0:1:19.41,0:1:22.36,Default,,0000,0000,0000,,Se il Capitano dice 2 \nCuori dopo che hai aperto 
+Dialogue: 0,0:1:22.36,0:1:25.06,Default,,0000,0000,0000,,1 Senza Atout, sta \ncercando un fit a Cuori. 
+Dialogue: 0,0:1:25.06,0:1:27.65,Default,,0000,0000,0000,,Tu rispondi mostrando se \nhai il fit o no. 
+Dialogue: 0,0:1:27.65,0:1:30.60,Default,,0000,0000,0000,,Non salti a 4 Cuori \nperche pensi che sia giusto 
+Dialogue: 0,0:1:30.60,0:1:32.22,Default,,0000,0000,0000,,il Capitano decidera lui . 
+Dialogue: 0,0:1:32.22,0:1:35.11,Default,,0000,0000,0000,,C' e un'altra regola \nfondamentale: il Capitano 
+Dialogue: 0,0:1:35.11,0:1:38.06,Default,,0000,0000,0000,,puo inventare cambi di \ncolore anche senza avere 
+Dialogue: 0,0:1:38.06,0:1:38.72,Default,,0000,0000,0000,,il colore. 
+Dialogue: 0,0:1:38.72,0:1:39.86,Default,,0000,0000,0000,,Il Subordinato no! 
+Dialogue: 0,0:1:39.86,0:1:42.63,Default,,0000,0000,0000,,Le dichiarazioni del \nSubordinato sono sempre 
+Dialogue: 0,0:1:42.63,0:1:45.22,Default,,0000,0000,0000,,descrittive e \nrappresentano colori reali. 
+Dialogue: 0,0:1:45.22,0:1:47.93,Default,,0000,0000,0000,,Se il Subordinato dice \nCuori, ha davvero le 
+Dialogue: 0,0:1:47.93,0:1:48.35,Default,,0000,0000,0000,,Cuori. 
+Dialogue: 0,0:1:48.35,0:1:51.23,Default,,0000,0000,0000,,Se il Capitano dice \nCuori, potrebbe essere una 
+Dialogue: 0,0:1:51.23,0:1:54.06,Default,,0000,0000,0000,,domanda mascherata per \nottenere informazioni. 
+Dialogue: 0,0:1:54.06,0:1:55.87,Default,,0000,0000,0000,,Tre situazioni da \nricordare. 
+Dialogue: 0,0:1:55.87,0:1:58.51,Default,,0000,0000,0000,,Se il Capitano indaga, \ncioe fa domande, il 
+Dialogue: 0,0:1:58.51,0:2:0.62,Default,,0000,0000,0000,,Subordinato descrive la \nsua mano. 
+Dialogue: 0,0:2:0.62,0:2:3.09,Default,,0000,0000,0000,,Se il Capitano decide, \ncioe dichiara il 
+Dialogue: 0,0:2:3.09,0:2:5.85,Default,,0000,0000,0000,,contratto finale, il \nSubordinato passa senza 
+Dialogue: 0,0:2:5.85,0:2:6.45,Default,,0000,0000,0000,,pensarci. 
+Dialogue: 0,0:2:6.45,0:2:9.34,Default,,0000,0000,0000,,Se il Capitano rinuncia \nal comando, cioe fa un 
+Dialogue: 0,0:2:9.34,0:2:12.23,Default,,0000,0000,0000,,invito senza obbligare, \ni ruoli si invertono e 
+Dialogue: 0,0:2:12.23,0:2:11.69,Default,,0000,0000,0000,,il Subordinato diventa \nCapitano. 
+Dialogue: 0,0:2:11.69,0:2:14.51,Default,,0000,0000,0000,,Adesso vediamo cosa dice \nl'Apertore quando il 
+Dialogue: 0,0:2:14.51,0:2:15.65,Default,,0000,0000,0000,,compagno risponde. 
+Dialogue: 0,0:2:15.65,0:2:17.98,Default,,0000,0000,0000,,La replica dell'Apertore \ne la seconda 
+Dialogue: 0,0:2:17.98,0:2:20.74,Default,,0000,0000,0000,,dichiarazione e serve a \ndescrivere meglio la 
+Dialogue: 0,0:2:20.74,0:2:21.10,Default,,0000,0000,0000,,mano. 
+Dialogue: 0,0:2:21.10,0:2:23.44,Default,,0000,0000,0000,,Partiamo dalle risposte \nal livello 1. 
+Dialogue: 0,0:2:23.44,0:2:25.89,Default,,0000,0000,0000,,Se il compagno risponde \n1 in un colore, 
+Dialogue: 0,0:2:25.89,0:2:27.81,Default,,0000,0000,0000,,l'Apertore ha diverse \nopzioni. 
+Dialogue: 0,0:2:27.81,0:2:30.63,Default,,0000,0000,0000,,La prima e dire 1 Senza \nAtout: significa mano 
+Dialogue: 0,0:2:30.63,0:2:33.44,Default,,0000,0000,0000,,bilanciata con 12-14 \npunti, niente fit quarto 
+Dialogue: 0,0:2:33.44,0:2:35.96,Default,,0000,0000,0000,,nel colore del compagno \ne nessuna quarta 
+Dialogue: 0,0:2:35.96,0:2:37.58,Default,,0000,0000,0000,,dichiarabile a livello 1 . 
+Dialogue: 0,0:2:37.58,0:2:39.74,Default,,0000,0000,0000,,E una dichiarazione \nmolto precisa! 
+Dialogue: 0,0:2:39.74,0:2:42.61,Default,,0000,0000,0000,,Se invece l'Apertore \nripete il proprio colore, 
+Dialogue: 0,0:2:42.61,0:2:45.31,Default,,0000,0000,0000,,dice 12-14 punti con \nmano sbilanciata: o un 
+Dialogue: 0,0:2:45.31,0:2:48.01,Default,,0000,0000,0000,,colore sesto, o un 5-4 \ndove la quarta non e 
+Dialogue: 0,0:2:48.01,0:2:48.84,Default,,0000,0000,0000,,dichiarabile. 
+Dialogue: 0,0:2:48.84,0:2:51.78,Default,,0000,0000,0000,,Attenzione: non si \nripete mai il colore con una 
+Dialogue: 0,0:2:51.78,0:2:54.54,Default,,0000,0000,0000,,distribuzione 5-3-3-2, \nperche quella mano si 
+Dialogue: 0,0:2:54.54,0:2:56.28,Default,,0000,0000,0000,,descrive con 1 Senza \nAtout. 
+Dialogue: 0,0:2:56.28,0:2:59.03,Default,,0000,0000,0000,,Un concetto \nimportantissimo: se il colore di 
+Dialogue: 0,0:2:59.03,0:3:1.97,Default,,0000,0000,0000,,risposta del compagno e \ndi rango immediatamente 
+Dialogue: 0,0:3:1.97,0:3:4.79,Default,,0000,0000,0000,,superiore al tuo colore \ndi apertura, ripetere 
+Dialogue: 0,0:3:4.79,0:3:6.70,Default,,0000,0000,0000,,il colore garantisce un \nsesto! 
+Dialogue: 0,0:3:6.70,0:3:9.34,Default,,0000,0000,0000,,Per esempio, se apri 1 \nCuori e il compagno 
+Dialogue: 0,0:3:9.34,0:3:12.28,Default,,0000,0000,0000,,risponde 1 Picche, dire \n2 Cuori promette almeno 
+Dialogue: 0,0:3:12.28,0:3:12.94,Default,,0000,0000,0000,,sei Cuori. 
+Dialogue: 0,0:3:12.94,0:3:13.41,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:3:13.41,0:3:16.05,Default,,0000,0000,0000,,Perche se avessi quattro \nPicche le avresti 
+Dialogue: 0,0:3:16.05,0:3:18.69,Default,,0000,0000,0000,,appoggiate, e con solo \ncinque Cuori e mano 
+Dialogue: 0,0:3:18.69,0:3:21.15,Default,,0000,0000,0000,,bilanciata avresti detto \n1 Senza Atout. 
+Dialogue: 0,0:3:21.15,0:3:22.76,Default,,0000,0000,0000,,E ora parliamo del Rever . 
+Dialogue: 0,0:3:22.76,0:3:25.46,Default,,0000,0000,0000,,Il Rever e una \ndichiarazione che mostra una 
+Dialogue: 0,0:3:25.46,0:3:28.28,Default,,0000,0000,0000,,mano piu forte del \nminimo, tra 16 e 20 punti. 
+Dialogue: 0,0:3:28.28,0:3:31.15,Default,,0000,0000,0000,,Il Rever senza salto \nmostra 16-20 punti ed e a 
+Dialogue: 0,0:3:31.15,0:3:31.93,Default,,0000,0000,0000,,tutto campo. 
+Dialogue: 0,0:3:31.93,0:3:34.69,Default,,0000,0000,0000,,Il Piccolo Rever, cioe \nun salto in un colore 
+Dialogue: 0,0:3:34.69,0:3:37.57,Default,,0000,0000,0000,,gia detto, mostra 15-17 \npunti e non e forzante 
+Dialogue: 0,0:3:37.57,0:3:37.69,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:37.69,0:3:40.62,Default,,0000,0000,0000,,Il Gran Rever, cioe un \nsalto in un colore nuovo 
+Dialogue: 0,0:3:40.62,0:3:43.26,Default,,0000,0000,0000,,mostra 18-20 punti ed e \nforzante a manche! 
+Dialogue: 0,0:3:43.26,0:3:45.60,Default,,0000,0000,0000,,Con 16-17 punti la \nstrategia giusta e 
+Dialogue: 0,0:3:45.60,0:3:48.53,Default,,0000,0000,0000,,dichiarare normalmente e \npoi dare una spinta al 
+Dialogue: 0,0:3:48.53,0:3:51.47,Default,,0000,0000,0000,,giro successivo, quando \nil compagno ha fatto un 
+Dialogue: 0,0:3:51.47,0:3:51.95,Default,,0000,0000,0000,,invito. 
+Dialogue: 0,0:3:51.95,0:3:54.88,Default,,0000,0000,0000,,Non fare subito il Gran \nRever con 16-17, perche 
+Dialogue: 0,0:3:54.88,0:3:57.70,Default,,0000,0000,0000,,costringeresti il \ncompagno ad andare a manche 
+Dialogue: 0,0:3:57.70,0:3:59.08,Default,,0000,0000,0000,,anche con pochi punti. 
+Dialogue: 0,0:3:59.08,0:4:1.84,Default,,0000,0000,0000,,Ecco un trucco per le \nmani 5-4-2-2 con 15-17 
+Dialogue: 0,0:4:1.84,0:4:4.47,Default,,0000,0000,0000,,punti: se i colori \nlunghi sono fragili e i 
+Dialogue: 0,0:4:4.47,0:4:7.17,Default,,0000,0000,0000,,doubleton sono coperti, \nconsidera l'idea di 
+Dialogue: 0,0:4:7.17,0:4:9.33,Default,,0000,0000,0000,,aprire direttamente 1 \nSenza Atout. 
+Dialogue: 0,0:4:9.33,0:4:11.84,Default,,0000,0000,0000,,E spesso piu descrittivo \ndi una sequenza 
+Dialogue: 0,0:4:11.84,0:4:13.40,Default,,0000,0000,0000,,dichiarativa complicata . 
+Dialogue: 0,0:4:13.40,0:4:16.04,Default,,0000,0000,0000,,Nella prossima lezione \nscopriremo i colori 
+Dialogue: 0,0:4:16.04,0:4:18.56,Default,,0000,0000,0000,,bucati e come muovere le \nfigure per fare 
+Dialogue: 0,0:4:18.56,0:4:19.09,Default,,0000,0000,0000,,impasse. 
+Dialogue: 0,0:4:19.09,0:4:21.97,Default,,0000,0000,0000,,Sara una lezione piena \ndi trucchi da campione! 

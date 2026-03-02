@@ -1,0 +1,138 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.34,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.34,0:0:2.91,Default,,0000,0000,0000,,Siamo arrivati \nall'ultima lezione del Corso 
+Dialogue: 0,0:0:2.91,0:0:4.22,Default,,0000,0000,0000,,Quadri, e che lezione! 
+Dialogue: 0,0:0:4.22,0:0:6.96,Default,,0000,0000,0000,,Oggi parliamo di \ninterventi e riaperture, cioe 
+Dialogue: 0,0:0:6.96,0:0:9.69,Default,,0000,0000,0000,,di tutte quelle \nsituazioni in cui l'avversario 
+Dialogue: 0,0:0:9.69,0:0:12.49,Default,,0000,0000,0000,,apre e tu devi decidere \nse e come intrometterti 
+Dialogue: 0,0:0:12.49,0:0:12.60,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:12.60,0:0:15.40,Default,,0000,0000,0000,,E come essere un \ngiocatore che entra in partita 
+Dialogue: 0,0:0:15.40,0:0:18.02,Default,,0000,0000,0000,,dalla panchina: devi \ncapire quando entrare e 
+Dialogue: 0,0:0:18.02,0:0:19.67,Default,,0000,0000,0000,,come farlo nel modo \ngiusto! 
+Dialogue: 0,0:0:19.67,0:0:22.07,Default,,0000,0000,0000,,Partiamo dal Contro \ninformativo, che gia 
+Dialogue: 0,0:0:22.07,0:0:24.41,Default,,0000,0000,0000,,conosci un po dalla \nlezione precedente. 
+Dialogue: 0,0:0:24.41,0:0:27.03,Default,,0000,0000,0000,,Il Contro informativo e \nquella dichiarazione 
+Dialogue: 0,0:0:27.03,0:0:29.77,Default,,0000,0000,0000,,che dice: `` Ho dei \npunti e vorrei giocare, ma 
+Dialogue: 0,0:0:29.77,0:0:31.99,Default,,0000,0000,0000,,non ho un singolo colore \nda mostrare. 
+Dialogue: 0,0:0:31.99,0:0:34.33,Default,,0000,0000,0000,,'' Ma attenzione, il \nContro informativo 
+Dialogue: 0,0:0:34.33,0:0:36.89,Default,,0000,0000,0000,,nasconde un segreto: da \nesso transitano due 
+Dialogue: 0,0:0:36.89,0:0:39.00,Default,,0000,0000,0000,,tipi di mano \ncompletamente diversi! 
+Dialogue: 0,0:0:39.00,0:0:41.80,Default,,0000,0000,0000,,Il primo tipo e la mano \nda dodici a quattordici 
+Dialogue: 0,0:0:41.80,0:0:42.20,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:0:42.20,0:0:44.48,Default,,0000,0000,0000,,Qui ci sono regole \nprecise sui colori. 
+Dialogue: 0,0:0:44.48,0:0:47.16,Default,,0000,0000,0000,,Se l'avversario apre uno \nCuori, il tuo Contro 
+Dialogue: 0,0:0:47.16,0:0:49.95,Default,,0000,0000,0000,,deve mostrare quattro \nPicche piu tolleranza per 
+Dialogue: 0,0:0:49.95,0:0:50.86,Default,,0000,0000,0000,,Fiori e Quadri. 
+Dialogue: 0,0:0:50.86,0:0:53.37,Default,,0000,0000,0000,,Se l'avversario apre uno \nPicche, il Contro 
+Dialogue: 0,0:0:53.37,0:0:55.82,Default,,0000,0000,0000,,mostra quattro Cuori piu \ntolleranza per i 
+Dialogue: 0,0:0:55.82,0:0:56.28,Default,,0000,0000,0000,,minori. 
+Dialogue: 0,0:0:56.28,0:0:59.07,Default,,0000,0000,0000,,Se l'avversario apre uno \nFiori o uno Quadri, il 
+Dialogue: 0,0:0:59.07,0:1:1.70,Default,,0000,0000,0000,,Contro mostra almeno \ntre-quattro carte in un 
+Dialogue: 0,0:1:1.70,0:1:4.15,Default,,0000,0000,0000,,nobile piu tolleranza \nper l'altro minore. 
+Dialogue: 0,0:1:4.15,0:1:6.77,Default,,0000,0000,0000,,Con dodici-quattordici, \ndopo che il compagno 
+Dialogue: 0,0:1:6.77,0:1:9.39,Default,,0000,0000,0000,,risponde, devi accettare \nla sua scelta e non 
+Dialogue: 0,0:1:9.39,0:1:11.11,Default,,0000,0000,0000,,scappare in un altro \ncolore. 
+Dialogue: 0,0:1:11.11,0:1:13.27,Default,,0000,0000,0000,,Hai fatto il tuo lavoro \nadesso taci! 
+Dialogue: 0,0:1:13.27,0:1:16.01,Default,,0000,0000,0000,,Il secondo tipo e la \nmano da diciotto punti in 
+Dialogue: 0,0:1:16.01,0:1:16.24,Default,,0000,0000,0000,,su. 
+Dialogue: 0,0:1:16.24,0:1:18.86,Default,,0000,0000,0000,,In questo caso il Contro \npuo avere qualsiasi 
+Dialogue: 0,0:1:18.86,0:1:19.72,Default,,0000,0000,0000,,distribuzione. 
+Dialogue: 0,0:1:19.72,0:1:22.00,Default,,0000,0000,0000,,Ma come fa il compagno a \ncapire se hai 
+Dialogue: 0,0:1:22.00,0:1:24.05,Default,,0000,0000,0000,,dodici-quattordici o \ndiciotto piu? 
+Dialogue: 0,0:1:24.05,0:1:26.27,Default,,0000,0000,0000,,Ecco il trucco geniale: \nla Rimozione! 
+Dialogue: 0,0:1:26.27,0:1:28.90,Default,,0000,0000,0000,,Se dopo il Contro cambi \nla dichiarazione del 
+Dialogue: 0,0:1:28.90,0:1:31.58,Default,,0000,0000,0000,,compagno, cioe non \naccetti la sua risposta ma 
+Dialogue: 0,0:1:31.58,0:1:34.03,Default,,0000,0000,0000,,proponi qualcosa di \ndiverso, stai dicendo 
+Dialogue: 0,0:1:34.03,0:1:36.25,Default,,0000,0000,0000,,automaticamente `` Ho \ndiciotto o piu! 
+Dialogue: 0,0:1:36.25,0:1:38.93,Default,,0000,0000,0000,,'' Per esempio, \nl'avversario apre uno Quadri, 
+Dialogue: 0,0:1:38.93,0:1:41.73,Default,,0000,0000,0000,,tu dai Contro, il \ncompagno dice uno Cuori, e tu 
+Dialogue: 0,0:1:41.73,0:1:42.98,Default,,0000,0000,0000,,dici uno Senza Atout. 
+Dialogue: 0,0:1:42.98,0:1:45.55,Default,,0000,0000,0000,,Quel Senza Atout e la \nRimozione: mostra una 
+Dialogue: 0,0:1:45.55,0:1:48.06,Default,,0000,0000,0000,,bilanciata da diciotto a \nventi con fermo a 
+Dialogue: 0,0:1:48.06,0:1:48.51,Default,,0000,0000,0000,,Quadri. 
+Dialogue: 0,0:1:48.51,0:1:50.96,Default,,0000,0000,0000,,Oppure, sempre dopo \nContro e risposta uno 
+Dialogue: 0,0:1:50.96,0:1:53.64,Default,,0000,0000,0000,,Picche, dici due Cuori: \nRimozione, che mostra 
+Dialogue: 0,0:1:53.64,0:1:53.02,Default,,0000,0000,0000,,diciotto piu con almeno \ncinque Cuori. 
+Dialogue: 0,0:1:53.02,0:1:55.88,Default,,0000,0000,0000,,Bene, adesso il compagno \nche sente la Rimozione 
+Dialogue: 0,0:1:55.88,0:1:57.46,Default,,0000,0000,0000,,deve riconsiderare tutto . 
+Dialogue: 0,0:1:57.46,0:2:0.33,Default,,0000,0000,0000,,Se il contrante ha \ndiciotto punti e il compagno 
+Dialogue: 0,0:2:0.33,0:2:3.13,Default,,0000,0000,0000,,ne ha anche solo \nsette-otto, la somma e gia da 
+Dialogue: 0,0:2:3.13,0:2:3.60,Default,,0000,0000,0000,,manche! 
+Dialogue: 0,0:2:3.60,0:2:6.17,Default,,0000,0000,0000,,Per esempio, dopo Contro \ne Rimozione a uno 
+Dialogue: 0,0:2:6.17,0:2:8.86,Default,,0000,0000,0000,,Senza, cioe \ndiciotto-venti bilanciata, se il 
+Dialogue: 0,0:2:8.86,0:2:11.61,Default,,0000,0000,0000,,compagno ha Donna quarta \ndi Picche, Fante-sei 
+Dialogue: 0,0:2:11.61,0:2:14.00,Default,,0000,0000,0000,,di Cuori, \notto-sette-cinque di Quadri e 
+Dialogue: 0,0:2:14.00,0:2:16.57,Default,,0000,0000,0000,,Asso-nove-otto-quattro \ndi Fiori, sono nove 
+Dialogue: 0,0:2:16.57,0:2:16.98,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:2:16.98,0:2:19.56,Default,,0000,0000,0000,,Diciotto piu nove fa \nventisette: tre Senza 
+Dialogue: 0,0:2:19.56,0:2:19.96,Default,,0000,0000,0000,,Atout! 
+Dialogue: 0,0:2:19.96,0:2:22.77,Default,,0000,0000,0000,,Passiamo all'intervento \na salto a livello due. 
+Dialogue: 0,0:2:22.77,0:2:25.28,Default,,0000,0000,0000,,Questa e una \ndichiarazione molto precisa: 
+Dialogue: 0,0:2:25.28,0:2:28.03,Default,,0000,0000,0000,,mostra sei buone carte \ncon almeno due onori e 
+Dialogue: 0,0:2:28.03,0:2:30.84,Default,,0000,0000,0000,,valori di apertura, cioe \nundici-quindici punti 
+Dialogue: 0,0:2:30.84,0:2:30.95,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:30.95,0:2:32.88,Default,,0000,0000,0000,,Per esempio, con due di \nPicche, 
+Dialogue: 0,0:2:32.88,0:2:35.16,Default,,0000,0000,0000,,Asso-Re-Fante-nove-sei-d \nue di Cuori, 
+Dialogue: 0,0:2:35.16,0:2:37.97,Default,,0000,0000,0000,,Re-sette-due di Quadri e \notto-sette-quattro di 
+Dialogue: 0,0:2:37.97,0:2:40.66,Default,,0000,0000,0000,,Fiori, su apertura \navversaria di uno Fiori o 
+Dialogue: 0,0:2:40.66,0:2:42.35,Default,,0000,0000,0000,,uno Quadri, dici due \nCuori. 
+Dialogue: 0,0:2:42.35,0:2:44.86,Default,,0000,0000,0000,,E una descrizione chiara \ne il compagno sa 
+Dialogue: 0,0:2:44.86,0:2:46.15,Default,,0000,0000,0000,,esattamente cosa hai. 
+Dialogue: 0,0:2:46.15,0:2:48.96,Default,,0000,0000,0000,,Il campo e cosi \nristretto che le decisioni del 
+Dialogue: 0,0:2:48.96,0:2:50.59,Default,,0000,0000,0000,,compagno diventano \nfacili. 
+Dialogue: 0,0:2:50.59,0:2:53.46,Default,,0000,0000,0000,,Adesso una convenzione \ndivertente: il due Senza 
+Dialogue: 0,0:2:53.46,0:2:56.14,Default,,0000,0000,0000,,Atout su aperture di uno \nCuori o uno Picche. 
+Dialogue: 0,0:2:56.14,0:2:58.37,Default,,0000,0000,0000,,Non mostra una \nbilanciata forte, no! 
+Dialogue: 0,0:2:58.37,0:3:1.17,Default,,0000,0000,0000,,Per convenzione mostra \nun bicolore nei minori, 
+Dialogue: 0,0:3:1.17,0:3:3.57,Default,,0000,0000,0000,,almeno cinque-cinque, \ncon buoni colori. 
+Dialogue: 0,0:3:3.57,0:3:6.43,Default,,0000,0000,0000,,Per esempio, con cinque \ndi Picche, sette-due di 
+Dialogue: 0,0:3:6.43,0:3:9.00,Default,,0000,0000,0000,,Cuori, \nRe-Donna-Dieci-otto-due di Quadri e 
+Dialogue: 0,0:3:9.00,0:3:11.81,Default,,0000,0000,0000,,Asso-Fante-Dieci-sei-due \ndi Fiori, su apertura 
+Dialogue: 0,0:3:11.81,0:3:13.80,Default,,0000,0000,0000,,uno Picche dici due \nSenza Atout. 
+Dialogue: 0,0:3:13.80,0:3:16.31,Default,,0000,0000,0000,,E una dichiarazione \nforzante senza limite 
+Dialogue: 0,0:3:16.31,0:3:16.95,Default,,0000,0000,0000,,superiore. 
+Dialogue: 0,0:3:16.95,0:3:19.11,Default,,0000,0000,0000,,Attenzione: non funziona \ncon colori 
+Dialogue: 0,0:3:19.11,0:3:21.74,Default,,0000,0000,0000,,inconsistenti, con \ncinque-quattro invece di 
+Dialogue: 0,0:3:21.74,0:3:24.43,Default,,0000,0000,0000,,cinque-cinque, o con \npunti fuori dai minori. 
+Dialogue: 0,0:3:24.43,0:3:25.84,Default,,0000,0000,0000,,Infine, il Passo Forte. 
+Dialogue: 0,0:3:25.84,0:3:28.12,Default,,0000,0000,0000,,Questa e una tecnica da \nveri esperti. 
+Dialogue: 0,0:3:28.12,0:3:30.98,Default,,0000,0000,0000,,Quando l'avversario apre \nnel colore dove tu hai 
+Dialogue: 0,0:3:30.98,0:3:33.61,Default,,0000,0000,0000,,lunghezza e forza, la \ncosa giusta da fare e 
+Dialogue: 0,0:3:33.61,0:3:34.14,Default,,0000,0000,0000,,passare! 
+Dialogue: 0,0:3:34.14,0:3:37.00,Default,,0000,0000,0000,,Non dare il Contro, \nperche il Contro direbbe `` 
+Dialogue: 0,0:3:37.00,0:3:38.93,Default,,0000,0000,0000,,sono corto in questo \ncolore ''. 
+Dialogue: 0,0:3:38.93,0:3:41.73,Default,,0000,0000,0000,,Tu invece sei lungo e \nforte, e vuoi difendere. 
+Dialogue: 0,0:3:41.73,0:3:44.54,Default,,0000,0000,0000,,Il compagno, vedendo che \ni punti `` mancano '' 
+Dialogue: 0,0:3:44.54,0:3:45.94,Default,,0000,0000,0000,,riaprira con un Contro. 
+Dialogue: 0,0:3:45.94,0:3:48.28,Default,,0000,0000,0000,,E tu, a quel punto, \npasserai di nuovo, 
+Dialogue: 0,0:3:48.28,0:3:50.44,Default,,0000,0000,0000,,trasformando il Contro \nin punitivo. 
+Dialogue: 0,0:3:50.44,0:3:51.32,Default,,0000,0000,0000,,Geniale, vero? 
+Dialogue: 0,0:3:51.32,0:3:53.54,Default,,0000,0000,0000,,Le riaperture sono \ndichiarazioni che 
+Dialogue: 0,0:3:53.54,0:3:56.17,Default,,0000,0000,0000,,impediscono alla licita \ndi morire quando il 
+Dialogue: 0,0:3:56.17,0:3:58.57,Default,,0000,0000,0000,,compagno potrebbe avere \nil Passo Forte. 
+Dialogue: 0,0:3:58.57,0:4:0.73,Default,,0000,0000,0000,,Chi riapre con il Contro \nnon mostra 
+Dialogue: 0,0:4:0.73,0:4:3.48,Default,,0000,0000,0000,,necessariamente tanta \nforza propria: ipotizza 
+Dialogue: 0,0:4:3.48,0:4:5.17,Default,,0000,0000,0000,,forza taciuta nel \ncompagno. 
+Dialogue: 0,0:4:5.17,0:4:7.57,Default,,0000,0000,0000,,Se pero la riapertura \nrischia di essere 
+Dialogue: 0,0:4:7.57,0:4:10.02,Default,,0000,0000,0000,,trasformata in modo \nsvantaggioso, meglio 
+Dialogue: 0,0:4:10.02,0:4:11.13,Default,,0000,0000,0000,,riaprire a colore. 
+Dialogue: 0,0:4:11.13,0:4:13.82,Default,,0000,0000,0000,,Per esempio, con poche \nprese difensive ma un 
+Dialogue: 0,0:4:13.82,0:4:16.63,Default,,0000,0000,0000,,bel colore sesto, riapri \nnel tuo colore invece 
+Dialogue: 0,0:4:16.63,0:4:17.74,Default,,0000,0000,0000,,di dare il Contro. 
+Dialogue: 0,0:4:17.74,0:4:20.43,Default,,0000,0000,0000,,Complimenti, hai \ncompletato il Corso Quadri! 
+Dialogue: 0,0:4:20.43,0:4:23.23,Default,,0000,0000,0000,,Hai imparato tantissime \ncose da vero giocatore 
+Dialogue: 0,0:4:23.23,0:4:23.93,Default,,0000,0000,0000,,intermedio. 
+Dialogue: 0,0:4:23.93,0:4:26.51,Default,,0000,0000,0000,,Continua a esercitarti e \nvedrai che queste 
+Dialogue: 0,0:4:26.51,0:4:28.43,Default,,0000,0000,0000,,tecniche diventeranno \nnaturali. 
+Dialogue: 0,0:4:28.43,0:4:29.49,Default,,0000,0000,0000,,In bocca al lupo! 

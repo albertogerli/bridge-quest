@@ -1,0 +1,124 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.37,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.37,0:0:2.87,Default,,0000,0000,0000,,Oggi affrontiamo un \nargomento pieno di 
+Dialogue: 0,0:0:2.87,0:0:5.56,Default,,0000,0000,0000,,convenzioni: gli \ninterventi speciali e le 
+Dialogue: 0,0:0:5.56,0:0:8.18,Default,,0000,0000,0000,,difese contro aperture \nparticolari degli 
+Dialogue: 0,0:0:8.18,0:0:8.87,Default,,0000,0000,0000,,avversari. 
+Dialogue: 0,0:0:8.87,0:0:11.49,Default,,0000,0000,0000,,Ti avverto subito, ci \nsono tante cose da 
+Dialogue: 0,0:0:11.49,0:0:14.37,Default,,0000,0000,0000,,ricordare, ma non \npreoccuparti: le imparerai 
+Dialogue: 0,0:0:14.37,0:0:17.18,Default,,0000,0000,0000,,una alla volta e vedrai \nche hanno tutte una 
+Dialogue: 0,0:0:17.18,0:0:18.11,Default,,0000,0000,0000,,logica chiara. 
+Dialogue: 0,0:0:18.11,0:0:19.55,Default,,0000,0000,0000,,Partiamo dai bicolori. 
+Dialogue: 0,0:0:19.55,0:0:20.24,Default,,0000,0000,0000,,Cosa sono? 
+Dialogue: 0,0:0:20.24,0:0:23.24,Default,,0000,0000,0000,,Sono interventi che con \nuna sola dichiarazione 
+Dialogue: 0,0:0:23.24,0:0:25.80,Default,,0000,0000,0000,,mostrano due colori \ncontemporaneamente. 
+Dialogue: 0,0:0:25.80,0:0:26.55,Default,,0000,0000,0000,,Comodo, no? 
+Dialogue: 0,0:0:26.55,0:0:29.48,Default,,0000,0000,0000,,Esistono due sistemi \nprincipali: Michael 's e 
+Dialogue: 0,0:0:29.48,0:0:30.05,Default,,0000,0000,0000,,Ghestem. 
+Dialogue: 0,0:0:30.05,0:0:31.73,Default,,0000,0000,0000,,Michael 's funziona cosi . 
+Dialogue: 0,0:0:31.73,0:0:34.54,Default,,0000,0000,0000,,Se l'avversario apre 1 \nCuori o 1 Picche, la 
+Dialogue: 0,0:0:34.54,0:0:37.35,Default,,0000,0000,0000,,surlicita, cioe' dire il \nsuo stesso colore, 
+Dialogue: 0,0:0:37.35,0:0:39.73,Default,,0000,0000,0000,,mostra l'altro nobile \npiu' un minore 
+Dialogue: 0,0:0:39.73,0:0:40.54,Default,,0000,0000,0000,,sconosciuto. 
+Dialogue: 0,0:0:40.54,0:0:43.60,Default,,0000,0000,0000,,Per esempio: avversario \napre 1 Cuori, tu dici 2 
+Dialogue: 0,0:0:43.60,0:0:46.54,Default,,0000,0000,0000,,Cuori e stai dicendo `` \nHo 5 Picche e 5 carte 
+Dialogue: 0,0:0:46.54,0:0:48.54,Default,,0000,0000,0000,,in un minore, almeno 12 \npunti. 
+Dialogue: 0,0:0:48.54,0:0:51.35,Default,,0000,0000,0000,,'' Il compagno se vuole \nsapere quale minore 
+Dialogue: 0,0:0:51.35,0:0:52.22,Default,,0000,0000,0000,,dichiera 2NT. 
+Dialogue: 0,0:0:52.22,0:0:55.03,Default,,0000,0000,0000,,Se l'avversario apre 1 \nFiori o 1 Quadri, la 
+Dialogue: 0,0:0:55.03,0:0:57.84,Default,,0000,0000,0000,,surlicita in quel colore \ne' naturale per le 
+Dialogue: 0,0:0:57.84,0:1:0.84,Default,,0000,0000,0000,,fiori, oppure mostra il \nbicolore nobile per le 
+Dialogue: 0,0:1:0.84,0:1:1.34,Default,,0000,0000,0000,,quadri. 
+Dialogue: 0,0:1:1.34,0:1:4.28,Default,,0000,0000,0000,,E 2NT mostra i due \ncolori di rango piu' basso 
+Dialogue: 0,0:1:4.28,0:1:5.28,Default,,0000,0000,0000,,tra i restanti. 
+Dialogue: 0,0:1:5.28,0:1:8.02,Default,,0000,0000,0000,,Regola fondamentale: i \nbicolori richiedono 
+Dialogue: 0,0:1:8.02,0:1:8.77,Default,,0000,0000,0000,,almeno 5-5. 
+Dialogue: 0,0:1:8.77,0:1:11.33,Default,,0000,0000,0000,,Mai spacciare una mano \n5-4 o 6-4 per un 
+Dialogue: 0,0:1:11.33,0:1:11.96,Default,,0000,0000,0000,,bicolore! 
+Dialogue: 0,0:1:11.96,0:1:14.65,Default,,0000,0000,0000,,Servono almeno 5 carte \nin ciascun colore. 
+Dialogue: 0,0:1:14.65,0:1:17.71,Default,,0000,0000,0000,,Poi c' e' il Ghestem, un \nsistema piu' complesso 
+Dialogue: 0,0:1:17.71,0:1:18.77,Default,,0000,0000,0000,,ma piu' preciso. 
+Dialogue: 0,0:1:18.77,0:1:21.58,Default,,0000,0000,0000,,Dopo 1 Cuori o 1 Picche \nla surlicita mostra 
+Dialogue: 0,0:1:21.58,0:1:24.58,Default,,0000,0000,0000,,l'altro nobile piu' \nFiori, 2NT mostra bicolore 
+Dialogue: 0,0:1:24.58,0:1:27.45,Default,,0000,0000,0000,,minore, e 3 Fiori mostra \nl'altro nobile piu' 
+Dialogue: 0,0:1:27.45,0:1:27.95,Default,,0000,0000,0000,,Quadri. 
+Dialogue: 0,0:1:27.95,0:1:30.76,Default,,0000,0000,0000,,Dopo apertura 1 Fiori: 2 \nQuadri e' bicolore 
+Dialogue: 0,0:1:30.76,0:1:33.57,Default,,0000,0000,0000,,nobile, 2NT e' Quadri \npiu' Cuori, 3 Fiori a 
+Dialogue: 0,0:1:33.57,0:1:35.45,Default,,0000,0000,0000,,salto e' Quadri piu' \nPicche. 
+Dialogue: 0,0:1:35.45,0:1:38.32,Default,,0000,0000,0000,,Dopo apertura 1 Quadri: \n2 Quadri e' bicolore 
+Dialogue: 0,0:1:38.32,0:1:41.07,Default,,0000,0000,0000,,nobile, 2NT e' Fiori piu \nCuori, 3 Fiori e' 
+Dialogue: 0,0:1:41.07,0:1:42.25,Default,,0000,0000,0000,,Fiori piu' Picche. 
+Dialogue: 0,0:1:42.25,0:1:43.75,Default,,0000,0000,0000,,Lo so, sono tanti casi! 
+Dialogue: 0,0:1:43.75,0:1:46.81,Default,,0000,0000,0000,,La cosa bella del \nGhestem e' che ti dice sempre 
+Dialogue: 0,0:1:46.81,0:1:49.88,Default,,0000,0000,0000,,esattamente quali due \ncolori ha il tuo compagno 
+Dialogue: 0,0:1:49.88,0:1:52.81,Default,,0000,0000,0000,,mentre con Michael 's a \nvolte devi indovinare 
+Dialogue: 0,0:1:52.81,0:1:51.31,Default,,0000,0000,0000,,il minore. 
+Dialogue: 0,0:1:51.31,0:1:54.11,Default,,0000,0000,0000,,Adesso passiamo a un \nargomento super utile: 
+Dialogue: 0,0:1:54.11,0:1:56.85,Default,,0000,0000,0000,,cosa fare quando \nl'avversario apre 1 Senza 
+Dialogue: 0,0:1:56.85,0:1:57.28,Default,,0000,0000,0000,,Atout. 
+Dialogue: 0,0:1:57.28,0:2:0.21,Default,,0000,0000,0000,,Qui il fattore \nprincipale non e' il punteggio 
+Dialogue: 0,0:2:0.21,0:2:1.51,Default,,0000,0000,0000,,ma la distribuzione. 
+Dialogue: 0,0:2:1.51,0:2:4.50,Default,,0000,0000,0000,,Non si interviene con \nmani bilanciate anche se 
+Dialogue: 0,0:2:4.50,0:2:7.49,Default,,0000,0000,0000,,forti: si interviene con \nseste o con bicolori. 
+Dialogue: 0,0:2:7.49,0:2:10.47,Default,,0000,0000,0000,,Il sistema si basa sul \nLandy e sui transfer: 2 
+Dialogue: 0,0:2:10.47,0:2:13.52,Default,,0000,0000,0000,,Fiori e' il Landy: \nmostra almeno 5-4 nei nobili 
+Dialogue: 0,0:2:13.52,0:2:14.95,Default,,0000,0000,0000,,con almeno 9-10 punti. 
+Dialogue: 0,0:2:14.95,0:2:17.94,Default,,0000,0000,0000,,Il compagno sceglie il \nnobile migliore, oppure 
+Dialogue: 0,0:2:17.94,0:2:20.74,Default,,0000,0000,0000,,dice 2 Quadri per \nchiedere quale e' il piu' 
+Dialogue: 0,0:2:20.74,0:2:21.17,Default,,0000,0000,0000,,lungo. 
+Dialogue: 0,0:2:21.17,0:2:23.85,Default,,0000,0000,0000,,2 Quadri e' un transfer \nper Cuori: mostra 
+Dialogue: 0,0:2:23.85,0:2:24.97,Default,,0000,0000,0000,,almeno 5-6 cuori. 
+Dialogue: 0,0:2:24.97,0:2:27.64,Default,,0000,0000,0000,,2 Cuori e' un transfer \nper Picche: mostra 
+Dialogue: 0,0:2:27.64,0:2:28.83,Default,,0000,0000,0000,,almeno 5-6 picche. 
+Dialogue: 0,0:2:28.83,0:2:31.63,Default,,0000,0000,0000,,Sono dichiarazioni che \npossono essere fatte 
+Dialogue: 0,0:2:31.63,0:2:34.55,Default,,0000,0000,0000,,anche con mani minime ma \nbuona distribuzione. 
+Dialogue: 0,0:2:34.55,0:2:37.47,Default,,0000,0000,0000,,2 Picche mostra 4 Picche \npiu' una sesta in un 
+Dialogue: 0,0:2:37.47,0:2:37.97,Default,,0000,0000,0000,,minore. 
+Dialogue: 0,0:2:37.97,0:2:40.96,Default,,0000,0000,0000,,Il compagno che vuole \nsapere quale minore dice 
+Dialogue: 0,0:2:40.96,0:2:41.27,Default,,0000,0000,0000,,2NT. 
+Dialogue: 0,0:2:41.27,0:2:44.26,Default,,0000,0000,0000,,3 Fiori e 3 Quadri \nmostrano 6 carte nel colore 
+Dialogue: 0,0:2:44.26,0:2:45.69,Default,,0000,0000,0000,,piu' 4 Cuori a fianco. 
+Dialogue: 0,0:2:45.69,0:2:47.74,Default,,0000,0000,0000,,2NT mostra bicolore \nminore 5-5. 
+Dialogue: 0,0:2:47.74,0:2:50.73,Default,,0000,0000,0000,,Un intervento speciale: \nse l'avversario usa la 
+Dialogue: 0,0:2:50.73,0:2:53.65,Default,,0000,0000,0000,,Stayman( 2 Fiori su 1NT \ndel compagno), il tuo 
+Dialogue: 0,0:2:53.65,0:2:56.64,Default,,0000,0000,0000,,Contro mostra un ottimo \ncolore di Fiori lungo. 
+Dialogue: 0,0:2:56.64,0:2:59.50,Default,,0000,0000,0000,,Se l'avversario usa una \nTexas, il tuo Contro 
+Dialogue: 0,0:2:59.50,0:3:2.30,Default,,0000,0000,0000,,mostra 5 o piu' carte \nonorate nel colore `` 
+Dialogue: 0,0:3:2.30,0:3:5.10,Default,,0000,0000,0000,,finto '', cioe' quello \nche la Texas nomina. 
+Dialogue: 0,0:3:5.10,0:3:7.52,Default,,0000,0000,0000,,Adesso le difese su \naperture speciali 
+Dialogue: 0,0:3:7.52,0:3:8.27,Default,,0000,0000,0000,,avversarie. 
+Dialogue: 0,0:3:8.27,0:3:11.13,Default,,0000,0000,0000,,Se l'avversario apre 2 \nQuadri Multicolor, ti 
+Dialogue: 0,0:3:11.13,0:3:14.06,Default,,0000,0000,0000,,comporti come se avesse \nsottoaperto 2 Picche. 
+Dialogue: 0,0:3:14.06,0:3:16.86,Default,,0000,0000,0000,,Il Contro immediato e' \ninformativo e mostra 
+Dialogue: 0,0:3:16.86,0:3:18.60,Default,,0000,0000,0000,,Cuori con 12 o piu' \npunti. 
+Dialogue: 0,0:3:18.60,0:3:21.21,Default,,0000,0000,0000,,Il 2NT immediato mostra \nbicolore minore. 
+Dialogue: 0,0:3:21.21,0:3:23.95,Default,,0000,0000,0000,,Il 2NT ritardato, dopo \naver passato prima, 
+Dialogue: 0,0:3:23.95,0:3:26.87,Default,,0000,0000,0000,,mostra bilanciata con 15 \no piu' punti e fermo 
+Dialogue: 0,0:3:26.87,0:3:28.12,Default,,0000,0000,0000,,nel colore svelato. 
+Dialogue: 0,0:3:28.12,0:3:30.54,Default,,0000,0000,0000,,Se passi e poi contri, \nmostri Picche. 
+Dialogue: 0,0:3:30.54,0:3:33.22,Default,,0000,0000,0000,,Sulla sottoapertura di 2 \nCuori o 2 Picche 
+Dialogue: 0,0:3:33.22,0:3:36.02,Default,,0000,0000,0000,,dell'avversario: il \nContro mostra 4-5 carte 
+Dialogue: 0,0:3:36.02,0:3:38.94,Default,,0000,0000,0000,,nell'altro nobile piu' \ntolleranza degli altri 
+Dialogue: 0,0:3:38.94,0:3:39.44,Default,,0000,0000,0000,,colori. 
+Dialogue: 0,0:3:39.44,0:3:42.43,Default,,0000,0000,0000,,2NT e' naturale con \nbilanciata da 16-17 o piu' 
+Dialogue: 0,0:3:42.43,0:3:42.55,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:42.55,0:3:45.23,Default,,0000,0000,0000,,Un intervento a colore \nrichiede valori di 
+Dialogue: 0,0:3:45.23,0:3:46.97,Default,,0000,0000,0000,,apertura e almeno 6 \ncarte. 
+Dialogue: 0,0:3:46.97,0:3:49.83,Default,,0000,0000,0000,,Errori da evitare: mai \nspacciare una 5-4 per 
+Dialogue: 0,0:3:49.83,0:3:52.88,Default,,0000,0000,0000,,bicolore, mai \nintervenire su 1NT con bilanciata 
+Dialogue: 0,0:3:52.88,0:3:55.37,Default,,0000,0000,0000,,forte, e mai intervenire \nleggeri sulle 
+Dialogue: 0,0:3:55.37,0:3:57.86,Default,,0000,0000,0000,,sottoaperture, servono \nrequisiti seri. 
+Dialogue: 0,0:3:57.86,0:4:0.47,Default,,0000,0000,0000,,Ricorda queste regole e \nsarai pronto per 
+Dialogue: 0,0:4:0.47,0:4:2.65,Default,,0000,0000,0000,,qualsiasi situazione \ncompetitiva. 
+Dialogue: 0,0:4:2.65,0:4:3.58,Default,,0000,0000,0000,,Alla prossima! 

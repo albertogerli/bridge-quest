@@ -1,0 +1,125 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.35,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.35,0:0:2.56,Default,,0000,0000,0000,,Oggi parliamo di una \ndelle cose piu' 
+Dialogue: 0,0:0:2.56,0:0:5.30,Default,,0000,0000,0000,,affascinanti del bridge \ncome gestire le carte 
+Dialogue: 0,0:0:5.30,0:0:5.88,Default,,0000,0000,0000,,di atout. 
+Dialogue: 0,0:0:5.88,0:0:7.22,Default,,0000,0000,0000,,Sembra semplice, vero? 
+Dialogue: 0,0:0:7.22,0:0:9.84,Default,,0000,0000,0000,,Hai le atout, batti \nquelle avversarie e poi 
+Dialogue: 0,0:0:9.84,0:0:11.00,Default,,0000,0000,0000,,giochi le vincenti. 
+Dialogue: 0,0:0:11.00,0:0:13.68,Default,,0000,0000,0000,,Ma in realta' ci sono \nDUE modi completamente 
+Dialogue: 0,0:0:13.68,0:0:16.54,Default,,0000,0000,0000,,diversi di giocare ad \natout, e scegliere quello 
+Dialogue: 0,0:0:16.54,0:0:18.81,Default,,0000,0000,0000,,sbagliato puo' costarti \nil contratto! 
+Dialogue: 0,0:0:18.81,0:0:21.60,Default,,0000,0000,0000,,Il primo modo si chiama \n`` Controllo del colpo 
+Dialogue: 0,0:0:21.60,0:0:21.83,Default,,0000,0000,0000,,''. 
+Dialogue: 0,0:0:21.83,0:0:24.69,Default,,0000,0000,0000,,E' il piu' comune e \nfunziona in tre fasi: prima 
+Dialogue: 0,0:0:24.69,0:0:27.25,Default,,0000,0000,0000,,batti le atout \navversarie, poi affranchi i 
+Dialogue: 0,0:0:27.25,0:0:30.04,Default,,0000,0000,0000,,colori laterali, e \ninfine incassi le vincenti. 
+Dialogue: 0,0:0:30.04,0:0:32.49,Default,,0000,0000,0000,,E' come pulire il campo \ndai nemici e poi 
+Dialogue: 0,0:0:32.49,0:0:33.89,Default,,0000,0000,0000,,raccogliere il bottino. 
+Dialogue: 0,0:0:33.89,0:0:36.68,Default,,0000,0000,0000,,Pero' attenzione: le \nprime due fasi non sempre 
+Dialogue: 0,0:0:36.68,0:0:38.02,Default,,0000,0000,0000,,vanno in quest'ordine! 
+Dialogue: 0,0:0:38.02,0:0:40.35,Default,,0000,0000,0000,,A volte devi fare degli \naggiustamenti. 
+Dialogue: 0,0:0:40.35,0:0:43.14,Default,,0000,0000,0000,,Il secondo modo si \nchiama `` Taglio totale ''. 
+Dialogue: 0,0:0:43.14,0:0:45.07,Default,,0000,0000,0000,,Qui non batti neanche le \natout! 
+Dialogue: 0,0:0:45.07,0:0:47.92,Default,,0000,0000,0000,,Incassi le vincenti \nlaterali il prima possibile 
+Dialogue: 0,0:0:47.92,0:0:50.77,Default,,0000,0000,0000,,perche' dopo te le \ntaglieranno, e poi cominci a 
+Dialogue: 0,0:0:50.77,0:0:53.62,Default,,0000,0000,0000,,tagliare avanti e \nindietro tra la tua mano e il 
+Dialogue: 0,0:0:53.62,0:0:54.03,Default,,0000,0000,0000,,morto. 
+Dialogue: 0,0:0:54.03,0:0:56.83,Default,,0000,0000,0000,,E' come una partita di \nping-pong con le carte! 
+Dialogue: 0,0:0:56.83,0:0:59.62,Default,,0000,0000,0000,,Per capire quale modo \nscegliere, devi guardare 
+Dialogue: 0,0:0:59.62,0:1:1.31,Default,,0000,0000,0000,,i colori a lato \ndell'atout. 
+Dialogue: 0,0:1:1.31,0:1:3.70,Default,,0000,0000,0000,,Se hai dei colori lunghi \nda affrancare, 
+Dialogue: 0,0:1:3.70,0:1:6.26,Default,,0000,0000,0000,,probabilmente il \ncontrollo del colpo e' la 
+Dialogue: 0,0:1:6.26,0:1:7.13,Default,,0000,0000,0000,,strada giusta. 
+Dialogue: 0,0:1:7.13,0:1:9.46,Default,,0000,0000,0000,,Se hai colori `` corti \n'' con vincenti 
+Dialogue: 0,0:1:9.46,0:1:12.26,Default,,0000,0000,0000,,immediate ma anche molte \ncarte da tagliare, il 
+Dialogue: 0,0:1:12.26,0:1:13.77,Default,,0000,0000,0000,,taglio totale fa per te . 
+Dialogue: 0,0:1:13.77,0:1:16.04,Default,,0000,0000,0000,,Facciamo un esempio di \ntaglio totale. 
+Dialogue: 0,0:1:16.04,0:1:17.03,Default,,0000,0000,0000,,Giochi 2 Picche. 
+Dialogue: 0,0:1:17.03,0:1:18.60,Default,,0000,0000,0000,,Ti attaccano Re di fiori . 
+Dialogue: 0,0:1:18.60,0:1:21.46,Default,,0000,0000,0000,,Il tuo piano: prendi con \nl'Asso di fiori, tagli 
+Dialogue: 0,0:1:21.46,0:1:24.25,Default,,0000,0000,0000,,una fiori, batti Asso-Re \ndi picche, poi vai al 
+Dialogue: 0,0:1:24.25,0:1:27.05,Default,,0000,0000,0000,,morto con le cuori e \ntagli un'altra fiori, poi 
+Dialogue: 0,0:1:27.05,0:1:28.56,Default,,0000,0000,0000,,tagli una cuori in mano . 
+Dialogue: 0,0:1:28.56,0:1:31.41,Default,,0000,0000,0000,,Hai fatto 8 prese \nsaltellando avanti e indietro 
+Dialogue: 0,0:1:31.41,0:1:31.53,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:1:31.53,0:1:34.03,Default,,0000,0000,0000,,La regola fondamentale \ndel taglio totale: 
+Dialogue: 0,0:1:34.03,0:1:36.71,Default,,0000,0000,0000,,inizia a tagliare sempre \ndal colore dove hai 
+Dialogue: 0,0:1:36.71,0:1:39.51,Default,,0000,0000,0000,,PIU' tagli da fare, \nperche' i collegamenti con 
+Dialogue: 0,0:1:39.51,0:1:41.95,Default,,0000,0000,0000,,l'altra mano te li danno \ni tagli stessi. 
+Dialogue: 0,0:1:41.95,0:1:44.69,Default,,0000,0000,0000,,Un caso ancora piu' \nspettacolare e' il taglio 
+Dialogue: 0,0:1:44.69,0:1:45.39,Default,,0000,0000,0000,,incrociato. 
+Dialogue: 0,0:1:45.39,0:1:48.06,Default,,0000,0000,0000,,In uno slam a 6 Cuori, \nhai 4 prese esterne e 
+Dialogue: 0,0:1:48.06,0:1:50.74,Default,,0000,0000,0000,,hai bisogno di tutte e 8 \nle atout come tagli 
+Dialogue: 0,0:1:50.74,0:1:53.60,Default,,0000,0000,0000,,separati: 4 tagli di \npicche nella mano di Ovest 
+Dialogue: 0,0:1:53.60,0:1:55.81,Default,,0000,0000,0000,,e 3 tagli di fiori in \nquella di Est. 
+Dialogue: 0,0:1:55.81,0:1:58.60,Default,,0000,0000,0000,,Inizi dal colore con piu \ntagli per non perdere 
+Dialogue: 0,0:1:58.60,0:1:59.42,Default,,0000,0000,0000,,gli ingressi. 
+Dialogue: 0,0:1:59.42,0:1:57.26,Default,,0000,0000,0000,,Fantastico! 
+Dialogue: 0,0:1:57.26,0:2:0.04,Default,,0000,0000,0000,,Adesso arriviamo a un \nconcetto cruciale: la 
+Dialogue: 0,0:2:0.04,0:2:2.58,Default,,0000,0000,0000,,differenza tra il fit \n5-3 e il fit 4-4. 
+Dialogue: 0,0:2:2.58,0:2:5.37,Default,,0000,0000,0000,,Tutti e due hanno 8 \ncarte di atout, ma sono 
+Dialogue: 0,0:2:5.37,0:2:7.35,Default,,0000,0000,0000,,animali completamente \ndiversi! 
+Dialogue: 0,0:2:7.35,0:2:10.25,Default,,0000,0000,0000,,Il fit 5-3 e' il piu' \nDELICATO tra i fit di 8 
+Dialogue: 0,0:2:10.25,0:2:10.69,Default,,0000,0000,0000,,carte. 
+Dialogue: 0,0:2:10.69,0:2:11.24,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:2:11.24,0:2:14.28,Default,,0000,0000,0000,,Pensa a cosa succede \ndopo tre giri di atout: la 
+Dialogue: 0,0:2:14.28,0:2:17.31,Default,,0000,0000,0000,,mano con 5 carte ne ha \nancora 2, ma la mano con 
+Dialogue: 0,0:2:17.31,0:2:18.79,Default,,0000,0000,0000,,3 carte non ne ha piu'! 
+Dialogue: 0,0:2:18.79,0:2:21.76,Default,,0000,0000,0000,,Solo una mano conserva \nil potere di taglio, ed 
+Dialogue: 0,0:2:21.76,0:2:23.74,Default,,0000,0000,0000,,e' quasi sempre la mano \ncorta. 
+Dialogue: 0,0:2:23.74,0:2:26.53,Default,,0000,0000,0000,,Questo significa che se \nla mano corta ha un 
+Dialogue: 0,0:2:26.53,0:2:28.94,Default,,0000,0000,0000,,colore da affrancare, \ndevi anticipare 
+Dialogue: 0,0:2:28.94,0:2:31.97,Default,,0000,0000,0000,,l'affrancamento PRIMA di \nbattere tutte le atout 
+Dialogue: 0,0:2:31.97,0:2:32.10,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:32.10,0:2:34.88,Default,,0000,0000,0000,,Il grande pericolo del \nfit 5-3 si chiama `` 
+Dialogue: 0,0:2:34.88,0:2:35.99,Default,,0000,0000,0000,,accorciamento ''. 
+Dialogue: 0,0:2:35.99,0:2:38.90,Default,,0000,0000,0000,,Succede quando gli \navversari ti costringono a 
+Dialogue: 0,0:2:38.90,0:2:41.19,Default,,0000,0000,0000,,tagliare dalla mano \nlunga di atout. 
+Dialogue: 0,0:2:41.19,0:2:43.91,Default,,0000,0000,0000,,Se hai 5 atout e gli \navversari te ne fanno 
+Dialogue: 0,0:2:43.91,0:2:46.76,Default,,0000,0000,0000,,usare 2 per tagli \nforzati, all'improvviso ne 
+Dialogue: 0,0:2:46.76,0:2:48.18,Default,,0000,0000,0000,,hai solo 3, come loro! 
+Dialogue: 0,0:2:48.18,0:2:49.67,Default,,0000,0000,0000,,Hai perso il controllo. 
+Dialogue: 0,0:2:49.67,0:2:52.45,Default,,0000,0000,0000,,La difesa \ndall'accorciamento e' semplice in 
+Dialogue: 0,0:2:52.45,0:2:55.36,Default,,0000,0000,0000,,teoria: RIFIUTA di \ntagliare dalla mano lunga! 
+Dialogue: 0,0:2:55.36,0:2:58.08,Default,,0000,0000,0000,,Scarta una perdente \nlaterale piuttosto che 
+Dialogue: 0,0:2:58.08,0:2:58.70,Default,,0000,0000,0000,,tagliare. 
+Dialogue: 0,0:2:58.70,0:3:1.67,Default,,0000,0000,0000,,Per esempio, giochi 2 \nPicche con fit 5-3 e gli 
+Dialogue: 0,0:3:1.67,0:3:4.40,Default,,0000,0000,0000,,avversari ti attaccano \ncuori continuando a 
+Dialogue: 0,0:3:4.40,0:3:4.83,Default,,0000,0000,0000,,farle. 
+Dialogue: 0,0:3:4.83,0:3:7.86,Default,,0000,0000,0000,,Invece di tagliare dalla \nmano lunga, scarti una 
+Dialogue: 0,0:3:7.86,0:3:8.36,Default,,0000,0000,0000,,quadri. 
+Dialogue: 0,0:3:8.36,0:3:11.20,Default,,0000,0000,0000,,Se continuano cuori, \ntagli dalla mano corta, 
+Dialogue: 0,0:3:11.20,0:3:12.25,Default,,0000,0000,0000,,cioe' dal morto. 
+Dialogue: 0,0:3:12.25,0:3:15.29,Default,,0000,0000,0000,,Cosi' la tua lunghezza \nin atout resta intatta e 
+Dialogue: 0,0:3:15.29,0:3:16.71,Default,,0000,0000,0000,,mantieni il controllo. 
+Dialogue: 0,0:3:16.71,0:3:19.68,Default,,0000,0000,0000,,Il fit 4-4, invece, e' \nil piu' POTENTE dei fit 
+Dialogue: 0,0:3:19.68,0:3:20.42,Default,,0000,0000,0000,,di 8 carte. 
+Dialogue: 0,0:3:20.42,0:3:20.98,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:3:20.98,0:3:23.95,Default,,0000,0000,0000,,Perche' nessuna delle \ndue mani e' predestinata 
+Dialogue: 0,0:3:23.95,0:3:25.62,Default,,0000,0000,0000,,ai tagli: puoi scegliere ! 
+Dialogue: 0,0:3:25.62,0:3:28.40,Default,,0000,0000,0000,,La cosa fondamentale e' \ndecidere QUALE mano 
+Dialogue: 0,0:3:28.40,0:3:30.82,Default,,0000,0000,0000,,affrancare e QUALE usare \nper i tagli. 
+Dialogue: 0,0:3:30.82,0:3:33.85,Default,,0000,0000,0000,,L'errore piu' grave e' \nfare `` un taglio di qua 
+Dialogue: 0,0:3:33.85,0:3:36.20,Default,,0000,0000,0000,,e un taglio di la '' \nsenza un piano. 
+Dialogue: 0,0:3:36.20,0:3:38.92,Default,,0000,0000,0000,,Per esempio, in 4 Picche \ncon fit 4-4, devi 
+Dialogue: 0,0:3:38.92,0:3:41.95,Default,,0000,0000,0000,,scegliere: affrancare la \nmano di Ovest che ha 3 
+Dialogue: 0,0:3:41.95,0:3:44.99,Default,,0000,0000,0000,,quadri da tagliare, \npiuttosto che cercare tagli 
+Dialogue: 0,0:3:44.99,0:3:46.16,Default,,0000,0000,0000,,dalla mano di Est. 
+Dialogue: 0,0:3:46.16,0:3:49.19,Default,,0000,0000,0000,,Con un piano chiaro, 10 \nprese sono a portata di 
+Dialogue: 0,0:3:49.19,0:3:49.56,Default,,0000,0000,0000,,mano. 
+Dialogue: 0,0:3:49.56,0:3:51.67,Default,,0000,0000,0000,,Senza piano, rischi il \ndisastro. 
+Dialogue: 0,0:3:51.67,0:3:54.70,Default,,0000,0000,0000,,Ricorda: il 4-4 e' \npotente, ma solo se lo guidi 
+Dialogue: 0,0:3:54.70,0:3:55.81,Default,,0000,0000,0000,,con intelligenza! 
+Dialogue: 0,0:3:55.81,0:3:56.74,Default,,0000,0000,0000,,Alla prossima! 

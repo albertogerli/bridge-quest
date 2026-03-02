@@ -1,0 +1,151 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:2.00,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:2.00,0:0:4.90,Default,,0000,0000,0000,,Oggi parliamo di un \nargomento davvero figo: le 
+Dialogue: 0,0:0:4.90,0:0:5.44,Default,,0000,0000,0000,,cue bid! 
+Dialogue: 0,0:0:5.44,0:0:8.29,Default,,0000,0000,0000,,Sai quando hai una mano \nfortissima e pensi `` 
+Dialogue: 0,0:0:8.29,0:0:10.04,Default,,0000,0000,0000,,qui ci facciamo lo slam \n''? 
+Dialogue: 0,0:0:10.04,0:0:12.94,Default,,0000,0000,0000,,Bene, le cue bid sono lo \nstrumento che usi per 
+Dialogue: 0,0:0:12.94,0:0:15.91,Default,,0000,0000,0000,,capire se lo slam si puo \nfare davvero oppure no 
+Dialogue: 0,0:0:15.91,0:0:16.03,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:16.03,0:0:17.60,Default,,0000,0000,0000,,Ma partiamo dall'inizio . 
+Dialogue: 0,0:0:17.60,0:0:20.32,Default,,0000,0000,0000,,Nella lezione precedente \nabbiamo imparato a 
+Dialogue: 0,0:0:20.32,0:0:21.35,Default,,0000,0000,0000,,fissare l'atout. 
+Dialogue: 0,0:0:21.35,0:0:21.90,Default,,0000,0000,0000,,Ricordi? 
+Dialogue: 0,0:0:21.90,0:0:24.50,Default,,0000,0000,0000,,Quando fissi l'atout in \nuna situazione di 
+Dialogue: 0,0:0:24.50,0:0:27.28,Default,,0000,0000,0000,,terreno solido, stai \ndicendo al compagno: `` 
+Dialogue: 0,0:0:27.28,0:0:28.85,Default,,0000,0000,0000,,Ehi, io punto allo slam ! 
+Dialogue: 0,0:0:28.85,0:0:31.39,Default,,0000,0000,0000,,'' Ed e' esattamente in \nquel momento che 
+Dialogue: 0,0:0:31.39,0:0:33.21,Default,,0000,0000,0000,,entrano in gioco le cue \nbid. 
+Dialogue: 0,0:0:33.21,0:0:35.93,Default,,0000,0000,0000,,Una cue bid e' una \ndichiarazione che sembra 
+Dialogue: 0,0:0:35.93,0:0:37.02,Default,,0000,0000,0000,,strana, illogica. 
+Dialogue: 0,0:0:37.02,0:0:39.50,Default,,0000,0000,0000,,Non stai proponendo un \nnuovo atout, no! 
+Dialogue: 0,0:0:39.50,0:0:41.98,Default,,0000,0000,0000,,Stai dicendo: `` In \nquesto colore ho un 
+Dialogue: 0,0:0:41.98,0:0:42.64,Default,,0000,0000,0000,,controllo. 
+Dialogue: 0,0:0:42.64,0:0:44.34,Default,,0000,0000,0000,,'' E cos' e' un \ncontrollo? 
+Dialogue: 0,0:0:44.34,0:0:47.06,Default,,0000,0000,0000,,E' qualcosa che \nimpedisce agli avversari di 
+Dialogue: 0,0:0:47.06,0:0:49.60,Default,,0000,0000,0000,,fare due prese immediate \nin quel colore. 
+Dialogue: 0,0:0:49.60,0:0:51.84,Default,,0000,0000,0000,,I controlli si dividono \nin livelli. 
+Dialogue: 0,0:0:51.84,0:0:54.50,Default,,0000,0000,0000,,I controlli di primo \ngiro sono l'Asso e il 
+Dialogue: 0,0:0:54.50,0:0:57.34,Default,,0000,0000,0000,,vuoto: nessuno puo' fare \nneanche una presa in 
+Dialogue: 0,0:0:57.34,0:0:59.03,Default,,0000,0000,0000,,quel colore al primo \ngiro. 
+Dialogue: 0,0:0:59.03,0:1:1.76,Default,,0000,0000,0000,,I controlli di secondo \ngiro sono il Re e il 
+Dialogue: 0,0:1:1.76,0:1:4.66,Default,,0000,0000,0000,,singolo: al primo giro \nforse perdete una presa 
+Dialogue: 0,0:1:4.66,0:1:5.75,Default,,0000,0000,0000,,ma al secondo no. 
+Dialogue: 0,0:1:5.75,0:1:8.65,Default,,0000,0000,0000,,E poi ci sono i \ncontrolli di terzo giro, cioe' 
+Dialogue: 0,0:1:8.65,0:1:9.20,Default,,0000,0000,0000,,la Dama. 
+Dialogue: 0,0:1:9.20,0:1:12.04,Default,,0000,0000,0000,,Attenzione a non \nconfondere i controlli con i 
+Dialogue: 0,0:1:12.04,0:1:12.46,Default,,0000,0000,0000,,fermi! 
+Dialogue: 0,0:1:12.46,0:1:15.06,Default,,0000,0000,0000,,Un fermo tipo \nDonna-Fante-piccola serve a 
+Dialogue: 0,0:1:15.06,0:1:17.97,Default,,0000,0000,0000,,senz'atout, ma non e' un \ncontrollo per lo slam 
+Dialogue: 0,0:1:17.97,0:1:18.09,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:18.09,0:1:20.93,Default,,0000,0000,0000,,Per lo slam servono Assi \nRe, vuoti e singoli. 
+Dialogue: 0,0:1:20.93,0:1:22.02,Default,,0000,0000,0000,,Adesso le regole! 
+Dialogue: 0,0:1:22.02,0:1:24.98,Default,,0000,0000,0000,,Le cue bid hanno quattro \nregole fondamentali, e 
+Dialogue: 0,0:1:24.98,0:1:26.92,Default,,0000,0000,0000,,sono facilissime da \nricordare. 
+Dialogue: 0,0:1:26.92,0:1:29.88,Default,,0000,0000,0000,,Regola numero uno: non \nsi fanno mai cue bid nel 
+Dialogue: 0,0:1:29.88,0:1:30.91,Default,,0000,0000,0000,,colore di atout. 
+Dialogue: 0,0:1:30.91,0:1:33.87,Default,,0000,0000,0000,,Se riporti nel colore di \natout, stai dicendo `` 
+Dialogue: 0,0:1:33.87,0:1:35.93,Default,,0000,0000,0000,,basta cosi', non andiamo \navanti. 
+Dialogue: 0,0:1:35.93,0:1:38.89,Default,,0000,0000,0000,,'' Regola numero due: \nfai sempre la cue bid piu 
+Dialogue: 0,0:1:38.89,0:1:39.56,Default,,0000,0000,0000,,economica. 
+Dialogue: 0,0:1:39.56,0:1:42.28,Default,,0000,0000,0000,,Se hai controllo a fiori \ne a quadri, mostri 
+Dialogue: 0,0:1:42.28,0:1:45.06,Default,,0000,0000,0000,,prima fiori perche' e' \nil colore piu' basso. 
+Dialogue: 0,0:1:45.06,0:1:48.03,Default,,0000,0000,0000,,Non importa se il \ncontrollo a quadri e' un Asso 
+Dialogue: 0,0:1:48.03,0:1:50.99,Default,,0000,0000,0000,,e quello a fiori e' un \nsingoletto: mostri prima 
+Dialogue: 0,0:1:50.99,0:1:52.14,Default,,0000,0000,0000,,il piu' economico. 
+Dialogue: 0,0:1:52.14,0:1:54.92,Default,,0000,0000,0000,,Regola numero tre, \nimportantissima: se salti 
+Dialogue: 0,0:1:54.92,0:1:57.46,Default,,0000,0000,0000,,una cue bid, vuol dire \nche non ce l'hai! 
+Dialogue: 0,0:1:57.46,0:2:0.37,Default,,0000,0000,0000,,Esempio: l'atout e' \ncuori e il compagno fa cue 
+Dialogue: 0,0:2:0.37,0:2:2.42,Default,,0000,0000,0000,,bid a picche saltando le \nquadri. 
+Dialogue: 0,0:2:2.42,0:2:5.33,Default,,0000,0000,0000,,Questo significa che NON \nha controllo a quadri 
+Dialogue: 0,0:2:5.33,0:2:5.45,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:5.45,0:2:8.23,Default,,0000,0000,0000,,Se tu poi prosegui con \nuna cue bid a quadri, 
+Dialogue: 0,0:2:8.23,0:2:10.17,Default,,0000,0000,0000,,stai promettendo di \naverlo tu. 
+Dialogue: 0,0:2:10.17,0:2:13.01,Default,,0000,0000,0000,,Regola numero quattro: \nse salti una cue bid e 
+Dialogue: 0,0:2:13.01,0:2:15.61,Default,,0000,0000,0000,,poi la fai al giro dopo \nstai mostrando un 
+Dialogue: 0,0:2:15.61,0:2:14.40,Default,,0000,0000,0000,,controllo di terzo giro \ncioe' la Dama. 
+Dialogue: 0,0:2:14.40,0:2:17.15,Default,,0000,0000,0000,,Ora vediamo come \nfunziona nella pratica. 
+Dialogue: 0,0:2:17.15,0:2:20.23,Default,,0000,0000,0000,,L'accostamento a slam ha \nquattro fasi, come i 
+Dialogue: 0,0:2:20.23,0:2:22.00,Default,,0000,0000,0000,,livelli di un videogioco ! 
+Dialogue: 0,0:2:22.00,0:2:24.69,Default,,0000,0000,0000,,Fase 1: fissi l'atout in \nmodo forzante. 
+Dialogue: 0,0:2:24.69,0:2:27.51,Default,,0000,0000,0000,,Questo l'abbiamo gia' \nvisto nella lezione 
+Dialogue: 0,0:2:27.51,0:2:28.03,Default,,0000,0000,0000,,scorsa. 
+Dialogue: 0,0:2:28.03,0:2:31.05,Default,,0000,0000,0000,,Per esempio, dopo 2 su 1 \nforzante manche, un 
+Dialogue: 0,0:2:31.05,0:2:33.86,Default,,0000,0000,0000,,rialzo appena sotto \nmanche fissa l'atout. 
+Dialogue: 0,0:2:33.86,0:2:36.75,Default,,0000,0000,0000,,Fase 2: verifichi che \ntutti i colori siano 
+Dialogue: 0,0:2:36.75,0:2:37.60,Default,,0000,0000,0000,,controllati. 
+Dialogue: 0,0:2:37.60,0:2:39.30,Default,,0000,0000,0000,,Qui arrivano le cue bid ! 
+Dialogue: 0,0:2:39.30,0:2:42.45,Default,,0000,0000,0000,,E c' e' una regola \nimportantissima: quando sei 
+Dialogue: 0,0:2:42.45,0:2:45.40,Default,,0000,0000,0000,,sotto il livello di \nmanche, le cue bid sono 
+Dialogue: 0,0:2:45.40,0:2:46.31,Default,,0000,0000,0000,,OBBLIGATORIE. 
+Dialogue: 0,0:2:46.31,0:2:49.26,Default,,0000,0000,0000,,Non puoi dire `` ah, ho \nla mano minima, non 
+Dialogue: 0,0:2:49.26,0:2:50.51,Default,,0000,0000,0000,,faccio la cue bid. 
+Dialogue: 0,0:2:50.51,0:2:50.97,Default,,0000,0000,0000,,'' No! 
+Dialogue: 0,0:2:50.97,0:2:53.98,Default,,0000,0000,0000,,Se hai un controllo e \nsei sotto manche, DEVI 
+Dialogue: 0,0:2:53.98,0:2:54.70,Default,,0000,0000,0000,,mostrarlo. 
+Dialogue: 0,0:2:54.70,0:2:57.46,Default,,0000,0000,0000,,Non nascondere \ninformazioni al compagno! 
+Dialogue: 0,0:2:57.46,0:3:0.21,Default,,0000,0000,0000,,Fase 3: ridefinisci la \nforza della mano. 
+Dialogue: 0,0:3:0.21,0:3:3.29,Default,,0000,0000,0000,,C' e' un concetto che si \nchiama `` livello di 
+Dialogue: 0,0:3:3.29,0:3:4.07,Default,,0000,0000,0000,,guardia ''. 
+Dialogue: 0,0:3:4.07,0:3:7.29,Default,,0000,0000,0000,,Se l'atout e' cuori, il \nlivello di guardia e' 3 
+Dialogue: 0,0:3:7.29,0:3:10.04,Default,,0000,0000,0000,,Cuori, e le cue bid \npartono da 3 Picche. 
+Dialogue: 0,0:3:10.04,0:3:13.18,Default,,0000,0000,0000,,Se l'atout e' picche, il \nlivello di guardia e' 
+Dialogue: 0,0:3:13.18,0:3:16.07,Default,,0000,0000,0000,,3 Picche, e le cue bid \npartono da 4 Fiori. 
+Dialogue: 0,0:3:16.07,0:3:19.21,Default,,0000,0000,0000,,Chi si ferma al livello \ndi guardia sta dicendo 
+Dialogue: 0,0:3:19.21,0:3:20.26,Default,,0000,0000,0000,,`` sono minimo. 
+Dialogue: 0,0:3:20.26,0:3:23.41,Default,,0000,0000,0000,,'' Chi lo supera sta \ndicendo `` sono massimo e 
+Dialogue: 0,0:3:23.41,0:3:24.98,Default,,0000,0000,0000,,ho ancora cose da dire! 
+Dialogue: 0,0:3:24.98,0:3:26.68,Default,,0000,0000,0000,,'' Fase 4: 4 Senz'Atout ! 
+Dialogue: 0,0:3:26.68,0:3:29.83,Default,,0000,0000,0000,,La famosa richiesta di \nAssi, il Blackwood RKC. 
+Dialogue: 0,0:3:29.83,0:3:32.97,Default,,0000,0000,0000,,Ma attenzione: puo' \nchiedere gli Assi solo chi 
+Dialogue: 0,0:3:32.97,0:3:35.92,Default,,0000,0000,0000,,non si e' mai limitato \nnella dichiarazione. 
+Dialogue: 0,0:3:35.92,0:3:39.13,Default,,0000,0000,0000,,Se hai gia' mostrato di \nessere minimo, tocca al 
+Dialogue: 0,0:3:39.13,0:3:40.38,Default,,0000,0000,0000,,compagno decidere. 
+Dialogue: 0,0:3:40.38,0:3:42.41,Default,,0000,0000,0000,,Facciamo un esempio \nconcreto. 
+Dialogue: 0,0:3:42.41,0:3:45.23,Default,,0000,0000,0000,,La sequenza e' 2 Picche \nforte - 3 Picche. 
+Dialogue: 0,0:3:45.23,0:3:48.44,Default,,0000,0000,0000,,Ovest ha aperto 2 Picche \nche promette almeno 21 
+Dialogue: 0,0:3:48.44,0:3:48.90,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:3:48.90,0:3:51.72,Default,,0000,0000,0000,,Est alza a 3 Picche, che \nfissa l'atout in 
+Dialogue: 0,0:3:51.72,0:3:52.77,Default,,0000,0000,0000,,terreno solido. 
+Dialogue: 0,0:3:52.77,0:3:54.93,Default,,0000,0000,0000,,Ora Ovest fa 4 Quadri, \ncue bid. 
+Dialogue: 0,0:3:54.93,0:3:56.50,Default,,0000,0000,0000,,Ma ha saltato le fiori! 
+Dialogue: 0,0:3:56.50,0:3:59.65,Default,,0000,0000,0000,,Questo dice a Est: `` \nNon ho controllo a fiori 
+Dialogue: 0,0:3:59.65,0:3:59.78,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:59.78,0:4:2.79,Default,,0000,0000,0000,,'' Est non ha controllo \na fiori nemmeno lui, 
+Dialogue: 0,0:4:2.79,0:4:5.09,Default,,0000,0000,0000,,quindi DEVE riportare a \n4 Picche. 
+Dialogue: 0,0:4:5.09,0:4:7.97,Default,,0000,0000,0000,,Non puo' andare avanti a \nmostrare i cuori, 
+Dialogue: 0,0:4:7.97,0:4:10.72,Default,,0000,0000,0000,,perche' le fiori non \nsono controllate da 
+Dialogue: 0,0:4:10.72,0:4:11.31,Default,,0000,0000,0000,,nessuno. 
+Dialogue: 0,0:4:11.31,0:4:14.52,Default,,0000,0000,0000,,Risultato: si fermano a \n4 Picche ed evitano uno 
+Dialogue: 0,0:4:14.52,0:4:15.70,Default,,0000,0000,0000,,slam impossibile. 
+Dialogue: 0,0:4:15.70,0:4:17.67,Default,,0000,0000,0000,,Le cue bid ti hanno \nsalvato! 
+Dialogue: 0,0:4:17.67,0:4:20.75,Default,,0000,0000,0000,,Un altro esempio bello: \n1 Cuori - 2 Fiori - 2 
+Dialogue: 0,0:4:20.75,0:4:22.65,Default,,0000,0000,0000,,Picche - 3 Cuori - 4 \nFiori. 
+Dialogue: 0,0:4:22.65,0:4:25.66,Default,,0000,0000,0000,,Qui l'atout e' cuori, \nfissato con 3 Cuori in 
+Dialogue: 0,0:4:25.66,0:4:26.71,Default,,0000,0000,0000,,terreno solido. 
+Dialogue: 0,0:4:26.71,0:4:28.81,Default,,0000,0000,0000,,Ovest fa 4 Fiori come \ncue bid. 
+Dialogue: 0,0:4:28.81,0:4:31.89,Default,,0000,0000,0000,,Est risponde 4 Quadri, e \nOvest dice 4 Picche. 
+Dialogue: 0,0:4:31.89,0:4:34.45,Default,,0000,0000,0000,,Poi Est chiede Assi con \n4 Senz'Atout. 
+Dialogue: 0,0:4:34.45,0:4:37.33,Default,,0000,0000,0000,,Se le risposte sono \nbuone, si arriva a 6 o 
+Dialogue: 0,0:4:37.33,0:4:38.70,Default,,0000,0000,0000,,addirittura 7 Cuori! 
+Dialogue: 0,0:4:38.70,0:4:39.75,Default,,0000,0000,0000,,Fantastico, no? 
+Dialogue: 0,0:4:39.75,0:4:42.83,Default,,0000,0000,0000,,Ricorda: le cue bid non \nsono difficili, basta 
+Dialogue: 0,0:4:42.83,0:4:44.67,Default,,0000,0000,0000,,seguire le quattro \nregole. 
+Dialogue: 0,0:4:44.67,0:4:47.42,Default,,0000,0000,0000,,Non fare cue bid \nnell'atout, fai la piu' 
+Dialogue: 0,0:4:47.42,0:4:50.57,Default,,0000,0000,0000,,economica, se salti vuol \ndire che non ce l'hai 
+Dialogue: 0,0:4:50.57,0:4:53.71,Default,,0000,0000,0000,,e se la fai dopo averla \nsaltata e' terzo giro. 
+Dialogue: 0,0:4:53.71,0:4:56.53,Default,,0000,0000,0000,,Con queste regole, lo \nslam non avra' piu' 
+Dialogue: 0,0:4:56.53,0:4:57.58,Default,,0000,0000,0000,,segreti per te! 
+Dialogue: 0,0:4:57.58,0:4:59.87,Default,,0000,0000,0000,,Ci vediamo alla prossima \nlezione! 

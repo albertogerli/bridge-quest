@@ -1,0 +1,120 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:1.98,Default,,0000,0000,0000,,Bentornato a BridgeQuest ! 
+Dialogue: 0,0:0:1.98,0:0:4.57,Default,,0000,0000,0000,,Oggi parliamo di un \nargomento che ti fara 
+Dialogue: 0,0:0:4.57,0:0:6.85,Default,,0000,0000,0000,,sentire un vero mago \ndella carte: le 
+Dialogue: 0,0:0:6.85,0:0:8.72,Default,,0000,0000,0000,,probabilita e le \npercentuali! 
+Dialogue: 0,0:0:8.72,0:0:11.54,Default,,0000,0000,0000,,Sai, il bridge non e' \nsolo istinto e fortuna. 
+Dialogue: 0,0:0:11.54,0:0:14.49,Default,,0000,0000,0000,,C' e' della matematica \ndietro, e chi la conosce 
+Dialogue: 0,0:0:14.49,0:0:17.38,Default,,0000,0000,0000,,ha un vantaggio enorme \nsu chi va a sentimento. 
+Dialogue: 0,0:0:17.38,0:0:19.90,Default,,0000,0000,0000,,Partiamo da una cosa che \nsorprende tutti 
+Dialogue: 0,0:0:19.90,0:0:20.62,Default,,0000,0000,0000,,all'inizio. 
+Dialogue: 0,0:0:20.62,0:0:23.45,Default,,0000,0000,0000,,Quando ti manca un \nnumero pari di carte in un 
+Dialogue: 0,0:0:23.45,0:0:26.33,Default,,0000,0000,0000,,colore, la divisione piu \nequilibrata NON e' la 
+Dialogue: 0,0:0:26.33,0:0:27.30,Default,,0000,0000,0000,,piu' probabile. 
+Dialogue: 0,0:0:27.30,0:0:28.14,Default,,0000,0000,0000,,Strano, vero? 
+Dialogue: 0,0:0:28.14,0:0:30.90,Default,,0000,0000,0000,,Se ti mancano sei carte \npenseresti che tre e 
+Dialogue: 0,0:0:30.90,0:0:32.89,Default,,0000,0000,0000,,tre sia il caso piu' \nfrequente. 
+Dialogue: 0,0:0:32.89,0:0:33.67,Default,,0000,0000,0000,,E invece no! 
+Dialogue: 0,0:0:33.67,0:0:36.50,Default,,0000,0000,0000,,La divisione quattro e \ndue e' piu' probabile: 
+Dialogue: 0,0:0:36.50,0:0:39.20,Default,,0000,0000,0000,,succede nel quarantotto \nper cento dei casi, 
+Dialogue: 0,0:0:39.20,0:0:41.49,Default,,0000,0000,0000,,mentre tre e tre solo \nnel trentasei. 
+Dialogue: 0,0:0:41.49,0:0:44.31,Default,,0000,0000,0000,,E' come se le carte \npreferissero distribuirsi 
+Dialogue: 0,0:0:44.31,0:0:46.06,Default,,0000,0000,0000,,in modo un po' \nsbilanciato. 
+Dialogue: 0,0:0:46.06,0:0:48.94,Default,,0000,0000,0000,,Adesso ti do una tabella \nche e' come avere una 
+Dialogue: 0,0:0:48.94,0:0:50.02,Default,,0000,0000,0000,,mappa del tesoro. 
+Dialogue: 0,0:0:50.02,0:0:52.55,Default,,0000,0000,0000,,Memorizzala e avrai \nsempre un vantaggio! 
+Dialogue: 0,0:0:52.55,0:0:55.38,Default,,0000,0000,0000,,Se ti mancano due carte \nuna e una succede nel 
+Dialogue: 0,0:0:55.38,0:0:58.32,Default,,0000,0000,0000,,cinquantadue per cento \ndei casi, due e zero nel 
+Dialogue: 0,0:0:58.32,0:0:59.10,Default,,0000,0000,0000,,quarantotto. 
+Dialogue: 0,0:0:59.10,0:1:1.45,Default,,0000,0000,0000,,Se ti mancano tre carte \ndue e uno nel 
+Dialogue: 0,0:1:1.45,0:1:4.33,Default,,0000,0000,0000,,settantotto per cento, \ntre e zero nel ventidue 
+Dialogue: 0,0:1:4.33,0:1:4.45,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:4.45,0:1:7.04,Default,,0000,0000,0000,,Con quattro carte \nmancanti: tre e uno nel 
+Dialogue: 0,0:1:7.04,0:1:9.93,Default,,0000,0000,0000,,cinquanta per cento, due \ne due nel quaranta, e 
+Dialogue: 0,0:1:9.93,0:1:11.55,Default,,0000,0000,0000,,quattro e zero nel dieci . 
+Dialogue: 0,0:1:11.55,0:1:14.07,Default,,0000,0000,0000,,Con cinque carte \nmancanti: tre e due nel 
+Dialogue: 0,0:1:14.07,0:1:16.60,Default,,0000,0000,0000,,sessantotto per cento, \nquattro e uno nel 
+Dialogue: 0,0:1:16.60,0:1:19.00,Default,,0000,0000,0000,,ventotto, e cinque e \nzero nel quattro. 
+Dialogue: 0,0:1:19.00,0:1:21.59,Default,,0000,0000,0000,,Con sei carte mancanti: \nquattro e due nel 
+Dialogue: 0,0:1:21.59,0:1:24.48,Default,,0000,0000,0000,,quarantotto, tre e tre \nnel trentasei, e cinque 
+Dialogue: 0,0:1:24.48,0:1:25.68,Default,,0000,0000,0000,,e uno nel quindici. 
+Dialogue: 0,0:1:25.68,0:1:28.32,Default,,0000,0000,0000,,Con sette carte mancanti \nquattro e tre nel 
+Dialogue: 0,0:1:28.32,0:1:30.79,Default,,0000,0000,0000,,sessantadue per cento, \ncinque e due nel 
+Dialogue: 0,0:1:30.79,0:1:31.39,Default,,0000,0000,0000,,trentuno. 
+Dialogue: 0,0:1:31.39,0:1:32.17,Default,,0000,0000,0000,,E l'impasse? 
+Dialogue: 0,0:1:32.17,0:1:34.76,Default,,0000,0000,0000,,L'impasse semplice \nriesce esattamente nel 
+Dialogue: 0,0:1:34.76,0:1:36.62,Default,,0000,0000,0000,,cinquanta per cento dei \ncasi. 
+Dialogue: 0,0:1:36.62,0:1:38.43,Default,,0000,0000,0000,,E' come lanciare una \nmoneta. 
+Dialogue: 0,0:1:38.43,0:1:41.31,Default,,0000,0000,0000,,Questo numero e' \nimportantissimo perche' e' il 
+Dialogue: 0,0:1:41.31,0:1:44.20,Default,,0000,0000,0000,,nostro punto di \nriferimento per confrontare le 
+Dialogue: 0,0:1:44.20,0:1:43.66,Default,,0000,0000,0000,,diverse linee di gioco. 
+Dialogue: 0,0:1:43.66,0:1:46.31,Default,,0000,0000,0000,,Ora viene la parte \ndavvero divertente: come 
+Dialogue: 0,0:1:46.31,0:1:49.14,Default,,0000,0000,0000,,usare questi numeri per \nfare la scelta giusta! 
+Dialogue: 0,0:1:49.14,0:1:51.97,Default,,0000,0000,0000,,Immagina di avere sette \ncarte in un colore, ti 
+Dialogue: 0,0:1:51.97,0:1:54.38,Default,,0000,0000,0000,,manca il Fante, e devi \ndecidere: faccio 
+Dialogue: 0,0:1:54.38,0:1:56.86,Default,,0000,0000,0000,,l'impasse al Dieci \noppure batto in testa 
+Dialogue: 0,0:1:56.86,0:1:58.57,Default,,0000,0000,0000,,sperando che il Fante \ncada? 
+Dialogue: 0,0:1:58.57,0:2:1.33,Default,,0000,0000,0000,,Ecco il trucco: dipende \nda dove sta il Dieci! 
+Dialogue: 0,0:2:1.33,0:2:3.16,Default,,0000,0000,0000,,Se hai Asso-Tre in una \nmano e 
+Dialogue: 0,0:2:3.16,0:2:5.93,Default,,0000,0000,0000,,Re-Donna-Dieci-Sei-Due \nnell'altra, battere in 
+Dialogue: 0,0:2:5.93,0:2:8.82,Default,,0000,0000,0000,,testa vince nel \ncinquantadue per cento dei casi 
+Dialogue: 0,0:2:8.82,0:2:8.93,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:8.93,0:2:9.46,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:2:9.46,0:2:12.35,Default,,0000,0000,0000,,Perche' il Fante cade \ncon le tre-tre, che e' il 
+Dialogue: 0,0:2:12.35,0:2:15.18,Default,,0000,0000,0000,,trentasei per cento, piu \nle volte che il Fante 
+Dialogue: 0,0:2:15.18,0:2:17.83,Default,,0000,0000,0000,,e' secondo nella \ndivisione quattro-due, che 
+Dialogue: 0,0:2:17.83,0:2:20.01,Default,,0000,0000,0000,,aggiunge un altro sedici \nper cento. 
+Dialogue: 0,0:2:20.01,0:2:21.31,Default,,0000,0000,0000,,Totale: cinquantadue! 
+Dialogue: 0,0:2:21.31,0:2:24.02,Default,,0000,0000,0000,,Meglio dell'impasse che \nvale solo cinquanta. 
+Dialogue: 0,0:2:24.02,0:2:24.90,Default,,0000,0000,0000,,Ma attenzione! 
+Dialogue: 0,0:2:24.90,0:2:27.20,Default,,0000,0000,0000,,Se il Dieci e' accanto \nall'Asso, tipo 
+Dialogue: 0,0:2:27.20,0:2:29.97,Default,,0000,0000,0000,,Asso-Dieci in una mano e \nRe-Donna-Sei-Tre-Due 
+Dialogue: 0,0:2:29.97,0:2:32.85,Default,,0000,0000,0000,,nell'altra, allora \nl'impasse al Dieci vince nel 
+Dialogue: 0,0:2:32.85,0:2:35.56,Default,,0000,0000,0000,,cinquanta per cento, \nmentre battere in testa 
+Dialogue: 0,0:2:35.56,0:2:38.33,Default,,0000,0000,0000,,vince solo nel trentasei \ncioe' solo quando il 
+Dialogue: 0,0:2:38.33,0:2:40.86,Default,,0000,0000,0000,,Fante cade perche' le \ncarte sono tre-tre. 
+Dialogue: 0,0:2:40.86,0:2:43.40,Default,,0000,0000,0000,,In questo caso l'impasse \ne' molto meglio! 
+Dialogue: 0,0:2:43.40,0:2:46.17,Default,,0000,0000,0000,,Ma la cosa piu' bella di \ntutte e' il concetto 
+Dialogue: 0,0:2:46.17,0:2:47.46,Default,,0000,0000,0000,,di chance successive. 
+Dialogue: 0,0:2:47.46,0:2:50.17,Default,,0000,0000,0000,,Immagina di poter \nprovare prima una linea di 
+Dialogue: 0,0:2:50.17,0:2:52.82,Default,,0000,0000,0000,,gioco e, se non funziona \nprovarne un'altra. 
+Dialogue: 0,0:2:52.82,0:2:54.47,Default,,0000,0000,0000,,Le percentuali si \nSOMMANO! 
+Dialogue: 0,0:2:54.47,0:2:57.07,Default,,0000,0000,0000,,Per esempio: prima provi \nse le quadri sono 
+Dialogue: 0,0:2:57.07,0:2:59.60,Default,,0000,0000,0000,,tre-due, che e' il \nsessantotto per cento. 
+Dialogue: 0,0:2:59.60,0:3:2.37,Default,,0000,0000,0000,,Se non sono tre-due, \nprovi l'impasse a cuori, 
+Dialogue: 0,0:3:2.37,0:3:5.08,Default,,0000,0000,0000,,che sul trentadue per \ncento restante vale il 
+Dialogue: 0,0:3:5.08,0:3:7.73,Default,,0000,0000,0000,,cinquanta, cioe' un \naltro sedici per cento. 
+Dialogue: 0,0:3:7.73,0:3:10.03,Default,,0000,0000,0000,,Totale: sessantotto piu \nsedici uguale 
+Dialogue: 0,0:3:10.03,0:3:11.62,Default,,0000,0000,0000,,ottantaquattro per cento ! 
+Dialogue: 0,0:3:11.62,0:3:14.03,Default,,0000,0000,0000,,E' come avere un \nparacadute di riserva. 
+Dialogue: 0,0:3:14.03,0:3:16.51,Default,,0000,0000,0000,,Oppure hai bisogno che \nalmeno uno di due 
+Dialogue: 0,0:3:16.51,0:3:17.45,Default,,0000,0000,0000,,impasse riesca. 
+Dialogue: 0,0:3:17.45,0:3:19.45,Default,,0000,0000,0000,,Il primo e' cinquanta \nper cento. 
+Dialogue: 0,0:3:19.45,0:3:22.34,Default,,0000,0000,0000,,Se fallisce, il secondo \ne' ancora cinquanta per 
+Dialogue: 0,0:3:22.34,0:3:24.75,Default,,0000,0000,0000,,cento, ma sul cinquanta \nrestante, cioe' 
+Dialogue: 0,0:3:24.75,0:3:25.52,Default,,0000,0000,0000,,venticinque. 
+Dialogue: 0,0:3:25.52,0:3:27.58,Default,,0000,0000,0000,,Totale: settantacinque \nper cento! 
+Dialogue: 0,0:3:27.58,0:3:28.53,Default,,0000,0000,0000,,Fantastico, no? 
+Dialogue: 0,0:3:28.53,0:3:31.35,Default,,0000,0000,0000,,L'ordine in cui provi le \ncose e' fondamentale. 
+Dialogue: 0,0:3:31.35,0:3:33.95,Default,,0000,0000,0000,,Prova PRIMA la chance \nche, se fallisce, ti 
+Dialogue: 0,0:3:33.95,0:3:36.42,Default,,0000,0000,0000,,lascia ancora la \npossibilita' di provare 
+Dialogue: 0,0:3:36.42,0:3:36.95,Default,,0000,0000,0000,,l'altra. 
+Dialogue: 0,0:3:36.95,0:3:39.84,Default,,0000,0000,0000,,Se fai l'impasse prima e \nfallisce, potresti non 
+Dialogue: 0,0:3:39.84,0:3:42.19,Default,,0000,0000,0000,,avere piu' gli ingressi \nper provare la 
+Dialogue: 0,0:3:42.19,0:3:43.90,Default,,0000,0000,0000,,divisione del colore \nlungo! 
+Dialogue: 0,0:3:43.90,0:3:46.49,Default,,0000,0000,0000,,Ragiona sempre \ndall'inizio su quale ordine 
+Dialogue: 0,0:3:46.49,0:3:49.20,Default,,0000,0000,0000,,seguire, e avrai una \npercentuale di successo 
+Dialogue: 0,0:3:49.20,0:3:50.21,Default,,0000,0000,0000,,molto piu' alta. 
+Dialogue: 0,0:3:50.21,0:3:52.27,Default,,0000,0000,0000,,Ci vediamo alla prossima \nlezione! 

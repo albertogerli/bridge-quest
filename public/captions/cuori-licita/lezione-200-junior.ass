@@ -1,0 +1,142 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.36,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.36,0:0:3.17,Default,,0000,0000,0000,,Oggi parliamo di una \nregola che nel bridge e' 
+Dialogue: 0,0:0:3.17,0:0:5.91,Default,,0000,0000,0000,,come una formula magica \nla Legge delle Prese 
+Dialogue: 0,0:0:5.91,0:0:6.39,Default,,0000,0000,0000,,Totali. 
+Dialogue: 0,0:0:6.39,0:0:9.32,Default,,0000,0000,0000,,Sembra complicata, ma ti \nassicuro che una volta 
+Dialogue: 0,0:0:9.32,0:0:12.13,Default,,0000,0000,0000,,capita, diventa il tuo \nsuperpotere al tavolo. 
+Dialogue: 0,0:0:12.13,0:0:14.94,Default,,0000,0000,0000,,Immagina di giocare una \npartita a squadre: la 
+Dialogue: 0,0:0:14.94,0:0:17.74,Default,,0000,0000,0000,,tua squadra ha un certo \nnumero di giocatori e 
+Dialogue: 0,0:0:17.74,0:0:19.18,Default,,0000,0000,0000,,quella avversaria pure. 
+Dialogue: 0,0:0:19.18,0:0:22.04,Default,,0000,0000,0000,,Nel bridge, i `` \ngiocatori '' sono le carte di 
+Dialogue: 0,0:0:22.04,0:0:22.46,Default,,0000,0000,0000,,atout. 
+Dialogue: 0,0:0:22.46,0:0:25.39,Default,,0000,0000,0000,,La Legge dice una cosa \nsemplicissima: il numero 
+Dialogue: 0,0:0:25.39,0:0:28.26,Default,,0000,0000,0000,,totale di prese che le \ndue coppie possono fare 
+Dialogue: 0,0:0:28.26,0:0:31.18,Default,,0000,0000,0000,,ognuna nel proprio \nmiglior contratto, e' uguale 
+Dialogue: 0,0:0:31.18,0:0:33.81,Default,,0000,0000,0000,,alla somma totale delle \ncarte di atout che 
+Dialogue: 0,0:0:33.81,0:0:34.53,Default,,0000,0000,0000,,possiedono. 
+Dialogue: 0,0:0:34.53,0:0:37.34,Default,,0000,0000,0000,,Quindi se la tua coppia \nha 8 carte di atout e 
+Dialogue: 0,0:0:37.34,0:0:40.15,Default,,0000,0000,0000,,gli avversari ne hanno 8 \nle prese totali sono 
+Dialogue: 0,0:0:40.15,0:0:40.39,Default,,0000,0000,0000,,16. 
+Dialogue: 0,0:0:40.39,0:0:43.13,Default,,0000,0000,0000,,Se voi ne avete 9 e loro \n8, il totale e' 17. 
+Dialogue: 0,0:0:43.13,0:0:46.00,Default,,0000,0000,0000,,Ma la parte davvero \nutile e' questa: quando le 
+Dialogue: 0,0:0:46.00,0:0:48.39,Default,,0000,0000,0000,,due coppie hanno piu' o \nmeno lo stesso 
+Dialogue: 0,0:0:48.39,0:0:51.32,Default,,0000,0000,0000,,punteggio, ognuna fara' \ntante prese quante sono 
+Dialogue: 0,0:0:51.32,0:0:52.69,Default,,0000,0000,0000,,le atout che possiede. 
+Dialogue: 0,0:0:52.69,0:0:55.62,Default,,0000,0000,0000,,Quindi se hai 8 atout in \nlinea, puoi aspettarti 
+Dialogue: 0,0:0:55.62,0:0:58.55,Default,,0000,0000,0000,,di fare 8 prese, cioe' \nun contratto a livello 2 
+Dialogue: 0,0:0:58.55,0:0:58.67,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:58.67,0:1:1.06,Default,,0000,0000,0000,,Se ne hai 9, puoi \ngiocare a livello 3. 
+Dialogue: 0,0:1:1.06,0:1:3.92,Default,,0000,0000,0000,,Se ne hai 10, puoi \nspingerti fino a livello 4. 
+Dialogue: 0,0:1:3.92,0:1:6.85,Default,,0000,0000,0000,,Ecco la regola d'oro: il \nlivello di sicurezza e 
+Dialogue: 0,0:1:6.85,0:1:9.12,Default,,0000,0000,0000,,pari al numero delle \natout in linea. 
+Dialogue: 0,0:1:9.12,0:1:10.91,Default,,0000,0000,0000,,Otto atout uguale \nlivello 2. 
+Dialogue: 0,0:1:10.91,0:1:12.70,Default,,0000,0000,0000,,Nove atout uguale \nlivello 3. 
+Dialogue: 0,0:1:12.70,0:1:14.56,Default,,0000,0000,0000,,Dieci atout uguale \nlivello 4. 
+Dialogue: 0,0:1:14.56,0:1:17.42,Default,,0000,0000,0000,,E' come un ascensore: \npiu' carte di atout hai, 
+Dialogue: 0,0:1:17.42,0:1:19.04,Default,,0000,0000,0000,,piu' in alto puoi salire . 
+Dialogue: 0,0:1:19.04,0:1:21.85,Default,,0000,0000,0000,,Adesso, cosa fai quando \nsei in una situazione 
+Dialogue: 0,0:1:21.85,0:1:24.65,Default,,0000,0000,0000,,competitiva, cioe' \nquando anche gli avversari 
+Dialogue: 0,0:1:24.65,0:1:25.37,Default,,0000,0000,0000,,dichiarano? 
+Dialogue: 0,0:1:25.37,0:1:28.06,Default,,0000,0000,0000,,Se hai il fit e il \npunteggio e' piu' o meno 
+Dialogue: 0,0:1:28.06,0:1:30.69,Default,,0000,0000,0000,,uguale al loro, conviene \ndichiarare subito 
+Dialogue: 0,0:1:30.69,0:1:33.02,Default,,0000,0000,0000,,tante prese quante le \natout in linea. 
+Dialogue: 0,0:1:33.02,0:1:35.71,Default,,0000,0000,0000,,Non aspettare, non \nesitare: metti subito la 
+Dialogue: 0,0:1:35.71,0:1:36.78,Default,,0000,0000,0000,,pressione giusta. 
+Dialogue: 0,0:1:36.78,0:1:38.57,Default,,0000,0000,0000,,Facciamo un esempio \npratico. 
+Dialogue: 0,0:1:38.57,0:1:40.90,Default,,0000,0000,0000,,Il compagno apre 1 Fiori \nl'avversario 
+Dialogue: 0,0:1:40.90,0:1:42.16,Default,,0000,0000,0000,,interviene 1 Picche. 
+Dialogue: 0,0:1:42.16,0:1:44.67,Default,,0000,0000,0000,,Tu hai: \nDonna-piccola-piccola di picche, 
+Dialogue: 0,0:1:44.67,0:1:46.16,Default,,0000,0000,0000,,piccola-piccola di cuori \n
+Dialogue: 0,0:1:46.16,0:1:49.03,Default,,0000,0000,0000,,Re-piccola-piccola-picco \nla-piccola di quadri, 
+Dialogue: 0,0:1:49.03,0:1:51.12,Default,,0000,0000,0000,,piccola-piccola-piccola \ndi fiori. 
+Dialogue: 0,0:1:51.12,0:1:53.99,Default,,0000,0000,0000,,Hai 3 carte di fiori piu \nle 5 del compagno che 
+Dialogue: 0,0:1:53.99,0:1:56.44,Default,,0000,0000,0000,,ne ha promesse almeno 3 \ncon l'apertura: 
+Dialogue: 0,0:1:56.44,0:1:58.77,Default,,0000,0000,0000,,probabilmente avete 8 \natout in linea. 
+Dialogue: 0,0:1:58.77,0:1:59.60,Default,,0000,0000,0000,,Dici 2 Fiori! 
+Dialogue: 0,0:1:59.60,0:2:2.41,Default,,0000,0000,0000,,Con \nDonna-piccola-piccola-pi ccola di picche, 
+Dialogue: 0,0:2:2.41,0:2:4.50,Default,,0000,0000,0000,,piccola-piccola-piccola \ndi cuori, 
+Dialogue: 0,0:2:4.50,0:2:7.43,Default,,0000,0000,0000,,Asso-piccola-piccola-pic \ncola-piccola di quadri 
+Dialogue: 0,0:2:7.43,0:2:8.80,Default,,0000,0000,0000,,e un singolo di fiori? 
+Dialogue: 0,0:2:8.80,0:2:11.31,Default,,0000,0000,0000,,Avete 9 atout e il \nsingolo rende la mano 
+Dialogue: 0,0:2:11.31,0:2:10.18,Default,,0000,0000,0000,,migliore: dici 3 Fiori! 
+Dialogue: 0,0:2:10.18,0:2:12.90,Default,,0000,0000,0000,,Adesso dobbiamo parlare \ndi quando la Legge 
+Dialogue: 0,0:2:12.90,0:2:15.94,Default,,0000,0000,0000,,funziona un po' meno \nbene, e di quando funziona 
+Dialogue: 0,0:2:15.94,0:2:17.73,Default,,0000,0000,0000,,ancora meglio del \nprevisto. 
+Dialogue: 0,0:2:17.73,0:2:20.58,Default,,0000,0000,0000,,Le distribuzioni piatte \nsono il nemico della 
+Dialogue: 0,0:2:20.58,0:2:21.01,Default,,0000,0000,0000,,Legge. 
+Dialogue: 0,0:2:21.01,0:2:21.69,Default,,0000,0000,0000,,Cosa sono? 
+Dialogue: 0,0:2:21.69,0:2:24.54,Default,,0000,0000,0000,,Mani tipo 5-3-3-2 o, \npeggio ancora, 4-3-3-3. 
+Dialogue: 0,0:2:24.54,0:2:27.33,Default,,0000,0000,0000,,Quando hai una di queste \nmani, le prese che 
+Dialogue: 0,0:2:27.33,0:2:30.18,Default,,0000,0000,0000,,riesci a fare sono di \nmeno rispetto a quello 
+Dialogue: 0,0:2:30.18,0:2:31.91,Default,,0000,0000,0000,,che la Legge \nprevederebbe. 
+Dialogue: 0,0:2:31.91,0:2:34.82,Default,,0000,0000,0000,,E' come avere una \nmacchina potente ma guidare 
+Dialogue: 0,0:2:34.82,0:2:37.85,Default,,0000,0000,0000,,su una strada tutta \ndritta e piatta: non riesci 
+Dialogue: 0,0:2:37.85,0:2:39.28,Default,,0000,0000,0000,,a sfruttare il motore. 
+Dialogue: 0,0:2:39.28,0:2:42.12,Default,,0000,0000,0000,,Quindi con una 4-3-3-3 \ndevi svalutare di una 
+Dialogue: 0,0:2:42.12,0:2:42.56,Default,,0000,0000,0000,,presa. 
+Dialogue: 0,0:2:42.56,0:2:45.53,Default,,0000,0000,0000,,Se la Legge dice che \npuoi giocare a livello 3, 
+Dialogue: 0,0:2:45.53,0:2:46.83,Default,,0000,0000,0000,,fermati a livello 2. 
+Dialogue: 0,0:2:46.83,0:2:49.74,Default,,0000,0000,0000,,Esempio: il compagno \napre 1 Fiori, avversario 
+Dialogue: 0,0:2:49.74,0:2:52.77,Default,,0000,0000,0000,,interviene 1 Picche e tu \nhai Re-9-6-3 di picche 
+Dialogue: 0,0:2:52.77,0:2:55.74,Default,,0000,0000,0000,,Donna-8-2 di cuori, \n8-7-4 di quadri, Re-9-2 di 
+Dialogue: 0,0:2:55.74,0:2:56.18,Default,,0000,0000,0000,,fiori. 
+Dialogue: 0,0:2:56.18,0:2:59.15,Default,,0000,0000,0000,,Hai il fit quarto a \npicche del compagno ... ah 
+Dialogue: 0,0:2:59.15,0:3:1.81,Default,,0000,0000,0000,,no, aspetta: il compagno \nha aperto fiori. 
+Dialogue: 0,0:3:1.81,0:3:4.78,Default,,0000,0000,0000,,Hai 3 fiori, \ndistribuzione 4-3-3-3 piattissima 
+Dialogue: 0,0:3:4.78,0:3:4.91,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:4.91,0:3:7.63,Default,,0000,0000,0000,,Nonostante le 8-9 atout \ndici solo 2 Fiori. 
+Dialogue: 0,0:3:7.63,0:3:9.67,Default,,0000,0000,0000,,La 4-3-3-3 ti toglie una \npresa. 
+Dialogue: 0,0:3:9.67,0:3:12.40,Default,,0000,0000,0000,,E quando la Legge e' \nancora piu' generosa? 
+Dialogue: 0,0:3:12.40,0:3:14.81,Default,,0000,0000,0000,,Due situazioni: il \nsingolo nel colore 
+Dialogue: 0,0:3:14.81,0:3:16.61,Default,,0000,0000,0000,,avversario e il doppio \nfit. 
+Dialogue: 0,0:3:16.61,0:3:19.45,Default,,0000,0000,0000,,Se hai un singolo nel \ncolore che giocano gli 
+Dialogue: 0,0:3:19.45,0:3:21.99,Default,,0000,0000,0000,,avversari, puoi \ndichiarare uno in piu'. 
+Dialogue: 0,0:3:21.99,0:3:24.84,Default,,0000,0000,0000,,Se avete un doppio fit, \ncioe' il fit sia nel 
+Dialogue: 0,0:3:24.84,0:3:27.81,Default,,0000,0000,0000,,vostro colore che in un \naltro, puoi dichiarare 
+Dialogue: 0,0:3:27.81,0:3:28.62,Default,,0000,0000,0000,,uno in piu'. 
+Dialogue: 0,0:3:28.62,0:3:31.59,Default,,0000,0000,0000,,Questi bonus sono come \navere delle carte jolly 
+Dialogue: 0,0:3:31.59,0:3:32.02,Default,,0000,0000,0000,,extra. 
+Dialogue: 0,0:3:32.02,0:3:34.99,Default,,0000,0000,0000,,Attenzione anche agli \nonori intermedi: Donne e 
+Dialogue: 0,0:3:34.99,0:3:35.42,Default,,0000,0000,0000,,Fanti. 
+Dialogue: 0,0:3:35.42,0:3:38.27,Default,,0000,0000,0000,,Se li hai nel colore di \natout o in un colore 
+Dialogue: 0,0:3:38.27,0:3:40.13,Default,,0000,0000,0000,,laterale vostro, sono \nutili. 
+Dialogue: 0,0:3:40.13,0:3:43.16,Default,,0000,0000,0000,,Se li hai nei colori \ndegli avversari, sono meno 
+Dialogue: 0,0:3:43.16,0:3:46.20,Default,,0000,0000,0000,,utili di quanto pensi: \nfanno presa in difesa ma 
+Dialogue: 0,0:3:46.20,0:3:48.98,Default,,0000,0000,0000,,non in attacco, e \nabbassano il totale delle 
+Dialogue: 0,0:3:48.98,0:3:49.42,Default,,0000,0000,0000,,prese. 
+Dialogue: 0,0:3:49.42,0:3:52.45,Default,,0000,0000,0000,,Un ultimo punto \nimportantissimo: non confondere 
+Dialogue: 0,0:3:52.45,0:3:55.42,Default,,0000,0000,0000,,dichiarazioni \ncompetitive con inviti a manche! 
+Dialogue: 0,0:3:55.42,0:3:58.45,Default,,0000,0000,0000,,Quando dici 2 Picche o 3 \nPicche direttamente in 
+Dialogue: 0,0:3:58.45,0:4:0.93,Default,,0000,0000,0000,,appoggio al compagno in \nuna situazione 
+Dialogue: 0,0:4:0.93,0:4:3.41,Default,,0000,0000,0000,,competitiva, stai \napplicando la Legge. 
+Dialogue: 0,0:4:3.41,0:4:6.44,Default,,0000,0000,0000,,Non stai dicendo `` ho \ntanti punti, proviamo la 
+Dialogue: 0,0:4:6.44,0:4:7.12,Default,,0000,0000,0000,,manche ''. 
+Dialogue: 0,0:4:7.12,0:4:9.60,Default,,0000,0000,0000,,Per invitare a manche \ndevi usare altri 
+Dialogue: 0,0:4:9.60,0:4:12.44,Default,,0000,0000,0000,,strumenti: 2 Senza Atout \nun altro colore, il 
+Dialogue: 0,0:4:12.44,0:4:12.94,Default,,0000,0000,0000,,Contro. 
+Dialogue: 0,0:4:12.94,0:4:15.91,Default,,0000,0000,0000,,Mai nominare \ndirettamente l'atout per invitare 
+Dialogue: 0,0:4:15.91,0:4:16.04,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:4:16.04,0:4:19.01,Default,,0000,0000,0000,,Per esempio, dopo 1 \nCuori - 1 Picche - 2 Cuori 
+Dialogue: 0,0:4:19.01,0:4:22.04,Default,,0000,0000,0000,,dal compagno, se dici 2 \nSenza Atout o 3 Fiori o 
+Dialogue: 0,0:4:22.04,0:4:24.27,Default,,0000,0000,0000,,3 Quadri, stai invitando \na manche. 
+Dialogue: 0,0:4:24.27,0:4:27.24,Default,,0000,0000,0000,,Ma se dici 3 Cuori, \nquello e' competitivo, non 
+Dialogue: 0,0:4:27.24,0:4:27.92,Default,,0000,0000,0000,,un invito. 
+Dialogue: 0,0:4:27.92,0:4:30.89,Default,,0000,0000,0000,,Ricorda: Legge uguale \ncompetitivo, convenzioni 
+Dialogue: 0,0:4:30.89,0:4:32.13,Default,,0000,0000,0000,,uguale costruttivo. 
+Dialogue: 0,0:4:32.13,0:4:34.55,Default,,0000,0000,0000,,La Legge delle Prese \nTotali e' il tuo 
+Dialogue: 0,0:4:34.55,0:4:37.39,Default,,0000,0000,0000,,navigatore nella giungla \ndelle dichiarazioni 
+Dialogue: 0,0:4:37.39,0:4:38.20,Default,,0000,0000,0000,,competitive. 
+Dialogue: 0,0:4:38.20,0:4:40.36,Default,,0000,0000,0000,,Usala bene e non ti \nperderai mai! 
+Dialogue: 0,0:4:40.36,0:4:42.53,Default,,0000,0000,0000,,Ci vediamo alla prossima \nlezione! 

@@ -1,0 +1,134 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.38,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.38,0:0:2.70,Default,,0000,0000,0000,,Oggi parliamo di un \nargomento super 
+Dialogue: 0,0:0:2.70,0:0:4.78,Default,,0000,0000,0000,,interessante: le \nsottoaperture! 
+Dialogue: 0,0:0:4.78,0:0:7.73,Default,,0000,0000,0000,,Sai, nel bridge non \nsempre hai una mano forte 
+Dialogue: 0,0:0:7.73,0:0:9.24,Default,,0000,0000,0000,,per aprire a livello 1. 
+Dialogue: 0,0:0:9.24,0:0:12.19,Default,,0000,0000,0000,,A volte hai una mano \ndebole, tipo 6-10 punti, 
+Dialogue: 0,0:0:12.19,0:0:14.83,Default,,0000,0000,0000,,ma con un bel colore \nlungo di sei carte. 
+Dialogue: 0,0:0:14.83,0:0:16.03,Default,,0000,0000,0000,,E allora cosa fai? 
+Dialogue: 0,0:0:16.03,0:0:16.72,Default,,0000,0000,0000,,Sottoapri! 
+Dialogue: 0,0:0:16.72,0:0:19.55,Default,,0000,0000,0000,,Le sottoaperture sono 2 \nQuadri, 2 Cuori e 2 
+Dialogue: 0,0:0:19.55,0:0:20.05,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:0:20.05,0:0:22.82,Default,,0000,0000,0000,,Attenzione: 2 Fiori \nresta l'unica apertura 
+Dialogue: 0,0:0:22.82,0:0:25.39,Default,,0000,0000,0000,,forte del sistema, \nquindi non si tocca! 
+Dialogue: 0,0:0:25.39,0:0:28.47,Default,,0000,0000,0000,,Le altre tre aperture a \nlivello 2 sono deboli e 
+Dialogue: 0,0:0:28.47,0:0:29.35,Default,,0000,0000,0000,,interdittive. 
+Dialogue: 0,0:0:29.35,0:0:32.43,Default,,0000,0000,0000,,Stai dicendo agli \navversari: `` Ho sei carte in 
+Dialogue: 0,0:0:32.43,0:0:34.32,Default,,0000,0000,0000,,questo colore e pochi \npunti. 
+Dialogue: 0,0:0:34.32,0:0:35.26,Default,,0000,0000,0000,,Buona fortuna! 
+Dialogue: 0,0:0:35.26,0:0:38.28,Default,,0000,0000,0000,,'' Ma non basta avere \nsei carte e pochi punti. 
+Dialogue: 0,0:0:38.28,0:0:40.29,Default,,0000,0000,0000,,Il colore deve essere \ndecente! 
+Dialogue: 0,0:0:40.29,0:0:43.24,Default,,0000,0000,0000,,Per 2 Cuori e 2 Picche, \nil colore deve essere 
+Dialogue: 0,0:0:43.24,0:0:46.20,Default,,0000,0000,0000,,capeggiato da almeno un \nonore maggiore, cioe' 
+Dialogue: 0,0:0:46.20,0:0:47.20,Default,,0000,0000,0000,,l'Asso o il Re. 
+Dialogue: 0,0:0:47.20,0:0:50.16,Default,,0000,0000,0000,,Va bene anche la Dama \naccompagnata almeno dal 
+Dialogue: 0,0:0:50.16,0:0:51.60,Default,,0000,0000,0000,,10, tipo Q-10-x-x-x-x. 
+Dialogue: 0,0:0:51.60,0:0:54.68,Default,,0000,0000,0000,,Per 2 Quadri il \nrequisito e' piu' alto: servono 
+Dialogue: 0,0:0:54.68,0:0:57.13,Default,,0000,0000,0000,,almeno due onori \nmaggiori nel colore. 
+Dialogue: 0,0:0:57.13,0:0:57.70,Default,,0000,0000,0000,,Perche'? 
+Dialogue: 0,0:0:57.70,0:1:0.72,Default,,0000,0000,0000,,Perche' con le quadri la \nmanche probabile e' 3 
+Dialogue: 0,0:1:0.72,0:1:3.48,Default,,0000,0000,0000,,Senz'Atout, e ti serve \nun colore che possa 
+Dialogue: 0,0:1:3.48,0:1:4.99,Default,,0000,0000,0000,,giocarsi quasi da solo. 
+Dialogue: 0,0:1:4.99,0:1:7.44,Default,,0000,0000,0000,,C' e' una regola \nimportantissima: mai 
+Dialogue: 0,0:1:7.44,0:1:10.02,Default,,0000,0000,0000,,sottoaprire quando hai \nanche una quarta 
+Dialogue: 0,0:1:10.02,0:1:11.21,Default,,0000,0000,0000,,maggiore a fianco! 
+Dialogue: 0,0:1:11.21,0:1:14.29,Default,,0000,0000,0000,,Se hai sei quadri e \nquattro cuori, non aprire 2 
+Dialogue: 0,0:1:14.29,0:1:14.80,Default,,0000,0000,0000,,Quadri. 
+Dialogue: 0,0:1:14.80,0:1:17.81,Default,,0000,0000,0000,,E anche avere tre carte \nnell'altro maggiore e' 
+Dialogue: 0,0:1:17.81,0:1:20.14,Default,,0000,0000,0000,,sconveniente per una \nsottoapertura. 
+Dialogue: 0,0:1:20.14,0:1:23.16,Default,,0000,0000,0000,,Quanto ai punti: il \nminimo e' 6, purche' siano 
+Dialogue: 0,0:1:23.16,0:1:24.67,Default,,0000,0000,0000,,concentrati nel colore. 
+Dialogue: 0,0:1:24.67,0:1:27.68,Default,,0000,0000,0000,,Non tutti i 6 punti \nvanno bene: se hai un Re a 
+Dialogue: 0,0:1:27.68,0:1:30.76,Default,,0000,0000,0000,,fiori e una Dama a cuori \nma il tuo colore lungo 
+Dialogue: 0,0:1:30.76,0:1:33.72,Default,,0000,0000,0000,,e' picche, quei 6 punti \nnon valgono nulla per 
+Dialogue: 0,0:1:33.72,0:1:34.85,Default,,0000,0000,0000,,la sottoapertura. 
+Dialogue: 0,0:1:34.85,0:1:36.80,Default,,0000,0000,0000,,Il massimo e' circa 10 \npunti. 
+Dialogue: 0,0:1:36.80,0:1:39.88,Default,,0000,0000,0000,,Se hai due prese certe \ndi controgioco, tipo due 
+Dialogue: 0,0:1:39.88,0:1:42.58,Default,,0000,0000,0000,,Assi laterali, apri di 1 \nnon sottoaprire. 
+Dialogue: 0,0:1:42.58,0:1:45.60,Default,,0000,0000,0000,,Dopo che sottoapri, il \ntuo compagno diventa il 
+Dialogue: 0,0:1:45.60,0:1:46.22,Default,,0000,0000,0000,,Capitano. 
+Dialogue: 0,0:1:46.22,0:1:49.18,Default,,0000,0000,0000,,Tu hai detto tutto con \nla tua apertura, e ora 
+Dialogue: 0,0:1:49.18,0:1:48.86,Default,,0000,0000,0000,,le decisioni spettano a \nlui! 
+Dialogue: 0,0:1:48.86,0:1:51.72,Default,,0000,0000,0000,,Adesso vediamo cosa fa \nil compagno quando 
+Dialogue: 0,0:1:51.72,0:1:53.78,Default,,0000,0000,0000,,sottoapri 2 Cuori o 2 \nPicche. 
+Dialogue: 0,0:1:53.78,0:1:55.97,Default,,0000,0000,0000,,Il compagno ha diverse \nopzioni. 
+Dialogue: 0,0:1:55.97,0:1:58.49,Default,,0000,0000,0000,,Prima opzione: dire un \ncolore nuovo. 
+Dialogue: 0,0:1:58.49,0:2:1.55,Default,,0000,0000,0000,,Questo e' forte, almeno \n14 punti, con almeno 
+Dialogue: 0,0:2:1.55,0:2:3.28,Default,,0000,0000,0000,,cinque carte nel colore . 
+Dialogue: 0,0:2:3.28,0:2:4.14,Default,,0000,0000,0000,,E' forzante! 
+Dialogue: 0,0:2:4.14,0:2:7.26,Default,,0000,0000,0000,,Tu come apertore devi \nrispondere: appoggi con 
+Dialogue: 0,0:2:7.26,0:2:10.45,Default,,0000,0000,0000,,fit terzo, dici 2 \nSenz'Atout con il doubleton, 
+Dialogue: 0,0:2:10.45,0:2:13.51,Default,,0000,0000,0000,,ripeti il tuo colore con \nsingolo o vuoto nel 
+Dialogue: 0,0:2:13.51,0:2:14.90,Default,,0000,0000,0000,,colore del compagno. 
+Dialogue: 0,0:2:14.90,0:2:16.89,Default,,0000,0000,0000,,Seconda opzione: rialzo \na 3. 
+Dialogue: 0,0:2:16.89,0:2:19.88,Default,,0000,0000,0000,,Per esempio, su 2 Picche \nil compagno dice 3 
+Dialogue: 0,0:2:19.88,0:2:20.42,Default,,0000,0000,0000,,Picche. 
+Dialogue: 0,0:2:20.42,0:2:22.14,Default,,0000,0000,0000,,Questo NON e' un invito ! 
+Dialogue: 0,0:2:22.14,0:2:23.87,Default,,0000,0000,0000,,E' una decisione finale . 
+Dialogue: 0,0:2:23.87,0:2:26.79,Default,,0000,0000,0000,,Il compagno ha tre carte \ndi appoggio e sta 
+Dialogue: 0,0:2:26.79,0:2:29.85,Default,,0000,0000,0000,,applicando la Legge \ndelle Prese Totali: nove 
+Dialogue: 0,0:2:29.85,0:2:31.91,Default,,0000,0000,0000,,carte, nove prese, \nlivello 3. 
+Dialogue: 0,0:2:31.91,0:2:33.10,Default,,0000,0000,0000,,Tu passi e basta. 
+Dialogue: 0,0:2:33.10,0:2:36.16,Default,,0000,0000,0000,,Terza opzione: rialzo \ndirettamente a manche. 
+Dialogue: 0,0:2:36.16,0:2:38.02,Default,,0000,0000,0000,,Il compagno dice 4 \nPicche. 
+Dialogue: 0,0:2:38.02,0:2:40.94,Default,,0000,0000,0000,,Anche questa e' \ndecisionale: o ha una mano 
+Dialogue: 0,0:2:40.94,0:2:44.13,Default,,0000,0000,0000,,povera con fit quarto e \nsta giocando la Legge, 
+Dialogue: 0,0:2:44.13,0:2:47.32,Default,,0000,0000,0000,,oppure ha fit \nsufficiente con abbastanza punti 
+Dialogue: 0,0:2:47.32,0:2:48.32,Default,,0000,0000,0000,,per la manche. 
+Dialogue: 0,0:2:48.32,0:2:51.57,Default,,0000,0000,0000,,E poi c' e' la quarta \nopzione, la piu' figa: la 
+Dialogue: 0,0:2:51.57,0:2:52.83,Default,,0000,0000,0000,,convenzione Ogust! 
+Dialogue: 0,0:2:52.83,0:2:55.42,Default,,0000,0000,0000,,Il compagno dice 2 \nSenz'Atout, che e' 
+Dialogue: 0,0:2:55.42,0:2:57.62,Default,,0000,0000,0000,,un'interrogativa \nconvenzionale. 
+Dialogue: 0,0:2:57.62,0:2:58.75,Default,,0000,0000,0000,,Non e' naturale! 
+Dialogue: 0,0:2:58.75,0:3:1.47,Default,,0000,0000,0000,,Ti sta chiedendo: `` Com \ne' la tua mano 
+Dialogue: 0,0:3:1.47,0:3:2.33,Default,,0000,0000,0000,,esattamente? 
+Dialogue: 0,0:3:2.33,0:3:5.06,Default,,0000,0000,0000,,'' Le risposte all'Ogust \nsono semplici. 
+Dialogue: 0,0:3:5.06,0:3:8.05,Default,,0000,0000,0000,,3 Fiori vuol dire \npunteggio minimo e colore 
+Dialogue: 0,0:3:8.05,0:3:8.58,Default,,0000,0000,0000,,brutto. 
+Dialogue: 0,0:3:8.58,0:3:11.63,Default,,0000,0000,0000,,3 Quadri vuol dire \npunteggio minimo e colore 
+Dialogue: 0,0:3:11.63,0:3:12.10,Default,,0000,0000,0000,,bello. 
+Dialogue: 0,0:3:12.10,0:3:15.15,Default,,0000,0000,0000,,3 Cuori vuol dire \npunteggio massimo e colore 
+Dialogue: 0,0:3:15.15,0:3:15.69,Default,,0000,0000,0000,,brutto. 
+Dialogue: 0,0:3:15.69,0:3:18.81,Default,,0000,0000,0000,,3 Picche vuol dire \npunteggio massimo e colore 
+Dialogue: 0,0:3:18.81,0:3:19.27,Default,,0000,0000,0000,,bello. 
+Dialogue: 0,0:3:19.27,0:3:22.53,Default,,0000,0000,0000,,3 Senz'Atout vuol dire \nche hai Asso-Re-Dama nel 
+Dialogue: 0,0:3:22.53,0:3:24.79,Default,,0000,0000,0000,,tuo colore, praticamente \nchiuso! 
+Dialogue: 0,0:3:24.79,0:3:27.78,Default,,0000,0000,0000,,Il punteggio minimo e' \n6-8, il massimo e' 8 
+Dialogue: 0,0:3:27.78,0:3:28.91,Default,,0000,0000,0000,,belli fino a 10. 
+Dialogue: 0,0:3:28.91,0:3:31.83,Default,,0000,0000,0000,,Il colore bello ha due \nonori maggiori tipo 
+Dialogue: 0,0:3:31.83,0:3:34.88,Default,,0000,0000,0000,,Asso-Re, Asso-Dama, \nRe-Dama, oppure un onore 
+Dialogue: 0,0:3:34.88,0:3:36.61,Default,,0000,0000,0000,,maggiore con Fante e 10 . 
+Dialogue: 0,0:3:36.61,0:3:39.60,Default,,0000,0000,0000,,Esempio: hai \nQ-10-9-7-5-3 di picche, 8-7 di 
+Dialogue: 0,0:3:39.60,0:3:42.59,Default,,0000,0000,0000,,cuori, Re-8-4 di quadri \ne Donna-7 di fiori. 
+Dialogue: 0,0:3:42.59,0:3:43.59,Default,,0000,0000,0000,,Apri 2 Picche. 
+Dialogue: 0,0:3:43.59,0:3:46.78,Default,,0000,0000,0000,,Su 2 Senz'Atout del \ncompagno, rispondi 3 Fiori 
+Dialogue: 0,0:3:46.78,0:3:49.10,Default,,0000,0000,0000,,punteggio minimo e \ncolore brutto. 
+Dialogue: 0,0:3:49.10,0:3:52.16,Default,,0000,0000,0000,,Un caso speciale: se il \ncompagno sottoapre 2 
+Dialogue: 0,0:3:52.16,0:3:55.35,Default,,0000,0000,0000,,Quadri, le cose \nfunzionano un po' diversamente 
+Dialogue: 0,0:3:55.35,0:3:55.48,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:3:55.48,0:3:58.20,Default,,0000,0000,0000,,Le risposte 2 Cuori, 2 \nPicche e 3 Fiori 
+Dialogue: 0,0:3:58.20,0:4:1.32,Default,,0000,0000,0000,,mostrano cinque carte e \n14-15 punti, cercando 
+Dialogue: 0,0:4:1.32,0:4:2.72,Default,,0000,0000,0000,,la manche nella 5/3. 
+Dialogue: 0,0:4:2.72,0:4:5.71,Default,,0000,0000,0000,,E 2 Senz'Atout su 2 \nQuadri e' NATURALE, non 
+Dialogue: 0,0:4:5.71,0:4:6.17,Default,,0000,0000,0000,,Ogust! 
+Dialogue: 0,0:4:6.17,0:4:8.03,Default,,0000,0000,0000,,E' un tentativo di \nmanche. 
+Dialogue: 0,0:4:8.03,0:4:10.96,Default,,0000,0000,0000,,L'apertore mostra valori \nlaterali o dice 3 
+Dialogue: 0,0:4:10.96,0:4:13.95,Default,,0000,0000,0000,,Senz'Atout con massimo e \nquadri semichiuse. 
+Dialogue: 0,0:4:13.95,0:4:17.14,Default,,0000,0000,0000,,Per difendersi dalle \nsottoaperture avversarie: 
+Dialogue: 0,0:4:17.14,0:4:20.39,Default,,0000,0000,0000,,Contro e' informativo \ncon interesse per l'altro 
+Dialogue: 0,0:4:20.39,0:4:23.58,Default,,0000,0000,0000,,maggiore; interventi a \ncolore sono naturali; 2 
+Dialogue: 0,0:4:23.58,0:4:26.77,Default,,0000,0000,0000,,Senz'Atout mostra \nbilanciata con fermo e 16-18 
+Dialogue: 0,0:4:26.77,0:4:27.23,Default,,0000,0000,0000,,punti. 
+Dialogue: 0,0:4:27.23,0:4:28.23,Default,,0000,0000,0000,,Alla prossima! 

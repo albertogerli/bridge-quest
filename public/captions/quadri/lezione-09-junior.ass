@@ -1,0 +1,141 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.34,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.34,0:0:2.91,Default,,0000,0000,0000,,Oggi parliamo di un \nmomento importantissimo: 
+Dialogue: 0,0:0:2.91,0:0:5.65,Default,,0000,0000,0000,,quando gli avversari \nattaccano e tu devi capire 
+Dialogue: 0,0:0:5.65,0:0:6.82,Default,,0000,0000,0000,,cosa sta succedendo. 
+Dialogue: 0,0:0:6.82,0:0:9.39,Default,,0000,0000,0000,,Immagina di essere un \ndetective: la carta di 
+Dialogue: 0,0:0:9.39,0:0:12.13,Default,,0000,0000,0000,,attacco e il tuo primo \nindizio per risolvere il 
+Dialogue: 0,0:0:12.13,0:0:12.46,Default,,0000,0000,0000,,caso. 
+Dialogue: 0,0:0:12.46,0:0:15.03,Default,,0000,0000,0000,,Se impari a leggere \nquesto indizio, il gioco 
+Dialogue: 0,0:0:15.03,0:0:16.54,Default,,0000,0000,0000,,diventa molto piu facile ! 
+Dialogue: 0,0:0:16.54,0:0:19.23,Default,,0000,0000,0000,,Partiamo dalla regola \npiu importante di tutte, 
+Dialogue: 0,0:0:19.23,0:0:21.74,Default,,0000,0000,0000,,segnala sul quaderno \nperche e fondamentale: 
+Dialogue: 0,0:0:21.74,0:0:24.37,Default,,0000,0000,0000,,nessun giocatore esperto \nattacca sotto l'Asso 
+Dialogue: 0,0:0:24.37,0:0:26.10,Default,,0000,0000,0000,,contro un contratto ad \natout. 
+Dialogue: 0,0:0:26.10,0:0:26.38,Default,,0000,0000,0000,,Mai. 
+Dialogue: 0,0:0:26.38,0:0:29.12,Default,,0000,0000,0000,,Se il tuo avversario \nattacca con una cartina in 
+Dialogue: 0,0:0:29.12,0:0:31.69,Default,,0000,0000,0000,,un colore e l'Asso non e \nsul tavolo ne nella 
+Dialogue: 0,0:0:31.69,0:0:34.09,Default,,0000,0000,0000,,tua mano, puoi stare \ntranquillo: l'Asso e 
+Dialogue: 0,0:0:34.09,0:0:36.78,Default,,0000,0000,0000,,nell'altra mano, quella \ndel compagno di chi ha 
+Dialogue: 0,0:0:36.78,0:0:37.39,Default,,0000,0000,0000,,attaccato. 
+Dialogue: 0,0:0:37.39,0:0:40.07,Default,,0000,0000,0000,,Questa deduzione e un \nregalo enorme, perche ti 
+Dialogue: 0,0:0:40.07,0:0:42.81,Default,,0000,0000,0000,,dice esattamente dove si \ntrova una carta chiave 
+Dialogue: 0,0:0:42.81,0:0:42.93,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:0:42.93,0:0:43.82,Default,,0000,0000,0000,,Ma c' e di piu. 
+Dialogue: 0,0:0:43.82,0:0:46.45,Default,,0000,0000,0000,,Quando l'avversario \nattacca con un onore, per 
+Dialogue: 0,0:0:46.45,0:0:48.63,Default,,0000,0000,0000,,esempio il Re, guarda \nsubito la carta 
+Dialogue: 0,0:0:48.63,0:0:50.14,Default,,0000,0000,0000,,immediatamente piu bassa . 
+Dialogue: 0,0:0:50.14,0:0:52.76,Default,,0000,0000,0000,,Se hai il Dieci in mano \no al morto, e il Re e 
+Dialogue: 0,0:0:52.76,0:0:55.28,Default,,0000,0000,0000,,stato attaccato, \nchiediti: l'avversario sta 
+Dialogue: 0,0:0:55.28,0:0:57.68,Default,,0000,0000,0000,,attaccando da una \nsequenza tipo Re-Donna, 
+Dialogue: 0,0:0:57.68,0:0:59.52,Default,,0000,0000,0000,,oppure il Re e secco o \nsecondo? 
+Dialogue: 0,0:0:59.52,0:1:2.26,Default,,0000,0000,0000,,Se avessi visto la Donna \nsul tavolo o nella tua 
+Dialogue: 0,0:1:2.26,0:1:4.95,Default,,0000,0000,0000,,mano, sapresti che \nl'attacco viene da Re-Donna 
+Dialogue: 0,0:1:4.95,0:1:5.06,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:5.06,0:1:7.74,Default,,0000,0000,0000,,Ma se la Donna non si \nvede, forse il Re e solo 
+Dialogue: 0,0:1:7.74,0:1:10.37,Default,,0000,0000,0000,,cioe l'avversario spera \ndi trovare l'Asso nel 
+Dialogue: 0,0:1:10.37,0:1:12.66,Default,,0000,0000,0000,,compagno e di fare \ntaglio al giro dopo! 
+Dialogue: 0,0:1:12.66,0:1:15.29,Default,,0000,0000,0000,,Nei contratti ad atout, \nl'attacco di un onore 
+Dialogue: 0,0:1:15.29,0:1:16.80,Default,,0000,0000,0000,,secondo e frequentissimo . 
+Dialogue: 0,0:1:16.80,0:1:17.24,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:1:17.24,0:1:19.70,Default,,0000,0000,0000,,Perche chi attacca cerca \nspesso un taglio. 
+Dialogue: 0,0:1:19.70,0:1:22.05,Default,,0000,0000,0000,,Se ha Re-piccola di \nCuori e spera che il 
+Dialogue: 0,0:1:22.05,0:1:24.73,Default,,0000,0000,0000,,compagno abbia l'Asso, \nattacca il Re per farsi 
+Dialogue: 0,0:1:24.73,0:1:27.14,Default,,0000,0000,0000,,dare il ritorno e \ntagliare al terzo giro. 
+Dialogue: 0,0:1:27.14,0:1:29.87,Default,,0000,0000,0000,,E come quando in un \nvideogioco il nemico fa una 
+Dialogue: 0,0:1:29.87,0:1:32.45,Default,,0000,0000,0000,,mossa prevedibile: se \nconosci il suo schema, 
+Dialogue: 0,0:1:32.45,0:1:33.40,Default,,0000,0000,0000,,puoi difenderti! 
+Dialogue: 0,0:1:33.40,0:1:36.02,Default,,0000,0000,0000,,Adesso parliamo di una \ntecnica da vero furbo: 
+Dialogue: 0,0:1:36.02,0:1:37.20,Default,,0000,0000,0000,,creare un'illusione. 
+Dialogue: 0,0:1:37.20,0:1:39.71,Default,,0000,0000,0000,,Se capisci che \nl'avversario sta cercando un 
+Dialogue: 0,0:1:39.71,0:1:42.45,Default,,0000,0000,0000,,taglio, puoi confonderlo \ngiocando un onore alto 
+Dialogue: 0,0:1:42.45,0:1:43.34,Default,,0000,0000,0000,,dalla tua mano. 
+Dialogue: 0,0:1:43.34,0:1:46.08,Default,,0000,0000,0000,,Per esempio, se \nl'attacco e piccola e tu hai il 
+Dialogue: 0,0:1:46.08,0:1:48.60,Default,,0000,0000,0000,,Fante e la Donna, dai il \nFante invece della 
+Dialogue: 0,0:1:48.60,0:1:48.99,Default,,0000,0000,0000,,Donna. 
+Dialogue: 0,0:1:48.99,0:1:51.34,Default,,0000,0000,0000,,L'avversario potrebbe \npensare che il suo 
+Dialogue: 0,0:1:51.34,0:1:53.96,Default,,0000,0000,0000,,compagno abbia il Fante \ne cambiare strategia. 
+Dialogue: 0,0:1:53.96,0:1:56.03,Default,,0000,0000,0000,,E come un bluff a carte \nfai credere 
+Dialogue: 0,0:1:56.03,0:1:55.92,Default,,0000,0000,0000,,all'avversario qualcosa \nche non e vero! 
+Dialogue: 0,0:1:55.92,0:1:58.05,Default,,0000,0000,0000,,Bene, passiamo a un \naltro concetto 
+Dialogue: 0,0:1:58.05,0:2:0.71,Default,,0000,0000,0000,,importantissimo: non \nsprecare gli onori del 
+Dialogue: 0,0:2:0.71,0:2:1.12,Default,,0000,0000,0000,,morto! 
+Dialogue: 0,0:2:1.12,0:2:3.90,Default,,0000,0000,0000,,Quando l'avversario \nattacca e al morto hai un 
+Dialogue: 0,0:2:3.90,0:2:6.67,Default,,0000,0000,0000,,onore come il Re, non \nbuttarlo sulla presa se 
+Dialogue: 0,0:2:6.67,0:2:7.74,Default,,0000,0000,0000,,non puo vincerla. 
+Dialogue: 0,0:2:7.74,0:2:10.46,Default,,0000,0000,0000,,Un Re vivo al morto fa \npaura all'avversario: 
+Dialogue: 0,0:2:10.46,0:2:13.35,Default,,0000,0000,0000,,non osera piu giocare \nquel colore perche sa che 
+Dialogue: 0,0:2:13.35,0:2:14.59,Default,,0000,0000,0000,,il Re lo fermerebbe. 
+Dialogue: 0,0:2:14.59,0:2:17.49,Default,,0000,0000,0000,,E come avere una \nsentinella all'ingresso: anche 
+Dialogue: 0,0:2:17.49,0:2:20.27,Default,,0000,0000,0000,,se non combatte, la sua \npresenza scoraggia il 
+Dialogue: 0,0:2:20.27,0:2:20.74,Default,,0000,0000,0000,,nemico. 
+Dialogue: 0,0:2:20.74,0:2:22.57,Default,,0000,0000,0000,,Facciamo un esempio \nconcreto. 
+Dialogue: 0,0:2:22.57,0:2:25.47,Default,,0000,0000,0000,,Al morto hai \nAsso-Donna-cinque di un colore, in 
+Dialogue: 0,0:2:25.47,0:2:28.24,Default,,0000,0000,0000,,mano hai otto-sei-tre, e \nl'avversario attacca 
+Dialogue: 0,0:2:28.24,0:2:29.07,Default,,0000,0000,0000,,con il sette. 
+Dialogue: 0,0:2:29.07,0:2:29.66,Default,,0000,0000,0000,,Cosa fai? 
+Dialogue: 0,0:2:29.66,0:2:31.37,Default,,0000,0000,0000,,Giochi il cinque dal \nmorto! 
+Dialogue: 0,0:2:31.37,0:2:33.56,Default,,0000,0000,0000,,Non la Donna, non l'Asso \nil cinque. 
+Dialogue: 0,0:2:33.56,0:2:36.40,Default,,0000,0000,0000,,L'avversario di destra \nprendera con il Dieci o 
+Dialogue: 0,0:2:36.40,0:2:39.00,Default,,0000,0000,0000,,il Fante, ma poi sara \ncostretto a cambiare 
+Dialogue: 0,0:2:39.00,0:2:39.47,Default,,0000,0000,0000,,colore. 
+Dialogue: 0,0:2:39.47,0:2:42.13,Default,,0000,0000,0000,,L'Asso e la Donna \nrestano al morto come due 
+Dialogue: 0,0:2:42.13,0:2:44.37,Default,,0000,0000,0000,,guardiani pronti a \nintervenire dopo. 
+Dialogue: 0,0:2:44.37,0:2:47.27,Default,,0000,0000,0000,,Se invece avessi messo \nla Donna, e l'avversario 
+Dialogue: 0,0:2:47.27,0:2:50.11,Default,,0000,0000,0000,,di destra avesse il Re, \navresti perso la Donna 
+Dialogue: 0,0:2:50.11,0:2:52.82,Default,,0000,0000,0000,,e l'avversario \ncontinuerebbe tranquillamente 
+Dialogue: 0,0:2:52.82,0:2:53.59,Default,,0000,0000,0000,,quel colore. 
+Dialogue: 0,0:2:53.59,0:2:56.07,Default,,0000,0000,0000,,Stare bassi qui e la \nmossa intelligente. 
+Dialogue: 0,0:2:56.07,0:2:58.97,Default,,0000,0000,0000,,Adesso parliamo del \nlisciare, cioe rifiutare di 
+Dialogue: 0,0:2:58.97,0:3:1.45,Default,,0000,0000,0000,,prendere una presa che \npotresti vincere. 
+Dialogue: 0,0:3:1.45,0:3:3.11,Default,,0000,0000,0000,,Perche mai dovresti \nfarlo? 
+Dialogue: 0,0:3:3.11,0:3:6.00,Default,,0000,0000,0000,,Per tagliare i \ncollegamenti tra i due avversari 
+Dialogue: 0,0:3:6.00,0:3:6.12,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:3:6.12,0:3:9.02,Default,,0000,0000,0000,,E come chiudere un ponte \nse l'avversario che ha 
+Dialogue: 0,0:3:9.02,0:3:11.85,Default,,0000,0000,0000,,attaccato non ha piu \ncarte in quel colore, non 
+Dialogue: 0,0:3:11.85,0:3:13.86,Default,,0000,0000,0000,,puo piu comunicare col \ncompagno. 
+Dialogue: 0,0:3:13.86,0:3:16.58,Default,,0000,0000,0000,,Esempio: al morto hai \nsei-cinque-quattro, in 
+Dialogue: 0,0:3:16.58,0:3:19.42,Default,,0000,0000,0000,,mano hai Asso-Fante-tre \ne Ovest attacca il Re. 
+Dialogue: 0,0:3:19.42,0:3:20.01,Default,,0000,0000,0000,,Tu lisci! 
+Dialogue: 0,0:3:20.01,0:3:21.37,Default,,0000,0000,0000,,Non prendi con l'Asso. 
+Dialogue: 0,0:3:21.37,0:3:24.20,Default,,0000,0000,0000,,Ovest adesso e nei guai \nse continua il colore, 
+Dialogue: 0,0:3:24.20,0:3:25.15,Default,,0000,0000,0000,,il Fante vince. 
+Dialogue: 0,0:3:25.15,0:3:27.57,Default,,0000,0000,0000,,Se cambia colore, hai \nguadagnato tempo. 
+Dialogue: 0,0:3:27.57,0:3:29.17,Default,,0000,0000,0000,,Ecco la magia del liscio . 
+Dialogue: 0,0:3:29.17,0:3:31.94,Default,,0000,0000,0000,,Ma attenzione, il liscio \nnon funziona sempre! 
+Dialogue: 0,0:3:31.94,0:3:34.54,Default,,0000,0000,0000,,Se al morto hai \nFante-sei-cinque e in mano 
+Dialogue: 0,0:3:34.54,0:3:37.32,Default,,0000,0000,0000,,Asso-sette-tre, e \nl'avversario attacca il Re, 
+Dialogue: 0,0:3:37.32,0:3:39.03,Default,,0000,0000,0000,,lisciare sarebbe \ninsensato. 
+Dialogue: 0,0:3:39.03,0:3:39.51,Default,,0000,0000,0000,,Perche? 
+Dialogue: 0,0:3:39.51,0:3:42.23,Default,,0000,0000,0000,,Perche prendendo subito \ncon l'Asso, poi puoi 
+Dialogue: 0,0:3:42.23,0:3:43.76,Default,,0000,0000,0000,,fare l'impasse al Fante . 
+Dialogue: 0,0:3:43.76,0:3:46.54,Default,,0000,0000,0000,,Ogni situazione e \ndiversa e va analizzata con 
+Dialogue: 0,0:3:46.54,0:3:46.95,Default,,0000,0000,0000,,calma. 
+Dialogue: 0,0:3:46.95,0:3:49.20,Default,,0000,0000,0000,,Infine, ricordati sempre \ndi usare la 
+Dialogue: 0,0:3:49.20,0:3:50.79,Default,,0000,0000,0000,,dichiarazione come aiuto . 
+Dialogue: 0,0:3:50.79,0:3:53.39,Default,,0000,0000,0000,,Se l'avversario di \ndestra ha aperto di uno 
+Dialogue: 0,0:3:53.39,0:3:56.11,Default,,0000,0000,0000,,Picche e poi l'attacco e \nil Dieci di Picche, 
+Dialogue: 0,0:3:56.11,0:3:58.71,Default,,0000,0000,0000,,sai che quel Dieci e \nprobabilmente secco o 
+Dialogue: 0,0:3:58.71,0:4:1.25,Default,,0000,0000,0000,,secondo, perche chi ha \nle Picche lunghe e 
+Dialogue: 0,0:4:1.25,0:4:2.32,Default,,0000,0000,0000,,dall'altra parte. 
+Dialogue: 0,0:4:2.32,0:4:5.21,Default,,0000,0000,0000,,In quel caso, stai basso \nsu entrambi i giri per 
+Dialogue: 0,0:4:5.21,0:4:6.75,Default,,0000,0000,0000,,tagliare i collegamenti . 
+Dialogue: 0,0:4:6.75,0:4:9.41,Default,,0000,0000,0000,,La dichiarazione e il \ngioco sono collegati: 
+Dialogue: 0,0:4:9.41,0:4:12.07,Default,,0000,0000,0000,,quello che succede prima \ndel gioco ti aiuta 
+Dialogue: 0,0:4:12.07,0:4:13.13,Default,,0000,0000,0000,,durante il gioco! 
+Dialogue: 0,0:4:13.13,0:4:15.91,Default,,0000,0000,0000,,Fantastico, hai imparato \na ricevere l'attacco 
+Dialogue: 0,0:4:15.91,0:4:17.33,Default,,0000,0000,0000,,come un vero detective! 
+Dialogue: 0,0:4:17.33,0:4:20.10,Default,,0000,0000,0000,,Nella prossima lezione \nparleremo del Contro e 
+Dialogue: 0,0:4:20.10,0:4:22.11,Default,,0000,0000,0000,,della Surlicita in \ncompetizione. 
+Dialogue: 0,0:4:22.11,0:4:23.00,Default,,0000,0000,0000,,Continua cosi! 

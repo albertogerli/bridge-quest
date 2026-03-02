@@ -1,0 +1,134 @@
+[Script Info]
+Title: movio
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+
+Style: Default,NotoSans-Regular,12.0,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,70,70,0,0,4,0,2,2,10,10,10,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:0:0.00,0:0:0.40,Default,,0000,0000,0000,,Ciao! 
+Dialogue: 0,0:0:0.40,0:0:3.23,Default,,0000,0000,0000,,Oggi parliamo di una \ntecnica che ti fara' 
+Dialogue: 0,0:0:3.23,0:0:6.39,Default,,0000,0000,0000,,sentire un vero stratega \ni giochi di sicurezza 
+Dialogue: 0,0:0:6.39,0:0:6.52,Default,,0000,0000,0000,,! 
+Dialogue: 0,0:0:6.52,0:0:9.68,Default,,0000,0000,0000,,Sai cosa significa `` \ngiocare in sicurezza ''? 
+Dialogue: 0,0:0:9.68,0:0:12.58,Default,,0000,0000,0000,,Significa rinunciare \nvolontariamente a una 
+Dialogue: 0,0:0:12.58,0:0:14.95,Default,,0000,0000,0000,,presa per evitare di \nperderne DUE. 
+Dialogue: 0,0:0:14.95,0:0:16.40,Default,,0000,0000,0000,,Sembra assurdo, vero? 
+Dialogue: 0,0:0:16.40,0:0:19.17,Default,,0000,0000,0000,,Perche' mai dovresti \nregalare una presa? 
+Dialogue: 0,0:0:19.17,0:0:21.87,Default,,0000,0000,0000,,Perche' a volte le carte \npossono essere 
+Dialogue: 0,0:0:21.87,0:0:24.64,Default,,0000,0000,0000,,distribuite in modo \npessimo, e se non ti 
+Dialogue: 0,0:0:24.64,0:0:26.68,Default,,0000,0000,0000,,proteggi, il danno e' \ndoppio! 
+Dialogue: 0,0:0:26.68,0:0:29.78,Default,,0000,0000,0000,,Pensa a un videogioco: \nhai 10 punti vita e il 
+Dialogue: 0,0:0:29.78,0:0:30.90,Default,,0000,0000,0000,,boss ti attacca. 
+Dialogue: 0,0:0:30.90,0:0:34.06,Default,,0000,0000,0000,,Se cerchi di schivare \ntutto al massimo, rischi 
+Dialogue: 0,0:0:34.06,0:0:36.30,Default,,0000,0000,0000,,di prendere un colpo da \n5 danni. 
+Dialogue: 0,0:0:36.30,0:0:39.46,Default,,0000,0000,0000,,Ma se ti metti lo scudo \nperdi 1 punto vita per 
+Dialogue: 0,0:0:39.46,0:0:42.36,Default,,0000,0000,0000,,lo scudo ma sei protetto \ndal colpo grande. 
+Dialogue: 0,0:0:42.36,0:0:45.33,Default,,0000,0000,0000,,Ecco, il gioco di \nsicurezza e' lo scudo del 
+Dialogue: 0,0:0:45.33,0:0:45.85,Default,,0000,0000,0000,,bridge! 
+Dialogue: 0,0:0:45.85,0:0:48.36,Default,,0000,0000,0000,,Quando si usa il gioco \ndi sicurezza? 
+Dialogue: 0,0:0:48.36,0:0:51.06,Default,,0000,0000,0000,,Quando l'unica cosa che \nti interessa e' 
+Dialogue: 0,0:0:51.06,0:0:52.64,Default,,0000,0000,0000,,mantenere il contratto. 
+Dialogue: 0,0:0:52.64,0:0:55.73,Default,,0000,0000,0000,,In una partita a squadre \nfare il contratto e' 
+Dialogue: 0,0:0:55.73,0:0:56.20,Default,,0000,0000,0000,,tutto. 
+Dialogue: 0,0:0:56.20,0:0:59.29,Default,,0000,0000,0000,,Se giochi 4 Picche e fai \n10 prese, hai vinto. 
+Dialogue: 0,0:0:59.29,0:1:2.19,Default,,0000,0000,0000,,Se ne fai 11 ma \nrischiando di farne 9, sei 
+Dialogue: 0,0:1:2.19,0:1:3.38,Default,,0000,0000,0000,,stato imprudente. 
+Dialogue: 0,0:1:3.38,0:1:6.08,Default,,0000,0000,0000,,La sicurezza si applica \nanche quando il 
+Dialogue: 0,0:1:6.08,0:1:9.24,Default,,0000,0000,0000,,contratto e' contrato o \nquando il risultato e' 
+Dialogue: 0,0:1:9.24,0:1:12.20,Default,,0000,0000,0000,,gia' ottimo: non cercare \ndi massimizzare le 
+Dialogue: 0,0:1:12.20,0:1:14.18,Default,,0000,0000,0000,,prese, minimizza il \nrischio! 
+Dialogue: 0,0:1:14.18,0:1:16.75,Default,,0000,0000,0000,,Vediamo la prima figura \ndi sicurezza. 
+Dialogue: 0,0:1:16.75,0:1:19.65,Default,,0000,0000,0000,,Hai Re-9-2 da una parte \ne Asso-Fante-7-6-5 
+Dialogue: 0,0:1:19.65,0:1:20.44,Default,,0000,0000,0000,,dall'altra. 
+Dialogue: 0,0:1:20.44,0:1:23.34,Default,,0000,0000,0000,,Nove carte in tutto, \nmanca la Donna con il 
+Dialogue: 0,0:1:23.34,0:1:24.00,Default,,0000,0000,0000,,10-8-4-3. 
+Dialogue: 0,0:1:24.00,0:1:27.16,Default,,0000,0000,0000,,La giocata per il \nmassimo e' fare l'impasse al 
+Dialogue: 0,0:1:27.16,0:1:30.12,Default,,0000,0000,0000,,Fante: se la Donna e' \nnel posto giusto, fai 
+Dialogue: 0,0:1:30.12,0:1:31.18,Default,,0000,0000,0000,,tutte le prese. 
+Dialogue: 0,0:1:31.18,0:1:34.34,Default,,0000,0000,0000,,Ma se la Donna e' quarta \nnell'altro avversario 
+Dialogue: 0,0:1:34.34,0:1:35.33,Default,,0000,0000,0000,,perdi 2 prese! 
+Dialogue: 0,0:1:35.33,0:1:38.36,Default,,0000,0000,0000,,Il gioco di sicurezza: \nbatti l'Asso, l'onore 
+Dialogue: 0,0:1:38.36,0:1:41.59,Default,,0000,0000,0000,,vicino al Fante, e poi \ngioca piccola verso Re-9 
+Dialogue: 0,0:1:41.59,0:1:41.72,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:41.72,0:1:44.88,Default,,0000,0000,0000,,Se l'avversario mette \npiccola, inserisci il 9. 
+Dialogue: 0,0:1:44.88,0:1:46.92,Default,,0000,0000,0000,,Copre tutte le divisioni \n4-1! 
+Dialogue: 0,0:1:46.92,0:1:49.62,Default,,0000,0000,0000,,Se la Donna cade \nsull'Asso, hai finito. 
+Dialogue: 0,0:1:49.62,0:1:52.85,Default,,0000,0000,0000,,Se la Donna e' quarta a \ndestra, il 9 la cattura 
+Dialogue: 0,0:1:52.85,0:1:52.98,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:1:52.98,0:1:55.88,Default,,0000,0000,0000,,Se la Donna e' quarta a \nsinistra, il Re la 
+Dialogue: 0,0:1:55.88,0:1:56.41,Default,,0000,0000,0000,,prende. 
+Dialogue: 0,0:1:56.41,0:1:58.91,Default,,0000,0000,0000,,Perdi al massimo una \npresa, mai due. 
+Dialogue: 0,0:1:58.91,0:2:1.94,Default,,0000,0000,0000,,Altro esempio: \nAsso-Fante-3-2 da una parte e 
+Dialogue: 0,0:2:1.94,0:2:3.33,Default,,0000,0000,0000,,Re-9-5-4 dall'altra. 
+Dialogue: 0,0:2:3.33,0:2:5.24,Default,,0000,0000,0000,,Otto carte, manca la \nDonna. 
+Dialogue: 0,0:2:5.24,0:2:8.40,Default,,0000,0000,0000,,Per tutte le prese, \nfaresti l'impasse al Fante 
+Dialogue: 0,0:2:8.40,0:2:8.53,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:8.53,0:2:11.76,Default,,0000,0000,0000,,Ma per perdere al \nmassimo 1 presa, la sicurezza 
+Dialogue: 0,0:2:11.76,0:2:14.79,Default,,0000,0000,0000,,e' diversa: batti l'Asso \ne poi gioca piccola 
+Dialogue: 0,0:2:14.79,0:2:15.58,Default,,0000,0000,0000,,verso Re-9. 
+Dialogue: 0,0:2:15.58,0:2:18.28,Default,,0000,0000,0000,,Se la Donna era seconda \ne' gia' caduta. 
+Dialogue: 0,0:2:18.28,0:2:21.11,Default,,0000,0000,0000,,Se e' terza o quarta, il \nRe-9 gestisce la 
+Dialogue: 0,0:2:21.11,0:2:21.90,Default,,0000,0000,0000,,situazione. 
+Dialogue: 0,0:2:21.90,0:2:21.05,Default,,0000,0000,0000,,Non rischiare quando non \nserve! 
+Dialogue: 0,0:2:21.05,0:2:24.26,Default,,0000,0000,0000,,Adesso vediamo altre \nfigure importanti e poi un 
+Dialogue: 0,0:2:24.26,0:2:26.81,Default,,0000,0000,0000,,piano di gioco completo \nin sicurezza. 
+Dialogue: 0,0:2:26.81,0:2:29.63,Default,,0000,0000,0000,,Re-Donna-9-6-2 da una \nparte e Asso-10-7-3 
+Dialogue: 0,0:2:29.63,0:2:30.42,Default,,0000,0000,0000,,dall'altra. 
+Dialogue: 0,0:2:30.42,0:2:32.64,Default,,0000,0000,0000,,Nove carte, manca solo \nil Fante. 
+Dialogue: 0,0:2:32.64,0:2:35.85,Default,,0000,0000,0000,,La regola: incassa un \nonore dalla parte dove ce 
+Dialogue: 0,0:2:35.85,0:2:38.41,Default,,0000,0000,0000,,ne sono due, cioe' dove \nhai Re-Donna. 
+Dialogue: 0,0:2:38.41,0:2:41.62,Default,,0000,0000,0000,,Cosi' conservi la \nforchetta in entrambe le mani 
+Dialogue: 0,0:2:41.62,0:2:41.75,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:2:41.75,0:2:44.63,Default,,0000,0000,0000,,Se il Fante e' 4-0 in \nuna mano, lo catturi 
+Dialogue: 0,0:2:44.63,0:2:45.55,Default,,0000,0000,0000,,dovunque sia! 
+Dialogue: 0,0:2:45.55,0:2:48.56,Default,,0000,0000,0000,,Se batti prima l'Asso e \nil Fante e' quarto a 
+Dialogue: 0,0:2:48.56,0:2:51.71,Default,,0000,0000,0000,,sinistra, non hai piu' \nRe-Donna davanti a lui. 
+Dialogue: 0,0:2:51.71,0:2:54.33,Default,,0000,0000,0000,,Ancora: Re-Donna-9-6-2 \ncon Asso-7-5-3. 
+Dialogue: 0,0:2:54.33,0:2:55.64,Default,,0000,0000,0000,,Mancano Fante e 10. 
+Dialogue: 0,0:2:55.64,0:2:58.45,Default,,0000,0000,0000,,Se Fante e 10 sono \nquarti in una mano, ti 
+Dialogue: 0,0:2:58.45,0:3:0.75,Default,,0000,0000,0000,,servono DUE onori per \ncatturarli. 
+Dialogue: 0,0:3:0.75,0:3:3.23,Default,,0000,0000,0000,,La regola: non sguarnire \ni due onori 
+Dialogue: 0,0:3:3.23,0:3:4.09,Default,,0000,0000,0000,,raggruppati. 
+Dialogue: 0,0:3:4.09,0:3:6.57,Default,,0000,0000,0000,,Batti l'onore isolato, \ncioe' l'Asso. 
+Dialogue: 0,0:3:6.57,0:3:8.93,Default,,0000,0000,0000,,La forchetta Re-Donna-9 \ncatturera' 
+Dialogue: 0,0:3:8.93,0:3:12.14,Default,,0000,0000,0000,,Fante-10-piccola-piccola \nse sono a sinistra del 
+Dialogue: 0,0:3:12.14,0:3:12.40,Default,,0000,0000,0000,,Re. 
+Dialogue: 0,0:3:12.40,0:3:15.55,Default,,0000,0000,0000,,Un caso fondamentale: \nAsso-Donna-piccola-picco 
+Dialogue: 0,0:3:15.55,0:3:18.43,Default,,0000,0000,0000,,la da una parte e \npiccola-piccola-piccola- 
+Dialogue: 0,0:3:18.43,0:3:19.74,Default,,0000,0000,0000,,piccola dall'altra. 
+Dialogue: 0,0:3:19.74,0:3:20.99,Default,,0000,0000,0000,,Il Re e' mancante. 
+Dialogue: 0,0:3:20.99,0:3:24.20,Default,,0000,0000,0000,,Per tutte le prese \nfaresti l'impasse alla Donna 
+Dialogue: 0,0:3:24.20,0:3:27.08,Default,,0000,0000,0000,,piccola verso Asso-Donna \ne metti la Donna. 
+Dialogue: 0,0:3:27.08,0:3:29.96,Default,,0000,0000,0000,,Ma il gioco di sicurezza \ne' diverso: batti 
+Dialogue: 0,0:3:29.96,0:3:30.48,Default,,0000,0000,0000,,l'Asso! 
+Dialogue: 0,0:3:30.48,0:3:32.78,Default,,0000,0000,0000,,Poi gioca piccola verso \nla Donna. 
+Dialogue: 0,0:3:32.78,0:3:35.99,Default,,0000,0000,0000,,Questo si chiama `` \nexpasse '': incassi l'onore 
+Dialogue: 0,0:3:35.99,0:3:39.13,Default,,0000,0000,0000,,alto e trasformi \nl'impasse in un colpo sicuro. 
+Dialogue: 0,0:3:39.13,0:3:41.95,Default,,0000,0000,0000,,Se il Re era secco a \ndestra, l'Asso lo ha 
+Dialogue: 0,0:3:41.95,0:3:42.67,Default,,0000,0000,0000,,catturato. 
+Dialogue: 0,0:3:42.67,0:3:45.75,Default,,0000,0000,0000,,Se era a sinistra, \nl'impasse riesce comunque. 
+Dialogue: 0,0:3:45.75,0:3:48.96,Default,,0000,0000,0000,,Perdi solo se il Re era \nterzo o quarto a destra 
+Dialogue: 0,0:3:48.96,0:3:52.17,Default,,0000,0000,0000,,ma in quel caso \nl'impasse diretto avrebbe avuto 
+Dialogue: 0,0:3:52.17,0:3:54.52,Default,,0000,0000,0000,,la stessa probabilita' \ndi fallire. 
+Dialogue: 0,0:3:54.52,0:3:57.21,Default,,0000,0000,0000,,Per finire, un piano di \ngioco completo. 
+Dialogue: 0,0:3:57.21,0:4:0.03,Default,,0000,0000,0000,,Giochi 3 Senza e hai \nAsso-Donna-9-5-3 con 
+Dialogue: 0,0:4:0.03,0:4:1.20,Default,,0000,0000,0000,,Re-10-2 di fiori. 
+Dialogue: 0,0:4:1.20,0:4:4.41,Default,,0000,0000,0000,,L'avversario attacca \ncuori e hai il Re protetto 
+Dialogue: 0,0:4:4.41,0:4:4.55,Default,,0000,0000,0000,,. 
+Dialogue: 0,0:4:4.55,0:4:7.69,Default,,0000,0000,0000,,Il gioco di sicurezza: \nprendi con il Re, gioca 
+Dialogue: 0,0:4:7.69,0:4:10.18,Default,,0000,0000,0000,,la Donna di fiori e poi \nfiori al 10. 
+Dialogue: 0,0:4:10.18,0:4:13.13,Default,,0000,0000,0000,,Se il 10 perde verso Sud \nil tuo Re di cuori 
+Dialogue: 0,0:4:13.13,0:4:15.55,Default,,0000,0000,0000,,resta protetto dal lato \npericoloso. 
+Dialogue: 0,0:4:15.55,0:4:18.63,Default,,0000,0000,0000,,Se avessi giocato fiori \ndall'altra parte e il 
+Dialogue: 0,0:4:18.63,0:4:21.77,Default,,0000,0000,0000,,Fante fosse quarto in \nNord, Nord prenderebbe e 
+Dialogue: 0,0:4:21.77,0:4:24.65,Default,,0000,0000,0000,,giocherebbe attraverso \nil tuo Re di cuori. 
+Dialogue: 0,0:4:24.65,0:4:25.38,Default,,0000,0000,0000,,Game over! 
+Dialogue: 0,0:4:25.38,0:4:28.39,Default,,0000,0000,0000,,La sicurezza non e' solo \nnella manovra di un 
+Dialogue: 0,0:4:28.39,0:4:31.53,Default,,0000,0000,0000,,singolo colore, ma nel \npiano complessivo della 
+Dialogue: 0,0:4:31.53,0:4:31.93,Default,,0000,0000,0000,,mano. 
+Dialogue: 0,0:4:31.93,0:4:32.91,Default,,0000,0000,0000,,Alla prossima! 
