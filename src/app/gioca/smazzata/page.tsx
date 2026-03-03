@@ -15,6 +15,7 @@ import {
 } from "@/data/all-smazzate";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
+import { useGameResults } from "@/hooks/use-game-results";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, cardToString } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
@@ -263,6 +264,7 @@ function PlayingView({
   const isMobile = useMobile();
   const profile = useProfile();
   const dds = useDDS();
+  const { saveGameResult } = useGameResults();
 
   // Player controls declarer + dummy (dummy = north display position)
   const dummyGamePos = toGamePosition("north", declarer);
@@ -343,8 +345,25 @@ function PlayingView({
           lessonId: String(smazzata.lesson),
         });
       } catch {}
+
+      // Sync to Supabase
+      saveGameResult({
+        gameType: "smazzata",
+        lessonId: smazzata.lesson,
+        score: earned,
+        details: {
+          tricks: game.result.tricksMade,
+          tricksNeeded: game.result.tricksNeeded,
+          result: game.result.result,
+          made: game.result.result >= 0,
+          contract: smazzata.contract,
+          declarer: smazzata.declarer,
+          smazzataId: smazzata.id,
+          board: smazzata.board,
+        },
+      });
     }
-  }, [game.phase, game.result, xpSaved, smazzata]);
+  }, [game.phase, game.result, xpSaved, smazzata, saveGameResult]);
 
   // Run DDS analysis when game finishes
   useEffect(() => {

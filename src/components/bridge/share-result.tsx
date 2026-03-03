@@ -35,7 +35,7 @@ function buildShareText({
     "\uD83C\uDCCF FIGB Bridge LAB - Sfida del Bridge!",
     `Contratto: ${contract} \u00B7 Risultato: ${tricksMade}/${tricksNeeded} prese ${resultEmoji}`,
     `${starString}${grayStars} ${verdict}`,
-    "Riesci a fare meglio? \uD83D\uDC49 bridge-quest.vercel.app",
+    "Riesci a fare meglio? \uD83D\uDC49 bridgelab.figb.it",
   ];
 
   return lines.join("\n");
@@ -145,7 +145,7 @@ export function ShareResult(props: ShareResultProps) {
           </div>
 
           {/* URL hint */}
-          <p className="text-[11px] text-gray-400">bridge-quest.vercel.app</p>
+          <p className="text-[11px] text-gray-400">bridgelab.figb.it</p>
         </div>
       </div>
 

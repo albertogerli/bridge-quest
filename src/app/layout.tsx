@@ -11,10 +11,67 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "FIGB Bridge LAB - Impara il Bridge giocando",
+  title: {
+    default: "FIGB Bridge LAB - Impara il Bridge giocando",
+    template: "%s",
+  },
   description:
-    "La piattaforma interattiva della FIGB per imparare il bridge. Gamification, AI e divertimento. Il tuo viaggio nel bridge inizia qui.",
-  keywords: ["bridge", "FIGB", "corso fiori", "impara bridge", "gioco carte", "bridge lab"],
+    "La piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB) per imparare il bridge. 4 corsi completi: Fiori, Quadri, Cuori Gioco e Cuori Licita. 49 lezioni interattive con gamification, AI e video didattici.",
+  keywords: [
+    "bridge",
+    "FIGB",
+    "federazione italiana gioco bridge",
+    "corso bridge",
+    "corso fiori",
+    "corso quadri",
+    "corso cuori",
+    "impara bridge",
+    "gioco carte",
+    "bridge lab",
+    "bridge online",
+    "lezioni bridge",
+    "dichiarazione bridge",
+    "gioco della carta",
+  ],
+  metadataBase: new URL("https://bridgelab.figb.it"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "FIGB Bridge LAB - Impara il Bridge giocando",
+    description:
+      "La piattaforma ufficiale FIGB per imparare il bridge. 4 corsi, 49 lezioni interattive, gamification e AI. Il tuo viaggio nel bridge inizia qui.",
+    url: "https://bridgelab.figb.it",
+    siteName: "FIGB Bridge LAB",
+    images: [
+      {
+        url: "/youtube-banner.png",
+        width: 1280,
+        height: 720,
+        alt: "FIGB Bridge LAB - Impara il Bridge giocando",
+      },
+    ],
+    locale: "it_IT",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FIGB Bridge LAB - Impara il Bridge giocando",
+    description:
+      "La piattaforma ufficiale FIGB per imparare il bridge. 4 corsi, 49 lezioni interattive, gamification e AI.",
+    images: ["/youtube-banner.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

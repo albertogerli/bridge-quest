@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useStats } from "@/hooks/use-stats";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
+import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards } from "@/data/collectible-cards";
 import { useProfile } from "@/hooks/use-profile";
 
@@ -13,10 +14,23 @@ const miniGames = [
   { href: "/gioca/memory", emoji: "🧠", label: "Memory", color: "bg-purple-50 border-purple-200 text-purple-700" },
 ];
 
+// Objective icon mapping for sidebar
+const objectiveEmojiMap: Record<string, string> = {
+  quiz: "📝",
+  hands: "🃏",
+  xp: "⭐",
+  modules: "📚",
+  streak: "🔥",
+  minigames: "🎮",
+  daily: "📅",
+  perfect: "💯",
+};
+
 export function DesktopSidebar() {
   const stats = useStats();
   const profile = useProfile();
   const { reviewCount } = useSpacedReview();
+  const { objectives, allCompleted, bonusClaimed } = useWeeklyObjectives();
 
   const playerStats = {
     xp: stats.xp,
@@ -122,9 +136,80 @@ export function DesktopSidebar() {
           </div>
         </Link>
 
+        {/* Weekly Objectives */}
+        {objectives.length > 0 && (
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎯</span>
+                <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider">Obiettivi</p>
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                  allCompleted
+                    ? "bg-emerald-100 text-emerald-700"
+                    : "bg-[#003DA5]/10 text-[#003DA5]"
+                }`}>
+                  {objectives.filter(o => o.completed).length}/3
+                </span>
+              </div>
+              <Link href="/obiettivi" className="text-[10px] font-semibold text-[#003DA5] hover:underline">
+                Dettagli →
+              </Link>
+            </div>
+            <div className="space-y-2">
+              {objectives.map((obj) => {
+                const pct = obj.target > 0 ? Math.min(Math.round((obj.current / obj.target) * 100), 100) : 0;
+                return (
+                  <div
+                    key={obj.id}
+                    className={`flex items-center gap-2.5 p-2 rounded-xl border ${
+                      obj.completed
+                        ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800"
+                        : "bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700"
+                    }`}
+                  >
+                    <span className="text-sm shrink-0">{objectiveEmojiMap[obj.id] || "📌"}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className={`text-[11px] font-semibold truncate ${
+                          obj.completed ? "text-emerald-700 line-through" : "text-gray-900 dark:text-gray-100"
+                        }`}>
+                          {obj.title}
+                        </p>
+                        <span className="text-[10px] font-bold text-gray-400 tabular-nums ml-1 shrink-0">
+                          {obj.current}/{obj.target}
+                        </span>
+                      </div>
+                      <div className="mt-1 h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all ${
+                            obj.completed ? "bg-emerald-500" : "bg-[#003DA5]"
+                          }`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {allCompleted && !bonusClaimed && (
+              <Link href="/obiettivi">
+                <div className="mt-2.5 py-2 rounded-xl bg-[#003DA5] text-white text-center text-xs font-bold cursor-pointer hover:bg-[#002E7A] transition-colors">
+                  🎁 Riscuoti bonus +100 XP!
+                </div>
+              </Link>
+            )}
+            {bonusClaimed && (
+              <div className="mt-2.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
+                <p className="text-[11px] font-bold text-emerald-700">Bonus riscosso! Torna lunedi</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Spaced Review */}
         {reviewCount > 0 && (
-          <Link href="/lezioni">
+          <Link href="/ripasso">
             <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">

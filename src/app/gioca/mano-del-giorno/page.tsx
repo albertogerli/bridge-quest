@@ -23,6 +23,7 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
+import { useGameResults } from "@/hooks/use-game-results";
 import Link from "next/link";
 
 // ─── Date Helpers ────────────────────────────────────────────────────────────
@@ -235,6 +236,7 @@ function HandFanPreview({ cards }: { cards: Card[] }) {
 export default function ManoDelGiornoPage() {
   const isMobile = useMobile();
   const profile = useProfile();
+  const { saveGameResult } = useGameResults();
   const today = getToday();
   const yesterday = getYesterday();
 
@@ -278,6 +280,12 @@ export default function ManoDelGiornoPage() {
         saveDailyResult(today, result);
         awardGameXp(`mano-giorno-${today}`, xpEarned);
         try { updateLastActivity(); } catch {}
+        // Sync to Supabase
+        saveGameResult({
+          gameType: "mano-del-giorno",
+          score: xpEarned,
+          details: { tricks, result: resultDelta, made, stars, date: today, contract: todayHand.contract },
+        });
       }
 
       setTodayResult(result);
@@ -298,6 +306,7 @@ export default function ManoDelGiornoPage() {
         onBack={() => setIsPlaying(false)}
         isMobile={isMobile}
         profile={profile}
+        saveGameResult={saveGameResult}
       />
     );
   }
@@ -312,6 +321,7 @@ export default function ManoDelGiornoPage() {
         onBack={() => setPlayingYesterday(false)}
         isMobile={isMobile}
         profile={profile}
+        saveGameResult={saveGameResult}
       />
     );
   }
@@ -822,6 +832,7 @@ function PlayingView({
   onBack,
   isMobile,
   profile,
+  saveGameResult,
 }: {
   smazzata: Smazzata;
   isDaily: boolean;
@@ -830,6 +841,7 @@ function PlayingView({
   onBack: () => void;
   isMobile: boolean;
   profile: import("@/hooks/use-profile").ProfileConfig;
+  saveGameResult: (result: import("@/hooks/use-game-results").GameResult) => void;
 }) {
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
@@ -907,6 +919,18 @@ function PlayingView({
           Math.max(0, game.result.result) * 10;
         awardGameXp(`mano-${smazzata.id}`, earned);
         try { updateLastActivity(); } catch {}
+        // Sync to Supabase
+        saveGameResult({
+          gameType: "mano-del-giorno",
+          score: earned,
+          details: {
+            tricks: game.result.tricksMade,
+            result: game.result.result,
+            made: game.result.result >= 0,
+            contract: smazzata.contract,
+            smazzataId: smazzata.id,
+          },
+        });
       }
     }
   }, [game.phase, game.result, isDaily, onFinish]);

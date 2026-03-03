@@ -703,7 +703,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
             >
-              <Link href="/lezioni">
+              <Link href="/ripasso">
                 <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
@@ -1276,14 +1276,21 @@ function WeeklyObjectivesSection() {
   };
 
   return (
-    <section className="px-4 sm:px-5 pt-4">
+    <section className="px-4 sm:px-5 pt-5">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+              <Target className="w-4 h-4 text-emerald-600" />
+            </div>
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Obiettivi settimanali
             </h2>
-            <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
+            <Badge className={`text-[10px] font-bold border-0 ${
+              completedCount === 3
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-[#003DA5]/10 text-[#003DA5]"
+            }`}>
               {completedCount}/3
             </Badge>
           </div>
@@ -1292,12 +1299,16 @@ function WeeklyObjectivesSection() {
               variant="outline"
               className="text-[10px] font-semibold text-[#003DA5] border-[#003DA5]/20 cursor-pointer hover:bg-[#003DA5]/5 transition-colors"
             >
-              Dettagli →
+              Vedi tutti →
             </Badge>
           </Link>
         </div>
 
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e7eb] dark:border-[#2a3040]">
+        <div className={`rounded-2xl p-4 border transition-all ${
+          completedCount === 3
+            ? "bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-[#1a1f2e] border-emerald-200 dark:border-emerald-800"
+            : "bg-white dark:bg-[#1a1f2e] border-[#e5e7eb] dark:border-[#2a3040]"
+        }`}>
           <div className="space-y-2.5">
             {objectives.map((obj, i) => (
               <div
