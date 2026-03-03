@@ -829,7 +829,10 @@ export default function Home() {
             <p className="mt-2 text-xs text-[#003DA5]/60">
               Commissione Insegnamento · Corsi Fiori, Quadri, Cuori
             </p>
-            <Link href="/privacy" className="mt-3 inline-block text-[10px] text-[#003DA5]/50 underline">
+            <p className="mt-2 text-[10px] text-[#003DA5]/40">
+              Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.
+            </p>
+            <Link href="/privacy" className="mt-2 inline-block text-[10px] text-[#003DA5]/50 underline">
               Privacy e Cookie Policy
             </Link>
           </div>
@@ -2023,7 +2026,10 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
       </section>
 
       {/* Footer */}
-      <footer className="px-5 pb-8 text-center">
+      <footer className="px-5 pb-8 text-center space-y-1">
+        <p className="text-[10px] text-gray-400">
+          Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.
+        </p>
         <p className="text-[11px] text-gray-400">
           <a href="/privacy" className="underline hover:text-gray-600 transition-colors">Privacy e Cookie Policy</a>
         </p>

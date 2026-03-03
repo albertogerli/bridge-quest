@@ -304,6 +304,9 @@ export function DesktopSidebar() {
           <p className="text-[10px] text-[#003DA5]/70 mt-0.5">
             Commissione Insegnamento
           </p>
+          <p className="text-[9px] text-[#003DA5]/40 mt-1">
+            Sviluppo: A. G. Gerli / Tourbillon Tech
+          </p>
         </div>
 
       </div>
