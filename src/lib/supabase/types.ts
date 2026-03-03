@@ -184,6 +184,7 @@ export interface Database {
           user_id: string;
           body: string;
           likes_count: number;
+          parent_id: number | null;
           created_at: string;
         };
         Insert: {
@@ -191,10 +192,12 @@ export interface Database {
           user_id: string;
           body: string;
           likes_count?: number;
+          parent_id?: number | null;
         };
         Update: {
           body?: string;
           likes_count?: number;
+          parent_id?: number | null;
         };
       };
       forum_likes: {

@@ -387,7 +387,7 @@ function ActiveChallenge({
   // Copy challenge link
   const handleCopyLink = useCallback(async () => {
     if (!challengeCode) return;
-    const link = `https://bridge-quest.vercel.app/gioca/sfida-amico?id=${encodeURIComponent(challengeCode)}`;
+    const link = `https://bridgelab.figb.it/gioca/sfida-amico?id=${encodeURIComponent(challengeCode)}`;
     try {
       await navigator.clipboard.writeText(link);
       setCopied(true);
@@ -409,7 +409,7 @@ function ActiveChallenge({
   // Share via Web Share API
   const handleShare = useCallback(async () => {
     if (!challengeCode) return;
-    const link = `https://bridge-quest.vercel.app/gioca/sfida-amico?id=${encodeURIComponent(challengeCode)}`;
+    const link = `https://bridgelab.figb.it/gioca/sfida-amico?id=${encodeURIComponent(challengeCode)}`;
     const myTricks = game.result?.tricksMade ?? 0;
     const text = `Ti sfido a Bridge! Ho fatto ${myTricks} prese su ${tricksNeeded} necessarie. Riesci a fare meglio?\n${link}`;
 
@@ -713,7 +713,7 @@ function ActiveChallenge({
                     {/* Link preview */}
                     <div className="mt-4 bg-black/20 rounded-xl px-4 py-2.5">
                       <p className="text-[11px] text-white/50 font-mono break-all">
-                        bridge-quest.vercel.app/gioca/sfida-amico?id=...
+                        bridgelab.figb.it/gioca/sfida-amico?id=...
                       </p>
                     </div>
                   </div>
@@ -938,7 +938,7 @@ function CopyMiniButton({ challengeId }: { challengeId: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    const link = `https://bridge-quest.vercel.app/gioca/sfida-amico?id=${encodeURIComponent(challengeId)}`;
+    const link = `https://bridgelab.figb.it/gioca/sfida-amico?id=${encodeURIComponent(challengeId)}`;
     try {
       await navigator.clipboard.writeText(link);
       setCopied(true);

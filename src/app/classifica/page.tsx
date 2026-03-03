@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
-import { Clock, Trophy, Landmark } from "lucide-react";
+import { courses, type CourseId } from "@/data/courses";
+import { Clock, Trophy, Landmark, ChevronUp, Filter } from "lucide-react";
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -34,7 +33,7 @@ function getLevel(xp: number) {
 }
 
 const leagues = [
-  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-100", textColor: "text-emerald-dark", iconBg: "bg-emerald", next: "Lega Quadri ♦" },
+  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-100", textColor: "text-emerald-700", iconBg: "bg-emerald-600", next: "Lega Quadri ♦" },
   { name: "Lega Quadri", icon: "♦", minXp: 1000, color: "from-orange-50 to-orange-100/50", border: "border-orange-100", textColor: "text-orange-700", iconBg: "bg-orange-500", next: "Lega Cuori ♥" },
   { name: "Lega Cuori", icon: "♥", minXp: 3000, color: "from-rose-50 to-rose-100/50", border: "border-rose-100", textColor: "text-rose-700", iconBg: "bg-rose-500", next: "Lega Picche ♠" },
   { name: "Lega Picche", icon: "♠", minXp: 6000, color: "from-indigo-50 to-indigo-100/50", border: "border-indigo-100", textColor: "text-indigo-700", iconBg: "bg-indigo-600", next: "Lega SA" },
@@ -61,11 +60,36 @@ function getWeeklyCountdown() {
   return { days, hours };
 }
 
+// Course lesson ID ranges for "Per Corso" filter
+const courseRanges: Record<CourseId, { min: number; max: number }> = {
+  fiori: { min: 0, max: 12 },
+  quadri: { min: 1, max: 12 },        // Quadri lesson IDs 1-12 overlap, but we use completed_modules
+  "cuori-gioco": { min: 100, max: 109 },
+  "cuori-licita": { min: 200, max: 213 },
+};
+
+type TabId = "globale" | "settimanale" | "per-corso" | "per-asd";
+
+const tabs: { id: TabId; label: string; icon: string }[] = [
+  { id: "globale", label: "Globale", icon: "🌍" },
+  { id: "settimanale", label: "Settimanale", icon: "📅" },
+  { id: "per-corso", label: "Per Corso", icon: "📚" },
+  { id: "per-asd", label: "Per ASD", icon: "🏛" },
+];
+
+const courseFilters: { id: CourseId; label: string; icon: string; color: string; activeColor: string }[] = [
+  { id: "fiori", label: "Fiori", icon: "♣", color: "text-emerald-600", activeColor: "bg-emerald-600 text-white" },
+  { id: "quadri", label: "Quadri", icon: "♦", color: "text-orange-600", activeColor: "bg-orange-500 text-white" },
+  { id: "cuori-gioco", label: "Cuori Gioco", icon: "♥", color: "text-rose-600", activeColor: "bg-rose-500 text-white" },
+  { id: "cuori-licita", label: "Cuori Licita", icon: "♥", color: "text-pink-600", activeColor: "bg-pink-600 text-white" },
+];
+
 interface PlayerEntry {
   id: string;
   name: string;
   xp: number;
   updated_at: string;
+  asd_name: string | null;
 }
 
 interface AsdRanking {
@@ -80,6 +104,11 @@ export default function ClassificaPage() {
   const [playersLoading, setPlayersLoading] = useState(true);
   const [asdRankings, setAsdRankings] = useState<AsdRanking[]>([]);
   const [asdLoading, setAsdLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>("globale");
+  const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
+  const [userFullRank, setUserFullRank] = useState<number | null>(null);
+  const [userFullTotal, setUserFullTotal] = useState<number>(0);
+  const tabsRef = useRef<HTMLDivElement>(null);
   const countdown = getWeeklyCountdown();
 
   useEffect(() => {
@@ -91,24 +120,74 @@ export default function ClassificaPage() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) setCurrentUserId(user.id);
 
-        // Fetch all profiles
+        // Fetch all profiles with ASD join
         const { data } = await supabase
           .from("profiles")
-          .select("id, display_name, xp, updated_at")
+          .select("id, display_name, xp, updated_at, asd_id, asd:asd_id(name)")
           .order("xp", { ascending: false })
-          .limit(50);
+          .limit(100);
 
         if (data && data.length > 0) {
-          setAllPlayers(
-            data
-              .filter((u) => u.display_name)
-              .map((u) => ({
-                id: u.id,
-                name: u.display_name!,
-                xp: u.xp || 0,
-                updated_at: u.updated_at,
-              }))
-          );
+          const players = data
+            .filter((u: Record<string, unknown>) => u.display_name)
+            .map((u: Record<string, unknown>) => ({
+              id: u.id as string,
+              name: u.display_name as string,
+              xp: (u.xp as number) || 0,
+              updated_at: u.updated_at as string,
+              asd_name: (u.asd as { name: string } | null)?.name || null,
+            }));
+          setAllPlayers(players);
+
+          // Calculate user's full rank (even if not in top 100)
+          if (user) {
+            const userInList = players.findIndex((p: PlayerEntry) => p.id === user.id);
+            if (userInList >= 0) {
+              setUserFullRank(userInList + 1);
+              setUserFullTotal(players.length);
+            } else {
+              // User not in top 100, fetch their rank separately
+              const { count } = await supabase
+                .from("profiles")
+                .select("id", { count: "exact", head: true })
+                .not("display_name", "is", null);
+
+              const userProfile = await supabase
+                .from("profiles")
+                .select("xp")
+                .eq("id", user.id)
+                .single();
+
+              if (userProfile.data && count) {
+                const { count: aboveCount } = await supabase
+                  .from("profiles")
+                  .select("id", { count: "exact", head: true })
+                  .not("display_name", "is", null)
+                  .gt("xp", userProfile.data.xp);
+
+                setUserFullRank((aboveCount || 0) + 1);
+                setUserFullTotal(count);
+
+                // Add user to the list for display
+                const { data: fullUser } = await supabase
+                  .from("profiles")
+                  .select("id, display_name, xp, updated_at, asd_id, asd:asd_id(name)")
+                  .eq("id", user.id)
+                  .single();
+
+                if (fullUser) {
+                  const fu = fullUser as Record<string, unknown>;
+                  setAllPlayers(prev => [...prev, {
+                    id: fu.id as string,
+                    name: fu.display_name as string,
+                    xp: (fu.xp as number) || 0,
+                    updated_at: fu.updated_at as string,
+                    asd_name: (fu.asd as { name: string } | null)?.name || null,
+                  }]);
+                }
+              }
+            }
+          }
         }
       } catch {}
       setPlayersLoading(false);
@@ -148,21 +227,29 @@ export default function ClassificaPage() {
   // Current user info from Supabase data
   const currentPlayer = allPlayers.find((p) => p.id === currentUserId);
   const userXp = currentPlayer?.xp ?? 0;
-  const userLevel = getLevel(userXp);
   const league = getLeague(userXp);
   const nextLeague = leagues.find((l) => l.minXp > userXp);
 
   // Filter players by activity period
   const now = new Date();
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  const weeklyPlayers = allPlayers.filter((p) => new Date(p.updated_at) >= weekAgo);
-  const monthlyPlayers = allPlayers.filter((p) => new Date(p.updated_at) >= monthAgo);
+  const weeklyPlayers = useMemo(
+    () => allPlayers.filter((p) => new Date(p.updated_at) >= weekAgo),
+    [allPlayers]
+  );
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    if (tab === "per-asd") {
+      fetchAsdRankings();
+    }
+  };
 
   return (
     <div className="pt-6 px-5 pb-24">
       <div className="mx-auto max-w-lg">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -171,11 +258,96 @@ export default function ClassificaPage() {
           <p className="text-sm text-gray-500 mt-1">Scala le leghe e diventa Campione Azzurro</p>
         </motion.div>
 
+        {/* User's own rank - Sticky highlight card */}
+        {currentPlayer && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="sticky top-2 z-20 mt-4"
+          >
+            <div className="bg-gradient-to-r from-amber-50 via-white to-amber-50 card-clean rounded-2xl border-2 border-amber-200/60 p-4 shadow-lg shadow-amber-100/40">
+              <div className="flex items-center gap-3">
+                {/* Rank badge */}
+                <div className="flex flex-col items-center justify-center min-w-[48px]">
+                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Pos.</span>
+                  <span className="text-2xl font-black text-amber-600">
+                    {userFullRank ? `#${userFullRank}` : (
+                      (() => {
+                        const sorted = [...allPlayers].sort((a, b) => b.xp - a.xp);
+                        const idx = sorted.findIndex(p => p.id === currentUserId);
+                        return idx >= 0 ? `#${idx + 1}` : "--";
+                      })()
+                    )}
+                  </span>
+                  {userFullTotal > 0 && (
+                    <span className="text-[9px] text-gray-400">
+                      su {userFullTotal}
+                    </span>
+                  )}
+                </div>
+
+                {/* Avatar */}
+                <Avatar className="h-12 w-12 ring-2 ring-amber-300/50">
+                  <AvatarFallback className="bg-gradient-to-br from-amber-400 to-amber-600 text-white text-sm font-bold">
+                    TU
+                  </AvatarFallback>
+                </Avatar>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-sm text-gray-900 truncate">
+                    {currentPlayer.name}
+                  </p>
+                  <p className="text-[11px] text-gray-500">
+                    Lv.{getLevel(currentPlayer.xp).level} · {getLevel(currentPlayer.xp).name}
+                  </p>
+                  {currentPlayer.asd_name && (
+                    <span className="inline-flex items-center gap-1 mt-0.5 text-[10px] text-indigo-600 bg-indigo-50 rounded-full px-2 py-0.5 font-medium">
+                      <Landmark className="w-2.5 h-2.5" />
+                      {currentPlayer.asd_name}
+                    </span>
+                  )}
+                </div>
+
+                {/* XP */}
+                <div className="text-right">
+                  <p className="font-black text-lg text-gray-900">
+                    {currentPlayer.xp.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-gray-400 font-medium">XP</p>
+                </div>
+              </div>
+
+              {/* Distance to next player */}
+              {(() => {
+                const sorted = [...allPlayers].sort((a, b) => b.xp - a.xp);
+                const idx = sorted.findIndex(p => p.id === currentUserId);
+                if (idx > 0) {
+                  const above = sorted[idx - 1];
+                  const gap = above.xp - currentPlayer.xp;
+                  return (
+                    <div className="mt-2.5 pt-2 border-t border-amber-100/60">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <ChevronUp className="w-3.5 h-3.5 text-amber-500" />
+                        <p className="text-[11px] text-gray-500">
+                          <span className="font-bold text-amber-600">{gap.toLocaleString()} XP</span> per superare {above.name}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+            </div>
+          </motion.div>
+        )}
+
         {/* Weekly countdown */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
+          transition={{ delay: 0.08 }}
           className="mt-4 flex items-center justify-between bg-white card-clean rounded-xl p-3"
         >
           <div className="flex items-center gap-2">
@@ -203,7 +375,7 @@ export default function ClassificaPage() {
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08 }}
+            transition={{ delay: 0.1 }}
             className="mt-3 bg-white card-clean rounded-xl p-3"
           >
             <div className="flex items-center justify-between mb-2">
@@ -224,126 +396,397 @@ export default function ClassificaPage() {
               />
             </div>
             <p className="text-[10px] text-gray-400 mt-1">
-              Mancano {nextLeague.minXp - userXp} XP per la promozione
+              Mancano {(nextLeague.minXp - userXp).toLocaleString()} XP per la promozione
             </p>
           </motion.div>
         )}
 
-        <Tabs defaultValue="sempre" className="w-full mt-4">
-          <TabsList className="w-full bg-gray-100 p-1 rounded-xl">
-            <TabsTrigger value="settimana" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              Settimana
-            </TabsTrigger>
-            <TabsTrigger value="mese" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              Mese
-            </TabsTrigger>
-            <TabsTrigger value="sempre" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              Sempre
-            </TabsTrigger>
-            <TabsTrigger value="asd" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm" onClick={fetchAsdRankings}>
-              Per ASD
-            </TabsTrigger>
-          </TabsList>
+        {/* Tab bar - horizontal scrollable pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="mt-5"
+        >
+          <div
+            ref={tabsRef}
+            className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`relative flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
+                    isActive
+                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                      : "bg-white text-gray-600 card-clean hover:bg-gray-50"
+                  }`}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  <span className="text-sm">{tab.icon}</span>
+                  {tab.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTabIndicator"
+                      className="absolute inset-0 bg-indigo-600 rounded-full -z-10"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </motion.div>
 
-          <TabsContent value="settimana" className="mt-4">
-            {playersLoading ? (
-              <LeaderboardSkeleton />
-            ) : weeklyPlayers.length === 0 ? (
-              <EmptyState message="Nessun giocatore attivo questa settimana" />
-            ) : (
-              <LeaderboardList
-                players={weeklyPlayers}
-                currentUserId={currentUserId}
-                league={league}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="mese" className="mt-4">
-            {playersLoading ? (
-              <LeaderboardSkeleton />
-            ) : monthlyPlayers.length === 0 ? (
-              <EmptyState message="Nessun giocatore attivo questo mese" />
-            ) : (
-              <LeaderboardList
-                players={monthlyPlayers}
-                currentUserId={currentUserId}
-                league={league}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="sempre" className="mt-4">
-            {playersLoading ? (
-              <LeaderboardSkeleton />
-            ) : allPlayers.length === 0 ? (
-              <EmptyState message="La classifica e ancora vuota" />
-            ) : (
-              <LeaderboardList
-                players={allPlayers}
-                currentUserId={currentUserId}
-                league={league}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="asd" className="mt-4">
-            {asdLoading ? (
-              <LeaderboardSkeleton />
-            ) : asdRankings.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-12"
-              >
-                <span className="flex justify-center mb-3"><Landmark className="w-10 h-10 text-gray-400" /></span>
-                <p className="text-sm text-gray-500">
-                  Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione
-                </p>
-              </motion.div>
-            ) : (
-              <div className="space-y-2">
-                {asdRankings.map((asd, i) => (
-                  <motion.div
-                    key={asd.asd_name}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.03 }}
-                    className="card-clean rounded-2xl bg-white p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="w-8 text-center text-base font-bold">
-                        {i < 3 ? medals[i] : <span className="text-gray-400 text-sm">{i + 1}</span>}
-                      </span>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 text-[#003DA5] text-lg font-bold flex-shrink-0">
-                        {asd.asd_name[0]}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-sm text-gray-900 truncate">
-                          {asd.asd_name}
-                        </p>
-                        <p className="text-[11px] text-gray-500">
-                          {asd.member_count} {asd.member_count === 1 ? "membro" : "membri"}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-sm text-gray-900">
-                          {asd.total_xp.toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-gray-400">XP totali</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+        {/* Course filter sub-pills (only when Per Corso tab is active) */}
+        <AnimatePresence>
+          {activeTab === "per-corso" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                <div className="flex items-center gap-1 mr-1 flex-shrink-0">
+                  <Filter className="w-3.5 h-3.5 text-gray-400" />
+                </div>
+                {courseFilters.map((course) => {
+                  const isActive = selectedCourse === course.id;
+                  return (
+                    <motion.button
+                      key={course.id}
+                      onClick={() => setSelectedCourse(course.id)}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
+                        isActive
+                          ? course.activeColor + " shadow-sm"
+                          : "bg-white text-gray-500 card-clean hover:bg-gray-50"
+                      }`}
+                      whileTap={{ scale: 0.96 }}
+                    >
+                      <span className={isActive ? "text-white" : course.color}>{course.icon}</span>
+                      {course.label}
+                    </motion.button>
+                  );
+                })}
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Tab content with animated transitions */}
+        <div className="mt-4">
+          <AnimatePresence mode="wait">
+            {activeTab === "globale" && (
+              <motion.div
+                key="globale"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {playersLoading ? (
+                  <LeaderboardSkeleton />
+                ) : allPlayers.length === 0 ? (
+                  <EmptyState message="La classifica e ancora vuota" />
+                ) : (
+                  <LeaderboardList
+                    players={allPlayers}
+                    currentUserId={currentUserId}
+                    league={league}
+                  />
+                )}
+              </motion.div>
             )}
-          </TabsContent>
-        </Tabs>
+
+            {activeTab === "settimanale" && (
+              <motion.div
+                key="settimanale"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {playersLoading ? (
+                  <LeaderboardSkeleton />
+                ) : weeklyPlayers.length === 0 ? (
+                  <EmptyState message="Nessun giocatore attivo questa settimana" />
+                ) : (
+                  <>
+                    {/* Weekly info banner */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 card-clean rounded-xl p-3"
+                    >
+                      <p className="text-xs text-indigo-700 font-medium">
+                        Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di piu sale in cima!
+                      </p>
+                    </motion.div>
+                    <LeaderboardList
+                      players={weeklyPlayers}
+                      currentUserId={currentUserId}
+                      league={league}
+                    />
+                  </>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === "per-corso" && (
+              <motion.div
+                key="per-corso"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <PerCorsoView
+                  courseId={selectedCourse}
+                  allPlayers={allPlayers}
+                  currentUserId={currentUserId}
+                />
+              </motion.div>
+            )}
+
+            {activeTab === "per-asd" && (
+              <motion.div
+                key="per-asd"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {asdLoading ? (
+                  <LeaderboardSkeleton />
+                ) : asdRankings.length === 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center py-12"
+                  >
+                    <span className="flex justify-center mb-3"><Landmark className="w-10 h-10 text-gray-400" /></span>
+                    <p className="text-sm text-gray-500">
+                      Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione
+                    </p>
+                  </motion.div>
+                ) : (
+                  <div className="space-y-2">
+                    {asdRankings.map((asd, i) => (
+                      <motion.div
+                        key={asd.asd_name}
+                        initial={{ opacity: 0, x: -12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.03 }}
+                        className="card-clean rounded-2xl bg-white p-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 text-center text-base font-bold">
+                            {i < 3 ? medals[i] : <span className="text-gray-400 text-sm">{i + 1}</span>}
+                          </span>
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 text-[#003DA5] text-lg font-bold flex-shrink-0">
+                            {asd.asd_name[0]}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-sm text-gray-900 truncate">
+                              {asd.asd_name}
+                            </p>
+                            <p className="text-[11px] text-gray-500">
+                              {asd.member_count} {asd.member_count === 1 ? "membro" : "membri"}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-sm text-gray-900">
+                              {asd.total_xp.toLocaleString()}
+                            </p>
+                            <p className="text-[10px] text-gray-400">XP totali</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
 }
 
+/* ============================================================================
+   Per Corso view - shows leaderboard filtered by course completion
+   ============================================================================ */
+function PerCorsoView({
+  courseId,
+  allPlayers,
+  currentUserId,
+}: {
+  courseId: CourseId;
+  allPlayers: PlayerEntry[];
+  currentUserId: string | null;
+}) {
+  const [coursePlayers, setCoursePlayers] = useState<(PlayerEntry & { courseXp: number })[]>([]);
+  const [loading, setLoading] = useState(true);
+  const courseInfo = courses.find(c => c.id === courseId);
+
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      setLoading(true);
+      try {
+        const supabase = createClient();
+
+        // Get completed modules for this course's lessons
+        const range = courseRanges[courseId];
+        const { data: modules } = await supabase
+          .from("completed_modules")
+          .select("user_id, lesson_id, module_id")
+          .gte("lesson_id", String(range.min))
+          .lte("lesson_id", String(range.max));
+
+        if (modules && modules.length > 0) {
+          // Count unique modules completed per user as a proxy for course XP
+          const userModuleCount = new Map<string, number>();
+          for (const m of modules) {
+            const count = userModuleCount.get(m.user_id) || 0;
+            userModuleCount.set(m.user_id, count + 1);
+          }
+
+          // Map to players with course XP (modules * 10 XP each as estimate)
+          const playerMap = new Map(allPlayers.map(p => [p.id, p]));
+          const result: (PlayerEntry & { courseXp: number })[] = [];
+          for (const [userId, moduleCount] of userModuleCount) {
+            const player = playerMap.get(userId);
+            if (player) {
+              result.push({ ...player, courseXp: moduleCount * 10 });
+            } else {
+              // Player not in top 100, create minimal entry
+              result.push({
+                id: userId,
+                name: "Giocatore",
+                xp: 0,
+                updated_at: "",
+                asd_name: null,
+                courseXp: moduleCount * 10,
+              });
+            }
+          }
+          result.sort((a, b) => b.courseXp - a.courseXp);
+          setCoursePlayers(result);
+        } else {
+          setCoursePlayers([]);
+        }
+      } catch {
+        setCoursePlayers([]);
+      }
+      setLoading(false);
+    };
+    fetchCourseData();
+  }, [courseId, allPlayers]);
+
+  if (loading) return <LeaderboardSkeleton />;
+
+  if (coursePlayers.length === 0) {
+    return (
+      <EmptyState
+        message={`Nessun giocatore ha ancora completato moduli del ${courseInfo?.name || "corso"}`}
+      />
+    );
+  }
+
+  return (
+    <>
+      {/* Course header */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="card-clean rounded-2xl bg-white p-4 mb-4"
+      >
+        <div className="flex items-center gap-3">
+          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white text-2xl font-bold shadow-md ${
+            courseId === "fiori" ? "bg-emerald-600" :
+            courseId === "quadri" ? "bg-orange-500" :
+            courseId === "cuori-gioco" ? "bg-rose-500" :
+            "bg-pink-600"
+          }`}>
+            {courseInfo?.icon || "?"}
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-base text-gray-900">
+              {courseInfo?.name || "Corso"}
+            </p>
+            <p className="text-xs text-gray-500">
+              {coursePlayers.length} {coursePlayers.length === 1 ? "partecipante" : "partecipanti"} · {courseInfo?.lessonCount || 0} lezioni
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Course leaderboard */}
+      <div className="space-y-2">
+        {coursePlayers.map((player, index) => {
+          const isCurrentUser = player.id === currentUserId;
+          const rank = index + 1;
+          return (
+            <motion.div
+              key={player.id}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.03 }}
+            >
+              <div className={`card-clean rounded-2xl bg-white p-3.5 ${
+                isCurrentUser ? "ring-2 ring-amber-300/50" : ""
+              } ${rank <= 3 ? "border-l-[3px] border-l-emerald-400" : ""}`}>
+                <div className="flex items-center gap-3">
+                  <span className="w-8 text-center text-base font-bold">
+                    {rank <= 3
+                      ? medals[rank - 1]
+                      : <span className="text-gray-400 text-sm">{rank}</span>}
+                  </span>
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
+                      {isCurrentUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
+                      {isCurrentUser ? `${player.name} (Tu)` : player.name}
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[11px] text-gray-500">
+                        {player.courseXp} XP corso
+                      </p>
+                      {player.asd_name && (
+                        <span className="inline-flex items-center text-[9px] text-indigo-600 bg-indigo-50 rounded-full px-1.5 py-0.5 font-medium">
+                          {player.asd_name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-sm text-gray-900">
+                      {player.courseXp}
+                    </p>
+                    <p className="text-[10px] text-gray-400">XP</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+/* ============================================================================
+   LeaderboardList component
+   ============================================================================ */
 function LeaderboardList({
   players,
   currentUserId,
@@ -357,8 +800,6 @@ function LeaderboardList({
   const sorted = [...players].sort((a, b) => b.xp - a.xp);
   const ranked = sorted.map((p, i) => ({ ...p, rank: i + 1 }));
   const totalPlayers = ranked.length;
-
-  const currentEntry = ranked.find((p) => p.id === currentUserId);
 
   return (
     <>
@@ -405,48 +846,6 @@ function LeaderboardList({
         <span className="text-[10px] font-bold text-gray-300">{totalPlayers} giocatori</span>
       </motion.div>
 
-      {/* Your position - sticky highlight (only if logged in) */}
-      {currentEntry && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mb-4 card-clean rounded-2xl bg-white border-2 border-amber/30 p-4"
-        >
-          <div className="flex items-center gap-3">
-            <span className="w-8 text-center text-sm font-bold text-amber-500">
-              {currentEntry.rank}
-            </span>
-            <Avatar className="h-10 w-10">
-              <AvatarFallback className="bg-gradient-to-br from-emerald to-emerald-dark text-white text-xs font-bold">
-                TU
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <p className="font-bold text-sm text-amber-600">{currentEntry.name}</p>
-              <p className="text-[11px] text-gray-500">
-                Lv.{getLevel(currentEntry.xp).level} {getLevel(currentEntry.xp).name}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="font-bold text-gray-900">{currentEntry.xp.toLocaleString()}</p>
-              <p className="text-[10px] text-gray-400">XP</p>
-            </div>
-          </div>
-          {currentEntry.rank > 1 && (
-            <div className="mt-2 pt-2 border-t border-gray-100">
-              <p className="text-[10px] text-gray-400 text-center">
-                {(() => {
-                  const above = ranked.find((p) => p.rank === currentEntry.rank - 1);
-                  if (!above) return "";
-                  return `${above.xp - currentEntry.xp} XP per superare ${above.name}`;
-                })()}
-              </p>
-            </div>
-          )}
-        </motion.div>
-      )}
-
       {/* Leaderboard */}
       <div className="space-y-2">
         {ranked.map((player, index) => {
@@ -460,10 +859,10 @@ function LeaderboardList({
               key={player.id}
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + index * 0.03 }}
+              transition={{ delay: 0.2 + index * 0.03 }}
             >
               <div className={`card-clean rounded-2xl bg-white p-3.5 ${
-                isCurrentUser ? "ring-2 ring-amber/40" : ""
+                isCurrentUser ? "ring-2 ring-amber-300/50" : ""
               } ${isPromotion ? "border-l-[3px] border-l-emerald-400" : ""} ${
                 isRelegation ? "border-l-[3px] border-l-rose-300" : ""
               }`}>
@@ -474,7 +873,7 @@ function LeaderboardList({
                       : <span className="text-gray-400 text-sm">{player.rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-emerald to-emerald-dark text-white" : avatarColors[index % avatarColors.length]}`}>
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
                       {isCurrentUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -482,9 +881,16 @@ function LeaderboardList({
                     <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
                       {isCurrentUser ? `${player.name} (Tu)` : player.name}
                     </p>
-                    <p className="text-[11px] text-gray-500">
-                      Lv.{pl.level} · {pl.name}
-                    </p>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <p className="text-[11px] text-gray-500">
+                        Lv.{pl.level} · {pl.name}
+                      </p>
+                      {player.asd_name && (
+                        <span className="inline-flex items-center text-[9px] text-indigo-600 bg-indigo-50 rounded-full px-1.5 py-0.5 font-medium">
+                          {player.asd_name}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-sm text-gray-900">
@@ -517,6 +923,9 @@ function LeaderboardList({
   );
 }
 
+/* ============================================================================
+   Empty state & skeleton
+   ============================================================================ */
 function EmptyState({ message }: { message: string }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">

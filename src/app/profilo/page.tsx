@@ -11,6 +11,7 @@ import { ASD_LIST } from "@/data/asd-list";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useGameHistory } from "@/hooks/use-game-history";
 import { StatsDashboard } from "@/components/stats-dashboard";
+import { shareInvite, shareBadge } from "@/lib/share";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "motion/react";
@@ -18,7 +19,7 @@ import { useRouter } from "next/navigation";
 import {
   Spade, BookOpen, Target, Flame, Trophy, Star, Crown, GraduationCap,
   Globe, Medal, CheckCircle2, Zap, BookOpenCheck, BarChart3,
-  Gamepad2, Coffee, Coins
+  Gamepad2, Coffee, Coins, Share2, UserPlus, Check
 } from "lucide-react";
 
 const allWorlds = courses.flatMap(c => c.worlds);
@@ -45,6 +46,9 @@ export default function ProfiloPage() {
   const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
   const [currentProfile, setCurrentProfile] = useState<UserProfile>("adulto");
   const [advancedStatsOpen, setAdvancedStatsOpen] = useState(false);
+  const [inviteToast, setInviteToast] = useState<string | null>(null);
+  const [inviteXpToast, setInviteXpToast] = useState(false);
+  const [sharedBadge, setSharedBadge] = useState<string | null>(null);
   const { getStats } = useGameHistory();
   const gameStats = getStats();
 
@@ -80,6 +84,33 @@ export default function ProfiloPage() {
       setShowLogoutConfirm(false);
     }
   }, [signOut]);
+
+  const handleInvite = useCallback(async () => {
+    const { outcome, xpAwarded } = await shareInvite();
+    if (outcome === "clipboard") {
+      setInviteToast("Link copiato!");
+      setTimeout(() => setInviteToast(null), 2500);
+    } else if (outcome === "shared") {
+      setInviteToast("Invito condiviso!");
+      setTimeout(() => setInviteToast(null), 2500);
+    }
+    if (xpAwarded > 0) {
+      setXp((prev) => prev + xpAwarded);
+      setInviteXpToast(true);
+      setTimeout(() => setInviteXpToast(false), 3000);
+    }
+  }, []);
+
+  const handleShareBadge = useCallback(async (badgeName: string) => {
+    const outcome = await shareBadge(badgeName);
+    if (outcome === "clipboard") {
+      setSharedBadge(badgeName);
+      setTimeout(() => setSharedBadge(null), 2500);
+    } else if (outcome === "shared") {
+      setSharedBadge(badgeName);
+      setTimeout(() => setSharedBadge(null), 2500);
+    }
+  }, []);
 
   const level = Math.floor(xp / 100) + 1;
   const xpInLevel = xp % 100;
@@ -332,19 +363,48 @@ export default function ProfiloPage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.35 + i * 0.03 }}
-                className={`flex flex-col items-center gap-1.5 ${
+                className={`relative flex flex-col items-center gap-1.5 ${
                   !badge.earned ? "opacity-25 grayscale" : ""
                 }`}
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm text-2xl">
                   {badge.icon}
                 </div>
+                {badge.earned && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleShareBadge(badge.name); }}
+                    className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#003DA5] text-white shadow-sm hover:bg-[#002E7A] transition-colors"
+                    title="Condividi badge"
+                  >
+                    {sharedBadge === badge.name ? (
+                      <Check className="w-2.5 h-2.5" />
+                    ) : (
+                      <Share2 className="w-2.5 h-2.5" />
+                    )}
+                  </button>
+                )}
                 <span className="text-[10px] text-center text-gray-500 font-semibold leading-tight">
                   {badge.name}
                 </span>
               </motion.div>
             ))}
           </div>
+          {/* Badge share toast */}
+          <AnimatePresence>
+            {sharedBadge && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="mt-3 text-center"
+              >
+                <span className="inline-flex items-center gap-1.5 bg-[#003DA5]/10 text-[#003DA5] text-xs font-bold rounded-full px-3 py-1.5">
+                  <Check className="h-3.5 w-3.5" />
+                  Badge condiviso!
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         <Separator className="my-6 bg-[#e5e7eb]" />
@@ -648,6 +708,67 @@ export default function ProfiloPage() {
               </div>
             </div>
             <p className="text-3xl font-bold text-amber-dark">{Math.floor(xp / 10)}</p>
+          </div>
+        </motion.div>
+
+        {/* Invita un Amico */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.58 }}
+          className="mb-6"
+        >
+          <div className="rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-indigo-50 border-2 border-[#003DA5]/20 shadow-sm p-5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20">
+                <UserPlus className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-gray-900">Invita un Amico</p>
+                <p className="text-xs text-gray-500">
+                  Condividi Bridge LAB e guadagna +25 XP
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleInvite}
+              className="w-full rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white font-semibold h-11 text-sm shadow-md shadow-[#003DA5]/20 transition-colors"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Invita un amico a giocare
+            </Button>
+            {/* Invite toast feedback */}
+            <AnimatePresence>
+              {inviteToast && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="mt-3 text-center"
+                >
+                  <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full px-3 py-1.5">
+                    <Check className="h-3.5 w-3.5" />
+                    {inviteToast}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {/* XP award toast */}
+            <AnimatePresence>
+              {inviteXpToast && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="mt-2 text-center"
+                >
+                  <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-full px-3 py-1.5">
+                    <Zap className="h-3.5 w-3.5" />
+                    +25 XP guadagnati!
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 

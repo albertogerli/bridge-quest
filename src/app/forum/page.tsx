@@ -221,12 +221,21 @@ export default function ForumPage() {
                               </svg>
                               {post.likes_count}
                             </span>
-                            <span className="flex items-center gap-0.5">
-                              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                              </svg>
-                              {post.comments_count}
-                            </span>
+                            {post.comments_count > 0 ? (
+                              <span className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-md font-bold">
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                                {post.comments_count} {post.comments_count === 1 ? "risposta" : "risposte"}
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-0.5">
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                                0
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>

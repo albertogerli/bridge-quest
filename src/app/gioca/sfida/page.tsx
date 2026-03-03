@@ -19,6 +19,7 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
+import { useGameResults } from "@/hooks/use-game-results";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(): Smazzata {
@@ -56,6 +57,7 @@ export default function SfidaDelGiornoPage() {
   const [alreadyCompleted] = useState(() => isDailyChallengeCompleted());
   const isMobile = useMobile();
   const profile = useProfile();
+  const { saveGameResult } = useGameResults();
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -119,8 +121,21 @@ export default function SfidaDelGiornoPage() {
       awardGameXp(`sfida-${today}`, totalEarned);
       try { updateLastActivity(); } catch {}
       if (!alreadyCompleted) markDailyCompleted();
+      // Sync to Supabase
+      saveGameResult({
+        gameType: "sfida",
+        score: totalEarned,
+        details: {
+          tricks: game.result.tricksMade,
+          tricksNeeded: game.result.tricksNeeded,
+          result: game.result.result,
+          made: game.result.result >= 0,
+          contract: smazzata.contract,
+          date: today,
+        },
+      });
     }
-  }, [game.phase, game.result, alreadyCompleted]);
+  }, [game.phase, game.result, alreadyCompleted, saveGameResult]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =
