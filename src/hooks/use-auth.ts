@@ -103,8 +103,10 @@ export function useAuth() {
       clearTimeout(timer);
       timer = setTimeout(async () => {
         console.log("Session timeout: auto-logout due to inactivity");
+        try { localStorage.removeItem("bq_guest"); } catch {}
         await supabase.auth.signOut();
         setState({ user: null, profile: null, session: null, loading: false });
+        window.location.href = "/";
       }, INACTIVITY_TIMEOUT);
     };
 
