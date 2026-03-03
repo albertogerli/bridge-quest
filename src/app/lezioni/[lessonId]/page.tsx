@@ -1,10 +1,10 @@
 "use client";
 
-import { use, useState, useEffect, useRef } from "react";
+import { use, useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { getLessonById } from "@/data/courses";
-import { getVideoForLesson, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
+import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 
@@ -36,8 +36,6 @@ export default function LessonDetailPage({
     } catch {}
   }, []);
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoMuted, setVideoMuted] = useState(true);
   const [infographicLoaded, setInfographicLoaded] = useState(false);
   const profileConfig = useProfile();
   const maestroName = getMaestroName(profileConfig.profile);
@@ -50,7 +48,7 @@ export default function LessonDetailPage({
   const progress = totalModules > 0 ? (completedModules / totalModules) * 100 : 0;
   const totalXp = lesson.modules.reduce((sum, m) => sum + m.xpReward, 0);
   const totalDuration = lesson.modules.reduce((sum, m) => sum + parseInt(m.duration), 0);
-  const lessonVideo = getVideoForLesson(lesson.id);
+  const youtubeEmbed = getYouTubeEmbedUrl(lesson.id);
 
   return (
     <div className="pt-6 px-5">
@@ -102,50 +100,22 @@ export default function LessonDetailPage({
           </div>
         </motion.div>
 
-        {/* Maestro Fiori video */}
-        {lessonVideo && (
+        {/* Maestro YouTube video */}
+        {youtubeEmbed && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
             className="card-clean rounded-2xl bg-white overflow-hidden mb-4"
           >
-            <div className="relative">
-              <video
-                ref={videoRef}
-                src={lessonVideo}
-                className="w-full aspect-square object-cover"
-                autoPlay
-                muted={videoMuted}
-                playsInline
-                loop={false}
+            <div className="relative w-full aspect-video">
+              <iframe
+                src={youtubeEmbed}
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={`${maestroName} - ${lesson.title}`}
               />
-              <button
-                onClick={() => {
-                  setVideoMuted(!videoMuted);
-                  if (videoRef.current) {
-                    videoRef.current.muted = !videoMuted;
-                    if (videoMuted) {
-                      videoRef.current.currentTime = 0;
-                      videoRef.current.play();
-                    }
-                  }
-                }}
-                className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
-              >
-                {videoMuted ? (
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                    <line x1="23" y1="9" x2="17" y2="15" />
-                    <line x1="17" y1="9" x2="23" y2="15" />
-                  </svg>
-                ) : (
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                    <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
-                  </svg>
-                )}
-              </button>
             </div>
             <div className="p-3 flex items-center gap-2">
               <span className="text-lg">🎓</span>
