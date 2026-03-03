@@ -829,6 +829,9 @@ export default function Home() {
             <p className="mt-2 text-xs text-[#003DA5]/60">
               Commissione Insegnamento · Corsi Fiori, Quadri, Cuori
             </p>
+            <Link href="/privacy" className="mt-3 inline-block text-[10px] text-[#003DA5]/50 underline">
+              Privacy e Cookie Policy
+            </Link>
           </div>
         </div>
       </section>
@@ -1499,7 +1502,7 @@ const onboardingSteps: { id: string; title: string; subtitle: string; descriptio
   {
     id: "welcome",
     title: "Benvenuto in Bridge LAB",
-    subtitle: "Il tuo viaggio nel bridge inizia qui",
+    subtitle: "La piattaforma ufficiale FIGB",
     description:
       "Il bridge è il gioco di carte più bello e stimolante del mondo. Con Bridge LAB imparerai a giocare divertendoti, passo dopo passo.",
   },
@@ -1824,7 +1827,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
           className="mt-10 text-center"
         >
           <p className="text-[11px] text-white/30 font-semibold tracking-wider uppercase">
-            Un progetto della FIGB · Corso Fiori
+            Un progetto della Federazione Italiana Gioco Bridge
           </p>
         </motion.div>
       </div>
@@ -2018,6 +2021,13 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
           </motion.div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="px-5 pb-8 text-center">
+        <p className="text-[11px] text-gray-400">
+          <a href="/privacy" className="underline hover:text-gray-600 transition-colors">Privacy e Cookie Policy</a>
+        </p>
+      </footer>
     </div>
   );
 }

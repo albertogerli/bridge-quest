@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "La piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB) per imparare il bridge. 4 corsi completi: Fiori, Quadri, Cuori Gioco e Cuori Licita. 49 lezioni interattive con gamification, AI e video didattici.",
+    "Impara il bridge con Bridge LAB, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
   keywords: [
     "bridge",
     "FIGB",
@@ -33,15 +33,15 @@ export const metadata: Metadata = {
     "dichiarazione bridge",
     "gioco della carta",
   ],
-  metadataBase: new URL("https://bridgelab.figb.it"),
+  metadataBase: new URL("https://bridgelab.it"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "FIGB Bridge LAB - Impara il Bridge giocando",
     description:
-      "La piattaforma ufficiale FIGB per imparare il bridge. 4 corsi, 49 lezioni interattive, gamification e AI. Il tuo viaggio nel bridge inizia qui.",
-    url: "https://bridgelab.figb.it",
+      "Impara il bridge con Bridge LAB, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
+    url: "https://bridgelab.it",
     siteName: "FIGB Bridge LAB",
     images: [
       {
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FIGB Bridge LAB - Impara il Bridge giocando",
     description:
-      "La piattaforma ufficiale FIGB per imparare il bridge. 4 corsi, 49 lezioni interattive, gamification e AI.",
+      "Impara il bridge con Bridge LAB, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi.",
     images: ["/youtube-banner.png"],
   },
   robots: {
@@ -119,6 +119,63 @@ export default function RootLayout({
     <html lang="it" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              "name": "Bridge LAB",
+              "description": "Piattaforma didattica ufficiale della Federazione Italiana Gioco Bridge (FIGB) per imparare il bridge.",
+              "url": "https://bridgelab.it",
+              "logo": "https://bridgelab.it/icons/icon-512x512.png",
+              "parentOrganization": {
+                "@type": "Organization",
+                "name": "Federazione Italiana Gioco Bridge",
+                "alternateName": "FIGB",
+                "url": "https://www.federbridge.it"
+              },
+              "hasCourse": [
+                {
+                  "@type": "Course",
+                  "name": "Corso Fiori - Le Basi",
+                  "description": "13 lezioni per imparare le basi del bridge: prese, atout, piano di gioco, dichiarazione.",
+                  "provider": { "@type": "Organization", "name": "FIGB" },
+                  "educationalLevel": "Principiante",
+                  "inLanguage": "it",
+                  "numberOfLessons": 13
+                },
+                {
+                  "@type": "Course",
+                  "name": "Corso Quadri - Intermedio",
+                  "description": "12 lezioni su gioco avanzato, controgioco, interventi e dichiarazione competitiva.",
+                  "provider": { "@type": "Organization", "name": "FIGB" },
+                  "educationalLevel": "Intermedio",
+                  "inLanguage": "it",
+                  "numberOfLessons": 12
+                },
+                {
+                  "@type": "Course",
+                  "name": "Corso Cuori - Il Gioco della Carta",
+                  "description": "10 lezioni avanzate su tecniche di gioco: sicurezza, eliminazione, percentuali, deduzioni.",
+                  "provider": { "@type": "Organization", "name": "FIGB" },
+                  "educationalLevel": "Avanzato",
+                  "inLanguage": "it",
+                  "numberOfLessons": 10
+                },
+                {
+                  "@type": "Course",
+                  "name": "Corso Cuori - La Dichiarazione",
+                  "description": "14 lezioni avanzate sulla dichiarazione: Texas, Slam, sottoaperture, competitivo.",
+                  "provider": { "@type": "Organization", "name": "FIGB" },
+                  "educationalLevel": "Avanzato",
+                  "inLanguage": "it",
+                  "numberOfLessons": 14
+                }
+              ]
+            }),
+          }}
+        />
       </head>
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <a href="#main-content" className="skip-link">Vai al contenuto</a>

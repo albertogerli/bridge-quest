@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/admin/"],
       },
     ],
-    sitemap: "https://bridgelab.figb.it/sitemap.xml",
+    sitemap: "https://bridgelab.it/sitemap.xml",
   };
 }

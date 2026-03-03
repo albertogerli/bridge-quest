@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://bridgelab.figb.it";
+  const baseUrl = "https://bridgelab.it";
   const lastModified = new Date();
 
   // Static pages
