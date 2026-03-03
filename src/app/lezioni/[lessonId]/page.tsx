@@ -108,19 +108,19 @@ export default function LessonDetailPage({
             transition={{ delay: 0.08 }}
             className="card-clean rounded-2xl bg-white overflow-hidden mb-4"
           >
-            <div className="relative w-full aspect-video">
+            <div className="relative w-full" style={{ aspectRatio: "9/16" }}>
               <iframe
                 src={youtubeEmbed}
                 className="absolute inset-0 w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                title={`${maestroName} - ${lesson.title}`}
+                title={`Maestro Franci - ${lesson.title}`}
               />
             </div>
             <div className="p-3 flex items-center gap-2">
               <span className="text-lg">🎓</span>
               <p className="text-sm font-bold text-gray-700">
-                {maestroName} introduce la lezione
+                Maestro Franci introduce la lezione
               </p>
             </div>
           </motion.div>

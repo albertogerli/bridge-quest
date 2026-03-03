@@ -1981,13 +1981,13 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
       transition={{ delay: 0.1 }}
       className="mb-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
     >
-      <div className="relative w-full aspect-video">
+      <div className="relative w-full" style={{ aspectRatio: "9/16" }}>
         <iframe
           src={youtubeEmbed}
           className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          title="Il Maestro introduce la lezione"
+          title="Maestro Franci introduce la lezione"
         />
         <button
           onClick={() => setDismissed(true)}
@@ -2002,7 +2002,7 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
       <div className="p-3 flex items-center gap-2">
         <span className="text-lg">🎓</span>
         <p className="text-sm font-bold text-gray-700">
-          Il Maestro introduce la lezione
+          Maestro Franci introduce la lezione
         </p>
       </div>
     </motion.div>
