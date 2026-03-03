@@ -11,7 +11,7 @@ import { useSounds } from "@/hooks/use-sounds";
 import { useAppunti } from "@/hooks/use-appunti";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { ComprehensionQuiz } from "@/components/comprehension-quiz";
-import { getVideoForLesson } from "@/components/maestro-video";
+import { getYouTubeEmbedUrl } from "@/components/maestro-video";
 import Link from "next/link";
 
 // SVG icons for block types
@@ -1967,14 +1967,12 @@ export default function ModulePage({
 function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
   lessonId: number; moduleIndex: number; currentStep: number;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
   const [dismissed, setDismissed] = useState(false);
 
-  const videoPath = getVideoForLesson(lessonId);
+  const youtubeEmbed = getYouTubeEmbedUrl(lessonId);
 
   // Only show on first module, at beginning
-  if (moduleIndex !== 0 || currentStep > 1 || !videoPath || dismissed) return null;
+  if (moduleIndex !== 0 || currentStep > 1 || !youtubeEmbed || dismissed) return null;
 
   return (
     <motion.div
@@ -1983,54 +1981,23 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
       transition={{ delay: 0.1 }}
       className="mb-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
     >
-      <div className="relative">
-        <video
-          ref={videoRef}
-          src={videoPath}
-          className="w-full aspect-video object-cover"
-          autoPlay
-          muted={muted}
-          playsInline
-          loop={false}
+      <div className="relative w-full aspect-video">
+        <iframe
+          src={youtubeEmbed}
+          className="absolute inset-0 w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          title="Il Maestro introduce la lezione"
         />
-        <div className="absolute bottom-3 right-3 flex gap-2">
-          <button
-            onClick={() => {
-              setMuted(!muted);
-              if (videoRef.current) {
-                videoRef.current.muted = !muted;
-                if (muted) {
-                  videoRef.current.currentTime = 0;
-                  videoRef.current.play();
-                }
-              }
-            }}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
-            aria-label={muted ? "Attiva audio" : "Disattiva audio"}
-          >
-            {muted ? (
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                <line x1="23" y1="9" x2="17" y2="15" />
-                <line x1="17" y1="9" x2="23" y2="15" />
-              </svg>
-            ) : (
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
-              </svg>
-            )}
-          </button>
-          <button
-            onClick={() => setDismissed(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
-            aria-label="Chiudi video"
-          >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+        <button
+          onClick={() => setDismissed(true)}
+          className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
+          aria-label="Chiudi video"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div className="p-3 flex items-center gap-2">
         <span className="text-lg">🎓</span>
