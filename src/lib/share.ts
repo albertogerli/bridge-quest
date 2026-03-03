@@ -6,7 +6,7 @@
  * or 'cancelled' when the user dismissed the share sheet.
  */
 
-const APP_URL = "https://bridgelab.figb.it";
+const APP_URL = "https://bridgelab.it";
 
 export type ShareOutcome = "shared" | "clipboard" | "cancelled";
 

@@ -34,11 +34,11 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://bridgelab.figb.it/lezioni/${lessonId}`,
+      url: `https://bridgelab.it/lezioni/${lessonId}`,
       siteName: "FIGB Bridge LAB",
       images: [
         {
-          url: "https://bridgelab.figb.it/youtube-banner.png",
+          url: "https://bridgelab.it/youtube-banner.png",
           width: 1280,
           height: 720,
           alt: `${lesson.title} - FIGB Bridge LAB`,
@@ -51,7 +51,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["https://bridgelab.figb.it/youtube-banner.png"],
+      images: ["https://bridgelab.it/youtube-banner.png"],
     },
   };
 }
