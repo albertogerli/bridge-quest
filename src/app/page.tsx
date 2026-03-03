@@ -224,8 +224,17 @@ export default function Home() {
 
   const hasStarted = totalModulesCompleted > 0;
 
+  // While auth is loading, show spinner (prevents dashboard flash after logout)
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   // Show landing page for non-authenticated visitors (not guest, not logged in)
-  if (!authLoading && !user && !isGuest) {
+  if (!user && !isGuest) {
     return <LandingPage onContinueAsGuest={() => {
       try { localStorage.setItem("bq_guest", "1"); } catch {}
       setIsGuest(true);
