@@ -54,6 +54,8 @@ export default function ProfiloPage() {
   const [handsPlayed, setHandsPlayed] = useState(0);
   const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
   const [currentProfile, setCurrentProfile] = useState<UserProfile>("adulto");
+  const [guestName, setGuestName] = useState("");
+  const [guestBbo, setGuestBbo] = useState("");
   const [advancedStatsOpen, setAdvancedStatsOpen] = useState(false);
   const [inviteToast, setInviteToast] = useState<string | null>(null);
   const [inviteXpToast, setInviteXpToast] = useState(false);
@@ -84,6 +86,8 @@ export default function ProfiloPage() {
       const p = localStorage.getItem("bq_profile") as UserProfile | null;
       if (p) setCurrentProfile(p);
       setInvitesSent(getInviteCount());
+      setGuestName(localStorage.getItem("bq_display_name") || "");
+      setGuestBbo(localStorage.getItem("bq_bbo_username") || "");
     } catch {}
   }, []);
 
@@ -259,13 +263,13 @@ export default function ProfiloPage() {
           </Avatar>
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-900">
-              {user && authProfile?.display_name ? authProfile.display_name : "Bridgista"}
+              {user && authProfile?.display_name ? authProfile.display_name : guestName || "Bridgista"}
             </h1>
             {cosmetics.activeTitle && (
               <p className="text-xs font-semibold text-[#003DA5]">{cosmetics.activeTitle}</p>
             )}
-            {user && authProfile?.bbo_username && (
-              <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
+            {(user ? authProfile?.bbo_username : guestBbo) && (
+              <p className="text-xs text-gray-500">BBO: {user ? authProfile?.bbo_username : guestBbo}</p>
             )}
             <div className="flex items-center gap-2 mt-1.5">
               <Badge className="bg-[#003DA5] text-white font-medium text-xs">
@@ -581,180 +585,201 @@ export default function ProfiloPage() {
           </div>
         </motion.div>
 
-        {/* Edit Profile */}
-        {user && (
-          <>
-            <Separator className="my-6 bg-[#e5e7eb]" />
+        {/* Edit Profile — available for all users */}
+        <Separator className="my-6 bg-[#e5e7eb]" />
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.47 }}
+        >
+          {!editing ? (
+            <button
+              onClick={() => {
+                setEditName(user ? (authProfile?.display_name || "") : ((() => { try { return localStorage.getItem("bq_display_name") || ""; } catch { return ""; } })()));
+                setEditBbo(user ? (authProfile?.bbo_username || "") : ((() => { try { return localStorage.getItem("bq_bbo_username") || ""; } catch { return ""; } })()));
+                setEditAsdSelected((() => { try { const idx = user ? (authProfile as unknown as Record<string, unknown>)?.asd_id : parseInt(localStorage.getItem("bq_asd_id") || "0", 10); return idx && typeof idx === "number" && idx > 0 && idx <= ASD_LIST.length ? ASD_LIST[idx - 1] : ""; } catch { return ""; } })());
+                setEditAvatarFile(null);
+                setEditAvatarPreview("");
+                setEditing(true);
+              }}
+              className="w-full rounded-2xl bg-white p-4 text-left border-2 border-[#e5e7eb] shadow-sm hover:shadow-lg transition-shadow"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-gray-900">Modifica profilo</p>
+                  <p className="text-[11px] text-gray-500">{user ? "Foto, nome, BBO, associazione" : "Nome, BBO, associazione"}</p>
+                </div>
+                <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <polyline points="9,6 15,12 9,18" />
+                </svg>
+              </div>
+            </button>
+          ) : (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.47 }}
+              className="rounded-2xl bg-white p-5 border-2 border-[#e5e7eb] shadow-sm"
             >
-              {!editing ? (
-                <button
-                  onClick={() => {
-                    setEditName(authProfile?.display_name || "");
-                    setEditBbo(authProfile?.bbo_username || "");
-                    setEditAsdSelected("");
-                    setEditAvatarFile(null);
-                    setEditAvatarPreview("");
-                    setEditing(true);
-                  }}
-                  className="w-full rounded-2xl bg-white p-4 text-left border-2 border-[#e5e7eb] shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-gray-900">Modifica profilo</p>
-                      <p className="text-[11px] text-gray-500">Foto, nome, BBO, associazione</p>
-                    </div>
-                    <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                      <polyline points="9,6 15,12 9,18" />
-                    </svg>
-                  </div>
-                </button>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl bg-white p-5 border-2 border-[#e5e7eb] shadow-sm"
-                >
-                  <h3 className="text-sm font-bold text-gray-900 mb-4">Modifica profilo</h3>
+              <h3 className="text-sm font-bold text-gray-900 mb-4">Modifica profilo</h3>
 
-                  {/* Avatar upload */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="relative h-16 w-16 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {editAvatarPreview ? (
-                        <img src={editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
-                      ) : authProfile?.avatar_url ? (
-                        <img src={authProfile.avatar_url} alt="Foto profilo" className="h-full w-full object-cover" />
-                      ) : (
-                        <span className="text-2xl">{(authProfile?.display_name || "B")[0].toUpperCase()}</span>
-                      )}
-                    </div>
-                    <label className="cursor-pointer">
-                      <span className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
-                        Cambia foto
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setEditAvatarFile(file);
-                            const reader = new FileReader();
-                            reader.onloadend = () => setEditAvatarPreview(reader.result as string);
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-
-                  {/* Name */}
-                  <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Nome</label>
-                    <input
-                      type="text"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
-                    />
-                  </div>
-
-                  {/* BBO */}
-                  <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Username BBO</label>
-                    <input
-                      type="text"
-                      value={editBbo}
-                      onChange={(e) => setEditBbo(e.target.value)}
-                      placeholder="Il tuo username su BridgeBase Online"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
-                    />
-                  </div>
-
-                  {/* ASD */}
-                  <div className="mb-4 relative">
-                    <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Associazione (ASD)</label>
-                    <input
-                      type="text"
-                      value={editAsdSelected || editAsdSearch}
-                      onChange={(e) => {
-                        setEditAsdSearch(e.target.value);
-                        setEditAsdSelected("");
-                        setShowAsdDropdown(true);
-                      }}
-                      onFocus={() => setShowAsdDropdown(true)}
-                      placeholder="Cerca la tua associazione..."
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
-                    />
-                    {showAsdDropdown && !editAsdSelected && (
-                      <>
-                        <div className="fixed inset-0 z-40" onClick={() => setShowAsdDropdown(false)} />
-                        <div className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-40 overflow-y-auto">
-                          {ASD_LIST.filter((a) => !editAsdSearch || a.toLowerCase().includes(editAsdSearch.toLowerCase())).slice(0, 15).map((asd) => (
-                            <button
-                              key={asd}
-                              type="button"
-                              onClick={() => { setEditAsdSelected(asd); setEditAsdSearch(""); setShowAsdDropdown(false); }}
-                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
-                            >
-                              {asd}
-                            </button>
-                          ))}
-                        </div>
-                      </>
+              {/* Avatar upload — only for logged-in users */}
+              {user && (
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="relative h-16 w-16 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {editAvatarPreview ? (
+                      <img src={editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
+                    ) : authProfile?.avatar_url ? (
+                      <img src={authProfile.avatar_url} alt="Foto profilo" className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="text-2xl">{(authProfile?.display_name || "B")[0].toUpperCase()}</span>
                     )}
                   </div>
+                  <label className="cursor-pointer">
+                    <span className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+                      Cambia foto
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setEditAvatarFile(file);
+                          const reader = new FileReader();
+                          reader.onloadend = () => setEditAvatarPreview(reader.result as string);
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              )}
 
-                  {/* Buttons */}
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setEditing(false)}
-                      className="flex-1 h-10 rounded-xl font-semibold text-xs"
-                    >
-                      Annulla
-                    </Button>
-                    <Button
-                      onClick={async () => {
-                        setSaving(true);
-                        const updates: Record<string, unknown> = {};
-                        if (editName.trim()) updates.display_name = editName.trim();
-                        if (editBbo !== (authProfile?.bbo_username || "")) updates.bbo_username = editBbo.trim() || null;
+              {/* Name */}
+              <div className="mb-3">
+                <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Nome</label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Come vuoi essere chiamato?"
+                  className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
+                />
+              </div>
+
+              {/* BBO */}
+              <div className="mb-3">
+                <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Username BBO</label>
+                <input
+                  type="text"
+                  value={editBbo}
+                  onChange={(e) => setEditBbo(e.target.value)}
+                  placeholder="Il tuo username su BridgeBase Online"
+                  className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
+                />
+              </div>
+
+              {/* ASD */}
+              <div className="mb-4 relative">
+                <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Associazione (ASD)</label>
+                <input
+                  type="text"
+                  value={editAsdSelected || editAsdSearch}
+                  onChange={(e) => {
+                    setEditAsdSearch(e.target.value);
+                    setEditAsdSelected("");
+                    setShowAsdDropdown(true);
+                  }}
+                  onFocus={() => setShowAsdDropdown(true)}
+                  placeholder="Cerca la tua associazione..."
+                  className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
+                />
+                {showAsdDropdown && !editAsdSelected && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setShowAsdDropdown(false)} />
+                    <div className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-40 overflow-y-auto">
+                      {ASD_LIST.filter((a) => !editAsdSearch || a.toLowerCase().includes(editAsdSearch.toLowerCase())).slice(0, 15).map((asd) => (
+                        <button
+                          key={asd}
+                          type="button"
+                          onClick={() => { setEditAsdSelected(asd); setEditAsdSearch(""); setShowAsdDropdown(false); }}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                        >
+                          {asd}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setEditing(false)}
+                  className="flex-1 h-10 rounded-xl font-semibold text-xs"
+                >
+                  Annulla
+                </Button>
+                <Button
+                  onClick={async () => {
+                    setSaving(true);
+                    if (user) {
+                      // Logged-in: save to Supabase
+                      const updates: Record<string, unknown> = {};
+                      if (editName.trim()) updates.display_name = editName.trim();
+                      if (editBbo !== (authProfile?.bbo_username || "")) updates.bbo_username = editBbo.trim() || null;
+                      if (editAsdSelected) {
+                        const idx = ASD_LIST.indexOf(editAsdSelected as typeof ASD_LIST[number]);
+                        if (idx >= 0) updates.asd_id = idx + 1;
+                      }
+                      if (Object.keys(updates).length > 0) {
+                        await updateProfile(updates);
+                      }
+                      if (editAvatarFile) {
+                        await uploadAvatar(editAvatarFile);
+                      }
+                      await refreshProfile();
+                    } else {
+                      // Guest: save to localStorage
+                      try {
+                        if (editName.trim()) {
+                          localStorage.setItem("bq_display_name", editName.trim());
+                          setGuestName(editName.trim());
+                        }
+                        if (editBbo.trim()) {
+                          localStorage.setItem("bq_bbo_username", editBbo.trim());
+                          setGuestBbo(editBbo.trim());
+                        } else {
+                          localStorage.removeItem("bq_bbo_username");
+                          setGuestBbo("");
+                        }
                         if (editAsdSelected) {
                           const idx = ASD_LIST.indexOf(editAsdSelected as typeof ASD_LIST[number]);
-                          if (idx >= 0) updates.asd_id = idx + 1;
+                          if (idx >= 0) localStorage.setItem("bq_asd_id", String(idx + 1));
                         }
-                        if (Object.keys(updates).length > 0) {
-                          await updateProfile(updates);
-                        }
-                        if (editAvatarFile) {
-                          await uploadAvatar(editAvatarFile);
-                        }
-                        await refreshProfile();
-                        setSaving(false);
-                        setEditing(false);
-                      }}
-                      disabled={saving}
-                      className="flex-1 h-10 rounded-xl bg-[#003DA5] font-semibold text-xs shadow-md disabled:opacity-50"
-                    >
-                      {saving ? "Salvataggio..." : "Salva"}
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
+                      } catch {}
+                    }
+                    setSaving(false);
+                    setEditing(false);
+                  }}
+                  disabled={saving}
+                  className="flex-1 h-10 rounded-xl bg-[#003DA5] font-semibold text-xs shadow-md disabled:opacity-50"
+                >
+                  {saving ? "Salvataggio..." : "Salva"}
+                </Button>
+              </div>
             </motion.div>
-          </>
-        )}
+          )}
+        </motion.div>
 
         <Separator className="my-6 bg-[#e5e7eb]" />
 
