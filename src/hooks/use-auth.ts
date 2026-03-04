@@ -60,9 +60,18 @@ export function useAuth() {
     let mounted = true;
     let authResolved = false;
 
+    // Check if Supabase auth cookies exist in document.cookie
+    const hasAuthCookies = (): boolean => {
+      try {
+        return document.cookie.includes("sb-") && document.cookie.includes("auth-token");
+      } catch {
+        return false;
+      }
+    };
+
     // Helper: set auth state immediately, then fetch profile in background
     const resolveAuth = (session: Session | null) => {
-      if (!mounted) return;
+      if (!mounted || authResolved) return;
       authResolved = true;
 
       if (session?.user) {
@@ -84,11 +93,19 @@ export function useAuth() {
       (event, session) => {
         if (!mounted) return;
 
-        // For subsequent events after initial, always update
-        if (authResolved && event !== "INITIAL_SESSION") {
-          authResolved = false;
+        if (event === "INITIAL_SESSION") {
+          if (session?.user) {
+            // Valid session found → resolve immediately
+            resolveAuth(session);
+          }
+          // If session is null, DON'T resolve yet - let the getSession() fallback
+          // handle it. This fixes edge case where cookies exist but weren't parsed
+          // in time for the INITIAL_SESSION event (e.g., direct URL access/refresh).
+          return;
         }
 
+        // For subsequent events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED), always update
+        if (authResolved) authResolved = false;
         resolveAuth(session);
 
         // Update last_login on sign-in or token refresh
@@ -102,7 +119,9 @@ export function useAuth() {
       }
     );
 
-    // 2. Fallback: if onAuthStateChange hasn't fired within 1s, try getSession directly
+    // 2. Fallback: getSession() as authoritative check for null sessions
+    //    Short delay (300ms) if cookies exist (possible recovery), otherwise 100ms
+    const fallbackDelay = hasAuthCookies() ? 300 : 100;
     const fallbackTimer = setTimeout(async () => {
       if (authResolved || !mounted) return;
       try {
@@ -111,11 +130,12 @@ export function useAuth() {
       } catch {
         if (!authResolved && mounted) resolveAuth(null);
       }
-    }, 1000);
+    }, fallbackDelay);
 
     // 3. Safety timeout: never stay loading forever (max 5 seconds)
     const timeout = setTimeout(() => {
-      if (mounted) {
+      if (mounted && !authResolved) {
+        authResolved = true;
         setState((prev) => {
           if (prev.loading) {
             console.warn("Auth loading timeout - forcing loading=false");
@@ -196,6 +216,7 @@ export function useAuth() {
       password,
       options: {
         data: { display_name: displayName },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -229,7 +250,7 @@ export function useAuth() {
   // Reset password
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
+      redirectTo: `${window.location.origin}/auth/callback?next=/login`,
     });
     return { error };
   };
