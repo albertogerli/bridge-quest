@@ -445,7 +445,7 @@ export default function GiocaPage() {
                 <p className="text-xs font-bold text-gray-500 mb-2">♣ Corso Fiori ({fioriSmazzate.length} mani)</p>
                 <div className="grid grid-cols-4 gap-2">
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((lesson) => (
-                    <Link key={`f-${lesson}`} href={`/gioca/smazzata?lesson=${lesson}`}>
+                    <Link key={`f-${lesson}`} href={`/gioca/smazzata?course=fiori&lesson=${lesson}`}>
                       <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-emerald-50 hover:text-emerald transition-colors p-2.5 cursor-pointer">
                         <span className="text-sm font-bold text-gray-700">{lesson}</span>
                         <span className="text-[9px] text-gray-400 font-bold mt-0.5">8 mani</span>
@@ -462,7 +462,7 @@ export default function GiocaPage() {
                     {Array.from(new Set(quadriSmazzate.map(s => s.lesson))).sort((a,b) => a-b).map((lesson) => {
                       const count = quadriSmazzate.filter(s => s.lesson === lesson).length;
                       return (
-                        <Link key={`q-${lesson}`} href={`/gioca/smazzata?lesson=${lesson}`}>
+                        <Link key={`q-${lesson}`} href={`/gioca/smazzata?course=quadri&lesson=${lesson}`}>
                           <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-orange-50 hover:text-orange-600 transition-colors p-2.5 cursor-pointer">
                             <span className="text-sm font-bold text-gray-700">{lesson}</span>
                             <span className="text-[9px] text-gray-400 font-bold mt-0.5">{count} mani</span>
@@ -481,7 +481,7 @@ export default function GiocaPage() {
                     {Array.from(new Set(cuoriGiocoSmazzate.map(s => s.lesson))).sort((a,b) => a-b).map((lesson) => {
                       const count = cuoriGiocoSmazzate.filter(s => s.lesson === lesson).length;
                       return (
-                        <Link key={`cg-${lesson}`} href={`/gioca/smazzata?lesson=${lesson}`}>
+                        <Link key={`cg-${lesson}`} href={`/gioca/smazzata?course=cuori-gioco&lesson=${lesson}`}>
                           <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-red-50 hover:text-red-600 transition-colors p-2.5 cursor-pointer">
                             <span className="text-sm font-bold text-gray-700">{lesson}</span>
                             <span className="text-[9px] text-gray-400 font-bold mt-0.5">{count} mani</span>

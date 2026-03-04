@@ -20,7 +20,7 @@ const CATEGORIES: { key: Category; label: string; emoji: string }[] = [
 
 export default function NuovoPostPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState<Category>("generale");
@@ -62,6 +62,14 @@ export default function NuovoPostPage() {
 
     router.push(`/forum/${data.id}`);
   };
+
+  if (authLoading) {
+    return (
+      <div className="pt-6 px-4 sm:px-5 pb-24 flex justify-center">
+        <div className="mt-12 w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!user) {
     return (

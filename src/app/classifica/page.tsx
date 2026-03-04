@@ -116,16 +116,24 @@ export default function ClassificaPage() {
       try {
         const supabase = createClient();
 
-        // Get current user
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) setCurrentUserId(user.id);
+        // Get current user (don't block on failure)
+        let user: { id: string } | null = null;
+        try {
+          const { data: { user: authUser } } = await supabase.auth.getUser();
+          user = authUser;
+          if (user) setCurrentUserId(user.id);
+        } catch {}
 
         // Fetch all profiles with ASD join
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("profiles")
           .select("id, display_name, xp, updated_at, asd_id, asd:asd_id(name)")
           .order("xp", { ascending: false })
           .limit(100);
+
+        if (error) {
+          console.warn("Classifica fetch error:", error.message);
+        }
 
         if (data && data.length > 0) {
           const players = data
