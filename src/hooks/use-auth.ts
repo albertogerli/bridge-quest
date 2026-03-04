@@ -41,47 +41,79 @@ export function useAuth() {
 
   const supabase = createClient();
 
-  // Fetch profile from DB
-  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    return data as Profile | null;
+  // Fetch profile from DB (non-blocking, updates state separately)
+  const fetchProfileInBackground = useCallback(async (userId: string) => {
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      return data as Profile | null;
+    } catch {
+      return null;
+    }
   }, [supabase]);
 
   // Initialize auth state
   useEffect(() => {
     let mounted = true;
+    let authResolved = false;
 
-    const initAuth = async () => {
-      try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) {
-          console.warn("Auth session error:", sessionError.message);
-          if (mounted) setState({ user: null, profile: null, session: null, loading: false });
-          return;
-        }
-        if (session?.user) {
-          // Fetch profile separately - don't block auth on profile failure
-          let profile: Profile | null = null;
-          try {
-            profile = await fetchProfile(session.user.id);
-          } catch (profileErr) {
-            console.warn("Profile fetch failed:", profileErr);
+    // Helper: set auth state immediately, then fetch profile in background
+    const resolveAuth = (session: Session | null) => {
+      if (!mounted) return;
+      authResolved = true;
+
+      if (session?.user) {
+        // Set user IMMEDIATELY (don't wait for profile fetch)
+        setState({ user: session.user, profile: null, session, loading: false });
+        // Fetch profile in background (non-blocking)
+        fetchProfileInBackground(session.user.id).then((profile) => {
+          if (mounted && profile) {
+            setState((prev) => ({ ...prev, profile }));
           }
-          if (mounted) setState({ user: session.user, profile, session, loading: false });
-        } else {
-          if (mounted) setState({ user: null, profile: null, session: null, loading: false });
-        }
-      } catch (err) {
-        console.error("Auth init error:", err);
-        if (mounted) setState({ user: null, profile: null, session: null, loading: false });
+        });
+      } else {
+        setState({ user: null, profile: null, session: null, loading: false });
       }
     };
 
-    // Safety timeout: never stay loading forever (max 5 seconds)
+    // 1. Subscribe to auth changes FIRST (catches INITIAL_SESSION event)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (!mounted) return;
+
+        // For subsequent events after initial, always update
+        if (authResolved && event !== "INITIAL_SESSION") {
+          authResolved = false;
+        }
+
+        resolveAuth(session);
+
+        // Update last_login on sign-in or token refresh
+        if (session?.user && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
+          supabase
+            .from("profiles")
+            .update({ last_login: new Date().toISOString() })
+            .eq("id", session.user.id)
+            .then(() => {});
+        }
+      }
+    );
+
+    // 2. Fallback: if onAuthStateChange hasn't fired within 1s, try getSession directly
+    const fallbackTimer = setTimeout(async () => {
+      if (authResolved || !mounted) return;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!authResolved && mounted) resolveAuth(session);
+      } catch {
+        if (!authResolved && mounted) resolveAuth(null);
+      }
+    }, 1000);
+
+    // 3. Safety timeout: never stay loading forever (max 5 seconds)
     const timeout = setTimeout(() => {
       if (mounted) {
         setState((prev) => {
@@ -94,32 +126,9 @@ export function useAuth() {
       }
     }, 5000);
 
-    initAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          let profile: Profile | null = null;
-          try {
-            profile = await fetchProfile(session.user.id);
-          } catch {}
-          if (mounted) setState({ user: session.user, profile, session, loading: false });
-          // Update last_login on sign-in or token refresh
-          if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-            supabase
-              .from("profiles")
-              .update({ last_login: new Date().toISOString() })
-              .eq("id", session.user.id)
-              .then(() => {});
-          }
-        } else {
-          if (mounted) setState({ user: null, profile: null, session: null, loading: false });
-        }
-      }
-    );
-
     return () => {
       mounted = false;
+      clearTimeout(fallbackTimer);
       clearTimeout(timeout);
       subscription.unsubscribe();
     };
@@ -285,7 +294,7 @@ export function useAuth() {
     uploadAvatar,
     refreshProfile: async () => {
       if (state.user) {
-        const profile = await fetchProfile(state.user.id);
+        const profile = await fetchProfileInBackground(state.user.id);
         setState((prev) => ({ ...prev, profile }));
       }
     },
