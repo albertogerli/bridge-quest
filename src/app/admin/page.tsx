@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import Link from "next/link";
 
 const ADMIN_EMAIL = "alberto@albertogerli.it";
@@ -30,7 +30,7 @@ interface Stats {
 }
 
 export default function AdminPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useSharedAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);

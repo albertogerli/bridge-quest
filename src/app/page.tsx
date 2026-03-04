@@ -14,7 +14,7 @@ import { useProfile, getProfileConfig, type UserProfile } from "@/hooks/use-prof
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
-import { useAuth } from "@/hooks/use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import {
   Zap, CheckCircle2, Flame, Target, BarChart3, Brain,
   Smartphone, BookOpen, Spade, CalendarDays, Gift,
@@ -106,7 +106,7 @@ function useLocalStats() {
 }
 
 export default function Home() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useSharedAuth();
   const stats = useLocalStats();
   const profile = useProfile();
   const { reviewCount } = useSpacedReview();

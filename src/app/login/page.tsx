@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_LIST } from "@/data/asd-list";
 import Link from "next/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -26,7 +26,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const initialMode = searchParams.get("mode") === "signup" ? "signup" : "login";
-  const { signIn, signUp, uploadAvatar, resetPassword } = useAuth();
+  const { signIn, signUp, uploadAvatar, resetPassword } = useSharedAuth();
   const [mode, setMode] = useState<Mode>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

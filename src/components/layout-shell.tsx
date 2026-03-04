@@ -5,11 +5,20 @@ import { DesktopNav } from "@/components/desktop-nav";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
+import { AuthProvider } from "@/contexts/auth-provider";
 
 /** Routes that should be full-screen (no nav, no sidebar) */
 const FULL_SCREEN_ROUTES = ["/login", "/admin"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <LayoutShellInner>{children}</LayoutShellInner>
+    </AuthProvider>
+  );
+}
+
+function LayoutShellInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isFullScreen = FULL_SCREEN_ROUTES.some((r) => pathname.startsWith(r));
 

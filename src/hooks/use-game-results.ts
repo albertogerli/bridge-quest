@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAuth } from "./use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 
 // ===== Types =====
@@ -63,7 +63,7 @@ function clearQueue() {
 // ===== Hook =====
 
 export function useGameResults() {
-  const { user } = useAuth();
+  const { user } = useSharedAuth();
 
   /**
    * Save a game result.
