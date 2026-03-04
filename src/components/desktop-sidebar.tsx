@@ -48,7 +48,7 @@ export function DesktopSidebar() {
   const totalCards = collectibleCards.length;
 
   return (
-    <aside className="hidden lg:block w-[320px] shrink-0">
+    <aside className="hidden lg:block w-[320px] shrink-0" aria-label="Barra laterale">
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
@@ -65,7 +65,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-right">
               <p className="text-xl font-bold text-[#003DA5]">{stats.xpInLevel}</p>
-              <p className="text-[10px] text-gray-400 font-medium">{`/ 100 ${profile.xpLabel}`}</p>
+              <p className="text-[10px] text-gray-500 font-medium">{`/ 100 ${profile.xpLabel}`}</p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
@@ -74,7 +74,7 @@ export function DesktopSidebar() {
               style={{ width: `${stats.xpInLevel}%` }}
             />
           </div>
-          <p className="text-[10px] text-gray-400 mt-1.5 font-medium">
+          <p className="text-[10px] text-gray-500 mt-1.5 font-medium">
             {stats.xp} {profile.xpLabel} totali · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
           </p>
         </div>
@@ -101,7 +101,7 @@ export function DesktopSidebar() {
                 className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-bold ${
                   i < Math.min(stats.streak, 7)
                     ? "bg-[#003DA5] text-white"
-                    : "bg-gray-100 text-gray-400 border border-gray-200"
+                    : "bg-gray-100 text-gray-500 border border-gray-200"
                 }`}
               >
                 {day}
@@ -177,7 +177,7 @@ export function DesktopSidebar() {
                         }`}>
                           {obj.title}
                         </p>
-                        <span className="text-[10px] font-bold text-gray-400 tabular-nums ml-1 shrink-0">
+                        <span className="text-[10px] font-bold text-gray-500 tabular-nums ml-1 shrink-0">
                           {obj.current}/{obj.target}
                         </span>
                       </div>
@@ -211,7 +211,7 @@ export function DesktopSidebar() {
 
         {/* Spaced Review */}
         {reviewCount > 0 && (
-          <Link href="/ripasso">
+          <Link href="/ripasso" aria-label={`Ripasso del giorno: ${reviewCount} domande da ripassare`}>
             <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
@@ -233,7 +233,7 @@ export function DesktopSidebar() {
 
         {/* Continue CTA */}
         {stats.nextModule && (
-          <Link href={`/lezioni/${stats.nextModule.lessonId}/${stats.nextModule.moduleId}`}>
+          <Link href={`/lezioni/${stats.nextModule.lessonId}/${stats.nextModule.moduleId}`} aria-label={`Riprendi: ${stats.nextModule.moduleTitle}`}>
             <div className="rounded-2xl bg-[#003DA5] p-4 text-white shadow-sm hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
@@ -254,9 +254,9 @@ export function DesktopSidebar() {
           <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-3 uppercase tracking-wider">Mini-Giochi</p>
           <div className="grid grid-cols-2 gap-2">
             {miniGames.map((game) => (
-              <Link key={game.href} href={game.href}>
+              <Link key={game.href} href={game.href} aria-label={`Mini-gioco: ${game.label}`}>
                 <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer ${game.color}`}>
-                  <span className="text-base">{game.emoji}</span>
+                  <span className="text-base" aria-hidden="true">{game.emoji}</span>
                   <span>{game.label}</span>
                 </div>
               </Link>
@@ -306,6 +306,7 @@ export function DesktopSidebar() {
               try { localStorage.removeItem("bq_guest"); } catch {}
               window.location.href = "/";
             }}
+            aria-label="Esci dal tuo account"
             className="w-full flex items-center gap-2.5 rounded-xl bg-white dark:bg-[#1a1f2e] card-clean p-3 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors group"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 group-hover:bg-rose-100">
@@ -323,6 +324,7 @@ export function DesktopSidebar() {
         ) : (
           <Link
             href="/login"
+            aria-label="Accedi o Registrati"
             className="w-full flex items-center gap-2.5 rounded-xl bg-[#003DA5] p-3 hover:bg-[#002E7A] transition-colors"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white">

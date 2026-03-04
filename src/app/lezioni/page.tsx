@@ -90,6 +90,8 @@ export default function LezioniPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
             className="mb-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
+            role="tablist"
+            aria-label="Seleziona corso"
           >
             {availableCourses.map((course) => {
               const isActive = course.id === selectedCourse;
@@ -99,6 +101,9 @@ export default function LezioniPage() {
                 <button
                   key={course.id}
                   onClick={() => handleCourseChange(course.id)}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-label={`${course.name}: ${stats.progress}% completato`}
                   className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-[0.97] ${
                     isActive
                       ? `${colors.active} shadow-[0_3px_0_rgba(0,0,0,0.15)]`
@@ -138,7 +143,7 @@ export default function LezioniPage() {
           transition={{ delay: 0.09 }}
           className="mb-4"
         >
-          <Link href="/dispense">
+          <Link href="/dispense" aria-label="Dispense e Infografiche: scarica il materiale didattico">
             <div className="card-clean rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-[#003DA5]/10 border border-[#003DA5]/15 p-3.5 flex items-center gap-3 hover:shadow-md transition-all active:scale-[0.99] cursor-pointer">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#003DA5]/10">
                 <svg className="h-5 w-5 text-[#003DA5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -262,7 +267,7 @@ export default function LezioniPage() {
                           {world.name}
                         </h2>
                         {worldProgress === 100 && (
-                          <span className="text-emerald text-lg">✓</span>
+                          <span className="text-emerald-700 text-lg" aria-label="Completato">✓</span>
                         )}
                       </div>
                       <p className={`text-xs ${isLocked ? "text-gray-400" : "text-gray-500"}`}>
@@ -276,7 +281,7 @@ export default function LezioniPage() {
                               style={{ width: `${worldProgress}%` }}
                             />
                           </div>
-                          <span className="text-[11px] font-bold text-gray-400">
+                          <span className="text-[11px] font-bold text-gray-500">
                             {worldCompleted}/{worldModules}
                           </span>
                         </div>
@@ -330,7 +335,7 @@ export default function LezioniPage() {
                             }}
                             className={`relative ${offset}`}
                           >
-                            <Link href={`/lezioni/${lesson.id}`}>
+                            <Link href={`/lezioni/${lesson.id}`} aria-label={`Lezione ${lesson.id}: ${lesson.title}, ${lessonCompleted} di ${lessonModules} moduli completati`}>
                               <div className={`group flex items-center gap-3 p-3 rounded-2xl transition-all active:scale-[0.97] ${
                                 isCurrent
                                   ? "bg-white border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
@@ -398,7 +403,7 @@ export default function LezioniPage() {
                                       Lez. {lesson.id}
                                     </Badge>
                                     {lesson.smazzateIds.length > 0 && (
-                                      <span className="text-[10px] font-bold text-amber-500">
+                                      <span className="text-[10px] font-bold text-amber-600">
                                         {lesson.smazzateIds.length} <Spade className="w-3 h-3 inline ml-0.5" />
                                       </span>
                                     )}
@@ -408,7 +413,7 @@ export default function LezioniPage() {
                                   }`}>
                                     {lesson.title}
                                   </h3>
-                                  <p className="text-[12px] text-gray-400 mt-0.5 truncate">
+                                  <p className="text-[12px] text-gray-500 mt-0.5 truncate">
                                     {lessonCompleted}/{lessonModules} moduli
                                     {isComplete && " · Completata!"}
                                   </p>

@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { courses, type CourseId } from "@/data/courses";
-import { Clock, Trophy, Landmark, ChevronUp, Filter } from "lucide-react";
+import { Clock, Trophy, Landmark, ChevronUp, Filter, Target } from "lucide-react";
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -58,6 +59,15 @@ function getWeeklyCountdown() {
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   return { days, hours };
+}
+
+const xpMilestones = [100, 250, 500, 1000, 2000, 5000, 10000];
+
+function getNextMilestone(xp: number): number | null {
+  for (const m of xpMilestones) {
+    if (xp < m) return m;
+  }
+  return null;
 }
 
 // Course lesson ID ranges for "Per Corso" filter
@@ -283,7 +293,7 @@ export default function ClassificaPage() {
               <div className="flex items-center gap-3">
                 {/* Rank badge */}
                 <div className="flex flex-col items-center justify-center min-w-[48px]">
-                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Pos.</span>
+                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Pos.</span>
                   <span className="text-2xl font-black text-amber-600">
                     {userFullRank ? `#${userFullRank}` : (
                       (() => {
@@ -356,6 +366,18 @@ export default function ClassificaPage() {
           </motion.div>
         )}
 
+        {/* Local fallback for non-authenticated users */}
+        {!currentUserId && !playersLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="mt-4"
+          >
+            <LocalXpCard />
+          </motion.div>
+        )}
+
         {/* Weekly countdown */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -425,6 +447,8 @@ export default function ClassificaPage() {
             ref={tabsRef}
             className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            role="tablist"
+            aria-label="Tipo di classifica"
           >
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -432,6 +456,9 @@ export default function ClassificaPage() {
                 <motion.button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-label={`Classifica ${tab.label}`}
                   className={`relative flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                     isActive
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
@@ -439,7 +466,7 @@ export default function ClassificaPage() {
                   }`}
                   whileTap={{ scale: 0.96 }}
                 >
-                  <span className="text-sm">{tab.icon}</span>
+                  <span className="text-sm" aria-hidden="true">{tab.icon}</span>
                   {tab.label}
                   {isActive && (
                     <motion.div
@@ -464,8 +491,8 @@ export default function ClassificaPage() {
               transition={{ duration: 0.25 }}
               className="overflow-hidden"
             >
-              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-                <div className="flex items-center gap-1 mr-1 flex-shrink-0">
+              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label="Filtra per corso" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                <div className="flex items-center gap-1 mr-1 flex-shrink-0" aria-hidden="true">
                   <Filter className="w-3.5 h-3.5 text-gray-400" />
                 </div>
                 {courseFilters.map((course) => {
@@ -474,6 +501,9 @@ export default function ClassificaPage() {
                     <motion.button
                       key={course.id}
                       onClick={() => setSelectedCourse(course.id)}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Corso ${course.label}`}
                       className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                         isActive
                           ? course.activeColor + " shadow-sm"
@@ -481,7 +511,7 @@ export default function ClassificaPage() {
                       }`}
                       whileTap={{ scale: 0.96 }}
                     >
-                      <span className={isActive ? "text-white" : course.color}>{course.icon}</span>
+                      <span className={isActive ? "text-white" : course.color} aria-hidden="true">{course.icon}</span>
                       {course.label}
                     </motion.button>
                   );
@@ -505,7 +535,7 @@ export default function ClassificaPage() {
                 {playersLoading ? (
                   <LeaderboardSkeleton />
                 ) : allPlayers.length === 0 ? (
-                  <EmptyState message="La classifica e ancora vuota" />
+                  <EmptyState message="La classifica e ancora vuota" showCta />
                 ) : (
                   <LeaderboardList
                     players={allPlayers}
@@ -912,12 +942,41 @@ function LeaderboardList({
                     <p className="text-[10px] text-gray-400">XP</p>
                   </div>
                 </div>
+
+                {/* Next milestone badge for current user */}
+                {isCurrentUser && (() => {
+                  const milestone = getNextMilestone(player.xp);
+                  if (!milestone) return null;
+                  const remaining = milestone - player.xp;
+                  const progress = (player.xp / milestone) * 100;
+                  return (
+                    <div className="mt-2.5 pt-2 border-t border-gray-100">
+                      <div className="flex items-center gap-2">
+                        <Target className="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-[11px] text-gray-500">
+                              Prossimo traguardo: <span className="font-bold text-purple-600">{milestone.toLocaleString()} XP</span>
+                            </p>
+                            <p className="text-[10px] font-medium text-gray-400">-{remaining.toLocaleString()}</p>
+                          </div>
+                          <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-purple-400 to-purple-600"
+                              style={{ width: `${Math.min(progress, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {player.rank === 3 && totalPlayers > 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
                   <div className="flex-1 h-px bg-emerald-200" />
-                  <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">zona promozione</span>
+                  <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-wider">zona promozione</span>
                   <div className="flex-1 h-px bg-emerald-200" />
                 </div>
               )}
@@ -939,13 +998,111 @@ function LeaderboardList({
 /* ============================================================================
    Empty state & skeleton
    ============================================================================ */
-function EmptyState({ message }: { message: string }) {
+function EmptyState({ message, showCta = false }: { message: string; showCta?: boolean }) {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
-      <span className="flex justify-center mb-4"><Trophy className="w-12 h-12 text-amber-400" /></span>
-      <p className="text-base font-bold text-gray-700">{message}</p>
-      <p className="text-sm text-gray-500 mt-1">Completa lezioni e sfide per scalare le posizioni!</p>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
+      <div className="card-clean rounded-2xl bg-gradient-to-br from-amber-50 via-white to-orange-50 border border-amber-100/60 p-8 mx-auto max-w-sm">
+        <div className="flex justify-center mb-4">
+          <div className="relative">
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-200/50">
+              <Trophy className="w-8 h-8 text-white" />
+            </div>
+            <span className="absolute -top-1 -right-1 text-lg">🏅</span>
+          </div>
+        </div>
+        <p className="text-base font-bold text-gray-800">{showCta ? "Nessun giocatore in classifica" : message}</p>
+        <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+          {showCta
+            ? "Sii il primo a scalare le posizioni! Completa lezioni e gioca partite per guadagnare XP."
+            : "Completa lezioni e sfide per scalare le posizioni!"}
+        </p>
+        {showCta && (
+          <Link href="/gioca">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="mt-5 inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md shadow-indigo-200/50 hover:shadow-lg transition-shadow"
+            >
+              🃏 Inizia a giocare
+            </motion.div>
+          </Link>
+        )}
+      </div>
     </motion.div>
+  );
+}
+
+function LocalXpCard() {
+  const [localXp, setLocalXp] = useState(0);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("bq_xp");
+      if (stored) setLocalXp(parseInt(stored, 10) || 0);
+    } catch {}
+  }, []);
+
+  const league = getLeague(localXp);
+  const nextLeague = leagues.find((l) => l.minXp > localXp);
+  const milestone = getNextMilestone(localXp);
+
+  return (
+    <div className="card-clean rounded-2xl bg-gradient-to-r from-slate-50 via-white to-indigo-50/30 border border-slate-200/60 p-4 shadow-sm">
+      <div className="flex items-center gap-3">
+        {/* League icon */}
+        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-xl font-bold shadow-md`}>
+          {league.icon}
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <p className="font-bold text-sm text-gray-900">I tuoi XP</p>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${league.textColor} bg-white border ${league.border}`}>
+              {league.name}
+            </span>
+          </div>
+          <p className="text-2xl font-black text-gray-900">{localXp.toLocaleString()} <span className="text-sm font-bold text-gray-400">XP</span></p>
+          {milestone && (
+            <p className="text-[10px] text-gray-400 mt-0.5">
+              Prossimo traguardo: {milestone.toLocaleString()} XP ({(milestone - localXp).toLocaleString()} rimanenti)
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* League progress (if not max league) */}
+      {nextLeague && (
+        <div className="mt-3 pt-2 border-t border-gray-100">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[10px] font-bold text-gray-500">
+              {league.name} {league.icon} → {nextLeague.name} {nextLeague.icon}
+            </p>
+            <p className="text-[10px] font-bold text-gray-400">
+              {localXp}/{nextLeague.minXp}
+            </p>
+          </div>
+          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500"
+              style={{ width: `${Math.min((localXp / nextLeague.minXp) * 100, 100)}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* CTA to log in */}
+      <div className="mt-3 pt-2 border-t border-gray-100">
+        <Link href="/login">
+          <motion.div
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-200/40 hover:shadow-lg transition-shadow w-full"
+          >
+            Accedi per entrare in classifica
+          </motion.div>
+        </Link>
+      </div>
+    </div>
   );
 }
 

@@ -11,6 +11,7 @@ const navItems = [
   { href: "/gioca", icon: "play", label: "Gioca" },
   { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/classifica", icon: "trophy", label: "Classifica" },
+  { href: "/negozio", icon: "shop", label: "Negozio" },
   { href: "/profilo", icon: "user", label: "Profilo" },
 ];
 
@@ -55,6 +56,13 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
       <path d="M18 2H6v7a6 6 0 0012 0V2z" />
     </svg>
   ),
+  shop: (a) => (
+    <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  ),
   user: (a) => (
     <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
       <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
@@ -95,7 +103,7 @@ export function DesktopNav() {
 
           if (isPlay) {
             return (
-              <Link key={item.href} href={item.href}>
+              <Link key={item.href} href={item.href} aria-label={item.label}>
                 <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.97] mt-2 mb-2 ${
                   active
                     ? "bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20"
@@ -109,13 +117,13 @@ export function DesktopNav() {
           }
 
           return (
-            <Link key={item.href} href={item.href}>
+            <Link key={item.href} href={item.href} aria-label={item.label}>
               <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all active:scale-[0.97] ${
                 active
                   ? "bg-[#003DA5]/10 text-[#003DA5] font-semibold"
                   : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
               }`}>
-                <span className={active ? "" : "text-gray-400"}>
+                <span className={active ? "" : "text-gray-400"} aria-hidden="true">
                   {icons[item.icon](active)}
                 </span>
                 <span>{item.label}</span>
