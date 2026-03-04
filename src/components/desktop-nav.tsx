@@ -80,16 +80,8 @@ export function DesktopNav() {
     <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white dark:bg-[#141821] border-r border-[#e5e7eb] dark:border-[#2a3040]" aria-label="Navigazione principale">
       {/* Logo */}
       <div className="px-5 pt-6 pb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1">
-            {(["club", "heart", "diamond", "spade"] as const).map((suit) => (
-              <div key={suit} className="w-5 h-5 flex items-center justify-center">
-                <SuitSymbol suit={suit} size="sm" />
-              </div>
-            ))}
-          </div>
-        </div>
-        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2">FIGB Bridge LAB</h1>
+        <img src="/icons/logo-figb.png" alt="FIGB - Federazione Italiana Gioco Bridge" className="w-12 h-auto mb-2" />
+        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">FIGB Bridge LAB</h1>
         <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">Corsi FIGB</p>
       </div>
 

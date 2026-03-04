@@ -338,17 +338,23 @@ export function DesktopSidebar() {
           </Link>
         )}
 
-        {/* FIGB badge */}
-        <div className="rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-3 text-center">
-          <p className="text-[10px] font-medium text-[#003DA5] uppercase tracking-wider">
-            Un progetto della FIGB
-          </p>
-          <p className="text-[10px] text-[#003DA5]/70 mt-0.5">
-            Commissione Insegnamento
-          </p>
-          <p className="text-[9px] text-[#003DA5]/40 mt-1">
-            Sviluppo: A. G. Gerli / Tourbillon Tech
-          </p>
+        {/* FIGB + CONI logos */}
+        <div className="rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 text-center space-y-3">
+          <div className="flex items-center justify-center gap-4">
+            <img src="/icons/logo-figb.png" alt="FIGB" className="h-10 w-auto" />
+            <img src="/icons/logo-coni.png" alt="CONI - Disciplina Sportiva Associata" className="h-8 w-auto" />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium text-[#003DA5] uppercase tracking-wider">
+              Un progetto della FIGB
+            </p>
+            <p className="text-[10px] text-[#003DA5]/70 mt-0.5">
+              Commissione Insegnamento
+            </p>
+            <p className="text-[9px] text-[#003DA5]/40 mt-1">
+              Sviluppo: A. G. Gerli / Tourbillon Tech
+            </p>
+          </div>
         </div>
 
       </div>
