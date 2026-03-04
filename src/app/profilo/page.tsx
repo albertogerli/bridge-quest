@@ -11,7 +11,10 @@ import { ASD_LIST } from "@/data/asd-list";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useGameHistory } from "@/hooks/use-game-history";
 import { StatsDashboard } from "@/components/stats-dashboard";
-import { shareInvite, shareBadge } from "@/lib/share";
+import {
+  shareInvite, shareBadge, generateReferralCode, getReferralLink,
+  copyReferralLink, shareViaWhatsApp, getInviteCount
+} from "@/lib/share";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "motion/react";
@@ -19,7 +22,7 @@ import { useRouter } from "next/navigation";
 import {
   Spade, BookOpen, Target, Flame, Trophy, Star, Crown, GraduationCap,
   Globe, Medal, CheckCircle2, Zap, BookOpenCheck, BarChart3,
-  Gamepad2, Coffee, Coins, Share2, UserPlus, Check
+  Gamepad2, Coffee, Coins, Share2, UserPlus, Check, Copy, MessageCircle, Send
 } from "lucide-react";
 
 const allWorlds = courses.flatMap(c => c.worlds);
@@ -49,6 +52,10 @@ export default function ProfiloPage() {
   const [inviteToast, setInviteToast] = useState<string | null>(null);
   const [inviteXpToast, setInviteXpToast] = useState(false);
   const [sharedBadge, setSharedBadge] = useState<string | null>(null);
+  const [invitesSent, setInvitesSent] = useState(0);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const referralCode = user?.id ? generateReferralCode(user.id) : null;
+  const referralLink = user?.id ? getReferralLink(user.id) : getReferralLink();
   const { getStats } = useGameHistory();
   const gameStats = getStats();
 
@@ -61,6 +68,7 @@ export default function ProfiloPage() {
       if (cm) setCompletedModules(JSON.parse(cm));
       const p = localStorage.getItem("bq_profile") as UserProfile | null;
       if (p) setCurrentProfile(p);
+      setInvitesSent(getInviteCount());
     } catch {}
   }, []);
 
@@ -86,7 +94,7 @@ export default function ProfiloPage() {
   }, [signOut]);
 
   const handleInvite = useCallback(async () => {
-    const { outcome, xpAwarded } = await shareInvite();
+    const { outcome, xpAwarded } = await shareInvite(user?.id);
     if (outcome === "clipboard") {
       setInviteToast("Link copiato!");
       setTimeout(() => setInviteToast(null), 2500);
@@ -94,12 +102,40 @@ export default function ProfiloPage() {
       setInviteToast("Invito condiviso!");
       setTimeout(() => setInviteToast(null), 2500);
     }
+    if (outcome !== "cancelled") {
+      setInvitesSent(getInviteCount());
+    }
     if (xpAwarded > 0) {
       setXp((prev) => prev + xpAwarded);
       setInviteXpToast(true);
       setTimeout(() => setInviteXpToast(false), 3000);
     }
-  }, []);
+  }, [user?.id]);
+
+  const handleCopyLink = useCallback(async () => {
+    await copyReferralLink(user?.id);
+    setLinkCopied(true);
+    setInvitesSent((prev) => {
+      try {
+        const count = parseInt(localStorage.getItem("bq_invites_sent") || "0", 10) + 1;
+        localStorage.setItem("bq_invites_sent", String(count));
+        return count;
+      } catch { return prev; }
+    });
+    setTimeout(() => setLinkCopied(false), 2500);
+  }, [user?.id]);
+
+  const handleWhatsApp = useCallback(() => {
+    const text = "Impara il Bridge con me su Bridge LAB! L'app ufficiale della FIGB per imparare a giocare a bridge.";
+    shareViaWhatsApp(text, referralLink);
+    setInvitesSent((prev) => {
+      try {
+        const count = parseInt(localStorage.getItem("bq_invites_sent") || "0", 10) + 1;
+        localStorage.setItem("bq_invites_sent", String(count));
+        return count;
+      } catch { return prev; }
+    });
+  }, [referralLink]);
 
   const handleShareBadge = useCallback(async (badgeName: string) => {
     const outcome = await shareBadge(badgeName);
@@ -709,6 +745,17 @@ export default function ProfiloPage() {
             </div>
             <p className="text-3xl font-bold text-amber-dark">{Math.floor(xp / 10)}</p>
           </div>
+          <Link
+            href="/negozio"
+            className="mt-4 flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold h-11 text-sm shadow-md shadow-amber-500/20 transition-all active:scale-[0.97]"
+          >
+            <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Vai al Negozio
+          </Link>
         </motion.div>
 
         {/* Invita un Amico */}
@@ -729,14 +776,66 @@ export default function ProfiloPage() {
                   Condividi Bridge LAB e guadagna +25 XP
                 </p>
               </div>
+              {invitesSent > 0 && (
+                <div className="flex items-center gap-1.5 bg-[#003DA5]/10 rounded-full px-3 py-1">
+                  <Send className="w-3 h-3 text-[#003DA5]" />
+                  <span className="text-[11px] font-bold text-[#003DA5]">
+                    {invitesSent} invit{invitesSent === 1 ? "o" : "i"}
+                  </span>
+                </div>
+              )}
             </div>
-            <Button
-              onClick={handleInvite}
-              className="w-full rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white font-semibold h-11 text-sm shadow-md shadow-[#003DA5]/20 transition-colors"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Invita un amico a giocare
-            </Button>
+
+            {/* Referral code card */}
+            {referralCode && (
+              <div className="mb-4 rounded-xl bg-white/80 border border-[#003DA5]/10 p-3.5">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                  Il tuo codice referral
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="flex-1 font-mono text-lg font-bold text-[#003DA5] tracking-widest">
+                    {referralCode}
+                  </span>
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex items-center gap-1.5 rounded-lg bg-[#003DA5]/10 hover:bg-[#003DA5]/20 text-[#003DA5] px-3 py-1.5 text-xs font-bold transition-colors"
+                  >
+                    {linkCopied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        Copiato!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        Copia link
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Share buttons row */}
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              {/* WhatsApp button */}
+              <Button
+                onClick={handleWhatsApp}
+                className="rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold h-11 text-sm shadow-md shadow-[#25D366]/20 transition-colors"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                WhatsApp
+              </Button>
+              {/* Generic share button */}
+              <Button
+                onClick={handleInvite}
+                className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white font-semibold h-11 text-sm shadow-md shadow-[#003DA5]/20 transition-colors"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Condividi
+              </Button>
+            </div>
+
             {/* Invite toast feedback */}
             <AnimatePresence>
               {inviteToast && (

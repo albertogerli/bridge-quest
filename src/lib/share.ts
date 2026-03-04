@@ -10,6 +10,85 @@ const APP_URL = "https://bridgelab.it";
 
 export type ShareOutcome = "shared" | "clipboard" | "cancelled";
 
+// ─── Referral system ────────────────────────────────────────────────────────
+
+const INVITES_SENT_KEY = "bq_invites_sent";
+
+/**
+ * Generate a short referral code from a userId.
+ * Uses a simple hash (djb2) to produce an 8-char alphanumeric code.
+ */
+export function generateReferralCode(userId: string): string {
+  let hash = 5381;
+  for (let i = 0; i < userId.length; i++) {
+    hash = ((hash << 5) + hash + userId.charCodeAt(i)) >>> 0;
+  }
+  return hash.toString(36).toUpperCase().padStart(8, "0").slice(0, 8);
+}
+
+/**
+ * Get the full referral link for a user.
+ * If no userId is provided, returns the base URL without referral code.
+ */
+export function getReferralLink(userId?: string): string {
+  if (!userId) return APP_URL;
+  const code = generateReferralCode(userId);
+  return `${APP_URL}/?ref=${code}`;
+}
+
+/**
+ * Copy the referral link to clipboard.
+ */
+export async function copyReferralLink(userId?: string): Promise<void> {
+  const link = getReferralLink(userId);
+  try {
+    await navigator.clipboard.writeText(link);
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = link;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
+}
+
+/**
+ * Share via WhatsApp — opens wa.me with pre-filled text and URL.
+ */
+export function shareViaWhatsApp(text: string, url: string): void {
+  const fullMessage = `${text}\n${url}`;
+  const encoded = encodeURIComponent(fullMessage);
+  window.open(`https://wa.me/?text=${encoded}`, "_blank");
+}
+
+/**
+ * Increment the invite-sent counter in localStorage.
+ */
+export function incrementInviteCount(): number {
+  try {
+    const prev = parseInt(localStorage.getItem(INVITES_SENT_KEY) || "0", 10);
+    const next = prev + 1;
+    localStorage.setItem(INVITES_SENT_KEY, String(next));
+    return next;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * Get current invite-sent count.
+ */
+export function getInviteCount(): number {
+  try {
+    return parseInt(localStorage.getItem(INVITES_SENT_KEY) || "0", 10);
+  } catch {
+    return 0;
+  }
+}
+
 /**
  * Share content via the Web Share API (mobile) with clipboard fallback (desktop).
  */
@@ -55,19 +134,23 @@ export async function shareContent(
  * Share an invite-a-friend message.
  * Awards +25 XP once per day via localStorage.
  * Returns the share outcome and whether XP was awarded.
+ * If userId is provided, includes a personal referral link.
  */
-export async function shareInvite(): Promise<{
+export async function shareInvite(userId?: string): Promise<{
   outcome: ShareOutcome;
   xpAwarded: number;
 }> {
+  const referralUrl = getReferralLink(userId);
   const outcome = await shareContent(
     "Bridge LAB - Impara il Bridge",
-    "Impara il Bridge con me su Bridge LAB! L'app ufficiale della FIGB per imparare a giocare a bridge."
+    "Impara il Bridge con me su Bridge LAB! L'app ufficiale della FIGB per imparare a giocare a bridge.",
+    referralUrl
   );
 
   let xpAwarded = 0;
   if (outcome !== "cancelled") {
     xpAwarded = awardShareXp();
+    incrementInviteCount();
   }
 
   return { outcome, xpAwarded };

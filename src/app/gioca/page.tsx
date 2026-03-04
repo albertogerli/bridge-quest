@@ -56,7 +56,7 @@ export default function GiocaPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Link href="/gioca/sfida" className="block">
+          <Link href="/gioca/sfida" className="block" aria-label="Sfida del Giorno: una nuova mano ogni giorno">
             <div className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl ${
               dailyDone
                 ? "bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200"
@@ -109,7 +109,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.12 }}
           className="mt-4"
         >
-          <Link href="/gioca/torneo" className="block">
+          <Link href="/gioca/torneo" className="block" aria-label="Torneo Settimanale: 5 mani, stessa sfida per tutti">
             <div className={`relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl ${
               tournamentDone
                 ? "bg-[#003DA5]/5 border border-[#003DA5]/15"
@@ -170,7 +170,7 @@ export default function GiocaPage() {
           </div>
           <div className="space-y-2.5">
             {/* Mano del Giorno */}
-            <Link href="/gioca/mano-del-giorno" className="block">
+            <Link href="/gioca/mano-del-giorno" className="block" aria-label="Mano del Giorno: una mano al giorno, uguale per tutti">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
                   <CalendarDays className="w-6 h-6 text-white" />
@@ -189,7 +189,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Quiz Lampo */}
-            <Link href="/gioca/quiz-lampo" className="block">
+            <Link href="/gioca/quiz-lampo" className="block" aria-label="Quiz Lampo: raffica di domande, 30 secondi">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-2xl shadow-md shadow-rose-400/20">
                   <Zap className="w-6 h-6 text-white" />
@@ -208,7 +208,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Trova l'Errore */}
-            <Link href="/gioca/trova-errore" className="block">
+            <Link href="/gioca/trova-errore" className="block" aria-label="Trova l'Errore: trova l'errore nella dichiarazione o giocata">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-2xl shadow-md shadow-red-400/20">
                   <Search className="w-6 h-6 text-white" />
@@ -227,7 +227,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Impasse o Drop */}
-            <Link href="/gioca/impasse" className="block">
+            <Link href="/gioca/impasse" className="block" aria-label="Impasse o Drop: decidi in 5 secondi">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-2xl shadow-md shadow-cyan-400/20">
                   <Target className="w-6 h-6 text-white" />
@@ -246,7 +246,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Conta Veloce */}
-            <Link href="/gioca/conta-veloce" className="block">
+            <Link href="/gioca/conta-veloce" className="block" aria-label="Conta Veloce: conta i punti onore a tempo">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-2xl shadow-md shadow-emerald-400/20">
                   <Hash className="w-6 h-6 text-white" />
@@ -256,7 +256,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-gray-500 mt-0.5">Conta i Punti Onore a tempo! Quanto sei veloce?</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-emerald bg-emerald-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -265,7 +265,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Dichiara! */}
-            <Link href="/gioca/dichiara" className="block">
+            <Link href="/gioca/dichiara" className="block" aria-label="Dichiara: scegli l'apertura giusta per ogni mano">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
                   <Megaphone className="w-6 h-6 text-white" />
@@ -284,7 +284,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Pratica Licita */}
-            <Link href="/gioca/pratica-licita" className="block">
+            <Link href="/gioca/pratica-licita" className="block" aria-label="Pratica Licita: esercitati nella dichiarazione">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl shadow-md shadow-indigo-400/20">
                   <MessageCircle className="w-6 h-6 text-white" />
@@ -303,7 +303,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Memory Bridge */}
-            <Link href="/gioca/memory" className="block">
+            <Link href="/gioca/memory" className="block" aria-label="Memory Bridge: abbina carte e concetti">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-2xl shadow-md shadow-purple-400/20">
                   <Brain className="w-6 h-6 text-white" />
@@ -322,7 +322,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Sfida un Amico */}
-            <Link href="/gioca/sfida-amico" className="block">
+            <Link href="/gioca/sfida-amico" className="block" aria-label="Sfida un Amico: gioca la stessa mano e confronta i risultati">
               <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 text-2xl shadow-md shadow-violet-400/20">
                   <Swords className="w-6 h-6 text-white" />
@@ -350,7 +350,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 }}
           >
-            <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block">
+            <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block" aria-label="Pratica Libera: gioca una mano casuale">
               <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 mb-3">
                   <Spade className="w-6 h-6 text-indigo-600" />
@@ -376,7 +376,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <Link href="/gioca/smazzata" className="block">
+            <Link href="/gioca/smazzata" className="block" aria-label="Tutte le Smazzate: sfoglia e gioca le mani per lezione">
               <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 mb-3">
                   <BookOpen className="w-6 h-6 text-amber-600" />
@@ -421,7 +421,7 @@ export default function GiocaPage() {
                 <p className="text-[11px] text-gray-500 font-medium">Disponibili</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-amber-500">
+                <p className="text-2xl font-bold text-amber-600">
                   {handsPlayed > 0 ? Math.round((handsPlayed / allSmazzate.length) * 100) : 0}%
                 </p>
                 <p className="text-[11px] text-gray-500 font-medium">Esplorate</p>
@@ -448,7 +448,7 @@ export default function GiocaPage() {
                     <Link key={`f-${lesson}`} href={`/gioca/smazzata?course=fiori&lesson=${lesson}`}>
                       <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-emerald-50 hover:text-emerald transition-colors p-2.5 cursor-pointer">
                         <span className="text-sm font-bold text-gray-700">{lesson}</span>
-                        <span className="text-[9px] text-gray-400 font-bold mt-0.5">8 mani</span>
+                        <span className="text-[9px] text-gray-500 font-bold mt-0.5">8 mani</span>
                       </div>
                     </Link>
                   ))}
@@ -465,7 +465,7 @@ export default function GiocaPage() {
                         <Link key={`q-${lesson}`} href={`/gioca/smazzata?course=quadri&lesson=${lesson}`}>
                           <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-orange-50 hover:text-orange-600 transition-colors p-2.5 cursor-pointer">
                             <span className="text-sm font-bold text-gray-700">{lesson}</span>
-                            <span className="text-[9px] text-gray-400 font-bold mt-0.5">{count} mani</span>
+                            <span className="text-[9px] text-gray-500 font-bold mt-0.5">{count} mani</span>
                           </div>
                         </Link>
                       );
@@ -484,7 +484,7 @@ export default function GiocaPage() {
                         <Link key={`cg-${lesson}`} href={`/gioca/smazzata?course=cuori-gioco&lesson=${lesson}`}>
                           <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-red-50 hover:text-red-600 transition-colors p-2.5 cursor-pointer">
                             <span className="text-sm font-bold text-gray-700">{lesson}</span>
-                            <span className="text-[9px] text-gray-400 font-bold mt-0.5">{count} mani</span>
+                            <span className="text-[9px] text-gray-500 font-bold mt-0.5">{count} mani</span>
                           </div>
                         </Link>
                       );

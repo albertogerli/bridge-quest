@@ -21,6 +21,40 @@ const nextConfig: NextConfig = {
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data:",
+              "frame-src https://www.youtube.com https://youtube.com",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.heygen.com",
+              "media-src 'self' blob: https:",
+              "worker-src 'self' blob:",
+            ].join("; "),
+          },
+        ],
+      },
+      {
+        // Static assets: aggressive caching
+        source: "/:path*.(jpg|jpeg|png|gif|webp|svg|ico|mp4|woff|woff2|ttf|eot)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, stale-while-revalidate=86400, immutable",
+          },
+        ],
+      },
+      {
+        // PDF and infographic files: moderate caching
+        source: "/:path*.(pdf)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
         ],
       },
       {

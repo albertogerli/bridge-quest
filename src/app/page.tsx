@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,31 @@ const objectiveIcons: Record<string, React.ReactNode> = {
   daily: <CalendarDays className="w-4 h-4 text-teal-500" />,
   perfect: <Target className="w-4 h-4 text-rose-500" />,
 };
+
+// ─── Referral handler (reads ?ref= from URL) ─────────────────────────────
+
+const REFERRED_KEY = "bq_referred_by";
+const REFERRAL_XP_AMOUNT = 50;
+const XP_KEY = "bq_xp";
+
+function ReferralHandler({ onReferralBonus }: { onReferralBonus: () => void }) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    try {
+      const ref = searchParams.get("ref");
+      if (ref && !localStorage.getItem(REFERRED_KEY)) {
+        localStorage.setItem(REFERRED_KEY, ref);
+        // Award 50 XP bonus to the new referred user
+        const prev = parseInt(localStorage.getItem(XP_KEY) || "0", 10);
+        localStorage.setItem(XP_KEY, String(prev + REFERRAL_XP_AMOUNT));
+        onReferralBonus();
+      }
+    } catch {}
+  }, [searchParams, onReferralBonus]);
+
+  return null;
+}
 
 // Derive world cards from ALL courses
 const allWorldsData = courses.flatMap(c => c.worlds);
@@ -119,12 +145,16 @@ export default function Home() {
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
   const [handsPlayed, setHandsPlayed] = useState(0);
   const [isGuest, setIsGuest] = useState(false);
+  const [referralToast, setReferralToast] = useState(false);
 
   useEffect(() => {
     try {
       setIsGuest(localStorage.getItem("bq_guest") === "1");
       if (!localStorage.getItem("bq_onboarded")) {
         setShowOnboarding(true);
+        // Mark as shown immediately so it doesn't reappear if user
+        // navigates away via bottom nav without completing/skipping
+        localStorage.setItem("bq_onboarded", "1");
       }
       setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
 
@@ -177,6 +207,11 @@ export default function Home() {
     } catch {}
     setShowOnboarding(false);
   };
+
+  const handleReferralBonus = useRef(() => {
+    setReferralToast(true);
+    setTimeout(() => setReferralToast(false), 4000);
+  }).current;
 
   // Count completed modules per world (all courses)
   const worldCompletedCounts = worlds.map((w) => {
@@ -247,6 +282,28 @@ export default function Home() {
 
   return (
     <div>
+      {/* Referral code handler (reads ?ref= from URL) */}
+      <Suspense fallback={null}>
+        <ReferralHandler onReferralBonus={handleReferralBonus} />
+      </Suspense>
+
+      {/* Referral bonus toast */}
+      <AnimatePresence>
+        {referralToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-[60]"
+          >
+            <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl shadow-emerald-500/30">
+              <Zap className="w-5 h-5" />
+              <span className="text-sm font-bold">Bonus +50 XP dal tuo amico!</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Achievement popup */}
       <AchievementPopup badge={newBadge} onDismiss={dismiss} />
 
@@ -267,6 +324,9 @@ export default function Home() {
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Riepilogo settimanale"
             >
               <div className="flex justify-center mb-3"><BarChart3 className="w-12 h-12 text-indigo-500" /></div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{profile.weeklyRecapTitle}</h2>
@@ -537,7 +597,7 @@ export default function Home() {
                       className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold ${
                         i < Math.min(stats.streak, 7)
                           ? "bg-blue-500 text-white border border-blue-600"
-                          : "bg-gray-100 dark:bg-gray-800 text-gray-400 border border-gray-200 dark:border-gray-700"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
                       }`}
                     >
                       {day}
@@ -644,8 +704,11 @@ export default function Home() {
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
               className="bg-white dark:bg-[#1a1f2e] rounded-t-3xl p-6 w-full max-w-md shadow-2xl pb-10"
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Guida installazione su iPhone e iPad"
             >
-              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" aria-hidden="true" />
               <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
                 Installa su iPhone/iPad
               </h3>
@@ -735,7 +798,7 @@ export default function Home() {
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Prossimo premio
             </h2>
-            <span className="text-xs font-bold text-amber-500">
+            <span className="text-xs font-bold text-amber-600">
               {totalModulesCompleted} moduli
             </span>
           </div>
@@ -873,7 +936,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
               {world.name}
             </h3>
             {progress === 100 && (
-              <span className="text-emerald-500 text-lg">✓</span>
+              <span className="text-emerald-700 text-lg" aria-label="Completato">✓</span>
             )}
           </div>
           <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-0.5">{world.subtitle}</p>
@@ -1004,7 +1067,7 @@ function DailyQuests({
                     style={{ width: `${(quest.progress / quest.target) * 100}%` }}
                   />
                 </div>
-                <span className="text-[10px] font-bold text-gray-400">
+                <span className="text-[10px] font-bold text-gray-500">
                   {quest.progress}/{quest.target}
                 </span>
               </div>
@@ -1098,6 +1161,9 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
             className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Baule sbloccato"
           >
             <motion.div
               animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
@@ -1155,7 +1221,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
                 {isEarned ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : chestMilestoneIcons[chest.modules]?.("w-5 h-5")}
               </motion.div>
               <span className={`text-[9px] font-bold ${
-                isEarned ? "text-amber-600" : isCurrent ? "text-amber-500" : "text-gray-400"
+                isEarned ? "text-amber-700" : isCurrent ? "text-amber-600" : "text-gray-500"
               }`}>
                 {chest.modules} mod
               </span>
@@ -1171,7 +1237,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
             <p className="text-xs font-bold text-gray-700 flex items-center gap-1">
               {chestMilestoneIcons[nextChest.modules]?.("w-4 h-4")} {nextChest.label}
             </p>
-            <p className="text-[11px] font-bold text-amber-500">
+            <p className="text-[11px] font-bold text-amber-600">
               {modulesCompleted}/{nextChest.modules}
             </p>
           </div>
@@ -1192,7 +1258,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       {!nextChest && (
         <div className="text-center py-2">
           <p className="text-sm font-bold text-amber-700 flex items-center justify-center gap-1">Tutti i bauli aperti! <Crown className="w-4 h-4" /></p>
-          <p className="text-xs text-amber-500 mt-0.5">Sei un vero campione</p>
+          <p className="text-xs text-amber-700 mt-0.5">Sei un vero campione</p>
         </div>
       )}
     </div>
@@ -1343,7 +1409,7 @@ function WeeklyObjectivesSection() {
                         style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
                       />
                     </div>
-                    <span className="text-[10px] font-bold text-gray-400">
+                    <span className="text-[10px] font-bold text-gray-500">
                       {obj.current}/{obj.target}
                     </span>
                   </div>
@@ -1430,7 +1496,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
           <Link href="/collezione">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold text-amber-500 border-amber-200 cursor-pointer hover:bg-amber-50 transition-colors"
+              className="text-[10px] font-semibold text-amber-700 border-amber-200 cursor-pointer hover:bg-amber-50 transition-colors"
             >
               Vedi tutte →
             </Badge>
@@ -1669,6 +1735,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
                         if (videoMuted) videoRef.current.currentTime = 0;
                       }
                     }}
+                    aria-label={videoMuted ? "Attiva audio" : "Disattiva audio"}
                     className={`absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-all ${
                       videoMuted
                         ? "bg-white/90 text-[#003DA5] shadow-lg animate-pulse"
