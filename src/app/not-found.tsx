@@ -16,7 +16,7 @@ export default function NotFound() {
       <h1 className="text-4xl font-black text-gray-900 mb-2">404</h1>
       <p className="text-lg font-bold text-gray-700 mb-1">Pagina non trovata</p>
       <p className="text-sm text-gray-500 max-w-xs mb-8">
-        Questa carta non e nel mazzo! La pagina che cerchi non esiste o e stata spostata.
+        Questa carta non è nel mazzo! La pagina che cerchi non esiste o è stata spostata.
       </p>
 
       {/* Navigation links */}
