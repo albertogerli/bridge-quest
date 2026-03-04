@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { useAuth } from "./use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 
 const LS_KEYS = {
@@ -50,7 +50,7 @@ function getLocalSnapshot(): string {
  * - On page close: best-effort push
  */
 export function useSupabaseSync() {
-  const { user, profile } = useAuth();
+  const { user, profile } = useSharedAuth();
   const hasDoneInitialSync = useRef(false);
   const userIdRef = useRef<string | null>(null);
   const supabase = createClient();

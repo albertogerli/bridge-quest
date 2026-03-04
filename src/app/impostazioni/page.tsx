@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useTheme, type ThemeMode } from "@/hooks/use-theme";
 import {
@@ -76,7 +76,7 @@ const APP_VERSION = "1.0.0";
 
 export default function ImpostazioniPage() {
   const router = useRouter();
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useSharedAuth();
   const notifications = useNotifications();
   const { theme, setTheme } = useTheme();
   const [textSize, setTextSize] = useState("medio");

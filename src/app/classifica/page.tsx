@@ -113,6 +113,10 @@ export default function ClassificaPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Safety timeout: never stay loading forever (max 8 seconds)
+      const safetyTimer = setTimeout(() => {
+        setPlayersLoading(false);
+      }, 8000);
       try {
         const supabase = createClient();
 
@@ -198,6 +202,7 @@ export default function ClassificaPage() {
           }
         }
       } catch {}
+      clearTimeout(safetyTimer);
       setPlayersLoading(false);
     };
     fetchData();

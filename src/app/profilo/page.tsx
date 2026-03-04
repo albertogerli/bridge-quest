@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { courses, levelInfo } from "@/data/courses";
-import { useAuth } from "@/hooks/use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_LIST } from "@/data/asd-list";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useGameHistory } from "@/hooks/use-game-history";
@@ -28,7 +28,7 @@ const BQ_KEYS_PREFIX = "bq_";
 
 export default function ProfiloPage() {
   const router = useRouter();
-  const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useAuth();
+  const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useSharedAuth();
   const [editing, setEditing] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);

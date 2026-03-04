@@ -6,7 +6,7 @@ import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards } from "@/data/collectible-cards";
 import { useProfile } from "@/hooks/use-profile";
-import { useAuth } from "@/hooks/use-auth";
+import { useSharedAuth } from "@/contexts/auth-provider";
 
 const miniGames = [
   { href: "/gioca/quiz-lampo", emoji: "⚡", label: "Quiz Lampo", color: "bg-rose-50 border-rose-200 text-rose-700" },
@@ -30,7 +30,7 @@ const objectiveEmojiMap: Record<string, string> = {
 export function DesktopSidebar() {
   const stats = useStats();
   const profile = useProfile();
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useSharedAuth();
   const { reviewCount } = useSpacedReview();
   const { objectives, allCompleted, bonusClaimed } = useWeeklyObjectives();
 

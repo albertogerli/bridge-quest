@@ -44,6 +44,10 @@ export default function ForumPage() {
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);
+    // Safety timeout: never stay loading forever (max 8 seconds)
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+    }, 8000);
     try {
       let query = supabase
         .from("forum_posts")
@@ -62,9 +66,11 @@ export default function ForumPage() {
       }
 
       const { data, error } = await query.limit(50);
+      clearTimeout(safetyTimer);
       if (error) console.warn("Forum fetch error:", error.message);
       setPosts((data as ForumPost[]) || []);
     } catch (err) {
+      clearTimeout(safetyTimer);
       console.warn("Forum fetch failed:", err);
       setPosts([]);
     }

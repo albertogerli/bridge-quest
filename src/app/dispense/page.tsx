@@ -157,23 +157,9 @@ export default function DispensePage() {
   );
 }
 
-async function downloadPdf(url: string, filename: string) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Download failed");
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(blobUrl);
-  } catch {
-    // Fallback: open in new tab
-    window.open(url, "_blank");
-  }
+function downloadPdf(url: string, _filename: string) {
+  // Open PDF in new tab - most reliable across all hosting environments
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 function InfographicCard({
