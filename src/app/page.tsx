@@ -16,6 +16,7 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
 import {
   Zap, CheckCircle2, Flame, Target, BarChart3, Brain,
   Smartphone, BookOpen, Spade, CalendarDays, Gift,
@@ -626,6 +627,13 @@ export default function Home() {
             handsPlayed={handsPlayed}
             dailyDone={stats.dailyDone}
           />
+        </div>
+      </section>
+
+      {/* ===== WEEKLY CHALLENGE BANNER ===== */}
+      <section className="px-4 sm:px-5 pt-4">
+        <div className="mx-auto max-w-lg">
+          <WeeklyChallengeBanner compact />
         </div>
       </section>
 

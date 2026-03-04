@@ -11,8 +11,9 @@ import { useProfile } from "@/hooks/use-profile";
 import {
   Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
   Target, Hash, Megaphone, MessageCircle, Brain, Swords,
-  Spade, BookOpen
+  Spade, BookOpen, Link2, BarChart3
 } from "lucide-react";
+import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
 
 export default function GiocaPage() {
   const profile = useProfile();
@@ -155,11 +156,21 @@ export default function GiocaPage() {
           </Link>
         </motion.div>
 
+        {/* Weekly Challenge Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.14 }}
+          className="mt-4"
+        >
+          <WeeklyChallengeBanner />
+        </motion.div>
+
         {/* Mini-Games Section */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
+          transition={{ delay: 0.16 }}
           className="mt-6"
         >
           <div className="flex items-center gap-2 mb-3">
@@ -390,6 +401,58 @@ export default function GiocaPage() {
                 <div className="mt-3 flex items-center gap-1.5">
                   <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
                     {allSmazzate.length} mani
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* Sfida via Link */}
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <Link href="/gioca/sfida-link" className="block" aria-label="Sfida via Link: condividi una mano e sfida un amico">
+              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 mb-3">
+                  <Link2 className="w-6 h-6 text-violet-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 text-[15px]">
+                  Sfida via Link
+                </h3>
+                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                  Condividi un link, giocate la stessa mano e confrontate!
+                </p>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 rounded-full px-2 py-0.5">
+                    +30 {profile.xpLabel}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* Analisi AI */}
+          <motion.div
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.34 }}
+          >
+            <Link href="/gioca/analisi" className="block" aria-label="Analisi AI: rivedi le tue mani con commenti dell'intelligenza artificiale">
+              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 mb-3">
+                  <BarChart3 className="w-6 h-6 text-emerald-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 text-[15px]">
+                  Analisi AI
+                </h3>
+                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                  Rivedi le tue mani con commenti dell&apos;AI carta per carta
+                </p>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 rounded-full px-2 py-0.5">
+                    Post-partita
                   </span>
                 </div>
               </div>
