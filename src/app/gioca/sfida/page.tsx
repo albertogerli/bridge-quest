@@ -20,6 +20,8 @@ import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
+import { CelebrationCombo } from "@/components/celebration-effects";
+import { useSound } from "@/hooks/use-sound";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(): Smazzata {
@@ -58,6 +60,8 @@ export default function SfidaDelGiornoPage() {
   const isMobile = useMobile();
   const profile = useProfile();
   const { saveGameResult } = useGameResults();
+  const { play } = useSound();
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -114,6 +118,8 @@ export default function SfidaDelGiornoPage() {
   useEffect(() => {
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
+      play(game.result.result >= 0 ? 'contractMade' : 'contractFailed');
+      setShowCelebration(true);
       const gameXp = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
       const dailyBonus = alreadyCompleted ? 0 : 40;
       const totalEarned = gameXp + dailyBonus;
@@ -344,6 +350,7 @@ export default function SfidaDelGiornoPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="mt-6 mx-auto max-w-lg"
             >
+              <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? 'epic' : 'medium') : 'small'} />
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0

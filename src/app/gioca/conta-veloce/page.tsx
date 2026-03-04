@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
+import { CelebrationCombo } from "@/components/celebration-effects";
+import { useSound } from "@/hooks/use-sound";
 
 // Card generation
 const suits = ["spade", "heart", "diamond", "club"] as const;
@@ -56,6 +58,8 @@ const difficultyConfig = {
 export default function ContaVelocePage() {
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const profileConfig = useProfile();
+  const { play } = useSound();
+  const [showCelebration, setShowCelebration] = useState(false);
   const [phase, setPhase] = useState<"menu" | "playing" | "result" | "gameover">("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
   const [hand, setHand] = useState<Card[]>([]);
@@ -115,6 +119,7 @@ export default function ContaVelocePage() {
     setShowAnswer(true);
 
     if (isCorrect) {
+      play('trickWon');
       // Score: base 100 + speed bonus (faster = more points, max 200 for < 2s)
       const speedBonus = Math.max(0, Math.floor(200 - elapsed * 20));
       const streakBonus = streak * 10;
@@ -126,12 +131,15 @@ export default function ContaVelocePage() {
         return newStreak;
       });
     } else {
+      play('error');
       setStreak(0);
     }
 
     setTimeout(() => {
       if (round >= config.rounds) {
         setPhase("gameover");
+        play('success');
+        setShowCelebration(true);
         // Save XP
         const earned = Math.floor((Math.floor(score / 50) + (isCorrect ? 10 : 0) + 20) * config.xpMult);
         setXpEarned(earned);
@@ -144,7 +152,7 @@ export default function ContaVelocePage() {
         nextHand();
       }
     }, 1500);
-  }, [correctHCP, round, score, streak, nextHand, config]);
+  }, [correctHCP, round, score, streak, nextHand, config, play]);
 
   useEffect(() => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
@@ -240,6 +248,7 @@ export default function ContaVelocePage() {
 
     return (
       <div className="pt-6 px-5 pb-24">
+        <CelebrationCombo trigger={showCelebration} type={stars >= 3 ? 'epic' : stars >= 2 ? 'medium' : 'small'} />
         <div className="mx-auto max-w-lg text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}

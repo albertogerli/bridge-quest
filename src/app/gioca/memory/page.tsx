@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useProfile } from "@/hooks/use-profile";
+import { CelebrationCombo } from "@/components/celebration-effects";
+import { useSound } from "@/hooks/use-sound";
 import Link from "next/link";
 
 // Card pairs for bridge memory - match card with its bridge concept
@@ -52,6 +54,8 @@ export default function MemoryPage() {
   const prof = useProfile();
   const isSenior = prof.profile === "senior";
   const isGiovane = prof.profile === "giovane";
+  const { play } = useSound();
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const [phase, setPhase] = useState<GamePhase>("menu");
   const [difficulty, setDifficulty] = useState<4 | 6 | 8>(6);
@@ -100,6 +104,7 @@ export default function MemoryPage() {
     setStreak(0);
     setMaxStreak(0);
     setShowMismatch(false);
+    setShowCelebration(false);
     lockRef.current = false;
     setPhase("playing");
   }, []);
@@ -121,6 +126,7 @@ export default function MemoryPage() {
 
       if (card1.pairId === card2.pairId && card1.type !== card2.type) {
         // Match!
+        play('trickWon');
         const newMatched = [...matched, first, second];
         setMatched(newMatched);
         setStreak((s) => {
@@ -134,6 +140,8 @@ export default function MemoryPage() {
         // Check game over
         if (newMatched.length === cards.length) {
           if (timerRef.current) clearInterval(timerRef.current);
+          play('success');
+          setShowCelebration(true);
           // Save XP
           try {
             const xp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
@@ -150,6 +158,7 @@ export default function MemoryPage() {
         }
       } else {
         // Mismatch
+        play('error');
         setShowMismatch(true);
         setStreak(0);
         setTimeout(() => {
@@ -407,6 +416,7 @@ export default function MemoryPage() {
 
   return (
     <div className="pt-6 px-5 pb-24">
+      <CelebrationCombo trigger={showCelebration} type={stars >= 3 ? 'epic' : stars >= 2 ? 'medium' : 'small'} />
       <div className="mx-auto max-w-lg">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}

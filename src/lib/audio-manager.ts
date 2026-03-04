@@ -22,12 +22,15 @@ class AudioManager {
   private volume: number = 0.5;
 
   private constructor() {
-    // Carica le preferenze da localStorage
-    const savedEnabled = localStorage.getItem('bq_sound_enabled');
-    const savedVolume = localStorage.getItem('bq_sound_volume');
-
-    this.enabled = savedEnabled !== null ? savedEnabled === 'true' : true;
-    this.volume = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
+    // Carica le preferenze da localStorage (solo lato client)
+    if (typeof window !== 'undefined') {
+      try {
+        const savedEnabled = localStorage.getItem('bq_sound_enabled');
+        const savedVolume = localStorage.getItem('bq_sound_volume');
+        this.enabled = savedEnabled !== null ? savedEnabled === 'true' : true;
+        this.volume = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
+      } catch {}
+    }
   }
 
   static getInstance(): AudioManager {

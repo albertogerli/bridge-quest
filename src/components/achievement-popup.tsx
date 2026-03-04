@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { ConfettiBurst } from "@/components/celebration-effects";
+import { useSound } from "@/hooks/use-sound";
 
 export interface BadgeDef {
   id: string;
@@ -100,7 +102,17 @@ export function AchievementPopup({
   badge: BadgeDef | null;
   onDismiss: () => void;
 }) {
+  const { play } = useSound();
+
+  useEffect(() => {
+    if (badge) {
+      play('badgeUnlock');
+    }
+  }, [badge, play]);
+
   return (
+    <>
+    <ConfettiBurst trigger={!!badge} />
     <AnimatePresence>
       {badge && (
         <motion.div
@@ -130,5 +142,6 @@ export function AchievementPopup({
         </motion.div>
       )}
     </AnimatePresence>
+    </>
   );
 }

@@ -481,17 +481,17 @@ export default function ProfiloPage() {
           </AnimatePresence>
 
           {/* Secret Achievements */}
-          {earnedSecretAchievements.length > 0 && (
-            <div className="mt-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
-                  <Star className="w-4 h-4 text-amber-500" />
-                  Achievement Segreti
-                </h3>
-                <Badge variant="outline" className="text-[11px] text-amber-600 border-amber-200">
-                  {earnedSecretAchievements.length} / {totalSecretAchievements}
-                </Badge>
-              </div>
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                <Star className="w-4 h-4 text-amber-500" />
+                Achievement Segreti
+              </h3>
+              <Badge variant="outline" className="text-[11px] text-amber-600 border-amber-200">
+                {earnedSecretAchievements.length} / {totalSecretAchievements}
+              </Badge>
+            </div>
+            {earnedSecretAchievements.length > 0 ? (
               <div className="grid grid-cols-5 gap-2">
                 {earnedSecretAchievements.map((a) => (
                   <div key={a.id} className="flex flex-col items-center gap-1">
@@ -502,8 +502,15 @@ export default function ProfiloPage() {
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-100 px-4 py-3">
+                <span className="text-lg">🔒</span>
+                <p className="text-xs text-amber-700">
+                  Ci sono <span className="font-bold">{totalSecretAchievements} achievement nascosti</span> da scoprire. Gioca, esplora e completa sfide per sbloccarli!
+                </p>
+              </div>
+            )}
+          </div>
         </motion.div>
 
         <Separator className="my-6 bg-[#e5e7eb]" />
