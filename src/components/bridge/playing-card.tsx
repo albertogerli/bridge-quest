@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 
 export type Suit = "spade" | "heart" | "diamond" | "club";
 export type Rank = "A" | "K" | "Q" | "J" | "10" | "9" | "8" | "7" | "6" | "5" | "4" | "3" | "2";
@@ -72,6 +73,8 @@ export function PlayingCard({
     lg: "text-xl",
   };
 
+  const cosmetics = useShopCosmetics();
+
   // Dynamic inline style when cardWidth is set
   const dynamicStyle = cardWidth
     ? { width: cardWidth, height: Math.round(cardWidth * 1.4) }
@@ -82,15 +85,15 @@ export function PlayingCard({
   if (faceDown) {
     return (
       <motion.div
-        className={`${dimClass} rounded bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm cursor-default`}
+        className={`${dimClass} rounded bg-gradient-to-br ${cosmetics.cardBackGradient} border border-white/20 shadow-sm cursor-default`}
         style={{
           ...dynamicStyle,
           backgroundImage: `repeating-linear-gradient(
             45deg,
             transparent,
             transparent 4px,
-            rgba(255,255,255,0.05) 4px,
-            rgba(255,255,255,0.05) 8px
+            ${cosmetics.cardBackOverlay} 4px,
+            ${cosmetics.cardBackOverlay} 8px
           )`,
         }}
       >

@@ -21,7 +21,7 @@ import {
   Zap, CheckCircle2, Flame, Target, BarChart3, Brain,
   Smartphone, BookOpen, Spade, CalendarDays, Gift,
   Gamepad2, Coffee, Crown, GraduationCap, Trophy,
-  Sparkles, Package, Wrench, Star, FileText
+  Sparkles, Package, Wrench, Star, FileText, Globe
 } from "lucide-react";
 
 // Map weekly objective IDs to Lucide icons
@@ -884,6 +884,44 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ===== SCOPRI IL BRIDGE ===== */}
+      <section className="px-4 sm:px-5 pt-2 pb-4">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+          >
+            <Link href="/scopri">
+              <div className="rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-indigo-50 dark:from-[#003DA5]/10 dark:to-indigo-950/30 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all group">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#003DA5] to-[#0066FF] shadow-sm">
+                    <Globe className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                      Scopri il Bridge
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Storia, la FIGB, curiosita e link utili
+                    </p>
+                  </div>
+                  <svg
+                    className="h-5 w-5 text-[#003DA5]/40 group-hover:text-[#003DA5] group-hover:translate-x-0.5 transition-all shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <polyline points="9,6 15,12 9,18" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
