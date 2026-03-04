@@ -25,6 +25,8 @@ import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import Link from "next/link";
+import { CelebrationCombo } from "@/components/celebration-effects";
+import { useSound } from "@/hooks/use-sound";
 
 // ─── Date Helpers ────────────────────────────────────────────────────────────
 
@@ -847,6 +849,8 @@ function PlayingView({
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const xpSaved = useRef(false);
+  const { play } = useSound();
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -905,6 +909,8 @@ function PlayingView({
   useEffect(() => {
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
+      play(game.result.result >= 0 ? 'contractMade' : 'contractFailed');
+      setShowCelebration(true);
       if (isDaily) {
         onFinish(
           game.result.tricksMade,
@@ -1202,6 +1208,7 @@ function PlayingView({
               exit={{ opacity: 0, scale: 0.95 }}
               className="mt-6 mx-auto max-w-lg space-y-4"
             >
+              <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? 'epic' : 'medium') : 'small'} />
               {/* Main Result Card */}
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${

@@ -8,6 +8,8 @@ import Link from "next/link";
 import { courses } from "@/data/courses";
 import type { ContentBlock } from "@/data/courses";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
+import { CelebrationCombo } from "@/components/celebration-effects";
+import { useSound } from "@/hooks/use-sound";
 
 // ===== Types =====
 
@@ -182,6 +184,8 @@ function getTypeBadge(type: QuizQuestion["type"]) {
 export default function QuizLampoPage() {
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const profileConfig = useProfile();
+  const { play } = useSound();
+  const [showCelebration, setShowCelebration] = useState(false);
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
 
@@ -304,6 +308,7 @@ export default function QuizLampoPage() {
       setShowResult(false);
       setXpEarned(0);
       setIsNewBest(false);
+      setShowCelebration(false);
       lockedRef.current = false;
       setPhase("playing");
 
@@ -347,6 +352,7 @@ export default function QuizLampoPage() {
       let roundSpeedBonus = 0;
 
       if (isCorrect) {
+        play('trickWon');
         setCorrectCount((c) => c + 1);
         const newCombo = combo + 1;
         setCombo(newCombo);
@@ -364,6 +370,7 @@ export default function QuizLampoPage() {
         const roundScore = 100 + roundSpeedBonus + roundComboPoints;
         setScore((s) => s + roundScore);
       } else {
+        play('error');
         setCombo(0);
       }
 
@@ -385,6 +392,12 @@ export default function QuizLampoPage() {
         // Game over - calculate XP
         // We need final tallies. Use functional state to get latest values.
         setPhase("gameover");
+
+        // Calculate stars to determine celebration level and sound
+        const finalPct = correctCount / cfg.rounds;
+        const finalStars = finalPct >= 0.9 ? 3 : finalPct >= 0.65 ? 2 : finalPct >= 0.4 ? 1 : 0;
+        play(finalStars >= 2 ? 'success' : 'error');
+        setShowCelebration(true);
 
         // Calculate XP from current accumulated state
         // We'll compute it in a useEffect that watches phase === 'gameover'
@@ -620,6 +633,7 @@ export default function QuizLampoPage() {
 
     return (
       <div className="pt-6 px-5 pb-24">
+        <CelebrationCombo trigger={showCelebration} type={stars >= 3 ? 'epic' : stars >= 2 ? 'medium' : 'small'} />
         <div className="mx-auto max-w-lg text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
