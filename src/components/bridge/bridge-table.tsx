@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Hand } from "./hand";
 import { DummyHand } from "./dummy-hand";
 import type { CardData } from "./playing-card";
+import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 
 export interface TrickPlayDisplay {
   position: string;
@@ -49,19 +50,19 @@ const suitColorClass: Record<string, string> = {
 };
 
 /** Compact face-down card stack for mobile E/W positions */
-function CompactFaceDown({ count }: { count: number }) {
+function CompactFaceDown({ count, gradient }: { count: number; gradient: string }) {
   return (
     <div className="relative w-8 h-14 flex items-center justify-center">
       {/* Stacked card backs */}
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="absolute w-8 h-[44px] rounded bg-gradient-to-br from-emerald to-emerald-dark border border-white/20 shadow-sm"
+          className={`absolute w-8 h-[44px] rounded bg-gradient-to-br ${gradient} border border-white/20 shadow-sm`}
           style={{ top: i * 2, left: i * 1 }}
         />
       ))}
       {/* Count badge */}
-      <div className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[8px] font-black text-emerald-dark shadow-sm">
+      <div className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[8px] font-black text-gray-700 shadow-sm">
         {count}
       </div>
     </div>
@@ -91,6 +92,8 @@ export function BridgeTable({
   compact = false,
   trumpSuit,
 }: BridgeTableProps) {
+  const cosmetics = useShopCosmetics();
+
   // ── Self-measuring: adapt to actual rendered width ──
   const tableRef = useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = useState(0);
@@ -151,9 +154,10 @@ export function BridgeTable({
 
   return (
     <div ref={tableRef} className={`relative w-full max-w-2xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
-      {/* Felt background */}
+      {/* Felt background — uses shop cosmetic if purchased */}
       <div
-        className={`absolute inset-0 rounded-3xl felt-bg border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
+        className={`absolute inset-0 rounded-3xl border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
+        style={{ background: cosmetics.tableBg }}
       >
         <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')]" />
       </div>
@@ -292,7 +296,7 @@ export function BridgeTable({
       <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
         <div className="flex items-center gap-1">
           {isCompact && eastFaceDown ? (
-            <CompactFaceDown count={east.length} />
+            <CompactFaceDown count={east.length} gradient={cosmetics.cardBackGradient} />
           ) : (
             <Hand
               cards={east}
@@ -315,7 +319,7 @@ export function BridgeTable({
             Ovest
           </span>
           {isCompact && westFaceDown ? (
-            <CompactFaceDown count={west.length} />
+            <CompactFaceDown count={west.length} gradient={cosmetics.cardBackGradient} />
           ) : (
             <Hand
               cards={west}

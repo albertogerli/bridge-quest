@@ -4,14 +4,14 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Coins, ShoppingBag, Sparkles, Crown, Diamond, Frame, Palette, Image as ImageIcon, Check } from "lucide-react";
+import { Coins, ShoppingBag, Sparkles, Crown, Diamond, Frame, Palette, Image as ImageIcon, Check, Star, Flame, Rainbow, Award, Heart, Trophy, Gem, Type } from "lucide-react";
 import Link from "next/link";
 
 /* ────────────────────────────────────────────── */
 /*  Types & Data                                   */
 /* ────────────────────────────────────────────── */
 
-type CategoryId = "avatari" | "temi-carta" | "sfondi-tavolo";
+type CategoryId = "avatari" | "temi-carta" | "sfondi-tavolo" | "titoli";
 
 interface ShopItem {
   id: string;
@@ -31,6 +31,7 @@ const categories: { id: CategoryId; label: string; icon: React.ReactNode }[] = [
   { id: "avatari", label: "Avatari", icon: <Frame className="w-4 h-4" /> },
   { id: "temi-carta", label: "Temi Carta", icon: <Palette className="w-4 h-4" /> },
   { id: "sfondi-tavolo", label: "Sfondi Tavolo", icon: <ImageIcon className="w-4 h-4" /> },
+  { id: "titoli", label: "Titoli", icon: <Type className="w-4 h-4" /> },
 ];
 
 const shopItems: ShopItem[] = [
@@ -70,6 +71,42 @@ const shopItems: ShopItem[] = [
     },
     description: "Cornice con corona del campione",
   },
+  {
+    id: "cornice-azzurro",
+    name: "Cornice Azzurro FIGB",
+    price: 150,
+    category: "avatari",
+    preview: {
+      gradient: "from-blue-400 via-blue-500 to-blue-700",
+      border: "ring-4 ring-blue-500/60",
+      icon: <Award className="w-5 h-5 text-white" />,
+    },
+    description: "Cornice ufficiale blu FIGB",
+  },
+  {
+    id: "cornice-fiamma",
+    name: "Cornice Fiamma",
+    price: 250,
+    category: "avatari",
+    preview: {
+      gradient: "from-orange-400 via-red-500 to-orange-600",
+      border: "ring-4 ring-orange-500/60",
+      icon: <Flame className="w-5 h-5 text-white" />,
+    },
+    description: "Anello di fuoco ardente intorno al tuo avatar",
+  },
+  {
+    id: "cornice-arcobaleno",
+    name: "Cornice Arcobaleno",
+    price: 300,
+    category: "avatari",
+    preview: {
+      gradient: "from-red-400 via-yellow-400 via-green-400 via-blue-400 to-purple-500",
+      border: "ring-4 ring-pink-400/60",
+      icon: <Rainbow className="w-5 h-5 text-white" />,
+    },
+    description: "Anello arcobaleno animato scintillante",
+  },
 
   // Temi Carta (card backs)
   {
@@ -105,6 +142,30 @@ const shopItems: ShopItem[] = [
     preview: { gradient: "from-amber-600 via-yellow-500 to-amber-700" },
     description: "Retro carta in oro reale con motivi regali",
   },
+  {
+    id: "rosso-velluto",
+    name: "Rosso Velluto",
+    price: 150,
+    category: "temi-carta",
+    preview: { gradient: "from-red-800 via-red-900 to-red-950" },
+    description: "Retro in velluto rosso profondo, eleganza pura",
+  },
+  {
+    id: "platino",
+    name: "Platino",
+    price: 200,
+    category: "temi-carta",
+    preview: { gradient: "from-slate-300 via-gray-100 to-slate-400" },
+    description: "Retro platino con riflessi argentati esclusivi",
+  },
+  {
+    id: "aurora-boreale",
+    name: "Aurora Boreale",
+    price: 300,
+    category: "temi-carta",
+    preview: { gradient: "from-emerald-400 via-cyan-500 to-purple-600" },
+    description: "Luci del nord che danzano sul retro carta",
+  },
 
   // Sfondi Tavolo (table backgrounds)
   {
@@ -139,6 +200,82 @@ const shopItems: ShopItem[] = [
     category: "sfondi-tavolo",
     preview: { gradient: "from-gray-100 via-white to-gray-200" },
     description: "Superficie in marmo bianco di Carrara",
+  },
+  {
+    id: "velluto-rosso",
+    name: "Velluto Rosso",
+    price: 150,
+    category: "sfondi-tavolo",
+    preview: { gradient: "from-red-800 via-red-900 to-red-950" },
+    description: "Tavolo rivestito in velluto rosso da casin\u00f2",
+  },
+  {
+    id: "cielo-stellato",
+    name: "Cielo Stellato",
+    price: 250,
+    category: "sfondi-tavolo",
+    preview: { gradient: "from-indigo-900 via-slate-900 to-slate-950" },
+    description: "Gioca sotto un cielo di stelle scintillanti",
+  },
+
+  // Titoli (displayed under user's name)
+  {
+    id: "maestro-di-bridge",
+    name: "Maestro di Bridge",
+    price: 0,
+    category: "titoli",
+    preview: { gradient: "from-blue-400 via-blue-500 to-indigo-600" },
+    description: "Il titolo base per ogni giocatore di bridge",
+    isFree: true,
+  },
+  {
+    id: "stratega",
+    name: "Stratega",
+    price: 80,
+    category: "titoli",
+    preview: { gradient: "from-emerald-400 via-teal-500 to-emerald-600" },
+    description: "Per chi pianifica ogni mossa con precisione",
+  },
+  {
+    id: "il-professore",
+    name: "Il Professore",
+    price: 100,
+    category: "titoli",
+    preview: { gradient: "from-violet-400 via-purple-500 to-violet-600" },
+    description: "Conoscenza e stile al tavolo da bridge",
+  },
+  {
+    id: "asso-di-cuori",
+    name: "Asso di Cuori",
+    price: 120,
+    category: "titoli",
+    preview: {
+      gradient: "from-rose-400 via-pink-500 to-rose-600",
+      icon: <Heart className="w-5 h-5 text-white" />,
+    },
+    description: "La carta pi\u00f9 amata del mazzo, sei tu",
+  },
+  {
+    id: "campione-nazionale",
+    name: "Campione Nazionale",
+    price: 150,
+    category: "titoli",
+    preview: {
+      gradient: "from-amber-400 via-yellow-500 to-amber-600",
+      icon: <Trophy className="w-5 h-5 text-white" />,
+    },
+    description: "Titolo riservato ai veri campioni d'Italia",
+  },
+  {
+    id: "leggenda-del-bridge",
+    name: "Leggenda del Bridge",
+    price: 500,
+    category: "titoli",
+    preview: {
+      gradient: "from-amber-300 via-yellow-400 to-amber-500",
+      icon: <Gem className="w-5 h-5 text-white" />,
+    },
+    description: "Il titolo pi\u00f9 esclusivo e prestigioso in assoluto",
   },
 ];
 
@@ -201,6 +338,7 @@ const defaultActives: Record<CategoryId, string> = {
   avatari: "",
   "temi-carta": "classico-blu",
   "sfondi-tavolo": "verde-classico",
+  titoli: "maestro-di-bridge",
 };
 
 /* ────────────────────────────────────────────── */
@@ -362,7 +500,7 @@ export default function NegozioPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="flex gap-2 mb-6"
+          className="flex gap-1.5 mb-6 overflow-x-auto scrollbar-hide"
         >
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
@@ -370,7 +508,7 @@ export default function NegozioPage() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl text-xs font-bold transition-all active:scale-95 ${
+                className={`flex-1 flex items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all active:scale-95 whitespace-nowrap ${
                   isSelected
                     ? "bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20"
                     : "bg-white text-gray-500 border-2 border-[#e5e7eb] shadow-sm hover:border-gray-300"
@@ -395,6 +533,7 @@ export default function NegozioPage() {
             {selectedCategory === "avatari" && "Cornici decorative per il tuo profilo"}
             {selectedCategory === "temi-carta" && "Personalizza il retro delle tue carte"}
             {selectedCategory === "sfondi-tavolo" && "Cambia l'aspetto del tavolo da gioco"}
+            {selectedCategory === "titoli" && "Titoli esclusivi sotto il tuo nome"}
           </p>
         </motion.div>
 
@@ -450,6 +589,14 @@ export default function NegozioPage() {
                                   {dir}
                                 </span>
                               ))}
+                            </div>
+                          </div>
+                        )}
+                        {item.category === "titoli" && (
+                          <div className="flex flex-col items-center gap-1.5">
+                            {item.preview.icon || <Star className="w-6 h-6 text-white/90" />}
+                            <div className="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/30">
+                              <span className="text-white text-[10px] font-bold tracking-wide">{item.name}</span>
                             </div>
                           </div>
                         )}

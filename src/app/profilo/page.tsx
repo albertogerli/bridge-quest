@@ -9,6 +9,7 @@ import { courses, levelInfo } from "@/data/courses";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_LIST } from "@/data/asd-list";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import { useGameHistory } from "@/hooks/use-game-history";
 import { StatsDashboard } from "@/components/stats-dashboard";
 import {
@@ -36,6 +37,7 @@ const BQ_KEYS_PREFIX = "bq_";
 export default function ProfiloPage() {
   const router = useRouter();
   const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useSharedAuth();
+  const cosmetics = useShopCosmetics();
   const [editing, setEditing] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -246,7 +248,7 @@ export default function ProfiloPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4"
         >
-          <Avatar className="h-18 w-18 shadow-lg shadow-[#003DA5]/20">
+          <Avatar className={`h-18 w-18 shadow-lg shadow-[#003DA5]/20 ${cosmetics.avatarFrame || ""}`}>
             {user && authProfile?.avatar_url ? (
               <img src={authProfile.avatar_url} alt="Foto profilo" className="h-18 w-18 rounded-full object-cover" />
             ) : (
@@ -259,6 +261,9 @@ export default function ProfiloPage() {
             <h1 className="text-2xl font-bold text-gray-900">
               {user && authProfile?.display_name ? authProfile.display_name : "Bridgista"}
             </h1>
+            {cosmetics.activeTitle && (
+              <p className="text-xs font-semibold text-[#003DA5]">{cosmetics.activeTitle}</p>
+            )}
             {user && authProfile?.bbo_username && (
               <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
             )}
