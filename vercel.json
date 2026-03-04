@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/infografiche/(.*)",
+      "source": "/infografiche/:path*",
       "headers": [
         {
           "key": "Cache-Control",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "source": "/videos/(.*)",
+      "source": "/videos/:path*",
       "headers": [
         {
           "key": "Cache-Control",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "source": "/icons/(.*)",
+      "source": "/icons/:path*",
       "headers": [
         {
           "key": "Cache-Control",
@@ -28,38 +28,11 @@
       ]
     },
     {
-      "source": "/captions/(.*)",
+      "source": "/captions/:path*",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=2592000, stale-while-revalidate=86400"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).(?:jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|eot)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, stale-while-revalidate=86400, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).mp4",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, stale-while-revalidate=86400, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).pdf",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400, stale-while-revalidate=604800"
         }
       ]
     },
