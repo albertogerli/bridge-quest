@@ -891,6 +891,10 @@ export default function Home() {
       <section className="px-4 sm:px-5 pb-6 lg:hidden">
         <div className="mx-auto max-w-lg">
           <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-5 text-center">
+            <div className="flex items-center justify-center gap-5 mb-3">
+              <img src="/icons/logo-figb.png" alt="FIGB" className="h-12 w-auto" />
+              <img src="/icons/logo-coni.png" alt="CONI" className="h-9 w-auto" />
+            </div>
             <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
               Un progetto della
             </p>
@@ -2055,6 +2059,10 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
                 <p className="text-2xl font-bold text-[#003DA5]">200+</p>
                 <p className="text-[10px] font-bold text-[#003DA5]/70 uppercase">Mani</p>
               </div>
+            </div>
+            <div className="flex items-center justify-center gap-5 mb-3">
+              <img src="/icons/logo-figb.png" alt="FIGB" className="h-12 w-auto" />
+              <img src="/icons/logo-coni.png" alt="CONI" className="h-9 w-auto" />
             </div>
             <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
               Un progetto della
