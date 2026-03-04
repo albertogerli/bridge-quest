@@ -447,7 +447,7 @@ export default function ImpostazioniPage() {
             </div>
             <div>
               <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base">Livello AI Avversari</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Scegli la difficolta degli avversari AI</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Scegli la difficoltà degli avversari AI</p>
             </div>
           </div>
           <div className="space-y-2">

@@ -185,7 +185,7 @@ function InfographicCard({
     <div className="card-clean rounded-2xl bg-white overflow-hidden group">
       {/* Thumbnail */}
       <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden">
-        {!error ? (
+        {!error && imageSrc ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
