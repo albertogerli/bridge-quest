@@ -22,8 +22,12 @@ import { useRouter } from "next/navigation";
 import {
   Spade, BookOpen, Target, Flame, Trophy, Star, Crown, GraduationCap,
   Globe, Medal, CheckCircle2, Zap, BookOpenCheck, BarChart3,
-  Gamepad2, Coffee, Coins, Share2, UserPlus, Check, Copy, MessageCircle, Send
+  Gamepad2, Coffee, Coins, Share2, UserPlus, Check, Copy, MessageCircle, Send,
+  Sparkles, Snowflake
 } from "lucide-react";
+import { StreakFreezeCard } from "@/components/streak-freeze-card";
+import { useSecretAchievements } from "@/hooks/use-secret-achievements";
+import SecretAchievementPopup from "@/components/secret-achievement-popup";
 
 const allWorlds = courses.flatMap(c => c.worlds);
 
@@ -58,6 +62,15 @@ export default function ProfiloPage() {
   const referralLink = user?.id ? getReferralLink(user.id) : getReferralLink();
   const { getStats } = useGameHistory();
   const gameStats = getStats();
+  const { checkAchievements, earnedSecretAchievements, totalSecretAchievements } = useSecretAchievements();
+  const [pendingAchievement, setPendingAchievement] = useState<{ id: string; name: string; icon: string; description: string } | null>(null);
+
+  useEffect(() => {
+    const newOnes = checkAchievements();
+    if (newOnes.length > 0) {
+      setPendingAchievement(newOnes[0]);
+    }
+  }, [checkAchievements]);
 
   useEffect(() => {
     try {
@@ -371,6 +384,31 @@ export default function ProfiloPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Bridge Wrapped link */}
+          <Link
+            href="/profilo/wrapped"
+            className="mt-3 w-full rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 flex items-center gap-3 hover:shadow-lg transition-shadow"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-white">Bridge Wrapped</p>
+              <p className="text-[11px] text-white/70">Le tue statistiche del mese</p>
+            </div>
+            <svg className="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9,6 15,12 9,18" /></svg>
+          </Link>
+        </motion.div>
+
+        {/* Streak Freeze */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24 }}
+          className="mt-4"
+        >
+          <StreakFreezeCard streak={streak} xp={xp} />
         </motion.div>
 
         <Separator className="my-6 bg-[#e5e7eb]" />
@@ -441,6 +479,31 @@ export default function ProfiloPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Secret Achievements */}
+          {earnedSecretAchievements.length > 0 && (
+            <div className="mt-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                  <Star className="w-4 h-4 text-amber-500" />
+                  Achievement Segreti
+                </h3>
+                <Badge variant="outline" className="text-[11px] text-amber-600 border-amber-200">
+                  {earnedSecretAchievements.length} / {totalSecretAchievements}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-5 gap-2">
+                {earnedSecretAchievements.map((a) => (
+                  <div key={a.id} className="flex flex-col items-center gap-1">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 border border-amber-200 text-xl">
+                      {a.icon}
+                    </div>
+                    <span className="text-[9px] text-center text-amber-700 font-semibold leading-tight">{a.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         <Separator className="my-6 bg-[#e5e7eb]" />
@@ -958,6 +1021,12 @@ export default function ProfiloPage() {
           )}
         </motion.div>
       </div>
+
+      {/* Secret Achievement Popup */}
+      <SecretAchievementPopup
+        achievement={pendingAchievement}
+        onClose={() => setPendingAchievement(null)}
+      />
     </div>
   );
 }
