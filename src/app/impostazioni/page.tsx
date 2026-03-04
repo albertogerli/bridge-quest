@@ -120,6 +120,7 @@ export default function ImpostazioniPage() {
   const updateProfile = useCallback((value: string) => {
     setProfile(value);
     localStorage.setItem("bq_profile", value);
+    window.dispatchEvent(new CustomEvent("bq_profile_change", { detail: value }));
   }, []);
 
   const updateAiLevel = useCallback((value: AILevel) => {

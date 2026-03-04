@@ -280,6 +280,89 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════
+   PROFILE-BASED VISUAL ADAPTATION
+   Applied via data-profile attribute on layout wrapper
+   ═══════════════════════════════════════════════════ */
+
+/* ─── SENIOR (55+): Larger fonts, higher contrast, bigger targets ─── */
+[data-profile="senior"] {
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+[data-profile="senior"] h1 { font-size: 2rem; }
+[data-profile="senior"] h2 { font-size: 1.5rem; }
+[data-profile="senior"] h3 { font-size: 1.25rem; }
+
+[data-profile="senior"] p,
+[data-profile="senior"] span,
+[data-profile="senior"] label,
+[data-profile="senior"] li {
+  font-size: inherit;
+}
+
+/* Bigger buttons and touch targets */
+[data-profile="senior"] button,
+[data-profile="senior"] a[class*="rounded"] {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+/* Larger card padding */
+[data-profile="senior"] .card-clean,
+[data-profile="senior"] [class*="rounded-2xl"][class*="border"] {
+  padding: 1.25rem;
+}
+
+/* Higher contrast text */
+[data-profile="senior"] .text-gray-500 { color: #4b5563; }
+[data-profile="senior"] .text-gray-400 { color: #6b7280; }
+[data-profile="senior"] .text-gray-600 { color: #374151; }
+
+/* More vivid colors for primary actions */
+[data-profile="senior"] .bg-\[#003DA5\] { background-color: #0047c2; }
+[data-profile="senior"] .text-\[#003DA5\] { color: #0047c2; }
+[data-profile="senior"] .bg-blue-600 { background-color: #1d4ed8; }
+[data-profile="senior"] .bg-indigo-600 { background-color: #4338ca; }
+[data-profile="senior"] .bg-amber-500 { background-color: #d97706; }
+[data-profile="senior"] .text-amber-500 { color: #d97706; }
+[data-profile="senior"] .bg-emerald-500 { background-color: #047857; }
+[data-profile="senior"] .text-emerald-600 { color: #047857; }
+[data-profile="senior"] .text-red-600 { color: #b91c1c; }
+
+/* Wider badge/pill text */
+[data-profile="senior"] [class*="rounded-full"][class*="text-\[10px\]"],
+[data-profile="senior"] [class*="rounded-full"][class*="text-\[11px\]"] {
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.75rem;
+}
+
+/* ─── JUNIOR (8-17): Fun vibrant colors, playful feel ─── */
+[data-profile="junior"] {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* Vibrant accent colors */
+[data-profile="junior"] .bg-\[#003DA5\] { background-color: #2563eb; }
+[data-profile="junior"] .text-\[#003DA5\] { color: #2563eb; }
+[data-profile="junior"] .bg-blue-600 { background-color: #3b82f6; }
+[data-profile="junior"] .bg-gradient-to-br { filter: saturate(1.2); }
+
+/* Slightly bigger touch targets for younger users too */
+[data-profile="junior"] button { min-height: 46px; }
+
+/* ─── GIOVANE (18-35): Standard, slightly vibrant ─── */
+[data-profile="giovane"] {
+  font-size: 15px;
+}
+
+/* ─── ADULTO (36-55): Standard baseline ─── */
+[data-profile="adulto"] {
+  font-size: 15px;
+}
+
 /* Visible focus indicator for keyboard navigation */
 :focus-visible {
   outline: 2px solid #003DA5;
