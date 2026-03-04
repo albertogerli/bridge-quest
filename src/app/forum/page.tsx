@@ -44,26 +44,32 @@ export default function ForumPage() {
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);
-    let query = supabase
-      .from("forum_posts")
-      .select("*, profiles(display_name, avatar_url, asd_id)");
+    try {
+      let query = supabase
+        .from("forum_posts")
+        .select("*, profiles(display_name, avatar_url, asd_id)");
 
-    if (category !== "tutti") {
-      query = query.eq("category", category);
+      if (category !== "tutti") {
+        query = query.eq("category", category);
+      }
+
+      if (sortBy === "recenti") {
+        query = query.order("pinned", { ascending: false }).order("created_at", { ascending: false });
+      } else if (sortBy === "votati") {
+        query = query.order("pinned", { ascending: false }).order("likes_count", { ascending: false });
+      } else {
+        query = query.order("pinned", { ascending: false }).order("comments_count", { ascending: false });
+      }
+
+      const { data, error } = await query.limit(50);
+      if (error) console.warn("Forum fetch error:", error.message);
+      setPosts((data as ForumPost[]) || []);
+    } catch (err) {
+      console.warn("Forum fetch failed:", err);
+      setPosts([]);
     }
-
-    if (sortBy === "recenti") {
-      query = query.order("pinned", { ascending: false }).order("created_at", { ascending: false });
-    } else if (sortBy === "votati") {
-      query = query.order("pinned", { ascending: false }).order("likes_count", { ascending: false });
-    } else {
-      query = query.order("pinned", { ascending: false }).order("comments_count", { ascending: false });
-    }
-
-    const { data } = await query.limit(50);
-    setPosts((data as ForumPost[]) || []);
     setLoading(false);
-  }, [category, sortBy, supabase]);
+  }, [category, sortBy]);
 
   useEffect(() => {
     fetchPosts();

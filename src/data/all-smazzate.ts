@@ -98,9 +98,21 @@ export const allSmazzate: Smazzata[] = validateSmazzate([
   ...cuoriLicitaSmazzate,
 ]);
 
-/** Get smazzate for a specific lesson */
-export function getSmazzateByLesson(lesson: number): Smazzata[] {
-  return allSmazzate.filter((s) => s.lesson === lesson);
+/** Get smazzate for a specific lesson (optionally filtered by course) */
+export function getSmazzateByLesson(lesson: number, course?: string): Smazzata[] {
+  const pool = course ? getSmazzateByCourse(course) : allSmazzate;
+  return pool.filter((s) => s.lesson === lesson);
+}
+
+/** Get all smazzate for a specific course */
+export function getSmazzateByCourse(courseId: string): Smazzata[] {
+  switch (courseId) {
+    case "fiori": return validateSmazzate(fioriSmazzate);
+    case "quadri": return validateSmazzate([...quadriSmazzate]);
+    case "cuori-gioco": return validateSmazzate([...cuoriGiocoSmazzate]);
+    case "cuori-licita": return validateSmazzate([...cuoriLicitaSmazzate]);
+    default: return allSmazzate;
+  }
 }
 
 /** Get a single smazzata by id */

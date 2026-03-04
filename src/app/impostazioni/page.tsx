@@ -76,7 +76,7 @@ const APP_VERSION = "1.0.0";
 
 export default function ImpostazioniPage() {
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const notifications = useNotifications();
   const { theme, setTheme } = useTheme();
   const [textSize, setTextSize] = useState("medio");
@@ -622,7 +622,11 @@ export default function ImpostazioniPage() {
           transition={{ duration: 0.35, delay: 0.35 }}
           className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
-          {user ? (
+          {authLoading ? (
+            <div className="flex items-center justify-center py-4">
+              <div className="w-6 h-6 border-3 border-gray-300 border-t-[#003DA5] rounded-full animate-spin" />
+            </div>
+          ) : user ? (
             <>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center">
@@ -727,8 +731,8 @@ export default function ImpostazioniPage() {
               v{APP_VERSION}
             </Badge>
           </div>
-          <p className="text-gray-400 text-xs mt-2">FIGB - Corso Fiori</p>
-          <p className="text-gray-300 text-[10px] mt-1">Sviluppato con Claude Code</p>
+          <p className="text-gray-400 text-xs mt-2">FIGB - Federazione Italiana Gioco Bridge</p>
+          <p className="text-gray-300 text-[10px] mt-1">Sviluppo: A. G. Gerli / Tourbillon Tech</p>
         </motion.div>
       </div>
     </div>

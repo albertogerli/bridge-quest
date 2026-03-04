@@ -115,9 +115,8 @@ export default function DispensePage() {
                   </p>
                 </div>
                 {coursePdf && (
-                  <a
-                    href={coursePdf}
-                    download
+                  <button
+                    onClick={() => downloadPdf(coursePdf, `corso-${selectedCourse}.pdf`)}
                     className="flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white hover:bg-white/30 transition-colors active:scale-95"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -126,7 +125,7 @@ export default function DispensePage() {
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
                     Tutte
-                  </a>
+                  </button>
                 )}
               </div>
             </div>
@@ -156,6 +155,25 @@ export default function DispensePage() {
       </div>
     </div>
   );
+}
+
+async function downloadPdf(url: string, filename: string) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Download failed");
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
+  } catch {
+    // Fallback: open in new tab
+    window.open(url, "_blank");
+  }
 }
 
 function InfographicCard({
@@ -215,9 +233,8 @@ function InfographicCard({
 
         {/* PDF download button (overlay) */}
         {pdfSrc && (
-          <a
-            href={pdfSrc}
-            download
+          <button
+            onClick={() => downloadPdf(pdfSrc, `dispensa-lezione-${lessonId}.pdf`)}
             className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#003DA5] text-white shadow-lg transition-all hover:bg-[#002d7a] active:scale-90 opacity-0 group-hover:opacity-100 lg:opacity-100"
             title="Scarica PDF"
           >
@@ -226,7 +243,7 @@ function InfographicCard({
               <polyline points="7,10 12,15 17,10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-          </a>
+          </button>
         )}
       </div>
 

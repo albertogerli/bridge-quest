@@ -28,7 +28,7 @@ const BQ_KEYS_PREFIX = "bq_";
 
 export default function ProfiloPage() {
   const router = useRouter();
-  const { user, profile: authProfile, signOut, updateProfile, uploadAvatar, refreshProfile } = useAuth();
+  const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useAuth();
   const [editing, setEditing] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -168,7 +168,7 @@ export default function ProfiloPage() {
     <div className="pt-6 px-5">
       <div className="mx-auto max-w-lg">
         {/* Login/Register CTA */}
-        {!user && (
+        {!authLoading && !user && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

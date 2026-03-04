@@ -6,6 +6,7 @@ import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards } from "@/data/collectible-cards";
 import { useProfile } from "@/hooks/use-profile";
+import { useAuth } from "@/hooks/use-auth";
 
 const miniGames = [
   { href: "/gioca/quiz-lampo", emoji: "⚡", label: "Quiz Lampo", color: "bg-rose-50 border-rose-200 text-rose-700" },
@@ -29,6 +30,7 @@ const objectiveEmojiMap: Record<string, string> = {
 export function DesktopSidebar() {
   const stats = useStats();
   const profile = useProfile();
+  const { user, signOut } = useAuth();
   const { reviewCount } = useSpacedReview();
   const { objectives, allCompleted, bonusClaimed } = useWeeklyObjectives();
 
@@ -295,6 +297,44 @@ export function DesktopSidebar() {
             </div>
           </div>
         </Link>
+
+        {/* Account */}
+        {user ? (
+          <button
+            onClick={async () => {
+              await signOut();
+              try { localStorage.removeItem("bq_guest"); } catch {}
+              window.location.href = "/";
+            }}
+            className="w-full flex items-center gap-2.5 rounded-xl bg-white dark:bg-[#1a1f2e] card-clean p-3 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors group"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 group-hover:bg-rose-100">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </div>
+            <div className="text-left">
+              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 group-hover:text-rose-600">Esci</p>
+              <p className="text-[10px] text-gray-400">{user.email}</p>
+            </div>
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="w-full flex items-center gap-2.5 rounded-xl bg-[#003DA5] p-3 hover:bg-[#002E7A] transition-colors"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+            </div>
+            <p className="text-xs font-semibold text-white">Accedi o Registrati</p>
+          </Link>
+        )}
 
         {/* FIGB badge */}
         <div className="rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-3 text-center">

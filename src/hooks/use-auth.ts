@@ -53,28 +53,57 @@ export function useAuth() {
 
   // Initialize auth state
   useEffect(() => {
+    let mounted = true;
+
     const initAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          console.warn("Auth session error:", sessionError.message);
+          if (mounted) setState({ user: null, profile: null, session: null, loading: false });
+          return;
+        }
         if (session?.user) {
-          const profile = await fetchProfile(session.user.id);
-          setState({ user: session.user, profile, session, loading: false });
+          // Fetch profile separately - don't block auth on profile failure
+          let profile: Profile | null = null;
+          try {
+            profile = await fetchProfile(session.user.id);
+          } catch (profileErr) {
+            console.warn("Profile fetch failed:", profileErr);
+          }
+          if (mounted) setState({ user: session.user, profile, session, loading: false });
         } else {
-          setState({ user: null, profile: null, session: null, loading: false });
+          if (mounted) setState({ user: null, profile: null, session: null, loading: false });
         }
       } catch (err) {
         console.error("Auth init error:", err);
-        setState({ user: null, profile: null, session: null, loading: false });
+        if (mounted) setState({ user: null, profile: null, session: null, loading: false });
       }
     };
+
+    // Safety timeout: never stay loading forever (max 5 seconds)
+    const timeout = setTimeout(() => {
+      if (mounted) {
+        setState((prev) => {
+          if (prev.loading) {
+            console.warn("Auth loading timeout - forcing loading=false");
+            return { ...prev, loading: false };
+          }
+          return prev;
+        });
+      }
+    }, 5000);
 
     initAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
-          const profile = await fetchProfile(session.user.id);
-          setState({ user: session.user, profile, session, loading: false });
+          let profile: Profile | null = null;
+          try {
+            profile = await fetchProfile(session.user.id);
+          } catch {}
+          if (mounted) setState({ user: session.user, profile, session, loading: false });
           // Update last_login on sign-in or token refresh
           if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
             supabase
@@ -84,12 +113,16 @@ export function useAuth() {
               .then(() => {});
           }
         } else {
-          setState({ user: null, profile: null, session: null, loading: false });
+          if (mounted) setState({ user: null, profile: null, session: null, loading: false });
         }
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Inactivity timeout: auto-logout after 30 minutes of no interaction

@@ -10,6 +10,7 @@ import { useBridgeGame } from "@/hooks/use-bridge-game";
 import {
   allSmazzate,
   getSmazzateByLesson,
+  getSmazzateByCourse,
   lessonTitles,
   type Smazzata,
 } from "@/data/all-smazzate";
@@ -42,7 +43,9 @@ function SmazzataBrowserContent() {
   const profile = useProfile();
   const searchParams = useSearchParams();
   const lessonParam = searchParams.get("lesson");
+  const courseParam = searchParams.get("course");
   const randomParam = searchParams.get("random");
+  const courseSmazzate = courseParam ? getSmazzateByCourse(courseParam) : allSmazzate;
   const [selectedLesson, setSelectedLesson] = useState<number>(
     lessonParam ? parseInt(lessonParam) : 1
   );
@@ -69,11 +72,13 @@ function SmazzataBrowserContent() {
     }
   }, [randomParam]);
 
-  const lessonSmazzate = getSmazzateByLesson(selectedLesson);
-  const lessons = Object.entries(lessonTitles).map(([id, title]) => ({
-    id: parseInt(id),
-    title,
-    count: getSmazzateByLesson(parseInt(id)).length,
+  const lessonSmazzate = getSmazzateByLesson(selectedLesson, courseParam || undefined);
+  // Build lesson list from course-specific smazzate
+  const courseLessonIds = [...new Set(courseSmazzate.map(s => s.lesson))].sort((a, b) => a - b);
+  const lessons = courseLessonIds.map((id) => ({
+    id,
+    title: lessonTitles[id] || `Lezione ${id}`,
+    count: getSmazzateByLesson(id, courseParam || undefined).length,
   }));
 
   if (isPlaying && selectedSmazzata) {
