@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { courses, type CourseId, levelInfo } from "@/data/courses";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getInfographicForLesson } from "@/components/maestro-video";
 import Link from "next/link";
 
@@ -180,6 +181,7 @@ function InfographicCard({
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const colors = courseColors[courseId];
+  const lessonNumber = getLessonDisplayNumber(lessonId);
 
   return (
     <div className="card-clean rounded-2xl bg-white overflow-hidden group">
@@ -190,7 +192,7 @@ function InfographicCard({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageSrc}
-              alt={`Dispensa Lezione ${lessonId}`}
+              alt={`Dispensa Lezione ${lessonNumber}`}
               className={`w-full h-full object-cover transition-all duration-300 ${
                 loaded ? "opacity-100 group-hover:scale-105" : "opacity-0"
               }`}
@@ -213,14 +215,14 @@ function InfographicCard({
         {/* Lesson number badge */}
         <div className="absolute top-2 left-2">
           <Badge className={`${colors.active} text-[10px] font-bold border-0 shadow-sm`}>
-            Lez. {lessonId}
+            Lez. {lessonNumber}
           </Badge>
         </div>
 
         {/* PDF download button (overlay) */}
         {pdfSrc && (
           <button
-            onClick={() => downloadPdf(pdfSrc, `dispensa-lezione-${lessonId}.pdf`)}
+            onClick={() => downloadPdf(pdfSrc, `dispensa-lezione-${lessonNumber}.pdf`)}
             className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#003DA5] text-white shadow-lg transition-all hover:bg-[#002d7a] active:scale-90 opacity-0 group-hover:opacity-100 lg:opacity-100"
             title="Scarica PDF"
           >

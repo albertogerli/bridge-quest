@@ -18,6 +18,7 @@
 
 import type { Suit, Rank, Card, Position } from "../lib/bridge-engine";
 import type { Vulnerability, BiddingData } from "./smazzate";
+import { toQuadriLessonId } from "./lesson-meta";
 
 // Re-export the Smazzata type
 export type { Smazzata } from "./smazzate";
@@ -41,7 +42,7 @@ function hand(
   ];
 }
 
-export const quadriSmazzate: Smazzata[] = [
+const rawQuadriSmazzate: Smazzata[] = [
   // ==========================================================================
   // LESSON 1: Tempi e comunicazioni a Senza
   // ==========================================================================
@@ -2075,3 +2076,8 @@ export const quadriSmazzate: Smazzata[] = [
   },
 
 ];
+
+export const quadriSmazzate: Smazzata[] = rawQuadriSmazzate.map((smazzata) => ({
+  ...smazzata,
+  lesson: toQuadriLessonId(smazzata.lesson),
+}));

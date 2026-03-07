@@ -1,6 +1,7 @@
 // Maestro video - YouTube video IDs for all courses
 // Channel: https://www.youtube.com/@FIGBBridgeLab
 import { getCourseForLesson } from "@/data/courses";
+import { getLessonAssetNumber, getLessonDisplayNumber } from "@/data/lesson-meta";
 
 // ===== YouTube Video IDs by lesson ID =====
 
@@ -78,6 +79,8 @@ const MAESTRO_NAMES: Record<string, string> = {
   senior: "Maestro Claudio",
 };
 
+const SUPPORTED_INFOGRAPHIC_PROFILES = new Set(["junior"]);
+
 export function getMaestroName(profile: string): string {
   return MAESTRO_NAMES[profile] || "Maestro Andrea";
 }
@@ -91,8 +94,11 @@ export function getInfographicForLesson(
   if (!course) return null;
 
   const courseFolder = course.id; // "fiori" | "quadri" | "cuori-gioco" | "cuori-licita"
-  const formattedId = String(lessonId).padStart(2, "0");
-  const p = profile || "junior";
+  const formattedId = String(getLessonAssetNumber(lessonId)).padStart(2, "0");
+  const requestedProfile = profile || "junior";
+  const p = SUPPORTED_INFOGRAPHIC_PROFILES.has(requestedProfile)
+    ? requestedProfile
+    : "junior";
 
   return {
     image: `/infografiche/${courseFolder}/lezione-${formattedId}-${p}.jpg`,
@@ -103,10 +109,13 @@ export function getInfographicForLesson(
 
 // Universal: get YouTube video ID for any lesson ID across all courses
 export function getVideoForLesson(lessonId: number): string | null {
+  const course = getCourseForLesson(lessonId);
   // Fiori: lessons 0-12
   if (FIORI_YOUTUBE[lessonId] !== undefined) return FIORI_YOUTUBE[lessonId];
   // Quadri: lessons 1-12
-  if (QUADRI_YOUTUBE[lessonId]) return QUADRI_YOUTUBE[lessonId];
+  if (course?.id === "quadri") {
+    return QUADRI_YOUTUBE[getLessonDisplayNumber(lessonId)] ?? null;
+  }
   // Cuori Gioco: lessons 100-109
   if (CUORI_GIOCO_YOUTUBE[lessonId]) return CUORI_GIOCO_YOUTUBE[lessonId];
   // Cuori Licita: lessons 200-213

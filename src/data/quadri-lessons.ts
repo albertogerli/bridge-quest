@@ -8,6 +8,8 @@
 // Type Definitions
 // ============================================================
 
+import { toQuadriLessonId } from "./lesson-meta";
+
 export interface QuadriContentBlock {
   type: "text" | "example" | "rule" | "tip" | "quiz";
   content: string;
@@ -2078,7 +2080,7 @@ function adaptModule(qm: QuadriModule): LessonModule {
 
 function adaptLesson(ql: QuadriLesson, wId: number): Lesson {
   return {
-    id: ql.id,
+    id: toQuadriLessonId(ql.id),
     worldId: wId,
     title: ql.title,
     subtitle: ql.description,

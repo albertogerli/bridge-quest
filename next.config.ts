@@ -1,5 +1,9 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -10,6 +14,7 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: projectRoot,
   turbopack: {},
   async headers() {
     return [
@@ -25,12 +30,12 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
               "frame-src https://www.youtube.com https://youtube.com",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.heygen.com",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.heygen.com https://vitals.vercel-insights.com",
               "media-src 'self' blob: https:",
               "worker-src 'self' blob:",
             ].join("; "),

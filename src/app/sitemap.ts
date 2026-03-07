@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { courses } from "@/data/courses";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://bridgelab.it";
@@ -50,43 +51,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Corso Fiori lessons (IDs 0-12)
-  const fioriLessons: MetadataRoute.Sitemap = Array.from({ length: 13 }, (_, i) => ({
-    url: `${baseUrl}/lezioni/${i}`,
-    lastModified,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
-
-  // Corso Quadri lessons (IDs 1-12)
-  const quadriLessons: MetadataRoute.Sitemap = Array.from({ length: 12 }, (_, i) => ({
-    url: `${baseUrl}/lezioni/${i + 1}`,
-    lastModified,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
-
-  // Corso Cuori Gioco lessons (IDs 100-109)
-  const cuoriGiocoLessons: MetadataRoute.Sitemap = Array.from({ length: 10 }, (_, i) => ({
-    url: `${baseUrl}/lezioni/${100 + i}`,
-    lastModified,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
-
-  // Corso Cuori Licita lessons (IDs 200-213)
-  const cuoriLicitaLessons: MetadataRoute.Sitemap = Array.from({ length: 14 }, (_, i) => ({
-    url: `${baseUrl}/lezioni/${200 + i}`,
-    lastModified,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const lessonPages: MetadataRoute.Sitemap = courses.flatMap((course) =>
+    course.lessons.map((lesson) => ({
+      url: `${baseUrl}/lezioni/${lesson.id}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    }))
+  );
 
   return [
     ...staticPages,
-    ...fioriLessons,
-    ...cuoriGiocoLessons,
-    ...cuoriLicitaLessons,
-    ...quadriLessons,
+    ...lessonPages,
   ];
 }

@@ -9,11 +9,12 @@ import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import {
   allSmazzate,
+  getLessonTitle,
   getSmazzateByLesson,
   getSmazzateByCourse,
-  lessonTitles,
   type Smazzata,
 } from "@/data/all-smazzate";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
@@ -46,8 +47,9 @@ function SmazzataBrowserContent() {
   const courseParam = searchParams.get("course");
   const randomParam = searchParams.get("random");
   const courseSmazzate = courseParam ? getSmazzateByCourse(courseParam) : allSmazzate;
+  const courseLessonIds = [...new Set(courseSmazzate.map((s) => s.lesson))].sort((a, b) => a - b);
   const [selectedLesson, setSelectedLesson] = useState<number>(
-    lessonParam ? parseInt(lessonParam) : 1
+    lessonParam ? parseInt(lessonParam) : (courseLessonIds[0] ?? 1)
   );
   const [selectedSmazzata, setSelectedSmazzata] = useState<Smazzata | null>(
     null
@@ -58,6 +60,12 @@ function SmazzataBrowserContent() {
   useEffect(() => {
     if (lessonParam) setSelectedLesson(parseInt(lessonParam));
   }, [lessonParam]);
+
+  useEffect(() => {
+    if (!lessonParam && courseLessonIds.length > 0 && !courseLessonIds.includes(selectedLesson)) {
+      setSelectedLesson(courseLessonIds[0]);
+    }
+  }, [courseLessonIds, lessonParam, selectedLesson]);
 
   // Auto-play random smazzata
   useEffect(() => {
@@ -73,13 +81,12 @@ function SmazzataBrowserContent() {
   }, [randomParam]);
 
   const lessonSmazzate = getSmazzateByLesson(selectedLesson, courseParam || undefined);
-  // Build lesson list from course-specific smazzate
-  const courseLessonIds = [...new Set(courseSmazzate.map(s => s.lesson))].sort((a, b) => a - b);
   const lessons = courseLessonIds.map((id) => ({
     id,
-    title: lessonTitles[id] || `Lezione ${id}`,
+    title: getLessonTitle(id),
     count: getSmazzateByLesson(id, courseParam || undefined).length,
   }));
+  const selectedLessonNumber = getLessonDisplayNumber(selectedLesson);
 
   if (isPlaying && selectedSmazzata) {
     return (
@@ -110,7 +117,7 @@ function SmazzataBrowserContent() {
             Smazzate del Corso
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            96 mani pratiche dalle lezioni FIGB
+            {courseSmazzate.length} mani pratiche dalle lezioni FIGB
           </p>
         </motion.div>
 
@@ -135,7 +142,7 @@ function SmazzataBrowserContent() {
                     : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                 }`}
               >
-                Lez. {lesson.id}
+                Lez. {getLessonDisplayNumber(lesson.id)}
               </button>
             ))}
           </div>
@@ -149,10 +156,10 @@ function SmazzataBrowserContent() {
           className="mb-4"
         >
           <h2 className="text-lg font-bold text-gray-900">
-            Lezione {selectedLesson}
+            Lezione {selectedLessonNumber}
           </h2>
           <p className="text-sm text-gray-500">
-            {lessonTitles[selectedLesson]} · {lessonSmazzate.length} mani
+            {getLessonTitle(selectedLesson)} · {lessonSmazzate.length} mani
           </p>
         </motion.div>
 
@@ -439,7 +446,7 @@ function PlayingView({
                   variant="outline"
                   className="text-[10px] font-bold text-emerald border-emerald/30 bg-emerald-50 shrink-0"
                 >
-                  Lez. {smazzata.lesson} · Board {smazzata.board}
+                  Lez. {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
                 </Badge>
                 <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
@@ -847,7 +854,7 @@ function PlayingView({
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Lezione</span>
-                    <span className="font-bold text-gray-900">Lez. {smazzata.lesson} - {lessonTitles[smazzata.lesson] || ""}</span>
+                    <span className="font-bold text-gray-900">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {getLessonTitle(smazzata.lesson)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Vulnerabilita'</span>

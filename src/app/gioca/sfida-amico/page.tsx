@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { allSmazzate, getSmazzataById, type Smazzata } from "@/data/all-smazzate";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
@@ -473,7 +474,7 @@ function ActiveChallenge({
             {smazzata.title}
           </h1>
           <p className="text-xs text-gray-500 mt-1">
-            Lezione {smazzata.lesson} {"\u00B7"} Board {smazzata.board}
+            Lezione {getLessonDisplayNumber(smazzata.lesson)} {"\u00B7"} Board {smazzata.board}
           </p>
         </motion.div>
 

@@ -11,6 +11,7 @@ import {
   type Course,
   type CourseId,
 } from "@/data/courses";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction } from "lucide-react";
 
@@ -293,6 +294,7 @@ export default function LezioniPage() {
                   {!isLocked ? (
                     <div className="space-y-1">
                       {world.lessons.map((lesson, lessonIdx) => {
+                        const lessonNumber = getLessonDisplayNumber(lesson.id);
                         const lessonModules = lesson.modules.length;
                         const lessonCompleted = lesson.modules.filter(
                           (m) => completedMap[`${lesson.id}-${m.id}`]
@@ -335,7 +337,7 @@ export default function LezioniPage() {
                             }}
                             className={`relative ${offset}`}
                           >
-                            <Link href={`/lezioni/${lesson.id}`} aria-label={`Lezione ${lesson.id}: ${lesson.title}, ${lessonCompleted} di ${lessonModules} moduli completati`}>
+                            <Link href={`/lezioni/${lesson.id}`} aria-label={`Lezione ${lessonNumber}: ${lesson.title}, ${lessonCompleted} di ${lessonModules} moduli completati`}>
                               <div className={`group flex items-center gap-3 p-3 rounded-2xl transition-all active:scale-[0.97] ${
                                 isCurrent
                                   ? "bg-white border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
@@ -400,7 +402,7 @@ export default function LezioniPage() {
                                           : "text-gray-400 border-gray-200"
                                       }`}
                                     >
-                                      Lez. {lesson.id}
+                                      Lez. {lessonNumber}
                                     </Badge>
                                     {lesson.smazzateIds.length > 0 && (
                                       <span className="text-[10px] font-bold text-amber-600">

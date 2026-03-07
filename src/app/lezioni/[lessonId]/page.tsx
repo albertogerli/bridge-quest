@@ -3,7 +3,8 @@
 import { use, useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
-import { getLessonById } from "@/data/courses";
+import { getCourseForLesson, getLessonById } from "@/data/courses";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
@@ -38,6 +39,8 @@ export default function LessonDetailPage({
 
   const [infographicLoaded, setInfographicLoaded] = useState(false);
   const profileConfig = useProfile();
+  const course = getCourseForLesson(lesson.id);
+  const lessonNumber = getLessonDisplayNumber(lesson.id);
   const maestroName = getMaestroName(profileConfig.profile);
   const infographic = getInfographicForLesson(lesson.id, profileConfig.profile);
 
@@ -63,7 +66,7 @@ export default function LessonDetailPage({
             Lezioni
           </Link>
           <span>/</span>
-          <span className="text-emerald font-semibold">Lezione {lesson.id}</span>
+          <span className="text-emerald font-semibold">Lezione {lessonNumber}</span>
         </motion.div>
 
         {/* Header */}
@@ -77,7 +80,7 @@ export default function LessonDetailPage({
             <div className="text-4xl mb-3">{lesson.icon}</div>
             <div className="flex items-center gap-2 mb-2">
               <Badge className="bg-white/20 text-white text-[10px] font-bold border-0">
-                Lezione {lesson.id}
+                Lezione {lessonNumber}
               </Badge>
               <Badge className="bg-white/10 text-white/70 text-[10px] font-bold border-0">
                 {totalDuration} min
@@ -138,7 +141,7 @@ export default function LessonDetailPage({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={infographic.image}
-                alt={`Infografica Lezione ${lesson.id}`}
+                alt={`Infografica Lezione ${lessonNumber}`}
                 className="w-full"
                 onLoad={() => setInfographicLoaded(true)}
                 onError={() => setInfographicLoaded(false)}
@@ -211,7 +214,7 @@ export default function LessonDetailPage({
                 <Link
                   href={
                     module.type === "practice" && lesson.smazzateIds.length > 0
-                      ? `/gioca/smazzata?lesson=${lesson.id}`
+                      ? `/gioca/smazzata?lesson=${lesson.id}${course ? `&course=${course.id}` : ""}`
                       : `/lezioni/${lesson.id}/${module.id}`
                   }
                 >
