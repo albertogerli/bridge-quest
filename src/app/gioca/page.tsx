@@ -20,21 +20,20 @@ export default function GiocaPage() {
   const [dailyDone, setDailyDone] = useState(false);
   const [handsPlayed, setHandsPlayed] = useState(0);
   const [tournamentDone, setTournamentDone] = useState(false);
+  const [randomIdx, setRandomIdx] = useState(0);
 
   useEffect(() => {
     try {
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
       setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
+      setRandomIdx(Math.floor(Math.random() * allSmazzate.length));
       // Check tournament completion for current week
       const EPOCH_START = new Date("2024-01-01T00:00:00Z").getTime();
       const weekNum = Math.floor((Date.now() - EPOCH_START) / (7 * 24 * 60 * 60 * 1000));
       setTournamentDone(!!localStorage.getItem(`bq_tournament_week_${weekNum}`));
     } catch {}
   }, []);
-
-  // Pick a random smazzata for "Pratica Libera"
-  const randomIdx = Math.floor(Math.random() * allSmazzate.length);
 
   return (
     <div className="pt-6 px-5 pb-24">

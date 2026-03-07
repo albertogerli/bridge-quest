@@ -9,6 +9,8 @@ import { smazzate9to12 } from "./smazzate-9-12";
 import { quadriSmazzate } from "./quadri-smazzate";
 import { cuoriGiocoSmazzate } from "./cuori-gioco-smazzate";
 import { cuoriLicitaSmazzate } from "./cuori-licita-smazzate";
+import { getLessonById } from "./courses";
+import { getLessonDisplayNumber } from "./lesson-meta";
 import type { Position, Card } from "../lib/bridge-engine";
 
 export type { Smazzata } from "./smazzate";
@@ -135,3 +137,11 @@ export const lessonTitles: Record<number, string> = {
   11: "L'intervento",
   12: "Sviluppi dopo l'intervento",
 };
+
+export function getLessonTitle(lessonId: number): string {
+  return (
+    getLessonById(lessonId)?.title ??
+    lessonTitles[lessonId] ??
+    `Lezione ${getLessonDisplayNumber(lessonId)}`
+  );
+}

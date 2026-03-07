@@ -98,6 +98,8 @@ export const courses: Course[] = [
   corsoCuoriLicita,
 ];
 
+export const allWorlds: World[] = courses.flatMap((course) => course.worlds);
+
 // ===== Helper Functions =====
 
 export function getCourseById(id: CourseId): Course | undefined {
@@ -118,6 +120,10 @@ export function getLessonById(id: number): Lesson | undefined {
 
 export function getCourseForLesson(lessonId: number): Course | undefined {
   return courses.find((c) => c.lessons.some((l) => l.id === lessonId));
+}
+
+export function getLessonIdsForCourse(courseId: CourseId): number[] {
+  return getCourseById(courseId)?.lessons.map((lesson) => lesson.id) ?? [];
 }
 
 export function getModuleById(lessonId: number, moduleId: string): LessonModule | undefined {

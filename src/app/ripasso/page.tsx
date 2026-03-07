@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSpacedReview, type ReviewItem } from "@/hooks/use-spaced-review";
 import { getLessonById, getModuleById, getCourseForLesson } from "@/data/courses";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import {
   Brain, ArrowLeft, Clock, AlertTriangle,
   CheckCircle2, Zap, BookOpen, ChevronRight,
@@ -117,7 +118,7 @@ function enrichItem(item: ReviewItem): EnrichedReviewItem {
 
   return {
     ...item,
-    lessonTitle: lesson?.title ?? `Lezione ${item.lessonId}`,
+    lessonTitle: lesson?.title ?? `Lezione ${getLessonDisplayNumber(item.lessonId)}`,
     lessonIcon: lesson?.icon ?? "📖",
     moduleTitle: mod?.title ?? item.moduleId,
     courseName: course?.name ?? "Corso",

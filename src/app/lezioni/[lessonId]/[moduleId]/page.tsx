@@ -4,7 +4,8 @@ import { use, useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getLessonById, getModuleById, worlds, type ContentBlock } from "@/data/lessons";
+import { allWorlds, getLessonById, getModuleById, type ContentBlock } from "@/data/courses";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
 import { useSounds } from "@/hooks/use-sounds";
@@ -55,7 +56,6 @@ export default function ModulePage({
   const { lessonId, moduleId } = use(params);
   const lesson = getLessonById(parseInt(lessonId));
   const mod = getModuleById(parseInt(lessonId), moduleId);
-
   const [currentStep, setCurrentStep] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
   const [showExplanation, setShowExplanation] = useState<Record<number, boolean>>({});
@@ -228,6 +228,7 @@ export default function ModulePage({
   const totalSteps = mod.content.length;
   const isLastStep = currentStep >= totalSteps - 1;
   const progress = ((currentStep + 1) / totalSteps) * 100;
+  const lessonNumber = lesson ? getLessonDisplayNumber(lesson.id) : parseInt(lessonId, 10);
 
   const moduleIndex = lesson.modules.findIndex((m) => m.id === moduleId);
   const nextModule =
@@ -238,14 +239,14 @@ export default function ModulePage({
   // Find the next lesson if all modules in this lesson are done
   const nextLesson = (() => {
     if (nextModule) return null; // Still have modules in this lesson
-    for (const world of worlds) {
+    for (const world of allWorlds) {
       const lessonIdx = world.lessons.findIndex((l) => l.id === lesson.id);
       if (lessonIdx >= 0) {
         // Next lesson in same world
         if (lessonIdx < world.lessons.length - 1) return world.lessons[lessonIdx + 1];
         // Next world's first lesson
-        const worldIdx = worlds.indexOf(world);
-        if (worldIdx < worlds.length - 1) return worlds[worldIdx + 1].lessons[0];
+        const worldIdx = allWorlds.indexOf(world);
+        if (worldIdx < allWorlds.length - 1) return allWorlds[worldIdx + 1].lessons[0];
       }
     }
     return null;
@@ -1484,7 +1485,7 @@ export default function ModulePage({
           className="mb-3 flex items-center gap-2"
         >
           <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-0">
-            Lezione {lesson.id}
+            Lezione {lessonNumber}
           </Badge>
           <span className="text-xs text-gray-400 font-medium">{mod.title}</span>
         </motion.div>
@@ -1742,7 +1743,7 @@ export default function ModulePage({
 
               {isLessonComplete && (
                 <p className="text-sm text-emerald-600 mt-1">
-                  Hai terminato tutti i moduli della Lezione {lesson.id}!
+                  Hai terminato tutti i moduli della Lezione {lessonNumber}!
                 </p>
               )}
 
@@ -1928,7 +1929,7 @@ export default function ModulePage({
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-bold text-gray-900 text-[15px]">
-                          Lezione {nextLesson.id}: {nextLesson.title}
+                          Lezione {getLessonDisplayNumber(nextLesson.id)}: {nextLesson.title}
                         </h4>
                         <p className="text-[12px] text-gray-500 mt-0.5">
                           {nextLesson.modules.length} moduli · {nextLesson.subtitle}

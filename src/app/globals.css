@@ -321,8 +321,8 @@
 [data-profile="senior"] .text-gray-600 { color: #374151; }
 
 /* More vivid colors for primary actions */
-[data-profile="senior"] .bg-\[#003DA5\] { background-color: #0047c2; }
-[data-profile="senior"] .text-\[#003DA5\] { color: #0047c2; }
+[data-profile="senior"] .bg-\[\#003DA5\] { background-color: #0047c2; }
+[data-profile="senior"] .text-\[\#003DA5\] { color: #0047c2; }
 [data-profile="senior"] .bg-blue-600 { background-color: #1d4ed8; }
 [data-profile="senior"] .bg-indigo-600 { background-color: #4338ca; }
 [data-profile="senior"] .bg-amber-500 { background-color: #d97706; }
@@ -345,8 +345,8 @@
 }
 
 /* Vibrant accent colors */
-[data-profile="junior"] .bg-\[#003DA5\] { background-color: #2563eb; }
-[data-profile="junior"] .text-\[#003DA5\] { color: #2563eb; }
+[data-profile="junior"] .bg-\[\#003DA5\] { background-color: #2563eb; }
+[data-profile="junior"] .text-\[\#003DA5\] { color: #2563eb; }
 [data-profile="junior"] .bg-blue-600 { background-color: #3b82f6; }
 [data-profile="junior"] .bg-gradient-to-br { filter: saturate(1.2); }
 

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
-import { courses, type CourseId } from "@/data/courses";
+import { courses, getLessonIdsForCourse, type CourseId } from "@/data/courses";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target } from "lucide-react";
 
 const medals = ["🥇", "🥈", "🥉"];
@@ -70,13 +70,9 @@ function getNextMilestone(xp: number): number | null {
   return null;
 }
 
-// Course lesson ID ranges for "Per Corso" filter
-const courseRanges: Record<CourseId, { min: number; max: number }> = {
-  fiori: { min: 0, max: 12 },
-  quadri: { min: 1, max: 12 },        // Quadri lesson IDs 1-12 overlap, but we use completed_modules
-  "cuori-gioco": { min: 100, max: 109 },
-  "cuori-licita": { min: 200, max: 213 },
-};
+function formatNumber(value: number): string {
+  return new Intl.NumberFormat("it-IT").format(value);
+}
 
 type TabId = "globale" | "settimanale" | "per-corso" | "per-asd";
 
@@ -336,7 +332,7 @@ export default function ClassificaPage() {
                 {/* XP */}
                 <div className="text-right">
                   <p className="font-black text-lg text-gray-900">
-                    {currentPlayer.xp.toLocaleString()}
+                    {formatNumber(currentPlayer.xp)}
                   </p>
                   <p className="text-[10px] text-gray-400 font-medium">XP</p>
                 </div>
@@ -354,7 +350,7 @@ export default function ClassificaPage() {
                       <div className="flex items-center justify-center gap-1.5">
                         <ChevronUp className="w-3.5 h-3.5 text-amber-500" />
                         <p className="text-[11px] text-gray-500">
-                          <span className="font-bold text-amber-600">{gap.toLocaleString()} XP</span> per superare {above.name}
+                          <span className="font-bold text-amber-600">{formatNumber(gap)} XP</span> per superare {above.name}
                         </p>
                       </div>
                     </div>
@@ -431,7 +427,7 @@ export default function ClassificaPage() {
               />
             </div>
             <p className="text-[10px] text-gray-400 mt-1">
-              Mancano {(nextLeague.minXp - userXp).toLocaleString()} XP per la promozione
+              Mancano {formatNumber(nextLeague.minXp - userXp)} XP per la promozione
             </p>
           </motion.div>
         )}
@@ -644,7 +640,7 @@ export default function ClassificaPage() {
                           </div>
                           <div className="text-right">
                             <p className="font-bold text-sm text-gray-900">
-                              {asd.total_xp.toLocaleString()}
+                              {formatNumber(asd.total_xp)}
                             </p>
                             <p className="text-[10px] text-gray-400">XP totali</p>
                           </div>
@@ -685,12 +681,16 @@ function PerCorsoView({
         const supabase = createClient();
 
         // Get completed modules for this course's lessons
-        const range = courseRanges[courseId];
+        const lessonIds = getLessonIdsForCourse(courseId).map(String);
+        if (lessonIds.length === 0) {
+          setCoursePlayers([]);
+          setLoading(false);
+          return;
+        }
         const { data: modules } = await supabase
           .from("completed_modules")
           .select("user_id, lesson_id, module_id")
-          .gte("lesson_id", String(range.min))
-          .lte("lesson_id", String(range.max));
+          .in("lesson_id", lessonIds);
 
         if (modules && modules.length > 0) {
           // Count unique modules completed per user as a proxy for course XP
@@ -802,7 +802,7 @@ function PerCorsoView({
                     </p>
                     <div className="flex items-center gap-1.5">
                       <p className="text-[11px] text-gray-500">
-                        {player.courseXp} XP corso
+                        {formatNumber(player.courseXp)} XP corso
                       </p>
                       {player.asd_name && (
                         <span className="inline-flex items-center text-[9px] text-indigo-600 bg-indigo-50 rounded-full px-1.5 py-0.5 font-medium">
@@ -937,7 +937,7 @@ function LeaderboardList({
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-sm text-gray-900">
-                      {player.xp.toLocaleString()}
+                      {formatNumber(player.xp)}
                     </p>
                     <p className="text-[10px] text-gray-400">XP</p>
                   </div>
@@ -956,9 +956,9 @@ function LeaderboardList({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-[11px] text-gray-500">
-                              Prossimo traguardo: <span className="font-bold text-purple-600">{milestone.toLocaleString()} XP</span>
+                              Prossimo traguardo: <span className="font-bold text-purple-600">{formatNumber(milestone)} XP</span>
                             </p>
-                            <p className="text-[10px] font-medium text-gray-400">-{remaining.toLocaleString()}</p>
+                            <p className="text-[10px] font-medium text-gray-400">-{formatNumber(remaining)}</p>
                           </div>
                           <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
                             <div
@@ -1062,10 +1062,10 @@ function LocalXpCard() {
               {league.name}
             </span>
           </div>
-          <p className="text-2xl font-black text-gray-900">{localXp.toLocaleString()} <span className="text-sm font-bold text-gray-400">XP</span></p>
+          <p className="text-2xl font-black text-gray-900">{formatNumber(localXp)} <span className="text-sm font-bold text-gray-400">XP</span></p>
           {milestone && (
             <p className="text-[10px] text-gray-400 mt-0.5">
-              Prossimo traguardo: {milestone.toLocaleString()} XP ({(milestone - localXp).toLocaleString()} rimanenti)
+              Prossimo traguardo: {formatNumber(milestone)} XP ({formatNumber(milestone - localXp)} rimanenti)
             </p>
           )}
         </div>
