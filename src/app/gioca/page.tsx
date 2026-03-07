@@ -50,6 +50,46 @@ export default function GiocaPage() {
           </p>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.06 }}
+          className="mb-4"
+        >
+          <Link href="/prima-mano" className="block" aria-label="Prima Mano: onboarding morbido per iniziare a giocare">
+            <div className="relative overflow-hidden rounded-3xl border border-[#c8a44e]/20 bg-[linear-gradient(135deg,#fffaf0_0%,#f4ead5_100%)] p-5 transition-all hover:shadow-xl">
+              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#c8a44e]/10 blur-2xl" />
+              <div className="relative flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-lg shadow-[#003DA5]/20">
+                  <BookOpen className="w-6 h-6" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex items-center gap-2">
+                    <h2 className="text-lg font-semibold text-[#12305f]">Prima Mano</h2>
+                    {handsPlayed === 0 && (
+                      <Badge className="bg-[#c8a44e]/15 text-[#8f6b16] text-[10px] font-bold border-0">
+                        Nuovo
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-[#51627f]">
+                    Entra al tavolo in modo morbido: presa, ruoli, atout e poi una mano vera.
+                  </p>
+                </div>
+                <svg
+                  className="h-6 w-6 shrink-0 text-[#12305f]/45"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <polyline points="9,6 15,12 9,18" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+
         {/* Hero card: Sfida del Giorno */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
