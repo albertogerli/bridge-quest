@@ -114,6 +114,33 @@ export default function GiocaPage() {
           </motion.div>
         )}
 
+        {/* Mano Guidata card (after Prima Mano is done) */}
+        {onboarded && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08 }}
+            className="mb-3"
+          >
+            <Link href="/gioca/mano-guidata" className="block" aria-label="Mano Guidata: pratica passo-passo">
+              <div className="relative overflow-hidden rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50 px-4 py-3.5 hover:shadow-md transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 shadow-md">
+                    <Target className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-gray-900">Mano Guidata</p>
+                    <p className="text-[11px] text-gray-500">Pratica passo-passo con suggerimenti</p>
+                  </div>
+                  <Badge className="bg-cyan-100 text-cyan-700 text-[10px] font-bold border-0">
+                    +35 XP
+                  </Badge>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        )}
+
         {/* Hero card: Sfida del Giorno */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

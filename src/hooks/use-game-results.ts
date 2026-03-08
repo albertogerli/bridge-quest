@@ -15,7 +15,8 @@ export type GameType =
   | "conta-veloce"
   | "impasse"
   | "memory"
-  | "trova-errore";
+  | "trova-errore"
+  | "mano-guidata";
 
 export interface GameResult {
   gameType: GameType;

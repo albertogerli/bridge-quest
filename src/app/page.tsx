@@ -18,6 +18,9 @@ import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
+import { useBeginnerStatus } from "@/hooks/use-beginner-status";
+import { GuidedPath } from "@/components/beginner/guided-path";
+import { LostCard } from "@/components/beginner/lost-card";
 import {
   Zap, CheckCircle2, Flame, Target, BarChart3, Brain,
   Smartphone, BookOpen, Spade, CalendarDays, Gift,
@@ -140,6 +143,7 @@ export default function Home() {
   const { reviewCount } = useSpacedReview();
   const { canInstall, isInstalled, isIOS, install } = usePwaInstall();
   const { checkReminders, scheduleReminder } = useNotifications();
+  const { isNewUser, isGuidedMode, isStuck, toggleGuidedMode, isOnboarded } = useBeginnerStatus();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -542,6 +546,20 @@ export default function Home() {
         </motion.div>
       )}
 
+      {/* ===== GUIDED PATH (new users first 7 days) ===== */}
+      {isOnboarded && isNewUser && !isStuck && (
+        <section className="mx-auto max-w-lg px-4 mb-4">
+          <GuidedPath variant="compact" />
+        </section>
+      )}
+
+      {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
+      {isOnboarded && isStuck && (
+        <section className="mx-auto max-w-lg px-4 mb-4">
+          <LostCard nextModule={nextModule} />
+        </section>
+      )}
+
       {/* Daily login XP toast */}
       <AnimatePresence>
         {stats.dailyLoginAwarded && (
@@ -656,15 +674,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== WEEKLY CHALLENGE BANNER ===== */}
-      <section className="px-4 sm:px-5 pt-4">
-        <div className="mx-auto max-w-lg">
-          <WeeklyChallengeBanner compact />
-        </div>
-      </section>
+      {/* ===== WEEKLY CHALLENGE BANNER ===== (hidden in guided mode) */}
+      {!isGuidedMode && (
+        <section className="px-4 sm:px-5 pt-4">
+          <div className="mx-auto max-w-lg">
+            <WeeklyChallengeBanner compact />
+          </div>
+        </section>
+      )}
 
-      {/* ===== WEEKLY OBJECTIVES ===== */}
-      <WeeklyObjectivesSection />
+      {/* ===== WEEKLY OBJECTIVES ===== (hidden in guided mode) */}
+      {!isGuidedMode && <WeeklyObjectivesSection />}
 
       {/* ===== INSTALL APP BANNER ===== (mobile only) */}
       {!isInstalled && !installDismissed && (canInstall || isIOS) && (
@@ -825,28 +845,32 @@ export default function Home() {
         </section>
       )}
 
-      {/* ===== TREASURE CHESTS ===== */}
-      <section className="px-4 sm:px-5 pt-4">
-        <div className="mx-auto max-w-lg">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              Prossimo premio
-            </h2>
-            <span className="text-xs font-bold text-amber-600">
-              {totalModulesCompleted} moduli
-            </span>
+      {/* ===== TREASURE CHESTS ===== (hidden in guided mode) */}
+      {!isGuidedMode && (
+        <section className="px-4 sm:px-5 pt-4">
+          <div className="mx-auto max-w-lg">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Prossimo premio
+              </h2>
+              <span className="text-xs font-bold text-amber-600">
+                {totalModulesCompleted} moduli
+              </span>
+            </div>
+            <TreasureChests modulesCompleted={totalModulesCompleted} />
           </div>
-          <TreasureChests modulesCompleted={totalModulesCompleted} />
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* ===== COLLEZIONE CARTE ===== */}
-      <CollectionTeaser
-        xp={stats.xp}
-        streak={stats.streak}
-        handsPlayed={handsPlayed}
-        completedModules={totalModulesCompleted}
-      />
+      {/* ===== COLLEZIONE CARTE ===== (hidden in guided mode) */}
+      {!isGuidedMode && (
+        <CollectionTeaser
+          xp={stats.xp}
+          streak={stats.streak}
+          handsPlayed={handsPlayed}
+          completedModules={totalModulesCompleted}
+        />
+      )}
 
       {/* ===== COURSES ===== */}
       <CoursesSection completedModules={stats.completedModules} />
@@ -950,6 +974,21 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* ===== GUIDED MODE TOGGLE ===== */}
+      {isGuidedMode && (
+        <section className="px-4 sm:px-5 pt-2 pb-2">
+          <div className="mx-auto max-w-lg text-center">
+            <button
+              onClick={toggleGuidedMode}
+              className="inline-flex items-center gap-2 rounded-xl border border-[#e5e0d5] bg-white px-4 py-2 text-xs font-semibold text-[#5c677d] shadow-sm hover:text-[#12305f] hover:border-[#c8a44e]/30 transition-all"
+            >
+              <Globe className="w-3.5 h-3.5" />
+              Mostra tutto (Modalità esperto)
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}
       <section className="px-4 sm:px-5 pb-6 lg:hidden">

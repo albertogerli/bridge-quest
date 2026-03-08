@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, Swords, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { ConfettiBurst, StarBurst } from "@/components/celebration-effects";
+import { GuidedPath } from "@/components/beginner/guided-path";
 import { StepShell } from "../step-shell";
 import type { StepProps } from "../types";
 
@@ -66,7 +65,6 @@ export function StepVittoria({
   quizScore,
   miniPreseScore,
 }: StepVittoriaProps) {
-  const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
   const animatedXp = useAnimatedCounter(totalXp, 1500);
   const stars = quizStars(quizScore.correct, quizScore.total);
@@ -160,30 +158,14 @@ export function StepVittoria({
         </span>
       </motion.div>
 
-      {/* CTA buttons */}
+      {/* Guided next steps */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.3 }}
-        className="mt-6 grid gap-3 sm:grid-cols-2"
+        className="mt-6"
       >
-        <Button
-          onClick={() => router.push("/gioca/sfida")}
-          size="lg"
-          className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
-        >
-          <Swords className="mr-2 h-4 w-4" />
-          Gioca ancora
-        </Button>
-        <Button
-          onClick={() => router.push("/lezioni")}
-          size="lg"
-          variant="outline"
-          className="h-14 w-full rounded-[22px] border-[#d8d0c0] bg-white text-base font-semibold text-[#12305f] hover:bg-[#f7f5f0]"
-        >
-          <BookOpen className="mr-2 h-4 w-4" />
-          Inizia il corso
-        </Button>
+        <GuidedPath variant="full" />
       </motion.div>
     </StepShell>
   );
