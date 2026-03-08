@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { pbnCardToCard } from "@/lib/ben-format";
 
 const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
-const TIMEOUT_MS = 5000;
+const TIMEOUT_MS = 15000;
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const params = new URLSearchParams();
     if (hand) params.set("hand", hand);
-    if (seat) params.set("pos", seat);
+    if (seat) params.set("seat", seat);
     if (dealer) params.set("dealer", dealer);
     if (vul) params.set("vul", vul);
     if (ctx) params.set("ctx", ctx);

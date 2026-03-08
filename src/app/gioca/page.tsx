@@ -57,8 +57,9 @@ export default function GiocaPage() {
           className="mb-4"
         >
           <Link href="/prima-mano" className="block" aria-label="Prima Mano: onboarding morbido per iniziare a giocare">
-            <div className="relative overflow-hidden rounded-3xl border border-[#c8a44e]/20 bg-[linear-gradient(135deg,#fffaf0_0%,#f4ead5_100%)] p-5 transition-all hover:shadow-xl">
-              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#c8a44e]/10 blur-2xl" />
+            <div className="relative overflow-hidden rounded-3xl border border-[#c8a44e]/30 bg-[linear-gradient(135deg,#fffaf0_0%,#f0e4c8_50%,#e8d9b0_100%)] p-5 transition-all hover:shadow-xl">
+              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#c8a44e]/15 blur-2xl" />
+              <div className="absolute -left-4 -bottom-4 h-20 w-20 rounded-full bg-[#003DA5]/8 blur-2xl" />
               <div className="relative flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-lg shadow-[#003DA5]/20">
                   <BookOpen className="w-6 h-6" />
@@ -66,14 +67,15 @@ export default function GiocaPage() {
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex items-center gap-2">
                     <h2 className="text-lg font-semibold text-[#12305f]">Prima Mano</h2>
-                    {handsPlayed === 0 && (
-                      <Badge className="bg-[#c8a44e]/15 text-[#8f6b16] text-[10px] font-bold border-0">
-                        Nuovo
-                      </Badge>
-                    )}
+                    <Badge className="bg-[#c8a44e]/20 text-[#8f6b16] text-[10px] font-bold border-0">
+                      3 min
+                    </Badge>
+                    <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-bold border-0">
+                      +50 {profile.xpLabel}
+                    </Badge>
                   </div>
                   <p className="text-sm text-[#51627f]">
-                    Entra al tavolo in modo morbido: presa, ruoli, atout e poi una mano vera.
+                    3 quiz, 4 mini-prese e poi una mano vera. Il modo piu veloce per iniziare.
                   </p>
                 </div>
                 <svg
