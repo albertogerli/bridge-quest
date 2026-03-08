@@ -51,7 +51,7 @@ export default function LessonDetailPage({
   const progress = totalModules > 0 ? (completedModules / totalModules) * 100 : 0;
   const totalXp = lesson.modules.reduce((sum, m) => sum + m.xpReward, 0);
   const totalDuration = lesson.modules.reduce((sum, m) => sum + parseInt(m.duration), 0);
-  const youtubeEmbed = getYouTubeEmbedUrl(lesson.id);
+  const youtubeEmbed = getYouTubeEmbedUrl(lesson.id, profileConfig.profile);
 
   return (
     <div className="pt-6 px-5">

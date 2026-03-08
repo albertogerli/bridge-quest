@@ -56,3 +56,13 @@ public/infografiche/*/corso-*.pdf
 # Temp files
 *.tmp
 .gitignore.tmp
+
+# Word temp files
+~$*.docx
+
+# Legal/sensitive documents
+Accordo-*.docx
+docs/*.docx
+
+# HeyGen generation state
+scripts/video-jobs.json
