@@ -13,7 +13,7 @@ import {
 } from "@/data/courses";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import Link from "next/link";
-import { Lock, Trophy, Target, Crown, Spade, Construction } from "lucide-react";
+import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
 
 // Colors for the path nodes per world
 const worldColors = [
@@ -38,6 +38,7 @@ const courseColors: Record<CourseId, { active: string; inactive: string; border:
 export default function LezioniPage() {
   const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
+  const [onboarded, setOnboarded] = useState(false);
 
   useEffect(() => {
     try {
@@ -47,6 +48,7 @@ export default function LezioniPage() {
       if (saved && courses.some((c) => c.id === saved)) {
         setSelectedCourse(saved as CourseId);
       }
+      setOnboarded(localStorage.getItem("bq_onboarded") === "true");
     } catch {}
   }, []);
 
@@ -82,6 +84,53 @@ export default function LezioniPage() {
           <p className="text-sm text-gray-500 mt-1">
             {totalCompleted}/{totalModules} moduli completati
           </p>
+        </motion.div>
+
+        {/* Prima Mano — lezione introduttiva, sempre visibile */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04 }}
+          className="mb-4"
+        >
+          <Link href="/prima-mano" aria-label="Prima Mano: lezione introduttiva">
+            <div className={`relative overflow-hidden rounded-2xl border p-4 transition-all hover:shadow-lg active:scale-[0.99] ${
+              onboarded
+                ? "border-emerald-200 bg-gradient-to-r from-emerald-50 to-white"
+                : "border-[#c8a44e]/30 bg-[linear-gradient(135deg,#fffaf0_0%,#f0e4c8_50%,#e8d9b0_100%)]"
+            }`}>
+              <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#c8a44e]/10 blur-2xl" />
+              <div className="relative flex items-center gap-3">
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg ${
+                  onboarded
+                    ? "bg-emerald-500 text-white shadow-emerald-500/20"
+                    : "bg-[#003DA5] text-white shadow-[#003DA5]/20"
+                }`}>
+                  {onboarded ? <CheckCircle2 className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <p className="text-sm font-bold text-[#12305f]">Prima Mano</p>
+                    <Badge className={`text-[10px] font-bold border-0 ${
+                      onboarded
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-[#c8a44e]/20 text-[#8f6b16]"
+                    }`}>
+                      {onboarded ? "Completata ✓" : "3 min"}
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-[#51627f]">
+                    {onboarded
+                      ? "Rivedi le basi: cos'è una presa, come si gioca, la tua prima mano"
+                      : "Inizia da qui! Scopri il bridge in 3 minuti e gioca la tua prima mano"}
+                  </p>
+                </div>
+                <svg className="h-5 w-5 text-gray-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <polyline points="9,6 15,12 9,18" />
+                </svg>
+              </div>
+            </div>
+          </Link>
         </motion.div>
 
         {/* Course selector tabs */}

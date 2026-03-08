@@ -769,10 +769,10 @@ export default function ProfiloPage() {
           </h2>
           <div className="grid grid-cols-2 gap-2">
             {([
-              { id: "junior" as const, icon: <Gamepad2 className="w-6 h-6" />, label: "Explorer" },
-              { id: "giovane" as const, icon: <Zap className="w-6 h-6" />, label: "Dinamico" },
-              { id: "adulto" as const, icon: <Spade className="w-6 h-6" />, label: "Classico" },
-              { id: "senior" as const, icon: <Coffee className="w-6 h-6" />, label: "Rilassato" },
+              { id: "junior" as const, icon: <Gamepad2 className="w-6 h-6" />, label: "8-17 anni" },
+              { id: "giovane" as const, icon: <Zap className="w-6 h-6" />, label: "18-35 anni" },
+              { id: "adulto" as const, icon: <Spade className="w-6 h-6" />, label: "36-55 anni" },
+              { id: "senior" as const, icon: <Coffee className="w-6 h-6" />, label: "55+ anni" },
             ]).map((opt) => (
               <button
                 key={opt.id}

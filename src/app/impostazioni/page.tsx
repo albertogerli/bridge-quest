@@ -46,25 +46,25 @@ const ANIM_SPEEDS = [
 const PROFILES = [
   {
     key: "junior",
-    label: "Explorer",
+    label: "8-17 anni",
     description: "Super divertente! Animazioni pazze, tanti premi",
     color: "bg-pink-500",
   },
   {
     key: "giovane",
-    label: "Dinamico",
+    label: "18-35 anni",
     description: "Gamification completa, animazioni vivaci, sfide intense",
     color: "bg-[#003DA5]",
   },
   {
     key: "adulto",
-    label: "Classico",
+    label: "36-55 anni",
     description: "Esperienza bilanciata, focus sull'apprendimento",
     color: "bg-blue-500",
   },
   {
     key: "senior",
-    label: "Rilassato",
+    label: "55+ anni",
     description: "Testo grande, ritmo calmo, interfaccia semplificata",
     color: "bg-amber-500",
   },

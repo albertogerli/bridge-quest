@@ -288,10 +288,10 @@ function LoginContent() {
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {([
-                      { key: "junior" as ProfileType, label: "Explorer", icon: <Gamepad2 className="w-6 h-6 text-pink-500" />, desc: "8–17 anni" },
-                      { key: "giovane" as ProfileType, label: "Dinamico", icon: <Zap className="w-6 h-6 text-emerald-500" />, desc: "18–35 anni" },
-                      { key: "adulto" as ProfileType, label: "Classico", icon: <Spade className="w-6 h-6 text-blue-500" />, desc: "36–55 anni" },
-                      { key: "senior" as ProfileType, label: "Rilassato", icon: <Coffee className="w-6 h-6 text-amber-500" />, desc: "55+ anni" },
+                      { key: "junior" as ProfileType, label: "8–17 anni", icon: <Gamepad2 className="w-6 h-6 text-pink-500" />, desc: "Stile Explorer" },
+                      { key: "giovane" as ProfileType, label: "18–35 anni", icon: <Zap className="w-6 h-6 text-emerald-500" />, desc: "Stile Dinamico" },
+                      { key: "adulto" as ProfileType, label: "36–55 anni", icon: <Spade className="w-6 h-6 text-blue-500" />, desc: "Stile Classico" },
+                      { key: "senior" as ProfileType, label: "55+ anni", icon: <Coffee className="w-6 h-6 text-amber-500" />, desc: "Stile Rilassato" },
                     ] as { key: ProfileType; label: string; icon: ReactNode; desc: string }[]).map(({ key, label, icon, desc }) => (
                       <button
                         key={key}

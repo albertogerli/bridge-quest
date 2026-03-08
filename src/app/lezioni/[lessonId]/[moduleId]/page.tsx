@@ -1600,7 +1600,7 @@ export default function ModulePage({
         </AnimatePresence>
 
         {/* Maestro video - first module of each lesson, shown at start */}
-        <MaestroVideoInline lessonId={lesson.id} moduleIndex={moduleIndex} currentStep={currentStep} />
+        <MaestroVideoInline lessonId={lesson.id} moduleIndex={moduleIndex} currentStep={currentStep} profile={profile.profile} />
 
         {/* Content blocks */}
         <div>
@@ -1965,12 +1965,12 @@ export default function ModulePage({
 }
 
 /** Maestro video inline: shows on the first module of each lesson, at step 0 */
-function MaestroVideoInline({ lessonId, moduleIndex, currentStep }: {
-  lessonId: number; moduleIndex: number; currentStep: number;
+function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile }: {
+  lessonId: number; moduleIndex: number; currentStep: number; profile?: string;
 }) {
   const [dismissed, setDismissed] = useState(false);
 
-  const youtubeEmbed = getYouTubeEmbedUrl(lessonId);
+  const youtubeEmbed = getYouTubeEmbedUrl(lessonId, profile);
 
   // Only show on first module, at beginning
   if (moduleIndex !== 0 || currentStep > 1 || !youtubeEmbed || dismissed) return null;
