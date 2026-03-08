@@ -32,6 +32,7 @@ export const allBadges: BadgeDef[] = [
   { id: "small_slam", name: "Piccolo Slam", icon: "⭐", desc: "Raggiungi 500 XP", check: (s) => s.xp >= 500 },
   { id: "world_done", name: "Mondo Completo", icon: "🌍", desc: "Completa un mondo intero", check: (s) => s.worldsCompleted >= 1 },
   { id: "grand_slam", name: "Grande Slam", icon: "👑", desc: "Raggiungi 2000 XP", check: (s) => s.xp >= 2000 },
+  { id: "prima_mano", name: "Prima Mano", icon: "🎴", desc: "Completa il tutorial Prima Mano", check: (s) => s.handsPlayed >= 1 && s.xp >= 50 },
 ];
 
 function getEarnedBadgeIds(): Set<string> {

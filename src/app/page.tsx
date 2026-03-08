@@ -143,6 +143,7 @@ export default function Home() {
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [notOnboarded, setNotOnboarded] = useState(false);
   const [showWeeklyRecap, setShowWeeklyRecap] = useState(false);
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
   const [handsPlayed, setHandsPlayed] = useState(0);
@@ -154,6 +155,7 @@ export default function Home() {
       setIsGuest(localStorage.getItem("bq_guest") === "1");
       if (!localStorage.getItem("bq_onboarded")) {
         setShowOnboarding(true);
+        setNotOnboarded(true);
       }
       setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
 
@@ -511,6 +513,32 @@ export default function Home() {
               <path d="M9 18l6-6-6-6" />
             </svg>
           </a>
+        </motion.div>
+      )}
+
+      {/* Prima Mano banner for users who skipped onboarding */}
+      {notOnboarded && !showOnboarding && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto max-w-lg px-4 mb-4"
+        >
+          <Link
+            href="/prima-mano"
+            className="relative block overflow-hidden rounded-2xl border border-[#c8a44e]/25 bg-[linear-gradient(135deg,#fffaf0_0%,#f4ead5_100%)] p-4 hover:shadow-lg transition-all"
+          >
+            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#c8a44e]/10 blur-2xl" />
+            <div className="relative flex items-center gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-lg shadow-[#003DA5]/20">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-[#12305f]">Hai 3 minuti? Prova Prima Mano</p>
+                <p className="text-[11px] text-[#51627f]">Impara le basi del bridge e guadagna +50 XP</p>
+              </div>
+              <span className="shrink-0 rounded-full bg-[#c8a44e]/15 px-2.5 py-1 text-[10px] font-bold text-[#8f6b16]">+50 XP</span>
+            </div>
+          </Link>
         </motion.div>
       )}
 

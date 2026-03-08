@@ -91,11 +91,11 @@ export function benToPosition(ben: string): Position {
 
 export function vulToBEN(vul: Vulnerability): string {
   switch (vul) {
-    case "none": return "";
-    case "ns": return "@V@v";   // NS vulnerable
-    case "ew": return "@v@V";   // EW vulnerable
-    case "both": return "@V@V"; // Both vulnerable
-    default: return "";
+    case "none": return "None";
+    case "ns": return "NS";
+    case "ew": return "EW";
+    case "both": return "Both";
+    default: return "None";
   }
 }
 
