@@ -22,7 +22,7 @@ export function StepTavolo({ onComplete, playSound }: StepProps) {
     <StepShell
       kicker="Prendi Posto"
       title="Quattro giocatori, due squadre."
-      body="Nord-Sud contro Est-Ovest. Tu sei Sud. Il tuo compagno e di fronte a te."
+      body="Tu sei Sud. Il tuo compagno e di fronte."
     >
       <div className="relative mt-6 aspect-square max-w-[320px] mx-auto">
         {/* Table background */}

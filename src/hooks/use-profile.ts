@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 
 export type UserProfile = "junior" | "giovane" | "adulto" | "senior";
 
@@ -182,18 +182,29 @@ const configs: Record<UserProfile, ProfileConfig> = {
   },
 };
 
+function subscribeProfile(cb: () => void) {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+}
+
+function getProfileSnapshot(): UserProfile {
+  try {
+    const stored = localStorage.getItem("bq_profile") as UserProfile | null;
+    if (stored && configs[stored]) return stored;
+  } catch {}
+  return "adulto";
+}
+
+function getProfileServerSnapshot(): UserProfile {
+  return "adulto";
+}
+
 export function useProfile(): ProfileConfig {
-  const [profile, setProfile] = useState<UserProfile>("adulto");
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("bq_profile") as UserProfile | null;
-      if (stored && configs[stored]) {
-        setProfile(stored);
-      }
-    } catch {}
-  }, []);
-
+  const profile = useSyncExternalStore(
+    subscribeProfile,
+    getProfileSnapshot,
+    getProfileServerSnapshot,
+  );
   return configs[profile];
 }
 
