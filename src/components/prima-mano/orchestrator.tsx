@@ -57,6 +57,9 @@ export function PrimaManoV2({
     try {
       localStorage.setItem(STORAGE_KEY, "1");
       localStorage.removeItem(STEP_KEY);
+      if (!localStorage.getItem("bq_onboarded_date")) {
+        localStorage.setItem("bq_onboarded_date", new Date().toISOString().slice(0, 10));
+      }
       if (!localStorage.getItem("bq_profile")) {
         localStorage.setItem("bq_profile", "adulto");
       }
