@@ -21,6 +21,7 @@ import { StepManoVera } from "./steps/step-mano-vera";
 import { StepVittoria } from "./steps/step-vittoria";
 
 const STORAGE_KEY = "bq_onboarded";
+const STEP_KEY = "bq_onboarding_step";
 const GAME_ID = "prima-mano-v2";
 const QUIZ_STEPS = new Set<StepId>(["presa", "obbligo", "ruoli", "atout"]);
 
@@ -34,7 +35,15 @@ export function PrimaManoV2({
   const router = useRouter();
   const { playSound } = useSounds();
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    try {
+      const saved = parseInt(localStorage.getItem(STEP_KEY) || "0", 10);
+      // Don't resume into mano-vera or vittoria (gameplay state is lost)
+      if (saved > 0 && saved < STEPS.length - 2) return saved;
+    } catch {}
+    return 0;
+  });
   const [totalXp, setTotalXp] = useState(0);
   const [quizCorrect, setQuizCorrect] = useState(0);
   const [quizTotal, setQuizTotal] = useState(0);
@@ -47,6 +56,7 @@ export function PrimaManoV2({
   const persistOnboarding = useCallback(() => {
     try {
       localStorage.setItem(STORAGE_KEY, "1");
+      localStorage.removeItem(STEP_KEY);
       if (!localStorage.getItem("bq_profile")) {
         localStorage.setItem("bq_profile", "adulto");
       }
@@ -81,6 +91,7 @@ export function PrimaManoV2({
       if (currentStep < STEPS.length - 1) {
         const nextIdx = currentStep + 1;
         setCurrentStep(nextIdx);
+        try { localStorage.setItem(STEP_KEY, String(nextIdx)); } catch {}
 
         // Reaching vittoria — persist and award total XP
         if (STEPS[nextIdx].id === "vittoria") {
@@ -166,29 +177,34 @@ export function PrimaManoV2({
         <div className="w-full">
           {/* Mobile progress bar (visible < lg, when sidebar is hidden) */}
           {!isManoVera && (
-            <div className="mb-4 flex items-center justify-between rounded-full border border-[#d8d0c0] bg-white/80 px-4 py-2 backdrop-blur-sm lg:hidden">
-              <span className="text-xs font-bold text-[#8f6b16]">
-                {currentStep + 1}/{STEPS.length}
-              </span>
-              <div className="flex gap-1.5">
-                {STEPS.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-2 w-2 rounded-full ${
-                      i < currentStep
-                        ? "bg-[#c8a44e]"
-                        : i === currentStep
-                          ? "bg-[#003DA5]"
-                          : "bg-[#d8d0c0]"
-                    }`}
-                  />
-                ))}
-              </div>
-              {totalXp > 0 && (
-                <span className="text-xs font-bold text-[#c8a44e]">
-                  +{totalXp} XP
+            <div className="mb-4 rounded-2xl border border-[#d8d0c0] bg-white/80 px-4 py-2.5 backdrop-blur-sm lg:hidden">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] font-bold text-[#8f6b16]">
+                  {STEPS[currentStep].kicker}
                 </span>
-              )}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-[#5c677d]">
+                    {currentStep + 1}/{STEPS.length}
+                  </span>
+                  {totalXp > 0 && (
+                    <motion.span
+                      key={totalXp}
+                      initial={{ scale: 1.4, color: "#c8a44e" }}
+                      animate={{ scale: 1, color: "#8f6b16" }}
+                      className="text-[11px] font-bold"
+                    >
+                      +{totalXp} XP
+                    </motion.span>
+                  )}
+                </div>
+              </div>
+              <div className="h-1.5 rounded-full bg-[#d8d0c0]/40">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-[#c8a44e] to-[#f0d37a]"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((currentStep + 1) / STEPS.length) * 100}%` }}
+                />
+              </div>
             </div>
           )}
 

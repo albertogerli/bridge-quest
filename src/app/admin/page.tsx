@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import Link from "next/link";
@@ -171,15 +171,25 @@ export default function AdminPage() {
     senior: "🏆",
   };
 
-  const timeAgo = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m fa`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h fa`;
-    const days = Math.floor(hours / 24);
-    return `${days}g fa`;
-  };
+  // Stable clock: updates once per minute so timeAgo is pure
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const timeAgo = useMemo(
+    () => (date: string) => {
+      const diff = now - new Date(date).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60) return `${mins}m fa`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours}h fa`;
+      const days = Math.floor(hours / 24);
+      return `${days}g fa`;
+    },
+    [now],
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">

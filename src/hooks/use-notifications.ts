@@ -83,21 +83,21 @@ function showNotification(title: string, body: string, icon?: string) {
 }
 
 export function useNotifications() {
-  const [supported, setSupported] = useState(false);
-  const [permission, setPermission] = useState<NotificationPermissionState>("default");
-  const [enabled, setEnabled] = useState(false);
+  const [supported] = useState(() => isNotificationSupported());
+  const [permission, setPermission] = useState<NotificationPermissionState>(() => {
+    if (typeof window === "undefined" || !("Notification" in window)) return "default";
+    return Notification.permission as NotificationPermissionState;
+  });
+  const [enabled, setEnabled] = useState(() => {
+    if (typeof window === "undefined" || !("Notification" in window)) return false;
+    return getStoredEnabled() && Notification.permission === "granted";
+  });
   const reminderChecked = useRef(false);
 
-  // Initialize state
+  // Register SW on mount
   useEffect(() => {
-    const sup = isNotificationSupported();
-    setSupported(sup);
-    if (sup) {
-      setPermission(Notification.permission as NotificationPermissionState);
-      setEnabled(getStoredEnabled() && Notification.permission === "granted");
-      registerNotificationSW();
-    }
-  }, []);
+    if (supported) registerNotificationSW();
+  }, [supported]);
 
   // Request permission and enable notifications
   const requestPermission = useCallback(async (): Promise<boolean> => {

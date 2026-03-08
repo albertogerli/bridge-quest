@@ -11,7 +11,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
     <StepShell
       kicker="Arrivo al Club"
       title="Il tuo primo torneo."
-      body="Quattro sedie, un mazzo, e l'avversario ti sta gia guardando. Tra 5 minuti giocherai la tua prima mano vera."
+      body="Tra 5 minuti giocherai la tua prima mano vera di bridge."
     >
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <motion.div
@@ -22,7 +22,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
         >
           <p className="text-sm font-bold text-[#12305f]">Cosa NON facciamo</p>
           <p className="mt-2 text-sm leading-6 text-[#5c677d]">
-            Niente punti onori, niente convenzioni, niente teoria pesante.
+            Niente teoria pesante. Zero gergo.
           </p>
         </motion.div>
         <motion.div
@@ -36,7 +36,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
             <p className="text-sm font-bold text-[#12305f]">Cosa facciamo</p>
           </div>
           <p className="mt-1 text-sm leading-6 text-[#5c677d]">
-            4 quiz, 4 mini-prese e poi una mano vera. In 5 minuti sei al tavolo.
+            Quiz, mini-prese e poi una mano vera.
           </p>
         </motion.div>
       </div>

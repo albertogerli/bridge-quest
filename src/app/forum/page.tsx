@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -81,17 +81,27 @@ export default function ForumPage() {
     fetchPosts();
   }, [fetchPosts]);
 
-  const timeAgo = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "ora";
-    if (mins < 60) return `${mins}m fa`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h fa`;
-    const days = Math.floor(hours / 24);
-    if (days < 30) return `${days}g fa`;
-    return `${Math.floor(days / 30)}mesi fa`;
-  };
+  // Stable clock: updates once per minute so timeAgo is pure
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const timeAgo = useMemo(
+    () => (date: string) => {
+      const diff = now - new Date(date).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return "ora";
+      if (mins < 60) return `${mins}m fa`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours}h fa`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) return `${days}g fa`;
+      return `${Math.floor(days / 30)}mesi fa`;
+    },
+    [now],
+  );
 
   const categoryEmoji = (cat: Category) =>
     CATEGORIES.find((c) => c.key === cat)?.emoji || "💬";
