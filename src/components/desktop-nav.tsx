@@ -87,10 +87,8 @@ export function DesktopNav() {
   return (
     <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white dark:bg-[#141821] border-r border-[#e5e7eb] dark:border-[#2a3040]" aria-label="Navigazione principale">
       {/* Logo */}
-      <div className="px-5 pt-6 pb-4">
-        <img src="/icons/logo-figb.png" alt="FIGB - Federazione Italiana Gioco Bridge" className="w-12 h-auto mb-2" />
-        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">FIGB Bridge LAB</h1>
-        <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">Corsi FIGB</p>
+      <div className="px-4 pt-4 pb-3">
+        <img src="/logo-bridgelab.svg" alt="BridgeLab - Impara il Bridge giocando" className="w-full h-10 object-contain object-left" />
       </div>
 
       <div className="h-px bg-[#e5e7eb] dark:bg-[#2a3040] mx-4" />

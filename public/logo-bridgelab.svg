@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003DA5"/>
+      <stop offset="50%" stop-color="#0052CC"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#002D7A"/>
+      <stop offset="50%" stop-color="#003DA5"/>
+      <stop offset="100%" stop-color="#0052CC"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon: rounded square with card suits -->
+  <rect x="10" y="20" width="200" height="200" rx="40" fill="url(#iconBg)"/>
+
+  <!-- 2x2 grid centered in the icon rect (110, 120) -->
+  <!-- Top-left: Spade at (72, 82) -->
+  <g transform="translate(72, 82)">
+    <path d="M0,-22 C0,-22 -18,-6 -18,6 C-18,12 -12,16 -6,13 L-6,20 L6,20 L6,13 C12,16 18,12 18,6 C18,-6 0,-22 0,-22Z" fill="white" opacity="0.95"/>
+  </g>
+
+  <!-- Top-right: Heart at (148, 82) -->
+  <g transform="translate(148, 82)">
+    <path d="M0,18 C0,18 -19,4 -19,-6 C-19,-12 -14,-16 -9,-16 C-5,-16 -2,-14 0,-11 C2,-14 5,-16 9,-16 C14,-16 19,-12 19,-6 C19,4 0,18 0,18Z" fill="white" opacity="0.95"/>
+  </g>
+
+  <!-- Bottom-left: Diamond at (72, 158) -->
+  <g transform="translate(72, 158)">
+    <path d="M0,-21 L14,0 L0,21 L-14,0 Z" fill="white" opacity="0.95"/>
+  </g>
+
+  <!-- Bottom-right: Club at (148, 158) -->
+  <g transform="translate(148, 158)">
+    <circle cx="0" cy="-8" r="8" fill="white" opacity="0.95"/>
+    <circle cx="-8" cy="3" r="8" fill="white" opacity="0.95"/>
+    <circle cx="8" cy="3" r="8" fill="white" opacity="0.95"/>
+    <rect x="-3" y="4" width="6" height="10" rx="1.5" fill="white" opacity="0.95"/>
+  </g>
+
+  <!-- Text: BridgeLab - same weight -->
+  <text x="235" y="135" font-family="'Montserrat', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="95" font-weight="700" fill="url(#grad1)" letter-spacing="-2">BridgeLab</text>
+
+  <!-- Tagline -->
+  <text x="238" y="175" font-family="'Montserrat', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500" fill="#6b7280" letter-spacing="6">IMPARA IL BRIDGE GIOCANDO</text>
+</svg>
