@@ -1,12 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="50%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#a855f7"/>
+      <stop offset="0%" stop-color="#002D7A"/>
+      <stop offset="50%" stop-color="#003DA5"/>
+      <stop offset="100%" stop-color="#0052CC"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="96" fill="url(#bg)"/>
-  <text x="256" y="210" text-anchor="middle" font-size="130" font-weight="900" font-family="system-ui, sans-serif" fill="white" letter-spacing="-4">BL</text>
-  <text x="256" y="370" text-anchor="middle" font-size="105" fill="white" opacity="0.9">&#9824;&#9829;&#9830;&#9827;</text>
+
+  <!-- 2x2 grid: centered at 256,256. Each cell ~120x120, gap 40 -->
+  <!-- Top-left: Spade at (176, 176) -->
+  <g transform="translate(176, 176)">
+    <!-- Spade pointing up -->
+    <path d="M0,-52 C0,-52 -44,-14 -44,14 C-44,30 -30,40 -16,32 L-16,48 L16,48 L16,32 C30,40 44,30 44,14 C44,-14 0,-52 0,-52Z" fill="white"/>
+  </g>
+
+  <!-- Top-right: Heart at (336, 176) -->
+  <g transform="translate(336, 176)">
+    <!-- Heart -->
+    <path d="M0,44 C0,44 -46,10 -46,-14 C-46,-30 -34,-40 -22,-40 C-12,-40 -4,-34 0,-26 C4,-34 12,-40 22,-40 C34,-40 46,-30 46,-14 C46,10 0,44 0,44Z" fill="white"/>
+  </g>
+
+  <!-- Bottom-left: Diamond at (176, 336) -->
+  <g transform="translate(176, 336)">
+    <!-- Diamond -->
+    <path d="M0,-50 L34,0 L0,50 L-34,0 Z" fill="white"/>
+  </g>
+
+  <!-- Bottom-right: Club at (336, 336) -->
+  <g transform="translate(336, 336)">
+    <!-- Club: 3 circles + stem -->
+    <circle cx="0" cy="-20" r="18" fill="white"/>
+    <circle cx="-18" cy="6" r="18" fill="white"/>
+    <circle cx="18" cy="6" r="18" fill="white"/>
+    <rect x="-8" y="8" width="16" height="24" rx="3" fill="white"/>
+  </g>
 </svg>
