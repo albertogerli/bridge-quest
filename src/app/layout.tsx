@@ -12,11 +12,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "FIGB Bridge LAB - Impara il Bridge giocando",
+    default: "BridgeLab - Impara il Bridge giocando",
     template: "%s",
   },
   description:
-    "Impara il bridge con Bridge LAB, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
+    "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
   keywords: [
     "bridge",
     "FIGB",
@@ -38,17 +38,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "FIGB Bridge LAB - Impara il Bridge giocando",
+    title: "BridgeLab - Impara il Bridge giocando",
     description:
-      "Impara il bridge con Bridge LAB, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
+      "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
     url: "https://bridgelab.it",
-    siteName: "FIGB Bridge LAB",
+    siteName: "BridgeLab",
     images: [
       {
         url: "/youtube-banner.png",
-        width: 1280,
-        height: 720,
-        alt: "FIGB Bridge LAB - Impara il Bridge giocando",
+        width: 1200,
+        height: 630,
+        alt: "BridgeLab - Impara il Bridge giocando",
       },
     ],
     locale: "it_IT",
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FIGB Bridge LAB - Impara il Bridge giocando",
+    title: "BridgeLab - Impara il Bridge giocando",
     description:
-      "Impara il bridge con Bridge LAB, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi.",
+      "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi.",
     images: ["/youtube-banner.png"],
   },
   robots: {
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Bridge LAB",
+    title: "BridgeLab",
   },
   icons: {
     icon: [
@@ -124,7 +124,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "EducationalOrganization",
-              "name": "Bridge LAB",
+              "name": "BridgeLab",
               "description": "Piattaforma didattica ufficiale della Federazione Italiana Gioco Bridge (FIGB) per imparare il bridge.",
               "url": "https://bridgelab.it",
               "logo": "https://bridgelab.it/icons/icon-512x512.png",
