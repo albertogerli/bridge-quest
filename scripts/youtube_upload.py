@@ -227,7 +227,7 @@ def make_description(course, lesson_id, profile):
         f"Con {maestro} - profilo {PROFILES[profile]['label']}\n\n"
         f"BridgeLab - La piattaforma gratuita per imparare il Bridge\n"
         f"Basata sulle dispense ufficiali della Federazione Italiana Gioco Bridge (FIGB)\n\n"
-        f"Prova gratis: https://bridgequest.vercel.app\n\n"
+        f"Prova gratis: https://bridgelab.it\n\n"
         f"#Bridge #FIGB #BridgeLab #ImparaIlBridge"
     )
 
@@ -372,6 +372,10 @@ def main():
         except Exception as e:
             print(f"  FAILED: {e}")
             failed += 1
+            if "uploadLimitExceeded" in str(e):
+                print(f"\n  DAILY LIMIT REACHED — {uploaded} uploaded today.")
+                print(f"  Run again tomorrow to continue.")
+                break
 
     print(f"\n{'=' * 60}")
     print(f"  Uploaded: {uploaded} | Failed: {failed}")
