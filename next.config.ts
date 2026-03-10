@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
               "frame-src https://www.youtube.com https://youtube.com",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.heygen.com https://vitals.vercel-insights.com",
+              "connect-src 'self' https: wss://*.supabase.co",
               "media-src 'self' blob: https:",
               "worker-src 'self' blob:",
             ].join("; "),
