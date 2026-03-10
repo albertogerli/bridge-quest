@@ -38,19 +38,19 @@ type CourseYouTubeMap = Record<string, ProfileYouTubeMap>;
 // Corso Fiori (Base) - App IDs 0-12
 const FIORI_YOUTUBE: CourseYouTubeMap = {
   junior: {
-    0: "VwgC44w5QQI",   // Lezione 1: Il Bridge: un gioco di prese
-    1: "rnKU1ofQAZw",   // Lezione 2: Vincenti e affrancabili
-    2: "FBxpmzUwhhs",   // Lezione 3: Il punto di vista dei difensori
-    3: "Bs3UtObjqHI",   // Lezione 4: Affrancamenti di lunga e di posizione
-    4: "xU0FgJw0S18",   // Lezione 5: Il piano di gioco a senz'atout
-    5: "fJ7rOJRbdmI",   // Lezione 6: Il gioco con l'atout
-    6: "tL_e79sMUFA",   // Lezione 7: Il piano di gioco con l'atout
-    7: "d4w1RW4O2v0",   // Lezione 8: La valutazione della mano
-    8: "xzg-KoqdC2Y",   // Lezione 9: L'apertura e la risposta
-    9: "enqWv8gZDsg",   // Lezione 10: Aperture di 1 a colore. Le risposte
-    10: "vj1tobTPKdo",  // Lezione 11: L'apertore descrive
-    11: "6RDfZoFDV74",  // Lezione 12: L'intervento
-    12: "88pWri0SoqY",  // Lezione 13: Sviluppi dopo l'intervento avversario
+    0: "RBH2cAE6Pk8",   // Lezione 0: Il Bridge - Un Gioco di Prese
+    1: "qmUGm6I_BpE",   // Lezione 1: Le Carte Vincenti
+    2: "mbjV43fl1uI",   // Lezione 2: L'Attacco e la Difesa
+    3: "H5stQyLwAcs",   // Lezione 3: Sviluppo del Gioco
+    4: "g2qnXphmcgQ",   // Lezione 4: Il Piano di Gioco
+    5: "t0QTS_ulR6Y",   // Lezione 5: La Dichiarazione - Le Basi
+    6: "otFDie72PcY",   // Lezione 6: Risposte all'Apertura
+    7: "e3YYPyetRXk",   // Lezione 7: Il Rientro del Dichiarante
+    8: "jAGhKMLywAQ",   // Lezione 8: La Seconda Dichiarazione
+    9: "enqWv8gZDsg",   // Lezione 9: Aperture di 1 a colore. Le risposte
+    10: "vj1tobTPKdo",  // Lezione 10: L'apertore descrive
+    11: "6RDfZoFDV74",  // Lezione 11: L'intervento
+    12: "88pWri0SoqY",  // Lezione 12: Sviluppi dopo l'intervento avversario
   },
   giovane: {},
   adulto: {},
