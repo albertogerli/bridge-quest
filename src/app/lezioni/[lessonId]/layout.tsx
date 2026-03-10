@@ -18,14 +18,14 @@ export async function generateMetadata({
 
   if (!lesson || !course) {
     return {
-      title: "Lezione non trovata | FIGB Bridge LAB",
+      title: "Lezione non trovata | BridgeLab",
       description: "La lezione richiesta non esiste.",
     };
   }
 
   const totalModules = lesson.modules.length;
   const totalXp = lesson.modules.reduce((sum, m) => sum + m.xpReward, 0);
-  const title = `${lesson.title} | ${course.name} | FIGB Bridge LAB`;
+  const title = `${lesson.title} | ${course.name} | BridgeLab`;
   const description = `${lesson.subtitle}. ${totalModules} moduli, ${totalXp} XP disponibili. ${course.name} - ${course.subtitle}. Impara il bridge con la piattaforma ufficiale FIGB.`;
 
   return {
@@ -35,13 +35,13 @@ export async function generateMetadata({
       title,
       description,
       url: `https://bridgelab.it/lezioni/${lessonId}`,
-      siteName: "FIGB Bridge LAB",
+      siteName: "BridgeLab",
       images: [
         {
-          url: "https://bridgelab.it/youtube-banner.png",
+          url: "https://bridgelab.it/og-image.png",
           width: 1280,
           height: 720,
-          alt: `${lesson.title} - FIGB Bridge LAB`,
+          alt: `${lesson.title} - BridgeLab`,
         },
       ],
       locale: "it_IT",
@@ -51,7 +51,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["https://bridgelab.it/youtube-banner.png"],
+      images: ["https://bridgelab.it/og-image.png"],
     },
   };
 }

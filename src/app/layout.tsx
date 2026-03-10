@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     siteName: "BridgeLab",
     images: [
       {
-        url: "/youtube-banner.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "BridgeLab - Impara il Bridge giocando",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: "BridgeLab - Impara il Bridge giocando",
     description:
       "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi.",
-    images: ["/youtube-banner.png"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
