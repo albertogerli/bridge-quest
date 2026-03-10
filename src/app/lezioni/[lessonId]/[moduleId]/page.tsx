@@ -192,6 +192,23 @@ export default function ModulePage({
     }
   }, [currentStep, contentLength, lessonId, moduleId, mod, lesson, saveRules]);
 
+  // Shuffle quiz options so correct answer isn't always first (Fisher-Yates)
+  const shuffledQuizOptions = useMemo(() => {
+    if (!mod) return {} as Record<number, number[]>;
+    const map: Record<number, number[]> = {};
+    mod.content.forEach((block, i) => {
+      if ((block.type === "quiz" || block.type === "bid-select") && block.options && block.options.length > 2) {
+        const indices = block.options.map((_: string, idx: number) => idx);
+        for (let j = indices.length - 1; j > 0; j--) {
+          const k = Math.floor(Math.random() * (j + 1));
+          [indices[j], indices[k]] = [indices[k], indices[j]];
+        }
+        map[i] = indices;
+      }
+    });
+    return map;
+  }, [mod]);
+
   // Count quizzes for scoring (all interactive types)
   const quizTypes = ["quiz", "true-false", "card-select", "hand-eval", "bid-select"];
   const totalQuizzes = useMemo(
@@ -675,7 +692,7 @@ export default function ModulePage({
                     className="rounded-xl bg-blue-50 border border-blue-100 p-3"
                   >
                     <p className="text-sm text-blue-700">
-                      💡 Suggerimento: la risposta corretta e la {String.fromCharCode(65 + (block.correctAnswer ?? 0))}
+                      💡 Suggerimento: la risposta corretta è la {String.fromCharCode(65 + (shuffledQuizOptions[blockIndex]?.indexOf(block.correctAnswer ?? 0) ?? (block.correctAnswer ?? 0)))}
                     </p>
                   </motion.div>
                 )}
@@ -683,12 +700,13 @@ export default function ModulePage({
             )}
 
             <div className="space-y-2">
-              {block.options?.map((option, optIdx) => {
-                // 50/50: hide eliminated options
-                if (eliminated[blockIndex]?.includes(optIdx)) return null;
+              {(shuffledQuizOptions[blockIndex] || block.options?.map((_: string, i: number) => i) || []).map((origIdx: number, displayIdx: number) => {
+                const option = block.options![origIdx];
+                // 50/50: hide eliminated options (uses original indices)
+                if (eliminated[blockIndex]?.includes(origIdx)) return null;
 
-                const isSelected = quizAnswers[blockIndex] === optIdx;
-                const isCorrectOption = block.correctAnswer === optIdx;
+                const isSelected = quizAnswers[blockIndex] === origIdx;
+                const isCorrectOption = block.correctAnswer === origIdx;
 
                 let optionClass = "bg-gray-50 border-gray-200 text-gray-700";
                 if (answered) {
@@ -703,9 +721,9 @@ export default function ModulePage({
 
                 return (
                   <motion.button
-                    key={optIdx}
+                    key={origIdx}
                     whileTap={!answered ? { scale: 0.98 } : undefined}
-                    onClick={() => !answered && handleQuizAnswer(blockIndex, optIdx)}
+                    onClick={() => !answered && handleQuizAnswer(blockIndex, origIdx)}
                     disabled={answered}
                     className={`w-full text-left rounded-xl border-2 font-medium transition-all ${optionClass} ${
                       isJunior ? "p-4 text-[15px] font-semibold" : profile.profile === "senior" ? "p-4 text-base" : "p-3 text-[14px]"
@@ -731,7 +749,7 @@ export default function ModulePage({
                           ? "✓"
                           : answered && isSelected && !isCorrect
                             ? "✗"
-                            : String.fromCharCode(65 + optIdx)}
+                            : String.fromCharCode(65 + displayIdx)}
                       </span>
                       <span className="flex-1">{option}</span>
                     </div>
@@ -1173,9 +1191,10 @@ export default function ModulePage({
               </div>
             )}
             <div className="grid grid-cols-3 gap-2">
-              {bidOptions.map((bid, idx) => {
-                const isSelected = quizAnswers[blockIndex] === idx;
-                const isCorrectBid = block.correctAnswer === idx;
+              {(shuffledQuizOptions[blockIndex] || bidOptions.map((_: string, i: number) => i)).map((origIdx: number) => {
+                const bid = bidOptions[origIdx];
+                const isSelected = quizAnswers[blockIndex] === origIdx;
+                const isCorrectBid = block.correctAnswer === origIdx;
                 const bidLevel = bid[0];
                 const bidSuit = bid.slice(1).toUpperCase();
                 const suitSymbols: Record<string, { sym: string; color: string }> = {
@@ -1196,11 +1215,11 @@ export default function ModulePage({
                 const isPasso = bid === "P" || bid === "Passo";
                 return (
                   <motion.button
-                    key={idx}
+                    key={origIdx}
                     whileTap={!bsAnswered ? { scale: 0.95 } : undefined}
                     onClick={() => {
                       if (bsAnswered) return;
-                      handleQuizAnswer(blockIndex, idx);
+                      handleQuizAnswer(blockIndex, origIdx);
                     }}
                     disabled={bsAnswered}
                     className={`rounded-xl border-2 p-3 text-center font-bold transition-all cursor-pointer ${bidCls}`}

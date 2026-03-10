@@ -79,7 +79,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco J di cuori, da sequenza. Nord conta le prese: 6 a picche se i resti sono 2-2, 5 se le picche sono 3-1, 4 se sono 4-0, +1 quadri, 2 fiori e 3 cuori... a condizione di poterle incassare separatamente. Serve un ingresso al morto, ed e' facile trovarlo! Vinta la presa con il K, Nord incassa A e K di atout, poi A e K di fiori e taglia il 6 al morto, guadagnando cosi' una presa in piu' e un ingresso. Su K e Q di cuori scarta le due cartine di quadri... e finisce a 12 prese. 4 picche + 2, in prima: 480.",
+      "Attacco J di cuori, da sequenza. Nord conta le prese: 6 a picche se i resti sono 2-2, 5 se le picche sono 3-1, 4 se sono 4-0, +1 quadri, 2 fiori e 3 cuori... a condizione di poterle incassare separatamente. Serve un ingresso al morto, ed è facile trovarlo! Vinta la presa con il K, Nord incassa A e K di atout, poi A e K di fiori e taglia il 6 al morto, guadagnando così una presa in più e un ingresso. Su K e Q di cuori scarta le due cartine di quadri... e finisce a 12 prese. 4 picche + 2, in prima: 480.",
   },
 
   // Board 2 - Lesson 5
@@ -119,7 +119,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco A di quadri, seguito dal K. Est conta su 5 o 6 picche (6 solo se cadra' il fante), 2 cuori e almeno 4 fiori. Tagliato il secondo giro a quadri batte le atout (e' necessario farlo, altrimenti non si potranno incassare le fiori). Scopre che a Sud spettera' una presa, ma e' inutile rigiocare picche: Sud la fara' di taglio, quando vorra'. Ora puo' tranquillamente incassare le fiori, prima o poi Sud tagliera', ma il morto e' raggiungibile con l'Asso di cuori - se e' stato conservato - per poter realizzare le fiori restanti. La difesa ha incassato 2 prese, Est le restanti 11. 4 picche + 1, in prima: 450.",
+      "Attacco A di quadri, seguito dal K. Est conta su 5 o 6 picche (6 solo se cadrà il fante), 2 cuori e almeno 4 fiori. Tagliato il secondo giro a quadri batte le atout (è necessario farlo, altrimenti non si potranno incassare le fiori). Scopre che a Sud spetterà una presa, ma è inutile rigiocare picche: Sud la farà di taglio, quando vorrà. Ora può tranquillamente incassare le fiori, prima o poi Sud taglierà, ma il morto è raggiungibile con l'Asso di cuori - se è stato conservato - per poter realizzare le fiori restanti. La difesa ha incassato 2 prese, Est le restanti 11. 4 picche + 1, in prima: 450.",
   },
 
   // Board 3 - Lesson 5
@@ -159,7 +159,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco J di picche, da sequenza. Est, sapendo che la Dama di picche e' in mano a Sud, deve superare con un onore e incassare anche l'altro; dopodiche' puo' giocare qualsiasi altro colore, anche picche (nella speranza di un taglio). Veniamo a Sud, che non deve perdere altre prese. Le atout devono essere battute, ma quando sull'Asso cade il Fante deve scattare un allarme. Ancora il Re per essere sicuri, e Ovest scarta. CONTATE le carte!! Est ha ancora 10x, Sud deve andare al morto (meglio usare le cuori) e giocare quadri verso Q9, superando la carta di Est. Eliminate le atout potra' passare all'incasso. 5 quadri, in prima: 400.",
+      "Attacco J di picche, da sequenza. Est, sapendo che la Dama di picche è in mano a Sud, deve superare con un onore e incassare anche l'altro; dopodiché può giocare qualsiasi altro colore, anche picche (nella speranza di un taglio). Veniamo a Sud, che non deve perdere altre prese. Le atout devono essere battute, ma quando sull'Asso cade il Fante deve scattare un allarme. Ancora il Re per essere sicuri, e Ovest scarta. CONTATE le carte!! Est ha ancora 10x, Sud deve andare al morto (meglio usare le cuori) e giocare quadri verso Q9, superando la carta di Est. Eliminate le atout potrà passare all'incasso. 5 quadri, in prima: 400.",
   },
 
   // Board 4 - Lesson 5
@@ -199,7 +199,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco 3 di quadri (nella speranza di fare un taglio). Sud vince la presa con il Re e vede cadere il 4; sa con certezza che la Dama e' in Ovest (impossibile che Nord, con Q3, abbia attaccato col 3!). Incassa anche l'altro onore, e continua con il J: sa che tagliano entrambi, ma offre a Nord la possibilita' di 'surtagliare'. Ovest ha tutte atout alte, quindi non commetta l'ingenuita' di tagliare con il 5! Vincera' la presa tagliando con una cuori alta, battera' le atout, incassera' le fiori e cedera' una picche. 10 prese. 4 cuori, in seconda: 620.",
+      "Attacco 3 di quadri (nella speranza di fare un taglio). Sud vince la presa con il Re e vede cadere il 4; sa con certezza che la Dama è in Ovest (impossibile che Nord, con Q3, abbia attaccato col 3!). Incassa anche l'altro onore, e continua con il J: sa che tagliano entrambi, ma offre a Nord la possibilità di 'surtagliare'. Ovest ha tutte atout alte, quindi non commetta l'ingenuità di tagliare con il 5! Vincerà la presa tagliando con una cuori alta, batterà le atout, incasserà le fiori e cederà una picche. 10 prese. 4 cuori, in seconda: 620.",
   },
 
   // Board 5 - Lesson 5
@@ -239,7 +239,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco J di quadri, da sequenza. Verosimilmente, che venga messo o no il Re, la difesa continuera' a quadri e Nord taglia. Ora conta: 4 prese a cuori (le sue 6 meno 2 da cedere), 2 picche, 4 fiori. Anche se mancano gli onori alti, le atout vanno assolutamente battute. Nord gioca la Dama di cuori (se Est ha fatto scopa con il Re... e' bene che rifletta: l'Asso di atout non glie lo porta via nessuno!), continuera' a giocare cuori e cuori qualunque sia il rinvio dei difensori. Solo dopo aver eliminato le cuori di Est-Ovest, finalmente, potra' dedicarsi alle fiori. 4 cuori, in seconda: 620.",
+      "Attacco J di quadri, da sequenza. Verosimilmente, che venga messo o no il Re, la difesa continuerà a quadri e Nord taglia. Ora conta: 4 prese a cuori (le sue 6 meno 2 da cedere), 2 picche, 4 fiori. Anche se mancano gli onori alti, le atout vanno assolutamente battute. Nord gioca la Dama di cuori (se Est ha fatto scopa con il Re... è bene che rifletta: l'Asso di atout non glie lo porta via nessuno!), continuerà a giocare cuori e cuori qualunque sia il rinvio dei difensori. Solo dopo aver eliminato le cuori di Est-Ovest, finalmente, potrà dedicarsi alle fiori. 4 cuori, in seconda: 620.",
   },
 
   // Board 6 - Lesson 5
@@ -279,7 +279,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco K di fiori, che promette la Q. Est conta 12 prese: 5 quadri della mano (manca l'Asso, che dovra' essere l'unica presa della difesa), 3 picche, 3 cuori, 1 fiori. Ma attenzione, se Est batte atout adesso, i difensori incasseranno al volo l'Asso di quadri e la Dama di fiori! PRIMA di dare la presa a quadri Est dovra', con minimo rischio, giocare il K di cuori, cuori per l'Asso e Dama di cuori, scartando il 6 di fiori. Ora atout, e il contratto e' in una botte di ferro perche' Est e' in grado di tagliare la prosecuzione a fiori. 6 quadri, in seconda: 1370.",
+      "Attacco K di fiori, che promette la Q. Est conta 12 prese: 5 quadri della mano (manca l'Asso, che dovrà essere l'unica presa della difesa), 3 picche, 3 cuori, 1 fiori. Ma attenzione, se Est batte atout adesso, i difensori incasseranno al volo l'Asso di quadri e la Dama di fiori! PRIMA di dare la presa a quadri Est dovrà, con minimo rischio, giocare il K di cuori, cuori per l'Asso e Dama di cuori, scartando il 6 di fiori. Ora atout, e il contratto è in una botte di ferro perché Est è in grado di tagliare la prosecuzione a fiori. 6 quadri, in seconda: 1370.",
   },
 
   // Board 7 - Lesson 5
@@ -318,7 +318,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco A di cuori, che normalmente promette il K. Mai vista una mano piu' facile: Sud taglia, batte le atout (prima il Re, onore della parte corta, poi altri due giri di mano) e passa all'incasso delle fiori. Ma c'e' una trappola... per chi non conta le carte: dopo aver incassato Asso e Re Sud ha VISTO la 3-1. Sa che il Fante sta per cadere sotto la Dama, quindi le altre due fiori del morto saranno comunque buone. Sempre che Sud abbia sbloccato, quell'ingombrante 10 di fiori sotto uno degli onori del morto. 4 picche + 1, in seconda: 650.",
+      "Attacco A di cuori, che normalmente promette il K. Mai vista una mano più facile: Sud taglia, batte le atout (prima il Re, onore della parte corta, poi altri due giri di mano) e passa all'incasso delle fiori. Ma c'è una trappola... per chi non conta le carte: dopo aver incassato Asso e Re Sud ha VISTO la 3-1. Sa che il Fante sta per cadere sotto la Dama, quindi le altre due fiori del morto saranno comunque buone. Sempre che Sud abbia sbloccato, quell'ingombrante 10 di fiori sotto uno degli onori del morto. 4 picche + 1, in seconda: 650.",
   },
 
   // Board 8 - Lesson 5
@@ -358,7 +358,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco J di picche, o J di cuori. Ovest, dopo essersi fatto un selfie con queste carte, conta: 1 picche, 3 cuori (?), 3 quadri, 6 fiori: 13 prese. Ma il blocco delle cuori da' un po' di inquietudine: come si puo' andare al morto a incassare KQ? Le atout sono tutte piu' piccole, ingressi non ce ne sono. Serve il sacrificio di un onore! Coraggio: Asso e Re di picche, poi Asso e Re di quadri e Dama di quadri tagliata. Eccoci al morto, con le cuori a disposizione. 7 fiori, in prima: 1440.",
+      "Attacco J di picche, o J di cuori. Ovest, dopo essersi fatto un selfie con queste carte, conta: 1 picche, 3 cuori (?), 3 quadri, 6 fiori: 13 prese. Ma il blocco delle cuori dà un po' di inquietudine: come si può andare al morto a incassare KQ? Le atout sono tutte più piccole, ingressi non ce ne sono. Serve il sacrificio di un onore! Coraggio: Asso e Re di picche, poi Asso e Re di quadri e Dama di quadri tagliata. Eccoci al morto, con le cuori a disposizione. 7 fiori, in prima: 1440.",
   },
 
   // ===== LESSON 6: Il piano di gioco ad atout =====
@@ -400,7 +400,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco K di quadri, da sequenza. A contare si fa presto: una presa certa a picche, cuori, quadri, l'Asso d'atout... e di affrancabili neanche l'ombra. Ma la distribuzione dei colori e' eccezionale per un piano di gioco a tagli: niente battuta di atout, questa volta! Nord incassa i due Assi rossi (e anche quello di fiori), poi prosegue tagliando le cuori in mano e le quadri al morto. Ottera' 4 prese dagli Assi, piu' 3 tagli con le picche di Sud, piu' 3 tagli con le cartine di picche di Nord: incredibilmente... 10 prese! 2 picche + 2: 170.",
+      "Attacco K di quadri, da sequenza. A contare si fa presto: una presa certa a picche, cuori, quadri, l'Asso d'atout... e di affrancabili neanche l'ombra. Ma la distribuzione dei colori è eccezionale per un piano di gioco a tagli: niente battuta di atout, questa volta! Nord incassa i due Assi rossi (e anche quello di fiori), poi prosegue tagliando le cuori in mano e le quadri al morto. Otterrà 4 prese dagli Assi, più 3 tagli con le picche di Sud, più 3 tagli con le cartine di picche di Nord: incredibilmente... 10 prese! 2 picche + 2: 170.",
   },
 
   // Board 2 - Lesson 6
@@ -440,7 +440,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco Q di fiori, testa di sequenza. Est puo' contare su 4 picche della mano e 2 fiori; sommando le affrancabili (1 cuori e 2 quadri) arriva a 9, manca una presa. Se Est riesce a ottenere un taglio con un'atout di Ovest, avra' allungato le prese di una; c'e' un colore che si presta, e' cuori: presenta la corta dalla stessa parte delle atout corte. Quindi, vinto l'attacco, subito cuori verso il Re. Su qualunque ritorno Est potra' giocare la Dama di cuori, tagliare la cartina, e poi battere atout. Invertendo l'ordine delle operazioni... il risultato non e' affatto lo stesso!! 4 picche, in prima: 420.",
+      "Attacco Q di fiori, testa di sequenza. Est può contare su 4 picche della mano e 2 fiori; sommando le affrancabili (1 cuori e 2 quadri) arriva a 9, manca una presa. Se Est riesce a ottenere un taglio con un'atout di Ovest, avrà allungato le prese di una; c'è un colore che si presta, è cuori: presenta la corta dalla stessa parte delle atout corte. Quindi, vinto l'attacco, subito cuori verso il Re. Su qualunque ritorno Est potrà giocare la Dama di cuori, tagliare la cartina, e poi battere atout. Invertendo l'ordine delle operazioni... il risultato non è affatto lo stesso!! 4 picche, in prima: 420.",
   },
 
   // Board 3 - Lesson 6
@@ -480,7 +480,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco K di quadri, da sequenza. Il conto delle vincenti e' esaltante... ma l'attacco ha trovato il tallone d'Achille. E bisogna fare l'impasse al Re di atout. Sud puo' anche permettersi di pagare una cuori, se l'impasse andasse male, ma non di pagare una cuori e una quadri! Prima di muovere atout e' necessario disfarsi del 7 di quadri, quindi: Asso di quadri, 8 di fiori superato dal Fante, Re di picche scartando il 7 di quadri. Ora si torna in mano (c'e' ampia scelta su come farlo) e si esegue l'impasse al Re di atout. Va male, ma lo slam e' salvo. 6 cuori, in prima: 980.",
+      "Attacco K di quadri, da sequenza. Il conto delle vincenti è esaltante... ma l'attacco ha trovato il tallone d'Achille. E bisogna fare l'impasse al Re di atout. Sud può anche permettersi di pagare una cuori, se l'impasse andasse male, ma non di pagare una cuori e una quadri! Prima di muovere atout è necessario disfarsi del 7 di quadri, quindi: Asso di quadri, 8 di fiori superato dal Fante, Re di picche scartando il 7 di quadri. Ora si torna in mano (c'è ampia scelta su come farlo) e si esegue l'impasse al Re di atout. Va male, ma lo slam è salvo. 6 cuori, in prima: 980.",
   },
 
   // Board 4 - Lesson 6
@@ -520,7 +520,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco A di cuori, K di cuori. Ovest ha buone probabilita' di mantenere il contratto: a quadri conta 7 prese certe, 1 a picche, 3 a fiori ma con qualche problema di blocco: se supera la Q con il K, non fara' piu' 3 prese a fiori!! Il solo modo per raggiungere il morto, e bisogna pensarci subito, e' sperare che sotto AK di quadri cadano tutte le atout: allora Ovest potra' sbloccare AQ di fiori e andare al morto con il 3 di quadri, superato dal 7. Accidenti! ... il 3 di quadri lo avete usato per tagliare??? Peccato! Era la piu' importante delle 13 carte di Ovest... valeva 600 punti! 5 quadri, in seconda: 600.",
+      "Attacco A di cuori, K di cuori. Ovest ha buone probabilità di mantenere il contratto: a quadri conta 7 prese certe, 1 a picche, 3 a fiori ma con qualche problema di blocco: se supera la Q con il K, non farà più 3 prese a fiori!! Il solo modo per raggiungere il morto, e bisogna pensarci subito, è sperare che sotto AK di quadri cadano tutte le atout: allora Ovest potrà sbloccare AQ di fiori e andare al morto con il 3 di quadri, superato dal 7. Accidenti! ... il 3 di quadri lo avete usato per tagliare??? Peccato! Era la più importante delle 13 carte di Ovest... valeva 600 punti! 5 quadri, in seconda: 600.",
   },
 
   // Board 5 - Lesson 6
@@ -560,7 +560,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco K di cuori, che promette la Q. Nord conta 5 prese a picche, 1 cuori, 1 quadri, 1 fiori: 8. Serve trovare altre due prese e, poiche' affrancare due prese nei colori laterali e' molto improbabile, occorre aumentare le prese date dalle atout e ottenerne 7. Il modo piu' semplice e' tagliare due cuori con le picche di Sud (le picche daranno cosi' 7 prese: 5 di Nord, + 2 tagli). Meglio farlo immediatamente, e rimandare la battuta d'atout; se Nord si ostina a togliere di mezzo tutte le picche dei difensori, spariranno le 3 atout di Sud e rimarra' a 8 prese. 4 picche, in seconda: 620.",
+      "Attacco K di cuori, che promette la Q. Nord conta 5 prese a picche, 1 cuori, 1 quadri, 1 fiori: 8. Serve trovare altre due prese e, poiché affrancare due prese nei colori laterali è molto improbabile, occorre aumentare le prese date dalle atout e ottenerne 7. Il modo più semplice è tagliare due cuori con le picche di Sud (le picche daranno così 7 prese: 5 di Nord, + 2 tagli). Meglio farlo immediatamente, e rimandare la battuta d'atout; se Nord si ostina a togliere di mezzo tutte le picche dei difensori, spariranno le 3 atout di Sud e rimarrà a 8 prese. 4 picche, in seconda: 620.",
   },
 
   // Board 6 - Lesson 6
@@ -600,7 +600,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco K di cuori, da sequenza. Con un colore pieno da sfruttare (le quadri danno 5 prese) Est sa di dover scegliere una strategia classica: 'elimino le atout e poi incasso le mie'. Anche se le atout dessero solo 3 prese, i colori a lato ne offrono 7. Come muovere le picche? Mancano Dama e 10, quindi il solo modo e' incassare il Re e poi piccola verso il Fante. Sud scarta, poco male: Est incassa anche l'Asso e poi gioca K e Q di quadri e quadri. Nord al quarto giro taglia, ma Est scarta la cartina di cuori e potra' tagliare il ritorno nel colore, cedendo solo piu' una fiori alla fine. 4 picche + 1, in seconda: 650.",
+      "Attacco K di cuori, da sequenza. Con un colore pieno da sfruttare (le quadri danno 5 prese) Est sa di dover scegliere una strategia classica: 'elimino le atout e poi incasso le mie'. Anche se le atout dessero solo 3 prese, i colori a lato ne offrono 7. Come muovere le picche? Mancano Dama e 10, quindi il solo modo è incassare il Re e poi piccola verso il Fante. Sud scarta, poco male: Est incassa anche l'Asso e poi gioca K e Q di quadri e quadri. Nord al quarto giro taglia, ma Est scarta la cartina di cuori e potrà tagliare il ritorno nel colore, cedendo solo più una fiori alla fine. 4 picche + 1, in seconda: 650.",
   },
 
   // Board 7 - Lesson 6
@@ -640,7 +640,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco K di quadri, da sequenza. Sud conta facilmente 10 prese: 6 picche, 3 cuori e 1 quadri. Vinto l'attacco (in quel momento la difesa ha a disposizione 2 fiori e 2 quadri affrancate!) il miglior modo di procedere e' questo: incassare AK di picche, poi la Dama di cuori, poi picche per il Fante eliminando l'ultima atout, poi A e K di cuori, scartando due quadri. Ora potra' giocare fiori per affrancare la sua 11a presa. 4 picche + 1, in seconda: 650.",
+      "Attacco K di quadri, da sequenza. Sud conta facilmente 10 prese: 6 picche, 3 cuori e 1 quadri. Vinto l'attacco (in quel momento la difesa ha a disposizione 2 fiori e 2 quadri affrancate!) il miglior modo di procedere è questo: incassare AK di picche, poi la Dama di cuori, poi picche per il Fante eliminando l'ultima atout, poi A e K di cuori, scartando due quadri. Ora potrà giocare fiori per affrancare la sua 11a presa. 4 picche + 1, in seconda: 650.",
   },
 
   // Board 8 - Lesson 6
@@ -680,7 +680,7 @@ export const smazzate5to8: BridgeHand[] = [
       ],
     },
     commentary:
-      "Attacco Q di quadri, la piu' alta della sequenza. Questa mano e' un esempio di corsa all'affrancamento: notate che a N-S spettano 2 cuori e 1 picche, ma stanno lavorando per affrancare una presa a quadri. Se ci riescono, Ovest perdera' il contratto. Se Ovest gioca cuori, e la difesa insiste sempre a quadri, questo avverra'. Ovest deve invece muovere subito il K di fiori; Sud prende e gioca quadri... Ovest prende, incassa Q e J di picche scartando il 6 di quadri. Ora e' a cavallo, puo' battere atout; ai difensori spetteranno due prese, ma non potranno piu' incassare la quadri affrancata perche' Ovest ha ottenuto il controllo di taglio. 4 cuori, in prima: 420 oppure 4 cuori -1: -50.",
+      "Attacco Q di quadri, la più alta della sequenza. Questa mano è un esempio di corsa all'affrancamento: notate che a N-S spettano 2 cuori e 1 picche, ma stanno lavorando per affrancare una presa a quadri. Se ci riescono, Ovest perderà il contratto. Se Ovest gioca cuori, e la difesa insiste sempre a quadri, questo avverrà. Ovest deve invece muovere subito il K di fiori; Sud prende e gioca quadri... Ovest prende, incassa Q e J di picche scartando il 6 di quadri. Ora è a cavallo, può battere atout; ai difensori spetteranno due prese, ma non potranno più incassare la quadri affrancata perché Ovest ha ottenuto il controllo di taglio. 4 cuori, in prima: 420 oppure 4 cuori -1: -50.",
   },
 
   // ===== LESSON 7: Le dichiarazioni di apertura =====
@@ -726,7 +726,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "1NT", "P", "3NT", "P", "P", "P"],
     },
     commentary:
-      "Attacco 2 di picche (unico colore lungo di Sud). Est ha una bilanciata compresa nel campo 15-17: l'apertura corretta e' 1NT. Ovest ha 11, sa di avere sulla linea 26/27/28: quanto basta per dichiarare una manche. E 3NT sembra proprio la migliore. Est conta 2 picche, 3 o 4 cuori a seconda che l'impasse riesca o meno, e 4 quadri. Qxx + Jxx di fiori rappresentano un fermo sicuro, ma solo se saranno gli avversari a muovere per primi. La prima cosa da fare e' l'impasse a cuori, quindi si va al morto a quadri e si lascia 'girare' il fante di cuori. Sud vince con il Re, e sa di poter giocare picche (se Nord sull'attacco ha correttamente messo il DIECI) per il J del compagno. Est realizza le sue 9 prese (o 10, se la difesa avra' fretta di giocare fiori anziche' affrancare le picche). 3NT, in prima: 400.",
+      "Attacco 2 di picche (unico colore lungo di Sud). Est ha una bilanciata compresa nel campo 15-17: l'apertura corretta è 1NT. Ovest ha 11, sa di avere sulla linea 26/27/28: quanto basta per dichiarare una manche. E 3NT sembra proprio la migliore. Est conta 2 picche, 3 o 4 cuori a seconda che l'impasse riesca o meno, e 4 quadri. Qxx + Jxx di fiori rappresentano un fermo sicuro, ma solo se saranno gli avversari a muovere per primi. La prima cosa da fare è l'impasse a cuori, quindi si va al morto a quadri e si lascia 'girare' il fante di cuori. Sud vince con il Re, e sa di poter giocare picche (se Nord sull'attacco ha correttamente messo il DIECI) per il J del compagno. Est realizza le sue 9 prese (o 10, se la difesa avrà fretta di giocare fiori anziché affrancare le picche). 3NT, in prima: 400.",
   },
 
   // Board 2 - Lesson 7
@@ -770,7 +770,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "1NT", "P", "4S", "P", "P", "P"],
     },
     commentary:
-      "Perche' non 4 picche, visto che Sud ha certamente almeno 2 carte? Est vede cadere il Fante e si deve fermare: se prosegue con il K (quasi certamente tagliato), la Dama del morto sara' un regalo per Nord, che potra' fare 12 prese (6 picche, 2 cuori, un taglio al morto della cartina di cuori, 2 quadri e 1 fiori: 12). Se Est, saggiamente, prosegue in un qualsiasi altro colore Nord fara' solo 11 prese. 4 picche + 1, in seconda: 650.",
+      "Perché non 4 picche, visto che Sud ha certamente almeno 2 carte? Est vede cadere il Fante e si deve fermare: se prosegue con il K (quasi certamente tagliato), la Dama del morto sarà un regalo per Nord, che potrà fare 12 prese (6 picche, 2 cuori, un taglio al morto della cartina di cuori, 2 quadri e 1 fiori: 12). Se Est, saggiamente, prosegue in un qualsiasi altro colore Nord farà solo 11 prese. 4 picche + 1, in seconda: 650.",
   },
 
   // Board 3 - Lesson 7
@@ -814,7 +814,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "2S", "P", "4S", "P", "P", "P"],
     },
     commentary:
-      "La licita. Con 21 punti e 6 ottime carte, l'apertura di 2 picche e' perfetta. Est ha fit sufficiente e, sapendo di avere almeno 21+6=27 punti in linea, dichiara direttamente la manche. Ovest potrebbe anche avere meno di 21... ma in tal caso promette 8 prese da solo, e Est ne porta due: un Asso e la Dama di atout. Ovest vince l'attacco e conta: 6 picche, 2 cuori, 1 quadri, 2 fiori: 11 prese facili. Ma il bridge e' un gioco di confronti, quindi se non c'e' rischio bisogna sempre cercare di fare il maggior numero possibile di prese; non costa nulla incassare AK di picche, poi fiori all'Asso, picche al Re e quadri tagliata in assoluta sicurezza con la Dama di picche. E le prese sono diventate 12. 4 picche + 2, in seconda: 680.",
+      "La licita. Con 21 punti e 6 ottime carte, l'apertura di 2 picche è perfetta. Est ha fit sufficiente e, sapendo di avere almeno 21+6=27 punti in linea, dichiara direttamente la manche. Ovest potrebbe anche avere meno di 21... ma in tal caso promette 8 prese da solo, e Est ne porta due: un Asso e la Dama di atout. Ovest vince l'attacco e conta: 6 picche, 2 cuori, 1 quadri, 2 fiori: 11 prese facili. Ma il bridge è un gioco di confronti, quindi se non c'è rischio bisogna sempre cercare di fare il maggior numero possibile di prese; non costa nulla incassare AK di picche, poi fiori all'Asso, picche al Re e quadri tagliata in assoluta sicurezza con la Dama di picche. E le prese sono diventate 12. 4 picche + 2, in seconda: 680.",
   },
 
   // Board 4 - Lesson 7
@@ -858,7 +858,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "2H", "P", "2S", "P", "4S", "P", "P", "P"],
     },
     commentary:
-      "La licita. Nord ha 10 vincenti...da solo, e due possibili colori da scegliere come atout. L'apertura di 2 a colore non e' passabile, e questa mano evidenzia il perche'. Sud non ha fit, ma non puo' passare: la dichiarazione piu' ovvia e' 2 picche. Nord (che continua a vedersi 10 prese... ora e' ancora piu' contento) ne dichiara direttamente 4. Nessuna difficolta' per Sud, che se si ingegna riuscira' a fare 12 prese: Asso di quadri, Asso e Re di picche, Asso e Re di fiori, piccola picche per il Fante... e Dama di quadri per lo scarto del 5 di cuori. I difensori faranno solo l'Asso di cuori. 4 picche + 2, in seconda: 680.",
+      "La licita. Nord ha 10 vincenti...da solo, e due possibili colori da scegliere come atout. L'apertura di 2 a colore non è passabile, e questa mano evidenzia il perché. Sud non ha fit, ma non può passare: la dichiarazione più ovvia è 2 picche. Nord (che continua a vedersi 10 prese... ora è ancora più contento) ne dichiara direttamente 4. Nessuna difficoltà per Sud, che se si ingegna riuscirà a fare 12 prese: Asso di quadri, Asso e Re di picche, Asso e Re di fiori, piccola picche per il Fante... e Dama di quadri per lo scarto del 5 di cuori. I difensori faranno solo l'Asso di cuori. 4 picche + 2, in seconda: 680.",
   },
 
   // Board 5 - Lesson 7
@@ -902,7 +902,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "P", "1NT", "P", "3NT", "P", "P", "P"],
     },
     commentary:
-      "Attacco Q di picche (sfortunato, ma corretto). La licita. Sud e' il primo che ha requisiti di apertura; ha 17 punti e mano bilanciata: 1NT. Nord, che non ha motivo di pensare ad altri tipi di contratto, somma i suoi punti a quelli di Sud (11 + 15/16/17) e sa di dover dichiarare 3NT. Sud conta 2 picche, 2 cuori, 4 quadri, 1 fiori. Nove senza fatica. Si puo' fare di meglio? Si, e senza rischi: verosimilmente l'attacco di Dama promette il Fante, vero? Allora si vince l'attacco con l'Asso... poi si gioca piccola verso K10 facendo un impasse al 100%! ... E le prese diventano 10. 3NT + 1, in seconda: 630.",
+      "Attacco Q di picche (sfortunato, ma corretto). La licita. Sud è il primo che ha requisiti di apertura; ha 17 punti e mano bilanciata: 1NT. Nord, che non ha motivo di pensare ad altri tipi di contratto, somma i suoi punti a quelli di Sud (11 + 15/16/17) e sa di dover dichiarare 3NT. Sud conta 2 picche, 2 cuori, 4 quadri, 1 fiori. Nove senza fatica. Si può fare di meglio? Si, e senza rischi: verosimilmente l'attacco di Dama promette il Fante, vero? Allora si vince l'attacco con l'Asso... poi si gioca piccola verso K10 facendo un impasse al 100%! ... E le prese diventano 10. 3NT + 1, in seconda: 630.",
   },
 
   // Board 6 - Lesson 7
@@ -946,7 +946,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["2NT", "P", "3NT", "P", "P", "P"],
     },
     commentary:
-      "La licita. Con mano bilanciata e 21 punti l'apertura corretta e' 2NT; Ovest, pure lui bilanciato, fa le somme e sa di avere sulla linea 29 o 30 punti, pertanto rialza a 3NT. Nonostante i punti, il contratto e' a rischio, perche' purtroppo a picche si fanno solo 2 prese. A cuori 3. Le picche sono inutili, non c'e' tempo per affrancarle (i difensori incasserebbero 2 picche e 3 quadri). Morale, e' indispensabile che le fiori forniscano QUATTRO prese, quindi che il Re sia in Nord, secondo o terzo. Per ripetere l'impasse bisogna partire due volte dal morto, incominciamo dunque a mettere il Re di cuori (e star sotto con la Dama). Fiori impasse, che va bene. Allora al Re e ancora fiori impasse. E nove sudatissime prese sono in tasca. 3NT, in seconda: 600.",
+      "La licita. Con mano bilanciata e 21 punti l'apertura corretta è 2NT; Ovest, pure lui bilanciato, fa le somme e sa di avere sulla linea 29 o 30 punti, pertanto rialza a 3NT. Nonostante i punti, il contratto è a rischio, perché purtroppo a picche si fanno solo 2 prese. A cuori 3. Le picche sono inutili, non c'è tempo per affrancarle (i difensori incasserebbero 2 picche e 3 quadri). Morale, è indispensabile che le fiori forniscano QUATTRO prese, quindi che il Re sia in Nord, secondo o terzo. Per ripetere l'impasse bisogna partire due volte dal morto, incominciamo dunque a mettere il Re di cuori (e star sotto con la Dama). Fiori impasse, che va bene. Allora al Re e ancora fiori impasse. E nove sudatissime prese sono in tasca. 3NT, in seconda: 600.",
   },
 
   // Board 7 - Lesson 7
@@ -989,7 +989,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "1H", "1S", "2H", "2S", "3H", "3S", "P", "4S", "P", "P", "P"],
     },
     commentary:
-      "In questa mano puo' succedere di tutto: entrambe le linee hanno un fit eccezionale. Ovest e' invogliato a competere dal singolo di picche, Sud lo e' altrettanto per il vuoto a cuori. Se Nord gioca con atout picche realizzera' 11 prese, purche' abbia cura di rimandare la battuta e tagliare al morto le tre cuori che ha in mano (perdera' solo A e K di cuori). Se Ovest gioca a cuori puo' fare 11 prese: 6 cuori di mano, 2 quadri, 3 quadri affrancate. Solo 10 con un brillante controgioco: A di quadri, picche per l'Asso e quadri taglio.",
+      "In questa mano può succedere di tutto: entrambe le linee hanno un fit eccezionale. Ovest è invogliato a competere dal singolo di picche, Sud lo è altrettanto per il vuoto a cuori. Se Nord gioca con atout picche realizzerà 11 prese, purché abbia cura di rimandare la battuta e tagliare al morto le tre cuori che ha in mano (perderà solo A e K di cuori). Se Ovest gioca a cuori può fare 11 prese: 6 cuori di mano, 2 quadri, 3 quadri affrancate. Solo 10 con un brillante controgioco: A di quadri, picche per l'Asso e quadri taglio.",
   },
 
   // Board 8 - Lesson 7
@@ -1033,7 +1033,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["2NT", "P", "7NT", "P", "P", "P"],
     },
     commentary:
-      "La licita. Con 21 punti e mano bilanciata Ovest apre di 2NT; Est, che ha quasi tutti i punti che restano nel mazzo, dovrebbe ragionevolmente spararne 7. Nella sua disperazione, Nord sceglie comunque la sua sequenza di cuori. Ovest conta: 4 picche, 3 cuori, 2 quadri, 3 fiori... forse 4. E' da li' che bisogna cominciare, senza aver fretta di incassare il resto. E bisogna cominciare con K e Q di fiori: A+10 del morto consentirebbero l'impasse al Fante, se quarto in Nord. E se fosse quarto in Sud... imprendibile? Rimarrebbe la ruota di scorta dell'impasse alla Q di quadri. 7NT, in prima: 1520.",
+      "La licita. Con 21 punti e mano bilanciata Ovest apre di 2NT; Est, che ha quasi tutti i punti che restano nel mazzo, dovrebbe ragionevolmente spararne 7. Nella sua disperazione, Nord sceglie comunque la sua sequenza di cuori. Ovest conta: 4 picche, 3 cuori, 2 quadri, 3 fiori... forse 4. È da lì che bisogna cominciare, senza aver fretta di incassare il resto. E bisogna cominciare con K e Q di fiori: A+10 del morto consentirebbero l'impasse al Fante, se quarto in Nord. E se fosse quarto in Sud... imprendibile? Rimarrebbe la ruota di scorta dell'impasse alla Q di quadri. 7NT, in prima: 1520.",
   },
 
   // ===== LESSON 8: Le aperture di 1NT e 2NT =====
@@ -1079,7 +1079,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["1NT", "P", "2C", "P", "2D", "P", "3NT", "P", "P", "P"],
     },
     commentary:
-      "La licita. Sud ha 10 punti, Nord mostra 15-17: la manche e' certa. Forse 3NT, forse no. L'ordine di priorita' suggerisce: 'cerca fit nobile, se non c'e' gioca a Senza, ultima spiaggia gioca a fiori o quadri'. Il fit a cuori e' possibile, per scoprirlo Sud deve chiedere a Nord se ha quarte nobili, usando il 2 fiori; appurato che a cuori non c'e' fit ripiega nella manche alternativa, a 3NT. La prima carta decide tutto: quando si riceve l'attacco in una figura come A10x + Jx si deve giocare piccola dal morto. Se Nord gioca il 3 avra' la certezza assoluta di fare 2 prese nel colore (provare per credere). Se gioca il Fante (Q di Ovest) certamente ci rimette una presa... e molte volte il contratto. 3NT + 1, in prima: 430. Oppure 3NT -1, in prima: -50.",
+      "La licita. Sud ha 10 punti, Nord mostra 15-17: la manche è certa. Forse 3NT, forse no. L'ordine di priorità suggerisce: 'cerca fit nobile, se non c'è gioca a Senza, ultima spiaggia gioca a fiori o quadri'. Il fit a cuori è possibile, per scoprirlo Sud deve chiedere a Nord se ha quarte nobili, usando il 2 fiori; appurato che a cuori non c'è fit ripiega nella manche alternativa, a 3NT. La prima carta decide tutto: quando si riceve l'attacco in una figura come A10x + Jx si deve giocare piccola dal morto. Se Nord gioca il 3 avrà la certezza assoluta di fare 2 prese nel colore (provare per credere). Se gioca il Fante (Q di Ovest) certamente ci rimette una presa... e molte volte il contratto. 3NT + 1, in prima: 430. Oppure 3NT -1, in prima: -50.",
   },
 
   // Board 2 - Lesson 8
@@ -1123,7 +1123,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "P", "2NT", "P", "3C", "P", "3D", "P", "3NT", "P", "P", "P"],
     },
     commentary:
-      "La licita. Per giocare una manche servono 24-25 punti; a volte avrete 12 + 13... a volte 20+5. Est non si deve scoraggiare, interroga per scoprire se Ovest ha 4 carte a cuori (la sua mano sarebbe piu' adatta a giocare ad atout) ma quando scopre che non c'e' fit prende coraggio e dichiara 3NT. L'attacco toglie al morto l'unico ingresso accanto alle fiori, sorgente di prese. Ovest conta 2 picche, 3 quadri, 1 cuori... e se riesce a incassare 4 fiori ha gia' 10 prese. Muove immediatamente piccola fiori verso la mano (prima gli onori della parte corta) e, se ha la prontezza di buttar via K o Q sotto l'Asso di Sud... manterra' il contratto. 3NT + 1, in prima: 430.",
+      "La licita. Per giocare una manche servono 24-25 punti; a volte avrete 12 + 13... a volte 20+5. Est non si deve scoraggiare, interroga per scoprire se Ovest ha 4 carte a cuori (la sua mano sarebbe più adatta a giocare ad atout) ma quando scopre che non c'è fit prende coraggio e dichiara 3NT. L'attacco toglie al morto l'unico ingresso accanto alle fiori, sorgente di prese. Ovest conta 2 picche, 3 quadri, 1 cuori... e se riesce a incassare 4 fiori ha già 10 prese. Muove immediatamente piccola fiori verso la mano (prima gli onori della parte corta) e, se ha la prontezza di buttar via K o Q sotto l'Asso di Sud... manterrà il contratto. 3NT + 1, in prima: 430.",
   },
 
   // Board 3 - Lesson 8
@@ -1167,7 +1167,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["1NT", "P", "2C", "P", "2S", "P", "3NT", "P", "P", "P"],
     },
     commentary:
-      "La licita. Nord ha il compito di portare la sua coppia alla miglior manche; prima di dire 3NT dovrebbe assicurarsi che non ci sia un fit nobile, quindi interroga con 2 fiori. La risposta di Sud esclude la quarta di cuori (quindi non ha senso che Nord le mostri) e 3NT e' l'ovvia conclusione. Est si regolera' a seconda della carta del morto: K sulla Q e J sul 9. Comunque si svolgano le prime due prese, Ovest deve guardare con attenzione tutte le carte (il suo 8 e' prezioso) e accorgersi che deve assolutamente superare con l'Asso l'onore di Est... perche', se conta le carte, sa che Est potrebbe non averne piu'! Se avra' questa prontezza il contratto (pur ottimo) cadra' di una presa. Altrimenti Sud senza fatica mettera' insieme ben 10 prese (4 picche, data la 3-3, 4 cuori, 2 fiori). 3NT - 1, in prima: -50. Oppure 3NT +1, in prima: 430.",
+      "La licita. Nord ha il compito di portare la sua coppia alla miglior manche; prima di dire 3NT dovrebbe assicurarsi che non ci sia un fit nobile, quindi interroga con 2 fiori. La risposta di Sud esclude la quarta di cuori (quindi non ha senso che Nord le mostri) e 3NT è l'ovvia conclusione. Est si regolerà a seconda della carta del morto: K sulla Q e J sul 9. Comunque si svolgano le prime due prese, Ovest deve guardare con attenzione tutte le carte (il suo 8 è prezioso) e accorgersi che deve assolutamente superare con l'Asso l'onore di Est... perché, se conta le carte, sa che Est potrebbe non averne più! Se avrà questa prontezza il contratto (pur ottimo) cadrà di una presa. Altrimenti Sud senza fatica metterà insieme ben 10 prese (4 picche, data la 3-3, 4 cuori, 2 fiori). 3NT - 1, in prima: -50. Oppure 3NT +1, in prima: 430.",
   },
 
   // Board 4 - Lesson 8
@@ -1211,7 +1211,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["1NT", "P", "2S", "P", "P", "P"],
     },
     commentary:
-      "La licita. Sarebbe una grande vigliaccata se Est decidesse di far giocare 1NT al compagno (e' il PASSO su 1NT che DECIDE il contratto, non l'apertura di 1NT!). Le sue carte, a Senza, non valgono niente, mentre giocando con atout picche porteranno mediamente 3 o 4 prese. Quindi deve imporre il parziale migliore, che e' 2 picche. Basta che le dica, Ovest DEVE passare. Est conta di fare 4 picche di mano (6 meno 2 da cedere), 3 cuori, 1 fiori, ma come sempre deve chiedersi: cosa succede se ora cedo la presa a picche? Succede che loro fanno 6 prese al volo: 2 picche appena affrancate, 2 quadri, 2 fiori. Morale: giocare immediatamente AKQ di cuori e scartate una quadri o una fiori, a scelta. Poi, atout. 2 picche: 110. Oppure 1NT - 3: -300.",
+      "La licita. Sarebbe una grande vigliaccata se Est decidesse di far giocare 1NT al compagno (è il PASSO su 1NT che DECIDE il contratto, non l'apertura di 1NT!). Le sue carte, a Senza, non valgono niente, mentre giocando con atout picche porteranno mediamente 3 o 4 prese. Quindi deve imporre il parziale migliore, che è 2 picche. Basta che le dica, Ovest DEVE passare. Est conta di fare 4 picche di mano (6 meno 2 da cedere), 3 cuori, 1 fiori, ma come sempre deve chiedersi: cosa succede se ora cedo la presa a picche? Succede che loro fanno 6 prese al volo: 2 picche appena affrancate, 2 quadri, 2 fiori. Morale: giocare immediatamente AKQ di cuori e scartate una quadri o una fiori, a scelta. Poi, atout. 2 picche: 110. Oppure 1NT - 3: -300.",
   },
 
   // Board 5 - Lesson 8
@@ -1255,7 +1255,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "1NT", "P", "2C", "P", "2NT", "P", "4H", "P", "P", "P"],
     },
     commentary:
-      "La licita. Ovest e' certo di dover dichiarare una manche: i punti in linea sono 27/29. Quello che NON deve fare... e' dire 2 cuori (Est ha l'ordine di passare, e lo fara'). La via giusta e' l'interrogativa, per scoprire se c'e' fit a cuori. Est con 2NT mostra entrambe le quarte nobili e Ovest puo' concludere a 4 cuori. La difesa prova a incassare un'altra fiori ma Ovest taglia. Conta su 2 picche, 5 quadri (molto probabili), e 5 prese a cuori: le 4 del morto piu' il taglio appena fatto. Nessuna controindicazione al battere atout, ignorando la 4-1; poi K e J di quadri, picche per il Re e le restanti quadri. 4 cuori + 2, in prima: 480.",
+      "La licita. Ovest è certo di dover dichiarare una manche: i punti in linea sono 27/29. Quello che NON deve fare... è dire 2 cuori (Est ha l'ordine di passare, è lo farà). La via giusta è l'interrogativa, per scoprire se c'è fit a cuori. Est con 2NT mostra entrambe le quarte nobili e Ovest può concludere a 4 cuori. La difesa prova a incassare un'altra fiori ma Ovest taglia. Conta su 2 picche, 5 quadri (molto probabili), e 5 prese a cuori: le 4 del morto più il taglio appena fatto. Nessuna controindicazione al battere atout, ignorando la 4-1; poi K e J di quadri, picche per il Re e le restanti quadri. 4 cuori + 2, in prima: 480.",
   },
 
   // Board 6 - Lesson 8
@@ -1299,7 +1299,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["P", "1NT", "P", "2NT", "P", "P", "P"],
     },
     commentary:
-      "La licita. Le carte di Nord si prestano a un contratto a Senza (le lunghe minori portano prese anche a Senza, ma non hanno convenienza a essere atout... a meno che sia in ballo uno Slam), la sua incertezza pero' e' sulla somma punti: i suoi 8 portano a 23 se l'apertore ha 15, a 25 se ha 17. Il rialzo a 2NT comunica proprio questo; il compito di Sud e' passare se ha il minimo e rialzare a 3NT se ha 17 (o 16 bellissimi). Mano facile, 8 prese ci sono, salvo cattiva divisione delle fiori. Vinto l'attacco in mano (meglio lasciare il K di picche accanto alle fiori, non si sa mai) Sud gioca K e Q di fiori e prosegue con le altre fiori del morto. Poi si dovra' accontentare. 2NT: 120.",
+      "La licita. Le carte di Nord si prestano a un contratto a Senza (le lunghe minori portano prese anche a Senza, ma non hanno convenienza a essere atout... a meno che sia in ballo uno Slam), la sua incertezza però è sulla somma punti: i suoi 8 portano a 23 se l'apertore ha 15, a 25 se ha 17. Il rialzo a 2NT comunica proprio questo; il compito di Sud è passare se ha il minimo e rialzare a 3NT se ha 17 (o 16 bellissimi). Mano facile, 8 prese ci sono, salvo cattiva divisione delle fiori. Vinto l'attacco in mano (meglio lasciare il K di picche accanto alle fiori, non si sa mai) Sud gioca K e Q di fiori e prosegue con le altre fiori del morto. Poi si dovrà accontentare. 2NT: 120.",
   },
 
   // Board 7 - Lesson 8
@@ -1343,7 +1343,7 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["1NT", "P", "2C", "P", "2D", "P", "2S", "P", "3S", "P", "4S", "P", "P", "P"],
     },
     commentary:
-      "La licita. Nord ha un solo dubbio: la manche sara' 3NT se Sud ha due sole picche, o sara' 4 picche se Sud ha 3 o 4 carte. Interroga con la Stayman, e Sud nega quarte maggiori. Quarte, ma non terze: su 2 quadri ora Nord deve dire 2 picche. Sud deve capire: a) che le picche di Nord sono 5, sarebbe sciocco dire un colore quarto gia' sapendo che il fit non c'e'; b) che Nord vuole giocare una manche, altrimenti avrebbe detto 2 picche subito. Poiche' ha fit di 3 carte, Sud dichiara 3 picche (con 2 avrebbe ripiegato a 2NT) e ora Nord sa che manche dichiarare. Tutta discesa: vinto l'attacco a cuori si fa l'impasse al K di picche (per piacere, iniziate con il 10 o il 9). Catturato il Re e battute le atout si incassa il resto, per un totale di 11 prese: 5 picche, 2 cuori, 4 fiori. Nulla cambia con l'attacco quadri. 4 picche + 1, in seconda: 650.",
+      "La licita. Nord ha un solo dubbio: la manche sarà 3NT se Sud ha due sole picche, o sarà 4 picche se Sud ha 3 o 4 carte. Interroga con la Stayman, e Sud nega quarte maggiori. Quarte, ma non terze: su 2 quadri ora Nord deve dire 2 picche. Sud deve capire: a) che le picche di Nord sono 5, sarebbe sciocco dire un colore quarto già sapendo che il fit non c'è; b) che Nord vuole giocare una manche, altrimenti avrebbe detto 2 picche subito. Poiché ha fit di 3 carte, Sud dichiara 3 picche (con 2 avrebbe ripiegato a 2NT) e ora Nord sa che manche dichiarare. Tutta discesa: vinto l'attacco a cuori si fa l'impasse al K di picche (per piacere, iniziate con il 10 o il 9). Catturato il Re e battute le atout si incassa il resto, per un totale di 11 prese: 5 picche, 2 cuori, 4 fiori. Nulla cambia con l'attacco quadri. 4 picche + 1, in seconda: 650.",
   },
 
   // Board 8 - Lesson 8
@@ -1387,6 +1387,6 @@ export const smazzate5to8: BridgeHand[] = [
       bids: ["1NT", "P", "4H", "P", "P", "P"],
     },
     commentary:
-      "Est deve fare attenzione, la somma di vincenti e affrancabili potrebbe portarlo fuori strada, se non considera i 'tempi' di gioco. Fara' 5 prese a cuori e 2 picche, e puo' affrancare 2 fiori e 2 picche. E gli avversari? Hanno 3 assi a disposizione, e stanno rosicchiando un'affrancabile a quadri. Se Est muove subito atout (Sud continua a quadri) andra' sotto di una! Vinto l'attacco, invece, Est dovra' affrettarsi a giocare il K di fiori. Nord prendera' per giocare quadri, ma ora Est e' in grado di scartare la cartina di quadri sulla Q di picche. Adesso, e solo adesso, battera' le atout. 4 cuori, in prima: 420.",
+      "Est deve fare attenzione, la somma di vincenti e affrancabili potrebbe portarlo fuori strada, se non considera i 'tempi' di gioco. Farà 5 prese a cuori e 2 picche, e può affrancare 2 fiori e 2 picche. E gli avversari? Hanno 3 assi a disposizione, e stanno rosicchiando un'affrancabile a quadri. Se Est muove subito atout (Sud continua a quadri) andrà sotto di una! Vinto l'attacco, invece, Est dovrà affrettarsi a giocare il K di fiori. Nord prenderà per giocare quadri, ma ora Est è in grado di scartare la cartina di quadri sulla Q di picche. Adesso, e solo adesso, batterà le atout. 4 cuori, in prima: 420.",
   },
 ];

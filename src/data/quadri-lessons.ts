@@ -62,7 +62,7 @@ const lezione1: QuadriLesson = {
   title: "Tempi e comunicazioni nel gioco a Senza",
   icon: "🕐",
   description:
-    "Il gioco a SA e una corsa: impara a valutare tempi, ingressi e l'avversario pericoloso.",
+    "Il gioco a SA è una corsa: impara a valutare tempi, ingressi e l'avversario pericoloso.",
   smazzateIds: ["Q1-1", "Q1-2", "Q1-3", "Q1-4"],
   modules: [
     {
@@ -74,12 +74,12 @@ const lezione1: QuadriLesson = {
         {
           type: "text",
           content:
-            "Nel gioco a Senza la domanda fondamentale e: 'Posso affrancare le prese che mi servono, prima che gli avversari ne affranchino abbastanza nei loro colori per battere il mio contratto?'",
+            "Nel gioco a Senza la domanda fondamentale è: 'Posso affrancare le prese che mi servono, prima che gli avversari ne affranchino abbastanza nei loro colori per battere il mio contratto?'",
         },
         {
           type: "rule",
           content:
-            "I TEMPI sono essenziali: il gioco a Senza e una corsa. Serve una scelta immediata, a favore dei colori che possono, da soli, produrre tutte le prese che servono.",
+            "I TEMPI sono essenziali: il gioco a Senza è una corsa. Serve una scelta immediata, a favore dei colori che possono, da soli, produrre tutte le prese che servono.",
         },
         {
           type: "text",
@@ -89,23 +89,23 @@ const lezione1: QuadriLesson = {
         {
           type: "example",
           content:
-            "Est gioca 3NT, attacco 5♠. Vincenti: 2♠ e 4♦. Ci sono 3 affrancabili nel colore di cuori e 4 nel colore di fiori, ma e rimasto un solo fermo a Picche. Si devono scegliere le Cuori che si affrancano in un tempo solo, e non le Fiori che richiedono due tempi.",
+            "Est gioca 3NT, attacco 5♠. Vincenti: 2♠ e 4♦. Ci sono 3 affrancabili nel colore di cuori e 4 nel colore di fiori, ma è rimasto un solo fermo a Picche. Si devono scegliere le Cuori che si affrancano in un tempo solo, e non le Fiori che richiedono due tempi.",
           cards: "♠63 ♥KJ105 ♦AQ75 ♣J83 | ♠AK ♥Q6 ♦KJ6 ♣Q109762",
         },
         {
           type: "rule",
           content:
-            "Quando muoviamo un colore fatto di carte equivalenti (KQJ...QJ10...) le prese che cediamo all'avversario ERANO GIA SUE IN PARTENZA. Quando invece facciamo un impasse, o cediamo una presa per affrancarne di lunga, stiamo DANDO all'avversario prese che non aveva ancora a disposizione.",
+            "Quando muoviamo un colore fatto di carte equivalenti (KQJ...QJ10...) le prese che cediamo all'avversario ERANO GIÀ SUE IN PARTENZA. Quando invece facciamo un impasse, o cediamo una presa per affrancarne di lunga, stiamo DANDO all'avversario prese che non aveva ancora a disposizione.",
         },
         {
           type: "quiz",
           content:
-            "A Senza Atout, quando e meglio affrancareun colore con carte equivalenti (es. KQJ) rispetto a un colore che richiede un impasse?",
+            "A Senza Atout, quando è meglio affrancareun colore con carte equivalenti (es. KQJ) rispetto a un colore che richiede un impasse?",
           quizType: "multiple-choice",
           options: [
             "Sempre: le carte equivalenti sono migliori",
             "Quando non si hanno abbastanza tempi per l'impasse",
-            "Mai: l'impasse e sempre preferibile",
+            "Mai: l'impasse è sempre preferibile",
             "Solo quando si hanno 9+ carte nel colore",
           ],
           correctAnswer: 1,
@@ -123,23 +123,23 @@ const lezione1: QuadriLesson = {
         {
           type: "text",
           content:
-            "Se la mano presenta un colore affrancabile in tempo utile, che puo dare da solo le prese che servono, tutto deve essere finalizzato all'affrancamento di quel colore. Potendo vincere l'attacco in mano o al morto, scegliete in base al modo migliore di manovrare il colore da affrancare.",
+            "Se la mano presenta un colore affrancabile in tempo utile, che può dare da solo le prese che servono, tutto deve essere finalizzato all'affrancamento di quel colore. Potendo vincere l'attacco in mano o al morto, scegliete in base al modo migliore di manovrare il colore da affrancare.",
         },
         {
           type: "rule",
           content:
-            "Assicuratevi che il colore sia raggiungibile, una volta affrancato, con i necessari ingressi. Le prese 'oltre che per incassare' vanno usate anche per consumo dei colori in cui c'e da lavorare.",
+            "Assicuratevi che il colore sia raggiungibile, una volta affrancato, con i necessari ingressi. Le prese 'oltre che per incassare' vanno usate anche per consumo dei colori in cui c'è da lavorare.",
         },
         {
           type: "example",
           content:
-            "Est gioca 3NT, attacco a Cuori. Per prima cosa si dovra dedicare alle Quadri (ha 5 vincenti), e le quadri forniranno 4 o 5 prese a seconda che riesca o meno l'impasse, muovendo dal morto verso la mano.",
+            "Est gioca 3NT, attacco a Cuori. Per prima cosa si dovrà dedicare alle Quadri (ha 5 vincenti), e le quadri forniranno 4 o 5 prese a seconda che riesca o meno l'impasse, muovendo dal morto verso la mano.",
           cards: "♠AQ7 ♥K84 ♦875 ♣8763 | ♠86 ♥A32 ♦AQJ106 ♣AK4",
         },
         {
           type: "tip",
           content:
-            "Di solito se si fronteggiano mani di pari punteggio il collegamento e facile. Se c'e sproporzione di forze, abbiate cura di utilizzare in modo razionale i pochi ingressi della mano povera.",
+            "Di solito se si fronteggiano mani di pari punteggio il collegamento è facile. Se c'è sproporzione di forze, abbiate cura di utilizzare in modo razionale i pochi ingressi della mano povera.",
         },
         {
           type: "quiz",
@@ -149,7 +149,7 @@ const lezione1: QuadriLesson = {
           options: ["48%", "36%", "50%", "68%"],
           correctAnswer: 1,
           explanation:
-            "Con un colore di 7 carte, la 3/3 avversaria si trova nel 36% dei casi. La 4/2 e il 48%. Siate ottimisti se la probabilita di incassare l'intera lunghezza e altamente probabile.",
+            "Con un colore di 7 carte, la 3/3 avversaria si trova nel 36% dei casi. La 4/2 è il 48%. Siate ottimisti se la probabilità di incassare l'intera lunghezza è altamente probabile.",
         },
       ],
     },
@@ -167,7 +167,7 @@ const lezione1: QuadriLesson = {
         {
           type: "rule",
           content:
-            "L'avversario pericoloso e 'quello che non deve entrare in presa', e molte volte non coincide con quello lungo nel colore di attacco. Ragionate sempre su chi potrebbe fare danno al vostro contratto.",
+            "L'avversario pericoloso è 'quello che non deve entrare in presa', e molte volte non coincide con quello lungo nel colore di attacco. Ragionate sempre su chi potrebbe fare danno al vostro contratto.",
         },
         {
           type: "example",
@@ -178,17 +178,17 @@ const lezione1: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "A 3NT, dopo un attacco nel vostro colore debole, quale difensore e l'avversario pericoloso?",
+            "A 3NT, dopo un attacco nel vostro colore debole, quale difensore è l'avversario pericoloso?",
           quizType: "multiple-choice",
           options: [
             "Sempre quello alla vostra sinistra",
             "Sempre quello alla vostra destra",
-            "Quello che puo continuare nel colore di attacco",
-            "Quello con piu punti",
+            "Quello che può continuare nel colore di attacco",
+            "Quello con più punti",
           ],
           correctAnswer: 2,
           explanation:
-            "L'avversario pericoloso e quello che, se entra in presa, puo continuare a giocare il colore d'attacco e battere il contratto. Ogni volta che va in presa l'avversario, lavora a suo favore.",
+            "L'avversario pericoloso è quello che, se entra in presa, può continuare a giocare il colore d'attacco e battere il contratto. Ogni volta che va in presa l'avversario, lavora a suo favore.",
         },
       ],
     },
@@ -217,16 +217,16 @@ const lezione1: QuadriLesson = {
         {
           type: "tip",
           content:
-            "Lisciare diventa inutile se il colore da affrancare rischia comunque di mettere in presa chi e lungo nel colore di attacco. Ricordate: come e ragionevole pensare, la lunga sia in mano a chi ha attaccato.",
+            "Lisciare diventa inutile se il colore da affrancare rischia comunque di mettere in presa chi è lungo nel colore di attacco. Ricordate: come è ragionevole pensare, la lunga sia in mano a chi ha attaccato.",
         },
         {
           type: "quiz",
           content:
-            "Giochi 3NT. L'attacco e nel colore di cuori. Hai Ax in mano. Quando conviene lisciare?",
+            "Giochi 3NT. L'attacco è nel colore di cuori. Hai Ax in mano. Quando conviene lisciare?",
           quizType: "true-false",
           correctAnswer: "true",
           explanation:
-            "Con Ax, lisciando al primo giro si esauriscono le cuori del difensore non lungo. Quando il partner dell'attaccante entrera in presa non potra piu giocare cuori. E la tecnica del 'hold-up'.",
+            "Con Ax, lisciando al primo giro si esauriscono le cuori del difensore non lungo. Quando il partner dell'attaccante entrerà in presa non potrà più giocare cuori. È la tecnica del 'hold-up'.",
         },
       ],
     },
@@ -250,32 +250,32 @@ const lezione3: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il tempo di gioco e l'opportunita di ogni coppia di muovere un colore nel proprio interesse. I Controlli sono i 'fermi' che ogni linea possiede per impedire l'affrancamento di prese nei colori avversari.",
+            "Il tempo di gioco è l'opportunità di ogni coppia di muovere un colore nel proprio interesse. I Controlli sono i 'fermi' che ogni linea possiede per impedire l'affrancamento di prese nei colori avversari.",
         },
         {
           type: "rule",
           content:
-            "Quando il piano di gioco prevede di cedere una presa, chiedetevi SEMPRE cosa fara l'avversario. L'equilibrio di Tempi e Controlli determina l'impostazione del piano di gioco.",
+            "Quando il piano di gioco prevede di cedere una presa, chiedetevi SEMPRE cosa farà l'avversario. L'equilibrio di Tempi e Controlli determina l'impostazione del piano di gioco.",
         },
         {
           type: "text",
           content:
-            "Il controllo in un seme si puo avere o con carte alte o con le atout, ma per tagliare e necessario che la lunghezza in quel seme venga azzerata. Ottenere il controllo di taglio in un colore richiede, come mossa assai frequente, lo scarto di alcune carte vincenti in altri colori della mano di fronte.",
+            "Il controllo in un seme si può avere o con carte alte o con le atout, ma per tagliare è necessario che la lunghezza in quel seme venga azzerata. Ottenere il controllo di taglio in un colore richiede, come mossa assai frequente, lo scarto di alcune carte vincenti in altri colori della mano di fronte.",
         },
         {
           type: "quiz",
           content:
-            "In un contratto ad atout, quando si deve cedere una presa e importante...",
+            "In un contratto ad atout, quando si deve cedere una presa è importante...",
           quizType: "multiple-choice",
           options: [
             "Battere subito tutte le atout",
-            "Chiedersi cosa fara l'avversario in presa",
-            "Giocare sempre il colore piu lungo",
+            "Chiedersi cosa farà l'avversario in presa",
+            "Giocare sempre il colore più lungo",
             "Passare subito al morto",
           ],
           correctAnswer: 1,
           explanation:
-            "Prima di cedere la presa, valutate cosa l'avversario fara con il tempo guadagnato. Potrebbe affrancare un colore laterale, tagliare, o battere atout.",
+            "Prima di cedere la presa, valutate cosa l'avversario farà con il tempo guadagnato. Potrebbe affrancare un colore laterale, tagliare, o battere atout.",
         },
       ],
     },
@@ -288,7 +288,7 @@ const lezione3: QuadriLesson = {
         {
           type: "text",
           content:
-            "L'urgenza di disfarsi di carte perdenti e il tema principale dei contratti ad atout. Ci sono due modi per disfarsi delle carte spettanti avversari: scartandole su vincenti (o affrancabili) extra della mano di fronte, oppure tagliandole.",
+            "L'urgenza di disfarsi di carte perdenti è il tema principale dei contratti ad atout. Ci sono due modi per disfarsi delle carte spettanti avversari: scartandole su vincenti (o affrancabili) extra della mano di fronte, oppure tagliandole.",
         },
         {
           type: "rule",
@@ -298,7 +298,7 @@ const lezione3: QuadriLesson = {
         {
           type: "example",
           content:
-            "Est gioca 6♠, attacco Q♦. Se si precipita a muovere atout, dovendo cedere la presa d'Asso, andra inevitabilmente sotto al ritorno di quadri. Ovest deve procurarsi un controllo (taglio) nel colore di quadri, scartando subito la terza cuori del morto: KQ di ♥, fiori al Fante e A♥ scartando quadri. Ora si batte atout.",
+            "Est gioca 6♠, attacco Q♦. Se si precipita a muovere atout, dovendo cedere la presa d'Asso, andrà inevitabilmente sotto al ritorno di quadri. Ovest deve procurarsi un controllo (taglio) nel colore di quadri, scartando subito la terza cuori del morto: KQ di ♥, fiori al Fante e A♥ scartando quadri. Ora si batte atout.",
           cards: "♠KQ75 ♥A97 ♦863 ♣J84 | ♠J10984 ♥KQ ♦A7 ♣AKQ7",
         },
         {
@@ -326,7 +326,7 @@ const lezione3: QuadriLesson = {
         {
           type: "rule",
           content:
-            "METODO PER CONTARE LE PRESE NEL GIOCO IN ATOUT: Se una mano contiene piu atout dell'altra, e considerata la mano BASE, l'altra il SATELLITE. Si contano le prese di atout della Base e si aggiungono quelle certe o possibili che possono essere reperite nel Satellite (tagli).",
+            "METODO PER CONTARE LE PRESE NEL GIOCO IN ATOUT: Se una mano contiene più atout dell'altra, è considerata la mano BASE, l'altra il SATELLITE. Si contano le prese di atout della Base e si aggiungono quelle certe o possibili che possono essere reperite nel Satellite (tagli).",
         },
         {
           type: "tip",
@@ -342,7 +342,7 @@ const lezione3: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Qual e la 'parte corta' in un fit 5-3 di atout?",
+            "Qual è la 'parte corta' in un fit 5-3 di atout?",
           quizType: "multiple-choice",
           options: [
             "La mano con 5 atout",
@@ -352,7 +352,7 @@ const lezione3: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "La mano con meno atout e il Satellite (parte corta). I tagli dal Satellite aggiungono prese extra, mentre quelli dalla Base no (sono gia contate).",
+            "La mano con meno atout è il Satellite (parte corta). I tagli dal Satellite aggiungono prese extra, mentre quelli dalla Base no (sono già contate).",
         },
       ],
     },
@@ -365,17 +365,17 @@ const lezione3: QuadriLesson = {
         {
           type: "text",
           content:
-            "Con il fit 4-4, entrambe le mani possono fare da Base o Satellite. Questo tipo di fit e il piu potente che esista. Non essendoci a priori una mano base, questa potra essere scelta dal giocante a seconda delle esigenze.",
+            "Con il fit 4-4, entrambe le mani possono fare da Base o Satellite. Questo tipo di fit è il più potente che esista. Non essendoci a priori una mano base, questa potrà essere scelta dal giocante a seconda delle esigenze.",
         },
         {
           type: "rule",
           content:
-            "La mano BASE e quella destinata prima o poi a battere atout. La mano SATELLITE usa le sue atout per effettuare i tagli. Questa distinzione e fondamentale nel piano di gioco.",
+            "La mano BASE è quella destinata prima o poi a battere atout. La mano SATELLITE usa le sue atout per effettuare i tagli. Questa distinzione è fondamentale nel piano di gioco.",
         },
         {
           type: "tip",
           content:
-            "Attenzione a non sovrapporre due piani di gioco: se l'unico colore in cui si comunica con una lunga del morto e quello di atout, la parte corta non va accorciata con i tagli!",
+            "Attenzione a non sovrapporre due piani di gioco: se l'unico colore in cui si comunica con una lunga del morto è quello di atout, la parte corta non va accorciata con i tagli!",
         },
         {
           type: "quiz",
@@ -390,7 +390,7 @@ const lezione3: QuadriLesson = {
           ],
           correctAnswer: 2,
           explanation:
-            "Le atout legittime della difesa sono quelle che comunque farebbero presa, indipendentemente da quando vengono giocate. Le prese di taglio in piu sono 'illegittime' perche vengono guadagnate extra.",
+            "Le atout legittime della difesa sono quelle che comunque farebbero presa, indipendentemente da quando vengono giocate. Le prese di taglio in più sono 'illegittime' perché vengono guadagnate extra.",
         },
       ],
     },
@@ -424,17 +424,17 @@ const lezione5: QuadriLesson = {
         {
           type: "example",
           content:
-            "Disposizione Q74 in Nord, K95 in Ovest, A106 in Est, J83 in Sud. Se Sud inizia col 3, Ovest sta basso; il suo K deve prendersi cura del J di Sud, mentre l'Asso di Est si occupera della Q di Nord. Se il colore viene mosso da Est o Ovest: una presa per NS.",
+            "Disposizione Q74 in Nord, K95 in Ovest, A106 in Est, J83 in Sud. Se Sud inizia col 3, Ovest sta basso; il suo K deve prendersi cura del J di Sud, mentre l'Asso di Est si occuperà della Q di Nord. Se il colore viene mosso da Est o Ovest: una presa per NS.",
         },
         {
           type: "text",
           content:
-            "Fare ipotesi sulla posizione degli onori mancanti e fondamentale. Quando affrontiamo una figura di carte dobbiamo sempre chiederci quale sia la configurazione per noi vincente.",
+            "Fare ipotesi sulla posizione degli onori mancanti è fondamentale. Quando affrontiamo una figura di carte dobbiamo sempre chiederci quale sia la configurazione per noi vincente.",
         },
         {
           type: "quiz",
           content:
-            "Con AQ54 in Nord e J632 in Sud, cosa occorre perche facciate prese?",
+            "Con AQ54 in Nord e J632 in Sud, cosa occorre perché facciate prese?",
           quizType: "multiple-choice",
           options: [
             "Che il K sia in Ovest (in impasse)",
@@ -444,7 +444,7 @@ const lezione5: QuadriLesson = {
           ],
           correctAnswer: 0,
           explanation:
-            "Occorre che il K sia secondo in impasse (in Ovest, davanti all'AQ). Si deve muovere piccola per la Q e poi tirare l'Asso. La posizione del 10 e del 9 e ininfluente.",
+            "Occorre che il K sia secondo in impasse (in Ovest, davanti all'AQ). Si deve muovere piccola per la Q e poi tirare l'Asso. La posizione del 10 e del 9 è ininfluente.",
         },
       ],
     },
@@ -457,7 +457,7 @@ const lezione5: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il 'gradino di ingresso' e una delle carte equivalenti che possediamo in linea e che ci permetterebbe, nelle figure di impasse, di forzare la carta avversaria restando dalla parte giusta per ripetere l'operazione.",
+            "Il 'gradino di ingresso' è una delle carte equivalenti che possediamo in linea e che ci permetterebbe, nelle figure di impasse, di forzare la carta avversaria restando dalla parte giusta per ripetere l'operazione.",
         },
         {
           type: "rule",
@@ -472,7 +472,7 @@ const lezione5: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Con AKJ10 in Nord e 8752 in Sud, la manovra migliore e...",
+            "Con AKJ10 in Nord e 8752 in Sud, la manovra migliore è...",
           quizType: "multiple-choice",
           options: [
             "Giocare AK e sperare nella Q secca",
@@ -482,7 +482,7 @@ const lezione5: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Con 8 carte in linea e mancando solo la Dama, il colpo di sonda (battere A poi K) e opportuno per catturare una eventuale Dama secca in Est. Se entrambi gli avversari rispondono con cartine, vi mancano ancora la Dama e una cartina: tornate in Sud e fate l'impasse.",
+            "Con 8 carte in linea e mancando solo la Dama, il colpo di sonda (battere A poi K) è opportuno per catturare una eventuale Dama secca in Est. Se entrambi gli avversari rispondono con cartine, vi mancano ancora la Dama e una cartina: tornate in Sud e fate l'impasse.",
         },
       ],
     },
@@ -495,7 +495,7 @@ const lezione5: QuadriLesson = {
         {
           type: "rule",
           content:
-            "QUANDO GLI AVVERSARI HANNO UN ONORE PIU DUE O TRE CARTINE... FATE L'IMPASSE. QUANDO GLI AVVERSARI HANNO UN ONORE E UNA CARTINA... BATTETE IN TESTA.",
+            "QUANDO GLI AVVERSARI HANNO UN ONORE PIÙ DUE O TRE CARTINE... FATE L'IMPASSE. QUANDO GLI AVVERSARI HANNO UN ONORE E UNA CARTINA... BATTETE IN TESTA.",
         },
         {
           type: "example",
@@ -505,12 +505,12 @@ const lezione5: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando manca solo la Dama: con 9 o piu carte si battono A e K (la probabilita di trovarla secca o seconda e superiore). Con 8 o meno carte si fa l'impasse.",
+            "Quando manca solo la Dama: con 9 o più carte si battono A e K (la probabilità di trovarla secca o seconda è superiore). Con 8 o meno carte si fa l'impasse.",
         },
         {
           type: "tip",
           content:
-            "CHI GIOCA IL FANTE... E NON HA IL 10 DEVE STARE IN GINOCCHIO SUI CECI!!! Il 10 e una carta chiave nelle manovre di impasse: la mancanza del 10 orienta l'impasse verso il lato che ha il Fante.",
+            "CHI GIOCA IL FANTE... E NON HA IL 10 DEVE STARE IN GINOCCHIO SUI CECI!!! Il 10 è una carta chiave nelle manovre di impasse: la mancanza del 10 orienta l'impasse verso il lato che ha il Fante.",
         },
         {
           type: "quiz",
@@ -525,7 +525,7 @@ const lezione5: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Quando manca il K e gli avversari hanno un onore piu due o tre cartine, si fa l'impasse. Inserendo il J (o il Q) si spera che il K sia in Ovest.",
+            "Quando manca il K e gli avversari hanno un onore più due o tre cartine, si fa l'impasse. Inserendo il J (o il Q) si spera che il K sia in Ovest.",
         },
       ],
     },
@@ -538,17 +538,17 @@ const lezione5: QuadriLesson = {
         {
           type: "text",
           content:
-            "I colori bucati possono presentare figure di onore isolato che si prestano a manovre di expasse: non muovete gli onori... ma muovete VERSO gli onori. La consegna e sempre la stessa.",
+            "I colori bucati possono presentare figure di onore isolato che si prestano a manovre di expasse: non muovete gli onori... ma muovete VERSO gli onori. La consegna è sempre la stessa.",
         },
         {
           type: "rule",
           content:
-            "L'IMPASSE consiste nel giocare un colore iniziando dalla parte opposta di una forchetta, e inserendo la carta piu bassa della forchetta stessa, allo scopo di far presa se l'onore mancante e posizionato 'prima'. L'EXPASSE: non si muovono gli onori isolati ma si gioca verso di essi.",
+            "L'IMPASSE consiste nel giocare un colore iniziando dalla parte opposta di una forchetta, e inserendo la carta più bassa della forchetta stessa, allo scopo di far presa se l'onore mancante è posizionato 'prima'. L'EXPASSE: non si muovono gli onori isolati ma si gioca verso di essi.",
         },
         {
           type: "example",
           content:
-            "Con K1043 in Nord e Q652 in Sud: il 10 e la vostra carta chiave, rafforzata (protetta) da un onore. Piccola alla Dama, poi piccola all'Asso isolato. Qualunque cosa succeda, rimarremo con la forchetta K10.",
+            "Con K1043 in Nord e Q652 in Sud: il 10 è la vostra carta chiave, rafforzata (protetta) da un onore. Piccola alla Dama, poi piccola all'Asso isolato. Qualunque cosa succeda, rimarremo con la forchetta K10.",
         },
         {
           type: "quiz",
@@ -558,7 +558,7 @@ const lezione5: QuadriLesson = {
           options: [
             "Impasse verso la Q",
             "Tirate l'Asso e sperate",
-            "Non c'e soluzione",
+            "Non c'è soluzione",
             "Giocate il K di mano se lo avete",
           ],
           correctAnswer: 1,
@@ -592,12 +592,12 @@ const lezione2: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il conteggio Milton Work e estremamente approssimativo e insufficiente, va integrato con altre considerazioni. Con mani di 11 punti i 'difetti' possono essere tanti.",
+            "Il conteggio Milton Work è estremamente approssimativo e insufficiente, va integrato con altre considerazioni. Con mani di 11 punti i 'difetti' possono essere tanti.",
         },
         {
           type: "rule",
           content:
-            "Difetti delle mani da 11 punti: 1) Poche carte 'di testa' (A e K sono piu apprezzabili di Q e J). 2) La mano e 'impura' (onori concentrati nei colori lunghi). 3) Colori non competitivi (mancanza di maggiori). 4) La posizione di apertura sconsiglia. 5) Seconda dichiarazione pessima.",
+            "Difetti delle mani da 11 punti: 1) Poche carte 'di testa' (A e K sono più apprezzabili di Q e J). 2) La mano è 'impura' (onori concentrati nei colori lunghi). 3) Colori non competitivi (mancanza di maggiori). 4) La posizione di apertura sconsiglia. 5) Seconda dichiarazione pessima.",
         },
         {
           type: "example",
@@ -622,10 +622,10 @@ const lezione2: QuadriLesson = {
             "Hai ♠KQ75 ♥98 ♦A543 ♣754 (11 punti). Apri?",
           quizType: "multiple-choice",
           options: [
-            "Si, sempre con 11 punti",
-            "Si, carte di testa e distribuzione pulita",
+            "Sì, sempre con 11 punti",
+            "Sì, carte di testa e distribuzione pulita",
             "No, troppo debole",
-            "Dipende dalla vulnerabilita",
+            "Dipende dalla vulnerabilità",
           ],
           correctAnswer: 1,
           explanation:
@@ -642,12 +642,12 @@ const lezione2: QuadriLesson = {
         {
           type: "text",
           content:
-            "La Forza Giocabile e la capacita di una mano di conseguire prese alla sola condizione di imporre il proprio atout. La Forza Onori e la capacita di produrre prese qualunque sia il contratto del tavolo.",
+            "La Forza Giocabile è la capacità di una mano di conseguire prese alla sola condizione di imporre il proprio atout. La Forza Onori è la capacità di produrre prese qualunque sia il contratto del tavolo.",
         },
         {
           type: "example",
           content:
-            "1) ♠AKQ8765 ♥62 ♦J ♣543 - 7 vincenti con atout Picche, ma scarsissime possibilita in altri contratti. 2) ♠AQJ ♥KJ54 ♦AJ97 ♣K4 - Meno vincenti certe ma prese ovunque.",
+            "1) ♠AKQ8765 ♥62 ♦J ♣543 - 7 vincenti con atout Picche, ma scarsissime possibilità in altri contratti. 2) ♠AQJ ♥KJ54 ♦AJ97 ♣K4 - Meno vincenti certe ma prese ovunque.",
           cards: "♠AKQ8765 ♥62 ♦J ♣543",
         },
         {
@@ -668,7 +668,7 @@ const lezione2: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "La forza giocabile e data dalla capacita di fare prese con un colore lungo imposto come atout. Ha scarsissime possibilita di fare prese in contratti alternativi.",
+            "La forza giocabile è data dalla capacità di fare prese con un colore lungo imposto come atout. Ha scarsissime possibilità di fare prese in contratti alternativi.",
         },
       ],
     },
@@ -681,12 +681,12 @@ const lezione2: QuadriLesson = {
         {
           type: "text",
           content:
-            "Le aperture di barrage (livello 3 e 4) sono per mani con grande forza giocabile: monocolori onorati. Il messaggio e: 'da solo, con le mie carte, faccio circa tre prese in meno di quelle che sto dichiarando.'",
+            "Le aperture di barrage (livello 3 e 4) sono per mani con grande forza giocabile: monocolori onorati. Il messaggio è: 'da solo, con le mie carte, faccio circa tre prese in meno di quelle che sto dichiarando.'",
         },
         {
           type: "rule",
           content:
-            "Requisiti barrage: 7+ carte onorate nel colore, non piu di una carta alta (A o K) esterna al colore. Dopo un'apertura di barrage ogni decisione spetta al compagno: CHI FA UN BARRAGE... POI VA AL BAR A PRENDERSI UN CAFFE.",
+            "Requisiti barrage: 7+ carte onorate nel colore, non più di una carta alta (A o K) esterna al colore. Dopo un'apertura di barrage ogni decisione spetta al compagno: CHI FA UN BARRAGE... POI VA AL BAR A PRENDERSI UN CAFFÈ.",
         },
         {
           type: "example",
@@ -700,7 +700,7 @@ const lezione2: QuadriLesson = {
           quizType: "true-false",
           correctAnswer: "false",
           explanation:
-            "No! Le picche non sono sufficientemente onorate (dove vedete 6-7 prese?), e il K esterno e un difetto per un barrage. Questa mano va passata.",
+            "No! Le picche non sono sufficientemente onorate (dove vedete 6-7 prese?), e il K esterno è un difetto per un barrage. Questa mano va passata.",
         },
       ],
     },
@@ -713,27 +713,27 @@ const lezione2: QuadriLesson = {
         {
           type: "text",
           content:
-            "Le valutazioni possono cambiare di molto strada facendo, sia la distribuzione che per i punti. Una lunga e tendenzialmente costante: tanto piu se facilmente affrancabile, e sempre e comunque una buona cosa.",
+            "Le valutazioni possono cambiare di molto strada facendo, sia la distribuzione che per i punti. Una lunga è tendenzialmente costante: tanto più se facilmente affrancabile, e sempre e comunque una buona cosa.",
         },
         {
           type: "rule",
           content:
-            "Una mano con due colori quarti (4432) e decisamente migliore di una che ne abbia uno solo (4333, la peggiore in assoluto). Ogni mano aumenta di valore quando si scopre fit, e perde valore quando si fronteggiano colori opposti.",
+            "Una mano con due colori quarti (4432) è decisamente migliore di una che ne abbia uno solo (4333, la peggiore in assoluto). Ogni mano aumenta di valore quando si scopre fit, e perde valore quando si fronteggiano colori opposti.",
         },
         {
           type: "text",
           content:
-            "Le mani 6-5 sono spesso traditrici. Se la dichiarazione non ha impennate, la descrizione di una 6-5 richiede tre tempi. Se la mano non ha almeno 8 vincenti, e consigliabile trattare la 6-5 come fosse una 5-5, aprendo nel seme di rango maggiore anche se l'altro e piu lungo.",
+            "Le mani 6-5 sono spesso traditrici. Se la dichiarazione non ha impennate, la descrizione di una 6-5 richiede tre tempi. Se la mano non ha almeno 8 vincenti, è consigliabile trattare la 6-5 come fosse una 5-5, aprendo nel seme di rango maggiore anche se l'altro è più lungo.",
         },
         {
           type: "quiz",
           content:
-            "Quale distribuzione e la peggiore in assoluto per il gioco ad atout?",
+            "Quale distribuzione è la peggiore in assoluto per il gioco ad atout?",
           quizType: "multiple-choice",
           options: ["4432", "5332", "4333", "5422"],
           correctAnswer: 2,
           explanation:
-            "La 4333 e la peggiore: un solo colore quarto e nessuna possibilita di taglio. La 4432 e decisamente migliore perche offre un doubleton dove tagliare.",
+            "La 4333 è la peggiore: un solo colore quarto e nessuna possibilità di taglio. La 4432 è decisamente migliore perché offre un doubleton dove tagliare.",
         },
       ],
     },
@@ -762,17 +762,17 @@ const lezione4: QuadriLesson = {
         {
           type: "rule",
           content:
-            "SU QUALSIASI APERTURA DI UNO IL CAPITANATO SPETTA AL RISPONDENTE. L'APERTORE QUINDI DOVRA DESCRIVERSI. MA MAI PRENDERSI L'ARBITRIO DI DECIDERE IL CONTRATTO.",
+            "SU QUALSIASI APERTURA DI UNO IL CAPITANATO SPETTA AL RISPONDENTE. L'APERTORE QUINDI DOVRÀ DESCRIVERSI. MA MAI PRENDERSI L'ARBITRIO DI DECIDERE IL CONTRATTO.",
         },
         {
           type: "text",
           content:
-            "Tutte le dichiarazioni fatte dal Subordinato sono descrittive e rappresentano sempre colori reali. Il Capitano puo inventare cambi di colore anche senza averli, perche sara lui a prendere la decisione finale.",
+            "Tutte le dichiarazioni fatte dal Subordinato sono descrittive e rappresentano sempre colori reali. Il Capitano può inventare cambi di colore anche senza averli, perché sarà lui a prendere la decisione finale.",
         },
         {
           type: "quiz",
           content:
-            "Nella sequenza 1♥-2♣-2♥, chi e il Capitano?",
+            "Nella sequenza 1♥-2♣-2♥, chi è il Capitano?",
           quizType: "multiple-choice",
           options: [
             "L'Apertore (Nord)",
@@ -782,7 +782,7 @@ const lezione4: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Il Rispondente e il Capitano: ha dichiarato un colore nuovo (2♣ forzante) e l'Apertore, ridichiarando 2♥, si sta descrivendo come Subordinato. Sud decidera il contratto finale.",
+            "Il Rispondente è il Capitano: ha dichiarato un colore nuovo (2♣ forzante) e l'Apertore, ridichiarando 2♥, si sta descrivendo come Subordinato. Sud deciderà il contratto finale.",
         },
       ],
     },
@@ -795,17 +795,17 @@ const lezione4: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando l'apertura e stata 1♥ o 1♠ e la risposta e stata 2 su 1, vale che: la ripetizione del nobile non lo allunga e non limita la mano. Un colore nuovo a livello 2 ha forza ambigua (12+). Un colore nuovo a livello 3 e certamente mano buona (15+ oppure 5-5).",
+            "Quando l'apertura è stata 1♥ o 1♠ e la risposta è stata 2 su 1, vale che: la ripetizione del nobile non lo allunga e non limita la mano. Un colore nuovo a livello 2 ha forza ambigua (12+). Un colore nuovo a livello 3 è certamente mano buona (15+ oppure 5-5).",
         },
         {
           type: "rule",
           content:
-            "2NT e una 5332 di 12-14, adatta a giocare a Senza con un fermo nei colori non detti. Un SALTO mostra una monocolore 'chiusa' o una grande bicolore.",
+            "2NT è una 5332 di 12-14, adatta a giocare a Senza con un fermo nei colori non detti. Un SALTO mostra una monocolore 'chiusa' o una grande bicolore.",
         },
         {
           type: "example",
           content:
-            "Dopo 1♥-2♣: ♠K75 ♥Q9853 ♦AKQ ♣72 - La replica corretta e 2NT (5332 di Diritto, non 2♦!). L'Apertore si descrive senza fare invenzioni.",
+            "Dopo 1♥-2♣: ♠K75 ♥Q9853 ♦AKQ ♣72 - La replica corretta è 2NT (5332 di Diritto, non 2♦!). L'Apertore si descrive senza fare invenzioni.",
         },
         {
           type: "quiz",
@@ -815,7 +815,7 @@ const lezione4: QuadriLesson = {
           options: ["2♠", "3♠", "2NT", "2♦"],
           correctAnswer: 1,
           explanation:
-            "3♠ e un salto che mostra una monocolore 'chiusa': picche lunghe e solide, qualita eccezionale del colore. Il messaggio e: 'possiamo giocare a picche anche se non ne hai'.",
+            "3♠ è un salto che mostra una monocolore 'chiusa': picche lunghe e solide, qualità eccezionale del colore. Il messaggio è: 'possiamo giocare a picche anche se non ne hai'.",
         },
       ],
     },
@@ -833,12 +833,12 @@ const lezione4: QuadriLesson = {
         {
           type: "rule",
           content:
-            "LA RIPETIZIONE DEL COLORE DI APERTURA: su risposte a livello UNO, mostra forza (12-14) e mano sbilanciata: o il colore e sesto, o c'e una 5/4 non dichiarabile. Mai la 5332.",
+            "LA RIPETIZIONE DEL COLORE DI APERTURA: su risposte a livello UNO, mostra forza (12-14) e mano sbilanciata: o il colore è sesto, o c'è una 5/4 non dichiarabile. Mai la 5332.",
         },
         {
           type: "text",
           content:
-            "I Rever: Piccoli Rever (15-17) sono le dichiarazioni con cui l'Apertore SALTA in un colore gia detto. I Rever senza salto sono a tutto campo: 16-20. I Rever a salto (Gran Rever) sono sempre nella fascia massima: 18-20.",
+            "I Rever: Piccoli Rever (15-17) sono le dichiarazioni con cui l'Apertore SALTA in un colore già detto. I Rever senza salto sono a tutto campo: 16-20. I Rever a salto (Gran Rever) sono sempre nella fascia massima: 18-20.",
         },
         {
           type: "quiz",
@@ -848,7 +848,7 @@ const lezione4: QuadriLesson = {
           options: ["1NT", "2♦", "3♦", "2NT"],
           correctAnswer: 2,
           explanation:
-            "3♦ e un Piccolo Rever (15-17): l'Apertore salta nel proprio colore mostrando forza extra. Se avesse dichiarato solo 2♦ avrebbe mostrato 12-14.",
+            "3♦ è un Piccolo Rever (15-17): l'Apertore salta nel proprio colore mostrando forza extra. Se avesse dichiarato solo 2♦ avrebbe mostrato 12-14.",
         },
       ],
     },
@@ -861,7 +861,7 @@ const lezione4: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando l'Apertore ridichiara 1NT, la sua mano e decisamente definita tra 12 e 14 punti. Quando mostra un nuovo colore (1♦-1♥-1♠, oppure 1♥-1♠-2♦) il punteggio e piu elastico e non si puo tassativamente circoscrivere ai 12-14.",
+            "Quando l'Apertore ridichiara 1NT, la sua mano è decisamente definita tra 12 e 14 punti. Quando mostra un nuovo colore (1♦-1♥-1♠, oppure 1♥-1♠-2♦) il punteggio è più elastico e non si può tassativamente circoscrivere ai 12-14.",
         },
         {
           type: "rule",
@@ -871,7 +871,7 @@ const lezione4: QuadriLesson = {
         {
           type: "tip",
           content:
-            "Quando siete in dubbio se fare Gran Rever o temporeggiare in Diritto, ricordatevi che la situazione di probabile misfit e un elemento negativo. Con mani di forza 15-17, descrivete la mano come bilanciata e aprite di 1NT quando i colori lunghi sono fragili e i doubleton entrambi coperti.",
+            "Quando siete in dubbio se fare Gran Rever o temporeggiare in Diritto, ricordatevi che la situazione di probabile misfit è un elemento negativo. Con mani di forza 15-17, descrivete la mano come bilanciata e aprite di 1NT quando i colori lunghi sono fragili e i doubleton entrambi coperti.",
         },
         {
           type: "quiz",
@@ -886,7 +886,7 @@ const lezione4: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "1NT mostra una mano bilanciata con 15-17 punti. E l'esempio tipico di mano 'definita' per punteggio e distribuzione: in una sola dichiarazione l'Apertore ha dato un'informazione precisa.",
+            "1NT mostra una mano bilanciata con 15-17 punti. È l'esempio tipico di mano 'definita' per punteggio e distribuzione: in una sola dichiarazione l'Apertore ha dato un'informazione precisa.",
         },
       ],
     },
@@ -915,12 +915,12 @@ const lezione6: QuadriLesson = {
         {
           type: "rule",
           content:
-            "LE APERTURE DI 2♦, 2♥, 2♠ SONO FORZANTI FINO A 'TRE NEL COLORE INIZIALE'. Nessuno dei due potra abbandonare la licita al di sotto di tale livello.",
+            "LE APERTURE DI 2♦, 2♥, 2♠ SONO FORZANTI FINO A 'TRE NEL COLORE INIZIALE'. Nessuno dei due potrà abbandonare la licita al di sotto di tale livello.",
         },
         {
           type: "text",
           content:
-            "Le risposte: a) un colore nuovo a livello 2 richiede 0+ punti e 4+ carte; b) dichiarazioni a livello 3 sono forzanti di manche e mostrano 5+ carte; c) l'appoggio immediato a manche mostra forza appena sufficiente; d) 2NT e una risposta d'attesa debole e disperata.",
+            "Le risposte: a) un colore nuovo a livello 2 richiede 0+ punti e 4+ carte; b) dichiarazioni a livello 3 sono forzanti di manche e mostrano 5+ carte; c) l'appoggio immediato a manche mostra forza appena sufficiente; d) 2NT è una risposta d'attesa debole e disperata.",
         },
         {
           type: "quiz",
@@ -930,7 +930,7 @@ const lezione6: QuadriLesson = {
           options: ["Passo", "2NT", "3♣", "2♠"],
           correctAnswer: 2,
           explanation:
-            "3♣ e forzante a manche: mostra 5+ carte con almeno 2 onori al livello 3. Con un colore cosi bello e 5+ punti, e la risposta corretta. Non si passa MAI su apertura di 2 a colore!",
+            "3♣ è forzante a manche: mostra 5+ carte con almeno 2 onori al livello 3. Con un colore così bello e 5+ punti, è la risposta corretta. Non si passa MAI su apertura di 2 a colore!",
         },
       ],
     },
@@ -943,7 +943,7 @@ const lezione6: QuadriLesson = {
         {
           type: "text",
           content:
-            "L'apertura di 2♣ e anomala: e un contenitore per due tipi di mano: la bilanciata forte (23+) e la mano a base fiori. La risposta 2♦ e convenzionale d'attesa (non promette le quadri).",
+            "L'apertura di 2♣ è anomala: è un contenitore per due tipi di mano: la bilanciata forte (23+) e la mano a base fiori. La risposta 2♦ è convenzionale d'attesa (non promette le quadri).",
         },
         {
           type: "rule",
@@ -953,7 +953,7 @@ const lezione6: QuadriLesson = {
         {
           type: "example",
           content:
-            "♠AQJ3 ♥AK5 ♦KJ107 ♣AQ - Apre 2♣, poi dira 2NT (bilanciata 23+). ♠KQJ3 ♥- ♦AK7 ♣AK10954 - Apre 2♣, poi dira fiori (mano a base fiori fortissima).",
+            "♠AQJ3 ♥AK5 ♦KJ107 ♣AQ - Apre 2♣, poi dirà 2NT (bilanciata 23+). ♠KQJ3 ♥- ♦AK7 ♣AK10954 - Apre 2♣, poi dirà fiori (mano a base fiori fortissima).",
         },
         {
           type: "quiz",
@@ -986,12 +986,12 @@ const lezione6: QuadriLesson = {
         {
           type: "rule",
           content:
-            "AD ATOUT gli ASSI sono CINQUE: A♣, A♦, A♥, A♠ e il K di atout. Le risposte: 5♣ = 0 o 3 assi; 5♦ = 1 o 4 assi; 5♥ = 2 assi senza la Dama di atout; 5♠ = 2 assi piu la Dama di atout.",
+            "AD ATOUT gli ASSI sono CINQUE: A♣, A♦, A♥, A♠ e il K di atout. Le risposte: 5♣ = 0 o 3 assi; 5♦ = 1 o 4 assi; 5♥ = 2 assi senza la Dama di atout; 5♠ = 2 assi più la Dama di atout.",
         },
         {
           type: "text",
           content:
-            "Note importanti: il 4NT e richiesta d'assi SOLO se esiste un atout concordato esplicitamente o implicitamente. La richiesta e prerogativa del Capitano, o comunque di chi non si sia mai limitato in precedenza. La dichiarazione di 5NT chiede i Re: 6♣=0, 6♦=1, 6♥=2, 6♠=3.",
+            "Note importanti: il 4NT è richiesta d'assi SOLO se esiste un atout concordato esplicitamente o implicitamente. La richiesta è prerogativa del Capitano, o comunque di chi non si sia mai limitato in precedenza. La dichiarazione di 5NT chiede i Re: 6♣=0, 6♦=1, 6♥=2, 6♠=3.",
         },
         {
           type: "quiz",
@@ -1001,7 +1001,7 @@ const lezione6: QuadriLesson = {
           options: ["4", "5", "6", "Dipende dal colore"],
           correctAnswer: 1,
           explanation:
-            "Ad atout gli assi sono 5: i quattro Assi tradizionali piu il Re di atout, che e una carta importantissima e viene accomunato agli assi.",
+            "Ad atout gli assi sono 5: i quattro Assi tradizionali più il Re di atout, che è una carta importantissima e viene accomunato agli assi.",
         },
       ],
     },
@@ -1019,7 +1019,7 @@ const lezione6: QuadriLesson = {
         {
           type: "rule",
           content:
-            "Il compagno dira Passo solo se avendo i fermi in tutti i colori ritiene che 3NT sia un contratto fattibile. Altrimenti dira 4♣ col significato: 'passa se il tuo colore e fiori, altrimenti correggi a 4♦'.",
+            "Il compagno dirà Passo solo se avendo i fermi in tutti i colori ritiene che 3NT sia un contratto fattibile. Altrimenti dirà 4♣ col significato: 'passa se il tuo colore è fiori, altrimenti correggi a 4♦'.",
         },
         {
           type: "example",
@@ -1034,7 +1034,7 @@ const lezione6: QuadriLesson = {
           options: ["Passo", "4♣", "4NT", "5♣"],
           correctAnswer: 1,
           explanation:
-            "Non hai i fermi necessari per giocare a Senza. Dici 4♣: 'passa se il tuo colore e fiori, altrimenti correggi a 4♦'. E l'unico modo per trovare il parziale giusto.",
+            "Non hai i fermi necessari per giocare a Senza. Dici 4♣: 'passa se il tuo colore è fiori, altrimenti correggi a 4♦'. È l'unico modo per trovare il parziale giusto.",
         },
       ],
     },
@@ -1063,12 +1063,12 @@ const lezione8: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando si parla di 'cambio di colore forcing' si intende la situazione in cui il Rispondente (non l'Apertore!), dopo aver gia detto un colore e non 1NT, al giro successivo dichiara un colore nuovo.",
+            "Quando si parla di 'cambio di colore forcing' si intende la situazione in cui il Rispondente (non l'Apertore!), dopo aver già detto un colore e non 1NT, al giro successivo dichiara un colore nuovo.",
         },
         {
           type: "rule",
           content:
-            "Il Terzo colore: se e DISCENDENTE a livello 2 e forzante 1 giro. Se e ASCENDENTE o DISCENDENTE a livello 3 e forzante a manche. ALLUNGA il colore precedente. E tendenzialmente un colore reale, o quantomeno mostra valori.",
+            "Il Terzo colore: se è DISCENDENTE a livello 2 è forzante 1 giro. Se è ASCENDENTE o DISCENDENTE a livello 3 è forzante a manche. ALLUNGA il colore precedente. È tendenzialmente un colore reale, o quantomeno mostra valori.",
         },
         {
           type: "example",
@@ -1079,7 +1079,7 @@ const lezione8: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Nella sequenza 1♦-1♥-1♠-2♣, il 2♣ e...",
+            "Nella sequenza 1♦-1♥-1♠-2♣, il 2♣ è...",
           quizType: "multiple-choice",
           options: [
             "Forzante a manche",
@@ -1089,7 +1089,7 @@ const lezione8: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "2♣ e un terzo colore discendente a livello 2: e forzante un solo giro. L'Apertore non puo passare ma la coppia non e ancora obbligata alla manche.",
+            "2♣ è un terzo colore discendente a livello 2: è forzante un solo giro. L'Apertore non può passare ma la coppia non è ancora obbligata alla manche.",
         },
       ],
     },
@@ -1102,12 +1102,12 @@ const lezione8: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il Quarto colore e forcing manche (tranne a livello 1: 1♣-1♦-1♥-1♠ e forzante 1 solo giro). Non garantisce necessariamente 3 carte nel palo precedente, non promette lunghezza ne valori.",
+            "Il Quarto colore è forcing manche (tranne a livello 1: 1♣-1♦-1♥-1♠ è forzante 1 solo giro). Non garantisce necessariamente 3 carte nel palo precedente, non promette lunghezza né valori.",
         },
         {
           type: "rule",
           content:
-            "Il Quarto colore e l'unico rimasto a disposizione del Rispondente per forzare e richiedere ulteriore descrizione. Il Rispondente vuole sapere: se l'apertore ha fit terzo nel primo colore, se possiede il fermo nel 4° colore, se ha ulteriore lunghezza nei propri colori.",
+            "Il Quarto colore è l'unico rimasto a disposizione del Rispondente per forzare e richiedere ulteriore descrizione. Il Rispondente vuole sapere: se l'apertore ha fit terzo nel primo colore, se possiede il fermo nel 4° colore, se ha ulteriore lunghezza nei propri colori.",
         },
         {
           type: "text",
@@ -1122,25 +1122,25 @@ const lezione8: QuadriLesson = {
           options: ["2♥", "2NT", "2♦", "3♣"],
           correctAnswer: 0,
           explanation:
-            "2♥: Nord ha fit terzo nel primo colore del Rispondente (cuori). E la prima priorita: mostrare il fit nel maggiore del partner, prima di Senza.",
+            "2♥: Nord ha fit terzo nel primo colore del Rispondente (cuori). È la prima priorità: mostrare il fit nel maggiore del partner, prima di Senza.",
         },
       ],
     },
     {
       id: "Q8-3",
-      title: "Quando il fit maggiore e trovato",
+      title: "Quando il fit maggiore è trovato",
       icon: "🤝",
       xp: 60,
       content: [
         {
           type: "text",
           content:
-            "Quando c'e fit e si gioca ad atout, il risultato in prese puo risultare diverso a seconda che gli onori dei colori laterali si complementino o meno.",
+            "Quando c'è fit e si gioca ad atout, il risultato in prese può risultare diverso a seconda che gli onori dei colori laterali si complementino o meno.",
         },
         {
           type: "rule",
           content:
-            "QUANDO IL CONTRATTO E AD ATOUT, IL SUCCESSO DIPENDE NON SOLO DALLA QUANTITA DEI PUNTI ONORI MA DAI COLORI IN CUI SONO DISLOCATI! Quando una coppia trova fit a livello 2, tutto lo spazio compreso tra il 2 e il 3 in atout e destinato alle indagini per sondare le possibilita di manche.",
+            "QUANDO IL CONTRATTO È AD ATOUT, IL SUCCESSO DIPENDE NON SOLO DALLA QUANTITÀ DEI PUNTI ONORI MA DAI COLORI IN CUI SONO DISLOCATI! Quando una coppia trova fit a livello 2, tutto lo spazio compreso tra il 2 e il 3 in atout è destinato alle indagini per sondare le possibilità di manche.",
         },
         {
           type: "example",
@@ -1150,7 +1150,7 @@ const lezione8: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Dopo 1♠-2♠, un cambio di colore del Capitano (es. 3♦) e...",
+            "Dopo 1♠-2♠, un cambio di colore del Capitano (es. 3♦) è...",
           quizType: "multiple-choice",
           options: [
             "Una proposta di nuovo contratto",
@@ -1160,7 +1160,7 @@ const lezione8: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "E una trial bid: chiede al Rispondente di chiamare manche se aiuta nel colore dichiarato (con onori o valori di taglio), ma di riportare a 3 in atout in caso contrario.",
+            "È una trial bid: chiede al Rispondente di chiamare manche se aiuta nel colore dichiarato (con onori o valori di taglio), ma di riportare a 3 in atout in caso contrario.",
         },
       ],
     },
@@ -1173,17 +1173,17 @@ const lezione8: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando il Rispondente ha rialzato a 2 un maggiore, il contratto GOAL e 4 nel maggiore, e la licita di un nuovo colore da parte dell'Apertore e detta trial-bid. Chiede al Rispondente di chiamare manche se aiuta nel colore dichiarato.",
+            "Quando il Rispondente ha rialzato a 2 un maggiore, il contratto GOAL è 4 nel maggiore, e la licita di un nuovo colore da parte dell'Apertore è detta trial-bid. Chiede al Rispondente di chiamare manche se aiuta nel colore dichiarato.",
         },
         {
           type: "rule",
           content:
-            "AD ATOUT MAGGIORE TROVATO A LIVELLO 'DUE', UN CAMBIO DI COLORE DEL CAPITANO CHIEDE AIUTO NEL COLORE ED E FORZANTE FINO A 'TRE' NELL'ATOUT.",
+            "AD ATOUT MAGGIORE TROVATO A LIVELLO 'DUE', UN CAMBIO DI COLORE DEL CAPITANO CHIEDE AIUTO NEL COLORE ED È FORZANTE FINO A 'TRE' NELL'ATOUT.",
         },
         {
           type: "text",
           content:
-            "Come comportarsi di fronte a un colore nuovo (trial bid): se ha valori (A,K,Q) rialza a manche. Se ha cartine, riporta a 3 nell'atout: 'mi spiace, tentativo di manche fallito'. Se ha un valore importante (A o Re) in un altro seme, puo dichiararlo 'sotto' del 3 in atout.",
+            "Come comportarsi di fronte a un colore nuovo (trial bid): se ha valori (A,K,Q) rialza a manche. Se ha cartine, riporta a 3 nell'atout: 'mi spiace, tentativo di manche fallito'. Se ha un valore importante (A o Re) in un altro seme, può dichiararlo 'sotto' del 3 in atout.",
         },
         {
           type: "quiz",
@@ -1217,12 +1217,12 @@ const lezione10: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il Contro ci aiuta a distinguere i colori quarti dai colori lunghi. La Surlicita e il rialzo di un colore mostrato dall'avversario. Entrambe si usano solo in competizione.",
+            "Il Contro ci aiuta a distinguere i colori quarti dai colori lunghi. La Surlicita è il rialzo di un colore mostrato dall'avversario. Entrambe si usano solo in competizione.",
         },
         {
           type: "rule",
           content:
-            "QUANDO ENTRAMBE LE DICHIARAZIONI SONO DISPONIBILI: IL CONTRO CERCA FIT (forzante generico che nega fit). LA SURLICITA LO PROMETTE (forzante che conferma fit). QUANDO IL CONTRO NON E DISPONIBILE: La Surlicita si fa carico di tutte le mani forti, con o senza fit.",
+            "QUANDO ENTRAMBE LE DICHIARAZIONI SONO DISPONIBILI: IL CONTRO CERCA FIT (forzante generico che nega fit). LA SURLICITA LO PROMETTE (forzante che conferma fit). QUANDO IL CONTRO NON È DISPONIBILE: La Surlicita si fa carico di tutte le mani forti, con o senza fit.",
         },
         {
           type: "example",
@@ -1235,14 +1235,14 @@ const lezione10: QuadriLesson = {
             "La Surlicita, a differenza del Contro, promette...",
           quizType: "multiple-choice",
           options: [
-            "Piu punti",
+            "Più punti",
             "Fit nel colore del compagno",
             "Un colore lungo proprio",
             "Mano bilanciata",
           ],
           correctAnswer: 1,
           explanation:
-            "La Surlicita e un forzante che promette fit. Il Contro e un forzante generico che nega fit. Questa definizione e il caposaldo di tutta la dichiarazione competitiva.",
+            "La Surlicita è un forzante che promette fit. Il Contro è un forzante generico che nega fit. Questa definizione è il caposaldo di tutta la dichiarazione competitiva.",
         },
       ],
     },
@@ -1255,12 +1255,12 @@ const lezione10: QuadriLesson = {
         {
           type: "text",
           content:
-            "Dopo apertura e intervento a colore, il compagno dell'apertore puo usare il contro per cercare fit e la surlicita per mostrare 'forza almeno di manche e fit trovato'.",
+            "Dopo apertura e intervento a colore, il compagno dell'apertore può usare il contro per cercare fit e la surlicita per mostrare 'forza almeno di manche e fit trovato'.",
         },
         {
           type: "rule",
           content:
-            "SU UN INTERVENTO A COLORE DEL COMPAGNO: SE C'E FIT LA SURLICITA PROMETTE 11+ PUNTI. SE NON C'E FIT LA SURLICITA PROMETTE 14+ PUNTI.",
+            "SU UN INTERVENTO A COLORE DEL COMPAGNO: SE C'È FIT LA SURLICITA PROMETTE 11+ PUNTI. SE NON C'È FIT LA SURLICITA PROMETTE 14+ PUNTI.",
         },
         {
           type: "text",
@@ -1275,7 +1275,7 @@ const lezione10: QuadriLesson = {
           options: ["2♠ (surlicita)", "X (contro)", "2♦", "1NT"],
           correctAnswer: 2,
           explanation:
-            "2♦ e la dichiarazione naturale corretta: 11+ punti e 5+ carte di quadri. Non fate uso di Contro o Surlicita quando avete a disposizione una dichiarazione naturale forzante!",
+            "2♦ è la dichiarazione naturale corretta: 11+ punti e 5+ carte di quadri. Non fate uso di Contro o Surlicita quando avete a disposizione una dichiarazione naturale forzante!",
         },
       ],
     },
@@ -1288,7 +1288,7 @@ const lezione10: QuadriLesson = {
         {
           type: "text",
           content:
-            "Sul contro del compagno l'unica dichiarazione forzante, obbligatoria con tutte le mani di 11+, e la surlicita. Chi surlicita si impegna a parlare ancora almeno fino a livello 3 in uno dei colori 'promessi'.",
+            "Sul contro del compagno l'unica dichiarazione forzante, obbligatoria con tutte le mani di 11+, è la surlicita. Chi surlicita si impegna a parlare ancora almeno fino a livello 3 in uno dei colori 'promessi'.",
         },
         {
           type: "rule",
@@ -1303,7 +1303,7 @@ const lezione10: QuadriLesson = {
           options: ["1♠", "2♦ (surlicita)", "1♥", "2NT"],
           correctAnswer: 1,
           explanation:
-            "2♦ e surlicita: una manche e certa, ma perche mettersi a indovinare quale? 'Caro compagno, almeno fino a livello di 3 possiamo giocare, comincia TU a dirmi il primo colore in cui hai 4 carte!'.",
+            "2♦ è surlicita: una manche è certa, ma perché mettersi a indovinare quale? 'Caro compagno, almeno fino a livello di 3 possiamo giocare, comincia TU a dirmi il primo colore in cui hai 4 carte!'.",
         },
       ],
     },
@@ -1316,12 +1316,12 @@ const lezione10: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando l'avversario e entrato in dichiarazione, l'occasione per contrare o surlicitare capita anche all'apertore. La surlicita dell'Apertore esprime fit quarto a cuori e una mano piu forte che se avesse detto 3♥ o 4♥.",
+            "Quando l'avversario è entrato in dichiarazione, l'occasione per contrare o surlicitare capita anche all'apertore. La surlicita dell'Apertore esprime fit quarto a cuori e una mano più forte che se avesse detto 3♥ o 4♥.",
         },
         {
           type: "rule",
           content:
-            "Il contro dell'Apertore mostra una mano di REVER e chiede al partner di dichiarare ancora: non ha 4 carte nel nobile del compagno e non ha una licita migliore. E la 'rimozione': Contro poi cambio colore = 18+ punti.",
+            "Il contro dell'Apertore mostra una mano di REVER e chiede al partner di dichiarare ancora: non ha 4 carte nel nobile del compagno e non ha una licita migliore. È la 'rimozione': Contro poi cambio colore = 18+ punti.",
         },
         {
           type: "example",
@@ -1341,7 +1341,7 @@ const lezione10: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "La surlicita dell'Apertore esprime fit quarto nel colore del compagno con mano piu forte di un semplice appoggio. Con onori concentrati nei colori lunghi, pochi punti possono bastare.",
+            "La surlicita dell'Apertore esprime fit quarto nel colore del compagno con mano più forte di un semplice appoggio. Con onori concentrati nei colori lunghi, pochi punti possono bastare.",
         },
       ],
     },
@@ -1375,7 +1375,7 @@ const lezione12: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando si da il Contro con 12-14, si deve poter accettare qualsiasi scelta del compagno perche non si potra piu scappare. Se il contrante cambia quanto ha detto il partner seguendo il meccanismo della 'Rimozione', mostra in automatico la mano con 18+.",
+            "Quando si dà il Contro con 12-14, si deve poter accettare qualsiasi scelta del compagno perché non si potrà più scappare. Se il contrante cambia quanto ha detto il partner seguendo il meccanismo della 'Rimozione', mostra in automatico la mano con 18+.",
         },
         {
           type: "quiz",
@@ -1403,7 +1403,7 @@ const lezione12: QuadriLesson = {
         {
           type: "rule",
           content:
-            "Dopo aperture di 1♥ o 1♠, l'intervento di 2NT mostra una bicolore minore almeno 5-5, con buoni colori. Non puo mostrare una bilanciata forte (per quella si usa Contro poi 1NT). E una dichiarazione illogica e quindi forzante.",
+            "Dopo aperture di 1♥ o 1♠, l'intervento di 2NT mostra una bicolore minore almeno 5-5, con buoni colori. Non può mostrare una bilanciata forte (per quella si usa Contro poi 1NT). È una dichiarazione illogica e quindi forzante.",
         },
         {
           type: "example",
@@ -1418,7 +1418,7 @@ const lezione12: QuadriLesson = {
           options: ["2NT", "2♦", "Passo", "3♦"],
           correctAnswer: 1,
           explanation:
-            "Questa non e una bicolore: e una monocolore di quadri con un ciuffo di fiori. Intervenite 2♦, non 2NT! La 2NT richiede una vera 5-5 minore con colori onesti.",
+            "Questa non è una bicolore: è una monocolore di quadri con un ciuffo di fiori. Intervenite 2♦, non 2NT! La 2NT richiede una vera 5-5 minore con colori onesti.",
         },
       ],
     },
@@ -1431,17 +1431,17 @@ const lezione12: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il 'Passo forte' e la situazione in cui il Passo non e dovuto a scarso punteggio ma al possesso di lunghezza e forza nel colore avversario. Il compagno deve proteggere riaprendo la licita.",
+            "Il 'Passo forte' è la situazione in cui il Passo non è dovuto a scarso punteggio ma al possesso di lunghezza e forza nel colore avversario. Il compagno deve proteggere riaprendo la licita.",
         },
         {
           type: "rule",
           content:
-            "Si definisce 'RIAPERTURA' qualsiasi dichiarazione fatta dal giocatore che, se dicesse Passo, concluderebbe la licita (terzo e ultimo Passo). La RIAPERTURA DI CONTRO non mostra particolari requisiti di forza, ma garantisce almeno due prese certe di controgioco. E un CONTRO DI PROTEZIONE.",
+            "Si definisce 'RIAPERTURA' qualsiasi dichiarazione fatta dal giocatore che, se dicesse Passo, concluderebbe la licita (terzo e ultimo Passo). La RIAPERTURA DI CONTRO non mostra particolari requisiti di forza, ma garantisce almeno due prese certe di controgioco. È un CONTRO DI PROTEZIONE.",
         },
         {
           type: "text",
           content:
-            "E fondamentale la differenza tra intervento e riapertura: l'intervento e di tipo 'informativo' (garantisce requisiti), la riapertura e di tipo 'deduttivo' (non si basa sulla forza propria ma su quella dedotta sulla propria linea).",
+            "È fondamentale la differenza tra intervento e riapertura: l'intervento è di tipo 'informativo' (garantisce requisiti), la riapertura è di tipo 'deduttivo' (non si basa sulla forza propria ma su quella dedotta sulla propria linea).",
         },
         {
           type: "quiz",
@@ -1451,7 +1451,7 @@ const lezione12: QuadriLesson = {
           options: ["Passo", "X (Contro)", "2♥", "2NT"],
           correctAnswer: 2,
           explanation:
-            "Riaprite a colore con 2♥: avete forza giocabile e non volete lasciare giocare 1♠. Non Contro, perche se il compagno trasformasse il contro non fareste un buon affare!",
+            "Riaprite a colore con 2♥: avete forza giocabile e non volete lasciare giocare 1♠. Non Contro, perché se il compagno trasformasse il contro non fareste un buon affare!",
         },
       ],
     },
@@ -1464,17 +1464,17 @@ const lezione12: QuadriLesson = {
         {
           type: "text",
           content:
-            "Non si ha mai la certezza che il compagno sia in 'passo forte': qualora cosi non fosse sara lui a dover togliere il contro e dichiarare qualcosa. Chi riapre con il contro ipotizza forza taciuta nel compagno.",
+            "Non si ha mai la certezza che il compagno sia in 'passo forte': qualora così non fosse sarà lui a dover togliere il contro e dichiarare qualcosa. Chi riapre con il contro ipotizza forza taciuta nel compagno.",
         },
         {
           type: "rule",
           content:
-            "QUANDO RIAPRITE: assicuratevi di avere buone probabilita di trovare un fit. Abbiate cura di avere tutti punti utili. QUANDO IL COMPAGNO RIAPRE RICORDATEVI CHE SA GIA CHE AVETE DEI PUNTI!",
+            "QUANDO RIAPRITE: assicuratevi di avere buone probabilità di trovare un fit. Abbiate cura di avere tutti punti utili. QUANDO IL COMPAGNO RIAPRE RICORDATEVI CHE SA GIÀ CHE AVETE DEI PUNTI!",
         },
         {
           type: "tip",
           content:
-            "La riapertura puo essere fatta anche a colore, quando le carte sono tali da ritenere che, se contrassimo e il compagno trasformasse, non faremmo un buon affare. Onde evitare, riaprire a colore e non con il Contro!",
+            "La riapertura può essere fatta anche a colore, quando le carte sono tali da ritenere che, se contrassimo e il compagno trasformasse, non faremmo un buon affare. Onde evitare, riaprire a colore e non con il Contro!",
         },
         {
           type: "quiz",
@@ -1484,7 +1484,7 @@ const lezione12: QuadriLesson = {
           options: ["Passo", "X (Contro)", "2♦", "1♠"],
           correctAnswer: 1,
           explanation:
-            "Contro di protezione: il partner potrebbe avere un 'passo forte' con buone cuori. Il Contro riapre la licita e il compagno potra trasformarlo dicendo Passo se ha le cuori, oppure dichiarare il suo colore.",
+            "Contro di protezione: il partner potrebbe avere un 'passo forte' con buone cuori. Il Contro riapre la licita e il compagno potrà trasformarlo dicendo Passo se ha le cuori, oppure dichiarare il suo colore.",
         },
       ],
     },
@@ -1513,17 +1513,17 @@ const lezione7: QuadriLesson = {
         {
           type: "text",
           content:
-            "La carta di attacco richiede due scelte: in che seme (dalla licita) e con che carta (dagli accordi di coppia). In presenza di sequenze, si sceglie la piu alta delle toccanti; senza sequenze si attacca di cartina.",
+            "La carta di attacco richiede due scelte: in che seme (dalla licita) e con che carta (dagli accordi di coppia). In presenza di sequenze, si sceglie la più alta delle toccanti; senza sequenze si attacca di cartina.",
         },
         {
           type: "rule",
           content:
-            "L'ATTACCO CON LA PIU PICCOLA DELLE CARTINE dice che in quel colore abbiamo almeno un onore. Al compagno viene chiesto di prendere e tornare. L'ATTACCO CON LA PIU ALTA DELLE CARTINE dice che non abbiamo onori: il compagno e libero di prendere e cambiare.",
+            "L'ATTACCO CON LA PIÙ PICCOLA DELLE CARTINE dice che in quel colore abbiamo almeno un onore. Al compagno viene chiesto di prendere e tornare. L'ATTACCO CON LA PIÙ ALTA DELLE CARTINE dice che non abbiamo onori: il compagno è libero di prendere e cambiare.",
         },
         {
           type: "text",
           content:
-            "Le carte di attacco che promettono l'inferiore sono A, K, Q, J, 10, 9. Il 9 non e una cartina. La piu alta delle cartine e l'8, che non promette niente. Se volete attaccare da K9754, la carta e il 4. Da 97542, la carta e il 9. Da Q10865, la carta e il 5.",
+            "Le carte di attacco che promettono l'inferiore sono A, K, Q, J, 10, 9. Il 9 non è una cartina. La più alta delle cartine è l'8, che non promette niente. Se volete attaccare da K9754, la carta è il 4. Da 97542, la carta è il 9. Da Q10865, la carta è il 5.",
         },
         {
           type: "quiz",
@@ -1533,7 +1533,7 @@ const lezione7: QuadriLesson = {
           options: ["K", "9", "4", "7"],
           correctAnswer: 2,
           explanation:
-            "Si attacca con il 4 (la piu piccola delle cartine) per dire al compagno 'ho almeno un onore in questo colore, prendi e torna'. Il K e il 9 promettono l'inferiore e non vanno giocati in busso.",
+            "Si attacca con il 4 (la più piccola delle cartine) per dire al compagno 'ho almeno un onore in questo colore, prendi e torna'. Il K e il 9 promettono l'inferiore e non vanno giocati in busso.",
         },
       ],
     },
@@ -1551,7 +1551,7 @@ const lezione7: QuadriLesson = {
         {
           type: "rule",
           content:
-            "CON 2, 4, 6 CARTE SI SCEGLIE UNA CARTA ALTA (cui seguira una piu bassa). CON 1, 3, 5 CARTE SI SCEGLIE LA PIU PICCOLA, A PRESCINDERE DALLA PRESENZA O MENO DI ONORI.",
+            "CON 2, 4, 6 CARTE SI SCEGLIE UNA CARTA ALTA (cui seguirà una più bassa). CON 1, 3, 5 CARTE SI SCEGLIE LA PIÙ PICCOLA, A PRESCINDERE DALLA PRESENZA O MENO DI ONORI.",
         },
         {
           type: "example",
@@ -1566,7 +1566,7 @@ const lezione7: QuadriLesson = {
           options: ["Q", "7", "2", "6"],
           correctAnswer: 1,
           explanation:
-            "Con 4 carte (numero pari) si sceglie una carta alta: il 7. La Q non va giocata perche stiamo attaccando 'in conto' (mostrando la parita) non in busso.",
+            "Con 4 carte (numero pari) si sceglie una carta alta: il 7. La Q non va giocata perché stiamo attaccando 'in conto' (mostrando la parità) non in busso.",
         },
       ],
     },
@@ -1579,7 +1579,7 @@ const lezione7: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il segnale del gradimento entra in azione quando un difensore non e impegnato nella presa e le sue carte possono essere usate per mandare messaggi al compagno: 'il colore che hai mosso mi piace, continua' oppure 'non ho interesse alla continuazione'.",
+            "Il segnale del gradimento entra in azione quando un difensore non è impegnato nella presa e le sue carte possono essere usate per mandare messaggi al compagno: 'il colore che hai mosso mi piace, continua' oppure 'non ho interesse alla continuazione'.",
         },
         {
           type: "rule",
@@ -1589,7 +1589,7 @@ const lezione7: QuadriLesson = {
         {
           type: "text",
           content:
-            "Precisazioni: a Senza il gradimento si da solo in presenza di una carta equivalente alla sequenza o di un onore. Nei contratti a colore, una carta di invito puo provenire da doubleton per segnalare la possibilita del taglio.",
+            "Precisazioni: a Senza il gradimento si dà solo in presenza di una carta equivalente alla sequenza o di un onore. Nei contratti a colore, una carta di invito può provenire da doubleton per segnalare la possibilità del taglio.",
         },
         {
           type: "quiz",
@@ -1599,12 +1599,12 @@ const lezione7: QuadriLesson = {
           options: [
             "Una carta pari (2, 4, 6, 8)",
             "Una carta dispari (3, 5, 7, 9)",
-            "La piu alta possibile",
-            "La piu bassa possibile",
+            "La più alta possibile",
+            "La più bassa possibile",
           ],
           correctAnswer: 1,
           explanation:
-            "Nel Pari-Dispari, la carta dispari mostra gradimento. Il 9 e la meno equivoca per mostrare gradimento, il 2 la piu lampante per mostrare sgradimento.",
+            "Nel Pari-Dispari, la carta dispari mostra gradimento. Il 9 è la meno equivoca per mostrare gradimento, il 2 la più lampante per mostrare sgradimento.",
         },
       ],
     },
@@ -1617,27 +1617,27 @@ const lezione7: QuadriLesson = {
         {
           type: "text",
           content:
-            "Quando un difensore si ritrova a dover SCARTARE per la prima volta, la scelta e piu ampia che col gradimento: puo scegliere tra due o tre colori. Il primo scarto segue la regola: DISPARI CHIAMA E PARI RIFIUTA.",
+            "Quando un difensore si ritrova a dover SCARTARE per la prima volta, la scelta è più ampia che col gradimento: può scegliere tra due o tre colori. Il primo scarto segue la regola: DISPARI CHIAMA E PARI RIFIUTA.",
         },
         {
           type: "rule",
           content:
-            "QUANDO UN DIFENSORE SCARTA: puo MOSTRARE VALORI in un seme scartando una carta DISPARI, o puo NEGARE VALORI in un seme scartando una carta PARI. Al primo scarto: dispari chiama e pari rifiuta!",
+            "QUANDO UN DIFENSORE SCARTA: può MOSTRARE VALORI in un seme scartando una carta DISPARI, o può NEGARE VALORI in un seme scartando una carta PARI. Al primo scarto: dispari chiama e pari rifiuta!",
         },
         {
           type: "example",
           content:
-            "Est deve scartare con lo scarto: chiama dove vi conviene, non dove avete le carte piu alte. Invitate il compagno a muovere FIORI: scartate le carte piu alte dispari di fiori. E se non aveste dispari di fiori? Otterreste lo stesso risultato scartando una PARI di quadri (negando quadri).",
+            "Est deve scartare con lo scarto: chiama dove vi conviene, non dove avete le carte più alte. Invitate il compagno a muovere FIORI: scartate le carte più alte dispari di fiori. E se non aveste dispari di fiori? Otterreste lo stesso risultato scartando una PARI di quadri (negando quadri).",
         },
         {
           type: "quiz",
           content:
             "Al primo scarto, volete che il compagno giochi quadri. Avete ♦J932. Quale carta scartate?",
           quizType: "multiple-choice",
-          options: ["♦2 (la piu bassa)", "♦J (la piu alta)", "♦9 (dispari alta)", "♦3 (dispari bassa)"],
+          options: ["♦2 (la più bassa)", "♦J (la più alta)", "♦9 (dispari alta)", "♦3 (dispari bassa)"],
           correctAnswer: 2,
           explanation:
-            "Scartate il 9♦ (dispari = chiama). Al primo scarto all'italiana, una carta dispari mostra valori e chiama nel colore scartato. Il 9 e la piu inequivocabile.",
+            "Scartate il 9♦ (dispari = chiama). Al primo scarto all'italiana, una carta dispari mostra valori e chiama nel colore scartato. Il 9 è la più inequivocabile.",
         },
       ],
     },
@@ -1661,7 +1661,7 @@ const lezione9: QuadriLesson = {
         {
           type: "text",
           content:
-            "Nei contratti ad atout la scelta di attacco dell'avversario puo esser motivata anche dalla ricerca di un taglio. Un attacco di onore secondo e frequente, quindi per il giocante aumentano le difficolta per individuare la disposizione delle carte mancanti.",
+            "Nei contratti ad atout la scelta di attacco dell'avversario può esser motivata anche dalla ricerca di un taglio. Un attacco di onore secondo è frequente, quindi per il giocante aumentano le difficoltà per individuare la disposizione delle carte mancanti.",
         },
         {
           type: "rule",
@@ -1671,7 +1671,7 @@ const lezione9: QuadriLesson = {
         {
           type: "example",
           content:
-            "Se subodorate un taglio, provate ad alzare un po' di nebbia: giocate carte false, come un onore alto che non vi costa nulla, per costruire un'illusione verosimile per il difensore che puo dare il taglio all'altro.",
+            "Se subodorate un taglio, provate ad alzare un po' di nebbia: giocate carte false, come un onore alto che non vi costa nulla, per costruire un'illusione verosimile per il difensore che può dare il taglio all'altro.",
         },
         {
           type: "quiz",
@@ -1681,8 +1681,8 @@ const lezione9: QuadriLesson = {
           options: [
             "In mano a chi ha attaccato",
             "In mano al compagno di chi ha attaccato",
-            "Non si puo sapere",
-            "E stato scartato",
+            "Non si può sapere",
+            "È stato scartato",
           ],
           correctAnswer: 1,
           explanation:
@@ -1709,7 +1709,7 @@ const lezione9: QuadriLesson = {
         {
           type: "rule",
           content:
-            "Nei contratti a colore puo esserci convenienza a lisciare l'attacco per tagliare i collegamenti tra gli avversari, e impedire che vada in presa un difensore che potrebbe fare un ritorno pericoloso (un onore sotto impasse).",
+            "Nei contratti a colore può esserci convenienza a lisciare l'attacco per tagliare i collegamenti tra gli avversari, e impedire che vada in presa un difensore che potrebbe fare un ritorno pericoloso (un onore sotto impasse).",
         },
         {
           type: "quiz",
@@ -1718,7 +1718,7 @@ const lezione9: QuadriLesson = {
           quizType: "true-false",
           correctAnswer: "true",
           explanation:
-            "Si! Lisciando il K, Ovest (che ha KQ) non potra proseguire senza darvi la presa con l'Asso. Se rovesciate gli onori, se ha KQ potrebbe darvi problemi al secondo giro. Conservate il controllo per i tempi migliori.",
+            "Si! Lisciando il K, Ovest (che ha KQ) non potrà proseguire senza darvi la presa con l'Asso. Se rovesciate gli onori, se ha KQ potrebbe darvi problemi al secondo giro. Conservate il controllo per i tempi migliori.",
         },
       ],
     },
@@ -1731,12 +1731,12 @@ const lezione9: QuadriLesson = {
         {
           type: "text",
           content:
-            "Prima di 'chiamare' la carta dal morto fate le opportune deduzioni sia in base alla carta d'attacco, sia in base alla licita. Ponetevi sempre delle domande: da quale figura di carte puo venire? Mi conviene prendere o lisciare? Devo fare dei tagli o battere atout?",
+            "Prima di 'chiamare' la carta dal morto fate le opportune deduzioni sia in base alla carta d'attacco, sia in base alla licita. Ponetevi sempre delle domande: da quale figura di carte può venire? Mi conviene prendere o lisciare? Devo fare dei tagli o battere atout?",
         },
         {
           type: "rule",
           content:
-            "Ricordate che: nessun giocatore attacca sotto asso ad atout. Se pensate ad un attacco per il taglio, giocate carte 'false'. Non e utile sprecare onori lunghi del morto. Se l'attacco vi pone la scelta di un impasse, spesso e opportuno rinunciarci.",
+            "Ricordate che: nessun giocatore attacca sotto asso ad atout. Se pensate ad un attacco per il taglio, giocate carte 'false'. Non è utile sprecare onori lunghi del morto. Se l'attacco vi pone la scelta di un impasse, spesso è opportuno rinunciarci.",
         },
         {
           type: "tip",
@@ -1756,7 +1756,7 @@ const lezione9: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Se l'attacco vi pone la scelta di un impasse che ha pochissime chance, puo essere conveniente rinunciarci. Prendete d'Asso, battete atout, e poi cedete le prese che dovete cedere.",
+            "Se l'attacco vi pone la scelta di un impasse che ha pochissime chance, può essere conveniente rinunciarci. Prendete d'Asso, battete atout, e poi cedete le prese che dovete cedere.",
         },
       ],
     },
@@ -1769,22 +1769,22 @@ const lezione9: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il problema delle comunicazioni e importantissimo e richiede di prevedere fin dall'inizio le mosse successive, anziche iniziare a pensare dopo la prima presa. E indispensabile fare il 'piano di gioco' e verificare eventuali collegamenti e rientri necessari.",
+            "Il problema delle comunicazioni è importantissimo e richiede di prevedere fin dall'inizio le mosse successive, anziché iniziare a pensare dopo la prima presa. È indispensabile fare il 'piano di gioco' e verificare eventuali collegamenti e rientri necessari.",
         },
         {
           type: "rule",
           content:
-            "Non sprecate mai onori lunghi del morto quando e assolutamente certo che non vinceranno la presa e non avete nulla da affrancare. Un onore lungo, se lo lasciate dov'e, obbliga almeno uno degli avversari a non potersi muovere nel colore.",
+            "Non sprecate mai onori lunghi del morto quando è assolutamente certo che non vinceranno la presa e non avete nulla da affrancare. Un onore lungo, se lo lasciate dov'è, obbliga almeno uno degli avversari a non potersi muovere nel colore.",
         },
         {
           type: "tip",
           content:
-            "E' possibile lisciare per tagliare i collegamenti agli avversari nei contratti a colore. Il taglio avverra grazie alle Cuori stesse, che comunicano ancora.",
+            "È possibile lisciare per tagliare i collegamenti agli avversari nei contratti a colore. Il taglio avverrà grazie alle Cuori stesse, che comunicano ancora.",
         },
         {
           type: "quiz",
           content:
-            "Al primo attacco in un contratto ad atout, la cosa piu importante e...",
+            "Al primo attacco in un contratto ad atout, la cosa più importante è...",
           quizType: "multiple-choice",
           options: [
             "Giocare velocemente",
@@ -1794,7 +1794,7 @@ const lezione9: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "E indispensabile fare il piano di gioco PRIMA di chiamare dal morto. Contate le prese, identificate i pericoli, verificate i collegamenti e i rientri. Solo poi giocate.",
+            "È indispensabile fare il piano di gioco PRIMA di chiamare dal morto. Contate le prese, identificate i pericoli, verificate i collegamenti e i rientri. Solo poi giocate.",
         },
       ],
     },
@@ -1823,12 +1823,12 @@ const lezione11: QuadriLesson = {
         {
           type: "rule",
           content:
-            "NON E' POSSIBILE ATTUARE UN BUON CONTROGIOCO SE: non si gira la testa per guardare il morto, non ci si ricorda la dichiarazione, non si contano i punti e le lunghezze, non si fanno deduzioni, non si guardano le carte del compagno.",
+            "NON È POSSIBILE ATTUARE UN BUON CONTROGIOCO SE: non si gira la testa per guardare il morto, non ci si ricorda la dichiarazione, non si contano i punti e le lunghezze, non si fanno deduzioni, non si guardano le carte del compagno.",
         },
         {
           type: "tip",
           content:
-            "Ricordatevi la dichiarazione! E' sempre l'indizio fondamentale: e in base alla dichiarazione che si cerca di ricostruire la distribuzione del Giocante e gli onori che puo avere.",
+            "Ricordatevi la dichiarazione! È sempre l'indizio fondamentale: è in base alla dichiarazione che si cerca di ricostruire la distribuzione del Giocante e gli onori che può avere.",
         },
         {
           type: "quiz",
@@ -1843,7 +1843,7 @@ const lezione11: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Il primo passo e guardare il morto e ricordare la dichiarazione. Da queste informazioni si deducono distribuzione e onori del giocante, e si imposta la strategia difensiva.",
+            "Il primo passo è guardare il morto e ricordare la dichiarazione. Da queste informazioni si deducono distribuzione e onori del giocante, e si imposta la strategia difensiva.",
         },
       ],
     },
@@ -1861,12 +1861,12 @@ const lezione11: QuadriLesson = {
         {
           type: "rule",
           content:
-            "SE SIETE IN PRESA E AVETE UNA VINCENTE DA INCASSARE CHE POTREBBE AFFRANCARE CARTE AL GIOCANTE... INCASSATELA SOLO SE E' LA PRESA DEL DOWN!",
+            "SE SIETE IN PRESA E AVETE UNA VINCENTE DA INCASSARE CHE POTREBBE AFFRANCARE CARTE AL GIOCANTE... INCASSATELA SOLO SE È LA PRESA DEL DOWN!",
         },
         {
           type: "example",
           content:
-            "L'attacco e Asso di fiori. Est risponde con il 2 e Sud con il 3. Sapete che il 2 nega interesse. Proseguite con il K di Fiori! Sapete che la Dama e in Sud e che Est non taglia. Se Sud ha Qx di fiori, state per affrancarsi il J del morto.",
+            "L'attacco è Asso di fiori. Est risponde con il 2 e Sud con il 3. Sapete che il 2 nega interesse. Proseguite con il K di Fiori! Sapete che la Dama è in Sud e che Est non taglia. Se Sud ha Qx di fiori, state per affrancarsi il J del morto.",
         },
         {
           type: "quiz",
@@ -1894,17 +1894,17 @@ const lezione11: QuadriLesson = {
         {
           type: "text",
           content:
-            "Cercate di capire il piano di gioco del Giocante: solo cosi potrete cercare di ostacolarlo. Contate le prese del giocante come fa lui, provateci anche voi. E se vi rendete conto che ha il contratto in tasca, non arrendetevi: giocate attivamente e non pigramente.",
+            "Cercate di capire il piano di gioco del Giocante: solo così potrete cercare di ostacolarlo. Contate le prese del giocante come fa lui, provateci anche voi. E se vi rendete conto che ha il contratto in tasca, non arrendetevi: giocate attivamente e non pigramente.",
         },
         {
           type: "rule",
           content:
-            "Se il contratto sembra corazzato, non fate giocate pigre e automatiche. Contate le prese del giocante. Se sono sufficienti, cercate mosse attive. A volte una difesa aggressiva e l'unica chance.",
+            "Se il contratto sembra corazzato, non fate giocate pigre e automatiche. Contate le prese del giocante. Se sono sufficienti, cercate mosse attive. A volte una difesa aggressiva è l'unica chance.",
         },
         {
           type: "example",
           content:
-            "Sud gioca 3NT dopo 1♣-1♦-1NT-3NT. Attacco Q♥. Est risponde con il 2. Sud prende con l'Asso e gioca il K♣. Siete in presa. Sud ha verosimilmente ♥AKx, ♣KQxx. Tornate a cuori: al 2 di Est: 'cuori non ha' e un'informazione preziosa. Sud ha 12 punti certi: non ha l'Asso di Picche. Giocate piccola picche per l'Asso di Est!",
+            "Sud gioca 3NT dopo 1♣-1♦-1NT-3NT. Attacco Q♥. Est risponde con il 2. Sud prende con l'Asso e gioca il K♣. Siete in presa. Sud ha verosimilmente ♥AKx, ♣KQxx. Tornate a cuori: al 2 di Est: 'cuori non ha' è un'informazione preziosa. Sud ha 12 punti certi: non ha l'Asso di Picche. Giocate piccola picche per l'Asso di Est!",
         },
         {
           type: "quiz",
@@ -1913,13 +1913,13 @@ const lezione11: QuadriLesson = {
           quizType: "multiple-choice",
           options: [
             "Giocate un altro colore a caso",
-            "Rispettate il linguaggio di controgioco: cercate il colore piu verosimile dal morto",
+            "Rispettate il linguaggio di controgioco: cercate il colore più verosimile dal morto",
             "Battete atout",
             "Non importa, giocate qualunque cosa",
           ],
           correctAnswer: 1,
           explanation:
-            "Rispettate i codici del linguaggio di controgioco. Se non potete dare il ritorno chiesto, cercate il colore piu logico guardando il morto. Una carta di rifiuto chiede comunque un cambio di colore!",
+            "Rispettate i codici del linguaggio di controgioco. Se non potete dare il ritorno chiesto, cercate il colore più logico guardando il morto. Una carta di rifiuto chiede comunque un cambio di colore!",
         },
       ],
     },
@@ -1932,7 +1932,7 @@ const lezione11: QuadriLesson = {
         {
           type: "text",
           content:
-            "Il 'taglio e scarto' e un errore difensivo grave: giocate un colore in cui il morto presenta il vuoto, il giocante taglia da una parte e scarta una perdente dall'altra. Ottiene un allungamento di taglio che non era in grado di produrre da solo.",
+            "Il 'taglio e scarto' è un errore difensivo grave: giocate un colore in cui il morto presenta il vuoto, il giocante taglia da una parte e scarta una perdente dall'altra. Ottiene un allungamento di taglio che non era in grado di produrre da solo.",
         },
         {
           type: "rule",
@@ -1957,7 +1957,7 @@ const lezione11: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "SE NON SI OTTENGONO CERTEZZE... SI GIOCA 'COME SE'... IPOTIZZANDO DETERMINATE SITUAZIONI E AGENDO COME SE FOSSERO CERTE. E il principio fondamentale del controgioco ragionato.",
+            "SE NON SI OTTENGONO CERTEZZE... SI GIOCA 'COME SE'... IPOTIZZANDO DETERMINATE SITUAZIONI E AGENDO COME SE FOSSERO CERTE. È il principio fondamentale del controgioco ragionato.",
         },
       ],
     },

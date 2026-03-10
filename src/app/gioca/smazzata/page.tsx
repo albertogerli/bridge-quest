@@ -857,7 +857,7 @@ function PlayingView({
                     <span className="font-bold text-gray-900">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {getLessonTitle(smazzata.lesson)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Vulnerabilita'</span>
+                    <span className="text-gray-500">Vulnerabilità</span>
                     <span className="font-bold text-gray-900">
                       {smazzata.vulnerability === "none" ? "Nessuna" : smazzata.vulnerability === "ns" ? "N-S" : smazzata.vulnerability === "ew" ? "E-O" : "Tutti"}
                     </span>

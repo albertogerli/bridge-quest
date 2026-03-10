@@ -80,7 +80,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
     <StepShell
       kicker="La Prima Regola"
       title="Qui conta una sola cosa."
-      body="Ogni giro si giocano 4 carte, una per giocatore. Chi gioca la carta piu alta del seme comandato vince la presa."
+      body="Ogni giro si giocano 4 carte, una per giocatore. Chi gioca la carta più alta del seme comandato vince la presa."
     >
       <ConfettiBurst trigger={showConfetti} count={25} />
 
@@ -120,7 +120,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
         <div className="grid gap-3">
           <ChoiceCard
             label="Asso di picche"
-            description="E la carta piu alta del seme giocato."
+            description="È la carta più alta del seme giocato."
             selected={choice === "ace"}
             correct
             onClick={() => handleChoice("ace")}
@@ -128,7 +128,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
           />
           <ChoiceCard
             label="Donna di picche"
-            description="E alta, ma non abbastanza."
+            description="È alta, ma non abbastanza."
             selected={choice === "queen"}
             correct={false}
             onClick={() => handleChoice("queen")}
@@ -147,8 +147,8 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
             }`}
           >
             {choice === "ace"
-              ? "Giusto! La presa la vince la carta piu alta del seme giocato."
-              : "Quasi. Qui vince l'Asso di picche, perche nel seme giocato e la carta piu alta."}
+              ? "Giusto! La presa la vince la carta più alta del seme giocato."
+              : "Quasi. Qui vince l'Asso di picche, perché nel seme giocato è la carta più alta."}
           </motion.div>
         )}
 

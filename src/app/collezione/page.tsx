@@ -727,7 +727,7 @@ export default function CollezionePage() {
                       ) : (
                         <>
                           <p className="text-sm text-gray-400 leading-relaxed">
-                            Questa carta non e' ancora stata sbloccata.
+                            Questa carta non è ancora stata sbloccata.
                           </p>
 
                           <div className="mt-4 bg-amber-50 rounded-xl p-3 flex items-center gap-2">

@@ -378,7 +378,7 @@ export default function TorneoSettimanale() {
 
                 <p className="text-[13px] font-semibold text-gray-700 leading-snug">
                   Gioca 5 mani selezionate: la stessa sfida per tutti i
-                  giocatori questa settimana. Vince chi totalizza piu prese!
+                  giocatori questa settimana. Vince chi totalizza più prese!
                 </p>
               </div>
 
@@ -673,7 +673,7 @@ export default function TorneoSettimanale() {
               <div className="text-center py-6">
                 <p className="text-sm text-gray-400">
                   {alreadyPlayed
-                    ? "Il tuo risultato e stato registrato!"
+                    ? "Il tuo risultato è stato registrato!"
                     : "Gioca il torneo per entrare in classifica"}
                 </p>
                 {alreadyPlayed && existingResult && (

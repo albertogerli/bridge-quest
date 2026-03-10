@@ -42,7 +42,7 @@ export default function ScopriPage() {
                 Scopri il Bridge
               </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Storia, curiosita e link utili
+                Storia, curiosità e link utili
               </p>
             </div>
           </div>
@@ -79,9 +79,9 @@ export default function ScopriPage() {
               </div>
 
               <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                La <strong>Federazione Italiana Gioco Bridge</strong> (FIGB) e l&apos;organismo
+                La <strong>Federazione Italiana Gioco Bridge</strong> (FIGB) è l&apos;organismo
                 ufficiale che governa il bridge sportivo in Italia. Fondata nel <strong>1936</strong>,
-                e membro del <strong>CONI</strong> (Comitato Olimpico Nazionale Italiano) e conta
+                è membro del <strong>CONI</strong> (Comitato Olimpico Nazionale Italiano) e conta
                 circa <strong>35.000 tesserati</strong> e oltre <strong>300 circoli</strong> su tutto
                 il territorio nazionale.
               </p>
@@ -151,7 +151,7 @@ export default function ScopriPage() {
                 <TimelineItem
                   year="XVII sec."
                   title="Le origini: il Whist"
-                  description="Il bridge affonda le sue radici nel Whist, un gioco di carte nato in Inghilterra nel XVII secolo. Dall'evoluzione del Whist nacquero varianti sempre piu sofisticate."
+                  description="Il bridge affonda le sue radici nel Whist, un gioco di carte nato in Inghilterra nel XVII secolo. Dall'evoluzione del Whist nacquero varianti sempre più sofisticate."
                   color="bg-gray-500"
                 />
 
@@ -214,7 +214,7 @@ export default function ScopriPage() {
               <div className="mt-4 flex items-start gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
                 <Brain className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-sm text-amber-800 dark:text-amber-200">
-                  Il bridge e riconosciuto come <strong>&quot;sport della mente&quot;</strong> dal
+                  Il bridge è riconosciuto come <strong>&quot;sport della mente&quot;</strong> dal
                   Comitato Olimpico Internazionale (CIO) dal 1999.
                 </p>
               </div>
@@ -238,7 +238,7 @@ export default function ScopriPage() {
               icon={<Globe className="w-5 h-5 text-blue-500" />}
               iconBg="bg-blue-100 dark:bg-blue-900/30"
               title="100+ paesi"
-              description="Il bridge e giocato in oltre 100 paesi in tutti i continenti, con milioni di appassionati."
+              description="Il bridge è giocato in oltre 100 paesi in tutti i continenti, con milioni di appassionati."
             />
             <FunFactCard
               icon={<Users className="w-5 h-5 text-emerald-500" />}

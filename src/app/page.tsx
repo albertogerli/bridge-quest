@@ -357,9 +357,9 @@ export default function Home() {
               </div>
 
               {weeklyData.xpEarned > 200 ? (
-                <p className="mt-4 text-sm font-bold text-emerald-600">Settimana fantastica! Continua cosi'!</p>
+                <p className="mt-4 text-sm font-bold text-emerald-600">Settimana fantastica! Continua così!</p>
               ) : weeklyData.xpEarned > 0 ? (
-                <p className="mt-4 text-sm font-bold text-amber-600">Buon lavoro! Punta piu' in alto questa settimana!</p>
+                <p className="mt-4 text-sm font-bold text-amber-600">Buon lavoro! Punta più in alto questa settimana!</p>
               ) : (
                 <p className="mt-4 text-sm font-bold text-gray-500 dark:text-gray-400">Nuova settimana, nuove sfide!</p>
               )}
@@ -956,7 +956,7 @@ export default function Home() {
                       Scopri il Bridge
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Storia, la FIGB, curiosita e link utili
+                      Storia, la FIGB, curiosità e link utili
                     </p>
                   </div>
                   <svg

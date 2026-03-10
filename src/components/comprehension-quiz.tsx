@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { comprehensionData, type ComprehensionQuestion } from "@/data/comprensione-data";
@@ -18,6 +18,20 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
+
+  // Shuffle options for each question (Fisher-Yates)
+  const shuffledIndices = useMemo(() => {
+    if (!data) return [];
+    return data.questions.map((q) => {
+      if (q.options.length <= 2) return q.options.map((_: string, i: number) => i);
+      const indices = q.options.map((_: string, i: number) => i);
+      for (let j = indices.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [indices[j], indices[k]] = [indices[k], indices[j]];
+      }
+      return indices;
+    });
+  }, [data]);
 
   if (!data || data.questions.length === 0) return null;
 
@@ -138,37 +152,38 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
             {question.question}
           </p>
 
-          {/* Options */}
+          {/* Options (shuffled) */}
           <div className="space-y-2">
-            {question.options.map((opt, i) => {
+            {(shuffledIndices[currentIdx] || question.options.map((_: string, i: number) => i)).map((origIdx: number, displayIdx: number) => {
+              const opt = question.options[origIdx];
               let bg = "bg-gray-50 hover:bg-gray-100 border-gray-200";
               let text = "text-gray-700";
 
               if (showResult) {
-                if (i === question.correctAnswer) {
+                if (origIdx === question.correctAnswer) {
                   bg = "bg-emerald-50 border-emerald-400";
                   text = "text-emerald-800";
-                } else if (i === selected && !isCorrect) {
+                } else if (origIdx === selected && !isCorrect) {
                   bg = "bg-red-50 border-red-400";
                   text = "text-red-800";
                 } else {
                   bg = "bg-gray-50 border-gray-200 opacity-50";
                 }
-              } else if (selected === i) {
+              } else if (selected === origIdx) {
                 bg = "bg-emerald-50 border-emerald-300";
               }
 
               return (
                 <motion.button
-                  key={i}
-                  onClick={() => handleSelect(i)}
+                  key={origIdx}
+                  onClick={() => handleSelect(origIdx)}
                   disabled={showResult}
                   className={`w-full text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${bg} ${text}`}
                   whileTap={showResult ? {} : { scale: 0.98 }}
                 >
                   <span className="inline-flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold border border-gray-200 flex-shrink-0">
-                      {String.fromCharCode(65 + i)}
+                      {String.fromCharCode(65 + displayIdx)}
                     </span>
                     {opt}
                   </span>

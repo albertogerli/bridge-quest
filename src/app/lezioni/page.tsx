@@ -246,7 +246,7 @@ export default function LezioniPage() {
               In arrivo!
             </h3>
             <p className="text-sm text-gray-400 max-w-xs mx-auto">
-              Il {currentCourse.name} sara disponibile presto. Intanto continua con il Corso Fiori!
+              Il {currentCourse.name} sarà disponibile presto. Intanto continua con il Corso Fiori!
             </p>
           </motion.div>
         )}

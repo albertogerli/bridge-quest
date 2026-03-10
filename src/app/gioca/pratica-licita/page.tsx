@@ -244,7 +244,7 @@ export default function PraticaLicitaPage() {
                 <li>
                   Temi: Texas, Stayman, cue bid, interventi, aperture deboli
                 </li>
-                <li>Piu&apos; sei veloce, piu&apos; punti guadagni!</li>
+                <li>Più sei veloce, più punti guadagni!</li>
               </ul>
             </div>
 
@@ -277,7 +277,7 @@ export default function PraticaLicitaPage() {
             {/* Difficulty selector */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-gray-900 text-left">
-                Scegli difficolta&apos;
+                Scegli difficoltà
               </h3>
               {(
                 Object.entries(diffConfig) as [

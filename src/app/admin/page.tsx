@@ -147,7 +147,7 @@ export default function AdminPage() {
         <div className="text-center">
           <div className="text-6xl mb-4">🔒</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Accesso negato</h1>
-          <p className="text-gray-500 mb-6">Questa pagina e riservata agli amministratori.</p>
+          <p className="text-gray-500 mb-6">Questa pagina è riservata agli amministratori.</p>
           <Link href="/" className="text-emerald-600 font-bold hover:underline">
             Torna alla home
           </Link>

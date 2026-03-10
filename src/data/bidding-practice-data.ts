@@ -104,7 +104,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "Passo",
     wrongBids: ["2♣", "2NT", "2♦"],
     explanation:
-      "Con solo 6 HCP e distribuzione bilanciata 3-3-4-3, passa. Non hai la forza per invitare (8-9 HCP) ne' un lungo da trasferire.",
+      "Con solo 6 HCP e distribuzione bilanciata 3-3-4-3, passa. Non hai la forza per invitare (8-9 HCP) né un lungo da trasferire.",
     difficulty: 1,
     topic: "Risposte a 1NT",
   },
@@ -183,7 +183,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♠",
     wrongBids: ["1♠", "Passo", "3♠"],
     explanation:
-      "Con 8 HCP, 6 picche di buona qualita' (2 dei 3 onori alti) e mano non adatta per apertura a livello 1, apri con un debole a 2♠.",
+      "Con 8 HCP, 6 picche di buona qualità (2 dei 3 onori alti) e mano non adatta per apertura a livello 1, apri con un debole a 2♠.",
     difficulty: 2,
     topic: "Aperture deboli",
   },
@@ -200,7 +200,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♣",
     wrongBids: ["2♠", "1♠", "2NT"],
     explanation:
-      "Con 25 HCP e mano potentissima, apri 2♣ forte convenzionale e forzante. E' l'unica apertura con 22+ HCP.",
+      "Con 25 HCP e mano potentissima, apri 2♣ forte convenzionale e forzante. È l'unica apertura con 22+ HCP.",
     difficulty: 2,
     topic: "2♣ Forte",
   },
@@ -278,7 +278,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♦",
     wrongBids: ["Passo", "2NT", "2♥"],
     explanation:
-      "Dopo 2♣ forte, NON puoi passare (e' forzante!). Con mano debole (0-7 HCP) rispondi 2♦ relais (negativa convenzionale). Il compagno fara' la sua seconda dichiarazione.",
+      "Dopo 2♣ forte, NON puoi passare (è forzante!). Con mano debole (0-7 HCP) rispondi 2♦ relais (negativa convenzionale). Il compagno farà la sua seconda dichiarazione.",
     difficulty: 2,
     topic: "2♣ Forte",
   },
@@ -362,7 +362,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♥",
     wrongBids: ["3♥", "Passo", "Contro"],
     explanation:
-      "Con 8 HCP e 5 cuori di appoggio, rialza a 2♥ anche dopo l'intervento. Il rialzo semplice (2♥) e' competitivo e mostra il fit, impedendo al campo avversario di giocare comodi a 2♣.",
+      "Con 8 HCP e 5 cuori di appoggio, rialza a 2♥ anche dopo l'intervento. Il rialzo semplice (2♥) è competitivo e mostra il fit, impedendo al campo avversario di giocare comodi a 2♣.",
     difficulty: 3,
     topic: "Dichiarazione competitiva",
   },
@@ -401,7 +401,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "Contro",
     wrongBids: ["3♥", "2NT", "Passo"],
     explanation:
-      "Con 19 HCP e apertura avversaria debole 2♠, fai Contro. E' informativo (non punitivo): mostra forza e chiede al compagno di scegliere. Troppo forte per un semplice intervento a 3♥.",
+      "Con 19 HCP e apertura avversaria debole 2♠, fai Contro. È informativo (non punitivo): mostra forza e chiede al compagno di scegliere. Troppo forte per un semplice intervento a 3♥.",
     difficulty: 3,
     topic: "Dichiarazione competitiva",
   },
@@ -423,7 +423,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♠",
     wrongBids: ["2♥", "2♦", "2NT"],
     explanation:
-      "Dopo Stayman del compagno (2♣), rispondi 2♠ mostrando le 4 picche. Con 15 HCP e 4 picche, NON dire 2♦ (che nega i nobili) ne' 2♥ (non hai 4 cuori). Mostra le picche!",
+      "Dopo Stayman del compagno (2♣), rispondi 2♠ mostrando le 4 picche. Con 15 HCP e 4 picche, NON dire 2♦ (che nega i nobili) né 2♥ (non hai 4 cuori). Mostra le picche!",
     difficulty: 3,
     topic: "Stayman",
   },

@@ -79,7 +79,7 @@ export default function GiocaPage() {
                       </Badge>
                     </div>
                     <p className="text-sm text-[#51627f]">
-                      3 quiz, 4 mini-prese e poi una mano vera. Il modo piu veloce per iniziare.
+                      3 quiz, 4 mini-prese e poi una mano vera. Il modo più veloce per iniziare.
                     </p>
                   </div>
                   <svg

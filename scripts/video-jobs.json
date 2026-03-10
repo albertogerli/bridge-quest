@@ -142,5 +142,1096 @@
   "maestro-cuori-gioco-lezione109.mp4": {
     "video_id": "3320451760ea4691b97342341dbd3c16",
     "status": "done"
+  },
+  "maestro-fiori-lezione00-giovane.mp4": {
+    "video_id": "3a168420e11e466da0b65c0adb35ca94",
+    "status": "done",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "00"
+  },
+  "maestro-fiori-lezione01-giovane.mp4": {
+    "video_id": "bc8c24e4ed88468488f9e8b78afccf59",
+    "status": "done",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "01"
+  },
+  "maestro-fiori-lezione02-giovane.mp4": {
+    "video_id": "a8c608fa5c5348eabaae22939cae0968",
+    "status": "done",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "02"
+  },
+  "maestro-fiori-lezione03-giovane.mp4": {
+    "video_id": "72653cd9e92a4c4e8cc11702161ab3da",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "03",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione04-giovane.mp4": {
+    "video_id": "d535012e577d4862860ee8bc0641a19d",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "04",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione05-giovane.mp4": {
+    "video_id": "8358d7da83b2439a99b260848a39cdcc",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "05",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione06-giovane.mp4": {
+    "video_id": "fe77f8140f5b426f8cb2d62d72c03142",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "06",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione07-giovane.mp4": {
+    "video_id": "679554bd6c134b0d8ee540f814d798b2",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "07",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione08-giovane.mp4": {
+    "video_id": "14431f263c3d45aeaf0d17295148e9db",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "08",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione09-giovane.mp4": {
+    "video_id": "2dd0d5a2dd4d4392848901164dfe6d34",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "09",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione10-giovane.mp4": {
+    "video_id": "c29499456c3b4370a856887f010b3aad",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "10",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione11-giovane.mp4": {
+    "video_id": "7d576be1027547e899628ad7fef74656",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "11",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-fiori-lezione12-giovane.mp4": {
+    "video_id": "f3a06f00935c4148988d9ea5c238ecf4",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "giovane",
+    "lesson": "12",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione01-giovane.mp4": {
+    "video_id": "88c7e39c06b241fd9c209a1ecb88f71f",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "01",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione02-giovane.mp4": {
+    "video_id": "fe5bf18adf8545919f02b157206b7815",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "02",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione03-giovane.mp4": {
+    "video_id": "f58158891f914295b742a2c874175dec",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "03",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione04-giovane.mp4": {
+    "video_id": "7e3d94527499410cb5b4799ce90be5e1",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "04",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione05-giovane.mp4": {
+    "video_id": "b64ab25b83a2468f9c3917354eb97c87",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "05",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione06-giovane.mp4": {
+    "video_id": "d29bddf1026d4566b7e775d34bb6d9ef",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "06",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione07-giovane.mp4": {
+    "video_id": "ae50a0f35f2b488a8e9e12c99ed2b8b5",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "07",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione08-giovane.mp4": {
+    "video_id": "c99133983d6c46d0a473efa98a6056ad",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "08",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione09-giovane.mp4": {
+    "video_id": "dd95792105f74f448b6b9a0b27991d98",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "09",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione10-giovane.mp4": {
+    "video_id": "3bb996ffc1de4f1e85c71230a8e519e5",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "10",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione11-giovane.mp4": {
+    "video_id": "47682132b86a4eedad46b138a524e8bf",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "11",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-quadri-lezione12-giovane.mp4": {
+    "video_id": "f735c9fc34ff4183a6090ad5a01e12c3",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "giovane",
+    "lesson": "12",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione100-giovane.mp4": {
+    "video_id": "a9e5c5a76d2e4fa4bb012c0a93baecac",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "100",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione101-giovane.mp4": {
+    "video_id": "98e71c796f664af1997ddac13a4112d1",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "101",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione102-giovane.mp4": {
+    "video_id": "836c025267b84fd6be9b1f1c112a2a7e",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "102",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione103-giovane.mp4": {
+    "video_id": "4a77bba1e1714c639723c4ab760e450d",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "103",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione104-giovane.mp4": {
+    "video_id": "d8dffd5dbf3e44f3afe0b16ca01b56b0",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "104",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione105-giovane.mp4": {
+    "video_id": "f22dc8fa396e4c28ab17ff347b983cc6",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "105",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione106-giovane.mp4": {
+    "video_id": "d309fe42c2db4d6fb65d47519b14f081",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "106",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione107-giovane.mp4": {
+    "video_id": "052ad9ab9ace4b2d914afd29c2826b0e",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "107",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione108-giovane.mp4": {
+    "video_id": "81171e5c888f41f5b9fa920138fa4ab1",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "108",
+    "retry": true,
+    "background": "green_screen"
+  },
+  "maestro-cuori-gioco-lezione109-giovane.mp4": {
+    "video_id": "eae26cda7c154259b5643676553d427e",
+    "status": "done",
+    "course": "cuori-gioco",
+    "profile": "giovane",
+    "lesson": "109"
+  },
+  "maestro-cuori-licita-lezione200-giovane.mp4": {
+    "video_id": "9efbf01717024c6e91b27fb29ee46445",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "200"
+  },
+  "maestro-cuori-licita-lezione201-giovane.mp4": {
+    "video_id": "3ede61941510456fb2ba7858471a6971",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "201"
+  },
+  "maestro-cuori-licita-lezione202-giovane.mp4": {
+    "video_id": "307ba562b43b47ecbaed59715fbaf69c",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "202"
+  },
+  "maestro-cuori-licita-lezione203-giovane.mp4": {
+    "video_id": "e91af406e816476497a3c7a90f3ef38e",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "203"
+  },
+  "maestro-cuori-licita-lezione204-giovane.mp4": {
+    "video_id": "75cd10f4a5ca455ab0e0a463253c719f",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "204"
+  },
+  "maestro-cuori-licita-lezione205-giovane.mp4": {
+    "video_id": "df21f013c9ce42018e3f925578a4fc75",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "205"
+  },
+  "maestro-cuori-licita-lezione206-giovane.mp4": {
+    "video_id": "7354675f809a48a6964627d9fe001726",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "206"
+  },
+  "maestro-cuori-licita-lezione207-giovane.mp4": {
+    "video_id": "38bc9a6e372a42c2874c9a9d95af6af8",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "207"
+  },
+  "maestro-cuori-licita-lezione208-giovane.mp4": {
+    "video_id": "0f976e4d170b4445a29a9803c1c778c2",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "208"
+  },
+  "maestro-cuori-licita-lezione209-giovane.mp4": {
+    "video_id": "2d9b198e15404d89a893a231514b24e8",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "209"
+  },
+  "maestro-cuori-licita-lezione210-giovane.mp4": {
+    "video_id": "5c9986cfd40d4109a2e844e94212ffe7",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "210"
+  },
+  "maestro-cuori-licita-lezione211-giovane.mp4": {
+    "video_id": "b193355956d745dda20d92bac2e048fd",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "211"
+  },
+  "maestro-cuori-licita-lezione212-giovane.mp4": {
+    "video_id": "c64f9ebdde9a4154840283469e7fecb8",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "212"
+  },
+  "maestro-cuori-licita-lezione213-giovane.mp4": {
+    "video_id": "a00fb9306c8544d2bda73d6828f73aa4",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "giovane",
+    "lesson": "213"
+  },
+  "maestro-fiori-lezione00-adulto.mp4": {
+    "video_id": "67bd5142571949cdb4525073650f6333",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "00"
+  },
+  "maestro-fiori-lezione01-adulto.mp4": {
+    "video_id": "7289cbd754c34e9c88bbb1604cc7fc1c",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "01"
+  },
+  "maestro-fiori-lezione02-adulto.mp4": {
+    "video_id": "94db5cf5eabd4cf2bf58bc4808880419",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "02"
+  },
+  "maestro-fiori-lezione03-adulto.mp4": {
+    "video_id": "a07dc7083bb24dfda6110fb6f60b92d6",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "03"
+  },
+  "maestro-fiori-lezione04-adulto.mp4": {
+    "video_id": "fc04eaf1a9804cdea7d6f013cd639957",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "04"
+  },
+  "maestro-fiori-lezione05-adulto.mp4": {
+    "video_id": "bcd58255c4014277afe88c1cfcf08a5e",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "05"
+  },
+  "maestro-fiori-lezione06-adulto.mp4": {
+    "video_id": "f1a10df50c9f48838440920d2af87d90",
+    "status": "done",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "06"
+  },
+  "maestro-fiori-lezione07-adulto.mp4": {
+    "video_id": "531450950c7547d69fcadf2f4396c511",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "07"
+  },
+  "maestro-fiori-lezione08-adulto.mp4": {
+    "video_id": "43aa645b2c0947fa8f754de7c1b01def",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "08"
+  },
+  "maestro-fiori-lezione09-adulto.mp4": {
+    "video_id": "02f372103ab5426ab502ab5ff88226e7",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "09"
+  },
+  "maestro-fiori-lezione10-adulto.mp4": {
+    "video_id": "c41e0cd41bde46e2984f82d09afbfdca",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "10"
+  },
+  "maestro-fiori-lezione11-adulto.mp4": {
+    "video_id": "36dd14cec5cc4645a26ca08adfd7fa3b",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "11"
+  },
+  "maestro-fiori-lezione12-adulto.mp4": {
+    "video_id": "21c4521395b44ec3b655b510c4efe4b6",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "adulto",
+    "lesson": "12"
+  },
+  "maestro-quadri-lezione01-adulto.mp4": {
+    "video_id": "4ac0a0c7924d4106a3eae7d98767133d",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "01"
+  },
+  "maestro-quadri-lezione02-adulto.mp4": {
+    "video_id": "265c7cf7c1bb4842a582973d7c034c49",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "02"
+  },
+  "maestro-quadri-lezione03-adulto.mp4": {
+    "video_id": "0f152b6638b24fb6b08763fe17c696f1",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "03"
+  },
+  "maestro-quadri-lezione04-adulto.mp4": {
+    "video_id": "db4383d448aa4d64aa424f2e31500e6f",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "04"
+  },
+  "maestro-quadri-lezione05-adulto.mp4": {
+    "video_id": "4975e07eaa034780a013eadf1f2d54a3",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "05"
+  },
+  "maestro-quadri-lezione06-adulto.mp4": {
+    "video_id": "c4711ea3860d4caeb58cdcde545acf65",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "06"
+  },
+  "maestro-quadri-lezione07-adulto.mp4": {
+    "video_id": "af7462025e0e49a18b3b7a3e6ec47f9c",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "07"
+  },
+  "maestro-quadri-lezione08-adulto.mp4": {
+    "video_id": "12a727df2caf425eae7710f6fed44d9f",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "08"
+  },
+  "maestro-quadri-lezione09-adulto.mp4": {
+    "video_id": "d1741d4f41ed40379f98ac0054f381ff",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "09"
+  },
+  "maestro-quadri-lezione10-adulto.mp4": {
+    "video_id": "7a20cf73b6c54d09b26331c9bf1da864",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "10"
+  },
+  "maestro-quadri-lezione11-adulto.mp4": {
+    "video_id": "120bf29f2c1e419880d96a5d1557a0d6",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "11"
+  },
+  "maestro-quadri-lezione12-adulto.mp4": {
+    "video_id": "4dd937c52dfc400a93619f9c8da13396",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "adulto",
+    "lesson": "12"
+  },
+  "maestro-cuori-gioco-lezione100-adulto.mp4": {
+    "video_id": "8a98924e2f6849089c65941d36b4a59e",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "100"
+  },
+  "maestro-cuori-gioco-lezione101-adulto.mp4": {
+    "video_id": "0757c9d02b904758b8646a766247d8f1",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "101"
+  },
+  "maestro-cuori-gioco-lezione102-adulto.mp4": {
+    "video_id": "15d37d7beffb4b6f9a4a650f10c3be61",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "102"
+  },
+  "maestro-cuori-gioco-lezione103-adulto.mp4": {
+    "video_id": "798cf40478834de7917b75f198fc4d41",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "103"
+  },
+  "maestro-cuori-gioco-lezione104-adulto.mp4": {
+    "video_id": "c071608b31824de5af00682c4089bc9f",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "104"
+  },
+  "maestro-cuori-gioco-lezione105-adulto.mp4": {
+    "video_id": "1bca78382af44ddea94a38e9ea40e964",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "105"
+  },
+  "maestro-cuori-gioco-lezione106-adulto.mp4": {
+    "video_id": "769b50fd9fb449a0ac6c22ce170d0986",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "106"
+  },
+  "maestro-cuori-gioco-lezione107-adulto.mp4": {
+    "video_id": "9ce7551939d84f09b0251b64023ee418",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "107"
+  },
+  "maestro-cuori-gioco-lezione108-adulto.mp4": {
+    "video_id": "7200f1a923a54c0eb545727971d6bf0e",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "108"
+  },
+  "maestro-cuori-gioco-lezione109-adulto.mp4": {
+    "video_id": "3377a57cd6a84043b8e8ff83a81cf094",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "adulto",
+    "lesson": "109"
+  },
+  "maestro-cuori-licita-lezione200-adulto.mp4": {
+    "video_id": "b34b9d039d664e44942b6467cd0c3f1c",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "200"
+  },
+  "maestro-cuori-licita-lezione201-adulto.mp4": {
+    "video_id": "a24697e3ae4f4e3f81cbe6ac4fb9fe30",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "201"
+  },
+  "maestro-cuori-licita-lezione202-adulto.mp4": {
+    "video_id": "a859e8a186f045689d2164718b1dc2e3",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "202"
+  },
+  "maestro-cuori-licita-lezione203-adulto.mp4": {
+    "video_id": "5b211d36b9cd4733ac2dbee594bb9d2f",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "203"
+  },
+  "maestro-cuori-licita-lezione204-adulto.mp4": {
+    "video_id": "06221f25fc12474a8a7feca4e2a96bd5",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "204"
+  },
+  "maestro-cuori-licita-lezione205-adulto.mp4": {
+    "video_id": "1f67f604a6d9440e90488ba11694eca0",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "205"
+  },
+  "maestro-cuori-licita-lezione206-adulto.mp4": {
+    "video_id": "2dbe60194ac14a93b8fbdfe6c8507c5c",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "206"
+  },
+  "maestro-cuori-licita-lezione207-adulto.mp4": {
+    "video_id": "0eb1763881f04247865a938159da2dc3",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "207"
+  },
+  "maestro-cuori-licita-lezione208-adulto.mp4": {
+    "video_id": "cccb4a09e51f4433a33b0c12012485e1",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "208"
+  },
+  "maestro-cuori-licita-lezione209-adulto.mp4": {
+    "video_id": "b2a18bc22b3c4751a0bafc1c8f722fbb",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "209"
+  },
+  "maestro-cuori-licita-lezione210-adulto.mp4": {
+    "video_id": "2aa5c14ede0f42338f69e1ae3e78f8b9",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "210"
+  },
+  "maestro-cuori-licita-lezione211-adulto.mp4": {
+    "video_id": "78e61c2deea24b66861e63714044fe60",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "211"
+  },
+  "maestro-cuori-licita-lezione212-adulto.mp4": {
+    "video_id": "263abb32cf6a48f188e99cb4b4e7f30c",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "212"
+  },
+  "maestro-cuori-licita-lezione213-adulto.mp4": {
+    "video_id": "1ceb567bdc294e9da45cac5db7c4f50c",
+    "status": "done",
+    "course": "cuori-licita",
+    "profile": "adulto",
+    "lesson": "213"
+  },
+  "maestro-fiori-lezione00-senior.mp4": {
+    "video_id": "931ed1efbec14418a6a6d04d5311536c",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "00"
+  },
+  "maestro-fiori-lezione01-senior.mp4": {
+    "video_id": "def91890a9f44b268b03a555dd33984a",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "01"
+  },
+  "maestro-fiori-lezione02-senior.mp4": {
+    "video_id": "6b90f5b0d83d4a1882b8ac20be63c0a5",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "02"
+  },
+  "maestro-fiori-lezione03-senior.mp4": {
+    "video_id": "ce7f2a75377148e4800b3778dc417cbe",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "03"
+  },
+  "maestro-fiori-lezione04-senior.mp4": {
+    "video_id": "422bbb553e1144d4a41dfc4152920ae6",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "04"
+  },
+  "maestro-fiori-lezione05-senior.mp4": {
+    "video_id": "f789d1eb498e4c6c834be70307480b60",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "05"
+  },
+  "maestro-fiori-lezione06-senior.mp4": {
+    "video_id": "58bd953e26964630a59516b1a7d7dee2",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "06"
+  },
+  "maestro-fiori-lezione07-senior.mp4": {
+    "video_id": "ddf799e912e844619c35c9c6b82ac95a",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "07"
+  },
+  "maestro-fiori-lezione08-senior.mp4": {
+    "video_id": "52b8cd62a884450aa0d48829eacc6120",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "08"
+  },
+  "maestro-fiori-lezione09-senior.mp4": {
+    "video_id": "bf086062488e4ab1ae897effb8457c4d",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "09"
+  },
+  "maestro-fiori-lezione10-senior.mp4": {
+    "video_id": "f0d2a50505c949b59b65fded254dbe65",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "10"
+  },
+  "maestro-fiori-lezione11-senior.mp4": {
+    "video_id": "e5708cf2578843fc819edae14b80ea95",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "11"
+  },
+  "maestro-fiori-lezione12-senior.mp4": {
+    "video_id": "9b58a1f4d35f4e52bf83afd3ab43e88c",
+    "status": "failed",
+    "course": "fiori",
+    "profile": "senior",
+    "lesson": "12"
+  },
+  "maestro-quadri-lezione01-senior.mp4": {
+    "video_id": "827c14f7962f44a09f8619d3bbb8e65c",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "01"
+  },
+  "maestro-quadri-lezione02-senior.mp4": {
+    "video_id": "477affb7436d4c51aa5daaa85992fe4a",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "02"
+  },
+  "maestro-quadri-lezione03-senior.mp4": {
+    "video_id": "62b9484d5db44fd0875737a6e86a7f00",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "03"
+  },
+  "maestro-quadri-lezione04-senior.mp4": {
+    "video_id": "3bfb362932484a099df3a69d38b679e5",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "04"
+  },
+  "maestro-quadri-lezione05-senior.mp4": {
+    "video_id": "893700feb9824f70b1413d6b02beadd4",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "05"
+  },
+  "maestro-quadri-lezione06-senior.mp4": {
+    "video_id": "fda5bc2898374d9496fca27d408b57d0",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "06"
+  },
+  "maestro-quadri-lezione07-senior.mp4": {
+    "video_id": "4ceb01053fb8429d81b0cf149e0ab3e5",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "07"
+  },
+  "maestro-quadri-lezione08-senior.mp4": {
+    "video_id": "665c999887d74f41aac7513286a7f5db",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "08"
+  },
+  "maestro-quadri-lezione09-senior.mp4": {
+    "video_id": "1d9be5c273274cc8a48708a593c4c6be",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "09"
+  },
+  "maestro-quadri-lezione10-senior.mp4": {
+    "video_id": "a7761b00c4404afb95be36f7cfdec306",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "10"
+  },
+  "maestro-quadri-lezione11-senior.mp4": {
+    "video_id": "24b274d8f139439780d9edbb19449b8b",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "11"
+  },
+  "maestro-quadri-lezione12-senior.mp4": {
+    "video_id": "fca0639b7d0849df9f212dca6f33098d",
+    "status": "failed",
+    "course": "quadri",
+    "profile": "senior",
+    "lesson": "12"
+  },
+  "maestro-cuori-gioco-lezione100-senior.mp4": {
+    "video_id": "2f066996b45d4941b7e82879eef48fa0",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "100"
+  },
+  "maestro-cuori-gioco-lezione101-senior.mp4": {
+    "video_id": "772222e7e5ae4252a544c57f06b0be9f",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "101"
+  },
+  "maestro-cuori-gioco-lezione102-senior.mp4": {
+    "video_id": "902fce7f54cd462da7ee0f90130761c1",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "102"
+  },
+  "maestro-cuori-gioco-lezione103-senior.mp4": {
+    "video_id": "86d5724f443c49a8aa5c8d6471215bf3",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "103"
+  },
+  "maestro-cuori-gioco-lezione104-senior.mp4": {
+    "video_id": "b378d5014bfd42a5add32f321ed21ec3",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "104"
+  },
+  "maestro-cuori-gioco-lezione105-senior.mp4": {
+    "video_id": "6e155b2d433f40dca4104f1ade1cce50",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "105"
+  },
+  "maestro-cuori-gioco-lezione106-senior.mp4": {
+    "video_id": "f22123d2a3dd4e38a7f9639f3c880cbc",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "106"
+  },
+  "maestro-cuori-gioco-lezione107-senior.mp4": {
+    "video_id": "24f793c967f64fa19c7063a0844c3137",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "107"
+  },
+  "maestro-cuori-gioco-lezione108-senior.mp4": {
+    "video_id": "49267d11c3b84054925fcd4a7a34a4df",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "108"
+  },
+  "maestro-cuori-gioco-lezione109-senior.mp4": {
+    "video_id": "9b4f83b1e41d4bc0a802be3df8f6cb52",
+    "status": "failed",
+    "course": "cuori-gioco",
+    "profile": "senior",
+    "lesson": "109"
+  },
+  "maestro-cuori-licita-lezione200-senior.mp4": {
+    "video_id": "058d442b979346a4b3f51a442aed3fba",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "200"
+  },
+  "maestro-cuori-licita-lezione201-senior.mp4": {
+    "video_id": "c18af66713544f5ca9132a05df6ed57d",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "201"
+  },
+  "maestro-cuori-licita-lezione202-senior.mp4": {
+    "video_id": "3fca542e15fa4cb9a21600bf5686a935",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "202"
+  },
+  "maestro-cuori-licita-lezione203-senior.mp4": {
+    "video_id": "b38c7c0e908c428c8281d3d2db7a45f5",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "203"
+  },
+  "maestro-cuori-licita-lezione204-senior.mp4": {
+    "video_id": "520d9259f5a142dcb31b13c2dc1495d1",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "204"
+  },
+  "maestro-cuori-licita-lezione205-senior.mp4": {
+    "video_id": "6ab5ad02fd534a5bb3301b27e9466443",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "205"
+  },
+  "maestro-cuori-licita-lezione206-senior.mp4": {
+    "video_id": "69c92ca300d745a5986a11c6ff8f9b80",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "206"
+  },
+  "maestro-cuori-licita-lezione207-senior.mp4": {
+    "video_id": "c9d5922d4e56404fb6ec17f4492bcc82",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "207"
+  },
+  "maestro-cuori-licita-lezione208-senior.mp4": {
+    "video_id": "481d16fdf2e343cba0dcea559784d1d7",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "208"
+  },
+  "maestro-cuori-licita-lezione209-senior.mp4": {
+    "video_id": "6697dce5280642fc87be35a69edd2f6d",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "209"
+  },
+  "maestro-cuori-licita-lezione210-senior.mp4": {
+    "video_id": "758ecdbc88d3439fb08d57810c56f506",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "210"
+  },
+  "maestro-cuori-licita-lezione211-senior.mp4": {
+    "video_id": "ca60ee6cb09a4be98bb684b0de6cfc4c",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "211"
+  },
+  "maestro-cuori-licita-lezione212-senior.mp4": {
+    "video_id": "e1c9834ca612441580b780f4f8eac33f",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "212"
+  },
+  "maestro-cuori-licita-lezione213-senior.mp4": {
+    "video_id": "2522a44dabb849e08c886dae15506723",
+    "status": "failed",
+    "course": "cuori-licita",
+    "profile": "senior",
+    "lesson": "213"
   }
 }

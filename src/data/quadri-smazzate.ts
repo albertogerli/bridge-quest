@@ -257,7 +257,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["Q", "9", "7", "6", "2"], ["Q", "J", "7"], ["J", "6"], ["10", "9", "2"]),
     },
     commentary:
-      "Gli 11 punti di Est, con distribuzione piatta e senza nemmeno un asso, non presentano alcun motivo per essere rivalutati. Ma sull'apertura di Ovest, Est ha un'ottima dichiarazione: il suo 2NT mostra proprio 11 e carte molto più adatte al gioco a Senz'atout che a un parziale a quadri! Il Gioco. Nord vince la prima presa e rigioca nel colore (il fante, per favore!). Est può decidere se prendere o lisciare: al momento ha 7 prese e dovrà per forza affrancare 2 fiori. Se le picche sono 4-4 non avrà problemi: perderà 3♠ e ♣. Se Sud ha 5♠, e ha l'A♣, il contratto cadrà. Ma se l'A♣ è in mano a Nord no, purché Est aspetti a prendere al terzo giro, ossia quando Nord avrà terminato le picche! E' PIÙ FACILE MOSTRARE \"IL MASSIMO DEL PASSO\" CHE \"IL MINIMO DELL'APERTURA\"",
+      "Gli 11 punti di Est, con distribuzione piatta e senza nemmeno un asso, non presentano alcun motivo per essere rivalutati. Ma sull'apertura di Ovest, Est ha un'ottima dichiarazione: il suo 2NT mostra proprio 11 e carte molto più adatte al gioco a Senz'atout che a un parziale a quadri! Il Gioco. Nord vince la prima presa e rigioca nel colore (il fante, per favore!). Est può decidere se prendere o lisciare: al momento ha 7 prese e dovrà per forza affrancare 2 fiori. Se le picche sono 4-4 non avrà problemi: perderà 3♠ e ♣. Se Sud ha 5♠, e ha l'A♣, il contratto cadrà. Ma se l'A♣ è in mano a Nord no, purché Est aspetti a prendere al terzo giro, ossia quando Nord avrà terminato le picche! È PIÙ FACILE MOSTRARE \"IL MASSIMO DEL PASSO\" CHE \"IL MINIMO DELL'APERTURA\"",
     bidding: { dealer: "east", bids: ["P", "P", "1♦", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
 
@@ -836,7 +836,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["Q", "9"], ["J", "7", "3"], ["A", "7", "6", "3"], ["A", "J", "6", "5"]),
     },
     commentary:
-      "Il 2NT è una licita morbida (comunque forzante, dopo 2♣) che consente a Nord di descrivere altro, se ha maggiori lunghezze. Se Sud avesse sparato 3NT Nord avrebbe dovuto indovinare tra Passo e 4♥. Il Gioco. Vinto l'attacco Nord deve manovrare le atout: con Jxx + AQxxx, mancando il 10, la partenza con il J è sempre perdente. Non si faranno MAI 5 prese in nessun caso, e se poi ci fosse il K secco se ne perderebbero due! Quindi, si parte di piccola con l'intenzione di passare la Q. Nord cattura il K e lascia a Est l'atout vincente per dedicarsi alle picche; Est gli batterà l'atout e giocherà quadri, ma ormai Nord ha 10 prese. E' CORRETTO GIOCARE UN IMPASSE \"A FORZARE\" SOLO SE, CATTURATO L'ONORE, AVANZATE QUANTO BASTA PER POTER ELIMINARE TUTTE LE CARTE AVVERSARIE",
+      "Il 2NT è una licita morbida (comunque forzante, dopo 2♣) che consente a Nord di descrivere altro, se ha maggiori lunghezze. Se Sud avesse sparato 3NT Nord avrebbe dovuto indovinare tra Passo e 4♥. Il Gioco. Vinto l'attacco Nord deve manovrare le atout: con Jxx + AQxxx, mancando il 10, la partenza con il J è sempre perdente. Non si faranno MAI 5 prese in nessun caso, e se poi ci fosse il K secco se ne perderebbero due! Quindi, si parte di piccola con l'intenzione di passare la Q. Nord cattura il K e lascia a Est l'atout vincente per dedicarsi alle picche; Est gli batterà l'atout e giocherà quadri, ma ormai Nord ha 10 prese. È CORRETTO GIOCARE UN IMPASSE \"A FORZARE\" SOLO SE, CATTURATO L'ONORE, AVANZATE QUANTO BASTA PER POTER ELIMINARE TUTTE LE CARTE AVVERSARIE",
     bidding: { dealer: "north", bids: ["1♠", "P", "2♣", "P", "2♥", "P", "2NT", "P", "3♥", "P", "4♥", "P", "P", "P"] },
   },
 
@@ -1096,7 +1096,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["J", "7"], ["K", "10", "8", "6"], ["9", "7", "5"], ["K", "Q", "7", "6"]),
     },
     commentary:
-      "L'attacco A♠ è scontato; Ovest rifiuta con il 2. Est si deve rendere conto che la Q è quindi in Nord, e che la prosecuzione con il K♠ la affrancherebbe (offrendo uno scarto … per esempio di una quadri del morto). E' urgente cambiare, e il colore più promettente è quadri (2♦), sperando in un onore in mano al compagno. Notate che se Est prosegue pigramente a picche Nord manterrà il contratto. Se invece muove piccola quadri il giocante, che non avrà il tempo di scartare, perderà 2 picche, 1 fiori, e 2 quadri: una sotto. UN ATTACCO DI ASSO DA AK È SEMPRE UN OTTIMO ATTACCO. MA NON È AFFATTO DETTO CHE SI DEBBA SEGUIRE A RUOTA CON IL K: GUARDATE LA CARTA DEL COMPAGNO, E IL MORTO!",
+      "L'attacco A♠ è scontato; Ovest rifiuta con il 2. Est si deve rendere conto che la Q è quindi in Nord, e che la prosecuzione con il K♠ la affrancherebbe (offrendo uno scarto … per esempio di una quadri del morto). È urgente cambiare, e il colore più promettente è quadri (2♦), sperando in un onore in mano al compagno. Notate che se Est prosegue pigramente a picche Nord manterrà il contratto. Se invece muove piccola quadri il giocante, che non avrà il tempo di scartare, perderà 2 picche, 1 fiori, e 2 quadri: una sotto. UN ATTACCO DI ASSO DA AK È SEMPRE UN OTTIMO ATTACCO. MA NON È AFFATTO DETTO CHE SI DEBBA SEGUIRE A RUOTA CON IL K: GUARDATE LA CARTA DEL COMPAGNO, E IL MORTO!",
     bidding: { dealer: "north", bids: ["1♥", "P", "3♥", "P", "P", "P"] },
   },
 
@@ -1439,7 +1439,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["A", "J", "10", "6", "4", "3"], ["J", "8", "3"], ["A"], ["Q", "J", "6"]),
     },
     commentary:
-      "L'attacco (3♦) nel colore di intervento deve mostrare il Conto delle carte, quindi Est sa che Ovest ne ha 1 o 3. NON deve mettere il K neanche se Sud (errore!) fa giocare un onore al morto. Il Gioco. Sud ha bisogno di affrancare una quadri, quindi non deve sprecare nella prima presa né J né Q del morto: gioca il 5 e prende, batte atout finendo in Nord, e ora sì che presenta la Q♦; tagliato il K tornerà al morto con un terzo giro di atout per scartare una cuori sul J♦. Se tutti giocano al meglio alla difesa spetteranno solo 2 cuori e 1 fiori. E' SCIOCCO SPERARE NELL'ERRORE AVVERSARIO QUANDO ESISTE UNA MANOVRA MIGLIORE PER GARANTIRE IL SUCCESSO AL 100%.",
+      "L'attacco (3♦) nel colore di intervento deve mostrare il Conto delle carte, quindi Est sa che Ovest ne ha 1 o 3. NON deve mettere il K neanche se Sud (errore!) fa giocare un onore al morto. Il Gioco. Sud ha bisogno di affrancare una quadri, quindi non deve sprecare nella prima presa né J né Q del morto: gioca il 5 e prende, batte atout finendo in Nord, e ora sì che presenta la Q♦; tagliato il K tornerà al morto con un terzo giro di atout per scartare una cuori sul J♦. Se tutti giocano al meglio alla difesa spetteranno solo 2 cuori e 1 fiori. È SCIOCCO SPERARE NELL'ERRORE AVVERSARIO QUANDO ESISTE UNA MANOVRA MIGLIORE PER GARANTIRE IL SUCCESSO AL 100%.",
     bidding: { dealer: "north", bids: ["1♣", "1♦", "1♠", "P", "2♠", "P", "4♠", "P", "P", "P"] },
   },
 
@@ -1559,7 +1559,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["10"], ["10", "9", "8"], ["K", "9", "8", "2"], ["A", "9", "7", "6", "5"]),
     },
     commentary:
-      "Est ha fit quarto e 9 punti, rivalutati valgono 11 e appoggia a livello 3; Ovest ha abbastanza per rialzare. E' una buona manche che può essere battuta solo se Nord trova l'attacco mortale, nel singolo. Ovest deve drizzare le antenne, perché l'attacco è molto sospetto: Nord non ha onori che giustifichino l'attacco di piccola, e l'A♣ è di certo in Sud: quindi un taglio è in agguato. E' bene che si prepari a dare, di mano, una carta che sia verosimile per far pensare a Sud che il compagno ha attaccato da 3 carte. È più verosimile un attacco da Qxx o da Jxx? Da Qxx, quindi dia il J di mano. QUANDO INTENDETE DARE UNA CARTA FALSA, PENSATECI PRIMA E POI RISPONDETE VELOCEMENTE E CON DISINVOLTURA.",
+      "Est ha fit quarto e 9 punti, rivalutati valgono 11 e appoggia a livello 3; Ovest ha abbastanza per rialzare. È una buona manche che può essere battuta solo se Nord trova l'attacco mortale, nel singolo. Ovest deve drizzare le antenne, perché l'attacco è molto sospetto: Nord non ha onori che giustifichino l'attacco di piccola, e l'A♣ è di certo in Sud: quindi un taglio è in agguato. È bene che si prepari a dare, di mano, una carta che sia verosimile per far pensare a Sud che il compagno ha attaccato da 3 carte. È più verosimile un attacco da Qxx o da Jxx? Da Qxx, quindi dia il J di mano. QUANDO INTENDETE DARE UNA CARTA FALSA, PENSATECI PRIMA E POI RISPONDETE VELOCEMENTE E CON DISINVOLTURA.",
     bidding: { dealer: "south", bids: ["P", "1♠", "P", "3♠", "P", "4♠", "P", "P", "P"] },
   },
 
@@ -1703,7 +1703,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["A", "Q", "4", "3"], ["K", "Q", "8", "2"], ["6", "5", "3"], ["A", "Q"]),
     },
     commentary:
-      "Quando Nord, obbligato, dichiara 1♠ può avere da zero a 9/10 punti; Sud mostra mano forte e fit quando al secondo giro surlicita, ma poi deve fidarsi della reticenza di Nord, che riporta nel colore fittato al minimo livello, e passare. Il Controgioco. Sull'attacco Ovest deve dare la Q♦, carta con cui promette di poter vincere la seconda presa (o Q secca, o QJ). Se Est si fida, incassa l'A♥ e prosegue con piccola quadri; se Ovest è sveglio, gli dà il primo taglio a cuori; se Est gioca un terzo giro di quadri Ovest lo taglia (anche se vincente) per dare a Est un secondo taglio a cuori: 1 down. E' PIÙ CONVENIENTE \"CHIEDERE AL COMPAGNO QUALE SIA IL SUO CAMPO DI FORZA\" USANDO UNA SURLICITA ANZICHÉ \"MOSTRARE LA PROPRIA\" CON SALTI INCONSULTI.",
+      "Quando Nord, obbligato, dichiara 1♠ può avere da zero a 9/10 punti; Sud mostra mano forte e fit quando al secondo giro surlicita, ma poi deve fidarsi della reticenza di Nord, che riporta nel colore fittato al minimo livello, e passare. Il Controgioco. Sull'attacco Ovest deve dare la Q♦, carta con cui promette di poter vincere la seconda presa (o Q secca, o QJ). Se Est si fida, incassa l'A♥ e prosegue con piccola quadri; se Ovest è sveglio, gli dà il primo taglio a cuori; se Est gioca un terzo giro di quadri Ovest lo taglia (anche se vincente) per dare a Est un secondo taglio a cuori: 1 down. È PIÙ CONVENIENTE \"CHIEDERE AL COMPAGNO QUALE SIA IL SUO CAMPO DI FORZA\" USANDO UNA SURLICITA ANZICHÉ \"MOSTRARE LA PROPRIA\" CON SALTI INCONSULTI.",
     bidding: { dealer: "east", bids: ["1♦", "Dbl", "P", "1♠", "2♣", "2♦", "P", "2♠", "P", "P", "P"] },
   },
 
@@ -1867,7 +1867,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["J", "7"], ["Q", "9", "5", "4"], ["K", "6", "5", "3"], ["K", "Q", "5"]),
     },
     commentary:
-      "Le carte di Sud sembrano fatte apposta per dire 2NT e Nord, se si rende conto che 3NT è verosimilmente la miglior manche da giocare, farebbe bene a rialzare senza raccontare troppo (e inutilmente) delle sue carte. Il Gioco. Un bilancino di precisione per la difesa: attacco 3♥, Est gioca il Re e ritorna nel colore. E' rimasto con 2 carte, quindi l'8, la più alta di due. Sud per il suo meglio inserisce il 9 e Ovest vince con il J. E si deve fermare!! Con K852 Est sarebbe tornato con il 2. Quindi la Q di cuori non cade, è ancora seconda; bisogna aspettare che Est vada in presa e rigiochi cuori. Se Ovest ha fretta di fare l'A♥, regala il contratto. QUANDO SI RIGIOCA IN UN COLORE GIÀ MOSSO IL \"CONTO\" È DI IMPORTANZA VITALE.",
+      "Le carte di Sud sembrano fatte apposta per dire 2NT e Nord, se si rende conto che 3NT è verosimilmente la miglior manche da giocare, farebbe bene a rialzare senza raccontare troppo (e inutilmente) delle sue carte. Il Gioco. Un bilancino di precisione per la difesa: attacco 3♥, Est gioca il Re e ritorna nel colore. È rimasto con 2 carte, quindi l'8, la più alta di due. Sud per il suo meglio inserisce il 9 e Ovest vince con il J. E si deve fermare!! Con K852 Est sarebbe tornato con il 2. Quindi la Q di cuori non cade, è ancora seconda; bisogna aspettare che Est vada in presa e rigiochi cuori. Se Ovest ha fretta di fare l'A♥, regala il contratto. QUANDO SI RIGIOCA IN UN COLORE GIÀ MOSSO IL \"CONTO\" È DI IMPORTANZA VITALE.",
     bidding: { dealer: "east", bids: ["P", "P", "P", "1♠", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
 
@@ -1991,7 +1991,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["J", "5", "4", "2"], ["6", "3"], ["J", "10", "2"], ["10", "6", "4", "3"]),
     },
     commentary:
-      "Nella situazione di \"Contro seguito da una rimozione a colore\" il compagno è legittimato a passare solo se non ha fit e se pensa di non portare neppure una presa. E' il caso di Sud… Est non ha motivo alcuno di attaccare diversamente dal colore di apertura, in Conto: quindi il 3♦. Il Gioco. Vista la mancanza assoluta di ingressi (ne serve almeno uno, per tentare l'impasse a fiori) il Giocante dovrebbe mettere il 10 del morto, se Ovest sta basso è già al morto per giocare ♣ al J. Se Ovest prende, Nord deve essere pronto a buttar via un onore. Nord troverà le atout mal divise, ma se riesce a fare l'impasse a fiori manterrà il contratto con 3 cuori, 3 fiori e 2 quadri. INDUSTRIARSI PER TROVARE INGRESSI IN UNA MANO POVERA È UNA DELLE COSE PIÙ STIMOLANTI DEL GIOCO….",
+      "Nella situazione di \"Contro seguito da una rimozione a colore\" il compagno è legittimato a passare solo se non ha fit e se pensa di non portare neppure una presa. È il caso di Sud… Est non ha motivo alcuno di attaccare diversamente dal colore di apertura, in Conto: quindi il 3♦. Il Gioco. Vista la mancanza assoluta di ingressi (ne serve almeno uno, per tentare l'impasse a fiori) il Giocante dovrebbe mettere il 10 del morto, se Ovest sta basso è già al morto per giocare ♣ al J. Se Ovest prende, Nord deve essere pronto a buttar via un onore. Nord troverà le atout mal divise, ma se riesce a fare l'impasse a fiori manterrà il contratto con 3 cuori, 3 fiori e 2 quadri. INDUSTRIARSI PER TROVARE INGRESSI IN UNA MANO POVERA È UNA DELLE COSE PIÙ STIMOLANTI DEL GIOCO….",
     bidding: { dealer: "west", bids: ["1♦", "Dbl", "P", "2♥", "P", "P", "P"] },
   },
 
@@ -2031,7 +2031,7 @@ const rawQuadriSmazzate: Smazzata[] = [
       south: hand(["K", "Q", "9", "8", "5"], ["9", "5", "3"], ["K", "7", "3", "2"], ["A"]),
     },
     commentary:
-      "Su 1♠ Ovest \"si imbosca\" in attesa di una riapertura, e quando trasforma il Contro, passando, a tutti è chiaro che intende punire il contratto di 1♠. E' questo (e non prima) il momento in cui Nord deve correre ai ripari, scappando in un parziale a fiori (che Sud non deve correggere, se ha capito che aria tira). Per EO il bottino diventa meno appetibile, e sul 2NT proposto da Ovest Est rialza a manche. Ovest farà l'impasse a quadri e alla fine collezionerà 10 prese. SE L'INTERVENTO DEL COMPAGNO VI TROVA DISPERATI, SENZA FIT E SENZA PUNTI, IL MOMENTO PER SCAPPARE IN UN COLORE DIVERSO VA ATTESO: FATELO SOLO DOPO CHE L'AVVERSARIO ABBIA MOSTRATO INTENZIONI PUNITIVE.",
+      "Su 1♠ Ovest \"si imbosca\" in attesa di una riapertura, e quando trasforma il Contro, passando, a tutti è chiaro che intende punire il contratto di 1♠. È questo (e non prima) il momento in cui Nord deve correre ai ripari, scappando in un parziale a fiori (che Sud non deve correggere, se ha capito che aria tira). Per EO il bottino diventa meno appetibile, e sul 2NT proposto da Ovest Est rialza a manche. Ovest farà l'impasse a quadri e alla fine collezionerà 10 prese. SE L'INTERVENTO DEL COMPAGNO VI TROVA DISPERATI, SENZA FIT E SENZA PUNTI, IL MOMENTO PER SCAPPARE IN UN COLORE DIVERSO VA ATTESO: FATELO SOLO DOPO CHE L'AVVERSARIO ABBIA MOSTRATO INTENZIONI PUNITIVE.",
     bidding: { dealer: "east", bids: ["1♦", "1♠", "P", "P", "Dbl", "P", "2♣", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
 

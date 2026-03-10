@@ -74,6 +74,8 @@ export default function ContaVelocePage() {
   const [lastCorrect, setLastCorrect] = useState(false);
   const [xpEarned, setXpEarned] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [roundHistory, setRoundHistory] = useState<Array<{ handStr: string; correctHCP: number; selectedHCP: number; correct: boolean }>>([]);
+  const [showRecap, setShowRecap] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
   const startTimeRef = useRef(0);
   const pausedElapsedRef = useRef(0);
@@ -95,6 +97,8 @@ export default function ContaVelocePage() {
     setStreak(0);
     setBestStreak(0);
     setTotalTime(0);
+    setRoundHistory([]);
+    setShowRecap(false);
     nextHand();
   }, []);
 
@@ -117,6 +121,13 @@ export default function ContaVelocePage() {
     const isCorrect = answer === correctHCP;
     setLastCorrect(isCorrect);
     setShowAnswer(true);
+
+    // Save for recap
+    const handStr = suits.map(s => {
+      const cards = hand.filter(c => c.suit === s).map(c => c.rank).join("");
+      return `${suitSymbols[s]}${cards}`;
+    }).join(" ");
+    setRoundHistory(prev => [...prev, { handStr, correctHCP, selectedHCP: answer, correct: isCorrect }]);
 
     if (isCorrect) {
       play('trickWon');
@@ -288,6 +299,57 @@ export default function ContaVelocePage() {
                 <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
+
+            {/* Recap toggle */}
+            <div className="mt-4">
+              <button
+                onClick={() => setShowRecap(!showRecap)}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                <span>{showRecap ? "Nascondi" : "Mostra"} recap risposte</span>
+                <span className="text-xs">{showRecap ? "▲" : "▼"}</span>
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {showRecap && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-3 space-y-2 text-left">
+                    {roundHistory.map((r, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        className={`rounded-xl p-3 border ${r.correct ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
+                      >
+                        <div className="flex items-start gap-2">
+                          <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${r.correct ? "bg-emerald-500" : "bg-red-500"}`}>
+                            {r.correct ? "✓" : "✗"}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[11px] text-gray-500 font-mono">{r.handStr}</p>
+                            <p className="text-xs text-gray-600 mt-0.5">
+                              Hai risposto: <span className="font-bold">{r.selectedHCP} HCP</span>
+                            </p>
+                            {!r.correct && (
+                              <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                                Corretta: {r.correctHCP} HCP
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="flex gap-3 mt-6">
               <Link href="/gioca" className="flex-1">
