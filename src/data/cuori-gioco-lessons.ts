@@ -2,7 +2,7 @@
  * FIGB Bridge LAB - Cuori Gioco Lesson Content Data
  * Extracted from FIGB Corso Cuori Gioco (advanced card play course)
  * World 10: Tecniche Base (lessons 1-4)
- * World 11: Probabilita e Strategia (lessons 5-7)
+ * World 11: Probabilità e Strategia (lessons 5-7)
  * World 12: Gioco Avanzato (lessons 8-10)
  */
 
@@ -32,27 +32,27 @@ const lezione1CG: Lesson = {
         {
           type: "text",
           content:
-            "E statisticamente provato che la maggior parte dei contratti si perdono alla prima carta, proprio perche spesso il giocante comincia a pensare quando ormai e tardi. Una pausa di riflessione e indispensabile per riflettere sulla distribuzione e i punti avversari.",
+            "È statisticamente provato che la maggior parte dei contratti si perdono alla prima carta, proprio perché spesso il giocante comincia a pensare quando ormai è tardi. Una pausa di riflessione è indispensabile per riflettere sulla distribuzione e i punti avversari.",
         },
         {
           type: "rule",
           content:
-            "Per trarre deduzioni dalla carta di attacco si deve supporre che l'avversario segua regole logiche. E normale: 1) Non attaccare sotto Asso nei contratti a colore. 2) Rispettare gli schemi di attacco con sequenze e cartine. 3) Preferire un colore in cui si abbia AK. 4) Attaccare nel colore dichiarato dal partner.",
+            "Per trarre deduzioni dalla carta di attacco si deve supporre che l'avversario segua regole logiche. È normale: 1) Non attaccare sotto Asso nei contratti a colore. 2) Rispettare gli schemi di attacco con sequenze e cartine. 3) Preferire un colore in cui si abbia AK. 4) Attaccare nel colore dichiarato dal partner.",
         },
         {
           type: "text",
           content:
-            "Altre regole importanti: 5) Attaccare nel colore in cui la coppia si e appoggiata. 6) Se nessuno della coppia ha parlato, attaccare nel colore non detto. 7) Non attaccare per fare tagli quando si ha una presa di lunga in atout.",
+            "Altre regole importanti: 5) Attaccare nel colore in cui la coppia si è appoggiata. 6) Se nessuno della coppia ha parlato, attaccare nel colore non detto. 7) Non attaccare per fare tagli quando si ha una presa di lunga in atout.",
         },
         {
           type: "tip",
           content: "Pensate sempre alle carte che mancano!",
           explanation:
-            "Fate almeno un'ipotesi sulla distribuzione avversaria e controllatela: a volte i conti non tornano, e se ne fara un'altra. Pensare PRIMA di giocare la prima carta e fondamentale.",
+            "Fate almeno un'ipotesi sulla distribuzione avversaria e controllatela: a volte i conti non tornano, e se ne farà un'altra. Pensare PRIMA di giocare la prima carta è fondamentale.",
         },
         {
           type: "quiz",
-          content: "Quale attacco e considerato 'anormale' e sospetto nel gioco a colore?",
+          content: "Quale attacco è considerato 'anormale' e sospetto nel gioco a colore?",
           options: [
             "Attacco da AK in un colore",
             "Attacco sotto Asso",
@@ -61,11 +61,11 @@ const lezione1CG: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Attaccare sotto Asso nei contratti a colore e anormale: se l'avversario lo fa, sospettate un motivo nascosto come la ricerca di un taglio.",
+            "Attaccare sotto Asso nei contratti a colore è anormale: se l'avversario lo fa, sospettate un motivo nascosto come la ricerca di un taglio.",
         },
         {
           type: "true-false",
-          content: "Quando nessuno della coppia difensiva ha parlato, e normale attaccare nel colore non dichiarato dagli avversari.",
+          content: "Quando nessuno della coppia difensiva ha parlato, è normale attaccare nel colore non dichiarato dagli avversari.",
           correctAnswer: 0,
           explanation:
             "Esatto! Se nessuno dei difensori ha dichiarato, si preferisce attaccare nel colore che gli avversari non hanno mostrato, cercando i punti del compagno.",
@@ -86,7 +86,7 @@ const lezione1CG: Lesson = {
         {
           type: "text",
           content:
-            "Gioco a Senza, attacco di 5. La carta che giocate dal morto alla prima presa puo determinare l'esito del contratto. Analizziamo le figure piu comuni.",
+            "Gioco a Senza, attacco di 5. La carta che giocate dal morto alla prima presa può determinare l'esito del contratto. Analizziamo le figure più comuni.",
         },
         {
           type: "example",
@@ -96,7 +96,7 @@ const lezione1CG: Lesson = {
         {
           type: "text",
           content:
-            "Giocate piccola dal morto! Se mettete il J, lo catturano e perdete la chance di fare 2 prese. Stando bassi, il terzo di mano sara costretto a impegnare un onore.",
+            "Giocate piccola dal morto! Se mettete il J, lo catturano e perdete la chance di fare 2 prese. Stando bassi, il terzo di mano sarà costretto a impegnare un onore.",
         },
         {
           type: "example",
@@ -106,7 +106,7 @@ const lezione1CG: Lesson = {
         {
           type: "text",
           content:
-            "Giocate la Dama dal morto! Se il terzo di mano copre con l'Asso, il vostro Re fara presa dopo. Se non copre, avete vinto una presa gratis.",
+            "Giocate la Dama dal morto! Se il terzo di mano copre con l'Asso, il vostro Re farà presa dopo. Se non copre, avete vinto una presa gratis.",
         },
         {
           type: "quiz",
@@ -114,12 +114,12 @@ const lezione1CG: Lesson = {
           options: [
             "Il Re, sperando che cada l'Asso",
             "Piccola, stando bassi",
-            "Il 3, tanto e indifferente",
+            "Il 3, tanto è indifferente",
             "Dipende solo dalla dichiarazione",
           ],
           correctAnswer: 1,
           explanation:
-            "State bassi! Chi attacca puo avere la Dama ma e fortemente improbabile che abbia l'Asso. Mettendo il Re perdete sempre. Stando bassi potreste fare il Re in seguito.",
+            "State bassi! Chi attacca può avere la Dama ma è fortemente improbabile che abbia l'Asso. Mettendo il Re perdete sempre. Stando bassi potreste fare il Re in seguito.",
         },
         {
           type: "card-select",
@@ -145,7 +145,7 @@ const lezione1CG: Lesson = {
         {
           type: "text",
           content:
-            "L'andamento della prima presa, e la memoria della dichiarazione, a volte e la chiave di volta per mantenere il contratto. Bisogna fidarsi delle deduzioni logiche.",
+            "L'andamento della prima presa, e la memoria della dichiarazione, a volte è la chiave di volta per mantenere il contratto. Bisogna fidarsi delle deduzioni logiche.",
         },
         {
           type: "example",
@@ -155,12 +155,12 @@ const lezione1CG: Lesson = {
         {
           type: "text",
           content:
-            "La deduzione e chiara: Sud e passato su 1♥ avendo AKxxxx di fiori. Se avesse avuto un Re accanto al colore non sarebbe intervenuto di 2♣? Quindi Nord possiede entrambi i Re al 99%. Niente impasse a picche, ma impasse di taglio al K♦ di Nord.",
+            "La deduzione è chiara: Sud è passato su 1♥ avendo AKxxxx di fiori. Se avesse avuto un Re accanto al colore non sarebbe intervenuto di 2♣? Quindi Nord possiede entrambi i Re al 99%. Niente impasse a picche, ma impasse di taglio al K♦ di Nord.",
         },
         {
           type: "rule",
           content:
-            "Sospettate degli attacchi in colori dove avete molte carte e onori: e probabile che l'avversario cerchi un taglio. Se gli avversari si appoggiano un palo e l'attacco e poi diverso, sospettate la ricerca di un taglio!",
+            "Sospettate degli attacchi in colori dove avete molte carte e onori: è probabile che l'avversario cerchi un taglio. Se gli avversari si appoggiano un palo e l'attacco è poi diverso, sospettate la ricerca di un taglio!",
         },
         {
           type: "tip",
@@ -179,14 +179,14 @@ const lezione1CG: Lesson = {
           ],
           correctAnswer: 2,
           explanation:
-            "Quando l'avversario attacca in un colore dove avete molte carte e onori, e probabile che cerchi un taglio: il suo partner potrebbe essere corto in quel colore.",
+            "Quando l'avversario attacca in un colore dove avete molte carte e onori, è probabile che cerchi un taglio: il suo partner potrebbe essere corto in quel colore.",
         },
         {
           type: "true-false",
           content: "Se siete certi che un taglio sia in agguato, potete scartare un onore dalla mano per confondere le acque al nemico.",
           correctAnswer: 0,
           explanation:
-            "Si! Se non vi costa prese, potete dare un onore di mano per far credere al difensore che siete voi a essere singoli. E una manovra ingannevole lecita e a volte brillante.",
+            "Si! Se non vi costa prese, potete dare un onore di mano per far credere al difensore che siete voi a essere singoli. È una manovra ingannevole lecita e a volte brillante.",
         },
       ],
     },
@@ -217,7 +217,7 @@ const lezione2CG: Lesson = {
         {
           type: "text",
           content:
-            "Ci sono fondamentalmente due modi di giocare ad atout: a) mantenendo il controllo del colpo (le piu frequenti), b) in Taglio totale.",
+            "Ci sono fondamentalmente due modi di giocare ad atout: a) mantenendo il controllo del colpo (le più frequenti), b) in Taglio totale.",
         },
         {
           type: "rule",
@@ -227,13 +227,13 @@ const lezione2CG: Lesson = {
         {
           type: "text",
           content:
-            "Le mani giocate a Taglio totale sono quelle in cui il giocante arraffa piu rapidamente che puo le prese, incassando le vincenti e sfruttando il maggior numero possibile di atout per i tagli. L'analisi dei semi a lato dell'atout determina il piano di gioco da adottare.",
+            "Le mani giocate a Taglio totale sono quelle in cui il giocante arraffa più rapidamente che può le prese, incassando le vincenti e sfruttando il maggior numero possibile di atout per i tagli. L'analisi dei semi a lato dell'atout determina il piano di gioco da adottare.",
         },
         {
           type: "tip",
           content: "Due precauzioni per il Taglio totale",
           explanation:
-            "a) Incassate le vincenti laterali il prima possibile (dopo ve le taglieranno!). b) Cominciate a tagliare sempre il colore in cui avete piu tagli da fare, altrimenti vi ritroverete in difficolta con gli ingressi.",
+            "a) Incassate le vincenti laterali il prima possibile (dopo ve le taglieranno!). b) Cominciate a tagliare sempre il colore in cui avete più tagli da fare, altrimenti vi ritroverete in difficoltà con gli ingressi.",
         },
         {
           type: "example",
@@ -245,13 +245,13 @@ const lezione2CG: Lesson = {
           content: "In un piano di Taglio totale, in quale ordine si eseguono i tagli?",
           options: [
             "Si taglia a caso, alternando le mani",
-            "Si comincia dal colore con piu tagli da fare",
+            "Si comincia dal colore con più tagli da fare",
             "Si comincia dal colore con meno tagli",
             "Si battono prima le atout e poi si taglia",
           ],
           correctAnswer: 1,
           explanation:
-            "Si comincia a tagliare il colore in cui si hanno piu tagli da fare, per non restare senza collegamenti (ingressi). I tagli stessi forniscono i collegamenti con l'altra mano!",
+            "Si comincia a tagliare il colore in cui si hanno più tagli da fare, per non restare senza collegamenti (ingressi). I tagli stessi forniscono i collegamenti con l'altra mano!",
         },
       ],
     },
@@ -264,21 +264,21 @@ const lezione2CG: Lesson = {
       content: [
         {
           type: "heading",
-          content: "Il fit 5-3: il piu delicato",
+          content: "Il fit 5-3: il più delicato",
         },
         {
           type: "text",
           content:
-            "Il fit 5-3 e il piu delicato tra tutti i fit di 8 carte, sia perche dopo le indispensabili tre battute solo una mano avra conservato potere di taglio sia perche e quello che meno garantisce facili collegamenti mano-morto.",
+            "Il fit 5-3 è il più delicato tra tutti i fit di 8 carte, sia perché dopo le indispensabili tre battute solo una mano avrà conservato potere di taglio sia perché è quello che meno garantisce facili collegamenti mano-morto.",
         },
         {
           type: "rule",
           content:
-            "La mano che potrebbe portare allungamento di prese e quasi sempre la corta di atout. Quando la parte corta presenta un colore da affrancare e i collegamenti sono garantiti solo dal colore di atout, bisogna anticipare l'affrancamento alla battuta.",
+            "La mano che potrebbe portare allungamento di prese è quasi sempre la corta di atout. Quando la parte corta presenta un colore da affrancare e i collegamenti sono garantiti solo dal colore di atout, bisogna anticipare l'affrancamento alla battuta.",
         },
         {
           type: "example",
-          content: "Est gioca 4♠ con attacco atout. La linea di gioco per affrancare le fiori e molto piu semplice che tagliare al morto. Ovest: ♠KQ2 ♥65 ♦74 ♣Q98643. Est: ♠AJ875 ♥AK ♦Q863 ♣K2.",
+          content: "Est gioca 4♠ con attacco atout. La linea di gioco per affrancare le fiori è molto più semplice che tagliare al morto. Ovest: ♠KQ2 ♥65 ♦74 ♣Q98643. Est: ♠AJ875 ♥AK ♦Q863 ♣K2.",
           cards: "♠KQ2 ♥65 ♦74 ♣Q98643",
         },
         {
@@ -292,8 +292,8 @@ const lezione2CG: Lesson = {
           options: [
             "La mano con 5 atout",
             "La mano con 3 atout (la corta)",
-            "E indifferente",
-            "La mano con piu onori",
+            "È indifferente",
+            "La mano con più onori",
           ],
           correctAnswer: 1,
           explanation:
@@ -304,7 +304,7 @@ const lezione2CG: Lesson = {
           content: "Con fit 5-3 bisogna sempre battere tutte le atout prima di affrancare i colori laterali.",
           correctAnswer: 1,
           explanation:
-            "Falso! A volte e necessario posporre la battuta delle atout per produrre dei tagli o affrancare un colore laterale. L'ordine dipende dalla mano specifica.",
+            "Falso! A volte è necessario posporre la battuta delle atout per produrre dei tagli o affrancare un colore laterale. L'ordine dipende dalla mano specifica.",
         },
       ],
     },
@@ -331,7 +331,7 @@ const lezione2CG: Lesson = {
         },
         {
           type: "example",
-          content: "Est gioca 4♥ con fit 7 carte. Prende l'attacco a fiori e la prosecuzione. Se Est taglia, mantiene solo con cuori 3-3 (36%). Se rifiuta di tagliare scartando 2 picche, e in botte di ferro sia con 3-3 che con 4-2.",
+          content: "Est gioca 4♥ con fit 7 carte. Prende l'attacco a fiori e la prosecuzione. Se Est taglia, mantiene solo con cuori 3-3 (36%). Se rifiuta di tagliare scartando 2 picche, è in botte di ferro sia con 3-3 che con 4-2.",
           cards: "♠7643 ♥K53 ♦KQ2 ♣763",
         },
         {
@@ -351,7 +351,7 @@ const lezione2CG: Lesson = {
     },
     {
       id: "101-4",
-      title: "Il fit 4-4: il piu potente",
+      title: "Il fit 4-4: il più potente",
       duration: "5",
       type: "theory",
       xpReward: 65,
@@ -363,37 +363,37 @@ const lezione2CG: Lesson = {
         {
           type: "text",
           content:
-            "E il piu potente dei fit di 8 carte. Non essendoci a priori una mano da usare per i tagli, questa potra essere scelta dal giocante a seconda delle esigenze. A volte e lo stesso attacco che decide l'impostazione della manovra.",
+            "È il più potente dei fit di 8 carte. Non essendoci a priori una mano da usare per i tagli, questa potrà essere scelta dal giocante a seconda delle esigenze. A volte è lo stesso attacco che decide l'impostazione della manovra.",
         },
         {
           type: "rule",
           content:
-            "Quando si gioca nella 4-4 l'importante e decidere quale mano affrancare e quale usare per i tagli. L'avventura incerta di un taglio di qua e un taglio di la puo diventare pericolosa!",
+            "Quando si gioca nella 4-4 l'importante è decidere quale mano affrancare e quale usare per i tagli. L'avventura incerta di un taglio di qua e un taglio di là può diventare pericolosa!",
         },
         {
           type: "example",
-          content: "Est gioca 4♠ con attacco K♦. Ovest: ♠AQJ7 ♥52 ♦A875 ♣AK3. Est: ♠K863 ♥9743 ♦2 ♣8752. Avendo 3 quadri pronte da tagliare, Est puo fare 4 prese in atout di Ovest + 3 tagli + 2 fiori + 1 quadri = 10.",
+          content: "Est gioca 4♠ con attacco K♦. Ovest: ♠AQJ7 ♥52 ♦A875 ♣AK3. Est: ♠K863 ♥9743 ♦2 ♣8752. Avendo 3 quadri pronte da tagliare, Est può fare 4 prese in atout di Ovest + 3 tagli + 2 fiori + 1 quadri = 10.",
           cards: "♠AQJ7 ♥52 ♦A875 ♣AK3",
         },
         {
           type: "quiz",
-          content: "Nel fit 4-4, quale e il rischio principale se si taglia da entrambe le mani senza un piano?",
+          content: "Nel fit 4-4, quale è il rischio principale se si taglia da entrambe le mani senza un piano?",
           options: [
             "Si fanno troppe prese",
             "Si perde il controllo: le atout avversarie non vengono mai eliminate",
             "Si regalano prese agli avversari",
-            "Non c'e alcun rischio",
+            "Non c'è alcun rischio",
           ],
           correctAnswer: 1,
           explanation:
-            "Tagliare 'un po' di qua e un po' di la' senza piano puo essere pericoloso: si rischia di non avere piu abbastanza atout per eliminare quelle avversarie, e la difesa riprendera il controllo.",
+            "Tagliare 'un po' di qua e un po' di là' senza piano può essere pericoloso: si rischia di non avere più abbastanza atout per eliminare quelle avversarie, e la difesa riprenderà il controllo.",
         },
         {
           type: "true-false",
-          content: "Il fit 4-4 e piu potente del fit 5-3 perche offre flessibilita nella scelta di quale mano usare per i tagli.",
+          content: "Il fit 4-4 è più potente del fit 5-3 perché offre flessibilità nella scelta di quale mano usare per i tagli.",
           correctAnswer: 0,
           explanation:
-            "Corretto! Nel fit 4-4 si puo scegliere liberamente quale mano affrancare e quale usare per i tagli, adattandosi alla situazione specifica della mano.",
+            "Corretto! Nel fit 4-4 si può scegliere liberamente quale mano affrancare e quale usare per i tagli, adattandosi alla situazione specifica della mano.",
         },
       ],
     },
@@ -424,12 +424,12 @@ const lezione3CG: Lesson = {
         {
           type: "rule",
           content:
-            "IL SEGNALE DI CONTROGIOCO E LA RISPOSTA ALLA DOMANDA CHE IL COMPAGNO SI STA FACENDO, O CHE SI STA PER FARE.",
+            "IL SEGNALE DI CONTROGIOCO È LA RISPOSTA ALLA DOMANDA CHE IL COMPAGNO SI STA FACENDO, O CHE SI STA PER FARE.",
         },
         {
           type: "text",
           content:
-            "Il conto della carta e una convenzione per leggere la lunghezza del colore in mano al dichiarante. Un difensore che mostri il conto aiuta il partner a ricostruire con precisione quante carte abbia la mano nascosta.",
+            "Il conto della carta è una convenzione per leggere la lunghezza del colore in mano al dichiarante. Un difensore che mostri il conto aiuta il partner a ricostruire con precisione quante carte abbia la mano nascosta.",
         },
         {
           type: "rule",
@@ -439,22 +439,22 @@ const lezione3CG: Lesson = {
         {
           type: "text",
           content:
-            "Quando si rigioca in un colore gia mosso, si torna in conto delle carte rimaste. Ad esempio: A72 - dopo aver usato l'Asso rigioca il 7 (la piu alta delle 2 rimaste). K853 - dopo aver usato il Re rigioca il 3 (la piu piccola delle 3 rimaste).",
+            "Quando si rigioca in un colore già mosso, si torna in conto delle carte rimaste. Ad esempio: A72 - dopo aver usato l'Asso rigioca il 7 (la più alta delle 2 rimaste). K853 - dopo aver usato il Re rigioca il 3 (la più piccola delle 3 rimaste).",
         },
         {
           type: "quiz",
           content: "Il compagno attacca con il 2♦. Voi avete A843♦. Prendete con l'Asso. Quale carta tornate per mostrare il conto di 3 carte rimaste?",
-          options: ["Il 3 (la piu piccola)", "L'8 (la piu alta)", "Il 4 (intermedia)", "Non importa quale"],
+          options: ["Il 3 (la più piccola)", "L'8 (la più alta)", "Il 4 (intermedia)", "Non importa quale"],
           correctAnswer: 0,
           explanation:
-            "Si torna in conto delle carte RIMASTE: con 3 carte rimaste (dispari) si gioca la piu piccola. Con 843, la 3 dice 'dispari = mi restano 3 carte'.",
+            "Si torna in conto delle carte RIMASTE: con 3 carte rimaste (dispari) si gioca la più piccola. Con 843, la 3 dice 'dispari = mi restano 3 carte'.",
         },
         {
           type: "true-false",
           content: "Il conto va sempre dato, in ogni situazione di controgioco.",
           correctAnswer: 1,
           explanation:
-            "Falso! Il conto non va mai dato quando puo essere utile solo al giocante, ne quando la lunghezza nel colore mosso e gia assolutamente conosciuta dalla licita.",
+            "Falso! Il conto non va mai dato quando può essere utile solo al giocante, né quando la lunghezza nel colore mosso è già assolutamente conosciuta dalla licita.",
         },
       ],
     },
@@ -472,40 +472,40 @@ const lezione3CG: Lesson = {
         {
           type: "text",
           content:
-            "Si dicono preferenziali le chiamate indirette: si usa un colore per indicare gradimento di un altro. Si possono usare le carte di un colore per parlare di un altro SOLO dopo che la situazione di quel colore sia gia chiarita.",
+            "Si dicono preferenziali le chiamate indirette: si usa un colore per indicare gradimento di un altro. Si possono usare le carte di un colore per parlare di un altro SOLO dopo che la situazione di quel colore sia già chiarita.",
         },
         {
           type: "rule",
           content:
-            "La regola dei messaggi preferenziali: carta ALTA chiama nel piu ALTO di rango dei restanti colori. Carta BASSA chiama nel piu BASSO di rango dei restanti colori.",
+            "La regola dei messaggi preferenziali: carta ALTA chiama nel più ALTO di rango dei restanti colori. Carta BASSA chiama nel più BASSO di rango dei restanti colori.",
         },
         {
           type: "example",
-          content: "Sud gioca 4♠. Ovest attacca A♥, ma il morto ha il singolo. Il terzo di mano gioca il 9♥: non sta chiamando a cuori, ma nel piu alto dei colori rimasti (quadri).",
+          content: "Sud gioca 4♠. Ovest attacca A♥, ma il morto ha il singolo. Il terzo di mano gioca il 9♥: non sta chiamando a cuori, ma nel più alto dei colori rimasti (quadri).",
           cards: "♠AQ75 ♥10 ♦KJ54 ♣K1086",
         },
         {
           type: "text",
           content:
-            "Quando si offre un taglio, si gioca piccola se si vuole il ritorno nel colore piu basso di rango e alta se lo si vuole nel piu alto. Quando si mette in presa l'avversario con una carta obbligata, la carta scelta indica l'ingresso per le future prese.",
+            "Quando si offre un taglio, si gioca piccola se si vuole il ritorno nel colore più basso di rango e alta se lo si vuole nel più alto. Quando si mette in presa l'avversario con una carta obbligata, la carta scelta indica l'ingresso per le future prese.",
         },
         {
           type: "rule",
           content:
-            "UNA PREFERENZA ALTA E INEQUIVOCABILE. UNA PREFERENZA BASSA E DUBBIA: o chiama nel colore basso o non chiama niente. Di certo non chiama nel colore alto.",
+            "UNA PREFERENZA ALTA È INEQUIVOCABILE. UNA PREFERENZA BASSA È DUBBIA: o chiama nel colore basso o non chiama niente. Di certo non chiama nel colore alto.",
         },
         {
           type: "quiz",
-          content: "Il vostro compagno sta per tagliarvi una quadri. Volete che dopo il taglio ritorni a Fiori (il colore piu basso). Quale quadri giocate per il taglio?",
+          content: "Il vostro compagno sta per tagliarvi una quadri. Volete che dopo il taglio ritorni a Fiori (il colore più basso). Quale quadri giocate per il taglio?",
           options: [
-            "La quadri piu alta possibile",
-            "La quadri piu bassa possibile",
-            "E indifferente",
+            "La quadri più alta possibile",
+            "La quadri più bassa possibile",
+            "È indifferente",
             "Il 10 di quadri",
           ],
           correctAnswer: 1,
           explanation:
-            "Una carta bassa chiama nel colore piu basso di rango tra quelli restanti. Se volete il ritorno a Fiori (basso) giocate la carta piu piccola.",
+            "Una carta bassa chiama nel colore più basso di rango tra quelli restanti. Se volete il ritorno a Fiori (basso) giocate la carta più piccola.",
         },
       ],
     },
@@ -523,25 +523,25 @@ const lezione3CG: Lesson = {
         {
           type: "text",
           content:
-            "Quando si scarta in un colore che e inutile tenere, l'ordine scelto per le carte scartate indica valori nei colori laterali. Scartando dall'alto si attira l'attenzione verso il colore piu alto di rango dei restanti.",
+            "Quando si scarta in un colore che è inutile tenere, l'ordine scelto per le carte scartate indica valori nei colori laterali. Scartando dall'alto si attira l'attenzione verso il colore più alto di rango dei restanti.",
         },
         {
           type: "example",
-          content: "Sud gioca 4♠ dopo che EstOvest si sono appoggiati fino a 4♥. L'attacco e A♥, Sud taglia e batte atout. Est scarta le cuori dall'alto (10 poi 9): segnala valori nel colore piu alto dei restanti (quadri).",
+          content: "Sud gioca 4♠ dopo che EstOvest si sono appoggiati fino a 4♥. L'attacco è A♥, Sud taglia e batte atout. Est scarta le cuori dall'alto (10 poi 9): segnala valori nel colore più alto dei restanti (quadri).",
           cards: "♠3 ♥K10982 ♦AKJ ♣J974",
         },
         {
           type: "quiz",
-          content: "Siete Est e dovete scartare su un giro di atout. Avete valori a Fiori (il colore piu basso). Come scartate le vostre cuori inutili?",
+          content: "Siete Est e dovete scartare su un giro di atout. Avete valori a Fiori (il colore più basso). Come scartate le vostre cuori inutili?",
           options: [
             "Dall'alto: 10, poi 9, poi 8",
             "Dal basso: 2, poi 8",
-            "E indifferente",
+            "È indifferente",
             "Scartate una fiori per mostrare il colore",
           ],
           correctAnswer: 1,
           explanation:
-            "Scartando dal basso si indica interesse nel colore piu basso di rango dei restanti. Per chiamare a Fiori, scartate le cuori dal basso.",
+            "Scartando dal basso si indica interesse nel colore più basso di rango dei restanti. Per chiamare a Fiori, scartate le cuori dal basso.",
         },
         {
           type: "true-false",
@@ -579,12 +579,12 @@ const lezione4CG: Lesson = {
         {
           type: "text",
           content:
-            "Lo stile del combattimento viene scelto gia con l'attacco: un attacco aggressivo e di chi vuole incassare rapidamente; un attacco neutro e di chi mantiene alta la guardia. Capire quale sia il comportamento giusto dipende molto dalla dichiarazione.",
+            "Lo stile del combattimento viene scelto già con l'attacco: un attacco aggressivo è di chi vuole incassare rapidamente; un attacco neutro è di chi mantiene alta la guardia. Capire quale sia il comportamento giusto dipende molto dalla dichiarazione.",
         },
         {
           type: "rule",
           content:
-            "Il problema principale dei difensori e ANTICIPARE URGENTEMENTE i colori in cui possono affrancare prese, prima che il giocante tagli le perdenti o le scarti su vincenti in altri colori.",
+            "Il problema principale dei difensori è ANTICIPARE URGENTEMENTE i colori in cui possono affrancare prese, prima che il giocante tagli le perdenti o le scarti su vincenti in altri colori.",
         },
         {
           type: "example",
@@ -594,16 +594,16 @@ const lezione4CG: Lesson = {
         {
           type: "text",
           content:
-            "Prima di muovere un colore in cui compare al morto una figura a rischio, il difensore dovra chiedersi: a) e veramente indispensabile giocare subito quel colore? b) quali carte si deve sperare di trovare nel compagno? c) qual e la carta giusta da muovere?",
+            "Prima di muovere un colore in cui compare al morto una figura a rischio, il difensore dovrà chiedersi: a) è veramente indispensabile giocare subito quel colore? b) quali carte si deve sperare di trovare nel compagno? c) qual è la carta giusta da muovere?",
         },
         {
           type: "quiz",
-          content: "Il morto ha KQ864♦ e il giocante ha dichiarato con forza. Perche e urgente muovere un altro colore prima?",
+          content: "Il morto ha KQ864♦ e il giocante ha dichiarato con forza. Perché è urgente muovere un altro colore prima?",
           options: [
             "Per confondere il giocante",
             "Per togliere gli ingressi al morto",
             "Per affrancare prese prima che il giocante scarti le perdenti sulle quadri",
-            "Non e urgente, si puo aspettare",
+            "Non è urgente, si può aspettare",
           ],
           correctAnswer: 2,
           explanation:
@@ -625,29 +625,29 @@ const lezione4CG: Lesson = {
         {
           type: "text",
           content:
-            "Immaginare le figure e un'operazione faticosa ma fondamentale. Bisogna ipotizzare le possibili carte in mano al partner e scegliere l'uscita corretta.",
+            "Immaginare le figure è un'operazione faticosa ma fondamentale. Bisogna ipotizzare le possibili carte in mano al partner e scegliere l'uscita corretta.",
         },
         {
           type: "example",
-          content: "Vedete al morto K86. Supponete che Est abbia l'Asso. Se il J e in Sud con AJxx, partire con la Q e fondamentale. Se il J e in Est con A9xx e Sud ha Jxx, non bisogna muoversi!",
+          content: "Vedete al morto K86. Supponete che Est abbia l'Asso. Se il J è in Sud con AJxx, partire con la Q è fondamentale. Se il J è in Est con A9xx e Sud ha Jxx, non bisogna muoversi!",
           cards: "Q104 + K86",
         },
         {
           type: "rule",
           content:
-            "Notate come acquistano valore i 10, i 9 e gli 8 in queste figure. La scelta della carta giusta da muovere puo fare la differenza tra regalare una presa e affrancarne due.",
+            "Notate come acquistano valore i 10, i 9 e gli 8 in queste figure. La scelta della carta giusta da muovere può fare la differenza tra regalare una presa e affrancarne due.",
         },
         {
           type: "text",
           content:
-            "Quando muovete 'sotto Asso' a smazzata iniziata e un rischio che si puo correre, purche si abbia la certezza che il giocante non abbia il K secco. Quel che c'e al morto si vede! Non abbiate timore a segnalare al partner quel poco che avete.",
+            "Quando muovete 'sotto Asso' a smazzata iniziata è un rischio che si può correre, purché si abbia la certezza che il giocante non abbia il K secco. Quel che c'è al morto si vede! Non abbiate timore a segnalare al partner quel poco che avete.",
         },
         {
           type: "quiz",
           content: "Vedete al morto KJ del colore. Avete Q104 e ipotizzate l'Asso nel compagno. Come muovete?",
           options: [
             "La Q, per costringere il morto a coprire",
-            "Il 4, la piu piccola",
+            "Il 4, la più piccola",
             "Il 10, per non perdere la Dama",
             "La Q o il 10, sono indifferenti",
           ],
@@ -657,10 +657,10 @@ const lezione4CG: Lesson = {
         },
         {
           type: "true-false",
-          content: "In un torneo a duplicato e giustificato fare giocate rischiose per battere il contratto, anche a costo di regalare prese in piu.",
+          content: "In un torneo a duplicato è giustificato fare giocate rischiose per battere il contratto, anche a costo di regalare prese in più.",
           correctAnswer: 0,
           explanation:
-            "Si! In duplicato la cosa piu importante e battere il contratto: le prese in piu non hanno grosso peso. In Mitchell invece bisogna stare attenti a non regalare prese.",
+            "Si! In duplicato la cosa più importante è battere il contratto: le prese in più non hanno grosso peso. In Mitchell invece bisogna stare attenti a non regalare prese.",
         },
       ],
     },
@@ -678,21 +678,21 @@ const lezione4CG: Lesson = {
         {
           type: "text",
           content:
-            "I segnali difensivi forniscono aiuti preziosi, ma la fatica di contare e immaginare le carte dovete farla voi. Ricostruire la distribuzione del giocante e fondamentale per scegliere il momento giusto per muovere un colore.",
+            "I segnali difensivi forniscono aiuti preziosi, ma la fatica di contare e immaginare le carte dovete farla voi. Ricostruire la distribuzione del giocante è fondamentale per scegliere il momento giusto per muovere un colore.",
         },
         {
           type: "example",
-          content: "Siete Ovest. Attaccate A♠, Est rifiuta con il 4. Sud ha 6 picche e 0 cuori, quindi 7 carte tra fiori e quadri. Non devono far paura le fiori del morto: anche se Sud scarta, gli rimangono comunque 2 quadri. Non e urgente muovere quadri!",
+          content: "Siete Ovest. Attaccate A♠, Est rifiuta con il 4. Sud ha 6 picche e 0 cuori, quindi 7 carte tra fiori e quadri. Non devono far paura le fiori del morto: anche se Sud scarta, gli rimangono comunque 2 quadri. Non è urgente muovere quadri!",
           cards: "♠A103 ♥98732 ♦Q104 ♣86",
         },
         {
           type: "quiz",
           content: "Il giocante ha 6 atout e 0 cuori. Ha quindi 7 carte tra fiori e quadri. Il morto ha 5 fiori. Dovete muovere quadri subito?",
           options: [
-            "Si, e sempre urgente",
-            "No, sulle fiori il giocante non puo scartare abbastanza quadri per eliminare il problema",
+            "Sì, è sempre urgente",
+            "No, sulle fiori il giocante non può scartare abbastanza quadri per eliminare il problema",
             "Dipende solo dai punti",
-            "Si, perche il morto ha 5 fiori",
+            "Sì, perché il morto ha 5 fiori",
           ],
           correctAnswer: 1,
           explanation:
@@ -732,21 +732,21 @@ const lezione5CG: Lesson = {
         {
           type: "rule",
           content:
-            "Il concetto di sicurezza entra in azione quando il contratto ha enormi probabilita di riuscita e, non essendo interessati alle prese in piu, tutta l'attenzione si concentra nel cautelarsi da quelle rare disposizioni di carte che potrebbero generare difficolta.",
+            "Il concetto di sicurezza entra in azione quando il contratto ha enormi probabilità di riuscita e, non essendo interessati alle prese in più, tutta l'attenzione si concentra nel cautelarsi da quelle rare disposizioni di carte che potrebbero generare difficoltà.",
         },
         {
           type: "example",
-          content: "6NT. L'unico colore nevralgico e quadri (K92 + AJ765) dove basta fare 4 prese. Si inizia battendo l'Asso (l'onore alto che accompagna il Fante) poi si muove piccola verso K9, inserendo il 9 se Sud gioca piccola.",
+          content: "6NT. L'unico colore nevralgico è quadri (K92 + AJ765) dove basta fare 4 prese. Si inizia battendo l'Asso (l'onore alto che accompagna il Fante) poi si muove piccola verso K9, inserendo il 9 se Sud gioca piccola.",
           cards: "♦K92 + ♦AJ765",
         },
         {
           type: "text",
           content:
-            "In questo modo ci si cautela dalla Q10xx in una mano sola. Se il 9 viene catturato, i difensori hanno una sola carta di quadri e cadera sotto il Re. Se Q10xx e nel giocatore dopo di noi, lo vedremo alla seconda presa e faremo l'expasse.",
+            "In questo modo ci si cautela dalla Q10xx in una mano sola. Se il 9 viene catturato, i difensori hanno un solo quadro e cadrà sotto il Re. Se Q10xx è nel giocatore dopo di noi, lo vedremo alla seconda presa e faremo l'expasse.",
         },
         {
           type: "quiz",
-          content: "Avete K92♦ al morto e AJ765♦ in mano. Dovete fare 4 prese su 5 in quadri. Qual e la giocata di sicurezza?",
+          content: "Avete K92♦ al morto e AJ765♦ in mano. Dovete fare 4 prese su 5 in quadri. Qual è la giocata di sicurezza?",
           options: [
             "Re e piccola al Fante (impasse normale)",
             "Asso e poi piccola verso K9, inserendo il 9",
@@ -755,7 +755,7 @@ const lezione5CG: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Si batte l'Asso (l'onore vicino al J) e si muove verso K9. Se Sud ha Q10xx il 9 fara presa. Se Est ha Q10xx lo si scoprira e si vincera col Re per l'expasse. La giocata normale (K e piccola al J) perde 2 prese con Q10xx in Sud.",
+            "Si batte l'Asso (l'onore vicino al J) e si muove verso K9. Se Sud ha Q10xx il 9 farà presa. Se Est ha Q10xx lo si scoprirà e si vincerà col Re per l'expasse. La giocata normale (K e piccola al J) perde 2 prese con Q10xx in Sud.",
         },
       ],
     },
@@ -773,7 +773,7 @@ const lezione5CG: Lesson = {
         {
           type: "text",
           content:
-            "Con 9 carte in linea mancanti solo del J, basta incassare per primo un onore dalla parte dove ce ne sono due, conservando una forchetta in entrambe le mani. Constatata la 4/0 si potra catturare il J dovunque sia.",
+            "Con 9 carte in linea mancanti solo del J, basta incassare per primo un onore dalla parte dove ce ne sono due, conservando una forchetta in entrambe le mani. Constatata la 4/0 si potrà catturare il J dovunque sia.",
         },
         {
           type: "rule",
@@ -788,7 +788,7 @@ const lezione5CG: Lesson = {
         {
           type: "text",
           content:
-            "Con AQxx e xxxx: poiche si dovra perdere in ogni caso una presa anche se il Re e in impasse, non costa nulla incassare l'Asso e poi tornare in mano per giocare piccola verso la Dama. Se il Re e secco in Est, chi ha fatto l'impasse perde poi 2 prese in piu.",
+            "Con AQxx e xxxx: poiché si dovrà perdere in ogni caso una presa anche se il Re è in impasse, non costa nulla incassare l'Asso e poi tornare in mano per giocare piccola verso la Dama. Se il Re è secco in Est, chi ha fatto l'impasse perde poi 2 prese in più.",
         },
         {
           type: "quiz",
@@ -808,7 +808,7 @@ const lezione5CG: Lesson = {
           content: "Molte giocate di sicurezza distruggono volontariamente la forchetta (incassando l'onore alto) e trasformano un impasse in un expasse.",
           correctAnswer: 0,
           explanation:
-            "Esatto! E una caratteristica comune: si rinuncia all'impasse diretto per creare un expasse che protegge da distribuzioni sfavorevoli.",
+            "Esatto! È una caratteristica comune: si rinuncia all'impasse diretto per creare un expasse che protegge da distribuzioni sfavorevoli.",
         },
       ],
     },
@@ -826,42 +826,42 @@ const lezione5CG: Lesson = {
         {
           type: "text",
           content:
-            "Il concetto di sicurezza non si applica solo alla manovra di uno specifico colore: sovente e la linea generale di gioco ad essere improntata a questo concetto.",
+            "Il concetto di sicurezza non si applica solo alla manovra di uno specifico colore: sovente è la linea generale di gioco ad essere improntata a questo concetto.",
         },
         {
           type: "example",
-          content: "3NT. La protezione: se le fiori corrono ci sono 10 prese ma se Nord ha il J quarto, preso a fiori tornera Cuori. Sicurezza: incassare Q♣ e poi ♣ al 10. Se prende Sud, il K♥ resta protetto.",
+          content: "3NT. La protezione: se le fiori corrono ci sono 10 prese ma se Nord ha il J quarto, preso a fiori torneràCuori. Sicurezza: incassare Q♣ e poi ♣ al 10. Se prende Sud, il K♥ resta protetto.",
           cards: "♠K83 ♥62 ♦K62 ♣AQ953",
         },
         {
           type: "text",
           content:
-            "L'eliminazione di sicurezza: in 6♠ con attacco ambiguo di 10♥, invece di rischiare impasse, si puo: A♥, battere atout, incassare le 3 fiori, poi giocare Q♥. Chiunque prenda dovra giocare il taglio e scarto o regalare l'impasse a quadri. 12 prese garantite!",
+            "L'eliminazione di sicurezza: in 6♠ con attacco ambiguo di 10♥, invece di rischiare impasse, si può: A♥, battere atout, incassare le 3 fiori, poi giocare Q♥. Chiunque prenda dovrà giocare il taglio e scarto o regalare l'impasse a quadri. 12 prese garantite!",
         },
         {
           type: "quiz",
           content: "In un torneo a squadre giocate un 6NT sicuro. Vale la pena rischiare per la tredicesima presa?",
           options: [
-            "Si, ogni presa in piu conta",
-            "No, a squadre mantenere il contratto e tutto: la presa in piu vale pochissimo",
+            "Sì, ogni presa in più conta",
+            "No, a squadre mantenere il contratto è tutto: la presa in più vale pochissimo",
             "Dipende dal punteggio",
-            "Si, per il morale della coppia",
+            "Sì, per il morale della coppia",
           ],
           correctAnswer: 1,
           explanation:
-            "A squadre il concetto di sicurezza e fondamentale: perdere uno slam per cercare una presa in piu e un disastro. In Mitchell a coppie invece la presa in piu conta per il confronto.",
+            "A squadre il concetto di sicurezza è fondamentale: perdere uno slam per cercare una presa in più è un disastro. In Mitchell a coppie invece la presa in più conta per il confronto.",
         },
       ],
     },
   ],
 };
 
-// ===== LESSON 6: Probabilita e Percentuali =====
+// ===== LESSON 6: Probabilità e Percentuali =====
 
 const lezione6CG: Lesson = {
   id: 105,
   worldId: 11,
-  title: "Probabilita e Percentuali",
+  title: "Probabilità e Percentuali",
   subtitle: "Tabelle, scelte e calcolo delle chance",
   icon: "📊",
   smazzateIds: ["cg-6-1", "cg-6-2", "cg-6-3", "cg-6-4", "cg-6-5", "cg-6-6", "cg-6-7", "cg-6-8"],
@@ -875,17 +875,17 @@ const lezione6CG: Lesson = {
       content: [
         {
           type: "heading",
-          content: "Probabilita e Percentuali",
+          content: "Probabilità e Percentuali",
         },
         {
           type: "text",
           content:
-            "Quando si affronta una mano che offre due o piu possibili linee di gioco, e matematicamente accertabile quale sia la migliore, in base alle percentuali statistiche relative alla divisione dei colori e alla posizione degli onori avversari.",
+            "Quando si affronta una mano che offre due o più possibili linee di gioco, è matematicamente accertabile quale sia la migliore, in base alle percentuali statistiche relative alla divisione dei colori e alla posizione degli onori avversari.",
         },
         {
           type: "rule",
           content:
-            "Quando manca un numero PARI di carte la divisione piu probabile non e mai quella piu equilibrata! 6 carte mancanti: 4-2 (48%) batte 3-3 (36%). 4 carte mancanti: 3-1 (50%) batte 2-2 (40%).",
+            "Quando manca un numero PARI di carte la divisione più probabile non è mai quella più equilibrata! 6 carte mancanti: 4-2 (48%) batte 3-3 (36%). 4 carte mancanti: 3-1 (50%) batte 2-2 (40%).",
         },
         {
           type: "text",
@@ -894,18 +894,18 @@ const lezione6CG: Lesson = {
         },
         {
           type: "quiz",
-          content: "Vi mancano 6 carte in un colore. Qual e la divisione piu probabile?",
+          content: "Vi mancano 6 carte in un colore. Qual è la divisione più probabile?",
           options: ["3-3 (pari)", "4-2", "5-1", "2-4 e 3-3 sono uguali"],
           correctAnswer: 1,
           explanation:
-            "Con 6 carte mancanti la 4-2 e piu probabile (48%) della 3-3 (36%). Ricordate: con un numero pari di carte mancanti la divisione piu probabile non e mai quella equilibrata!",
+            "Con 6 carte mancanti la 4-2 è più probabile (48%) della 3-3 (36%). Ricordate: con un numero pari di carte mancanti la divisione più probabile non è mai quella equilibrata!",
         },
         {
           type: "true-false",
-          content: "Con 5 carte mancanti, la divisione 3-2 ha probabilita del 68%.",
+          content: "Con 5 carte mancanti, la divisione 3-2 ha probabilità del 68%.",
           correctAnswer: 0,
           explanation:
-            "Corretto! Con un numero dispari di carte mancanti la divisione piu equilibrata E la piu probabile: 3-2 = 68%.",
+            "Corretto! Con un numero dispari di carte mancanti la divisione più equilibrata È la più probabile: 3-2 = 68%.",
         },
       ],
     },
@@ -923,7 +923,7 @@ const lezione6CG: Lesson = {
         {
           type: "text",
           content:
-            "La domanda fondamentale: la nona presa verra dall'impasse a quadri (50%) o dalle cuori 3-3 (36%)? La risposta e nei numeri: puntiamo sull'impasse!",
+            "La domanda fondamentale: la nona presa verrà dall'impasse a quadri (50%) o dalle cuori 3-3 (36%)? La risposta è nei numeri: puntiamo sull'impasse!",
         },
         {
           type: "example",
@@ -938,11 +938,11 @@ const lezione6CG: Lesson = {
         {
           type: "text",
           content:
-            "Esempio: in 6NT la dodicesima presa puo venire dalle quadri 3-2 (68%) o dall'impasse a cuori (50%). Si provano prima le quadri: se non vanno si prova l'impasse. Probabilita totale: 68% + (50% di 32%) = 68 + 16 = 84%!",
+            "Esempio: in 6NT la dodicesima presa può venire dalle quadri 3-2 (68%) o dall'impasse a cuori (50%). Si provano prima le quadri: se non vanno si prova l'impasse. Probabilità totale: 68% + (50% di 32%) = 68 + 16 = 84%!",
         },
         {
           type: "quiz",
-          content: "Lo slam dipende da 2 impasse indipendenti: basta che almeno uno riesca. Qual e la probabilita di riuscita?",
+          content: "Lo slam dipende da 2 impasse indipendenti: basta che almeno uno riesca. Qual è la probabilità di riuscita?",
           options: ["50%", "75%", "100%", "25%"],
           correctAnswer: 1,
           explanation:
@@ -953,7 +953,7 @@ const lezione6CG: Lesson = {
           content: "Con 7 carte in linea (A3 + KQ1062) mancanti del J, battere in testa (52%) e leggermente meglio dell'impasse (50%).",
           correctAnswer: 0,
           explanation:
-            "Esatto! La battuta funziona con 3-3 (36%) piu le volte che J e nel doubleton su 4-2 (16%). Totale 52%, meglio del 50% dell'impasse. Ma se il 10 e accanto all'Asso (A10 + KQ632), l'impasse torna a essere preferibile.",
+            "Esatto! La battuta funziona con 3-3 (36%) più le volte che J è nel doubleton su 4-2 (16%). Totale 52%, meglio del 50% dell'impasse. Ma se il 10 è accanto all'Asso (A10 + KQ632), l'impasse torna a essere preferibile.",
         },
       ],
     },
@@ -975,19 +975,19 @@ const lezione6CG: Lesson = {
             "Battere l'Asso: il Re secco cade il 13% delle volte",
             "Impasse: il 50% batte nettamente il 13%",
             "Sono uguali",
-            "Non importa, il K cadera comunque",
+            "Non importa, il K caderà comunque",
           ],
           correctAnswer: 1,
           explanation:
-            "Il Re secco dietro l'asso vale solo il 13% (un terzo del 39% di singolo a destra). L'impasse vale 50%. Con 10 carte e giusto fare l'impasse!",
+            "Il Re secco dietro l'asso vale solo il 13% (un terzo del 39% di singolo a destra). L'impasse vale 50%. Con 10 carte è giusto fare l'impasse!",
         },
         {
           type: "quiz",
-          content: "Se le vostre possibilita sono: quadri 3-2 (68%) E POI, come seconda chance, impasse a cuori (50%), qual e la percentuale combinata?",
+          content: "Se le vostre possibilità sono: quadri 3-2 (68%) E POI, come seconda chance, impasse a cuori (50%), qual è la percentuale combinata?",
           options: ["68%", "84%", "50%", "118%"],
           correctAnswer: 1,
           explanation:
-            "68% (quadri buone) + 50% del restante 32% (quando le quadri sono cattive ma l'impasse riesce) = 68% + 16% = 84%. Le chance successive si sommano correttamente cosi!",
+            "68% (quadri buone) + 50% del restante 32% (quando le quadri sono cattive ma l'impasse riesce) = 68% + 16% = 84%. Le chance successive si sommano correttamente così!",
         },
         {
           type: "hand-eval",
@@ -995,7 +995,7 @@ const lezione6CG: Lesson = {
           cards: "♠AKJ10 ♦9876",
           correctValue: 40,
           explanation:
-            "Con 4 carte mancanti: 3-1 = 50%, 2-2 = 40%, 4-0 = 10%. La divisione pari NON e la piu probabile!",
+            "Con 4 carte mancanti: 3-1 = 50%, 2-2 = 40%, 4-0 = 10%. La divisione pari NON è la più probabile!",
         },
       ],
     },
@@ -1031,30 +1031,30 @@ const lezione7CG: Lesson = {
         {
           type: "rule",
           content:
-            "a) Non buttate mai via onori secondi o terzi 'perche intanto sono in impasse': date relax all'avversario e le vie del Signore sono infinite. b) Evitate di giocare una intermedia altina per far impegnare un onore: potreste perdere una presa naturale.",
+            "a) Non buttate mai via onori secondi o terzi 'perché intanto sono in impasse': date relax all'avversario e le vie del Signore sono infinite. b) Evitate di giocare una intermedia altina per far impegnare un onore: potreste perdere una presa naturale.",
         },
         {
           type: "example",
-          content: "Morto ha Q74, voi K93 e Est A1052. Se mettete il 9 su piccola di Sud, la Q sara catturata dall'Asso ma poi Sud fara l'impasse al 10! Giocando piccola avreste fatto 3 prese.",
+          content: "Morto ha Q74, voi K93 e Est A1052. Se mettete il 9 su piccola di Sud, la Q sarà catturata dall'Asso ma poi Sud farà l'impasse al 10! Giocando piccola avreste fatto 3 prese.",
           cards: "Q74 / K93 / A1052",
         },
         {
           type: "text",
           content:
-            "L'eccezione: quando avete una sequenza abbastanza solida da non rimetterci una presa, inserite la piu alta della sequenza. Il morto muove il 4 verso la mano e voi avete QJ108: mettete la Q. Il compagno capira che possedete tutte le inferiori.",
+            "L'eccezione: quando avete una sequenza abbastanza solida da non rimetterci una presa, inserite la più alta della sequenza. Il morto muove il 4 verso la mano e voi avete QJ108: mettete la Q. Il compagno capirà che possedete tutte le inferiori.",
         },
         {
           type: "quiz",
           content: "Morto ha AQ1062, voi K7 in seconda di mano. Sud gioca il 3 verso il morto. Giocate il Re?",
           options: [
-            "Si, per prendere la presa",
+            "Sì, per prendere la presa",
             "No! Tenetevelo: Sud potrebbe decidere di battere l'Asso e il Re resterebbe vincente",
-            "Si, sempre onore su piccola con il Re",
+            "Sì, sempre onore su piccola con il Re",
             "Dipende da quante carte ha Sud",
           ],
           correctAnswer: 1,
           explanation:
-            "Tenetevi il Re! Sud potrebbe avere 10-11 carte e decidere di battere l'Asso. O anche con Jx giocare piccola al 10. Se mettete il Re, non sbagliera mai!",
+            "Tenetevi il Re! Sud potrebbe avere 10-11 carte e decidere di battere l'Asso. O anche con Jx giocare piccola al 10. Se mettete il Re, non sbaglierà mai!",
         },
       ],
     },
@@ -1072,11 +1072,11 @@ const lezione7CG: Lesson = {
         {
           type: "rule",
           content:
-            "SI COPRE L'ONORE AVVERSARIO SOLO SE C'E LA VEROSIMILE SPERANZA DI AFFRANCARE UNA CARTA INFERIORE A SE STESSI O AL PARTNER.",
+            "SI COPRE L'ONORE AVVERSARIO SOLO SE C'È LA VEROSIMILE SPERANZA DI AFFRANCARE UNA CARTA INFERIORE A SE STESSI O AL PARTNER.",
         },
         {
           type: "example",
-          content: "Morto AK64, voi Q983, Sud gioca il J: coprite! 9 e 8 vi garantiscono la quarta presa. Con A84, voi K103 e Sud Q: coprite, il 10 restera vincente nella schiena del J di Sud.",
+          content: "Morto AK64, voi Q983, Sud gioca il J: coprite! 9 e 8 vi garantiscono la quarta presa. Con A84, voi K103 e Sud Q: coprite, il 10 resterà vincente nella schiena del J di Sud.",
           cards: "AK64 / Q983",
         },
         {
@@ -1088,9 +1088,9 @@ const lezione7CG: Lesson = {
           type: "quiz",
           content: "Il morto ha QJ4 e voi K76. Il giocante parte di Q dal morto. Coprite?",
           options: [
-            "Si, sempre onore su onore",
+            "Sì, sempre onore su onore",
             "No! Non coprite il primo onore quando ce ne sono due. Coprite il secondo (il J)",
-            "Si, il Re deve catturare la Dama",
+            "Sì, il Re deve catturare la Dama",
             "No, mai coprire",
           ],
           correctAnswer: 1,
@@ -1099,10 +1099,10 @@ const lezione7CG: Lesson = {
         },
         {
           type: "true-false",
-          content: "Se il morto ha l'Asso secondo (A4) e Sud gioca la Q, e corretto coprire con il K terzo.",
+          content: "Se il morto ha l'Asso secondo (A4) e Sud gioca la Q, è corretto coprire con il K terzo.",
           correctAnswer: 1,
           explanation:
-            "Falso! Vedendo l'Asso SECONDO al morto, e una follia mettere il K terzo: non mettendolo il Re fara presa sempre comunque, perche l'Asso e troppo corto per catturarlo.",
+            "Falso! Vedendo l'Asso SECONDO al morto, è una follia mettere il K terzo: non mettendolo il Re farà presa sempre comunque, perché l'Asso è troppo corto per catturarlo.",
         },
       ],
     },
@@ -1120,11 +1120,11 @@ const lezione7CG: Lesson = {
         {
           type: "text",
           content:
-            "Non esiste regola fissa: si valuta caso per caso con riferimento alla dichiarazione. Si prende se la presa e quella del down, o se il giocante e quasi certamente singolo. Ma a volte lisciando si complica la vita al giocante.",
+            "Non esiste regola fissa: si valuta caso per caso con riferimento alla dichiarazione. Si prende se la presa è quella del down, o se il giocante è quasi certamente singolo. Ma a volte lisciando si complica la vita al giocante.",
         },
         {
           type: "example",
-          content: "Morto KJ52, voi A3, Sud gioca cartina: giocate PICCOLA. Lasciate che faccia il suo impasse. Se la Q e in Sud, potrete sempre incassare l'Asso dopo.",
+          content: "Morto KJ52, voi A3, Sud gioca cartina: giocate PICCOLA. Lasciate che faccia il suo impasse. Se la Q è in Sud, potrete sempre incassare l'Asso dopo.",
           cards: "KJ52 / A3",
         },
         {
@@ -1132,13 +1132,13 @@ const lezione7CG: Lesson = {
           content: "Morto ha Q107, voi K53 in seconda di mano. Il giocante muove il 4 verso il morto. Cosa fate?",
           options: [
             "Mettete il Re per prendere subito",
-            "Giocate piccola: se mettete il Re risolvete i problemi al giocante e non potra piu sbagliare",
+            "Giocate piccola: se mettete il Re risolvete i problemi al giocante e non potrà più sbagliare",
             "Mettete il 5 per segnalare",
             "Mettete il 3 per il conto",
           ],
           correctAnswer: 1,
           explanation:
-            "Se Sud ha l'Asso, dovra indovinare se passare la Q o il 10. Mettendo il K gli risolvete i problemi! Stesso ragionamento con l'Asso: non catturate un onore del morto a vuoto.",
+            "Se Sud ha l'Asso, dovrà indovinare se passare la Q o il 10. Mettendo il K gli risolvete i problemi! Stesso ragionamento con l'Asso: non catturate un onore del morto a vuoto.",
         },
       ],
     },
@@ -1169,12 +1169,12 @@ const lezione8CG: Lesson = {
         {
           type: "text",
           content:
-            "I giochi di eliminazione consistono nel manovrare in modo tale da mettere in presa un avversario dopo che gli sia stata tolta ogni possibilita di uscita se non a favore del giocante.",
+            "I giochi di eliminazione consistono nel manovrare in modo tale da mettere in presa un avversario dopo che gli sia stata tolta ogni possibilità di uscita se non a favore del giocante.",
         },
         {
           type: "rule",
           content:
-            "Due situazioni in cui un difensore e costretto a regalare una presa: 1) Gli unici colori rimasti offrono un TAGLIO E SCARTO. 2) L'alternativa e uscire in un colore dove regala l'impasse o toglie il problema di indovinare la figura.",
+            "Due situazioni in cui un difensore è costretto a regalare una presa: 1) Gli unici colori rimasti offrono un TAGLIO E SCARTO. 2) L'alternativa è uscire in un colore dove regala l'impasse o toglie il problema di indovinare la figura.",
         },
         {
           type: "example",
@@ -1189,7 +1189,7 @@ const lezione8CG: Lesson = {
         {
           type: "rule",
           content:
-            "PRIMA DI GIOCARE ANCORA IN UN COLORE CHE IL MORTO HA ESAURITO, E BENE ESSER CERTI CHE LA MANO NASCOSTA NE ABBIA ANCORA ALMENO UNA. Il conto della carta e lo strumento per saperlo.",
+            "PRIMA DI GIOCARE ANCORA IN UN COLORE CHE IL MORTO HA ESAURITO, È BENE ESSER CERTI CHE LA MANO NASCOSTA NE ABBIA ANCORA ALMENO UNA. Il conto della carta è lo strumento per saperlo.",
         },
         {
           type: "quiz",
@@ -1202,7 +1202,7 @@ const lezione8CG: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Questo e il bello dell'eliminazione! L'avversario e 'inchiodato': qualunque uscita vi favorisce. Se gioca cuori scartate la perdente, se gioca quadri vi regala la presa.",
+            "Questo è il bello dell'eliminazione! L'avversario è 'inchiodato': qualunque uscita vi favorisce. Se gioca cuori scartate la perdente, se gioca quadri vi regala la presa.",
         },
       ],
     },
@@ -1230,25 +1230,25 @@ const lezione8CG: Lesson = {
         {
           type: "text",
           content:
-            "Altre figure favorevoli: AJ3 + K102 (la Q e regalata se muove l'avversario); K103 + Q92 (si perde 1 presa invece di 2); J53 + Q62 (una presa assicurata invece del 50%); Q5 + A4 (la presa e certa se muove chi ha il K); 543 + AJ10 (il doppio impasse diventa 100%).",
+            "Altre figure favorevoli: AJ3 + K102 (la Q è regalata se muove l'avversario); K103 + Q92 (si perde 1 presa invece di 2); J53 + Q62 (una presa assicurata invece del 50%); Q5 + A4 (la presa è certa se muove chi ha il K); 543 + AJ10 (il doppio impasse diventa 100%).",
         },
         {
           type: "rule",
           content:
-            "BISOGNA PRIMA TOGLIERE ALL'AVVERSARIO OGNI POSSIBILITA DI USCITA NEUTRA: a) togliergli dalla mano tutte le carte di uscita libera; b) eliminare dalla mano e dal morto piu colori possibile per creare il taglio e scarto.",
+            "BISOGNA PRIMA TOGLIERE ALL'AVVERSARIO OGNI POSSIBILITÀ DI USCITA NEUTRA: a) togliergli dalla mano tutte le carte di uscita libera; b) eliminare dalla mano e dal morto più colori possibile per creare il taglio e scarto.",
         },
         {
           type: "quiz",
-          content: "Per preparare un'eliminazione in 4♠, dovete: battere atout, tagliare l'ultima cuori del morto, incassare A e K di fiori e cedere la terza. Perche tagliare la cuori PRIMA?",
+          content: "Per preparare un'eliminazione in 4♠, dovete: battere atout, tagliare l'ultima cuori del morto, incassare A e K di fiori e cedere la terza. Perché tagliare la cuori PRIMA?",
           options: [
-            "Per fare una presa in piu",
-            "Per eliminare l'uscita neutra del difensore: se non togliete le cuori, potra uscire di cuori senza regalare niente",
+            "Per fare una presa in più",
+            "Per eliminare l'uscita neutra del difensore: se non togliete le cuori, potrà uscire di cuori senza regalare niente",
             "Per contare i punti avversari",
             "Non serve tagliare la cuori",
           ],
           correctAnswer: 1,
           explanation:
-            "Se non eliminate le cuori del morto, il difensore in presa a fiori potrebbe uscire tranquillamente a cuori senza regalare niente. Togliendogli questa uscita, sara costretto a giocare quadri o a dare il taglio e scarto!",
+            "Se non eliminate le cuori del morto, il difensore in presa a fiori potrebbe uscire tranquillamente a cuori senza regalare niente. Togliendogli questa uscita, sarà costretto a giocare quadri o a dare il taglio e scarto!",
         },
       ],
     },
@@ -1271,11 +1271,11 @@ const lezione8CG: Lesson = {
         {
           type: "text",
           content:
-            "L'eliminazione funziona anche a Senza! Ovviamente non c'e il taglio e scarto, ma si puo costringere il difensore a uscire in un colore favorevole dopo avergli tolto tutte le alternative.",
+            "L'eliminazione funziona anche a Senza! Ovviamente non c'è il taglio e scarto, ma si può costringere il difensore a uscire in un colore favorevole dopo avergli tolto tutte le alternative.",
         },
         {
           type: "example",
-          content: "3NT: 8 prese sicure. Dopo A♦ e 9♦ per Ovest, le sue 3 quadri buone, e costretto a uscire a cuori o picche, regalando la nona presa. Ma prima bisogna togliergli le fiori incassandole tutte!",
+          content: "3NT: 8 prese sicure. Dopo A♦ e 9♦ per Ovest, le sue 3 quadri buone, è costretto a uscire a cuori o picche, regalando la nona presa. Ma prima bisogna togliergli le fiori incassandole tutte!",
           cards: "♠xxx ♥AJ9 ♦xxx ♣AQxx",
         },
         {
@@ -1283,13 +1283,13 @@ const lezione8CG: Lesson = {
           content: "Il taglio e scarto NON costituisce regalo quando:",
           options: [
             "Il giocante ha esaurito le atout in una delle due mani",
-            "Il giocante non ha piu perdenti nei colori laterali",
+            "Il giocante non ha più perdenti nei colori laterali",
             "Il giocante scarta ma resta con troppe carte nel colore problematico",
             "Tutte le precedenti",
           ],
           correctAnswer: 3,
           explanation:
-            "Tutte e tre! Il taglio e scarto non e un regalo se: le atout sono finite, non ci sono perdenti da scartare, o se il giocante scarta ma gli restano comunque troppe carte del colore problematico.",
+            "Tutte e tre! Il taglio e scarto non è un regalo se: le atout sono finite, non ci sono perdenti da scartare, o se il giocante scarta ma gli restano comunque troppe carte del colore problematico.",
         },
       ],
     },
@@ -1320,7 +1320,7 @@ const lezione9CG: Lesson = {
         {
           type: "text",
           content:
-            "I singoli passaggi di un ragionamento non sono quasi mai difficili, pero a volte sono tanti. La cosa essenziale e non perdere il filo. In prima istanza non prendete in considerazione distribuzioni molto improbabili.",
+            "I singoli passaggi di un ragionamento non sono quasi mai difficili, però a volte sono tanti. La cosa essenziale è non perdere il filo. In prima istanza non prendete in considerazione distribuzioni molto improbabili.",
         },
         {
           type: "rule",
@@ -1329,26 +1329,26 @@ const lezione9CG: Lesson = {
         },
         {
           type: "example",
-          content: "7NT in Est. Solo 10 prese fuori da picche. DEVE andare bene il doppio impasse a picche (K e J in Sud). E solo il 25%? Meglio di niente. Se Nord ha un onore, si va sotto e basta. Ovest: ♠AQ10 ♥J109 ♦AKQJ ♣Q72. Est: ♠9843 ♥AKQ ♦652 ♣AKJ.",
+          content: "7NT in Est. Solo 10 prese fuori da picche. DEVE andare bene il doppio impasse a picche (K e J in Sud). È solo il 25%? Meglio di niente. Se Nord ha un onore, si va sotto e basta. Ovest: ♠AQ10 ♥J109 ♦AKQJ ♣Q72. Est: ♠9843 ♥AKQ ♦652 ♣AKJ.",
           cards: "♠AQ10 ♥J109 ♦AKQJ ♣Q72",
         },
         {
           type: "text",
           content:
-            "Un altro esempio: Est gioca 6♠ con attacco A e K di cuori. Non c'e alcuna possibilita di fare il contratto se le picche non sono 3-3. Quindi le picche SONO 3-3: la giocata dura un attimo.",
+            "Un altro esempio: Est gioca 6♠ con attacco A e K di cuori. Non c'è alcuna possibilità di fare il contratto se le picche non sono 3-3. Quindi le picche SONO 3-3: la giocata dura un attimo.",
         },
         {
           type: "quiz",
-          content: "Giocate 6♠ e il contratto e impossibile se l'avversario ha AQ6 di atout. Che fate?",
+          content: "Giocate 6♠ e il contratto è impossibile se l'avversario ha AQ6 di atout. Che fate?",
           options: [
             "Cercate di indovinare dove sono le carte",
-            "Giocate come se fossero tutte nello stesso avversario dove il contratto e fattibile",
+            "Giocate come se fossero tutte nello stesso avversario dove il contratto è fattibile",
             "Vi arrendete",
             "Battete tutte le atout di testa",
           ],
           correctAnswer: 1,
           explanation:
-            "Se una distribuzione e ineluttabilmente perdente, scartatela e giocate come se le carte fossero nella posizione che rende possibile il contratto. E l'unica chance!",
+            "Se una distribuzione è ineluttabilmente perdente, scartatela e giocate come se le carte fossero nella posizione che rende possibile il contratto. È l'unica chance!",
         },
       ],
     },
@@ -1366,22 +1366,22 @@ const lezione9CG: Lesson = {
         {
           type: "text",
           content:
-            "Porre dei punti fermi e indispensabile per poterne mettere altri, fino a individuare il giusto percorso. Se una condizione e necessaria, datela per scontata e procedete con le conseguenze.",
+            "Porre dei punti fermi è indispensabile per poterne mettere altri, fino a individuare il giusto percorso. Se una condizione è necessaria, datela per scontata e procedete con le conseguenze.",
         },
         {
           type: "example",
-          content: "Est gioca 6♥ con attacco 6♣. Non bisogna fare l'impasse a fiori! Visto che l'Asso di picche dovra per forza essere ceduto, non ci si puo permettere di perdere una presa in atout. L'impasse alla Q♥ DEVE riuscire. Quindi: A♣, A♥ e cuori al Fante.",
+          content: "Est gioca 6♥ con attacco 6♣. Non bisogna fare l'impasse a fiori! Visto che l'Asso di picche dovrà per forza essere ceduto, non ci si può permettere di perdere una presa in atout. L'impasse alla Q♥ DEVE riuscire. Quindi: A♣, A♥ e cuori al Fante.",
           cards: "♠K4 ♥A875 ♦AJ1053 ♣AQ",
         },
         {
           type: "text",
           content:
-            "La paura del down e una pessima consigliera: rimandando il problema spesso si perde la possibilita di risolverlo. Se l'impasse a fiori DEVE riuscire e deve essere fatto due volte, fatelo subito prima di incassare le quadri, o non tornerete piu al morto!",
+            "La paura del down è una pessima consigliera: rimandando il problema spesso si perde la possibilità di risolverlo. Se l'impasse a fiori DEVE riuscire e deve essere fatto due volte, fatelo subito prima di incassare le quadri, o non tornerete più al morto!",
         },
         {
           type: "rule",
           content:
-            "Per folle che sia l'ipotesi vincente che avete formulato, se non ne esistono altre non avete di meglio che seguirla passo a passo. Qualche volta sarete premiati: tutte le atout e le fiori nello stesso avversario e possibile!",
+            "Per folle che sia l'ipotesi vincente che avete formulato, se non ne esistono altre non avete di meglio che seguirla passo a passo. Qualche volta sarete premiati: tutte le atout e le fiori nello stesso avversario è possibile!",
         },
         {
           type: "quiz",
@@ -1394,7 +1394,7 @@ const lezione9CG: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Poiche dovete assolutamente scartare la cuori, Sud DEVE rispondere 4 volte a picche. Giocate come se avesse il J quarto: A, K e poi picche al 10 se il J non e caduto.",
+            "Poiché dovete assolutamente scartare la cuori, Sud DEVE rispondere 4 volte a picche. Giocate come se avesse il J quarto: A, K e poi picche al 10 se il J non è caduto.",
         },
       ],
     },
@@ -1407,7 +1407,7 @@ const lezione9CG: Lesson = {
       content: [
         {
           type: "heading",
-          content: "Quando la distribuzione e la chiave",
+          content: "Quando la distribuzione è la chiave",
         },
         {
           type: "text",
@@ -1423,21 +1423,21 @@ const lezione9CG: Lesson = {
           type: "quiz",
           content: "Sud ha distribuzione ignota. Dovete incassare 3♥ e 3♦ senza che tagli. Sud ha 2♦ o 3♦, e 3♥ o 4♥. Da quale colore cominciate?",
           options: [
-            "Dalle quadri, perche ne ho meno",
-            "Dalle cuori: se Sud ha 3♥ e 3♦ e uguale, ma se ha 4♥ e 2♦ solo iniziando dalle cuori funziona",
-            "E indifferente",
+            "Dalle quadri, perché ne ho meno",
+            "Dalle cuori: se Sud ha 3♥ e 3♦ è uguale, ma se ha 4♥ e 2♦ solo iniziando dalle cuori funziona",
+            "È indifferente",
             "Dall'istinto del momento",
           ],
           correctAnswer: 1,
           explanation:
-            "Se le divisioni sono uguali (3+3) e indifferente. Ma se Sud ha 4♥ e 2♦ DOVETE cominciare dalle cuori, altrimenti vi taglia un giro di cuori. Cominciare dalle cuori copre entrambi i casi!",
+            "Se le divisioni sono uguali (3+3) è indifferente. Ma se Sud ha 4♥ e 2♦ DOVETE cominciare dalle cuori, altrimenti vi taglia un giro di cuori. Cominciare dalle cuori copre entrambi i casi!",
         },
         {
           type: "true-false",
-          content: "La paura del down e spesso una buona consigliera, perche vi fa rimandare le giocate rischiose.",
+          content: "La paura del down è spesso una buona consigliera, perché vi fa rimandare le giocate rischiose.",
           correctAnswer: 1,
           explanation:
-            "Falso! La paura del down e una PESSIMA consigliera. Rimandando il problema spesso si perde la possibilita di risolverlo. Affrontate subito le condizioni necessarie!",
+            "Falso! La paura del down è una PESSIMA consigliera. Rimandando il problema spesso si perde la possibilità di risolverlo. Affrontate subito le condizioni necessarie!",
         },
       ],
     },
@@ -1468,11 +1468,11 @@ const lezione10CG: Lesson = {
         {
           type: "text",
           content:
-            "L'attacco e l'unica mossa che la difesa fa alla cieca, senza vedere il morto. Per questo motivo i giocatori scelgono l'attacco senza fare invenzioni: piu sono bravi, piu si attengono a logiche universali.",
+            "L'attacco è l'unica mossa che la difesa fa alla cieca, senza vedere il morto. Per questo motivo i giocatori scelgono l'attacco senza fare invenzioni: più sono bravi, più si attengono a logiche universali.",
         },
         {
           type: "example",
-          content: "In Sud giocate 4♠. Ovest attacca Q♦. L'attacco fa dedurre che Ovest non ha AK♥: un pezzo e certamente in Est (probabilmente il K). Con il K♥, Est non puo avere nient'altro: le due Donne sono in Ovest. Impasse a picche su Ovest e AK fiori in testa: 11 prese.",
+          content: "In Sud giocate 4♠. Ovest attacca Q♦. L'attacco fa dedurre che Ovest non ha AK♥: un pezzo è certamente in Est (probabilmente il K). Con il K♥, Est non può avere nient'altro: le due Donne sono in Ovest. Impasse a picche su Ovest e AK fiori in testa: 11 prese.",
           cards: "♠AJ6 ♥J74 ♦1087 ♣A652",
         },
         {
@@ -1483,27 +1483,27 @@ const lezione10CG: Lesson = {
         {
           type: "text",
           content:
-            "Ad atout: attacco di cartina = non ha sequenze (AK, KQ, QJ) ne singoli. Se si appoggiano un colore ma attaccano in un altro = singolo o AQ nel colore fittato. Attacco sotto J = in ogni altro seme ha figura problematica.",
+            "Ad atout: attacco di cartina = non ha sequenze (AK, KQ, QJ) né singoli. Se si appoggiano un colore ma attaccano in un altro = singolo o AQ nel colore fittato. Attacco sotto J = in ogni altro seme ha figura problematica.",
         },
         {
           type: "quiz",
           content: "Ovest attacca Q♦ contro il vostro 4♠. Con KQ♥ avrebbe preferito quell'attacco. Cosa deducete?",
           options: [
             "Ha entrambi i Re",
-            "Non ha AK di cuori, e il K♥ e probabilmente in Est",
+            "Non ha AK di cuori, e il K♥ è probabilmente in Est",
             "Ha 5 carte di quadri",
-            "Non si puo dedurre nulla",
+            "Non si può dedurre nulla",
           ],
           correctAnswer: 1,
           explanation:
-            "Con AK di cuori Ovest avrebbe preferito quell'attacco. Attaccando Q♦ rivela che non ha la combinazione AK a cuori. Il K♥ e probabilmente in Est, e questo indirizza tutto il piano di gioco.",
+            "Con AK di cuori Ovest avrebbe preferito quell'attacco. Attaccando Q♦ rivela che non ha la combinazione AK a cuori. Il K♥ è probabilmente in Est, e questo indirizza tutto il piano di gioco.",
         },
         {
           type: "true-false",
-          content: "Se l'attacco arriva da un probabile singolo nel gioco ad atout, e improbabile che l'attaccante abbia una buona figura di atout (Qxx, Jxxx).",
+          content: "Se l'attacco arriva da un probabile singolo nel gioco ad atout, è improbabile che l'attaccante abbia una buona figura di atout (Qxx, Jxxx).",
           correctAnswer: 0,
           explanation:
-            "Esatto! Chi cerca un taglio non ha di solito una buona figura di atout, perche taglierebbe perdendo una presa naturale. L'attacco da singolo suggerisce mano corta in atout.",
+            "Esatto! Chi cerca un taglio non ha di solito una buona figura di atout, perché taglierebbe perdendo una presa naturale. L'attacco da singolo suggerisce mano corta in atout.",
         },
       ],
     },
@@ -1521,35 +1521,35 @@ const lezione10CG: Lesson = {
         {
           type: "rule",
           content:
-            "Prima, ovvia e importante deduzione: l'avversario che passa al suo turno NON HA L'APERTURA! Se ha gia mostrato 2 Assi, non puo avere anche una Dama: avrebbe aperto.",
+            "Prima, ovvia e importante deduzione: l'avversario che passa al suo turno NON HA L'APERTURA! Se ha già mostrato 2 Assi, non può avere anche una Dama: avrebbe aperto.",
         },
         {
           type: "example",
-          content: "Est passa e poi mostra 2 Assi (A♠ e A♥). Dovete indovinare chi ha Q♣: non puo essere Est! Con 2 Assi + Q avrebbe aperto. Impasse a fiori su Ovest.",
+          content: "Est passa e poi mostra 2 Assi (A♠ e A♥). Dovete indovinare chi ha Q♣: non può essere Est! Con 2 Assi + Q avrebbe aperto. Impasse a fiori su Ovest.",
           cards: "♠4 ♥J854 ♦KJ964 ♣AJ9",
         },
         {
           type: "text",
           content:
-            "Le informazioni ricavate dal comportamento avversario dipendono soprattutto da quello che NON fa e NON dice. Anche i PASSO sono fonte di deduzioni: se Ovest non interviene con AKxxxx♦ e non ha aggiunto nulla alla dichiarazione, non puo avere una Dama in aggiunta.",
+            "Le informazioni ricavate dal comportamento avversario dipendono soprattutto da quello che NON fa e NON dice. Anche i PASSO sono fonte di deduzioni: se Ovest non interviene con AKxxxx♦ e non ha aggiunto nulla alla dichiarazione, non può avere una Dama in aggiunta.",
         },
         {
           type: "text",
           content:
-            "Se il tipo di apertura avversaria vi consente di capire la distribuzione, approfittatene! Ad esempio: Est apre 1♣ e in gioco vedete il doubleton di fiori. Il solo caso in cui si apre di 1♣ in 2 carte e la 4-4-3-2. Quindi Est ha 4 picche, 4 cuori, 3 quadri e 2 fiori!",
+            "Se il tipo di apertura avversaria vi consente di capire la distribuzione, approfittatene! Ad esempio: Est apre 1♣ e in gioco vedete il doubleton di fiori. Il solo caso in cui si apre di 1♣ in 2 carte è la 4-4-3-2. Quindi Est ha 4 picche, 4 cuori, 3 quadri e 2 fiori!",
         },
         {
           type: "quiz",
-          content: "Ovest e passato di mano e poi ha attaccato AKQ di fiori. Il K♠ vi manca. Puo avere AKQ♣ + K♠?",
+          content: "Ovest è passato di mano e poi ha attaccato AKQ di fiori. Il K♠ vi manca. Può avere AKQ♣ + K♠?",
           options: [
-            "Si, perche ha attaccato con forza",
+            "Sì, perché ha attaccato con forza",
             "No! Con 12+ punti avrebbe aperto. Giocate per il K♠ secco dietro l'Asso",
-            "Forse, dipende dalla vulnerabilita",
-            "Si, potrebbe aver passato per tattica",
+            "Forse, dipende dalla vulnerabilità",
+            "Sì, potrebbe aver passato per tattica",
           ],
           correctAnswer: 1,
           explanation:
-            "Ovest e passato: non ha 12 punti. AKQ♣ = 9 punti. Se avesse anche K♠ sarebbero 12 e avrebbe aperto. Il K♠ NON e in Ovest: giocate A♠ sperando nel Re secco in Est.",
+            "Ovest è passato: non ha 12 punti. AKQ♣ = 9 punti. Se avesse anche K♠ sarebbero 12 e avrebbe aperto. Il K♠ NON è in Ovest: giocate A♠ sperando nel Re secco in Est.",
         },
       ],
     },
@@ -1567,26 +1567,26 @@ const lezione10CG: Lesson = {
         {
           type: "text",
           content:
-            "Il compito dei difensori e non bloccare il proprio colore. A seconda di come si comportano potete capire come sia diviso il colore e adeguare la vostra linea di gioco.",
+            "Il compito dei difensori è non bloccare il proprio colore. A seconda di come si comportano potete capire come sia diviso il colore e adeguare la vostra linea di gioco.",
         },
         {
           type: "example",
-          content: "3NT. L'attacco e J♠, su cui Est invita. Deducete che Est ha la Q♠ terza: con Q seconda avrebbe sbloccato. Picche 4-3, cedete 2 quadri per le 9 prese senza avventure a cuori o fiori.",
+          content: "3NT. L'attacco è J♠, su cui Est invita. Deducete che Est ha la Q♠ terza: con Q seconda avrebbe sbloccato. Picche 4-3, cedete 2 quadri per le 9 prese senza avventure a cuori o fiori.",
           cards: "♠864 ♥J73 ♦A9532 ♣64",
         },
         {
           type: "rule",
           content:
-            "In generale, se state giocando un parziale con 18-22 punti in linea e l'avversario e sempre passato: i punti sono divisi, se mancano 8 carte in un maggiore il colore e probabilmente 4-4, e l'avversario con mani molto bilanciate abbandona la competizione presto.",
+            "In generale, se state giocando un parziale con 18-22 punti in linea e l'avversario è sempre passato: i punti sono divisi, se mancano 8 carte in un maggiore il colore è probabilmente 4-4, e l'avversario con mani molto bilanciate abbandona la competizione presto.",
         },
         {
           type: "quiz",
-          content: "L'attacco e J♠ e il terzo di mano mette la Q♠. Supponete che normalmente si sblocchi la Q seconda. Cosa deducete?",
+          content: "L'attacco è J♠ e il terzo di mano mette la Q♠. Supponete che normalmente si sblocchi la Q seconda. Cosa deducete?",
           options: [
             "Est ha la Q secca",
             "Est ha la Q terza (o quarta con J10x di Ovest)",
             "Ovest ha la Q",
-            "Non si puo dedurre nulla",
+            "Non si può dedurre nulla",
           ],
           correctAnswer: 1,
           explanation:
@@ -1597,7 +1597,7 @@ const lezione10CG: Lesson = {
           content: "Un Maggiore dichiarato in risposta (come 2♣ su 1♦) chiede una descrizione generica dell'apertura, non fit specifico in quel seme.",
           correctAnswer: 1,
           explanation:
-            "Falso! Un MINORE chiede una descrizione generica. Un MAGGIORE chiede di SE': cioe chiede se c'e fit in quel seme specifico. Ricordate: Maggiore chiede di se, minore chiede descrizione!",
+            "Falso! Un MINORE chiede una descrizione generica. Un MAGGIORE chiede di SÉ: cioè chiede se c'è fit in quel seme specifico. Ricordate: Maggiore chiede di sé, minore chiede descrizione!",
         },
       ],
     },
@@ -1617,26 +1617,26 @@ const lezione10CG: Lesson = {
           content: "4♠ di Sud. Ovest attacca da cartina. Cosa potete dedurre sugli altri colori di Ovest?",
           options: [
             "Ha sequenze solide negli altri colori",
-            "Non ha sequenze (AK, KQ, QJ) ne singoli negli altri colori",
+            "Non ha sequenze (AK, KQ, QJ) né singoli negli altri colori",
             "Ha un colore lunghissimo",
             "Ha molti punti",
           ],
           correctAnswer: 1,
           explanation:
-            "Un attacco di cartina nel gioco ad atout indica che l'attaccante non aveva alternative migliori: ne sequenze di 2+ onori, ne singoli promettenti negli altri colori.",
+            "Un attacco di cartina nel gioco ad atout indica che l'attaccante non aveva alternative migliori: né sequenze di 2+ onori, né singoli promettenti negli altri colori.",
         },
         {
           type: "quiz",
           content: "L'avversario gioca consapevolmente in taglio e scarto. Cosa vi aspettate sulla sua lunghezza in atout?",
           options: [
             "Ha esattamente 2 atout",
-            "E molto corto o molto lungo in atout: sta cercando di accorciarvi per salvare una presa",
+            "È molto corto o molto lungo in atout: sta cercando di accorciarvi per salvare una presa",
             "Ha 3 atout esatte",
             "Non ha atout",
           ],
           correctAnswer: 1,
           explanation:
-            "Se l'avversario gioca deliberatamente il taglio e scarto, e o molto corto (non ha prese di atout da proteggere) o molto lungo (cerca di farvi tagliare dalla parte corta per accorciarvi e salvare la sua lunga di atout).",
+            "Se l'avversario gioca deliberatamente il taglio e scarto, è o molto corto (non ha prese di atout da proteggere) o molto lungo (cerca di farvi tagliare dalla parte corta per accorciarvi e salvare la sua lunga di atout).",
         },
         {
           type: "quiz",
@@ -1649,7 +1649,7 @@ const lezione10CG: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Se Ovest non attacca nel colore appoggiato, e perche ha un singolo altrove (un doubleton non giustificherebbe rinunciare al colore fittato) oppure ha AQ nel colore dell'appoggio e preferisce non muoverlo.",
+            "Se Ovest non attacca nel colore appoggiato, è perché ha un singolo altrove (un doubleton non giustificherebbe rinunciare al colore fittato) oppure ha AQ nel colore dell'appoggio e preferisce non muoverlo.",
         },
       ],
     },

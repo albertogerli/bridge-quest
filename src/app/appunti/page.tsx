@@ -168,7 +168,7 @@ export default function AppuntiPage() {
               ) : (
                 <div className="rounded-xl bg-red-50 border border-red-200 p-4">
                   <p className={`text-red-700 font-medium ${isSenior ? "text-base" : "text-sm"}`}>
-                    Sei sicuro? Questa azione non si puo annullare.
+                    Sei sicuro? Questa azione non si può annullare.
                   </p>
                   <div className="flex gap-3 justify-center mt-3">
                     <Button

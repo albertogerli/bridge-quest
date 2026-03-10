@@ -62,7 +62,7 @@ const defaultLevelNames = [
 
 const defaultCorrectMessages = [
   "Bravo! Ben ragionato.", "Esatto! Ottima risposta.",
-  "Perfetto! Continua cosi.", "Giusto! Stai imparando veloce.",
+  "Perfetto! Continua così.", "Giusto! Stai imparando veloce.",
 ];
 
 const configs: Record<UserProfile, ProfileConfig> = {
@@ -87,7 +87,7 @@ const configs: Record<UserProfile, ProfileConfig> = {
       "SPACCA! 💥", "SEI UN MITO! 🌟", "PERFETTO! 🔥",
       "GENIALE! ⚡", "BOOM! 💣", "INCREDIBILE! 🚀",
     ],
-    wrongMessage: "Oops! Non mollare, il prossimo e' tuo! 💪",
+    wrongMessage: "Oops! Non mollare, il prossimo è tuo! 💪",
     streak3: "🔥 TRIS INFUOCATO! 3 di fila!",
     streak5: "🚀 SEI INARRESTABILE! 5 di fila! 3x Stelle!",
     streak7: "👑 LEGGENDA ASSOLUTA! 7 risposte perfette!",
@@ -168,7 +168,7 @@ const configs: Record<UserProfile, ProfileConfig> = {
       "Ottimo lavoro!", "Risposta corretta!",
       "Ben fatto!", "Esatto, complimenti!",
     ],
-    wrongMessage: "Nessun problema! Leggi la spiegazione e la prossima volta andra' meglio.",
+    wrongMessage: "Nessun problema! Leggi la spiegazione e la prossima volta andrà meglio.",
     streak3: "Tre risposte corrette di fila! 👏",
     streak5: "Cinque di fila — complimenti! 🌟",
     streak7: "Sette risposte perfette! Straordinario! 🏆",

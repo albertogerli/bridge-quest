@@ -35,7 +35,7 @@ const lezione200: Lesson = {
         {
           type: "text",
           content:
-            "La Legge delle Prese Totali e una legge statistica fondamentale del bridge competitivo. Afferma che la somma delle prese che le due coppie faranno, se impegnate nei rispettivi migliori contratti, e uguale alla somma delle atout che complessivamente possiedono.",
+            "La Legge delle Prese Totali è una legge statistica fondamentale del bridge competitivo. Afferma che la somma delle prese che le due coppie faranno, se impegnate nei rispettivi migliori contratti, è uguale alla somma delle atout che complessivamente possiedono.",
         },
         {
           type: "rule",
@@ -51,13 +51,13 @@ const lezione200: Lesson = {
         {
           type: "text",
           content:
-            "La Legge e indifferente alla posizione degli onori e alla distribuzione. Se si sposta un onore da una linea all'altra si modifica l'attribuzione di prese, ma il totale non cambia. Se si modifica la distribuzione, idem.",
+            "La Legge è indifferente alla posizione degli onori e alla distribuzione. Se si sposta un onore da una linea all'altra si modifica l'attribuzione di prese, ma il totale non cambia. Se si modifica la distribuzione, idem.",
         },
         {
           type: "tip",
           content: "Il livello di sicurezza",
           explanation:
-            "Il livello di sicurezza e pari al numero delle atout che abbiamo sulla linea. Con 8 atout giochiamo a livello 2, con 9 a livello 3, con 10 a livello 4.",
+            "Il livello di sicurezza è pari al numero delle atout che abbiamo sulla linea. Con 8 atout giochiamo a livello 2, con 9 a livello 3, con 10 a livello 4.",
         },
         {
           type: "quiz",
@@ -66,7 +66,7 @@ const lezione200: Lesson = {
           options: ["15", "16", "17", "18"],
           correctAnswer: 2,
           explanation:
-            "Le Prese Totali sono 9 + 8 = 17. NS, giocando a Picche, puo aspettarsi circa 9 prese; EO circa 8.",
+            "Le Prese Totali sono 9 + 8 = 17. NS, giocando a Picche, può aspettarsi circa 9 prese; EO circa 8.",
         },
         {
           type: "true-false",
@@ -74,7 +74,7 @@ const lezione200: Lesson = {
             "Secondo la Legge, spostando un Re da una linea all'altra il numero totale di prese cambia.",
           correctAnswer: 1,
           explanation:
-            "Falso! La Legge e indifferente alla posizione degli onori: il totale delle prese resta invariato, cambia solo l'attribuzione tra le due coppie.",
+            "Falso! La Legge è indifferente alla posizione degli onori: il totale delle prese resta invariato, cambia solo l'attribuzione tra le due coppie.",
         },
       ],
     },
@@ -117,7 +117,7 @@ const lezione200: Lesson = {
           options: ["2♠", "3♠", "4♠", "Passo"],
           correctAnswer: 2,
           explanation:
-            "4♠! Dieci carte in linea, dieci prese. Anche se andate sotto di 1 o 2, e un affare rispetto alla manche avversaria a Cuori.",
+            "4♠! Dieci carte in linea, dieci prese. Anche se andate sotto di 1 o 2, è un affare rispetto alla manche avversaria a Cuori.",
         },
       ],
     },
@@ -135,7 +135,7 @@ const lezione200: Lesson = {
         {
           type: "text",
           content:
-            "Le distribuzioni 5332 e 4333 sono dette 'tomba' perche non offrono tagli. La Legge funziona lo stesso, ma nella spartizione delle Prese Totali all'avversario ne spetteranno troppe e a noi troppo poche.",
+            "Le distribuzioni 5332 e 4333 sono dette 'tomba' perché non offrono tagli. La Legge funziona lo stesso, ma nella spartizione delle Prese Totali all'avversario né spetteranno troppe e a noi troppo poche.",
         },
         {
           type: "example",
@@ -146,7 +146,7 @@ const lezione200: Lesson = {
         {
           type: "rule",
           content:
-            "Nelle situazioni in cui si mostra fit o in cui il fit e gia concordato, ogni dichiarazione diretta del colore di atout mostra una competizione basata sulla Legge; ogni dichiarazione 'convenzionale' mostra un reale invito a partita basato sulla forza onori.",
+            "Nelle situazioni in cui si mostra fit o in cui il fit è già concordato, ogni dichiarazione diretta del colore di atout mostra una competizione basata sulla Legge; ogni dichiarazione 'convenzionale' mostra un reale invito a partita basato sulla forza onori.",
         },
         {
           type: "text",
@@ -160,7 +160,7 @@ const lezione200: Lesson = {
           options: ["2♥", "3♥ (Prese Totali)", "2♠ (surlicita)", "4♥"],
           correctAnswer: 1,
           explanation:
-            "3♥: avete nove atout in linea (5+4), nove prese. Non e un invito a manche ma una dichiarazione competitiva secondo la Legge.",
+            "3♥: avete nove atout in linea (5+4), nove prese. Non è un invito a manche ma una dichiarazione competitiva secondo la Legge.",
         },
         {
           type: "true-false",
@@ -168,7 +168,7 @@ const lezione200: Lesson = {
             "Con distribuzione 4333 e fit quarto, il principio 'nove carte nove prese' funziona sempre bene.",
           correctAnswer: 1,
           explanation:
-            "Falso! Le distribuzioni piatte 4333 e 5332 riducono la resa di taglio. Bisogna agire con prudenza, perche nella spartizione delle Prese Totali saremo svantaggiati.",
+            "Falso! Le distribuzioni piatte 4333 e 5332 riducono la resa di taglio. Bisogna agire con prudenza, perché nella spartizione delle Prese Totali saremo svantaggiati.",
         },
       ],
     },
@@ -199,12 +199,12 @@ const lezione201: Lesson = {
         {
           type: "text",
           content:
-            "Una situazione di fit non e di per se garanzia per fare prese extra. Le corte e le lunghe accanto al fit sono un valore determinante. Anche un fit di 10 carte puo dare risultati deludenti se mancano tagli e colori laterali sfruttabili.",
+            "Una situazione di fit non è di per sé garanzia per fare prese extra. Le corte e le lunghe accanto al fit sono un valore determinante. Anche un fit di 10 carte può dare risultati deludenti se mancano tagli e colori laterali sfruttabili.",
         },
         {
           type: "rule",
           content:
-            "I singoli di prese non ne fanno! E la carta di atout che produce la presa nel taglio, non il singolo stesso. Chi possiede un singolo non ha gli elementi per valutarne l'efficacia: e il compagno che li ha. Morale: i singoli si raccontano e il partner valuta.",
+            "I singoli di prese non né fanno! È la carta di atout che produce la presa nel taglio, non il singolo stesso. Chi possiede un singolo non ha gli elementi per valutarne l'efficacia: è il compagno che li ha. Morale: i singoli si raccontano e il partner valuta.",
         },
         {
           type: "example",
@@ -215,13 +215,13 @@ const lezione201: Lesson = {
         {
           type: "text",
           content:
-            "Non ha senso apprezzare un singolo a priori. Solo strada facendo un giocatore avra modo di valutare se la sua distribuzione merita rivalutazione o meno. Se il colore mostrato dal rispondente corrisponde al singolo, un gran Rever e giustificato solo da un punteggio supermassimo.",
+            "Non ha senso apprezzare un singolo a priori. Solo strada facendo un giocatore avrà modo di valutare se la sua distribuzione merita rivalutazione o meno. Se il colore mostrato dal rispondente corrisponde al singolo, un gran Rever è giustificato solo da un punteggio supermassimo.",
         },
         {
           type: "tip",
           content: "Rivalutare dopo la risposta del compagno",
           explanation:
-            "Con ♠AQJx ♥KQx ♦x ♣AQxxx: aprite 1♣. Su risposta 1♦ dichiarate solo 1♠ (il singolo di quadri non e un plusvalore). Su risposta 1♥ il 2♠ ci sta tutto (fit a cuori come assicurazione). Su risposta 1♠? Da bere per tutti: 4♠!",
+            "Con ♠AQJx ♥KQx ♦x ♣AQxxx: aprite 1♣. Su risposta 1♦ dichiarate solo 1♠ (il singolo di quadri non è un plusvalore). Su risposta 1♥ il 2♠ ci sta tutto (fit a cuori come assicurazione). Su risposta 1♠? Da bere per tutti: 4♠!",
         },
         {
           type: "quiz",
@@ -235,7 +235,7 @@ const lezione201: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "KQ di fronte al singolo del compagno sono inutili in attacco: non potranno mai fare prese, perche il compagno taglia al primo giro. Sono un valore solo difensivo.",
+            "KQ di fronte al singolo del compagno sono inutili in attacco: non potranno mai fare prese, perché il compagno taglia al primo giro. Sono un valore solo difensivo.",
         },
       ],
     },
@@ -248,17 +248,17 @@ const lezione201: Lesson = {
       content: [
         {
           type: "heading",
-          content: "Le monocolori di 7 e piu carte",
+          content: "Le monocolori di 7 e più carte",
         },
         {
           type: "text",
           content:
-            "Un colore di 7 o piu carte e protagonista assoluto. Dara grandi gioie al suo possessore solo se ottera sempre il privilegio di essere protagonista come atout. Non bisogna nasconderlo ne tradirlo per un altro colore.",
+            "Un colore di 7 o più carte è protagonista assoluto. Darà grandi gioie al suo possessore solo se otterrà sempre il privilegio di essere protagonista come atout. Non bisogna nasconderlo né tradirlo per un altro colore.",
         },
         {
           type: "rule",
           content:
-            "Con le mani 7/4 e a volte anche le 7/5, sono mani MONOCOLORI. La convenienza ad offrire al partner una scelta e solo apparente. Ribadite la lunga!",
+            "Con le mani 7/4 e a volte anche le 7/5, sono mani MONOCOLORI. La convenienza ad offrire al partner una scelta è solo apparente. Ribadite la lunga!",
         },
         {
           type: "example",
@@ -269,7 +269,7 @@ const lezione201: Lesson = {
         {
           type: "text",
           content:
-            "Le farete otto volte su dieci. Non sapete se troverete i punti giusti, ma il vostro compagno non ha elementi per valutare se ha carte utili, quindi prendetevi la responsabilita di decidere. Con le ottave bisogna ignorare i punti e prendere il toro per le corna!",
+            "Le farete otto volte su dieci. Non sapete se troverete i punti giusti, ma il vostro compagno non ha elementi per valutare se ha carte utili, quindi prendetevi la responsabilità di decidere. Con le ottave bisogna ignorare i punti e prendere il toro per le corna!",
         },
         {
           type: "bid-select",
@@ -286,7 +286,7 @@ const lezione201: Lesson = {
             "Con una settima maggiore e una quarta a fianco, conviene sempre mostrare entrambi i colori al compagno.",
           correctAnswer: 1,
           explanation:
-            "Falso! Le 7/4 sono mani MONOCOLORI. La convenienza ad offrire una scelta e solo apparente. Il colore settimo dovrebbe prevalere quasi sempre.",
+            "Falso! Le 7/4 sono mani MONOCOLORI. La convenienza ad offrire una scelta è solo apparente. Il colore settimo dovrebbe prevalere quasi sempre.",
         },
       ],
     },
@@ -317,7 +317,7 @@ const lezione202: Lesson = {
         {
           type: "text",
           content:
-            "Una dichiarazione in transfer (Texas) e una licita convenzionale che, per mostrare un colore, dichiara quello di rango immediatamente inferiore. I vantaggi sono due: orientano il gioco dalla parte della mano forte e funzionano da moltiplicatori di licite.",
+            "Una dichiarazione in transfer (Texas) è una licita convenzionale che, per mostrare un colore, dichiara quello di rango immediatamente inferiore. I vantaggi sono due: orientano il gioco dalla parte della mano forte e funzionano da moltiplicatori di licite.",
         },
         {
           type: "rule",
@@ -327,7 +327,7 @@ const lezione202: Lesson = {
         {
           type: "text",
           content:
-            "L'Apertore rispetta il Transfer con tutte le mani con cui sul 'due naturale' sarebbe passato. Eccezionalmente, con fit di 4 carte e mano massima, puo 'super accettare' dichiarando 3 nel colore del rispondente.",
+            "L'Apertore rispetta il Transfer con tutte le mani con cui sul 'due naturale' sarebbe passato. Eccezionalmente, con fit di 4 carte e mano massima, può 'super accettare' dichiarando 3 nel colore del rispondente.",
         },
         {
           type: "example",
@@ -347,14 +347,14 @@ const lezione202: Lesson = {
           options: ["2♥", "2♦", "4♥", "3♥"],
           correctAnswer: 1,
           explanation:
-            "2♦! E il transfer per le Cuori. Il compagno dichiarera 2♥ e sara lui a giocarle, proteggendo i suoi valori dall'attacco. Poi direte 4♥.",
+            "2♦! È il transfer per le Cuori. Il compagno dichiarerà 2♥ e sarà lui a giocarle, proteggendo i suoi valori dall'attacco. Poi direte 4♥.",
         },
         {
           type: "quiz",
           content:
-            "Perche il Transfer e preferibile alla dichiarazione diretta del colore?",
+            "Perché il Transfer è preferibile alla dichiarazione diretta del colore?",
           options: [
-            "Mostra piu punti",
+            "Mostra più punti",
             "Orienta il gioco dalla mano forte e moltiplica le licite",
             "Impedisce l'intervento avversario",
             "Mostra sempre lo slam",
@@ -389,7 +389,7 @@ const lezione202: Lesson = {
         {
           type: "example",
           content:
-            "1NT-2♠(Fiori): Ovest con ♠A972 ♥K4 ♦KQ73 ♣K75 dira 2NT (ha K♣). Con ♠AK2 ♥KJ94 ♦AQ7 ♣875 dira 3♣ (no onori a Fiori).",
+            "1NT-2♠(Fiori): Ovest con ♠A972 ♥K4 ♦KQ73 ♣K75 dirà 2NT (ha K♣). Con ♠AK2 ♥KJ94 ♦AQ7 ♣875 dirà 3♣ (no onori a Fiori).",
         },
         {
           type: "text",
@@ -399,7 +399,7 @@ const lezione202: Lesson = {
         {
           type: "quiz",
           content:
-            "Dopo 1NT, avete: ♠AK863 ♥4 ♦AKJ4 ♣752. Se usate il Transfer 2♥, dopo 2♠ non avrete piu licita adatta. Quale via e corretta?",
+            "Dopo 1NT, avete: ♠AK863 ♥4 ♦AKJ4 ♣752. Se usate il Transfer 2♥, dopo 2♠ non avrete più licita adatta. Quale via è corretta?",
           options: [
             "Transfer 2♥ poi 3♦",
             "Stayman 2♣ poi dichiarare le picche",
@@ -408,15 +408,15 @@ const lezione202: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "La via giusta e la Stayman! Potrete dire 2♠ su qualsiasi risposta, e se l'apertore nega fit con 2NT direte 3♦ forzante. Il Transfer vi avrebbe bloccato.",
+            "La via giusta è la Stayman! Potrete dire 2♠ su qualsiasi risposta, e se l'apertore nega fit con 2NT direte 3♦ forzante. Il Transfer vi avrebbe bloccato.",
         },
         {
           type: "true-false",
           content:
-            "Dopo un Transfer, il 4NT e Blackwood (richiesta d'Assi).",
+            "Dopo un Transfer, il 4NT è Blackwood (richiesta d'Assi).",
           correctAnswer: 1,
           explanation:
-            "Falso! Dopo un Transfer, il 4NT descrive una 5332 ed e un quantitativo (tentativo di 6NT), NON richiesta d'Assi.",
+            "Falso! Dopo un Transfer, il 4NT descrive una 5332 ed è un quantitativo (tentativo di 6NT), NON richiesta d'Assi.",
         },
       ],
     },
@@ -447,12 +447,12 @@ const lezione203: Lesson = {
         {
           type: "text",
           content:
-            "Una risposta 2 su 1 e forzante di manche tranne due eccezioni: quando chi la fornisce era gia passato di mano (8-11 punti), e quando l'avversario e intervenuto a colore (promette 10+ anziche 12+).",
+            "Una risposta 2 su 1 è forzante di manche tranne due eccezioni: quando chi la fornisce era già passato di mano (8-11 punti), e quando l'avversario è intervenuto a colore (promette 10+ anziché 12+).",
         },
         {
           type: "rule",
           content:
-            "In situazione di sicuro forcing manche, l'apertore ridichiara a livello descrivendo la distribuzione. L'apertore dichiara i colori che ha: se non li dichiara e perche non li possiede.",
+            "In situazione di sicuro forcing manche, l'apertore ridichiara a livello descrivendo la distribuzione. L'apertore dichiara i colori che ha: se non li dichiara è perché non li possiede.",
         },
         {
           type: "text",
@@ -462,7 +462,7 @@ const lezione203: Lesson = {
         {
           type: "example",
           content:
-            "Dopo 1♥-2♣, Ovest ripete 2♥ anche con ♠Qx ♥AJxxxx ♦AK ♣Kxx. Perche non c'e fretta: il colore di atout per lo Slam potrebbe essere Fiori.",
+            "Dopo 1♥-2♣, Ovest ripete 2♥ anche con ♠Qx ♥AJxxxx ♦AK ♣Kxx. Perché non c'è fretta: il colore di atout per lo Slam potrebbe essere Fiori.",
         },
         {
           type: "quiz",
@@ -471,7 +471,7 @@ const lezione203: Lesson = {
           options: ["2♥", "2NT", "2♠", "3♣"],
           correctAnswer: 1,
           explanation:
-            "2NT! Mostra bilanciata di diritto (12-14) con fermi negli altri colori, giocati dalla propria parte. E l'unica replica che limita la mano.",
+            "2NT! Mostra bilanciata di diritto (12-14) con fermi negli altri colori, giocati dalla propria parte. È l'unica replica che limita la mano.",
         },
       ],
     },
@@ -489,12 +489,12 @@ const lezione203: Lesson = {
         {
           type: "rule",
           content:
-            "Al secondo giro, la dichiarazione di un colore morto mostra un problema di fermi. La dichiarazione di 2NT mostra disinteresse per i fermi (o perche li ha, o perche sa gia che giochera ad atout).",
+            "Al secondo giro, la dichiarazione di un colore morto mostra un problema di fermi. La dichiarazione di 2NT mostra disinteresse per i fermi (o perché li ha, o perché sa già che giocherà ad atout).",
         },
         {
           type: "text",
           content:
-            "Il Riporto a 2 nel seme di apertura mostra 'almeno tolleranza' (2+ carte) e chiede un'ulteriore descrizione. Non fissa l'atout. Il 4 colore chiede il Fermo. Il rialzo a 3 in uno dei colori dell'apertore mostra velleita di Slam (almeno 15/16 punti).",
+            "Il Riporto a 2 nel seme di apertura mostra 'almeno tolleranza' (2+ carte) e chiede un'ulteriore descrizione. Non fissa l'atout. Il 4 colore chiede il Fermo. Il rialzo a 3 in uno dei colori dell'apertore mostra velleità di Slam (almeno 15/16 punti).",
         },
         {
           type: "example",
@@ -516,7 +516,7 @@ const lezione203: Lesson = {
             "In situazione forzante di manche, se il rispondente conclude a 3NT e l'apertore ha mano forte (17+), l'apertore deve passare.",
           correctAnswer: 1,
           explanation:
-            "Falso! L'apertore puo riaprire: 4NT e quantitativo (non Blackwood) se ha 17+ con 5422 senza fit. Puo anche dire 4 nel colore del rispondente se ha fit e mano forte.",
+            "Falso! L'apertore può riaprire: 4NT è quantitativo (non Blackwood) se ha 17+ con 5422 senza fit. Può anche dire 4 nel colore del rispondente se ha fit e mano forte.",
         },
       ],
     },
@@ -547,36 +547,36 @@ const lezione204: Lesson = {
         {
           type: "text",
           content:
-            "'Fissare l'atout' e diverso da 'trovare fit': e implicito che l'obiettivo sia lo Slam. Dopo 1♦-1♥-1♠-3♠ la coppia ha trovato fit ma 3♠ potrebbe restare il contratto finale. Dopo 1♠-2♣-2♥-3♥ Est 'fissa' l'atout Cuori in una sequenza forzante per lo Slam.",
+            "'Fissare l'atout' è diverso da 'trovare fit': è implicito che l'obiettivo sia lo Slam. Dopo 1♦-1♥-1♠-3♠ la coppia ha trovato fit ma 3♠ potrebbe restare il contratto finale. Dopo 1♠-2♣-2♥-3♥ Est 'fissa' l'atout Cuori in una sequenza forzante per lo Slam.",
         },
         {
           type: "rule",
           content:
-            "Terreno solido: le dichiarazioni iniziali hanno individuato almeno 21-22 punti in linea. Se il terreno e solido, un atout fissato appena sotto il livello di manche e FORZANTE. Se non solido, e INVITANTE (passabile).",
+            "Terreno solido: le dichiarazioni iniziali hanno individuato almeno 21-22 punti in linea. Se il terreno è solido, un atout fissato appena sotto il livello di manche è FORZANTE. Se non solido, è INVITANTE (passabile).",
         },
         {
           type: "example",
           content:
-            "Terreno solido: (1) 1♥-2♣ gia FM. (2) 2♠-3♠: Ovest ha 21+ da solo. (3) 1♦-1♠-2♥-3♥: Rever 16+ e risposta 5+. (4) 1NT-2♣-2♠-3♠: Ovest 15+ e Est 8+.",
+            "Terreno solido: (1) 1♥-2♣ già FM. (2) 2♠-3♠: Ovest ha 21+ da solo. (3) 1♦-1♠-2♥-3♥: Rever 16+ e risposta 5+. (4) 1NT-2♣-2♠-3♠: Ovest 15+ e Est 8+.",
         },
         {
           type: "text",
           content:
-            "Terreno non solido: Dopo 1♥-1♠-2♥ non c'era certezza di 21+, quindi 3♥ e passabile. Dopo 1♦-1♥-1♠ idem, 3♠ e passabile. Perche e importante comunicare fit e forza a basso livello? Perche lo spazio puo essere utilizzato scambiandosi cue-bid.",
+            "Terreno non solido: Dopo 1♥-1♠-2♥ non c'era certezza di 21+, quindi 3♥ è passabile. Dopo 1♦-1♥-1♠ idem, 3♠ è passabile. Perché è importante comunicare fit e forza a basso livello? Perché lo spazio può essere utilizzato scambiandosi cue-bid.",
         },
         {
           type: "quiz",
           content:
-            "Dopo la sequenza 1♥-1♠-2♦-3♥, il 3♥ e forzante?",
+            "Dopo la sequenza 1♥-1♠-2♦-3♥, il 3♥ è forzante?",
           options: [
-            "Si, perche ha fissato l'atout",
-            "No, perche non c'era certezza di 21+ punti in linea",
-            "Si, perche e una risposta 2 su 1",
+            "Sì, perché ha fissato l'atout",
+            "No, perché non c'era certezza di 21+ punti in linea",
+            "Sì, perché è una risposta 2 su 1",
             "Dipende dalla zona",
           ],
           correctAnswer: 1,
           explanation:
-            "Dopo 1♥-1♠-2♦, la coppia non ha certezza di possedere 21+ punti: il terreno non e solido, quindi 3♥ e un invito passabile.",
+            "Dopo 1♥-1♠-2♦, la coppia non ha certezza di possedere 21+ punti: il terreno non è solido, quindi 3♥ è un invito passabile.",
         },
       ],
     },
@@ -594,7 +594,7 @@ const lezione204: Lesson = {
         {
           type: "text",
           content:
-            "Quando il Rispondente ha risposto 1 su 1 e ha ambizioni di Slam, per arrivare a un '3 in atout' forzante deve passare dal quarto colore per costruire Terreno solido in anticipo. La strada rapida (salto diretto) e solo invitante.",
+            "Quando il Rispondente ha risposto 1 su 1 e ha ambizioni di Slam, per arrivare a un '3 in atout' forzante deve passare dal quarto colore per costruire Terreno solido in anticipo. La strada rapida (salto diretto) è solo invitante.",
         },
         {
           type: "example",
@@ -604,7 +604,7 @@ const lezione204: Lesson = {
         {
           type: "rule",
           content:
-            "In competizione: ogni rialzo diretto e 'solo competitivo'. Per fissare l'atout con mano forte, usate surlicita o contro, poi dichiarate il colore. Le due domande chiave: A) Puo accontentarsi del contratto? B) Aveva strade piu forti? Se SI a entrambe, e passabile!",
+            "In competizione: ogni rialzo diretto è 'solo competitivo'. Per fissare l'atout con mano forte, usate surlicita o contro, poi dichiarate il colore. Le due domande chiave: A) Può accontentarsi del contratto? B) Aveva strade più forti? Se SI a entrambe, è passabile!",
         },
         {
           type: "bid-select",
@@ -618,7 +618,7 @@ const lezione204: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "3♦ e forzante in quanto illogico (il fit e cuori). Potete poi mostrare la cue bid a 3♠. Se diceste 3♥ significherebbe 'tentativo fallito, giochiamo 3♥'.",
+            "3♦ è forzante in quanto illogico (il fit è cuori). Potete poi mostrare la cue bid a 3♠. Se diceste 3♥ significherebbe 'tentativo fallito, giochiamo 3♥'.",
         },
       ],
     },
@@ -649,12 +649,12 @@ const lezione205: Lesson = {
         {
           type: "text",
           content:
-            "Le Cue-Bid sono dichiarazioni illogiche che mostrano controllo in un colore, dopo che la coppia abbia posto il traguardo a Slam. Non confondete Fermo e Controllo: QJx sono un fermo ma non un controllo. Il vuoto e un controllo ma non e un fermo.",
+            "Le Cue-Bid sono dichiarazioni illogiche che mostrano controllo in un colore, dopo che la coppia abbia posto il traguardo a Slam. Non confondete Fermo e Controllo: QJx sono un fermo ma non un controllo. Il vuoto è un controllo ma non è un fermo.",
         },
         {
           type: "rule",
           content:
-            "I controlli che proteggono un colore sono: Asso e Vuoto (1 giro), Re e Singolo (2 giro). Le 4 regole: 1) Non si fanno cue-bid nel colore di atout. 2) Ogni giocatore effettua la cue-bid piu economica che ha. 3) Cue-bid saltata, non c'e. 4) Cue saltata e poi fatta = controllo di 3 giro (la Dama).",
+            "I controlli che proteggono un colore sono: Asso e Vuoto (1 giro), Re e Singolo (2 giro). Le 4 regole: 1) Non si fanno cue-bid nel colore di atout. 2) Ogni giocatore effettua la cue-bid più economica che ha. 3) Cue-bid saltata, non c'è. 4) Cue saltata e poi fatta = controllo di 3 giro (la Dama).",
         },
         {
           type: "text",
@@ -664,7 +664,7 @@ const lezione205: Lesson = {
         {
           type: "example",
           content:
-            "1♥-2♣-2♥-3♥: Ovest ha ♠6 ♥AJ10872 ♦942 ♣AK2. Deve dire 3♠ (singolo, cue piu economica) e NON 4♣ (salterebbe le picche).",
+            "1♥-2♣-2♥-3♥: Ovest ha ♠6 ♥AJ10872 ♦942 ♣AK2. Deve dire 3♠ (singolo, cue più economica) e NON 4♣ (salterebbe le picche).",
         },
         {
           type: "quiz",
@@ -678,7 +678,7 @@ const lezione205: Lesson = {
           ],
           correctAnswer: 0,
           explanation:
-            "Attenzione: il 4♦ ESCLUDE controllo a fiori (regola 3: cue saltata non c'e). Se Est non ha neppure il controllo fiori, deve riportare a 4♠ senza mostrare il cuori!",
+            "Attenzione: il 4♦ ESCLUDE controllo a fiori (regola 3: cue saltata non c'è). Se Est non ha neppure il controllo fiori, deve riportare a 4♠ senza mostrare il cuori!",
         },
       ],
     },
@@ -706,18 +706,18 @@ const lezione205: Lesson = {
         {
           type: "example",
           content:
-            "1♥-2♣-2♠-3♠-4♣-4♦-4♥-4♠-4NT-5♦-6♠: il primo giro di cue bid (4♣, 4♦) e sotto il livello di guardia. 4♥ frenata = tentativo minimo. Ma Ovest, che non ha mostrato la forza, prende l'iniziativa.",
+            "1♥-2♣-2♠-3♠-4♣-4♦-4♥-4♠-4NT-5♦-6♠: il primo giro di cue bid (4♣, 4♦) è sotto il livello di guardia. 4♥ frenata = tentativo minimo. Ma Ovest, che non ha mostrato la forza, prende l'iniziativa.",
         },
         {
           type: "tip",
           content: "Chi chiede gli Assi?",
           explanation:
-            "Solo una mano che non si e mai limitata in precedenza puo chiedere gli assi con 4NT. Se non lo fate voi quando vi spetta, il compagno proseguira con cue bid e non saprete mai quanti assi avete in linea!",
+            "Solo una mano che non si è mai limitata in precedenza può chiedere gli assi con 4NT. Se non lo fate voi quando vi spetta, il compagno proseguirà con cue bid e non saprete mai quanti assi avete in linea!",
         },
         {
           type: "true-false",
           content:
-            "Se un giocatore ha mano minima, puo rifiutarsi di fare cue bid sotto il livello di manche per scoraggiare il compagno.",
+            "Se un giocatore ha mano minima, può rifiutarsi di fare cue bid sotto il livello di manche per scoraggiare il compagno.",
           correctAnswer: 1,
           explanation:
             "Falso! Sotto il livello di manche le cue bid sono OBBLIGATORIE. Negarle porterebbe il compagno a conclusioni errate sulla posizione dei controlli.",
@@ -751,12 +751,12 @@ const lezione206: Lesson = {
         {
           type: "text",
           content:
-            "Se una coppia gioca le sottoaperture: 2♦, 2♥, 2♠ mostrano 6 carte e punteggio 6-10. Il 2♣ rimane l'unica apertura forte. Sono aperture interdittive: il Rispondente sara Capitano e l'Apertore non prendera piu iniziativa.",
+            "Se una coppia gioca le sottoaperture: 2♦, 2♥, 2♠ mostrano 6 carte e punteggio 6-10. Il 2♣ rimane l'unica apertura forte. Sono aperture interdittive: il Rispondente sarà Capitano e l'Apertore non prenderà più iniziativa.",
         },
         {
           type: "rule",
           content:
-            "Requisiti del colore: per 2♥ e 2♠ almeno un onore maggiore (A o K), oppure Q accompagnata dal 10. Per 2♦ servono almeno 2 onori maggiori (la manche aspirata e 3NT). Mai sottoaprire con una quarta maggiore a fianco!",
+            "Requisiti del colore: per 2♥ e 2♠ almeno un onore maggiore (A o K), oppure Q accompagnata dal 10. Per 2♦ servono almeno 2 onori maggiori (la manche aspirata è 3NT). Mai sottoaprire con una quarta maggiore a fianco!",
         },
         {
           type: "example",
@@ -793,12 +793,12 @@ const lezione206: Lesson = {
         {
           type: "text",
           content:
-            "Un nuovo colore del Rispondente e naturale (5+ carte), forte (14+) e forzante. Il rialzo a 3 mostra fit terzo (9 atout = 9 prese, Legge). Il rialzo a 4 puo venire da mano povera con fit quarto (Prese Totali) o mano con punti sufficienti.",
+            "Un nuovo colore del Rispondente è naturale (5+ carte), forte (14+) e forzante. Il rialzo a 3 mostra fit terzo (9 atout = 9 prese, Legge). Il rialzo a 4 può venire da mano povera con fit quarto (Prese Totali) o mano con punti sufficienti.",
         },
         {
           type: "rule",
           content:
-            "Il 2NT e la convenzione Ogust interrogativa: 3♣ = minimo + colore brutto. 3♦ = minimo + colore bello. 3♥ = massimo + colore brutto. 3♠ = massimo + colore bello. 3NT = AKQxxx chiuso.",
+            "Il 2NT è la convenzione Ogust interrogativa: 3♣ = minimo + colore brutto. 3♦ = minimo + colore bello. 3♥ = massimo + colore brutto. 3♠ = massimo + colore bello. 3NT = AKQxxx chiuso.",
         },
         {
           type: "example",
@@ -820,7 +820,7 @@ const lezione206: Lesson = {
             "Dopo una sottoapertura, con 12-13 punti e nessun fit, il Rispondente deve comunque dichiarare.",
           correctAnswer: 1,
           explanation:
-            "Falso! Se il fit e inesistente bisogna avere il coraggio di passare, anche con 12-14 punti. Valori di apertura con fit secondo bastano appena per mantenere il contratto gia dichiarato.",
+            "Falso! Se il fit è inesistente bisogna avere il coraggio di passare, anche con 12-14 punti. Valori di apertura con fit secondo bastano appena per mantenere il contratto già dichiarato.",
         },
       ],
     },
@@ -851,22 +851,22 @@ const lezione207: Lesson = {
         {
           type: "text",
           content:
-            "Con le sottoaperture attive, tutte le mani forti convogliano nel 2♣. L'apertura di 2♣ e l'unica in cui il Capitanato spetta all'Apertore. La risposta convenzionale di attesa e 2♦. Se l'Apertore mostra mano a base minore, la situazione e FM.",
+            "Con le sottoaperture attive, tutte le mani forti convogliano nel 2♣. L'apertura di 2♣ è l'unica in cui il Capitanato spetta all'Apertore. La risposta convenzionale di attesa è 2♦. Se l'Apertore mostra mano a base minore, la situazione è FM.",
         },
         {
           type: "rule",
           content:
-            "Risposte: 2♥/2♠ = 5+ carte con onore, 5+ punti (FM). 3♥/3♠ = 6+ carte con 2-3 onori maggiori. 3♣/3♦ = 5+ carte con 3 onori o 6+ con 2. 2NT = 5-7 punti, 4333, nega A o 2K. 2♦ = attesa (la piu frequente).",
+            "Risposte: 2♥/2♠ = 5+ carte con onore, 5+ punti (FM). 3♥/3♠ = 6+ carte con 2-3 onori maggiori. 3♣/3♦ = 5+ carte con 3 onori o 6+ con 2. 2NT = 5-7 punti, 4333, nega A o 2K. 2♦ = attesa (la più frequente).",
         },
         {
           type: "text",
           content:
-            "Su 2♦, l'Apertore ridichiara: 2NT = bilanciata 23+ (FM). 2♥/2♠ = come apertura standard 2♥/2♠ (forzante fino al ritorno nel colore). 3♣/3♦ = FM, ridichiarazione del 1 gradino e negativa. 3♥/3♠ a salto = monocolore chiusa, impone l'atout.",
+            "Su 2♦, l'Apertore ridichiara: 2NT = bilanciata 23+ (FM). 2♥/2♠ = come apertura standard 2♥/2♠ (forzante fino al ritorno nel colore). 3♣/3♦ = FM, ridichiarazione del 1 gradino è negativa. 3♥/3♠ a salto = monocolore chiusa, impone l'atout.",
         },
         {
           type: "example",
           content:
-            "2♣-2♦-3♠: l'atout e imposto. Est mostra l'unica cue bid (4♥), Ovest conclude a 4♠ sapendo che ci sono 2 quadri da perdere.",
+            "2♣-2♦-3♠: l'atout è imposto. Est mostra l'unica cue bid (4♥), Ovest conclude a 4♠ sapendo che ci sono 2 quadri da perdere.",
           cards: "♠AKQJ763 ♥A ♦87 ♣AKQ",
         },
         {
@@ -894,12 +894,12 @@ const lezione207: Lesson = {
         {
           type: "rule",
           content:
-            "L'apertura di 2♣ significa: 'o giochiamo noi, o giocano loro ma Contrati'. Su intervento a colore: il Contro fino a 3♠ compreso e PUNITIVO. Dichiarazioni a Senza e a colore sono naturali FM.",
+            "L'apertura di 2♣ significa: 'o giochiamo noi, o giocano loro ma Contrati'. Su intervento a colore: il Contro fino a 3♠ compreso è PUNITIVO. Dichiarazioni a Senza e a colore sono naturali FM.",
         },
         {
           type: "text",
           content:
-            "Se l'avversario interviene da 3♠ in su, il meccanismo si rovescia: il Contro mostra mano nulla ('non dichiarare piu'). Il Passo mostra carte utili per il gioco dell'Apertore.",
+            "Se l'avversario interviene da 3♠ in su, il meccanismo si rovescia: il Contro mostra mano nulla ('non dichiarare più'). Il Passo mostra carte utili per il gioco dell'Apertore.",
         },
         {
           type: "bid-select",
@@ -976,7 +976,7 @@ const lezione208: Lesson = {
         {
           type: "text",
           content:
-            "Tre criteri: 1) Il sistema la definisce tale. 2) Vi erano alternative 'forti' (contro, surlicita). 3) La coppia ha gia manifestato l'intenzione di non giocare manche (coerenza).",
+            "Tre criteri: 1) Il sistema la definisce tale. 2) Vi erano alternative 'forti' (contro, surlicita). 3) La coppia ha già manifestato l'intenzione di non giocare manche (coerenza).",
         },
         {
           type: "rule",
@@ -986,21 +986,21 @@ const lezione208: Lesson = {
         {
           type: "bid-select",
           content:
-            "1♥-P-2♥-P-3♥. Questo rialzo di Sud e un invito a manche?",
+            "1♥-P-2♥-P-3♥. Questo rialzo di Sud è un invito a manche?",
           options: [
-            "Si, invita a manche",
-            "No, e interdittivo: mostra maggior lunghezza secondo la Legge",
-            "No, e competitivo",
-            "Si, e costruttivo",
+            "Sì, invita a manche",
+            "No, è interdittivo: mostra maggior lunghezza secondo la Legge",
+            "No, è competitivo",
+            "Sì, è costruttivo",
           ],
           correctAnswer: 1,
           explanation:
-            "No! Per un invito Sud aveva a disposizione 2NT, 2♠, 3♣, 3♦. Il solo motivo per salire a 3 e mostrare maggior lunghezza (Legge) e rendere impossibile un rientro tardivo avversario.",
+            "No! Per un invito Sud aveva a disposizione 2NT, 2♠, 3♣, 3♦. Il solo motivo per salire a 3 è mostrare maggior lunghezza (Legge) e rendere impossibile un rientro tardivo avversario.",
         },
         {
           type: "true-false",
           content:
-            "Una dichiarazione a salto in situazione di appoggio e sempre interdittiva, mai costruttiva.",
+            "Una dichiarazione a salto in situazione di appoggio è sempre interdittiva, mai costruttiva.",
           correctAnswer: 0,
           explanation:
             "Vero! Le dichiarazioni interdittive sono SEMPRE caratterizzate da un annuncio a salto. I messaggi costruttivi usano altri mezzi: contro, surlicita, cambio di colore forcing.",
@@ -1039,7 +1039,7 @@ const lezione209: Lesson = {
         {
           type: "rule",
           content:
-            "Il 2NT Truscott: fit nel nobile terzo o quarto, invito a manche (10-12 brutti). Non richiede fermi nei colori ne mano bilanciata: parla del fit. L'apertore riporta a 3 nel colore se minimo, dichiara manche se buon diritto, o mostra colore laterale se in dubbio.",
+            "Il 2NT Truscott: fit nel nobile terzo o quarto, invito a manche (10-12 brutti). Non richiede fermi nei colori né mano bilanciata: parla del fit. L'apertore riporta a 3 nel colore se minimo, dichiara manche se buon diritto, o mostra colore laterale se in dubbio.",
         },
         {
           type: "example",
@@ -1058,7 +1058,7 @@ const lezione209: Lesson = {
           options: ["2♠", "2NT (Truscott)", "3♠", "4♠"],
           correctAnswer: 1,
           explanation:
-            "2NT Truscott! Fit quarto con una corta e carte di testa (A+A = 8 punti che si rivalutano). E un serio invito a manche nel nobile.",
+            "2NT Truscott! Fit quarto con una corta e carte di testa (A+A = 8 punti che si rivalutano). È un serio invito a manche nel nobile.",
         },
       ],
     },
@@ -1076,12 +1076,12 @@ const lezione209: Lesson = {
         {
           type: "text",
           content:
-            "L'ampliamento della risposta 1NT fino a 11 punti e inevitabile: il 2NT ora ha altro significato. L'apertore sa che il compagno potrebbe avere 11: con 5332 minima puo passare, con 13+ cerca di tenere aperta la dichiarazione.",
+            "L'ampliamento della risposta 1NT fino a 11 punti è inevitabile: il 2NT ora ha altro significato. L'apertore sa che il compagno potrebbe avere 11: con 5332 minima può passare, con 13+ cerca di tenere aperta la dichiarazione.",
         },
         {
           type: "rule",
           content:
-            "Dopo apertura 1♠ e risposta 1NT: con la 3-3 minore l'apertore dichiara la terza piu bassa (non la piu bella) per stanare la lunga del compagno. Con la 5332 di 17-19 rialza a 2NT. Con solo 12-13 e 5332, puo passare.",
+            "Dopo apertura 1♠ e risposta 1NT: con la 3-3 minore l'apertore dichiara la terza più bassa (non la più bella) per stanare la lunga del compagno. Con la 5332 di 17-19 rialza a 2NT. Con solo 12-13 e 5332, può passare.",
         },
         {
           type: "example",
@@ -1094,7 +1094,7 @@ const lezione209: Lesson = {
             "Su intervento avversario a colore dopo apertura nobile, il 2NT Truscott promette almeno QUATTRO carte di appoggio e diventa illimitato (11+).",
           correctAnswer: 0,
           explanation:
-            "Vero! In competizione il 2NT Truscott richiede fit quarto (non terzo) e diventa illimitato. La surlicita, in alternativa, mostra fit TERZO ed e anch'essa illimitata (11+).",
+            "Vero! In competizione il 2NT Truscott richiede fit quarto (non terzo) e diventa illimitato. La surlicita, in alternativa, mostra fit TERZO ed è anch'essa illimitata (11+).",
         },
       ],
     },
@@ -1125,12 +1125,12 @@ const lezione210: Lesson = {
         {
           type: "text",
           content:
-            "La convenzione Bergen attribuisce alle risposte di 3♣ e 3♦ significati speciali su apertura di 1♥ o 1♠: 3♣ = fit quarto, 7-9 punti (piu solida del barrage). 3♦ = fit quarto, 10-11 punti (vicina al FM, accetta parziale se apertore minimo).",
+            "La convenzione Bergen attribuisce alle risposte di 3♣ e 3♦ significati speciali su apertura di 1♥ o 1♠: 3♣ = fit quarto, 7-9 punti (più solida del barrage). 3♦ = fit quarto, 10-11 punti (vicina al FM, accetta parziale se apertore minimo).",
         },
         {
           type: "rule",
           content:
-            "L'appoggio a livello 2 e costruttivo: 7/8-10 punti. Per mani piu deboli (4-7) o piu forti (10-11) con fit terzo, si usa 1NT forzante seguito dall'appoggio ritardato. Con 4-7: 1NT poi riporto a 2. Con 8-10: appoggio diretto a 2. Con 10-11: 1NT poi riporto a 3.",
+            "L'appoggio a livello 2 è costruttivo: 7/8-10 punti. Per mani più deboli (4-7) o più forti (10-11) con fit terzo, si usa 1NT forzante seguito dall'appoggio ritardato. Con 4-7: 1NT poi riporto a 2. Con 8-10: appoggio diretto a 2. Con 10-11: 1NT poi riporto a 3.",
         },
         {
           type: "example",
@@ -1140,7 +1140,7 @@ const lezione210: Lesson = {
         {
           type: "text",
           content:
-            "♠J2 ♥Q872 ♦KQ63 ♣985: 3♣ (fit 4, 7-9). ♠K52 ♥AJ92 ♦73 ♣K875: 3♦ (fit 4, 10-11). ♠82 ♥A10862 ♦2 ♣J10543: 4♥ barrage (fit 5, 3-7). Il 2NT Truscott mostra tutte le mani 12+ con fit quarto o piu.",
+            "♠J2 ♥Q872 ♦KQ63 ♣985: 3♣ (fit 4, 7-9). ♠K52 ♥AJ92 ♦73 ♣K875: 3♦ (fit 4, 10-11). ♠82 ♥A10862 ♦2 ♣J10543: 4♥ barrage (fit 5, 3-7). Il 2NT Truscott mostra tutte le mani 12+ con fit quarto o più.",
         },
         {
           type: "bid-select",
@@ -1149,7 +1149,7 @@ const lezione210: Lesson = {
           options: ["2♠", "3♣ (Bergen)", "3♦ (Bergen)", "2NT (Truscott)"],
           correctAnswer: 1,
           explanation:
-            "3♣ Bergen: fit quarto nel maggiore e punteggio 7-9 (qui avete 8 punti). E una mano un po' piu solida dell'appoggio barrage a 3♠.",
+            "3♣ Bergen: fit quarto nel maggiore e punteggio 7-9 (qui avete 8 punti). È una mano un po' più solida dell'appoggio barrage a 3♠.",
         },
       ],
     },
@@ -1167,7 +1167,7 @@ const lezione210: Lesson = {
         {
           type: "text",
           content:
-            "Giocare il Senza forzante significa estendere il campo della risposta 1NT da 5-10 a 5-11/12 brutti. L'Apertore non puo mai passare (tranne con 5332 di 11). Se non ha un colore da dire, inventa il minore terzo piu basso.",
+            "Giocare il Senza forzante significa estendere il campo della risposta 1NT da 5-10 a 5-11/12 brutti. L'Apertore non può mai passare (tranne con 5332 di 11). Se non ha un colore da dire, inventa il minore terzo più basso.",
         },
         {
           type: "rule",
@@ -1186,7 +1186,7 @@ const lezione210: Lesson = {
           ],
           correctAnswer: 2,
           explanation:
-            "3♥! Un colore al di sopra del 3♠ in atout rende obbligatoria la manche, quindi e cue bid per lo Slam. L'apertore ha una mano cosi forte da pensare allo slam anche a fronte di 7-9.",
+            "3♥! Un colore al di sopra del 3♠ in atout rende obbligatoria la manche, quindi è cue bid per lo Slam. L'apertore ha una mano così forte da pensare allo slam anche a fronte di 7-9.",
         },
       ],
     },
@@ -1217,7 +1217,7 @@ const lezione211: Lesson = {
         {
           type: "text",
           content:
-            "In questa versione l'appoggio a livello 2 e 'costruttivo': 8-10 punti, tipicamente fit terzo. Non si usano i Bergen. Per le mani con fit quarto e invito (10-12) si usa il 2NT Truscott. Con fit terzo fuori range: 1NT forzante poi appoggio ritardato.",
+            "In questa versione l'appoggio a livello 2 è 'costruttivo': 8-10 punti, tipicamente fit terzo. Non si usano i Bergen. Per le mani con fit quarto e invito (10-12) si usa il 2NT Truscott. Con fit terzo fuori range: 1NT forzante poi appoggio ritardato.",
         },
         {
           type: "rule",
@@ -1236,7 +1236,7 @@ const lezione211: Lesson = {
           options: ["1NT (poi 2♠)", "2♠", "2NT", "Passo"],
           correctAnswer: 1,
           explanation:
-            "2♠ costruttivo! A+K sono punti di testa che si rivalutano. Anche se l'onore-conteggio e 7, la qualita dei punti (due Assi/Re) giustifica l'appoggio costruttivo 8-10.",
+            "2♠ costruttivo! A+K sono punti di testa che si rivalutano. Anche se l'onore-conteggio è 7, la qualità dei punti (due Assi/Re) giustifica l'appoggio costruttivo 8-10.",
         },
       ],
     },
@@ -1267,12 +1267,12 @@ const lezione212: Lesson = {
         {
           type: "text",
           content:
-            "Dopo apertura 1♥ o 1♠: Michael's: la surlicita mostra l'altro nobile + un minore sconosciuto (12+ punti, 5-5). 2NT mostra la bicolore minore. Dopo apertura 1♣ o 1♦: 2♦ mostra la bicolore nobile. 2NT mostra i due colori di rango piu basso tra i restanti.",
+            "Dopo apertura 1♥ o 1♠: Michael's: la surlicita mostra l'altro nobile + un minore sconosciuto (12+ punti, 5-5). 2NT mostra la bicolore minore. Dopo apertura 1♣ o 1♦: 2♦ mostra la bicolore nobile. 2NT mostra i due colori di rango più basso tra i restanti.",
         },
         {
           type: "rule",
           content:
-            "NON spacciate MAI per bicolori le mani 5-4 o 6-4! La quinta carta in entrambi i colori non deve mai mancare. Su 2NT il partner non passa mai: se ha fit, scegliera il seme a un livello consono alle Prese Totali.",
+            "NON spacciate MAI per bicolori le mani 5-4 o 6-4! La quinta carta in entrambi i colori non deve mai mancare. Su 2NT il partner non passa mai: se ha fit, sceglierà il seme a un livello consono alle Prese Totali.",
         },
         {
           type: "text",
@@ -1286,7 +1286,7 @@ const lezione212: Lesson = {
           options: ["2♠ (surlicita)", "2NT", "3♣", "Contro"],
           correctAnswer: 0,
           explanation:
-            "2♠ surlicita! Mostra l'altro nobile (♥) + un minore sconosciuto (♣ in questo caso). Se il compagno vuole conoscere il minore, chiedera 2NT.",
+            "2♠ surlicita! Mostra l'altro nobile (♥) + un minore sconosciuto (♣ in questo caso). Se il compagno vuole conoscere il minore, chiederà 2NT.",
         },
       ],
     },
@@ -1304,7 +1304,7 @@ const lezione212: Lesson = {
         {
           type: "text",
           content:
-            "Su 1NT il fattore principale e la distribuzione, non i punti. Si 'entra' solo con le seste o con le bicolori. Se avete bilanciata forte, passate: lasciate nelle grane l'avversario. Convenzioni: 2♣ (Landy) = 5/4+ nobile. 2♦ = cuori (transfer). 2♥ = picche. 2♠ = 4♠ + sesta minore. 2NT = minori.",
+            "Su 1NT il fattore principale è la distribuzione, non i punti. Si 'entra' solo con le seste o con le bicolori. Se avete bilanciata forte, passate: lasciate nelle grane l'avversario. Convenzioni: 2♣ (Landy) = 5/4+ nobile. 2♦ = cuori (transfer). 2♥ = picche. 2♠ = 4♠ + sesta minore. 2NT = minori.",
         },
         {
           type: "rule",
@@ -1354,7 +1354,7 @@ const lezione213: Lesson = {
         {
           type: "text",
           content:
-            "Il salto a 2NT dopo apertura maggiore e risposta 1NT (o 1 su 1) mostra bilanciata 5332 di 17-18. Il salto a 3NT mostra 19-20. Conseguenza: se apriamo 1NT con un nobile quinto, il punteggio e minimo (15-16).",
+            "Il salto a 2NT dopo apertura maggiore e risposta 1NT (o 1 su 1) mostra bilanciata 5332 di 17-18. Il salto a 3NT mostra 19-20. Conseguenza: se apriamo 1NT con un nobile quinto, il punteggio è minimo (15-16).",
         },
         {
           type: "rule",
@@ -1364,13 +1364,13 @@ const lezione213: Lesson = {
         {
           type: "example",
           content:
-            "1♦-1♥-3NT: mostra fit quarto a cuori e bilanciata 18-20. Quindi 4♣ e 4♦ dopo sono cue bid per lo Slam a Cuori!",
+            "1♦-1♥-3NT: mostra fit quarto a cuori e bilanciata 18-20. Quindi 4♣ e 4♦ dopo sono cue-bid per lo Slam a Cuori!",
           cards: "♠A98 ♥Q1073 ♦AKJ2 ♣KJ",
         },
         {
           type: "text",
           content:
-            "Dopo 2NT, il 3♣ ha funzione 'tipo Stayman': 3♦ = non ho quarte maggiori. 3♥ = ho 3 cuori, non 4 picche. 3♠ = ho 4 picche, non 3 cuori. 3NT = non ho 4♠ ne 3♥. 2NT di Est = entrambe le nobili minimo.",
+            "Dopo 2NT, il 3♣ ha funzione 'tipo Stayman': 3♦ = non ho quarte maggiori. 3♥ = ho 3 cuori, non 4 picche. 3♠ = ho 4 picche, non 3 cuori. 3NT = non ho 4♠ né 3♥. 2NT di Est = entrambe le nobili minimo.",
         },
         {
           type: "quiz",
@@ -1379,7 +1379,7 @@ const lezione213: Lesson = {
           options: ["3♥ (a passare)", "3NT", "Passo", "4♥"],
           correctAnswer: 0,
           explanation:
-            "3♥ a passare! Con carte con cui la manche pare del tutto improbabile, la ripetizione del colore e non forzante. L'apertore puo passare.",
+            "3♥ a passare! Con carte con cui la manche pare del tutto improbabile, la ripetizione del colore è non forzante. L'apertore può passare.",
         },
       ],
     },
@@ -1397,7 +1397,7 @@ const lezione213: Lesson = {
         {
           type: "text",
           content:
-            "L'intervento avversario produce un effetto 'sponda': l'apertore e esentato da ogni obbligo. Se dichiara, e perche ha qualcosa di speciale. Dopo 1♦-P-1♥-1♠: l'appoggio immediato mostra fit quarto (2♥ normale, 3♥ piccolo Rever sbilanciato, 4♥ prese, 2♠ surlicita = il modo piu forte).",
+            "L'intervento avversario produce un effetto 'sponda': l'apertore è esentato da ogni obbligo. Se dichiara, è perché ha qualcosa di speciale. Dopo 1♦-P-1♥-1♠: l'appoggio immediato mostra fit quarto (2♥ normale, 3♥ piccolo Rever sbilanciato, 4♥ prese, 2♠ surlicita = il modo più forte).",
         },
         {
           type: "rule",
@@ -1416,7 +1416,7 @@ const lezione213: Lesson = {
           options: ["2♥", "Contro", "1NT", "Passo"],
           correctAnswer: 1,
           explanation:
-            "Contro di riapertura! Garantisce almeno 7/8 punti e chiede all'apertore di continuare a descriversi. L'apertore potra dire NT con bilanciata 12-14 e fermo, o ripetere il colore, o appoggiare le cuori.",
+            "Contro di riapertura! Garantisce almeno 7/8 punti e chiede all'apertore di continuare a descriversi. L'apertore potrà dire NT con bilanciata 12-14 e fermo, o ripetere il colore, o appoggiare le cuori.",
         },
         {
           type: "true-false",
@@ -1424,7 +1424,7 @@ const lezione213: Lesson = {
             "Il Contro dell'apertore dopo intervento avversario garantisce sempre tolleranza del colore di risposta.",
           correctAnswer: 1,
           explanation:
-            "Falso! Il Contro dell'apertore NON garantisce tolleranza del colore di risposta. Pero: tanto minore e la tolleranza, tanto maggiore e la forza della mano.",
+            "Falso! Il Contro dell'apertore NON garantisce tolleranza del colore di risposta. Però: tanto minore è la tolleranza, tanto maggiore è la forza della mano.",
         },
       ],
     },

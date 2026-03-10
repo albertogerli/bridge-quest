@@ -19,7 +19,7 @@ const ACHIEVEMENTS = [
   "Sai come si vince una presa.",
   "Sai quando devi rispondere al seme.",
   "Conosci i ruoli al tavolo.",
-  "Sai quando l'atout puo tagliare.",
+  "Sai quando l'atout può tagliare.",
 ];
 
 function useAnimatedCounter(target: number, duration = 1200) {

@@ -26,7 +26,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "prima-mano",
     name: "Prima Mano",
-    description: "Il primo passo nel mondo del bridge. Ogni maestro e' stato un principiante.",
+    description: "Il primo passo nel mondo del bridge. Ogni maestro è stato un principiante.",
     category: "storia",
     rarity: "comune",
     emoji: "🃏",
@@ -59,7 +59,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "passo",
     name: "Il Passo",
-    description: "Sapere quando passare e' importante quanto sapere quando dichiarare.",
+    description: "Sapere quando passare è importante quanto sapere quando dichiarare.",
     category: "strategia",
     rarity: "comune",
     emoji: "✋",
@@ -93,7 +93,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "impasse",
     name: "L'Impasse",
-    description: "La mossa piu' elegante del bridge: il tentativo di cattura dell'onore avversario.",
+    description: "La mossa più elegante del bridge: il tentativo di cattura dell'onore avversario.",
     category: "mossa",
     rarity: "rara",
     emoji: "🎯",
@@ -104,7 +104,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "sans-atout",
     name: "Senza Atout",
-    description: "3NT: il contratto piu' giocato al mondo. Eleganza pura.",
+    description: "3NT: il contratto più giocato al mondo. Eleganza pura.",
     category: "tecnica",
     rarity: "rara",
     emoji: "🎩",
@@ -148,7 +148,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "quiz-master",
     name: "Quiz Master",
-    description: "La velocita' di pensiero e' fondamentale al tavolo da bridge.",
+    description: "La velocità di pensiero è fondamentale al tavolo da bridge.",
     category: "storia",
     rarity: "rara",
     emoji: "⚡",
@@ -171,7 +171,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "squeeze",
     name: "Lo Squeeze",
-    description: "Mettere un avversario nell'impossibilita' di scartare: l'arte suprema del bridge.",
+    description: "Mettere un avversario nell'impossibilità di scartare: l'arte suprema del bridge.",
     category: "mossa",
     rarity: "epica",
     emoji: "🔧",
@@ -215,7 +215,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "mano-quotidiana",
     name: "Giocatore Assiduo",
-    description: "La pratica quotidiana e' il segreto di ogni campione.",
+    description: "La pratica quotidiana è il segreto di ogni campione.",
     category: "storia",
     rarity: "epica",
     emoji: "📅",
@@ -238,7 +238,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "blue-team",
     name: "Blue Team",
-    description: "La squadra italiana che domino' il bridge mondiale: 16 titoli mondiali (1957-1975).",
+    description: "La squadra italiana che dominò il bridge mondiale: 16 titoli mondiali (1957-1975).",
     category: "storia",
     rarity: "leggendaria",
     emoji: "🇮🇹",
@@ -249,7 +249,7 @@ export const collectibleCards: CollectibleCard[] = [
   {
     id: "maestro",
     name: "Il Maestro",
-    description: "Non si smette mai di imparare. Il bridge e' un viaggio senza fine.",
+    description: "Non si smette mai di imparare. Il bridge è un viaggio senza fine.",
     category: "storia",
     rarity: "leggendaria",
     emoji: "🎓",

@@ -34,19 +34,19 @@ export const STEPS: StepConfig[] = [
     id: "benvenuto",
     kicker: "Arrivo al Club",
     title: "Il tuo primo torneo.",
-    body: "Quattro sedie, un mazzo, e l'avversario ti sta gia guardando. Tra 5 minuti giocherai la tua prima mano vera.",
+    body: "Quattro sedie, un mazzo, e l'avversario ti sta già guardando. Tra 5 minuti giocherai la tua prima mano vera.",
   },
   {
     id: "tavolo",
     kicker: "Prendi Posto",
     title: "Quattro giocatori, due squadre.",
-    body: "Nord-Sud contro Est-Ovest. Tu sei Sud. Il tuo compagno e di fronte a te.",
+    body: "Nord-Sud contro Est-Ovest. Tu sei Sud. Il tuo compagno è di fronte a te.",
   },
   {
     id: "presa",
     kicker: "La Prima Regola",
     title: "Qui conta una sola cosa.",
-    body: "Ogni giro si giocano 4 carte, una per giocatore. Chi gioca la carta piu alta del seme comandato vince la presa.",
+    body: "Ogni giro si giocano 4 carte, una per giocatore. Chi gioca la carta più alta del seme comandato vince la presa.",
   },
   {
     id: "obbligo",
@@ -63,7 +63,7 @@ export const STEPS: StepConfig[] = [
   {
     id: "atout",
     kicker: "L'Arma Segreta",
-    title: "Il taglio non e magia.",
+    title: "Il taglio non è magia.",
     body: "Se non hai il seme giocato, puoi tagliare con l'atout. Ma non sei obbligato: puoi anche scartare.",
   },
   {
@@ -76,7 +76,7 @@ export const STEPS: StepConfig[] = [
     id: "mano-vera",
     kicker: "La Partita",
     title: "Silenzio al club.",
-    body: "E il tuo turno. Gioca la tua prima mano vera di bridge. Contratto: 4 Picche. Devi fare almeno 10 prese.",
+    body: "È il tuo turno. Gioca la tua prima mano vera di bridge. Contratto: 4 Picche. Devi fare almeno 10 prese.",
   },
   {
     id: "vittoria",

@@ -41,7 +41,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 52,
     explanation:
-      "Regola dei 9: con 9 carte e la Donna mancante, batti Asso e Re (drop al 52%). La Q cade perche' con 4 carte fuori la divisione 2-2 e' al 40%, e la Q singola aggiunge un ulteriore 10%.",
+      "Regola dei 9: con 9 carte e la Donna mancante, batti Asso e Re (drop al 52%). La Q cade perché con 4 carte fuori la divisione 2-2 è al 40%, e la Q singola aggiunge un ulteriore 10%.",
     difficulty: "facile",
   },
   {
@@ -67,7 +67,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 78,
     explanation:
-      "Con 10 carte e la Donna tra sole 3 avversarie, il drop e' schiacciante (78%). La Q e' singola o seconda nella grande maggioranza dei casi. Batti Asso e Re senza pensarci.",
+      "Con 10 carte e la Donna tra sole 3 avversarie, il drop è schiacciante (78%). La Q è singola o seconda nella grande maggioranza dei casi. Batti Asso e Re senza pensarci.",
     difficulty: "facile",
   },
   {
@@ -80,7 +80,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Con solo 7 carte il Re e' disperso tra 6 carte avversarie: il Re singolo e' rarissimo (~3%). L'impasse al 50% e' l'unica manovra ragionevole.",
+      "Con solo 7 carte il Re è disperso tra 6 carte avversarie: il Re singolo è rarissimo (~3%). L'impasse al 50% è l'unica manovra ragionevole.",
     difficulty: "facile",
   },
   {
@@ -106,7 +106,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "AQJ contro il Re: impasse con gradino d'ingresso. Gioca piccola dal morto, inserisci il Fante. Se perde, la volta dopo gioca ancora piccola per la Donna. Con 8 carte il drop (33%) e' molto peggio.",
+      "AQJ contro il Re: impasse con gradino d'ingresso. Gioca piccola dal morto, inserisci il Fante. Se perde, la volta dopo gioca ancora piccola per la Donna. Con 8 carte il drop (33%) è molto peggio.",
     difficulty: "facile",
   },
   {
@@ -119,7 +119,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 58,
     explanation:
-      "Con AKQ distribuiti e 9 carte, il Fante mancante cade facilmente giocando dall'alto. Il drop del J con 4 carte fuori e' molto probabile (~58%) perche' il J e' un onore basso.",
+      "Con AKQ distribuiti e 9 carte, il Fante mancante cade facilmente giocando dall'alto. Il drop del J con 4 carte fuori è molto probabile (~58%) perché il J è un onore basso.",
     difficulty: "facile",
   },
   {
@@ -132,7 +132,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "8 carte, Re mancante tra 5 avversarie: impasse al 50% contro drop al 33%. Gioca dal morto piccola verso la Donna. Il 10 nel morto puo' aiutare come carta intermedia.",
+      "8 carte, Re mancante tra 5 avversarie: impasse al 50% contro drop al 33%. Gioca dal morto piccola verso la Donna. Il 10 nel morto può aiutare come carta intermedia.",
     difficulty: "facile",
   },
   {
@@ -145,14 +145,14 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 78,
     explanation:
-      "Con 10 carte la Q e' tra sole 3 avversarie. Il drop (78%) e' nettamente superiore. Batti A e K: la Donna cade nella stragrande maggioranza dei casi.",
+      "Con 10 carte la Q è tra sole 3 avversarie. Il drop (78%) è nettamente superiore. Batti A e K: la Donna cade nella stragrande maggioranza dei casi.",
     difficulty: "facile",
   },
 
   // ============================================================
   // MEDIO (12 scenari) - Variazioni con diversi onori, casi limite
   // Regola FIGB: la "regola dei 9" (8 ever / 9 never) vale solo
-  // per la Donna. Con il Re mancante e AQ, l'impasse e' sempre
+  // per la Donna. Con il Re mancante e AQ, l'impasse è sempre
   // corretta indipendentemente dal numero di carte.
   // ============================================================
   {
@@ -178,7 +178,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Attenzione: la regola dei 9 vale SOLO per la Donna! Con il Re mancante e AQ in mano, l'impasse (50%) resta corretta anche con 9 carte, perche' non puoi 'droppare' il Re giocando dall'alto senza l'AK.",
+      "Attenzione: la regola dei 9 vale SOLO per la Donna! Con il Re mancante e AQ in mano, l'impasse (50%) resta corretta anche con 9 carte, perché non puoi 'droppare' il Re giocando dall'alto senza l'AK.",
     difficulty: "medio",
   },
   {
@@ -204,7 +204,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Re mancante con 9 carte: NON applicare la regola dei 9! Quella regola e' solo per la Donna. Con AQ devi giocare verso la Donna, cioe' fare l'impasse. Non puoi 'droppare' il Re senza avere AK.",
+      "Re mancante con 9 carte: NON applicare la regola dei 9! Quella regola è solo per la Donna. Con AQ devi giocare verso la Donna, cioè fare l'impasse. Non puoi 'droppare' il Re senza avere AK.",
     difficulty: "medio",
   },
   {
@@ -217,7 +217,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 52,
     explanation:
-      "9 carte totali, Donna mancante: 'con 9, non finessare'. Il drop al 52% e' leggermente favorito. Batti A e K: la Q ha buone probabilita' di cadere.",
+      "9 carte totali, Donna mancante: 'con 9, non finessare'. Il drop al 52% è leggermente favorito. Batti A e K: la Q ha buone probabilità di cadere.",
     difficulty: "medio",
   },
   {
@@ -230,7 +230,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Solo 7 carte con il Re disperso tra 6 avversarie: il Re singolo davanti alla Q sarebbe un miracolo (~3%). L'impasse al 50% e' l'unica scelta sensata.",
+      "Solo 7 carte con il Re disperso tra 6 avversarie: il Re singolo davanti alla Q sarebbe un miracolo (~3%). L'impasse al 50% è l'unica scelta sensata.",
     difficulty: "medio",
   },
   {
@@ -256,7 +256,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "7 carte, Re mancante tra 6: l'impasse al 50% e' obbligatoria. Il 10 fornisce un comodo gradino d'ingresso: gioca piccola, inserisci il 10, poi riprova con la Q.",
+      "7 carte, Re mancante tra 6: l'impasse al 50% è obbligatoria. Il 10 fornisce un comodo gradino d'ingresso: gioca piccola, inserisci il 10, poi riprova con la Q.",
     difficulty: "medio",
   },
   {
@@ -269,7 +269,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 52,
     explanation:
-      "Il Fante ti protegge, ma con 9 carte e la Donna fuori, il drop (52%) resta la manovra corretta. Colpo di sonda: batti l'Asso, poi il Re. Se la Q non cade, il J e' ancora utilizzabile.",
+      "Il Fante ti protegge, ma con 9 carte e la Donna fuori, il drop (52%) resta la manovra corretta. Colpo di sonda: batti l'Asso, poi il Re. Se la Q non cade, il J è ancora utilizzabile.",
     difficulty: "medio",
   },
   {
@@ -282,7 +282,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Re mancante con 9 carte e AQ in mano: l'impasse e' obbligatoria. Non puoi 'droppare' il Re senza avere AK. Gioca dal morto piccola verso la Donna.",
+      "Re mancante con 9 carte e AQ in mano: l'impasse è obbligatoria. Non puoi 'droppare' il Re senza avere AK. Gioca dal morto piccola verso la Donna.",
     difficulty: "medio",
   },
   {
@@ -295,7 +295,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Con AKQ distribuiti e 8 carte, il Fante tra 5 avversarie rende l'impasse (50%) migliore del drop (~33%). Il 9 e' il gradino: gioca piccola verso la Q, poi piccola verso il 9.",
+      "Con AKQ distribuiti e 8 carte, il Fante tra 5 avversarie rende l'impasse (50%) migliore del drop (~33%). Il 9 è il gradino: gioca piccola verso la Q, poi piccola verso il 9.",
     difficulty: "medio",
   },
   {
@@ -308,7 +308,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "drop",
     probability: 58,
     explanation:
-      "Con AKQ distribuiti e 9 carte, il Fante e' un onore minore: battendo dall'alto cade nel 58% dei casi. Il drop e' nettamente favorito, non serve impasse per il J.",
+      "Con AKQ distribuiti e 9 carte, il Fante è un onore minore: battendo dall'alto cade nel 58% dei casi. Il drop è nettamente favorito, non serve impasse per il J.",
     difficulty: "medio",
   },
 
@@ -339,7 +339,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "Trappola: 9 carte ma il Re e' l'onore mancante, non la Donna! La regola dei 9 NON si applica. Con AQ devi fare l'impasse. Il 10 aiuta se il K e' terzo a Ovest.",
+      "Trappola: 9 carte ma il Re è l'onore mancante, non la Donna! La regola dei 9 NON si applica. Con AQ devi fare l'impasse. Il 10 aiuta se il K è terzo a Ovest.",
     difficulty: "difficile",
   },
   {
@@ -352,7 +352,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "7 carte, K fuori tra 6: il drop e' praticamente impossibile (K singolo ~3%). La sequenza J-10-9 nel morto ti permette un'impasse ripetuta: gioca il J, se il K non copre inserisci, poi il 10, ecc. In due tentativi ~75%.",
+      "7 carte, K fuori tra 6: il drop è praticamente impossibile (K singolo ~3%). La sequenza J-10-9 nel morto ti permette un'impasse ripetuta: gioca il J, se il K non copre inserisci, poi il 10, ecc. In due tentativi ~75%.",
     difficulty: "difficile",
   },
   {
@@ -378,7 +378,7 @@ export const impasseScenarios: ImpasseScenario[] = [
     correctAnswer: "impasse",
     probability: 50,
     explanation:
-      "9 carte ma e' il Re che manca, non la Donna! Non confondere con la regola dei 9. Con AQ in mano devi giocare verso la Donna (impasse). Il 10 del morto e' un'utile carta intermedia se il K e' terzo.",
+      "9 carte ma è il Re che manca, non la Donna! Non confondere con la regola dei 9. Con AQ in mano devi giocare verso la Donna (impasse). Il 10 del morto è un'utile carta intermedia se il K è terzo.",
     difficulty: "difficile",
   },
   {

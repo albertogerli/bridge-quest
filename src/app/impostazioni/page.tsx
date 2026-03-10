@@ -584,7 +584,7 @@ export default function ImpostazioniPage() {
               >
                 <p className="text-red-700 text-sm font-semibold mb-1">Sei sicuro?</p>
                 <p className="text-red-600/80 text-xs mb-4">
-                  Questa azione cancellera tutti i tuoi progressi, XP, badge e impostazioni. Non potrai annullarla.
+                  Questa azione cancellerà tutti i tuoi progressi, XP, badge e impostazioni. Non potrai annullarla.
                 </p>
                 <div className="flex gap-2">
                   <Button

@@ -31,14 +31,14 @@ export const comprehensionData: LessonComprehension[] = [
           "2 giocatori, uno contro l'altro",
           "4 giocatori, 2 coppie: Nord-Sud contro Est-Ovest",
           "6 giocatori, 3 per squadra",
-          "4 giocatori, ognuno per se'",
+          "4 giocatori, ognuno per sé",
         ],
         correctAnswer: 1,
         explanation:
           "Il bridge si gioca in 4 giocatori divisi in 2 coppie: N/S contro E/O. Ogni giocatore riceve 13 carte.",
       },
       {
-        question: "Qual e' la gerarchia corretta dei semi dal piu' alto al piu' basso?",
+        question: "Qual è la gerarchia corretta dei semi dal più alto al più basso?",
         options: [
           "Cuori > Picche > Quadri > Fiori",
           "Picche > Cuori > Fiori > Quadri",
@@ -47,7 +47,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "La gerarchia e': Senza Atout > Picche > Cuori > Quadri > Fiori. I semi nobili (Picche e Cuori) valgono 30 punti per presa dichiarata.",
+          "La gerarchia è: Senza Atout > Picche > Cuori > Quadri > Fiori. I semi nobili (Picche e Cuori) valgono 30 punti per presa dichiarata.",
       },
       {
         question: "Quante prese deve realizzare chi dichiara '3 Senza Atout'?",
@@ -69,7 +69,7 @@ export const comprehensionData: LessonComprehension[] = [
         options: ["1", "2", "3", "4"],
         correctAnswer: 3,
         explanation:
-          "AKQJ sono 4 carte equivalenti e tutte vincenti. Il Fante vince tanto quanto l'Asso perche' sono una sequenza completa.",
+          "AKQJ sono 4 carte equivalenti e tutte vincenti. Il Fante vince tanto quanto l'Asso perché sono una sequenza completa.",
       },
       {
         question:
@@ -104,22 +104,22 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "Da difensore a Senza Atout, quale colore scegliete per l'attacco?",
         options: [
-          "Il colore con piu' onori alti",
-          "Il colore piu' lungo, se pari lunghezza il piu' onorato",
-          "Sempre Picche perche' e' il seme piu' alto",
+          "Il colore con più onori alti",
+          "Il colore più lungo, se pari lunghezza il più onorato",
+          "Sempre Picche perché è il seme più alto",
           "Il colore del morto",
         ],
         correctAnswer: 1,
         explanation:
-          "A SA i difensori scelgono il colore piu' lungo; se due colori di pari lunghezza, il piu' onorato.",
+          "A SA i difensori scelgono il colore più lungo; se due colori di pari lunghezza, il più onorato.",
       },
       {
         question:
           "Il terzo di mano ha KQJ nel colore d'attacco. Quale carta gioca?",
-        options: ["Il Re", "La Donna", "Il Fante", "E' indifferente"],
+        options: ["Il Re", "La Donna", "Il Fante", "È indifferente"],
         correctAnswer: 2,
         explanation:
-          "Quando ha carte equivalenti, il terzo di mano gioca la piu' bassa della sequenza (il contrario di chi muove per primo). Con KQJ come terzo, gioca il J.",
+          "Quando ha carte equivalenti, il terzo di mano gioca la più bassa della sequenza (il contrario di chi muove per primo). Con KQJ come terzo, gioca il J.",
       },
       {
         question:
@@ -156,15 +156,15 @@ export const comprehensionData: LessonComprehension[] = [
           "L'impasse si realizza giocando 'verso' l'onore protetto: piccola da Sud verso la Donna al morto. Se Ovest non ha il Re, la Donna vince.",
       },
       {
-        question: "Qual e' la probabilita' di successo di un'impasse semplice?",
+        question: "Qual è la probabilità di successo di un'impasse semplice?",
         options: ["25%", "33%", "50%", "75%"],
         correctAnswer: 2,
         explanation:
-          "Un'impasse semplice ha il 50% di probabilita': l'onore mancante puo' essere a destra o a sinistra con uguale probabilita'.",
+          "Un'impasse semplice ha il 50% di probabilità: l'onore mancante può essere a destra o a sinistra con uguale probabilità.",
       },
       {
         question:
-          "Cosa e' un 'rientro' (o ingresso) e perche' e' fondamentale per l'affrancamento di lunga?",
+          "Cos'è un 'rientro' (o ingresso) e perché è fondamentale per l'affrancamento di lunga?",
         options: [
           "Una carta che permette di fare presa alla mano giusta nel momento giusto",
           "Un tipo di dichiarazione",
@@ -173,7 +173,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 0,
         explanation:
-          "Il rientro e' una carta che consente di trasferire la mano alla posizione giusta per incassare le carte affrancate. Senza rientri, le affrancabili di lunga restano inutilizzabili.",
+          "Il rientro è una carta che consente di trasferire la mano alla posizione giusta per incassare le carte affrancate. Senza rientri, le affrancabili di lunga restano inutilizzabili.",
       },
     ],
   },
@@ -185,19 +185,19 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Qual e' il primo passo del piano di gioco a Senza Atout?",
+          "Qual è il primo passo del piano di gioco a Senza Atout?",
         options: [
           "Fare subito l'impasse",
           "Contare le vincenti e calcolare quante prese mancano",
           "Incassare tutte le vincenti",
-          "Giocare il colore piu' lungo",
+          "Giocare il colore più lungo",
         ],
         correctAnswer: 1,
         explanation:
           "Il metodo del piano di gioco: 1) Quante prese ho? 2) Quante ne devo trovare? 3) Da quale colore reperirle? Prima di muovere, contate sempre le vincenti.",
       },
       {
-        question: "Cos'e' il 'colpo in bianco' (duck)?",
+        question: "Cos'è il 'colpo in bianco' (duck)?",
         options: [
           "Giocare l'Asso il prima possibile",
           "Fare un'impasse senza successo",
@@ -206,7 +206,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "Il duck e' la cessione immediata di una presa (che sarebbe comunque ceduta dopo) allo scopo di mantenere le comunicazioni con la mano che ha il colore lungo.",
+          "Il duck è la cessione immediata di una presa (che sarebbe comunque ceduta dopo) allo scopo di mantenere le comunicazioni con la mano che ha il colore lungo.",
       },
       {
         question:
@@ -230,42 +230,42 @@ export const comprehensionData: LessonComprehension[] = [
     title: "Il gioco con l'atout",
     questions: [
       {
-        question: "Cos'e' un 'fit' nel bridge?",
+        question: "Cos'è un 'fit' nel bridge?",
         options: [
           "Avere tutte le carte alte in un seme",
-          "L'incontro di 8 o piu' carte in un colore tra le due mani della coppia",
+          "L'incontro di 8 o più carte in un colore tra le due mani della coppia",
           "Avere 5 carte in un seme",
           "Possedere Asso e Re nello stesso seme",
         ],
         correctAnswer: 1,
         explanation:
-          "Il fit e' l'incontro di 8 o piu' carte in un colore tra giocante e morto. Con fit in un nobile (Cuori/Picche) si preferisce giocare ad atout anziche' a SA.",
+          "Il fit è l'incontro di 8 o più carte in un colore tra giocante e morto. Con fit in un nobile (Cuori/Picche) si preferisce giocare ad atout anziché a SA.",
       },
       {
         question:
-          "Perche' nel gioco ad atout la prima operazione e' spesso 'battere le atout'?",
+          "Perché nel gioco ad atout la prima operazione è spesso 'battere le atout'?",
         options: [
-          "Per fare piu' prese possibili",
+          "Per fare più prese possibili",
           "Per impedire agli avversari di tagliare le nostre vincenti laterali",
-          "Perche' e' obbligatorio per regolamento",
+          "Perché è obbligatorio per regolamento",
           "Per mostrare le proprie carte al morto",
         ],
         correctAnswer: 1,
         explanation:
-          "Le vincenti nei colori laterali sono vincenti RELATIVE: il giocante le potra' incassare solo quando avra' eliminato le atout avversarie. Battere atout prima protegge le vincenti.",
+          "Le vincenti nei colori laterali sono vincenti RELATIVE: il giocante le potrà incassare solo quando avrà eliminato le atout avversarie. Battere atout prima protegge le vincenti.",
       },
       {
         question:
           "Cosa si intende per 'potere di allungamento' delle atout?",
         options: [
-          "Le atout diventano piu' lunghe durante il gioco",
-          "Tagliando dalla mano corta si ottengono piu' prese rispetto al semplice incasso",
-          "Le atout valgono piu' punti",
+          "Le atout diventano più lunghe durante il gioco",
+          "Tagliando dalla mano corta si ottengono più prese rispetto al semplice incasso",
+          "Le atout valgono più punti",
           "Si aggiungono carte al colore di atout",
         ],
         correctAnswer: 1,
         explanation:
-          "L'allungamento: tagliando dalla mano corta si possono ottenere dal colore di atout PIU' prese che giocando normalmente. Serve quando il taglio aumenta di almeno una presa.",
+          "L'allungamento: tagliando dalla mano corta si possono ottenere dal colore di atout PIÙ prese che giocando normalmente. Serve quando il taglio aumenta di almeno una presa.",
       },
     ],
   },
@@ -281,7 +281,7 @@ export const comprehensionData: LessonComprehension[] = [
         options: [
           "Mai: le atout vanno sempre battute subito",
           "Quando avete bisogno di fare tagli dalla parte corta",
-          "Quando avete piu' di 8 atout in linea",
+          "Quando avete più di 8 atout in linea",
           "Quando il morto ha molte vincenti",
         ],
         correctAnswer: 1,
@@ -292,21 +292,21 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "Nel gioco ad atout, l'attacco da due carte: quale carta si sceglie?",
         options: [
-          "Sempre la piu' bassa",
-          "Sempre la piu' alta",
-          "Quella con l'onore piu' alto",
-          "E' indifferente",
+          "Sempre la più bassa",
+          "Sempre la più alta",
+          "Quella con l'onore più alto",
+          "È indifferente",
         ],
         correctAnswer: 1,
         explanation:
-          "Quando si attacca da due carte ad atout, si sceglie sempre la piu' alta. Con 74: il 7. Con 102: il 10. Con A9: l'Asso.",
+          "Quando si attacca da due carte ad atout, si sceglie sempre la più alta. Con 74: il 7. Con 102: il 10. Con A9: l'Asso.",
       },
       {
         question:
-          "Perche' ad atout non si deve MAI attaccare 'sotto Asso'?",
+          "Perché ad atout non si deve MAI attaccare 'sotto Asso'?",
         options: [
-          "E' vietato dal regolamento",
-          "Perche' l'Asso va sempre giocato per primo",
+          "È vietato dal regolamento",
+          "Perché l'Asso va sempre giocato per primo",
           "Si rischia di regalare una presa al giocante",
           "Il compagno non capirebbe il segnale",
         ],
@@ -338,14 +338,14 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "Con due semi di 5 carte e 12 punti, quale colore aprite?",
         options: [
-          "Il colore piu' basso di rango",
-          "Il colore con piu' onori",
-          "Il colore piu' alto di rango",
+          "Il colore più basso di rango",
+          "Il colore con più onori",
+          "Il colore più alto di rango",
           "Sempre Fiori",
         ],
         correctAnswer: 2,
         explanation:
-          "Con due semi di 5 carte si apre nel piu' alto di rango. La scelta del colore dipende dalle lunghezze, NON dalla posizione degli onori.",
+          "Con due semi di 5 carte si apre nel più alto di rango. La scelta del colore dipende dalle lunghezze, NON dalla posizione degli onori.",
       },
       {
         question:
@@ -369,25 +369,25 @@ export const comprehensionData: LessonComprehension[] = [
         options: [
           "Passo",
           "2NT (invitante)",
-          "3NT (la manche e' certa)",
+          "3NT (la manche è certa)",
           "2 Fiori (Stayman)",
         ],
         correctAnswer: 2,
         explanation:
-          "Con 10+ punti e mano senza fit nobile si risponde 3NT. La manche e' certa: 15-17 + 10 = almeno 25 punti in linea.",
+          "Con 10+ punti e mano senza fit nobile si risponde 3NT. La manche è certa: 15-17 + 10 = almeno 25 punti in linea.",
       },
       {
         question:
           "Dopo 1NT - 2 Fiori (Stayman), l'apertore risponde 2 Quadri. Cosa significa?",
         options: [
           "Ha 4 carte a Quadri",
-          "Non ha ne' 4 Cuori ne' 4 Picche",
+          "Non ha né 4 Cuori né 4 Picche",
           "Ha 4 Cuori e 4 Picche",
           "Ha solo 15 punti (il minimo)",
         ],
         correctAnswer: 1,
         explanation:
-          "Nella Stayman: 2Q = 'non ho ne' 4 Cuori ne' 4 Picche'; 2C = 'ho 4 Cuori'; 2P = 'ho 4 Picche'; 2NT = 'ho 4C e 4P'.",
+          "Nella Stayman: 2Q = 'non ho né 4 Cuori né 4 Picche'; 2C = 'ho 4 Cuori'; 2P = 'ho 4 Picche'; 2NT = 'ho 4C e 4P'.",
       },
       {
         question:
@@ -400,7 +400,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Con 5+ carte in un nobile e mano debole (0-7 punti) si risponde a livello 2 nel colore. E' una proposta di parziale CONCLUSIVA: il partner deve passare.",
+          "Con 5+ carte in un nobile e mano debole (0-7 punti) si risponde a livello 2 nel colore. È una proposta di parziale CONCLUSIVA: il partner deve passare.",
       },
     ],
   },
@@ -416,7 +416,7 @@ export const comprehensionData: LessonComprehension[] = [
         options: ["1NT", "2 Picche", "Passo", "2 Fiori"],
         correctAnswer: 2,
         explanation:
-          "Con meno di 5 punti si dice Passo. L'apertore puo' avere 12-20: con solo 4 punti la manche (24-25) non e' raggiungibile.",
+          "Con meno di 5 punti si dice Passo. L'apertore può avere 12-20: con solo 4 punti la manche (24-25) non è raggiungibile.",
       },
       {
         question:
@@ -429,11 +429,11 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Appoggio a livello 2: limitativo, mostra fit (4 carte su 1Q) e 5-9 punti. Il messaggio: 'se hai una mano normale, la manche e' irraggiungibile'.",
+          "Appoggio a livello 2: limitativo, mostra fit (4 carte su 1Q) e 5-9 punti. Il messaggio: 'se hai una mano normale, la manche è irraggiungibile'.",
       },
       {
         question:
-          "Il partner apre 1 Cuori. Quale risposta e' FORZANTE (l'apertore non puo' passare)?",
+          "Il partner apre 1 Cuori. Quale risposta è FORZANTE (l'apertore non può passare)?",
         options: [
           "2 Cuori (appoggio)",
           "1NT (5-10 punti)",
@@ -442,7 +442,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "Un colore nuovo in risposta e' sempre FORZANTE: l'apertore non puo' passare. Promette 5+ punti e almeno 4 carte nel colore.",
+          "Un colore nuovo in risposta è sempre FORZANTE: l'apertore non può passare. Promette 5+ punti e almeno 4 carte nel colore.",
       },
     ],
   },
@@ -454,11 +454,11 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "L'apertore con 12-15 punti e' definito 'mano di Diritto'. Qual e' il suo Livello di Guardia con mano bilanciata?",
+          "L'apertore con 12-15 punti è definito 'mano di Diritto'. Qual è il suo Livello di Guardia con mano bilanciata?",
         options: ["1 nel suo colore", "1NT", "2NT", "2 nel suo colore"],
         correctAnswer: 1,
         explanation:
-          "Con mano bilanciata di Diritto (12-15), il Livello di Guardia e' 1NT. La ridichiarazione non superera' quel livello.",
+          "Con mano bilanciata di Diritto (12-15), il Livello di Guardia è 1NT. La ridichiarazione non supererà quel livello.",
       },
       {
         question:
@@ -471,11 +471,11 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "La bilanciata 18-20 si descrive con il salto a 2NT dopo risposta 1 su 1. E' troppo forte per 1NT (15-17) e troppo debole per apertura 2NT (21-23).",
+          "La bilanciata 18-20 si descrive con il salto a 2NT dopo risposta 1 su 1. È troppo forte per 1NT (15-17) e troppo debole per apertura 2NT (21-23).",
       },
       {
         question:
-          "Dopo una risposta '2 su 1' (es. 1P-2Q), la situazione e' forzante a manche. L'apertore cosa deve fare?",
+          "Dopo una risposta '2 su 1' (es. 1P-2Q), la situazione è forzante a manche. L'apertore cosa deve fare?",
         options: [
           "Passare se ha il minimo",
           "Descrivere la DISTRIBUZIONE senza distinguere Diritto/Rovescio",
@@ -484,7 +484,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Su risposte 2 su 1 la coppia ha almeno 24 punti: la manche e' assicurata. L'apertore descrive solo la DISTRIBUZIONE senza fare distinzioni tra Diritto e Rovescio.",
+          "Su risposte 2 su 1 la coppia ha almeno 24 punti: la manche è assicurata. L'apertore descrive solo la DISTRIBUZIONE senza fare distinzioni tra Diritto e Rovescio.",
       },
     ],
   },
@@ -505,7 +505,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Il Contro informativo su 1C garantisce 4 Picche e tolleranza per Fiori e Quadri, con 12-16 punti. E' il modo per chiedere al compagno di scegliere.",
+          "Il Contro informativo su 1C garantisce 4 Picche e tolleranza per Fiori e Quadri, con 12-16 punti. È il modo per chiedere al compagno di scegliere.",
       },
       {
         question:
@@ -518,7 +518,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "L'intervento di 1NT e' equivalente all'apertura 1NT (15-17 bilanciata) MA garantisce in piu' il fermo nel colore dell'apertore.",
+          "L'intervento di 1NT è equivalente all'apertura 1NT (15-17 bilanciata) MA garantisce in più il fermo nel colore dell'apertore.",
       },
       {
         question:
@@ -531,7 +531,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "L'intervento 1 su 1 richiede 8-16 punti e 5+ carte con almeno 1 Onore (A, K o Q). Se il punteggio e' minimo, dev'essere concentrato nel colore.",
+          "L'intervento 1 su 1 richiede 8-16 punti e 5+ carte con almeno 1 Onore (A, K o Q). Se il punteggio è minimo, dev'essere concentrato nel colore.",
       },
     ],
   },
@@ -552,7 +552,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Con 11+ punti sul Contro avversario si fa Surcontro: e' l'unica dichiarazione forte. La descrizione della mano si rimanda al giro successivo.",
+          "Con 11+ punti sul Contro avversario si fa Surcontro: è l'unica dichiarazione forte. La descrizione della mano si rimanda al giro successivo.",
       },
       {
         question:
@@ -565,11 +565,11 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Con l'intervento, i Senza non sono piu' obbligati ma proposte di contratto: promettono il fermo nel colore avversario. 1NT = 7-10 punti con fermo.",
+          "Con l'intervento, i Senza non sono più obbligati ma proposte di contratto: promettono il fermo nel colore avversario. 1NT = 7-10 punti con fermo.",
       },
       {
         question:
-          "L'apertore e' passato dopo che il 4o di mano ha detto 1P su 1Q-1C. Con mano normale bilanciata, cosa fa l'apertore?",
+          "L'apertore è passato dopo che il 4o di mano ha detto 1P su 1Q-1C. Con mano normale bilanciata, cosa fa l'apertore?",
         options: [
           "Ridice 2 Quadri per mostrare forza",
           "Contro per mostrare i suoi punti",
@@ -578,7 +578,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "Con mani normali bilanciate o sbilanciate dopo intervento del 4o di mano: l'apertore Passa. Il partner avra' comunque modo di parlare grazie all'intervento avversario.",
+          "Con mani normali bilanciate o sbilanciate dopo intervento del 4o di mano: l'apertore Passa. Il partner avrà comunque modo di parlare grazie all'intervento avversario.",
       },
     ],
   },
@@ -586,7 +586,7 @@ export const comprehensionData: LessonComprehension[] = [
   // ============================================================
   // CORSO QUADRI (12 lezioni, ID 1-12)
   // Nota: gli ID coincidono con Fiori. Queste domande saranno
-  // servite quando l'architettura distinguera' i corsi.
+  // servite quando l'architettura distinguerà i corsi.
   // ============================================================
 
   // --- Quadri Lez. 1: Tempi e Comunicazioni nel Gioco a Senza ---
@@ -616,7 +616,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Nel gioco a colore, quale attacco e' considerato 'anormale' e sospetto?",
+          "Nel gioco a colore, quale attacco è considerato 'anormale' e sospetto?",
         options: [
           "Attacco dal colore del compagno",
           "Attacco da una sequenza (es. KQJ)",
@@ -629,29 +629,29 @@ export const comprehensionData: LessonComprehension[] = [
       },
       {
         question:
-          "Al morto c'e' K3 e in mano J54. L'avversario attacca con il 2 (vi mancano A e Q). Cosa giocate dal morto?",
+          "Al morto c'è K3 e in mano J54. L'avversario attacca con il 2 (vi mancano A e Q). Cosa giocate dal morto?",
         options: [
           "Il Re, sperando che cada l'Asso",
           "Piccola, stando bassi",
-          "Il 3, perche' e' indifferente",
+          "Il 3, perché è indifferente",
           "Dipende dalla dichiarazione avversaria",
         ],
         correctAnswer: 1,
         explanation:
-          "State bassi! Chi attacca puo' avere la Dama ma probabilmente non l'Asso. Mettendo il Re si perde sicuramente; stando bassi il Re potrebbe vincere in seguito.",
+          "State bassi! Chi attacca può avere la Dama ma probabilmente non l'Asso. Mettendo il Re si perde sicuramente; stando bassi il Re potrebbe vincere in seguito.",
       },
       {
         question:
           "Prima di giocare la prima carta dal morto, cosa dovete fare?",
         options: [
-          "Giocare il piu' velocemente possibile",
+          "Giocare il più velocemente possibile",
           "Contare solo i punti del morto",
           "Fare una pausa di riflessione, dedurre dalla carta d'attacco e dalla licita",
           "Chiedere consiglio al compagno",
         ],
         correctAnswer: 2,
         explanation:
-          "La pausa alla prima presa e' fondamentale. Dedurre dalla carta d'attacco, ricordare la licita, formulare ipotesi sulla distribuzione e fare il piano di gioco PRIMA di muovere.",
+          "La pausa alla prima presa è fondamentale. Dedurre dalla carta d'attacco, ricordare la licita, formulare ipotesi sulla distribuzione e fare il piano di gioco PRIMA di muovere.",
       },
     ],
   },
@@ -666,25 +666,25 @@ export const comprehensionData: LessonComprehension[] = [
           "Nel gioco ad atout, la 'Mano Base' e la 'Mano Satellite' si riferiscono a:",
         options: [
           "La mano forte e la mano debole",
-          "La mano con piu' atout (Base) e l'altra (Satellite che fa i tagli)",
+          "La mano con più atout (Base) e l'altra (Satellite che fa i tagli)",
           "La mano del giocante e quella del morto",
           "Il seme di atout e il seme laterale",
         ],
         correctAnswer: 1,
         explanation:
-          "La Mano Base e' quella con piu' atout, destinata a battere le atout avversarie. La Mano Satellite usa le sue atout per tagliare. I tagli della Satellite producono prese extra.",
+          "La Mano Base è quella con più atout, destinata a battere le atout avversarie. La Mano Satellite usa le sue atout per tagliare. I tagli della Satellite producono prese extra.",
       },
       {
-        question: "Perche' il fit 4-4 e' considerato il piu' potente?",
+        question: "Perché il fit 4-4 è considerato il più potente?",
         options: [
-          "Perche' ha piu' punti",
-          "Perche' non c'e' una mano Base a priori e si puo' tagliare da entrambe le parti",
-          "Perche' garantisce 10 prese",
-          "Perche' gli avversari hanno meno atout",
+          "Perché ha più punti",
+          "Perché non c'è una mano Base a priori e si può tagliare da entrambe le parti",
+          "Perché garantisce 10 prese",
+          "Perché gli avversari hanno meno atout",
         ],
         correctAnswer: 1,
         explanation:
-          "Il fit 4-4 e' il piu' potente perche' non avendo una mano Base predefinita, si puo' scegliere da quale parte tagliare a seconda delle esigenze, massimizzando le prese.",
+          "Il fit 4-4 è il più potente perché non avendo una mano Base predefinita, si può scegliere da quale parte tagliare a seconda delle esigenze, massimizzando le prese.",
       },
       {
         question:
@@ -697,7 +697,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Le prese del Satellite devono essere raggiungibili! Se l'unico modo per raggiungere una lunga del morto e' il colore di atout, non bisogna accorciarlo con i tagli.",
+          "Le prese del Satellite devono essere raggiungibili! Se l'unico modo per raggiungere una lunga del morto è il colore di atout, non bisogna accorciarlo con i tagli.",
       },
     ],
   },
@@ -711,14 +711,14 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "Nel 'conto della carta', come segnalate di avere un numero PARI di carte nel colore giocato dal compagno?",
         options: [
-          "Giocate la carta piu' piccola",
+          "Giocate la carta più piccola",
           "Giocate una carta alta seguita da una bassa",
           "Giocate sempre il 2",
           "Giocate un onore",
         ],
         correctAnswer: 1,
         explanation:
-          "Nel conto: con 2, 4 o 6 carte (pari) si sceglie una carta ALTA cui seguira' una piu' bassa. Con 1, 3 o 5 carte (dispari) si gioca la piu' piccola.",
+          "Nel conto: con 2, 4 o 6 carte (pari) si sceglie una carta ALTA cui seguirà una più bassa. Con 1, 3 o 5 carte (dispari) si gioca la più piccola.",
       },
       {
         question:
@@ -744,7 +744,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Al primo scarto: DISPARI chiama (mostra valori nel colore) e PARI rifiuta (nega valori). E' il 'primo scarto all'italiana'.",
+          "Al primo scarto: DISPARI chiama (mostra valori nel colore) e PARI rifiuta (nega valori). È il 'primo scarto all'italiana'.",
       },
     ],
   },
@@ -758,7 +758,7 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "In difesa, quando il giocante inizia un colore con una piccola, cosa fate in seconda posizione?",
         options: [
-          "Coprite sempre con il vostro onore piu' alto",
+          "Coprite sempre con il vostro onore più alto",
           "Giocate piccola (seconda di mano bassa)",
           "Giocate il vostro onore medio",
           "Tagliate se possibile",
@@ -773,25 +773,25 @@ export const comprehensionData: LessonComprehension[] = [
         options: [
           "Mai, lasciate che il compagno faccia da solo",
           "Sempre, per cercare di vincere la presa",
-          "Solo se l'onore e' l'Asso",
+          "Solo se l'onore è l'Asso",
           "Quando il gradimento richiede di continuare il colore e avete carte equivalenti",
         ],
         correctAnswer: 1,
         explanation:
-          "Il terzo di mano deve cercare di vincere la presa, eventualmente sacrificando i suoi onori per affrancare quelli del compagno. E' un principio fondamentale della difesa.",
+          "Il terzo di mano deve cercare di vincere la presa, eventualmente sacrificando i suoi onori per affrancare quelli del compagno. È un principio fondamentale della difesa.",
       },
       {
         question:
-          "Quando e' corretto dare il segnale di gradimento?",
+          "Quando è corretto dare il segnale di gradimento?",
         options: [
           "Sempre quando il compagno muove un colore",
-          "Solo quando il colore e' mosso dai difensori, MAI se mosso dal Giocante",
+          "Solo quando il colore è mosso dai difensori, MAI se mosso dal Giocante",
           "Quando il Giocante attacca un colore dal morto",
           "Solo nella prima presa",
         ],
         correctAnswer: 1,
         explanation:
-          "Il gradimento si da' SOLO quando un colore viene mosso dai difensori. Non si segnala MAI quando il colore e' mosso dal Giocante: in quel caso si difende normalmente.",
+          "Il gradimento si dà SOLO quando un colore viene mosso dai difensori. Non si segnala MAI quando il colore è mosso dal Giocante: in quel caso si difende normalmente.",
       },
     ],
   },
@@ -803,7 +803,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Cos'e' un 'gioco di sicurezza' nel bridge?",
+          "Cos'è un 'gioco di sicurezza' nel bridge?",
         options: [
           "Giocare sempre gli Assi per primi",
           "Rinunciare a una presa potenziale per garantirsi di non perderne due",
@@ -812,20 +812,20 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Il gioco di sicurezza consiste nel rinunciare volontariamente a una presa (o alla possibilita' di farla) per proteggersi da cattive divisioni e garantire il contratto.",
+          "Il gioco di sicurezza consiste nel rinunciare volontariamente a una presa (o alla possibilità di farla) per proteggersi da cattive divisioni e garantire il contratto.",
       },
       {
         question:
-          "Quando e' piu' importante la sicurezza rispetto alla massimizzazione delle prese?",
+          "Quando è più importante la sicurezza rispetto alla massimizzazione delle prese?",
         options: [
           "Sempre nel gioco a Senza Atout",
-          "Quando si gioca a squadre (IMP) e il contratto e' importante",
+          "Quando si gioca a squadre (IMP) e il contratto è importante",
           "Solo quando si ha slam",
           "Solo quando si ha meno di 20 punti",
         ],
         correctAnswer: 1,
         explanation:
-          "A squadre (IMP) il concetto di sicurezza e' fondamentale: perdere un contratto per cercare una presa in piu' e' un disastro. A coppie (Mitchell) la presa in piu' conta di piu'.",
+          "A squadre (IMP) il concetto di sicurezza è fondamentale: perdere un contratto per cercare una presa in più è un disastro. A coppie (Mitchell) la presa in più conta di più.",
       },
       {
         question:
@@ -843,16 +843,16 @@ export const comprehensionData: LessonComprehension[] = [
     ],
   },
 
-  // --- Lezione 105: Probabilita' e Percentuali ---
+  // --- Lezione 105: Probabilità e Percentuali ---
   {
     lessonId: 105,
-    title: "Probabilita' e Percentuali",
+    title: "Probabilità e Percentuali",
     questions: [
       {
         question:
-          "Con 8 carte in linea in un colore, quale divisione avversaria e' la piu' probabile?",
+          "Con 8 carte in linea in un colore, quale divisione avversaria è la più probabile?",
         options: [
-          "2-3 (piu' della meta' delle volte)",
+          "2-3 (più della metà delle volte)",
           "3-2 nel 68% dei casi",
           "4-1 nel 50% dei casi",
           "2-3 nel 50% e 4-1 nel 50%",
@@ -863,11 +863,11 @@ export const comprehensionData: LessonComprehension[] = [
       },
       {
         question:
-          "Con 7 carte in linea, qual e' la probabilita' di trovare la divisione 3-3 avversaria?",
+          "Con 7 carte in linea, qual è la probabilità di trovare la divisione 3-3 avversaria?",
         options: ["50%", "48%", "36%", "68%"],
         correctAnswer: 2,
         explanation:
-          "Con 7 carte in linea, la 3-3 avversaria si trova solo nel 36% dei casi. La 4-2 e' molto piu' frequente (48%).",
+          "Con 7 carte in linea, la 3-3 avversaria si trova solo nel 36% dei casi. La 4-2 è molto più frequente (48%).",
       },
       {
         question:
@@ -880,7 +880,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Con 9+ carte in linea e la sola Dama mancante, la percentuale del drop (battere A e K) supera quella dell'impasse. La Dama e' piu' probabilmente secca o seconda.",
+          "Con 9+ carte in linea e la sola Dama mancante, la percentuale del drop (battere A e K) supera quella dell'impasse. La Dama è più probabilmente secca o seconda.",
       },
     ],
   },
@@ -894,22 +894,22 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "In seconda posizione, il giocante muove un onore dal morto. Quando dovete coprirlo?",
         options: [
-          "Sempre, e' la regola universale",
+          "Sempre, è la regola universale",
           "Mai, si gioca sempre piccola in seconda",
           "Quando coprendo potete promuovere un onore al compagno o a voi stessi",
           "Solo se avete l'Asso",
         ],
         correctAnswer: 2,
         explanation:
-          "Si copre l'onore del morto quando coprendo si puo' promuovere un onore per la propria linea. Se coprire non produce nulla (es. il morto ha una sequenza), meglio giocare piccola.",
+          "Si copre l'onore del morto quando coprendo si può promuovere un onore per la propria linea. Se coprire non produce nulla (es. il morto ha una sequenza), meglio giocare piccola.",
       },
       {
         question:
           "Il morto ha QJ109. Il giocante gioca la Donna. Coprite con il Re?",
         options: [
-          "Si', sempre coprire un onore",
-          "No, perche' il morto ha una sequenza: coprire non promuove nulla",
-          "Si', per bloccare il colore",
+          "Sì, sempre coprire un onore",
+          "No, perché il morto ha una sequenza: coprire non promuove nulla",
+          "Sì, per bloccare il colore",
           "Dipende dai punti del giocante",
         ],
         correctAnswer: 1,
@@ -920,14 +920,14 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "La regola di seconda mano bassa ('piccola su piccola') si applica sempre?",
         options: [
-          "Si', senza eccezioni",
+          "Sì, senza eccezioni",
           "No, a volte bisogna salire per impedire al giocante di fare prese con carte basse",
           "Solo nel gioco a Senza Atout",
           "Solo se si ha un onore alto",
         ],
         correctAnswer: 1,
         explanation:
-          "La regola 'piccola su piccola' ha eccezioni: quando si puo' prendere la presa con certezza, o quando lasciando passare si permetterebbe al giocante una presa immeritata.",
+          "La regola 'piccola su piccola' ha eccezioni: quando si può prendere la presa con certezza, o quando lasciando passare si permetterebbe al giocante una presa immeritata.",
       },
     ],
   },
@@ -939,7 +939,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Cos'e' una 'messa in mano' (endplay)?",
+          "Cos'è una 'messa in mano' (endplay)?",
         options: [
           "Giocare la prima carta nella presa",
           "Mettere un avversario in presa obbligandolo a giocare a nostro vantaggio",
@@ -961,19 +961,19 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Prima della messa in mano bisogna 'eliminare' i colori neutri (quelli che l'avversario potrebbe rigiocare senza danno), cosi' quando sara' in presa sara' costretto a giocare nel colore favorevole a noi.",
+          "Prima della messa in mano bisogna 'eliminare' i colori neutri (quelli che l'avversario potrebbe rigiocare senza danno), così quando sarà in presa sarà costretto a giocare nel colore favorevole a noi.",
       },
       {
-        question: "Cos'e' il 'taglio e scarto'?",
+        question: "Cos'è il 'taglio e scarto'?",
         options: [
           "Tagliare un colore e scartarne un altro",
-          "L'avversario in presa gioca un colore in cui noi siamo vuoti al morto e in mano, dandoci la possibilita' di tagliare da una parte e scartare una perdente dall'altra",
+          "L'avversario in presa gioca un colore in cui noi siamo vuoti al morto e in mano, dandoci la possibilità di tagliare da una parte e scartare una perdente dall'altra",
           "Una convenzione di licita",
           "Scartare le atout per fare tagli",
         ],
         correctAnswer: 1,
         explanation:
-          "Il 'taglio e scarto' (ruff and discard) si verifica quando l'avversario e' costretto a giocare un colore in cui una mano e' vuota: si taglia da una parte e si scarta una perdente dall'altra.",
+          "Il 'taglio e scarto' (ruff and discard) si verifica quando l'avversario è costretto a giocare un colore in cui una mano è vuota: si taglia da una parte e si scarta una perdente dall'altra.",
       },
     ],
   },
@@ -987,14 +987,14 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "Cosa significa 'giocare come se' nel bridge?",
         options: [
-          "Giocare facendo finta di avere piu' punti",
+          "Giocare facendo finta di avere più punti",
           "Ipotizzare una distribuzione avversaria necessaria per mantenere il contratto e giocare di conseguenza",
           "Copiare il gioco degli avversari",
           "Giocare senza guardare le carte",
         ],
         correctAnswer: 1,
         explanation:
-          "Giocare 'come se' significa formulare un'ipotesi sulla distribuzione avversaria che renda il contratto possibile, e agire come se fosse certa. Se l'ipotesi alternativa porta comunque al fallimento, non c'e' nulla da perdere.",
+          "Giocare 'come se' significa formulare un'ipotesi sulla distribuzione avversaria che renda il contratto possibile, e agire come se fosse certa. Se l'ipotesi alternativa porta comunque al fallimento, non c'è nulla da perdere.",
       },
       {
         question:
@@ -1002,25 +1002,25 @@ export const comprehensionData: LessonComprehension[] = [
         options: [
           "Sperare nella fortuna",
           "Affrontare subito la condizione necessaria, non rimandarla",
-          "Evitare il problema il piu' a lungo possibile",
+          "Evitare il problema il più a lungo possibile",
           "Chiedere il Contro per guadagnare tempo",
         ],
         correctAnswer: 1,
         explanation:
-          "Rimandare il problema spesso significa perdere la possibilita' di risolverlo. Se il contratto dipende da una condizione (es. un'impasse), affrontatela subito.",
+          "Rimandare il problema spesso significa perdere la possibilità di risolverlo. Se il contratto dipende da una condizione (es. un'impasse), affrontatela subito.",
       },
       {
         question:
-          "Se il contratto puo' essere mantenuto solo con una specifica divisione degli onori avversari, come procedete?",
+          "Se il contratto può essere mantenuto solo con una specifica divisione degli onori avversari, come procedete?",
         options: [
           "Giocate la linea che funziona nel maggior numero di casi",
           "Ipotizzate la divisione favorevole e giocate di conseguenza",
-          "Provate prima la linea piu' sicura e poi cambiate",
-          "Non importa: il risultato e' casuale",
+          "Provate prima la linea più sicura e poi cambiate",
+          "Non importa: il risultato è casuale",
         ],
         correctAnswer: 1,
         explanation:
-          "Se l'unica via per mantenere il contratto e' una specifica distribuzione, la assumete come vera e giocate di conseguenza. Se fosse diversa, il contratto sarebbe comunque perso.",
+          "Se l'unica via per mantenere il contratto è una specifica distribuzione, la assumete come vera e giocate di conseguenza. Se fosse diversa, il contratto sarebbe comunque perso.",
       },
     ],
   },
@@ -1041,24 +1041,24 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Se l'avversario ha aperto 1NT (15-17) e ha mostrato A e K in un colore (7 punti), negli altri colori avra' al massimo 10 punti. Queste deduzioni dalla licita sono fondamentali per localizzare gli onori mancanti.",
+          "Se l'avversario ha aperto 1NT (15-17) e ha mostrato A e K in un colore (7 punti), negli altri colori avrà al massimo 10 punti. Queste deduzioni dalla licita sono fondamentali per localizzare gli onori mancanti.",
       },
       {
         question:
           "L'avversario ha passato in apertura e poi ha giocato AK di fiori. Dove cercate la Donna di un altro seme?",
         options: [
           "Indifferentemente da una parte o dall'altra",
-          "Sicuramente dall'altra parte (chi ha passato con AK ha al massimo 10 punti, non abbastanza per una Donna in piu')",
+          "Sicuramente dall'altra parte (chi ha passato con AK ha al massimo 10 punti, non abbastanza per una Donna in più)",
           "Dalla stessa parte di chi ha AK",
           "Non si possono fare deduzioni",
         ],
         correctAnswer: 1,
         explanation:
-          "Se un giocatore ha passato in apertura con AK di fiori (7 punti), non puo' avere troppo di piu'. Le Donne e i Re mancanti saranno probabilmente dall'altro lato.",
+          "Se un giocatore ha passato in apertura con AK di fiori (7 punti), non può avere troppo di più. Le Donne e i Re mancanti saranno probabilmente dall'altro lato.",
       },
       {
         question:
-          "Quando la carta d'attacco e' un'onore alto (es. Re), cosa potete dedurre?",
+          "Quando la carta d'attacco è un'onore alto (es. Re), cosa potete dedurre?",
         options: [
           "Niente di preciso",
           "L'attaccante ha una sequenza: il Re promette anche la Donna e nega l'Asso",
@@ -1087,7 +1087,7 @@ export const comprehensionData: LessonComprehension[] = [
         options: ["15", "16", "17", "18"],
         correctAnswer: 2,
         explanation:
-          "Prese Totali = Somma delle atout. 9 + 8 = 17 Prese Totali. Ogni coppia fara' circa tante prese quante atout possiede.",
+          "Prese Totali = Somma delle atout. 9 + 8 = 17 Prese Totali. Ogni coppia farà circa tante prese quante atout possiede.",
       },
       {
         question:
@@ -1100,20 +1100,20 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Le distribuzioni piatte 4333 riducono la resa: svalutate di una presa. Con 8 atout in linea ma 4333, dichiarate solo 2 nel colore anziche' 3.",
+          "Le distribuzioni piatte 4333 riducono la resa: svalutate di una presa. Con 8 atout in linea ma 4333, dichiarate solo 2 nel colore anziché 3.",
       },
       {
         question:
-          "Dopo 1C-1P-2C-2P, il vostro partner rialza a 3C. E' un invito a manche?",
+          "Dopo 1C-1P-2C-2P, il vostro partner rialza a 3C. È un invito a manche?",
         options: [
-          "Si', sta invitando con punti buoni",
-          "No, e' competitivo secondo la Legge (9 atout, 9 prese)",
-          "Si', mostra 16-18 punti",
-          "Dipende dalla vulnerabilita'",
+          "Sì, sta invitando con punti buoni",
+          "No, è competitivo secondo la Legge (9 atout, 9 prese)",
+          "Sì, mostra 16-18 punti",
+          "Dipende dalla vulnerabilità",
         ],
         correctAnswer: 1,
         explanation:
-          "3C dopo 1C-1P-2C-2P e' competitivo (9 carte, 9 prese secondo la Legge). Per invitare a manche si usano dichiarazioni convenzionali come 2NT, Contro, o un nuovo colore.",
+          "3C dopo 1C-1P-2C-2P è competitivo (9 carte, 9 prese secondo la Legge). Per invitare a manche si usano dichiarazioni convenzionali come 2NT, Contro, o un nuovo colore.",
       },
     ],
   },
@@ -1134,7 +1134,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "A fronte di un singolo del partner, solo l'Asso e' un onore interessante. Re, Donna e Fante davanti a un singolo sono valori potenzialmente sprecati.",
+          "A fronte di un singolo del partner, solo l'Asso è un onore interessante. Re, Donna e Fante davanti a un singolo sono valori potenzialmente sprecati.",
       },
       {
         question:
@@ -1194,7 +1194,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "4NT dopo transfer su 1NT e' QUANTITATIVO, cioe' un invito a slam. Non e' Blackwood! Per chiedere gli Assi si usa la Stayman e poi si cerca l'atout.",
+          "4NT dopo transfer su 1NT è QUANTITATIVO, cioè un invito a slam. Non è Blackwood! Per chiedere gli Assi si usa la Stayman e poi si cerca l'atout.",
       },
       {
         question:
@@ -1228,7 +1228,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "In forcing manche, 2NT dell'apertore e' l'unica replica che limita la mano: bilanciata 12-14 con attitudine a giocare a Senza. Mostra fermi nei colori non detti.",
+          "In forcing manche, 2NT dell'apertore è l'unica replica che limita la mano: bilanciata 12-14 con attitudine a giocare a Senza. Mostra fermi nei colori non detti.",
       },
       {
         question:
@@ -1247,14 +1247,14 @@ export const comprehensionData: LessonComprehension[] = [
         question:
           "In FM, il rispondente riporta a 2 nel seme di apertura (es. 1P-2F-2Q-2P). Questo fissa l'atout?",
         options: [
-          "Si', fissa le Picche come atout definitivo",
+          "Sì, fissa le Picche come atout definitivo",
           "No, mostra almeno tolleranza (2+ carte) e chiede ulteriore descrizione",
-          "Si', e invita allo slam",
-          "E' una dichiarazione conclusiva",
+          "Sì, e invita allo slam",
+          "È una dichiarazione conclusiva",
         ],
         correctAnswer: 1,
         explanation:
-          "Il riporto a 2 nel seme di apertura mostra tolleranza (2+ carte) e chiede all'apertore di descriversi ancora. NON fissa l'atout. Il rialzo a 3, invece, fissa l'atout con velleita' di Slam.",
+          "Il riporto a 2 nel seme di apertura mostra tolleranza (2+ carte) e chiede all'apertore di descriversi ancora. NON fissa l'atout. Il rialzo a 3, invece, fissa l'atout con velleità di Slam.",
       },
     ],
   },
@@ -1266,42 +1266,42 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Cos'e' il 'terreno solido' nella dichiarazione verso lo Slam?",
+          "Cos'è il 'terreno solido' nella dichiarazione verso lo Slam?",
         options: [
           "Quando si hanno 30+ punti in linea",
           "Quando le dichiarazioni iniziali hanno individuato almeno 21-22 punti in linea",
-          "Quando l'atout e' concordato",
+          "Quando l'atout è concordato",
           "Quando si hanno tutti gli Assi",
         ],
         correctAnswer: 1,
         explanation:
-          "Il terreno e' solido quando le dichiarazioni hanno mostrato almeno 21-22 punti combinati. Su terreno solido, fissare l'atout appena sotto manche e' FORZANTE (obiettivo Slam).",
+          "Il terreno è solido quando le dichiarazioni hanno mostrato almeno 21-22 punti combinati. Su terreno solido, fissare l'atout appena sotto manche è FORZANTE (obiettivo Slam).",
       },
       {
         question:
-          "Dopo 1C-1P-2C-3C, il 3C e' forzante o passabile?",
+          "Dopo 1C-1P-2C-3C, il 3C è forzante o passabile?",
         options: [
           "Forzante (terreno solido, obiettivo Slam)",
           "Passabile (terreno non solido, invitante)",
           "Dipende dai punti dell'apertore",
-          "E' sempre conclusivo",
+          "È sempre conclusivo",
         ],
         correctAnswer: 1,
         explanation:
-          "Dopo 1C-1P-2C non c'e' certezza di 21+ punti in linea. Il terreno non e' solido, quindi 3C e' passabile (invitante, non forzante).",
+          "Dopo 1C-1P-2C non c'è certezza di 21+ punti in linea. Il terreno non è solido, quindi 3C è passabile (invitante, non forzante).",
       },
       {
         question:
           "Come si distingue un fissaggio forzante (slam) da uno invitante?",
         options: [
           "Dal livello di dichiarazione",
-          "Se il terreno e' solido (21+ in linea) e' forzante; se non solido e' invitante",
-          "E' sempre forzante sotto manche",
+          "Se il terreno è solido (21+ in linea) è forzante; se non solido è invitante",
+          "È sempre forzante sotto manche",
           "Dipende dal numero di Assi",
         ],
         correctAnswer: 1,
         explanation:
-          "Le due domande chiave: A) Il compagno potrebbe accontentarsi del contratto? B) Aveva strade piu' forti? Se terreno solido = forzante (Slam). Se non solido = invitante (passabile).",
+          "Le due domande chiave: A) Il compagno potrebbe accontentarsi del contratto? B) Aveva strade più forti? Se terreno solido = forzante (Slam). Se non solido = invitante (passabile).",
       },
     ],
   },
@@ -1313,7 +1313,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Cos'e' una Cue Bid nel contesto dell'accostamento a Slam?",
+          "Cos'è una Cue Bid nel contesto dell'accostamento a Slam?",
         options: [
           "La dichiarazione del colore avversario",
           "Una dichiarazione illogica che mostra un CONTROLLO (Asso, vuoto, Re, singolo) in un colore laterale",
@@ -1322,11 +1322,11 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Le Cue Bid per lo Slam sono dichiarazioni che mostrano un controllo (1o giro: Asso/vuoto; 2o giro: Re/singolo) in un colore laterale, dopo che l'obiettivo e' lo Slam.",
+          "Le Cue Bid per lo Slam sono dichiarazioni che mostrano un controllo (1o giro: Asso/vuoto; 2o giro: Re/singolo) in un colore laterale, dopo che l'obiettivo è lo Slam.",
       },
       {
         question:
-          "Quale delle 4 regole delle Cue Bid dice 'Cue Bid saltata = non c'e''?",
+          "Quale delle 4 regole delle Cue Bid dice 'Cue Bid saltata = non c'è'?",
         options: [
           "La prima regola",
           "La seconda regola",
@@ -1335,16 +1335,16 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 2,
         explanation:
-          "Regola 3: Cue Bid saltata = non c'e'. Se un giocatore salta una Cue e il compagno prosegue le Cue Bid, il compagno promette di avere il controllo nel colore saltato.",
+          "Regola 3: Cue Bid saltata = non c'è. Se un giocatore salta una Cue e il compagno prosegue le Cue Bid, il compagno promette di avere il controllo nel colore saltato.",
       },
       {
         question:
           "Sotto il livello di manche, le Cue Bid sono obbligatorie o facoltative?",
         options: [
-          "Facoltative: con mano minima si puo' rifiutare",
+          "Facoltative: con mano minima si può rifiutare",
           "OBBLIGATORIE: non si nega la Cue Bid con la scusa 'mano minima'",
           "Dipende dal numero di punti",
-          "Solo il Capitano puo' fare Cue Bid",
+          "Solo il Capitano può fare Cue Bid",
         ],
         correctAnswer: 1,
         explanation:
@@ -1369,7 +1369,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Le sottoaperture 2C e 2P mostrano 6 carte e punteggio 6-10. Sono aperture interdittive: il Rispondente sara' il Capitano.",
+          "Le sottoaperture 2C e 2P mostrano 6 carte e punteggio 6-10. Sono aperture interdittive: il Rispondente sarà il Capitano.",
       },
       {
         question:
@@ -1377,12 +1377,12 @@ export const comprehensionData: LessonComprehension[] = [
         options: [
           "Stayman",
           "Transfer",
-          "Ogust (interrogativa: chiede qualita' del colore e del punteggio)",
+          "Ogust (interrogativa: chiede qualità del colore e del punteggio)",
           "Blackwood",
         ],
         correctAnswer: 2,
         explanation:
-          "2NT dopo sottoapertura e' la convenzione Ogust: chiede al compagno la qualita' del colore e del punteggio. Risposte: 3F=min+brutto, 3Q=min+bello, 3C=max+brutto, 3P=max+bello, 3NT=AKQxxx.",
+          "2NT dopo sottoapertura è la convenzione Ogust: chiede al compagno la qualità del colore e del punteggio. Risposte: 3F=min+brutto, 3Q=min+bello, 3C=max+brutto, 3P=max+bello, 3NT=AKQxxx.",
       },
       {
         question:
@@ -1407,7 +1407,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "L'apertura di 2 Fiori e':",
+          "L'apertura di 2 Fiori è:",
         options: [
           "Un barrage a Fiori",
           "L'unica apertura forte del sistema, senza limite superiore di punti",
@@ -1416,7 +1416,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "2F e' l'unica apertura forte del sistema. Non ha limite superiore. Il Capitanato spetta all'Apertore. La risposta convenzionale d'attesa e' 2Q.",
+          "2F è l'unica apertura forte del sistema. Non ha limite superiore. Il Capitanato spetta all'Apertore. La risposta convenzionale d'attesa è 2Q.",
       },
       {
         question:
@@ -1433,16 +1433,16 @@ export const comprehensionData: LessonComprehension[] = [
       },
       {
         question:
-          "Dopo 2F-2Q-2C, la situazione e' forzante manche?",
+          "Dopo 2F-2Q-2C, la situazione è forzante manche?",
         options: [
-          "Si', sempre dopo 2F",
-          "No, e' forzante solo fino al ritorno a 3C (3 nel colore)",
-          "Si', ma solo con 8+ punti",
-          "No, si puo' passare subito",
+          "Sì, sempre dopo 2F",
+          "No, è forzante solo fino al ritorno a 3C (3 nel colore)",
+          "Sì, ma solo con 8+ punti",
+          "No, si può passare subito",
         ],
         correctAnswer: 1,
         explanation:
-          "Dopo 2F-2Q-2C o 2P, la situazione NON e' FM: e' forzante solo fino al ritorno nel colore (3C o 3P). FM si raggiunge solo se l'apertore mostra bilanciata (2NT) o minore.",
+          "Dopo 2F-2Q-2C o 2P, la situazione NON è FM: è forzante solo fino al ritorno nel colore (3C o 3P). FM si raggiunge solo se l'apertore mostra bilanciata (2NT) o minore.",
       },
     ],
   },
@@ -1454,7 +1454,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Una dichiarazione COMPETITIVA e' caratterizzata da:",
+          "Una dichiarazione COMPETITIVA è caratterizzata da:",
         options: [
           "Un salto nel colore di atout",
           "L'appoggio o rialzo senza salto, senza ambizioni di manche",
@@ -1467,7 +1467,7 @@ export const comprehensionData: LessonComprehension[] = [
       },
       {
         question:
-          "Una dichiarazione INTERDITTIVA e' SEMPRE caratterizzata da:",
+          "Una dichiarazione INTERDITTIVA è SEMPRE caratterizzata da:",
         options: [
           "Un appoggio al minimo livello",
           "Un annuncio a SALTO",
@@ -1480,7 +1480,7 @@ export const comprehensionData: LessonComprehension[] = [
       },
       {
         question:
-          "Dopo 1C-P-2C-P-3C dall'apertore. Il 3C e':",
+          "Dopo 1C-P-2C-P-3C dall'apertore. Il 3C è:",
         options: [
           "Un invito a manche",
           "Interdittivo: mostra lunghezza extra e previene la riapertura avversaria",
@@ -1489,7 +1489,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "3C non e' un invito! E' interdittivo, mostra lunghezza extra nel colore (Legge delle Prese Totali) e cerca di impedire la riapertura avversaria.",
+          "3C non è un invito! È interdittivo, mostra lunghezza extra nel colore (Legge delle Prese Totali) e cerca di impedire la riapertura avversaria.",
       },
     ],
   },
@@ -1510,7 +1510,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Nel sistema standard avanzato, 3 nel nobile e' BARRAGE: fit quarto, 0-7 punti e distribuzione sbilanciata (non invito!). Racconta l'esatta lunghezza del fit.",
+          "Nel sistema standard avanzato, 3 nel nobile è BARRAGE: fit quarto, 0-7 punti e distribuzione sbilanciata (non invito!). Racconta l'esatta lunghezza del fit.",
       },
       {
         question:
@@ -1523,20 +1523,20 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "2NT Truscott: fit nel nobile, terzo o quarto, invito a manche (10 belli - 12 brutti). NON richiede fermi nei colori ne' mano bilanciata.",
+          "2NT Truscott: fit nel nobile, terzo o quarto, invito a manche (10 belli - 12 brutti). NON richiede fermi nei colori né mano bilanciata.",
       },
       {
         question:
-          "La risposta 1NT su 1 nobile del partner (nel sistema avanzato) e':",
+          "La risposta 1NT su 1 nobile del partner (nel sistema avanzato) è:",
         options: [
           "Sempre 5-10 punti, nega il fit",
-          "Semiforzante: 5-11 punti, puo' nascondere fit nel nobile",
+          "Semiforzante: 5-11 punti, può nascondere fit nel nobile",
           "15-17 punti bilanciata",
           "Forzante a manche",
         ],
         correctAnswer: 1,
         explanation:
-          "1NT semiforzante si allarga a 5-11 punti. Puo' nascondere fit nel nobile di apertura. L'apertore su 1NT non dice mai Passo (tranne 5332 di 11).",
+          "1NT semiforzante si allarga a 5-11 punti. Può nascondere fit nel nobile di apertura. L'apertore su 1NT non dice mai Passo (tranne 5332 di 11).",
       },
     ],
   },
@@ -1564,13 +1564,13 @@ export const comprehensionData: LessonComprehension[] = [
           "Nel Bergen, 2NT Truscott mostra:",
         options: [
           "Invito naturale a 3NT",
-          "Tutte le mani di 12+ punti con fit quarto o piu'",
+          "Tutte le mani di 12+ punti con fit quarto o più",
           "8-9 punti bilanciata",
           "Fit terzo debole",
         ],
         correctAnswer: 1,
         explanation:
-          "Nel Bergen, 2NT Truscott e' illimitato (12+ punti) con fit quarto o piu'. L'apertore risponde: colore nuovo = singolo/vuoto; 3 in atout = mano interessante; 4 in atout = peggiore.",
+          "Nel Bergen, 2NT Truscott è illimitato (12+ punti) con fit quarto o più. L'apertore risponde: colore nuovo = singolo/vuoto; 3 in atout = mano interessante; 4 in atout = peggiore.",
       },
       {
         question:
@@ -1604,16 +1604,16 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Nel sistema NT forzante, l'appoggio a 2 e' COSTRUTTIVO: 8-10 punti, normalmente fit terzo. Le mani piu' deboli con fit passano da 1NT forzante e poi riportano a 2.",
+          "Nel sistema NT forzante, l'appoggio a 2 è COSTRUTTIVO: 8-10 punti, normalmente fit terzo. Le mani più deboli con fit passano da 1NT forzante e poi riportano a 2.",
       },
       {
         question:
           "Dopo intervento avversario, 2NT Truscott diventa:",
         options: [
           "Invitante come senza intervento",
-          "ILLIMITATA (11+), con fit quarto o piu'",
+          "ILLIMITATA (11+), con fit quarto o più",
           "Naturale, proposta di giocare a Senza",
-          "Non piu' utilizzabile",
+          "Non più utilizzabile",
         ],
         correctAnswer: 1,
         explanation:
@@ -1664,7 +1664,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Landy: 2F su 1NT avversario mostra almeno 5/4 nelle nobili con 9/10+ punti. Il compagno sceglie il maggiore preferito (2Q chiede il nobile piu' lungo).",
+          "Landy: 2F su 1NT avversario mostra almeno 5/4 nelle nobili con 9/10+ punti. Il compagno sceglie il maggiore preferito (2Q chiede il nobile più lungo).",
       },
       {
         question:
@@ -1711,7 +1711,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "L'appoggio immediato dopo intervento = fit quarto. L'apertore non e' obbligato a parlare (effetto sponda), quindi ogni dichiarazione e' 'speciale'. L'appoggio a 2 = fit quarto, mano normale.",
+          "L'appoggio immediato dopo intervento = fit quarto. L'apertore non è obbligato a parlare (effetto sponda), quindi ogni dichiarazione è 'speciale'. L'appoggio a 2 = fit quarto, mano normale.",
       },
       {
         question:
@@ -1724,7 +1724,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Dopo che l'apertore e' passato sull'intervento del 4o di mano, il Contro del rispondente (7/8+ punti) chiede all'apertore di descriversi: non e' punitivo, e' competitivo.",
+          "Dopo che l'apertore è passato sull'intervento del 4o di mano, il Contro del rispondente (7/8+ punti) chiede all'apertore di descriversi: non è punitivo, è competitivo.",
       },
     ],
   },

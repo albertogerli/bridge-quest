@@ -205,6 +205,10 @@ export default function QuizLampoPage() {
   const [showResult, setShowResult] = useState(false);
   const [wasCorrect, setWasCorrect] = useState(false);
 
+  // Answer history for recap
+  const [answersHistory, setAnswersHistory] = useState<Array<{ selected: number | null; correct: boolean }>>([]);
+  const [showRecap, setShowRecap] = useState(false);
+
   // Gameover state
   const [xpEarned, setXpEarned] = useState(0);
   const [bestScore, setBestScore] = useState<number | null>(null);
@@ -264,6 +268,7 @@ export default function QuizLampoPage() {
       setWasCorrect(false);
       setCombo(0);
       setTimeLeft(0);
+      setAnswersHistory(prev => [...prev, { selected: null, correct: false }]);
 
       setTimeout(() => {
         advanceQuestion(false, 0);
@@ -309,6 +314,8 @@ export default function QuizLampoPage() {
       setXpEarned(0);
       setIsNewBest(false);
       setShowCelebration(false);
+      setAnswersHistory([]);
+      setShowRecap(false);
       lockedRef.current = false;
       setPhase("playing");
 
@@ -347,6 +354,7 @@ export default function QuizLampoPage() {
       setSelectedIdx(optionIdx);
       setShowResult(true);
       setWasCorrect(isCorrect);
+      setAnswersHistory(prev => [...prev, { selected: optionIdx, correct: isCorrect }]);
 
       let roundComboPoints = 0;
       let roundSpeedBonus = 0;
@@ -529,7 +537,7 @@ export default function QuizLampoPage() {
             <p
               className={`text-gray-500 mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : "text-sm"}`}
             >
-              Domande a raffica da tutti i corsi. Velocita' e precisione per
+              Domande a raffica da tutti i corsi. Velocità e precisione per
               scalare la classifica!
             </p>
 
@@ -769,6 +777,72 @@ export default function QuizLampoPage() {
                 </div>
               </div>
             </motion.div>
+
+            {/* Recap toggle */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.85 }}
+              className="mt-4"
+            >
+              <button
+                onClick={() => setShowRecap(!showRecap)}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                <span>{showRecap ? "Nascondi" : "Mostra"} recap risposte</span>
+                <span className="text-xs">{showRecap ? "▲" : "▼"}</span>
+              </button>
+            </motion.div>
+
+            {/* Recap delle risposte */}
+            <AnimatePresence>
+              {showRecap && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-3 space-y-2 text-left">
+                    {questions.map((q, i) => {
+                      const answer = answersHistory[i];
+                      if (!answer) return null;
+                      const wasRight = answer.correct;
+                      const selectedOption = answer.selected !== null ? q.options[answer.selected] : null;
+                      return (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className={`rounded-xl p-3 border ${wasRight ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
+                        >
+                          <div className="flex items-start gap-2">
+                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${wasRight ? "bg-emerald-500" : "bg-red-500"}`}>
+                              {wasRight ? "✓" : "✗"}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium text-gray-800 leading-relaxed">{q.content}</p>
+                              <p className="text-[11px] text-gray-500 mt-1">
+                                {answer.selected !== null
+                                  ? `Hai risposto: ${selectedOption}`
+                                  : "Tempo scaduto"}
+                              </p>
+                              {!wasRight && (
+                                <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                                  Corretta: {q.options[q.correctIndex]}
+                                  {q.explanation && ` — ${q.explanation}`}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Actions */}
             <motion.div

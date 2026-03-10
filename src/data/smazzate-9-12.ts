@@ -57,7 +57,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("J"), S("10"), S("6"), H("A"), H("4"), D("A"), D("J"), D("8"), D("6"), C("10"), C("8"), C("5")],
       south: [S("K"), S("5"), S("3"), H("9"), H("8"), H("7"), H("3"), D("7"), D("4"), C("A"), C("K"), C("9"), C("4")],
     },
-    commentary: "La licita. Con una bilanciata di 12 punti Est deve aprire di 1D (1S richiede 5 carte). Ovest, certo di non avere in linea 8 carte in nessun nobile, rialza a 3D mostrando fit e carte che, rivalutate, valgono 11. Est passa: a 25 punti, richiesti per giocare manche, non si arriva. Nessun rimpianto per le C: Ovest, scegliendo le D, nega di avere 4 o piu carte a H o S. Il gioco. Est conta 5 prese a D e 2 a H, piu due affrancabili a S. Esecuzione facile: si battono i giri di atout necessari e poi si cedono A e K di S. 3D: 110.",
+    commentary: "La licita. Con una bilanciata di 12 punti Est deve aprire di 1D (1S richiede 5 carte). Ovest, certo di non avere in linea 8 carte in nessun nobile, rialza a 3D mostrando fit e carte che, rivalutate, valgono 11. Est passa: a 25 punti, richiesti per giocare manche, non si arriva. Nessun rimpianto per le C: Ovest, scegliendo le D, nega di avere 4 o più carte a H o S. Il gioco. Est conta 5 prese a D e 2 a H, più due affrancabili a S. Esecuzione facile: si battono i giri di atout necessari e poi si cedono A e K di S. 3D: 110.",
     bidding: {
       dealer: "north",
       bids: ["P", "1D", "P", "3D", "P", "P", "P"],
@@ -84,7 +84,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("2"), H("J"), H("10"), H("8"), H("5"), H("3"), D("J"), D("9"), D("6"), D("4"), C("J"), C("7")],
       south: [S("K"), S("J"), S("8"), S("5"), H("A"), H("9"), H("4"), H("2"), D("Q"), D("7"), C("K"), C("8"), C("6")],
     },
-    commentary: "La licita. Sud procede per eliminazione: non puo aprire di 1S, ne di 1H, ne di 1D, ne di 1NT. Non resta che 1C. Nord e bilanciato, sa per certo di avere almeno 26 in linea e nessun fit nobile e possibile: 3NT e una decisione rapida e vincente. Il gioco. Nord conta 3 vincenti a S e 2 a H; puo affrancare 3C e 1D. Se intuisce che l'attacco proviene da J10, anche il 9 di H dara una presa, ma solo se vince l'attacco in mano! Subito S per cedere l'Asso, poi l'altro onore corto di H e impasse al 10 al 100%... infine, se non ci ha ancora pensato l'avversario, D. 3NT + 1, in seconda: 630.",
+    commentary: "La licita. Sud procede per eliminazione: non può aprire di 1S, né di 1H, né di 1D, né di 1NT. Non resta che 1C. Nord è bilanciato, sa per certo di avere almeno 26 in linea e nessun fit nobile è possibile: 3NT è una decisione rapida e vincente. Il gioco. Nord conta 3 vincenti a S e 2 a H; può affrancare 3C e 1D. Se intuisce che l'attacco proviene da J10, anche il 9 di H darà una presa, ma solo se vince l'attacco in mano! Subito S per cedere l'Asso, poi l'altro onore corto di H e impasse al 10 al 100%... infine, se non ci ha ancora pensato l'avversario, D. 3NT + 1, in seconda: 630.",
     bidding: {
       dealer: "east",
       bids: ["P", "1C", "P", "3NT", "P", "P", "P"],
@@ -111,7 +111,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("J"), S("9"), S("7"), S("4"), H("6"), D("A"), D("8"), D("5"), D("4"), D("3"), C("Q"), C("5")],
       south: [S("6"), H("K"), H("Q"), H("9"), H("3"), D("K"), D("Q"), D("6"), C("10"), C("9"), C("6"), C("4"), C("2")],
     },
-    commentary: "La licita. Con due colori entrambi quinti si apre in quello di rango maggiore. Est ha un fit eccezionale: la sua mano, se si gioca a S, vale 13 punti (9+4), pertanto la dichiarazione corretta e 4S. Il gioco. Nord incassa A e K di C, poi - essendo inutile la continuazione - prosegue con il J di quadri. Ovest conta: 1H, 1D... e di conseguenza almeno 8 prese dovranno essere date dalle atout. Puo tagliare 4H al morto e 4D in mano, un colpo di atout si puo dare, poi si prosegue incassando i due Assi e tagliando tutto; 9 prese con le atout, piu i due Assi: 11. 4S + 1, in seconda: 650.",
+    commentary: "La licita. Con due colori entrambi quinti si apre in quello di rango maggiore. Est ha un fit eccezionale: la sua mano, se si gioca a S, vale 13 punti (9+4), pertanto la dichiarazione corretta è 4S. Il gioco. Nord incassa A e K di C, poi - essendo inutile la continuazione - prosegue con il J di quadri. Ovest conta: 1H, 1D... e di conseguenza almeno 8 prese dovranno essere date dalle atout. Può tagliare 4H al morto e 4D in mano, un colpo di atout si può dare, poi si prosegue incassando i due Assi e tagliando tutto; 9 prese con le atout, più i due Assi: 11. 4S + 1, in seconda: 650.",
     bidding: {
       dealer: "south",
       bids: ["P", "1S", "P", "4S", "P", "P", "P"],
@@ -138,7 +138,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("9"), S("8"), S("6"), S("5"), H("J"), D("A"), D("K"), D("10"), D("3"), C("9"), C("5"), C("3"), C("2")],
       south: [S("K"), S("Q"), S("J"), S("7"), H("A"), H("10"), H("8"), H("7"), H("5"), H("3"), D("5"), C("A"), C("K")],
     },
-    commentary: "La licita. Sud ha buone carte, che diventano ottime quando Nord mostra fit: il colore non e molto onorato, ma piu sono le carte in linea e meno saranno le prese da cedere. Il rialzo a manche e una buona scommessa. Il gioco. Sud conta 6, o 5, o 4 prese a H (a seconda che i resti siano 2-2, 3-1, 4-0), 3C, e 3 affrancabili a picche. Vinto l'attacco, con un minimo rischio puo sbarazzarsi del 5 di D: incassa l'altro onore a C, l'Asso di H e H al Re (ora ovest ha una atout vincente, inutile batterla) e Dama di C scartando D. Poi si affrontano le picche. Agli avversari spettera solo una picche e una H. 4H + 1, in seconda: 650.",
+    commentary: "La licita. Sud ha buone carte, che diventano ottime quando Nord mostra fit: il colore non è molto onorato, ma più sono le carte in linea e meno saranno le prese da cedere. Il rialzo a manche è una buona scommessa. Il gioco. Sud conta 6, o 5, o 4 prese a H (a seconda che i resti siano 2-2, 3-1, 4-0), 3C, e 3 affrancabili a picche. Vinto l'attacco, con un minimo rischio può sbarazzarsi del 5 di D: incassa l'altro onore a C, l'Asso di H e H al Re (ora ovest ha una atout vincente, inutile batterla) e Dama di C scartando D. Poi si affrontano le picche. Agli avversari spetterà solo una picche e una H. 4H + 1, in seconda: 650.",
     bidding: {
       dealer: "west",
       bids: ["P", "P", "P", "1H", "P", "2H", "P", "4H", "P", "P", "P"],
@@ -165,7 +165,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("K"), S("5"), S("2"), H("7"), D("A"), D("10"), D("9"), D("8"), C("Q"), C("10"), C("9"), C("6"), C("2")],
       south: [S("8"), S("7"), S("4"), H("A"), H("K"), H("J"), H("3"), H("2"), D("4"), D("3"), C("A"), C("8"), C("7")],
     },
-    commentary: "La licita. Ovvia l'apertura di Sud; Nord ha fit abbondante e lo deve comunicare. La sua mano, con atout H, vale 11 (8+3), punteggio critico perche la manche non e certa (11+12) ma nemmeno da escludere (11+14). L'appoggio a livello 3 dice: 'H ok, sono incerto sulla somma punti; passa se hai il minimo dell'apertura e rialza se hai almeno 14'. Sud non potrebbe avere meno di quello che ha, e passa. Il gioco. Sud conta: 1S, 5H, 1C. Ricavare 2 prese dalle D? E' quasi impossibile. Ma altre due prese dalle atout si: basta tagliare due C al morto! Preso l'attacco, C all'Asso e C taglio. H all'Asso e C taglio. Poi eliminazione delle atout... e 9 prese fatte. 3H: 140.",
+    commentary: "La licita. Ovvia l'apertura di Sud; Nord ha fit abbondante e lo deve comunicare. La sua mano, con atout H, vale 11 (8+3), punteggio critico perché la manche non è certa (11+12) ma nemmeno da escludere (11+14). L'appoggio a livello 3 dice: 'H ok, sono incerto sulla somma punti; passa se hai il minimo dell'apertura e rialza se hai almeno 14'. Sud non potrebbe avere meno di quello che ha, e passa. Il gioco. Sud conta: 1S, 5H, 1C. Ricavare 2 prese dalle D? È quasi impossibile. Ma altre due prese dalle atout si: basta tagliare due C al morto! Preso l'attacco, C all'Asso e C taglio. H all'Asso e C taglio. Poi eliminazione delle atout... e 9 prese fatte. 3H: 140.",
     bidding: {
       dealer: "north",
       bids: ["P", "P", "1H", "P", "3H", "P", "P", "P"],
@@ -192,7 +192,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("J"), S("9"), S("5"), S("4"), H("A"), H("J"), H("5"), D("6"), D("5"), C("K"), C("7"), C("5")],
       south: [S("Q"), S("10"), S("6"), H("Q"), H("10"), H("9"), H("2"), D("A"), D("7"), D("4"), D("2"), C("J"), C("2")],
     },
-    commentary: "La licita. Est ha le carte in regola per aprire 1S; Ovest deve evitare 2 errori: 1) passare (con 5+ punti non si passa MAI), 2) dire 2C (licita istintiva ma sbagliata: prometterebbe 12+ punti). Non ne rimane che una: 1NT. Est passa, in linea c'e al massimo 23, nessuna manche e possibile. Il gioco. Gioco duro, se NS sanno il fatto loro: Sud prende e rigioca D; Ovest in presa con il Re conta: 1S, 1H, 1D, 2C. Le C, se divise 3-2, possono dare 2 prese di lunga, cedendone una. Attenzione pero: serve un colpo in bianco, perche Ovest non ha piu ingressi: piccola C da ambo le mani, o K di C e C a dare... non A e K di C e C! 1NT: 90.",
+    commentary: "La licita. Est ha le carte in regola per aprire 1S; Ovest deve evitare 2 errori: 1) passare (con 5+ punti non si passa MAI), 2) dire 2C (licita istintiva ma sbagliata: prometterebbe 12+ punti). Non ne rimane che una: 1NT. Est passa, in linea c'è al massimo 23, nessuna manche è possibile. Il gioco. Gioco duro, se NS sanno il fatto loro: Sud prende e rigioca D; Ovest in presa con il Re conta: 1S, 1H, 1D, 2C. Le C, se divise 3-2, possono dare 2 prese di lunga, cedendone una. Attenzione però: serve un colpo in bianco, perché Ovest non ha più ingressi: piccola C da ambo le mani, o K di C e C a dare... non A e K di C e C! 1NT: 90.",
     bidding: {
       dealer: "east",
       bids: ["1S", "P", "1NT", "P", "P", "P"],
@@ -219,7 +219,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("10"), H("Q"), H("8"), H("5"), H("2"), D("Q"), D("9"), D("8"), D("3"), C("K"), C("Q"), C("J"), C("5")],
       south: [S("A"), S("9"), S("8"), S("2"), H("A"), H("7"), D("A"), D("J"), D("5"), D("4"), C("7"), C("6"), C("3")],
     },
-    commentary: "La licita. Sud ha una bilanciata, il primo colore in cui trova il numero di carte sufficiente per aprire e D. Nord ha due colori in cui chiedere se c'e fit, ma le S sono 5 quindi e da li che deve cominciare. Sud (che sa di dover dichiarare ancora) ha una licita spontanea e ovvia: 2S 'si, ho fit di 4 carte, e un'apertura di forza minima. Vedi tu.' Nord passa. Il gioco. Le prime 3 prese sono della difesa, che poi proseguira H, o D. Nord conta 5, o 4, o 3 (a seconda dei resti: 2-2, 3-1, 4-0), 2H, 1D. Bisogna ricorrere ad un allungamento di prese: tagliare 2H al morto o 3D in mano e equivalente, ma la prima ipotesi e meno complicata. 2S + 1: 140.",
+    commentary: "La licita. Sud ha una bilanciata, il primo colore in cui trova il numero di carte sufficiente per aprire e D. Nord ha due colori in cui chiedere se c'è fit, ma le S sono 5 quindi è da lì che deve cominciare. Sud (che sa di dover dichiarare ancora) ha una licita spontanea e ovvia: 2S 'sì, ho fit di 4 carte, e un'apertura di forza minima. Vedi tu.' Nord passa. Il gioco. Le prime 3 prese sono della difesa, che poi proseguirà H, o D. Nord conta 5, o 4, o 3 (a seconda dei resti: 2-2, 3-1, 4-0), 2H, 1D. Bisogna ricorrere ad un allungamento di prese: tagliare 2H al morto o 3D in mano è equivalente, ma la prima ipotesi è meno complicata. 2S + 1: 140.",
     bidding: {
       dealer: "south",
       bids: ["1D", "P", "1S", "P", "2S", "P", "P", "P"],
@@ -246,7 +246,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("K"), S("4"), H("A"), H("J"), H("10"), H("9"), H("5"), D("K"), C("J"), C("4"), C("3"), C("2")],
       south: [S("5"), S("2"), H("4"), H("2"), D("A"), D("J"), D("10"), D("8"), D("5"), C("Q"), C("9"), C("6"), C("5")],
     },
-    commentary: "La licita. Est ha... 13 (un Re secco non va contato a pieno valore), l'apertura 1H e facile. Ovest, con fit di 5 carte e un singolo, appoggia a manche perche le sue carte, ora, valgono 13 (9 + 4). Il gioco. Est gioca comodo; puo anche permettersi di battere 2 atout, glie ne restano abbastanza per fare i tre tagli a C al morto; realizzera 5H di mano, 3 tagli con le S del morto, 1D e 3 (o 4?) C. Nota: se il morto non scarta nessuna S, Nord deve conservarle tutte e 4 (altrimenti Est fara 13 prese). 4H + 2, in prima: 480.",
+    commentary: "La licita. Est ha... 13 (un Re secco non va contato a pieno valore), l'apertura 1H è facile. Ovest, con fit di 5 carte è un singolo, appoggia a manche perché le sue carte, ora, valgono 13 (9 + 4). Il gioco. Est gioca comodo; può anche permettersi di battere 2 atout, glie ne restano abbastanza per fare i tre tagli a C al morto; realizzerà 5H di mano, 3 tagli con le S del morto, 1D e 3 (o 4?) C. Nota: se il morto non scarta nessuna S, Nord deve conservarle tutte e 4 (altrimenti Est farà 13 prese). 4H + 2, in prima: 480.",
     bidding: {
       dealer: "west",
       bids: ["P", "P", "1H", "P", "4H", "P", "P", "P"],
@@ -277,7 +277,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("9"), H("K"), H("10"), H("8"), H("2"), D("9"), D("7"), C("Q"), C("10"), C("6"), C("3"), C("2")],
       south: [S("A"), S("7"), S("6"), S("4"), H("5"), H("3"), D("A"), D("K"), D("J"), D("6"), D("5"), C("K"), C("J")],
     },
-    commentary: "La licita. Nord inizia chiedendo fit nel colore quinto e Sud, saltando un livello, mostra mano sbilanciata con 4 carte di appoggio e circa 15-17 punti; quanto basta a Nord (almeno 25 in linea ci sono) per dichiarare 4S. Il gioco. L'attacco e insidioso, quello che non si deve fare e mettere il Re: non si attacca sotto asso, ad atout, quindi il Re verrebbe catturato al 100%. Ovest, in presa, per il suo meglio potrebbe giocare la Q di H; Nord vince con l'Asso, batte A e K di atout (con 9 carte NON si fa l'impasse alla Q) e incassa le D, per 12 prese. 4S + 2, in prima: 480.",
+    commentary: "La licita. Nord inizia chiedendo fit nel colore quinto e Sud, saltando un livello, mostra mano sbilanciata con 4 carte di appoggio e circa 15-17 punti; quanto basta a Nord (almeno 25 in linea ci sono) per dichiarare 4S. Il gioco. L'attacco è insidioso, quello che non si deve fare è mettere il Re: non si attacca sotto asso, ad atout, quindi il Re verrebbe catturato al 100%. Ovest, in presa, per il suo meglio potrebbe giocare la Q di H; Nord vince con l'Asso, batte A e K di atout (con 9 carte NON si fa l'impasse alla Q) e incassa le D, per 12 prese. 4S + 2, in prima: 480.",
     bidding: {
       dealer: "north",
       bids: ["P", "P", "1D", "P", "1S", "P", "3S", "P", "4S", "P", "P", "P"],
@@ -304,7 +304,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("8"), S("4"), S("3"), H("9"), H("6"), H("2"), D("Q"), D("10"), D("4"), D("2"), C("K"), C("8")],
       south: [S("Q"), S("7"), S("5"), S("2"), H("K"), H("10"), H("5"), H("3"), D("7"), D("6"), C("A"), C("Q"), C("3")],
     },
-    commentary: "La licita. Con la bilanciata di 18-20 punti si apre di 1 a colore, e si salta a 2NT al giro seguente. Est, con 9, ha abbastanza per rialzare a 3NT; se Ovest possiede 4 carte di S potra correggere a 4S. Il gioco. Inizio drammatico, 4 prese per la difesa (se il K non viene giocato... Sud deve comunque giocare la Q e poi l'Asso) dopodiche Nord, tra H e C, dovrebbe proseguire con il J di C. Ovest ha 7 vincenti e deve assolutamente ricavare altre 2 prese dalle D; gli ingressi per fare e ripetere l'impasse abbondano, e solo il coraggio che non deve mancare! 3NT, in prima: 400.",
+    commentary: "La licita. Con la bilanciata di 18-20 punti si apre di 1 a colore, e si salta a 2NT al giro seguente. Est, con 9, ha abbastanza per rialzare a 3NT; se Ovest possiede 4 carte di S potrà correggere a 4S. Il gioco. Inizio drammatico, 4 prese per la difesa (se il K non viene giocato... Sud deve comunque giocare la Q e poi l'Asso) dopodiché Nord, tra H e C, dovrebbe proseguire con il J di C. Ovest ha 7 vincenti e deve assolutamente ricavare altre 2 prese dalle D; gli ingressi per fare e ripetere l'impasse abbondano, è solo il coraggio che non deve mancare! 3NT, in prima: 400.",
     bidding: {
       dealer: "east",
       bids: ["P", "P", "1D", "P", "1S", "P", "2NT", "P", "3NT", "P", "P", "P"],
@@ -331,7 +331,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("10"), S("4"), H("J"), H("7"), D("10"), D("7"), D("6"), D("3"), C("A"), C("J"), C("10"), C("5"), C("2")],
       south: [S("K"), S("J"), S("9"), S("5"), H("A"), H("10"), H("9"), H("3"), H("2"), D("A"), D("Q"), C("7"), C("3")],
     },
-    commentary: "La licita. Nord, poiche i punti gli consentono il livello 2, deve iniziare dal suo colore piu lungo: 2D. Ora entrambi sanno di avere forza per una manche. Sud mostra l'altro colore e Nord conclude senza tergiversare. Il gioco. Dopo aver incassato le prime due fiori Ovest deve cambiare, e il rinvio meno rischioso e atout. Sud conta 4S, 2H, 5D; e inutile tagliare le H (piu di 11 prese non puo fare!) pertanto batte tre giri, sblocca AQ di D e rientra con il Re di H per completare l'incasso. 4S + 1, in prima: 450.",
+    commentary: "La licita. Nord, poiché i punti gli consentono il livello 2, deve iniziare dal suo colore più lungo: 2D. Ora entrambi sanno di avere forza per una manche. Sud mostra l'altro colore e Nord conclude senza tergiversare. Il gioco. Dopo aver incassato le prime due fiori Ovest deve cambiare, e il rinvio meno rischioso è atout. Sud conta 4S, 2H, 5D; è inutile tagliare le H (più di 11 prese non può fare!) pertanto batte tre giri, sblocca AQ di D e rientra con il Re di H per completare l'incasso. 4S + 1, in prima: 450.",
     bidding: {
       dealer: "south",
       bids: ["1H", "P", "2D", "P", "2S", "P", "4S", "P", "P", "P"],
@@ -358,7 +358,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("K"), S("J"), S("10"), S("5"), S("4"), H("K"), H("7"), H("3"), D("A"), D("Q"), D("5"), C("7"), C("6")],
       south: [S("A"), S("6"), S("2"), H("10"), H("9"), H("8"), H("5"), D("9"), D("8"), D("3"), C("10"), C("9"), C("3")],
     },
-    commentary: "La licita. Est, dopo 1NT, sa di aver di fronte una bilanciata di 12-14 punti, in cui le S sono o due, oppure tre. La manche e certa, e sara o 3NT (se Ovest ha 2S) o 4S (se Ovest ne ha 3). Per ottenere questa informazione usa un cambio di colore forzante e, appurate 8 carte in linea, sa che manche dichiarare. Il gioco. Sud sceglie l'unico colore non detto, Nord vince la presa e muove il K di C. Est conta 10 prese (4S, 2H, 3D e 1C) e non deve fare altro che battere atout. Nota: a 3NT si va sotto di una (attacco K di C)! 4S, in seconda: 620.",
+    commentary: "La licita. Est, dopo 1NT, sa di aver di fronte una bilanciata di 12-14 punti, in cui le S sono o due, oppure tre. La manche è certa, e sarà o 3NT (se Ovest ha 2S) o 4S (se Ovest ne ha 3). Per ottenere questa informazione usa un cambio di colore forzante e, appurate 8 carte in linea, sa che manche dichiarare. Il gioco. Sud sceglie l'unico colore non detto, Nord vince la presa e muove il K di C. Est conta 10 prese (4S, 2H, 3D e 1C) e non deve fare altro che battere atout. Nota: a 3NT si va sotto di una (attacco K di C)! 4S, in seconda: 620.",
     bidding: {
       dealer: "west",
       bids: ["1C", "P", "1S", "P", "1NT", "P", "2D", "P", "2S", "P", "4S", "P", "P", "P"],
@@ -385,7 +385,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("7"), S("4"), S("2"), H("J"), H("9"), H("5"), H("2"), D("K"), D("6"), C("J"), C("10"), C("5")],
       south: [S("K"), S("Q"), S("J"), H("K"), H("Q"), H("6"), H("4"), D("10"), D("9"), D("2"), C("Q"), C("7"), C("3")],
     },
-    commentary: "La licita. Nord ha una sbilanciata di Diritto, il livello di guardia e 2D, quindi e autorizzato a dichiarare 2C (mostrando cosi 5+ D e 4+ C). Sud sa che i punti per una manche ci sono, sa che non c'e fit nei nobili, sa che l'attacco sara nell'unico colore non detto... e KQJ dovrebbero bastare: 3NT. Il gioco. Ovest sceglie la piu alta delle cartine, e questo aiuta Est a capire, quando vede cadere il J, che Sud ha esattamente KQJ e Ovest 5 carte.... quindi S ancora. Sud conta 2S, 3H... e le D, da sole, portano a 9 prese anche se l'impasse fallisse. Quindi 10 di D subito, per le C non ci sara tempo. 3NT, in seconda: 600.",
+    commentary: "La licita. Nord ha una sbilanciata di Diritto, il livello di guardia è 2D, quindi è autorizzato a dichiarare 2C (mostrando così 5+ D e 4+ C). Sud sa che i punti per una manche ci sono, sa che non c'è fit nei nobili, sa che l'attacco sarà nell'unico colore non detto... e KQJ dovrebbero bastare: 3NT. Il gioco. Ovest sceglie la più alta delle cartine, e questo aiuta Est a capire, quando vede cadere il J, che Sud ha esattamente KQJ e Ovest 5 carte.... quindi S ancora. Sud conta 2S, 3H... e le D, da sole, portano a 9 prese anche se l'impasse fallisse. Quindi 10 di D subito, per le C non ci sarà tempo. 3NT, in seconda: 600.",
     bidding: {
       dealer: "north",
       bids: ["1D", "P", "1H", "P", "2C", "P", "3NT", "P", "P", "P"],
@@ -412,7 +412,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("7"), S("6"), S("5"), H("K"), H("Q"), D("K"), D("Q"), D("9"), D("8"), C("A"), C("7"), C("6"), C("4")],
       south: [S("A"), S("K"), S("8"), H("8"), H("7"), H("6"), D("J"), D("10"), D("2"), C("K"), C("10"), C("3"), C("2")],
     },
-    commentary: "La licita. Sull'apertura di 1 a colore non si deve mai passare se si hanno 5+ punti; Ovest risponde 1H e poi deve essere coerente: le sue carte valgono qualcosa solo se H e atout, quindi su 1NT e doveroso salvare il compagno e decidere che il parziale debba essere 2H. E' semplice, basta dire 2H! Il gioco. La difesa incassa le prime 3S, poi al meglio devia sulle fiori. Ovest prende, vede che 'avrebbe' 9 prese (5H, 3D, 1C) ma se ora batte atout ne resteranno solo 8. Quindi Asso di D, D al morto, e sul terzo giro di D, scarto del 9 di C. Poi, atout. Nota: il contratto di 1NT cadrebbe di 2 prese! 2H+1: 140.",
+    commentary: "La licita. Sull'apertura di 1 a colore non si deve mai passare se si hanno 5+ punti; Ovest risponde 1H e poi deve essere coerente: le sue carte valgono qualcosa solo se H è atout, quindi su 1NT è doveroso salvare il compagno e decidere che il parziale debba essere 2H. È semplice, basta dire 2H! Il gioco. La difesa incassa le prime 3S, poi al meglio devia sulle fiori. Ovest prende, vede che 'avrebbe' 9 prese (5H, 3D, 1C) ma se ora batte atout ne resteranno solo 8. Quindi Asso di D, D al morto, e sul terzo giro di D, scarto del 9 di C. Poi, atout. Nota: il contratto di 1NT cadrebbe di 2 prese! 2H+1: 140.",
     bidding: {
       dealer: "east",
       bids: ["1D", "P", "1H", "P", "1NT", "P", "2H", "P", "P", "P"],
@@ -439,7 +439,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("10"), S("8"), S("2"), H("K"), D("A"), D("K"), D("10"), D("3"), C("J"), C("9"), C("7"), C("2")],
       south: [S("K"), S("4"), H("10"), H("5"), H("3"), D("Q"), D("J"), D("8"), D("5"), D("4"), C("A"), C("K"), C("3")],
     },
-    commentary: "La licita. Sud, con 1D e poi 1NT, mostra una bilanciata 12-14; Nord sa di dover dichiarare una manche e sa anche quale sia: il fit a H di 8 o 9 carte e una certezza. Il gioco. Tagliato l'attacco (se D) o vinta la presa (se S), Nord conta 5 (o 6) H a seconda che si debba dare il Re o meno, 2S, 3C. Il morto offre la possibilita di tagliare due D (quindi: meglio prendere l'attacco con il K, poi S per l'Asso..). Il primo taglio si fa con il 3, il secondo con il 10 (se fosse surtagliato dal Re, se non altro Nord avra risolto un problema). Considerando che Ovest non surtaglia... deduzione quasi al 100%: non ha il Re, l'impasse non serve: a Nord conviene incassare l'Asso di H, ogni tanto avra una bella sorpresa. Se Nord ha indovinato tutto... 4H+ 3, in seconda: 710.",
+    commentary: "La licita. Sud, con 1D e poi 1NT, mostra una bilanciata 12-14; Nord sa di dover dichiarare una manche e sa anche quale sia: il fit a H di 8 o 9 carte è una certezza. Il gioco. Tagliato l'attacco (se D) o vinta la presa (se S), Nord conta 5 (o 6) H a seconda che si debba dare il Re o meno, 2S, 3C. Il morto offre la possibilità di tagliare due D (quindi: meglio prendere l'attacco con il K, poi S per l'Asso..). Il primo taglio si fa con il 3, il secondo con il 10 (se fosse surtagliato dal Re, se non altro Nord avrà risolto un problema). Considerando che Ovest non surtaglia... deduzione quasi al 100%: non ha il Re, l'impasse non serve: a Nord conviene incassare l'Asso di H, ogni tanto avrà una bella sorpresa. Se Nord ha indovinato tutto... 4H+ 3, in seconda: 710.",
     bidding: {
       dealer: "south",
       bids: ["1D", "P", "1H", "P", "1NT", "P", "4H", "P", "P", "P"],
@@ -466,7 +466,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("6"), H("K"), H("Q"), H("9"), H("6"), D("J"), D("10"), D("7"), C("Q"), C("J"), C("3"), C("2")],
       south: [S("8"), S("5"), S("4"), H("J"), H("8"), H("7"), H("2"), D("A"), D("9"), C("A"), C("10"), C("9"), C("8")],
     },
-    commentary: "La licita. Est chiede fit a H, Ovest nega di avere 4 carte ma descrive, sempre entro il livello di guardia, una mano di diritto (bilanciata o no) con 4 carte di S. Il 2NT di Est e un invito per la manche a senza: 11 sono troppi per dire 1NT (anche al secondo giro vale 5-10) e pochi per dire 3NT (12-15); Ovest con 14 accetta l'invito e rialza; con 12-13 sarebbe passato. Il gioco. Le prime prese dovrebbero svolgersi: 10C, 4C, KC, 2C, ancora 7C, JC, AC, 4C, e 9 di C per la dama di Est, che si rassicura vedendo Nord rispondere (C 4-3). Est ha due colori di sviluppo: S e D. Ma le S, anche se il K fosse in Sud, non bastano per arrivare a 9 prese. Le D invece si! Quindi subito J di D in tavola, e 9 prese non possono scappare. 3NT, in prima: 400.",
+    commentary: "La licita. Est chiede fit a H, Ovest nega di avere 4 carte ma descrive, sempre entro il livello di guardia, una mano di diritto (bilanciata o no) con 4 carte di S. Il 2NT di Est è un invito per la manche a senza: 11 sono troppi per dire 1NT (anche al secondo giro vale 5-10) e pochi per dire 3NT (12-15); Ovest con 14 accetta l'invito e rialza; con 12-13 sarebbe passato. Il gioco. Le prime prese dovrebbero svolgersi: 10C, 4C, KC, 2C, ancora 7C, JC, AC, 4C, e 9 di C per la dama di Est, che si rassicura vedendo Nord rispondere (C 4-3). Est ha due colori di sviluppo: S e D. Ma le S, anche se il K fosse in Sud, non bastano per arrivare a 9 prese. Le D invece si! Quindi subito J di D in tavola, e 9 prese non possono scappare. 3NT, in prima: 400.",
     bidding: {
       dealer: "west",
       bids: ["1D", "P", "1H", "P", "1S", "P", "2NT", "P", "3NT", "P", "P", "P"],
@@ -497,7 +497,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("J"), S("10"), H("A"), H("K"), H("J"), D("A"), D("10"), D("7"), D("3"), C("Q"), C("10"), C("6")],
       south: [S("7"), S("4"), S("3"), H("9"), H("4"), H("3"), H("2"), D("8"), D("2"), C("5"), C("4"), C("3"), C("2")],
     },
-    commentary: "Sud, con mano nulla, deve favorire il compagno attaccando nel suo colore. La licita. L'intervento di 1NT richiede le stesse caratteristiche dell'apertura di 1NT, e il fermo; Ovest con 11 e senza interesse a interrogare dichiara direttamente 3NT. Il gioco. Nord incassa AK e ci rigioca, affrancandosi due prese. Est conta: 1S, 3H, 2D e 1C. Puo cercare di indovinare la Q di D (ha la forchetta in entrambe le mani), o fare l'impasse a C. La soluzione e nella licita! Mancano esattamente 12 punti... e Nord ha aperto. Chissa chi ha la Dama di D? 3NT, in prima: 400.",
+    commentary: "Sud, con mano nulla, deve favorire il compagno attaccando nel suo colore. La licita. L'intervento di 1NT richiede le stesse caratteristiche dell'apertura di 1NT, e il fermo; Ovest con 11 e senza interesse a interrogare dichiara direttamente 3NT. Il gioco. Nord incassa AK e ci rigioca, affrancandosi due prese. Est conta: 1S, 3H, 2D e 1C. Può cercare di indovinare la Q di D (ha la forchetta in entrambe le mani), o fare l'impasse a C. La soluzione è nella licita! Mancano esattamente 12 punti... e Nord ha aperto. Chissà chi ha la Dama di D? 3NT, in prima: 400.",
     bidding: {
       dealer: "north",
       bids: ["1S", "1NT", "P", "3NT", "P", "P", "P"],
@@ -524,7 +524,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("K"), S("Q"), S("4"), S("3"), S("2"), H("5"), H("2"), D("8"), D("7"), C("A"), C("10"), C("4"), C("3")],
       south: [S("7"), S("5"), H("K"), H("Q"), H("J"), H("8"), H("7"), D("A"), D("10"), D("2"), C("Q"), C("8"), C("6")],
     },
-    commentary: "La licita. Sia Nord che Est hanno un fit eccezionale nel colore del compagno, tale da suggerire per entrambi un contratto di manche. Infatti... si fanno 4H su una linea, ma anche 4S sull'altra: non vi stupite, e merito della quantita di atout. Il gioco. Nord puo proseguire H... o D... o C o atout: nulla impedira a Ovest di mettere insieme 10 prese: 5 atout di Est, 1 taglio (a H), 1D (l'Asso e ben messo) e 3C, facendo e ripetendo l'impasse a Q e K. 4S, in prima: 420.",
+    commentary: "La licita. Sia Nord che Est hanno un fit eccezionale nel colore del compagno, tale da suggerire per entrambi un contratto di manche. Infatti... si fanno 4H su una linea, ma anche 4S sull'altra: non vi stupite, è merito della quantità di atout. Il gioco. Nord può proseguire H... o D... o C o atout: nulla impedirà a Ovest di mettere insieme 10 prese: 5 atout di Est, 1 taglio (a H), 1D (l'Asso è ben messo) e 3C, facendo e ripetendo l'impasse a Q e K. 4S, in prima: 420.",
     bidding: {
       dealer: "east",
       bids: ["P", "1H", "1S", "4H", "4S", "P", "P", "P"],
@@ -551,7 +551,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("9"), S("8"), S("2"), H("4"), H("3"), D("Q"), D("J"), D("9"), D("2"), C("K"), C("J"), C("3"), C("2")],
       south: [S("10"), S("7"), S("6"), H("K"), H("J"), H("6"), H("5"), D("10"), D("4"), D("3"), C("A"), C("10"), C("7")],
     },
-    commentary: "La licita. Nord interviene nella sua buona quinta e poiche le forze sulle linee sono equilibrate, la competizione finisce subito: Est rialza le D e Sud le H, spuntandola - come spesso accade - perche il rango dei colori avvantaggia NS (a 3D Ovest va sotto di una). Il gioco. Nessuna difficolta per Nord: 5H, 1C e due facili affrancabili a S, se avra cura di fare l'expasse due volte. 2H: 110.",
+    commentary: "La licita. Nord interviene nella sua buona quinta e poiché le forze sulle linee sono equilibrate, la competizione finisce subito: Est rialza le D e Sud le H, spuntandola - come spesso accade - perché il rango dei colori avvantaggia NS (a 3D Ovest va sotto di una). Il gioco. Nessuna difficoltà per Nord: 5H, 1C e due facili affrancabili a S, se avrà cura di fare l'expasse due volte. 2H: 110.",
     bidding: {
       dealer: "south",
       bids: ["P", "1D", "1H", "2D", "2H", "P", "P", "P"],
@@ -578,7 +578,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("7"), H("J"), H("9"), D("K"), D("Q"), D("10"), D("7"), D("6"), D("4"), C("A"), C("J"), C("3")],
       south: [S("K"), S("9"), S("8"), S("3"), H("K"), H("Q"), H("8"), H("6"), D("A"), D("5"), C("10"), C("5"), C("2")],
     },
-    commentary: "La licita. Il contro di Sud e impeccabile: puo giocare in entrambi i maggiori e non disdegna le C. Nord deve rendersi conto che deve scegliere non solo il colore, ma anche il LIVELLO, perche - anche se il Contro 'mostra' valori di apertura - il meccanismo e diverso: chi ha detto Contro con mano standard (12-14) non ha niente da aggiungere, neanche l'appoggio! Il gioco. Facile: 6 S (probabili) 3 H, 1 D. Dopo aver battuto 2 giri di atout Nord incassa 3 H scartando la cartina di D, poi gioca C e perdera solo le tre prese nel colore. 4S, in seconda: 620.",
+    commentary: "La licita. Il contro di Sud è impeccabile: può giocare in entrambi i maggiori e non disdegna le C. Nord deve rendersi conto che deve scegliere non solo il colore, ma anche il LIVELLO, perché - anche se il Contro 'mostra' valori di apertura - il meccanismo è diverso: chi ha detto Contro con mano standard (12-14) non ha niente da aggiungere, neanche l'appoggio! Il gioco. Facile: 6 S (probabili) 3 H, 1 D. Dopo aver battuto 2 giri di atout Nord incassa 3 H scartando la cartina di D, poi gioca C e perderà solo le tre prese nel colore. 4S, in seconda: 620.",
     bidding: {
       dealer: "west",
       bids: ["P", "P", "1D", "X", "P", "4S", "P", "P", "P"],
@@ -605,7 +605,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("Q"), S("J"), S("10"), H("A"), H("7"), H("4"), H("3"), D("Q"), D("9"), D("5"), C("3"), C("2")],
       south: [S("8"), S("7"), H("8"), H("6"), D("10"), D("8"), D("6"), D("4"), D("2"), C("Q"), C("8"), C("6"), C("4")],
     },
-    commentary: "La licita. Perfetto il Contro di Est: H e S, e almeno 2-3 D. Ovest non ha bisogno d'altro per decidere, sa di avere in linea forza di manche ma nessun fit nobile di 8 carte; K109x sono un fermo eccellente (ammesso che le fiori di Nord siano reali), quindi che altro, se non 3NT? Il gioco. L'attacco non disturba, Ovest ferma due volte. Conta 2H, 3D... e basterebbe fare 4 S per mantenere il contratto (il K in Nord e al 99%!). Volendo muovere immediatamente le S Ovest vince in mano e gioca S al 10. Rientra a D e ripete: S al Fante. Rientra a D e ultimo impasse. E 9 prese garantite. (possibili 10, vedete come?). 3NT, in prima: 400 (o 3NT + 1: 430).",
+    commentary: "La licita. Perfetto il Contro di Est: H e S, e almeno 2-3 D. Ovest non ha bisogno d'altro per decidere, sa di avere in linea forza di manche ma nessun fit nobile di 8 carte; K109x sono un fermo eccellente (ammesso che le fiori di Nord siano reali), quindi che altro, se non 3NT? Il gioco. L'attacco non disturba, Ovest ferma due volte. Conta 2H, 3D... e basterebbe fare 4 S per mantenere il contratto (il K in Nord è al 99%!). Volendo muovere immediatamente le S Ovest vince in mano e gioca S al 10. Rientra a D e ripete: S al Fante. Rientra a D e ultimo impasse. E 9 prese garantite. (possibili 10, vedete come?). 3NT, in prima: 400 (o 3NT + 1: 430).",
     bidding: {
       dealer: "north",
       bids: ["1C", "X", "P", "3NT", "P", "P", "P"],
@@ -632,7 +632,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("8"), S("5"), S("3"), S("2"), H("8"), H("7"), H("6"), D("6"), D("3"), C("A"), C("10"), C("7"), C("2")],
       south: [S("K"), H("A"), H("K"), H("4"), H("2"), D("A"), D("K"), D("10"), D("9"), D("4"), D("2"), C("9"), C("4")],
     },
-    commentary: "La licita. Perfetto il Contro, Est DEVE dichiarare un colore (1S: 4+ carte, da zero a 9-10). Sud ha carte con cui non e giusto rassegnarsi: ha 14 (il K di S e presumibilmente un valore nullo) ma, se gioca nei suoi colori, ha molte prese; quando dichiara 2H mostra la quarta, e 5+ D: Nord non dorma, e riporti a 3D. Il gioco. Se Ovest ha attaccato e proseguito a C, Sud taglia e conta: 6D, 2H, 2 tagli al morto. Tagliata la prosecuzione gioca AK di H e ne taglia una, rientra in mano in atout e ne taglia un'altra. 10 prese. Se l'attacco e stato piccola S (ma davvero?? sotto asso??) ne confezionera 11. 3D+ 1: 130.",
+    commentary: "La licita. Perfetto il Contro, Est DEVE dichiarare un colore (1S: 4+ carte, da zero a 9-10). Sud ha carte con cui non è giusto rassegnarsi: ha 14 (il K di S è presumibilmente un valore nullo) ma, se gioca nei suoi colori, ha molte prese; quando dichiara 2H mostra la quarta, e 5+ D: Nord non dorma, e riporti a 3D. Il gioco. Se Ovest ha attaccato e proseguito a C, Sud taglia e conta: 6D, 2H, 2 tagli al morto. Tagliata la prosecuzione gioca AK di H e ne taglia una, rientra in mano in atout e ne taglia un'altra. 10 prese. Se l'attacco è stato piccola S (ma davvero?? sotto asso??) ne confezionerà 11. 3D+ 1: 130.",
     bidding: {
       dealer: "east",
       bids: ["P", "1D", "X", "P", "1S", "2H", "P", "3D", "P", "P", "P"],
@@ -659,7 +659,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("Q"), S("5"), S("2"), H("A"), H("10"), H("8"), H("6"), H("4"), D("K"), D("9"), D("8"), C("8"), C("5")],
       south: [S("8"), S("7"), H("7"), H("2"), D("A"), D("10"), D("7"), D("5"), D("4"), C("A"), C("K"), C("Q"), C("3")],
     },
-    commentary: "La licita. Est e tenuto a scegliere un colore, e non ha dubbi su quale dire. Non ha carte sufficienti per dire 4H, ma ha carte troppo belle per dire solo 1H (la stessa dichiarazione che farebbe con xxx xxxx xxx xxx!) La via di mezzo, 2H, mostra 8-10 e 5 carte, e significa 'sono contento del contratto che sto dichiarando'. Ovest non si lasci ipnotizzare dalla ricchezza a H: ha 12, il minimo, deve accontentarsi e passare. Il gioco. Mano facile: tagliato il terzo C Est batte atout e prova l'impasse a S. Purtroppo va male e la difesa (Q di D di Nord) incassa 2 D, ma il contratto e salvo. 2H: 110.",
+    commentary: "La licita. Est è tenuto a scegliere un colore, e non ha dubbi su quale dire. Non ha carte sufficienti per dire 4H, ma ha carte troppo belle per dire solo 1H (la stessa dichiarazione che farebbe con xxx xxxx xxx xxx!) La via di mezzo, 2H, mostra 8-10 e 5 carte, e significa 'sono contento del contratto che sto dichiarando'. Ovest non si lasci ipnotizzare dalla ricchezza a H: ha 12, il minimo, deve accontentarsi e passare. Il gioco. Mano facile: tagliato il terzo C Est batte atout e prova l'impasse a S. Purtroppo va male e la difesa (Q di D di Nord) incassa 2 D, ma il contratto è salvo. 2H: 110.",
     bidding: {
       dealer: "south",
       bids: ["1D", "X", "P", "2H", "P", "P", "P"],
@@ -686,7 +686,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("J"), S("8"), S("6"), S("5"), H("10"), D("A"), D("J"), C("K"), C("J"), C("10"), C("5"), C("4"), C("2")],
       south: [S("A"), H("K"), H("Q"), H("8"), H("7"), H("5"), H("4"), D("K"), D("10"), D("2"), C("Q"), C("7"), C("6")],
     },
-    commentary: "La licita. Sull'intervento di Est Sud dichiara le sue H (mostrando 11+ e almeno 5 carte) e, quando sente l'appoggio di Nord, dichiara la manche. Il gioco. Sud deve entrare in allarme: il 3 e un singolo. Quindi prende con l'Asso, incassa l'Asso di S e ora, volendo andare al morto per sfruttare K e Q e scartare le due C, deve essere certo che gli avversari non abbiano piu atout quando li incassera. Pertanto, visto che le H potrebbero essere 3-1, gioca Re e Dama di H e poi H all'Asso. Scarta le due C e infine tenta con successo l'expasse al K di D. 4H + 1, in prima: 450.",
+    commentary: "La licita. Sull'intervento di Est Sud dichiara le sue H (mostrando 11+ e almeno 5 carte) e, quando sente l'appoggio di Nord, dichiara la manche. Il gioco. Sud deve entrare in allarme: il 3 è un singolo. Quindi prende con l'Asso, incassa l'Asso di S e ora, volendo andare al morto per sfruttare K e Q e scartare le due C, deve essere certo che gli avversari non abbiano più atout quando li incasserà. Pertanto, visto che le H potrebbero essere 3-1, gioca Re e Dama di H e poi H all'Asso. Scarta le due C e infine tenta con successo l'expasse al K di D. 4H + 1, in prima: 450.",
     bidding: {
       dealer: "west",
       bids: ["P", "1D", "2C", "2H", "P", "3H", "P", "4H", "P", "P", "P"],
@@ -717,7 +717,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("7"), S("5"), S("2"), H("Q"), H("J"), H("10"), H("2"), D("9"), D("4"), D("3"), C("A"), C("K"), C("4")],
       south: [S("A"), S("K"), S("10"), S("9"), S("6"), H("8"), H("7"), H("4"), D("7"), D("6"), C("Q"), C("10"), C("5")],
     },
-    commentary: "La licita. Ovest ha una mano di forza normale: anche se ha il fermo a S, NON deve dire 1NT 'liberamente' al primo giro (mostrerebbe 18-20!) Deve aspettare una autorizzazione del compagno (Contro: 'dichiara ancora, abbiamo piu punti di loro'). Il gioco. Si interviene anche per dare un buon attacco, Nord deve fidarsi e attaccare con l'8 di S (da 2 carte sempre la piu alta). Se Sud si ingolosisce e incassa A e K, fara solo quelle due prese (e Ovest 1NT + 1: 1S, 3H, 2D e 2C) perche Nord, che entra in presa due volte, ha solo 2 S. Se Sud liscia l'attacco (Colpo in bianco!) e se Nord fiducioso rigiochera S, Sud fara 4 prese nel colore, e Ovest 1NT giusto. 1NT: 90.",
+    commentary: "La licita. Ovest ha una mano di forza normale: anche se ha il fermo a S, NON deve dire 1NT 'liberamente' al primo giro (mostrerebbe 18-20!) Deve aspettare una autorizzazione del compagno (Contro: 'dichiara ancora, abbiamo più punti di loro'). Il gioco. Si interviene anche per dare un buon attacco, Nord deve fidarsi e attaccare con l'8 di S (da 2 carte sempre la più alta). Se Sud si ingolosisce e incassa A e K, farà solo quelle due prese (e Ovest 1NT + 1: 1S, 3H, 2D e 2C) perché Nord, che entra in presa due volte, ha solo 2 S. Se Sud liscia l'attacco (Colpo in bianco!) e se Nord fiducioso rigiocherà S, Sud farà 4 prese nel colore, e Ovest 1NT giusto. 1NT: 90.",
     bidding: {
       dealer: "north",
       bids: ["P", "P", "1S", "P", "P", "X", "P", "1NT", "P", "P", "P"],
@@ -744,7 +744,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("Q"), S("4"), S("2"), H("3"), H("2"), D("A"), D("K"), D("10"), D("6"), C("8"), C("6"), C("5")],
       south: [S("10"), S("9"), S("8"), S("5"), H("A"), H("K"), H("Q"), H("6"), H("4"), D("9"), C("J"), C("9"), C("2")],
     },
-    commentary: "La licita. Su 1H di Sud, Ovest cerca il fit 4-4 a S usando il Contro (1S mostrerebbe 5+ carte) e, avendolo trovato, rialza a manche. Il gioco. Sud prosegue a H finche Est non taglia. Est conta 11 prese: 4S, 1 taglio, 2C e probabilmente 4D. Le atout vanno battute (altrimenti le D non sono incassabili) e la brutta sorpresa e che Sud ne ha 4. Poco male, puo togliergliele tutte e poi dedicarsi alle D. Attenzione: potrebbero essere divise male, e se cosi fosse la lunga e probabilmente in Nord: In Sud ha gia visto 9 carte tra H e S. Quindi un onore di D della mano, e poi D alla Dama, per essere dalla parte giusta per catturare l'eventuale fante quarto in Nord. 4S +1, in seconda: 650.",
+    commentary: "La licita. Su 1H di Sud, Ovest cerca il fit 4-4 a S usando il Contro (1S mostrerebbe 5+ carte) e, avendolo trovato, rialza a manche. Il gioco. Sud prosegue a H finché Est non taglia. Est conta 11 prese: 4S, 1 taglio, 2C e probabilmente 4D. Le atout vanno battute (altrimenti le D non sono incassabili) e la brutta sorpresa è che Sud ne ha 4. Poco male, può togliergliele tutte e poi dedicarsi alle D. Attenzione: potrebbero essere divise male, e se così fosse la lunga è probabilmente in Nord: In Sud ha già visto 9 carte tra H e S. Quindi un onore di D della mano, e poi D alla Dama, per essere dalla parte giusta per catturare l'eventuale fante quarto in Nord. 4S +1, in seconda: 650.",
     bidding: {
       dealer: "east",
       bids: ["1D", "1H", "X", "P", "1S", "P", "4S", "P", "P", "P"],
@@ -771,7 +771,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("10"), S("9"), S("8"), S("4"), S("2"), H("A"), H("9"), H("5"), D("8"), D("5"), C("10"), C("9"), C("4")],
       south: [S("K"), S("5"), H("Q"), H("3"), H("2"), D("K"), D("J"), D("10"), C("K"), C("Q"), C("8"), C("5"), C("2")],
     },
-    commentary: "La licita. Punti pochi, ma bel colore: 1D di Ovest e legittimo. Nord usa il Contro per trovare fit a H o a S, ma Sud non ha quarte da dichiarare. Poiche a D ha KJ10, la dichiarazione di 1NT e decisamente meglio della ripetizione delle C. Sfumata la possibilita di giocare una manche nobile Nord rialza a 3NT. Il gioco. Pur sapendo di regalare probabilmente una presa Ovest fa un investimento sul proprio colore e ci attacca. Sud vince con il 10, e si rende conto che AQ sono 'sopra' il suo KJ... quindi affrancare le H sarebbe molto pericoloso (l'Asso potrebbe essere in Est). Pertanto si garantisce le sue nove prese: 5C e 3S. Fara in effetti 3NT giusti, mentre avrebbe potuto fare 3NT+1 (affrancando le H) se Ovest non avesse attaccato a D. 3NT, in prima: 400.",
+    commentary: "La licita. Punti pochi, ma bel colore: 1D di Ovest è legittimo. Nord usa il Contro per trovare fit a H o a S, ma Sud non ha quarte da dichiarare. Poiché a D ha KJ10, la dichiarazione di 1NT è decisamente meglio della ripetizione delle C. Sfumata la possibilità di giocare una manche nobile Nord rialza a 3NT. Il gioco. Pur sapendo di regalare probabilmente una presa Ovest fa un investimento sul proprio colore e ci attacca. Sud vince con il 10, e si rende conto che AQ sono 'sopra' il suo KJ... quindi affrancare le H sarebbe molto pericoloso (l'Asso potrebbe essere in Est). Pertanto si garantisce le sue nove prese: 5C e 3S. Farà in effetti 3NT giusti, mentre avrebbe potuto fare 3NT+1 (affrancando le H) se Ovest non avesse attaccato a D. 3NT, in prima: 400.",
     bidding: {
       dealer: "south",
       bids: ["1C", "1D", "X", "P", "1NT", "P", "3NT", "P", "P", "P"],
@@ -798,7 +798,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("7"), H("K"), H("Q"), H("J"), H("7"), H("4"), D("10"), D("4"), C("Q"), C("8"), C("6"), C("3")],
       south: [S("J"), S("10"), S("5"), S("3"), H("9"), H("8"), D("Q"), D("8"), D("6"), C("A"), C("J"), C("7"), C("5")],
     },
-    commentary: "La licita. Con 17 sbilanciati l'apertura corretta e 1D; Sud cerca fit a S usando il contro (punteggio minimo, ma distribuzione perfetta) e Nord si deve rendere conto di dover raccontare sia le S che la forza... quindi non 1S (che direbbe anche con 12) ma DUE. Sud ora sa che il compagno ha mano di Rever, che i suoi pochi punti saranno tutti utili - soprattutto la preziosa Q di D, sulla lunga di Nord - e rialza a manche. Il gioco. Vinto l'attacco Nord conta: 3S, 1H, 5D, 1C e almeno un taglio. Non puo evitare di perdere una S, e anche una H. Muove il Re di S, cede la H, vince qualsiasi ritorno e allinea le restanti 11 prese senza difficolta. 4S + 1, in seconda: 650.",
+    commentary: "La licita. Con 17 sbilanciati l'apertura corretta è 1D; Sud cerca fit a S usando il contro (punteggio minimo, ma distribuzione perfetta) e Nord si deve rendere conto di dover raccontare sia le S che la forza... quindi non 1S (che direbbe anche con 12) ma DUE. Sud ora sa che il compagno ha mano di Rever, che i suoi pochi punti saranno tutti utili - soprattutto la preziosa Q di D, sulla lunga di Nord - e rialza a manche. Il gioco. Vinto l'attacco Nord conta: 3S, 1H, 5D, 1C e almeno un taglio. Non può evitare di perdere una S, e anche una H. Muove il Re di S, cede la H, vince qualsiasi ritorno e allinea le restanti 11 prese senza difficoltà. 4S + 1, in seconda: 650.",
     bidding: {
       dealer: "west",
       bids: ["P", "1D", "1H", "X", "P", "2S", "P", "4S", "P", "P", "P"],
@@ -825,7 +825,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("K"), S("J"), S("6"), S("2"), H("7"), H("6"), D("A"), D("9"), D("5"), D("3"), C("9"), C("8")],
       south: [S("Q"), S("9"), S("5"), H("A"), H("Q"), H("5"), H("4"), D("10"), D("8"), D("7"), D("6"), C("K"), C("4")],
     },
-    commentary: "La licita. Est interviene nel suo colore e Sud, che deve tenere le D come ruota di scorta, cerca fit a H con il Contro. Nord, su invito del compagno, descrive la quarta e, poiche ha mano di Diritto massima accetta l'invito di Sud (3H = 11) e rialza. Il controgioco. L'attacco di Asso di S e scontato, ma quando scende il morto Est si deve fermare! Nord ha aperto 1D (DOVEROSO ricordarsi sempre la dichiarazione!), Sud e sceso con 4 carte... quindi Ovest ha una D sola, e giocando Asso di S e D tagliera. Non incassare il Re di S e fondamentale, perche e la presa con cui Ovest ridara la mano a Est per poter fare un altro taglio: una sotto. 4H - 1, in seconda: -100.",
+    commentary: "La licita. Est interviene nel suo colore e Sud, che deve tenere le D come ruota di scorta, cerca fit a H con il Contro. Nord, su invito del compagno, descrive la quarta e, poiché ha mano di Diritto massima accetta l'invito di Sud (3H = 11) e rialza. Il controgioco. L'attacco di Asso di S è scontato, ma quando scende il morto Est si deve fermare! Nord ha aperto 1D (DOVEROSO ricordarsi sempre la dichiarazione!), Sud è sceso con 4 carte... quindi Ovest ha una D sola, e giocando Asso di S e D taglierà. Non incassare il Re di S è fondamentale, perché è la presa con cui Ovest ridarà la mano a Est per poter fare un altro taglio: una sotto. 4H - 1, in seconda: -100.",
     bidding: {
       dealer: "north",
       bids: ["1D", "1S", "X", "P", "2H", "P", "3H", "P", "4H", "P", "P", "P"],
@@ -852,7 +852,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("J"), S("5"), S("4"), S("3"), H("A"), H("K"), H("5"), H("4"), D("K"), D("Q"), D("8"), D("5"), C("J")],
       south: [S("A"), S("10"), S("9"), S("2"), H("Q"), H("8"), H("7"), H("2"), D("A"), D("9"), C("A"), C("7"), C("5")],
     },
-    commentary: "La licita. Sud ha un Contro perfetto: entrambe le quarte maggiori e tolleranza per il minore restante. Il 2C di Ovest non e affatto 'forzante': lo sarebbe se Sud fosse passato, o avesse detto 1H o 1S. Dopo il Contro, qualsiasi colore significa 'sarei contento se tu mi lasciassi giocare questo contratto'. Per Est, anche se a malincuore, la dichiarazione vincente e Passo. Il gioco. Ottima idea l'attacco di K di S (uno dei colori che Sud ha implicitamente mostrato), per aprirsi un taglio. Ed in effetti la difesa inizia con K di S, S all'Asso, S taglio. Ma Ovest e in una botte di ferro: perdera solo piu l'Asso di D e quello di C. Anche col senno di poi, 2C era il miglior parziale per Est Ovest. 2C: 90.",
+    commentary: "La licita. Sud ha un Contro perfetto: entrambe le quarte maggiori e tolleranza per il minore restante. Il 2C di Ovest non è affatto 'forzante': lo sarebbe se Sud fosse passato, o avesse detto 1H o 1S. Dopo il Contro, qualsiasi colore significa 'sarei contento se tu mi lasciassi giocare questo contratto'. Per Est, anche se a malincuore, la dichiarazione vincente è Passo. Il gioco. Ottima idea l'attacco di K di S (uno dei colori che Sud ha implicitamente mostrato), per aprirsi un taglio. Ed in effetti la difesa inizia con K di S, S all'Asso, S taglio. Ma Ovest è in una botte di ferro: perderà solo più l'Asso di D e quello di C. Anche col senno di poi, 2C era il miglior parziale per Est Ovest. 2C: 90.",
     bidding: {
       dealer: "east",
       bids: ["1D", "X", "2C", "P", "P", "P"],
@@ -879,7 +879,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("A"), S("Q"), S("6"), H("K"), H("4"), D("A"), D("8"), D("6"), D("5"), C("K"), C("Q"), C("J"), C("7")],
       south: [S("8"), S("2"), H("J"), H("9"), H("7"), H("2"), D("K"), D("7"), D("2"), C("8"), C("6"), C("4"), C("3")],
     },
-    commentary: "La licita. Est, con 19 bilanciati, progetta la sequenza '1D poi 2NT', ma visto che Nord e intervenuto con 1S il salto non serve piu: 1NT, detto liberamente, mostra gia quel tipo di mano. Con una bilanciata di Diritto Est, pur col fermo, avrebbe detto Passo. Ovest non deve dormire: 25-27 in linea ci sono. Il gioco. Sud segue l'indicazione del compagno e attacca con l'8 di S; Est vince la presa e conta: 2S, 1H, 4D. Affrancare 1H non basta per arrivare a 9, ma affrancare altre due D si: facendo l'impasse due volte si faranno 3 prese sempre, tranne che con K e Q entrambi in Sud (1 volta su 4), Quindi S al 10 e J di D per il primo impasse (quello che di solito va male), poi C all'Asso e secondo impasse (quello che di solito va bene!) Nota: Se Sud rigioca S Est fara 3NT giusti. Se gioca altro... 3NT+1. 3NT, in seconda: 600.",
+    commentary: "La licita. Est, con 19 bilanciati, progetta la sequenza '1D poi 2NT', ma visto che Nord è intervenuto con 1S il salto non serve più: 1NT, detto liberamente, mostra già quel tipo di mano. Con una bilanciata di Diritto Est, pur col fermo, avrebbe detto Passo. Ovest non deve dormire: 25-27 in linea ci sono. Il gioco. Sud segue l'indicazione del compagno e attacca con l'8 di S; Est vince la presa e conta: 2S, 1H, 4D. Affrancare 1H non basta per arrivare a 9, ma affrancare altre due D sì: facendo l'impasse due volte si faranno 3 prese sempre, tranne che con K e Q entrambi in Sud (1 volta su 4), Quindi S al 10 e J di D per il primo impasse (quello che di solito va male), poi C all'Asso e secondo impasse (quello che di solito va bene!) Nota: Se Sud rigioca S Est farà 3NT giusti. Se gioca altro... 3NT+1. 3NT, in seconda: 600.",
     bidding: {
       dealer: "south",
       bids: ["P", "P", "P", "1D", "P", "1H", "1S", "1NT", "P", "3NT", "P", "P", "P"],
@@ -906,7 +906,7 @@ export const smazzate9to12: Smazzata[] = [
       east:  [S("10"), S("9"), S("4"), S("3"), H("9"), H("5"), H("4"), D("K"), D("9"), C("8"), C("7"), C("5"), C("3")],
       south: [S("K"), S("J"), H("J"), H("8"), H("2"), D("Q"), D("J"), D("6"), D("4"), C("Q"), C("J"), C("10"), C("9")],
     },
-    commentary: "La licita. Sul Contro di Nord (carte da manuale: entrambe le quarte maggiori, e tolleranza per le C) Sud si ritrova con 11 punti ma senza possibilita di gioco nei maggiori del compagno. In compenso, QJxx di D sono un fermo granitico, quindi propone di giocare a Senza. Non 3, non 1: 2NT descrive proprio l'incertezza sulla somma punti (11), Nord ha 14 e rialza a 3NT. Il gioco. Sull'attacco Est gioca il Re e ritorna nel colore, per il J di Sud e l'Asso di Ovest che insiste con il 10 affrancando il colore. Ora pero il gioco di Sud e a 'carte viste': quando ha mostrato il K di D Est ha gia fatto vedere tutta la sua ricchezza, tutto il resto costituisce l'apertura di Ovest! Quindi l'impasse a C si fa a occhi chiusi e poi quello a H anche. Quello di picche... meglio evitarlo!! 3NT + 2, in prima: 460.",
+    commentary: "La licita. Sul Contro di Nord (carte da manuale: entrambe le quarte maggiori, e tolleranza per le C) Sud si ritrova con 11 punti ma senza possibilità di gioco nei maggiori del compagno. In compenso, QJxx di D sono un fermo granitico, quindi propone di giocare a Senza. Non 3, non 1: 2NT descrive proprio l'incertezza sulla somma punti (11), Nord ha 14 e rialza a 3NT. Il gioco. Sull'attacco Est gioca il Re e ritorna nel colore, per il J di Sud e l'Asso di Ovest che insiste con il 10 affrancando il colore. Ora però il gioco di Sud è a 'carte viste': quando ha mostrato il K di D Est ha già fatto vedere tutta la sua ricchezza, tutto il resto costituisce l'apertura di Ovest! Quindi l'impasse a C si fa a occhi chiusi e poi quello a H anche. Quello di picche... meglio evitarlo!! 3NT + 2, in prima: 460.",
     bidding: {
       dealer: "west",
       bids: ["1D", "X", "P", "2NT", "P", "3NT", "P", "P", "P"],

@@ -114,7 +114,7 @@ function LoginContent() {
           if (err.message.toLowerCase().includes("rate limit")) {
             setError("Troppe richieste. Attendi qualche minuto e riprova.");
           } else if (err.message.includes("already registered")) {
-            setError("Questa email e gia registrata. Prova ad accedere.");
+            setError("Questa email è già registrata. Prova ad accedere.");
           } else {
             setError(err.message);
           }

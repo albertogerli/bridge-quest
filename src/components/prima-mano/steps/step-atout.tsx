@@ -83,7 +83,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="L'Arma Segreta"
-      title="Il taglio non e magia."
+      title="Il taglio non è magia."
       body="Se non hai il seme giocato, puoi tagliare con l'atout. Ma non sei obbligato: puoi anche scartare."
     >
       <ConfettiBurst trigger={showConfetti} count={25} />
@@ -178,11 +178,11 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
           className="rounded-[28px] border border-[#d8d0c0] bg-white p-5"
         >
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
-            Il taglio e obbligatorio?
+            Il taglio è obbligatorio?
           </p>
           <div className="grid gap-3">
             <ChoiceCard
-              label="Si, devo per forza tagliare"
+              label="Sì, devo per forza tagliare"
               description="Se non ho il seme giocato, devo usare l'atout."
               selected={choice === "yes"}
               correct={false}
@@ -212,8 +212,8 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
             }`}
           >
             {choice === "no"
-              ? "Giusto! Tagliare e un'opzione, non un obbligo. A volte conviene scartare una carta inutile piuttosto che sprecare un atout."
-              : "No, il taglio non e mai obbligatorio. Puoi sempre scegliere di scartare una carta di un altro seme."}
+              ? "Giusto! Tagliare è un'opzione, non un obbligo. A volte conviene scartare una carta inutile piuttosto che sprecare un atout."
+              : "No, il taglio non è mai obbligatorio. Puoi sempre scegliere di scartare una carta di un altro seme."}
           </motion.div>
         )}
 

@@ -531,7 +531,7 @@ export default function ClassificaPage() {
                 {playersLoading ? (
                   <LeaderboardSkeleton />
                 ) : allPlayers.length === 0 ? (
-                  <EmptyState message="La classifica e ancora vuota" showCta />
+                  <EmptyState message="La classifica è ancora vuota" showCta />
                 ) : (
                   <LeaderboardList
                     players={allPlayers}
@@ -563,7 +563,7 @@ export default function ClassificaPage() {
                       className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 card-clean rounded-xl p-3"
                     >
                       <p className="text-xs text-indigo-700 font-medium">
-                        Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di piu sale in cima!
+                        Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di più sale in cima!
                       </p>
                     </motion.div>
                     <LeaderboardList

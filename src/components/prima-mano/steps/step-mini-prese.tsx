@@ -37,7 +37,7 @@ const MINI_TRICKS: MiniTrick[] = [
     loseMessage: "Il 7 non batte il Re. Serviva l'Asso!",
   },
   {
-    lead: "Sei tu ad attaccare. Picche e atout.",
+    lead: "Sei tu ad attaccare. Picche è atout.",
     west: { rank: "4", suit: "spade" },
     north: { rank: "J", suit: "spade" },
     east: { rank: "6", suit: "spade" },
@@ -74,9 +74,9 @@ const MINI_TRICKS: MiniTrick[] = [
       { rank: "9", suit: "diamond" },
     ],
     correctIndex: 0,
-    hint: "Non hai fiori. Picche e atout. Tagli o scarti?",
+    hint: "Non hai fiori. Picche è atout. Tagli o scarti?",
     winMessage: "Esatto! Hai tagliato con l'atout e vinto la presa!",
-    loseMessage: "Il 9 di quadri e solo uno scarto. Potevi tagliare con picche (atout)!",
+    loseMessage: "Il 9 di quadri è solo uno scarto. Potevi tagliare con picche (atout)!",
   },
 ];
 
@@ -133,7 +133,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
       <StepShell
         kicker="Riscaldamento"
         title="Quattro prese di pratica."
-        body="Ecco come e andata."
+        body="Ecco come è andata."
       >
         <ConfettiBurst trigger={showConfetti} count={perfect ? 40 : 20} />
 

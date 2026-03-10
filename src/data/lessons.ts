@@ -80,12 +80,12 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Il Bridge e un gioco di coppia: i due giocatori che siedono di fronte giocano insieme, opposti agli altri due. La coppia N/S gioca contro la coppia E/O.",
+            "Il Bridge è un gioco di coppia: i due giocatori che siedono di fronte giocano insieme, opposti agli altri due. La coppia N/S gioca contro la coppia E/O.",
         },
         {
           type: "text",
           content:
-            "Il mazzo e quello \"Francese\", composto da 52 carte divise in quattro semi: le Picche ♠, i Cuori ♥, i Quadri ♦ e i Fiori ♣. In ogni seme ci sono 13 carte, dall'Asso al due.",
+            "Il mazzo è quello \"Francese\", composto da 52 carte divise in quattro semi: le Picche ♠, i Cuori ♥, i Quadri ♦ e i Fiori ♣. In ogni seme ci sono 13 carte, dall'Asso al due.",
         },
         {
           type: "rule",
@@ -100,7 +100,7 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Per convenzione si parla prima delle Picche, poi delle Cuori, Quadri e Fiori. La mancanza di un seme e detta \"vuoto\" o \"chicane\"; una carta sola e un \"singolo\", due carte sono dette \"doubleton\".",
+            "Per convenzione si parla prima delle Picche, poi delle Cuori, Quadri e Fiori. La mancanza di un seme è detta \"vuoto\" o \"chicane\"; una carta sola è un \"singolo\", due carte sono dette \"doubleton\".",
         },
         {
           type: "quiz",
@@ -112,10 +112,10 @@ const premessa: Lesson = {
         },
         {
           type: "true-false",
-          content: "Il Dieci e considerato un onore nel bridge.",
+          content: "Il Dieci è considerato un onore nel bridge.",
           correctAnswer: 0,
           explanation:
-            "Si! Gli onori sono: Asso, Re, Dama, Fante e Dieci. Le carte dal 9 al 2 sono cartine.",
+            "Sì! Gli onori sono: Asso, Re, Dama, Fante e Dieci. Le carte dal 9 al 2 sono cartine.",
         },
       ],
     },
@@ -133,27 +133,27 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Il giocatore alla sinistra del Mazziere sceglie una delle sue tredici carte e la espone davanti a se sul tavolo. Questa prima giocata si chiama Attacco.",
+            "Il giocatore alla sinistra del Mazziere sceglie una delle sue tredici carte e la espone davanti a sé sul tavolo. Questa prima giocata si chiama Attacco.",
         },
         {
           type: "text",
           content:
-            "Gli altri tre, a turno seguendo in senso orario, dovranno anch'essi esporre davanti a se una carta dello stesso seme. Questo obbligo si chiama rispondere al colore.",
+            "Gli altri tre, a turno seguendo in senso orario, dovranno anch'essi esporre davanti a sé una carta dello stesso seme. Questo obbligo si chiama rispondere al colore.",
         },
         {
           type: "rule",
           content:
-            "SI AGGIUDICA LA PRESA CHI HA GIOCATO LA CARTA PIU' ALTA DEL SEME DOMINANTE",
+            "SI AGGIUDICA LA PRESA CHI HA GIOCATO LA CARTA PIÙ ALTA DEL SEME DOMINANTE",
         },
         {
           type: "text",
           content:
-            "L'obbligo di rispondere a colore viene meno solo quando un giocatore e sprovvisto di carte nel seme imposto; in tal caso sceglie liberamente una carta di un altro seme: si dice che scarta.",
+            "L'obbligo di rispondere a colore viene meno solo quando un giocatore è sprovvisto di carte nel seme imposto; in tal caso sceglie liberamente una carta di un altro seme: si dice che scarta.",
         },
         {
           type: "rule",
           content:
-            "IL GIOCATORE CHE SCARTA NON PUO' MAI AGGIUDICARSI LA PRESA",
+            "IL GIOCATORE CHE SCARTA NON PUÒ MAI AGGIUDICARSI LA PRESA",
         },
         {
           type: "quiz",
@@ -174,7 +174,7 @@ const premessa: Lesson = {
           content: "Ovest attacca con ♠K. Nord gioca ♠3. Est gioca ♠7. Quale carta giochi da Sud per vincere la presa?",
           cards: "♠A♠Q♠5♠2",
           correctCard: "♠A",
-          explanation: "L'Asso e l'unica carta che batte il Re con certezza. Non sprecare la Dama quando il Re e gia in tavola!",
+          explanation: "L'Asso è l'unica carta che batte il Re con certezza. Non sprecare la Dama quando il Re è già in tavola!",
         },
       ],
     },
@@ -197,7 +197,7 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Sara il suo compagno — il giocante — a decidere, di volta in volta, quale carta giocare quando sara il turno del morto.",
+            "Sarà il suo compagno — il giocante — a decidere, di volta in volta, quale carta giocare quando sarà il turno del morto.",
         },
         {
           type: "tip",
@@ -208,17 +208,17 @@ const premessa: Lesson = {
         },
         {
           type: "quiz",
-          content: "Quante carte puo vedere il Giocante (Dichiarante)?",
+          content: "Quante carte può vedere il Giocante (Dichiarante)?",
           options: ["13", "26", "39", "52"],
           correctAnswer: 1,
           explanation:
-            "Il Giocante vede le proprie 13 carte piu le 13 carte del morto = 26 carte totali.",
+            "Il Giocante vede le proprie 13 carte più le 13 carte del morto = 26 carte totali.",
         },
         {
           type: "true-false",
-          content: "Il morto puo scegliere autonomamente quale carta giocare.",
+          content: "Il morto può scegliere autonomamente quale carta giocare.",
           correctAnswer: 1,
-          explanation: "Falso! Il morto non sceglie: e il Giocante (Dichiarante) che decide quale carta giocare dalla mano del morto.",
+          explanation: "Falso! Il morto non sceglie: è il Giocante (Dichiarante) che decide quale carta giocare dalla mano del morto.",
         },
       ],
     },
@@ -236,12 +236,12 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Gioco con un atout (♠, ♥, ♦, o ♣): se un seme e atout, chi e sprovvisto di carte nel seme dominante puo \"tagliare\" con una carta di atout e vincere la presa.",
+            "Gioco con un atout (♠, ♥, ♦, o ♣): se un seme è atout, chi è sprovvisto di carte nel seme dominante può \"tagliare\" con una carta di atout e vincere la presa.",
         },
         {
           type: "rule",
           content:
-            "Non e possibile tagliare se si possiedono carte del seme giocato. Tagliare e una possibilita, non un obbligo. Se tagliano in due, vince chi ha usato la carta di atout piu alta.",
+            "Non è possibile tagliare se si possiedono carte del seme giocato. Tagliare è una possibilità, non un obbligo. Se tagliano in due, vince chi ha usato la carta di atout più alta.",
         },
         {
           type: "text",
@@ -251,7 +251,7 @@ const premessa: Lesson = {
         {
           type: "quiz",
           content:
-            "Se il contratto e a Cuori (atout) e non hai Picche, cosa puoi fare quando viene giocata una Picca?",
+            "Se il contratto è a Cuori (atout) e non hai Picche, cosa puoi fare quando viene giocata una Picca?",
           options: [
             "Solo scartare",
             "Tagliare con una carta di Cuori",
@@ -260,7 +260,7 @@ const premessa: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Se non hai carte del seme giocato e c'e un atout, puoi tagliare con una carta di atout per vincere la presa!",
+            "Se non hai carte del seme giocato e c'è un atout, puoi tagliare con una carta di atout per vincere la presa!",
         },
       ],
     },
@@ -278,21 +278,21 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Per poter imporre il tipo di gioco piu conveniente, la coppia si deve impegnare per un certo numero di prese, attraverso una sorta di \"asta\". Chi fa l'offerta piu alta stabilisce il tipo di gioco.",
+            "Per poter imporre il tipo di gioco più conveniente, la coppia si deve impegnare per un certo numero di prese, attraverso una sorta di \"asta\". Chi fa l'offerta più alta stabilisce il tipo di gioco.",
         },
         {
           type: "text",
           content:
-            "Le dichiarazioni si fanno usando il Bidding box. Il simbolo e il tipo di gioco proposto, il numero rappresenta le prese (oltre a sei) che ci si propone di fare.",
+            "Le dichiarazioni si fanno usando il Bidding box. Il simbolo è il tipo di gioco proposto, il numero rappresenta le prese (oltre a sei) che ci si propone di fare.",
         },
         {
           type: "example",
           content:
-            "Chi espone il cartellino di \"2♥\" sta dicendo: \"la mia coppia si impegna a realizzare almeno 8 prese, purche il colore di cuori sia atout\".",
+            "Chi espone il cartellino di \"2♥\" sta dicendo: \"la mia coppia si impegna a realizzare almeno 8 prese, purché il colore di cuori sia atout\".",
         },
         {
           type: "text",
-          content: "La gerarchia e: NT ♠ ♥ ♦ ♣ (dal piu alto al piu basso)",
+          content: "La gerarchia è: NT ♠ ♥ ♦ ♣ (dal più alto al più basso)",
         },
         {
           type: "rule",
@@ -302,18 +302,18 @@ const premessa: Lesson = {
         {
           type: "quiz",
           content:
-            "Se un giocatore dichiara 1♥, quale delle seguenti dichiarazioni e valida per il giocatore successivo?",
+            "Se un giocatore dichiara 1♥, quale delle seguenti dichiarazioni è valida per il giocatore successivo?",
           options: ["1♦", "1♣", "1♠", "1♥"],
           correctAnswer: 2,
           explanation:
-            "1♠ e valida perche le Picche hanno rango superiore ai Cuori. 1♦ e 1♣ sono di rango inferiore e richiederebbero il livello 2.",
+            "1♠ è valida perché le Picche hanno rango superiore ai Cuori. 1♦ e 1♣ sono di rango inferiore e richiederebbero il livello 2.",
         },
         {
           type: "bid-select",
-          content: "L'avversario apre 1♦. Tu hai una bella mano. Quale di queste dichiarazioni e VALIDA?",
+          content: "L'avversario apre 1♦. Tu hai una bella mano. Quale di queste dichiarazioni è VALIDA?",
           options: ["1C", "1D", "1H", "P"],
           correctAnswer: 2,
-          explanation: "1♥ e valida perche i Cuori hanno rango superiore ai Quadri. 1♣ e 1♦ sarebbero allo stesso livello o inferiore!",
+          explanation: "1♥ è valida perché i Cuori hanno rango superiore ai Quadri. 1♣ e 1♦ sarebbero allo stesso livello o inferiore!",
         },
       ],
     },
@@ -331,12 +331,12 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Per ogni presa dichiarata (le prime 6 non vengono pagate): 30 punti se l'atout e ♥ o ♠, o se e a NT (40 la prima, 30 le altre). 20 punti se l'atout e ♣ o ♦.",
+            "Per ogni presa dichiarata (le prime 6 non vengono pagate): 30 punti se l'atout è ♥ o ♠, o se è a NT (40 la prima, 30 le altre). 20 punti se l'atout è ♣ o ♦.",
         },
         {
           type: "text",
           content:
-            "Sono contratti di Manche quelli in cui la somma delle prese dichiarate vale almeno 100 (3NT, 4♥, 4♠, 5♣, 5♦). Il bonus e 300 se \"verdi\" o 500 se \"rossi\".",
+            "Sono contratti di Manche quelli in cui la somma delle prese dichiarate vale almeno 100 (3NT, 4♥, 4♠, 5♣, 5♦). Il bonus è 300 se \"verdi\" o 500 se \"rossi\".",
         },
         {
           type: "text",
@@ -346,7 +346,7 @@ const premessa: Lesson = {
         {
           type: "text",
           content:
-            "Se il contratto non viene mantenuto: per ogni presa in meno, 50 se il giocante e verde e 100 se e rosso.",
+            "Se il contratto non viene mantenuto: per ogni presa in meno, 50 se il giocante è verde e 100 se è rosso.",
         },
         {
           type: "quiz",
@@ -383,7 +383,7 @@ const lezione1: Lesson = {
         {
           type: "text",
           content:
-            "Si dice vincente una carta che, se giocata in quel momento, e in grado di aggiudicarsi una presa con certezza assoluta. Si dice affrancabile una carta che potra diventare vincente dopo un'opportuna manovra.",
+            "Si dice vincente una carta che, se giocata in quel momento, è in grado di aggiudicarsi una presa con certezza assoluta. Si dice affrancabile una carta che potrà diventare vincente dopo un'opportuna manovra.",
         },
         {
           type: "example",
@@ -406,20 +406,20 @@ const lezione1: Lesson = {
           options: ["5", "7", "8", "9"],
           correctAnswer: 1,
           explanation:
-            "Picche: 0 (manca l'Asso), Cuori: 2 (A e K, il J non e garantito), Quadri: 0 (manca l'Asso), Fiori: 3 (AKQ) = totale 5... ma attenzione: dipende anche dalle carte del morto!",
+            "Picche: 0 (manca l'Asso), Cuori: 2 (A e K, il J non è garantito), Quadri: 0 (manca l'Asso), Fiori: 3 (AKQ) = totale 5... ma attenzione: dipende anche dalle carte del morto!",
         },
         {
           type: "card-select",
           content: "Hai ♣KQJ10 e vuoi affrancare le Fiori. Quale carta giochi per prima?",
           cards: "♣K♣Q♣J♣10",
           correctCard: "♣K",
-          explanation: "Giochi il Re (il piu alto della sequenza). Cosi forzi l'Asso avversario e le altre carte si affranqueranno.",
+          explanation: "Giochi il Re (il più alto della sequenza). Così forzi l'Asso avversario e le altre carte si affranqueranno.",
         },
         {
           type: "true-false",
-          content: "Una sequenza ♠KQJ e equivalente a una sequenza ♠AKQ per l'affrancamento.",
+          content: "Una sequenza ♠KQJ è equivalente a una sequenza ♠AKQ per l'affrancamento.",
           correctAnswer: 1,
-          explanation: "Falso! ♠AKQ sono gia vincenti. ♠KQJ devono prima \"costringere\" l'avversario a usare l'Asso prima di affrancarsi.",
+          explanation: "Falso! ♠AKQ sono già vincenti. ♠KQJ devono prima \"costringere\" l'avversario a usare l'Asso prima di affrancarsi.",
         },
       ],
     },
@@ -437,7 +437,7 @@ const lezione1: Lesson = {
         {
           type: "text",
           content:
-            "Il Giocante ha sempre un obiettivo predefinito da raggiungere: se il contratto e 3NT, dovra fare almeno 9 prese. Solitamente il conto delle vincenti e molto lontano dall'obiettivo: ci sara da lavorare per affrancare prese nuove.",
+            "Il Giocante ha sempre un obiettivo predefinito da raggiungere: se il contratto è 3NT, dovrà fare almeno 9 prese. Solitamente il conto delle vincenti è molto lontano dall'obiettivo: ci sarà da lavorare per affrancare prese nuove.",
         },
         {
           type: "rule",
@@ -447,12 +447,12 @@ const lezione1: Lesson = {
         {
           type: "text",
           content:
-            "IL NUMERO MASSIMO DI PRESE REALIZZABILI IN UN SEME E PARI O INFERIORE AL NUMERO DI CARTE DEL LATO LUNGO.",
+            "IL NUMERO MASSIMO DI PRESE REALIZZABILI IN UN SEME È PARI O INFERIORE AL NUMERO DI CARTE DEL LATO LUNGO.",
         },
         {
           type: "text",
           content:
-            "Seconda operazione: individuare i colori da cui si potrebbero affrancare altre prese. La strategia migliore non e quella di affrettarsi a giocare le vincenti, ma quella di giocare nei colori che presentano carte da affrancare.",
+            "Seconda operazione: individuare i colori da cui si potrebbero affrancare altre prese. La strategia migliore non è quella di affrettarsi a giocare le vincenti, ma quella di giocare nei colori che presentano carte da affrancare.",
         },
       ],
     },
@@ -470,12 +470,12 @@ const lezione1: Lesson = {
         {
           type: "text",
           content:
-            "Quando si hanno carte equivalenti affrancare e facile: ♣KQJ10 — dopo che una di queste carte avra costretto l'avversario a usare l'Asso, le altre tre si affranqueranno.",
+            "Quando si hanno carte equivalenti affrancare è facile: ♣KQJ10 — dopo che una di queste carte avrà costretto l'avversario a usare l'Asso, le altre tre si affranqueranno.",
         },
         {
           type: "rule",
           content:
-            "Attenzione: le carte affrancate non saranno disponibili immediatamente. Per poterle \"incassare\" sara necessario vincere una delle prese successive.",
+            "Attenzione: le carte affrancate non saranno disponibili immediatamente. Per poterle \"incassare\" sarà necessario vincere una delle prese successive.",
         },
         {
           type: "text",
@@ -484,13 +484,13 @@ const lezione1: Lesson = {
         },
         {
           type: "example",
-          content: "Primi colori da muovere - quelli che ci danno piu carte affrancate:",
+          content: "Primi colori da muovere - quelli che ci danno più carte affrancate:",
           cards: "♠AQ8 ♥76 ♦K65 ♣K10932",
         },
         {
           type: "text",
           content:
-            "Attacco: ♦Q. Sud conta le vincenti: Picche 3, Cuori 1, Quadri 2, Fiori 0. Ma le Fiori sono una grande sorgente di prese (si affrancano 4 delle 5 carte di Nord). Sud vince l'attacco e immediatamente gioca Fiori, e continua finche non scende l'Asso.",
+            "Attacco: ♦Q. Sud conta le vincenti: Picche 3, Cuori 1, Quadri 2, Fiori 0. Ma le Fiori sono una grande sorgente di prese (si affrancano 4 delle 5 carte di Nord). Sud vince l'attacco e immediatamente gioca Fiori, e continua finché non scende l'Asso.",
         },
       ],
     },
@@ -514,7 +514,7 @@ const lezione1: Lesson = {
           type: "tip",
           content: "Consiglio del Maestro Fiori",
           explanation:
-            "Prima di giocare la prima carta, fermati e conta: quante vincenti ho? Quante me ne servono? Da dove le prendo? Questo piano di gioco e la chiave del successo!",
+            "Prima di giocare la prima carta, fermati e conta: quante vincenti ho? Quante me ne servono? Da dove le prendo? Questo piano di gioco è la chiave del successo!",
         },
       ],
     },
@@ -548,7 +548,7 @@ const lezione2: Lesson = {
         {
           type: "text",
           content:
-            "A volte il colore di attacco si rivelera azzeccato, altre volte no. Quello che entrambi dovranno fare e guardare il morto e giocare nei colori dove la loro coppia potrebbe vincere o affrancare delle prese.",
+            "A volte il colore di attacco si rivelerà azzeccato, altre volte no. Quello che entrambi dovranno fare è guardare il morto e giocare nei colori dove la loro coppia potrebbe vincere o affrancare delle prese.",
         },
       ],
     },
@@ -566,17 +566,17 @@ const lezione2: Lesson = {
         {
           type: "text",
           content:
-            "I difensori non devono aver fretta di incassare le carte vincenti. Scegliere il colore e fondamentale!",
+            "I difensori non devono aver fretta di incassare le carte vincenti. Scegliere il colore è fondamentale!",
         },
         {
           type: "rule",
           content:
-            "SCEGLIETE IL COLORE PIU' LUNGO. SE NE AVETE DUE DI PARI LUNGHEZZA, SCEGLIETE IL PIU' ONORATO.",
+            "SCEGLIETE IL COLORE PIÙ LUNGO. SE NE AVETE DUE DI PARI LUNGHEZZA, SCEGLIETE IL PIÙ ONORATO.",
         },
         {
           type: "text",
           content:
-            "Regola 1 — attacco dall'alto: con una sequenza di onori contigui (KQJ, QJ10...), si attacca con il piu alto. Regola 2 — attacco dal basso: senza una sequenza, si attacca con la cartina in coda al colore (la quarta).",
+            "Regola 1 — attacco dall'alto: con una sequenza di onori contigui (KQJ, QJ10...), si attacca con il più alto. Regola 2 — attacco dal basso: senza una sequenza, si attacca con la cartina in coda al colore (la quarta).",
         },
         {
           type: "example",
@@ -585,16 +585,16 @@ const lezione2: Lesson = {
         },
         {
           type: "card-select",
-          content: "Devi attaccare contro 3NT. Il tuo colore piu lungo e ♠QJ1073. Quale carta attacchi?",
+          content: "Devi attaccare contro 3NT. Il tuo colore più lungo è ♠QJ1073. Quale carta attacchi?",
           cards: "♠Q♠J♠10♠7♠3",
           correctCard: "♠Q",
-          explanation: "Con una sequenza QJ10, attacchi dalla piu alta: la Dama. Questo segnala al compagno che hai anche il Fante e il 10.",
+          explanation: "Con una sequenza QJ10, attacchi dalla più alta: la Dama. Questo segnala al compagno che hai anche il Fante e il 10.",
         },
         {
           type: "true-false",
-          content: "Contro un contratto a Senz'Atout, conviene sempre attaccare nel colore piu lungo.",
+          content: "Contro un contratto a Senz'Atout, conviene sempre attaccare nel colore più lungo.",
           correctAnswer: 0,
-          explanation: "Vero! Nei contratti a SA, il colore lungo e la miglior sorgente di prese per i difensori. Se ne avete due di pari lunghezza, scegliete il piu onorato.",
+          explanation: "Vero! Nei contratti a SA, il colore lungo è la miglior sorgente di prese per i difensori. Se ne avete due di pari lunghezza, scegliete il più onorato.",
         },
       ],
     },
@@ -617,7 +617,7 @@ const lezione2: Lesson = {
         {
           type: "rule",
           content:
-            "QUANDO HA CARTE EQUIVALENTI, IL TERZO GIOCA LA PIU' BASSA DELLA SEQUENZA",
+            "QUANDO HA CARTE EQUIVALENTI, IL TERZO GIOCA LA PIÙ BASSA DELLA SEQUENZA",
         },
         {
           type: "text",
@@ -627,7 +627,7 @@ const lezione2: Lesson = {
         {
           type: "rule",
           content:
-            "LA CARTA GIOCATA DAL TERZO, QUANDO E' IMPEGNATA PER PRENDERE, ESCLUDE IL POSSESSO DELLA CARTA IMMEDIATAMENTE INFERIORE",
+            "LA CARTA GIOCATA DAL TERZO, QUANDO È IMPEGNATA PER PRENDERE, ESCLUDE IL POSSESSO DELLA CARTA IMMEDIATAMENTE INFERIORE",
         },
       ],
     },
@@ -674,7 +674,7 @@ const lezione3: Lesson = {
         {
           type: "text",
           content:
-            "Possedendo un elevato numero di carte di un seme, dopo alcuni giri puo succedere che le carte rimaste, anche se piccole, si siano affrancate perche gli altri le avranno esaurite.",
+            "Possedendo un elevato numero di carte di un seme, dopo alcuni giri può succedere che le carte rimaste, anche se piccole, si siano affrancate perché gli altri le avranno esaurite.",
         },
         {
           type: "text",
@@ -702,26 +702,26 @@ const lezione3: Lesson = {
         {
           type: "text",
           content:
-            "Un onore che al momento non e vincente potrebbe fornire una presa. Non giocatelo mai direttamente! Posizionatevi dalla parte opposta e giocate verso quell'onore.",
+            "Un onore che al momento non è vincente potrebbe fornire una presa. Non giocatelo mai direttamente! Posizionatevi dalla parte opposta e giocate verso quell'onore.",
         },
         {
           type: "text",
           content:
-            "Questa manovra (giocare \"verso\" un onore, protetto da una carta superiore) si chiama IMPASSE. La probabilita di successo e esattamente del 50%.",
+            "Questa manovra (giocare \"verso\" un onore, protetto da una carta superiore) si chiama IMPASSE. La probabilità di successo è esattamente del 50%.",
         },
         {
           type: "text",
           content:
-            "Molto simile come concetto e la manovra di EXPASSE: giocare verso un onore non protetto, sperando che la carta che lo puo superare sia posizionata prima e non dopo.",
+            "Molto simile come concetto è la manovra di EXPASSE: giocare verso un onore non protetto, sperando che la carta che lo può superare sia posizionata prima e non dopo.",
         },
         {
           type: "quiz",
           content:
             "Hai AQ5 a Nord e 863 a Sud. Per fare l'impasse verso la Dama, da dove devi giocare?",
-          options: ["Da Nord", "Da Sud", "Non importa", "Non si puo fare l'impasse"],
+          options: ["Da Nord", "Da Sud", "Non importa", "Non si può fare l'impasse"],
           correctAnswer: 1,
           explanation:
-            "Devi giocare da Sud verso la Dama di Nord. Se il Re e in Ovest (prima della Dama), la tua Dama vincera!",
+            "Devi giocare da Sud verso la Dama di Nord. Se il Re è in Ovest (prima della Dama), la tua Dama vincerà!",
         },
         {
           type: "card-select",
@@ -732,9 +732,9 @@ const lezione3: Lesson = {
         },
         {
           type: "true-false",
-          content: "L'impasse ha una probabilita di successo del 50%.",
+          content: "L'impasse ha una probabilità di successo del 50%.",
           correctAnswer: 0,
-          explanation: "Vero! La carta avversaria che cerchi (es. il Re) puo essere in una di due posizioni: favorevole o sfavorevole. La probabilita e quindi 50-50.",
+          explanation: "Vero! La carta avversaria che cerchi (es. il Re) può essere in una di due posizioni: favorevole o sfavorevole. La probabilità è quindi 50-50.",
         },
       ],
     },
@@ -783,12 +783,12 @@ const lezione4: Lesson = {
         {
           type: "text",
           content:
-            "Avere un preciso obiettivo induce il Giocante a organizzare le sue manovre con un certo criterio per raggiungere il numero di prese dell'impegno. Solitamente il conto delle vincenti e molto lontano dall'obiettivo, quindi occorre lavorare per affrancare prese nuove.",
+            "Avere un preciso obiettivo induce il Giocante a organizzare le sue manovre con un certo criterio per raggiungere il numero di prese dell'impegno. Solitamente il conto delle vincenti è molto lontano dall'obiettivo, quindi occorre lavorare per affrancare prese nuove.",
         },
         {
           type: "rule",
           content:
-            "Il metodo parte da un semplice conto: quante prese ho a disposizione? Quante ne devo trovare per mantenere l'impegno? Il seguito e aritmetico: scegliere da quale o quali colori reperire le prese che mancano.",
+            "Il metodo parte da un semplice conto: quante prese ho a disposizione? Quante ne devo trovare per mantenere l'impegno? Il seguito è aritmetico: scegliere da quale o quali colori reperire le prese che mancano.",
         },
         {
           type: "example",
@@ -799,7 +799,7 @@ const lezione4: Lesson = {
         {
           type: "text",
           content:
-            "A volte il colore di sviluppo e uno solo ed e evidente. Altre volte ci sono piu possibilita e bisogna scegliere quella migliore, considerando quante prese si devono cedere e i rischi connessi.",
+            "A volte il colore di sviluppo è uno solo ed è evidente. Altre volte ci sono più possibilità e bisogna scegliere quella migliore, considerando quante prese si devono cedere e i rischi connessi.",
         },
         {
           type: "quiz",
@@ -826,33 +826,33 @@ const lezione4: Lesson = {
         {
           type: "text",
           content:
-            "Quando il colore sorgente di prese e nella mano povera di ingressi, il Giocante deve cercare di affrancare il colore e conservare la possibilita di incassare quanto ha affrancato.",
+            "Quando il colore sorgente di prese è nella mano povera di ingressi, il Giocante deve cercare di affrancare il colore e conservare la possibilità di incassare quanto ha affrancato.",
         },
         {
           type: "rule",
           content:
-            "IL RIENTRO (O INGRESSO) E UNA CARTA CHE CONSENTE DI FAR VINCERE LA PRESA ALLA MANO GIUSTA E NEL MOMENTO GIUSTO. Salvaguardate gli ingressi accanto alla lunga che volete affrancare!",
+            "IL RIENTRO (O INGRESSO) È UNA CARTA CHE CONSENTE DI FAR VINCERE LA PRESA ALLA MANO GIUSTA E NEL MOMENTO GIUSTO. Salvaguardate gli ingressi accanto alla lunga che volete affrancare!",
         },
         {
           type: "example",
           content:
-            "Sud gioca 3NT. Attacco ♥2. Le Quadri possono dare 4 prese affrancate, ma il K♥ nel morto e l'unico rientro. Sud deve rifiutare la presa a Cuori due volte, vincendo solo alla terza, per conservare il K♥ come ingresso al morto.",
+            "Sud gioca 3NT. Attacco ♥2. Le Quadri possono dare 4 prese affrancate, ma il K♥ nel morto è l'unico rientro. Sud deve rifiutare la presa a Cuori due volte, vincendo solo alla terza, per conservare il K♥ come ingresso al morto.",
           cards: "♠86 ♥K5 ♦KQ1075 ♣872",
         },
         {
           type: "tip",
           content: "Il Colpo in Bianco",
           explanation:
-            "Il Colpo in Bianco e la cessione immediata di una presa (che comunque si sarebbe ceduta dopo) allo scopo di mantenere le comunicazioni nel colore. E una manovra fondamentale a Senz'atout!",
+            "Il Colpo in Bianco è la cessione immediata di una presa (che comunque si sarebbe ceduta dopo) allo scopo di mantenere le comunicazioni nel colore. È una manovra fondamentale a Senz'atout!",
         },
         {
           type: "quiz",
           content:
-            "Perche il Giocante a volte rifiuta di vincere una presa che potrebbe prendere?",
+            "Perché il Giocante a volte rifiuta di vincere una presa che potrebbe prendere?",
           options: [
             "Per confondere gli avversari",
             "Per mantenere i rientri verso la mano con le carte affrancate",
-            "Perche non ha carte abbastanza alte",
+            "Perché non ha carte abbastanza alte",
             "Non ha mai senso rifiutare una presa",
           ],
           correctAnswer: 1,
@@ -875,12 +875,12 @@ const lezione4: Lesson = {
         {
           type: "text",
           content:
-            "Si dice che un colore comunica quando e possibile trasferire la presa da una mano all'altra. Un colore e bloccato quando il lato corto contiene tutte le carte piu alte del lato lungo.",
+            "Si dice che un colore comunica quando è possibile trasferire la presa da una mano all'altra. Un colore è bloccato quando il lato corto contiene tutte le carte più alte del lato lungo.",
         },
         {
           type: "example",
           content:
-            "KQ72 su AJ83: l'incasso e fluido, 4 prese. Ma QJ109 su AK: il colore e bloccato, non si possono incassare tutte le vincenti!",
+            "KQ72 su AJ83: l'incasso è fluido, 4 prese. Ma QJ109 su AK: il colore è bloccato, non si possono incassare tutte le vincenti!",
           cards: "KQ72 → AJ83 (fluido) | QJ109 → AK (bloccato)",
         },
         {
@@ -897,7 +897,7 @@ const lezione4: Lesson = {
         {
           type: "text",
           content:
-            "A volte il blocco non e irrimediabile: se nella parte lunga esiste un rientro in un altro colore, si puo usare quello per superare il blocco e incassare le carte affrancate.",
+            "A volte il blocco non è irrimediabile: se nella parte lunga esiste un rientro in un altro colore, si può usare quello per superare il blocco e incassare le carte affrancate.",
         },
         {
           type: "quiz",
@@ -917,7 +917,7 @@ const lezione4: Lesson = {
     },
     {
       id: "4-4",
-      title: "La scelta tra piu colori",
+      title: "La scelta tra più colori",
       duration: "5",
       type: "theory",
       xpReward: 50,
@@ -929,7 +929,7 @@ const lezione4: Lesson = {
         {
           type: "text",
           content:
-            "Quando avete la possibilita di vincere l'attacco al Morto o in mano, valutate prima cosa intendete fare subito dopo: vi aiutera a prendere dalla parte giusta.",
+            "Quando avete la possibilità di vincere l'attacco al Morto o in mano, valutate prima cosa intendete fare subito dopo: vi aiuterà a prendere dalla parte giusta.",
         },
         {
           type: "example",
@@ -946,15 +946,15 @@ const lezione4: Lesson = {
           type: "tip",
           content: "Consiglio del Maestro",
           explanation:
-            "Quando avete due colori di sviluppo possibili, scegliete quello che richiede di cedere meno prese. Se sono equivalenti, preferite quello che offre piu prese affrancate.",
+            "Quando avete due colori di sviluppo possibili, scegliete quello che richiede di cedere meno prese. Se sono equivalenti, preferite quello che offre più prese affrancate.",
         },
         {
           type: "quiz",
           content:
-            "Sud gioca 3NT con 5 vincenti. Ha due colori di sviluppo: Fiori (4 affrancabili cedendo 1 presa) e Quadri (5 affrancabili cedendo 2 prese). Gli avversari hanno gia 3 prese pronte. Quale colore sceglie?",
+            "Sud gioca 3NT con 5 vincenti. Ha due colori di sviluppo: Fiori (4 affrancabili cedendo 1 presa) e Quadri (5 affrancabili cedendo 2 prese). Gli avversari hanno già 3 prese pronte. Quale colore sceglie?",
           options: [
-            "Quadri, perche danno piu prese",
-            "Fiori, perche cede solo 1 presa e gli avversari non arriveranno a 5",
+            "Quadri, perché danno più prese",
+            "Fiori, perché cede solo 1 presa e gli avversari non arriveranno a 5",
             "Non importa",
             "Nessuno dei due",
           ],
@@ -1010,7 +1010,7 @@ const lezione5: Lesson = {
       content: [
         {
           type: "heading",
-          content: "Perche giocare con l'atout?",
+          content: "Perché giocare con l'atout?",
         },
         {
           type: "text",
@@ -1020,18 +1020,18 @@ const lezione5: Lesson = {
         {
           type: "rule",
           content:
-            "Se c'e un fit conveniente (♥ o ♠: 30 punti ogni presa), si gioca con questo atout. Se non c'e fit a ♥ o ♠, si gioca a Senz'atout. Se non e possibile giocare a SA, si gioca a ♣ o ♦ (20 punti ogni presa).",
+            "Se c'è un fit conveniente (♥ o ♠: 30 punti ogni presa), si gioca con questo atout. Se non c'è fit a ♥ o ♠, si gioca a Senz'atout. Se non è possibile giocare a SA, si gioca a ♣ o ♦ (20 punti ogni presa).",
         },
         {
           type: "text",
           content:
-            "Il fatto di aver scelto quale atout rappresenta quasi sempre una rivalutazione per un colore, a maggior ragione se e composto da carte deboli. Ad esempio: ♠543 ♥QJ10987 ♦654 ♣2. A Senza queste carte sono quasi inutili, ma se Cuori fosse atout avremmo la certezza di almeno 4 prese!",
+            "Il fatto di aver scelto quale atout rappresenta quasi sempre una rivalutazione per un colore, a maggior ragione se è composto da carte deboli. Ad esempio: ♠543 ♥QJ10987 ♦654 ♣2. A Senza queste carte sono quasi inutili, ma se Cuori fosse atout avremmo la certezza di almeno 4 prese!",
         },
         {
           type: "quiz",
           content:
             "Quante carte in un seme deve avere la coppia per considerarlo un buon fit?",
-          options: ["6", "7", "8 o piu", "10"],
+          options: ["6", "7", "8 o più", "10"],
           correctAnswer: 2,
           explanation:
             "Si parla di FIT quando la coppia possiede almeno 8 carte in un seme. Con 8+ carte conviene giocare con quel seme come atout.",
@@ -1052,12 +1052,12 @@ const lezione5: Lesson = {
         {
           type: "text",
           content:
-            "Le vincenti nei colori a lato delle atout sono vincenti RELATIVE: il Giocante le potra liberamente incassare SOLO QUANDO avra eliminato le atout in mano agli avversari. Questa operazione e detta \"battere le atout\".",
+            "Le vincenti nei colori a lato delle atout sono vincenti RELATIVE: il Giocante le potrà liberamente incassare SOLO QUANDO avrà eliminato le atout in mano agli avversari. Questa operazione è detta \"battere le atout\".",
         },
         {
           type: "rule",
           content:
-            "Se avete vincenti o affrancabili \"lunghe\", e inevitabile che prima o poi dobbiate battere le atout, cioe togliere di mezzo quelle che hanno gli avversari. Diversamente, taglieranno le vostre carte buone!",
+            "Se avete vincenti o affrancabili \"lunghe\", è inevitabile che prima o poi dobbiate battere le atout, cioè togliere di mezzo quelle che hanno gli avversari. Diversamente, taglieranno le vostre carte buone!",
         },
         {
           type: "example",
@@ -1068,12 +1068,12 @@ const lezione5: Lesson = {
         {
           type: "quiz",
           content:
-            "Perche il Giocante deve battere le atout prima di incassare le vincenti laterali?",
+            "Perché il Giocante deve battere le atout prima di incassare le vincenti laterali?",
           options: [
-            "Per fare piu prese",
-            "E obbligatorio per regolamento",
+            "Per fare più prese",
+            "È obbligatorio per regolamento",
             "Per evitare che gli avversari taglino le sue carte buone",
-            "Non deve farlo, e sempre meglio tagliare subito",
+            "Non deve farlo, è sempre meglio tagliare subito",
           ],
           correctAnswer: 2,
           explanation:
@@ -1095,17 +1095,17 @@ const lezione5: Lesson = {
         {
           type: "text",
           content:
-            "Il taglio puo interrompere le vincenti dell'avversario. Il taglio puo essere effettuato sia dalla mano che dal morto. Ovviamente la prima mano a poterlo esercitare sara quella che per prima esaurisce le carte nel colore giocato.",
+            "Il taglio può interrompere le vincenti dell'avversario. Il taglio può essere effettuato sia dalla mano che dal morto. Ovviamente la prima mano a poterlo esercitare sarà quella che per prima esaurisce le carte nel colore giocato.",
         },
         {
           type: "text",
           content:
-            "Il Potere di Controllo: quando si taglia con l'atout una vincente avversaria, non si guadagnano prese supplementari se si sarebbe comunque fatta quella presa con l'atout. Il vero guadagno e l'allungamento.",
+            "Il Potere di Controllo: quando si taglia con l'atout una vincente avversaria, non si guadagnano prese supplementari se si sarebbe comunque fatta quella presa con l'atout. Il vero guadagno è l'allungamento.",
         },
         {
           type: "rule",
           content:
-            "IL POTERE DI ALLUNGAMENTO DELLE ATOUT E DATO DALLA POSSIBILITA CHE ESSE OFFRONO, TAGLIANDO, DI FAR AUMENTARE LE PRESE NEL COLORE DI ATOUT. Si realizza un allungamento solo quando il taglio aumenta di almeno una le prese rispetto all'incasso normale.",
+            "IL POTERE DI ALLUNGAMENTO DELLE ATOUT È DATO DALLA POSSIBILITÀ CHE ESSE OFFRONO, TAGLIANDO, DI FAR AUMENTARE LE PRESE NEL COLORE DI ATOUT. Si realizza un allungamento solo quando il taglio aumenta di almeno una le prese rispetto all'incasso normale.",
         },
         {
           type: "example",
@@ -1125,7 +1125,7 @@ const lezione5: Lesson = {
           ],
           correctAnswer: 2,
           explanation:
-            "L'allungamento si verifica quando, tagliando dalla parte corta dell'atout, si ottengono piu prese di quante se ne farebbero semplicemente incassando il colore. Tagliare dalla mano lunga normalmente non aggiunge prese.",
+            "L'allungamento si verifica quando, tagliando dalla parte corta dell'atout, si ottengono più prese di quante se ne farebbero semplicemente incassando il colore. Tagliare dalla mano lunga normalmente non aggiunge prese.",
         },
       ],
     },
@@ -1143,7 +1143,7 @@ const lezione5: Lesson = {
         {
           type: "text",
           content:
-            "Il potere di affrancamento consente, tagliando, di affrancare cartine di un colore lungo senza cedere prese all'avversario. E una delle manovre piu potenti del gioco a colore.",
+            "Il potere di affrancamento consente, tagliando, di affrancare cartine di un colore lungo senza cedere prese all'avversario. È una delle manovre più potenti del gioco a colore.",
         },
         {
           type: "example",
@@ -1181,7 +1181,7 @@ const lezione5: Lesson = {
         {
           type: "text",
           content:
-            "Gioca le smazzate della Lezione 5. Decidi quando battere le atout e quando e meglio tagliare prima. Cerca le occasioni di allungamento e affrancamento!",
+            "Gioca le smazzate della Lezione 5. Decidi quando battere le atout e quando è meglio tagliare prima. Cerca le occasioni di allungamento e affrancamento!",
         },
         {
           type: "tip",
@@ -1218,12 +1218,12 @@ const lezione6: Lesson = {
         {
           type: "text",
           content:
-            "Se il vostro contratto e ad atout, ricordatevi che la possibilita di tagliare e data anche all'avversario, e ne fara uso se glielo permetterete. La prima valutazione riguarda i colori che avete a lato delle atout.",
+            "Se il vostro contratto è ad atout, ricordatevi che la possibilità di tagliare è data anche all'avversario, e ne farà uso se glielo permetterete. La prima valutazione riguarda i colori che avete a lato delle atout.",
         },
         {
           type: "text",
           content:
-            "Se avete vincenti o affrancabili \"lunghe\", e inevitabile che prima o poi dobbiate battere le atout. Diversamente, taglieranno le vostre carte buone. Se invece avete solo vincenti o affrancabili \"corte\", cercate di fare il maggior numero possibile di prese facendo dei tagli.",
+            "Se avete vincenti o affrancabili \"lunghe\", è inevitabile che prima o poi dobbiate battere le atout. Diversamente, taglieranno le vostre carte buone. Se invece avete solo vincenti o affrancabili \"corte\", cercate di fare il maggior numero possibile di prese facendo dei tagli.",
         },
         {
           type: "rule",
@@ -1239,7 +1239,7 @@ const lezione6: Lesson = {
         {
           type: "quiz",
           content:
-            "Con affrancabili \"lunghe\" nei colori laterali, qual e la strategia corretta?",
+            "Con affrancabili \"lunghe\" nei colori laterali, qual è la strategia corretta?",
           options: [
             "Tagliare subito dalla parte corta",
             "Battere le atout prima, poi incassare le lunghe",
@@ -1266,12 +1266,12 @@ const lezione6: Lesson = {
         {
           type: "text",
           content:
-            "La possibilita di taglio non e sempre immediata: e il Giocante che deve adoperarsi per costruirla, cedendo le prese del caso. Se la parte corta dell'atout ha ancora carte nel colore che si vuole tagliare, bisogna prima eliminarle.",
+            "La possibilità di taglio non è sempre immediata: è il Giocante che deve adoperarsi per costruirla, cedendo le prese del caso. Se la parte corta dell'atout ha ancora carte nel colore che si vuole tagliare, bisogna prima eliminarle.",
         },
         {
           type: "example",
           content:
-            "Atout ♠. Nord ha ♥32 e Sud ha ♥A74. Sud gioca A♥ e poi cede una Cuori: ora Nord non ha piu Cuori e puo tagliare la terza con una Picca del morto.",
+            "Atout ♠. Nord ha ♥32 e Sud ha ♥A74. Sud gioca A♥ e poi cede una Cuori: ora Nord non ha più Cuori e può tagliare la terza con una Picca del morto.",
           cards: "♠654 ♥32 → ♠AKQ32 ♥A74",
         },
         {
@@ -1282,7 +1282,7 @@ const lezione6: Lesson = {
         {
           type: "text",
           content:
-            "A volte anche un solo giro di atout sarebbe fatale: se l'avversario entra in presa a Cuori e gioca atout, addio taglio! Quindi fate prima cio che e urgente (i tagli), poi battete.",
+            "A volte anche un solo giro di atout sarebbe fatale: se l'avversario entra in presa a Cuori e gioca atout, addio taglio! Quindi fate prima ciò che è urgente (i tagli), poi battete.",
         },
         {
           type: "quiz",
@@ -1291,7 +1291,7 @@ const lezione6: Lesson = {
           options: ["0", "1", "2", "3"],
           correctAnswer: 2,
           explanation:
-            "Devi giocare A♥ (prima presa) e poi cedere una Cuori (seconda presa). A quel punto il morto non ha piu Cuori e puo tagliare la terza con l'atout.",
+            "Devi giocare A♥ (prima presa) e poi cedere una Cuori (seconda presa). A quel punto il morto non ha più Cuori e può tagliare la terza con l'atout.",
         },
       ],
     },
@@ -1309,12 +1309,12 @@ const lezione6: Lesson = {
         {
           type: "text",
           content:
-            "Decidere di battere atout non significa farlo subito! Se avete bisogno di fare tagli dalla parte corta, aspettate. Ci puo essere qualche altra cosa urgente da fare prima di battere.",
+            "Decidere di battere atout non significa farlo subito! Se avete bisogno di fare tagli dalla parte corta, aspettate. Ci può essere qualche altra cosa urgente da fare prima di battere.",
         },
         {
           type: "example",
           content:
-            "Sud gioca 4♠. Ovest attacca ♥K. Teoricamente 10 prese: 4 atout, 1♥, 3♦, 2 affrancabili a ♣. Ma dopo l'attacco, i difensori hanno affrancato 2 prese a Cuori. Se Sud prende con l'A♥ e gioca atout, l'A♠ e in mano ai nemici che incasseranno le Cuori e poi A♣. Soluzione: scartare carte perdenti prima!",
+            "Sud gioca 4♠. Ovest attacca ♥K. Teoricamente 10 prese: 4 atout, 1♥, 3♦, 2 affrancabili a ♣. Ma dopo l'attacco, i difensori hanno affrancato 2 prese a Cuori. Se Sud prende con l'A♥ e gioca atout, l'A♠ è in mano ai nemici che incasseranno le Cuori e poi A♣. Soluzione: scartare carte perdenti prima!",
           cards: "♠K952 ♥853 ♦AQ5 ♣K65",
         },
         {
@@ -1334,7 +1334,7 @@ const lezione6: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Se batti le atout, l'avversario con l'Asso prendera e potra giocare atout lui stesso, togliendoti la possibilita di taglio. Meglio fare prima il taglio, poi battere le atout.",
+            "Se batti le atout, l'avversario con l'Asso prenderà e potrà giocare atout lui stesso, togliendoti la possibilità di taglio. Meglio fare prima il taglio, poi battere le atout.",
         },
       ],
     },
@@ -1352,22 +1352,22 @@ const lezione6: Lesson = {
         {
           type: "text",
           content:
-            "Quando si gioca ad atout non ha piu molto senso cercare di affrancare il proprio colore lungo, perche quand'anche ci si riuscisse il giocante taglierebbe le nostre vincenti. A volte sara meglio cercare di affrancare prese rapide, o sperare nei tagli.",
+            "Quando si gioca ad atout non ha più molto senso cercare di affrancare il proprio colore lungo, perché quand'anche ci si riuscisse il giocante taglierebbe le nostre vincenti. A volte sarà meglio cercare di affrancare prese rapide, o sperare nei tagli.",
         },
         {
           type: "rule",
           content:
-            "SE IL CONTRATTO AVVERSARIO E AD ATOUT, PER L'ATTACCO DA SEQUENZA BASTANO DUE ONORI CONTIGUI (KQ, QJ, J10). Quando si attacca da due carte, si sceglie sempre la piu alta.",
+            "SE IL CONTRATTO AVVERSARIO È AD ATOUT, PER L'ATTACCO DA SEQUENZA BASTANO DUE ONORI CONTIGUI (KQ, QJ, J10). Quando si attacca da due carte, si sceglie sempre la più alta.",
         },
         {
           type: "text",
           content:
-            "Non attaccate mai \"sotto asso\" se il contratto e ad atout: rischiate di regalare una presa che non tornera piu. Quello che non si deve mai fare e attaccare sotto asso in un contratto a colore.",
+            "Non attaccate mai \"sotto asso\" se il contratto è ad atout: rischiate di regalare una presa che non tornerà più. Quello che non si deve mai fare è attaccare sotto asso in un contratto a colore.",
         },
         {
           type: "quiz",
           content:
-            "Il contratto e 4♥. Hai ♠KQ74. Qual e l'attacco corretto?",
+            "Il contratto è 4♥. Hai ♠KQ74. Qual è l'attacco corretto?",
           options: [
             "Il 4 di Picche (quarta migliore)",
             "Il Re di Picche (dall'alto della sequenza)",
@@ -1394,7 +1394,7 @@ const lezione6: Lesson = {
         {
           type: "text",
           content:
-            "Gioca le smazzate della Lezione 6. In ogni mano chiediti: ho affrancabili lunghe o corte? Devo battere subito le atout o prima tagliare? Cosa fara l'avversario quando entrera in presa?",
+            "Gioca le smazzate della Lezione 6. In ogni mano chiediti: ho affrancabili lunghe o corte? Devo battere subito le atout o prima tagliare? Cosa farà l'avversario quando entrerà in presa?",
         },
         {
           type: "tip",
@@ -1431,7 +1431,7 @@ const lezione7: Lesson = {
         {
           type: "text",
           content:
-            "Le carte che statisticamente realizzano piu frequentemente le prese sono gli assi e le tre figure di ogni colore. Un giocatore americano, Milton Work, ha attribuito a queste carte un valore numerico per avere un riferimento statistico:",
+            "Le carte che statisticamente realizzano più frequentemente le prese sono gli assi e le tre figure di ogni colore. Un giocatore americano, Milton Work, ha attribuito a queste carte un valore numerico per avere un riferimento statistico:",
         },
         {
           type: "rule",
@@ -1447,7 +1447,7 @@ const lezione7: Lesson = {
         {
           type: "text",
           content:
-            "Statisticamente la coppia che possiede piu punti e in grado di realizzare piu prese dell'altra. Come riferimento: con 20-24 punti coppia si fanno contratti parziali; con 25-31 contratti di manche; con 32-36 piccoli slam; con 37+ grandi slam.",
+            "Statisticamente la coppia che possiede più punti è in grado di realizzare più prese dell'altra. Come riferimento: con 20-24 punti coppia si fanno contratti parziali; con 25-31 contratti di manche; con 32-36 piccoli slam; con 37+ grandi slam.",
         },
         {
           type: "quiz",
@@ -1481,7 +1481,7 @@ const lezione7: Lesson = {
         {
           type: "text",
           content:
-            "L'apertura e la prima dichiarazione diversa da Passo fatta al tavolo. Aprire e una libera scelta, non un obbligo. La decisione di Aprire o Passare dipende dalla Forza della mano.",
+            "L'apertura è la prima dichiarazione diversa da Passo fatta al tavolo. Aprire è una libera scelta, non un obbligo. La decisione di Aprire o Passare dipende dalla Forza della mano.",
         },
         {
           type: "rule",
@@ -1497,7 +1497,7 @@ const lezione7: Lesson = {
           type: "tip",
           content: "11 punti: come decidere?",
           explanation:
-            "Con 11 punti, valutate la qualita degli onori. Onori concentrati nei colori lunghi e prese rapide (Assi) sono buoni. Onori secchi (Q o J da soli) e senza prese rapide sono cattivi. In pratica: 11 punti NON ESISTONO, o sono 10 o sono 12!",
+            "Con 11 punti, valutate la qualità degli onori. Onori concentrati nei colori lunghi e prese rapide (Assi) sono buoni. Onori secchi (Q o J da soli) e senza prese rapide sono cattivi. In pratica: 11 punti NON ESISTONO, o sono 10 o sono 12!",
         },
         {
           type: "quiz",
@@ -1511,7 +1511,7 @@ const lezione7: Lesson = {
           ],
           correctAnswer: 2,
           explanation:
-            "Con 10 punti onori si passa. Non si hanno i requisiti minimi per aprire (almeno 12 punti). Anche se i Quadri sono belli, la forza complessiva e insufficiente.",
+            "Con 10 punti onori si passa. Non si hanno i requisiti minimi per aprire (almeno 12 punti). Anche se i Quadri sono belli, la forza complessiva è insufficiente.",
         },
         {
           type: "hand-eval",
@@ -1526,7 +1526,7 @@ const lezione7: Lesson = {
           cards: "♠93 ♥AK752 ♦Q84 ♣KJ3",
           options: ["1H", "1NT", "1D", "P"],
           correctAnswer: 0,
-          explanation: "Con 13 punti e distribuzione 5332, non sei nel range 15-17 per 1NT. Apri 1♥, il tuo colore piu lungo!",
+          explanation: "Con 13 punti e distribuzione 5332, non sei nel range 15-17 per 1NT. Apri 1♥, il tuo colore più lungo!",
         },
       ],
     },
@@ -1544,7 +1544,7 @@ const lezione7: Lesson = {
         {
           type: "text",
           content:
-            "Il TIPO di apertura e determinato dalla DISTRIBUZIONE. La distribuzione di una mano e l'insieme delle lunghezze dei quattro semi. Le distribuzioni bilanciate sono tre: 4333, 4432 e 5332.",
+            "Il TIPO di apertura è determinato dalla DISTRIBUZIONE. La distribuzione di una mano è l'insieme delle lunghezze dei quattro semi. Le distribuzioni bilanciate sono tre: 4333, 4432 e 5332.",
         },
         {
           type: "rule",
@@ -1554,12 +1554,12 @@ const lezione7: Lesson = {
         {
           type: "text",
           content:
-            "Per le aperture a colore, la regola generale e: SI APRE NEL SEME PIU LUNGO POSSEDUTO. Con semi di diversa lunghezza: apri nel piu lungo. Con due semi di 5 carte: apri nel piu alto di rango. Con due o tre semi di 4 carte: apri nel piu basso di rango.",
+            "Per le aperture a colore, la regola generale è: SI APRE NEL SEME PIÙ LUNGO POSSEDUTO. Con semi di diversa lunghezza: apri nel più lungo. Con due semi di 5 carte: apri nel più alto di rango. Con due o tre semi di 4 carte: apri nel più basso di rango.",
         },
         {
           type: "example",
           content:
-            "♠K2 ♥4 ♦KJ876 ♣AQ873 → 1♦ (due quinti, apri nel piu alto). ♠AQJ3 ♥KJ62 ♦Q7 ♣853 → 1♣ (due quarti, apri nel piu basso). ♠53 ♥AJ4 ♦K9 ♣AJ10762 → 1♣ (un colore lungo).",
+            "♠K2 ♥4 ♦KJ876 ♣AQ873 → 1♦ (due quinti, apri nel più alto). ♠AQJ3 ♥KJ62 ♦Q7 ♣853 → 1♣ (due quarti, apri nel più basso). ♠53 ♥AJ4 ♦K9 ♣AJ10762 → 1♣ (un colore lungo).",
           cards: "♠K2 ♥4 ♦KJ876 ♣AQ873 → 1♦",
         },
         {
@@ -1577,7 +1577,7 @@ const lezione7: Lesson = {
           cards: "♠K2 ♥4 ♦KJ876 ♣AQ873",
           options: ["1C", "1D", "1H", "1NT"],
           correctAnswer: 1,
-          explanation: "Con due colori di 5 carte, si apre nel piu alto di rango: 1♦ (i Quadri hanno rango superiore ai Fiori). Cosi nella ridichiara potrai mostrare anche i Fiori!",
+          explanation: "Con due colori di 5 carte, si apre nel più alto di rango: 1♦ (i Quadri hanno rango superiore ai Fiori). Così nella ridichiara potrai mostrare anche i Fiori!",
         },
         {
           type: "bid-select",
@@ -1585,7 +1585,7 @@ const lezione7: Lesson = {
           cards: "♠AQJ3 ♥KJ62 ♦Q73 ♣85",
           options: ["1S", "1H", "1D", "1NT"],
           correctAnswer: 1,
-          explanation: "Con due quarti nobili (♠ e ♥), apri nel piu basso: 1♥. In ridichiara potrai dire 1♠ senza salire di livello!",
+          explanation: "Con due quarti nobili (♠ e ♥), apri nel più basso: 1♥. In ridichiara potrai dire 1♠ senza salire di livello!",
         },
       ],
     },
@@ -1608,12 +1608,12 @@ const lezione7: Lesson = {
         {
           type: "rule",
           content:
-            "L'apertura di 2♣ e speciale: e un \"contenitore\" per due tipi di mano — la bilanciata fortissima (24+) e la mano a base fiori. SULLE APERTURE DI 2 A COLORE E VIETATO DIRE PASSO dal rispondente.",
+            "L'apertura di 2♣ è speciale: è un \"contenitore\" per due tipi di mano — la bilanciata fortissima (24+) e la mano a base fiori. SULLE APERTURE DI 2 A COLORE È VIETATO DIRE PASSO dal rispondente.",
         },
         {
           type: "text",
           content:
-            "Le aperture di barrage (livello 3 e 4) sono riservate a mani con un colore molto lungo (almeno 7 carte) capeggiato da almeno due onori, e nient'altro a lato. Il messaggio e: \"faccio da solo 3 prese in meno di quelle che dichiaro\".",
+            "Le aperture di barrage (livello 3 e 4) sono riservate a mani con un colore molto lungo (almeno 7 carte) capeggiato da almeno due onori, e nient'altro a lato. Il messaggio è: \"faccio da solo 3 prese in meno di quelle che dichiaro\".",
         },
         {
           type: "example",
@@ -1628,7 +1628,7 @@ const lezione7: Lesson = {
           options: ["1♠", "2♠", "2♣", "2NT"],
           correctAnswer: 1,
           explanation:
-            "Con 20 punti e una mano sbilanciata con almeno 8 vincenti, si apre a livello 2 nel proprio colore lungo: 2♠. Non 1♠ (troppo forte), non 2♣ (riservata alle bilanciate 24+ o alle mani a base fiori), non 2NT (non e bilanciata).",
+            "Con 20 punti e una mano sbilanciata con almeno 8 vincenti, si apre a livello 2 nel proprio colore lungo: 2♠. Non 1♠ (troppo forte), non 2♣ (riservata alle bilanciate 24+ o alle mani a base fiori), non 2NT (non è bilanciata).",
         },
       ],
     },
@@ -1669,7 +1669,7 @@ const lezione8: Lesson = {
         {
           type: "text",
           content:
-            "Il Rispondente decide il contratto: e il CAPITANO. Sapendo che l'apertore ha 15-17, il rispondente contera i propri punti e avra un'idea abbastanza precisa della somma sulla linea, decidendo di conseguenza il livello di contratto conveniente.",
+            "Il Rispondente decide il contratto: è il CAPITANO. Sapendo che l'apertore ha 15-17, il rispondente conterà i propri punti e avrà un'idea abbastanza precisa della somma sulla linea, decidendo di conseguenza il livello di contratto conveniente.",
         },
         {
           type: "example",
@@ -1691,7 +1691,7 @@ const lezione8: Lesson = {
           content: "Conta i punti di questa mano. E un'apertura di 1NT?",
           cards: "♠KQ8 ♥AJ73 ♦Q92 ♣K85",
           correctValue: 15,
-          explanation: "♠ K(3)+Q(2)=5 | ♥ A(4)+J(1)=5 | ♦ Q(2)=2 | ♣ K(3)=3. Totale: 5+5+2+3 = 15. Si, e un'apertura di 1NT (15-17, bilanciata 4333)!",
+          explanation: "♠ K(3)+Q(2)=5 | ♥ A(4)+J(1)=5 | ♦ Q(2)=2 | ♣ K(3)=3. Totale: 5+5+2+3 = 15. Sì, è un'apertura di 1NT (15-17, bilanciata 4333)!",
         },
       ],
     },
@@ -1714,7 +1714,7 @@ const lezione8: Lesson = {
         {
           type: "rule",
           content:
-            "Risposte CONCLUSIVE (l'apertore passa): 4♥, 4♠, 3NT (manche trovata). Oppure 2♥, 2♠ (parziale minimo, la mano e debole). Risposte INVITANTI (l'apertore decide se rialzare): 2NT, 3♥, 3♠ (\"rialza con il massimo, altrimenti passa\").",
+            "Risposte CONCLUSIVE (l'apertore passa): 4♥, 4♠, 3NT (manche trovata). Oppure 2♥, 2♠ (parziale minimo, la mano è debole). Risposte INVITANTI (l'apertore decide se rialzare): 2NT, 3♥, 3♠ (\"rialza con il massimo, altrimenti passa\").",
         },
         {
           type: "text",
@@ -1724,7 +1724,7 @@ const lezione8: Lesson = {
         {
           type: "example",
           content:
-            "Il compagno apre 1NT. Hai ♠AQ8743 ♥K5 ♦J42 ♣76. Sai che c'e fit a Picche (almeno 8 carte) e punti per manche (25-27). Rispondi 4♠ direttamente!",
+            "Il compagno apre 1NT. Hai ♠AQ8743 ♥K5 ♦J42 ♣76. Sai che c'è fit a Picche (almeno 8 carte) e punti per manche (25-27). Rispondi 4♠ direttamente!",
           cards: "♠AQ8743 ♥K5 ♦J42 ♣76 → 4♠",
         },
         {
@@ -1734,7 +1734,7 @@ const lezione8: Lesson = {
           options: ["Passo", "2♥", "3♥", "4♥"],
           correctAnswer: 1,
           explanation:
-            "Con 2 punti la manche e irraggiungibile (17+2=19, lontano da 25). Ma con 6 carte di Cuori, giocare 2♥ e molto meglio che lasciare il compagno a 1NT. La risposta 2♥ a colore e conclusiva: l'apertore deve passare.",
+            "Con 2 punti la manche è irraggiungibile (17+2=19, lontano da 25). Ma con 6 carte di Cuori, giocare 2♥ è molto meglio che lasciare il compagno a 1NT. La risposta 2♥ a colore è conclusiva: l'apertore deve passare.",
         },
         {
           type: "bid-select",
@@ -1742,7 +1742,7 @@ const lezione8: Lesson = {
           cards: "♠AK9753 ♥Q4 ♦K62 ♣83",
           options: ["2S", "3S", "4S", "3NT"],
           correctAnswer: 2,
-          explanation: "Con 12 punti e 6 Picche, la somma e 27-29: manche sicura! Con un colore di almeno 6 carte, il fit e garantito (l'apertore di 1NT ha almeno 2 Picche). Rispondi direttamente 4♠!",
+          explanation: "Con 12 punti e 6 Picche, la somma è 27-29: manche sicura! Con un colore di almeno 6 carte, il fit è garantito (l'apertore di 1NT ha almeno 2 Picche). Rispondi direttamente 4♠!",
         },
       ],
     },
@@ -1760,12 +1760,12 @@ const lezione8: Lesson = {
         {
           type: "text",
           content:
-            "Quando il Rispondente non ha abbastanza informazioni per decidere il contratto, puo usare una dichiarazione convenzionale speciale: \"2 Fiori\" (detta \"Stayman\", dal nome del suo inventore). Chiede all'Apertore quali colori nobili quarti possiede.",
+            "Quando il Rispondente non ha abbastanza informazioni per decidere il contratto, può usare una dichiarazione convenzionale speciale: \"2 Fiori\" (detta \"Stayman\", dal nome del suo inventore). Chiede all'Apertore quali colori nobili quarti possiede.",
         },
         {
           type: "rule",
           content:
-            "Si usa Stayman con almeno 8 punti e 4/5 carte in un colore nobile. Le risposte dell'Apertore: 2♦ = \"non ho ne 4 Cuori ne 4 Picche\"; 2♥ = \"ho 4 Cuori (e meno di 4 Picche)\"; 2♠ = \"ho 4 Picche (e meno di 4 Cuori)\"; 2NT = \"ho 4 Cuori e 4 Picche\".",
+            "Si usa Stayman con almeno 8 punti e 4/5 carte in un colore nobile. Le risposte dell'Apertore: 2♦ = \"non ho né 4 Cuori né 4 Picche\"; 2♥ = \"ho 4 Cuori (e meno di 4 Picche)\"; 2♠ = \"ho 4 Picche (e meno di 4 Cuori)\"; 2NT = \"ho 4 Cuori e 4 Picche\".",
         },
         {
           type: "example",
@@ -1798,7 +1798,7 @@ const lezione8: Lesson = {
           cards: "♠AK86 ♥Q93 ♦KJ7 ♣A84",
           options: ["2D", "2H", "2S", "2NT"],
           correctAnswer: 2,
-          explanation: "Hai 4 Picche e meno di 4 Cuori. La risposta alla Stayman e 2♠! Mostra le tue 4 Picche al compagno.",
+          explanation: "Hai 4 Picche e meno di 4 Cuori. La risposta alla Stayman è 2♠! Mostra le tue 4 Picche al compagno.",
         },
       ],
     },
@@ -1816,17 +1816,17 @@ const lezione8: Lesson = {
         {
           type: "text",
           content:
-            "Si apre di 2NT quando si hanno 21, 22 o 23 punti e una distribuzione bilanciata (4333, 4432, 5332). Non ci sono mai singoli ne vuoti, ne colori di 6+ carte. Se la mano ha i requisiti per 2NT, tale apertura prevale su quella a colore.",
+            "Si apre di 2NT quando si hanno 21, 22 o 23 punti e una distribuzione bilanciata (4333, 4432, 5332). Non ci sono mai singoli né vuoti, né colori di 6+ carte. Se la mano ha i requisiti per 2NT, tale apertura prevale su quella a colore.",
         },
         {
           type: "rule",
           content:
-            "Su 2NT l'unico modo per fermarsi prima di manche e dire Passo. Le risposte di 3♥, 3♠ mostrano 5+ carte e forza almeno di manche. L'apertore rialza con fit, altrimenti 3NT. Per cercare il fit 4-4 si usa 3♣ (Stayman scalata di un livello).",
+            "Su 2NT l'unico modo per fermarsi prima di manche è dire Passo. Le risposte di 3♥, 3♠ mostrano 5+ carte e forza almeno di manche. L'apertore rialza con fit, altrimenti 3NT. Per cercare il fit 4-4 si usa 3♣ (Stayman scalata di un livello).",
         },
         {
           type: "example",
           content:
-            "Ovest apre 2NT (21-23). Est ha ♠95 ♥J965 ♦865 ♣AJ92. La somma e almeno 25: manche sicura. Est usa 3♣ (Stayman). Ovest risponde 3♥: fit trovato! Est dichiara 4♥.",
+            "Ovest apre 2NT (21-23). Est ha ♠95 ♥J965 ♦865 ♣AJ92. La somma è almeno 25: manche sicura. Est usa 3♣ (Stayman). Ovest risponde 3♥: fit trovato! Est dichiara 4♥.",
           cards: "♠95 ♥J965 ♦865 ♣AJ92",
         },
         {
@@ -1841,7 +1841,7 @@ const lezione8: Lesson = {
           options: ["Passo", "3♦", "3NT", "3♣ (Stayman)"],
           correctAnswer: 2,
           explanation:
-            "Con 11 punti la somma e almeno 32 (21+11): manche sicura e possibile slam! Senza fit nobile in vista (solo 3 carte a Cuori, 2 a Picche), la scelta migliore e 3NT direttamente. Le Quadri daranno molte prese a NT.",
+            "Con 11 punti la somma è almeno 32 (21+11): manche sicura e possibile slam! Senza fit nobile in vista (solo 3 carte a Cuori, 2 a Picche), la scelta migliore è 3NT direttamente. Le Quadri daranno molte prese a NT.",
         },
       ],
     },

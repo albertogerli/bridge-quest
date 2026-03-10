@@ -26,7 +26,7 @@ export default function PrivacyPage() {
             <p className="text-gray-600 dark:text-gray-400">
               Lo sviluppo, la gestione tecnica e l&apos;hosting della piattaforma Bridge LAB sono curati
               a titolo gratuito da <strong>Tourbillon Tech S.r.l.</strong> (nella persona di Alberto Giovanni Gerli,
-              Vice Presidente FIGB), in qualita di Responsabile del trattamento ai sensi dell&apos;art. 28 GDPR,
+              Vice Presidente FIGB), in qualità di Responsabile del trattamento ai sensi dell&apos;art. 28 GDPR,
               sulla base di apposito accordo con il Titolare.
             </p>
           </section>
@@ -35,18 +35,18 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Dati raccolti</h2>
             <p className="text-gray-600 dark:text-gray-400">Bridge LAB raccoglie i seguenti dati:</p>
             <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
-              <li><strong>Dati di registrazione:</strong> email, nome visualizzato, tipo di profilo (fascia d&apos;eta), associazione sportiva (ASD) di appartenenza (opzionale), username BBO (opzionale).</li>
+              <li><strong>Dati di registrazione:</strong> email, nome visualizzato, tipo di profilo (fascia d&apos;età), associazione sportiva (ASD) di appartenenza (opzionale), username BBO (opzionale).</li>
               <li><strong>Dati di utilizzo:</strong> progressi nelle lezioni (moduli completati), punti esperienza (XP), risultati di gioco, badge ottenuti, streak giornaliero.</li>
               <li><strong>Dati tecnici:</strong> indirizzo IP, tipo di browser, sistema operativo, tramite cookie tecnici e analitici.</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Finalita del trattamento</h2>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Finalità del trattamento</h2>
             <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
               <li>Erogazione del servizio educativo (lezioni, quiz, pratica al tavolo)</li>
               <li>Salvataggio dei progressi e sincronizzazione tra dispositivi</li>
-              <li>Classifiche e funzionalita social (forum, sfide)</li>
+              <li>Classifiche e funzionalità social (forum, sfide)</li>
               <li>Miglioramento del servizio tramite analisi aggregate e anonime</li>
             </ul>
           </section>
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Conservazione dei dati</h2>
             <p className="text-gray-600 dark:text-gray-400">
-              I dati personali sono conservati per la durata dell&apos;account. L&apos;utente puo richiedere la cancellazione
+              I dati personali sono conservati per la durata dell&apos;account. L&apos;utente può richiedere la cancellazione
               in qualsiasi momento contattando il Titolare. I dati vengono eliminati entro 30 giorni dalla richiesta.
             </p>
           </section>
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
             <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
               <li><strong>Cookie tecnici:</strong> necessari per il funzionamento (autenticazione, preferenze tema). Non richiedono consenso.</li>
               <li><strong>Cookie analitici:</strong> Vercel Analytics per statistiche aggregate e anonime sull&apos;utilizzo.</li>
-              <li><strong>Cookie di terze parti:</strong> YouTube puo impostare cookie quando si visualizzano i video embedded.</li>
+              <li><strong>Cookie di terze parti:</strong> YouTube può impostare cookie quando si visualizzano i video embedded.</li>
             </ul>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
               Non utilizziamo cookie di profilazione o pubblicitari.
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Diritti dell&apos;utente</h2>
             <p className="text-gray-600 dark:text-gray-400">
               Ai sensi del GDPR (artt. 15-22), l&apos;utente ha diritto di: accesso, rettifica, cancellazione,
-              limitazione del trattamento, portabilita dei dati, opposizione. Per esercitare tali diritti,
+              limitazione del trattamento, portabilità dei dati, opposizione. Per esercitare tali diritti,
               contattare il Titolare: <a href="mailto:info@federbridge.it" className="text-[#003DA5] underline">info@federbridge.it</a>
             </p>
           </section>
@@ -102,14 +102,14 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Aggiornamenti</h2>
             <p className="text-gray-600 dark:text-gray-400">
-              Questa policy puo essere aggiornata periodicamente. L&apos;ultima revisione risale a marzo 2026.
+              Questa policy può essere aggiornata periodicamente. L&apos;ultima revisione risale a marzo 2026.
             </p>
           </section>
 
           {/* Credits */}
           <section className="pt-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed">
-              Bridge LAB e un progetto della Federazione Italiana Gioco Bridge (FIGB) - Commissione Insegnamento.
+              Bridge LAB è un progetto della Federazione Italiana Gioco Bridge (FIGB) - Commissione Insegnamento.
               Sviluppo e hosting a cura di Alberto Giovanni Gerli / Tourbillon Tech S.r.l., a titolo gratuito.
             </p>
           </section>
