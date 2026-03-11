@@ -1360,7 +1360,7 @@ export const comprehensionData: LessonComprehension[] = [
     questions: [
       {
         question:
-          "Le sottoaperture 2C e 2P mostrano:",
+          "Le sottoaperture 2Q, 2C e 2P mostrano:",
         options: [
           "21+ punti e mano forte",
           "6 carte e 6-10 punti",
@@ -1369,7 +1369,7 @@ export const comprehensionData: LessonComprehension[] = [
         ],
         correctAnswer: 1,
         explanation:
-          "Le sottoaperture 2C e 2P mostrano 6 carte e punteggio 6-10. Sono aperture interdittive: il Rispondente sarà il Capitano.",
+          "Le sottoaperture 2Q, 2C e 2P mostrano 6 carte e punteggio 6-10. Sono aperture interdittive: il Rispondente sarà il Capitano.",
       },
       {
         question:

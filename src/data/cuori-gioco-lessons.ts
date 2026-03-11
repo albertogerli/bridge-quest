@@ -186,7 +186,7 @@ const lezione1CG: Lesson = {
           content: "Se siete certi che un taglio sia in agguato, potete scartare un onore dalla mano per confondere le acque al nemico.",
           correctAnswer: 0,
           explanation:
-            "Si! Se non vi costa prese, potete dare un onore di mano per far credere al difensore che siete voi a essere singoli. È una manovra ingannevole lecita e a volte brillante.",
+            "Sì! Se non vi costa prese, potete dare un onore di mano per far credere al difensore che siete voi a essere singoli. È una manovra ingannevole lecita e a volte brillante.",
         },
       ],
     },
@@ -660,7 +660,7 @@ const lezione4CG: Lesson = {
           content: "In un torneo a duplicato è giustificato fare giocate rischiose per battere il contratto, anche a costo di regalare prese in più.",
           correctAnswer: 0,
           explanation:
-            "Si! In duplicato la cosa più importante è battere il contratto: le prese in più non hanno grosso peso. In Mitchell invece bisogna stare attenti a non regalare prese.",
+            "Sì! In duplicato la cosa più importante è battere il contratto: le prese in più non hanno grosso peso. In Mitchell invece bisogna stare attenti a non regalare prese.",
         },
       ],
     },
@@ -742,7 +742,7 @@ const lezione5CG: Lesson = {
         {
           type: "text",
           content:
-            "In questo modo ci si cautela dalla Q10xx in una mano sola. Se il 9 viene catturato, i difensori hanno un solo quadro e cadrà sotto il Re. Se Q10xx è nel giocatore dopo di noi, lo vedremo alla seconda presa e faremo l'expasse.",
+            "In questo modo ci si cautela dalla Q10xx in una mano sola. Se il 9 viene catturato, i difensori hanno una sola carta di quadri e cadrà sotto il Re. Se Q10xx è nel giocatore dopo di noi, lo vedremo alla seconda presa e faremo l'expasse.",
         },
         {
           type: "quiz",
@@ -830,7 +830,7 @@ const lezione5CG: Lesson = {
         },
         {
           type: "example",
-          content: "3NT. La protezione: se le fiori corrono ci sono 10 prese ma se Nord ha il J quarto, preso a fiori torneràCuori. Sicurezza: incassare Q♣ e poi ♣ al 10. Se prende Sud, il K♥ resta protetto.",
+          content: "3NT. La protezione: se le fiori corrono ci sono 10 prese ma se Nord ha il J quarto, preso a fiori tornerà a cuori. Sicurezza: incassare Q♣ e poi ♣ al 10. Se prende Sud, il K♥ resta protetto.",
           cards: "♠K83 ♥62 ♦K62 ♣AQ953",
         },
         {
@@ -946,11 +946,11 @@ const lezione6CG: Lesson = {
           options: ["50%", "75%", "100%", "25%"],
           correctAnswer: 1,
           explanation:
-            "Il primo impasse riesce il 50% delle volte. Del restante 50% in cui fallisce, il secondo riesce meta delle volte (+25%). Totale: 50% + 25% = 75%. Se servono ENTRAMBI: 50% x 50% = 25%.",
+            "Il primo impasse riesce il 50% delle volte. Del restante 50% in cui fallisce, il secondo riesce metà delle volte (+25%). Totale: 50% + 25% = 75%. Se servono ENTRAMBI: 50% x 50% = 25%.",
         },
         {
           type: "true-false",
-          content: "Con 7 carte in linea (A3 + KQ1062) mancanti del J, battere in testa (52%) e leggermente meglio dell'impasse (50%).",
+          content: "Con 7 carte in linea (A3 + KQ1062) mancanti del J, battere in testa (52%) è leggermente meglio dell'impasse (50%).",
           correctAnswer: 0,
           explanation:
             "Esatto! La battuta funziona con 3-3 (36%) più le volte che J è nel doubleton su 4-2 (16%). Totale 52%, meglio del 50% dell'impasse. Ma se il 10 è accanto all'Asso (A10 + KQ632), l'impasse torna a essere preferibile.",

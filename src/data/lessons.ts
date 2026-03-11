@@ -404,7 +404,7 @@ const lezione1: Lesson = {
           type: "quiz",
           content: "Quante vincenti immediate ci sono in questa mano? ♠KQ65 ♥AKJ3 ♦K4 ♣AKQ",
           options: ["5", "7", "8", "9"],
-          correctAnswer: 1,
+          correctAnswer: 0,
           explanation:
             "Picche: 0 (manca l'Asso), Cuori: 2 (A e K, il J non è garantito), Quadri: 0 (manca l'Asso), Fiori: 3 (AKQ) = totale 5... ma attenzione: dipende anche dalle carte del morto!",
         },
@@ -1491,7 +1491,7 @@ const lezione7: Lesson = {
         {
           type: "text",
           content:
-            "La forza della mano determina anche il LIVELLO in cui si apre: da 12 a 20 punti si apre a livello 1 (1♣, 1♦, 1♥, 1♠, 1NT). Da 21 punti in su si apre a livello 2 (2♣, 2♦, 2♥, 2♠, 2NT).",
+            "La forza della mano determina anche il LIVELLO in cui si apre: da 12 a 20 punti si apre a livello 1 (1♣, 1♦, 1♥, 1♠, 1NT). Da 20-21 punti in su con almeno 8 vincenti si apre a livello 2 nel proprio colore (2♦, 2♥, 2♠). Con 22-23 punti e mano bilanciata: 2NT. Con 24+ punti: 2♣ (forte e artificiale).",
         },
         {
           type: "tip",
@@ -1559,7 +1559,7 @@ const lezione7: Lesson = {
         {
           type: "example",
           content:
-            "♠K2 ♥4 ♦KJ876 ♣AQ873 → 1♦ (due quinti, apri nel più alto). ♠AQJ3 ♥KJ62 ♦Q7 ♣853 → 1♣ (due quarti, apri nel più basso). ♠53 ♥AJ4 ♦K9 ♣AJ10762 → 1♣ (un colore lungo).",
+            "♠K2 ♥4 ♦KJ876 ♣AQ873 → 1♦ (due quinti, apri nel più alto). ♠AQJ3 ♥KJ62 ♦Q7 ♣853 → 1♥ (due quarti nobili, apri nel più basso). ♠53 ♥AJ4 ♦K9 ♣AJ10762 → 1♣ (un colore lungo).",
           cards: "♠K2 ♥4 ♦KJ876 ♣AQ873 → 1♦",
         },
         {

@@ -290,7 +290,7 @@ export const errorScenarios: ErrorScenario[] = [
     ],
     correctAnswer: 0,
     explanation:
-      "A Senza Atout, quando gli avversari attaccano il vostro punto debole, conviene spesso 'duccarè (lisciare): giocare piccola per rompere le comunicazioni tra i difensori. Se Ovest ha attaccato quarta migliore da ♠QJ1065, prendendo subito col K lasciate A-9 contro Q-J-10-6. Meglio giocare il 2 dal morto: se Est vince, poi Ovest rimane scollegato quando rientra in presa.",
+      "A Senza Atout, quando gli avversari attaccano il vostro punto debole, conviene spesso 'duccare' (lisciare): giocare piccola per rompere le comunicazioni tra i difensori. Se Ovest ha attaccato quarta migliore da ♠QJ1065, prendendo subito col K lasciate A-9 contro Q-J-10-6. Meglio giocare il 2 dal morto: se Est vince, poi Ovest rimane scollegato quando rientra in presa.",
   },
   {
     id: 16,
