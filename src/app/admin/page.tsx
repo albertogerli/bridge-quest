@@ -16,6 +16,8 @@ interface UserRow {
   streak: number;
   hands_played: number;
   asd_id: number | null;
+  marketing_consent: boolean | null;
+  total_minutes: number;
   created_at: string;
   last_login: string | null;
 }
@@ -38,9 +40,14 @@ interface Stats {
   topUsers: UserRow[];
   asdDistribution: { id: number; count: number }[];
   maxStreak: number;
+  marketingAccepted: number;
+  marketingDeclined: number;
+  marketingPending: number;
+  totalMinutesAll: number;
+  avgMinutes: number;
 }
 
-type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "created_at" | "last_login";
+type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "total_minutes" | "created_at" | "last_login";
 type SortDir = "asc" | "desc";
 
 /** Parse last_login which can be date-only "2026-03-11" or full ISO "2026-03-11T14:32:00Z" */
@@ -76,7 +83,7 @@ export default function AdminPage() {
     try {
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, created_at, last_login")
+        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, marketing_consent, total_minutes, created_at, last_login")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -103,6 +110,10 @@ export default function AdminPage() {
         let activeToday = 0;
         let activeWeek = 0;
         let maxStreak = 0;
+        let marketingAccepted = 0;
+        let marketingDeclined = 0;
+        let marketingPending = 0;
+        let totalMinutesAll = 0;
         const hourlySignups = new Array(24).fill(0);
         const dailyMap = new Map<string, number>();
         const asdMap = new Map<number, number>();
@@ -113,6 +124,10 @@ export default function AdminPage() {
           totalXp += u.xp || 0;
           totalHands += u.hands_played || 0;
           if (u.streak > maxStreak) maxStreak = u.streak;
+          totalMinutesAll += u.total_minutes || 0;
+          if (u.marketing_consent === true) marketingAccepted++;
+          else if (u.marketing_consent === false) marketingDeclined++;
+          else marketingPending++;
 
           if (created >= todayStart) {
             today++;
@@ -189,6 +204,11 @@ export default function AdminPage() {
           topUsers,
           asdDistribution,
           maxStreak,
+          marketingAccepted,
+          marketingDeclined,
+          marketingPending,
+          totalMinutesAll,
+          avgMinutes: profiles.length > 0 ? Math.round(totalMinutesAll / profiles.length) : 0,
         });
       }
     } catch (err) {
@@ -294,7 +314,7 @@ export default function AdminPage() {
       setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortKey(key);
-      setSortDir(key === "xp" || key === "hands_played" || key === "streak" ? "desc" : "asc");
+      setSortDir(key === "xp" || key === "hands_played" || key === "streak" || key === "total_minutes" ? "desc" : "asc");
     }
   };
 
@@ -326,7 +346,7 @@ export default function AdminPage() {
 
   // CSV export
   const exportCsv = () => {
-    const header = "Nome,BBO,Tipo,XP,Streak,Mani,ASD,Registrato,Ultimo accesso\n";
+    const header = "Nome,BBO,Tipo,XP,Streak,Mani,Tempo(min),ASD,Marketing,Registrato,Ultimo accesso\n";
     const rows = users.map((u) =>
       [
         u.display_name || "",
@@ -335,7 +355,9 @@ export default function AdminPage() {
         u.xp,
         u.streak,
         u.hands_played,
+        u.total_minutes || 0,
         u.asd_id || "",
+        u.marketing_consent === true ? "Sì" : u.marketing_consent === false ? "No" : "—",
         new Date(u.created_at).toLocaleDateString("it-IT"),
         u.last_login || "Mai",
       ].join(",")
@@ -485,6 +507,45 @@ export default function AdminPage() {
                 <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Retention 7 giorni</div>
                 <div className="text-2xl font-bold mt-1" style={{ color: (stats?.retention7d ?? 0) >= 30 ? "#059669" : "#dc2626" }}>
                   {stats?.retention7d ?? 0}%
+                </div>
+              </div>
+            </div>
+
+            {/* Marketing consent + Time tracking */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Tempo totale app</div>
+                <div className="text-2xl font-bold text-[#003DA5] mt-1">
+                  {Math.round((stats?.totalMinutesAll ?? 0) / 60)}h {(stats?.totalMinutesAll ?? 0) % 60}m
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Tempo medio/utente</div>
+                <div className="text-2xl font-bold text-gray-900 mt-1">
+                  {stats?.avgMinutes ?? 0} min
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Marketing ✅/❌</div>
+                <div className="text-2xl font-bold mt-1">
+                  <span className="text-emerald-600">{stats?.marketingAccepted ?? 0}</span>
+                  <span className="text-gray-300 mx-1">/</span>
+                  <span className="text-red-500">{stats?.marketingDeclined ?? 0}</span>
+                </div>
+                <div className="text-[10px] text-gray-400 mt-0.5">
+                  {stats?.marketingPending ?? 0} non chiesto
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Consenso %</div>
+                <div className="text-2xl font-bold mt-1" style={{
+                  color: ((stats?.marketingAccepted ?? 0) + (stats?.marketingDeclined ?? 0)) > 0
+                    ? (stats!.marketingAccepted / (stats!.marketingAccepted + stats!.marketingDeclined) >= 0.5 ? "#059669" : "#dc2626")
+                    : "#6b7280"
+                }}>
+                  {((stats?.marketingAccepted ?? 0) + (stats?.marketingDeclined ?? 0)) > 0
+                    ? Math.round((stats!.marketingAccepted / (stats!.marketingAccepted + stats!.marketingDeclined)) * 100)
+                    : 0}%
                 </div>
               </div>
             </div>
@@ -660,6 +721,7 @@ export default function AdminPage() {
                       <SortTh label="XP" field="xp" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
                       <SortTh label="Streak" field="streak" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
                       <SortTh label="Mani" field="hands_played" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
+                      <SortTh label="Tempo" field="total_minutes" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
                       <SortTh label="Registrato" field="created_at" current={sortKey} dir={sortDir} onClick={handleSort} />
                       <SortTh label="Ultimo accesso" field="last_login" current={sortKey} dir={sortDir} onClick={handleSort} />
                     </tr>
@@ -688,6 +750,11 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-right text-gray-600">
                           {u.hands_played}
                         </td>
+                        <td className="px-5 py-3 text-right text-gray-600 text-xs">
+                          {(u.total_minutes || 0) >= 60
+                            ? `${Math.floor(u.total_minutes / 60)}h ${u.total_minutes % 60}m`
+                            : `${u.total_minutes || 0}m`}
+                        </td>
                         <td className="px-5 py-3 text-gray-500 text-xs">
                           {new Date(u.created_at).toLocaleDateString("it-IT")}
                         </td>
@@ -698,7 +765,7 @@ export default function AdminPage() {
                     ))}
                     {sortedUsers.length === 0 && (
                       <tr>
-                        <td colSpan={8} className="px-5 py-10 text-center text-gray-400">
+                        <td colSpan={9} className="px-5 py-10 text-center text-gray-400">
                           {search ? "Nessun utente trovato" : "Nessun utente registrato"}
                         </td>
                       </tr>

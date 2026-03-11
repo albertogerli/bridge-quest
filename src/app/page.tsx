@@ -17,6 +17,7 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
 import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
 import { DidactaBanner } from "@/components/didacta-banner";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
@@ -138,7 +139,7 @@ function useLocalStats() {
 }
 
 export default function Home() {
-  const { user, loading: authLoading } = useSharedAuth();
+  const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
   const stats = useLocalStats();
   const profile = useProfile();
   const { reviewCount } = useSpacedReview();
@@ -292,6 +293,12 @@ export default function Home() {
       <Suspense fallback={null}>
         <ReferralHandler onReferralBonus={handleReferralBonus} />
       </Suspense>
+
+      {/* Marketing consent banner (logged-in users, shown once) */}
+      <MarketingConsentBanner
+        user={user}
+        marketingConsent={authProfile?.marketing_consent ?? null}
+      />
 
       {/* Referral bonus toast */}
       <AnimatePresence>

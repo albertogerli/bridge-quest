@@ -20,6 +20,9 @@ export interface Profile {
   anim_speed: string;
   sound_on: boolean;
   memory_best: number | null;
+  marketing_consent: boolean | null;
+  marketing_consent_date: string | null;
+  total_minutes: number;
   created_at: string;
   updated_at: string;
 }

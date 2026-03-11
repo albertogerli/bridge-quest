@@ -6,7 +6,9 @@ import { DesktopNav } from "@/components/desktop-nav";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
+import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider } from "@/contexts/auth-provider";
+import { CookieBanner } from "@/components/cookie-banner";
 import type { UserProfile } from "@/hooks/use-profile";
 
 /** Routes that should be full-screen (no nav, no sidebar) */
@@ -50,8 +52,16 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   // Continuous Supabase sync (runs on every page, no-op if not logged in)
   useSupabaseSync();
 
+  // Track time spent in app (30s heartbeat, pauses when tab hidden)
+  useActivityTracker();
+
   if (isFullScreen) {
-    return <main id="main-content" className="min-h-svh" data-profile={profile}>{children}</main>;
+    return (
+      <>
+        <main id="main-content" className="min-h-svh" data-profile={profile}>{children}</main>
+        <CookieBanner />
+      </>
+    );
   }
 
   return (
@@ -69,6 +79,9 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
       <div className="hidden lg:block px-6 pt-6">
         <DesktopSidebar />
       </div>
+
+      {/* Cookie consent banner */}
+      <CookieBanner />
     </div>
   );
 }
