@@ -18,6 +18,7 @@ import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
+import { DidactaBanner } from "@/components/didacta-banner";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { GuidedPath } from "@/components/beginner/guided-path";
 import { LostCard } from "@/components/beginner/lost-card";
@@ -267,8 +268,8 @@ export default function Home() {
   // While auth is loading, show spinner (prevents dashboard flash after logout)
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#1B5E3B] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -327,7 +328,7 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.8, y: 30 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+              className="bg-white dark:bg-[#152019] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -366,7 +367,7 @@ export default function Home() {
 
               <Button
                 onClick={() => setShowWeeklyRecap(false)}
-                className="mt-5 w-full h-12 rounded-xl bg-[#003DA5] font-semibold shadow-lg"
+                className="mt-5 w-full h-12 rounded-xl bg-[#1B5E3B] font-semibold shadow-lg"
               >
                 Andiamo!
               </Button>
@@ -406,7 +407,7 @@ export default function Home() {
               )}
             </motion.div>
 
-            <h1 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-white leading-none">
+            <h1 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-white leading-none font-display">
               FIGB Bridge LAB
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">
@@ -461,15 +462,15 @@ export default function Home() {
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
                 <Button
                   size="lg"
-                  className="w-full h-auto rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] py-3.5 px-5"
+                  className="w-full h-auto rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#1B5E3B] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] py-3.5 px-5"
                 >
                   <div className="flex items-center gap-3 w-full">
                     <span className="text-2xl">{nextModule.lessonIcon}</span>
                     <div className="flex-1 text-left">
-                      <p className="text-[10px] font-bold text-[#003DA5]/60 uppercase tracking-wider">Riprendi</p>
-                      <p className="text-sm font-bold text-[#003DA5] truncate">{nextModule.moduleTitle}</p>
+                      <p className="text-[10px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">Riprendi</p>
+                      <p className="text-sm font-bold text-[#1B5E3B] truncate">{nextModule.moduleTitle}</p>
                     </div>
-                    <svg className="h-5 w-5 text-[#003DA5]/50 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="h-5 w-5 text-[#1B5E3B]/50 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
@@ -479,7 +480,7 @@ export default function Home() {
               <Link href="/lezioni">
                 <Button
                   size="lg"
-                  className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98]"
+                  className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#1B5E3B] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98]"
                 >
                   <Target className="w-5 h-5 mr-2" />
                   Inizia il tuo viaggio
@@ -490,7 +491,7 @@ export default function Home() {
         </div>
 
         {/* Smooth gradient fade to background */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#FAFAFA] dark:to-[#0f1219]" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#F5F2EB] dark:to-[#0D1A12]" aria-hidden="true" />
       </section>
 
       {/* Guest login reminder */}
@@ -502,9 +503,9 @@ export default function Home() {
         >
           <a
             href="/login"
-            className="flex items-center gap-3 rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-3.5 hover:bg-[#003DA5]/8 transition-colors"
+            className="flex items-center gap-3 rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-3.5 hover:bg-[#1B5E3B]/8 transition-colors"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003DA5] text-white shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1B5E3B] text-white shrink-0">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
               </svg>
@@ -513,7 +514,7 @@ export default function Home() {
               <p className="text-sm font-bold text-gray-900">Crea un account gratuito</p>
               <p className="text-[11px] text-gray-500">Salva i progressi e sincronizza su tutti i dispositivi</p>
             </div>
-            <svg className="w-4 h-4 text-[#003DA5] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-4 h-4 text-[#1B5E3B] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <path d="M9 18l6-6-6-6" />
             </svg>
           </a>
@@ -533,7 +534,7 @@ export default function Home() {
           >
             <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#c8a44e]/10 blur-2xl" />
             <div className="relative flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-lg shadow-[#003DA5]/20">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#1B5E3B] text-white shadow-lg shadow-[#1B5E3B]/20">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="flex-1">
@@ -683,6 +684,13 @@ export default function Home() {
         </section>
       )}
 
+      {/* ===== DIDACTA 2026 BANNER ===== */}
+      <section className="px-4 sm:px-5 pt-4">
+        <div className="mx-auto max-w-lg">
+          <DidactaBanner />
+        </div>
+      </section>
+
       {/* ===== WEEKLY OBJECTIVES ===== (hidden in guided mode) */}
       {!isGuidedMode && <WeeklyObjectivesSection />}
 
@@ -695,10 +703,10 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4">
+              <div className="rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
-                    <Smartphone className="w-6 h-6 text-[#003DA5]" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1B5E3B]/10">
+                    <Smartphone className="w-6 h-6 text-[#1B5E3B]" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -712,14 +720,14 @@ export default function Home() {
                     {canInstall ? (
                       <button
                         onClick={() => install()}
-                        className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-bold shadow-sm hover:bg-[#002E7A] transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
                       >
                         Installa
                       </button>
                     ) : isIOS ? (
                       <button
                         onClick={() => setShowIOSGuide(true)}
-                        className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-bold shadow-sm hover:bg-[#002E7A] transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
                       >
                         Come fare
                       </button>
@@ -802,7 +810,7 @@ export default function Home() {
               </div>
               <button
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-6 w-full py-3 rounded-2xl bg-[#003DA5] text-white font-bold text-sm"
+                className="mt-6 w-full py-3 rounded-2xl bg-[#1B5E3B] text-white font-bold text-sm"
               >
                 Ho capito
               </button>
@@ -821,10 +829,10 @@ export default function Home() {
               transition={{ delay: 0.9 }}
             >
               <Link href="/ripasso">
-                <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
+                <div className="rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
-                      <Brain className="w-6 h-6 text-[#003DA5]" />
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1B5E3B]/10">
+                      <Brain className="w-6 h-6 text-[#1B5E3B]" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -834,7 +842,7 @@ export default function Home() {
                         {reviewCount} {reviewCount === 1 ? "domanda" : "domande"} da ripassare
                       </p>
                     </div>
-                    <Badge className="bg-[#003DA5] text-white text-xs font-bold hover:bg-[#003DA5]">
+                    <Badge className="bg-[#1B5E3B] text-white text-xs font-bold hover:bg-[#1B5E3B]">
                       {reviewCount}
                     </Badge>
                   </div>
@@ -871,6 +879,13 @@ export default function Home() {
           completedModules={totalModulesCompleted}
         />
       )}
+
+      {/* Suit divider */}
+      <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+      </div>
 
       {/* ===== COURSES ===== */}
       <CoursesSection completedModules={stats.completedModules} />
@@ -937,6 +952,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Suit divider */}
+      <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+      </div>
+
       {/* ===== SCOPRI IL BRIDGE ===== */}
       <section className="px-4 sm:px-5 pt-2 pb-4">
         <div className="mx-auto max-w-lg">
@@ -946,9 +968,9 @@ export default function Home() {
             transition={{ delay: 1.2 }}
           >
             <Link href="/scopri">
-              <div className="rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-indigo-50 dark:from-[#003DA5]/10 dark:to-indigo-950/30 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all group">
+              <div className="rounded-2xl bg-gradient-to-r from-[#1B5E3B]/5 to-emerald-50 dark:from-[#1B5E3B]/10 dark:to-emerald-950/30 border border-[#1B5E3B]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all group">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#003DA5] to-[#0066FF] shadow-sm">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#1B5E3B] to-[#2D7A50] shadow-sm">
                     <Globe className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -960,7 +982,7 @@ export default function Home() {
                     </p>
                   </div>
                   <svg
-                    className="h-5 w-5 text-[#003DA5]/40 group-hover:text-[#003DA5] group-hover:translate-x-0.5 transition-all shrink-0"
+                    className="h-5 w-5 text-[#1B5E3B]/40 group-hover:text-[#1B5E3B] group-hover:translate-x-0.5 transition-all shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -1072,7 +1094,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
         </div>
 
         <svg
-          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-[#003DA5] group-hover:translate-x-0.5 transition-all"
+          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-[#1B5E3B] group-hover:translate-x-0.5 transition-all"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -1477,7 +1499,7 @@ function WeeklyObjectivesSection() {
             <Badge className={`text-[10px] font-bold border-0 ${
               completedCount === 3
                 ? "bg-emerald-100 text-emerald-700"
-                : "bg-[#003DA5]/10 text-[#003DA5]"
+                : "bg-[#1B5E3B]/10 text-[#1B5E3B]"
             }`}>
               {completedCount}/3
             </Badge>
@@ -1485,7 +1507,7 @@ function WeeklyObjectivesSection() {
           <Link href="/obiettivi">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold text-[#003DA5] border-[#003DA5]/20 cursor-pointer hover:bg-[#003DA5]/5 transition-colors"
+              className="text-[10px] font-semibold text-[#1B5E3B] border-[#1B5E3B]/20 cursor-pointer hover:bg-[#1B5E3B]/5 transition-colors"
             >
               Vedi tutti →
             </Badge>
@@ -1498,11 +1520,24 @@ function WeeklyObjectivesSection() {
             : "bg-white dark:bg-[#1a1f2e] border-[#e5e7eb] dark:border-[#2a3040]"
         }`}>
           <div className="space-y-2.5">
-            {objectives.map((obj, i) => (
-              <div
+            {objectives.map((obj, i) => {
+              const objLinks: Record<string, string> = {
+                quiz: "/gioca/quiz-lampo",
+                hands: "/gioca/smazzata",
+                xp: "/lezioni",
+                modules: "/lezioni",
+                streak: "/lezioni",
+                minigames: "/gioca",
+                daily: "/gioca/smazzata",
+                perfect: "/gioca/quiz-lampo",
+              };
+              const href = objLinks[obj.id] || "/lezioni";
+              return (
+              <Link
+                href={href}
                 key={obj.id}
-                className={`flex items-center gap-3 p-2.5 rounded-xl ${
-                  obj.completed ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
+                className={`flex items-center gap-3 p-2.5 rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] ${
+                  obj.completed ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-[#1B5E3B]/30"
                 }`}
               >
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
@@ -1520,7 +1555,7 @@ function WeeklyObjectivesSection() {
                     <div className="flex-1 h-2.5 rounded-full bg-gray-200 border border-gray-300 overflow-hidden max-w-[100px]">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          obj.completed ? "bg-emerald" : "bg-[#003DA5]"
+                          obj.completed ? "bg-emerald" : "bg-[#1B5E3B]"
                         }`}
                         style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
                       />
@@ -1531,12 +1566,13 @@ function WeeklyObjectivesSection() {
                   </div>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  obj.completed ? "bg-emerald-100 text-emerald-700" : "bg-[#003DA5]/10 text-[#003DA5]"
+                  obj.completed ? "bg-emerald-100 text-emerald-700" : "bg-[#c8a44e]/10 text-[#c8a44e]"
                 }`}>
                   +{obj.xpReward} XP
                 </span>
-              </div>
-            ))}
+              </Link>
+              );
+            })}
           </div>
 
           {/* Bonus bar */}
@@ -1545,15 +1581,15 @@ function WeeklyObjectivesSection() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               onClick={handleClaimBonus}
-              className="mt-3 w-full py-3 rounded-xl bg-[#003DA5] text-white font-bold text-sm shadow-lg shadow-[#003DA5]/20 active:scale-[0.98] transition-transform"
+              className="mt-3 w-full py-3 rounded-xl bg-[#c8a44e] text-white font-bold text-sm shadow-lg shadow-[#c8a44e]/20 active:scale-[0.98] transition-transform"
             >
               <Gift className="w-4 h-4 inline mr-1" /> Riscuoti bonus +100 XP!
             </motion.button>
           )}
 
           {bonusClaimed && (
-            <div className="mt-3 py-2.5 rounded-xl bg-[#003DA5]/8 text-center">
-              <p className="text-xs font-bold text-[#003DA5] flex items-center justify-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Bonus riscosso! Torna la prossima settimana</p>
+            <div className="mt-3 py-2.5 rounded-xl bg-[#c8a44e]/8 text-center">
+              <p className="text-xs font-bold text-[#c8a44e] flex items-center justify-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Bonus riscosso! Torna la prossima settimana</p>
             </div>
           )}
         </div>
@@ -1567,7 +1603,7 @@ function WeeklyObjectivesSection() {
               exit={{ opacity: 0, y: -20 }}
               className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
             >
-              <div className="flex items-center gap-2 bg-[#003DA5] text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl">
+              <div className="flex items-center gap-2 bg-[#c8a44e] text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl">
                 <Gift className="w-4 h-4" /> +100 XP Bonus settimanale!
               </div>
             </motion.div>
@@ -1680,7 +1716,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[#FAFAFA] overflow-y-auto">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#002E7A] via-[#003DA5] to-[#0052CC] px-5 pt-16 pb-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#14472D] via-[#1B5E3B] to-[#2D7A50] px-5 pt-16 pb-20">
         <div className="relative mx-auto max-w-lg text-center">
           {/* Suit icons */}
           <motion.div
@@ -1706,7 +1742,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-4xl sm:text-5xl font-bold text-white tracking-tight"
+            className="text-4xl sm:text-5xl font-bold text-white tracking-tight font-display"
           >
             FIGB Bridge LAB
           </motion.h1>
@@ -1728,7 +1764,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
           >
             <a
               href="/login?mode=signup"
-              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
+              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-[#1B5E3B] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
             >
               Inizia gratis
             </a>
@@ -1753,7 +1789,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
         </div>
 
         {/* Fade to content */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#FAFAFA]" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#F5F2EB]" />
       </section>
 
       {/* Features */}
@@ -1775,7 +1811,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.07 }}
-                className="rounded-2xl bg-white p-4 border border-[#e5e7eb] shadow-sm"
+                className="rounded-2xl bg-white p-4 border border-[#D9D3C7] shadow-warm-sm"
               >
                 <div className="mb-2">{feat.icon}</div>
                 <p className="text-sm font-semibold text-gray-900">{feat.title}</p>
@@ -1785,6 +1821,13 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
           </div>
         </div>
       </section>
+
+      {/* Suit divider */}
+      <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+      </div>
 
       {/* Stats */}
       <section className="px-5 pb-8">
@@ -1838,13 +1881,13 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
           >
             <a
               href="/login?mode=signup"
-              className="flex items-center justify-center w-full h-12 rounded-2xl bg-[#003DA5] text-white font-semibold text-sm shadow-lg shadow-[#003DA5]/20 hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-[#1B5E3B] text-white font-semibold text-sm shadow-lg shadow-[#1B5E3B]/20 hover:opacity-90 transition-opacity"
             >
               Inizia gratis
             </a>
             <a
               href="/login?mode=login"
-              className="flex items-center justify-center w-full h-12 rounded-2xl bg-white text-[#003DA5] font-semibold text-sm border-2 border-[#003DA5]/20 hover:border-[#003DA5]/40 transition-all"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-white text-[#1B5E3B] font-semibold text-sm border-2 border-[#1B5E3B]/20 hover:border-[#1B5E3B]/40 transition-all"
             >
               Accedi
             </a>

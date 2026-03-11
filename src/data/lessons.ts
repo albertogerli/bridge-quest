@@ -1454,9 +1454,9 @@ const lezione7: Lesson = {
           content:
             "Quanti punti onori ha questa mano? ♠KJ73 ♥AQ5 ♦K84 ♣Q92",
           options: ["12", "14", "15", "16"],
-          correctAnswer: 1,
+          correctAnswer: 2,
           explanation:
-            "♠ K(3)+J(1)=4 | ♥ A(4)+Q(2)=6 | ♦ K(3)=3 | ♣ Q(2)=2. Totale: 4+6+3+1 = 14 punti. (Il 9 non vale nulla nel conteggio dei punti onori.)",
+            "♠ K(3)+J(1)=4 | ♥ A(4)+Q(2)=6 | ♦ K(3)=3 | ♣ Q(2)=2. Totale: 4+6+3+2 = 15 punti. (Il 9 non vale nulla nel conteggio dei punti onori.)",
         },
         {
           type: "hand-eval",
