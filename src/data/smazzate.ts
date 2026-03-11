@@ -251,7 +251,7 @@ export const smazzate: Smazzata[] = [
     },
     commentary:
       "È un ottimo attacco per la difesa, l'unico che consente di battere il contratto. Ovest ha K e J, non si tratta di carte equivalenti, quindi deve mettere la più alta: il Re. Rimasto in presa deve giocare ancora cuori; il Fante e non il 5 (se muovesse il 5, gli rimarrebbe in mano una cuori più alta di quelle di Est, impedendone l'incasso). Il gioco. Nord è destinato ad andare sotto di una, se la difesa non pasticcia; se così è, Nord potrà incassare 2 picche, 2 fiori, e 5 quadri (purché abbia cura di far vincere la seconda presa al morto, superando la Dama o il Fante). 3NT -1, in prima: -50. Oppure 3NT, in prima: 400 (100 per le prese + 300 di Bonus)",
-    bidding: { dealer: "north", bids: ["1C", "P", "1D", "P", "1S", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "north", bids: ["1C", "P", "1D", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
 
   // --- Board 2 ---
@@ -377,7 +377,7 @@ export const smazzate: Smazzata[] = [
     },
     commentary:
       "Attacco facile: Q di picche, la più alta delle toccanti. L'esito del contratto dipende da Est: se la prima presa si svolge Q - 2 - 8 - Asso, Sud guadagnerà 630 punti (3NT + 1); giocherà subito il K o la Q di quadri e affrancherà 4 prese, oltre alle 2 prese a cuori e 3 fiori. Ovest prenderà con l'Asso e rigiocherà picche... ma il Re che Est si è conservato in mano impedirà ai difensori di incassare tutto il colore. Se quel prezioso Re viene giocato nella prima presa (sblocco), Ovest potrà incassare le sue 4 prese (4 picche + l'Asso di quadri) e battere il contratto. 3NT - 1, in seconda: -100. Oppure 3NT + 1, in seconda: 630 (130 per le prese, + 500 di bonus)",
-    bidding: { dealer: "south", bids: ["1D", "P", "1NT", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "south", bids: ["1D", "P", "2C", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
 
   // --- Board 8 ---
@@ -444,7 +444,7 @@ export const smazzate: Smazzata[] = [
     },
     commentary:
       "Attacco: 10 di picche, che promuove il 9, nega il Fante, non esclude onori più alti. Il gioco. Est conta le vincenti: 2 picche, 2 cuori, 3 quadri, 1 fiori. Serve una presa, ed è ragionevole riguardare con affetto le quadri (se fossero divise 3-3, darebbero 5 prese). Il colore è bloccato, quindi dà la prima manovra, dopo aver vinto l'attacco, e incassare A e K di quadri. Poi si deve tornare al morto (meglio usare le cuori e lasciar lì l'ultimo baluardo di picche). Si incassa la Dama di quadri ma si scopre la 4-2: poco male, tutti i colori sono ancora controllati... basta rigiocare quadri e affrancare così la quinta carta. Qualunque sia il ritorno di Sud, il contratto è mantenuto. 3NT, in prima: 400 (100 per le prese + 300 di bonus)",
-    bidding: { dealer: "west", bids: ["1NT", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "west", bids: ["1D", "P", "1NT", "P", "3NT", "P", "P", "P"] },
   },
 
   // --- Board 3 ---
@@ -486,7 +486,7 @@ export const smazzate: Smazzata[] = [
     },
     commentary:
       "Attacco Q di fiori, da sequenza. Il gioco. Ovest ha 7 vincenti in partenza: 2 cuori, 3 quadri e 2 fiori. Deve trovare altre due prese. È possibile che l'expasse a picche abbia buon esito, ma anche se fosse sarebbe l'ottava presa e ne mancherebbe ancora una, da cercare a cuori. Allora, tanto vale cominciare dalle cuori. Iniziare con il Fante è una pessima idea (non abbiamo il 10). Incassando un onore, vediamo cadere la Dama. Contiamo le carte: se Nord ha una cuori sola, Sud ne ha ancora 3, e ha il 10. Quindi cuori per il Fante e cuori dal morto, superando di misura la carta di Sud, faremo 4 prese nel colore. 3NT, in seconda: 600 (100 le prese, + 500 di bonus)",
-    bidding: { dealer: "west", bids: ["1H", "P", "1NT", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "west", bids: ["1C", "P", "1D", "P", "1NT", "P", "3NT", "P", "P", "P"] },
   },
 
   // --- Board 5 ---
@@ -528,7 +528,7 @@ export const smazzate: Smazzata[] = [
     },
     commentary:
       "Attacco 10 di fiori, da sequenza. Il gioco. Est conta 5 prese a picche, 4 a fiori, e i due Assi: 11. La presa mancante è affidata alla buona sorte: l'expasse alla di Dama cuori (giocando piccola verso la Q) oppure l'impasse al Re di cuori (giocando piccola verso AQ) dovrà fornire questa presa. Da quale cominciare? È una differenza di importanza vitale! Riflettete: se cominciate con l'expasse, e va male, avete ancora la possibilità di provare l'impasse. Se iniziate con l'impasse, e va male... non avete più chance. Quindi, CUORI VERSO LA DAMA. Subito, senza perdere tempo (e collegamenti) con fiori e quadri! 6NT, in seconda: 1440 (190 le prese, + 500 di bonus di manche in zona + 750 di bonus di Slam)",
-    bidding: { dealer: "west", bids: ["1D", "P", "1S", "P", "2NT", "P", "6NT", "P", "P", "P"] },
+    bidding: { dealer: "west", bids: ["1D", "P", "3NT", "P", "6NT", "P", "P", "P"] },
   },
 
   // --- Board 7 ---
@@ -570,7 +570,7 @@ export const smazzate: Smazzata[] = [
     },
     commentary:
       "Attacco Q di cuori, che promuove il J ed almeno il 9. Il gioco. Ovest conta 7 vincenti: 2 cuori, 2 quadri e purtroppo solo 3 fiori. Servono altre 2 prese. Inutile sperare in prese di lunga a cuori: l'attacco ci dice che il colore non è certo ben diviso! La speranza quindi è nelle picche, che daranno 2 prese se l'Asso è piazzato prima di KQ. Poiché dovremo muovere verso gli onori l'attacco si prende con l'Asso; picche verso un onore (se Nord prende subito vi fa un favore) e, vinta la presa, si rientra in mano (J di fiori superato dalla Dama) e si ripete l'expasse. 3NT, in prima: 400 (100 le prese, + 300 di bonus)",
-    bidding: { dealer: "east", bids: ["1NT", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "east", bids: ["2C", "P", "2D", "P", "2H", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
 
   // ==========================================================================

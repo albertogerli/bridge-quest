@@ -430,7 +430,7 @@ export const smazzate9to12: Smazzata[] = [
     board: 7,
     title: "L'Apertore descrive",
     contract: "4H",
-    declarer: "south",
+    declarer: "north",
     openingLead: { suit: "diamond", rank: "A" },
     vulnerability: "all",
     hands: {

@@ -1756,7 +1756,7 @@ const rawQuadriSmazzate: Smazzata[] = [
     lesson: 11,
     board: 1,
     title: "Controgioco: ragionare e dedurre",
-    contract: "4♠",
+    contract: "4S",
     declarer: "north",
     openingLead: c("club", "Q"),
     vulnerability: "none",
@@ -1768,7 +1768,7 @@ const rawQuadriSmazzate: Smazzata[] = [
     },
     commentary:
       "Quando dice 1♠ Nord può avere 0/10 e 4 carte. Quando sulla surlicita \"torna\" sulle ♠ ha sempre 4+ carte, e circa 0/6. Sud spinge ancora: 3♠ dice \"se sei vicino a zero passa, ma se hai 5-6 rialza!\" e Nord dovrebbe farlo, anche per via della 5^ carta di atout. Il Gioco. Asso e dama di ♣ sono il miglior inizio, per Nord: il 10 è il suo unico ingresso per fare poi l'impasse a cuori. Se Est…continua pigramente a fiori, Nord manterrà l'impegno: picche al 10, impasse a cuori e 10 prese. Ma Est si deve rendere conto che Nord non avrebbe mai mosso le atout in questo modo, se avesse l'A♦! Quindi non fiori, ma piccola quadri per incassare velocemente 3 prese e battere il contratto. ATTRIBUITE ALL'AVVERSARIO GIOCATE LOGICHE.",
-    bidding: { dealer: "north", bids: ["P", "1♣", "P", "1♠", "P", "Dbl", "P", "2♠", "P", "2♣", "P", "3♠", "P", "4♠", "P", "P", "P"] },
+    bidding: { dealer: "south", bids: ["1C", "P", "1S", "P", "3S", "P", "4S", "P", "P", "P"] },
   },
 
   {
