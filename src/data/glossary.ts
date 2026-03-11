@@ -323,7 +323,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
   scarto: {
     term: "Scarto",
     definition:
-      "Giocare una carta di un seme diverso da quello richiesto quando non si hanno né quel seme né atout utili.",
+      "Giocare una carta di un seme diverso da quello richiesto quando non si hanno carte di quel seme e non si può (o non conviene) tagliare.",
     emoji: "🗑️",
     category: "gioco",
     example:
@@ -499,7 +499,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
   segnale: {
     term: "Segnale",
     definition:
-      "Il modo in cui i difensori comunicano tra loro attraverso la scelta delle carte giocate (alto = incoraggiante, basso = scoraggiante).",
+      "Il modo in cui i difensori comunicano tra loro attraverso la scelta delle carte giocate. Nel sistema tradizionale: alto = incoraggiante, basso = scoraggiante. In Italia si usa spesso il sistema pari-dispari: carta dispari = gradimento, carta pari = sgradimento.",
     emoji: "📡",
     category: "difesa",
     example:

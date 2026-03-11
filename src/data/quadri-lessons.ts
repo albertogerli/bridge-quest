@@ -100,7 +100,7 @@ const lezione1: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "A Senza Atout, quando è meglio affrancareun colore con carte equivalenti (es. KQJ) rispetto a un colore che richiede un impasse?",
+            "A Senza Atout, quando è meglio affrancare un colore con carte equivalenti (es. KQJ) rispetto a un colore che richiede un impasse?",
           quizType: "multiple-choice",
           options: [
             "Sempre: le carte equivalenti sono migliori",
@@ -201,7 +201,7 @@ const lezione1: QuadriLesson = {
         {
           type: "text",
           content:
-            "A volte la soluzione per evitare che la difesa incassi la lunga e lisciare l'attacco per tagliare i collegamenti tra i difensori.",
+            "A volte la soluzione per evitare che la difesa incassi la lunga è lisciare l'attacco per tagliare i collegamenti tra i difensori.",
         },
         {
           type: "example",
@@ -419,7 +419,7 @@ const lezione5: QuadriLesson = {
         {
           type: "rule",
           content:
-            "SE ENTRAMBE LE LINEE HANNO INTERESSE AD AFFRANCARE PRESE IN UN COLORE, LA LINEA CHE SI MUOVE PER PRIMA E QUASI SEMPRE SVANTAGGIATA.",
+            "SE ENTRAMBE LE LINEE HANNO INTERESSE AD AFFRANCARE PRESE IN UN COLORE, LA LINEA CHE SI MUOVE PER PRIMA È QUASI SEMPRE SVANTAGGIATA.",
         },
         {
           type: "example",
@@ -843,7 +843,7 @@ const lezione4: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Dopo 1♣-1♠, Nord con ♠K5 ♥V65 ♦AKJ965 ♣AJ2 replica...",
+            "Dopo 1♣-1♠, Nord con ♠K5 ♥J65 ♦AKJ965 ♣AJ2 replica...",
           quizType: "bid-select",
           options: ["1NT", "2♦", "3♦", "2NT"],
           correctAnswer: 2,
@@ -1380,7 +1380,7 @@ const lezione12: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Ovest ha ♠QJ87 ♥V75 ♦AQ3 ♣A754. Dopo 1♦ dell'avversario, cosa dichiara?",
+            "Ovest ha ♠QJ87 ♥J75 ♦AQ3 ♣A754. Dopo 1♦ dell'avversario, cosa dichiara?",
           quizType: "bid-select",
           options: ["Passo", "1NT", "X (Contro)", "2♣"],
           correctAnswer: 2,
@@ -1686,7 +1686,7 @@ const lezione9: QuadriLesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Nessun giocatore attacca sotto asso contro un contratto ad atout. L'Asso e sicuramente nell'altra mano difensiva.",
+            "Nessun giocatore attacca sotto asso contro un contratto ad atout. L'Asso è sicuramente nell'altra mano difensiva.",
         },
       ],
     },
@@ -1714,11 +1714,11 @@ const lezione9: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "A 4♠ con ♦AJ3 in mano, l'attacco e ♦K. Conviene lisciare?",
+            "A 4♠ con ♦AJ3 in mano, l'attacco è ♦K. Conviene lisciare?",
           quizType: "true-false",
           correctAnswer: "true",
           explanation:
-            "Si! Lisciando il K, Ovest (che ha KQ) non potrà proseguire senza darvi la presa con l'Asso. Se rovesciate gli onori, se ha KQ potrebbe darvi problemi al secondo giro. Conservate il controllo per i tempi migliori.",
+            "Sì! Lisciando il K, Ovest (che ha KQ) non potrà proseguire senza darvi la presa con l'Asso. Se rovesciate gli onori, se ha KQ potrebbe darvi problemi al secondo giro. Conservate il controllo per i tempi migliori.",
         },
       ],
     },
@@ -1750,7 +1750,7 @@ const lezione9: QuadriLesson = {
           quizType: "multiple-choice",
           options: [
             "Fate sempre l'impasse",
-            "Spesso e opportuno rinunciarci",
+            "Spesso è opportuno rinunciarci",
             "Prendete sempre con l'Asso",
             "Lisciate sempre",
           ],
@@ -1833,7 +1833,7 @@ const lezione11: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Per un buon controgioco, la prima cosa da fare quando il morto viene esposto e...",
+            "Per un buon controgioco, la prima cosa da fare quando il morto viene esposto è...",
           quizType: "multiple-choice",
           options: [
             "Giocare velocemente",
@@ -1937,7 +1937,7 @@ const lezione11: QuadriLesson = {
         {
           type: "rule",
           content:
-            "NON GIOCATE COLORI IN CUI IL MORTO PRESENTA IL VUOTO SE NON AVETE LA CERTEZZA CHE IL GIOCANTE POSSIEDE ANCORA ALMENO UNA CARTA! Dare taglio e scarto e quasi sempre fatale.",
+            "NON GIOCATE COLORI IN CUI IL MORTO PRESENTA IL VUOTO SE NON AVETE LA CERTEZZA CHE IL GIOCANTE POSSIEDE ANCORA ALMENO UNA CARTA! Dare taglio e scarto è quasi sempre fatale.",
         },
         {
           type: "tip",

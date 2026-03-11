@@ -135,7 +135,7 @@ const lezione200: Lesson = {
         {
           type: "text",
           content:
-            "Le distribuzioni 5332 e 4333 sono dette 'tomba' perché non offrono tagli. La Legge funziona lo stesso, ma nella spartizione delle Prese Totali all'avversario né spetteranno troppe e a noi troppo poche.",
+            "Le distribuzioni 5332 e 4333 sono dette 'tomba' perché non offrono tagli. La Legge funziona lo stesso, ma nella spartizione delle Prese Totali all'avversario ne spetteranno troppe e a noi troppo poche.",
         },
         {
           type: "example",
@@ -204,7 +204,7 @@ const lezione201: Lesson = {
         {
           type: "rule",
           content:
-            "I singoli di prese non né fanno! È la carta di atout che produce la presa nel taglio, non il singolo stesso. Chi possiede un singolo non ha gli elementi per valutarne l'efficacia: è il compagno che li ha. Morale: i singoli si raccontano e il partner valuta.",
+            "I singoli di prese non ne fanno! È la carta di atout che produce la presa nel taglio, non il singolo stesso. Chi possiede un singolo non ha gli elementi per valutarne l'efficacia: è il compagno che li ha. Morale: i singoli si raccontano e il partner valuta.",
         },
         {
           type: "example",
