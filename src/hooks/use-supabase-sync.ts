@@ -88,7 +88,7 @@ export function useSupabaseSync() {
             text_size: textSize,
             anim_speed: animSpeed,
             sound_on: sound !== "false",
-            last_login: new Date().toISOString().split("T")[0],
+            last_login: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           })
           .eq("id", userId);
