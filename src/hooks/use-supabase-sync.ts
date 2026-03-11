@@ -17,6 +17,7 @@ const LS_KEYS = {
   animSpeed: "bq_anim_speed",
   sound: "bq_sound",
   reviewItems: "bq_review_items",
+  totalMinutes: "bq_total_minutes",
 } as const;
 
 /** Snapshot of last-synced values to skip unnecessary pushes */
@@ -35,6 +36,7 @@ function getLocalSnapshot(): string {
       sound: localStorage.getItem(LS_KEYS.sound) ?? "true",
       completedModules: localStorage.getItem(LS_KEYS.completedModules) || "{}",
       badges: localStorage.getItem(LS_KEYS.badges) || "[]",
+      totalMinutes: localStorage.getItem(LS_KEYS.totalMinutes) || "0",
     });
   } catch {
     return "";
@@ -75,6 +77,7 @@ export function useSupabaseSync() {
         const textSize = localStorage.getItem(LS_KEYS.textSize) || "medio";
         const animSpeed = localStorage.getItem(LS_KEYS.animSpeed) || "normale";
         const sound = localStorage.getItem(LS_KEYS.sound);
+        const totalMinutes = Math.round(parseFloat(localStorage.getItem(LS_KEYS.totalMinutes) || "0"));
 
         // Push profile data
         await supabase
@@ -88,6 +91,7 @@ export function useSupabaseSync() {
             text_size: textSize,
             anim_speed: animSpeed,
             sound_on: sound !== "false",
+            total_minutes: totalMinutes,
             last_login: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           })
@@ -287,6 +291,7 @@ function syncToLocalStorage(profile: {
   hands_played: number;
   profile_type: string;
   memory_best: number | null;
+  total_minutes: number;
   text_size: string;
   anim_speed: string;
   sound_on: boolean;
@@ -299,6 +304,7 @@ function syncToLocalStorage(profile: {
     if (profile.memory_best !== null) {
       localStorage.setItem(LS_KEYS.memoryBest, String(profile.memory_best));
     }
+    localStorage.setItem(LS_KEYS.totalMinutes, String(profile.total_minutes || 0));
     localStorage.setItem(LS_KEYS.textSize, profile.text_size);
     localStorage.setItem(LS_KEYS.animSpeed, profile.anim_speed);
     localStorage.setItem(LS_KEYS.sound, profile.sound_on ? "true" : "false");

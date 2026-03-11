@@ -91,11 +91,32 @@ export default function PrivacyPage() {
           </section>
 
           <section>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Consenso alle Comunicazioni Marketing</h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              Con il consenso esplicito dell&apos;utente, la FIGB potrà inviare comunicazioni relative a eventi,
+              corsi, tornei e iniziative legate al mondo del bridge. Il consenso viene richiesto tramite un banner
+              dedicato all&apos;interno dell&apos;applicazione e può essere revocato in qualsiasi momento dalle
+              impostazioni del profilo o contattando il Titolare. La mancata prestazione del consenso non pregiudica
+              in alcun modo l&apos;accesso e l&apos;utilizzo della piattaforma.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Diritti dell&apos;utente</h2>
             <p className="text-gray-600 dark:text-gray-400">
               Ai sensi del GDPR (artt. 15-22), l&apos;utente ha diritto di: accesso, rettifica, cancellazione,
               limitazione del trattamento, portabilità dei dati, opposizione. Per esercitare tali diritti,
               contattare il Titolare: <a href="mailto:info@federbridge.it" className="text-[#003DA5] underline">info@federbridge.it</a>
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Termini e Condizioni</h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              Per le condizioni complete di utilizzo della piattaforma, consulta i nostri{" "}
+              <Link href="/termini" className="text-[#003DA5] underline font-medium">
+                Termini e Condizioni d&apos;Uso
+              </Link>.
             </p>
           </section>
 
