@@ -675,6 +675,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== DIDACTA 2026 BANNER ===== */}
+      <section className="px-4 sm:px-5 pt-4">
+        <div className="mx-auto max-w-lg">
+          <DidactaBanner />
+        </div>
+      </section>
+
       {/* ===== WEEKLY CHALLENGE BANNER ===== (hidden in guided mode) */}
       {!isGuidedMode && (
         <section className="px-4 sm:px-5 pt-4">
@@ -683,13 +690,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      {/* ===== DIDACTA 2026 BANNER ===== */}
-      <section className="px-4 sm:px-5 pt-4">
-        <div className="mx-auto max-w-lg">
-          <DidactaBanner />
-        </div>
-      </section>
 
       {/* ===== WEEKLY OBJECTIVES ===== (hidden in guided mode) */}
       {!isGuidedMode && <WeeklyObjectivesSection />}
