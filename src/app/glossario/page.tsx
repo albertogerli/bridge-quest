@@ -127,6 +127,7 @@ export default function GlossarioPage() {
   } | null>(null);
   const [inlineSelected, setInlineSelected] = useState<number | null>(null);
   const [inlineAttempts, setInlineAttempts] = useState(0);
+  const [inlineXpAwarded, setInlineXpAwarded] = useState(0);
 
   // Quiz globale state
   const [quizTerms, setQuizTerms] = useState<(GlossaryEntry & { key: string })[]>([]);
@@ -187,6 +188,7 @@ export default function GlossarioPage() {
       setInlineShuffled({ options, correctIndex });
       setInlineSelected(null);
       setInlineAttempts(0);
+      setInlineXpAwarded(0);
     },
     [allTerms]
   );
@@ -201,14 +203,18 @@ export default function GlossarioPage() {
 
       if (isCorrect) {
         play("success");
-        // Award XP: 15 first time, 5 on retries
+        // Award XP: 15 first time, 5 on retries of already-completed terms
         if (!completed[inlineQuizKey]) {
           awardXp(XP_PER_CORRECT);
+          setInlineXpAwarded(XP_PER_CORRECT);
           const newCompleted = { ...completed, [inlineQuizKey]: true };
           setCompleted(newCompleted);
           saveCompleted(newCompleted);
         } else if (inlineAttempts > 0) {
           awardXp(XP_SECOND_ATTEMPT);
+          setInlineXpAwarded(XP_SECOND_ATTEMPT);
+        } else {
+          setInlineXpAwarded(0);
         }
       } else {
         play("error");
@@ -1190,7 +1196,7 @@ export default function GlossarioPage() {
                                         {inlineSelected ===
                                           inlineShuffled?.correctIndex && (
                                           <p className="text-xs text-[#003DA5] font-semibold mt-2">
-                                            +{!completed[entry.key] || completedCount === 0 ? XP_PER_CORRECT : inlineAttempts > 0 ? XP_SECOND_ATTEMPT : 0}{" "}
+                                            +{inlineXpAwarded}{" "}
                                             {profile.xpLabel}
                                           </p>
                                         )}
