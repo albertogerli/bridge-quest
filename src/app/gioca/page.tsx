@@ -548,6 +548,32 @@ export default function GiocaPage() {
               </div>
             </Link>
           </motion.div>
+
+          {/* Glossario */}
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.36 }}
+          >
+            <Link href="/glossario" className="block" aria-label="Glossario: impara tutti i termini del bridge">
+              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 mb-3">
+                  <span className="text-xl">📖</span>
+                </div>
+                <h3 className="font-semibold text-gray-900 text-[15px]">
+                  Glossario
+                </h3>
+                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                  Impara tutti i termini del bridge
+                </p>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-sky-600 bg-sky-50 rounded-full px-2 py-0.5">
+                    A-Z
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
         </div>
 
         {/* Stats bar */}

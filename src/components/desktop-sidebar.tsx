@@ -13,6 +13,7 @@ const miniGames = [
   { href: "/gioca/conta-veloce", emoji: "🔢", label: "Conta Veloce", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
   { href: "/gioca/dichiara", emoji: "📢", label: "Dichiara!", color: "bg-amber-50 border-amber-200 text-amber-700" },
   { href: "/gioca/memory", emoji: "🧠", label: "Memory", color: "bg-purple-50 border-purple-200 text-purple-700" },
+  { href: "/glossario", emoji: "📖", label: "Glossario", color: "bg-sky-50 border-sky-200 text-sky-700" },
 ];
 
 // Objective icon mapping for sidebar
