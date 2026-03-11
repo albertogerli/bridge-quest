@@ -1828,7 +1828,7 @@ const rawQuadriSmazzate: Smazzata[] = [
     },
     commentary:
       "Est \"mette le mani avanti\" per garantirsi che il compagno non passi prima di manche (4° colore), quindi su 2NT ribadisce ancora le cuori, mostrando la sesta (3♥ a questo punto non è più passabile, chiede una scelta tra 3NT e 4♥). Il Gioco. Sud non ha attacco migliore: quadri no (c'è l'asso), atout no (c'è K10x), fiori imbarazzante. L'attacco mortale è J♠; Nord sa che il J è \"corto\" (ha il 10), ma non può essere singolo altrimenti Est avrebbe 4 carte e avrebbe appoggiato le picche! Se Nord semplicemente \"gradisce\" con il 7, Sud rigiocherà ♠ quando prenderà a ♥ e il contratto cadrà di una presa. QUANTO FATE UN'IPOTESI SULLA DIVISIONE DI UN COLORE, COMPLETATELA SEMPRE ALLE 4 MANI E CHIEDETEVI SE È VEROSIMILE.",
-    bidding: { dealer: "west", bids: ["1♣", "P", "1♥", "P", "2♦", "P", "1♠", "P", "2NT", "P", "3♥", "P", "4♥", "P", "P", "P"] },
+    bidding: { dealer: "west", bids: ["1♣", "P", "1♥", "P", "2♦", "P", "2♠", "P", "2NT", "P", "3♥", "P", "4♥", "P", "P", "P"] },
   },
 
   {
@@ -1932,7 +1932,7 @@ const rawQuadriSmazzate: Smazzata[] = [
     },
     commentary:
       "L'intervento 2NT mostra una bicolore minore 5+/5+, con buoni colori. Il 5♦ di Ovest è quindi ragionevole: dal suo punto di vista 4♠ è un contratto che NS realizzerà. NS hanno a loro volta una decisione sofferta e uno dei due potrebbe dire 5♠. Se gioca Nord: l'attacco è K♦, su cui Ovest, sapendo che ne passa solo una, deve superare con l'Asso per giocare il J♣; unico controgioco che limita Nord a 10 prese (quindi batte il contratto di 5♠). Se gioca Ovest: dopo l'attacco K♥ la difesa si affretterà a incassare 2 cuori e 1 picche, per l'un down. DOPO APERTURA NOBILE L'INTERVENTO 2NT MOSTRA ENTRAMBI I COLORI MINORI, TASSATIVAMENTE ALMENO QUINTI.",
-    bidding: { dealer: "north", bids: ["1♠", "2NT", "4♠", "5♦", "P", "P", "P"] },
+    bidding: { dealer: "north", bids: ["1♠", "2NT", "4♠", "5♦", "5♠", "P", "P", "P"] },
   },
 
   {
