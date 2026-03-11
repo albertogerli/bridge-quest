@@ -12,13 +12,22 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
       <div className="bg-white dark:bg-[#141821] border-t border-[#e5e7eb] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
-        <div className="mx-auto flex max-w-lg items-center justify-around px-0.5 py-1 safe-area-bottom">
-          <NavItem href="/" icon="home" label="Home" active={isActive("/")} />
-          <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} />
-          <PlayButton active={isActive("/gioca")} />
-          <NavItem href="/forum" icon="forum" label="Forum" active={isActive("/forum")} />
-          <NavItem href="/classifica" icon="trophy" label="Classifica" active={isActive("/classifica")} />
-          <NavItem href="/profilo" icon="user" label="Profilo" active={isActive("/profilo")} />
+        <div className="mx-auto flex max-w-lg items-end px-0.5 py-1 safe-area-bottom">
+          {/* Left group */}
+          <div className="flex flex-1 justify-around">
+            <NavItem href="/" icon="home" label="Home" active={isActive("/")} />
+            <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} />
+          </div>
+          {/* Center - Gioca always centered */}
+          <div className="flex justify-center px-1">
+            <PlayButton active={isActive("/gioca")} />
+          </div>
+          {/* Right group */}
+          <div className="flex flex-1 justify-around">
+            <NavItem href="/forum" icon="forum" label="Forum" active={isActive("/forum")} />
+            <NavItem href="/classifica" icon="trophy" label="Classifica" active={isActive("/classifica")} />
+            <NavItem href="/profilo" icon="user" label="Profilo" active={isActive("/profilo")} />
+          </div>
         </div>
       </div>
     </nav>

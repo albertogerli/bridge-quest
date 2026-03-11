@@ -853,6 +853,38 @@ export default function Home() {
         </section>
       )}
 
+      {/* ===== GLOSSARIO LINK ===== */}
+      <section className="px-4 sm:px-5 pt-4">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.95 }}
+          >
+            <Link href="/glossario">
+              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e7eb] dark:border-[#2a3040] p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 border border-sky-200">
+                    <BookOpen className="w-5 h-5 text-sky-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      Glossario del Bridge
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      45 termini con quiz interattivi
+                    </p>
+                  </div>
+                  <svg className="w-4 h-4 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== TREASURE CHESTS ===== (hidden in guided mode) */}
       {!isGuidedMode && (
         <section className="px-4 sm:px-5 pt-4">
