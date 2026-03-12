@@ -155,6 +155,19 @@ export default function Home() {
   const [handsPlayed, setHandsPlayed] = useState(0);
   const [isGuest, setIsGuest] = useState(false);
   const [referralToast, setReferralToast] = useState(false);
+  const [expandedCourse, setExpandedCourse] = useState<string | null>(() => {
+    // Default: expand the first course that has incomplete modules
+    try {
+      const completedMods = JSON.parse(localStorage.getItem("bq_completed_modules") || "{}");
+      const completedCount = Object.keys(completedMods).length;
+      for (const c of courses) {
+        const cWorlds = worlds.filter(w => c.worlds.some(cw => cw.id === w.id));
+        const totalMods = cWorlds.reduce((sum, w) => sum + w.totalModules, 0);
+        if (totalMods > 0 && completedCount < totalMods) return c.id;
+      }
+    } catch {}
+    return courses[0]?.id ?? null;
+  });
 
   useEffect(() => {
     try {
@@ -502,7 +515,7 @@ export default function Home() {
       </section>
 
       {/* Guest login reminder */}
-      {!user && isGuest && (
+      {!user && isGuest && stats.xp === 0 && Object.keys(stats.completedModules).length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -946,44 +959,72 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-3">
             {courses.map((course) => {
               const courseWorlds = worlds.filter(w =>
                 course.worlds.some(cw => cw.id === w.id)
               );
               if (courseWorlds.length === 0) return null;
+
+              const isExpanded = expandedCourse === course.id;
+              const completedWorlds = courseWorlds.filter(w => {
+                const idx = worlds.findIndex(ww => ww.id === w.id);
+                return worldCompletedCounts[idx] === w.totalModules;
+              }).length;
+
               return (
-                <div key={course.id}>
-                  <Link href={`/lezioni?corso=${course.id}`}>
-                    <div className="flex items-center gap-2 mb-3 cursor-pointer group">
-                      <span className="text-lg">{course.icon}</span>
-                      <h3 className="text-sm font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
-                        {course.name}
-                      </h3>
-                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
-                        {levelInfo[course.level].label}
-                      </span>
+                <div key={course.id} className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-100 dark:border-gray-700/50 overflow-hidden">
+                  <button
+                    onClick={() => setExpandedCourse(isExpanded ? null : course.id)}
+                    className="w-full flex items-center gap-2.5 p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors text-left"
+                  >
+                    <span className="text-lg">{course.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200 truncate">
+                          {course.name}
+                        </h3>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
+                          {levelInfo[course.level].label}
+                        </span>
+                      </div>
+                      {!isExpanded && (
+                        <p className="text-[11px] text-gray-400 mt-0.5">
+                          {completedWorlds}/{courseWorlds.length} mondi completati
+                        </p>
+                      )}
                     </div>
-                  </Link>
-                  <div className="space-y-2.5">
-                    {courseWorlds.map((world) => {
-                      const globalIdx = worlds.findIndex(w => w.id === world.id);
-                      return (
-                        <motion.div
-                          key={world.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: 0.8 + globalIdx * 0.05,
-                            duration: 0.5,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                        >
-                          <WorldCard world={world} completedModules={worldCompletedCounts[globalIdx]} courseId={course.id} />
-                        </motion.div>
-                      );
-                    })}
-                  </div>
+                    <svg
+                      className={`w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <polyline points="6,9 12,15 18,9" />
+                    </svg>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-3.5 pb-3.5 space-y-2.5">
+                          {courseWorlds.map((world) => {
+                            const globalIdx = worlds.findIndex(w => w.id === world.id);
+                            return (
+                              <WorldCard key={world.id} world={world} completedModules={worldCompletedCounts[globalIdx]} courseId={course.id} />
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}

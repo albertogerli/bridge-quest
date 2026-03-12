@@ -9,6 +9,7 @@ import { useSupabaseSync } from "@/hooks/use-supabase-sync";
 import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider } from "@/contexts/auth-provider";
 import { CookieBanner } from "@/components/cookie-banner";
+import { SiteFooter } from "@/components/site-footer";
 import type { UserProfile } from "@/hooks/use-profile";
 
 /** Routes that should be full-screen (no nav, no sidebar) */
@@ -72,6 +73,9 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
       {/* Center: main content */}
       <div className="flex-1 flex flex-col min-w-0">
         <main id="main-content" className="flex-1 pb-20 lg:pb-6">{children}</main>
+        <div className="hidden lg:block">
+          <SiteFooter />
+        </div>
         <BottomNav />
       </div>
 

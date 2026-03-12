@@ -28,7 +28,7 @@ interface ShopItem {
 }
 
 const categories: { id: CategoryId; label: string; icon: React.ReactNode }[] = [
-  { id: "avatari", label: "Avatari", icon: <Frame className="w-4 h-4" /> },
+  { id: "avatari", label: "Cornici", icon: <Frame className="w-4 h-4" /> },
   { id: "temi-carta", label: "Temi Carta", icon: <Palette className="w-4 h-4" /> },
   { id: "sfondi-tavolo", label: "Sfondi Tavolo", icon: <ImageIcon className="w-4 h-4" /> },
   { id: "titoli", label: "Titoli", icon: <Type className="w-4 h-4" /> },
