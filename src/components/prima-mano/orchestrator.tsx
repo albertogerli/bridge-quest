@@ -39,8 +39,11 @@ export function PrimaManoV2({
     if (typeof window === "undefined") return 0;
     try {
       const saved = parseInt(localStorage.getItem(STEP_KEY) || "0", 10);
-      // Don't resume into mano-vera or vittoria (gameplay state is lost)
-      if (saved > 0 && saved < STEPS.length - 2) return saved;
+      // Resume progress; cap at mano-vera (gameplay state is fresh each time)
+      if (saved > 0 && saved < STEPS.length) {
+        const manoVeraIdx = STEPS.length - 2; // mano-vera is second to last
+        return Math.min(saved, manoVeraIdx);
+      }
     } catch {}
     return 0;
   });
