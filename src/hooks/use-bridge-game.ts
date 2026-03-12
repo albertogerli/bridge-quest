@@ -56,7 +56,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [phase, setPhase] = useState<GamePhase>("ready");
   const [lastTrick, setLastTrick] = useState<TrickPlay[] | null>(null);
-  const [message, setMessage] = useState("Premi Gioca per iniziare");
+  const [message, setMessage] = useState("Preparazione della mano…");
   const [highlightedCards, setHighlightedCards] = useState<Card[]>([]);
   const [benAvailable, setBenAvailable] = useState<boolean | null>(null);
   const [aiLevel, setAiLevel] = useState<AILevel>(() => getAILevel());
