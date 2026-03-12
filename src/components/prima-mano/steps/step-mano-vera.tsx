@@ -37,6 +37,12 @@ export function StepManoVera({ onComplete, playSound, onHandResult }: StepManoVe
     openingLead: ONBOARDING_HAND.openingLead,
   });
 
+  // Auto-start the game when component mounts
+  useEffect(() => {
+    game.startGame();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const trickCount = game.gameState?.tricks.length || 0;
   const showTutorial = !tutorialDismissed && trickCount < 3;
   const tutorialTip = showTutorial ? TUTORIAL_TIPS[Math.min(trickCount, 2)] : null;
