@@ -322,6 +322,23 @@ export function DesktopSidebar() {
               <p className="text-[10px] text-gray-400">{user.email}</p>
             </div>
           </button>
+        ) : stats.xp > 0 ? (
+          <Link
+            href="/login"
+            aria-label="Accedi per sincronizzare"
+            className="w-full flex items-center gap-2.5 rounded-xl bg-white dark:bg-[#1a1f2e] card-clean p-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors group"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                <path d="M4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
+              </svg>
+            </div>
+            <div className="text-left flex-1">
+              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Livello {stats.level} · {stats.xp} XP</p>
+              <p className="text-[10px] text-gray-400 group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
+            </div>
+          </Link>
         ) : (
           <Link
             href="/login"
