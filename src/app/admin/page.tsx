@@ -613,22 +613,26 @@ export default function AdminPage() {
                 <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
                   Iscrizioni per ora (oggi)
                 </h2>
-                <div className="flex items-end gap-[3px] h-32">
+                <div className="flex items-end gap-[3px]" style={{ height: 120 }}>
                   {stats?.hourlySignups.map((count, hour) => {
-                    const pct = (count / maxHourly) * 100;
+                    const ratio = count / maxHourly;
+                    const barH = count > 0 ? Math.max(ratio * 108, 6) : 0;
                     const isNow = new Date().getHours() === hour;
                     return (
                       <div
                         key={hour}
-                        className="flex-1 flex flex-col items-center gap-1"
+                        className="flex-1 flex flex-col items-center justify-end h-full"
                         title={`${hour}:00 — ${count} iscrizioni`}
                       >
+                        {count > 0 && (
+                          <span className="text-[8px] font-bold text-gray-500 mb-0.5">{count}</span>
+                        )}
                         <div
                           className={`w-full rounded-t transition-all ${isNow ? "bg-emerald-500" : "bg-[#003DA5]/70"}`}
-                          style={{ height: `${Math.max(pct, count > 0 ? 8 : 0)}%`, minHeight: count > 0 ? "4px" : "0" }}
+                          style={{ height: barH }}
                         />
                         {hour % 4 === 0 && (
-                          <span className="text-[9px] text-gray-400">{hour}</span>
+                          <span className="text-[9px] text-gray-400 mt-1">{hour}</span>
                         )}
                       </div>
                     );
@@ -641,20 +645,24 @@ export default function AdminPage() {
                 <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
                   Iscrizioni ultimi 30 giorni
                 </h2>
-                <div className="flex items-end gap-[2px] h-32">
+                <div className="flex items-end gap-[2px]" style={{ height: 120 }}>
                   {stats?.dailySignups.map((d) => {
-                    const pct = (d.count / maxDaily) * 100;
+                    const ratio = d.count / maxDaily;
+                    const barH = d.count > 0 ? Math.max(ratio * 108, 6) : 0;
                     const isDidacta = d.date >= "2026-03-12" && d.date <= "2026-03-14";
                     const isToday = d.date === new Date().toISOString().split("T")[0];
                     return (
                       <div
                         key={d.date}
-                        className="flex-1 flex flex-col items-center"
+                        className="flex-1 flex flex-col items-center justify-end h-full"
                         title={`${d.date}: ${d.count} iscrizioni`}
                       >
+                        {d.count > 0 && ratio >= 0.5 && (
+                          <span className="text-[7px] font-bold text-gray-500 mb-0.5">{d.count}</span>
+                        )}
                         <div
                           className={`w-full rounded-t transition-all ${isToday ? "bg-emerald-500" : isDidacta ? "bg-amber-400" : "bg-[#003DA5]/60"}`}
-                          style={{ height: `${Math.max(pct, d.count > 0 ? 5 : 0)}%`, minHeight: d.count > 0 ? "3px" : "0" }}
+                          style={{ height: barH }}
                         />
                       </div>
                     );
