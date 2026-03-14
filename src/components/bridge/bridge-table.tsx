@@ -168,7 +168,7 @@ export function BridgeTable({
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className={`${isCompact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}>
-              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/50 ${isCompact ? "text-[8px]" : "text-[10px]"} font-bold`}>
+              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[8px]" : "text-[10px]"} font-bold`}>
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
                 <div />
@@ -235,7 +235,7 @@ export function BridgeTable({
       {/* North hand */}
       <div className="absolute top-2 inset-x-4 z-10">
         <div className="text-center mb-1">
-          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/50"}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/80"}`}>
             {posLabel("north", "N")}
           </span>
         </div>
@@ -286,7 +286,7 @@ export function BridgeTable({
           />
         )}
         <div className="text-center mt-1">
-          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("south") ? "text-amber" : isDummy("south") ? "text-white/80" : "text-white/50"}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("south") ? "text-amber" : isDummy("south") ? "text-white/80" : "text-white/80"}`}>
             {posLabel("south", "S")}
           </span>
         </div>
@@ -306,7 +306,7 @@ export function BridgeTable({
               disabled={true}
             />
           )}
-          <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/50"}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
             Est
           </span>
         </div>
@@ -315,7 +315,7 @@ export function BridgeTable({
       {/* West hand */}
       <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10">
         <div className="flex items-center gap-1">
-          <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/50"}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
             Ovest
           </span>
           {isCompact && westFaceDown ? (

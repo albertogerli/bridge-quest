@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { courses, levelInfo } from "@/data/courses";
+import { courses, levelInfo, getCourseStats, type CourseId } from "@/data/courses";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_LIST } from "@/data/asd-list";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
@@ -24,7 +24,7 @@ import {
   Spade, BookOpen, Target, Flame, Trophy, Star, Crown, GraduationCap,
   Globe, Medal, CheckCircle2, Zap, BookOpenCheck, BarChart3,
   Gamepad2, Coffee, Coins, Share2, UserPlus, Check, Copy, MessageCircle, Send,
-  Sparkles, Snowflake
+  Sparkles, Snowflake, Clock, TrendingUp
 } from "lucide-react";
 import { StreakFreezeCard } from "@/components/streak-freeze-card";
 import { useSecretAchievements } from "@/hooks/use-secret-achievements";
@@ -66,6 +66,104 @@ export default function ProfiloPage() {
   const gameStats = getStats();
   const { checkAchievements, earnedSecretAchievements, totalSecretAchievements } = useSecretAchievements();
   const [pendingAchievement, setPendingAchievement] = useState<{ id: string; name: string; icon: string; description: string } | null>(null);
+
+  // ===== Chart Data Computations =====
+
+  // Chart 1: XP per day (last 7 days)
+  const xpPerDay = useMemo(() => {
+    const dayLabels = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
+    const now = new Date();
+    const days: { label: string; xp: number; date: string }[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      days.push({
+        label: dayLabels[d.getDay()],
+        xp: 0,
+        date: d.toISOString().slice(0, 10),
+      });
+    }
+
+    try {
+      const raw = localStorage.getItem("bq_game_results_queue");
+      if (raw) {
+        const queue: { timestamp: string; score: number }[] = JSON.parse(raw);
+        for (const entry of queue) {
+          const entryDate = entry.timestamp.slice(0, 10);
+          const day = days.find((d) => d.date === entryDate);
+          if (day) {
+            day.xp += entry.score || 0;
+          }
+        }
+      }
+    } catch {}
+
+    const maxXp = Math.max(...days.map((d) => d.xp), 1);
+    const hasData = days.some((d) => d.xp > 0);
+    return { days, maxXp, hasData };
+  }, []);
+
+  // Chart 2: Course competence (% completed per course)
+  const courseCompetence = useMemo(() => {
+    const courseConfigs: { id: CourseId; name: string; color: string; bgClass: string }[] = [
+      { id: "fiori", name: "Fiori", color: "#059669", bgClass: "bg-emerald-500" },
+      { id: "quadri", name: "Quadri", color: "#f97316", bgClass: "bg-orange-500" },
+      { id: "cuori-gioco", name: "Cuori Gioco", color: "#f43f5e", bgClass: "bg-rose-500" },
+      { id: "cuori-licita", name: "Cuori Licita", color: "#ec4899", bgClass: "bg-pink-500" },
+    ];
+
+    return courseConfigs.map((cfg) => {
+      const stats = getCourseStats(cfg.id, completedModules);
+      return {
+        ...cfg,
+        progress: stats.progress,
+        completed: stats.totalCompleted,
+        total: stats.totalModules,
+      };
+    });
+  }, [completedModules]);
+
+  // Chart 3: Game performance stats
+  const gamePerformanceStats = useMemo(() => {
+    let totalGames = 0;
+    let totalScore = 0;
+    let bestStreak = 0;
+    let totalMinutes = 0;
+
+    try {
+      const raw = localStorage.getItem("bq_game_results_queue");
+      if (raw) {
+        const queue: { score: number }[] = JSON.parse(raw);
+        totalGames = queue.length;
+        totalScore = queue.reduce((sum, e) => sum + (e.score || 0), 0);
+      }
+    } catch {}
+
+    try {
+      bestStreak = parseInt(localStorage.getItem("bq_streak") || "0", 10);
+    } catch {}
+
+    try {
+      totalMinutes = parseFloat(localStorage.getItem("bq_total_minutes") || "0");
+    } catch {}
+
+    const avgXp = totalGames > 0 ? Math.round(totalScore / totalGames) : 0;
+
+    // Format time nicely
+    let timeDisplay: string;
+    if (totalMinutes < 1) {
+      timeDisplay = "< 1 min";
+    } else if (totalMinutes < 60) {
+      timeDisplay = `${Math.round(totalMinutes)} min`;
+    } else {
+      const hours = Math.floor(totalMinutes / 60);
+      const mins = Math.round(totalMinutes % 60);
+      timeDisplay = mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    }
+
+    return { totalGames, bestStreak, timeDisplay, avgXp };
+  }, []);
 
   useEffect(() => {
     const newOnes = checkAchievements();
@@ -385,6 +483,99 @@ export default function ProfiloPage() {
               >
                 <div className="pt-3">
                   <StatsDashboard stats={gameStats} />
+
+                  {/* ===== Visual Progress Charts ===== */}
+                  <div className="mt-4 space-y-4">
+
+                    {/* Chart 1: XP Progress Over Time (7-day bar chart) */}
+                    <div className="card-clean rounded-2xl bg-white p-4">
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                        XP ultimi 7 giorni
+                      </p>
+                      {xpPerDay.hasData ? (
+                        <div className="flex items-end gap-1 h-24">
+                          {xpPerDay.days.map((d) => (
+                            <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full">
+                              {d.xp > 0 && (
+                                <span className="text-[8px] font-bold text-gray-500 mb-0.5">{d.xp}</span>
+                              )}
+                              <motion.div
+                                initial={{ height: 0 }}
+                                animate={{ height: Math.max((d.xp / xpPerDay.maxXp) * 80, d.xp > 0 ? 4 : 0) }}
+                                transition={{ delay: 0.2, duration: 0.5 }}
+                                className="w-full rounded-t bg-[#003DA5]/70"
+                              />
+                              <span className="text-[9px] text-gray-400 mt-1">{d.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-24 rounded-xl bg-gray-50">
+                          <p className="text-xs text-gray-400 font-medium">
+                            Gioca di piu per vedere le statistiche
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Chart 2: Competenze (Course progress horizontal bars) */}
+                    <div className="card-clean rounded-2xl bg-white p-4">
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                        Competenze per corso
+                      </p>
+                      <div className="space-y-3">
+                        {courseCompetence.map((course) => (
+                          <div key={course.id}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs font-semibold text-gray-700">{course.name}</span>
+                              <span className="text-[10px] font-bold text-gray-400">
+                                {course.completed}/{course.total} ({course.progress}%)
+                              </span>
+                            </div>
+                            <div className="h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${course.progress}%` }}
+                                transition={{ delay: 0.3, duration: 0.6 }}
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: course.color }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Chart 3: Game Performance (2x2 stat cards) */}
+                    <div className="card-clean rounded-2xl bg-white p-4">
+                      <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                        Rendimento di gioco
+                      </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                          <Gamepad2 className="w-5 h-5 text-[#003DA5] mx-auto mb-1" />
+                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.totalGames}</p>
+                          <p className="text-[10px] text-gray-500 font-medium">Partite totali</p>
+                        </div>
+                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                          <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
+                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.bestStreak}</p>
+                          <p className="text-[10px] text-gray-500 font-medium">Streak migliore</p>
+                        </div>
+                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                          <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
+                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.timeDisplay}</p>
+                          <p className="text-[10px] text-gray-500 font-medium">Tempo di gioco</p>
+                        </div>
+                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                          <TrendingUp className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
+                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.avgXp}</p>
+                          <p className="text-[10px] text-gray-500 font-medium">Media XP/partita</p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -699,7 +890,7 @@ export default function ProfiloPage() {
                     {showAsdDropdown && !editAsdSelected && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setShowAsdDropdown(false)} />
-                        <div className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-40 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-40 overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                           {ASD_LIST.filter((a) => !editAsdSearch || a.toLowerCase().includes(editAsdSearch.toLowerCase())).slice(0, 15).map((asd) => (
                             <button
                               key={asd}

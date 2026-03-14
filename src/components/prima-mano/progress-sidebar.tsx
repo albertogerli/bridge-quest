@@ -19,7 +19,7 @@ export function ProgressSidebar({
   if (collapsed) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-[20px] border border-[#d7d0bf] bg-[#0f2f5f] px-2 py-4 shadow-lg">
-        <div className="text-[10px] font-bold text-white/50">{currentStep + 1}/{steps.length}</div>
+        <div className="text-[10px] font-bold text-white/80">{currentStep + 1}/{steps.length}</div>
         <div className="flex flex-col gap-1.5">
           {steps.map((_, i) => (
             <div

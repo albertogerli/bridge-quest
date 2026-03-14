@@ -169,7 +169,7 @@ export function GameTutorial() {
           {/* Skip button */}
           <button
             onClick={dismiss}
-            className="absolute top-3 right-3 z-10 text-white/60 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all"
+            className="absolute top-3 right-3 z-10 text-white/80 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all"
           >
             Salta tutorial
           </button>
