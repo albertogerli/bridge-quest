@@ -22,8 +22,28 @@ import { StepVittoria } from "./steps/step-vittoria";
 
 const STORAGE_KEY = "bq_onboarded";
 const STEP_KEY = "bq_onboarding_step";
+const PROGRESS_KEY = "bq_onboarding_progress";
 const GAME_ID = "prima-mano-v2";
 const QUIZ_STEPS = new Set<StepId>(["presa", "obbligo", "ruoli", "atout"]);
+
+interface SavedProgress {
+  xp: number;
+  quizCorrect: number;
+  quizTotal: number;
+  miniWon: number;
+}
+
+function loadProgress(): SavedProgress {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { xp: 0, quizCorrect: 0, quizTotal: 0, miniWon: 0 };
+}
+
+function saveProgress(p: SavedProgress) {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch {}
+}
 
 export function PrimaManoV2({
   onDismiss,
@@ -47,10 +67,10 @@ export function PrimaManoV2({
     } catch {}
     return 0;
   });
-  const [totalXp, setTotalXp] = useState(0);
-  const [quizCorrect, setQuizCorrect] = useState(0);
-  const [quizTotal, setQuizTotal] = useState(0);
-  const [miniPreseScore, setMiniPreseScore] = useState({ won: 0, total: 4 });
+  const [totalXp, setTotalXp] = useState(() => loadProgress().xp);
+  const [quizCorrect, setQuizCorrect] = useState(() => loadProgress().quizCorrect);
+  const [quizTotal, setQuizTotal] = useState(() => loadProgress().quizTotal);
+  const [miniPreseScore, setMiniPreseScore] = useState(() => ({ won: loadProgress().miniWon, total: 4 }));
   const [handResult, setHandResult] = useState<HandResult | null>(null);
 
   const stepId = STEPS[currentStep].id;
@@ -60,6 +80,7 @@ export function PrimaManoV2({
     try {
       localStorage.setItem(STORAGE_KEY, "1");
       localStorage.removeItem(STEP_KEY);
+      localStorage.removeItem(PROGRESS_KEY);
       if (!localStorage.getItem("bq_onboarded_date")) {
         localStorage.setItem("bq_onboarded_date", new Date().toISOString().slice(0, 10));
       }
@@ -93,6 +114,12 @@ export function PrimaManoV2({
 
       setTotalXp(newTotalXp);
 
+      // Persist progress for resume on reload
+      const newQuizCorrect = QUIZ_STEPS.has(sid) && xpEarned >= 10 ? quizCorrect + 1 : quizCorrect;
+      const newQuizTotal = QUIZ_STEPS.has(sid) ? quizTotal + 1 : quizTotal;
+      const newMiniWon = sid === "mini-prese" ? Math.round(xpEarned / 5) : miniPreseScore.won;
+      saveProgress({ xp: newTotalXp, quizCorrect: newQuizCorrect, quizTotal: newQuizTotal, miniWon: newMiniWon });
+
       // Advance to next step
       if (currentStep < STEPS.length - 1) {
         const nextIdx = currentStep + 1;
@@ -109,7 +136,7 @@ export function PrimaManoV2({
         persistOnboarding();
       }
     },
-    [currentStep, totalXp, persistOnboarding],
+    [currentStep, totalXp, quizCorrect, quizTotal, miniPreseScore.won, persistOnboarding],
   );
 
   const handleHandResult = useCallback((result: HandResult) => {
