@@ -14,6 +14,39 @@ import { updateLastActivity } from "@/hooks/use-notifications";
 import { ComprehensionQuiz } from "@/components/comprehension-quiz";
 import { getYouTubeEmbedUrl } from "@/components/maestro-video";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+// === DRAFT SAVE/RESTORE ===
+interface ModuleDraft {
+  currentStep: number;
+  quizAnswers: Record<number, number>;
+  showExplanation: Record<number, boolean>;
+  xpEarned: number;
+  lives: number;
+  correctStreak: number;
+  bestStreak: number;
+  savedAt: string;
+}
+
+function getDraftKey(lessonId: string, moduleId: string) {
+  return `bq_module_draft_${lessonId}_${moduleId}`;
+}
+
+function loadDraft(lessonId: string, moduleId: string): ModuleDraft | null {
+  try {
+    const raw = localStorage.getItem(getDraftKey(lessonId, moduleId));
+    if (!raw) return null;
+    return JSON.parse(raw) as ModuleDraft;
+  } catch {
+    return null;
+  }
+}
+
+function clearDraft(lessonId: string, moduleId: string) {
+  try {
+    localStorage.removeItem(getDraftKey(lessonId, moduleId));
+  } catch {}
+}
 
 // SVG icons for block types
 function ShieldIcon({ className }: { className?: string }) {
@@ -54,14 +87,19 @@ export default function ModulePage({
   params: Promise<{ lessonId: string; moduleId: string }>;
 }) {
   const { lessonId, moduleId } = use(params);
+  const router = useRouter();
   const lesson = getLessonById(parseInt(lessonId));
   const mod = getModuleById(parseInt(lessonId), moduleId);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
-  const [showExplanation, setShowExplanation] = useState<Record<number, boolean>>({});
-  const [correctStreak, setCorrectStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [xpEarned, setXpEarned] = useState(0);
+
+  // Load draft from localStorage (lazy, runs once on mount)
+  const [draft] = useState<ModuleDraft | null>(() => loadDraft(lessonId, moduleId));
+  const [currentStep, setCurrentStep] = useState(draft?.currentStep ?? 0);
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>(draft?.quizAnswers ?? {});
+  const [showExplanation, setShowExplanation] = useState<Record<number, boolean>>(draft?.showExplanation ?? {});
+  const [correctStreak, setCorrectStreak] = useState(draft?.correctStreak ?? 0);
+  const [bestStreak, setBestStreak] = useState(draft?.bestStreak ?? 0);
+  const [xpEarned, setXpEarned] = useState(draft?.xpEarned ?? 0);
+  const [saveToast, setSaveToast] = useState(false);
   const [showXpPop, setShowXpPop] = useState(false);
   const [xpPopAmount, setXpPopAmount] = useState(0);
   const [achievement, setAchievement] = useState<string | null>(null);
@@ -74,7 +112,7 @@ export default function ModulePage({
   const stepEnteredAt = useRef(Date.now());
 
   // === GAMIFICATION STATE ===
-  const [lives, setLives] = useState(3); // ❤️ lives system
+  const [lives, setLives] = useState(draft?.lives ?? 3); // ❤️ lives system
   const [livesLost, setLivesLost] = useState(false); // shake animation trigger
   const [powerups, setPowerups] = useState({ fiftyFifty: 1, skip: 1, extraTime: 1 }); // power-ups
   const [eliminated, setEliminated] = useState<Record<number, number[]>>({}); // 50/50: eliminated option indices per block
@@ -149,6 +187,30 @@ export default function ModulePage({
     }
   }, [xpEarned]);
 
+  // === AUTO-SAVE DRAFT ===
+  const saveDraft = useCallback(() => {
+    try {
+      const draftData: ModuleDraft = {
+        currentStep,
+        quizAnswers,
+        showExplanation,
+        xpEarned,
+        lives,
+        correctStreak,
+        bestStreak,
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(getDraftKey(lessonId, moduleId), JSON.stringify(draftData));
+    } catch {}
+  }, [currentStep, quizAnswers, showExplanation, xpEarned, lives, correctStreak, bestStreak, lessonId, moduleId]);
+
+  // Auto-save on step change (after step 0)
+  useEffect(() => {
+    if (currentStep > 0) {
+      saveDraft();
+    }
+  }, [currentStep, saveDraft]);
+
   // Mark module completed when reaching last step
   const contentLength = mod?.content.length ?? 0;
   useEffect(() => {
@@ -159,6 +221,9 @@ export default function ModulePage({
         const prev = JSON.parse(localStorage.getItem(key) || "{}");
         prev[`${lessonId}-${moduleId}`] = true;
         localStorage.setItem(key, JSON.stringify(prev));
+
+        // Clear draft on completion
+        clearDraft(lessonId, moduleId);
 
         // Update streak (home page handles daily login, but update here too as fallback)
         const today = new Date().toISOString().slice(0, 10);
@@ -1314,6 +1379,16 @@ export default function ModulePage({
     }
   };
 
+  // Save and exit handler
+  const handleSaveAndExit = useCallback(() => {
+    saveDraft();
+    setSaveToast(true);
+    setTimeout(() => {
+      setSaveToast(false);
+      router.push(`/lezioni/${lessonId}`);
+    }, 800);
+  }, [saveDraft, router, lessonId]);
+
   // Giovane: particles on correct answer
   const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
   const particleId = useRef(0);
@@ -1603,6 +1678,23 @@ export default function ModulePage({
           )}
         </AnimatePresence>
 
+        {/* Save toast */}
+        <AnimatePresence>
+          {saveToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.9 }}
+              className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-gray-800 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2"
+            >
+              <svg className="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <polyline points="20,6 9,17 4,12" />
+              </svg>
+              Progressi salvati
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Achievement popup */}
         <AnimatePresence>
           {achievement && (
@@ -1664,6 +1756,16 @@ export default function ModulePage({
           className="fixed bottom-0 left-0 right-0 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+5rem)] lg:pb-6 z-40"
         >
           <div className="mx-auto max-w-lg">
+            {currentStep > 0 && !isLastStep && (
+              <div className="flex justify-center mb-1.5">
+                <button
+                  onClick={handleSaveAndExit}
+                  className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  Salva e esci
+                </button>
+              </div>
+            )}
             <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-[#e5e7eb] shadow-sm p-3 flex gap-3">
               {currentStep > 0 && (
                 <Button

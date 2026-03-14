@@ -29,13 +29,26 @@ export default function LessonDetailPage({
   }
 
   const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
+  const [draftsMap, setDraftsMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     try {
       const cm = localStorage.getItem("bq_completed_modules");
       if (cm) setCompletedMap(JSON.parse(cm));
     } catch {}
-  }, []);
+
+    // Check for saved drafts on each module
+    if (lesson) {
+      const drafts: Record<string, boolean> = {};
+      for (const m of lesson.modules) {
+        const key = `bq_module_draft_${lesson.id}_${m.id}`;
+        if (localStorage.getItem(key)) {
+          drafts[`${lesson.id}-${m.id}`] = true;
+        }
+      }
+      setDraftsMap(drafts);
+    }
+  }, [lesson]);
 
   const [infographicLoaded, setInfographicLoaded] = useState(false);
   const profileConfig = useProfile();
@@ -194,6 +207,10 @@ export default function LessonDetailPage({
         <div className="space-y-3">
           {lesson.modules.map((module, index) => {
             const isCompleted = !!completedMap[`${lesson.id}-${module.id}`];
+            const hasDraft = !!draftsMap[`${lesson.id}-${module.id}`] && !isCompleted;
+            // A module is locked if the previous module is not completed (first module is always unlocked)
+            const prevModule = index > 0 ? lesson.modules[index - 1] : null;
+            const isLocked = prevModule ? !completedMap[`${lesson.id}-${prevModule.id}`] : false;
 
             const typeConfig = {
               theory: { label: "Teoria", color: "bg-blue-50 text-blue-600", icon: "📖" },
@@ -204,6 +221,81 @@ export default function LessonDetailPage({
 
             const config = typeConfig[module.type];
 
+            const cardContent = (
+              <div className={`group card-clean rounded-2xl bg-white p-4 transition-all ${isLocked ? "" : "cursor-pointer hover:shadow-lg active:scale-[0.99]"}`}>
+                <div className="flex items-center gap-4">
+                  {/* Step number */}
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xl ${
+                      isCompleted
+                        ? "bg-emerald text-white"
+                        : isLocked
+                        ? "bg-gray-100 text-gray-300"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                        <polyline points="20,6 9,17 4,12" />
+                      </svg>
+                    ) : isLocked ? (
+                      <span className="text-base">🔒</span>
+                    ) : (
+                      <span className="text-sm font-bold">{index + 1}</span>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <Badge className={`text-[10px] font-bold border-0 ${config.color}`}>
+                        {config.icon} {config.label}
+                      </Badge>
+                      {hasDraft && !isLocked && (
+                        <Badge className="text-[10px] font-bold border-0 bg-amber-100 text-amber-700">
+                          Riprendi
+                        </Badge>
+                      )}
+                      <span className="text-[11px] text-gray-400">
+                        {module.duration} min
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-[15px]">
+                      {module.title}
+                    </h3>
+                    {isLocked ? (
+                      <p className="text-[11px] text-amber-600/80 mt-0.5 flex items-center gap-1">
+                        <span>🔒</span> Completa il modulo precedente per sbloccare
+                      </p>
+                    ) : (
+                      <p className="text-[12px] text-gray-500 mt-0.5">
+                        +{module.xpReward} XP
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Arrow or lock badge */}
+                  {isLocked ? (
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 shrink-0">
+                      <svg className="h-3.5 w-3.5 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
+                      </svg>
+                    </div>
+                  ) : (
+                    <svg
+                      className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <polyline points="9,6 15,12 9,18" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+            );
+
             return (
               <motion.div
                 key={module.id}
@@ -211,63 +303,21 @@ export default function LessonDetailPage({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 + index * 0.08 }}
               >
-                <Link
-                  href={
-                    module.type === "practice" && lesson.smazzateIds.length > 0
-                      ? `/gioca/smazzata?lesson=${lesson.id}${course ? `&course=${course.id}` : ""}`
-                      : `/lezioni/${lesson.id}/${module.id}`
-                  }
-                >
-                  <div className="group card-clean rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
-                    <div className="flex items-center gap-4">
-                      {/* Step number */}
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xl ${
-                          isCompleted
-                            ? "bg-emerald text-white"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        {isCompleted ? (
-                          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
-                            <polyline points="20,6 9,17 4,12" />
-                          </svg>
-                        ) : (
-                          <span className="text-sm font-bold">{index + 1}</span>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <Badge className={`text-[10px] font-bold border-0 ${config.color}`}>
-                            {config.icon} {config.label}
-                          </Badge>
-                          <span className="text-[11px] text-gray-400">
-                            {module.duration} min
-                          </span>
-                        </div>
-                        <h3 className="font-bold text-gray-900 text-[15px]">
-                          {module.title}
-                        </h3>
-                        <p className="text-[12px] text-gray-500 mt-0.5">
-                          +{module.xpReward} XP
-                        </p>
-                      </div>
-
-                      {/* Arrow */}
-                      <svg
-                        className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <polyline points="9,6 15,12 9,18" />
-                      </svg>
-                    </div>
+                {isLocked ? (
+                  <div className="opacity-60 pointer-events-none">
+                    {cardContent}
                   </div>
-                </Link>
+                ) : (
+                  <Link
+                    href={
+                      module.type === "practice" && lesson.smazzateIds.length > 0
+                        ? `/gioca/smazzata?lesson=${lesson.id}${course ? `&course=${course.id}` : ""}`
+                        : `/lezioni/${lesson.id}/${module.id}`
+                    }
+                  >
+                    {cardContent}
+                  </Link>
+                )}
               </motion.div>
             );
           })}

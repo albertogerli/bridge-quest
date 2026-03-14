@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="relative mb-8">
         <div className="w-28 h-40 rounded-2xl bg-gradient-to-br from-[#003DA5] to-[#002E7A] shadow-xl shadow-[#003DA5]/20 flex items-center justify-center rotate-6">
           <div className="absolute inset-2 rounded-xl border-2 border-white/10" />
-          <span className="text-5xl text-white/30 font-bold">?</span>
+          <span className="text-5xl text-white/60 font-bold">?</span>
         </div>
         <div className="absolute -bottom-2 -left-3 w-28 h-40 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 shadow-lg -rotate-12 -z-10" />
       </div>

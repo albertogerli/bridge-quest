@@ -227,7 +227,7 @@ export default function ImpostazioniPage() {
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   textSize === size.key
                     ? "border-[#003DA5] bg-[#003DA5]/8 text-[#003DA5] shadow-sm"
-                    : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                    : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 <span className={size.sizeClass}>{size.icon}</span>
@@ -271,7 +271,7 @@ export default function ImpostazioniPage() {
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   animSpeed === speed.key
                     ? "border-[#003DA5] bg-[#003DA5]/8 text-[#003DA5] shadow-sm"
-                    : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                    : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 <span className="text-lg">{speed.icon}</span>
@@ -359,7 +359,7 @@ export default function ImpostazioniPage() {
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   theme === opt.key
                     ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/15 text-[#003DA5] dark:text-[#003DA5]/70 shadow-sm"
-                    : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                    : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 <span className="text-lg">{opt.icon}</span>

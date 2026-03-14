@@ -364,7 +364,7 @@ export function HandAnalysisPanel({
       </div>
 
       {/* Scrollable analysis list */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
         <div className="p-4 space-y-3">
           {analyses.map((analysis, idx) => {
             const isCurrentTrickPlay =

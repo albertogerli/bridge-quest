@@ -345,7 +345,8 @@ function LoginContent() {
                         initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
-                        className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-48 overflow-y-auto"
+                        className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-48 overflow-y-auto scrollbar-hide"
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                       >
                         {filteredAsd.length === 0 ? (
                           <div className="px-4 py-3 text-sm text-gray-400">Nessuna ASD trovata</div>

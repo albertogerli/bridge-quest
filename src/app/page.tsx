@@ -1794,7 +1794,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#FAFAFA] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#FAFAFA] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#14472D] via-[#1B5E3B] to-[#2D7A50] px-5 pt-16 pb-20">
         <div className="relative mx-auto max-w-lg text-center">

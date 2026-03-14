@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { courses, type CourseId, levelInfo } from "@/data/courses";
@@ -24,12 +24,28 @@ const courseGradients: Record<CourseId, string> = {
 
 export default function DispensePage() {
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
+  const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
   const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];
   const profile = "junior"; // Currently only Junior infographics available
+
+  useEffect(() => {
+    try {
+      const cm = localStorage.getItem("bq_completed_modules");
+      if (cm) setCompletedMap(JSON.parse(cm));
+    } catch {}
+  }, []);
+
+  // Check if a lesson has any completed modules
+  const isLessonStarted = (lessonId: number) => {
+    return Object.keys(completedMap).some(
+      (key) => key.startsWith(`${lessonId}-`) && completedMap[key]
+    );
+  };
 
   const infographics = currentCourse.lessons.map((lesson) => ({
     lesson,
     info: getInfographicForLesson(lesson.id, profile),
+    locked: !isLessonStarted(lesson.id),
   }));
 
   const coursePdf = infographics[0]?.info?.coursePdf;
@@ -133,7 +149,7 @@ export default function DispensePage() {
 
             {/* Infographic grid */}
             <div className="grid grid-cols-2 gap-3">
-              {infographics.map(({ lesson, info }, index) => (
+              {infographics.map(({ lesson, info, locked }, index) => (
                 <motion.div
                   key={lesson.id}
                   initial={{ opacity: 0, y: 16 }}
@@ -147,6 +163,7 @@ export default function DispensePage() {
                     imageSrc={info?.image ?? ""}
                     pdfSrc={info?.pdf ?? ""}
                     courseId={selectedCourse}
+                    locked={locked}
                   />
                 </motion.div>
               ))}
@@ -170,6 +187,7 @@ function InfographicCard({
   imageSrc,
   pdfSrc,
   courseId,
+  locked,
 }: {
   lessonId: number;
   title: string;
@@ -177,6 +195,7 @@ function InfographicCard({
   imageSrc: string;
   pdfSrc: string;
   courseId: CourseId;
+  locked: boolean;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -195,7 +214,7 @@ function InfographicCard({
               alt={`Dispensa Lezione ${lessonNumber}`}
               className={`w-full h-full object-cover transition-all duration-300 ${
                 loaded ? "opacity-100 group-hover:scale-105" : "opacity-0"
-              }`}
+              } ${locked ? "grayscale opacity-50" : ""}`}
               onLoad={() => setLoaded(true)}
               onError={() => setError(true)}
             />
@@ -206,9 +225,22 @@ function InfographicCard({
             )}
           </>
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-300">
+          <div className={`absolute inset-0 flex flex-col items-center justify-center text-gray-300 ${locked ? "grayscale opacity-50" : ""}`}>
             <span className="text-3xl mb-1">{icon}</span>
             <span className="text-[10px] font-medium">Anteprima non disponibile</span>
+          </div>
+        )}
+
+        {/* Lock overlay for locked materials */}
+        {locked && loaded && (
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-1.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md">
+                <svg className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
+                </svg>
+              </div>
+            </div>
           </div>
         )}
 
@@ -219,8 +251,8 @@ function InfographicCard({
           </Badge>
         </div>
 
-        {/* PDF download button (overlay) */}
-        {pdfSrc && (
+        {/* PDF download button (overlay) - hidden when locked */}
+        {pdfSrc && !locked && (
           <button
             onClick={() => downloadPdf(pdfSrc, `dispensa-lezione-${lessonNumber}.pdf`)}
             className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#003DA5] text-white shadow-lg transition-all hover:bg-[#002d7a] active:scale-90 opacity-0 group-hover:opacity-100 lg:opacity-100"
@@ -240,12 +272,18 @@ function InfographicCard({
         <h3 className="text-[12px] font-bold text-gray-800 leading-tight line-clamp-2">
           {title}
         </h3>
-        <Link
-          href={`/lezioni/${lessonId}`}
-          className="text-[10px] font-semibold text-[#003DA5] mt-1 inline-block hover:underline"
-        >
-          Vai alla lezione →
-        </Link>
+        {locked ? (
+          <p className="text-[10px] font-medium text-amber-600/80 mt-1 flex items-center gap-1">
+            <span>🔒</span> Completa la lezione per sbloccare
+          </p>
+        ) : (
+          <Link
+            href={`/lezioni/${lessonId}`}
+            className="text-[10px] font-semibold text-[#003DA5] mt-1 inline-block hover:underline"
+          >
+            Vai alla lezione →
+          </Link>
+        )}
       </div>
     </div>
   );

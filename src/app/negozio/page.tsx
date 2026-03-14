@@ -618,6 +618,16 @@ export default function NegozioPage() {
                             </Badge>
                           </div>
                         )}
+
+                        {/* XP requirement badge for expensive items */}
+                        {!isOwned && !isActive && item.price >= 200 && (
+                          <div className="absolute bottom-2 left-2">
+                            <Badge className="bg-black/50 backdrop-blur-sm text-white text-[9px] font-bold border-0 px-2 py-0.5 flex items-center gap-1">
+                              <Gem className="w-2.5 h-2.5" />
+                              {item.price >= 300 ? "Esclusivo" : "Raro"}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
 
                       {/* Confetti overlay */}
@@ -640,18 +650,33 @@ export default function NegozioPage() {
                       </p>
 
                       {/* Price */}
-                      <div className="flex items-center gap-1 mt-2 mb-2.5">
-                        {item.isFree ? (
-                          <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-emerald-200 border px-2 py-0.5">
-                            Gratuito
-                          </Badge>
-                        ) : (
-                          <div className="flex items-center gap-1">
-                            <Coins className="w-3.5 h-3.5 text-amber-500" />
-                            <span className="text-sm font-bold text-amber-700">
-                              {item.price}
-                            </span>
-                          </div>
+                      <div className="flex flex-col gap-1 mt-2 mb-2.5">
+                        <div className="flex items-center gap-1">
+                          {item.isFree ? (
+                            <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-emerald-200 border px-2 py-0.5">
+                              Gratuito
+                            </Badge>
+                          ) : (
+                            <div className="flex items-center gap-1">
+                              <Coins className={`w-3.5 h-3.5 ${!isOwned && fiches < item.price ? "text-rose-400" : "text-amber-500"}`} />
+                              <span className={`text-sm font-bold ${!isOwned && fiches < item.price ? "text-rose-500" : "text-amber-700"}`}>
+                                {item.price}
+                              </span>
+                            </div>
+                          )}
+                          {/* XP tier badge for premium items */}
+                          {!item.isFree && item.price >= 200 && (
+                            <Badge className="bg-purple-50 text-purple-600 text-[9px] font-bold border-purple-200 border px-1.5 py-0 ml-auto">
+                              <Star className="w-2.5 h-2.5 mr-0.5" />
+                              Premium
+                            </Badge>
+                          )}
+                        </div>
+                        {/* Not enough fiches warning */}
+                        {!isOwned && !item.isFree && fiches < item.price && (
+                          <p className="text-[9px] font-semibold text-rose-500 leading-tight">
+                            Non abbastanza fiches
+                          </p>
                         )}
                       </div>
 
