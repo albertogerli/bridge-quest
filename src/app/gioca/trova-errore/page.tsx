@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
+import { useGameResults } from "@/hooks/use-game-results";
 import { errorScenarios, type ErrorScenario } from "@/data/trova-errore-data";
 
 type Difficulty = "facile" | "medio" | "difficile";
@@ -58,6 +59,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 export default function TrovaErrorePage() {
   const profileConfig = useProfile();
+  const { saveGameResult } = useGameResults();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("facile");
@@ -216,13 +218,22 @@ export default function TrovaErrorePage() {
             setBestScore(finalScore);
           }
         } catch {}
+        saveGameResult({
+          gameType: "trova-errore",
+          score: earned,
+          details: {
+            correctAnswers: finalCorrect,
+            totalRounds: TOTAL_ROUNDS,
+            difficulty,
+          },
+        });
       } else {
         setRound((r) => r + 1);
         startTimer();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [round, correctCount, score, config.xpMult, startTimer]
+    [round, correctCount, score, config.xpMult, startTimer, difficulty, saveGameResult]
   );
 
   // Cleanup timer on unmount

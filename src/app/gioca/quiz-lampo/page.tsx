@@ -10,6 +10,7 @@ import type { ContentBlock } from "@/data/courses";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useGameResults } from "@/hooks/use-game-results";
 
 // ===== Types =====
 
@@ -185,6 +186,7 @@ export default function QuizLampoPage() {
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const profileConfig = useProfile();
   const { play } = useSound();
+  const { saveGameResult } = useGameResults();
   const [showCelebration, setShowCelebration] = useState(false);
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
@@ -464,6 +466,18 @@ export default function QuizLampoPage() {
         setIsNewBest(true);
       }
     } catch {}
+
+    // Sync to Supabase
+    saveGameResult({
+      gameType: "quiz-lampo",
+      score: finalXP,
+      details: {
+        correctAnswers: correctCount,
+        totalQuestions: cfg.rounds,
+        difficulty,
+        maxCombo,
+      },
+    });
   }, [phase]);
 
   // ===== Current question =====

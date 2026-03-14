@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useGameResults } from "@/hooks/use-game-results";
 
 // Card generation
 const suits = ["spade", "heart", "diamond", "club"] as const;
@@ -59,6 +60,7 @@ export default function ContaVelocePage() {
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const profileConfig = useProfile();
   const { play } = useSound();
+  const { saveGameResult } = useGameResults();
   const [showCelebration, setShowCelebration] = useState(false);
   const [phase, setPhase] = useState<"menu" | "playing" | "result" | "gameover">("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
@@ -158,12 +160,23 @@ export default function ContaVelocePage() {
           const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
           localStorage.setItem("bq_xp", String(prev + earned));
         } catch {}
+        // Sync to Supabase
+        saveGameResult({
+          gameType: "conta-veloce",
+          score: earned,
+          details: {
+            rounds: config.rounds,
+            averageTime: +(totalTime / config.rounds).toFixed(1),
+            bestStreak: bestStreak,
+            difficulty,
+          },
+        });
       } else {
         setRound((r) => r + 1);
         nextHand();
       }
     }, 1500);
-  }, [correctHCP, round, score, streak, nextHand, config, play]);
+  }, [correctHCP, round, score, streak, nextHand, config, play, saveGameResult, totalTime, bestStreak, difficulty]);
 
   useEffect(() => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };

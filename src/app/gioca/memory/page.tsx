@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useGameResults } from "@/hooks/use-game-results";
 import Link from "next/link";
 
 // Card pairs for bridge memory - match card with its bridge concept
@@ -55,6 +56,7 @@ export default function MemoryPage() {
   const isSenior = prof.profile === "senior";
   const isGiovane = prof.profile === "giovane";
   const { play } = useSound();
+  const { saveGameResult } = useGameResults();
   const [showCelebration, setShowCelebration] = useState(false);
 
   const [phase, setPhase] = useState<GamePhase>("menu");
@@ -143,9 +145,9 @@ export default function MemoryPage() {
           play('success');
           setShowCelebration(true);
           // Save XP
+          const earned = getXP(cards.length / 2, moves + 1, timer);
           try {
             const xp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-            const earned = getXP(cards.length / 2, moves + 1, timer);
             localStorage.setItem("bq_xp", String(xp + earned));
             // Save best time
             const currentBest = localStorage.getItem("bq_memory_best");
@@ -154,6 +156,16 @@ export default function MemoryPage() {
               setBestTime(timer);
             }
           } catch {}
+          // Sync to Supabase
+          saveGameResult({
+            gameType: "memory",
+            score: earned,
+            details: {
+              pairs: cards.length / 2,
+              moves: moves + 1,
+              time: timer,
+            },
+          });
           setTimeout(() => setPhase("gameover"), 600);
         }
       } else {
@@ -168,7 +180,7 @@ export default function MemoryPage() {
         }, isSenior ? 1200 : 800);
       }
     }
-  }, [flipped, matched, cards, moves, timer, isSenior]);
+  }, [flipped, matched, cards, moves, timer, isSenior, saveGameResult]);
 
   const getXP = (pairs: number, totalMoves: number, time: number): number => {
     let xp = pairs * 10; // base

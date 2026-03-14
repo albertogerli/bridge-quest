@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { impasseScenarios, type ImpasseScenario } from "@/data/impasse-data";
 import { useProfile } from "@/hooks/use-profile";
+import { useGameResults } from "@/hooks/use-game-results";
 
 // ── Types ──────────────────────────────────────────────────────
 type Phase = "menu" | "playing" | "gameover";
@@ -100,6 +101,7 @@ function shuffle<T>(arr: T[]): T[] {
 // ── Main component ─────────────────────────────────────────────
 export default function ImpassePage() {
   const profileConfig = useProfile();
+  const { saveGameResult } = useGameResults();
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("medio");
   const [round, setRound] = useState(0);
@@ -268,8 +270,19 @@ export default function ImpassePage() {
           setBestScore(finalScore);
         }
       } catch {}
+
+      // Sync to Supabase
+      saveGameResult({
+        gameType: "impasse",
+        score: earned,
+        details: {
+          correctAnswers: finalCorrect,
+          total: TOTAL_ROUNDS,
+          difficulty,
+        },
+      });
     },
-    [correctCount, score, cfg.xpMult]
+    [correctCount, score, cfg.xpMult, saveGameResult, difficulty]
   );
 
   // ── Current scenario ────────────────────────────────────────
