@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
+import { useGameResults } from "@/hooks/use-game-results";
 
 const suitSymbols: Record<string, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
 const suitColors: Record<string, string> = {
@@ -189,6 +190,7 @@ const dichiaraDiffConfig = {
 
 export default function DichiaraPage() {
   const profileConfig = useProfile();
+  const { saveGameResult } = useGameResults();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const [phase, setPhase] = useState<"menu" | "playing" | "gameover">("menu");
   const [dichiaraDiff, setDichiaraDiff] = useState<DichiaraDifficulty>("facile");
@@ -280,6 +282,14 @@ export default function DichiaraPage() {
           const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
           localStorage.setItem("bq_xp", String(prev + earned));
         } catch {}
+        saveGameResult({
+          gameType: "dichiara",
+          score: earned,
+          details: {
+            correctBids: correct + (isCorrect ? 1 : 0),
+            totalHands: TOTAL_ROUNDS,
+          },
+        });
       } else {
         setRoundIdx((r) => r + 1);
         startTimer();

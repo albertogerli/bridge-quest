@@ -16,7 +16,9 @@ export type GameType =
   | "impasse"
   | "memory"
   | "trova-errore"
-  | "mano-guidata";
+  | "mano-guidata"
+  | "dichiara"
+  | "pratica-licita";
 
 export interface GameResult {
   gameType: GameType;
