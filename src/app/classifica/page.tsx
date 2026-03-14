@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { courses, getLessonIdsForCourse, type CourseId } from "@/data/courses";
-import { Clock, Trophy, Landmark, ChevronUp, Filter, Target } from "lucide-react";
+import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2 } from "lucide-react";
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -74,13 +74,14 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("it-IT").format(value);
 }
 
-type TabId = "globale" | "settimanale" | "per-corso" | "per-asd";
+type TabId = "globale" | "settimanale" | "per-corso" | "per-asd" | "per-gioco";
 
 const tabs: { id: TabId; label: string; icon: string }[] = [
   { id: "globale", label: "Globale", icon: "🌍" },
   { id: "settimanale", label: "Settimanale", icon: "📅" },
   { id: "per-corso", label: "Per Corso", icon: "📚" },
   { id: "per-asd", label: "Per ASD", icon: "🏛" },
+  { id: "per-gioco", label: "Per Gioco", icon: "🎮" },
 ];
 
 const courseFilters: { id: CourseId; label: string; icon: string; color: string; activeColor: string }[] = [
@@ -89,6 +90,32 @@ const courseFilters: { id: CourseId; label: string; icon: string; color: string;
   { id: "cuori-gioco", label: "Cuori Gioco", icon: "♥", color: "text-rose-600", activeColor: "bg-rose-500 text-white" },
   { id: "cuori-licita", label: "Cuori Licita", icon: "♥", color: "text-pink-600", activeColor: "bg-pink-600 text-white" },
 ];
+
+type GameTypeFilter = "sfida" | "quiz-lampo" | "conta-veloce" | "impasse" | "memory" | "trova-errore" | "mano-del-giorno" | "dichiara" | "pratica-licita";
+
+const gameFilters: { id: GameTypeFilter; label: string; icon: string; color: string; activeColor: string }[] = [
+  { id: "sfida", label: "Sfida", icon: "⚔️", color: "text-red-600", activeColor: "bg-red-600 text-white" },
+  { id: "quiz-lampo", label: "Quiz", icon: "⚡", color: "text-yellow-600", activeColor: "bg-yellow-500 text-white" },
+  { id: "conta-veloce", label: "Conta", icon: "🔢", color: "text-blue-600", activeColor: "bg-blue-600 text-white" },
+  { id: "impasse", label: "Impasse", icon: "🤔", color: "text-purple-600", activeColor: "bg-purple-600 text-white" },
+  { id: "memory", label: "Memoria", icon: "🧠", color: "text-pink-600", activeColor: "bg-pink-500 text-white" },
+  { id: "trova-errore", label: "Errori", icon: "🔍", color: "text-teal-600", activeColor: "bg-teal-600 text-white" },
+  { id: "mano-del-giorno", label: "Mano", icon: "🃏", color: "text-indigo-600", activeColor: "bg-indigo-600 text-white" },
+  { id: "dichiara", label: "Dichiara", icon: "📢", color: "text-orange-600", activeColor: "bg-orange-500 text-white" },
+  { id: "pratica-licita", label: "Licita", icon: "🗣️", color: "text-cyan-600", activeColor: "bg-cyan-600 text-white" },
+];
+
+const gameNames: Record<GameTypeFilter, string> = {
+  "sfida": "Sfida del Giorno",
+  "quiz-lampo": "Quiz Lampo",
+  "conta-veloce": "Conta Veloce",
+  "impasse": "Impasse o Drop?",
+  "memory": "Memoria Bridge",
+  "trova-errore": "Trova l'Errore",
+  "mano-del-giorno": "Mano del Giorno",
+  "dichiara": "Dichiara!",
+  "pratica-licita": "Pratica Licita",
+};
 
 interface PlayerEntry {
   id: string;
@@ -112,6 +139,7 @@ export default function ClassificaPage() {
   const [asdLoading, setAsdLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("globale");
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
+  const [selectedGame, setSelectedGame] = useState<GameTypeFilter>("sfida");
   const [userFullRank, setUserFullRank] = useState<number | null>(null);
   const [userFullTotal, setUserFullTotal] = useState<number>(0);
   const tabsRef = useRef<HTMLDivElement>(null);
@@ -517,6 +545,45 @@ export default function ClassificaPage() {
           )}
         </AnimatePresence>
 
+        <AnimatePresence>
+          {activeTab === "per-gioco" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label="Filtra per gioco" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                <div className="flex items-center gap-1 mr-1 flex-shrink-0" aria-hidden="true">
+                  <Gamepad2 className="w-3.5 h-3.5 text-gray-400" />
+                </div>
+                {gameFilters.map((game) => {
+                  const isActive = selectedGame === game.id;
+                  return (
+                    <motion.button
+                      key={game.id}
+                      onClick={() => setSelectedGame(game.id)}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Gioco ${game.label}`}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
+                        isActive
+                          ? game.activeColor + " shadow-sm"
+                          : "bg-white text-gray-500 card-clean hover:bg-gray-50"
+                      }`}
+                      whileTap={{ scale: 0.96 }}
+                    >
+                      <span className={isActive ? "" : game.color} aria-hidden="true">{game.icon}</span>
+                      {game.label}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Tab content with animated transitions */}
         <div className="mt-4">
           <AnimatePresence mode="wait">
@@ -649,6 +716,21 @@ export default function ClassificaPage() {
                     ))}
                   </div>
                 )}
+              </motion.div>
+            )}
+
+            {activeTab === "per-gioco" && (
+              <motion.div
+                key="per-gioco"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <PerGiocoView
+                  gameType={selectedGame}
+                  currentUserId={currentUserId}
+                />
               </motion.div>
             )}
           </AnimatePresence>
@@ -816,6 +898,129 @@ function PerCorsoView({
                       {player.courseXp}
                     </p>
                     <p className="text-[10px] text-gray-400">XP</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+/* ============================================================================
+   Per Gioco view - shows leaderboard for a specific game type
+   ============================================================================ */
+function PerGiocoView({
+  gameType,
+  currentUserId,
+}: {
+  gameType: GameTypeFilter;
+  currentUserId: string | null;
+}) {
+  const [gamePlayers, setGamePlayers] = useState<{ user_id: string; display_name: string; best_score: number; games_played: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const gameName = gameNames[gameType];
+
+  useEffect(() => {
+    const fetchGameData = async () => {
+      setLoading(true);
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase.rpc("get_game_leaderboard", {
+          p_game_type: gameType,
+          p_limit: 50,
+        });
+
+        if (error) {
+          console.warn("Game leaderboard fetch error:", error.message);
+          setGamePlayers([]);
+        } else if (data) {
+          setGamePlayers(
+            (data as { user_id: string; display_name: string; best_score: number; games_played: number }[])
+          );
+        }
+      } catch {
+        setGamePlayers([]);
+      }
+      setLoading(false);
+    };
+    fetchGameData();
+  }, [gameType]);
+
+  if (loading) return <LeaderboardSkeleton />;
+
+  if (gamePlayers.length === 0) {
+    return (
+      <EmptyState
+        message={`Nessun risultato ancora per ${gameName}`}
+      />
+    );
+  }
+
+  return (
+    <>
+      {/* Game header */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="card-clean rounded-2xl bg-white p-4 mb-4"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl shadow-md">
+            {gameFilters.find(g => g.id === gameType)?.icon || "🎮"}
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-base text-gray-900">
+              {gameName}
+            </p>
+            <p className="text-xs text-gray-500">
+              {gamePlayers.length} {gamePlayers.length === 1 ? "partecipante" : "partecipanti"} · Classifica per miglior punteggio
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Game leaderboard */}
+      <div className="space-y-2">
+        {gamePlayers.map((player, index) => {
+          const isCurrentUser = player.user_id === currentUserId;
+          const rank = index + 1;
+          return (
+            <motion.div
+              key={player.user_id}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.03 }}
+            >
+              <div className={`card-clean rounded-2xl bg-white p-3.5 ${
+                isCurrentUser ? "ring-2 ring-amber-300/50" : ""
+              } ${rank <= 3 ? "border-l-[3px] border-l-emerald-400" : ""}`}>
+                <div className="flex items-center gap-3">
+                  <span className="w-8 text-center text-base font-bold">
+                    {rank <= 3
+                      ? medals[rank - 1]
+                      : <span className="text-gray-400 text-sm">{rank}</span>}
+                  </span>
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
+                      {isCurrentUser ? "TU" : player.display_name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
+                      {isCurrentUser ? `${player.display_name} (Tu)` : player.display_name}
+                    </p>
+                    <p className="text-[11px] text-gray-500">
+                      {player.games_played} {player.games_played === 1 ? "partita" : "partite"} giocate
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-sm text-gray-900">
+                      {formatNumber(player.best_score)}
+                    </p>
+                    <p className="text-[10px] text-gray-400">best</p>
                   </div>
                 </div>
               </div>

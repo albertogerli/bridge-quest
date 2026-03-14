@@ -16,6 +16,7 @@ interface UserRow {
   streak: number;
   hands_played: number;
   asd_id: number | null;
+  asd_name: string | null;
   marketing_consent: boolean | null;
   total_minutes: number;
   created_at: string;
@@ -38,7 +39,7 @@ interface Stats {
   hourlySignups: number[];
   dailySignups: { date: string; count: number }[];
   topUsers: UserRow[];
-  asdDistribution: { id: number; count: number }[];
+  asdDistribution: { name: string; count: number }[];
   maxStreak: number;
   marketingAccepted: number;
   marketingDeclined: number;
@@ -47,7 +48,7 @@ interface Stats {
   avgMinutes: number;
 }
 
-type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "total_minutes" | "created_at" | "last_login";
+type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "asd" | "total_minutes" | "created_at" | "last_login";
 type SortDir = "asc" | "desc";
 
 /** Parse last_login which can be date-only "2026-03-11" or full ISO "2026-03-11T14:32:00Z" */
@@ -83,7 +84,7 @@ export default function AdminPage() {
     try {
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, marketing_consent, total_minutes, created_at, last_login")
+        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, asd:asd_id(name), marketing_consent, total_minutes, created_at, last_login")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -94,7 +95,22 @@ export default function AdminPage() {
       }
 
       if (profiles) {
-        setUsers(profiles as UserRow[]);
+        const mappedUsers: UserRow[] = profiles.map((u: any) => ({
+          id: u.id,
+          display_name: u.display_name,
+          bbo_username: u.bbo_username,
+          profile_type: u.profile_type,
+          xp: u.xp,
+          streak: u.streak,
+          hands_played: u.hands_played,
+          asd_id: u.asd_id,
+          asd_name: u.asd?.name || null,
+          marketing_consent: u.marketing_consent,
+          total_minutes: u.total_minutes,
+          created_at: u.created_at,
+          last_login: u.last_login,
+        }));
+        setUsers(mappedUsers);
 
         const now = new Date();
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -116,7 +132,7 @@ export default function AdminPage() {
         let totalMinutesAll = 0;
         const hourlySignups = new Array(24).fill(0);
         const dailyMap = new Map<string, number>();
-        const asdMap = new Map<number, number>();
+        const asdMap = new Map<string, number>();
 
         for (const u of profiles) {
           const created = new Date(u.created_at);
@@ -150,8 +166,9 @@ export default function AdminPage() {
           }
 
           // ASD distribution
-          if (u.asd_id) {
-            asdMap.set(u.asd_id, (asdMap.get(u.asd_id) || 0) + 1);
+          const asdName = (u as any).asd?.name;
+          if (asdName) {
+            asdMap.set(asdName, (asdMap.get(asdName) || 0) + 1);
           }
         }
 
@@ -164,13 +181,13 @@ export default function AdminPage() {
         }
 
         // Top 10 users by XP
-        const topUsers = [...profiles]
+        const topUsers = [...mappedUsers]
           .sort((a, b) => (b.xp || 0) - (a.xp || 0))
-          .slice(0, 10) as UserRow[];
+          .slice(0, 10);
 
         // ASD distribution sorted by count
         const asdDistribution = [...asdMap.entries()]
-          .map(([id, count]) => ({ id, count }))
+          .map(([name, count]) => ({ name, count }))
           .sort((a, b) => b.count - a.count);
 
         // Retention: users registered 7+ days ago who logged in last 7 days
@@ -328,6 +345,14 @@ export default function AdminPage() {
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     const dir = sortDir === "asc" ? 1 : -1;
+    if (sortKey === "asd") {
+      const av = a.asd_name;
+      const bv = b.asd_name;
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      return av.localeCompare(bv) * dir;
+    }
     const av = a[sortKey];
     const bv = b[sortKey];
     if (av == null && bv == null) return 0;
@@ -356,7 +381,7 @@ export default function AdminPage() {
         u.streak,
         u.hands_played,
         u.total_minutes || 0,
-        u.asd_id || "",
+        u.asd_name || "",
         u.marketing_consent === true ? "Sì" : u.marketing_consent === false ? "No" : "—",
         new Date(u.created_at).toLocaleDateString("it-IT"),
         u.last_login || "Mai",
@@ -678,8 +703,8 @@ export default function AdminPage() {
                     {stats.asdDistribution.slice(0, 10).map((asd) => {
                       const maxAsd = stats.asdDistribution[0]?.count || 1;
                       return (
-                        <div key={asd.id} className="flex items-center gap-3">
-                          <span className="text-xs text-gray-500 w-16 shrink-0">ASD #{asd.id}</span>
+                        <div key={asd.name} className="flex items-center gap-3">
+                          <span className="text-xs text-gray-500 w-32 shrink-0 truncate" title={asd.name}>{asd.name}</span>
                           <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
                             <div
                               className="h-full bg-[#003DA5]/70 rounded-full"
@@ -721,6 +746,7 @@ export default function AdminPage() {
                       <SortTh label="XP" field="xp" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
                       <SortTh label="Streak" field="streak" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
                       <SortTh label="Mani" field="hands_played" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
+                      <SortTh label="ASD" field="asd" current={sortKey} dir={sortDir} onClick={handleSort} />
                       <SortTh label="Tempo" field="total_minutes" current={sortKey} dir={sortDir} onClick={handleSort} align="right" />
                       <SortTh label="Registrato" field="created_at" current={sortKey} dir={sortDir} onClick={handleSort} />
                       <SortTh label="Ultimo accesso" field="last_login" current={sortKey} dir={sortDir} onClick={handleSort} />
@@ -750,6 +776,9 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-right text-gray-600">
                           {u.hands_played}
                         </td>
+                        <td className="px-5 py-3 text-gray-500 text-xs">
+                          {u.asd_name || "\u2014"}
+                        </td>
                         <td className="px-5 py-3 text-right text-gray-600 text-xs">
                           {(u.total_minutes || 0) >= 60
                             ? `${Math.floor(u.total_minutes / 60)}h ${u.total_minutes % 60}m`
@@ -765,7 +794,7 @@ export default function AdminPage() {
                     ))}
                     {sortedUsers.length === 0 && (
                       <tr>
-                        <td colSpan={9} className="px-5 py-10 text-center text-gray-400">
+                        <td colSpan={10} className="px-5 py-10 text-center text-gray-400">
                           {search ? "Nessun utente trovato" : "Nessun utente registrato"}
                         </td>
                       </tr>
