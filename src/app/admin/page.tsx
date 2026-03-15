@@ -81,6 +81,7 @@ export default function AdminPage() {
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -752,36 +753,67 @@ export default function AdminPage() {
                 <span className="text-[9px] text-gray-400">oggi</span>
               </div>
 
-              {/* Expanded day detail */}
+              {/* Expanded day detail — full data table */}
               {expandedDay && stats?.dailyActive && (() => {
                 const day = stats.dailyActive.find(d => d.date === expandedDay);
                 if (!day) return null;
                 const dayLabel = new Date(expandedDay + "T12:00:00").toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+                // Resolve full user data for active users that day
+                const dayUsers = day.activeUsers
+                  .map(au => {
+                    const full = users.find(u => u.id === au.id);
+                    return full ? { ...full, login_time: au.last_login } : null;
+                  })
+                  .filter(Boolean) as (UserRow & { login_time: string })[];
+                dayUsers.sort((a, b) => new Date(b.login_time).getTime() - new Date(a.login_time).getTime());
+
                 return (
                   <div className="border-t border-gray-100 pt-3">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-3">
                       <h3 className="text-sm font-bold text-gray-900 capitalize">{dayLabel}</h3>
-                      <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">
-                        {day.activeUsers.length} utenti
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">
+                          {dayUsers.length} utenti
+                        </span>
+                        <button onClick={() => setExpandedDay(null)} className="text-xs text-gray-400 hover:text-gray-600">✕</button>
+                      </div>
                     </div>
-                    {day.activeUsers.length > 0 ? (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 max-h-48 overflow-y-auto">
-                        {day.activeUsers
-                          .sort((a, b) => new Date(b.last_login).getTime() - new Date(a.last_login).getTime())
-                          .map((u) => (
-                          <div key={u.id} className="flex items-center gap-2 text-xs bg-gray-50 rounded-lg px-2.5 py-1.5">
-                            <div className="w-6 h-6 rounded-full bg-[#003DA5]/10 flex items-center justify-center text-[10px] font-bold text-[#003DA5] shrink-0">
-                              {(u.display_name || "?")[0].toUpperCase()}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="font-semibold text-gray-900 truncate">{u.display_name || "Anonimo"}</p>
-                              <p className="text-[10px] text-gray-400">
-                                {isFullTimestamp(u.last_login) ? new Date(u.last_login).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : ""}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                    {dayUsers.length > 0 ? (
+                      <div className="overflow-x-auto max-h-80 overflow-y-auto">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="bg-gray-50 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                              <th className="px-3 py-2">Utente</th>
+                              <th className="px-3 py-2">Tipo</th>
+                              <th className="px-3 py-2">BBO</th>
+                              <th className="px-3 py-2 text-right">XP</th>
+                              <th className="px-3 py-2 text-right">Streak</th>
+                              <th className="px-3 py-2 text-right">Mani</th>
+                              <th className="px-3 py-2">ASD</th>
+                              <th className="px-3 py-2 text-right">Tempo</th>
+                              <th className="px-3 py-2">Accesso</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-50">
+                            {dayUsers.map((u) => (
+                              <tr key={u.id} className="hover:bg-blue-50/50 cursor-pointer transition-colors" onClick={() => setSelectedUserId(u.id)}>
+                                <td className="px-3 py-2 font-semibold text-gray-900">{u.display_name || "—"}</td>
+                                <td className="px-3 py-2">{profileEmoji[u.profile_type]} {u.profile_type}</td>
+                                <td className="px-3 py-2 text-gray-500">{u.bbo_username || "—"}</td>
+                                <td className="px-3 py-2 text-right font-bold text-[#003DA5]">{u.xp.toLocaleString("it-IT")}</td>
+                                <td className="px-3 py-2 text-right">{u.streak > 0 ? `🔥 ${u.streak}` : "—"}</td>
+                                <td className="px-3 py-2 text-right text-gray-600">{u.hands_played}</td>
+                                <td className="px-3 py-2 text-gray-500 max-w-[120px] truncate" title={u.asd_name || ""}>{u.asd_name || "—"}</td>
+                                <td className="px-3 py-2 text-right text-gray-600">
+                                  {(u.total_minutes || 0) >= 60 ? `${Math.floor(u.total_minutes / 60)}h ${u.total_minutes % 60}m` : `${u.total_minutes || 0}m`}
+                                </td>
+                                <td className="px-3 py-2 text-gray-500">
+                                  {isFullTimestamp(u.login_time) ? new Date(u.login_time).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : u.login_time}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     ) : (
                       <p className="text-xs text-gray-400">Nessun utente attivo questo giorno</p>
@@ -878,9 +910,9 @@ export default function AdminPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {sortedUsers.map((u) => (
-                      <tr key={u.id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={u.id} className="hover:bg-blue-50/50 transition-colors cursor-pointer" onClick={() => setSelectedUserId(u.id)}>
                         <td className="px-5 py-3 font-semibold text-gray-900">
-                          {u.display_name || "—"}
+                          <span className="hover:text-[#003DA5] hover:underline">{u.display_name || "—"}</span>
                         </td>
                         <td className="px-5 py-3">
                           <span className="inline-flex items-center gap-1">
@@ -927,6 +959,150 @@ export default function AdminPage() {
                 </table>
               </div>
             </div>
+            {/* User detail modal */}
+            {selectedUserId && (() => {
+              const u = users.find(usr => usr.id === selectedUserId);
+              if (!u) return null;
+
+              // Calculate days since registration
+              const daysSinceReg = Math.floor((Date.now() - new Date(u.created_at).getTime()) / (1000 * 60 * 60 * 24));
+
+              // Find all days this user was active (from dailyActive data)
+              const activeDays = (stats?.dailyActive ?? [])
+                .filter(d => d.activeUsers.some(au => au.id === u.id))
+                .map(d => ({
+                  date: d.date,
+                  login: d.activeUsers.find(au => au.id === u.id)!.last_login,
+                }))
+                .sort((a, b) => b.date.localeCompare(a.date));
+
+              // Find user rank by XP
+              const xpRank = [...users].sort((a, b) => b.xp - a.xp).findIndex(usr => usr.id === u.id) + 1;
+
+              // Find user rank by hands
+              const handsRank = [...users].sort((a, b) => b.hands_played - a.hands_played).findIndex(usr => usr.id === u.id) + 1;
+
+              return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setSelectedUserId(null)}>
+                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4" onClick={e => e.stopPropagation()}>
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-[#003DA5] to-[#0052CC] text-white p-6 rounded-t-2xl">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold">
+                            {(u.display_name || "?")[0].toUpperCase()}
+                          </div>
+                          <div>
+                            <h2 className="text-xl font-bold">{u.display_name || "Anonimo"}</h2>
+                            <div className="flex items-center gap-3 mt-1 text-sm text-white/80">
+                              <span>{profileEmoji[u.profile_type]} {u.profile_type}</span>
+                              {u.bbo_username && <span>BBO: {u.bbo_username}</span>}
+                            </div>
+                          </div>
+                        </div>
+                        <button onClick={() => setSelectedUserId(null)} className="text-white/70 hover:text-white text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10">✕</button>
+                      </div>
+                    </div>
+
+                    {/* Stats grid */}
+                    <div className="p-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                        <UserStatBox label="XP" value={u.xp.toLocaleString("it-IT")} sub={`#${xpRank} su ${users.length}`} color="text-[#003DA5]" />
+                        <UserStatBox label="Streak" value={u.streak > 0 ? `🔥 ${u.streak}` : "0"} sub={u.streak > 0 ? "giorni" : "—"} color="text-orange-500" />
+                        <UserStatBox label="Mani giocate" value={u.hands_played.toLocaleString("it-IT")} sub={`#${handsRank} su ${users.length}`} color="text-emerald-600" />
+                        <UserStatBox label="Tempo in app" value={(u.total_minutes || 0) >= 60 ? `${Math.floor(u.total_minutes / 60)}h ${u.total_minutes % 60}m` : `${u.total_minutes || 0}m`} sub={daysSinceReg > 0 ? `${Math.round((u.total_minutes || 0) / daysSinceReg)} min/giorno` : "—"} color="text-violet-600" />
+                      </div>
+
+                      {/* Info table */}
+                      <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Dettagli profilo</h3>
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Registrato</span>
+                            <span className="font-semibold text-gray-900">{new Date(u.created_at).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Ultimo accesso</span>
+                            <span className="font-semibold text-gray-900">{formatLastLogin(u.last_login)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">ASD/Circolo</span>
+                            <span className="font-semibold text-gray-900">{u.asd_name || "Nessuno"}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Marketing</span>
+                            <span className={`font-semibold ${u.marketing_consent === true ? "text-emerald-600" : u.marketing_consent === false ? "text-red-500" : "text-gray-400"}`}>
+                              {u.marketing_consent === true ? "✅ Accettato" : u.marketing_consent === false ? "❌ Rifiutato" : "Non chiesto"}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Giorni dall'iscrizione</span>
+                            <span className="font-semibold text-gray-900">{daysSinceReg}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">ID</span>
+                            <span className="font-mono text-[10px] text-gray-400 max-w-[160px] truncate" title={u.id}>{u.id}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Activity heatmap - last 14 days */}
+                      <div className="mb-6">
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Attività ultimi 14 giorni</h3>
+                        <div className="flex gap-1.5 flex-wrap">
+                          {Array.from({ length: 14 }, (_, i) => {
+                            const d = new Date(Date.now() - (13 - i) * 24 * 60 * 60 * 1000);
+                            const key = d.toISOString().split("T")[0];
+                            const wasActive = activeDays.some(ad => ad.date === key);
+                            const isToday = i === 13;
+                            const dayName = d.toLocaleDateString("it-IT", { weekday: "short" }).slice(0, 2);
+                            const dayNum = d.getDate();
+                            return (
+                              <div key={key} className="flex flex-col items-center gap-0.5" title={`${key}: ${wasActive ? "attivo" : "inattivo"}`}>
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all ${
+                                  wasActive
+                                    ? "bg-emerald-500 text-white"
+                                    : isToday
+                                      ? "bg-gray-200 text-gray-500 ring-2 ring-gray-300"
+                                      : "bg-gray-100 text-gray-300"
+                                }`}>
+                                  {dayNum}
+                                </div>
+                                <span className="text-[9px] text-gray-400">{dayName}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="mt-2 flex items-center gap-3 text-[10px] text-gray-400">
+                          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-500" /> Attivo</span>
+                          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-100" /> Inattivo</span>
+                          <span className="ml-auto font-semibold">{activeDays.length} giorni attivi su 14</span>
+                        </div>
+                      </div>
+
+                      {/* Activity log */}
+                      {activeDays.length > 0 && (
+                        <div>
+                          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Log accessi</h3>
+                          <div className="space-y-1 max-h-40 overflow-y-auto">
+                            {activeDays.map(ad => (
+                              <div key={ad.date} className="flex items-center justify-between text-xs bg-gray-50 rounded-lg px-3 py-2">
+                                <span className="font-semibold text-gray-700">
+                                  {new Date(ad.date + "T12:00:00").toLocaleDateString("it-IT", { weekday: "short", day: "numeric", month: "short" })}
+                                </span>
+                                <span className="text-gray-400">
+                                  {isFullTimestamp(ad.login) ? new Date(ad.login).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : "—"}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </>
         )}
       </div>
@@ -965,6 +1141,16 @@ function MiniCard({ label, value, color }: { label: string; value: number; color
     <div className="text-center">
       <div className={`text-2xl font-black ${color}`}>{value}</div>
       <div className="text-xs text-gray-500 mt-0.5">{label}</div>
+    </div>
+  );
+}
+
+function UserStatBox({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
+  return (
+    <div className="bg-gray-50 rounded-xl p-3 text-center">
+      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</div>
+      <div className={`text-xl font-bold mt-1 ${color}`}>{value}</div>
+      <div className="text-[10px] text-gray-400 mt-0.5">{sub}</div>
     </div>
   );
 }
