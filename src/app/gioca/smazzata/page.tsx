@@ -14,6 +14,7 @@ import {
   getSmazzateByCourse,
   type Smazzata,
 } from "@/data/all-smazzate";
+import { getCourseForLesson } from "@/data/courses";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
@@ -121,31 +122,54 @@ function SmazzataBrowserContent() {
           </p>
         </motion.div>
 
-        {/* Lesson tabs - horizontal scroll */}
+        {/* Lesson tabs - grouped by course */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-5 -mx-5 px-5"
+          className="mb-5 -mx-5 px-5 space-y-2"
         >
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {lessons.map((lesson) => (
-              <button
-                key={lesson.id}
-                onClick={() => {
-                  setSelectedLesson(lesson.id);
-                  setSelectedSmazzata(null);
-                }}
-                className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
-                  selectedLesson === lesson.id
-                    ? "bg-emerald text-white shadow-md shadow-emerald/25"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                }`}
-              >
-                Lez. {getLessonDisplayNumber(lesson.id)}
-              </button>
-            ))}
-          </div>
+          {(() => {
+            // Group lessons by course
+            const courseGroups: { courseName: string; lessons: typeof lessons }[] = [];
+            const seen = new Set<string>();
+            for (const lesson of lessons) {
+              const course = getCourseForLesson(lesson.id);
+              const name = course?.name ?? "Altro";
+              if (!seen.has(name)) {
+                seen.add(name);
+                courseGroups.push({ courseName: name, lessons: [] });
+              }
+              courseGroups.find((g) => g.courseName === name)!.lessons.push(lesson);
+            }
+            return courseGroups.map((group) => (
+              <div key={group.courseName}>
+                {courseGroups.length > 1 && (
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">
+                    {group.courseName}
+                  </p>
+                )}
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                  {group.lessons.map((lesson) => (
+                    <button
+                      key={lesson.id}
+                      onClick={() => {
+                        setSelectedLesson(lesson.id);
+                        setSelectedSmazzata(null);
+                      }}
+                      className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                        selectedLesson === lesson.id
+                          ? "bg-emerald text-white shadow-md shadow-emerald/25"
+                          : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                      }`}
+                    >
+                      Lez. {getLessonDisplayNumber(lesson.id)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ));
+          })()}
         </motion.div>
 
         {/* Lesson title */}

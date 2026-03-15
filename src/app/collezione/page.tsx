@@ -253,7 +253,7 @@ export default function CollezionePage() {
           className="mt-4"
         >
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
-            Rarita
+            Rarità
           </p>
           <div className="flex flex-wrap gap-1.5">
             {(

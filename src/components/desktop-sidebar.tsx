@@ -35,16 +35,28 @@ export function DesktopSidebar() {
   const { reviewCount } = useSpacedReview();
   const { objectives, allCompleted, bonusClaimed } = useWeeklyObjectives();
 
-  const playerStats = {
-    xp: stats.xp,
-    streak: stats.streak,
-    handsPlayed: stats.handsPlayed,
-    completedModules: stats.totalModulesCompleted,
-    badges: [] as string[],
-    quizLampoBest: 0,
-    memoryBest: 0,
-    dailyHandsTotal: 0,
-  };
+  const playerStats = (() => {
+    let badges: string[] = [];
+    let quizLampoBest = 0;
+    let memoryBest = 0;
+    let dailyHandsTotal = 0;
+    try {
+      badges = JSON.parse(localStorage.getItem("bq_badges") || "[]");
+      quizLampoBest = parseInt(localStorage.getItem("bq_quiz_lampo_best") || "0", 10);
+      memoryBest = parseInt(localStorage.getItem("bq_memory_best") || "0", 10);
+      dailyHandsTotal = parseInt(localStorage.getItem("bq_daily_hand_total") || "0", 10);
+    } catch {}
+    return {
+      xp: stats.xp,
+      streak: stats.streak,
+      handsPlayed: stats.handsPlayed,
+      completedModules: stats.totalModulesCompleted,
+      badges,
+      quizLampoBest,
+      memoryBest,
+      dailyHandsTotal,
+    };
+  })();
   const unlockedCards = collectibleCards.filter((c) => c.checkUnlock(playerStats));
   const totalCards = collectibleCards.length;
 
@@ -69,7 +81,7 @@ export function DesktopSidebar() {
               <p className="text-[10px] text-gray-500 font-medium">{`/ 100 ${profile.xpLabel}`}</p>
             </div>
           </div>
-          <div className="h-3 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+          <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div
               className="h-full rounded-full bg-gradient-to-r from-[#003DA5] to-[#0052CC] transition-all"
               style={{ width: `${stats.xpInLevel}%` }}
@@ -102,7 +114,7 @@ export function DesktopSidebar() {
                 className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-bold ${
                   i < Math.min(stats.streak, 7)
                     ? "bg-[#003DA5] text-white"
-                    : "bg-gray-100 text-gray-500 border border-gray-200"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
                 }`}
               >
                 {day}
@@ -115,8 +127,8 @@ export function DesktopSidebar() {
         <Link href="/gioca/sfida" aria-label="Sfida del Giorno">
           <div className={`rounded-2xl p-4 transition-all hover:translate-y-[-1px] hover:shadow-md cursor-pointer ${
             stats.dailyDone
-              ? "bg-emerald-50 border border-emerald-200"
-              : "bg-white card-clean"
+              ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800"
+              : "bg-white dark:bg-[#1a1f2e] card-clean"
           }`}>
             <div className="flex items-center gap-3">
               <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${
@@ -203,8 +215,8 @@ export function DesktopSidebar() {
               </Link>
             )}
             {bonusClaimed && (
-              <div className="mt-2.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
-                <p className="text-[11px] font-bold text-emerald-700">Bonus riscosso! Torna lunedi</p>
+              <div className="mt-2.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-center">
+                <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400">Bonus riscosso! Torna lunedi</p>
               </div>
             )}
           </div>
@@ -256,7 +268,7 @@ export function DesktopSidebar() {
           <div className="grid grid-cols-2 gap-2">
             {miniGames.map((game) => (
               <Link key={game.href} href={game.href} aria-label={`Mini-gioco: ${game.label}`}>
-                <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer ${game.color}`}>
+                <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium transition-all hover:translate-y-[-1px] active:translate-y-[1px] cursor-pointer dark:bg-opacity-20 ${game.color}`}>
                   <span className="text-base" aria-hidden="true">{game.emoji}</span>
                   <span>{game.label}</span>
                 </div>

@@ -63,6 +63,7 @@ export default function SfidaDelGiornoPage() {
   const { saveGameResult } = useGameResults();
   const { play } = useSound();
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -406,7 +407,7 @@ export default function SfidaDelGiornoPage() {
           )}
         </AnimatePresence>
 
-        {/* Maestro Fiori tip */}
+        {/* Maestro Fiori tip - hidden behind toggle */}
         {game.phase === "ready" && smazzata.commentary && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -414,24 +415,55 @@ export default function SfidaDelGiornoPage() {
             transition={{ delay: 0.5 }}
             className="mt-6 mx-auto max-w-lg"
           >
-            <div className="card-elevated rounded-2xl bg-white p-5">
-              <div className="flex items-start gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
-                  M
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <p className="font-bold text-sm text-gray-900">Maestro Fiori</p>
-                    <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
-                      Suggerimento
-                    </Badge>
+            <button
+              onClick={() => setShowHint(!showHint)}
+              className="flex items-center gap-2 mx-auto mb-2 px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-sm font-semibold text-gray-600 transition-colors"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                {showHint ? (
+                  <>
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </>
+                ) : (
+                  <>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </>
+                )}
+              </svg>
+              {showHint ? "Nascondi suggerimento" : "Mostra suggerimento"}
+            </button>
+            <AnimatePresence>
+              {showHint && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="card-elevated rounded-2xl bg-white p-5">
+                    <div className="flex items-start gap-3.5">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
+                        M
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <p className="font-bold text-sm text-gray-900">Maestro Fiori</p>
+                          <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
+                            Suggerimento
+                          </Badge>
+                        </div>
+                        <p className="text-[13px] text-gray-600 leading-relaxed">
+                          {smazzata.commentary}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[13px] text-gray-600 leading-relaxed">
-                    {smazzata.commentary}
-                  </p>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </div>

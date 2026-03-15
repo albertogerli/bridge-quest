@@ -220,13 +220,21 @@ const shopItems: ShopItem[] = [
 
   // Titoli (displayed under user's name)
   {
-    id: "maestro-di-bridge",
-    name: "Maestro di Bridge",
+    id: "apprendista",
+    name: "Apprendista",
     price: 0,
     category: "titoli",
-    preview: { gradient: "from-blue-400 via-blue-500 to-indigo-600" },
-    description: "Il titolo base per ogni giocatore di bridge",
+    preview: { gradient: "from-sky-400 via-sky-500 to-blue-500" },
+    description: "Il titolo iniziale per chi sta imparando il bridge",
     isFree: true,
+  },
+  {
+    id: "maestro-di-bridge",
+    name: "Maestro di Bridge",
+    price: 200,
+    category: "titoli",
+    preview: { gradient: "from-blue-400 via-blue-500 to-indigo-600" },
+    description: "Titolo prestigioso per chi ha padroneggiato le basi",
   },
   {
     id: "stratega",
@@ -338,7 +346,7 @@ const defaultActives: Record<CategoryId, string> = {
   avatari: "",
   "temi-carta": "classico-blu",
   "sfondi-tavolo": "verde-classico",
-  titoli: "maestro-di-bridge",
+  titoli: "apprendista",
 };
 
 /* ────────────────────────────────────────────── */

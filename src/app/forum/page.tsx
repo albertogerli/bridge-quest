@@ -147,8 +147,8 @@ export default function ForumPage() {
         <div className="flex gap-2 mb-5">
           {([
             { key: "recenti" as SortBy, label: "Recenti" },
-            { key: "votati" as SortBy, label: "Piu' votati" },
-            { key: "commentati" as SortBy, label: "Piu' commentati" },
+            { key: "votati" as SortBy, label: "Più votati" },
+            { key: "commentati" as SortBy, label: "Più commentati" },
           ]).map(({ key, label }) => (
             <button
               key={key}

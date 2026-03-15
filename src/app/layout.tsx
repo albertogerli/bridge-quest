@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
+    "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 199 moduli interattivi con video, quiz e pratica al tavolo.",
   metadataBase: new URL("https://bridgelab.it"),
   alternates: {
     canonical: "/",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BridgeLab - Impara il Bridge giocando",
     description:
-      "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
+      "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 199 moduli interattivi con video, quiz e pratica al tavolo.",
     url: "https://bridgelab.it",
     siteName: "BridgeLab",
     images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BridgeLab - Impara il Bridge giocando",
     description:
-      "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 168 moduli interattivi.",
+      "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 199 moduli interattivi.",
     images: ["/og-image.png"],
   },
   robots: {

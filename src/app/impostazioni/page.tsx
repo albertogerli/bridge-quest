@@ -226,7 +226,7 @@ export default function ImpostazioniPage() {
                 onClick={() => updateTextSize(size.key)}
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   textSize === size.key
-                    ? "border-[#003DA5] bg-[#003DA5]/8 text-[#003DA5] shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/15 text-[#003DA5] dark:text-blue-400 shadow-sm"
                     : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
@@ -255,7 +255,7 @@ export default function ImpostazioniPage() {
           className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center">
               <span className="text-purple-600 text-xl">✦</span>
             </div>
             <div>
@@ -270,7 +270,7 @@ export default function ImpostazioniPage() {
                 onClick={() => updateAnimSpeed(speed.key)}
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   animSpeed === speed.key
-                    ? "border-[#003DA5] bg-[#003DA5]/8 text-[#003DA5] shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/15 text-[#003DA5] dark:text-blue-400 shadow-sm"
                     : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
@@ -300,7 +300,7 @@ export default function ImpostazioniPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center">
                 <span className="text-amber-600 text-xl">{sound ? "🔊" : "🔇"}</span>
               </div>
               <div>
@@ -358,7 +358,7 @@ export default function ImpostazioniPage() {
                 onClick={() => setTheme(opt.key)}
                 className={`relative rounded-xl py-3 px-2 font-semibold transition-all duration-200 border-2 ${
                   theme === opt.key
-                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/15 text-[#003DA5] dark:text-[#003DA5]/70 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/15 text-[#003DA5] dark:text-blue-400 shadow-sm"
                     : "border-gray-150 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
@@ -464,7 +464,7 @@ export default function ImpostazioniPage() {
               >
                 <div className="flex items-center gap-3">
                   <span className="text-base">{AI_LEVEL_ICONS[level]}</span>
-                  <span className={`font-bold text-sm ${aiLevel === level ? "text-[#003DA5] dark:text-[#003DA5]/70" : "text-gray-800 dark:text-gray-200"}`}>
+                  <span className={`font-bold text-sm ${aiLevel === level ? "text-[#003DA5] dark:text-blue-400" : "text-gray-800 dark:text-gray-200"}`}>
                     {AI_LEVEL_LABELS[level]}
                   </span>
                   {aiLevel === level && (
@@ -493,7 +493,7 @@ export default function ImpostazioniPage() {
           className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
@@ -511,13 +511,13 @@ export default function ImpostazioniPage() {
                 onClick={() => updateProfile(p.key)}
                 className={`relative w-full text-left rounded-xl p-4 transition-all duration-200 border-2 ${
                   profile === p.key
-                    ? "border-[#003DA5] bg-[#003DA5]/8 shadow-sm"
+                    ? "border-[#003DA5] bg-[#003DA5]/8 dark:bg-[#003DA5]/10 shadow-sm"
                     : "border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 hover:border-gray-200 dark:hover:border-gray-600"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${p.color}`} />
-                  <span className={`font-bold text-sm ${profile === p.key ? "text-[#003DA5] dark:text-[#003DA5]/70" : "text-gray-800 dark:text-gray-200"}`}>
+                  <span className={`font-bold text-sm ${profile === p.key ? "text-[#003DA5] dark:text-blue-400" : "text-gray-800 dark:text-gray-200"}`}>
                     {p.label}
                   </span>
                   {profile === p.key && (
@@ -546,7 +546,7 @@ export default function ImpostazioniPage() {
           className="card-clean bg-white dark:bg-[#1a1f2e] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-[#2a3040]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 6h18" />
                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -580,9 +580,9 @@ export default function ImpostazioniPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="bg-red-50 border border-red-200 rounded-xl p-4"
+                className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4"
               >
-                <p className="text-red-700 text-sm font-semibold mb-1">Sei sicuro?</p>
+                <p className="text-red-700 dark:text-red-400 text-sm font-semibold mb-1">Sei sicuro?</p>
                 <p className="text-red-600/80 text-xs mb-4">
                   Questa azione cancellerà tutti i tuoi progressi, XP, badge e impostazioni. Non potrai annullarla.
                 </p>
@@ -630,7 +630,7 @@ export default function ImpostazioniPage() {
           ) : user ? (
             <>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/50 flex items-center justify-center">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
@@ -650,9 +650,9 @@ export default function ImpostazioniPage() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
-                    className="bg-rose-50 border border-rose-200 rounded-xl p-4"
+                    className="bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 rounded-xl p-4"
                   >
-                    <p className="text-rose-700 text-sm font-semibold mb-1">Vuoi anche cancellare i dati locali?</p>
+                    <p className="text-rose-700 dark:text-rose-400 text-sm font-semibold mb-1">Vuoi anche cancellare i dati locali?</p>
                     <p className="text-rose-600/80 text-xs mb-4">
                       Puoi scegliere se mantenere i progressi salvati localmente o cancellarli insieme al logout.
                     </p>

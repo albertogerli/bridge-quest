@@ -69,6 +69,7 @@ const TABLE_BG_STYLES: Record<string, string> = {
 
 // Title ID to display name mappings
 const TITLE_NAMES: Record<string, string> = {
+  "apprendista": "Apprendista",
   "maestro-di-bridge": "Maestro di Bridge",
   "stratega": "Stratega",
   "il-professore": "Il Professore",

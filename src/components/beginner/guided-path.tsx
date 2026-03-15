@@ -49,7 +49,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={`rounded-[22px] border border-[#d8d0c0] bg-white overflow-hidden ${
+      className={`rounded-[22px] border border-[#d8d0c0] dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] overflow-hidden ${
         isFull ? "shadow-lg" : "shadow-sm"
       }`}
     >
@@ -57,12 +57,12 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
       <div className={`px-5 ${isFull ? "pt-5 pb-3" : "pt-4 pb-2"}`}>
         <div className="flex items-center gap-2">
           <span className="text-base">🧭</span>
-          <h3 className={`font-bold text-[#12305f] ${isFull ? "text-lg" : "text-sm"}`}>
+          <h3 className={`font-bold text-[#12305f] dark:text-gray-100 ${isFull ? "text-lg" : "text-sm"}`}>
             Percorso Consigliato
           </h3>
         </div>
         {isFull && (
-          <p className="mt-1 text-sm text-[#5c677d]">
+          <p className="mt-1 text-sm text-[#5c677d] dark:text-gray-400">
             Tre passi per partire col piede giusto.
           </p>
         )}
@@ -86,20 +86,20 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                 <div
                   className={`flex items-center gap-3 rounded-2xl border p-3 transition-all ${
                     isDone
-                      ? "border-emerald-200 bg-emerald-50/50"
+                      ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20"
                       : isCurrent
-                        ? "border-[#c8a44e]/40 bg-[#fffdf5] shadow-sm shadow-[#c8a44e]/10"
-                        : "border-[#e5e0d5] bg-[#fafaf7]"
+                        ? "border-[#c8a44e]/40 dark:border-[#c8a44e]/30 bg-[#fffdf5] dark:bg-[#c8a44e]/10 shadow-sm shadow-[#c8a44e]/10"
+                        : "border-[#e5e0d5] dark:border-[#2a3040] bg-[#fafaf7] dark:bg-[#1a1f2e]/50"
                   }`}
                 >
                   {/* Step number / check */}
                   <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
                       isDone
-                        ? "bg-emerald-100"
+                        ? "bg-emerald-100 dark:bg-emerald-900/40"
                         : isCurrent
                           ? `bg-gradient-to-br ${s.gradient} shadow-md`
-                          : "bg-gray-100"
+                          : "bg-gray-100 dark:bg-gray-800"
                     }`}
                   >
                     {isDone ? (
@@ -114,16 +114,16 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                     <p
                       className={`text-sm font-semibold ${
                         isDone
-                          ? "text-emerald-700 line-through decoration-emerald-300"
+                          ? "text-emerald-700 dark:text-emerald-400 line-through decoration-emerald-300"
                           : isCurrent
-                            ? "text-[#12305f]"
-                            : "text-gray-400"
+                            ? "text-[#12305f] dark:text-gray-100"
+                            : "text-gray-400 dark:text-gray-500"
                       }`}
                     >
                       {s.label}
                     </p>
                     {(isFull || isCurrent) && (
-                      <p className="text-[11px] text-[#5c677d] mt-0.5 truncate">{s.sub}</p>
+                      <p className="text-[11px] text-[#5c677d] dark:text-gray-400 mt-0.5 truncate">{s.sub}</p>
                     )}
                   </div>
 
@@ -131,7 +131,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                   {!isDone && (
                     <ChevronRight
                       className={`h-4 w-4 shrink-0 ${
-                        isCurrent ? "text-[#c8a44e]" : "text-gray-300"
+                        isCurrent ? "text-[#c8a44e]" : "text-gray-300 dark:text-gray-600"
                       }`}
                     />
                   )}
@@ -144,8 +144,8 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
 
       {/* All done banner */}
       {activeIdx >= STEPS.length && (
-        <div className="border-t border-emerald-200 bg-emerald-50 px-5 py-3 text-center">
-          <p className="text-sm font-semibold text-emerald-700">
+        <div className="border-t border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-5 py-3 text-center">
+          <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
             ✨ Percorso completato! Sei pronto per il corso completo.
           </p>
         </div>

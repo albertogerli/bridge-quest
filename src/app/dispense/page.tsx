@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { courses, type CourseId, levelInfo } from "@/data/courses";
@@ -66,10 +66,10 @@ export default function DispensePage() {
             <span>/</span>
             <span className="text-[#003DA5] font-semibold">Dispense</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             Dispense & Infografiche
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Materiale didattico per ogni lezione
           </p>
         </motion.div>
@@ -91,7 +91,7 @@ export default function DispensePage() {
                 className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-[0.97] ${
                   isActive
                     ? `${colors.active} shadow-[0_3px_0_rgba(0,0,0,0.15)]`
-                    : `bg-white border-2 ${colors.border} ${colors.inactive} shadow-sm`
+                    : `bg-white dark:bg-[#1a1f2e] border-2 ${colors.border} ${colors.inactive} shadow-sm`
                 }`}
               >
                 <span className="text-lg">{course.icon}</span>
@@ -199,17 +199,26 @@ function InfographicCard({
 }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const colors = courseColors[courseId];
+
+  // Check if image already loaded (from cache)
+  useEffect(() => {
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, []);
   const lessonNumber = getLessonDisplayNumber(lessonId);
 
   return (
-    <div className="card-clean rounded-2xl bg-white overflow-hidden group">
+    <div className="card-clean rounded-2xl bg-white dark:bg-[#1a1f2e] overflow-hidden group">
       {/* Thumbnail */}
-      <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden">
+      <div className="relative aspect-[3/4] bg-gray-50 dark:bg-gray-800/50 overflow-hidden">
         {!error && imageSrc ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
+              ref={imgRef}
               src={imageSrc}
               alt={`Dispensa Lezione ${lessonNumber}`}
               className={`w-full h-full object-cover transition-all duration-300 ${
@@ -269,7 +278,7 @@ function InfographicCard({
 
       {/* Title */}
       <div className="p-2.5">
-        <h3 className="text-[12px] font-bold text-gray-800 leading-tight line-clamp-2">
+        <h3 className="text-[12px] font-bold text-gray-800 dark:text-gray-100 leading-tight line-clamp-2">
           {title}
         </h3>
         {locked ? (
