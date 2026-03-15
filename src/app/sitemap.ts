@@ -55,6 +55,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/glossario`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/scopri`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${baseUrl}/termini`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${baseUrl}/accessibilita`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 
   const lessonPages: MetadataRoute.Sitemap = courses.flatMap((course) =>
