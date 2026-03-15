@@ -282,8 +282,9 @@ export default function Home() {
   // While auth is loading, show spinner (prevents dashboard flash after logout)
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#1B5E3B] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center" role="status" aria-label="Caricamento in corso">
+        <div className="w-8 h-8 border-4 border-[#1B5E3B] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+        <span className="sr-only">Caricamento...</span>
       </div>
     );
   }
@@ -323,7 +324,7 @@ export default function Home() {
             className="fixed top-4 left-1/2 -translate-x-1/2 z-[60]"
           >
             <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl shadow-emerald-500/30">
-              <Zap className="w-5 h-5" />
+              <Zap className="w-5 h-5" aria-hidden="true" />
               <span className="text-sm font-bold">Bonus +50 XP dal tuo amico!</span>
             </div>
           </motion.div>
@@ -411,6 +412,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
+              aria-hidden="true"
             >
               {(["club", "diamond", "heart", "spade"] as const).map(
                 (suit, i) => (
@@ -428,7 +430,7 @@ export default function Home() {
             </motion.div>
 
             <h1 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-white leading-none font-display">
-              FIGB Bridge LAB
+              BridgeLab
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">
               <div className="h-px w-8 bg-white/30" />
@@ -437,6 +439,9 @@ export default function Home() {
               </p>
               <div className="h-px w-8 bg-white/30" />
             </div>
+            <p className="mt-1 text-xs text-white/60">
+              Piattaforma ufficiale <abbr title="Federazione Italiana Gioco Bridge">FIGB</abbr>
+            </p>
           </motion.div>
 
           {/* XP Card - hidden on desktop (sidebar shows it) */}
@@ -449,7 +454,7 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber/20">
-                  <Zap className="w-4 h-4 text-amber-300" />
+                  <Zap className="w-4 h-4 text-amber-300" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white">Livello {stats.level}</p>
@@ -490,7 +495,7 @@ export default function Home() {
                       <p className="text-[10px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">Riprendi</p>
                       <p className="text-sm font-bold text-[#1B5E3B] truncate">{nextModule.moduleTitle}</p>
                     </div>
-                    <svg className="h-5 w-5 text-[#1B5E3B]/50 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="h-5 w-5 text-[#1B5E3B]/50 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
@@ -502,7 +507,7 @@ export default function Home() {
                   size="lg"
                   className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#1B5E3B] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98]"
                 >
-                  <Target className="w-5 h-5 mr-2" />
+                  <Target className="w-5 h-5 mr-2" aria-hidden="true" />
                   Inizia il tuo viaggio
                 </Button>
               </Link>
@@ -526,15 +531,15 @@ export default function Home() {
             className="flex items-center gap-3 rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-3.5 hover:bg-[#1B5E3B]/8 transition-colors"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1B5E3B] text-white shrink-0">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                 <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
               </svg>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-gray-900">Crea un account gratuito</p>
-              <p className="text-[11px] text-gray-500">Salva i progressi e sincronizza su tutti i dispositivi</p>
+              <p className="text-[11px] text-gray-500">Salva i progressi e sincronizza su tutti i dispositivi. Gratis, senza carta di credito.</p>
             </div>
-            <svg className="w-4 h-4 text-[#1B5E3B] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-4 h-4 text-[#1B5E3B] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path d="M9 18l6-6-6-6" />
             </svg>
           </a>
@@ -591,8 +596,8 @@ export default function Home() {
             transition={{ delay: 1, type: "spring", stiffness: 300, damping: 25 }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
           >
-            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl shadow-amber/30">
-              <Zap className="w-5 h-5" />
+            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl shadow-amber/30" role="status" aria-label={`Login giornaliero: bonus ${10 + Math.min(stats.streak * 5, 50)} XP`}>
+              <Zap className="w-5 h-5" aria-hidden="true" />
               Login giornaliero: +{10 + Math.min(stats.streak * 5, 50)} {profile.xpLabel}
               {stats.streak > 1 && <span className="ml-1 text-amber-100">(streak x{stats.streak})</span>}
             </div>
@@ -617,8 +622,8 @@ export default function Home() {
                     : "bg-white dark:bg-[#1a1f2e] border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm dark:shadow-[0_3px_0_#141821]"
                 }`}>
                   <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200">
-                      {stats.dailyDone ? <CheckCircle2 className="w-6 h-6 text-emerald-600" /> : <Flame className="w-6 h-6 text-amber-600" />}
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200" role="img" aria-label="Sfida del giorno">
+                      {stats.dailyDone ? <CheckCircle2 className="w-6 h-6 text-emerald-600" aria-hidden="true" /> : <Flame className="w-6 h-6 text-amber-600" aria-hidden="true" />}
                     </div>
                     {!stats.dailyDone && (
                       <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
@@ -644,8 +649,8 @@ export default function Home() {
             >
               <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm dark:shadow-[0_3px_0_#141821]">
                 <div className="flex items-center justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200">
-                    {stats.streak >= 7 ? <Flame className="w-6 h-6 text-blue-600" /> : <CalendarDays className="w-6 h-6 text-blue-600" />}
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200" role="img" aria-label="Streak giornaliero">
+                    {stats.streak >= 7 ? <Flame className="w-6 h-6 text-blue-600" aria-hidden="true" /> : <CalendarDays className="w-6 h-6 text-blue-600" aria-hidden="true" />}
                   </div>
                   {stats.streak > 0 && (
                     <span className="text-[10px] font-bold text-blue-600 bg-blue-50 rounded-full px-2 py-0.5">
@@ -802,7 +807,7 @@ export default function Home() {
                   <p className="text-sm text-gray-700">
                     Tocca il pulsante <strong>Condividi</strong>{" "}
                     <span className="inline-block align-middle">
-                      <svg className="w-5 h-5 inline text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 inline text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                         <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
                         <polyline points="16 6 12 2 8 6" />
                         <line x1="12" y1="2" x2="12" y2="15" />
@@ -895,7 +900,7 @@ export default function Home() {
                       45 termini con quiz interattivi
                     </p>
                   </div>
-                  <svg className="w-4 h-4 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-4 h-4 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                     <path d="M9 18l6-6-6-6" />
                   </svg>
                 </div>
@@ -1000,6 +1005,7 @@ export default function Home() {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth={2.5}
+                      aria-hidden="true"
                     >
                       <polyline points="6,9 12,15 18,9" />
                     </svg>
@@ -1067,6 +1073,7 @@ export default function Home() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2.5}
+                    aria-hidden="true"
                   >
                     <polyline points="9,6 15,12 9,18" />
                   </svg>
@@ -1096,10 +1103,10 @@ export default function Home() {
       <section className="px-4 sm:px-5 pb-6 lg:hidden">
         <div className="mx-auto max-w-lg">
           <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-5 text-center">
-            <img src="/logo-bridgelab.svg" alt="BridgeLab" className="h-10 mx-auto mb-4" />
+            <img src="/logo-bridgelab.svg" alt="Logo BridgeLab" className="h-10 mx-auto mb-4" />
             <div className="flex items-center justify-center gap-5 mb-3">
-              <img src="/icons/logo-figb.png" alt="FIGB" className="h-12 w-auto" />
-              <img src="/icons/logo-coni.png" alt="CONI" className="h-9 w-auto" />
+              <img src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" className="h-12 w-auto" />
+              <img src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" className="h-9 w-auto" />
             </div>
             <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
               Un progetto della
@@ -1179,6 +1186,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
           fill="none"
           stroke="currentColor"
           strokeWidth={2.5}
+          aria-hidden="true"
         >
           <polyline points="9,6 15,12 9,18" />
         </svg>
@@ -1804,6 +1812,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
+            aria-hidden="true"
           >
             {(["club", "diamond", "heart", "spade"] as const).map((suit, i) => (
               <motion.div
@@ -1848,11 +1857,12 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             >
               Inizia gratis
             </a>
+            <p className="text-center text-xs text-white/60 -mt-1">Nessuna carta di credito richiesta</p>
             <a
               href="/login?mode=login"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-white/15 backdrop-blur-sm text-white font-bold text-sm hover:bg-white/25 border border-white/20 active:scale-[0.98] transition-all"
             >
-              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                 <polyline points="10 17 15 12 10 7" />
                 <line x1="15" y1="12" x2="3" y2="12" />
@@ -1869,7 +1879,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
         </div>
 
         {/* Fade to content */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#F5F2EB]" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#F5F2EB]" aria-hidden="true" />
       </section>
 
       {/* Features */}
@@ -1932,10 +1942,10 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
                 <p className="text-[10px] font-bold text-[#003DA5]/70 uppercase">Mani</p>
               </div>
             </div>
-            <img src="/logo-bridgelab.svg" alt="BridgeLab" className="h-10 mx-auto mb-4" />
+            <img src="/logo-bridgelab.svg" alt="Logo BridgeLab" className="h-10 mx-auto mb-4" />
             <div className="flex items-center justify-center gap-5 mb-3">
-              <img src="/icons/logo-figb.png" alt="FIGB" className="h-12 w-auto" />
-              <img src="/icons/logo-coni.png" alt="CONI" className="h-9 w-auto" />
+              <img src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" className="h-12 w-auto" />
+              <img src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" className="h-9 w-auto" />
             </div>
             <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
               Un progetto della
@@ -1965,6 +1975,7 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
             >
               Inizia gratis
             </a>
+            <p className="text-center text-[11px] text-gray-400 -mt-1">Nessuna carta di credito richiesta</p>
             <a
               href="/login?mode=login"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-white text-[#1B5E3B] font-semibold text-sm border-2 border-[#1B5E3B]/20 hover:border-[#1B5E3B]/40 transition-all"

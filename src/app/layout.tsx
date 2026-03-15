@@ -16,23 +16,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
-  keywords: [
-    "bridge",
-    "FIGB",
-    "federazione italiana gioco bridge",
-    "corso bridge",
-    "corso fiori",
-    "corso quadri",
-    "corso cuori",
-    "impara bridge",
-    "gioco carte",
-    "bridge lab",
-    "bridge online",
-    "lezioni bridge",
-    "dichiarazione bridge",
-    "gioco della carta",
-  ],
+    "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
   metadataBase: new URL("https://bridgelab.it"),
   alternates: {
     canonical: "/",
@@ -40,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BridgeLab - Impara il Bridge giocando",
     description:
-      "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
+      "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 168 moduli interattivi con video, quiz e pratica al tavolo.",
     url: "https://bridgelab.it",
     siteName: "BridgeLab",
     images: [
@@ -58,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BridgeLab - Impara il Bridge giocando",
     description:
-      "Impara il bridge con BridgeLab, la piattaforma ufficiale FIGB. 4 corsi, 49 lezioni e 168 moduli interattivi.",
+      "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 168 moduli interattivi.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -172,6 +156,31 @@ export default function RootLayout({
                   "numberOfLessons": 14
                 }
               ]
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "BridgeLab",
+              "url": "https://bridgelab.it",
+              "applicationCategory": "EducationalApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "description": "Piattaforma interattiva per imparare il bridge con corsi, quiz, video e pratica al tavolo.",
+              "inLanguage": "it",
+              "author": {
+                "@type": "Organization",
+                "name": "Federazione Italiana Gioco Bridge",
+                "url": "https://www.federbridge.it"
+              }
             }),
           }}
         />
