@@ -246,6 +246,43 @@ export default function GiocaPage() {
           </Link>
         </motion.div>
 
+        {/* Sfida IMP - prominent card */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.13 }}
+          className="mt-4"
+        >
+          <Link href="/amici" className="block" aria-label="Sfida IMP: sfida un amico a 1, 4 o 8 mani con punteggio IMP">
+            <div className="relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-violet-600 to-indigo-700">
+              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+              <div className="relative flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl">
+                  <Swords className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className="text-lg font-semibold text-white">Sfida IMP</h2>
+                    <Badge className="bg-amber-400/20 text-amber-200 text-[10px] font-bold border-0 animate-pulse">NUOVO</Badge>
+                  </div>
+                  <p className="text-sm text-white/70">
+                    Sfida un amico a 1, 4 o 8 mani con punteggio IMP
+                  </p>
+                </div>
+                <svg
+                  className="h-6 w-6 shrink-0 text-white/60"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <polyline points="9,6 15,12 9,18" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+
         {/* Weekly Challenge Banner */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -440,6 +477,7 @@ export default function GiocaPage() {
                 </div>
               </div>
             </Link>
+
           </div>
         </motion.div>
 

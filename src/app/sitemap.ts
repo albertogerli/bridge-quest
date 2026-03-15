@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { courses } from "@/data/courses";
+import { getAllClubSlugs } from "@/lib/asd-utils";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://bridgelab.it";
@@ -85,6 +86,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/amici`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.6,
+    },
   ];
 
   const lessonPages: MetadataRoute.Sitemap = courses.flatMap((course) =>
@@ -96,8 +103,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
+  // Club pages
+  const clubPages: MetadataRoute.Sitemap = getAllClubSlugs().map(({ slug }) => ({
+    url: `${baseUrl}/circolo/${slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
   return [
     ...staticPages,
     ...lessonPages,
+    ...clubPages,
   ];
 }

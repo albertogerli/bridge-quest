@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { courses, levelInfo, getCourseStats, type CourseId } from "@/data/courses";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_LIST } from "@/data/asd-list";
+import { getAsdNameById, asdNameToSlug } from "@/lib/asd-utils";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import { useGameHistory } from "@/hooks/use-game-history";
@@ -27,6 +28,8 @@ import {
   Sparkles, Snowflake, Clock, TrendingUp
 } from "lucide-react";
 import { StreakFreezeCard } from "@/components/streak-freeze-card";
+import { useChallenges, type ChallengeData, type ChallengeStats } from "@/hooks/use-challenges";
+import { Swords } from "lucide-react";
 import { useSecretAchievements } from "@/hooks/use-secret-achievements";
 import SecretAchievementPopup from "@/components/secret-achievement-popup";
 
@@ -66,6 +69,10 @@ export default function ProfiloPage() {
   const gameStats = getStats();
   const { checkAchievements, earnedSecretAchievements, totalSecretAchievements } = useSecretAchievements();
   const [pendingAchievement, setPendingAchievement] = useState<{ id: string; name: string; icon: string; description: string } | null>(null);
+  const { getHistory, getStats: getChallengeStats } = useChallenges();
+  const [challengeHistory, setChallengeHistory] = useState<ChallengeData[]>([]);
+  const [challengeStats, setChallengeStats] = useState<ChallengeStats | null>(null);
+  const [challengeHistoryOpen, setChallengeHistoryOpen] = useState(false);
 
   // ===== Chart Data Computations =====
 
@@ -184,6 +191,18 @@ export default function ProfiloPage() {
       setInvitesSent(getInviteCount());
     } catch {}
   }, []);
+
+  // Fetch challenge history & stats
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        const [history, stats] = await Promise.all([getHistory(10), getChallengeStats()]);
+        if (history) setChallengeHistory(history as ChallengeData[]);
+        if (stats) setChallengeStats(stats);
+      } catch {}
+    })();
+  }, [user, getHistory, getChallengeStats]);
 
   const handleLogout = useCallback(async (clearData: boolean) => {
     setLoggingOut(true);
@@ -365,6 +384,18 @@ export default function ProfiloPage() {
             {user && authProfile?.bbo_username && (
               <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
             )}
+            {user && authProfile?.asd_id && (() => {
+              const clubName = getAsdNameById(authProfile.asd_id);
+              if (!clubName) return null;
+              return (
+                <Link href={`/circolo/${asdNameToSlug(clubName)}`} className="text-sm text-[#003DA5] hover:underline flex items-center gap-1 mt-0.5">
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                  </svg>
+                  {clubName}
+                </Link>
+              );
+            })()}
             <div className="flex items-center gap-2 mt-1.5">
               <Badge className="bg-[#003DA5] text-white font-medium text-xs">
                 Livello {level}
@@ -597,6 +628,122 @@ export default function ProfiloPage() {
           </Link>
         </motion.div>
 
+        {/* Challenge History IMP */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.23 }}
+            className="mt-4"
+          >
+            <button
+              className="w-full rounded-2xl bg-white border-2 border-[#e5e7eb] p-4 text-left shadow-sm hover:shadow-lg transition-shadow"
+              onClick={() => setChallengeHistoryOpen(!challengeHistoryOpen)}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 border border-violet-200">
+                  <Swords className="w-5 h-5 text-violet-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-gray-900">Sfide IMP</p>
+                  <p className="text-[11px] text-gray-500">
+                    {challengeStats
+                      ? `${challengeStats.played} sfide · ${challengeStats.won} vinte · ${challengeStats.played > 0 ? Math.round((challengeStats.won / challengeStats.played) * 100) : 0}%`
+                      : "Sfida un amico per iniziare"}
+                  </p>
+                </div>
+                <motion.svg
+                  className="h-5 w-5 text-gray-400 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  animate={{ rotate: challengeHistoryOpen ? 90 : 0 }}
+                >
+                  <polyline points="9,6 15,12 9,18" />
+                </motion.svg>
+              </div>
+            </button>
+            <AnimatePresence>
+              {challengeHistoryOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-2 space-y-2">
+                    {/* Stats summary */}
+                    {challengeStats && challengeStats.played > 0 && (
+                      <div className="grid grid-cols-4 gap-2 rounded-xl bg-violet-50 border border-violet-200 p-3">
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-gray-900">{challengeStats.played}</p>
+                          <p className="text-[10px] text-gray-500">Giocate</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-emerald-600">{challengeStats.won}</p>
+                          <p className="text-[10px] text-gray-500">Vinte</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-red-500">{challengeStats.lost}</p>
+                          <p className="text-[10px] text-gray-500">Perse</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-[#003DA5]">{challengeStats.avg_imp_margin > 0 ? "+" : ""}{Math.round(challengeStats.avg_imp_margin)}</p>
+                          <p className="text-[10px] text-gray-500">IMP medio</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* History list */}
+                    {challengeHistory.length > 0 ? (
+                      challengeHistory.map((ch) => {
+                        const isChallenger = ch.challenger_id === user.id;
+                        const opponentName = isChallenger ? (ch.opponent_name || "Avversario") : (ch.challenger_name || "Avversario");
+                        const myImps = isChallenger ? ch.challenger_imps : ch.opponent_imps;
+                        const theirImps = isChallenger ? ch.opponent_imps : ch.challenger_imps;
+                        const won = (myImps ?? 0) > (theirImps ?? 0);
+                        const drawn = myImps === theirImps;
+                        const netImp = (myImps ?? 0) - (theirImps ?? 0);
+                        return (
+                          <Link key={ch.id} href={`/gioca/sfida-imp?challengeId=${ch.id}`}>
+                            <div className="rounded-xl bg-white border border-gray-200 p-3 flex items-center gap-3 hover:shadow-md transition-shadow">
+                              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
+                                drawn ? "bg-gray-100 text-gray-500" : won ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"
+                              }`}>
+                                {drawn ? "=" : won ? "W" : "L"}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-semibold text-gray-900 truncate">vs {opponentName}</p>
+                                <p className="text-[10px] text-gray-400">
+                                  {ch.board_count} mani · {ch.completed_at ? new Date(ch.completed_at).toLocaleDateString("it-IT", { day: "numeric", month: "short" }) : ""}
+                                </p>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <p className={`text-sm font-bold ${netImp > 0 ? "text-emerald-600" : netImp < 0 ? "text-red-500" : "text-gray-500"}`}>
+                                  {netImp > 0 ? "+" : ""}{netImp} IMP
+                                </p>
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      })
+                    ) : (
+                      <div className="text-center py-6">
+                        <Swords className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-xs text-gray-400">Nessuna sfida completata</p>
+                        <Link href="/amici" className="text-xs text-[#003DA5] font-semibold hover:underline mt-1 inline-block">
+                          Sfida un amico →
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+
         {/* Streak Freeze */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -786,7 +933,7 @@ export default function ProfiloPage() {
                   onClick={() => {
                     setEditName(authProfile?.display_name || "");
                     setEditBbo(authProfile?.bbo_username || "");
-                    setEditAsdSelected("");
+                    setEditAsdSelected(authProfile?.asd_id ? (getAsdNameById(authProfile.asd_id) || "") : "");
                     setEditAvatarFile(null);
                     setEditAvatarPreview("");
                     setEditing(true);

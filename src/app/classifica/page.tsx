@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { asdNameToSlug } from "@/lib/asd-utils";
 import { courses, getLessonIdsForCourse, type CourseId } from "@/data/courses";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2 } from "lucide-react";
 
@@ -699,7 +700,10 @@ export default function ClassificaPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-bold text-sm text-gray-900 truncate">
-                              {asd.asd_name}
+                              <Link href={`/circolo/${asdNameToSlug(asd.asd_name)}`} className="hover:underline hover:text-[#003DA5] transition-colors inline-flex items-center gap-1">
+                                {asd.asd_name}
+                                <span className="text-gray-300 text-xs">&rsaquo;</span>
+                              </Link>
                             </p>
                             <p className="text-[11px] text-gray-500">
                               {asd.member_count} {asd.member_count === 1 ? "membro" : "membri"}

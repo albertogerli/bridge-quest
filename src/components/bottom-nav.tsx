@@ -24,7 +24,7 @@ export function BottomNav() {
           </div>
           {/* Right group */}
           <div className="flex flex-1 justify-around">
-            <NavItem href="/forum" icon="forum" label="Forum" active={isActive("/forum")} />
+            <NavItem href="/amici" icon="friends" label="Amici" active={isActive("/amici")} />
             <NavItem href="/classifica" icon="trophy" label="Classifica" active={isActive("/classifica")} />
             <NavItem href="/profilo" icon="user" label="Profilo" active={isActive("/profilo")} />
           </div>
@@ -86,6 +86,14 @@ function NavItem({
     forum: (
       <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} className="h-[22px] w-[22px]">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+    friends: (
+      <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} className="h-[22px] w-[22px]">
+        <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 00-3-3.87" />
+        <path d="M16 3.13a4 4 0 010 7.75" />
       </svg>
     ),
     trophy: (

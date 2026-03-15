@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DesktopNav } from "@/components/desktop-nav";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
@@ -10,6 +10,8 @@ import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider } from "@/contexts/auth-provider";
 import { CookieBanner } from "@/components/cookie-banner";
 import { SiteFooter } from "@/components/site-footer";
+import { useExitIntent } from "@/hooks/use-exit-intent";
+import { ExitIntentModal } from "@/components/exit-intent-modal";
 import type { UserProfile } from "@/hooks/use-profile";
 
 /** Routes that should be full-screen (no nav, no sidebar) */
@@ -25,8 +27,10 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
 
 function LayoutShellInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const isFullScreen = FULL_SCREEN_ROUTES.some((r) => pathname.startsWith(r));
   const [profile, setProfile] = useState<UserProfile>("adulto");
+  const { showExitModal, setShowExitModal } = useExitIntent();
 
   // Load profile for visual adaptation
   useEffect(() => {
@@ -86,6 +90,16 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Cookie consent banner */}
       <CookieBanner />
+
+      {/* Exit intent modal */}
+      <ExitIntentModal
+        open={showExitModal}
+        onOpenChange={setShowExitModal}
+        onPlay={() => {
+          setShowExitModal(false);
+          router.push('/gioca/smazzata');
+        }}
+      />
     </div>
   );
 }

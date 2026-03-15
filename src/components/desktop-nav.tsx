@@ -9,6 +9,7 @@ const navItems = [
   { href: "/lezioni", icon: "book", label: "Lezioni" },
   { href: "/dispense", icon: "dispense", label: "Dispense" },
   { href: "/gioca", icon: "play", label: "Gioca" },
+  { href: "/amici", icon: "friends", label: "Amici" },
   { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/classifica", icon: "trophy", label: "Classifica" },
   { href: "/negozio", icon: "shop", label: "Negozio" },
@@ -40,6 +41,14 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
   play: () => (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-0.5">
       <path d="M8 5v14l11-7z" />
+    </svg>
+  ),
+  friends: (a) => (
+    <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
+      <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 00-3-3.87" />
+      <path d="M16 3.13a4 4 0 010 7.75" />
     </svg>
   ),
   forum: (a) => (
