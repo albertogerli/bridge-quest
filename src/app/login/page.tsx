@@ -114,7 +114,7 @@ function LoginContent() {
           if (err.message.toLowerCase().includes("rate limit")) {
             setError("Troppe richieste. Attendi qualche minuto e riprova.");
           } else if (err.message.includes("already registered")) {
-            setError("Questa email è già registrata. Prova ad accedere.");
+            setError("already_registered");
           } else {
             setError(err.message);
           }
@@ -410,7 +410,40 @@ function LoginContent() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-red-50 text-red-600 text-sm font-medium rounded-xl px-4 py-3"
             >
-              {error}
+              {error === "already_registered" ? (
+                <div className="space-y-2">
+                  <p>Questa email è già registrata. Prova ad accedere.</p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => { setMode("login"); setError(""); }}
+                      className="text-xs font-bold text-[#003DA5] hover:underline"
+                    >
+                      Vai al login
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!email.trim()) return;
+                        setError("");
+                        setLoading(true);
+                        const { error: err } = await resetPassword(email.trim());
+                        setLoading(false);
+                        if (err) {
+                          setError("Errore nell'invio dell'email di reset. Riprova.");
+                        } else {
+                          setSuccess("Email di reset inviata! Controlla la tua casella di posta.");
+                        }
+                      }}
+                      className="text-xs font-bold text-[#003DA5] hover:underline"
+                    >
+                      Password dimenticata?
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                error
+              )}
             </motion.div>
           )}
           {success && (
