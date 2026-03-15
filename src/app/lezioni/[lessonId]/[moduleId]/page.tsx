@@ -380,6 +380,8 @@ export default function ModulePage({
 
   const handleStepAdvance = useCallback((nextStep: number) => {
     setCurrentStep(nextStep);
+    // Scroll to top so the new content is visible
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (!stepsViewed.has(nextStep)) {
       setStepsViewed((prev) => new Set(prev).add(nextStep));
       // Award small XP for reading content
@@ -1711,7 +1713,18 @@ export default function ModulePage({
         </AnimatePresence>
 
         {/* Maestro video - first module of each lesson, shown at start */}
-        <MaestroVideoInline lessonId={lesson.id} moduleIndex={moduleIndex} currentStep={currentStep} profile={profile.profile} />
+        <MaestroVideoInline
+          lessonId={lesson.id}
+          moduleIndex={moduleIndex}
+          currentStep={currentStep}
+          profile={profile.profile}
+          onDismiss={() => {
+            // Auto-advance to next step when video is dismissed
+            if (currentStep === 0 && totalSteps > 1) {
+              handleStepAdvance(1);
+            }
+          }}
+        />
 
         {/* Content blocks */}
         <div>
@@ -2114,8 +2127,9 @@ export default function ModulePage({
 }
 
 /** Maestro video inline: shows on the first module of each lesson, at step 0 */
-function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile }: {
+function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile, onDismiss }: {
   lessonId: number; moduleIndex: number; currentStep: number; profile?: string;
+  onDismiss?: () => void;
 }) {
   const [dismissed, setDismissed] = useState(false);
 
@@ -2128,10 +2142,11 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile }: {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, height: 0 }}
       transition={{ delay: 0.1 }}
       className="mb-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
     >
-      <div className="relative w-full" style={{ aspectRatio: "9/16" }}>
+      <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
         <iframe
           src={youtubeEmbed}
           className="absolute inset-0 w-full h-full"
@@ -2140,7 +2155,11 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile }: {
           title="Maestro Franci introduce la lezione"
         />
         <button
-          onClick={() => setDismissed(true)}
+          onClick={() => {
+            setDismissed(true);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            onDismiss?.();
+          }}
           className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
           aria-label="Chiudi video"
         >
