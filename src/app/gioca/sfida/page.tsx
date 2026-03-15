@@ -16,6 +16,8 @@ import { BenStatus } from "@/components/bridge/ben-status";
 import { GameTutorial } from "@/components/bridge/game-tutorial";
 import { ShareResult } from "@/components/bridge/share-result";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { BonusHandModal } from "@/components/bonus-hand-modal";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
@@ -52,6 +54,7 @@ function markDailyCompleted() {
 }
 
 export default function SfidaDelGiornoPage() {
+  const router = useRouter();
   const smazzata = getDailySmazzata();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
@@ -64,6 +67,7 @@ export default function SfidaDelGiornoPage() {
   const { play } = useSound();
   const [showCelebration, setShowCelebration] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [showBonus, setShowBonus] = useState(false);
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -129,6 +133,12 @@ export default function SfidaDelGiornoPage() {
       awardGameXp(`sfida-${today}`, totalEarned);
       try { updateLastActivity(); } catch {}
       if (!alreadyCompleted) markDailyCompleted();
+      // Mark bonus hand as available for today
+      const bonusUsed = localStorage.getItem(`bq_bonus_used_${today}`) === "1";
+      if (!bonusUsed) {
+        localStorage.setItem(`bq_bonus_available_${today}`, "1");
+        setTimeout(() => setShowBonus(true), 1500);
+      }
       // Sync to Supabase
       saveGameResult({
         gameType: "sfida",
@@ -339,6 +349,19 @@ export default function SfidaDelGiornoPage() {
               >
                 Rigioca
               </Button>
+              {(() => {
+                const td = new Date().toISOString().slice(0, 10);
+                const ba = typeof window !== 'undefined' && localStorage.getItem(`bq_bonus_available_${td}`) === "1";
+                const bu = typeof window !== 'undefined' && localStorage.getItem(`bq_bonus_used_${td}`) === "1";
+                return ba && !bu;
+              })() && (
+                <Button
+                  onClick={() => setShowBonus(true)}
+                  className="rounded-xl bg-amber-600 hover:bg-amber-700 text-sm font-bold h-12 px-6 shadow-lg shadow-amber-500/25"
+                >
+                  Mano Bonus 2x
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -467,6 +490,16 @@ export default function SfidaDelGiornoPage() {
           </motion.div>
         )}
       </div>
+
+      {/* Bonus Hand Modal */}
+      <BonusHandModal
+        open={showBonus}
+        onOpenChange={setShowBonus}
+        onPlay={() => {
+          localStorage.setItem('bq_bonus_mode', '1');
+          router.push('/gioca/smazzata');
+        }}
+      />
     </div>
   );
 }

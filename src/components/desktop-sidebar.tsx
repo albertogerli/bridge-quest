@@ -7,6 +7,7 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards } from "@/data/collectible-cards";
 import { useProfile } from "@/hooks/use-profile";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { DailyCountdown } from "@/components/daily-countdown";
 
 const miniGames = [
   { href: "/gioca/quiz-lampo", emoji: "⚡", label: "Quiz Lampo", color: "bg-rose-50 border-rose-200 text-rose-700" },
@@ -141,6 +142,7 @@ export function DesktopSidebar() {
                 <p className="text-[11px] text-gray-500 dark:text-gray-400">
                   {stats.dailyDone ? "Completata! Torna domani" : "Gioca la mano quotidiana"}
                 </p>
+                <DailyCountdown variant="compact" dailyDone={stats.dailyDone} />
               </div>
               {!stats.dailyDone && (
                 <span className="text-[10px] font-medium text-[#c8a44e] bg-[#c8a44e]/10 border border-[#c8a44e]/20 rounded-full px-2 py-0.5">
@@ -303,6 +305,24 @@ export function DesktopSidebar() {
                 <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">
                   {unlockedCards.length}/{totalCards} sbloccate
                 </p>
+              </div>
+              <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <polyline points="9,6 15,12 9,18" />
+              </svg>
+            </div>
+          </div>
+        </Link>
+
+        {/* Amici */}
+        <Link href="/amici" aria-label="Amici">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-800">
+                <span className="text-lg">👥</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Amici</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Cerca e sfida altri giocatori</p>
               </div>
               <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="9,6 15,12 9,18" />

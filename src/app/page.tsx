@@ -20,6 +20,8 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
 import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
 import { DidactaBanner } from "@/components/didacta-banner";
+import { PendingChallengesBanner } from "@/components/pending-challenges-banner";
+import { DailyCountdown } from "@/components/daily-countdown";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { GuidedPath } from "@/components/beginner/guided-path";
 import { LostCard } from "@/components/beginner/lost-card";
@@ -91,6 +93,7 @@ function useLocalStats() {
   const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
   const [dailyDone, setDailyDone] = useState(false);
   const [dailyLoginAwarded, setDailyLoginAwarded] = useState(false);
+  const [streakAtRisk, setStreakAtRisk] = useState(false);
 
   useEffect(() => {
     try {
@@ -102,6 +105,13 @@ function useLocalStats() {
       // Check daily challenge
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
+
+      // Check if streak is at risk (>18h since last activity)
+      const lastActivity = localStorage.getItem("bq_last_activity");
+      if (lastActivity && currentStreak > 0) {
+        const hoursAgo = (Date.now() - new Date(lastActivity).getTime()) / (1000 * 60 * 60);
+        setStreakAtRisk(hoursAgo > 18);
+      }
 
       // Daily login XP: award 10 XP + streak bonus on first visit per day
       const lastLogin = localStorage.getItem("bq_last_login");
@@ -135,7 +145,7 @@ function useLocalStats() {
   const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
   const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
 
-  return { xp, streak, completedModules, level, xpInLevel, levelName, dailyDone, dailyLoginAwarded };
+  return { xp, streak, completedModules, level, xpInLevel, levelName, dailyDone, dailyLoginAwarded, streakAtRisk };
 }
 
 export default function Home() {
@@ -605,6 +615,19 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* ===== PENDING IMP CHALLENGES ===== */}
+      <section className="px-4 sm:px-5 -mt-2 relative z-10">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <PendingChallengesBanner />
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== DAILY CHALLENGE + STREAK ===== (hidden on desktop, sidebar shows these) */}
       <section className="px-4 sm:px-5 -mt-6 relative z-10 lg:hidden">
         <div className="mx-auto max-w-lg">
@@ -637,6 +660,9 @@ export default function Home() {
                   <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                     {stats.dailyDone ? "Completata!" : "Gioca la mano quotidiana"}
                   </p>
+                  <div className="mt-2">
+                    <DailyCountdown variant="compact" dailyDone={stats.dailyDone} />
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -647,7 +673,11 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm dark:shadow-[0_3px_0_#141821]">
+              <div className={`rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 shadow-sm dark:shadow-[0_3px_0_#141821] ${
+                stats.streakAtRisk
+                  ? "border-2 border-red-400 dark:border-red-500 animate-pulse"
+                  : "border border-[#e5e7eb] dark:border-[#2a3040]"
+              }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200" role="img" aria-label="Streak giornaliero">
                     {stats.streak >= 7 ? <Flame className="w-6 h-6 text-blue-600" aria-hidden="true" /> : <CalendarDays className="w-6 h-6 text-blue-600" aria-hidden="true" />}
@@ -661,6 +691,11 @@ export default function Home() {
                 <p className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-100">
                   Streak: {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
                 </p>
+                {stats.streakAtRisk && (
+                  <p className="mt-1 text-xs font-semibold text-red-600 dark:text-red-400">
+                    La tua streak è a rischio!
+                  </p>
+                )}
                 <div className="mt-2 flex gap-1">
                   {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
                     <div

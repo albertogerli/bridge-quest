@@ -16,7 +16,7 @@ self.addEventListener("notificationclick", function (event) {
         }
         // Otherwise, open a new window
         if (clients.openWindow) {
-          return clients.openWindow("/");
+          return clients.openWindow(event.notification.data?.url || "/gioca/sfida");
         }
       })
   );

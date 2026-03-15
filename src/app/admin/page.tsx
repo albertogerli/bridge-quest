@@ -23,6 +23,11 @@ interface UserRow {
   last_login: string | null;
 }
 
+interface DailyActivity {
+  date: string;
+  activeUsers: { id: string; display_name: string | null; last_login: string }[];
+}
+
 interface Stats {
   total: number;
   today: number;
@@ -38,6 +43,7 @@ interface Stats {
   retention7d: number;
   hourlySignups: number[];
   dailySignups: { date: string; count: number }[];
+  dailyActive: DailyActivity[];
   topUsers: UserRow[];
   asdDistribution: { name: string; count: number }[];
   maxStreak: number;
@@ -74,6 +80,7 @@ export default function AdminPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -180,6 +187,33 @@ export default function AdminPage() {
           dailySignups.push({ date: key, count: dailyMap.get(key) || 0 });
         }
 
+        // Daily active users (last 14 days)
+        const dailyActiveMap = new Map<string, { id: string; display_name: string | null; last_login: string }[]>();
+        for (let i = 0; i < 14; i++) {
+          const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+          const key = d.toISOString().split("T")[0];
+          dailyActiveMap.set(key, []);
+        }
+        for (const u of profiles) {
+          const login = parseLogin(u.last_login);
+          if (login) {
+            const loginDay = login.toISOString().split("T")[0];
+            if (dailyActiveMap.has(loginDay)) {
+              dailyActiveMap.get(loginDay)!.push({
+                id: u.id,
+                display_name: u.display_name,
+                last_login: u.last_login!,
+              });
+            }
+          }
+        }
+        const dailyActive: DailyActivity[] = [];
+        for (let i = 0; i < 14; i++) {
+          const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+          const key = d.toISOString().split("T")[0];
+          dailyActive.push({ date: key, activeUsers: dailyActiveMap.get(key) || [] });
+        }
+
         // Top 10 users by XP
         const topUsers = [...mappedUsers]
           .sort((a, b) => (b.xp || 0) - (a.xp || 0))
@@ -218,6 +252,7 @@ export default function AdminPage() {
           retention7d,
           hourlySignups,
           dailySignups,
+          dailyActive,
           topUsers,
           asdDistribution,
           maxStreak,
@@ -673,6 +708,87 @@ export default function AdminPage() {
                   <span className="text-[9px] text-gray-400">oggi</span>
                 </div>
               </div>
+            </div>
+
+            {/* Daily Active Users - last 14 days */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
+                Utenti attivi per giorno (ultimi 14 giorni)
+              </h2>
+              {/* Bar chart */}
+              <div className="flex items-end gap-1 mb-4" style={{ height: 80 }}>
+                {stats?.dailyActive && (() => {
+                  const reversed = [...stats.dailyActive].reverse();
+                  const maxActive = Math.max(...reversed.map(d => d.activeUsers.length), 1);
+                  return reversed.map((d) => {
+                    const count = d.activeUsers.length;
+                    const barH = count > 0 ? Math.max((count / maxActive) * 64, 6) : 0;
+                    const isToday = d.date === new Date().toISOString().split("T")[0];
+                    const isExpanded = expandedDay === d.date;
+                    return (
+                      <div
+                        key={d.date}
+                        className="flex-1 flex flex-col items-center justify-end h-full cursor-pointer"
+                        onClick={() => setExpandedDay(isExpanded ? null : d.date)}
+                        title={`${d.date}: ${count} utenti attivi`}
+                      >
+                        {count > 0 && (
+                          <span className="text-[8px] font-bold text-gray-500 mb-0.5">{count}</span>
+                        )}
+                        <div
+                          className={`w-full rounded-t transition-all ${isExpanded ? "bg-violet-500" : isToday ? "bg-emerald-500" : "bg-teal-500/70"}`}
+                          style={{ height: barH }}
+                        />
+                        <span className="text-[8px] text-gray-400 mt-0.5">
+                          {d.date.slice(8)}
+                        </span>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+              <div className="flex justify-between mb-3">
+                <span className="text-[9px] text-gray-400">{stats?.dailyActive?.[13]?.date.slice(5)}</span>
+                <span className="text-[9px] text-gray-400">oggi</span>
+              </div>
+
+              {/* Expanded day detail */}
+              {expandedDay && stats?.dailyActive && (() => {
+                const day = stats.dailyActive.find(d => d.date === expandedDay);
+                if (!day) return null;
+                const dayLabel = new Date(expandedDay + "T12:00:00").toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+                return (
+                  <div className="border-t border-gray-100 pt-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-sm font-bold text-gray-900 capitalize">{dayLabel}</h3>
+                      <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">
+                        {day.activeUsers.length} utenti
+                      </span>
+                    </div>
+                    {day.activeUsers.length > 0 ? (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 max-h-48 overflow-y-auto">
+                        {day.activeUsers
+                          .sort((a, b) => new Date(b.last_login).getTime() - new Date(a.last_login).getTime())
+                          .map((u) => (
+                          <div key={u.id} className="flex items-center gap-2 text-xs bg-gray-50 rounded-lg px-2.5 py-1.5">
+                            <div className="w-6 h-6 rounded-full bg-[#003DA5]/10 flex items-center justify-center text-[10px] font-bold text-[#003DA5] shrink-0">
+                              {(u.display_name || "?")[0].toUpperCase()}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-gray-900 truncate">{u.display_name || "Anonimo"}</p>
+                              <p className="text-[10px] text-gray-400">
+                                {isFullTimestamp(u.last_login) ? new Date(u.last_login).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : ""}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-400">Nessun utente attivo questo giorno</p>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Top 10 + ASD row */}

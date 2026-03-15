@@ -36,20 +36,33 @@ export function awardGameXp(gameId: string, xp: number): number {
       return 0;
     }
 
+    // Check bonus mode (2x XP) — must be checked before awarding
+    let xpToAward = xp;
+    const bonusMode = localStorage.getItem('bq_bonus_mode') === '1';
+    if (bonusMode) {
+      xpToAward *= 2;
+      localStorage.removeItem('bq_bonus_mode');
+    }
+
     // Award XP
     const prev = parseInt(localStorage.getItem(XP_KEY) || "0", 10);
-    localStorage.setItem(XP_KEY, String(prev + xp));
+    localStorage.setItem(XP_KEY, String(prev + xpToAward));
 
     // Increment hands played
     const hp = parseInt(localStorage.getItem(HANDS_KEY) || "0", 10);
     localStorage.setItem(HANDS_KEY, String(hp + 1));
+
+    // Increment daily hand counter
+    const today = new Date().toISOString().slice(0, 10);
+    const ht = parseInt(localStorage.getItem(`bq_hands_today_${today}`) || "0", 10);
+    localStorage.setItem(`bq_hands_today_${today}`, String(ht + 1));
 
     // Mark as completed (keep max 500 entries to avoid bloat)
     completed.push(gameId);
     if (completed.length > 500) completed.splice(0, completed.length - 500);
     localStorage.setItem(COMPLETED_KEY, JSON.stringify(completed));
 
-    return xp;
+    return xpToAward;
   } catch {
     return 0;
   }

@@ -211,6 +211,39 @@ export function useNotifications() {
     return () => clearTimeout(timer);
   }, [enabled]);
 
+  // Notify when someone sends a challenge
+  const notifyChallenge = useCallback((challengerName: string) => {
+    if (!enabled) return;
+    setTimeout(() => {
+      showNotification(
+        "Nuova sfida!",
+        `${challengerName} ti ha sfidato a bridge! Accetta la sfida.`,
+      );
+    }, 1000);
+  }, [enabled]);
+
+  // Notify when challenge results are ready
+  const notifyChallengeResult = useCallback((opponentName: string) => {
+    if (!enabled) return;
+    setTimeout(() => {
+      showNotification(
+        "Risultati disponibili!",
+        `I risultati della sfida con ${opponentName} sono pronti!`,
+      );
+    }, 1000);
+  }, [enabled]);
+
+  // Notify when someone sends a friend request
+  const notifyFriendRequest = useCallback((senderName: string) => {
+    if (!enabled) return;
+    setTimeout(() => {
+      showNotification(
+        "Richiesta di amicizia",
+        `${senderName} vuole aggiungerti come amico!`,
+      );
+    }, 1000);
+  }, [enabled]);
+
   return {
     supported,
     permission,
@@ -220,5 +253,8 @@ export function useNotifications() {
     checkReminders,
     scheduleReminder,
     notifyLessonComplete,
+    notifyChallenge,
+    notifyChallengeResult,
+    notifyFriendRequest,
   };
 }
