@@ -23,6 +23,12 @@ interface UserRow {
   last_login: string | null;
 }
 
+interface LoginRecord {
+  id: string;
+  user_id: string;
+  logged_in_at: string;
+}
+
 interface DailyActivity {
   date: string;
   activeUsers: { id: string; display_name: string | null; last_login: string }[];
@@ -82,6 +88,7 @@ export default function AdminPage() {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [loginHistory, setLoginHistory] = useState<LoginRecord[]>([]);
 
   const supabase = createClient();
 
@@ -101,6 +108,15 @@ export default function AdminPage() {
         setLoading(false);
         return;
       }
+
+      // Fetch login history (last 30 days)
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const { data: logins } = await supabase
+        .from("login_history")
+        .select("id, user_id, logged_in_at")
+        .gte("logged_in_at", thirtyDaysAgo)
+        .order("logged_in_at", { ascending: false });
+      setLoginHistory((logins as LoginRecord[]) ?? []);
 
       if (profiles) {
         const mappedUsers: UserRow[] = profiles.map((u: any) => ({
@@ -188,19 +204,35 @@ export default function AdminPage() {
           dailySignups.push({ date: key, count: dailyMap.get(key) || 0 });
         }
 
-        // Daily active users (last 14 days)
-        const dailyActiveMap = new Map<string, { id: string; display_name: string | null; last_login: string }[]>();
+        // Daily active users (last 14 days) — from login_history table
+        const dailyActiveMap = new Map<string, Map<string, { id: string; display_name: string | null; last_login: string }>>();
         for (let i = 0; i < 14; i++) {
           const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
           const key = d.toISOString().split("T")[0];
-          dailyActiveMap.set(key, []);
+          dailyActiveMap.set(key, new Map());
         }
+        // Use login_history for accurate per-day tracking
+        for (const log of (logins as LoginRecord[]) ?? []) {
+          const logDate = new Date(log.logged_in_at);
+          const dayKey = logDate.toISOString().split("T")[0];
+          const dayMap = dailyActiveMap.get(dayKey);
+          if (dayMap && !dayMap.has(log.user_id)) {
+            const profile = profiles.find((p: any) => p.id === log.user_id);
+            dayMap.set(log.user_id, {
+              id: log.user_id,
+              display_name: profile?.display_name ?? null,
+              last_login: log.logged_in_at,
+            });
+          }
+        }
+        // Fallback: also include last_login from profiles (for days before login_history existed)
         for (const u of profiles) {
           const login = parseLogin(u.last_login);
           if (login) {
             const loginDay = login.toISOString().split("T")[0];
-            if (dailyActiveMap.has(loginDay)) {
-              dailyActiveMap.get(loginDay)!.push({
+            const dayMap = dailyActiveMap.get(loginDay);
+            if (dayMap && !dayMap.has(u.id)) {
+              dayMap.set(u.id, {
                 id: u.id,
                 display_name: u.display_name,
                 last_login: u.last_login!,
@@ -212,7 +244,7 @@ export default function AdminPage() {
         for (let i = 0; i < 14; i++) {
           const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
           const key = d.toISOString().split("T")[0];
-          dailyActive.push({ date: key, activeUsers: dailyActiveMap.get(key) || [] });
+          dailyActive.push({ date: key, activeUsers: [...(dailyActiveMap.get(key)?.values() ?? [])] });
         }
 
         // Top 10 users by XP
@@ -967,14 +999,35 @@ export default function AdminPage() {
               // Calculate days since registration
               const daysSinceReg = Math.floor((Date.now() - new Date(u.created_at).getTime()) / (1000 * 60 * 60 * 24));
 
-              // Find all days this user was active (from dailyActive data)
-              const activeDays = (stats?.dailyActive ?? [])
-                .filter(d => d.activeUsers.some(au => au.id === u.id))
-                .map(d => ({
-                  date: d.date,
-                  login: d.activeUsers.find(au => au.id === u.id)!.last_login,
-                }))
-                .sort((a, b) => b.date.localeCompare(a.date));
+              // Find all days this user was active (from login_history)
+              const userLogins = loginHistory.filter(l => l.user_id === u.id);
+              const activeDaySet = new Set<string>();
+              const activeDaysLog: { date: string; login: string }[] = [];
+              for (const l of userLogins) {
+                const dayKey = new Date(l.logged_in_at).toISOString().split("T")[0];
+                if (!activeDaySet.has(dayKey)) {
+                  activeDaySet.add(dayKey);
+                  activeDaysLog.push({ date: dayKey, login: l.logged_in_at });
+                }
+              }
+              // Also include last_login fallback
+              if (u.last_login) {
+                const lastDay = parseLogin(u.last_login);
+                if (lastDay) {
+                  const lastDayKey = lastDay.toISOString().split("T")[0];
+                  if (!activeDaySet.has(lastDayKey)) {
+                    activeDaySet.add(lastDayKey);
+                    activeDaysLog.push({ date: lastDayKey, login: u.last_login });
+                  }
+                }
+              }
+              // Also include created_at as first active day
+              const createdDay = new Date(u.created_at).toISOString().split("T")[0];
+              if (!activeDaySet.has(createdDay)) {
+                activeDaySet.add(createdDay);
+                activeDaysLog.push({ date: createdDay, login: u.created_at });
+              }
+              activeDaysLog.sort((a, b) => b.date.localeCompare(a.date));
 
               // Find user rank by XP
               const xpRank = [...users].sort((a, b) => b.xp - a.xp).findIndex(usr => usr.id === u.id) + 1;
@@ -1046,20 +1099,21 @@ export default function AdminPage() {
                         </div>
                       </div>
 
-                      {/* Activity heatmap - last 14 days */}
+                      {/* Activity heatmap - last 30 days */}
                       <div className="mb-6">
-                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Attività ultimi 14 giorni</h3>
-                        <div className="flex gap-1.5 flex-wrap">
-                          {Array.from({ length: 14 }, (_, i) => {
-                            const d = new Date(Date.now() - (13 - i) * 24 * 60 * 60 * 1000);
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Attività ultimi 30 giorni</h3>
+                        <div className="flex gap-1 flex-wrap">
+                          {Array.from({ length: 30 }, (_, i) => {
+                            const d = new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000);
                             const key = d.toISOString().split("T")[0];
-                            const wasActive = activeDays.some(ad => ad.date === key);
-                            const isToday = i === 13;
+                            const wasActive = activeDaySet.has(key);
+                            const isToday = i === 29;
                             const dayName = d.toLocaleDateString("it-IT", { weekday: "short" }).slice(0, 2);
                             const dayNum = d.getDate();
+                            const isFirstOfWeek = d.getDay() === 1;
                             return (
-                              <div key={key} className="flex flex-col items-center gap-0.5" title={`${key}: ${wasActive ? "attivo" : "inattivo"}`}>
-                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all ${
+                              <div key={key} className={`flex flex-col items-center gap-0.5 ${isFirstOfWeek && i > 0 ? "ml-1" : ""}`} title={`${key}: ${wasActive ? "attivo" : "inattivo"}`}>
+                                <div className={`w-7 h-7 rounded-md flex items-center justify-center text-[10px] font-bold transition-all ${
                                   wasActive
                                     ? "bg-emerald-500 text-white"
                                     : isToday
@@ -1068,7 +1122,7 @@ export default function AdminPage() {
                                 }`}>
                                   {dayNum}
                                 </div>
-                                <span className="text-[9px] text-gray-400">{dayName}</span>
+                                {(i === 0 || isFirstOfWeek) && <span className="text-[8px] text-gray-400">{dayName}</span>}
                               </div>
                             );
                           })}
@@ -1076,25 +1130,30 @@ export default function AdminPage() {
                         <div className="mt-2 flex items-center gap-3 text-[10px] text-gray-400">
                           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-500" /> Attivo</span>
                           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-100" /> Inattivo</span>
-                          <span className="ml-auto font-semibold">{activeDays.length} giorni attivi su 14</span>
+                          <span className="ml-auto font-semibold">{activeDaySet.size} giorni attivi su 30</span>
                         </div>
                       </div>
 
-                      {/* Activity log */}
-                      {activeDays.length > 0 && (
+                      {/* Activity log from login_history */}
+                      {activeDaysLog.length > 0 && (
                         <div>
-                          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Log accessi</h3>
-                          <div className="space-y-1 max-h-40 overflow-y-auto">
-                            {activeDays.map(ad => (
-                              <div key={ad.date} className="flex items-center justify-between text-xs bg-gray-50 rounded-lg px-3 py-2">
-                                <span className="font-semibold text-gray-700">
-                                  {new Date(ad.date + "T12:00:00").toLocaleDateString("it-IT", { weekday: "short", day: "numeric", month: "short" })}
-                                </span>
-                                <span className="text-gray-400">
-                                  {isFullTimestamp(ad.login) ? new Date(ad.login).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : "—"}
-                                </span>
-                              </div>
-                            ))}
+                          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Log accessi ({activeDaysLog.length} giorni)</h3>
+                          <div className="space-y-1 max-h-48 overflow-y-auto">
+                            {activeDaysLog.map(ad => {
+                              const logDate = new Date(ad.login);
+                              const isRegistration = ad.date === createdDay;
+                              return (
+                                <div key={ad.date} className="flex items-center justify-between text-xs bg-gray-50 rounded-lg px-3 py-2">
+                                  <span className="font-semibold text-gray-700">
+                                    {new Date(ad.date + "T12:00:00").toLocaleDateString("it-IT", { weekday: "short", day: "numeric", month: "short" })}
+                                    {isRegistration && <span className="ml-1.5 text-[10px] font-bold text-blue-500">registrazione</span>}
+                                  </span>
+                                  <span className="text-gray-400">
+                                    {isFullTimestamp(ad.login) ? logDate.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : "—"}
+                                  </span>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
