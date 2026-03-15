@@ -138,6 +138,13 @@ function SfidaAmicoContent() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
+            <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">
+              <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
+                Gioca
+              </Link>
+              <span>/</span>
+              <span className="text-[#003DA5] font-semibold">Sfida un Amico</span>
+            </div>
             <div className="flex items-center gap-3 mb-2">
               <Link
                 href="/gioca"

@@ -360,21 +360,21 @@ export default function Home() {
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Ecco i tuoi progressi!</p>
 
               <div className="grid grid-cols-2 gap-3 mt-6">
-                <div className="bg-emerald-50 rounded-xl p-3 border border-emerald-200">
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-xl p-3 border border-emerald-200 dark:border-emerald-800">
                   <p className="text-2xl font-bold text-emerald-600">+{weeklyData.xpEarned}</p>
-                  <p className="text-[10px] font-medium text-emerald-700">XP guadagnati</p>
+                  <p className="text-[10px] font-medium text-emerald-700 dark:text-emerald-400">XP guadagnati</p>
                 </div>
-                <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
+                <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-200 dark:border-amber-800">
                   <p className="text-2xl font-bold text-amber-600">{weeklyData.modulesCompleted}</p>
-                  <p className="text-[10px] font-medium text-amber-700">Moduli completati</p>
+                  <p className="text-[10px] font-medium text-amber-700 dark:text-amber-400">Moduli completati</p>
                 </div>
-                <div className="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+                <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded-xl p-3 border border-indigo-200 dark:border-indigo-800">
                   <p className="text-2xl font-bold text-indigo-600">{weeklyData.handsPlayed}</p>
-                  <p className="text-[10px] font-medium text-indigo-700">Mani giocate</p>
+                  <p className="text-[10px] font-medium text-indigo-700 dark:text-indigo-400">Mani giocate</p>
                 </div>
-                <div className="bg-orange-50 rounded-xl p-3 border border-orange-200">
+                <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl p-3 border border-orange-200 dark:border-orange-800">
                   <p className="text-2xl font-bold text-orange-600">{weeklyData.streakDays}</p>
-                  <p className="text-[10px] font-medium text-orange-700">Giorni streak</p>
+                  <p className="text-[10px] font-medium text-orange-700 dark:text-orange-400">Giorni streak</p>
                 </div>
               </div>
 
@@ -536,8 +536,8 @@ export default function Home() {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-gray-900">Crea un account gratuito</p>
-              <p className="text-[11px] text-gray-500">Salva i progressi e sincronizza su tutti i dispositivi. Gratis, senza carta di credito.</p>
+              <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Crea un account gratuito</p>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">Salva i progressi e sincronizza su tutti i dispositivi. Gratis, senza carta di credito.</p>
             </div>
             <svg className="w-4 h-4 text-[#1B5E3B] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path d="M9 18l6-6-6-6" />
@@ -738,7 +738,7 @@ export default function Home() {
                       Installa Bridge LAB
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Aggiungila alla schermata Home
+                      Aggiungilo alla schermata Home
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -801,10 +801,10 @@ export default function Home() {
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-lg flex-shrink-0">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-lg flex-shrink-0">
                     1
                   </div>
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
                     Tocca il pulsante <strong>Condividi</strong>{" "}
                     <span className="inline-block align-middle">
                       <svg className="w-5 h-5 inline text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -817,18 +817,18 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-lg flex-shrink-0">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-lg flex-shrink-0">
                     2
                   </div>
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
                     Scorri e tocca <strong>&quot;Aggiungi a schermata Home&quot;</strong>
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-lg flex-shrink-0">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-lg flex-shrink-0">
                     3
                   </div>
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
                     Tocca <strong>&quot;Aggiungi&quot;</strong> in alto a destra
                   </p>
                 </div>
@@ -897,7 +897,7 @@ export default function Home() {
                       Glossario del Bridge
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      45 termini con quiz interattivi
+                      49 termini con quiz interattivi
                     </p>
                   </div>
                   <svg className="w-4 h-4 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
@@ -1090,7 +1090,7 @@ export default function Home() {
           <div className="mx-auto max-w-lg text-center">
             <button
               onClick={toggleGuidedMode}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#e5e0d5] bg-white px-4 py-2 text-xs font-semibold text-[#5c677d] shadow-sm hover:text-[#12305f] hover:border-[#c8a44e]/30 transition-all"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#e5e0d5] dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] px-4 py-2 text-xs font-semibold text-[#5c677d] dark:text-gray-400 shadow-sm hover:text-[#12305f] dark:hover:text-gray-200 hover:border-[#c8a44e]/30 transition-all"
             >
               <Globe className="w-3.5 h-3.5" />
               Mostra tutto (Modalità esperto)
@@ -1274,11 +1274,11 @@ function DailyQuests({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 + i * 0.05 }}
             className={`flex items-center gap-3 p-3 rounded-xl ${
-              done ? "bg-emerald-50 border border-emerald-200" : "bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040]"
+              done ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800" : "bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040]"
             }`}
           >
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-              done ? "bg-emerald-100" : "bg-gray-50 dark:bg-gray-800/50"
+              done ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-gray-50 dark:bg-gray-800/50"
             }`}>
               {done ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : quest.icon}
             </div>
@@ -1299,7 +1299,7 @@ function DailyQuests({
               </div>
             </div>
             <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-              done ? "bg-emerald-100 text-emerald-700" : "bg-amber-50 text-amber-600"
+              done ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400" : "bg-amber-50 dark:bg-amber-950/30 text-amber-600"
             }`}>
               +{quest.xp} XP
             </span>
@@ -1314,7 +1314,7 @@ function DailyQuests({
         transition={{ delay: 1.1 }}
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
-            ? "bg-gradient-to-r from-amber-50 to-amber-100/60 border border-amber-200"
+            ? "bg-gradient-to-r from-amber-50 to-amber-100/60 dark:from-amber-950/30 dark:to-amber-900/20 border border-amber-200 dark:border-amber-800"
             : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
         }`}
       >
@@ -1436,9 +1436,9 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
               <motion.div
                 className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all ${
                   isEarned
-                    ? "bg-amber-100 shadow-sm"
+                    ? "bg-amber-100 dark:bg-amber-900/40 shadow-sm"
                     : isCurrent
-                      ? "bg-amber-50 ring-2 ring-amber-300"
+                      ? "bg-amber-50 dark:bg-amber-950/30 ring-2 ring-amber-300 dark:ring-amber-700"
                       : "bg-gray-50 dark:bg-gray-800/50"
                 }`}
                 animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
@@ -1460,7 +1460,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       {nextChest && (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-xs font-bold text-gray-700 flex items-center gap-1">
+            <p className="text-xs font-bold text-gray-700 dark:text-gray-300 flex items-center gap-1">
               {chestMilestoneIcons[nextChest.modules]?.("w-4 h-4")} {nextChest.label}
             </p>
             <p className="text-[11px] font-bold text-amber-600">
@@ -1625,22 +1625,22 @@ function WeeklyObjectivesSection() {
                 href={href}
                 key={obj.id}
                 className={`flex items-center gap-3 p-2.5 rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] ${
-                  obj.completed ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-[#1B5E3B]/30"
+                  obj.completed ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800" : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-[#1B5E3B]/30"
                 }`}
               >
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-                  obj.completed ? "bg-emerald-100" : "bg-white"
+                  obj.completed ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-white dark:bg-[#1a1f2e]"
                 }`}>
                   {obj.completed ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : (objectiveIcons[obj.id] || obj.emoji)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold ${
-                    obj.completed ? "text-emerald-700 line-through" : "text-gray-900 dark:text-gray-100"
+                    obj.completed ? "text-emerald-700 dark:text-emerald-400 line-through" : "text-gray-900 dark:text-gray-100"
                   }`}>
                     {obj.title}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-2.5 rounded-full bg-gray-200 border border-gray-300 overflow-hidden max-w-[100px]">
+                    <div className="flex-1 h-2.5 rounded-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 overflow-hidden max-w-[100px]">
                       <div
                         className={`h-full rounded-full transition-all ${
                           obj.completed ? "bg-emerald" : "bg-[#1B5E3B]"
@@ -1654,7 +1654,7 @@ function WeeklyObjectivesSection() {
                   </div>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  obj.completed ? "bg-emerald-100 text-emerald-700" : "bg-[#c8a44e]/10 text-[#c8a44e]"
+                  obj.completed ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400" : "bg-[#c8a44e]/10 text-[#c8a44e]"
                 }`}>
                   +{obj.xpReward} XP
                 </span>

@@ -78,10 +78,10 @@ export default function LezioniPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-2"
         >
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             Il Percorso
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {totalCompleted}/{totalModules} moduli completati
           </p>
         </motion.div>
@@ -96,8 +96,8 @@ export default function LezioniPage() {
           <Link href="/prima-mano" aria-label="Prima Mano: lezione introduttiva">
             <div className={`relative overflow-hidden rounded-2xl border p-4 transition-all hover:shadow-lg active:scale-[0.99] ${
               onboarded
-                ? "border-emerald-200 bg-gradient-to-r from-emerald-50 to-white"
-                : "border-[#c8a44e]/30 bg-[linear-gradient(135deg,#fffaf0_0%,#f0e4c8_50%,#e8d9b0_100%)]"
+                ? "border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-white dark:from-emerald-950/30 dark:to-[#1a1f2e]"
+                : "border-[#c8a44e]/30 dark:border-[#c8a44e]/20 bg-[linear-gradient(135deg,#fffaf0_0%,#f0e4c8_50%,#e8d9b0_100%)] dark:bg-[linear-gradient(135deg,#2a2518_0%,#1f1c14_100%)]"
             }`}>
               <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#c8a44e]/10 blur-2xl" />
               <div className="relative flex items-center gap-3">
@@ -110,7 +110,7 @@ export default function LezioniPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <p className="text-sm font-bold text-[#12305f]">Prima Mano</p>
+                    <p className="text-sm font-bold text-[#12305f] dark:text-gray-100">Prima Mano</p>
                     <Badge className={`text-[10px] font-bold border-0 ${
                       onboarded
                         ? "bg-emerald-100 text-emerald-700"
@@ -119,7 +119,7 @@ export default function LezioniPage() {
                       {onboarded ? "Completata ✓" : "3 min"}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-[#51627f]">
+                  <p className="text-[11px] text-[#51627f] dark:text-gray-400">
                     {onboarded
                       ? "Rivedi le basi: cos'è una presa, come si gioca, la tua prima mano"
                       : "Inizia da qui! Scopri il bridge in 3 minuti e gioca la tua prima mano"}
@@ -157,7 +157,7 @@ export default function LezioniPage() {
                   className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-[0.97] ${
                     isActive
                       ? `${colors.active} shadow-[0_3px_0_rgba(0,0,0,0.15)]`
-                      : `bg-white border-2 ${colors.border} ${colors.inactive} shadow-sm`
+                      : `bg-white dark:bg-[#1a1f2e] border-2 ${colors.border} ${colors.inactive} shadow-sm`
                   }`}
                 >
                   <span className="text-lg">{course.icon}</span>
@@ -204,8 +204,8 @@ export default function LezioniPage() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-800">Dispense & Infografiche</p>
-                <p className="text-[11px] text-gray-500">Scarica il materiale didattico</p>
+                <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Dispense & Infografiche</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Scarica il materiale didattico</p>
               </div>
               <svg className="h-5 w-5 text-gray-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="9,6 15,12 9,18" />
@@ -222,7 +222,7 @@ export default function LezioniPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-4 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+            <div className="flex-1 h-4 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
               <motion.div
                 className={`h-full rounded-full bg-gradient-to-r ${currentCourse.gradient}`}
                 initial={{ width: 0 }}
@@ -230,7 +230,7 @@ export default function LezioniPage() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
             </div>
-            <span className="text-sm font-bold text-gray-600">{overallProgress}%</span>
+            <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{overallProgress}%</span>
           </div>
         </motion.div>
 
@@ -242,7 +242,7 @@ export default function LezioniPage() {
             className="text-center py-16"
           >
             <div className="flex justify-center mb-4"><Construction className="w-12 h-12 text-amber-500" /></div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
               In arrivo!
             </h3>
             <p className="text-sm text-gray-400 max-w-xs mx-auto">
@@ -263,7 +263,7 @@ export default function LezioniPage() {
           >
             {/* Vertical connector line */}
             {courseWorlds.length > 0 && (
-              <div className="absolute left-[39px] top-8 bottom-8 w-1.5 bg-[#e5e7eb] rounded-full" />
+              <div className="absolute left-[39px] top-8 bottom-8 w-1.5 bg-[#e5e7eb] dark:bg-[#2a3040] rounded-full" />
             )}
 
             {courseWorlds.map((world, worldIdx) => {
@@ -313,19 +313,19 @@ export default function LezioniPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h2 className={`text-lg font-semibold ${isLocked ? "text-gray-400" : "text-gray-900"}`}>
+                        <h2 className={`text-lg font-semibold ${isLocked ? "text-gray-400" : "text-gray-900 dark:text-gray-100"}`}>
                           {world.name}
                         </h2>
                         {worldProgress === 100 && (
                           <span className="text-emerald-700 text-lg" aria-label="Completato">✓</span>
                         )}
                       </div>
-                      <p className={`text-xs ${isLocked ? "text-gray-400" : "text-gray-500"}`}>
+                      <p className={`text-xs ${isLocked ? "text-gray-400" : "text-gray-500 dark:text-gray-400"}`}>
                         {world.subtitle}
                       </p>
                       {!isLocked && (
                         <div className="flex items-center gap-2 mt-1.5">
-                          <div className="flex-1 h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden max-w-[120px]">
+                          <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden max-w-[120px]">
                             <div
                               className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
                               style={{ width: `${worldProgress}%` }}
@@ -389,10 +389,10 @@ export default function LezioniPage() {
                             <Link href={`/lezioni/${lesson.id}`} aria-label={`Lezione ${lessonNumber}: ${lesson.title}, ${lessonCompleted} di ${lessonModules} moduli completati`}>
                               <div className={`group flex items-center gap-3 p-3 rounded-2xl transition-all active:scale-[0.97] ${
                                 isCurrent
-                                  ? "bg-white border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7]"
+                                  ? "bg-white dark:bg-[#1a1f2e] border-2 border-emerald-300 dark:border-emerald-700 shadow-[0_4px_0_#6ee7b7] dark:shadow-[0_4px_0_#065f46]"
                                   : isComplete
-                                    ? "bg-white/60"
-                                    : "bg-white/40"
+                                    ? "bg-white/60 dark:bg-[#1a1f2e]/60"
+                                    : "bg-white/40 dark:bg-[#1a1f2e]/40"
                               }`}>
                                 {/* Node circle */}
                                 <div className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-xl z-10 transition-all ${
@@ -400,7 +400,7 @@ export default function LezioniPage() {
                                     ? `${colors.bg} text-white shadow-md border-2 border-white`
                                     : isCurrent
                                       ? `${colors.bg} text-white shadow-lg ${colors.glow} ring-4 ${colors.ring} ring-opacity-50`
-                                      : "bg-gray-100 text-gray-400 border-2 border-gray-200"
+                                      : "bg-gray-100 dark:bg-gray-800 text-gray-400 border-2 border-gray-200 dark:border-gray-700"
                                 }`}>
                                   {isComplete ? (
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
@@ -450,21 +450,25 @@ export default function LezioniPage() {
                                           ? "text-emerald border-emerald/30"
                                           : "text-gray-400 border-gray-200"
                                       }`}
+                                      title={`Lezione ${lessonNumber} - ${lessonModules} moduli`}
                                     >
                                       Lez. {lessonNumber}
                                     </Badge>
                                     {lesson.smazzateIds.length > 0 && (
-                                      <span className="text-[10px] font-bold text-amber-600">
+                                      <span
+                                        className="text-[10px] font-bold text-amber-600"
+                                        title={`${lesson.smazzateIds.length} mani pratiche disponibili`}
+                                      >
                                         {lesson.smazzateIds.length} <Spade className="w-3 h-3 inline ml-0.5" />
                                       </span>
                                     )}
                                   </div>
                                   <h3 className={`font-bold text-[15px] mt-0.5 truncate ${
-                                    isCurrent ? "text-gray-900" : isComplete ? "text-gray-700" : "text-gray-500"
+                                    isCurrent ? "text-gray-900 dark:text-gray-100" : isComplete ? "text-gray-700 dark:text-gray-300" : "text-gray-500 dark:text-gray-400"
                                   }`}>
                                     {lesson.title}
                                   </h3>
-                                  <p className="text-[12px] text-gray-500 mt-0.5 truncate">
+                                  <p className="text-[12px] text-gray-500 dark:text-gray-400 mt-0.5 truncate">
                                     {lessonCompleted}/{lessonModules} moduli
                                     {isComplete && " · Completata!"}
                                   </p>
@@ -496,7 +500,7 @@ export default function LezioniPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 + worldIdx * 0.15 }}
-                      className="ml-10 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300 p-4 text-center"
+                      className="ml-10 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-dashed border-gray-300 dark:border-gray-600 p-4 text-center"
                     >
                       <p className="text-sm text-gray-400 font-medium flex items-center justify-center gap-1.5">
                         <Lock className="w-4 h-4" /> Completa il mondo precedente al 50% per sbloccare
@@ -509,12 +513,12 @@ export default function LezioniPage() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="ml-10 mt-2 flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl p-3 border-2 border-amber-300 shadow-[0_3px_0_#fbbf24]"
+                      className="ml-10 mt-2 flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/30 dark:to-amber-900/20 rounded-xl p-3 border-2 border-amber-300 dark:border-amber-700 shadow-[0_3px_0_#fbbf24]"
                     >
                       <Trophy className="w-6 h-6 text-amber-700" />
                       <div>
-                        <p className="text-sm font-bold text-amber-700">Mondo completato!</p>
-                        <p className="text-[11px] text-amber-600/60">+200 XP bonus</p>
+                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Mondo completato!</p>
+                        <p className="text-[11px] text-amber-600/60 dark:text-amber-500/60">+200 XP bonus</p>
                       </div>
                     </motion.div>
                   )}
@@ -534,7 +538,7 @@ export default function LezioniPage() {
                   <div className={`flex h-20 w-20 items-center justify-center rounded-full text-3xl ${
                     overallProgress === 100
                       ? "bg-gradient-to-br from-amber-400 to-amber-500 shadow-xl shadow-amber-400/30 text-white border-3 border-amber-300"
-                      : "bg-gray-100 text-gray-300 border-2 border-gray-200"
+                      : "bg-gray-100 dark:bg-gray-800 text-gray-300 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700"
                   }`}>
                     {overallProgress === 100 ? <Crown className="w-8 h-8" /> : <Target className="w-8 h-8" />}
                   </div>
