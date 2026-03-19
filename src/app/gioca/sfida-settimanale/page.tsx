@@ -111,6 +111,20 @@ export default function SfidaSettimanale() {
                 ? "Hai completato la sfida settimanale!"
                 : `Ancora ${progress.target - progress.played} ${progress.target - progress.played === 1 ? "mano" : "mani"} per completare la sfida`}
             </p>
+
+            {/* CTA inside progress */}
+            {!progress.completed && (
+              <Link href="/gioca/smazzata" className="block mt-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-white text-gray-900 font-bold py-3 px-6 rounded-xl hover:shadow-lg transition-shadow flex items-center justify-center gap-2 text-base"
+                >
+                  <Play className="h-5 w-5" />
+                  Gioca una Mano
+                </motion.button>
+              </Link>
+            )}
           </div>
         </motion.div>
 
