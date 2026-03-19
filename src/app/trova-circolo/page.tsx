@@ -110,11 +110,11 @@ export default function TrovaCircoloPage() {
             <div className="flex items-center gap-2 text-xs text-white/60 mb-3">
               <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
               <span>/</span>
-              <span className="text-white/90 font-semibold">Trova Circolo</span>
+              <span className="text-white/90 font-semibold">Trova la tua ASD</span>
             </div>
-            <h1 className="text-3xl font-bold mb-2">Trova il tuo Circolo</h1>
+            <h1 className="text-3xl font-bold mb-2">Trova la tua ASD</h1>
             <p className="text-white/80 text-base">
-              {filteredClubs.length} circoli FIGB in tutta Italia{filter === "scuola" ? " con scuola bridge" : ""}
+              {filteredClubs.length} associazioni FIGB in tutta Italia{filter === "scuola" ? " con scuola bridge" : ""}
             </p>
           </motion.div>
 
@@ -133,7 +133,7 @@ export default function TrovaCircoloPage() {
             ) : userPos ? (
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
                 <Navigation className="w-4 h-4 text-emerald-300 flex-shrink-0" />
-                <span className="text-sm text-white/90">Posizione trovata! Circoli ordinati per distanza.</span>
+                <span className="text-sm text-white/90">Posizione trovata! Associazioni ordinate per distanza.</span>
               </div>
             ) : geoError ? (
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
@@ -151,7 +151,7 @@ export default function TrovaCircoloPage() {
                 className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 text-sm font-bold hover:bg-white/30 transition-colors w-full"
               >
                 <MapPin className="w-4 h-4" />
-                Condividi posizione per trovare i circoli vicini
+                Condividi posizione per trovare le ASD vicine
               </button>
             )}
           </motion.div>
@@ -234,7 +234,7 @@ export default function TrovaCircoloPage() {
                       onChange={(e) => setShowOnlyActive(e.target.checked)}
                       className="rounded border-gray-300 text-[#003DA5] focus:ring-[#003DA5]"
                     />
-                    Solo circoli attivi (iscritti 2025/2026)
+                    Solo ASD attive (iscritte 2025/2026)
                   </label>
                 </motion.div>
               )}
@@ -246,7 +246,7 @@ export default function TrovaCircoloPage() {
             {displayedClubs.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
                 <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-lg font-bold text-gray-900">Nessun circolo trovato</p>
+                <p className="text-lg font-bold text-gray-900">Nessuna ASD trovata</p>
                 <p className="text-sm text-gray-500 mt-1">Prova a modificare i filtri o la ricerca</p>
               </motion.div>
             ) : (

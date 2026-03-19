@@ -13,7 +13,7 @@ const navItems = [
   { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/classifica", icon: "trophy", label: "Classifica" },
   { href: "/negozio", icon: "shop", label: "Negozio" },
-  { href: "/trova-circolo", icon: "circolo", label: "Trova Circolo" },
+  { href: "/trova-circolo", icon: "circolo", label: "Trova ASD" },
   { href: "/scopri", icon: "scopri", label: "Scopri" },
   { href: "/profilo", icon: "user", label: "Profilo" },
 ];
