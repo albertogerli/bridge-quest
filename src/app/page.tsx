@@ -807,6 +807,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== SONDAGGIO BANNER ===== */}
+      <section className="px-4 sm:px-5 pt-4">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+          >
+            <Link href="/forum/6">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-lg transition-all">
+                <div className="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
+                <div className="relative flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shrink-0 text-xl">
+                    📊
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-white">Tu che bridgista sei?</p>
+                    <p className="text-xs text-white/70">Partecipa al sondaggio della community!</p>
+                  </div>
+                  <span className="shrink-0 text-[10px] font-bold text-white bg-white/20 px-2.5 py-1 rounded-full">
+                    VOTA
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== TROVA ASD BANNER ===== (logged-in users without ASD) */}
       {user && !authProfile?.asd_id && (
         <section className="px-4 sm:px-5 pt-4">
