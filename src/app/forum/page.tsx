@@ -28,6 +28,7 @@ interface ForumPost {
   comments_count: number;
   pinned: boolean;
   created_at: string;
+  poll_options: string[] | null;
   profiles: {
     display_name: string | null;
     avatar_url: string | null;
@@ -219,6 +220,14 @@ export default function ForumPage() {
                             {post.pinned && (
                               <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
                                 PINNED
+                              </span>
+                            )}
+                            {post.poll_options && post.poll_options.length > 0 && (
+                              <span className="text-[10px] font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                                  <path d="M18 20V10M12 20V4M6 20v-6" />
+                                </svg>
+                                SONDAGGIO
                               </span>
                             )}
                             <span className="text-[10px] text-gray-400">
