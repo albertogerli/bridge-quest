@@ -21,7 +21,7 @@ export default function LessonError({
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="w-full max-w-md bg-white rounded-2xl border border-[#e5e0d5] shadow-sm p-8 text-center"
+        className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-8 text-center"
       >
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-100">
           <span className="text-3xl">📘</span>
@@ -50,7 +50,7 @@ export default function LessonError({
           </button>
           <Link
             href="/lezioni"
-            className="w-full rounded-xl border border-[#e5e0d5] bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="w-full rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Torna alle Lezioni
           </Link>

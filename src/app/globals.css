@@ -72,7 +72,7 @@
 
 :root {
   --radius: 1rem;
-  --background: #FAFAFA;
+  --background: #F7F5F0;
   --foreground: #1a1a2e;
   --card: #ffffff;
   --card-foreground: #1a1a2e;
@@ -182,6 +182,16 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Elevated card — more shadow for interactive/highlighted cards */
+.card-elevated {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.dark .card-elevated {
+  border-color: #2a3040;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
 /* Glassmorphism - light version */
 .glass-light {
   background: rgba(255, 255, 255, 0.85);
@@ -250,6 +260,17 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Dark stats card — reusable gradient for stat sections */
+.card-dark {
+  background: linear-gradient(180deg, #1a3a4a 0%, #15302e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Warm cream background — standard across all pages */
+.bg-cream {
+  background-color: #F7F5F0;
 }
 
 /* Prevent text selection on game elements */

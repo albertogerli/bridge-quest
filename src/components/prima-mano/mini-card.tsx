@@ -46,8 +46,8 @@ export function MiniCard({
               ? "border-emerald-400 bg-emerald-50 shadow-[0_8px_24px_rgba(16,185,129,0.18)]"
               : "border-rose-400 bg-rose-50 shadow-[0_8px_24px_rgba(244,63,94,0.18)]"
             : disabled
-              ? "border-[#d8d0c0] bg-[#f5f0e5] opacity-60"
-              : "border-[#d8d0c0] bg-white hover:border-[#003DA5]/40 hover:shadow-lg cursor-pointer"
+              ? "border-gray-200 bg-[#f5f0e5] opacity-60"
+              : "border-gray-200 bg-white hover:border-[#003DA5]/40 hover:shadow-lg cursor-pointer"
       }`}
     >
       {locked && (

@@ -103,7 +103,7 @@ export default function GiocaPage() {
             className="mb-3"
           >
             <Link href="/prima-mano" className="block" aria-label="Rifai Prima Mano">
-              <div className="flex items-center gap-3 rounded-2xl border border-[#d8d0c0] bg-white px-4 py-3 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 hover:shadow-md transition-shadow">
                 <BookOpen className="w-4 h-4 text-[#003DA5] shrink-0" />
                 <span className="text-sm font-medium text-[#12305f]">Rivedi Prima Mano</span>
                 <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-0 ml-auto">

@@ -26,7 +26,7 @@ export function StepTavolo({ onComplete, playSound }: StepProps) {
     >
       <div className="relative mt-6 aspect-square max-w-[320px] mx-auto">
         {/* Table background */}
-        <div className="absolute inset-[15%] rounded-[28px] border-2 border-[#d8d0c0] bg-gradient-to-br from-[#1a5f2a] to-[#0d4a1c] shadow-inner" />
+        <div className="absolute inset-[15%] rounded-[28px] border-2 border-gray-200 bg-gradient-to-br from-[#1a5f2a] to-[#0d4a1c] shadow-inner" />
 
         {/* Partnership lines */}
         <svg className="absolute inset-0 w-full h-full opacity-20">
@@ -55,7 +55,7 @@ export function StepTavolo({ onComplete, playSound }: StepProps) {
                 className={`rounded-[20px] border-2 px-4 py-3 text-center shadow-md transition-all ${
                   isPlayer
                     ? "border-[#c8a44e] bg-[#fffdf5] shadow-[0_0_20px_rgba(200,164,78,0.3)]"
-                    : "border-[#d8d0c0] bg-white"
+                    : "border-gray-200 bg-white"
                 }`}
               >
                 <div className="flex justify-center mb-1">

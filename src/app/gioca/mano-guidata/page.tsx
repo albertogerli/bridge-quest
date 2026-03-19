@@ -44,11 +44,11 @@ function markHandCompleted(handId: number) {
 function HandSelector({ onSelect }: { onSelect: (hand: GuidedHand) => void }) {
   return (
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219]">
-      <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-[#e5e0d5] dark:border-[#2a3040]">
+      <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
         <div className="mx-auto max-w-lg flex items-center gap-3 px-4 py-3.5">
           <Link
             href="/gioca"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm"
           >
             <ArrowLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           </Link>
@@ -95,7 +95,7 @@ function HandSelector({ onSelect }: { onSelect: (hand: GuidedHand) => void }) {
             >
               <button
                 onClick={() => onSelect(hand)}
-                className="w-full text-left rounded-2xl border border-[#e5e0d5] dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all"
+                className="w-full text-left rounded-2xl border border-gray-200 dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all"
               >
                 {/* Gradient header */}
                 <div

@@ -69,13 +69,13 @@ export function LostCard({ nextModule }: LostCardProps) {
       {/* Action buttons */}
       <div className="grid gap-2">
         <Link href="/prima-mano">
-          <div className="flex items-center gap-3 rounded-2xl border border-[#e5e0d5] bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
             <BookOpen className="h-4 w-4 shrink-0 text-blue-500" />
             <span className="text-sm font-medium text-[#12305f]">Rivedi Prima Mano</span>
           </div>
         </Link>
         <Link href={nextLessonHref}>
-          <div className="flex items-center gap-3 rounded-2xl border border-[#e5e0d5] bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
             <Target className="h-4 w-4 shrink-0 text-purple-500" />
             <span className="text-sm font-medium text-[#12305f]">
               {nextModule ? `Continua: ${nextModule.moduleTitle}` : "Vai alle lezioni"}
@@ -83,7 +83,7 @@ export function LostCard({ nextModule }: LostCardProps) {
           </div>
         </Link>
         <Link href="/ripasso">
-          <div className="flex items-center gap-3 rounded-2xl border border-[#e5e0d5] bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
             <Brain className="h-4 w-4 shrink-0 text-amber-500" />
             <span className="text-sm font-medium text-[#12305f]">Fai un ripasso</span>
           </div>

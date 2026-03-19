@@ -201,9 +201,9 @@ export default function RipassoPage() {
       </AnimatePresence>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-[#e5e0d5] dark:border-[#2a3040]">
+      <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
         <div className="mx-auto max-w-lg flex items-center gap-3 px-4 py-3.5">
-          <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm">
+          <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm">
             <ArrowLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           </Link>
           <div className="flex-1">
@@ -230,15 +230,15 @@ export default function RipassoPage() {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-3 gap-3"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-3.5 text-center">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-red-500">{enrichedItems.filter(i => i.urgency === "overdue").length}</p>
             <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5">In ritardo</p>
           </div>
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-3.5 text-center">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-amber-500">{enrichedItems.filter(i => i.urgency === "today").length}</p>
             <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5">Oggi</p>
           </div>
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-3.5 text-center">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-indigo-500">{totalCount}</p>
             <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5">Totale</p>
           </div>
@@ -251,7 +251,7 @@ export default function RipassoPage() {
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               filter === "due"
                 ? "bg-[#003DA5] text-white shadow-md"
-                : "bg-white dark:bg-[#1a1f2e] text-gray-500 border border-[#e5e0d5] dark:border-[#2a3040]"
+                : "bg-white dark:bg-[#1a1f2e] text-gray-500 border border-gray-200 dark:border-[#2a3040]"
             }`}
           >
             Da ripassare ({dueCount})
@@ -261,7 +261,7 @@ export default function RipassoPage() {
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               filter === "all"
                 ? "bg-[#003DA5] text-white shadow-md"
-                : "bg-white dark:bg-[#1a1f2e] text-gray-500 border border-[#e5e0d5] dark:border-[#2a3040]"
+                : "bg-white dark:bg-[#1a1f2e] text-gray-500 border border-gray-200 dark:border-[#2a3040]"
             }`}
           >
             Tutti ({totalCount})
@@ -296,7 +296,7 @@ export default function RipassoPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 20 }}
-            className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-8 text-center"
+            className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-8 text-center"
           >
             <motion.div
               initial={{ scale: 0 }}

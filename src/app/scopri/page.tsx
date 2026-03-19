@@ -54,7 +54,7 @@ export default function ScopriPage() {
           transition={{ delay: 0.1, duration: 0.5 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm overflow-hidden">
             {/* FIGB Header */}
             <div className="bg-gradient-to-r from-[#003DA5] to-[#0052CC] px-5 py-4">
               <div className="flex items-center gap-3">
@@ -136,7 +136,7 @@ export default function ScopriPage() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm overflow-hidden">
             {/* History Header */}
             <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-4">
               <div className="flex items-center gap-3">
@@ -267,7 +267,7 @@ export default function ScopriPage() {
           transition={{ delay: 0.4, duration: 0.5 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 px-5 py-4">
               <div className="flex items-center gap-3">
                 <ExternalLink className="w-5 h-5 text-white/80" />
@@ -383,7 +383,7 @@ function ChampionCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="bg-white dark:bg-[#141821] rounded-xl p-3 border border-[#e5e0d5] dark:border-[#2a3040]">
+    <div className="bg-white dark:bg-[#141821] rounded-xl p-3 border border-gray-200 dark:border-[#2a3040]">
       <div className="flex items-center gap-1.5 mb-1">
         {icon}
         <p className="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">{name}</p>
@@ -405,7 +405,7 @@ function FunFactCard({
   description: string;
 }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e0d5] dark:border-[#2a3040] shadow-sm p-4">
+    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-4">
       <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconBg} mb-3`}>
         {icon}
       </div>

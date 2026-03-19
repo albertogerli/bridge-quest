@@ -201,7 +201,7 @@ function SfidaAmicoContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
+            <div className="rounded-2xl bg-white p-5 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
               <h3 className="font-bold text-gray-900 mb-4">Come funziona</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -898,7 +898,7 @@ function PastChallenges() {
       transition={{ delay: 0.3 }}
       className="mt-4"
     >
-      <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
+      <div className="rounded-2xl bg-white p-5 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-gray-900">Sfide Create</h3>
           <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200">

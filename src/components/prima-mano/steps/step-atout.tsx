@@ -42,8 +42,8 @@ function ChoiceCard({
             ? "border-emerald-300 bg-emerald-50 shadow-[0_10px_30px_rgba(16,185,129,0.12)]"
             : "border-rose-300 bg-rose-50 shadow-[0_10px_30px_rgba(244,63,94,0.12)]"
           : disabled
-            ? "border-[#e5e0d5] bg-[#f9f6f0] opacity-50"
-            : "border-[#d8d0c0] bg-white hover:border-[#003DA5]/30 hover:bg-[#f7f9ff]"
+            ? "border-gray-200 bg-[#f9f6f0] opacity-50"
+            : "border-gray-200 bg-white hover:border-[#003DA5]/30 hover:bg-[#f7f9ff]"
       }`}
     >
       <p className="text-sm font-bold text-[#12305f]">{label}</p>
@@ -112,7 +112,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
         </div>
 
         {/* Animation area */}
-        <div className="rounded-[28px] border border-[#d8d0c0] bg-white p-6">
+        <div className="rounded-[28px] border border-gray-200 bg-white p-6">
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-4 text-center">
             Il taglio in azione
           </p>
@@ -129,7 +129,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
                     : { opacity: 0.4, x: -30, scale: 0.85 }
               }
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-[22px] border border-[#d8d0c0] bg-[#fffaf0] px-5 py-4 text-center shadow-sm"
+              className="rounded-[22px] border border-gray-200 bg-[#fffaf0] px-5 py-4 text-center shadow-sm"
             >
               <p className="text-2xl font-black text-red-600">K</p>
               <div className="mt-1.5 flex justify-center">
@@ -175,7 +175,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="rounded-[28px] border border-[#d8d0c0] bg-white p-5"
+          className="rounded-[28px] border border-gray-200 bg-white p-5"
         >
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
             Il taglio è obbligatorio?

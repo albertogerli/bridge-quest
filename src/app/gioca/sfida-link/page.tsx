@@ -346,7 +346,7 @@ function SfidaLinkContent() {
             transition={{ delay: 0.2 }}
             className="mb-6"
           >
-            <div className="rounded-2xl bg-white p-6 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
+            <div className="rounded-2xl bg-white p-6 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
               <h3 className="font-bold text-gray-900 mb-4 text-center">La tua mano (Sud)</h3>
               <div className="flex flex-wrap justify-center gap-2">
                 {southHand.map((card, idx) => (
