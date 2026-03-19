@@ -58,6 +58,9 @@ interface Stats {
   marketingPending: number;
   totalMinutesAll: number;
   avgMinutes: number;
+  bboWithAsd: number;
+  bboWithoutAsd: number;
+  noBboNoAsd: number;
 }
 
 type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "asd" | "total_minutes" | "created_at" | "last_login";
@@ -270,6 +273,18 @@ export default function AdminPage() {
             ? Math.round((retainedCount / registeredBefore7d.length) * 100)
             : 0;
 
+        // BBO / ASD segmentation
+        let bboWithAsd = 0;
+        let bboWithoutAsd = 0;
+        let noBboNoAsd = 0;
+        for (const u of profiles) {
+          const hasBbo = !!u.bbo_username;
+          const hasAsd = !!(u as any).asd?.name;
+          if (hasBbo && hasAsd) bboWithAsd++;
+          else if (hasBbo && !hasAsd) bboWithoutAsd++;
+          else if (!hasBbo && !hasAsd) noBboNoAsd++;
+        }
+
         setStats({
           total: profiles.length,
           today,
@@ -294,6 +309,9 @@ export default function AdminPage() {
           marketingPending,
           totalMinutesAll,
           avgMinutes: profiles.length > 0 ? Math.round(totalMinutesAll / profiles.length) : 0,
+          bboWithAsd,
+          bboWithoutAsd,
+          noBboNoAsd,
         });
       }
     } catch (err) {
@@ -639,6 +657,37 @@ export default function AdminPage() {
                   {((stats?.marketingAccepted ?? 0) + (stats?.marketingDeclined ?? 0)) > 0
                     ? Math.round((stats!.marketingAccepted / (stats!.marketingAccepted + stats!.marketingDeclined)) * 100)
                     : 0}%
+                </div>
+              </div>
+            </div>
+
+            {/* BBO / ASD segmentation */}
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">BBO + Associazione</div>
+                <div className="text-2xl font-bold text-emerald-600 mt-1">
+                  {stats?.bboWithAsd ?? 0}
+                </div>
+                <div className="text-[10px] text-gray-400 mt-0.5">
+                  {stats && stats.total > 0 ? Math.round(((stats.bboWithAsd) / stats.total) * 100) : 0}% del totale
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">BBO senza Associazione</div>
+                <div className="text-2xl font-bold text-amber-600 mt-1">
+                  {stats?.bboWithoutAsd ?? 0}
+                </div>
+                <div className="text-[10px] text-gray-400 mt-0.5">
+                  {stats && stats.total > 0 ? Math.round(((stats.bboWithoutAsd) / stats.total) * 100) : 0}% del totale
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-200 p-4">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">No BBO, no Associazione</div>
+                <div className="text-2xl font-bold text-red-500 mt-1">
+                  {stats?.noBboNoAsd ?? 0}
+                </div>
+                <div className="text-[10px] text-gray-400 mt-0.5">
+                  {stats && stats.total > 0 ? Math.round(((stats.noBboNoAsd) / stats.total) * 100) : 0}% del totale
                 </div>
               </div>
             </div>
