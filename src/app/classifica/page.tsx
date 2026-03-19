@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { asdNameToSlug } from "@/lib/asd-utils";
 import { courses, getLessonIdsForCourse, type CourseId } from "@/data/courses";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2 } from "lucide-react";
@@ -28,7 +29,7 @@ const avatarColors = [
 ];
 
 function getLevel(xp: number) {
-  const level = Math.floor(xp / 100) + 1;
+  const level = getLevelFromXp(xp);
   const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
   const names = getProfileConfig(profileKey || "adulto").levelNames;
   return { level, name: names[Math.min(level - 1, names.length - 1)] };

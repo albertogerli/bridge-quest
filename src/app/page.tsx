@@ -13,6 +13,7 @@ import { useAchievementChecker, AchievementPopup } from "@/components/achievemen
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useProfile, getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { getLevel, getXpInLevel, getLevelProgress } from "@/lib/xp-levels";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards, RARITY_CONFIG } from "@/data/collectible-cards";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
@@ -139,13 +140,14 @@ function useLocalStats() {
     } catch {}
   }, []);
 
-  const level = Math.floor(xp / 100) + 1;
-  const xpInLevel = xp % 100;
+  const level = getLevel(xp);
+  const xpInLevel = getXpInLevel(xp);
+  const levelProgress = getLevelProgress(xp);
   const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
   const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
   const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
 
-  return { xp, streak, completedModules, level, xpInLevel, levelName, dailyDone, dailyLoginAwarded, streakAtRisk };
+  return { xp, streak, completedModules, level, xpInLevel, levelProgress, levelName, dailyDone, dailyLoginAwarded, streakAtRisk };
 }
 
 export default function Home() {
@@ -475,15 +477,15 @@ export default function Home() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-lg font-bold text-white">{stats.xpInLevel}</p>
-                <p className="text-[11px] text-white/80">/ 100 XP</p>
+                <p className="text-lg font-bold text-white">{stats.xp.toLocaleString()}</p>
+                <p className="text-[11px] text-white/80">XP totali</p>
               </div>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-amber-light to-amber"
                 initial={{ width: 0 }}
-                animate={{ width: `${stats.xpInLevel}%` }}
+                animate={{ width: `${stats.levelProgress}%` }}
                 transition={{ delay: 0.5, duration: 0.8 }}
               />
             </div>
