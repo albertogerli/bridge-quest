@@ -418,7 +418,7 @@ export default function Home() {
           >
             {/* Suits row */}
             <motion.div
-              className="mb-4 flex items-center justify-center gap-3"
+              className="mb-6 flex items-center justify-center gap-4"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -431,7 +431,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + i * 0.1 }}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm border border-white/20"
+                    className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/15 shadow-inner text-2xl"
                   >
                     <SuitSymbol suit={suit} size="lg" />
                   </motion.div>
@@ -449,7 +449,10 @@ export default function Home() {
               </p>
               <div className="h-px w-8 bg-white/30" />
             </div>
-            <p className="mt-1 text-xs text-white/60">
+            <p className="mt-2.5 text-[15px] text-white/80 font-medium leading-snug max-w-xs mx-auto">
+              Lezioni, gioco, analisi e community in un&apos;unica app.
+            </p>
+            <p className="mt-1.5 text-xs text-white/50">
               Piattaforma ufficiale <abbr title="Federazione Italiana Gioco Bridge">FIGB</abbr>
             </p>
           </motion.div>
@@ -614,6 +617,61 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ===== FEATURE CARDS GRID ===== */}
+      <section className="px-4 sm:px-5 -mt-8 relative z-10 lg:hidden">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="grid grid-cols-2 gap-3"
+          >
+            <Link href="/lezioni" className="rounded-2xl p-4 text-white shadow-sm flex flex-col justify-between h-[140px]" style={{ background: "linear-gradient(135deg, #2b4365, #182d4c)" }}>
+              <div>
+                <div className="text-2xl mb-1.5">🎓</div>
+                <h3 className="font-bold text-base leading-tight">Lezioni</h3>
+              </div>
+              <p className="text-xs text-blue-100/80 leading-snug">49 lezioni: 4 corsi FIGB completi</p>
+            </Link>
+            <Link href="/gioca" className="rounded-2xl p-4 bg-white text-gray-800 shadow-sm flex flex-col justify-between h-[140px] border border-gray-100">
+              <div>
+                <div className="text-2xl mb-1.5">♠</div>
+                <h3 className="font-bold text-base leading-tight">Gioca Subito</h3>
+              </div>
+              <p className="text-xs text-gray-500 leading-snug">Mani interattive con AI avversaria</p>
+            </Link>
+            <Link href="/lezioni" className="rounded-2xl p-4 bg-white text-gray-800 shadow-sm flex flex-col justify-between h-[140px] border border-gray-100">
+              <div>
+                <div className="text-2xl mb-1.5">🧠</div>
+                <h3 className="font-bold text-[15px] leading-tight">Quiz e Minigiochi</h3>
+              </div>
+              <p className="text-xs text-gray-500 leading-snug">6 tipi di quiz, 9 minigiochi</p>
+            </Link>
+            <Link href="/gioca/torneo" className="rounded-2xl p-4 text-white shadow-sm flex flex-col justify-between h-[140px]" style={{ background: "linear-gradient(135deg, #6c2a6f, #461750)" }}>
+              <div>
+                <div className="text-2xl mb-1.5">🏆</div>
+                <h3 className="font-bold text-base leading-tight">Tornei</h3>
+              </div>
+              <p className="text-xs text-purple-100/80 leading-snug">Torneo settimanale, sfida amici, classifica</p>
+            </Link>
+            <Link href="/dispense" className="rounded-2xl p-4 text-white shadow-sm flex flex-col justify-between h-[140px]" style={{ background: "linear-gradient(135deg, #74358a, #4e2261)" }}>
+              <div>
+                <div className="text-2xl mb-1.5">📊</div>
+                <h3 className="font-bold text-base leading-tight">Dispense</h3>
+              </div>
+              <p className="text-xs text-purple-100/80 leading-snug">Materiale FIGB scaricabile in PDF</p>
+            </Link>
+            <Link href="/profilo" className="rounded-2xl p-4 bg-white text-gray-800 shadow-sm flex flex-col justify-between h-[140px] border border-gray-100">
+              <div>
+                <div className="text-2xl mb-1.5">🔥</div>
+                <h3 className="font-bold text-base leading-tight">Gamification</h3>
+              </div>
+              <p className="text-xs text-gray-500 leading-snug">XP, streak, badge e collezionabili</p>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ===== PENDING IMP CHALLENGES ===== */}
       <section className="px-4 sm:px-5 -mt-2 relative z-10">
