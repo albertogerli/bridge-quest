@@ -47,7 +47,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
   // Compact version for homepage — links directly to play
   if (compact) {
     return (
-      <Link href="/gioca/smazzata">
+      <Link href="/gioca/sfida-settimanale">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

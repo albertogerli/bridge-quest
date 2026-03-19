@@ -26,7 +26,21 @@ export default function NuovoPostPage() {
   const [category, setCategory] = useState<Category>("generale");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isPoll, setIsPoll] = useState(false);
+  const [pollOptions, setPollOptions] = useState(["", ""]);
   const supabase = createClient();
+
+  const addPollOption = () => {
+    if (pollOptions.length < 6) setPollOptions([...pollOptions, ""]);
+  };
+
+  const removePollOption = (idx: number) => {
+    if (pollOptions.length > 2) setPollOptions(pollOptions.filter((_, i) => i !== idx));
+  };
+
+  const updatePollOption = (idx: number, value: string) => {
+    setPollOptions(pollOptions.map((o, i) => (i === idx ? value : o)));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,22 +49,34 @@ export default function NuovoPostPage() {
       setError("Inserisci un titolo");
       return;
     }
-    if (!body.trim()) {
+    if (!body.trim() && !isPoll) {
       setError("Inserisci il contenuto del post");
       return;
+    }
+    if (isPoll) {
+      const validOptions = pollOptions.filter((o) => o.trim());
+      if (validOptions.length < 2) {
+        setError("Il sondaggio deve avere almeno 2 opzioni");
+        return;
+      }
     }
 
     setLoading(true);
     setError("");
 
+    const insertData: Record<string, unknown> = {
+      user_id: user.id,
+      category,
+      title: title.trim(),
+      body: body.trim() || (isPoll ? "Vota nel sondaggio!" : ""),
+    };
+    if (isPoll) {
+      insertData.poll_options = pollOptions.filter((o) => o.trim());
+    }
+
     const { data, error: err } = await supabase
       .from("forum_posts")
-      .insert({
-        user_id: user.id,
-        category,
-        title: title.trim(),
-        body: body.trim(),
-      })
+      .insert(insertData)
       .select("id")
       .single();
 
@@ -129,6 +155,72 @@ export default function NuovoPostPage() {
                 ))}
               </div>
             </div>
+
+            {/* Poll Toggle */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setIsPoll(!isPoll)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  isPoll
+                    ? "bg-purple-100 text-purple-700 ring-2 ring-purple-500"
+                    : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                }`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M18 20V10M12 20V4M6 20v-6" />
+                </svg>
+                Sondaggio
+              </button>
+            </div>
+
+            {/* Poll Options */}
+            {isPoll && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="space-y-2"
+              >
+                <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  Opzioni sondaggio
+                </label>
+                {pollOptions.map((opt, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={opt}
+                      onChange={(e) => updatePollOption(idx, e.target.value)}
+                      maxLength={100}
+                      className="flex-1 h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      placeholder={`Opzione ${idx + 1}`}
+                    />
+                    {pollOptions.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => removePollOption(idx)}
+                        className="h-10 w-10 rounded-xl bg-red-50 text-red-400 hover:text-red-600 flex items-center justify-center transition-colors"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {pollOptions.length < 6 && (
+                  <button
+                    type="button"
+                    onClick={addPollOption}
+                    className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1"
+                  >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    Aggiungi opzione
+                  </button>
+                )}
+              </motion.div>
+            )}
 
             {/* Title */}
             <div>

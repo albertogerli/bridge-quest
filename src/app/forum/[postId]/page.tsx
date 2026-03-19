@@ -18,6 +18,7 @@ interface Post {
   comments_count: number;
   pinned: boolean;
   created_at: string;
+  poll_options: string[] | null;
   profiles: {
     display_name: string | null;
     avatar_url: string | null;
@@ -52,6 +53,9 @@ export default function PostDetailPage() {
   const [hasLiked, setHasLiked] = useState(false);
   const [likedComments, setLikedComments] = useState<Set<number>>(new Set());
   const [expandedThreads, setExpandedThreads] = useState<Set<number>>(new Set());
+  const [pollVote, setPollVote] = useState<number | null>(null);
+  const [pollVotes, setPollVotes] = useState<Record<number, number>>({});
+  const [pollTotalVotes, setPollTotalVotes] = useState(0);
   const supabase = createClient();
 
   const postId = params.postId as string;
@@ -98,13 +102,39 @@ export default function PostDetailPage() {
     }
   }, [user, supabase]);
 
+  const fetchPollVotes = useCallback(async () => {
+    const { data } = await supabase
+      .from("forum_poll_votes")
+      .select("option_index")
+      .eq("post_id", postId);
+    if (data) {
+      const counts: Record<number, number> = {};
+      data.forEach((v) => {
+        counts[v.option_index] = (counts[v.option_index] || 0) + 1;
+      });
+      setPollVotes(counts);
+      setPollTotalVotes(data.length);
+    }
+  }, [postId, supabase]);
+
+  const checkPollVote = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("forum_poll_votes")
+      .select("option_index")
+      .eq("post_id", postId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (data) setPollVote(data.option_index);
+  }, [user, postId, supabase]);
+
   useEffect(() => {
     const load = async () => {
-      await Promise.all([fetchPost(), fetchComments(), checkLike(), checkCommentLikes()]);
+      await Promise.all([fetchPost(), fetchComments(), checkLike(), checkCommentLikes(), fetchPollVotes(), checkPollVote()]);
       setLoading(false);
     };
     load();
-  }, [fetchPost, fetchComments, checkLike, checkCommentLikes]);
+  }, [fetchPost, fetchComments, checkLike, checkCommentLikes, fetchPollVotes, checkPollVote]);
 
   // Build threaded comment tree
   const { topLevelComments, repliesByParent } = useMemo(() => {
@@ -284,6 +314,22 @@ export default function PostDetailPage() {
     if (!confirm("Eliminare questo post?")) return;
     await supabase.from("forum_posts").delete().eq("id", post.id);
     router.push("/forum");
+  };
+
+  const handlePollVote = async (optionIndex: number) => {
+    if (!user || !post || pollVote !== null) return;
+    await supabase.from("forum_poll_votes").insert({
+      post_id: post.id,
+      user_id: user.id,
+      option_index: optionIndex,
+    });
+    setPollVote(optionIndex);
+    setPollVotes((prev) => ({
+      ...prev,
+      [optionIndex]: (prev[optionIndex] || 0) + 1,
+    }));
+    setPollTotalVotes((prev) => prev + 1);
+    awardXP(5);
   };
 
   const toggleThread = (commentId: number) => {
@@ -579,6 +625,76 @@ export default function PostDetailPage() {
           <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
             {post.body}
           </div>
+
+          {/* Poll */}
+          {post.poll_options && post.poll_options.length > 0 && (
+            <div className="mt-5 space-y-2">
+              <div className="flex items-center gap-2 mb-3">
+                <svg className="w-4 h-4 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M18 20V10M12 20V4M6 20v-6" />
+                </svg>
+                <span className="text-sm font-bold text-purple-700">Sondaggio</span>
+                <span className="text-[11px] text-gray-400">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
+              </div>
+              {post.poll_options.map((option, idx) => {
+                const votes = pollVotes[idx] || 0;
+                const pct = pollTotalVotes > 0 ? Math.round((votes / pollTotalVotes) * 100) : 0;
+                const hasVoted = pollVote !== null;
+                const isMyVote = pollVote === idx;
+                const isWinning = hasVoted && votes === Math.max(...Object.values(pollVotes), 0) && votes > 0;
+
+                return (
+                  <motion.button
+                    key={idx}
+                    onClick={() => handlePollVote(idx)}
+                    disabled={hasVoted || !user}
+                    className={`w-full text-left relative rounded-xl border-2 overflow-hidden transition-all ${
+                      isMyVote
+                        ? "border-purple-400 bg-purple-50"
+                        : hasVoted
+                          ? "border-gray-100 bg-gray-50"
+                          : "border-gray-200 bg-white hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer"
+                    } ${!user ? "cursor-not-allowed opacity-60" : ""}`}
+                    whileTap={!hasVoted && user ? { scale: 0.98 } : undefined}
+                  >
+                    {/* Progress bar background */}
+                    {hasVoted && (
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className={`absolute inset-y-0 left-0 ${
+                          isWinning ? "bg-purple-100" : "bg-gray-100"
+                        }`}
+                      />
+                    )}
+                    <div className="relative flex items-center justify-between px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        {isMyVote && (
+                          <svg className="w-4 h-4 text-purple-600 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                        <span className={`text-sm font-medium ${isMyVote ? "text-purple-700 font-bold" : "text-gray-700"}`}>
+                          {option}
+                        </span>
+                      </div>
+                      {hasVoted && (
+                        <span className={`text-sm font-bold flex-shrink-0 ml-2 ${isWinning ? "text-purple-700" : "text-gray-400"}`}>
+                          {pct}%
+                        </span>
+                      )}
+                    </div>
+                  </motion.button>
+                );
+              })}
+              {!user && (
+                <p className="text-[11px] text-gray-400 text-center mt-1">
+                  <Link href="/login" className="text-purple-600 font-bold hover:underline">Accedi</Link> per votare
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex items-center gap-4 mt-5 pt-4 border-t border-gray-100">
