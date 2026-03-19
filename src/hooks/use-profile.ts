@@ -26,7 +26,7 @@ export interface ProfileConfig {
   quizTransition: "slide" | "fade" | "scale";
   /** Show step-by-step hints */
   showHints: boolean;
-  /** Level names (12 levels) */
+  /** Level names (36 levels) */
   levelNames: string[];
   /** Correct answer messages (rotated) */
   correctMessages: string[];
@@ -55,9 +55,42 @@ export interface ProfileConfig {
 }
 
 const defaultLevelNames = [
-  "Principiante", "Novizio", "Apprendista", "Giocatore",
-  "Esperto", "Dichiarante", "Stratega", "Campione",
-  "Agonista", "Maestro", "Grande Maestro", "Campione Azzurro",
+  "Principiante",            // Lv  1
+  "Novizio",                 // Lv  2
+  "Apprendista",             // Lv  3
+  "Studente",                // Lv  4
+  "Giocatore",               // Lv  5
+  "Giocatore Attento",       // Lv  6
+  "Dichiarante",             // Lv  7
+  "Difensore",               // Lv  8
+  "Stratega",                // Lv  9
+  "Tattico",                 // Lv 10
+  "Agonista",                // Lv 11
+  "Competitore",             // Lv 12
+  "Esperto",                 // Lv 13
+  "Esperto di Torneo",       // Lv 14
+  "Veterano",                // Lv 15
+  "Professionista",          // Lv 16
+  "Maestrino",               // Lv 17
+  "Maestro",                 // Lv 18
+  "Maestro Esperto",         // Lv 19
+  "Grande Maestro",          // Lv 20
+  "Maestro Nazionale",       // Lv 21
+  "Maestro Federale",        // Lv 22
+  "Campione di Club",        // Lv 23
+  "Campione Regionale",      // Lv 24
+  "Campione Nazionale",      // Lv 25
+  "Internazionale",          // Lv 26
+  "Maestro Internazionale",  // Lv 27
+  "Grande Internazionale",   // Lv 28
+  "World Class",             // Lv 29
+  "Stella del Bridge",       // Lv 30
+  "Leggenda",                // Lv 31
+  "Mito del Bridge",         // Lv 32
+  "Immortale",               // Lv 33
+  "Diamante",                // Lv 34
+  "Grande Campione",         // Lv 35
+  "Campione Azzurro",        // Lv 36
 ];
 
 const defaultCorrectMessages = [
@@ -79,9 +112,42 @@ const configs: Record<UserProfile, ProfileConfig> = {
     quizTransition: "scale",
     showHints: true,
     levelNames: [
-      "Piccolo Bridgista", "Esploratore", "Avventuriero", "Sfidante",
-      "Tattico", "Stratega", "Campione", "Super Campione",
-      "Eroe del Bridge", "Leggenda", "Mito Vivente", "Campione Galattico",
+      "Piccolo Bridgista",     // Lv  1
+      "Esploratore",           // Lv  2
+      "Avventuriero",          // Lv  3
+      "Scopritore",            // Lv  4
+      "Sfidante",              // Lv  5
+      "Coraggioso",            // Lv  6
+      "Cavaliere",             // Lv  7
+      "Guerriero",             // Lv  8
+      "Tattico",               // Lv  9
+      "Stratega",              // Lv 10
+      "Paladino",              // Lv 11
+      "Campione",              // Lv 12
+      "Super Campione",        // Lv 13
+      "Eroe",                  // Lv 14
+      "Super Eroe",            // Lv 15
+      "Fenomeno",              // Lv 16
+      "Prodigio",              // Lv 17
+      "Genio",                 // Lv 18
+      "Mago del Bridge",       // Lv 19
+      "Ninja delle Carte",     // Lv 20
+      "Samurai",               // Lv 21
+      "Drago",                 // Lv 22
+      "Fenice",                // Lv 23
+      "Titano",                // Lv 24
+      "Semidio",               // Lv 25
+      "Dio delle Carte",       // Lv 26
+      "Leggenda Vivente",      // Lv 27
+      "Mito Cosmico",          // Lv 28
+      "Stella Galattica",      // Lv 29
+      "Supernova",             // Lv 30
+      "Imperatore",            // Lv 31
+      "Re del Bridge",         // Lv 32
+      "Onnisciente",           // Lv 33
+      "Campione Universale",   // Lv 34
+      "Onnipotente",           // Lv 35
+      "Campione Galattico",    // Lv 36
     ],
     correctMessages: [
       "SPACCA! 💥", "SEI UN MITO! 🌟", "PERFETTO! 🔥",

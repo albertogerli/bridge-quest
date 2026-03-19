@@ -10,6 +10,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_LIST } from "@/data/asd-list";
 import { getAsdNameById, asdNameToSlug } from "@/lib/asd-utils";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { getLevel, getXpInLevel, getLevelProgress, getXpForNextLevel, MAX_LEVEL } from "@/lib/xp-levels";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import { useGameHistory } from "@/hooks/use-game-history";
 import { StatsDashboard } from "@/components/stats-dashboard";
@@ -280,12 +281,14 @@ export default function ProfiloPage() {
     }
   }, []);
 
-  const level = Math.floor(xp / 100) + 1;
-  const xpInLevel = xp % 100;
+  const level = getLevel(xp);
+  const xpInLevel = getXpInLevel(xp);
+  const levelProgress = getLevelProgress(xp);
+  const xpForNext = getXpForNextLevel(xp);
   const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
   const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
   const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
-  const nextLevelName = profileLevelNames[Math.min(level, profileLevelNames.length - 1)];
+  const nextLevelName = level < MAX_LEVEL ? profileLevelNames[Math.min(level, profileLevelNames.length - 1)] : levelName;
 
   const totalModulesCompleted = Object.keys(completedModules).length;
   const totalModulesAvailable = allWorlds.reduce(
@@ -447,14 +450,14 @@ export default function ProfiloPage() {
                   strokeLinecap="round"
                   style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%", filter: "drop-shadow(0 0 6px rgba(34,197,94,0.5))" }}
                   initial={{ strokeDashoffset: 314 }}
-                  animate={{ strokeDashoffset: 314 * (1 - xpInLevel / 100) }}
+                  animate={{ strokeDashoffset: 314 * (1 - levelProgress / 100) }}
                   transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
                 />
               </svg>
               <div className="absolute flex flex-col items-center">
                 <Zap className="w-3.5 h-3.5 text-gray-400 mb-0.5" />
-                <span className="text-[28px] font-bold text-white leading-none">{xpInLevel}</span>
-                <span className="text-xs text-gray-400 mt-0.5">/ 100 XP</span>
+                <span className="text-[28px] font-bold text-white leading-none">{levelProgress}%</span>
+                <span className="text-xs text-gray-400 mt-0.5">{xpInLevel.toLocaleString()} / {xpForNext.toLocaleString()}</span>
               </div>
             </div>
             {/* Total XP */}

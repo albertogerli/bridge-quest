@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { courses } from "@/data/courses";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { getLevel, getXpInLevel, getLevelProgress, getXpForNextLevel, getXpToNextLevel } from "@/lib/xp-levels";
 
 export function useStats() {
   const [xp, setXp] = useState(0);
@@ -31,8 +32,11 @@ export function useStats() {
     return () => window.removeEventListener("bq_stats_updated", handleSyncUpdate);
   }, []);
 
-  const level = Math.floor(xp / 100) + 1;
-  const xpInLevel = xp % 100;
+  const level = getLevel(xp);
+  const xpInLevel = getXpInLevel(xp);
+  const levelProgress = getLevelProgress(xp);
+  const xpNeededForNext = getXpForNextLevel(xp);
+  const xpToNext = getXpToNextLevel(xp);
   const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
   const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
   const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
@@ -58,7 +62,7 @@ export function useStats() {
 
   return {
     xp, streak, handsPlayed, completedModules, dailyDone,
-    level, xpInLevel, levelName,
+    level, xpInLevel, levelProgress, xpNeededForNext, xpToNext, levelName,
     totalModulesCompleted, totalModulesAvailable, nextModule,
   };
 }

@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { slugToAsdName, getAsdId, asdNameToSlug } from "@/lib/asd-utils";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { ChevronRight, Users, Zap, TrendingUp, ArrowLeft } from "lucide-react";
 
 const medals = ["\u{1F947}", "\u{1F948}", "\u{1F949}"];
@@ -29,7 +30,7 @@ const avatarColors = [
 ];
 
 function getLevel(xp: number) {
-  const level = Math.floor(xp / 100) + 1;
+  const level = getLevelFromXp(xp);
   const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
   const names = getProfileConfig(profileKey || "adulto").levelNames;
   return { level, name: names[Math.min(level - 1, names.length - 1)] };

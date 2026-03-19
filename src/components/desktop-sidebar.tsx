@@ -10,9 +10,13 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { DailyCountdown } from "@/components/daily-countdown";
 
 const miniGames = [
+  { href: "/gioca/mano-del-giorno", emoji: "🎯", label: "Mano del Giorno", color: "bg-blue-50 border-blue-200 text-blue-700" },
   { href: "/gioca/quiz-lampo", emoji: "⚡", label: "Quiz Lampo", color: "bg-rose-50 border-rose-200 text-rose-700" },
+  { href: "/gioca/trova-errore", emoji: "🔍", label: "Trova l'Errore", color: "bg-orange-50 border-orange-200 text-orange-700" },
+  { href: "/gioca/impasse", emoji: "🎲", label: "Impasse o Drop?", color: "bg-indigo-50 border-indigo-200 text-indigo-700" },
   { href: "/gioca/conta-veloce", emoji: "🔢", label: "Conta Veloce", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
   { href: "/gioca/dichiara", emoji: "📢", label: "Dichiara!", color: "bg-amber-50 border-amber-200 text-amber-700" },
+  { href: "/gioca/pratica-licita", emoji: "🗣️", label: "Pratica Licita", color: "bg-teal-50 border-teal-200 text-teal-700" },
   { href: "/gioca/memory", emoji: "🧠", label: "Memory", color: "bg-purple-50 border-purple-200 text-purple-700" },
   { href: "/glossario", emoji: "📖", label: "Glossario", color: "bg-sky-50 border-sky-200 text-sky-700" },
 ];
@@ -78,18 +82,18 @@ export function DesktopSidebar() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xl font-bold text-[#003DA5]">{stats.xpInLevel}</p>
-              <p className="text-[10px] text-gray-500 font-medium">{`/ 100 ${profile.xpLabel}`}</p>
+              <p className="text-xl font-bold text-[#003DA5]">{stats.xp.toLocaleString()}</p>
+              <p className="text-[10px] text-gray-500 font-medium">{profile.xpLabel} totali</p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div
               className="h-full rounded-full bg-gradient-to-r from-[#003DA5] to-[#0052CC] transition-all"
-              style={{ width: `${stats.xpInLevel}%` }}
+              style={{ width: `${stats.levelProgress}%` }}
             />
           </div>
           <p className="text-[10px] text-gray-500 mt-1.5 font-medium">
-            {stats.xp} {profile.xpLabel} totali · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
+            {stats.xpInLevel.toLocaleString()} / {stats.xpNeededForNext.toLocaleString()} {profile.xpLabel} · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
           </p>
         </div>
 

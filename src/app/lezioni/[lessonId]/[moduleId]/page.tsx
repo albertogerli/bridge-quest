@@ -8,6 +8,7 @@ import { allWorlds, getLessonById, getModuleById, type ContentBlock } from "@/da
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
+import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { useSounds } from "@/hooks/use-sounds";
 import { useAppunti } from "@/hooks/use-appunti";
 import { updateLastActivity } from "@/hooks/use-notifications";
@@ -346,8 +347,8 @@ export default function ModulePage({
   const awardXp = (baseAmount: number) => {
     const amount = baseAmount * xpMultiplier;
     setXpEarned((prev) => {
-      const oldLevel = Math.floor(prev / 100);
-      const newLevel = Math.floor((prev + amount) / 100);
+      const oldLevel = getLevelFromXp(prev);
+      const newLevel = getLevelFromXp(prev + amount);
       if (newLevel > oldLevel) {
         // Level up!
         setTimeout(() => {
@@ -1453,7 +1454,7 @@ export default function ModulePage({
                 </motion.div>
                 <h3 className="text-2xl font-bold text-amber-900">{profile.levelUpTitle}</h3>
                 <p className="text-amber-800 font-bold mt-2 text-lg">
-                  Livello {Math.floor(xpEarned / 100) + 1}
+                  Livello {getLevelFromXp(xpEarned)}
                 </p>
                 <div className="mt-4 flex justify-center gap-2">
                   {["⭐", "⭐", "⭐"].map((s, i) => (
