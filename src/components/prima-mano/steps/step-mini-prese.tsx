@@ -140,7 +140,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="mt-6 rounded-[28px] border border-[#d8d0c0] bg-white p-6 text-center"
+          className="mt-6 rounded-[28px] border border-gray-200 bg-white p-6 text-center"
         >
           <p className="text-4xl font-black text-[#12305f]">
             {finalWins}/{MINI_TRICKS.length}
@@ -227,7 +227,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
       )}
 
       {/* Table cards */}
-      <div className="mt-4 rounded-[28px] border border-[#d8d0c0] bg-white p-5">
+      <div className="mt-4 rounded-[28px] border border-gray-200 bg-white p-5">
         <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
           Carte sul tavolo
         </p>

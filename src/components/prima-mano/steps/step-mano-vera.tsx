@@ -118,7 +118,7 @@ export function StepManoVera({ onComplete, playSound, onHandResult }: StepManoVe
       <CelebrationCombo trigger={showCelebration} type="epic" />
 
       {/* Contract info bar */}
-      <div className="flex items-center justify-between rounded-[20px] border border-[#d8d0c0] bg-[#fffaf0] px-4 py-3">
+      <div className="flex items-center justify-between rounded-[20px] border border-gray-200 bg-[#fffaf0] px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-[#12305f]">Contratto:</span>
           <span className="flex items-center gap-1 text-sm font-bold text-[#003DA5]">
@@ -150,7 +150,7 @@ export function StepManoVera({ onComplete, playSound, onHandResult }: StepManoVe
 
       {/* Bridge Table */}
       {hands && (
-        <div className="rounded-[24px] border border-[#d8d0c0] bg-white p-2 shadow-md">
+        <div className="rounded-[24px] border border-gray-200 bg-white p-2 shadow-md">
           <BridgeTable
             north={hands.north}
             south={hands.south}

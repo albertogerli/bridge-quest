@@ -111,7 +111,7 @@ export function StepVittoria({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 + i * 0.18, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="flex items-start gap-3 rounded-[20px] border border-[#d8d0c0] bg-white px-4 py-3"
+            className="flex items-start gap-3 rounded-[20px] border border-gray-200 bg-white px-4 py-3"
           >
             <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100">
               <span className="text-xs text-emerald-600">{"\u2713"}</span>

@@ -42,8 +42,8 @@ function ChoiceCard({
             ? "border-emerald-300 bg-emerald-50 shadow-[0_10px_30px_rgba(16,185,129,0.12)]"
             : "border-rose-300 bg-rose-50 shadow-[0_10px_30px_rgba(244,63,94,0.12)]"
           : disabled
-            ? "border-[#e5e0d5] bg-[#f9f6f0] opacity-50"
-            : "border-[#d8d0c0] bg-white hover:border-[#003DA5]/30 hover:bg-[#f7f9ff]"
+            ? "border-gray-200 bg-[#f9f6f0] opacity-50"
+            : "border-gray-200 bg-white hover:border-[#003DA5]/30 hover:bg-[#f7f9ff]"
       }`}
     >
       <p className="text-sm font-bold text-[#12305f]">{label}</p>
@@ -85,7 +85,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
       <ConfettiBurst trigger={showConfetti} count={25} />
 
       <div className="mt-6 space-y-4">
-        <div className="rounded-[28px] border border-[#d8d0c0] bg-white p-5">
+        <div className="rounded-[28px] border border-gray-200 bg-white p-5">
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
             Chi vince questa presa?
           </p>
@@ -103,7 +103,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
                     : {}),
                 }}
                 transition={{ delay: card.delay, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className={`rounded-[22px] border border-[#d8d0c0] bg-[#fffaf0] px-3 py-4 text-center shadow-sm ${
+                className={`rounded-[22px] border border-gray-200 bg-[#fffaf0] px-3 py-4 text-center shadow-sm ${
                   choice === "ace" && card.label === "A" ? "ring-2 ring-[#c8a44e]" : ""
                 }`}
               >

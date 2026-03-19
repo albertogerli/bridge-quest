@@ -12,7 +12,7 @@ export function StepShell({
   children?: ReactNode;
 }) {
   return (
-    <div className="rounded-[32px] border border-[#d8d0c0] bg-[#fffaf0] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+    <div className="rounded-[32px] border border-gray-200 bg-[#fffaf0] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
       <div className="mb-4 inline-flex rounded-full border border-[#c8a44e]/30 bg-[#c8a44e]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
         {kicker}
       </div>

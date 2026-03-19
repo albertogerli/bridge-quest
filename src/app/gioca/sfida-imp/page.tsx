@@ -570,7 +570,7 @@ function SfidaIMPContent() {
             transition={{ delay: 0.2 }}
             className="mt-4"
           >
-            <div className="rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
+            <div className="rounded-2xl bg-white p-5 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
               <h3 className="font-bold text-gray-900 mb-3">Come funziona il punteggio IMP</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
@@ -795,7 +795,7 @@ function SfidaIMPContent() {
             </p>
 
             {/* Stats */}
-            <div className="mt-6 rounded-2xl bg-white p-5 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
+            <div className="mt-6 rounded-2xl bg-white p-5 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Contratto</p>
@@ -922,7 +922,7 @@ function SfidaIMPContent() {
               </p>
 
               {/* Comparison Table */}
-              <div className="mt-6 rounded-2xl bg-white border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5] overflow-hidden">
+              <div className="mt-6 rounded-2xl bg-white border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb] overflow-hidden">
                 {/* Table Header */}
                 <div className="grid grid-cols-5 text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-gray-50 px-4 py-3">
                   <div className="text-left">Mano</div>
@@ -1012,7 +1012,7 @@ function SfidaIMPContent() {
 
             {/* My results summary */}
             {myResults && myResults.length > 0 && (
-              <div className="mt-6 rounded-2xl bg-white p-4 border-2 border-[#e5e0d5] shadow-[0_4px_0_#e5e0d5]">
+              <div className="mt-6 rounded-2xl bg-white p-4 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">I tuoi risultati</h3>
                 {myResults.map((r, i) => {
                   const needed = parseContract(r.contract).tricksNeeded;

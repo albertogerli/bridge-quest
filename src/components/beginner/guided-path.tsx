@@ -49,7 +49,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={`rounded-[22px] border border-[#d8d0c0] dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] overflow-hidden ${
+      className={`rounded-[22px] border border-gray-200 dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] overflow-hidden ${
         isFull ? "shadow-lg" : "shadow-sm"
       }`}
     >
@@ -89,7 +89,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                       ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20"
                       : isCurrent
                         ? "border-[#c8a44e]/40 dark:border-[#c8a44e]/30 bg-[#fffdf5] dark:bg-[#c8a44e]/10 shadow-sm shadow-[#c8a44e]/10"
-                        : "border-[#e5e0d5] dark:border-[#2a3040] bg-[#fafaf7] dark:bg-[#1a1f2e]/50"
+                        : "border-gray-200 dark:border-[#2a3040] bg-[#fafaf7] dark:bg-[#1a1f2e]/50"
                   }`}
                 >
                   {/* Step number / check */}

@@ -107,7 +107,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
             </div>
 
             {/* Lead card */}
-            <div className="rounded-[28px] border border-[#d8d0c0] bg-white p-5">
+            <div className="rounded-[28px] border border-gray-200 bg-white p-5">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
                 Ovest gioca:
               </p>
@@ -123,7 +123,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
             </div>
 
             {/* Player hand */}
-            <div className="rounded-[28px] border border-[#d8d0c0] bg-[#fffaf0] p-5">
+            <div className="rounded-[28px] border border-gray-200 bg-[#fffaf0] p-5">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
                 La tua mano &mdash; scegli una carta:
               </p>

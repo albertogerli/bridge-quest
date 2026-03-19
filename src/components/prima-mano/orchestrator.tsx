@@ -210,7 +210,7 @@ export function PrimaManoV2({
         <div className="w-full">
           {/* Mobile progress bar (visible < lg, when sidebar is hidden) */}
           {!isManoVera && (
-            <div className="mb-4 rounded-2xl border border-[#d8d0c0] bg-white/80 px-4 py-2.5 backdrop-blur-sm lg:hidden">
+            <div className="mb-4 rounded-2xl border border-gray-200 bg-white/80 px-4 py-2.5 backdrop-blur-sm lg:hidden">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[11px] font-bold text-[#8f6b16]">
                   {STEPS[currentStep].kicker}
@@ -295,7 +295,7 @@ export function PrimaManoV2({
                   </div>
                   <button
                     onClick={handleSkip}
-                    className="rounded-[22px] border border-[#d8d0c0] bg-white px-5 py-2 text-sm font-semibold text-[#5c677d] transition-colors hover:text-[#12305f]"
+                    className="rounded-[22px] border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-[#5c677d] transition-colors hover:text-[#12305f]"
                   >
                     Salta
                   </button>

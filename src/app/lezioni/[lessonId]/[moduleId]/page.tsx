@@ -1738,8 +1738,8 @@ export default function ModulePage({
                 <div className="flex justify-center pt-8 pb-4 opacity-[0.07]" aria-hidden="true">
                   <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
                     {/* Table */}
-                    <rect x="30" y="30" width="140" height="140" rx="16" fill="#1B5E3B" />
-                    <rect x="38" y="38" width="124" height="124" rx="12" stroke="#2D7A4F" strokeWidth="1.5" fill="none" />
+                    <rect x="30" y="30" width="140" height="140" rx="16" fill="#003DA5" />
+                    <rect x="38" y="38" width="124" height="124" rx="12" stroke="#0052CC" strokeWidth="1.5" fill="none" />
                     {/* N */}
                     <text x="100" y="58" textAnchor="middle" fill="#F7F5F0" fontSize="14" fontWeight="700">N</text>
                     {/* S */}

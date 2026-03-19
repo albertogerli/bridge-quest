@@ -18,7 +18,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="rounded-[24px] border border-[#d8d0c0] bg-white p-4"
+          className="rounded-[24px] border border-gray-200 bg-white p-4"
         >
           <p className="text-sm font-bold text-[#12305f]">Cosa NON facciamo</p>
           <p className="mt-2 text-sm leading-6 text-[#5c677d]">
@@ -29,7 +29,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="rounded-[24px] border border-[#d8d0c0] bg-white p-4"
+          className="rounded-[24px] border border-gray-200 bg-white p-4"
         >
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="h-4 w-4 text-[#c8a44e]" />
