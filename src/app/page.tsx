@@ -676,8 +676,8 @@ export default function Home() {
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-base leading-tight">Trova il tuo Circolo</h3>
-                <p className="text-xs text-blue-100/80 leading-snug">260 circoli FIGB in tutta Italia</p>
+                <h3 className="font-bold text-base leading-tight">Trova la tua ASD</h3>
+                <p className="text-xs text-blue-100/80 leading-snug">260 associazioni FIGB in tutta Italia</p>
               </div>
               <svg className="w-5 h-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <path d="M9 18l6-6-6-6" />
