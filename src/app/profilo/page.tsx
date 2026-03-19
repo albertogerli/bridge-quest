@@ -416,53 +416,74 @@ export default function ProfiloPage() {
           </Link>
         </motion.div>
 
-        {/* XP Progress */}
-        <motion.div
+        {/* Stats Card with Progress Ring */}
+        <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-6 card-clean rounded-2xl bg-white p-5"
+          className="mt-6 rounded-2xl p-6 relative overflow-hidden border border-white/10 shadow-xl"
+          style={{ background: "linear-gradient(180deg, #1a3a4a 0%, #15302e 100%)" }}
         >
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <p className="text-sm font-bold text-gray-900">
-                Prossimo livello
-              </p>
-              <p className="text-xs text-gray-500">Livello {level + 1}: {nextLevelName}</p>
+          <div className="text-center mb-5">
+            <h2 className="text-xl font-bold text-white">Livello {level} — {levelName}</h2>
+            <p className="text-sm text-[#8da4b8] mt-0.5">Prossimo livello: {nextLevelName}</p>
+          </div>
+          <div className="flex items-center justify-between">
+            {/* Streak */}
+            <div className="flex flex-col items-center w-1/4">
+              <Flame className="w-7 h-7 text-orange-500 mb-1.5" style={{ filter: "drop-shadow(0 0 8px rgba(249,115,22,0.7))" }} />
+              <p className="text-[10px] text-gray-400 font-medium">Streak</p>
+              <p className="font-bold text-white">{streak} gg</p>
             </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-[#003DA5]">{xpInLevel}</p>
-              <p className="text-[11px] text-gray-400">/ 100 XP</p>
+            {/* Progress Ring */}
+            <div className="relative flex items-center justify-center w-2/4">
+              <svg className="w-32 h-32" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" fill="transparent" r="50" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                <motion.circle
+                  cx="60" cy="60" fill="transparent" r="50"
+                  stroke="#22c55e"
+                  strokeWidth="8"
+                  strokeDasharray="314"
+                  strokeLinecap="round"
+                  style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%", filter: "drop-shadow(0 0 6px rgba(34,197,94,0.5))" }}
+                  initial={{ strokeDashoffset: 314 }}
+                  animate={{ strokeDashoffset: 314 * (1 - xpInLevel / 100) }}
+                  transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+                />
+              </svg>
+              <div className="absolute flex flex-col items-center">
+                <Zap className="w-3.5 h-3.5 text-gray-400 mb-0.5" />
+                <span className="text-[28px] font-bold text-white leading-none">{xpInLevel}</span>
+                <span className="text-xs text-gray-400 mt-0.5">/ 100 XP</span>
+              </div>
+            </div>
+            {/* Total XP */}
+            <div className="flex flex-col items-center w-1/4">
+              <Star className="w-7 h-7 text-yellow-400 mb-1.5" style={{ filter: "drop-shadow(0 0 8px rgba(250,204,21,0.7))" }} />
+              <p className="text-[10px] text-gray-400 font-medium">Totale XP</p>
+              <p className="font-bold text-white">{xp.toLocaleString("it-IT")}</p>
             </div>
           </div>
-          <div className="h-3.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
-            <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-[#003DA5] to-[#0052CC]"
-              initial={{ width: 0 }}
-              animate={{ width: `${xpInLevel}%` }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            />
-          </div>
-        </motion.div>
+        </motion.section>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-3 gap-3 mt-4">
-          {stats.map((stat, i) => (
+        {/* Quick stats */}
+        <div className="grid grid-cols-4 gap-2 mt-3">
+          {[
+            { icon: <BookOpen className="w-4 h-4 text-indigo-500" />, val: String(totalModulesCompleted), label: "Moduli" },
+            { icon: <Spade className="w-4 h-4 text-gray-700" />, val: String(handsPlayed), label: "Mani" },
+            { icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, val: `${completionPercent}%`, label: "Completato" },
+            { icon: <Globe className="w-4 h-4 text-blue-500" />, val: `${worldsCompleted}/${totalWorldsCount}`, label: "Mondi" },
+          ].map((s, i) => (
             <motion.div
-              key={stat.label}
+              key={s.label}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 + i * 0.05 }}
+              transition={{ delay: 0.2 + i * 0.04 }}
+              className="rounded-xl bg-white p-2.5 text-center border border-gray-200 shadow-sm"
             >
-              <div className="rounded-2xl bg-white p-3.5 text-center border-2 border-[#e5e7eb] shadow-sm">
-                <span className="flex items-center justify-center">{stat.icon}</span>
-                <p className="text-xl font-bold text-gray-900 mt-0.5">
-                  {stat.value}
-                </p>
-                <p className="text-[10px] text-gray-500 font-medium mt-0.5 leading-tight">
-                  {stat.label}
-                </p>
-              </div>
+              <span className="flex justify-center">{s.icon}</span>
+              <p className="text-lg font-bold text-gray-900 mt-0.5">{s.val}</p>
+              <p className="text-[9px] text-gray-500 font-medium">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -764,7 +785,7 @@ export default function ProfiloPage() {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">
-              Achievement
+              Badge Collezionati
             </h2>
             <Badge
               variant="outline"
@@ -784,8 +805,11 @@ export default function ProfiloPage() {
                   !badge.earned ? "opacity-25 grayscale" : ""
                 }`}
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border-2 border-[#e5e7eb] shadow-sm text-2xl">
-                  {badge.icon}
+                <div
+                  className="flex h-16 w-16 items-center justify-center rounded-full shadow-md"
+                  style={{ background: badge.earned ? "radial-gradient(circle at 30% 30%, #ffd700, #b8860b)" : "radial-gradient(circle at 30% 30%, #d1d5db, #9ca3af)" }}
+                >
+                  <span className="text-white/80">{badge.icon}</span>
                 </div>
                 {badge.earned && (
                   <button
