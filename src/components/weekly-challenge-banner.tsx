@@ -44,10 +44,10 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
 
   const progressPercent = (progress.played / progress.target) * 100;
 
-  // Compact version for homepage
+  // Compact version for homepage — links directly to play
   if (compact) {
     return (
-      <Link href="/gioca/sfida-settimanale">
+      <Link href="/gioca/smazzata">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
