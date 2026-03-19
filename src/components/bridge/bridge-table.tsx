@@ -173,8 +173,11 @@ export function BridgeTable({
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
                 <div />
                 <div className={`flex items-center justify-center ${isActive("west") ? "text-amber" : ""}`}>O</div>
-                <div className="flex items-center justify-center text-amber text-xs font-black">
-                  {trickCount.ns}-{trickCount.ew}
+                <div className="flex flex-col items-center justify-center leading-tight">
+                  <span className="text-amber text-xs font-black">{trickCount.ns}-{trickCount.ew}</span>
+                  {(trickCount.ns > 0 || trickCount.ew > 0) && (
+                    <span className="text-[7px] text-white/50 font-medium">dich-dif</span>
+                  )}
                 </div>
                 <div className={`flex items-center justify-center ${isActive("east") ? "text-amber" : ""}`}>E</div>
                 <div />
