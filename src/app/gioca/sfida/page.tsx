@@ -9,7 +9,7 @@ import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
-import { parseContract, toDisplayPosition, toGamePosition } from "@/lib/bridge-engine";
+import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
@@ -259,9 +259,9 @@ export default function SfidaDelGiornoPage() {
                 westFaceDown={true}
                 currentTrick={displayTrick}
                 contract={smazzata.contract}
-                declarer="S"
+                declarer={declarer === "south" ? "S" : declarer === "north" ? "N" : declarer === "east" ? "E" : "O"}
                 vulnerability={smazzata.vulnerability}
-                trickCount={game.gameState!.trickCount}
+                trickCount={partnershipOf(declarer) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
                 onPlayCard={handlePlayCard}
                 highlightedCards={game.validCards as CardData[]}
                 activePosition={activeDisplayPos}
@@ -280,7 +280,7 @@ export default function SfidaDelGiornoPage() {
                 eastFaceDown={true}
                 westFaceDown={true}
                 contract={smazzata.contract}
-                declarer="S"
+                declarer={declarer === "south" ? "S" : declarer === "north" ? "N" : declarer === "east" ? "E" : "O"}
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}

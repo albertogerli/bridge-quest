@@ -13,6 +13,7 @@ import {
   toDisplayPosition,
   toGamePosition,
   cardToString,
+  partnershipOf,
 } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
@@ -1081,9 +1082,9 @@ function PlayingView({
                 westFaceDown={true}
                 currentTrick={displayTrick}
                 contract={smazzata.contract}
-                declarer="S"
+                declarer={declarer === "south" ? "S" : declarer === "north" ? "N" : declarer === "east" ? "E" : "O"}
                 vulnerability={smazzata.vulnerability}
-                trickCount={game.gameState!.trickCount}
+                trickCount={partnershipOf(declarer) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
                 onPlayCard={handlePlayCard}
                 highlightedCards={game.validCards as CardData[]}
                 activePosition={activeDisplayPos}
@@ -1118,7 +1119,7 @@ function PlayingView({
                 eastFaceDown={true}
                 westFaceDown={true}
                 contract={smazzata.contract}
-                declarer="S"
+                declarer={declarer === "south" ? "S" : declarer === "north" ? "N" : declarer === "east" ? "E" : "O"}
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
