@@ -335,6 +335,24 @@ export function DesktopSidebar() {
           </div>
         </Link>
 
+        {/* Trova Circolo */}
+        <Link href="/trova-circolo" aria-label="Trova il tuo Circolo">
+          <div className="rounded-2xl bg-gradient-to-r from-[#003DA5] to-[#0052CC] p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                <span className="text-lg">📍</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-white">Trova Circolo</p>
+                <p className="text-[11px] text-white/70">260 circoli FIGB vicino a te</p>
+              </div>
+              <svg className="h-4 w-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <polyline points="9,6 15,12 9,18" />
+              </svg>
+            </div>
+          </div>
+        </Link>
+
         {/* Account */}
         {user ? (
           <button

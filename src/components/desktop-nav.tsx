@@ -13,6 +13,7 @@ const navItems = [
   { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/classifica", icon: "trophy", label: "Classifica" },
   { href: "/negozio", icon: "shop", label: "Negozio" },
+  { href: "/trova-circolo", icon: "circolo", label: "Trova Circolo" },
   { href: "/scopri", icon: "scopri", label: "Scopri" },
   { href: "/profilo", icon: "user", label: "Profilo" },
 ];
@@ -71,6 +72,12 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
       <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
       <line x1="3" y1="6" x2="21" y2="6" />
       <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  ),
+  circolo: (a) => (
+    <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   ),
   scopri: (a) => (

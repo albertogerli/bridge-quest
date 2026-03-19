@@ -30,7 +30,7 @@ import {
   Zap, CheckCircle2, Flame, Target, BarChart3, Brain,
   Smartphone, BookOpen, Spade, CalendarDays, Gift,
   Gamepad2, Crown, GraduationCap, Trophy,
-  Sparkles, Package, Wrench, Star, FileText, Globe
+  Sparkles, Package, Wrench, Star, FileText, Globe, MapPin
 } from "lucide-react";
 
 // Map weekly objective IDs to Lucide icons
@@ -670,6 +670,18 @@ export default function Home() {
                 <h3 className="font-bold text-base leading-tight">Gamification</h3>
               </div>
               <p className="text-xs text-gray-500 leading-snug">XP, streak, badge e collezionabili</p>
+            </Link>
+            <Link href="/trova-circolo" className="col-span-2 rounded-2xl p-4 text-white shadow-sm flex items-center gap-4 h-[80px]" style={{ background: "linear-gradient(135deg, #003DA5, #0052CC)" }}>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                <MapPin className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-base leading-tight">Trova il tuo Circolo</h3>
+                <p className="text-xs text-blue-100/80 leading-snug">260 circoli FIGB in tutta Italia</p>
+              </div>
+              <svg className="w-5 h-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path d="M9 18l6-6-6-6" />
+              </svg>
             </Link>
           </motion.div>
         </div>
