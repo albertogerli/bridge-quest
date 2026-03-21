@@ -18,7 +18,8 @@ export type GameType =
   | "trova-errore"
   | "mano-guidata"
   | "dichiara"
-  | "pratica-licita";
+  | "pratica-licita"
+  | "sfida-settimanale";
 
 export interface GameResult {
   gameType: GameType;
