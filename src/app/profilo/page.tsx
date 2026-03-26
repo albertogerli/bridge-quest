@@ -191,10 +191,17 @@ export default function ProfiloPage() {
       const cm = localStorage.getItem("bq_completed_modules");
       if (cm) setCompletedModules(JSON.parse(cm));
       const p = localStorage.getItem("bq_profile") as UserProfile | null;
-      if (p) setCurrentProfile(p);
+      if (p) {
+        setCurrentProfile(p);
+      } else if (authProfile?.profile_type) {
+        // Sync from Supabase if localStorage is empty (e.g. after clearing data)
+        const dbProfile = authProfile.profile_type as UserProfile;
+        setCurrentProfile(dbProfile);
+        localStorage.setItem("bq_profile", dbProfile);
+      }
       setInvitesSent(getInviteCount());
     } catch {}
-  }, []);
+  }, [authProfile]);
 
   // Fetch challenge history & stats
   useEffect(() => {

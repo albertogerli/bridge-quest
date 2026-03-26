@@ -16,6 +16,8 @@ import { ComprehensionQuiz } from "@/components/comprehension-quiz";
 import { getYouTubeEmbedUrl } from "@/components/maestro-video";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GLOSSARY } from "@/data/glossary";
+import { GlossaryTooltip } from "@/components/beginner/glossary-tooltip";
 
 // === DRAFT SAVE/RESTORE ===
 interface ModuleDraft {
@@ -222,6 +224,7 @@ export default function ModulePage({
         const prev = JSON.parse(localStorage.getItem(key) || "{}");
         prev[`${lessonId}-${moduleId}`] = true;
         localStorage.setItem(key, JSON.stringify(prev));
+        localStorage.setItem("bq_last_lesson_ts", String(Date.now()));
 
         // Clear draft on completion
         clearDraft(lessonId, moduleId);
@@ -504,6 +507,48 @@ export default function ModulePage({
     });
   }
 
+  // Bridge-specific terms safe for auto-linking (no common Italian words)
+  const GLOSSARY_AUTO_KEYS = [
+    "atout","dichiarante","morto","licita","fit","taglio","impasse",
+    "surtaglio","sottomano","rientro","onori","manche","slam","libro",
+    "bilanciata","forzante","ruff","eliminazione","squeeze","parziale",
+    "stayman","transfer","ducking","mazziere","vulnerabile","hold_up",
+    "cue_bid","presa_sicura","seme_lungo",
+  ] as const;
+
+  // Build term→key map once
+  const glossaryTermMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const key of GLOSSARY_AUTO_KEYS) {
+      const entry = GLOSSARY[key];
+      if (entry) map.set(entry.term.toLowerCase(), key);
+    }
+    return map;
+  }, []);
+
+  // Render text with both glossary tooltips and card symbols
+  function renderEnrichedText(text: string) {
+    if (!text) return text;
+    const terms = Array.from(glossaryTermMap.keys())
+      .sort((a, b) => b.length - a.length);
+    if (terms.length === 0) return renderTextWithCards(text);
+
+    const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const regex = new RegExp(`\\b(${escaped.join("|")})\\b`, "gi");
+    const parts = text.split(regex);
+    if (parts.length === 1) return renderTextWithCards(text);
+
+    const matched = new Set<string>();
+    return parts.map((part, i) => {
+      const key = glossaryTermMap.get(part.toLowerCase());
+      if (key && !matched.has(key)) {
+        matched.add(key);
+        return <GlossaryTooltip key={i} term={key}>{renderTextWithCards(part)}</GlossaryTooltip>;
+      }
+      return <span key={i}>{renderTextWithCards(part)}</span>;
+    });
+  }
+
   const isJunior = profile.profile === "junior";
 
   const renderBlock = (block: ContentBlock, blockIndex: number) => {
@@ -534,7 +579,7 @@ export default function ModulePage({
             transition={{ delay: delay * profile.animSpeed }}
             className={`text-gray-700 leading-relaxed ${isJunior ? "mb-5 text-[15.5px]" : "mb-4"} ${profile.contentClasses || "text-[15px]"}`}
           >
-            {renderTextWithCards(block.content)}
+            {renderEnrichedText(block.content)}
           </motion.div>
         );
 
@@ -567,7 +612,7 @@ export default function ModulePage({
                 <p className={`font-semibold leading-relaxed ${
                   isJunior ? "text-[15px] text-purple-900" : "text-[14px] text-emerald-900"
                 }`}>
-                  {block.content}
+                  {renderEnrichedText(block.content)}
                 </p>
               </div>
             </div>
@@ -599,7 +644,7 @@ export default function ModulePage({
                 }`}>{isJunior ? "Guarda Qui!" : "Esempio"}</p>
                 <p className={`leading-relaxed mb-2 ${
                   isJunior ? "text-[15px] text-amber-900" : "text-[14px] text-indigo-900"
-                }`}>{block.content}</p>
+                }`}>{renderEnrichedText(block.content)}</p>
                 {block.cards && (
                   <div className="mt-2">
                     <CardDisplay cards={block.cards} size="md" />
@@ -706,7 +751,7 @@ export default function ModulePage({
               </div>
             </div>
             <p className={`text-gray-700 mb-4 leading-relaxed ${profile.profile === "senior" ? "text-base" : "text-[14px]"}`}>
-              {renderTextWithCards(block.content)}
+              {renderEnrichedText(block.content)}
             </p>
 
             {/* Power-up buttons */}
@@ -1003,7 +1048,7 @@ export default function ModulePage({
               <p className="font-bold text-gray-900 text-[15px]">Vero o Falso?</p>
             </div>
             <p className="text-[14px] text-gray-700 mb-4 leading-relaxed">
-              {renderTextWithCards(block.content)}
+              {renderEnrichedText(block.content)}
             </p>
             <div className="grid grid-cols-2 gap-3">
               {["Vero", "Falso"].map((label, idx) => {
@@ -1071,7 +1116,7 @@ export default function ModulePage({
               <p className="font-bold text-gray-900 text-[15px]">Scegli la carta</p>
             </div>
             <p className="text-[14px] text-gray-700 mb-4 leading-relaxed">
-              {renderTextWithCards(block.content)}
+              {renderEnrichedText(block.content)}
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
               {cardParts.map((card, idx) => {
@@ -1167,7 +1212,7 @@ export default function ModulePage({
               <p className="font-bold text-gray-900 text-[15px]">Valuta la mano</p>
             </div>
             <p className="text-[14px] text-gray-700 mb-3 leading-relaxed">
-              {renderTextWithCards(block.content)}
+              {renderEnrichedText(block.content)}
             </p>
             {block.cards && (
               <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
@@ -1251,7 +1296,7 @@ export default function ModulePage({
               <p className="font-bold text-gray-900 text-[15px]">Bidding Box</p>
             </div>
             <p className="text-[14px] text-gray-700 mb-3 leading-relaxed">
-              {renderTextWithCards(block.content)}
+              {renderEnrichedText(block.content)}
             </p>
             {block.cards && (
               <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-100">

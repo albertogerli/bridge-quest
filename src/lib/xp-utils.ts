@@ -51,6 +51,7 @@ export function awardGameXp(gameId: string, xp: number): number {
     // Increment hands played
     const hp = parseInt(localStorage.getItem(HANDS_KEY) || "0", 10);
     localStorage.setItem(HANDS_KEY, String(hp + 1));
+    localStorage.setItem("bq_last_hand_ts", String(Date.now()));
 
     // Increment daily hand counter
     const today = new Date().toISOString().slice(0, 10);
