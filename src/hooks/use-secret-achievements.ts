@@ -94,8 +94,11 @@ export function useSecretAchievements() {
   }, []);
 
   const checkAchievements = (
-    currentEarned: string[] = earnedSecretAchievements
+    passedEarned?: string[]
   ): SecretAchievement[] => {
+    // Always read from localStorage to avoid stale state on mount
+    const currentEarned: string[] = passedEarned
+      ?? JSON.parse(localStorage.getItem("bq_secret_achievements") || "[]");
     const newlyUnlocked: SecretAchievement[] = [];
 
     // Nottambulo - Play after midnight

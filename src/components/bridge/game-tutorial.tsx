@@ -28,7 +28,7 @@ const STEPS: TutorialStep[] = [
     target: "highlighted",
     title: "Carte giocabili",
     description:
-      "Le carte evidenziate in verde sono quelle giocabili. Solo queste possono essere selezionate.",
+      "Le carte evidenziate sono quelle giocabili. Solo queste possono essere selezionate.",
   },
   {
     target: "center",
