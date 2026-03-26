@@ -909,6 +909,30 @@ function PlayingView({
                 result={game.result.result}
                 stars={ddsStars}
               />
+
+              {/* AI Analysis CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 }}
+              >
+                <Link href="/gioca/analisi">
+                  <div className="card-elevated rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200">
+                        <span className="text-lg">🤖</span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-gray-900">Analizza con l&apos;AI</p>
+                        <p className="text-[11px] text-gray-500">Scopri dove potevi migliorare</p>
+                      </div>
+                      <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                        <polyline points="9,6 15,12 9,18" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

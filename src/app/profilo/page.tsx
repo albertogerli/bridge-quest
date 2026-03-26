@@ -182,7 +182,10 @@ export default function ProfiloPage() {
 
   useEffect(() => {
     try {
-      setXp(parseInt(localStorage.getItem("bq_xp") || "0", 10));
+      const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
+      setXp(currentXp);
+      // Sync fiches with negozio (derived from XP)
+      localStorage.setItem("bq_fiches", String(Math.floor(currentXp / 10)));
       setStreak(parseInt(localStorage.getItem("bq_streak") || "0", 10));
       setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
       const cm = localStorage.getItem("bq_completed_modules");
