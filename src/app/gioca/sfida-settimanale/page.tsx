@@ -212,14 +212,10 @@ export default function SfidaSettimanale() {
                     </Button>
                   )}
                   {isPlayed && (
-                    <Button
-                      onClick={() => setCurrentHandIndex(i)}
-                      variant="outline"
-                      size="sm"
-                      className="rounded-xl font-bold text-xs h-9 px-3 shrink-0"
-                    >
-                      Rigioca
-                    </Button>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <span className="text-xs font-bold text-emerald-600">Giocata</span>
+                    </div>
                   )}
                 </div>
               </motion.div>

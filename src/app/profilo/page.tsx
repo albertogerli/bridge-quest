@@ -1111,6 +1111,8 @@ export default function ProfiloPage() {
                         await refreshProfile();
                         setSaving(false);
                         setEditing(false);
+                        setEditAsdSelected("");
+                        setEditAsdSearch("");
                       }}
                       disabled={saving}
                       className="flex-1 h-10 rounded-xl bg-[#003DA5] font-semibold text-xs shadow-md disabled:opacity-50"

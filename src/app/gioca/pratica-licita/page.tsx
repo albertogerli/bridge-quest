@@ -85,6 +85,7 @@ export default function PraticaLicitaPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startRef = useRef(0);
   const pausedElapsedRef = useRef(0);
+  const pendingAdvanceRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     try {
@@ -165,7 +166,8 @@ export default function PraticaLicitaPage() {
       setStreak(0);
     }
 
-    setTimeout(() => {
+    // Wait for user to press "Continua" instead of auto-dismissing
+    pendingAdvanceRef.current = () => {
       setShowFeedback(false);
       setSelectedAnswer("");
       if (roundIdx + 1 >= TOTAL_ROUNDS) {
@@ -191,7 +193,7 @@ export default function PraticaLicitaPage() {
         setRoundIdx((r) => r + 1);
         startTimer();
       }
-    }, 2500);
+    };
   };
 
   useEffect(() => {
@@ -633,6 +635,21 @@ export default function PraticaLicitaPage() {
                   <p className="text-xs text-gray-600 leading-relaxed">
                     {scenario.explanation}
                   </p>
+                  <button
+                    onClick={() => {
+                      if (pendingAdvanceRef.current) {
+                        pendingAdvanceRef.current();
+                        pendingAdvanceRef.current = null;
+                      }
+                    }}
+                    className={`mt-3 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-[0.97] ${
+                      lastCorrect
+                        ? "bg-emerald-600 hover:bg-emerald-700"
+                        : "bg-[#003DA5] hover:bg-[#002E7A]"
+                    }`}
+                  >
+                    Continua
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
