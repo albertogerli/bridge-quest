@@ -17,7 +17,7 @@ interface StepManoVeraProps extends StepProps {
 }
 
 const TUTORIAL_TIPS = [
-  "Le carte verdi sono giocabili. Tocca una per giocarla.",
+  "Le carte evidenziate sono giocabili. Tocca una per giocarla.",
   "Ora tocca le carte del morto (Nord). Le controlli tu.",
   "Guarda il contatore prese in centro. Devi arrivare a 10.",
 ];
