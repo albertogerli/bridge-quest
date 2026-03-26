@@ -7,7 +7,7 @@ import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
 import { useActivityTracker } from "@/hooks/use-activity-tracker";
-import { AuthProvider } from "@/contexts/auth-provider";
+import { AuthProvider, useSharedAuth } from "@/contexts/auth-provider";
 import { CookieBanner } from "@/components/cookie-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { useExitIntent } from "@/hooks/use-exit-intent";
@@ -16,6 +16,9 @@ import type { UserProfile } from "@/hooks/use-profile";
 
 /** Routes that should be full-screen (no nav, no sidebar) */
 const FULL_SCREEN_ROUTES = ["/login", "/admin"];
+
+/** Routes accessible without authentication */
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
@@ -28,9 +31,18 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
 function LayoutShellInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, loading: authLoading } = useSharedAuth();
   const isFullScreen = FULL_SCREEN_ROUTES.some((r) => pathname.startsWith(r));
+  const isPublic = PUBLIC_ROUTES.some((r) => r === "/" ? pathname === "/" : pathname.startsWith(r));
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const { showExitModal, setShowExitModal } = useExitIntent();
+
+  // Auth gate: redirect to login if not authenticated on protected routes
+  useEffect(() => {
+    if (!authLoading && !user && !isPublic) {
+      router.replace("/login");
+    }
+  }, [authLoading, user, isPublic, router]);
 
   // Load profile for visual adaptation
   useEffect(() => {
@@ -59,6 +71,15 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
   // Track time spent in app (30s heartbeat, pauses when tab hidden)
   useActivityTracker();
+
+  // Show loading spinner while auth resolves on protected routes
+  if (!isPublic && (authLoading || !user)) {
+    return (
+      <div className="min-h-svh bg-[#F7F5F0] dark:bg-[#0f1219] flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-gray-200 border-t-[#003DA5]" />
+      </div>
+    );
+  }
 
   if (isFullScreen) {
     return (

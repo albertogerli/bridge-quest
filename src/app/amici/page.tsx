@@ -20,7 +20,7 @@ interface SelectedFriend {
 }
 
 export default function AmiciPage() {
-  const { user } = useSharedAuth();
+  const { user, loading: authLoading } = useSharedAuth();
   const router = useRouter();
   const {
     friends,
@@ -98,6 +98,15 @@ export default function AmiciPage() {
     await addFriend(userId);
     setSentRequests((prev) => new Set(prev).add(userId));
   };
+
+  // Auth loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-gray-200 border-t-[#003DA5]" />
+      </div>
+    );
+  }
 
   // Not logged in
   if (!user) {

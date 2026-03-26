@@ -129,7 +129,7 @@ function SfidaIMPContent() {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     if (!challengeIdParam) {
-      setError("Nessun ID sfida specificato.");
+      setError("Per giocare una Sfida IMP, sfida un amico dalla pagina Amici.");
       setMatchPhase("error");
       return;
     }
@@ -451,6 +451,7 @@ function SfidaIMPContent() {
 
   // ── ERROR ──
   if (matchPhase === "error") {
+    const isNoChallengeId = !challengeIdParam;
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-lg">
@@ -459,17 +460,37 @@ function SfidaIMPContent() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-20"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 mx-auto mb-4">
-              <XCircle className="w-8 h-8 text-red-500" />
+            <div className={`flex h-16 w-16 items-center justify-center rounded-full mx-auto mb-4 ${
+              isNoChallengeId ? "bg-violet-50" : "bg-red-50"
+            }`}>
+              {isNoChallengeId ? (
+                <Swords className="w-8 h-8 text-violet-500" />
+              ) : (
+                <XCircle className="w-8 h-8 text-red-500" />
+              )}
             </div>
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Errore</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">
+              {isNoChallengeId ? "Sfida IMP" : "Errore"}
+            </h2>
             <p className="text-sm text-gray-500 mb-6">{error}</p>
-            <Link href="/gioca">
-              <Button className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-sm font-bold h-11 px-6">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Torna a Gioca
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              {isNoChallengeId && (
+                <Link href="/amici">
+                  <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 text-sm font-bold h-11 px-6">
+                    <Swords className="w-4 h-4 mr-2" />
+                    Sfida un amico
+                  </Button>
+                </Link>
+              )}
+              <Link href="/gioca">
+                <Button variant={isNoChallengeId ? "outline" : "default"} className={`rounded-xl text-sm font-bold h-11 px-6 ${
+                  isNoChallengeId ? "" : "bg-[#003DA5] hover:bg-[#002E7A]"
+                }`}>
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Torna a Gioca
+                </Button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </div>

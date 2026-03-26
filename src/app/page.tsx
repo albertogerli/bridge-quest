@@ -677,7 +677,7 @@ export default function Home() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-base leading-tight">Trova la tua ASD</h3>
-                <p className="text-xs text-blue-100/80 leading-snug">260 associazioni FIGB in tutta Italia</p>
+                <p className="text-xs text-blue-100/80 leading-snug">146 associazioni FIGB in tutta Italia</p>
               </div>
               <svg className="w-5 h-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <path d="M9 18l6-6-6-6" />
@@ -853,7 +853,7 @@ export default function Home() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-white">Non hai ancora un&apos;associazione?</p>
-                      <p className="text-xs text-white/70">Trova la tua ASD tra le 260 affiliate FIGB</p>
+                      <p className="text-xs text-white/70">Trova la tua ASD tra le 146 affiliate FIGB</p>
                     </div>
                     <svg className="w-5 h-5 text-white/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                       <path d="M9 18l6-6-6-6" />
@@ -1011,38 +1011,45 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ===== SPACED REVIEW ===== (hidden on desktop, sidebar shows it) */}
-      {reviewCount > 0 && (
-        <section className="px-4 sm:px-5 pt-4 lg:hidden">
-          <div className="mx-auto max-w-lg">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <Link href="/ripasso">
-                <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
-                      <Brain className="w-6 h-6 text-[#003DA5]" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                        Ripasso del giorno
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {reviewCount} {reviewCount === 1 ? "domanda" : "domande"} da ripassare
-                      </p>
-                    </div>
+      <section className="px-4 sm:px-5 pt-4 lg:hidden">
+        <div className="mx-auto max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <Link href="/ripasso">
+              <div className={`rounded-2xl p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all ${
+                reviewCount > 0
+                  ? "bg-[#003DA5]/5 border border-[#003DA5]/15"
+                  : "bg-white border border-gray-200 card-clean"
+              }`}>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
+                    <Brain className="w-6 h-6 text-[#003DA5]" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      Ripasso del giorno
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {reviewCount > 0
+                        ? `${reviewCount} ${reviewCount === 1 ? "domanda" : "domande"} da ripassare`
+                        : "Completa lezioni per sbloccare il ripasso"
+                      }
+                    </p>
+                  </div>
+                  {reviewCount > 0 && (
                     <Badge className="bg-[#003DA5] text-white text-xs font-bold hover:bg-[#003DA5]">
                       {reviewCount}
                     </Badge>
-                  </div>
+                  )}
                 </div>
-              </Link>
-            </motion.div>
-          </div>
-        </section>
-      )}
+              </div>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ===== GLOSSARIO LINK ===== */}
       <section className="px-4 sm:px-5 pt-4">

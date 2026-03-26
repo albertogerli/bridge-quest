@@ -268,6 +268,24 @@ export function DesktopSidebar() {
           </Link>
         )}
 
+        {/* Appunti */}
+        <Link href="/appunti" aria-label="I tuoi appunti">
+          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800">
+                <span className="text-lg">📝</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Appunti</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Le tue regole salvate</p>
+              </div>
+              <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <polyline points="9,6 15,12 9,18" />
+              </svg>
+            </div>
+          </div>
+        </Link>
+
         {/* Quick Links - Mini Games */}
         <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
           <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-3 uppercase tracking-wider">Mini-Giochi</p>
@@ -344,7 +362,7 @@ export function DesktopSidebar() {
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-white">Trova la tua ASD</p>
-                <p className="text-[11px] text-white/70">260 associazioni FIGB vicino a te</p>
+                <p className="text-[11px] text-white/70">146 associazioni FIGB vicino a te</p>
               </div>
               <svg className="h-4 w-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="9,6 15,12 9,18" />
