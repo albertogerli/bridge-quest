@@ -22,6 +22,7 @@ import {
 } from "@/data/weekly-challenges";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
+import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
@@ -346,6 +347,10 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
       awardGameXp(`weekly-${challenge.id}-hand-${handNumber}`, multipliedXp);
       try { updateLastActivity(); } catch {}
+
+      // Save for AI analysis
+      const parsed = parseContract(smazzata.contract);
+      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
 
       saveGameResult({
         gameType: "sfida-settimanale",

@@ -8,6 +8,7 @@ import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import {
   parseContract,
   toDisplayPosition,
@@ -937,6 +938,8 @@ function PlayingView({
       xpSaved.current = true;
       play(game.result.result >= 0 ? 'contractMade' : 'contractFailed');
       setShowCelebration(true);
+      // Save for AI analysis (both daily and yesterday)
+      { const p = parseContract(smazzata.contract); saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: p.level, suit: p.trumpSuit, declarer: smazzata.declarer }, game.result); }
       if (isDaily) {
         onFinish(
           game.result.tricksMade,
@@ -951,6 +954,9 @@ function PlayingView({
           Math.max(0, game.result.result) * 10;
         awardGameXp(`mano-${smazzata.id}`, earned);
         try { updateLastActivity(); } catch {}
+        // Save for AI analysis
+        const parsed = parseContract(smazzata.contract);
+        saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
         // Sync to Supabase
         saveGameResult({
           gameType: "mano-del-giorno",
