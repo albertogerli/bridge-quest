@@ -45,6 +45,8 @@ export default function ProfiloPage() {
   const [editing, setEditing] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [editName, setEditName] = useState("");
   const [editBbo, setEditBbo] = useState("");
   const [editAsdSearch, setEditAsdSearch] = useState("");
@@ -235,6 +237,34 @@ export default function ProfiloPage() {
       setShowLogoutConfirm(false);
     }
   }, [signOut]);
+
+  const handleDeleteAccount = useCallback(async () => {
+    setDeleting(true);
+    try {
+      const supabase = (await import("@/lib/supabase/client")).createClient();
+      if (user?.id) {
+        // Delete user data from all tables
+        await supabase.from("completed_modules").delete().eq("user_id", user.id);
+        await supabase.from("badges").delete().eq("user_id", user.id);
+        await supabase.from("review_items").delete().eq("user_id", user.id);
+        await supabase.from("challenges").delete().eq("challenger_id", user.id);
+        await supabase.from("challenges").delete().eq("challenged_id", user.id);
+        await supabase.from("friends").delete().eq("user_id", user.id);
+        await supabase.from("friends").delete().eq("friend_id", user.id);
+        await supabase.from("profiles").delete().eq("id", user.id);
+      }
+      // Clear all local data
+      const keys = Object.keys(localStorage).filter((k) => k.startsWith(BQ_KEYS_PREFIX));
+      keys.forEach((k) => localStorage.removeItem(k));
+      try { localStorage.removeItem("bq_guest"); } catch {}
+      await signOut();
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Delete account error:", err);
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  }, [user, signOut]);
 
   const handleInvite = useCallback(async () => {
     const { outcome, xpAwarded } = await shareInvite(user?.id);
@@ -1392,6 +1422,44 @@ export default function ProfiloPage() {
                     </svg>
                     Esci dall&apos;account
                   </Button>
+                  <AnimatePresence>
+                    {showDeleteConfirm ? (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-4"
+                      >
+                        <p className="text-sm font-bold text-rose-800 mb-1">Sei sicuro?</p>
+                        <p className="text-xs text-rose-600 mb-3">Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.</p>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={handleDeleteAccount}
+                            disabled={deleting}
+                            className="flex-1 bg-rose-700 hover:bg-rose-800 text-white rounded-xl text-xs font-semibold h-9"
+                          >
+                            {deleting ? "Eliminazione..." : "Conferma eliminazione"}
+                          </Button>
+                          <Button
+                            onClick={() => setShowDeleteConfirm(false)}
+                            variant="outline"
+                            className="flex-1 rounded-xl text-xs font-semibold h-9 border-rose-200"
+                          >
+                            Annulla
+                          </Button>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        onClick={() => setShowDeleteConfirm(true)}
+                        className="mt-3 w-full text-center text-xs text-gray-400 hover:text-rose-500 transition-colors py-2"
+                      >
+                        Elimina account e tutti i dati
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               )}
             </AnimatePresence>
