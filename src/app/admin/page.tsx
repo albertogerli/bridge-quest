@@ -1296,33 +1296,40 @@ export default function AdminPage() {
 
               // Find all days this user was active (from login_history)
               const userLogins = loginHistory.filter(l => l.user_id === u.id);
-              const activeDaySet = new Set<string>();
-              const activeDaysLog: { date: string; login: string }[] = [];
+              // Group logins by local date, keep all timestamps per day
+              const dayLoginsMap = new Map<string, string[]>();
               for (const l of userLogins) {
-                const dayKey = new Date(l.logged_in_at).toISOString().split("T")[0];
-                if (!activeDaySet.has(dayKey)) {
-                  activeDaySet.add(dayKey);
-                  activeDaysLog.push({ date: dayKey, login: l.logged_in_at });
-                }
+                // Use local date (not UTC) for grouping
+                const localDate = new Date(l.logged_in_at);
+                const dayKey = `${localDate.getFullYear()}-${String(localDate.getMonth()+1).padStart(2,"0")}-${String(localDate.getDate()).padStart(2,"0")}`;
+                const prev = dayLoginsMap.get(dayKey) || [];
+                prev.push(l.logged_in_at);
+                dayLoginsMap.set(dayKey, prev);
               }
-              // Also include last_login fallback
+              // Also include last_login fallback (only if no login_history for that day)
               if (u.last_login) {
                 const lastDay = parseLogin(u.last_login);
                 if (lastDay) {
-                  const lastDayKey = lastDay.toISOString().split("T")[0];
-                  if (!activeDaySet.has(lastDayKey)) {
-                    activeDaySet.add(lastDayKey);
-                    activeDaysLog.push({ date: lastDayKey, login: u.last_login });
+                  const lastDayKey = `${lastDay.getFullYear()}-${String(lastDay.getMonth()+1).padStart(2,"0")}-${String(lastDay.getDate()).padStart(2,"0")}`;
+                  if (!dayLoginsMap.has(lastDayKey)) {
+                    dayLoginsMap.set(lastDayKey, [u.last_login]);
                   }
                 }
               }
               // Also include created_at as first active day
-              const createdDay = new Date(u.created_at).toISOString().split("T")[0];
-              if (!activeDaySet.has(createdDay)) {
-                activeDaySet.add(createdDay);
-                activeDaysLog.push({ date: createdDay, login: u.created_at });
+              const createdDate = new Date(u.created_at);
+              const createdDay = `${createdDate.getFullYear()}-${String(createdDate.getMonth()+1).padStart(2,"0")}-${String(createdDate.getDate()).padStart(2,"0")}`;
+              if (!dayLoginsMap.has(createdDay)) {
+                dayLoginsMap.set(createdDay, [u.created_at]);
               }
-              activeDaysLog.sort((a, b) => b.date.localeCompare(a.date));
+              // Build sorted log entries with all accesses per day
+              const activeDaysLog = [...dayLoginsMap.entries()]
+                .map(([date, logins]) => ({
+                  date,
+                  logins: logins.sort((a, b) => a.localeCompare(b)),
+                }))
+                .sort((a, b) => b.date.localeCompare(a.date));
+              const activeDaySet = new Set(dayLoginsMap.keys());
 
               // Find user rank by XP
               const xpRank = [...users].sort((a, b) => b.xp - a.xp).findIndex(usr => usr.id === u.id) + 1;
@@ -1433,9 +1440,8 @@ export default function AdminPage() {
                       {activeDaysLog.length > 0 && (
                         <div>
                           <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Log accessi ({activeDaysLog.length} giorni)</h3>
-                          <div className="space-y-1 max-h-48 overflow-y-auto">
+                          <div className="space-y-1 max-h-64 overflow-y-auto">
                             {activeDaysLog.map(ad => {
-                              const logDate = new Date(ad.login);
                               const isRegistration = ad.date === createdDay;
                               return (
                                 <div key={ad.date} className="flex items-center justify-between text-xs bg-gray-50 rounded-lg px-3 py-2">
@@ -1443,8 +1449,12 @@ export default function AdminPage() {
                                     {new Date(ad.date + "T12:00:00").toLocaleDateString("it-IT", { weekday: "short", day: "numeric", month: "short" })}
                                     {isRegistration && <span className="ml-1.5 text-[10px] font-bold text-blue-500">registrazione</span>}
                                   </span>
-                                  <span className="text-gray-400">
-                                    {isFullTimestamp(ad.login) ? logDate.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) : "—"}
+                                  <span className="text-gray-400 flex items-center gap-1.5">
+                                    {ad.logins.map((login, i) => {
+                                      if (!isFullTimestamp(login)) return <span key={i}>—</span>;
+                                      const t = new Date(login);
+                                      return <span key={i} className="bg-white rounded px-1.5 py-0.5 text-gray-600">{t.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span>;
+                                    })}
                                   </span>
                                 </div>
                               );
