@@ -75,7 +75,15 @@ interface Stats {
   dailySignups: { date: string; count: number }[];
   dailyActive: DailyActivity[];
   topUsers: UserRow[];
-  asdDistribution: { name: string; count: number; province?: string; region?: string; totalXp: number; avgXp: number; totalMinutes: number; avgMinutes: number; topUser: string; topUserXp: number }[];
+  asdDistribution: {
+    name: string; count: number; province?: string; region?: string;
+    medianXp: number; medianMinutes: number;
+    topUser: string; topUserXp: number;
+    restMedianXp: number; restMedianMinutes: number;
+    firstSignup: string;
+    lastActive: string;
+    lowEngagement: boolean;
+  }[];
   maxStreak: number;
   marketingAccepted: number;
   marketingDeclined: number;
@@ -186,7 +194,7 @@ export default function AdminPage() {
         let totalMinutesAll = 0;
         const hourlySignups = new Array(24).fill(0);
         const dailyMap = new Map<string, number>();
-        const asdMap = new Map<string, { count: number; totalXp: number; totalMinutes: number; topUser: string; topUserXp: number }>();
+        const asdMap = new Map<string, { users: { name: string; xp: number; minutes: number; createdAt: string }[] }>();
 
         for (const u of profiles) {
           const created = new Date(u.created_at);
@@ -219,17 +227,11 @@ export default function AdminPage() {
             dailyMap.set(dayKey, (dailyMap.get(dayKey) || 0) + 1);
           }
 
-          // ASD distribution with stats
+          // ASD distribution — collect individual user data
           const asdName = (u as any).asd?.name;
           if (asdName) {
-            const prev = asdMap.get(asdName) || { count: 0, totalXp: 0, totalMinutes: 0, topUser: "", topUserXp: 0 };
-            prev.count++;
-            prev.totalXp += u.xp || 0;
-            prev.totalMinutes += u.total_minutes || 0;
-            if ((u.xp || 0) > prev.topUserXp) {
-              prev.topUser = u.display_name || "Anonimo";
-              prev.topUserXp = u.xp || 0;
-            }
+            const prev = asdMap.get(asdName) || { users: [] };
+            prev.users.push({ name: u.display_name || "Anonimo", xp: u.xp || 0, minutes: u.total_minutes || 0, createdAt: u.created_at });
             asdMap.set(asdName, prev);
           }
         }
@@ -290,6 +292,14 @@ export default function AdminPage() {
           .sort((a, b) => (b.xp || 0) - (a.xp || 0))
           .slice(0, 10);
 
+        // Median helper
+        const median = (arr: number[]) => {
+          if (arr.length === 0) return 0;
+          const sorted = [...arr].sort((a, b) => a - b);
+          const mid = Math.floor(sorted.length / 2);
+          return sorted.length % 2 !== 0 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+        };
+
         // ASD distribution sorted by count — enrich with province/region from ASD_CLUBS
         const asdClubByName = new Map(ASD_CLUBS.map(c => [c.name, c]));
         const asdDistribution = [...asdMap.entries()]
@@ -297,17 +307,37 @@ export default function AdminPage() {
             const club = asdClubByName.get(name);
             const province = club?.province;
             const region = province ? PROVINCE_TO_REGION[province] : undefined;
+            const users = data.users;
+            const count = users.length;
+            const allXp = users.map(u => u.xp);
+            const allMin = users.map(u => u.minutes);
+
+            // Top user
+            const topIdx = allXp.indexOf(Math.max(...allXp));
+            const topUser = users[topIdx]?.name || "";
+            const topUserXp = allXp[topIdx] || 0;
+
+            // Rest (without top user) — more honest picture
+            const restXp = allXp.filter((_, i) => i !== topIdx);
+            const restMin = allMin.filter((_, i) => i !== topIdx);
+
+            // Detect low engagement: median XP < 50 and last signup > 14 days ago
+            const dates = users.map(u => new Date(u.createdAt).getTime());
+            const firstSignup = new Date(Math.min(...dates)).toISOString().slice(0, 10);
+            const lastSignup = new Date(Math.max(...dates));
+            const daysSinceLastSignup = Math.floor((now.getTime() - lastSignup.getTime()) / 86400000);
+            const lowEngagement = median(restXp) < 50 && daysSinceLastSignup > 14 && count >= 3;
+
             return {
-              name,
-              count: data.count,
-              province,
-              region,
-              totalXp: data.totalXp,
-              avgXp: data.count > 0 ? Math.round(data.totalXp / data.count) : 0,
-              totalMinutes: data.totalMinutes,
-              avgMinutes: data.count > 0 ? Math.round(data.totalMinutes / data.count) : 0,
-              topUser: data.topUser,
-              topUserXp: data.topUserXp,
+              name, count, province, region,
+              medianXp: median(allXp),
+              medianMinutes: median(allMin),
+              topUser, topUserXp,
+              restMedianXp: median(restXp),
+              restMedianMinutes: median(restMin),
+              firstSignup,
+              lastActive: lastSignup.toISOString().slice(0, 10),
+              lowEngagement,
             };
           })
           .sort((a, b) => b.count - a.count);
@@ -1040,43 +1070,59 @@ export default function AdminPage() {
                     const dist = stats.asdDistribution;
                     const q = asdSearch.toLowerCase();
 
-                    interface AsdRow { label: string; count: number; detail?: string; avgXp: number; avgMinutes: number; topUser: string; topUserXp: number }
+                    interface AsdRow {
+                      label: string; count: number; detail?: string;
+                      medianXp: number; medianMinutes: number;
+                      topUser: string; topUserXp: number;
+                      restMedianXp: number; restMedianMinutes: number;
+                      lowEngagement: boolean; firstSignup?: string; lastActive?: string;
+                    }
 
                     // Build aggregated data based on tab
                     let rows: AsdRow[];
                     if (asdTab === "province") {
-                      const pMap = new Map<string, { count: number; totalXp: number; totalMin: number; topUser: string; topUserXp: number }>();
+                      const pMap = new Map<string, { count: number; xps: number[]; mins: number[]; topUser: string; topUserXp: number; lowCount: number }>();
                       for (const a of dist) {
                         const p = a.province || "N/D";
-                        const prev = pMap.get(p) || { count: 0, totalXp: 0, totalMin: 0, topUser: "", topUserXp: 0 };
-                        prev.count += a.count; prev.totalXp += a.totalXp; prev.totalMin += a.totalMinutes;
+                        const prev = pMap.get(p) || { count: 0, xps: [], mins: [], topUser: "", topUserXp: 0, lowCount: 0 };
+                        prev.count += a.count;
+                        // Approximate: use medians as representative values (repeated by count)
+                        for (let i = 0; i < a.count; i++) { prev.xps.push(a.medianXp); prev.mins.push(a.medianMinutes); }
                         if (a.topUserXp > prev.topUserXp) { prev.topUser = a.topUser; prev.topUserXp = a.topUserXp; }
+                        if (a.lowEngagement) prev.lowCount++;
                         pMap.set(p, prev);
                       }
+                      const medianFn = (arr: number[]) => { const s = [...arr].sort((a,b) => a-b); const m = Math.floor(s.length/2); return s.length % 2 ? s[m] : Math.round((s[m-1]+s[m])/2); };
                       rows = [...pMap.entries()]
-                        .map(([p, d]) => ({ label: p, count: d.count, detail: PROVINCE_TO_REGION[p] || "", avgXp: d.count > 0 ? Math.round(d.totalXp / d.count) : 0, avgMinutes: d.count > 0 ? Math.round(d.totalMin / d.count) : 0, topUser: d.topUser, topUserXp: d.topUserXp }))
-                        .sort((a, b) => b.count - a.count);
+                        .map(([p, d]) => {
+                          const restXps = d.xps.filter(x => x < d.topUserXp || d.xps.indexOf(x) > 0);
+                          return { label: p, count: d.count, detail: PROVINCE_TO_REGION[p] || "", medianXp: medianFn(d.xps), medianMinutes: medianFn(d.mins), topUser: d.topUser, topUserXp: d.topUserXp, restMedianXp: restXps.length ? medianFn(restXps) : 0, restMedianMinutes: medianFn(d.mins), lowEngagement: false };
+                        }).sort((a, b) => b.count - a.count);
                     } else if (asdTab === "regione") {
-                      const rMap = new Map<string, { count: number; totalXp: number; totalMin: number; topUser: string; topUserXp: number }>();
+                      const rMap = new Map<string, { count: number; xps: number[]; mins: number[]; topUser: string; topUserXp: number }>();
                       for (const a of dist) {
                         const r = a.region || "N/D";
-                        const prev = rMap.get(r) || { count: 0, totalXp: 0, totalMin: 0, topUser: "", topUserXp: 0 };
-                        prev.count += a.count; prev.totalXp += a.totalXp; prev.totalMin += a.totalMinutes;
+                        const prev = rMap.get(r) || { count: 0, xps: [], mins: [], topUser: "", topUserXp: 0 };
+                        prev.count += a.count;
+                        for (let i = 0; i < a.count; i++) { prev.xps.push(a.medianXp); prev.mins.push(a.medianMinutes); }
                         if (a.topUserXp > prev.topUserXp) { prev.topUser = a.topUser; prev.topUserXp = a.topUserXp; }
                         rMap.set(r, prev);
                       }
+                      const medianFn = (arr: number[]) => { const s = [...arr].sort((a,b) => a-b); const m = Math.floor(s.length/2); return s.length % 2 ? s[m] : Math.round((s[m-1]+s[m])/2); };
                       rows = [...rMap.entries()]
-                        .map(([r, d]) => ({ label: r, count: d.count, avgXp: d.count > 0 ? Math.round(d.totalXp / d.count) : 0, avgMinutes: d.count > 0 ? Math.round(d.totalMin / d.count) : 0, topUser: d.topUser, topUserXp: d.topUserXp }))
-                        .sort((a, b) => b.count - a.count);
+                        .map(([r, d]) => {
+                          const restXps = d.xps.filter(x => x < d.topUserXp || d.xps.indexOf(x) > 0);
+                          return { label: r, count: d.count, medianXp: medianFn(d.xps), medianMinutes: medianFn(d.mins), topUser: d.topUser, topUserXp: d.topUserXp, restMedianXp: restXps.length ? medianFn(restXps) : 0, restMedianMinutes: medianFn(d.mins), lowEngagement: false };
+                        }).sort((a, b) => b.count - a.count);
                     } else {
                       rows = dist.map(a => ({
-                        label: a.name,
-                        count: a.count,
+                        label: a.name, count: a.count,
                         detail: a.province ? `${a.province}${a.region ? ` · ${a.region}` : ""}` : undefined,
-                        avgXp: a.avgXp,
-                        avgMinutes: a.avgMinutes,
-                        topUser: a.topUser,
-                        topUserXp: a.topUserXp,
+                        medianXp: a.medianXp, medianMinutes: a.medianMinutes,
+                        topUser: a.topUser, topUserXp: a.topUserXp,
+                        restMedianXp: a.restMedianXp, restMedianMinutes: a.restMedianMinutes,
+                        lowEngagement: a.lowEngagement,
+                        firstSignup: a.firstSignup, lastActive: a.lastActive,
                       }));
                     }
 
@@ -1086,41 +1132,62 @@ export default function AdminPage() {
                       : rows;
                     const maxCount = filtered[0]?.count || 1;
                     const totalUsers = filtered.reduce((s, r) => s + r.count, 0);
+                    const lowEngagementCount = filtered.filter(r => r.lowEngagement).length;
+
+                    const fmtMin = (m: number) => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`;
 
                     return (
                       <>
-                        <div className="text-[11px] text-gray-400 mb-2">
-                          {filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti
+                        <div className="flex items-center gap-2 text-[11px] text-gray-400 mb-2">
+                          <span>{filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti</span>
+                          {lowEngagementCount > 0 && asdTab === "asd" && (
+                            <span className="text-orange-500 font-semibold">{lowEngagementCount} da riattivare</span>
+                          )}
                         </div>
                         <div className="space-y-0 max-h-[500px] overflow-y-auto pr-1">
                           {filtered.map((row) => (
-                            <div key={row.label} className="py-2.5 border-b border-gray-100 last:border-0">
-                              {/* Header: name + count */}
-                              <div className="flex items-start justify-between gap-2 mb-1">
+                            <div key={row.label} className={`py-3 border-b border-gray-100 last:border-0 ${row.lowEngagement ? "bg-orange-50/50 -mx-2 px-2 rounded-lg" : ""}`}>
+                              {/* Header: name + count + low engagement badge */}
+                              <div className="flex items-start justify-between gap-2 mb-1.5">
                                 <div className="min-w-0">
                                   <p className="text-xs font-semibold text-gray-800 break-words">{row.label}</p>
                                   {row.detail && <p className="text-[10px] text-gray-400">{row.detail}</p>}
                                 </div>
-                                <span className="text-sm font-bold text-[#003DA5] shrink-0">{row.count} utenti</span>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  {row.lowEngagement && (
+                                    <span className="text-[9px] font-bold text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">RIATTIVARE</span>
+                                  )}
+                                  <span className="text-sm font-bold text-[#003DA5]">{row.count}</span>
+                                </div>
                               </div>
-                              {/* Stats row */}
-                              <div className="flex items-center gap-3 mb-1.5">
+
+                              {/* Group stats (without top user) */}
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
                                 <span className="text-[10px] text-gray-500">
-                                  <span className="font-semibold text-gray-700">{row.avgXp.toLocaleString("it-IT")}</span> XP medio
+                                  Mediana XP: <span className="font-semibold text-gray-700">{row.restMedianXp.toLocaleString("it-IT")}</span>
+                                  {row.count > 1 && <span className="text-gray-400 ml-0.5">({row.count - 1} utenti)</span>}
                                 </span>
-                                <span className="text-[10px] text-gray-300">|</span>
                                 <span className="text-[10px] text-gray-500">
-                                  <span className="font-semibold text-gray-700">{row.avgMinutes >= 60 ? `${Math.floor(row.avgMinutes / 60)}h ${row.avgMinutes % 60}m` : `${row.avgMinutes}m`}</span> uso medio
+                                  Uso mediano: <span className="font-semibold text-gray-700">{fmtMin(row.restMedianMinutes)}</span>
                                 </span>
-                                <span className="text-[10px] text-gray-300">|</span>
-                                <span className="text-[10px] text-gray-500">
-                                  Top: <span className="font-semibold text-amber-600">{row.topUser}</span> ({row.topUserXp.toLocaleString("it-IT")} XP)
-                                </span>
+                                {row.firstSignup && row.lastActive && (
+                                  <span className="text-[10px] text-gray-400">
+                                    {row.firstSignup} → {row.lastActive}
+                                  </span>
+                                )}
                               </div>
+
+                              {/* Top performer — separated */}
+                              <div className="flex items-center gap-1.5 mb-1.5 pl-2 border-l-2 border-amber-300">
+                                <span className="text-[10px] text-amber-700 font-semibold">{row.topUser}</span>
+                                <span className="text-[10px] text-amber-500">{row.topUserXp.toLocaleString("it-IT")} XP · {fmtMin(row.medianMinutes)}</span>
+                              </div>
+
                               {/* Bar */}
-                              <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                                 <div
                                   className={`h-full rounded-full ${
+                                    row.lowEngagement ? "bg-orange-400/70" :
                                     asdTab === "regione" ? "bg-emerald-500/70" : asdTab === "province" ? "bg-amber-500/70" : "bg-[#003DA5]/70"
                                   }`}
                                   style={{ width: `${Math.max((row.count / maxCount) * 100, 3)}%` }}
