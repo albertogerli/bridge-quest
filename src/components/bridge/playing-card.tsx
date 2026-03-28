@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
+import { hapticTap } from "@/lib/native-bridge";
 
 export type Suit = "spade" | "heart" | "diamond" | "club";
 export type Rank = "A" | "K" | "Q" | "J" | "10" | "9" | "8" | "7" | "6" | "5" | "4" | "3" | "2";
@@ -106,7 +107,7 @@ export function PlayingCard({
 
   return (
     <motion.button
-      onClick={disabled ? undefined : onClick}
+      onClick={disabled ? undefined : () => { hapticTap(); onClick?.(); }}
       disabled={disabled}
       className={`
         ${dimClass} relative rounded bg-white

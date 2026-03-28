@@ -13,6 +13,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { useExitIntent } from "@/hooks/use-exit-intent";
 import { ExitIntentModal } from "@/components/exit-intent-modal";
 import type { UserProfile } from "@/hooks/use-profile";
+import { configureStatusBar } from "@/lib/native-bridge";
 
 /** Routes that should be full-screen (no nav, no sidebar) */
 const FULL_SCREEN_ROUTES = ["/login", "/admin"];
@@ -66,6 +67,9 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  // Configure native status bar (no-op on web)
+  useEffect(() => { configureStatusBar(); }, []);
+
   // Continuous Supabase sync (runs on every page, no-op if not logged in)
   useSupabaseSync();
 
@@ -91,7 +95,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-svh bg-[#F7F5F0] dark:bg-[#0f1219]" data-profile={profile}>
+    <div className="flex min-h-svh bg-[#F7F5F0] dark:bg-[#0f1219] safe-area-top" data-profile={profile}>
       {/* Left nav - desktop only */}
       <DesktopNav />
 

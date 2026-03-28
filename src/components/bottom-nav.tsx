@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { hapticTap } from "@/lib/native-bridge";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -40,6 +41,7 @@ function PlayButton({ active }: { active: boolean }) {
       href="/gioca"
       className="relative -mt-6 flex flex-col items-center"
       aria-label="Gioca"
+      onClick={() => hapticTap()}
     >
       <div
         className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 ${
@@ -117,6 +119,7 @@ function NavItem({
   return (
     <Link
       href={href}
+      onClick={() => hapticTap()}
       className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
         active
           ? "text-[#003DA5] bg-[#003DA5]/8"

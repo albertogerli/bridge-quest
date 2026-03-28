@@ -5,6 +5,8 @@
  * the same content only awards XP the first time.
  */
 
+import { hapticSuccess } from "@/lib/native-bridge";
+
 const COMPLETED_KEY = "bq_completed_games";
 const XP_KEY = "bq_xp";
 const HANDS_KEY = "bq_hands_played";
@@ -63,6 +65,7 @@ export function awardGameXp(gameId: string, xp: number): number {
     if (completed.length > 500) completed.splice(0, completed.length - 500);
     localStorage.setItem(COMPLETED_KEY, JSON.stringify(completed));
 
+    hapticSuccess();
     return xpToAward;
   } catch {
     return 0;
