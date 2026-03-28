@@ -3,7 +3,31 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { ASD_CLUBS } from "@/data/asd-clubs";
 import Link from "next/link";
+
+const PROVINCE_TO_REGION: Record<string, string> = {
+  TO:"Piemonte",VC:"Piemonte",NO:"Piemonte",CN:"Piemonte",AT:"Piemonte",AL:"Piemonte",BI:"Piemonte",VB:"Piemonte",
+  AO:"Valle d'Aosta",
+  VA:"Lombardia",CO:"Lombardia",SO:"Lombardia",MI:"Lombardia",BG:"Lombardia",BS:"Lombardia",PV:"Lombardia",CR:"Lombardia",MN:"Lombardia",LC:"Lombardia",LO:"Lombardia",MB:"Lombardia",
+  BZ:"Trentino-Alto Adige",TN:"Trentino-Alto Adige",
+  VR:"Veneto",VI:"Veneto",BL:"Veneto",TV:"Veneto",VE:"Veneto",PD:"Veneto",RO:"Veneto",
+  UD:"Friuli Venezia Giulia",GO:"Friuli Venezia Giulia",TS:"Friuli Venezia Giulia",PN:"Friuli Venezia Giulia",
+  IM:"Liguria",SV:"Liguria",GE:"Liguria",SP:"Liguria",
+  PC:"Emilia-Romagna",PR:"Emilia-Romagna",RE:"Emilia-Romagna",MO:"Emilia-Romagna",BO:"Emilia-Romagna",FE:"Emilia-Romagna",RA:"Emilia-Romagna",FC:"Emilia-Romagna",RN:"Emilia-Romagna",
+  MS:"Toscana",LU:"Toscana",PT:"Toscana",FI:"Toscana",LI:"Toscana",PI:"Toscana",AR:"Toscana",SI:"Toscana",GR:"Toscana",PO:"Toscana",
+  PG:"Umbria",TR:"Umbria",
+  PU:"Marche",AN:"Marche",MC:"Marche",AP:"Marche",FM:"Marche",
+  VT:"Lazio",RI:"Lazio",RM:"Lazio",LT:"Lazio",FR:"Lazio",
+  AQ:"Abruzzo",TE:"Abruzzo",PE:"Abruzzo",CH:"Abruzzo",
+  CB:"Molise",IS:"Molise",
+  CE:"Campania",BN:"Campania",NA:"Campania",AV:"Campania",SA:"Campania",
+  FG:"Puglia",BA:"Puglia",TA:"Puglia",BR:"Puglia",LE:"Puglia",BT:"Puglia",
+  PZ:"Basilicata",MT:"Basilicata",
+  CS:"Calabria",CZ:"Calabria",KR:"Calabria",VV:"Calabria",RC:"Calabria",
+  TP:"Sicilia",PA:"Sicilia",ME:"Sicilia",AG:"Sicilia",CL:"Sicilia",EN:"Sicilia",CT:"Sicilia",RG:"Sicilia",SR:"Sicilia",
+  SS:"Sardegna",NU:"Sardegna",CA:"Sardegna",OR:"Sardegna",SU:"Sardegna",
+};
 
 const ADMIN_EMAIL = "alberto@albertogerli.it";
 
@@ -51,7 +75,7 @@ interface Stats {
   dailySignups: { date: string; count: number }[];
   dailyActive: DailyActivity[];
   topUsers: UserRow[];
-  asdDistribution: { name: string; count: number }[];
+  asdDistribution: { name: string; count: number; province?: string; region?: string }[];
   maxStreak: number;
   marketingAccepted: number;
   marketingDeclined: number;
@@ -93,6 +117,8 @@ export default function AdminPage() {
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [loginHistory, setLoginHistory] = useState<LoginRecord[]>([]);
+  const [asdTab, setAsdTab] = useState<"asd" | "province" | "regione">("asd");
+  const [asdSearch, setAsdSearch] = useState("");
 
   const supabase = createClient();
 
@@ -256,9 +282,15 @@ export default function AdminPage() {
           .sort((a, b) => (b.xp || 0) - (a.xp || 0))
           .slice(0, 10);
 
-        // ASD distribution sorted by count
+        // ASD distribution sorted by count — enrich with province/region from ASD_CLUBS
+        const asdClubByName = new Map(ASD_CLUBS.map(c => [c.name, c]));
         const asdDistribution = [...asdMap.entries()]
-          .map(([name, count]) => ({ name, count }))
+          .map(([name, count]) => {
+            const club = asdClubByName.get(name);
+            const province = club?.province;
+            const region = province ? PROVINCE_TO_REGION[province] : undefined;
+            return { name, count, province, region };
+          })
           .sort((a, b) => b.count - a.count);
 
         // Retention: users registered 7+ days ago who logged in last 7 days
@@ -957,29 +989,100 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* ASD distribution */}
+              {/* ASD distribution — enhanced */}
               <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
+                <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
                   Distribuzione ASD
                 </h2>
+                {/* Tabs */}
+                <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-3">
+                  {([["asd", "Per ASD"], ["province", "Per Provincia"], ["regione", "Per Regione"]] as const).map(([key, label]) => (
+                    <button
+                      key={key}
+                      onClick={() => { setAsdTab(key); setAsdSearch(""); }}
+                      className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-all ${
+                        asdTab === key ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {/* Search */}
+                <input
+                  type="text"
+                  value={asdSearch}
+                  onChange={(e) => setAsdSearch(e.target.value)}
+                  placeholder={`Cerca ${asdTab === "asd" ? "ASD" : asdTab === "province" ? "provincia" : "regione"}...`}
+                  className="w-full h-8 px-3 mb-3 rounded-lg border border-gray-200 bg-gray-50 text-xs focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30"
+                />
                 {stats && stats.asdDistribution.length > 0 ? (
-                  <div className="space-y-2">
-                    {stats.asdDistribution.slice(0, 10).map((asd) => {
-                      const maxAsd = stats.asdDistribution[0]?.count || 1;
-                      return (
-                        <div key={asd.name} className="flex items-center gap-3">
-                          <span className="text-xs text-gray-500 w-32 shrink-0 truncate" title={asd.name}>{asd.name}</span>
-                          <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-[#003DA5]/70 rounded-full"
-                              style={{ width: `${(asd.count / maxAsd) * 100}%` }}
-                            />
-                          </div>
-                          <span className="text-xs font-bold text-gray-700 w-8 text-right">{asd.count}</span>
+                  (() => {
+                    const dist = stats.asdDistribution;
+                    const q = asdSearch.toLowerCase();
+
+                    // Build aggregated data based on tab
+                    let rows: { label: string; count: number; detail?: string }[];
+                    if (asdTab === "province") {
+                      const pMap = new Map<string, number>();
+                      for (const a of dist) {
+                        const p = a.province || "N/D";
+                        pMap.set(p, (pMap.get(p) || 0) + a.count);
+                      }
+                      rows = [...pMap.entries()]
+                        .map(([p, count]) => ({ label: p, count, detail: PROVINCE_TO_REGION[p] || "" }))
+                        .sort((a, b) => b.count - a.count);
+                    } else if (asdTab === "regione") {
+                      const rMap = new Map<string, number>();
+                      for (const a of dist) {
+                        const r = a.region || "N/D";
+                        rMap.set(r, (rMap.get(r) || 0) + a.count);
+                      }
+                      rows = [...rMap.entries()]
+                        .map(([r, count]) => ({ label: r, count }))
+                        .sort((a, b) => b.count - a.count);
+                    } else {
+                      rows = dist.map(a => ({
+                        label: a.name,
+                        count: a.count,
+                        detail: a.province ? `${a.province}${a.region ? ` · ${a.region}` : ""}` : undefined,
+                      }));
+                    }
+
+                    // Filter by search
+                    const filtered = q
+                      ? rows.filter(r => r.label.toLowerCase().includes(q) || (r.detail && r.detail.toLowerCase().includes(q)))
+                      : rows;
+                    const maxCount = filtered[0]?.count || 1;
+                    const totalUsers = filtered.reduce((s, r) => s + r.count, 0);
+
+                    return (
+                      <>
+                        <div className="text-[11px] text-gray-400 mb-2">
+                          {filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti
                         </div>
-                      );
-                    })}
-                  </div>
+                        <div className="space-y-1.5 max-h-[400px] overflow-y-auto pr-1">
+                          {filtered.map((row) => (
+                            <div key={row.label} className="flex items-center gap-2 group">
+                              <div className="min-w-0 shrink-0" style={{ width: asdTab === "asd" ? "180px" : "120px" }}>
+                                <p className="text-xs font-medium text-gray-700 truncate" title={row.label}>{row.label}</p>
+                                {row.detail && <p className="text-[10px] text-gray-400 truncate">{row.detail}</p>}
+                              </div>
+                              <div className="flex-1 h-5 bg-gray-100 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full transition-all ${
+                                    asdTab === "regione" ? "bg-emerald-500/70" : asdTab === "province" ? "bg-amber-500/70" : "bg-[#003DA5]/70"
+                                  }`}
+                                  style={{ width: `${Math.max((row.count / maxCount) * 100, 3)}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-bold text-gray-700 w-10 text-right shrink-0">{row.count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()
                 ) : (
                   <p className="text-sm text-gray-400">Nessun utente con ASD associato</p>
                 )}
