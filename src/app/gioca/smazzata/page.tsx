@@ -21,6 +21,7 @@ import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, cardToString, partnershipOf } from "@/lib/bridge-engine";
+import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
@@ -381,6 +382,10 @@ function PlayingView({
           lessonId: String(smazzata.lesson),
         });
       } catch {}
+
+      // Save game data for AI analysis page
+      const parsed = parseContract(smazzata.contract);
+      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
 
       // Sync to Supabase
       saveGameResult({

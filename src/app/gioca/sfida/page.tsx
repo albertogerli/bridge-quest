@@ -10,6 +10,7 @@ import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
+import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
@@ -139,6 +140,9 @@ export default function SfidaDelGiornoPage() {
         localStorage.setItem(`bq_bonus_available_${today}`, "1");
         setTimeout(() => setShowBonus(true), 1500);
       }
+      // Save for AI analysis
+      const parsed = parseContract(smazzata.contract);
+      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
       // Sync to Supabase
       saveGameResult({
         gameType: "sfida",
