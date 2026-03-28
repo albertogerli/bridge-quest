@@ -238,6 +238,8 @@ export function useSupabaseSync() {
           lastSyncedSnapshot = getLocalSnapshot();
           // Notify components that stats have been updated from Supabase
           window.dispatchEvent(new Event("bq_stats_updated"));
+          // Force re-render on pages that read from localStorage on mount
+          window.dispatchEvent(new StorageEvent("storage", { key: LS_KEYS.xp }));
           return;
         }
 
