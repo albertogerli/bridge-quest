@@ -75,7 +75,7 @@ interface Stats {
   dailySignups: { date: string; count: number }[];
   dailyActive: DailyActivity[];
   topUsers: UserRow[];
-  asdDistribution: { name: string; count: number; province?: string; region?: string }[];
+  asdDistribution: { name: string; count: number; province?: string; region?: string; totalXp: number; avgXp: number; totalMinutes: number; avgMinutes: number; topUser: string; topUserXp: number }[];
   maxStreak: number;
   marketingAccepted: number;
   marketingDeclined: number;
@@ -186,7 +186,7 @@ export default function AdminPage() {
         let totalMinutesAll = 0;
         const hourlySignups = new Array(24).fill(0);
         const dailyMap = new Map<string, number>();
-        const asdMap = new Map<string, number>();
+        const asdMap = new Map<string, { count: number; totalXp: number; totalMinutes: number; topUser: string; topUserXp: number }>();
 
         for (const u of profiles) {
           const created = new Date(u.created_at);
@@ -219,10 +219,18 @@ export default function AdminPage() {
             dailyMap.set(dayKey, (dailyMap.get(dayKey) || 0) + 1);
           }
 
-          // ASD distribution
+          // ASD distribution with stats
           const asdName = (u as any).asd?.name;
           if (asdName) {
-            asdMap.set(asdName, (asdMap.get(asdName) || 0) + 1);
+            const prev = asdMap.get(asdName) || { count: 0, totalXp: 0, totalMinutes: 0, topUser: "", topUserXp: 0 };
+            prev.count++;
+            prev.totalXp += u.xp || 0;
+            prev.totalMinutes += u.total_minutes || 0;
+            if ((u.xp || 0) > prev.topUserXp) {
+              prev.topUser = u.display_name || "Anonimo";
+              prev.topUserXp = u.xp || 0;
+            }
+            asdMap.set(asdName, prev);
           }
         }
 
@@ -285,11 +293,22 @@ export default function AdminPage() {
         // ASD distribution sorted by count — enrich with province/region from ASD_CLUBS
         const asdClubByName = new Map(ASD_CLUBS.map(c => [c.name, c]));
         const asdDistribution = [...asdMap.entries()]
-          .map(([name, count]) => {
+          .map(([name, data]) => {
             const club = asdClubByName.get(name);
             const province = club?.province;
             const region = province ? PROVINCE_TO_REGION[province] : undefined;
-            return { name, count, province, region };
+            return {
+              name,
+              count: data.count,
+              province,
+              region,
+              totalXp: data.totalXp,
+              avgXp: data.count > 0 ? Math.round(data.totalXp / data.count) : 0,
+              totalMinutes: data.totalMinutes,
+              avgMinutes: data.count > 0 ? Math.round(data.totalMinutes / data.count) : 0,
+              topUser: data.topUser,
+              topUserXp: data.topUserXp,
+            };
           })
           .sort((a, b) => b.count - a.count);
 
@@ -1021,31 +1040,43 @@ export default function AdminPage() {
                     const dist = stats.asdDistribution;
                     const q = asdSearch.toLowerCase();
 
+                    interface AsdRow { label: string; count: number; detail?: string; avgXp: number; avgMinutes: number; topUser: string; topUserXp: number }
+
                     // Build aggregated data based on tab
-                    let rows: { label: string; count: number; detail?: string }[];
+                    let rows: AsdRow[];
                     if (asdTab === "province") {
-                      const pMap = new Map<string, number>();
+                      const pMap = new Map<string, { count: number; totalXp: number; totalMin: number; topUser: string; topUserXp: number }>();
                       for (const a of dist) {
                         const p = a.province || "N/D";
-                        pMap.set(p, (pMap.get(p) || 0) + a.count);
+                        const prev = pMap.get(p) || { count: 0, totalXp: 0, totalMin: 0, topUser: "", topUserXp: 0 };
+                        prev.count += a.count; prev.totalXp += a.totalXp; prev.totalMin += a.totalMinutes;
+                        if (a.topUserXp > prev.topUserXp) { prev.topUser = a.topUser; prev.topUserXp = a.topUserXp; }
+                        pMap.set(p, prev);
                       }
                       rows = [...pMap.entries()]
-                        .map(([p, count]) => ({ label: p, count, detail: PROVINCE_TO_REGION[p] || "" }))
+                        .map(([p, d]) => ({ label: p, count: d.count, detail: PROVINCE_TO_REGION[p] || "", avgXp: d.count > 0 ? Math.round(d.totalXp / d.count) : 0, avgMinutes: d.count > 0 ? Math.round(d.totalMin / d.count) : 0, topUser: d.topUser, topUserXp: d.topUserXp }))
                         .sort((a, b) => b.count - a.count);
                     } else if (asdTab === "regione") {
-                      const rMap = new Map<string, number>();
+                      const rMap = new Map<string, { count: number; totalXp: number; totalMin: number; topUser: string; topUserXp: number }>();
                       for (const a of dist) {
                         const r = a.region || "N/D";
-                        rMap.set(r, (rMap.get(r) || 0) + a.count);
+                        const prev = rMap.get(r) || { count: 0, totalXp: 0, totalMin: 0, topUser: "", topUserXp: 0 };
+                        prev.count += a.count; prev.totalXp += a.totalXp; prev.totalMin += a.totalMinutes;
+                        if (a.topUserXp > prev.topUserXp) { prev.topUser = a.topUser; prev.topUserXp = a.topUserXp; }
+                        rMap.set(r, prev);
                       }
                       rows = [...rMap.entries()]
-                        .map(([r, count]) => ({ label: r, count }))
+                        .map(([r, d]) => ({ label: r, count: d.count, avgXp: d.count > 0 ? Math.round(d.totalXp / d.count) : 0, avgMinutes: d.count > 0 ? Math.round(d.totalMin / d.count) : 0, topUser: d.topUser, topUserXp: d.topUserXp }))
                         .sort((a, b) => b.count - a.count);
                     } else {
                       rows = dist.map(a => ({
                         label: a.name,
                         count: a.count,
                         detail: a.province ? `${a.province}${a.region ? ` · ${a.region}` : ""}` : undefined,
+                        avgXp: a.avgXp,
+                        avgMinutes: a.avgMinutes,
+                        topUser: a.topUser,
+                        topUserXp: a.topUserXp,
                       }));
                     }
 
@@ -1061,17 +1092,35 @@ export default function AdminPage() {
                         <div className="text-[11px] text-gray-400 mb-2">
                           {filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti
                         </div>
-                        <div className="space-y-1.5 max-h-[400px] overflow-y-auto pr-1">
+                        <div className="space-y-0 max-h-[500px] overflow-y-auto pr-1">
                           {filtered.map((row) => (
-                            <div key={row.label} className="flex flex-col gap-1 py-1.5 border-b border-gray-50 last:border-0">
-                              <div className="flex items-center justify-between gap-2">
-                                <p className="text-xs font-medium text-gray-700 break-words">{row.label}</p>
-                                <span className="text-xs font-bold text-gray-700 shrink-0">{row.count}</span>
+                            <div key={row.label} className="py-2.5 border-b border-gray-100 last:border-0">
+                              {/* Header: name + count */}
+                              <div className="flex items-start justify-between gap-2 mb-1">
+                                <div className="min-w-0">
+                                  <p className="text-xs font-semibold text-gray-800 break-words">{row.label}</p>
+                                  {row.detail && <p className="text-[10px] text-gray-400">{row.detail}</p>}
+                                </div>
+                                <span className="text-sm font-bold text-[#003DA5] shrink-0">{row.count} utenti</span>
                               </div>
-                              {row.detail && <p className="text-[10px] text-gray-400">{row.detail}</p>}
-                              <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                              {/* Stats row */}
+                              <div className="flex items-center gap-3 mb-1.5">
+                                <span className="text-[10px] text-gray-500">
+                                  <span className="font-semibold text-gray-700">{row.avgXp.toLocaleString("it-IT")}</span> XP medio
+                                </span>
+                                <span className="text-[10px] text-gray-300">|</span>
+                                <span className="text-[10px] text-gray-500">
+                                  <span className="font-semibold text-gray-700">{row.avgMinutes >= 60 ? `${Math.floor(row.avgMinutes / 60)}h ${row.avgMinutes % 60}m` : `${row.avgMinutes}m`}</span> uso medio
+                                </span>
+                                <span className="text-[10px] text-gray-300">|</span>
+                                <span className="text-[10px] text-gray-500">
+                                  Top: <span className="font-semibold text-amber-600">{row.topUser}</span> ({row.topUserXp.toLocaleString("it-IT")} XP)
+                                </span>
+                              </div>
+                              {/* Bar */}
+                              <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
                                 <div
-                                  className={`h-full rounded-full transition-all ${
+                                  className={`h-full rounded-full ${
                                     asdTab === "regione" ? "bg-emerald-500/70" : asdTab === "province" ? "bg-amber-500/70" : "bg-[#003DA5]/70"
                                   }`}
                                   style={{ width: `${Math.max((row.count / maxCount) * 100, 3)}%` }}
