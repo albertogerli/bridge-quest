@@ -1063,12 +1063,13 @@ export default function AdminPage() {
                         </div>
                         <div className="space-y-1.5 max-h-[400px] overflow-y-auto pr-1">
                           {filtered.map((row) => (
-                            <div key={row.label} className="flex items-center gap-2 group">
-                              <div className="min-w-0 shrink-0" style={{ width: asdTab === "asd" ? "180px" : "120px" }}>
-                                <p className="text-xs font-medium text-gray-700 truncate" title={row.label}>{row.label}</p>
-                                {row.detail && <p className="text-[10px] text-gray-400 truncate">{row.detail}</p>}
+                            <div key={row.label} className="flex flex-col gap-1 py-1.5 border-b border-gray-50 last:border-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="text-xs font-medium text-gray-700 break-words">{row.label}</p>
+                                <span className="text-xs font-bold text-gray-700 shrink-0">{row.count}</span>
                               </div>
-                              <div className="flex-1 h-5 bg-gray-100 rounded-full overflow-hidden">
+                              {row.detail && <p className="text-[10px] text-gray-400">{row.detail}</p>}
+                              <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                                 <div
                                   className={`h-full rounded-full transition-all ${
                                     asdTab === "regione" ? "bg-emerald-500/70" : asdTab === "province" ? "bg-amber-500/70" : "bg-[#003DA5]/70"
@@ -1076,7 +1077,6 @@ export default function AdminPage() {
                                   style={{ width: `${Math.max((row.count / maxCount) * 100, 3)}%` }}
                                 />
                               </div>
-                              <span className="text-xs font-bold text-gray-700 w-10 text-right shrink-0">{row.count}</span>
                             </div>
                           ))}
                         </div>
