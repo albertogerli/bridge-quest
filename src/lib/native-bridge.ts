@@ -1,6 +1,9 @@
 /**
- * Native bridge — detects if running inside Capacitor iOS app
+ * Native bridge — detects if running inside Capacitor iOS/Android app
  * and provides native capabilities (haptics, status bar, etc.)
+ *
+ * Uses global Capacitor plugins (injected by native shell) instead of
+ * npm imports so the web build doesn't need Capacitor dependencies.
  */
 
 export function isNativeApp(): boolean {
@@ -17,8 +20,8 @@ export function isIOS(): boolean {
 export async function hapticTap() {
   if (!isNativeApp()) return;
   try {
-    const { Haptics, ImpactStyle } = await import("@capacitor/haptics");
-    await Haptics.impact({ style: ImpactStyle.Light });
+    const Haptics = (window as any).Capacitor?.Plugins?.Haptics;
+    await Haptics?.impact?.({ style: "Light" });
   } catch {}
 }
 
@@ -26,8 +29,8 @@ export async function hapticTap() {
 export async function hapticSuccess() {
   if (!isNativeApp()) return;
   try {
-    const { Haptics, NotificationType } = await import("@capacitor/haptics");
-    await Haptics.notification({ type: NotificationType.Success });
+    const Haptics = (window as any).Capacitor?.Plugins?.Haptics;
+    await Haptics?.notification?.({ type: "SUCCESS" });
   } catch {}
 }
 
@@ -35,8 +38,8 @@ export async function hapticSuccess() {
 export async function hapticError() {
   if (!isNativeApp()) return;
   try {
-    const { Haptics, NotificationType } = await import("@capacitor/haptics");
-    await Haptics.notification({ type: NotificationType.Error });
+    const Haptics = (window as any).Capacitor?.Plugins?.Haptics;
+    await Haptics?.notification?.({ type: "ERROR" });
   } catch {}
 }
 
@@ -44,7 +47,7 @@ export async function hapticError() {
 export async function configureStatusBar() {
   if (!isNativeApp()) return;
   try {
-    const { StatusBar, Style } = await import("@capacitor/status-bar");
-    await StatusBar.setStyle({ style: Style.Dark });
+    const StatusBar = (window as any).Capacitor?.Plugins?.StatusBar;
+    await StatusBar?.setStyle?.({ style: "Dark" });
   } catch {}
 }
