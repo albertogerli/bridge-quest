@@ -417,9 +417,11 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
             </div>
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">N-S / E-O</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-gray-900">
-                {game.gameState?.trickCount.ns ?? 0} / {game.gameState?.trickCount.ew ?? 0}
+                {partnershipOf(declarer) === "ew"
+                  ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+                  : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
               </p>
             </div>
             <div className="h-8 w-px bg-gray-100" />
@@ -432,7 +434,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
         {/* Bridge Table + Bidding */}
         <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="flex-1 max-w-2xl relative">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="flex-1 max-w-3xl relative">
             {hands ? (
               <BridgeTable
                 north={hands.north}
@@ -479,7 +481,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
           {smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="w-full lg:w-48 shrink-0">
-              <BiddingPanel bidding={smazzata.bidding} />
+              <BiddingPanel bidding={smazzata.bidding} declarer={declarer} />
             </motion.div>
           )}
         </div>

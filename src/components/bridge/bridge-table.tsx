@@ -153,7 +153,7 @@ export function BridgeTable({
   };
 
   return (
-    <div ref={tableRef} className={`relative w-full max-w-2xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
+    <div ref={tableRef} className={`relative w-full max-w-3xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
       {/* Felt background — uses shop cosmetic if purchased */}
       <div
         className={`absolute inset-0 rounded-3xl border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
