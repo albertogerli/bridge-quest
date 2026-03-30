@@ -35,7 +35,7 @@ export function Hand({
 
   // Fluid mode: compute exact card pixel width from container
   // Cap at 70px so cards with 1-2 remaining don't become absurdly large
-  const MAX_CARD_WIDTH = position === "south" ? 70 : 55;
+  const MAX_CARD_WIDTH = position === "south" ? 80 : 60;
   const cardWidth =
     containerWidth && cards.length > 0 && !isVertical
       ? Math.min(MAX_CARD_WIDTH, Math.floor((containerWidth - GAP * (cards.length - 1)) / cards.length))

@@ -40,7 +40,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 1: La prima presa
   // ==========================================================================
   {
-    id: "CG1-1", lesson: 1, board: 1, title: "La prima presa",
+    id: "CG1-1", lesson: 100, board: 1, title: "La prima presa",
     contract: "3NT", declarer: "east", openingLead: c("spade", "10"), vulnerability: "none",
     hands: {
       north: hand(["A", "J", "8", "7", "5"], ["J", "9", "2"], ["8", "2"], ["K", "Q", "J"]),
@@ -52,7 +52,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "north", bids: ["1S", "P", "P", "Dbl", "P", "1NT", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG1-2", lesson: 1, board: 2, title: "La prima presa",
+    id: "CG1-2", lesson: 100, board: 2, title: "La prima presa",
     contract: "3NT", declarer: "west", openingLead: c("heart", "3"), vulnerability: "none",
     hands: {
       north: hand(["Q", "10", "2"], ["K", "9", "7", "6", "3"], ["10", "3", "2"], ["6", "5"]),
@@ -64,7 +64,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2C", "P", "2D", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG1-3", lesson: 1, board: 3, title: "La prima presa",
+    id: "CG1-3", lesson: 100, board: 3, title: "La prima presa",
     contract: "3NT", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["A", "Q", "2"], ["8", "5"], ["A", "10", "7", "6", "3"], ["9", "8", "6"]),
@@ -76,7 +76,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG1-4", lesson: 1, board: 4, title: "La prima presa",
+    id: "CG1-4", lesson: 100, board: 4, title: "La prima presa",
     contract: "4H", declarer: "north", openingLead: c("diamond", "J"), vulnerability: "none",
     hands: {
       north: hand(["K", "Q", "7"], ["K", "J", "7", "2"], ["K", "10"], ["Q", "8", "7", "2"]),
@@ -88,7 +88,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1D", "P", "2H", "P", "3H", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG1-5", lesson: 1, board: 5, title: "La prima presa",
+    id: "CG1-5", lesson: 100, board: 5, title: "La prima presa",
     contract: "4S", declarer: "east", openingLead: c("heart", "2"), vulnerability: "none",
     hands: {
       north: hand(["10"], ["J", "8"], ["Q", "10", "9", "8"], ["A", "9", "7", "6", "3", "2"]),
@@ -100,7 +100,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "west", bids: ["P", "1S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG1-6", lesson: 1, board: 6, title: "La prima presa",
+    id: "CG1-6", lesson: 100, board: 6, title: "La prima presa",
     contract: "4H", declarer: "north", openingLead: c("spade", "3"), vulnerability: "none",
     hands: {
       north: hand(["9", "7", "4"], ["A", "K", "J", "10", "8", "7"], ["A"], ["A", "Q", "2"]),
@@ -112,7 +112,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "east", bids: ["P", "1D", "Dbl", "P", "1S", "P", "2H", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG1-7", lesson: 1, board: 7, title: "La prima presa",
+    id: "CG1-7", lesson: 100, board: 7, title: "La prima presa",
     contract: "3NT", declarer: "east", openingLead: c("diamond", "2"), vulnerability: "none",
     hands: {
       north: hand(["10", "6", "2"], ["K", "7", "5", "4"], ["A", "7"], ["A", "10", "9", "5"]),
@@ -124,7 +124,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2D", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG1-8", lesson: 1, board: 8, title: "La prima presa",
+    id: "CG1-8", lesson: 100, board: 8, title: "La prima presa",
     contract: "3H", declarer: "west", openingLead: c("spade", "9"), vulnerability: "none",
     hands: {
       north: hand(["9", "3"], ["K", "9", "5", "4"], ["9", "8", "7"], ["8", "5", "4", "3"]),
@@ -140,7 +140,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 2: Il Fit 5-3 e 4-4
   // ==========================================================================
   {
-    id: "CG2-1", lesson: 2, board: 1, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-1", lesson: 101, board: 1, title: "Il Fit 5-3 e 4-4",
     contract: "4S", declarer: "east", openingLead: c("club", "5"), vulnerability: "none",
     hands: {
       north: hand(["8", "6"], ["J", "9", "8", "4", "3"], ["Q", "J"], ["K", "10", "7", "2"]),
@@ -152,7 +152,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "P", "P", "2C", "P", "2D", "P", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG2-2", lesson: 2, board: 2, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-2", lesson: 101, board: 2, title: "Il Fit 5-3 e 4-4",
     contract: "7S", declarer: "south", openingLead: c("club", "3"), vulnerability: "none",
     hands: {
       north: hand(["Q", "J", "10", "8"], ["A", "7"], ["K", "10"], ["A", "J", "9", "6", "2"]),
@@ -164,7 +164,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1D", "P", "2C", "P", "2S", "P", "4NT", "P", "5S", "P", "7S", "P", "P", "P"] },
   },
   {
-    id: "CG2-3", lesson: 2, board: 3, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-3", lesson: 101, board: 3, title: "Il Fit 5-3 e 4-4",
     contract: "6C", declarer: "west", openingLead: c("spade", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "2"], ["J", "6", "5", "4"], ["6", "5", "4", "2"], ["3", "2"]),
@@ -176,7 +176,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1C", "P", "1S", "P", "2D", "P", "2NT", "P", "4NT", "P", "6C", "P", "P", "P"] },
   },
   {
-    id: "CG2-4", lesson: 2, board: 4, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-4", lesson: 101, board: 4, title: "Il Fit 5-3 e 4-4",
     contract: "4S", declarer: "north", openingLead: c("heart", "10"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "J", "2"], ["8", "4", "3"], [], ["A", "K", "7", "6", "5", "2"]),
@@ -188,7 +188,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["2D", "2H", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG2-5", lesson: 2, board: 5, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-5", lesson: 101, board: 5, title: "Il Fit 5-3 e 4-4",
     contract: "6H", declarer: "west", openingLead: c("club", "7"), vulnerability: "none",
     hands: {
       north: hand(["K", "Q", "10"], ["5", "3"], ["Q", "10", "8", "4"], ["7", "4", "3", "2"]),
@@ -200,7 +200,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1H", "P", "1S", "P", "2D", "P", "2H", "P", "4NT", "P", "5H", "P", "6H", "P", "P", "P"] },
   },
   {
-    id: "CG2-6", lesson: 2, board: 6, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-6", lesson: 101, board: 6, title: "Il Fit 5-3 e 4-4",
     contract: "4S", declarer: "south", openingLead: c("club", "J"), vulnerability: "none",
     hands: {
       north: hand(["K", "J", "10", "9"], ["7", "6"], ["A", "J", "8"], ["9", "8", "6", "4"]),
@@ -212,7 +212,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG2-7", lesson: 2, board: 7, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-7", lesson: 101, board: 7, title: "Il Fit 5-3 e 4-4",
     contract: "4H", declarer: "south", openingLead: c("diamond", "Q"), vulnerability: "none",
     hands: {
       north: hand(["8", "4", "3"], ["J", "10", "9"], ["A", "7", "4", "2"], ["K", "8", "7"]),
@@ -224,7 +224,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1H", "P", "2H", "P", "3C", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG2-8", lesson: 2, board: 8, title: "Il Fit 5-3 e 4-4",
+    id: "CG2-8", lesson: 101, board: 8, title: "Il Fit 5-3 e 4-4",
     contract: "4S", declarer: "south", openingLead: c("heart", "Q"), vulnerability: "none",
     hands: {
       north: hand(["A", "Q"], ["7", "6", "5", "3", "2"], ["J", "10", "9", "7"], ["8", "4"]),
@@ -240,7 +240,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 3: Il conto e i preferenziali
   // ==========================================================================
   {
-    id: "CG3-1", lesson: 3, board: 1, title: "Il conto e i preferenziali",
+    id: "CG3-1", lesson: 102, board: 1, title: "Il conto e i preferenziali",
     contract: "4S", declarer: "east", openingLead: c("diamond", "Q"), vulnerability: "none",
     hands: {
       north: hand(["10", "7", "6"], ["A", "9", "5", "2"], ["A", "9", "6"], ["Q", "J", "10"]),
@@ -252,7 +252,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "north", bids: ["P", "1S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG3-2", lesson: 3, board: 2, title: "Il conto e i preferenziali",
+    id: "CG3-2", lesson: 102, board: 2, title: "Il conto e i preferenziali",
     contract: "4S", declarer: "south", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["J", "10", "9", "4"], ["K", "Q", "10", "6"], ["K", "10", "4"], ["Q", "5"]),
@@ -264,7 +264,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1D", "2C", "X", "P", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG3-3", lesson: 3, board: 3, title: "Il conto e i preferenziali",
+    id: "CG3-3", lesson: 102, board: 3, title: "Il conto e i preferenziali",
     contract: "3NT", declarer: "west", openingLead: c("diamond", "2"), vulnerability: "none",
     hands: {
       north: hand(["J", "4", "3"], ["8", "4", "3"], ["A", "J", "9", "5", "2"], ["5", "2"]),
@@ -276,7 +276,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "west", bids: ["P", "1NT", "P", "2S", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG3-4", lesson: 3, board: 4, title: "Il conto e i preferenziali",
+    id: "CG3-4", lesson: 102, board: 4, title: "Il conto e i preferenziali",
     contract: "6S", declarer: "south", openingLead: c("heart", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "7", "6", "3"], ["10"], ["A", "K", "7", "6", "4"], ["A", "7"]),
@@ -288,7 +288,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1H", "X", "4H", "P", "6S", "P", "P", "P"] },
   },
   {
-    id: "CG3-5", lesson: 3, board: 5, title: "Il conto e i preferenziali",
+    id: "CG3-5", lesson: 102, board: 5, title: "Il conto e i preferenziali",
     contract: "4H", declarer: "west", openingLead: c("diamond", "J"), vulnerability: "none",
     hands: {
       north: hand(["A", "9"], ["7", "6", "4"], ["J", "10", "9", "6", "2"], ["8", "5", "2"]),
@@ -300,7 +300,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "west", bids: ["1NT", "P", "2C", "P", "2H", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG3-6", lesson: 3, board: 6, title: "Il conto e i preferenziali",
+    id: "CG3-6", lesson: 102, board: 6, title: "Il conto e i preferenziali",
     contract: "4S", declarer: "east", openingLead: c("club", "Q"), vulnerability: "none",
     hands: {
       north: hand(["8", "7", "3"], ["J", "10", "5"], ["Q", "J", "6"], ["7", "6", "5", "4"]),
@@ -312,7 +312,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "east", bids: ["1S", "P", "2H", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG3-7", lesson: 3, board: 7, title: "Il conto e i preferenziali",
+    id: "CG3-7", lesson: 102, board: 7, title: "Il conto e i preferenziali",
     contract: "3NT", declarer: "south", openingLead: c("heart", "2"), vulnerability: "none",
     hands: {
       north: hand(["A", "J", "7", "4"], ["J", "10", "7"], ["Q", "6"], ["K", "8", "5", "2"]),
@@ -324,7 +324,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2D", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG3-8", lesson: 3, board: 8, title: "Il conto e i preferenziali",
+    id: "CG3-8", lesson: 102, board: 8, title: "Il conto e i preferenziali",
     contract: "4S", declarer: "north", openingLead: c("diamond", "2"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "7", "6"], ["10", "3"], ["K", "J"], ["A", "K", "Q", "9", "4"]),
@@ -340,7 +340,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 4: I colori da muovere in difesa
   // ==========================================================================
   {
-    id: "CG4-1", lesson: 4, board: 1, title: "I colori da muovere in difesa",
+    id: "CG4-1", lesson: 103, board: 1, title: "I colori da muovere in difesa",
     contract: "4H", declarer: "north", openingLead: c("club", "J"), vulnerability: "none",
     hands: {
       north: hand(["Q"], ["K", "J", "10", "9", "7"], ["9", "8", "5", "3"], ["A", "K", "7"]),
@@ -352,7 +352,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1S", "P", "2D", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG4-2", lesson: 4, board: 2, title: "I colori da muovere in difesa",
+    id: "CG4-2", lesson: 103, board: 2, title: "I colori da muovere in difesa",
     contract: "4S", declarer: "west", openingLead: c("heart", "10"), vulnerability: "none",
     hands: {
       north: hand(["4", "3"], ["10", "9", "7", "6", "2"], ["K", "8", "7", "5"], ["10", "8"]),
@@ -364,7 +364,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "west", bids: ["1NT", "P", "2C", "P", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG4-3", lesson: 4, board: 3, title: "I colori da muovere in difesa",
+    id: "CG4-3", lesson: 103, board: 3, title: "I colori da muovere in difesa",
     contract: "4S", declarer: "south", openingLead: c("club", "J"), vulnerability: "none",
     hands: {
       north: hand(["6", "5"], ["Q", "5"], ["8", "6"], ["A", "K", "Q", "J", "7", "6", "4"]),
@@ -376,7 +376,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1S", "P", "2C", "P", "2S", "P", "3S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG4-4", lesson: 4, board: 4, title: "I colori da muovere in difesa",
+    id: "CG4-4", lesson: 103, board: 4, title: "I colori da muovere in difesa",
     contract: "4S", declarer: "west", openingLead: c("club", "2"), vulnerability: "none",
     hands: {
       north: hand(["10", "5"], ["J", "9", "8", "4", "3", "2"], ["Q", "7", "6", "2"], ["2"]),
@@ -388,7 +388,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "west", bids: ["1NT", "P", "2C", "P", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG4-5", lesson: 4, board: 5, title: "I colori da muovere in difesa",
+    id: "CG4-5", lesson: 103, board: 5, title: "I colori da muovere in difesa",
     contract: "4S", declarer: "south", openingLead: c("heart", "2"), vulnerability: "none",
     hands: {
       north: hand(["Q", "10", "8", "3"], ["8", "4"], ["Q", "10", "2"], ["K", "Q", "7", "2"]),
@@ -400,7 +400,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG4-6", lesson: 4, board: 6, title: "I colori da muovere in difesa",
+    id: "CG4-6", lesson: 103, board: 6, title: "I colori da muovere in difesa",
     contract: "4H", declarer: "north", openingLead: c("spade", "A"), vulnerability: "none",
     hands: {
       north: hand(["Q", "7"], ["A", "J", "9", "8", "5"], ["J", "2"], ["A", "J", "7", "3"]),
@@ -412,7 +412,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "north", bids: ["1H", "1S", "P", "2S", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG4-7", lesson: 4, board: 7, title: "I colori da muovere in difesa",
+    id: "CG4-7", lesson: 103, board: 7, title: "I colori da muovere in difesa",
     contract: "4S", declarer: "east", openingLead: c("club", "K"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "4"], ["8", "7", "2"], ["9", "7"], ["10", "9", "8", "5", "3"]),
@@ -424,7 +424,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "east", bids: ["P", "P", "P", "1S", "P", "1NT", "P", "2H", "P", "3D", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG4-8", lesson: 4, board: 8, title: "I colori da muovere in difesa",
+    id: "CG4-8", lesson: 103, board: 8, title: "I colori da muovere in difesa",
     contract: "4H", declarer: "west", openingLead: c("spade", "K"), vulnerability: "none",
     hands: {
       north: hand(["K", "Q", "7", "4", "3"], ["5", "4"], ["8", "5", "2"], ["A", "8", "7"]),
@@ -440,7 +440,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 5: I giochi di sicurezza
   // ==========================================================================
   {
-    id: "CG5-1", lesson: 5, board: 1, title: "I giochi di sicurezza",
+    id: "CG5-1", lesson: 104, board: 1, title: "I giochi di sicurezza",
     contract: "3NT", declarer: "west", openingLead: c("club", "J"), vulnerability: "none",
     hands: {
       north: hand(["A"], ["K", "7", "6"], ["K", "Q", "J", "8", "4", "3", "2"], ["J", "2"]),
@@ -452,7 +452,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1H", "P", "2D", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG5-2", lesson: 5, board: 2, title: "I giochi di sicurezza",
+    id: "CG5-2", lesson: 104, board: 2, title: "I giochi di sicurezza",
     contract: "6S", declarer: "east", openingLead: c("heart", "Q"), vulnerability: "none",
     hands: {
       north: hand(["Q", "10", "5", "2"], ["5", "4", "3"], ["Q", "J", "10"], ["Q", "6", "5"]),
@@ -464,7 +464,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1S", "P", "2S", "P", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
   },
   {
-    id: "CG5-3", lesson: 5, board: 3, title: "I giochi di sicurezza",
+    id: "CG5-3", lesson: 104, board: 3, title: "I giochi di sicurezza",
     contract: "4S", declarer: "west", openingLead: c("heart", "10"), vulnerability: "none",
     hands: {
       north: hand(["Q", "5"], ["10", "9", "8", "7"], ["9", "5", "2"], ["A", "9", "7", "3"]),
@@ -476,7 +476,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "3S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG5-4", lesson: 5, board: 4, title: "I giochi di sicurezza",
+    id: "CG5-4", lesson: 104, board: 4, title: "I giochi di sicurezza",
     contract: "6S", declarer: "north", openingLead: c("heart", "J"), vulnerability: "none",
     hands: {
       north: hand(["Q", "9", "6", "3"], ["A", "K", "Q"], ["A", "J", "7", "6"], ["9", "8"]),
@@ -488,7 +488,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1NT", "P", "P", "P"] },
   },
   {
-    id: "CG5-5", lesson: 5, board: 5, title: "I giochi di sicurezza",
+    id: "CG5-5", lesson: 104, board: 5, title: "I giochi di sicurezza",
     contract: "4S", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["8", "7", "5", "4"], ["10", "9", "6"], ["A", "10"], ["J", "10", "8", "4"]),
@@ -500,7 +500,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1S", "X", "P", "2H", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG5-6", lesson: 5, board: 6, title: "I giochi di sicurezza",
+    id: "CG5-6", lesson: 104, board: 6, title: "I giochi di sicurezza",
     contract: "3NT", declarer: "south", openingLead: c("heart", "J"), vulnerability: "none",
     hands: {
       north: hand(["10", "7", "3"], ["6", "5"], ["A", "K", "5", "4", "3"], ["8", "4", "2"]),
@@ -512,7 +512,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG5-7", lesson: 5, board: 7, title: "I giochi di sicurezza",
+    id: "CG5-7", lesson: 104, board: 7, title: "I giochi di sicurezza",
     contract: "4S", declarer: "north", openingLead: c("heart", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "10", "4"], ["6", "4"], ["A", "7", "8", "5", "2"], ["J", "7"]),
@@ -524,7 +524,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1C", "P", "1D", "1H", "P", "P", "Dbl", "P", "2S", "P", "3S", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG5-8", lesson: 5, board: 8, title: "I giochi di sicurezza",
+    id: "CG5-8", lesson: 104, board: 8, title: "I giochi di sicurezza",
     contract: "3H", declarer: "south", openingLead: c("spade", "Q"), vulnerability: "none",
     hands: {
       north: hand(["8", "4", "3"], ["Q", "J", "10", "9"], ["Q", "10", "9"], ["A", "8", "5"]),
@@ -540,7 +540,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 6: Probabilità e percentuali
   // ==========================================================================
   {
-    id: "CG6-1", lesson: 6, board: 1, title: "Probabilità e percentuali",
+    id: "CG6-1", lesson: 105, board: 1, title: "Probabilità e percentuali",
     contract: "2H", declarer: "south", openingLead: c("club", "J"), vulnerability: "none",
     hands: {
       north: hand(["K", "J", "10", "2"], ["A", "7", "5"], ["J", "9", "5"], ["10", "8", "4"]),
@@ -552,7 +552,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1D", "P", "2C", "P", "2H", "P", "P", "P"] },
   },
   {
-    id: "CG6-2", lesson: 6, board: 2, title: "Probabilità e percentuali",
+    id: "CG6-2", lesson: 105, board: 2, title: "Probabilità e percentuali",
     contract: "3NT", declarer: "south", openingLead: c("heart", "Q"), vulnerability: "none",
     hands: {
       north: hand(["6", "5"], ["K", "10", "7", "5", "4"], ["J", "10", "8", "2"], ["10", "8"]),
@@ -564,7 +564,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1D", "P", "1NT", "P", "2S", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG6-3", lesson: 6, board: 3, title: "Probabilità e percentuali",
+    id: "CG6-3", lesson: 105, board: 3, title: "Probabilità e percentuali",
     contract: "3NT", declarer: "south", openingLead: c("heart", "4"), vulnerability: "none",
     hands: {
       north: hand(["A", "10", "8", "7"], ["6", "3"], ["A", "K", "9", "6", "3"], ["A", "K"]),
@@ -576,7 +576,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2S", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG6-4", lesson: 6, board: 4, title: "Probabilità e percentuali",
+    id: "CG6-4", lesson: 105, board: 4, title: "Probabilità e percentuali",
     contract: "3NT", declarer: "north", openingLead: c("diamond", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "Q", "5", "3", "2"], ["A", "Q"], ["10", "6", "4"], ["K", "J", "2"]),
@@ -588,7 +588,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "P", "1NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG6-5", lesson: 6, board: 5, title: "Probabilità e percentuali",
+    id: "CG6-5", lesson: 105, board: 5, title: "Probabilità e percentuali",
     contract: "3NT", declarer: "south", openingLead: c("club", "Q"), vulnerability: "none",
     hands: {
       north: hand(["8", "5", "4", "3"], ["K", "9", "5", "3"], ["10"], ["K", "5", "4", "2"]),
@@ -600,7 +600,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG6-6", lesson: 6, board: 6, title: "Probabilità e percentuali",
+    id: "CG6-6", lesson: 105, board: 6, title: "Probabilità e percentuali",
     contract: "7S", declarer: "north", openingLead: c("heart", "J"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "Q", "J", "6", "4"], ["A"], ["6", "4", "3", "2"], ["A", "Q"]),
@@ -612,7 +612,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1D", "P", "1S", "P", "2S", "P", "4NT", "P", "5D", "P", "7S", "P", "P", "P"] },
   },
   {
-    id: "CG6-7", lesson: 6, board: 7, title: "Probabilità e percentuali",
+    id: "CG6-7", lesson: 105, board: 7, title: "Probabilità e percentuali",
     contract: "3NT", declarer: "west", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["5", "4"], ["10", "9", "3", "2"], ["J", "5", "4"], ["A", "K", "Q", "3"]),
@@ -624,7 +624,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG6-8", lesson: 6, board: 8, title: "Probabilità e percentuali",
+    id: "CG6-8", lesson: 105, board: 8, title: "Probabilità e percentuali",
     contract: "4S", declarer: "west", openingLead: c("club", "K"), vulnerability: "none",
     hands: {
       north: hand([], ["A", "6", "5", "2"], ["10", "6", "4", "3"], ["K", "Q", "9", "3", "2"]),
@@ -640,7 +640,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 7: Coprire o non coprire
   // ==========================================================================
   {
-    id: "CG7-1", lesson: 7, board: 1, title: "Coprire o non coprire",
+    id: "CG7-1", lesson: 106, board: 1, title: "Coprire o non coprire",
     contract: "3NT", declarer: "west", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["10", "9", "8", "5"], ["10", "6", "5"], ["A", "K", "Q", "10"], ["J", "9"]),
@@ -652,7 +652,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1D", "P", "1H", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG7-2", lesson: 7, board: 2, title: "Coprire o non coprire",
+    id: "CG7-2", lesson: 106, board: 2, title: "Coprire o non coprire",
     contract: "4S", declarer: "east", openingLead: c("spade", "J"), vulnerability: "none",
     hands: {
       north: hand(["Q", "8", "3"], ["9", "7", "6", "5", "4"], ["4", "3"], ["A", "J", "9"]),
@@ -664,7 +664,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2C", "P", "2D", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG7-3", lesson: 7, board: 3, title: "Coprire o non coprire",
+    id: "CG7-3", lesson: 106, board: 3, title: "Coprire o non coprire",
     contract: "3NT", declarer: "south", openingLead: c("diamond", "Q"), vulnerability: "none",
     hands: {
       north: hand(["Q", "10", "4"], ["K", "6", "4"], ["A", "K"], ["10", "9", "6", "4", "2"]),
@@ -676,7 +676,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG7-4", lesson: 7, board: 4, title: "Coprire o non coprire",
+    id: "CG7-4", lesson: 106, board: 4, title: "Coprire o non coprire",
     contract: "4H", declarer: "north", openingLead: c("club", "K"), vulnerability: "none",
     hands: {
       north: hand(["A", "K"], ["K", "Q", "7", "6", "3"], ["A", "5", "3", "2"], ["9", "7"]),
@@ -688,7 +688,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "1H", "P", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG7-5", lesson: 7, board: 5, title: "Coprire o non coprire",
+    id: "CG7-5", lesson: 106, board: 5, title: "Coprire o non coprire",
     contract: "4S", declarer: "north", openingLead: c("heart", "A"), vulnerability: "none",
     hands: {
       north: hand(["Q", "J", "10", "8", "6", "5", "4", "2"], ["4", "3"], ["8"], ["K", "Q"]),
@@ -700,7 +700,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG7-6", lesson: 7, board: 6, title: "Coprire o non coprire",
+    id: "CG7-6", lesson: 106, board: 6, title: "Coprire o non coprire",
     contract: "3NT", declarer: "north", openingLead: c("spade", "3"), vulnerability: "none",
     hands: {
       north: hand(["K", "Q", "2"], ["10", "8", "5"], ["Q", "J", "9"], ["J", "8", "7", "3"]),
@@ -712,7 +712,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG7-7", lesson: 7, board: 7, title: "Coprire o non coprire",
+    id: "CG7-7", lesson: 106, board: 7, title: "Coprire o non coprire",
     contract: "4S", declarer: "south", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["J", "4", "2"], ["A", "9", "7", "3"], ["Q", "10", "4"], ["J", "8", "6"]),
@@ -724,7 +724,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1S", "P", "2S", "P", "3D", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG7-8", lesson: 7, board: 8, title: "Coprire o non coprire",
+    id: "CG7-8", lesson: 106, board: 8, title: "Coprire o non coprire",
     contract: "3NT", declarer: "west", openingLead: c("spade", "9"), vulnerability: "none",
     hands: {
       north: hand(["9", "6"], ["Q", "10", "7", "3"], ["Q", "5"], ["Q", "10", "9", "8", "3"]),
@@ -740,7 +740,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 8: I giochi di eliminazione
   // ==========================================================================
   {
-    id: "CG8-1", lesson: 8, board: 1, title: "I giochi di eliminazione",
+    id: "CG8-1", lesson: 107, board: 1, title: "I giochi di eliminazione",
     contract: "4S", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["J", "3"], ["10", "9", "8", "5"], ["7", "4"], ["Q", "10", "6", "5", "2"]),
@@ -752,7 +752,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "3H", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG8-2", lesson: 8, board: 2, title: "I giochi di eliminazione",
+    id: "CG8-2", lesson: 107, board: 2, title: "I giochi di eliminazione",
     contract: "6S", declarer: "south", openingLead: c("club", "2"), vulnerability: "none",
     hands: {
       north: hand(["K", "10", "9", "8"], ["A", "K"], ["Q", "J", "7", "6"], ["A", "10", "9"]),
@@ -764,7 +764,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2S", "P", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
   },
   {
-    id: "CG8-3", lesson: 8, board: 3, title: "I giochi di eliminazione",
+    id: "CG8-3", lesson: 107, board: 3, title: "I giochi di eliminazione",
     contract: "5D", declarer: "north", openingLead: c("heart", "A"), vulnerability: "none",
     hands: {
       north: hand(["9", "4", "2"], [], ["A", "K", "Q", "J", "10", "5", "4"], ["A", "7", "6"]),
@@ -776,7 +776,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "P", "1D", "1H", "X", "2H", "3S", "P", "5D", "P", "P", "P"] },
   },
   {
-    id: "CG8-4", lesson: 8, board: 4, title: "I giochi di eliminazione",
+    id: "CG8-4", lesson: 107, board: 4, title: "I giochi di eliminazione",
     contract: "6NT", declarer: "west", openingLead: c("diamond", "J"), vulnerability: "none",
     hands: {
       north: hand(["7", "6", "3"], ["7", "4", "2"], ["J", "10", "9", "8"], ["Q", "5", "4"]),
@@ -788,7 +788,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1NT", "P", "6NT", "P", "P", "P"] },
   },
   {
-    id: "CG8-5", lesson: 8, board: 5, title: "I giochi di eliminazione",
+    id: "CG8-5", lesson: 107, board: 5, title: "I giochi di eliminazione",
     contract: "6D", declarer: "south", openingLead: c("heart", "10"), vulnerability: "none",
     hands: {
       north: hand(["A", "Q", "5"], ["A", "K", "J", "3"], ["5", "4"], ["A", "Q", "9", "2"]),
@@ -800,7 +800,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["3D", "P", "6D", "P", "P", "P"] },
   },
   {
-    id: "CG8-6", lesson: 8, board: 6, title: "I giochi di eliminazione",
+    id: "CG8-6", lesson: 107, board: 6, title: "I giochi di eliminazione",
     contract: "6S", declarer: "south", openingLead: c("heart", "Q"), vulnerability: "none",
     hands: {
       north: hand(["2"], ["6", "5", "4", "3"], ["Q", "J", "10", "4"], ["K", "Q", "4", "3"]),
@@ -812,7 +812,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1S", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
   },
   {
-    id: "CG8-7", lesson: 8, board: 7, title: "I giochi di eliminazione",
+    id: "CG8-7", lesson: 107, board: 7, title: "I giochi di eliminazione",
     contract: "6S", declarer: "north", openingLead: c("heart", "10"), vulnerability: "none",
     hands: {
       north: hand(["A", "J", "10", "8", "7", "6", "5"], ["6"], ["A", "Q"], ["A", "J", "6"]),
@@ -824,7 +824,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1H", "P", "1S", "P", "2S", "P", "4NT", "P", "5D", "P", "6S", "P", "P", "P"] },
   },
   {
-    id: "CG8-8", lesson: 8, board: 8, title: "I giochi di eliminazione",
+    id: "CG8-8", lesson: 107, board: 8, title: "I giochi di eliminazione",
     contract: "4S", declarer: "west", openingLead: c("club", "K"), vulnerability: "none",
     hands: {
       north: hand(["5", "4"], ["J", "10", "8", "6"], ["5", "2"], ["K", "Q", "J", "10", "8"]),
@@ -840,7 +840,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 9: Giocare come se
   // ==========================================================================
   {
-    id: "CG9-1", lesson: 9, board: 1, title: "Giocare come se",
+    id: "CG9-1", lesson: 108, board: 1, title: "Giocare come se",
     contract: "4H", declarer: "south", openingLead: c("club", "10"), vulnerability: "none",
     hands: {
       north: hand(["K", "4"], ["Q", "J", "5", "3", "2"], ["K", "10", "9"], ["7", "6", "4"]),
@@ -852,7 +852,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1H", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG9-2", lesson: 9, board: 2, title: "Giocare come se",
+    id: "CG9-2", lesson: 108, board: 2, title: "Giocare come se",
     contract: "6C", declarer: "west", openingLead: c("club", "10"), vulnerability: "none",
     hands: {
       north: hand(["J", "9", "6", "4"], ["K", "Q", "J", "5"], ["J"], ["Q", "8", "6", "2"]),
@@ -864,7 +864,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2C", "P", "2D", "P", "3D", "P", "3S", "P", "6C", "P", "P", "P"] },
   },
   {
-    id: "CG9-3", lesson: 9, board: 3, title: "Giocare come se",
+    id: "CG9-3", lesson: 108, board: 3, title: "Giocare come se",
     contract: "3NT", declarer: "east", openingLead: c("heart", "Q"), vulnerability: "none",
     hands: {
       north: hand(["Q", "J", "8", "3"], ["A", "K", "5"], ["9", "8", "7"], ["10", "8", "4"]),
@@ -876,7 +876,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "P", "P", "1NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG9-4", lesson: 9, board: 4, title: "Giocare come se",
+    id: "CG9-4", lesson: 108, board: 4, title: "Giocare come se",
     contract: "7S", declarer: "north", openingLead: c("club", "10"), vulnerability: "none",
     hands: {
       north: hand(["7", "6"], ["Q", "J"], ["A", "K", "8", "7", "5", "2"], ["A", "Q", "6"]),
@@ -888,7 +888,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "3S", "P", "5C", "P", "6S", "P", "P", "P"] },
   },
   {
-    id: "CG9-5", lesson: 9, board: 5, title: "Giocare come se",
+    id: "CG9-5", lesson: 108, board: 5, title: "Giocare come se",
     contract: "7NT", declarer: "west", openingLead: c("spade", "10"), vulnerability: "none",
     hands: {
       north: hand(["10", "9", "8", "4", "2"], ["9", "8", "4", "3", "2"], ["6"], ["8", "7"]),
@@ -900,7 +900,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2C", "P", "2D", "P", "2NT", "P", "3NT", "P", "7NT", "P", "P", "P"] },
   },
   {
-    id: "CG9-6", lesson: 9, board: 6, title: "Giocare come se",
+    id: "CG9-6", lesson: 108, board: 6, title: "Giocare come se",
     contract: "6H", declarer: "north", openingLead: c("spade", "A"), vulnerability: "none",
     hands: {
       north: hand(["K", "Q"], ["8", "7", "6"], ["A", "Q", "J", "10", "8", "4"], ["A", "Q"]),
@@ -912,7 +912,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1H", "P", "2D", "P", "2H", "P", "3H", "P", "4H", "P", "4NT", "P", "5S", "P", "6H", "P", "P", "P"] },
   },
   {
-    id: "CG9-7", lesson: 9, board: 7, title: "Giocare come se",
+    id: "CG9-7", lesson: 108, board: 7, title: "Giocare come se",
     contract: "3NT", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["K", "8", "6", "5"], ["7", "5", "3", "2"], ["7", "4"], ["A", "4", "2"]),
@@ -924,7 +924,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "P", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
-    id: "CG9-8", lesson: 9, board: 8, title: "Giocare come se",
+    id: "CG9-8", lesson: 108, board: 8, title: "Giocare come se",
     contract: "6NT", declarer: "east", openingLead: c("spade", "10"), vulnerability: "none",
     hands: {
       north: hand(["8", "7", "6", "3"], ["A", "Q"], ["Q", "9", "6", "4"], ["A", "K", "Q"]),
@@ -940,7 +940,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // LESSON 10: Le deduzioni del giocante
   // ==========================================================================
   {
-    id: "CG10-1", lesson: 10, board: 1, title: "Le deduzioni del giocante",
+    id: "CG10-1", lesson: 109, board: 1, title: "Le deduzioni del giocante",
     contract: "4H", declarer: "west", openingLead: c("diamond", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "8", "4"], ["7", "6", "3"], ["A", "K", "6", "2"], ["9", "5", "2"]),
@@ -952,7 +952,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2H", "P", "4H", "P", "P", "P"] },
   },
   {
-    id: "CG10-2", lesson: 10, board: 2, title: "Le deduzioni del giocante",
+    id: "CG10-2", lesson: 109, board: 2, title: "Le deduzioni del giocante",
     contract: "4S", declarer: "north", openingLead: c("heart", "2"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "J", "10", "9"], ["10", "8", "5"], ["K", "3"], ["A", "8", "4"]),
@@ -964,7 +964,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2H", "2S", "3H", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG10-3", lesson: 10, board: 3, title: "Le deduzioni del giocante",
+    id: "CG10-3", lesson: 109, board: 3, title: "Le deduzioni del giocante",
     contract: "3H", declarer: "south", openingLead: c("spade", "A"), vulnerability: "none",
     hands: {
       north: hand(["Q", "9", "3"], ["4", "2"], ["A", "10", "9", "7", "3"], ["10", "7", "5"]),
@@ -976,7 +976,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1D", "P", "2D", "2H", "P", "3H", "P", "P", "P"] },
   },
   {
-    id: "CG10-4", lesson: 10, board: 4, title: "Le deduzioni del giocante",
+    id: "CG10-4", lesson: 109, board: 4, title: "Le deduzioni del giocante",
     contract: "4S", declarer: "south", openingLead: c("heart", "A"), vulnerability: "none",
     hands: {
       north: hand(["K", "10", "9", "7"], ["7", "6"], ["A", "K", "Q", "4"], ["K", "Q", "6"]),
@@ -988,7 +988,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["4H", "X", "P", "P", "P"] },
   },
   {
-    id: "CG10-5", lesson: 10, board: 5, title: "Le deduzioni del giocante",
+    id: "CG10-5", lesson: 109, board: 5, title: "Le deduzioni del giocante",
     contract: "7NT", declarer: "west", openingLead: c("spade", "10"), vulnerability: "none",
     hands: {
       north: hand(["10", "9", "8", "4", "2"], ["9", "8", "4", "3", "2"], ["6"], ["8", "7"]),
@@ -1000,7 +1000,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["P", "2C", "P", "2D", "P", "2NT", "P", "3NT", "P", "7NT", "P", "P", "P"] },
   },
   {
-    id: "CG10-6", lesson: 10, board: 6, title: "Le deduzioni del giocante",
+    id: "CG10-6", lesson: 109, board: 6, title: "Le deduzioni del giocante",
     contract: "4S", declarer: "south", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "Q", "10", "9", "8", "6"], ["9", "6", "3"], ["8", "5", "2"], []),
@@ -1012,7 +1012,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1C", "P", "1S", "P", "1NT", "P", "4S", "P", "P", "P"] },
   },
   {
-    id: "CG10-7", lesson: 10, board: 7, title: "Le deduzioni del giocante",
+    id: "CG10-7", lesson: 109, board: 7, title: "Le deduzioni del giocante",
     contract: "2S", declarer: "south", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "J", "6", "5"], ["7", "6", "4", "3"], ["10", "4"], ["6", "4", "3"]),
@@ -1024,7 +1024,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     bidding: { dealer: "south", bids: ["1S", "1NT", "2S", "P", "P", "P"] },
   },
   {
-    id: "CG10-8", lesson: 10, board: 8, title: "Le deduzioni del giocante",
+    id: "CG10-8", lesson: 109, board: 8, title: "Le deduzioni del giocante",
     contract: "4S", declarer: "south", openingLead: c("club", "A"), vulnerability: "none",
     hands: {
       north: hand(["J", "10", "9", "8"], ["8", "5", "2"], ["A", "Q", "6", "4"], ["5", "3"]),

@@ -19,6 +19,7 @@ import {
   parseContract,
   toDisplayPosition,
   toGamePosition,
+  partnershipOf,
   type Card,
   type Position,
 } from "@/lib/bridge-engine";
@@ -689,9 +690,11 @@ function SfidaIMPContent() {
               </div>
               <div className="h-8 w-px bg-gray-100" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">N-S / E-O</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
                 <p className="text-lg font-bold text-gray-900">
-                  {game.gameState?.trickCount.ns ?? 0} / {game.gameState?.trickCount.ew ?? 0}
+                  {partnershipOf(declarer) === "ew"
+                    ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+                    : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
                 </p>
               </div>
               {boardContract.vulnerable && (
@@ -712,7 +715,7 @@ function SfidaIMPContent() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="max-w-2xl mx-auto"
+            className="max-w-3xl mx-auto"
           >
             {hands ? (
               <BridgeTable

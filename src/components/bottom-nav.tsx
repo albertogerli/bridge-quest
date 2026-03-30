@@ -13,7 +13,7 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
       <div className="bg-white dark:bg-[#141821] border-t border-[#e5e7eb] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
-        <div className="mx-auto flex max-w-lg items-end px-0.5 py-1 safe-area-bottom">
+        <div className="mx-auto flex max-w-2xl items-end px-0.5 py-1 safe-area-bottom">
           {/* Left group */}
           <div className="flex flex-1 justify-around">
             <NavItem href="/" icon="home" label="Home" active={isActive("/")} />

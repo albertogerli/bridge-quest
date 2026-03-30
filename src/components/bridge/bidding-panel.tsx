@@ -89,15 +89,79 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
   );
 }
 
+/**
+ * Rotate bidding positions so the declarer's bids appear under "S" (South),
+ * matching the table display where the declarer is always at the bottom.
+ */
+function rotateBidding(bidding: BiddingData, declarer?: string): { displayOrder: readonly string[]; dealer: string; bids: string[] } {
+  if (!declarer || declarer === "south") {
+    return { displayOrder: POS_ORDER, dealer: bidding.dealer, bids: bidding.bids };
+  }
+
+  // Rotation map: game position → display position
+  const ROTATIONS: Record<string, Record<string, string>> = {
+    north: { north: "south", south: "north", east: "west", west: "east" },
+    east:  { north: "east",  south: "west",  east: "south", west: "north" },
+    west:  { north: "west",  south: "east",  east: "north", west: "south" },
+  };
+  const rot = ROTATIONS[declarer];
+
+  // Rotate the dealer position
+  const rotatedDealer = rot[bidding.dealer];
+
+  // Build a mapping from original column index to rotated column index
+  // Original order: W N E S (indices 0 1 2 3)
+  // Each original position maps to a display position, find its new column
+  const originalBidsByPos: string[][] = [[], [], [], []]; // W, N, E, S
+  const dealerIdx = POS_ORDER.indexOf(bidding.dealer);
+  let posIdx = dealerIdx;
+  for (const bid of bidding.bids) {
+    originalBidsByPos[posIdx].push(bid);
+    posIdx = (posIdx + 1) % 4;
+  }
+
+  // Map each original position's bids to its rotated display column
+  const rotatedBidsByCol: string[][] = [[], [], [], []]; // columns in POS_ORDER display
+  for (let i = 0; i < 4; i++) {
+    const origPos = POS_ORDER[i];
+    const displayPos = rot[origPos];
+    const displayCol = POS_ORDER.indexOf(displayPos as typeof POS_ORDER[number]);
+    rotatedBidsByCol[displayCol] = originalBidsByPos[i];
+  }
+
+  // Reconstruct sequential bids starting from rotated dealer
+  const rotatedDealerIdx = POS_ORDER.indexOf(rotatedDealer as typeof POS_ORDER[number]);
+  const maxRounds = Math.max(...rotatedBidsByCol.map((c) => c.length));
+  const rotatedBids: string[] = [];
+  for (let round = 0; round < maxRounds; round++) {
+    for (let col = 0; col < 4; col++) {
+      const actualCol = (rotatedDealerIdx + col) % 4;
+      if (round < rotatedBidsByCol[actualCol].length) {
+        rotatedBids.push(rotatedBidsByCol[actualCol][round]);
+      }
+    }
+  }
+
+  return {
+    displayOrder: POS_ORDER,
+    dealer: rotatedDealer,
+    bids: rotatedBids,
+  };
+}
+
 export function BiddingPanel({
   bidding,
   compact = false,
+  declarer,
 }: {
   bidding: BiddingData;
   compact?: boolean;
+  declarer?: string;
 }) {
+  const { dealer, bids } = rotateBidding(bidding, declarer);
+
   // Build the grid: figure out which column the dealer is in
-  const dealerIdx = POS_ORDER.indexOf(bidding.dealer);
+  const dealerIdx = POS_ORDER.indexOf(dealer as typeof POS_ORDER[number]);
 
   // Build rows of 4 cells each
   const rows: string[][] = [];
@@ -109,7 +173,7 @@ export function BiddingPanel({
   }
 
   // Add bids
-  for (const bid of bidding.bids) {
+  for (const bid of bids) {
     currentRow.push(bid);
     if (currentRow.length === 4) {
       rows.push(currentRow);
@@ -136,13 +200,13 @@ export function BiddingPanel({
               <th
                 key={pos}
                 className={`text-[10px] font-bold text-center pb-1 ${
-                  pos === bidding.dealer
+                  pos === dealer
                     ? "text-emerald"
                     : "text-gray-400"
                 }`}
               >
                 {POS_LABELS[pos]}
-                {pos === bidding.dealer && (
+                {pos === dealer && (
                   <span className="text-[7px] block text-emerald/60">D</span>
                 )}
               </th>

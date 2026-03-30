@@ -8,7 +8,7 @@ import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { GUIDED_HANDS, type GuidedHand } from "@/data/guided-hands";
 import type { Position } from "@/lib/bridge-engine";
-import { parseContract, toDisplayPosition, toGamePosition } from "@/lib/bridge-engine";
+import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
 import { GameTutorial } from "@/components/bridge/game-tutorial";
 import { ShareResult } from "@/components/bridge/share-result";
@@ -364,9 +364,11 @@ function GuidedGameplay({
             </div>
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">N-S / E-O</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-gray-900">
-                {game.gameState?.trickCount.ns ?? 0} / {game.gameState?.trickCount.ew ?? 0}
+                {partnershipOf(declarer) === "ew"
+                  ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+                  : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
               </p>
             </div>
           </div>
@@ -377,7 +379,7 @@ function GuidedGameplay({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex-1 max-w-2xl mx-auto relative"
+          className="flex-1 max-w-3xl mx-auto relative"
         >
           {hands ? (
             <BridgeTable

@@ -1053,13 +1053,14 @@ function PlayingView({
             <div className="h-8 w-px bg-gray-100" />
             <div className="text-center">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                N-S / E-O
+                Dich. / Dif.
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
               >
-                {game.gameState?.trickCount.ns ?? 0} /{" "}
-                {game.gameState?.trickCount.ew ?? 0}
+                {partnershipOf(declarer) === "ew"
+                  ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+                  : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
               </p>
             </div>
           </div>
@@ -1099,7 +1100,7 @@ function PlayingView({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-1 w-full max-w-2xl relative"
+            className="flex-1 w-full max-w-3xl relative"
           >
             {hands ? (
               <BridgeTable
@@ -1169,7 +1170,7 @@ function PlayingView({
               transition={{ delay: 0.3 }}
               className="w-full lg:w-48 shrink-0"
             >
-              <BiddingPanel bidding={smazzata.bidding} />
+              <BiddingPanel bidding={smazzata.bidding} declarer={declarer} />
             </motion.div>
           )}
         </div>

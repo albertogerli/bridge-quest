@@ -69,7 +69,7 @@ export function DummyHand({
         if (suitCards.length === 0) return null;
 
         return (
-          <div key={suit} className="flex flex-col items-center flex-1 max-w-[80px]">
+          <div key={suit} className="flex flex-col items-center flex-1 max-w-[100px]">
             <div className="flex flex-col items-center">
               {suitCards.map(({ card, originalIndex }, i) => {
                 const highlighted = isHighlighted(card);
