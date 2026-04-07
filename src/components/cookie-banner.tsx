@@ -10,6 +10,13 @@ export function CookieBanner() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // Hide cookie banner inside Capacitor iOS app (Apple guideline 5.1.2)
+    const isCapacitor = typeof window !== "undefined" && (
+      (window as any).Capacitor?.isNativePlatform?.() ||
+      navigator.userAgent.includes("BridgeLab-iOS")
+    );
+    if (isCapacitor) return;
+
     const consent = localStorage.getItem(STORAGE_KEY);
     if (!consent) {
       setShow(true);
