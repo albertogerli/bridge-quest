@@ -43,6 +43,7 @@ export interface Database {
           anim_speed: string;
           sound_on: boolean;
           memory_best: number | null;
+          platform: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -62,6 +63,7 @@ export interface Database {
           anim_speed?: string;
           sound_on?: boolean;
           memory_best?: number | null;
+          platform?: string | null;
         };
         Update: {
           username?: string | null;
@@ -78,6 +80,7 @@ export interface Database {
           anim_speed?: string;
           sound_on?: boolean;
           memory_best?: number | null;
+          platform?: string | null;
         };
       };
       completed_modules: {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getPlatform } from "@/lib/native-bridge";
 import type { User, Session } from "@supabase/supabase-js";
 
 export interface Profile {
@@ -111,11 +112,12 @@ export function useAuth() {
         if (authResolved) authResolved = false;
         resolveAuth(session);
 
-        // Update last_login on sign-in or token refresh
+        // Update last_login on sign-in or token refresh. The platform is
+        // written alongside so the DB trigger can stamp login_history with it.
         if (session?.user && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
           supabase
             .from("profiles")
-            .update({ last_login: new Date().toISOString() })
+            .update({ last_login: new Date().toISOString(), platform: getPlatform() })
             .eq("id", session.user.id)
             .then(() => {});
         }
@@ -235,6 +237,7 @@ export function useAuth() {
           bbo_username: bboUsername || null,
           asd_id: asdId || null,
           profile_type: profileType || "adulto",
+          platform: getPlatform(),
         }, { onConflict: "id" });
     }
 
@@ -253,7 +256,7 @@ export function useAuth() {
   // Reset password
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/login`,
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery&next=/reset-password`,
     });
     return { error };
   };

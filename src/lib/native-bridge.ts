@@ -16,6 +16,26 @@ export function isIOS(): boolean {
   return (window as any).Capacitor?.getPlatform?.() === "ios";
 }
 
+export type Platform = "ios" | "android" | "pwa" | "web";
+
+/** Detect the platform the user is currently running on. */
+export function getPlatform(): Platform {
+  if (typeof window === "undefined") return "web";
+  const cap = (window as any).Capacitor;
+  if (cap?.isNativePlatform?.()) {
+    const p = cap.getPlatform?.();
+    if (p === "ios") return "ios";
+    if (p === "android") return "android";
+  }
+  try {
+    const standalone =
+      window.matchMedia?.("(display-mode: standalone)").matches ||
+      (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+    if (standalone) return "pwa";
+  } catch {}
+  return "web";
+}
+
 /** Light haptic feedback on tap */
 export async function hapticTap() {
   if (!isNativeApp()) return;

@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
+import { getPlatform, type Platform } from "@/lib/native-bridge";
 
 // ===== Types =====
 
@@ -35,6 +36,7 @@ const LS_RESULTS_QUEUE = "bq_game_results_queue";
 
 interface QueuedResult extends GameResult {
   timestamp: string;
+  platform: Platform;
 }
 
 function getQueue(): QueuedResult[] {
@@ -49,7 +51,7 @@ function getQueue(): QueuedResult[] {
 function addToQueue(result: GameResult) {
   try {
     const queue = getQueue();
-    queue.push({ ...result, timestamp: new Date().toISOString() });
+    queue.push({ ...result, timestamp: new Date().toISOString(), platform: getPlatform() });
     // Keep max 200 entries to avoid localStorage bloat
     if (queue.length > 200) queue.splice(0, queue.length - 200);
     localStorage.setItem(LS_RESULTS_QUEUE, JSON.stringify(queue));
@@ -95,6 +97,7 @@ export function useGameResults() {
               lesson_id: result.lessonId ?? null,
               score: result.score,
               details: result.details ?? null,
+              platform: getPlatform(),
             })
         )
           .then(({ error }) => {
@@ -144,6 +147,7 @@ async function flushQueue(
       score: entry.score,
       details: entry.details ?? null,
       created_at: entry.timestamp,
+      platform: entry.platform,
     }));
 
     const { error } = await supabase.from("game_results").insert(rows);
