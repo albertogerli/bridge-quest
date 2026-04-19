@@ -45,12 +45,26 @@ interface UserRow {
   total_minutes: number;
   created_at: string;
   last_login: string | null;
+  platform: string | null;
 }
 
 interface LoginRecord {
   id: string;
   user_id: string;
   logged_in_at: string;
+  platform: string | null;
+}
+
+type PlatformKey = "ios" | "android" | "pwa" | "web" | "unknown";
+type PlatformBreakdown = Record<PlatformKey, number>;
+
+function emptyPlatformBreakdown(): PlatformBreakdown {
+  return { ios: 0, android: 0, pwa: 0, web: 0, unknown: 0 };
+}
+
+function bucketPlatform(p: string | null | undefined): PlatformKey {
+  if (p === "ios" || p === "android" || p === "pwa" || p === "web") return p;
+  return "unknown";
 }
 
 interface DailyActivity {
@@ -94,6 +108,8 @@ interface Stats {
   bboWithoutAsd: number;
   asdWithoutBbo: number;
   noBboNoAsd: number;
+  platformSignups: PlatformBreakdown;
+  platformLogins30d: PlatformBreakdown;
 }
 
 type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "asd" | "total_minutes" | "created_at" | "last_login";
@@ -137,7 +153,7 @@ export default function AdminPage() {
     try {
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, asd:asd_id(name), marketing_consent, total_minutes, created_at, last_login")
+        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, asd:asd_id(name), marketing_consent, total_minutes, created_at, last_login, platform")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -151,7 +167,7 @@ export default function AdminPage() {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
       const { data: logins } = await supabase
         .from("login_history")
-        .select("id, user_id, logged_in_at")
+        .select("id, user_id, logged_in_at, platform")
         .gte("logged_in_at", thirtyDaysAgo)
         .order("logged_in_at", { ascending: false });
       setLoginHistory((logins as LoginRecord[]) ?? []);
@@ -171,6 +187,7 @@ export default function AdminPage() {
           total_minutes: u.total_minutes,
           created_at: u.created_at,
           last_login: u.last_login,
+          platform: u.platform ?? null,
         }));
         setUsers(mappedUsers);
 
@@ -369,6 +386,16 @@ export default function AdminPage() {
           else noBboNoAsd++;
         }
 
+        // Platform breakdowns
+        const platformSignups = emptyPlatformBreakdown();
+        for (const u of profiles) {
+          platformSignups[bucketPlatform((u as { platform?: string | null }).platform)]++;
+        }
+        const platformLogins30d = emptyPlatformBreakdown();
+        for (const log of (logins as LoginRecord[]) ?? []) {
+          platformLogins30d[bucketPlatform(log.platform)]++;
+        }
+
         setStats({
           total: profiles.length,
           today,
@@ -397,6 +424,8 @@ export default function AdminPage() {
           bboWithoutAsd,
           asdWithoutBbo,
           noBboNoAsd,
+          platformSignups,
+          platformLogins30d,
         });
       }
     } catch (err) {
@@ -538,6 +567,22 @@ export default function AdminPage() {
     giovane: "🎮",
     adulto: "🃏",
     senior: "🏆",
+  };
+
+  const platformLabel: Record<PlatformKey, string> = {
+    ios: "iOS",
+    android: "Android",
+    pwa: "PWA",
+    web: "Web",
+    unknown: "Non tracciato",
+  };
+
+  const platformColor: Record<PlatformKey, string> = {
+    ios: "#0f172a",
+    android: "#34a853",
+    pwa: "#c8a44e",
+    web: "#003DA5",
+    unknown: "#9ca3af",
   };
 
   // CSV export
@@ -828,6 +873,40 @@ export default function AdminPage() {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Piattaforme: iscrizioni + accessi */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
+                Piattaforme
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {([
+                  { title: "Iscrizioni (ultima piattaforma nota)", data: stats?.platformSignups, total: stats?.total ?? 0 },
+                  { title: "Accessi ultimi 30 giorni", data: stats?.platformLogins30d, total: Object.values(stats?.platformLogins30d ?? emptyPlatformBreakdown()).reduce((a, b) => a + b, 0) },
+                ]).map(({ title, data, total }) => (
+                  <div key={title}>
+                    <div className="text-xs text-gray-500 mb-2">{title} — {total}</div>
+                    <div className="space-y-2">
+                      {(["ios", "android", "pwa", "web", "unknown"] as const).map((key) => {
+                        const count = data?.[key] ?? 0;
+                        const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                        const color = platformColor[key];
+                        return (
+                          <div key={key} className="flex items-center gap-3 text-sm">
+                            <span className="w-20 text-gray-600">{platformLabel[key]}</span>
+                            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
+                            </div>
+                            <span className="w-14 text-right font-semibold text-gray-800">{count}</span>
+                            <span className="w-10 text-right text-xs text-gray-400">{pct}%</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
