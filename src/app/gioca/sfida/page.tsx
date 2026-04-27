@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
@@ -34,8 +34,8 @@ function getDailySmazzata(): Smazzata {
   for (let i = 0; i < today.length; i++) {
     hash = (hash * 31 + today.charCodeAt(i)) | 0;
   }
-  const index = Math.abs(hash) % allSmazzate.length;
-  return allSmazzate[index];
+  const index = Math.abs(hash) % playableSmazzate.length;
+  return playableSmazzate[index];
 }
 
 function isDailyChallengeCompleted(): boolean {

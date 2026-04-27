@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import {
@@ -47,11 +47,11 @@ function dateToIndex(dateStr: string): number {
   const hash = dateStr
     .split("-")
     .reduce((acc, n) => acc * 31 + parseInt(n), 0);
-  return Math.abs(hash) % allSmazzate.length;
+  return Math.abs(hash) % playableSmazzate.length;
 }
 
 function getSmazzataForDate(dateStr: string): Smazzata {
-  return allSmazzate[dateToIndex(dateStr)];
+  return playableSmazzate[dateToIndex(dateStr)];
 }
 
 // ─── localStorage Helpers ────────────────────────────────────────────────────

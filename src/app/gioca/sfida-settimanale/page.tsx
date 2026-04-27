@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import {
   getCurrentWeeklyChallenge,
@@ -45,7 +45,7 @@ function getWeeklySmazzate(): Smazzata[] {
   const weeksSinceEpoch = Math.floor(now / (7 * 24 * 3600 * 1000));
   // Use a simple hash to scatter through the pool
   const result: Smazzata[] = [];
-  const pool = allSmazzate;
+  const pool = playableSmazzate;
   for (let i = 0; i < HANDS_PER_WEEK; i++) {
     const hash = ((weeksSinceEpoch * 31 + i * 7919) % pool.length + pool.length) % pool.length;
     result.push(pool[hash]);
