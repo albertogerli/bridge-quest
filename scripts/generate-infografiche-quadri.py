@@ -104,10 +104,10 @@ Visualizza questi concetti chiave:
 2. REGOLA D'ORO:
    → Se il Capitano INDAGA → il Subordinato descrive
    → Se il Capitano DECIDE → il Subordinato passa!
-3. REVER dell'apertore (3 livelli con barre di forza):
-   → Rever = 15-17 punti
-   → Gran Rever = 16-20 punti
-   → Piccoli Rever = 18-20 punti
+3. REVER dell'apertore (range FIGB Standard):
+   → Rever a colore (supera il LDG) = 17-19 punti
+   → Salto in colore nuovo (gran rever) = 20-21 punti
+   → Salto a 2NT = 18-19 punti bilanciata con fermo
 4. REPLICHE ELASTICHE: l'apertore si adatta alla risposta del compagno
 5. Schema: frecce Apertore ↔ Rispondente con flusso decisionale
 6. Esempio: "1♠ - 2♣ - ?" → l'apertore replica in base alla sua forza

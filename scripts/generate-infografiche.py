@@ -122,7 +122,7 @@ Visualizza questi concetti chiave:
    → ALLUNGAMENTO: ottenere più prese tagliando dalla mano corta
    → AFFRANCAMENTO: tagliare per affrancare un colore lungo
 4. BATTERE LE ATOUT: togliere le atout avversarie prima di incassare le lunghe
-5. RIVALUTAZIONE: con fit, aggiungi punti (atout - colore più corto = punti extra)
+5. RIVALUTAZIONE (per singola mano, MAI sul fit totale): con fit, aggiungi punti di distribuzione del RISPONDENTE: doubleton = +1, singolo = +3, vuoto = +5 (max 5 punti extra)
 6. Esempio visivo di taglio: mano con 0 carte nel seme → taglia con l'atout
 """
     },
@@ -174,7 +174,7 @@ Visualizza questi concetti chiave:
    Passo (0-7) | 2♦/♥/♠ (0-7, parziale) | 2NT (8-9, invitante)
    3♥/♠ (8-9, invitante) | 3NT (10+, manche) | 4♥/♠ (10+, manche)
 4. STAYMAN 2♣: "Hai una quarta nobile?" (serve 8+ punti + 4 carte nobile)
-   Risposte: 2♦ = no nobili | 2♥ = 4 cuori | 2♠ = 4 picche | 2NT = entrambi
+   Risposte: 2♦ = no nobile 4 carte | 2♥ = 4 cuori (eventualmente anche 4 picche) | 2♠ = 4 picche (nega 4 cuori). NON esiste risposta 2NT a Stayman!
 5. APERTURA 2NT: 21-23 punti, bilanciata
 6. Stayman su 2NT = 3♣ (stesse risposte scalate di 1 livello)
 """
@@ -220,7 +220,7 @@ Visualizza questi concetti chiave:
         "contenuto": """
 Visualizza questi concetti chiave:
 1. Tre tipi di INTERVENTO (3 riquadri):
-   → CONTRO INFORMATIVO: 12-16 pt, chiede al compagno di scegliere un colore
+   → CONTRO INFORMATIVO: 12-16 pt, CORTO (0-2 carte) nel colore avversario, almeno 3 carte in ogni altro colore. ATTENZIONE: il contro informativo NON promette mano bilanciata! Le mani bilanciate con fermo dichiarano 1NT.
    → 1NT: 15-17 bilanciata + FERMO nel colore avversario
    → A COLORE: 8-16 pt, 5+ carte con 1+ Onore
 2. CONTRO su 1♣/1♦: garantisce 4♥ e 4♠

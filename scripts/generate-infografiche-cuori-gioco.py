@@ -104,17 +104,19 @@ Visualizza questi concetti chiave:
         "titolo": "Le Giocate di Sicurezza",
         "contenuto": """
 Visualizza questi concetti chiave:
-1. RINUNCIA VOLONTARIA a una presa per evitarne DUE - icona bilancia 1 vs 2
-2. Esempio 1: K92 + AJ765 → Asso, poi piccola verso K9, inserendo il 9
-3. Esempio 2: KQ962 + A1073 → onore dalla parte con 2 onori
-4. Esempio 3: AJ32 + K954:
-   → Per TUTTE le prese = impasse (rischio!)
-   → Per max 1 persa = Asso e poi K9 (sicurezza!)
-5. Due PIANI DI GIOCO IN SICUREZZA:
-   → PROTEZIONE: limitare le perdite nel colore
-   → ELIMINAZIONE: evitare distribuzione sfavorevole
-6. Diagramma decisionale: "Quante prese ti servono?" → freccia verso giocata sicura o rischiosa
-7. Carte disposte su tavolo verde che mostrano l'inserimento del 9
+1. RINUNCIA VOLONTARIA a una presa per garantire il contratto - icona bilancia 1 vs 2
+2. Regola d'oro: "Se ti bastano N prese, gioca per quelle, non per N+1"
+3. ESEMPIO 1 - A10xx opposto Kxx (8 carte, obiettivo 3 prese):
+   SAFETY PLAY: piccola verso il 10; se Ovest mette J o Q, vinci con K; se non copre, inserisci 10.
+   Perdi max 1 presa contro QJxxx a Ovest.
+4. ESEMPIO 2 - AQJ9 opposto xxxx (8 carte, obiettivo 3 prese, possono esistere 4):
+   Impasse semplice = 50% per 4 prese.
+   SAFETY PLAY per 3 sicure: incassa Asso, poi piccola verso Q; perdi max 1.
+5. ESEMPIO 3 - Kxxxx opposto Axxx (9 carte, obiettivo 4 prese):
+   Naturale: Asso, Re, piccola; funziona se 3-1. Rischio se 4-0.
+   SAFETY PLAY: piccola dal morto, aspetta a inserire onore. Funziona contro 4-0.
+6. Diagramma decisionale: "Ti bastano X prese? SI -> safety play | NO -> linea massima"
+7. Box motto: "La SAFETY PLAY paga un piccolo premio per evitare il disastro!"
 """
     },
     {
@@ -143,7 +145,8 @@ Visualizza questi concetti chiave:
 2. ONORE SU ONORE: coprire solo se si spera di AFFRANCARE carta inferiore
 3. CON SEQUENZA SOLIDA: inserire la più alta (es: QJ10 → gioca Q)
 4. DUE ONORI AL MORTO: NON coprire il PRIMO, coprire il SECONDO!
-   → Esempio: QJ al morto, tu hai Kxx → passa sulla Q, copri sul J
+   → Esempio: QJ al morto, tu hai Kxx in Est. Nord gioca Q -> PASSA (tieni K su J). Se Nord gioca J dopo -> COPRI col K.
+   (Nota: se Est ha AKxxx, non copre mai: Asso cattura comunque il colore)
 5. FATTORE LUNGHEZZA: con carte lunghe sotto l'onore, più motivo per coprire
 6. Diagramma: morto gioca Donna, difensore con Re deve decidere - fumetto "Copro o no?"
 7. Schema riassuntivo con 3 casi: Sempre coprire / Mai coprire / Dipende
@@ -203,7 +206,7 @@ Visualizza questi concetti chiave:
    → Dai segnali difensivi
 5. IMPASSE DESTINATI AD ANDARE MALE NON SI FANNO: se sai che il Re è a destra, non fare l'impasse a sinistra!
 6. Diagramma: giocante con "mappa mentale" dei punti avversari dedotti
-7. Esempio: avversario apre, compagno passa → dedurre dove sono gli onori
+7. Esempio mano concreta del difensore SUD con 11 HCP: ♠ AJ85 ♥ Q743 ♦ K62 ♣ 94 (A=4+J=1+Q=2+K=3+J=1 = 11). Se Ovest apre 1NT, dedurre dove sono gli onori mancanti.
 """
     }
 ]

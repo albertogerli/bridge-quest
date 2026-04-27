@@ -53,6 +53,12 @@ public/videos/**/*.mp4
 # Large PDF course compilations
 public/infografiche/*/corso-*.pdf
 
+# Large PNG intermediates (gpt-image-2 raw output + original Gemini backup)
+public/infografiche/*/lezione-*-junior-v*.png
+public/infografiche/_backup-gemini/
+public/infografiche/*/lezione-*-test-pro.png
+public/infografiche/_test-gpt-image-2/
+
 # Temp files
 *.tmp
 .gitignore.tmp
