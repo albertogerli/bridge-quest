@@ -100,6 +100,65 @@ export const allSmazzate: Smazzata[] = validateSmazzate([
   ...cuoriLicitaSmazzate,
 ]);
 
+// ---------------------------------------------------------------------------
+// Coerenza HCP linea dichiarante / contratto
+//
+// Alcune smazzate del corpus FIGB sono state importate con punti distribuiti
+// sulle posizioni sbagliate (la linea dichiarante risulta avere molti meno HCP
+// del minimo plausibile). Per le challenge "a sorte" (sfida giorno, settimanale,
+// torneo) filtriamo queste smazzate, evitando di proporre p.es. un 3NT con 14
+// punti in linea. Le smazzate restano nel pool generale (`allSmazzate`) e
+// raggiungibili per id, così non si rompe il resto.
+// ---------------------------------------------------------------------------
+
+const HCP_TABLE: Record<string, number> = { A: 4, K: 3, Q: 2, J: 1 };
+
+function handHcp(hand: Card[]): number {
+  let s = 0;
+  for (const c of hand) s += HCP_TABLE[c.rank] ?? 0;
+  return s;
+}
+
+function minHcpForContract(contract: string): number {
+  const m = contract.replace(/[XR]+$/g, "").match(/^(\d)(NT|S|H|D|C)$/i);
+  if (!m) return 0;
+  const lvl = parseInt(m[1], 10);
+  const strain = m[2].toUpperCase();
+  const isNT = strain === "NT";
+  const isMaj = strain === "S" || strain === "H";
+  // Soglie con tolleranza 2-3 HCP rispetto al minimo "da manuale" per ammettere
+  // contratti marginali con buon fit/distribuzione.
+  if (lvl <= 2) return 14;
+  if (lvl === 3 && !isNT) return 18;
+  if (lvl === 3 && isNT) return 22;
+  if (lvl === 4 && isMaj) return 22;
+  if (lvl === 4 && !isMaj && !isNT) return 20;
+  if (lvl === 5) return 25;
+  if (lvl === 6) return 28;
+  if (lvl === 7) return 32;
+  return 0;
+}
+
+export function isPlausibleSmazzata(s: Smazzata): boolean {
+  const isNS = s.declarer === "north" || s.declarer === "south";
+  const declarerHcp = isNS
+    ? handHcp(s.hands.north) + handHcp(s.hands.south)
+    : handHcp(s.hands.east) + handHcp(s.hands.west);
+  const oppHcp = 40 - declarerHcp;
+  // Non deve essere chiaramente in minoranza vs avversari
+  if (declarerHcp + 4 < oppHcp) return false;
+  // Deve avere almeno il minimo plausibile per il contratto
+  if (declarerHcp < minHcpForContract(s.contract)) return false;
+  return true;
+}
+
+/**
+ * Pool da usare per le challenge "a sorte" (sfida del giorno/settimana,
+ * mano del giorno, torneo, smazzata casuale): esclude smazzate con
+ * incoerenze HCP/contratto.
+ */
+export const playableSmazzate: Smazzata[] = allSmazzate.filter(isPlausibleSmazzata);
+
 /** Get smazzate for a specific lesson (optionally filtered by course) */
 export function getSmazzateByLesson(lesson: number, course?: string): Smazzata[] {
   const pool = course ? getSmazzateByCourse(course) : allSmazzate;

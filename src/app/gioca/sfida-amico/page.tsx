@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { allSmazzate, getSmazzataById, type Smazzata } from "@/data/all-smazzate";
+import { playableSmazzate, getSmazzataById, type Smazzata } from "@/data/all-smazzate";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
@@ -118,8 +118,8 @@ function SfidaAmicoContent() {
 
   // Start creating a challenge: pick random hand
   const startCreate = useCallback(() => {
-    const randomIdx = Math.floor(Math.random() * allSmazzate.length);
-    setSmazzata(allSmazzate[randomIdx]);
+    const randomIdx = Math.floor(Math.random() * playableSmazzate.length);
+    setSmazzata(playableSmazzate[randomIdx]);
     setMode("creating");
     setChallengeCode(null);
     setChallengerTricks(null);

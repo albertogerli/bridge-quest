@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { allSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
 import type { Position } from "@/lib/bridge-engine";
 import {
   parseContract,
@@ -55,8 +55,8 @@ function formatDateShort(d: Date): string {
  * Same week = same 5 hands for all users.
  */
 function getTournamentHands(weekNum: number, count: number): Smazzata[] {
-  if (allSmazzate.length === 0) return [];
-  const ids = allSmazzate.map((_, i) => i);
+  if (playableSmazzate.length === 0) return [];
+  const ids = playableSmazzate.map((_, i) => i);
   const selected: number[] = [];
   const used = new Set<number>();
   let seed = weekNum * 2654435761; // large prime for spreading
@@ -75,7 +75,7 @@ function getTournamentHands(weekNum: number, count: number): Smazzata[] {
     selected.push(idx);
   }
 
-  return selected.map((i) => allSmazzate[i]);
+  return selected.map((i) => playableSmazzate[i]);
 }
 
 // ─── localStorage Helpers ───────────────────────────────────────────────────

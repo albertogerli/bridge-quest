@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { allSmazzate, fioriSmazzate } from "@/data/all-smazzate";
+import { allSmazzate, fioriSmazzate, playableSmazzate } from "@/data/all-smazzate";
 import { quadriSmazzate } from "@/data/quadri-smazzate";
 import { cuoriGiocoSmazzate } from "@/data/cuori-gioco-smazzate";
 import { useProfile } from "@/hooks/use-profile";
@@ -28,7 +28,12 @@ export default function GiocaPage() {
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
       setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
-      setRandomIdx(Math.floor(Math.random() * allSmazzate.length));
+      // Pratica Libera: pesca da playableSmazzate per evitare smazzate con HCP incoerenti.
+      // Salviamo l'INDICE in playableSmazzate ma il routing usa allSmazzate, quindi
+      // troviamo l'indice corrispondente in allSmazzate.
+      const picked = playableSmazzate[Math.floor(Math.random() * playableSmazzate.length)];
+      const idxInAll = allSmazzate.findIndex((s) => s.id === picked.id);
+      setRandomIdx(idxInAll >= 0 ? idxInAll : 0);
       // Check tournament completion for current week
       const EPOCH_START = new Date("2024-01-01T00:00:00Z").getTime();
       const weekNum = Math.floor((Date.now() - EPOCH_START) / (7 * 24 * 60 * 60 * 1000));
