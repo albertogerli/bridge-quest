@@ -57,8 +57,8 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     hands: {
       north: hand(["Q", "10", "2"], ["K", "9", "7", "6", "3"], ["10", "3", "2"], ["6", "5"]),
       east: hand(["6", "5"], ["Q", "10", "4"], ["Q", "J", "9", "8", "4"], ["J", "7", "4"]),
-      south: hand(["A", "K", "9", "7"], ["A", "J", "2"], ["A", "K"], ["A", "8", "3", "2"]),
-      west: hand(["J", "8", "4", "3"], ["8", "5"], ["7", "6", "5"], ["K", "Q", "10", "9"]),
+      south: hand(["J", "8", "4", "3"], ["8", "5"], ["7", "6", "5"], ["K", "Q", "10", "9"]),
+      west: hand(["A", "K", "9", "7"], ["A", "J", "2"], ["A", "K"], ["A", "8", "3", "2"]),
     },
     commentary: "Non è così male l'attacco per Ovest, ma deve garantirsi un passaggio al morto nel colore, visto che le Quadri sono bloccate. È necessario rinunciare alla facile presa di Fante (o di 10 del morto) altrimenti le Quadri saranno irraggiungibili. Ovest deve vincere la prima presa con l'Asso, sbloccare AK di quadri, e poi a sua scelta giocare il 2 per il 10, o il Fante per la Dama: lo porterà al morto di sicuro, anche se l'attacco fosse stato diverso. Sull'attacco siate pronti a usare carte alte, se non vi costa nulla e vi agevola nei collegamenti.",
     bidding: { dealer: "south", bids: ["P", "2C", "P", "2D", "P", "2NT", "P", "3NT", "P", "P", "P"] },
@@ -189,12 +189,12 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG2-5", lesson: 101, board: 5, title: "Il Fit 5-3 e 4-4",
-    contract: "6H", declarer: "west", openingLead: c("club", "7"), vulnerability: "none",
+    contract: "6H", declarer: "west", openingLead: c("spade", "K"), vulnerability: "none",
     hands: {
       north: hand(["K", "Q", "10"], ["5", "3"], ["Q", "10", "8", "4"], ["7", "4", "3", "2"]),
       east: hand(["A", "7", "6", "4"], ["J", "7", "2"], ["A", "6", "5"], ["Q", "J", "6"]),
-      south: hand(["J", "8", "3", "2"], ["K", "9", "4"], ["K", "9", "7", "2"], ["A", "K"]),
-      west: hand(["9", "5"], ["A", "Q", "10", "8", "6"], ["J", "3"], ["10", "9", "8", "5"]),
+      south: hand(["J", "8", "3", "2"], ["10", "9", "4"], ["J", "3"], ["10", "9", "8", "5"]),
+      west: hand(["9", "5"], ["A", "K", "Q", "8", "6"], ["K", "9", "7", "2"], ["A", "K"]),
     },
     commentary: "Ovest conta 11 prese, la 12^ può saltare fuori o dalle quadri 3-3 oppure da un taglio al morto. Ecco l'ordine esatto delle manovre: incasso di un onore di cuori (solo uno), poi AK fiori, quadri per l'Asso e Q picche scartando. Se le quadri sono divise 3-3, finirà di battere le atout. Se non lo sono, taglia un quadri al morto con il prezioso J. Anche un colore 4-3 può avere perdenti da tagliare: che la quarta carta sia vincente è un evento raro (36%).",
     bidding: { dealer: "south", bids: ["P", "1H", "P", "1S", "P", "2D", "P", "2H", "P", "4NT", "P", "5H", "P", "6H", "P", "P", "P"] },
@@ -405,8 +405,8 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     hands: {
       north: hand(["Q", "7"], ["A", "J", "9", "8", "5"], ["J", "2"], ["A", "J", "7", "3"]),
       east: hand(["A", "K", "9", "4"], ["K", "3", "2"], ["K", "7", "6", "4"], ["10", "5"]),
-      south: hand(["10", "8", "6", "5"], ["7", "6"], ["Q", "10", "9", "5", "3"], ["9", "6"]),
-      west: hand(["J", "3", "2"], ["Q", "10", "4"], ["A", "8"], ["K", "Q", "8", "4", "2"]),
+      south: hand(["J", "3", "2"], ["Q", "10", "4"], ["A", "8"], ["K", "Q", "8", "4", "2"]),
+      west: hand(["10", "8", "6", "5"], ["7", "6"], ["Q", "10", "9", "5", "3"], ["9", "6"]),
     },
     commentary: "Alla vista del morto Est, consapevole che Ovest, dato il Passo, può avere solo robetta, deve rendersi conto che la sola speranza è la Q di quadri in Ovest. Sull'A di picche Ovest ha rifiutato, non ha la Q. L'attacco di Asso da AK è ottimo perché consente di vedere il morto e decidere come proseguire.",
     bidding: { dealer: "north", bids: ["1H", "1S", "P", "2S", "4H", "P", "P", "P"] },
@@ -441,7 +441,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // ==========================================================================
   {
     id: "CG5-1", lesson: 104, board: 1, title: "I giochi di sicurezza",
-    contract: "3NT", declarer: "west", openingLead: c("club", "J"), vulnerability: "none",
+    contract: "3NT", declarer: "south", openingLead: c("spade", "J"), vulnerability: "none",
     hands: {
       north: hand(["A"], ["K", "7", "6"], ["K", "Q", "J", "8", "4", "3", "2"], ["J", "2"]),
       east: hand(["6", "5", "3", "2"], ["J", "10"], ["10", "9", "7", "5"], ["K", "8", "7"]),
@@ -453,15 +453,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG5-2", lesson: 104, board: 2, title: "I giochi di sicurezza",
-    contract: "6S", declarer: "east", openingLead: c("heart", "Q"), vulnerability: "none",
+    contract: "6S", declarer: "west", openingLead: c("diamond", "Q"), vulnerability: "none",
     hands: {
       north: hand(["Q", "10", "5", "2"], ["5", "4", "3"], ["Q", "J", "10"], ["Q", "6", "5"]),
       east: hand(["A", "8", "6", "3"], ["A", "K", "7", "6", "2"], ["7", "6"], ["K", "3"]),
-      south: hand(["K", "J", "9", "4"], ["Q", "J"], ["A", "K", "3"], ["A", "J", "4", "2"]),
-      west: hand(["7"], ["10", "9", "8"], ["9", "8", "5", "4", "2"], ["10", "9", "8", "7"]),
+      south: hand(["7"], ["10", "9", "8"], ["9", "8", "5", "4", "2"], ["10", "9", "8", "7"]),
+      west: hand(["K", "J", "9", "4"], ["Q", "J"], ["A", "K", "3"], ["A", "J", "4", "2"]),
     },
     commentary: "Uno slam corazzato, a patto di non perdere 2 prese in Atout. È possibile cautelarsi da Q10xx in Sud? Il compito dei giochi di sicurezza è rinunciare ad una eventuale Asso secco (che significherebbe perdere 0 prese) per assicurarci il nostro contratto. Con 8 carte e la divisione 3-2 ci darà la nona presa nel 68% dei casi. Possiamo però aumentare ancora le nostre chance dando un doppio 'colpo in bianco': ci prenderemo una assicurazione anche con le Quadri 4-1, mantenendo le Comunicazioni. Questo modo di affrontare il colore è 'obbligatorio' in duplicato, meno raccomandabile in una gara a coppie (con le carte 3-2 faremmo una presa in meno di tutti gli altri!). Il 'Colpo in Bianco' è una delle manovre di sicurezza più importanti.",
-    bidding: { dealer: "south", bids: ["P", "1S", "P", "2S", "P", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
+    bidding: { dealer: "east", bids: ["1H", "P", "1S", "P", "2S", "P", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
   },
   {
     id: "CG5-3", lesson: 104, board: 3, title: "I giochi di sicurezza",
@@ -489,15 +489,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG5-5", lesson: 104, board: 5, title: "I giochi di sicurezza",
-    contract: "4S", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
+    contract: "4S", declarer: "east", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["8", "7", "5", "4"], ["10", "9", "6"], ["A", "10"], ["J", "10", "8", "4"]),
       east: hand(["A", "K", "Q", "J", "9", "2"], ["2"], ["Q", "8", "3", "2"], ["K", "3"]),
-      south: hand(["10", "6"], ["A", "4", "3"], ["7", "6", "5", "4"], ["A", "9", "5", "2"]),
-      west: hand(["3"], ["K", "Q", "J", "8", "7", "5"], ["K", "J", "9"], ["Q", "7", "6"]),
+      south: hand(["3"], ["K", "Q", "J", "8", "7", "5"], ["K", "J", "9"], ["Q", "7", "6"]),
+      west: hand(["10", "6"], ["A", "4", "3"], ["7", "6", "5", "4"], ["A", "9", "5", "2"]),
     },
     commentary: "Dopo l'attacco contiamo 9 prese sicure (6P-1C-2F) e la decima può venire solo dalle Quadri cedendo 3 volte la presa all'avversario. Battendo le Atout non avremmo problema con le Atout 3-2, ma se fossero 4-1? Se l'avversario ci aiutassero. Prendiamo con il K cuori, poi AK fiori, quadri per l'Asso e Q picche scartando. Se le quadri sono divise 3-3, finirà di battere. Se l'avversario non ha avuto questa situazione non esiste, se si potrà evitare di perdere due prese! Se l'avversario ci costringe a tagliare dalla parte lunga cerchiamo di prevedere i pericoli di una eventuale battuta delle Atout.",
-    bidding: { dealer: "south", bids: ["P", "1S", "X", "P", "2H", "P", "4S", "P", "P", "P"] },
+    bidding: { dealer: "north", bids: ["P", "1S", "2H", "X", "P", "4S", "P", "P", "P"] },
   },
   {
     id: "CG5-6", lesson: 104, board: 6, title: "I giochi di sicurezza",
@@ -525,15 +525,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG5-8", lesson: 104, board: 8, title: "I giochi di sicurezza",
-    contract: "3H", declarer: "south", openingLead: c("spade", "Q"), vulnerability: "none",
+    contract: "3H", declarer: "east", openingLead: c("spade", "Q"), vulnerability: "none",
     hands: {
       north: hand(["8", "4", "3"], ["Q", "J", "10", "9"], ["Q", "10", "9"], ["A", "8", "5"]),
       east: hand(["A", "5"], ["A", "K", "7", "6"], ["A", "6", "2"], ["K", "Q", "J", "7"]),
-      south: hand(["K", "7", "6"], ["8", "5", "4", "2"], ["K", "8", "5", "3"], ["10", "2"]),
-      west: hand(["Q", "J", "10", "9", "2"], ["3"], ["J", "7", "4"], ["9", "6", "4", "3"]),
+      south: hand(["Q", "J", "10", "9", "2"], ["3"], ["J", "7", "4"], ["9", "6", "4", "3"]),
+      west: hand(["K", "7", "6"], ["8", "5", "4", "2"], ["K", "8", "5", "3"], ["10", "2"]),
     },
     commentary: "Dopo la Puppet Stayman (3 quadri) Ovest dichiara quella che NON ha. Est vince l'attacco in mano e conta 2 picche. Le altre 4 prese potranno venire dalle Fiori, una volta ceduto l'Asso, e la decima sicuramente dalle Atout, tagliando in una delle 2 mani. Ma per fare un taglio dobbiamo avere le Atout! Se battiamo A e K, e le troviamo 4-1, quando cederemo l'Asso di Fiori l'avversario potrà eliminarci tutte, e addio tagli. Per evitare questo problema la prima cosa da fare è sempre affrancare i colori laterali, quindi cediamo l'Asso di Fiori. Quando giochiamo con 8 Atout ricordiamoci che la divisione dei resti 4-1 non è un evento così raro: capita il 28% delle volte.",
-    bidding: { dealer: "south", bids: ["P", "2NT", "P", "3D", "P", "3S", "P", "4H", "P", "P", "P"] },
+    bidding: { dealer: "west", bids: ["P", "P", "2NT", "P", "3C", "P", "3D", "P", "3H", "P", "P", "P"] },
   },
 
   // ==========================================================================
@@ -589,15 +589,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG6-5", lesson: 105, board: 5, title: "Probabilità e percentuali",
-    contract: "3NT", declarer: "south", openingLead: c("club", "Q"), vulnerability: "none",
+    contract: "3NT", declarer: "east", openingLead: c("club", "Q"), vulnerability: "none",
     hands: {
       north: hand(["8", "5", "4", "3"], ["K", "9", "5", "3"], ["10"], ["K", "5", "4", "2"]),
       east: hand(["A", "K", "Q", "2"], ["7", "6", "2"], ["A", "K", "2"], ["7", "6", "3"]),
-      south: hand(["J", "10", "9"], ["A", "J", "10"], ["9", "8", "7", "4", "3"], ["A", "8"]),
-      west: hand(["7", "6"], ["Q", "8", "4"], ["Q", "J", "6", "5"], ["Q", "J", "10", "9"]),
+      south: hand(["7", "6"], ["Q", "8", "4"], ["Q", "J", "6", "5"], ["Q", "J", "10", "9"]),
+      west: hand(["J", "10", "9"], ["A", "J", "10"], ["9", "8", "7", "4", "3"], ["A", "8"]),
     },
     commentary: "Est, dopo l'attacco, conta 8 vincenti (4 picche,1 cuori,2 quadri,1 fiori) e può trovare la nona presa in ben 2 colori, Quadri (se 3/2) o Cuori (impasse ripetuto). Dovrà però cedere sicuramente la presa agli avversari, e poiché lisciare l'attacco è inutile (taglia i collegamenti solo se le fiori sono 6-2) deve comunque sperare che le fiori siano divise 4/4. Ora, quale colore scegliere? Se le Quadri sono 3-2, incasseremo 3 prese. Ma la probabilità che lo siano è il 68%, e non poco. Ma ripetere 2 volte l'impasse a Cuori porterebbe la nostra probabilità al 75%. Quindi senza ripensamenti si sceglie la percentuale maggiore. Conoscere le percentuali, almeno quelle fondamentali, ci dà sempre una marcia in più.",
-    bidding: { dealer: "south", bids: ["P", "1NT", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "north", bids: ["P", "1NT", "P", "3NT", "P", "P", "P"] },
   },
   {
     id: "CG6-6", lesson: 105, board: 6, title: "Probabilità e percentuali",
@@ -613,7 +613,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG6-7", lesson: 105, board: 7, title: "Probabilità e percentuali",
-    contract: "3NT", declarer: "west", openingLead: c("club", "A"), vulnerability: "none",
+    contract: "3NT", declarer: "south", openingLead: c("diamond", "A"), vulnerability: "none",
     hands: {
       north: hand(["5", "4"], ["10", "9", "3", "2"], ["J", "5", "4"], ["A", "K", "Q", "3"]),
       east: hand(["10", "8", "6"], ["J", "7", "6", "5"], ["8", "7", "3"], ["7", "6", "4"]),
@@ -621,7 +621,7 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
       west: hand(["J", "9", "7"], ["K", "8", "4"], ["A", "K", "Q", "10"], ["9", "8", "5"]),
     },
     commentary: "Possiamo provare la divisione delle Picche, senza cedere la mano all'avversario, e se le Picche non fossero divise in maniera a noi favorevole saremmo ancora in tempo per fare l'impasse a Cuori, unico ingresso al morto. Quando si vuole cumulare le probabilità senza cedere la mano all'avversario prima si controlla la divisione di un colore, e in caso negativo si ricorre a un impasse. Da un impasse andato male non si può tornare indietro.",
-    bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2NT", "P", "3NT", "P", "P", "P"] },
+    bidding: { dealer: "south", bids: ["1NT", "P", "2C", "P", "2S", "P", "3NT", "P", "P", "P"] },
   },
   {
     id: "CG6-8", lesson: 105, board: 8, title: "Probabilità e percentuali",
@@ -741,15 +741,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   // ==========================================================================
   {
     id: "CG8-1", lesson: 107, board: 1, title: "I giochi di eliminazione",
-    contract: "4S", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
+    contract: "4S", declarer: "east", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["J", "3"], ["10", "9", "8", "5"], ["7", "4"], ["Q", "10", "6", "5", "2"]),
       east: hand(["A", "K", "10", "9", "8"], ["A", "7", "6"], ["K", "10", "9"], ["A", "K"]),
-      south: hand(["Q", "7", "6", "5", "4"], ["4", "3", "2"], ["Q", "3", "2"], ["8", "3"]),
-      west: hand(["2"], ["K", "Q", "J"], ["A", "J", "8", "6", "5"], ["J", "9", "7", "4"]),
+      south: hand(["2"], ["K", "Q", "J"], ["A", "J", "8", "6", "5"], ["J", "9", "7", "4"]),
+      west: hand(["Q", "7", "6", "5", "4"], ["4", "3", "2"], ["Q", "3", "2"], ["8", "3"]),
     },
     commentary: "Con un fit quinto Est deve dire subito 4 picche. Il contratto sarebbe molto semplice indovinando la posizione del J di Quadri. Può farsi aiutare dagli avversari? Sì, se prima di metterli in presa toglie loro tutte le uscite tranne quelle che gli farebbero comodo, due giri di atout e poi fiori. L'avversario non è mai propenso ad aiutarci a indovinare una figura. Lo farà solo se non gli lasciamo alternative, ossia se prima gli togliamo tutte le uscite utili.",
-    bidding: { dealer: "south", bids: ["P", "3H", "P", "4S", "P", "P", "P"] },
+    bidding: { dealer: "north", bids: ["P", "2NT", "P", "3H", "P", "4S", "P", "P", "P"] },
   },
   {
     id: "CG8-2", lesson: 107, board: 2, title: "I giochi di eliminazione",
@@ -781,11 +781,11 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     hands: {
       north: hand(["7", "6", "3"], ["7", "4", "2"], ["J", "10", "9", "8"], ["Q", "5", "4"]),
       east: hand(["A", "J", "10", "5"], ["K", "J", "10"], ["A", "Q", "4"], ["K", "7", "6"]),
-      south: hand(["K", "Q", "2"], ["A", "9", "8"], ["K", "7", "3", "2"], ["A", "10", "8"]),
-      west: hand(["9", "8", "4"], ["Q", "6", "5", "3"], ["6", "5"], ["J", "9", "3", "2"]),
+      south: hand(["9", "8", "4"], ["Q", "6", "5", "3"], ["6", "5"], ["J", "9", "3", "2"]),
+      west: hand(["K", "Q", "2"], ["A", "9", "8"], ["K", "7", "3", "2"], ["A", "10", "8"]),
     },
     commentary: "I punti sono ben 35 ma le prese sono solo 11 e le 2 che mancano possono venire solo dalle Cuori, col doppio impasse. Quando dobbiamo fare per questo deve prima eliminare i colori; Asso e K di atout - rinunciando all'impasse. Quadri. Se sono 3-3 bene, se sono 4-2... cediamo la presa a quadri e aspettiamo: chiunque la vinca dovrà giocare o fiori o cuori. La manovra di eliminazione e messa in presa non è prerogativa solo del gioco ad atout ma può presentarsi anche nel gioco a Senza.",
-    bidding: { dealer: "south", bids: ["1NT", "P", "6NT", "P", "P", "P"] },
+    bidding: { dealer: "west", bids: ["1NT", "P", "6NT", "P", "P", "P"] },
   },
   {
     id: "CG8-5", lesson: 107, board: 5, title: "I giochi di eliminazione",
@@ -801,15 +801,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG8-6", lesson: 107, board: 6, title: "I giochi di eliminazione",
-    contract: "6S", declarer: "south", openingLead: c("heart", "Q"), vulnerability: "none",
+    contract: "6S", declarer: "east", openingLead: c("heart", "Q"), vulnerability: "none",
     hands: {
       north: hand(["2"], ["6", "5", "4", "3"], ["Q", "J", "10", "4"], ["K", "Q", "4", "3"]),
       east: hand(["A", "J", "9", "5", "4"], ["K", "7"], ["A", "8", "3"], ["J", "9", "8"]),
-      south: hand(["K", "Q", "10", "8", "7", "6"], ["A", "2"], ["K", "2"], ["A", "10", "2"]),
-      west: hand(["3"], ["Q", "J", "10", "9", "8"], ["9", "7", "6", "5"], ["7", "6", "5"]),
+      south: hand(["3"], ["Q", "J", "10", "9", "8"], ["9", "7", "6", "5"], ["7", "6", "5"]),
+      west: hand(["K", "Q", "10", "8", "7", "6"], ["A", "2"], ["K", "2"], ["A", "10", "2"]),
     },
     commentary: "Una mano che può sembrare molto semplice: facendo il doppio impasse a Fiori vinceremmo con ben il 75% di probabilità. È già buono, ma al 100% è meglio! Eliminiamo le atout, poi le cuori, poi le quadri tagliandone una al morto. Ora usiamo una atout per rientrare la mano. A questo punto - e solo ora- giochiamo Fiori per fare un primo impasse. Se non funziona, l'avversario dovrà giocare fiori o in taglio e scarto. Quando avete trovato una buona soluzione, prima di attuarla chiedetevi se per caso ce ne sia una migliore.",
-    bidding: { dealer: "south", bids: ["1S", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
+    bidding: { dealer: "east", bids: ["1S", "P", "4NT", "P", "5H", "P", "6S", "P", "P", "P"] },
   },
   {
     id: "CG8-7", lesson: 107, board: 7, title: "I giochi di eliminazione",
@@ -869,8 +869,8 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
     hands: {
       north: hand(["Q", "J", "8", "3"], ["A", "K", "5"], ["9", "8", "7"], ["10", "8", "4"]),
       east: hand(["A", "K", "10"], ["7", "6", "4"], ["A", "J", "4", "2"], ["K", "7", "3"]),
-      south: hand(["7", "6", "4", "2"], ["Q", "J", "10", "9", "8", "2"], ["K", "Q"], ["A"]),
-      west: hand(["9", "5"], ["3"], ["10", "6", "5", "3"], ["Q", "J", "9", "6", "5", "2"]),
+      south: hand(["9", "4", "2"], ["Q", "J", "10", "3"], ["5", "3"], ["Q", "J", "6", "5"]),
+      west: hand(["7", "6", "5"], ["9", "8", "2"], ["K", "Q", "10", "6"], ["A", "9", "2"]),
     },
     commentary: "Dopo l'attacco gli avversari incassano 4 Cuori e poi Nord sblocca A e K. Dopo l'attacco, Est ha 8 vincenti (3 picche + 2 Quadri + 2 fiori + K cuori in coppia) e la nona può venire dalla Q di quadri (se cade, il che è improbabile: sembra 4-1) o dall'impasse al K di picche. Quando abbiamo una sola possibilità non sprechiamola, per poco probabile che sia.",
     bidding: { dealer: "south", bids: ["P", "P", "P", "1NT", "P", "3NT", "P", "P", "P"] },
@@ -913,19 +913,19 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG9-7", lesson: 108, board: 7, title: "Giocare come se",
-    contract: "3NT", declarer: "south", openingLead: c("heart", "K"), vulnerability: "none",
+    contract: "3NT", declarer: "east", openingLead: c("heart", "K"), vulnerability: "none",
     hands: {
       north: hand(["K", "8", "6", "5"], ["7", "5", "3", "2"], ["7", "4"], ["A", "4", "2"]),
-      east: hand(["A", "J", "10", "2"], ["J", "6"], ["A", "K", "Q", "J"], ["8", "7", "3"]),
-      south: hand(["Q", "9", "3"], ["A", "8"], ["9", "5", "6", "3"], ["J", "9", "6", "5"]),
-      west: hand(["7", "4"], ["K", "Q", "10", "9", "4"], ["10", "8", "2"], ["K", "Q", "10"]),
+      east: hand(["A", "J", "10", "2"], ["J", "6"], ["A", "K", "Q", "J"], ["K", "Q", "10"]),
+      south: hand(["7", "4"], ["K", "Q", "10", "9", "4"], ["10", "8", "2"], ["8", "7", "3"]),
+      west: hand(["Q", "9", "3"], ["A", "8"], ["9", "5", "6", "3"], ["J", "9", "6", "5"]),
     },
     commentary: "Con ben 28 punti il contratto non è al sicuro; le Fiori vanno ignorate perché Sud è in vantaggio di tempo e affrancare le Fiori significa rassegnarsi al down. È necessario ottenere 4 prese dalle picche, quindi bisogna per forza fare l'impasse al K e garantirsi di poterlo ripetere 'restando nel colore', visto che il morto non ha ingressi. Bisogna muovere prima il 9 e poi altrimenti corriamo il rischio di bloccare il colore (se giochiamo la Q e Nord astutamente non copre, non faremo 4 prese perché la seconda presa dovremo vincerla in mano per forza). Anche quando abbiamo trovato la via corretta, attenzione a come muovere le carte. Una buccia di banana è sempre possibile.",
     bidding: { dealer: "south", bids: ["P", "P", "P", "2NT", "P", "3NT", "P", "P", "P"] },
   },
   {
     id: "CG9-8", lesson: 108, board: 8, title: "Giocare come se",
-    contract: "6NT", declarer: "east", openingLead: c("spade", "10"), vulnerability: "none",
+    contract: "6NT", declarer: "north", openingLead: c("club", "10"), vulnerability: "none",
     hands: {
       north: hand(["8", "7", "6", "3"], ["A", "Q"], ["Q", "9", "6", "4"], ["A", "K", "Q"]),
       east: hand(["K", "J", "9", "2"], ["10", "9", "5", "4"], ["8"], ["10", "9", "8", "3"]),
@@ -1001,15 +1001,15 @@ export const cuoriGiocoSmazzate: Smazzata[] = [
   },
   {
     id: "CG10-6", lesson: 109, board: 6, title: "Le deduzioni del giocante",
-    contract: "4S", declarer: "south", openingLead: c("club", "A"), vulnerability: "none",
+    contract: "4S", declarer: "north", openingLead: c("heart", "A"), vulnerability: "none",
     hands: {
       north: hand(["A", "K", "Q", "10", "9", "8", "6"], ["9", "6", "3"], ["8", "5", "2"], []),
       east: hand(["J"], ["A", "K", "Q", "10"], ["9", "7", "6", "3"], ["9", "7", "4", "2"]),
-      south: hand(["7", "4", "2"], ["J", "8", "7", "4"], ["K", "Q", "J", "10"], ["8", "5"]),
-      west: hand(["5", "3"], ["5", "2"], ["A", "4"], ["A", "K", "Q", "J", "10", "6", "3"]),
+      south: hand(["7", "4", "2"], ["J", "8", "7", "4"], ["A", "Q"], ["K", "Q", "J", "10"]),
+      west: hand(["5", "3"], ["5", "2"], ["K", "J", "10", "4"], ["A", "8", "6", "5", "3"]),
     },
     commentary: "Est gioca A, K e Q di Cuori ed ancora Cuori per il taglio e surtaglio di Nord (non con il 6, per favore: se cade il J del morto può essere ingresso un ingresso). Nord ha 10 prese Nord ha 2 strade: a) fare l'impasse al K di quadri e poi tagliare una al morto; b) affrancare le fiori con un impasse di taglio. Quale strada seguire? Se un solo colore ci fornisce le prese che mancano guardiamo solo quello.",
-    bidding: { dealer: "south", bids: ["1C", "P", "1S", "P", "1NT", "P", "4S", "P", "P", "P"] },
+    bidding: { dealer: "east", bids: ["P", "1C", "P", "1S", "P", "1NT", "P", "4S", "P", "P", "P"] },
   },
   {
     id: "CG10-7", lesson: 109, board: 7, title: "Le deduzioni del giocante",

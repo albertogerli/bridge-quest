@@ -120,23 +120,36 @@ function handHcp(hand: Card[]): number {
 }
 
 function minHcpForContract(contract: string): number {
-  const m = contract.replace(/[XR]+$/g, "").match(/^(\d)(NT|S|H|D|C)$/i);
+  // Normalizza simboli unicode → ASCII (♠→S, ♥→H, ♦→D, ♣→C) e rimuove X/R finali
+  const normalized = contract
+    .replace(/♠/g, "S")
+    .replace(/♥/g, "H")
+    .replace(/♦/g, "D")
+    .replace(/♣/g, "C");
+  const isDoubled = /[XR]+$/.test(normalized);
+  const stripped = normalized.replace(/[XR]+$/g, "");
+  const m = stripped.match(/^(\d)(NT|S|H|D|C)$/i);
   if (!m) return 0;
   const lvl = parseInt(m[1], 10);
   const strain = m[2].toUpperCase();
   const isNT = strain === "NT";
   const isMaj = strain === "S" || strain === "H";
-  // Soglie con tolleranza 2-3 HCP rispetto al minimo "da manuale" per ammettere
-  // contratti marginali con buon fit/distribuzione.
-  if (lvl <= 2) return 14;
-  if (lvl === 3 && !isNT) return 18;
-  if (lvl === 3 && isNT) return 22;
-  if (lvl === 4 && isMaj) return 22;
-  if (lvl === 4 && !isMaj && !isNT) return 20;
-  if (lvl === 5) return 25;
-  if (lvl === 6) return 28;
-  if (lvl === 7) return 32;
-  return 0;
+  // Soglie generose: ammettiamo manciate didattiche FIGB con fit eccezionali,
+  // doppi fit o sacrifici. Il filtro deve scartare solo dati chiaramente corrotti
+  // (es. 3NT con 14 HCP in linea), NON le mani marginali volute dal corso.
+  let base: number;
+  if (lvl <= 2) base = 12;
+  else if (lvl === 3 && !isNT) base = 16;
+  else if (lvl === 3 && isNT) base = 19;
+  else if (lvl === 4 && isMaj) base = 18;
+  else if (lvl === 4 && !isMaj && !isNT) base = 17;
+  else if (lvl === 5) base = 21;
+  else if (lvl === 6) base = 25;
+  else if (lvl === 7) base = 27;
+  else return 0;
+  // Contratti contrati (X) sono spesso sacrifici/save: la linea dichiarante
+  // ha tipicamente pochi HCP ma molte atout; abbassiamo la soglia.
+  return isDoubled ? Math.max(0, base - 5) : base;
 }
 
 export function isPlausibleSmazzata(s: Smazzata): boolean {
@@ -145,8 +158,9 @@ export function isPlausibleSmazzata(s: Smazzata): boolean {
     ? handHcp(s.hands.north) + handHcp(s.hands.south)
     : handHcp(s.hands.east) + handHcp(s.hands.west);
   const oppHcp = 40 - declarerHcp;
-  // Non deve essere chiaramente in minoranza vs avversari
-  if (declarerHcp + 4 < oppHcp) return false;
+  // Non deve essere chiaramente in minoranza vs avversari (soglia ampia per
+  // ammettere casi a doppio fit / sacrifici didattici).
+  if (declarerHcp + 10 < oppHcp) return false;
   // Deve avere almeno il minimo plausibile per il contratto
   if (declarerHcp < minHcpForContract(s.contract)) return false;
   return true;
