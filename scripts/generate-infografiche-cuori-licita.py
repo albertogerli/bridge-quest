@@ -199,7 +199,7 @@ Visualizza questi concetti chiave:
 5. RIALZO A 3 (box giallo attenzione):
    "Rialzo a 3 nel colore = DECISIONALE"
    "NON e un invito! Il partner DEVE passare!"
-6. Esempio mano: AKJ875 con 7 punti -> "Perfetta per 2 Picche!"
+6. Esempio mano: AKJ875 con 8 punti onori -> "Perfetta per 2 Picche!"
 7. Box motto: "La sottoapertura ruba spazio agli avversari e descrive una mano precisa!"
 """
     },
@@ -353,9 +353,16 @@ Visualizza questi concetti chiave:
    "Surlicita dopo 1C o 1P avversario = ALTRO NOBILE + una MINORE"
    "Esempio: (1C) - 2C = Picche + una minore (almeno 5-5!)"
    "Almeno 5-5 carte nei due colori!"
-3. GHESTEM (box viola con schema completo):
-   "Schema per mostrare bicolori dopo apertura avversaria"
-   Tabella con tutti i colori e significati
+3. GHESTEM (box viola con schema preciso):
+   "Bicolori FORTI 5-5 dopo apertura avversaria a colore"
+   SCHEMA OBBLIGATORIO (mostrare questa tabella ESATTA, non inventare):
+   - 2NT = i DUE COLORI INFERIORI (piu bassi tra i non aperti)
+   - 3F (o cue-bid al livello 3 piu basso) = i DUE COLORI ESTREMI (piu alto + piu basso)
+   - Cue-bid nel colore avversario = i DUE COLORI INTERMEDI
+   Esempio su (1P) apertura avversaria:
+   - 2NT = F+Q (le due minori, inferiori)
+   - 3F = C+F (estremi: il piu alto C + il piu basso F)
+   - 2P (cue-bid) = C+Q (intermedi)
 4. DIFESA SU 1NT AVVERSARIO (box verde):
    - 2F Landy = 5/4+ nelle NOBILI (cuori + picche)
    - 2Q / 2C = TRANSFER (come dopo 1NT del partner)
@@ -390,9 +397,9 @@ Visualizza questi concetti chiave:
    "La SURLICITA libera = il modo PIU FORTE per comunicare fit!"
    "Dichiarare il colore avversario = forza + fit nel colore del partner"
 6. CONTRO LIBERO (box rosso):
-   "Contro libero = qualsiasi mano 16-20 punti"
-   "NON adatta a dichiarazione naturale"
-   "Chiede al partner di descrivere"
+   "Contro libero = 8+ punti, di valore di risposta (NON 16-20!)"
+   "Indica 4 carte in ogni colore non ancora dichiarato"
+   "Sostituisce la risposta 1 su 1 quando l'avversario ha interferito"
 7. Box motto: "Dopo l'intervento le dichiarazioni diventano piu precise: libere = speciali!"
 """
     },

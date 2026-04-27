@@ -50,6 +50,14 @@ export default function DispensePage() {
 
   const coursePdf = infographics[0]?.info?.coursePdf;
 
+  // "Corso intero" sbloccato solo quando TUTTI i moduli di TUTTE le lezioni sono completati
+  const totalModules = currentCourse.lessons.reduce((sum, l) => sum + l.modules.length, 0);
+  const completedModulesCount = currentCourse.lessons.reduce(
+    (sum, l) => sum + l.modules.filter((m) => completedMap[`${l.id}-${m.id}`]).length,
+    0,
+  );
+  const isCourseCompleted = totalModules > 0 && completedModulesCount === totalModules;
+
   return (
     <div className="pt-6 px-5 pb-24">
       <div className="mx-auto max-w-lg">
@@ -131,10 +139,11 @@ export default function DispensePage() {
                     {currentCourse.lessonCount} dispense disponibili
                   </p>
                 </div>
-                {coursePdf && (
+                {coursePdf && isCourseCompleted ? (
                   <button
                     onClick={() => downloadPdf(coursePdf, `corso-${selectedCourse}.pdf`)}
                     className="flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white hover:bg-white/30 transition-colors active:scale-95"
+                    title="Scarica il corso intero in PDF"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                       <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -143,7 +152,22 @@ export default function DispensePage() {
                     </svg>
                     Tutte
                   </button>
-                )}
+                ) : coursePdf ? (
+                  <div
+                    className="flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white/70 cursor-not-allowed select-none"
+                    title="Completa tutte le lezioni per scaricare il corso intero"
+                  >
+                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
+                    </svg>
+                    <div className="flex flex-col items-start leading-tight">
+                      <span>Tutte</span>
+                      <span className="text-[10px] font-medium text-white/60">
+                        {completedModulesCount}/{totalModules} moduli
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
 
