@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
-import { slugToAsdName, getAsdId, asdNameToSlug } from "@/lib/asd-utils";
+import { slugToAsdCode, getAsdNameByCode, asdNameToSlug } from "@/lib/asd-utils";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
@@ -57,7 +57,8 @@ interface ClubStats {
 export default function CircoloPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const asdName = slugToAsdName(slug);
+  const asdCode = slugToAsdCode(slug);
+  const asdName = asdCode ? getAsdNameByCode(asdCode) : undefined;
 
   const [members, setMembers] = useState<ClubMember[]>([]);
   const [stats, setStats] = useState<ClubStats | null>(null);
@@ -74,7 +75,7 @@ export default function CircoloPage() {
   }
 
   useEffect(() => {
-    if (!asdName) {
+    if (!asdCode) {
       setLoading(false);
       return;
     }
@@ -86,7 +87,6 @@ export default function CircoloPage() {
       }, 8000);
 
       try {
-        const asdId = getAsdId(asdName);
         const supabase = createClient();
 
         // Try to get current user if not already resolved via context
@@ -100,7 +100,7 @@ export default function CircoloPage() {
         // Fetch club stats via RPC
         const { data: statsData, error: statsError } = await supabase.rpc(
           "get_club_stats",
-          { p_asd_id: asdId }
+          { p_asd_code: asdCode }
         );
 
         if (statsError) {
@@ -116,7 +116,7 @@ export default function CircoloPage() {
         // Fetch club leaderboard via RPC
         const { data: membersData, error: membersError } = await supabase.rpc(
           "get_club_leaderboard",
-          { p_asd_id: asdId }
+          { p_asd_code: asdCode }
         );
 
         if (membersError) {
@@ -144,10 +144,10 @@ export default function CircoloPage() {
     };
 
     fetchClubData();
-  }, [asdName]);
+  }, [asdCode]);
 
   // Club not found
-  if (!asdName) {
+  if (!asdCode || !asdName) {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-lg">

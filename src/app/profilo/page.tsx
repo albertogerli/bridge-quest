@@ -7,8 +7,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { courses, levelInfo, getCourseStats, type CourseId } from "@/data/courses";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { ASD_LIST } from "@/data/asd-list";
-import { getAsdNameById, asdNameToSlug } from "@/lib/asd-utils";
+import { ASD_CLUBS } from "@/data/asd-clubs";
+import { getAsdNameByCode, asdNameToSlug } from "@/lib/asd-utils";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel, getXpInLevel, getLevelProgress, getXpForNextLevel, MAX_LEVEL } from "@/lib/xp-levels";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
@@ -50,8 +50,16 @@ export default function ProfiloPage() {
   const [editName, setEditName] = useState("");
   const [editBbo, setEditBbo] = useState("");
   const [editAsdSearch, setEditAsdSearch] = useState("");
-  const [editAsdSelected, setEditAsdSelected] = useState("");
+  const [editAsdCode, setEditAsdCode] = useState("");
   const [showAsdDropdown, setShowAsdDropdown] = useState(false);
+  const editAsdSelectedName = useMemo(
+    () => (editAsdCode ? getAsdNameByCode(editAsdCode) ?? "" : ""),
+    [editAsdCode]
+  );
+  const activeClubsSorted = useMemo(
+    () => ASD_CLUBS.filter((c) => c.active),
+    []
+  );
   const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null);
   const [editAvatarPreview, setEditAvatarPreview] = useState("");
   const [saving, setSaving] = useState(false);
@@ -427,18 +435,14 @@ export default function ProfiloPage() {
             {user && authProfile?.bbo_username && (
               <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
             )}
-            {user && authProfile?.asd_id && (() => {
-              const clubName = getAsdNameById(authProfile.asd_id);
-              if (!clubName) return null;
-              return (
-                <Link href={`/circolo/${asdNameToSlug(clubName)}`} className="text-sm text-[#003DA5] hover:underline flex items-center gap-1 mt-0.5">
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                  </svg>
-                  {clubName}
-                </Link>
-              );
-            })()}
+            {user && authProfile?.asd_code && authProfile?.asd_name && (
+              <Link href={`/circolo/${asdNameToSlug(authProfile.asd_name)}`} className="text-sm text-[#003DA5] hover:underline flex items-center gap-1 mt-0.5">
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                {authProfile.asd_name}
+              </Link>
+            )}
             <div className="flex items-center gap-2 mt-1.5">
               <Badge className="bg-[#003DA5] text-white font-medium text-xs">
                 Livello {level}
@@ -1000,7 +1004,7 @@ export default function ProfiloPage() {
                   onClick={() => {
                     setEditName(authProfile?.display_name || "");
                     setEditBbo(authProfile?.bbo_username || "");
-                    setEditAsdSelected(authProfile?.asd_id ? (getAsdNameById(authProfile.asd_id) || "") : "");
+                    setEditAsdCode(authProfile?.asd_code || "");
                     setEditAvatarFile(null);
                     setEditAvatarPreview("");
                     setEditing(true);
@@ -1091,30 +1095,38 @@ export default function ProfiloPage() {
                     <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Associazione (ASD)</label>
                     <input
                       type="text"
-                      value={editAsdSelected || editAsdSearch}
+                      value={editAsdSelectedName || editAsdSearch}
                       onChange={(e) => {
                         setEditAsdSearch(e.target.value);
-                        setEditAsdSelected("");
+                        setEditAsdCode("");
                         setShowAsdDropdown(true);
                       }}
                       onFocus={() => setShowAsdDropdown(true)}
                       placeholder="Cerca la tua associazione..."
                       className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
                     />
-                    {showAsdDropdown && !editAsdSelected && (
+                    {showAsdDropdown && !editAsdCode && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setShowAsdDropdown(false)} />
                         <div className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-40 overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-                          {ASD_LIST.filter((a) => !editAsdSearch || a.toLowerCase().includes(editAsdSearch.toLowerCase())).slice(0, 15).map((asd) => (
-                            <button
-                              key={asd}
-                              type="button"
-                              onClick={() => { setEditAsdSelected(asd); setEditAsdSearch(""); setShowAsdDropdown(false); }}
-                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
-                            >
-                              {asd}
-                            </button>
-                          ))}
+                          {activeClubsSorted
+                            .filter((c) => !editAsdSearch || c.name.toLowerCase().includes(editAsdSearch.toLowerCase()))
+                            .slice(0, 15)
+                            .map((club) => (
+                              <button
+                                key={club.code}
+                                type="button"
+                                onClick={() => { setEditAsdCode(club.code); setEditAsdSearch(""); setShowAsdDropdown(false); }}
+                                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                              >
+                                <div>{club.name}</div>
+                                {club.city && (
+                                  <div className="text-[10px] text-gray-400">
+                                    {club.city}{club.province ? ` (${club.province})` : ""}
+                                  </div>
+                                )}
+                              </button>
+                            ))}
                         </div>
                       </>
                     )}
@@ -1135,9 +1147,9 @@ export default function ProfiloPage() {
                         const updates: Record<string, unknown> = {};
                         if (editName.trim()) updates.display_name = editName.trim();
                         if (editBbo !== (authProfile?.bbo_username || "")) updates.bbo_username = editBbo.trim() || null;
-                        if (editAsdSelected) {
-                          const idx = ASD_LIST.indexOf(editAsdSelected as typeof ASD_LIST[number]);
-                          if (idx >= 0) updates.asd_id = idx + 1;
+                        if (editAsdCode !== (authProfile?.asd_code || "")) {
+                          updates.asd_code = editAsdCode || null;
+                          updates.asd_name = editAsdSelectedName || null;
                         }
                         if (Object.keys(updates).length > 0) {
                           await updateProfile(updates);
@@ -1148,7 +1160,7 @@ export default function ProfiloPage() {
                         await refreshProfile();
                         setSaving(false);
                         setEditing(false);
-                        setEditAsdSelected("");
+                        setEditAsdCode("");
                         setEditAsdSearch("");
                       }}
                       disabled={saving}

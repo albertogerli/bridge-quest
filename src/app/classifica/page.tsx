@@ -164,10 +164,10 @@ export default function ClassificaPage() {
           if (user) setCurrentUserId(user.id);
         } catch {}
 
-        // Fetch all profiles with ASD join
+        // Fetch all profiles
         const { data, error } = await supabase
           .from("profiles")
-          .select("id, display_name, xp, updated_at, asd_id, asd:asd_id(name)")
+          .select("id, display_name, xp, updated_at, asd_name")
           .order("xp", { ascending: false })
           .limit(100);
 
@@ -183,7 +183,7 @@ export default function ClassificaPage() {
               name: u.display_name as string,
               xp: (u.xp as number) || 0,
               updated_at: u.updated_at as string,
-              asd_name: (u.asd as { name: string } | null)?.name || null,
+              asd_name: (u.asd_name as string | null) || null,
             }));
           setAllPlayers(players);
 
@@ -219,7 +219,7 @@ export default function ClassificaPage() {
                 // Add user to the list for display
                 const { data: fullUser } = await supabase
                   .from("profiles")
-                  .select("id, display_name, xp, updated_at, asd_id, asd:asd_id(name)")
+                  .select("id, display_name, xp, updated_at, asd_name")
                   .eq("id", user.id)
                   .single();
 
@@ -230,7 +230,7 @@ export default function ClassificaPage() {
                     name: fu.display_name as string,
                     xp: (fu.xp as number) || 0,
                     updated_at: fu.updated_at as string,
-                    asd_name: (fu.asd as { name: string } | null)?.name || null,
+                    asd_name: (fu.asd_name as string | null) || null,
                   }]);
                 }
               }
@@ -251,13 +251,13 @@ export default function ClassificaPage() {
       const supabase = createClient();
       const { data } = await supabase
         .from("profiles")
-        .select("xp, asd_id, asd:asd_id(name)")
-        .not("asd_id", "is", null);
+        .select("xp, asd_name")
+        .not("asd_name", "is", null);
 
       if (data) {
         const asdMap = new Map<string, { total_xp: number; member_count: number }>();
-        for (const row of data as unknown as Array<{ xp: number; asd_id: number; asd: { name: string } | null }>) {
-          const asdName = row.asd?.name;
+        for (const row of data as unknown as Array<{ xp: number; asd_name: string | null }>) {
+          const asdName = row.asd_name;
           if (!asdName) continue;
           const existing = asdMap.get(asdName) || { total_xp: 0, member_count: 0 };
           existing.total_xp += row.xp || 0;

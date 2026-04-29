@@ -39,7 +39,7 @@ interface UserRow {
   xp: number;
   streak: number;
   hands_played: number;
-  asd_id: number | null;
+  asd_code: string | null;
   asd_name: string | null;
   marketing_consent: boolean | null;
   total_minutes: number;
@@ -153,7 +153,7 @@ export default function AdminPage() {
     try {
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_id, asd:asd_id(name), marketing_consent, total_minutes, created_at, last_login, platform")
+        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -181,8 +181,8 @@ export default function AdminPage() {
           xp: u.xp,
           streak: u.streak,
           hands_played: u.hands_played,
-          asd_id: u.asd_id,
-          asd_name: u.asd?.name || null,
+          asd_code: u.asd_code,
+          asd_name: u.asd_name || null,
           marketing_consent: u.marketing_consent,
           total_minutes: u.total_minutes,
           created_at: u.created_at,
@@ -245,8 +245,8 @@ export default function AdminPage() {
           }
 
           // ASD distribution — collect individual user data
-          const asdName = (u as any).asd?.name;
-          if (asdName) {
+          if (u.asd_name) {
+            const asdName = u.asd_name;
             const prev = asdMap.get(asdName) || { users: [] };
             prev.users.push({ name: u.display_name || "Anonimo", xp: u.xp || 0, minutes: u.total_minutes || 0, createdAt: u.created_at });
             asdMap.set(asdName, prev);

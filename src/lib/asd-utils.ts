@@ -1,4 +1,4 @@
-import { ASD_LIST } from "@/data/asd-list";
+import { ASD_CLUBS, type AsdClub } from "@/data/asd-clubs";
 
 /**
  * Convert an ASD name to a URL-friendly slug.
@@ -13,41 +13,30 @@ export function asdNameToSlug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/**
- * Reverse lookup: find the original ASD name from a slug.
- * "baveno-bridge-club" -> "BAVENO BRIDGE CLUB"
- */
-export function slugToAsdName(slug: string): string | undefined {
-  return ASD_LIST.find((name) => asdNameToSlug(name) === slug);
+/** Lookup a club by F-code (e.g. "F0681"). Returns undefined if not found. */
+export function getAsdClubByCode(code: string | null | undefined): AsdClub | undefined {
+  if (!code) return undefined;
+  return ASD_CLUBS.find((c) => c.code === code);
 }
 
-/**
- * Returns the 1-indexed position of an ASD in ASD_LIST (matching profiles.asd_id).
- * Throws if the name is not found.
- */
-export function getAsdId(name: string): number {
-  const index = ASD_LIST.indexOf(name as (typeof ASD_LIST)[number]);
-  if (index === -1) {
-    throw new Error(`ASD not found: ${name}`);
-  }
-  return index + 1;
+/** Display name for a given F-code, or undefined. */
+export function getAsdNameByCode(code: string | null | undefined): string | undefined {
+  return getAsdClubByCode(code)?.name;
 }
 
-/**
- * Returns the ASD name at the given 1-indexed id, or undefined if out of range.
- */
-export function getAsdNameById(id: number): string | undefined {
-  if (id < 1 || id > ASD_LIST.length) return undefined;
-  return ASD_LIST[id - 1];
+/** Reverse-lookup: slug -> F-code. Searches active clubs first, then inactive as fallback. */
+export function slugToAsdCode(slug: string): string | undefined {
+  const active = ASD_CLUBS.find((c) => c.active && asdNameToSlug(c.name) === slug);
+  if (active) return active.code;
+  const any = ASD_CLUBS.find((c) => asdNameToSlug(c.name) === slug);
+  return any?.code;
 }
 
-/**
- * Returns all clubs with their slugs and ids, useful for generating static routes.
- */
-export function getAllClubSlugs(): { slug: string; name: string; id: number }[] {
-  return ASD_LIST.map((name, index) => ({
-    slug: asdNameToSlug(name),
-    name,
-    id: index + 1,
+/** All active clubs with their slugs and codes — used for static route generation. */
+export function getAllClubSlugs(): { slug: string; code: string; name: string }[] {
+  return ASD_CLUBS.filter((c) => c.active).map((c) => ({
+    slug: asdNameToSlug(c.name),
+    code: c.code,
+    name: c.name,
   }));
 }

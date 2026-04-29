@@ -9,7 +9,6 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, UserPlus, Users, Bell, Swords, X, Check } from "lucide-react";
-import { getAsdNameById } from "@/lib/asd-utils";
 
 type Tab = "amici" | "richieste" | "cerca";
 type BoardCount = 1 | 4 | 8;
@@ -259,9 +258,9 @@ export default function AmiciPage() {
                             @{friendship.profile.bbo_username}
                           </span>
                         )}
-                        {friendship.profile.asd_id && (
+                        {friendship.profile.asd_name && (
                           <span className="text-[10px] text-gray-400 truncate">
-                            {getAsdNameById(friendship.profile.asd_id)}
+                            {friendship.profile.asd_name}
                           </span>
                         )}
                       </div>
@@ -538,9 +537,9 @@ export default function AmiciPage() {
                               @{result.bbo_username}
                             </span>
                           )}
-                          {result.asd_id && (
+                          {result.asd_name && (
                             <span className="text-[10px] text-gray-400 truncate">
-                              {getAsdNameById(result.asd_id)}
+                              {result.asd_name}
                             </span>
                           )}
                         </div>

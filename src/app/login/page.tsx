@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { ASD_LIST } from "@/data/asd-list";
+import { ASD_CLUBS } from "@/data/asd-clubs";
 import Link from "next/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
@@ -39,16 +39,21 @@ function LoginContent() {
   const [bboUsername, setBboUsername] = useState("");
   const [profileType, setProfileType] = useState<ProfileType>("adulto");
   const [asdSearch, setAsdSearch] = useState("");
-  const [selectedAsd, setSelectedAsd] = useState<string>("");
+  const [selectedAsdCode, setSelectedAsdCode] = useState<string>("");
   const [showAsdDropdown, setShowAsdDropdown] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
 
+  const activeClubs = useMemo(() => ASD_CLUBS.filter((c) => c.active), []);
+  const selectedAsdName = useMemo(
+    () => activeClubs.find((c) => c.code === selectedAsdCode)?.name ?? "",
+    [activeClubs, selectedAsdCode]
+  );
   const filteredAsd = useMemo(() => {
-    if (!asdSearch.trim()) return ASD_LIST.slice(0, 20);
+    if (!asdSearch.trim()) return activeClubs.slice(0, 20);
     const q = asdSearch.toLowerCase();
-    return ASD_LIST.filter((a) => a.toLowerCase().includes(q)).slice(0, 20);
-  }, [asdSearch]);
+    return activeClubs.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 20);
+  }, [asdSearch, activeClubs]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -96,17 +101,13 @@ function LoginContent() {
           return;
         }
 
-        // Find ASD id
-        const asdIndex = selectedAsd
-          ? ASD_LIST.indexOf(selectedAsd as typeof ASD_LIST[number])
-          : -1;
-
         const { error: err } = await signUp({
           email,
           password,
           displayName: displayName.trim(),
           bboUsername: bboUsername.trim() || undefined,
-          asdId: asdIndex >= 0 ? asdIndex + 1 : undefined,
+          asdCode: selectedAsdCode || undefined,
+          asdName: selectedAsdName || undefined,
           profileType,
         });
 
@@ -318,20 +319,20 @@ function LoginContent() {
                   </label>
                   <input
                     type="text"
-                    value={selectedAsd || asdSearch}
+                    value={selectedAsdName || asdSearch}
                     onChange={(e) => {
                       setAsdSearch(e.target.value);
-                      setSelectedAsd("");
+                      setSelectedAsdCode("");
                       setShowAsdDropdown(true);
                     }}
                     onFocus={() => setShowAsdDropdown(true)}
                     className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
                     placeholder="Cerca la tua associazione..."
                   />
-                  {selectedAsd && (
+                  {selectedAsdCode && (
                     <button
                       type="button"
-                      onClick={() => { setSelectedAsd(""); setAsdSearch(""); }}
+                      onClick={() => { setSelectedAsdCode(""); setAsdSearch(""); }}
                       className="absolute right-3 top-[38px] text-gray-400 hover:text-gray-600"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -340,7 +341,7 @@ function LoginContent() {
                     </button>
                   )}
                   <AnimatePresence>
-                    {showAsdDropdown && !selectedAsd && (
+                    {showAsdDropdown && !selectedAsdCode && (
                       <motion.div
                         initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -351,18 +352,23 @@ function LoginContent() {
                         {filteredAsd.length === 0 ? (
                           <div className="px-4 py-3 text-sm text-gray-400">Nessuna ASD trovata</div>
                         ) : (
-                          filteredAsd.map((asd) => (
+                          filteredAsd.map((club) => (
                             <button
-                              key={asd}
+                              key={club.code}
                               type="button"
                               onClick={() => {
-                                setSelectedAsd(asd);
+                                setSelectedAsdCode(club.code);
                                 setAsdSearch("");
                                 setShowAsdDropdown(false);
                               }}
                               className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-[#003DA5]/8 hover:text-[#003DA5] transition-colors"
                             >
-                              {asd}
+                              <div>{club.name}</div>
+                              {club.city && (
+                                <div className="text-[11px] text-gray-400">
+                                  {club.city}{club.province ? ` (${club.province})` : ""}
+                                </div>
+                              )}
                             </button>
                           ))
                         )}
@@ -490,7 +496,7 @@ function LoginContent() {
         </div>
 
         {/* Close ASD dropdown on outside click */}
-        {showAsdDropdown && !selectedAsd && (
+        {showAsdDropdown && !selectedAsdCode && (
           <div
             className="fixed inset-0 z-40"
             onClick={() => setShowAsdDropdown(false)}

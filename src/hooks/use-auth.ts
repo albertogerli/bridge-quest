@@ -12,6 +12,8 @@ export interface Profile {
   bbo_username: string | null;
   avatar_url: string | null;
   asd_id: number | null;
+  asd_code: string | null;
+  asd_name: string | null;
   profile_type: "junior" | "giovane" | "adulto" | "senior";
   xp: number;
   streak: number;
@@ -206,14 +208,16 @@ export function useAuth() {
     password,
     displayName,
     bboUsername,
-    asdId,
+    asdCode,
+    asdName,
     profileType,
   }: {
     email: string;
     password: string;
     displayName: string;
     bboUsername?: string;
-    asdId?: number;
+    asdCode?: string;
+    asdName?: string;
     profileType?: "junior" | "giovane" | "adulto" | "senior";
   }) => {
     const { data, error } = await supabase.auth.signUp({
@@ -235,7 +239,8 @@ export function useAuth() {
           id: data.user.id,
           display_name: displayName,
           bbo_username: bboUsername || null,
-          asd_id: asdId || null,
+          asd_code: asdCode || null,
+          asd_name: asdName || null,
           profile_type: profileType || "adulto",
           platform: getPlatform(),
         }, { onConflict: "id" });

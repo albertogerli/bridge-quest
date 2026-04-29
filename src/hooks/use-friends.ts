@@ -8,7 +8,8 @@ export interface FriendProfile {
   display_name: string | null;
   bbo_username: string | null;
   avatar_url: string | null;
-  asd_id: number | null;
+  asd_code: string | null;
+  asd_name: string | null;
   xp: number;
 }
 
@@ -26,7 +27,8 @@ export interface SearchResult {
   display_name: string | null;
   bbo_username: string | null;
   avatar_url: string | null;
-  asd_id: number | null;
+  asd_code: string | null;
+  asd_name: string | null;
 }
 
 export function useFriends() {
@@ -99,7 +101,7 @@ export function useFriends() {
       // Fetch profiles for all friend IDs
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, display_name, bbo_username, avatar_url, asd_id, xp")
+        .select("id, display_name, bbo_username, avatar_url, asd_code, asd_name, xp")
         .in("id", allProfileIds);
 
       if (profilesError) {
@@ -174,7 +176,7 @@ export function useFriends() {
       if (allProfileIds.length > 0) {
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("id, display_name, bbo_username, avatar_url, asd_id, xp")
+          .select("id, display_name, bbo_username, avatar_url, asd_code, asd_name, xp")
           .in("id", allProfileIds);
 
         if (profilesError) {
