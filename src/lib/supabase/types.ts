@@ -34,6 +34,8 @@ export interface Database {
           bbo_username: string | null;
           avatar_url: string | null;
           asd_id: number | null;
+          asd_code: string | null;
+          asd_name: string | null;
           profile_type: "giovane" | "adulto" | "senior";
           xp: number;
           streak: number;
@@ -54,6 +56,8 @@ export interface Database {
           bbo_username?: string | null;
           avatar_url?: string | null;
           asd_id?: number | null;
+          asd_code?: string | null;
+          asd_name?: string | null;
           profile_type?: "giovane" | "adulto" | "senior";
           xp?: number;
           streak?: number;
@@ -71,6 +75,8 @@ export interface Database {
           bbo_username?: string | null;
           avatar_url?: string | null;
           asd_id?: number | null;
+          asd_code?: string | null;
+          asd_name?: string | null;
           profile_type?: "giovane" | "adulto" | "senior";
           xp?: number;
           streak?: number;

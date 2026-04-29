@@ -408,130 +408,111 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* ===== HERO ===== */}
-      <section className="relative overflow-hidden hero-gradient px-4 sm:px-5 pb-16 pt-14 lg:pb-12 lg:pt-8">
+      {/* ===== HERO — compact green header with inline stats ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E3B] via-[#14472D] to-[#0D3321] px-4 sm:px-5 pb-20 pt-10 lg:pb-14 lg:pt-6">
         <div className="relative mx-auto max-w-lg">
-          {/* Logo + Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center"
-          >
-            {/* Suits row */}
-            <motion.div
-              className="mb-6 flex items-center justify-center gap-4"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              aria-hidden="true"
-            >
-              {(["club", "diamond", "heart", "spade"] as const).map(
-                (suit, i) => (
-                  <motion.div
-                    key={suit}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 + i * 0.1 }}
-                    className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/15 shadow-inner text-2xl"
-                  >
-                    <SuitSymbol suit={suit} size="lg" />
-                  </motion.div>
-                )
-              )}
-            </motion.div>
-
-            <h1 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-white leading-none font-display">
-              BridgeLab
-            </h1>
-            <div className="mt-2 flex items-center justify-center gap-2">
-              <div className="h-px w-8 bg-white/30" />
-              <p className="text-sm font-semibold tracking-widest text-white/90 uppercase">
-                {profile.heroSubtitle}
-              </p>
-              <div className="h-px w-8 bg-white/30" />
-            </div>
-            <p className="mt-2.5 text-[15px] text-white/80 font-medium leading-snug max-w-xs mx-auto">
-              Lezioni, gioco, analisi e community in un&apos;unica app.
-            </p>
-            <p className="mt-1.5 text-xs text-white/50">
-              Piattaforma ufficiale <abbr title="Federazione Italiana Gioco Bridge">FIGB</abbr>
-            </p>
-          </motion.div>
-
-          {/* XP Card - hidden on desktop (sidebar shows it) */}
+          {/* Top row: brand + level badge */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 rounded-2xl glass-dark px-5 py-4 lg:hidden"
+            transition={{ duration: 0.5 }}
+            className="flex items-center justify-between"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber/20">
-                  <Zap className="w-4 h-4 text-amber-300" aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-white">Livello {stats.level}</p>
-                  <p className="text-[11px] text-white/80">{stats.levelName}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-lg font-bold text-white">{stats.xp.toLocaleString()}</p>
-                <p className="text-[11px] text-white/80">XP totali</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 border border-white/10 text-lg">🃏</div>
+              <div>
+                <h1 className="text-xl font-bold text-white tracking-tight font-display">BridgeLab</h1>
+                <p className="text-[10px] font-semibold text-white/50 uppercase tracking-wider">FIGB</p>
               </div>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1.5">
+              <Zap className="w-3.5 h-3.5 text-[#c8a44e]" aria-hidden="true" />
+              <span className="text-xs font-bold text-white">Lv. {stats.level}</span>
+              <span className="text-[10px] text-white/60">{stats.levelName}</span>
+            </div>
+          </motion.div>
+
+          {/* Stats bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.5 }}
+            className="mt-5 grid grid-cols-4 gap-2 lg:hidden"
+          >
+            <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-white leading-none">{stats.xp.toLocaleString()}</p>
+              <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">XP</p>
+            </div>
+            <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-white leading-none">{stats.streak}</p>
+              <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">Streak</p>
+            </div>
+            <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-white leading-none">{totalModulesCompleted}</p>
+              <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">Moduli</p>
+            </div>
+            <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-white leading-none">{handsPlayed}</p>
+              <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">Mani</p>
+            </div>
+          </motion.div>
+
+          {/* XP progress */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+            className="mt-3 lg:hidden"
+          >
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-[10px] font-semibold text-white/60">Livello {stats.level} → {stats.level + 1}</p>
+              <p className="text-[10px] font-bold text-[#c8a44e]">{stats.xpInLevel} XP</p>
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-amber-light to-amber"
+                className="h-full rounded-full bg-gradient-to-r from-[#c8a44e] to-[#e8c86e]"
                 initial={{ width: 0 }}
                 animate={{ width: `${stats.levelProgress}%` }}
-                transition={{ delay: 0.5, duration: 0.8 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
               />
             </div>
           </motion.div>
 
-          {/* CTA - Riprendi or Start - hidden on desktop (sidebar shows it) */}
+          {/* Main CTA — squishy button */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
+            transition={{ delay: 0.35, duration: 0.5 }}
             className="mt-5 lg:hidden"
           >
             {hasStarted && nextModule ? (
               <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
-                <Button
-                  size="lg"
-                  className="w-full h-auto rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98] py-3.5 px-5"
-                >
+                <div className="btn-squishy btn-squishy-white w-full rounded-2xl bg-white dark:bg-[#1a1f2e] px-5 py-3.5 cursor-pointer">
                   <div className="flex items-center gap-3 w-full">
                     <span className="text-2xl">{nextModule.lessonIcon}</span>
-                    <div className="flex-1 text-left">
-                      <p className="text-[10px] font-bold text-[#003DA5]/60 uppercase tracking-wider">Riprendi</p>
-                      <p className="text-sm font-bold text-[#003DA5] truncate">{nextModule.moduleTitle}</p>
+                    <div className="flex-1 text-left min-w-0">
+                      <p className="text-[10px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">Riprendi</p>
+                      <p className="text-sm font-bold text-[#1B5E3B] truncate">{nextModule.moduleTitle}</p>
                     </div>
-                    <svg className="h-5 w-5 text-[#003DA5]/50 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <svg className="h-5 w-5 text-[#1B5E3B]/40 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
-                </Button>
+                </div>
               </Link>
             ) : (
               <Link href="/lezioni">
-                <Button
-                  size="lg"
-                  className="w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/10 transition-all active:scale-[0.98]"
-                >
-                  <Target className="w-5 h-5 mr-2" aria-hidden="true" />
+                <div className="btn-squishy btn-squishy-white w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] flex items-center justify-center gap-2 font-semibold text-base text-[#1B5E3B] cursor-pointer">
+                  <Target className="w-5 h-5" aria-hidden="true" />
                   Inizia il tuo viaggio
-                </Button>
+                </div>
               </Link>
             )}
           </motion.div>
         </div>
 
         {/* Smooth gradient fade to background */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#F7F5F0] dark:to-[#0D1A12]" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-[#F7F5F0] dark:to-[#0D1A12]" aria-hidden="true" />
       </section>
 
       {/* Guest login reminder */}
@@ -543,9 +524,9 @@ export default function Home() {
         >
           <a
             href="/login"
-            className="flex items-center gap-3 rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-3.5 hover:bg-[#003DA5]/8 transition-colors"
+            className="flex items-center gap-3 rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-3.5 hover:bg-[#1B5E3B]/8 transition-colors"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003DA5] text-white shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1B5E3B] text-white shrink-0">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                 <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
               </svg>
@@ -554,7 +535,7 @@ export default function Home() {
               <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Crea un account gratuito</p>
               <p className="text-[11px] text-gray-500 dark:text-gray-400">Salva i progressi e sincronizza su tutti i dispositivi. Gratis, senza carta di credito.</p>
             </div>
-            <svg className="w-4 h-4 text-[#003DA5] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+            <svg className="w-4 h-4 text-[#1B5E3B] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path d="M9 18l6-6-6-6" />
             </svg>
           </a>
@@ -620,66 +601,86 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ===== FEATURE CARDS GRID ===== */}
-      <section className="px-4 sm:px-5 -mt-8 relative z-10 lg:hidden">
+      {/* ===== BENTO GRID ===== */}
+      <section className="px-4 sm:px-5 -mt-10 relative z-10 lg:hidden">
         <div className="mx-auto max-w-lg">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="grid grid-cols-2 gap-3"
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="grid grid-cols-12 gap-3"
           >
-            <Link href="/lezioni" className="rounded-2xl p-4 text-white shadow-sm flex flex-col justify-between h-[140px]" style={{ background: "linear-gradient(135deg, #2b4365, #182d4c)" }}>
+            {/* Main CTA — Gioca (large, spans 8 cols) */}
+            <Link href="/gioca/smazzata?random=1" className="col-span-8 btn-squishy btn-squishy-green rounded-2xl p-5 text-white flex flex-col justify-between min-h-[170px]" style={{ background: "linear-gradient(135deg, #1B5E3B, #14472D)" }}>
               <div>
-                <div className="text-2xl mb-1.5">🎓</div>
-                <h3 className="font-bold text-base leading-tight">Lezioni</h3>
+                <span className="text-3xl mb-2 block">♠</span>
+                <h3 className="font-bold text-xl leading-tight font-display">Gioca una mano</h3>
+                <p className="text-sm text-white/70 mt-1">Carte, licita e gioco con AI</p>
               </div>
-              <p className="text-xs text-blue-100/80 leading-snug">49 lezioni: 4 corsi FIGB completi</p>
+              <div className="flex items-center gap-1.5 mt-3">
+                <span className="text-[10px] font-bold text-white/50 bg-white/10 rounded-full px-2.5 py-1 uppercase tracking-wider">+20 XP</span>
+              </div>
             </Link>
-            <Link href="/gioca" className="rounded-2xl p-4 bg-white text-gray-800 shadow-sm flex flex-col justify-between h-[140px] border border-gray-100">
+
+            {/* Sfida del giorno (4 cols) */}
+            <Link href="/gioca/sfida" className="col-span-4 btn-squishy btn-squishy-gold rounded-2xl p-4 flex flex-col justify-between min-h-[170px]" style={{ background: "linear-gradient(135deg, #c8a44e, #a88a3a)" }}>
               <div>
-                <div className="text-2xl mb-1.5">♠</div>
-                <h3 className="font-bold text-base leading-tight">Gioca Subito</h3>
+                <Flame className="w-7 h-7 text-white/90 mb-2" />
+                <h3 className="font-bold text-sm leading-tight text-white">Sfida<br/>del giorno</h3>
               </div>
-              <p className="text-xs text-gray-500 leading-snug">Mani interattive con AI avversaria</p>
+              {stats.dailyDone ? (
+                <span className="text-[10px] font-bold text-white/80 bg-white/20 rounded-full px-2 py-0.5">Fatta!</span>
+              ) : (
+                <span className="text-[10px] font-bold text-white/80 bg-white/15 rounded-full px-2 py-0.5">+40 XP</span>
+              )}
             </Link>
-            <Link href="/lezioni" className="rounded-2xl p-4 bg-white text-gray-800 shadow-sm flex flex-col justify-between h-[140px] border border-gray-100">
+
+            {/* Lezioni (5 cols) */}
+            <Link href="/lezioni" className="col-span-5 btn-squishy btn-squishy-white rounded-2xl p-4 bg-white border border-[#E8E4DC] flex flex-col justify-between min-h-[130px]">
               <div>
-                <div className="text-2xl mb-1.5">🧠</div>
-                <h3 className="font-bold text-[15px] leading-tight">Quiz e Minigiochi</h3>
+                <span className="text-2xl mb-1.5 block">🎓</span>
+                <h3 className="font-bold text-[15px] leading-tight text-gray-900">Lezioni</h3>
               </div>
-              <p className="text-xs text-gray-500 leading-snug">6 tipi di quiz, 9 minigiochi</p>
+              <p className="text-[11px] text-gray-500 leading-snug">49 lezioni · 4 corsi</p>
             </Link>
-            <Link href="/gioca/torneo" className="rounded-2xl p-4 text-white shadow-sm flex flex-col justify-between h-[140px]" style={{ background: "linear-gradient(135deg, #6c2a6f, #461750)" }}>
+
+            {/* Torneo (7 cols) */}
+            <Link href="/gioca/torneo" className="col-span-7 btn-squishy btn-squishy-blue rounded-2xl p-4 text-white flex flex-col justify-between min-h-[130px]" style={{ background: "linear-gradient(135deg, #003DA5, #0052CC)" }}>
               <div>
-                <div className="text-2xl mb-1.5">🏆</div>
-                <h3 className="font-bold text-base leading-tight">Tornei</h3>
+                <Trophy className="w-6 h-6 text-white/90 mb-1.5" />
+                <h3 className="font-bold text-[15px] leading-tight">Tornei & Sfide</h3>
               </div>
-              <p className="text-xs text-purple-100/80 leading-snug">Torneo settimanale, sfida amici, classifica</p>
+              <p className="text-[11px] text-white/70 leading-snug">Settimanale, amici, classifica</p>
             </Link>
-            <Link href="/dispense" className="rounded-2xl p-4 text-white shadow-sm flex flex-col justify-between h-[140px]" style={{ background: "linear-gradient(135deg, #74358a, #4e2261)" }}>
+
+            {/* Quiz (6 cols) */}
+            <Link href="/gioca" className="col-span-6 btn-squishy btn-squishy-white rounded-2xl p-4 bg-white border border-[#E8E4DC] flex flex-col justify-between min-h-[110px]">
               <div>
-                <div className="text-2xl mb-1.5">📊</div>
-                <h3 className="font-bold text-base leading-tight">Dispense</h3>
+                <span className="text-xl mb-1 block">🧠</span>
+                <h3 className="font-bold text-sm leading-tight text-gray-900">Quiz & Minigiochi</h3>
               </div>
-              <p className="text-xs text-purple-100/80 leading-snug">Materiale FIGB scaricabile in PDF</p>
+              <p className="text-[10px] text-gray-400">6 quiz · 9 giochi</p>
             </Link>
-            <Link href="/profilo" className="rounded-2xl p-4 bg-white text-gray-800 shadow-sm flex flex-col justify-between h-[140px] border border-gray-100">
+
+            {/* Dispense (6 cols) */}
+            <Link href="/dispense" className="col-span-6 btn-squishy btn-squishy-white rounded-2xl p-4 bg-white border border-[#E8E4DC] flex flex-col justify-between min-h-[110px]">
               <div>
-                <div className="text-2xl mb-1.5">🔥</div>
-                <h3 className="font-bold text-base leading-tight">Gamification</h3>
+                <span className="text-xl mb-1 block">📄</span>
+                <h3 className="font-bold text-sm leading-tight text-gray-900">Dispense FIGB</h3>
               </div>
-              <p className="text-xs text-gray-500 leading-snug">XP, streak, badge e collezionabili</p>
+              <p className="text-[10px] text-gray-400">Materiale PDF</p>
             </Link>
-            <Link href="/trova-circolo" className="col-span-2 rounded-2xl p-4 text-white shadow-sm flex items-center gap-4 h-[80px]" style={{ background: "linear-gradient(135deg, #003DA5, #0052CC)" }}>
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                <MapPin className="w-6 h-6 text-white" />
+
+            {/* Trova ASD (full width) */}
+            <Link href="/trova-circolo" className="col-span-12 btn-squishy btn-squishy-blue rounded-2xl p-4 text-white flex items-center gap-4" style={{ background: "linear-gradient(135deg, #003DA5, #0052CC)" }}>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15">
+                <MapPin className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-base leading-tight">Trova la tua ASD</h3>
-                <p className="text-xs text-blue-100/80 leading-snug">146 associazioni FIGB in tutta Italia</p>
+                <h3 className="font-bold text-sm leading-tight">Trova la tua ASD</h3>
+                <p className="text-[11px] text-white/60">146 associazioni FIGB in Italia</p>
               </div>
-              <svg className="w-5 h-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-4 h-4 text-white/40 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </Link>
@@ -765,36 +766,36 @@ export default function Home() {
       )}
 
       {/* ===== DAILY CHALLENGE + STREAK ===== (hidden on desktop, sidebar shows these) */}
-      <section className="px-4 sm:px-5 -mt-6 relative z-10 lg:hidden">
+      <section className="px-4 sm:px-5 mt-4 relative z-10 lg:hidden">
         <div className="mx-auto max-w-lg">
           <div className="grid grid-cols-2 gap-3">
             {/* Daily Challenge */}
             <motion.div
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.5 }}
             >
               <Link href="/gioca/sfida" className="block">
-                <div className={`rounded-2xl p-4 cursor-pointer transition-all ${
+                <div className={`btn-squishy rounded-2xl p-4 cursor-pointer transition-colors ${
                   stats.dailyDone
-                    ? "bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-800"
-                    : "bg-white dark:bg-[#1a1f2e] border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm dark:shadow-[0_3px_0_#141821]"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800"
+                    : "bg-white dark:bg-[#1a1f2e] border border-[#E8E4DC] dark:border-[#2a3040]"
                 }`}>
                   <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 border border-amber-200" role="img" aria-label="Sfida del giorno">
-                      {stats.dailyDone ? <CheckCircle2 className="w-6 h-6 text-emerald-600" aria-hidden="true" /> : <Flame className="w-6 h-6 text-amber-600" aria-hidden="true" />}
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 border border-amber-200" role="img" aria-label="Sfida del giorno">
+                      {stats.dailyDone ? <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden="true" /> : <Flame className="w-5 h-5 text-amber-600" aria-hidden="true" />}
                     </div>
                     {!stats.dailyDone && (
-                      <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
+                      <span className="text-[9px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
                         +40 XP
                       </span>
                     )}
                   </div>
-                  <p className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <p className="mt-2.5 text-sm font-bold text-gray-900 dark:text-gray-100">
                     {profile.dailyChallengeLabel}
                   </p>
-                  <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                    {stats.dailyDone ? "Completata!" : "Gioca la mano quotidiana"}
+                  <p className="mt-0.5 text-[11px] text-gray-500 dark:text-gray-400">
+                    {stats.dailyDone ? "Completata!" : "Mano quotidiana"}
                   </p>
                   <div className="mt-2">
                     <DailyCountdown variant="compact" dailyDone={stats.dailyDone} />
@@ -807,39 +808,39 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.55 }}
             >
-              <div className={`rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 shadow-sm dark:shadow-[0_3px_0_#141821] ${
+              <div className={`btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 ${
                 stats.streakAtRisk
                   ? "border-2 border-red-400 dark:border-red-500 animate-pulse"
-                  : "border border-[#e5e7eb] dark:border-[#2a3040]"
+                  : "border border-[#E8E4DC] dark:border-[#2a3040]"
               }`}>
                 <div className="flex items-center justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 border border-blue-200" role="img" aria-label="Streak giornaliero">
-                    {stats.streak >= 7 ? <Flame className="w-6 h-6 text-blue-600" aria-hidden="true" /> : <CalendarDays className="w-6 h-6 text-blue-600" aria-hidden="true" />}
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10 border border-[#1B5E3B]/15" role="img" aria-label="Streak giornaliero">
+                    {stats.streak >= 7 ? <Flame className="w-5 h-5 text-[#1B5E3B]" aria-hidden="true" /> : <CalendarDays className="w-5 h-5 text-[#1B5E3B]" aria-hidden="true" />}
                   </div>
                   {stats.streak > 0 && (
-                    <span className="text-[10px] font-bold text-blue-600 bg-blue-50 rounded-full px-2 py-0.5">
-                      +{Math.min(stats.streak * 5, 50)} XP/giorno
+                    <span className="text-[9px] font-bold text-[#1B5E3B] bg-[#1B5E3B]/8 rounded-full px-2 py-0.5">
+                      +{Math.min(stats.streak * 5, 50)} XP
                     </span>
                   )}
                 </div>
-                <p className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-100">
-                  Streak: {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
+                <p className="mt-2.5 text-sm font-bold text-gray-900 dark:text-gray-100">
+                  {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
                 </p>
                 {stats.streakAtRisk && (
-                  <p className="mt-1 text-xs font-semibold text-red-600 dark:text-red-400">
-                    La tua streak è a rischio!
+                  <p className="mt-1 text-[11px] font-semibold text-red-600 dark:text-red-400">
+                    Streak a rischio!
                   </p>
                 )}
                 <div className="mt-2 flex gap-1">
                   {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
                     <div
                       key={i}
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold ${
+                      className={`flex h-6 w-6 items-center justify-center rounded-md text-[9px] font-bold ${
                         i < Math.min(stats.streak, 7)
-                          ? "bg-blue-500 text-white border border-blue-600"
-                          : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+                          ? "bg-[#1B5E3B] text-white"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500"
                       }`}
                     >
                       {day}
@@ -856,10 +857,15 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-5">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              Obiettivi del giorno
-            </h2>
-            <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#c8a44e]/15">
+                <Target className="w-4 h-4 text-[#c8a44e]" />
+              </div>
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Obiettivi del giorno
+              </h2>
+            </div>
+            <Badge variant="outline" className="text-[10px] font-bold text-[#c8a44e] border-[#c8a44e]/30">
               Bonus XP
             </Badge>
           </div>
@@ -880,17 +886,17 @@ export default function Home() {
             transition={{ delay: 0.55 }}
           >
             <Link href="/forum/6">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-lg transition-all">
-                <div className="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
+              <div className="btn-squishy btn-squishy-green relative overflow-hidden rounded-2xl p-4 cursor-pointer" style={{ background: "linear-gradient(135deg, #1B5E3B, #14472D)" }}>
+                <div className="absolute -right-8 -top-8 w-24 h-24 bg-white/8 rounded-full blur-2xl" />
                 <div className="relative flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shrink-0 text-xl">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 shrink-0 text-lg">
                     📊
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-white">Tu che bridgista sei?</p>
-                    <p className="text-xs text-white/70">Partecipa al sondaggio della community!</p>
+                    <p className="text-[11px] text-white/60">Partecipa al sondaggio della community!</p>
                   </div>
-                  <span className="shrink-0 text-[10px] font-bold text-white bg-white/20 px-2.5 py-1 rounded-full">
+                  <span className="shrink-0 text-[10px] font-bold text-white bg-white/15 px-2.5 py-1 rounded-full">
                     VOTA
                   </span>
                 </div>
@@ -901,7 +907,7 @@ export default function Home() {
       </section>
 
       {/* ===== TROVA ASD BANNER ===== (logged-in users without ASD) */}
-      {user && !authProfile?.asd_id && (
+      {user && !authProfile?.asd_code && (
         <section className="px-4 sm:px-5 pt-4">
           <div className="mx-auto max-w-lg">
             <motion.div
@@ -958,16 +964,16 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4">
+              <div className="rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
-                    <Smartphone className="w-6 h-6 text-[#003DA5]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10">
+                    <Smartphone className="w-5 h-5 text-[#1B5E3B]" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       Installa Bridge LAB
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
                       Aggiungilo alla schermata Home
                     </p>
                   </div>
@@ -975,14 +981,14 @@ export default function Home() {
                     {canInstall ? (
                       <button
                         onClick={() => install()}
-                        className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
                       >
                         Installa
                       </button>
                     ) : isIOS ? (
                       <button
                         onClick={() => setShowIOSGuide(true)}
-                        className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
                       >
                         Come fare
                       </button>
@@ -1083,20 +1089,20 @@ export default function Home() {
             transition={{ delay: 0.9 }}
           >
             <Link href="/ripasso">
-              <div className={`rounded-2xl p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all ${
+              <div className={`btn-squishy rounded-2xl p-4 cursor-pointer transition-colors ${
                 reviewCount > 0
-                  ? "bg-[#003DA5]/5 border border-[#003DA5]/15"
-                  : "bg-white border border-gray-200 card-clean"
+                  ? "bg-[#1B5E3B]/5 border border-[#1B5E3B]/15"
+                  : "bg-white border border-[#E8E4DC]"
               }`}>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10">
-                    <Brain className="w-6 h-6 text-[#003DA5]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10">
+                    <Brain className="w-5 h-5 text-[#1B5E3B]" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       Ripasso del giorno
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
                       {reviewCount > 0
                         ? `${reviewCount} ${reviewCount === 1 ? "domanda" : "domande"} da ripassare`
                         : "Completa lezioni per sbloccare il ripasso"
@@ -1104,7 +1110,7 @@ export default function Home() {
                     </p>
                   </div>
                   {reviewCount > 0 && (
-                    <Badge className="bg-[#003DA5] text-white text-xs font-bold hover:bg-[#003DA5]">
+                    <Badge className="bg-[#1B5E3B] text-white text-xs font-bold hover:bg-[#1B5E3B]">
                       {reviewCount}
                     </Badge>
                   )}
@@ -1124,16 +1130,16 @@ export default function Home() {
             transition={{ delay: 0.95 }}
           >
             <Link href="/glossario">
-              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#e5e7eb] dark:border-[#2a3040] p-4 cursor-pointer hover:translate-y-[-2px] hover:shadow-md transition-all shadow-sm">
+              <div className="btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#E8E4DC] dark:border-[#2a3040] p-4 cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 border border-sky-200">
-                    <BookOpen className="w-5 h-5 text-sky-600" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/8 border border-[#1B5E3B]/12">
+                    <BookOpen className="w-5 h-5 text-[#1B5E3B]" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       Glossario del Bridge
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
                       49 termini con quiz interattivi
                     </p>
                   </div>
@@ -1176,9 +1182,9 @@ export default function Home() {
 
       {/* Suit divider */}
       <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
-        <div className="h-px w-12 bg-[#003DA5]/10" />
-        <span className="text-[10px] tracking-[0.3em] text-[#003DA5]/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-[#003DA5]/10" />
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
       </div>
 
       {/* ===== COURSES ===== */}
@@ -1188,13 +1194,18 @@ export default function Home() {
       <section className="px-4 sm:px-5 pt-4 pb-6">
         <div className="mx-auto max-w-lg">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100">
-              Il tuo percorso
-            </h2>
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1B5E3B]/10">
+                <BookOpen className="w-4 h-4 text-[#1B5E3B]" />
+              </div>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100">
+                Il tuo percorso
+              </h2>
+            </div>
             <Link href="/lezioni">
               <Badge
                 variant="outline"
-                className="text-[11px] font-semibold text-indigo-500 border-indigo-300/50 cursor-pointer hover:bg-indigo-50 transition-colors"
+                className="text-[11px] font-semibold text-[#1B5E3B] border-[#1B5E3B]/20 cursor-pointer hover:bg-[#1B5E3B]/5 transition-colors"
               >
                 Vedi tutto →
               </Badge>
@@ -1215,7 +1226,7 @@ export default function Home() {
               }).length;
 
               return (
-                <div key={course.id} className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-100 dark:border-gray-700/50 overflow-hidden">
+                <div key={course.id} className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#E8E4DC] dark:border-gray-700/50 overflow-hidden">
                   <button
                     onClick={() => setExpandedCourse(isExpanded ? null : course.id)}
                     className="w-full flex items-center gap-2.5 p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors text-left"
@@ -1277,9 +1288,9 @@ export default function Home() {
 
       {/* Suit divider */}
       <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
-        <div className="h-px w-12 bg-[#003DA5]/10" />
-        <span className="text-[10px] tracking-[0.3em] text-[#003DA5]/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-[#003DA5]/10" />
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
       </div>
 
       {/* ===== SCOPRI IL BRIDGE ===== */}
@@ -1291,21 +1302,21 @@ export default function Home() {
             transition={{ delay: 1.2 }}
           >
             <Link href="/scopri">
-              <div className="rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-emerald-50 dark:from-[#003DA5]/10 dark:to-emerald-950/30 border border-[#003DA5]/15 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all group">
+              <div className="btn-squishy rounded-2xl bg-gradient-to-r from-[#1B5E3B]/5 to-[#1B5E3B]/10 dark:from-[#1B5E3B]/10 dark:to-emerald-950/30 border border-[#1B5E3B]/15 p-4 cursor-pointer group">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#003DA5] to-[#2D7A50] shadow-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#1B5E3B] to-[#14472D]">
                     <Globe className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                       Scopri il Bridge
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
                       Storia, la FIGB, curiosità e link utili
                     </p>
                   </div>
                   <svg
-                    className="h-5 w-5 text-[#003DA5]/40 group-hover:text-[#003DA5] group-hover:translate-x-0.5 transition-all shrink-0"
+                    className="h-5 w-5 text-[#1B5E3B]/30 group-hover:text-[#1B5E3B] transition-colors shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -1379,7 +1390,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
 
   const card = (
     <div
-      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1f2e] transition-all border border-[#e5e7eb] dark:border-[#2a3040] shadow-sm cursor-pointer hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] active:shadow-none"
+      className="btn-squishy group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1f2e] transition-colors border border-[#E8E4DC] dark:border-[#2a3040] cursor-pointer"
     >
       <div
         className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`}
@@ -1403,7 +1414,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
           </div>
           <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-0.5">{world.subtitle}</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
               <motion.div
                 className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
                 initial={{ width: 0 }}
@@ -1418,7 +1429,7 @@ function WorldCard({ world, completedModules, courseId }: { world: (typeof world
         </div>
 
         <svg
-          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-[#003DA5] group-hover:translate-x-0.5 transition-all"
+          className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-[#1B5E3B] transition-colors"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -1510,23 +1521,23 @@ function DailyQuests({
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 + i * 0.05 }}
-            className={`flex items-center gap-3 p-3 rounded-xl ${
-              done ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800" : "bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040]"
+            className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
+              done ? "bg-[#1B5E3B]/5 border border-[#1B5E3B]/15" : "bg-white dark:bg-[#1a1f2e] border border-[#E8E4DC] dark:border-[#2a3040]"
             }`}
           >
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-              done ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-gray-50 dark:bg-gray-800/50"
+              done ? "bg-[#1B5E3B]/10" : "bg-gray-50 dark:bg-gray-800/50"
             }`}>
-              {done ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : quest.icon}
+              {done ? <CheckCircle2 className="w-5 h-5 text-[#1B5E3B]" /> : quest.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className={`text-sm font-bold ${done ? "text-emerald-700 line-through" : "text-gray-900 dark:text-gray-100"}`}>
+              <p className={`text-sm font-bold ${done ? "text-[#1B5E3B] line-through" : "text-gray-900 dark:text-gray-100"}`}>
                 {quest.label}
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden max-w-[80px]">
+                <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden max-w-[80px]">
                   <div
-                    className={`h-full rounded-full ${done ? "bg-emerald-500" : "bg-amber-400"}`}
+                    className={`h-full rounded-full ${done ? "bg-[#1B5E3B]" : "bg-[#c8a44e]"}`}
                     style={{ width: `${(quest.progress / quest.target) * 100}%` }}
                   />
                 </div>
@@ -1535,8 +1546,8 @@ function DailyQuests({
                 </span>
               </div>
             </div>
-            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-              done ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400" : "bg-amber-50 dark:bg-amber-950/30 text-amber-600"
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              done ? "bg-[#1B5E3B]/10 text-[#1B5E3B]" : "bg-[#c8a44e]/10 text-[#c8a44e]"
             }`}>
               +{quest.xp} XP
             </span>
@@ -1551,12 +1562,12 @@ function DailyQuests({
         transition={{ delay: 1.1 }}
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
-            ? "bg-gradient-to-r from-amber-50 to-amber-100/60 dark:from-amber-950/30 dark:to-amber-900/20 border border-amber-200 dark:border-amber-800"
-            : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
+            ? "bg-gradient-to-r from-[#c8a44e]/10 to-[#c8a44e]/5 border border-[#c8a44e]/20"
+            : "bg-gray-50 dark:bg-gray-800/50 border border-[#E8E4DC] dark:border-gray-700"
         }`}
       >
-        {allDone ? <Gift className="w-5 h-5 text-amber-600" /> : <Target className="w-5 h-5 text-gray-400" />}
-        <p className={`text-xs font-bold ${allDone ? "text-amber-700" : "text-gray-400"}`}>
+        {allDone ? <Gift className="w-5 h-5 text-[#c8a44e]" /> : <Target className="w-5 h-5 text-gray-400" />}
+        <p className={`text-xs font-bold ${allDone ? "text-[#c8a44e]" : "text-gray-400"}`}>
           {allDone ? "Bonus completamento: +50 XP!" : "Completa tutti per +50 XP bonus"}
         </p>
       </motion.div>
@@ -1662,7 +1673,7 @@ function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
       )}
     </AnimatePresence>
 
-    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-gray-200 dark:border-[#2a3040]">
+    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#E8E4DC] dark:border-[#2a3040]">
       {/* Chest progress bar */}
       <div className="flex items-center gap-2 mb-4">
         {chestMilestones.map((chest, i) => {
@@ -1739,10 +1750,15 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
     <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-            I Corsi FIGB
-          </h2>
-          <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#003DA5]/10">
+              <GraduationCap className="w-4 h-4 text-[#003DA5]" />
+            </div>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+              I Corsi FIGB
+            </h2>
+          </div>
+          <Badge variant="outline" className="text-[10px] font-bold text-[#003DA5]/60 border-[#003DA5]/20">
             {availableCourses.length} corsi
           </Badge>
         </div>
@@ -1758,7 +1774,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                 transition={{ delay: 0.7 + i * 0.08 }}
               >
                 <Link href={`/lezioni?corso=${course.id}`}>
-                  <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e7eb] dark:border-[#2a3040] hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all">
+                  <div className="btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#E8E4DC] dark:border-[#2a3040]">
                     <div className="flex items-center gap-2 mb-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-bold text-lg`}>
                         {course.icon}
@@ -1774,7 +1790,7 @@ function CoursesSection({ completedModules }: { completedModules: Record<string,
                       {course.lessonCount} lezioni
                     </p>
                     <div className="mt-2.5 flex items-center gap-2">
-                      <div className="flex-1 h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                      <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                         <div
                           className={`h-full rounded-full bg-gradient-to-r ${course.gradient}`}
                           style={{ width: `${stats.progress}%` }}
@@ -1815,16 +1831,16 @@ function WeeklyObjectivesSection() {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
-              <Target className="w-4 h-4 text-emerald-600" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1B5E3B]/10">
+              <Target className="w-4 h-4 text-[#1B5E3B]" />
             </div>
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Obiettivi settimanali
             </h2>
             <Badge className={`text-[10px] font-bold border-0 ${
               completedCount === 3
-                ? "bg-emerald-100 text-emerald-700"
-                : "bg-[#003DA5]/10 text-[#003DA5]"
+                ? "bg-[#1B5E3B]/10 text-[#1B5E3B]"
+                : "bg-[#1B5E3B]/8 text-[#1B5E3B]"
             }`}>
               {completedCount}/3
             </Badge>
@@ -1832,7 +1848,7 @@ function WeeklyObjectivesSection() {
           <Link href="/obiettivi">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold text-[#003DA5] border-[#003DA5]/20 cursor-pointer hover:bg-[#003DA5]/5 transition-colors"
+              className="text-[10px] font-semibold text-[#1B5E3B] border-[#1B5E3B]/20 cursor-pointer hover:bg-[#1B5E3B]/5 transition-colors"
             >
               Vedi tutti →
             </Badge>
@@ -1841,8 +1857,8 @@ function WeeklyObjectivesSection() {
 
         <div className={`rounded-2xl p-4 border transition-all ${
           completedCount === 3
-            ? "bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-[#1a1f2e] border-emerald-200 dark:border-emerald-800"
-            : "bg-white dark:bg-[#1a1f2e] border-[#e5e7eb] dark:border-[#2a3040]"
+            ? "bg-gradient-to-br from-[#1B5E3B]/5 to-white dark:from-[#1B5E3B]/10 dark:to-[#1a1f2e] border-[#1B5E3B]/20"
+            : "bg-white dark:bg-[#1a1f2e] border-[#E8E4DC] dark:border-[#2a3040]"
         }`}>
           <div className="space-y-2.5">
             {objectives.map((obj, i) => {
@@ -1862,25 +1878,25 @@ function WeeklyObjectivesSection() {
                 href={href}
                 key={obj.id}
                 className={`flex items-center gap-3 p-2.5 rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] ${
-                  obj.completed ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800" : "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-[#003DA5]/30"
+                  obj.completed ? "bg-[#1B5E3B]/5 border border-[#1B5E3B]/15" : "bg-gray-50 dark:bg-gray-800/50 border border-[#E8E4DC] dark:border-gray-700 hover:border-[#1B5E3B]/30"
                 }`}
               >
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-                  obj.completed ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-white dark:bg-[#1a1f2e]"
+                  obj.completed ? "bg-[#1B5E3B]/10" : "bg-white dark:bg-[#1a1f2e]"
                 }`}>
-                  {obj.completed ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : (objectiveIcons[obj.id] || obj.emoji)}
+                  {obj.completed ? <CheckCircle2 className="w-5 h-5 text-[#1B5E3B]" /> : (objectiveIcons[obj.id] || obj.emoji)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold ${
-                    obj.completed ? "text-emerald-700 dark:text-emerald-400 line-through" : "text-gray-900 dark:text-gray-100"
+                    obj.completed ? "text-[#1B5E3B] dark:text-emerald-400 line-through" : "text-gray-900 dark:text-gray-100"
                   }`}>
                     {obj.title}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-2.5 rounded-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 overflow-hidden max-w-[100px]">
+                    <div className="flex-1 h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden max-w-[100px]">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          obj.completed ? "bg-emerald" : "bg-[#003DA5]"
+                          obj.completed ? "bg-[#1B5E3B]" : "bg-[#1B5E3B]"
                         }`}
                         style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
                       />
@@ -1891,7 +1907,7 @@ function WeeklyObjectivesSection() {
                   </div>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  obj.completed ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400" : "bg-[#c8a44e]/10 text-[#c8a44e]"
+                  obj.completed ? "bg-[#1B5E3B]/10 text-[#1B5E3B]" : "bg-[#c8a44e]/10 text-[#c8a44e]"
                 }`}>
                   +{obj.xpReward} XP
                 </span>
@@ -1981,7 +1997,7 @@ function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: {
         </div>
 
         <Link href="/collezione">
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#e5e7eb] dark:border-[#2a3040] hover:translate-y-[-2px] hover:shadow-md transition-all">
+          <div className="btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#E8E4DC] dark:border-[#2a3040]">
             {/* Mini card preview - show last 4 unlocked or first 4 locked */}
             <div className="flex items-center gap-2 mb-3">
               {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {
@@ -2151,9 +2167,9 @@ function LandingPage({ onContinueAsGuest }: { onContinueAsGuest: () => void }) {
 
       {/* Suit divider */}
       <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
-        <div className="h-px w-12 bg-[#003DA5]/10" />
-        <span className="text-[10px] tracking-[0.3em] text-[#003DA5]/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-[#003DA5]/10" />
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-[#1B5E3B]/10" />
       </div>
 
       {/* Stats */}

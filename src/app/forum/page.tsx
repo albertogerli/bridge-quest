@@ -32,7 +32,8 @@ interface ForumPost {
   profiles: {
     display_name: string | null;
     avatar_url: string | null;
-    asd_id: number | null;
+    asd_code: string | null;
+    asd_name: string | null;
   } | null;
 }
 
@@ -52,7 +53,7 @@ export default function ForumPage() {
     try {
       let query = supabase
         .from("forum_posts")
-        .select("*, profiles(display_name, avatar_url, asd_id)");
+        .select("*, profiles(display_name, avatar_url, asd_code, asd_name)");
 
       if (category !== "tutti") {
         query = query.eq("category", category);
