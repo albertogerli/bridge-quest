@@ -379,7 +379,7 @@ export default function AdminPage() {
         let asdWithoutBbo = 0;
         for (const u of profiles) {
           const hasBbo = !!u.bbo_username;
-          const hasAsd = !!(u as any).asd?.name;
+          const hasAsd = !!u.asd_name;
           if (hasBbo && hasAsd) bboWithAsd++;
           else if (hasBbo && !hasAsd) bboWithoutAsd++;
           else if (!hasBbo && hasAsd) asdWithoutBbo++;
