@@ -1,0 +1,7 @@
+Prima release dell'app BridgeLab per iOS!
+
+• Lezioni interattive di Bridge
+• Smazzate, Sfida Settimanale e Mano del Giorno
+• Classifica e sfide tra amici
+• Analisi AI delle giocate
+• Haptic feedback nativo per un'esperienza immersiva
