@@ -1,0 +1,32 @@
+{
+	"appId": "it.bridgelab.app",
+	"appName": "BridgeLab",
+	"server": {
+		"url": "https://bridgelab.it",
+		"cleartext": false
+	},
+	"appendUserAgent": "BridgeLab-iOS",
+	"ios": {
+		"scheme": "BridgeLab",
+		"contentInset": "automatic",
+		"preferredContentMode": "mobile",
+		"backgroundColor": "#F5F2EB"
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": true,
+			"launchShowDuration": 2000,
+			"backgroundColor": "#F5F2EB",
+			"showSpinner": false
+		},
+		"StatusBar": {
+			"style": "dark",
+			"backgroundColor": "#F5F2EB"
+		}
+	},
+	"packageClassList": [
+		"HapticsPlugin",
+		"SplashScreenPlugin",
+		"StatusBarPlugin"
+	]
+}
