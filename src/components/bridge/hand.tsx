@@ -54,9 +54,9 @@ export function Hand({
         {cards.map((card, index) => (
           <motion.div
             key={`${card.suit}-${card.rank}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.03, duration: 0.2 }}
+            initial={{ y: 10 }}
+            animate={{ y: 0 }}
+            transition={{ delay: index * 0.03, duration: 0.15 }}
             style={{ zIndex: index }}
           >
             <PlayingCard
@@ -93,9 +93,9 @@ export function Hand({
       {cards.map((card, index) => (
         <motion.div
           key={`${card.suit}-${card.rank}`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05, duration: 0.3 }}
+          initial={{ y: 10 }}
+          animate={{ y: 0 }}
+          transition={{ delay: index * 0.03, duration: 0.15 }}
           style={{
             marginLeft: !isVertical && index > 0 ? overlap[size] : 0,
             marginTop: isVertical && index > 0 ? overlap[size] : 0,

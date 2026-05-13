@@ -78,9 +78,9 @@ export function DummyHand({
                 return (
                   <motion.button
                     key={`${card.suit}-${card.rank}`}
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.03 }}
+                    initial={{ y: -4 }}
+                    animate={{ y: 0 }}
+                    transition={{ delay: i * 0.02 }}
                     onClick={() => !cardDisabled && onSelectCard?.(originalIndex)}
                     disabled={cardDisabled}
                     style={{ marginTop: i > 0 ? overlapY : 0, zIndex: i }}
