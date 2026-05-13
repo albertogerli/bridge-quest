@@ -1426,7 +1426,7 @@ function SingleHandView({
                 westFaceDown={true}
                 currentTrick={displayTrick}
                 contract={smazzata.contract}
-                declarer={declarer === "south" ? "S" : declarer === "north" ? "N" : declarer === "east" ? "E" : "O"}
+                declarer="S"
                 vulnerability={smazzata.vulnerability}
                 trickCount={partnershipOf(declarer) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
                 onPlayCard={handlePlayCard}
@@ -1463,7 +1463,7 @@ function SingleHandView({
                 eastFaceDown={true}
                 westFaceDown={true}
                 contract={smazzata.contract}
-                declarer={declarer === "south" ? "S" : declarer === "north" ? "N" : declarer === "east" ? "E" : "O"}
+                declarer="S"
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
