@@ -11,27 +11,101 @@ import { cuoriGiocoSmazzate } from "./cuori-gioco-smazzate";
 import { cuoriLicitaSmazzate } from "./cuori-licita-smazzate";
 import { getLessonById } from "./courses";
 import { getLessonDisplayNumber } from "./lesson-meta";
-import type { Position, Card } from "../lib/bridge-engine";
+import type { Position, Card, Suit, Rank } from "../lib/bridge-engine";
 
 export type { Smazzata } from "./smazzate";
 
 type Vulnerability = "none" | "ns" | "ew" | "both";
 
 const POSITIONS: Position[] = ["north", "south", "east", "west"];
+const RANK_ORDER: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 
 function nextPos(p: Position): Position {
   const order: Position[] = ["north", "east", "south", "west"];
   return order[(order.indexOf(p) + 1) % 4];
 }
 
+function declarerFromBidding(bidding: { dealer: Position; bids: string[] }): Position | null {
+  const order: Position[] = ["south", "west", "north", "east"];
+  const dealerIdx = order.indexOf(bidding.dealer);
+  if (dealerIdx === -1) return null;
+
+  let lastBidIdx = -1;
+  for (let i = bidding.bids.length - 1; i >= 0; i--) {
+    const b = bidding.bids[i];
+    if (b !== "P" && b !== "Dbl" && b !== "Rdbl" && b !== "X" && b !== "XX") {
+      lastBidIdx = i;
+      break;
+    }
+  }
+  if (lastBidIdx === -1) return null;
+
+  const lastBidderPos = order[(dealerIdx + lastBidIdx) % 4];
+  const winningSide = lastBidderPos === "north" || lastBidderPos === "south" ? "ns" : "ew";
+  const denom = bidding.bids[lastBidIdx].replace(/[0-9]/g, "").toUpperCase();
+
+  for (let i = 0; i < bidding.bids.length; i++) {
+    const pos = order[(dealerIdx + i) % 4];
+    const bid = bidding.bids[i];
+    if (bid === "P" || bid === "Dbl" || bid === "Rdbl" || bid === "X" || bid === "XX") continue;
+    const bidDenom = bid.replace(/[0-9]/g, "").toUpperCase();
+    const bidSide = pos === "north" || pos === "south" ? "ns" : "ew";
+    if (bidSide === winningSide && bidDenom === denom) return pos;
+  }
+  return lastBidderPos;
+}
+
+function pickOpeningLead(hand: Card[], trumpSuit: string | null): Card {
+  const suits: Suit[] = ["spade", "heart", "diamond", "club"];
+  const nonTrump = suits.filter(s => s !== trumpSuit);
+  const preferred = [...nonTrump, ...(trumpSuit ? [trumpSuit as Suit] : [])];
+
+  for (const suit of preferred) {
+    const cards = hand.filter(c => c.suit === suit).sort(
+      (a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank)
+    );
+    if (cards.length >= 4) return cards[3];
+    if (cards.length >= 2) return cards[0];
+  }
+  return hand[0];
+}
+
+function contractTrumpSuit(contract: string): Suit | null {
+  const normalized = contract.replace(/♠/g, "S").replace(/♥/g, "H").replace(/♦/g, "D").replace(/♣/g, "C");
+  const m = normalized.match(/\d(NT|S|H|D|C)/i);
+  if (!m) return null;
+  const s = m[1].toUpperCase();
+  if (s === "S") return "spade";
+  if (s === "H") return "heart";
+  if (s === "D") return "diamond";
+  if (s === "C") return "club";
+  return null;
+}
+
+function fixDeclarerFromBidding(s: Smazzata): Smazzata {
+  if (!s.bidding) return s;
+  const correct = declarerFromBidding(s.bidding);
+  if (!correct || correct === s.declarer) return s;
+
+  const newLeader = nextPos(correct);
+  const leaderHand = s.hands[newLeader];
+  const hasLead = leaderHand.some(
+    c => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank
+  );
+
+  return {
+    ...s,
+    declarer: correct,
+    openingLead: hasLead ? s.openingLead : pickOpeningLead(leaderHand, contractTrumpSuit(s.contract)),
+  };
+}
+
 /** Filter out smazzate with data issues (wrong hand sizes, duplicates, bad opening leads) */
 function validateSmazzate(hands: Smazzata[]): Smazzata[] {
-  return hands.filter((s) => {
-    // Check each hand has exactly 13 cards
+  return hands.map(fixDeclarerFromBidding).filter((s) => {
     for (const pos of POSITIONS) {
       if (s.hands[pos].length !== 13) return false;
     }
-    // Check no duplicate cards
     const seen = new Set<string>();
     for (const pos of POSITIONS) {
       for (const c of s.hands[pos]) {
@@ -40,7 +114,6 @@ function validateSmazzate(hands: Smazzata[]): Smazzata[] {
         seen.add(key);
       }
     }
-    // Check opening lead is in the leader's hand
     const leader = nextPos(s.declarer);
     const hasLead = s.hands[leader].some(
       (c) => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank
