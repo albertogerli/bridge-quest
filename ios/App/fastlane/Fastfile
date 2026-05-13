@@ -1,0 +1,36 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to App Store Connect (TestFlight)"
+  lane :beta do
+    setup_ci if ENV["CI"]
+
+    increment_build_number(
+      xcodeproj: "App.xcodeproj"
+    )
+
+    build_app(
+      scheme: "App",
+      xcodeproj: "App.xcodeproj",
+      export_method: "app-store",
+      clean: true,
+      output_directory: "./build",
+      output_name: "BridgeLab.ipa"
+    )
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Submit to App Store for review"
+  lane :release do
+    deliver(
+      submit_for_review: true,
+      automatic_release: true,
+      force: true,
+      metadata_path: "./fastlane/metadata",
+      screenshots_path: "./fastlane/screenshots"
+    )
+  end
+end
