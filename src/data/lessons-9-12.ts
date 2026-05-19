@@ -258,13 +258,13 @@ const lezione9: Lesson = {
             "Su apertura 1♠, se rispondete 1NT, cosa state negando?",
           options: [
             "Di avere punti",
-            "Di avere 4+ carte di Picche",
+            "Il fit a Picche (3+ carte)",
             "Di avere un colore lungo",
             "Di voler giocare",
           ],
           correctAnswer: 1,
           explanation:
-            "Su 1♠ la risposta 1NT nega fit a Picche (non avete 3+ carte). Mostra 5-10 punti e nessun colore dichiarabile a livello 1 (non ci sono colori sopra le Picche!). Può avere qualsiasi distribuzione.",
+            "Su 1♠ (apertura lungo+corto, 5+ picche garantite) la risposta 1NT nega il fit a Picche: avete al massimo 2 carte di Picche. Mostra 5-10 punti e non ci sono colori dichiarabili a livello 1 sopra le Picche. Può avere qualsiasi distribuzione.",
         },
         {
           type: "true-false",

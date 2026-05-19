@@ -1273,9 +1273,9 @@ const lezione10: QuadriLesson = {
             "Dopo 1♥-1♠-? avete ♠K75 ♥53 ♦AKJ5 ♣J976. Cosa dite?",
           quizType: "bid-select",
           options: ["2♠ (surlicita)", "X (contro)", "2♦", "1NT"],
-          correctAnswer: 2,
+          correctAnswer: 1,
           explanation:
-            "2♦ è la dichiarazione naturale corretta: 11+ punti e 5+ carte di quadri. Non fate uso di Contro o Surlicita quando avete a disposizione una dichiarazione naturale forzante!",
+            "X (contro negativo): con 12 punti, 4-4 nei minori e niente fit a cuori, il contro mostra esattamente questa mano. Per 2♦ servirebbero 5+ quadri, qui ne avete solo 4. La surlicita 2♠ promette fit a cuori (assente) e 14+; 1NT richiederebbe il fermo a picche.",
         },
       ],
     },

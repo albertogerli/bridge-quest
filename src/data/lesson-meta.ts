@@ -19,7 +19,9 @@ export function getCourseIdFromLessonId(
 export function getLessonDisplayNumber(lessonId: number): number {
   switch (getCourseIdFromLessonId(lessonId)) {
     case "fiori":
-      return lessonId + 1;
+      // Numerazione allineata a FIGB: id 0 → "Lezione 0" (introduzione "Il Bridge"),
+      // id 1 → "Lezione 1", ... — gli ID smazzate ("1-N") e i video corrispondono.
+      return lessonId;
     case "quadri":
       return lessonId - QUADRI_LESSON_ID_OFFSET;
     case "cuori-gioco":

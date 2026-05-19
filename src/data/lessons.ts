@@ -1730,11 +1730,11 @@ const lezione8: Lesson = {
         {
           type: "quiz",
           content:
-            "Il compagno apre 1NT (15-17). Hai ♠876 ♥J109652 ♦42 ♣76 (2 punti). Cosa rispondi?",
+            "Il compagno apre 1NT (15-17). Hai ♠876 ♥J109652 ♦42 ♣76 (1 punto). Cosa rispondi?",
           options: ["Passo", "2♥", "3♥", "4♥"],
           correctAnswer: 1,
           explanation:
-            "Con 2 punti la manche è irraggiungibile (17+2=19, lontano da 25). Ma con 6 carte di Cuori, giocare 2♥ è molto meglio che lasciare il compagno a 1NT. La risposta 2♥ a colore è conclusiva: l'apertore deve passare.",
+            "Con 1 punto la manche è irraggiungibile (17+1=18, lontano da 25). Ma con 6 carte di Cuori, giocare 2♥ è molto meglio che lasciare il compagno a 1NT. La risposta 2♥ a colore è conclusiva: l'apertore deve passare.",
         },
         {
           type: "bid-select",

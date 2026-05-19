@@ -113,7 +113,7 @@ export function PlayingCard({
         ${dimClass} relative rounded bg-white
         border border-gray-200 shadow-sm transition-all touch-manipulation
         ${selected ? `ring-2 ring-amber shadow-amber/30 border-amber ${noHover ? "" : "-translate-y-3"}` : ""}
-        ${highlighted && !selected ? "ring-2 ring-amber-400/70 border-amber-400 shadow-amber-400/30 animate-pulse" : ""}
+        ${highlighted && !selected ? "ring-2 ring-amber-400/70 border-amber-400 shadow-amber-400/30" : ""}
         ${disabled && !highlighted ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}
         ${!disabled && !selected ? "active:scale-95" : ""}
         ${highlighted && !disabled && !noHover ? "hover:shadow-lg hover:-translate-y-1" : ""}

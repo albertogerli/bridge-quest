@@ -129,18 +129,25 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
 
           if (newState.phase === "finished") {
             const res = getResult(newState);
-            if (res.result >= 0) {
-              setMessage(
-                res.result === 0
-                  ? `Contratto mantenuto! ${res.tricksMade} prese.`
-                  : `Contratto fatto con ${res.result} presa/e in più!`
-              );
-            } else {
-              setMessage(
-                `Contratto caduto di ${Math.abs(res.result)}. Prese: ${res.tricksMade}/${res.tricksNeeded}`
-              );
-            }
-            setPhase("finished");
+            // Mostra prima la 13ª presa completa (4 carte) come per tutte le altre,
+            // poi passa a "finished". Senza questa pausa la 52ª carta non si vede.
+            setPhase("trick-complete");
+            setMessage("Ultima presa...");
+            trickTimerRef.current = setTimeout(() => {
+              setLastTrick(null);
+              if (res.result >= 0) {
+                setMessage(
+                  res.result === 0
+                    ? `Contratto mantenuto! ${res.tricksMade} prese.`
+                    : `Contratto fatto con ${res.result} presa/e in più!`
+                );
+              } else {
+                setMessage(
+                  `Contratto caduto di ${Math.abs(res.result)}. Prese: ${res.tricksMade}/${res.tricksNeeded}`
+                );
+              }
+              setPhase("finished");
+            }, TRICK_CLEAR_DELAY);
             return;
           }
 
