@@ -384,8 +384,16 @@ export default function ModulePage({
 
   const handleStepAdvance = useCallback((nextStep: number) => {
     setCurrentStep(nextStep);
-    // Scroll to top so the new content is visible
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Scroll the newly-revealed block into view (not back to top) — previous
+    // blocks stay rendered, so jumping to the top would force re-scrolling.
+    requestAnimationFrame(() => {
+      const target = document.querySelector(
+        `[data-step-block="${nextStep}"]`
+      ) as HTMLElement | null;
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
     if (!stepsViewed.has(nextStep)) {
       setStepsViewed((prev) => new Set(prev).add(nextStep));
       // Award small XP for reading content
@@ -1774,9 +1782,11 @@ export default function ModulePage({
 
         {/* Content blocks */}
         <div>
-          {mod.content.slice(0, currentStep + 1).map((block, idx) =>
-            renderBlock(block, idx)
-          )}
+          {mod.content.slice(0, currentStep + 1).map((block, idx) => (
+            <div key={idx} data-step-block={idx} style={{ scrollMarginTop: 80 }}>
+              {renderBlock(block, idx)}
+            </div>
+          ))}
         </div>
 
               {/* Bridge table illustration for visual fill on short steps */}
