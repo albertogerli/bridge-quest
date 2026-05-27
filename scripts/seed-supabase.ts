@@ -40,6 +40,10 @@ import { quadriSmazzate } from "../src/data/quadri-smazzate.ts";
 import { cuoriGiocoSmazzate } from "../src/data/cuori-gioco-smazzate.ts";
 import { cuoriLicitaSmazzate } from "../src/data/cuori-licita-smazzate.ts";
 
+// Phase 4.2 — Glossary + ASD clubs catalog
+import { GLOSSARY } from "../src/data/glossary.ts";
+import { ASD_CLUBS } from "../src/data/asd-clubs.ts";
+
 // ─── Env / client ────────────────────────────────────────────────────────
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -359,6 +363,100 @@ async function seedSmazzate() {
   console.log(`✓ smazzate         ${total} rows upserted (${Math.ceil(rows.length / CHUNK)} batches)`);
 }
 
+// ─── Glossary (Phase 4.2.2) ──────────────────────────────────────────────
+
+async function seedGlossary() {
+  const entries = Object.entries(GLOSSARY);
+  const validIds = new Set(entries.map(([id]) => id));
+
+  // Preventive audit of related_terms — Postgres can't FK on array
+  // elements, so we enforce referential integrity here. Dangling refs
+  // get logged AND dropped from the row before upsert.
+  let droppedRefs = 0;
+  const rows = entries.map(([id, entry]) => {
+    const rawRelated = entry.relatedTerms ?? [];
+    const validRelated: string[] = [];
+    const dangling: string[] = [];
+    for (const ref of rawRelated) {
+      if (validIds.has(ref)) validRelated.push(ref);
+      else dangling.push(ref);
+    }
+    if (dangling.length > 0) {
+      console.warn(
+        `  ⚠ glossary["${id}"].relatedTerms: dropping unknown slug(s) ${dangling.map((d) => `"${d}"`).join(", ")}`,
+      );
+      droppedRefs += dangling.length;
+    }
+
+    return {
+      id,
+      term: entry.term,
+      definition: entry.definition,
+      emoji: entry.emoji,
+      category: entry.category,
+      example: entry.example ?? null,
+      cards: entry.cards ?? null,
+      related_terms: validRelated,
+      quiz: {
+        question: entry.quiz.question,
+        options: entry.quiz.options,
+        correctAnswer: entry.quiz.correctAnswer,
+        explanation: entry.quiz.explanation,
+      },
+    };
+  });
+
+  console.log(
+    `  · ${rows.length} glossary entries (${droppedRefs} dangling related_terms removed)`,
+  );
+
+  const { error } = await supabase
+    .from("glossary")
+    .upsert(rows, { onConflict: "id" });
+  if (error) {
+    console.error(`✗ glossary: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(`✓ glossary         ${rows.length} rows upserted`);
+}
+
+// ─── ASD clubs (Phase 4.2.2) ─────────────────────────────────────────────
+
+async function seedAsdClubs() {
+  const rows = ASD_CLUBS.map((c) => ({
+    code: c.code,
+    name: c.name,
+    kind: c.kind ?? "",
+    active: c.active,
+    has_school: c.hasSchool,           // camelCase → snake_case
+    region: c.region ?? "",
+    address: c.address ?? "",
+    city: c.city ?? "",
+    province: c.province ?? "",
+    cap: c.cap ?? "",                  // TEXT, preserves leading zeros
+    lat: c.lat ?? 0,
+    lng: c.lng ?? 0,
+  }));
+
+  // Sanity counters before the network call.
+  const active = rows.filter((r) => r.active).length;
+  const withSchool = rows.filter((r) => r.has_school).length;
+  const geocoded = rows.filter((r) => r.lat !== 0 || r.lng !== 0).length;
+  console.log(
+    `  · ${rows.length} ASD clubs (${active} active, ${withSchool} con scuola, ${geocoded} geocoded)`,
+  );
+
+  // 260 rows × ~250 bytes = ~65 KB total, well under the 1MB limit.
+  const { error } = await supabase
+    .from("asd_clubs")
+    .upsert(rows, { onConflict: "code" });
+  if (error) {
+    console.error(`✗ asd_clubs: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(`✓ asd_clubs        ${rows.length} rows upserted`);
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -370,6 +468,8 @@ async function main() {
   await seedLessons();
   await seedModules();
   await seedSmazzate();
+  await seedGlossary();
+  await seedAsdClubs();
 
   const dt = ((Date.now() - t0) / 1000).toFixed(2);
   console.log(`\nDone in ${dt}s. Catalog tables are in sync with src/data/.`);

@@ -105,7 +105,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   // Club pages
-  const clubPages: MetadataRoute.Sitemap = getAllClubSlugs().map(({ slug }) => ({
+  const clubSlugs = await getAllClubSlugs();
+  const clubPages: MetadataRoute.Sitemap = clubSlugs.map(({ slug }) => ({
     url: `${baseUrl}/circolo/${slug}`,
     lastModified,
     changeFrequency: "weekly" as const,

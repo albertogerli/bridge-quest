@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { ASD_CLUBS } from "@/data/asd-clubs";
+import { useAsdClubs } from "@/store/use-asd-store";
 import Link from "next/link";
 
 const PROVINCE_TO_REGION: Record<string, string> = {
@@ -129,6 +129,7 @@ function isFullTimestamp(val: string): boolean {
 
 export default function AdminPage() {
   const { user, loading: authLoading } = useSharedAuth();
+  const { clubs: asdClubs } = useAsdClubs();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -317,8 +318,8 @@ export default function AdminPage() {
           return sorted.length % 2 !== 0 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
         };
 
-        // ASD distribution sorted by count — enrich with province/region from ASD_CLUBS
-        const asdClubByName = new Map(ASD_CLUBS.map(c => [c.name, c]));
+        // ASD distribution sorted by count — enrich with province/region from the catalog
+        const asdClubByName = new Map(asdClubs.map(c => [c.name, c]));
         const asdDistribution = [...asdMap.entries()]
           .map(([name, data]) => {
             const club = asdClubByName.get(name);

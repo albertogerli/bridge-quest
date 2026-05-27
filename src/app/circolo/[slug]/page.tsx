@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
-import { slugToAsdCode, getAsdNameByCode, asdNameToSlug } from "@/lib/asd-utils";
+import { useAsdClubBySlug } from "@/store/use-asd-store";
+import { asdNameToSlug } from "@/lib/asd-utils";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
@@ -57,8 +58,9 @@ interface ClubStats {
 export default function CircoloPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const asdCode = slugToAsdCode(slug);
-  const asdName = asdCode ? getAsdNameByCode(asdCode) : undefined;
+  const club = useAsdClubBySlug(slug);
+  const asdCode = club?.code;
+  const asdName = club?.name;
 
   const [members, setMembers] = useState<ClubMember[]>([]);
   const [stats, setStats] = useState<ClubStats | null>(null);

@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { useProfile } from "@/hooks/use-profile";
 import { useSound } from "@/hooks/use-sound";
 import { CardDisplay } from "@/components/bridge/card-display";
-import { getAllTerms, getGlossaryCount, type GlossaryEntry } from "@/data/glossary";
+import { useGlossary } from "@/store/use-glossary-store";
+import type { GlossaryEntry } from "@/lib/catalog";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
 import {
@@ -107,8 +108,14 @@ export default function GlossarioPage() {
   const profile = useProfile();
   const { play } = useSound();
 
-  const allTerms = useMemo(() => getAllTerms(), []);
-  const totalCount = useMemo(() => getGlossaryCount(), []);
+  // Catalog-backed glossary: alias `id` → `key` to keep existing JSX usages
+  // (`.key`, `.key === ...`) working without a deeper refactor.
+  const { entries } = useGlossary();
+  const allTerms = useMemo(
+    () => entries.map((e) => ({ ...e, key: e.id })),
+    [entries],
+  );
+  const totalCount = entries.length;
 
   // State
   const [mounted, setMounted] = useState(false);
