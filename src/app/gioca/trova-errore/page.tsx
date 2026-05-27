@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
 import { errorScenarios, type ErrorScenario } from "@/data/trova-errore-data";
@@ -207,9 +208,8 @@ export default function TrovaErrorePage() {
           (finalCorrect * 20 + 10) * config.xpMult
         );
         setXpEarned(earned);
+        useGameStore.getState().addXp(earned);
         try {
-          const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          localStorage.setItem("bq_xp", String(prev + earned));
           // Save best score
           const currentBest = localStorage.getItem("bq_trova_errore_best");
           const finalScore = score + (wasCorrect ? 100 : 0); // approximate

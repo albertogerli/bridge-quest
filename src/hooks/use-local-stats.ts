@@ -1,76 +1,162 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { getLevel, getXpInLevel, getLevelProgress } from "@/lib/xp-levels";
+import { useEffect, useState } from "react";
+import {
+  getLevel,
+  getXpInLevel,
+  getLevelProgress,
+  getXpForNextLevel,
+  getXpToNextLevel,
+} from "@/lib/xp-levels";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
+import { useGameStore, useHasHydrated } from "@/store/use-game-store";
+import { courses } from "@/data/courses";
 
 /**
- * Reads gamification stats (xp, streak, completed modules, daily challenge,
- * level) from localStorage. Awards the daily-login XP bonus on first visit
- * of each day and recomputes streak.
+ * Canonical "player stats" reader. Subscribes to the Zustand
+ * `useGameStore` and exposes:
+ *  - raw store fields: xp, streak, completedModules, handsPlayed
+ *  - derived display fields: level, xpInLevel, levelProgress,
+ *    xpNeededForNext, xpToNext, levelName, totalModulesCompleted,
+ *    totalModulesAvailable, nextModule
+ *  - session-scoped UI fields: dailyDone (from `bq_daily_completed`),
+ *    streakAtRisk (from `bq_last_activity`), dailyLoginAwarded
  *
- * NOTE: this hook is intentionally a thin localStorage wrapper. In a future
- * phase it will be replaced by a proper store (Zustand/Supabase), but the
- * external API (the returned object shape) should remain stable.
+ * Daily-login bonus: on a new ISO day, awards 10 XP + 5 per streak day
+ * (max +50) and updates the streak via store actions. Runs once per mount
+ * per day; subsequent mounts read `lastLogin` and skip the award.
+ *
+ * SSR safety: returns the store defaults (zeros / empty) until
+ * `useHasHydrated()` flips true, so the server-rendered tree matches the
+ * first client render.
  */
 export function useLocalStats() {
-  const [xp, setXp] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
+  const hydrated = useHasHydrated();
+
+  // Subscribe to persisted fields via granular selectors.
+  const xp = useGameStore((s) => s.xp);
+  const streak = useGameStore((s) => s.streak);
+  const completedModules = useGameStore((s) => s.completedModules);
+  const handsPlayed = useGameStore((s) => s.handsPlayed);
+
   const [dailyDone, setDailyDone] = useState(false);
   const [dailyLoginAwarded, setDailyLoginAwarded] = useState(false);
   const [streakAtRisk, setStreakAtRisk] = useState(false);
 
   useEffect(() => {
-    try {
-      const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-      const currentStreak = parseInt(localStorage.getItem("bq_streak") || "0", 10);
-      const cm = localStorage.getItem("bq_completed_modules");
-      if (cm) setCompletedModules(JSON.parse(cm));
+    if (!hydrated) return;
 
-      // Check daily challenge
+    try {
       const today = new Date().toISOString().slice(0, 10);
+
+      // Daily challenge completion — still in its own legacy key.
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
 
-      // Check if streak is at risk (>18h since last activity)
+      // Streak at risk: >18h since last activity.
       const lastActivity = localStorage.getItem("bq_last_activity");
+      const currentStreak = useGameStore.getState().streak;
       if (lastActivity && currentStreak > 0) {
-        const hoursAgo = (Date.now() - new Date(lastActivity).getTime()) / (1000 * 60 * 60);
+        const hoursAgo =
+          (Date.now() - new Date(lastActivity).getTime()) / (1000 * 60 * 60);
         setStreakAtRisk(hoursAgo > 18);
       }
 
-      // Daily login XP: award 10 XP + streak bonus on first visit per day
-      const lastLogin = localStorage.getItem("bq_last_login");
+      // Daily login bonus — only once per ISO day.
+      const { lastLogin } = useGameStore.getState();
       if (lastLogin !== today) {
-        localStorage.setItem("bq_last_login", today);
+        const yesterday = new Date(Date.now() - 86400000)
+          .toISOString()
+          .slice(0, 10);
 
-        // Update streak
-        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-        const newStreak = lastLogin === yesterday ? currentStreak + 1 : 1;
-        localStorage.setItem("bq_streak", String(newStreak));
-
-        // Award daily login XP: 10 base + 5 per streak day (max +50)
+        const store = useGameStore.getState();
+        if (lastLogin === yesterday) {
+          store.incrementStreak();
+        } else {
+          store.resetStreak();
+        }
+        const newStreak = useGameStore.getState().streak;
         const streakBonus = Math.min(newStreak * 5, 50);
         const dailyXp = 10 + streakBonus;
-        const newXp = currentXp + dailyXp;
-        localStorage.setItem("bq_xp", String(newXp));
-
-        setXp(newXp);
-        setStreak(newStreak);
+        store.addXp(dailyXp);
+        store.setLastLogin(today);
         setDailyLoginAwarded(true);
-      } else {
-        setXp(currentXp);
-        setStreak(currentStreak);
       }
     } catch {}
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
+  // Derived display fields. Safe to compute even pre-hydration (xp=0 ⇒ level 1).
   const level = getLevel(xp);
   const xpInLevel = getXpInLevel(xp);
   const levelProgress = getLevelProgress(xp);
-  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
-  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
-  const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
+  const xpNeededForNext = getXpForNextLevel(xp);
+  const xpToNext = getXpToNextLevel(xp);
 
-  return { xp, streak, completedModules, level, xpInLevel, levelProgress, levelName, dailyDone, dailyLoginAwarded, streakAtRisk };
+  const profileKey =
+    typeof window !== "undefined"
+      ? (localStorage.getItem("bq_profile") as UserProfile | null)
+      : null;
+  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
+  const levelName =
+    profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
+
+  const totalModulesCompleted = Object.keys(completedModules).length;
+  const totalModulesAvailable = courses.reduce(
+    (sum, c) =>
+      sum +
+      c.worlds.reduce(
+        (ws, w) => ws + w.lessons.reduce((ls, l) => ls + l.modules.length, 0),
+        0,
+      ),
+    0,
+  );
+
+  // First incomplete module across all courses.
+  const nextModule = (() => {
+    for (const course of courses) {
+      for (const w of course.worlds) {
+        for (const lesson of w.lessons) {
+          for (const mod of lesson.modules) {
+            if (!completedModules[`${lesson.id}-${mod.id}`]) {
+              return {
+                lessonId: lesson.id,
+                moduleId: mod.id,
+                moduleTitle: mod.title,
+                lessonTitle: lesson.title,
+                lessonIcon: lesson.icon,
+              };
+            }
+          }
+        }
+      }
+    }
+    return null;
+  })();
+
+  return {
+    xp,
+    streak,
+    completedModules,
+    handsPlayed,
+    level,
+    xpInLevel,
+    levelProgress,
+    xpNeededForNext,
+    xpToNext,
+    levelName,
+    dailyDone,
+    dailyLoginAwarded,
+    streakAtRisk,
+    totalModulesCompleted,
+    totalModulesAvailable,
+    nextModule,
+  };
 }
+
+/**
+ * Backwards-compat alias — `useStats` was a near-duplicate of
+ * `useLocalStats` that lived in `use-stats.ts`. The hook has been merged;
+ * this export keeps existing consumers (e.g. `desktop-sidebar.tsx`)
+ * working without churn while the codebase converges on one name.
+ */
+export const useStats = useLocalStats;

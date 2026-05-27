@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
 
@@ -278,10 +279,7 @@ export default function DichiaraPage() {
         setPhase("gameover");
         const earned = Math.floor((20 + correct * 5 + (isCorrect ? 5 : 0)) * dCfg.xpMult);
         setXpEarned(earned);
-        try {
-          const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          localStorage.setItem("bq_xp", String(prev + earned));
-        } catch {}
+        useGameStore.getState().addXp(earned);
         saveGameResult({
           gameType: "dichiara",
           score: earned,

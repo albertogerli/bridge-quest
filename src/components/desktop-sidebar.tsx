@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useStats } from "@/hooks/use-stats";
+import { useStats } from "@/hooks/use-local-stats";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { collectibleCards } from "@/data/collectible-cards";

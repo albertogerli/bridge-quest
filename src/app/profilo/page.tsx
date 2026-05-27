@@ -32,6 +32,7 @@ import { StreakFreezeCard } from "@/components/streak-freeze-card";
 import { useChallenges, type ChallengeData, type ChallengeStats } from "@/hooks/use-challenges";
 import { Swords } from "lucide-react";
 import { useSecretAchievements } from "@/hooks/use-secret-achievements";
+import { useGameStore } from "@/store/use-game-store";
 import SecretAchievementPopup from "@/components/secret-achievement-popup";
 
 const allWorlds = courses.flatMap(c => c.worlds);
@@ -63,10 +64,10 @@ export default function ProfiloPage() {
   const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null);
   const [editAvatarPreview, setEditAvatarPreview] = useState("");
   const [saving, setSaving] = useState(false);
-  const [xp, setXp] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [handsPlayed, setHandsPlayed] = useState(0);
-  const [completedModules, setCompletedModules] = useState<Record<string, boolean>>({});
+  const xp = useGameStore((s) => s.xp);
+  const streak = useGameStore((s) => s.streak);
+  const handsPlayed = useGameStore((s) => s.handsPlayed);
+  const completedModules = useGameStore((s) => s.completedModules);
   const [currentProfile, setCurrentProfile] = useState<UserProfile>("adulto");
   const [advancedStatsOpen, setAdvancedStatsOpen] = useState(false);
   const [inviteToast, setInviteToast] = useState<string | null>(null);
@@ -158,9 +159,7 @@ export default function ProfiloPage() {
       }
     } catch {}
 
-    try {
-      bestStreak = parseInt(localStorage.getItem("bq_streak") || "0", 10);
-    } catch {}
+    bestStreak = useGameStore.getState().streak;
 
     try {
       totalMinutes = parseFloat(localStorage.getItem("bq_total_minutes") || "0");
@@ -192,14 +191,8 @@ export default function ProfiloPage() {
 
   useEffect(() => {
     try {
-      const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-      setXp(currentXp);
-      // Sync fiches with negozio (derived from XP)
-      localStorage.setItem("bq_fiches", String(Math.floor(currentXp / 10)));
-      setStreak(parseInt(localStorage.getItem("bq_streak") || "0", 10));
-      setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
-      const cm = localStorage.getItem("bq_completed_modules");
-      if (cm) setCompletedModules(JSON.parse(cm));
+      // Sync fiches with negozio (derived from current XP).
+      localStorage.setItem("bq_fiches", String(Math.floor(xp / 10)));
       const p = localStorage.getItem("bq_profile") as UserProfile | null;
       if (p) {
         setCurrentProfile(p);
@@ -211,7 +204,7 @@ export default function ProfiloPage() {
       }
       setInvitesSent(getInviteCount());
     } catch {}
-  }, [authProfile]);
+  }, [authProfile, xp]);
 
   // Fetch challenge history & stats
   useEffect(() => {
@@ -287,7 +280,7 @@ export default function ProfiloPage() {
       setInvitesSent(getInviteCount());
     }
     if (xpAwarded > 0) {
-      setXp((prev) => prev + xpAwarded);
+      useGameStore.getState().addXp(xpAwarded);
       setInviteXpToast(true);
       setTimeout(() => setInviteXpToast(false), 3000);
     }

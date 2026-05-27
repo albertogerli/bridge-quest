@@ -7,6 +7,7 @@ import { useSound } from "@/hooks/use-sound";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { getAllTerms, getGlossaryCount, type GlossaryEntry } from "@/data/glossary";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 import {
   Search,
   ChevronRight,
@@ -50,7 +51,6 @@ const CATEGORY_BADGE_CLASSES: Record<GlossaryEntry["category"], string> = {
 };
 
 const STORAGE_KEY = "bq_glossary_completed";
-const XP_KEY = "bq_xp";
 const QUIZ_GLOBALE_COUNT = 15;
 const TIMER_SECONDS = 15;
 const XP_PER_CORRECT = 15;
@@ -92,8 +92,7 @@ function saveCompleted(data: Record<string, boolean>) {
 }
 
 function awardXp(amount: number) {
-  const current = parseInt(localStorage.getItem(XP_KEY) || "0", 10);
-  localStorage.setItem(XP_KEY, String(current + amount));
+  useGameStore.getState().addXp(amount);
   window.dispatchEvent(new Event("bq_stats_updated"));
 }
 

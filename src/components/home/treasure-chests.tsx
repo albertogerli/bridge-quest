@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, Gift, Package, Wrench, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/use-profile";
+import { useGameStore } from "@/store/use-game-store";
 
 const chestMilestoneIcons = {
   3: (size: string) => <Gift className={`${size} text-amber-700`} />,
@@ -33,8 +34,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
           setShowChestPopup(chest);
           // Award XP
           const xpReward = chest.modules === 3 ? 50 : chest.modules === 10 ? 150 : chest.modules === 25 ? 300 : 500;
-          const prevXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          localStorage.setItem("bq_xp", String(prevXp + xpReward));
+          useGameStore.getState().addXp(xpReward);
           localStorage.setItem("bq_chests_claimed", JSON.stringify([...claimed, chest.modules]));
           break;
         }

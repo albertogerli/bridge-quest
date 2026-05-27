@@ -14,6 +14,7 @@ import {
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
+import { useGameStore } from "@/store/use-game-store";
 
 // Colors for the path nodes per world
 const worldColors = [
@@ -36,14 +37,12 @@ const courseColors: Record<CourseId, { active: string; inactive: string; border:
 };
 
 export default function LezioniPage() {
-  const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
+  const completedMap = useGameStore((s) => s.completedModules);
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
   const [onboarded, setOnboarded] = useState(false);
 
   useEffect(() => {
     try {
-      const cm = localStorage.getItem("bq_completed_modules");
-      if (cm) setCompletedMap(JSON.parse(cm));
       const saved = localStorage.getItem("bq_selected_course");
       if (saved && courses.some((c) => c.id === saved)) {
         setSelectedCourse(saved as CourseId);

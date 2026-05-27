@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useGameStore } from "@/store/use-game-store";
 import { useGameResults } from "@/hooks/use-game-results";
 
 // Card generation
@@ -156,10 +157,7 @@ export default function ContaVelocePage() {
         // Save XP
         const earned = Math.floor((Math.floor(score / 50) + (isCorrect ? 10 : 0) + 20) * config.xpMult);
         setXpEarned(earned);
-        try {
-          const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          localStorage.setItem("bq_xp", String(prev + earned));
-        } catch {}
+        useGameStore.getState().addXp(earned);
         // Sync to Supabase
         saveGameResult({
           gameType: "conta-veloce",

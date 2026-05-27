@@ -6,6 +6,8 @@
  * or 'cancelled' when the user dismissed the share sheet.
  */
 
+import { useGameStore } from "@/store/use-game-store";
+
 const APP_URL = "https://bridgelab.it";
 
 export type ShareOutcome = "shared" | "clipboard" | "cancelled";
@@ -182,7 +184,6 @@ export async function shareGameResult(
 // ─── Internal: XP for sharing (once per day) ───────────────────────────────
 
 const SHARE_XP_KEY = "bq_share_xp_date";
-const XP_KEY = "bq_xp";
 const SHARE_XP_AMOUNT = 25;
 
 function awardShareXp(): number {
@@ -191,8 +192,7 @@ function awardShareXp(): number {
     const lastAward = localStorage.getItem(SHARE_XP_KEY);
     if (lastAward === today) return 0; // Already awarded today
 
-    const prev = parseInt(localStorage.getItem(XP_KEY) || "0", 10);
-    localStorage.setItem(XP_KEY, String(prev + SHARE_XP_AMOUNT));
+    useGameStore.getState().addXp(SHARE_XP_AMOUNT);
     localStorage.setItem(SHARE_XP_KEY, today);
     return SHARE_XP_AMOUNT;
   } catch {

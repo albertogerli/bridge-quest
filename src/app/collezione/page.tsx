@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import {
   collectibleCards,
   RARITY_CONFIG,
@@ -23,13 +24,12 @@ type CategoryFilter = "tutte" | CollectibleCard["category"];
 /* ────────────────────────────────────────────── */
 
 function loadPlayerStats(): PlayerStats {
+  const { xp, streak, handsPlayed, completedModules } = useGameStore.getState();
   return {
-    xp: parseInt(localStorage.getItem("bq_xp") || "0", 10),
-    streak: parseInt(localStorage.getItem("bq_streak") || "0", 10),
-    handsPlayed: parseInt(localStorage.getItem("bq_hands_played") || "0", 10),
-    completedModules: Object.keys(
-      JSON.parse(localStorage.getItem("bq_completed_modules") || "{}")
-    ).length,
+    xp,
+    streak,
+    handsPlayed,
+    completedModules: Object.keys(completedModules).length,
     badges: JSON.parse(localStorage.getItem("bq_badges") || "[]"),
     quizLampoBest: parseInt(
       localStorage.getItem("bq_quiz_lampo_best") || "0",
@@ -86,8 +86,10 @@ export default function CollezionePage() {
   const [selectedCard, setSelectedCard] = useState<CollectibleCard | null>(null);
   const [revealingNew, setRevealingNew] = useState(false);
 
-  /* hydrate from localStorage */
+  /* hydrate from store + localStorage */
+  const hydrated = useHasHydrated();
   useEffect(() => {
+    if (!hydrated) return;
     try {
       const s = loadPlayerStats();
       setStats(s);
@@ -99,7 +101,7 @@ export default function CollezionePage() {
       }
       setUnlockedIds(ids);
     } catch {}
-  }, []);
+  }, [hydrated]);
 
   /* derived */
   const totalCards = collectibleCards.length;

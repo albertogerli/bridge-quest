@@ -7,6 +7,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useGameStore } from "@/store/use-game-store";
 
 interface Post {
   id: number;
@@ -224,8 +225,7 @@ export default function PostDetailPage() {
 
   const awardXP = (amount: number) => {
     try {
-      const current = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-      localStorage.setItem("bq_xp", String(current + amount));
+      useGameStore.getState().addXp(amount);
       window.dispatchEvent(new Event("bq_stats_updated"));
     } catch {}
   };

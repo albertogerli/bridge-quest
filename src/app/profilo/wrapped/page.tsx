@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, Share2, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import Link from "next/link";
 import { shareContent } from "@/lib/share";
+import { useGameStore } from "@/store/use-game-store";
 
 interface GameRecord {
   date: string;
@@ -122,15 +123,12 @@ function calculateMonthStats(records: GameRecord[]): MonthStats | null {
   // XP gained (estimate: 10 per hand played + 5 bonus per win)
   const xpGained = handsPlayed * 10 + wins * 5;
 
-  // Streak (from localStorage or compute)
+  // Streak (best recorded; otherwise current from store)
   let streakBest = 0;
   try {
     const stored = localStorage.getItem("bq_streak_best");
     if (stored) streakBest = parseInt(stored, 10);
-    else {
-      const currentStreak = localStorage.getItem("bq_streak");
-      if (currentStreak) streakBest = parseInt(currentStreak, 10);
-    }
+    else streakBest = useGameStore.getState().streak;
   } catch {}
 
   // Favorite day (most active weekday)

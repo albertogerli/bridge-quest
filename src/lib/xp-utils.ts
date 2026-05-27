@@ -6,10 +6,9 @@
  */
 
 import { hapticSuccess } from "@/lib/native-bridge";
+import { useGameStore } from "@/store/use-game-store";
 
 const COMPLETED_KEY = "bq_completed_games";
-const XP_KEY = "bq_xp";
-const HANDS_KEY = "bq_hands_played";
 
 /** Check if a specific game/hand has already been completed and XP awarded */
 export function isGameCompleted(gameId: string): boolean {
@@ -46,13 +45,10 @@ export function awardGameXp(gameId: string, xp: number): number {
       localStorage.removeItem('bq_bonus_mode');
     }
 
-    // Award XP
-    const prev = parseInt(localStorage.getItem(XP_KEY) || "0", 10);
-    localStorage.setItem(XP_KEY, String(prev + xpToAward));
-
-    // Increment hands played
-    const hp = parseInt(localStorage.getItem(HANDS_KEY) || "0", 10);
-    localStorage.setItem(HANDS_KEY, String(hp + 1));
+    // Award XP + count hand via the game store
+    const store = useGameStore.getState();
+    store.addXp(xpToAward);
+    store.recordHandPlayed();
     localStorage.setItem("bq_last_hand_ts", String(Date.now()));
 
     // Increment daily hand counter

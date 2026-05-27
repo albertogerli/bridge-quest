@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useGameStore } from "@/store/use-game-store";
 
 export interface WeeklyObjective {
   id: string;
@@ -86,16 +87,18 @@ export function useWeeklyObjectives() {
     // Generate new objectives for this week
     const objectives = selectObjectives(weekKey);
 
-    // Load current progress from localStorage
-    const xpStart = parseInt(localStorage.getItem(`bq_objectives_xp_start_${weekKey}`) || localStorage.getItem("bq_xp") || "0", 10);
+    // Load current progress: anchor weekly counters against the live store.
+    const storeXp = useGameStore.getState().xp;
+    const xpStart = parseInt(
+      localStorage.getItem(`bq_objectives_xp_start_${weekKey}`) || String(storeXp),
+      10,
+    );
     if (!localStorage.getItem(`bq_objectives_xp_start_${weekKey}`)) {
       localStorage.setItem(`bq_objectives_xp_start_${weekKey}`, String(xpStart));
     }
 
-    const modulesStart = parseInt(localStorage.getItem(`bq_objectives_modules_start_${weekKey}`) || "0", 10);
     if (!localStorage.getItem(`bq_objectives_modules_start_${weekKey}`)) {
-      const cm = localStorage.getItem("bq_completed_modules");
-      const count = cm ? Object.keys(JSON.parse(cm)).length : 0;
+      const count = Object.keys(useGameStore.getState().completedModules).length;
       localStorage.setItem(`bq_objectives_modules_start_${weekKey}`, String(count));
     }
 
@@ -115,12 +118,10 @@ export function useWeeklyObjectives() {
     }
 
     const xpStart = parseInt(localStorage.getItem(`bq_objectives_xp_start_${weekKey}`) || "0", 10);
-    const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
     const modulesStart = parseInt(localStorage.getItem(`bq_objectives_modules_start_${weekKey}`) || "0", 10);
-    const cm = localStorage.getItem("bq_completed_modules");
-    const currentModules = cm ? Object.keys(JSON.parse(cm)).length : 0;
-    const currentStreak = parseInt(localStorage.getItem("bq_streak") || "0", 10);
-    const handsPlayed = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
+    const { xp: currentXp, streak: currentStreak, handsPlayed, completedModules } =
+      useGameStore.getState();
+    const currentModules = Object.keys(completedModules).length;
     const weeklyMinigames = parseInt(localStorage.getItem("bq_weekly_minigames") || "0", 10);
     const weeklyQuizzes = parseInt(localStorage.getItem("bq_weekly_quizzes") || "0", 10);
     const dailyTotal = parseInt(localStorage.getItem("bq_daily_hand_total") || "0", 10);
@@ -168,8 +169,7 @@ export function useWeeklyObjectives() {
   const claimBonus = useCallback(() => {
     if (!state.allCompleted || state.bonusClaimed) return;
     const bonus = 100; // Bonus XP for completing all 3
-    const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-    localStorage.setItem("bq_xp", String(prev + bonus));
+    useGameStore.getState().addXp(bonus);
 
     const newState = { ...state, bonusClaimed: true };
     localStorage.setItem(`bq_objectives_${state.weekKey}`, JSON.stringify(newState));

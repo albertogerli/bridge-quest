@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useGameStore } from "@/store/use-game-store";
 
 export interface SecretAchievement {
   id: string;
@@ -184,8 +185,7 @@ export function useSecretAchievements() {
 
     // Stakanovista - 30-day streak
     if (!currentEarned.includes("stakanovista")) {
-      const streak = parseInt(localStorage.getItem("bq_streak") || "0");
-      if (streak >= 30) {
+      if (useGameStore.getState().streak >= 30) {
         newlyUnlocked.push(
           SECRET_ACHIEVEMENTS.find((a) => a.id === "stakanovista")!
         );
@@ -194,8 +194,7 @@ export function useSecretAchievements() {
 
     // Re delle Fiches - 500+ fiches
     if (!currentEarned.includes("re-delle-fiches")) {
-      const xp = parseInt(localStorage.getItem("bq_xp") || "0");
-      const fiches = Math.floor(xp / 10);
+      const fiches = Math.floor(useGameStore.getState().xp / 10);
       if (fiches >= 500) {
         newlyUnlocked.push(
           SECRET_ACHIEVEMENTS.find((a) => a.id === "re-delle-fiches")!

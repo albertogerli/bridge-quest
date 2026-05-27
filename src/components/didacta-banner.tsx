@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Camera, Share2, CheckCircle2, ExternalLink } from "lucide-react";
+import { useGameStore } from "@/store/use-game-store";
 
 const DIDACTA_END = new Date("2026-03-14T23:59:59+01:00"); // venerdì 14 marzo
 const STORAGE_KEY = "bq_didacta_claimed";
@@ -32,9 +33,7 @@ export function DidactaBanner() {
 
   const handleClaim = () => {
     if (claimed) return;
-    // Award XP
-    const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-    localStorage.setItem("bq_xp", String(currentXp + XP_REWARD));
+    useGameStore.getState().addXp(XP_REWARD);
     localStorage.setItem(STORAGE_KEY, "claimed");
     setClaimed(true);
     setJustClaimed(true);

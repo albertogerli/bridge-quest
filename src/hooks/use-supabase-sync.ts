@@ -3,13 +3,10 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
+import { useGameStore } from "@/store/use-game-store";
 
+// Keys that still live in plain localStorage (not yet in the game store).
 const LS_KEYS = {
-  xp: "bq_xp",
-  streak: "bq_streak",
-  lastLogin: "bq_last_login",
-  completedModules: "bq_completed_modules",
-  handsPlayed: "bq_hands_played",
   badges: "bq_badges",
   profile: "bq_profile",
   memoryBest: "bq_memory_best",
@@ -25,16 +22,17 @@ let lastSyncedSnapshot = "";
 
 function getLocalSnapshot(): string {
   try {
+    const { xp, streak, handsPlayed, completedModules } = useGameStore.getState();
     return JSON.stringify({
-      xp: localStorage.getItem(LS_KEYS.xp) || "0",
-      streak: localStorage.getItem(LS_KEYS.streak) || "0",
-      handsPlayed: localStorage.getItem(LS_KEYS.handsPlayed) || "0",
+      xp: String(xp),
+      streak: String(streak),
+      handsPlayed: String(handsPlayed),
       profile: localStorage.getItem(LS_KEYS.profile) || "adulto",
       memoryBest: localStorage.getItem(LS_KEYS.memoryBest) || "",
       textSize: localStorage.getItem(LS_KEYS.textSize) || "medio",
       animSpeed: localStorage.getItem(LS_KEYS.animSpeed) || "normale",
       sound: localStorage.getItem(LS_KEYS.sound) ?? "true",
-      completedModules: localStorage.getItem(LS_KEYS.completedModules) || "{}",
+      completedModules: JSON.stringify(completedModules),
       badges: localStorage.getItem(LS_KEYS.badges) || "[]",
       totalMinutes: localStorage.getItem(LS_KEYS.totalMinutes) || "0",
     });
@@ -69,9 +67,7 @@ export function useSupabaseSync() {
         const snapshot = getLocalSnapshot();
         if (!force && snapshot === lastSyncedSnapshot) return;
 
-        const xp = parseInt(localStorage.getItem(LS_KEYS.xp) || "0", 10);
-        const streak = parseInt(localStorage.getItem(LS_KEYS.streak) || "0", 10);
-        const handsPlayed = parseInt(localStorage.getItem(LS_KEYS.handsPlayed) || "0", 10);
+        const { xp, streak, handsPlayed, completedModules } = useGameStore.getState();
         const profileType = localStorage.getItem(LS_KEYS.profile) || "adulto";
         const memoryBest = localStorage.getItem(LS_KEYS.memoryBest);
         const textSize = localStorage.getItem(LS_KEYS.textSize) || "medio";
@@ -97,31 +93,21 @@ export function useSupabaseSync() {
           })
           .eq("id", userId);
 
-        // Push completed modules (stored as Record<string, boolean>)
-        const completedRaw = localStorage.getItem(LS_KEYS.completedModules);
-        if (completedRaw) {
-          try {
-            const parsed = JSON.parse(completedRaw);
-            // Handle both object {"1-1": true} and legacy array ["1-1"] formats
-            const keys: string[] = Array.isArray(parsed)
-              ? parsed
-              : typeof parsed === "object"
-                ? Object.keys(parsed)
-                : [];
-
-            const rows = keys.map((moduleKey: string) => {
-              const parts = moduleKey.split("-");
-              const lessonId = parts.slice(0, -1).join("-");
-              const moduleId = parts[parts.length - 1];
-              return { user_id: userId, lesson_id: lessonId, module_id: moduleId };
+        // Push completed modules from the store
+        try {
+          const keys = Object.keys(completedModules);
+          const rows = keys.map((moduleKey: string) => {
+            const parts = moduleKey.split("-");
+            const lessonId = parts.slice(0, -1).join("-");
+            const moduleId = parts[parts.length - 1];
+            return { user_id: userId, lesson_id: lessonId, module_id: moduleId };
+          });
+          if (rows.length > 0) {
+            await supabase.from("completed_modules").upsert(rows, {
+              onConflict: "user_id,lesson_id,module_id",
             });
-            if (rows.length > 0) {
-              await supabase.from("completed_modules").upsert(rows, {
-                onConflict: "user_id,lesson_id,module_id",
-              });
-            }
-          } catch {}
-        }
+          }
+        } catch {}
 
         // Push badges
         const badgesRaw = localStorage.getItem(LS_KEYS.badges);
@@ -186,65 +172,122 @@ export function useSupabaseSync() {
 
     const initialSync = async () => {
       try {
-        if (profile.xp > 0) {
-          // Supabase has data → pull to localStorage
-          syncToLocalStorage(profile);
+        // Read local values BEFORE any overwrite — game stats from the store,
+        // everything else still from plain localStorage.
+        const { xp: localXp, streak: localStreak, handsPlayed: localHands, completedModules: localModules } =
+          useGameStore.getState();
+        const localMinutes = Math.round(parseFloat(localStorage.getItem(LS_KEYS.totalMinutes) || "0"));
+        const localMemoryBest = localStorage.getItem(LS_KEYS.memoryBest);
+        const localMemoryBestNum = localMemoryBest ? parseInt(localMemoryBest, 10) : null;
 
-          // Also pull completed modules from Supabase
-          const { data: modules } = await supabase
-            .from("completed_modules")
-            .select("lesson_id, module_id")
-            .eq("user_id", user.id);
+        let localBadges: string[] = [];
+        try {
+          const raw = localStorage.getItem(LS_KEYS.badges);
+          if (raw) localBadges = JSON.parse(raw);
+        } catch {}
 
+        let localReviewItems: Array<{
+          lessonId: string;
+          moduleId: string;
+          question?: string;
+          wrongCount: number;
+          lastReview?: string;
+          nextReview?: string;
+        }> = [];
+        try {
+          const raw = localStorage.getItem(LS_KEYS.reviewItems);
+          if (raw) localReviewItems = JSON.parse(raw);
+        } catch {}
+
+        const hasLocalData = localXp > 0 || localHands > 0 || Object.keys(localModules).length > 0;
+
+        if (profile.xp > 0 || hasLocalData) {
+          // Fetch remote collections
+          const [{ data: modules }, { data: badges }, { data: reviews }] = await Promise.all([
+            supabase.from("completed_modules").select("lesson_id, module_id").eq("user_id", user.id),
+            supabase.from("badges").select("badge_id").eq("user_id", user.id),
+            supabase.from("review_items").select("*").eq("user_id", user.id),
+          ]);
+
+          // MERGE numeric values: take the MAX
+          const mergedXp = Math.max(profile.xp, localXp);
+          const mergedStreak = Math.max(profile.streak, localStreak);
+          const mergedHands = Math.max(profile.hands_played, localHands);
+          const mergedMinutes = Math.max(profile.total_minutes || 0, localMinutes);
+          const remoteMemoryBest = profile.memory_best;
+          const mergedMemoryBest = (remoteMemoryBest !== null && localMemoryBestNum !== null)
+            ? Math.min(remoteMemoryBest, localMemoryBestNum) // lower is better for memory game
+            : remoteMemoryBest ?? localMemoryBestNum;
+
+          // MERGE completed modules: union of both sets
+          const mergedModules: Record<string, boolean> = { ...localModules };
           if (modules && modules.length > 0) {
-            const map: Record<string, boolean> = {};
             for (const m of modules) {
-              map[`${m.lesson_id}-${m.module_id}`] = true;
+              mergedModules[`${m.lesson_id}-${m.module_id}`] = true;
             }
-            localStorage.setItem(LS_KEYS.completedModules, JSON.stringify(map));
           }
 
-          // Pull badges
-          const { data: badges } = await supabase
-            .from("badges")
-            .select("badge_id")
-            .eq("user_id", user.id);
+          // MERGE badges: union of both sets
+          const remoteBadgeIds = badges ? badges.map((b) => b.badge_id) : [];
+          const mergedBadges = [...new Set([...localBadges, ...remoteBadgeIds])];
 
-          if (badges && badges.length > 0) {
-            localStorage.setItem(
-              LS_KEYS.badges,
-              JSON.stringify(badges.map((b) => b.badge_id))
-            );
+          // MERGE review items: union by key, keep the one with latest lastReview
+          const reviewMap = new Map<string, typeof localReviewItems[number]>();
+          for (const item of localReviewItems) {
+            reviewMap.set(`${item.lessonId}-${item.moduleId}-${item.question || ""}`, item);
           }
-
-          // Pull review items
-          const { data: reviews } = await supabase
-            .from("review_items")
-            .select("*")
-            .eq("user_id", user.id);
-
           if (reviews && reviews.length > 0) {
-            const items = reviews.map((r) => ({
-              lessonId: r.lesson_id,
-              moduleId: r.module_id,
-              question: r.question,
-              wrongCount: r.wrong_count,
-              lastReview: r.last_review,
-              nextReview: r.next_review,
-            }));
-            localStorage.setItem(LS_KEYS.reviewItems, JSON.stringify(items));
+            for (const r of reviews) {
+              const key = `${r.lesson_id}-${r.module_id}-${r.question || ""}`;
+              const existing = reviewMap.get(key);
+              const remoteItem = {
+                lessonId: r.lesson_id,
+                moduleId: r.module_id,
+                question: r.question,
+                wrongCount: r.wrong_count,
+                lastReview: r.last_review,
+                nextReview: r.next_review,
+              };
+              if (!existing || (r.last_review && (!existing.lastReview || r.last_review > existing.lastReview))) {
+                reviewMap.set(key, remoteItem);
+              }
+            }
+          }
+          const mergedReviewItems = [...reviewMap.values()];
+
+          // Write merged values: game stats into the store, everything else to localStorage.
+          if (profile.xp > 0) {
+            localStorage.setItem(LS_KEYS.profile, profile.profile_type);
+            localStorage.setItem(LS_KEYS.textSize, profile.text_size);
+            localStorage.setItem(LS_KEYS.animSpeed, profile.anim_speed);
+            localStorage.setItem(LS_KEYS.sound, profile.sound_on ? "true" : "false");
+          }
+          useGameStore.setState({
+            xp: mergedXp,
+            streak: mergedStreak,
+            handsPlayed: mergedHands,
+            completedModules: mergedModules,
+          });
+          localStorage.setItem(LS_KEYS.totalMinutes, String(mergedMinutes));
+          if (mergedMemoryBest !== null) {
+            localStorage.setItem(LS_KEYS.memoryBest, String(mergedMemoryBest));
+          }
+          localStorage.setItem(LS_KEYS.badges, JSON.stringify(mergedBadges));
+          if (mergedReviewItems.length > 0) {
+            localStorage.setItem(LS_KEYS.reviewItems, JSON.stringify(mergedReviewItems));
           }
 
           lastSyncedSnapshot = getLocalSnapshot();
-          // Notify components that stats have been updated from Supabase
+
+          // Push merged state back to Supabase so both sides are in sync
+          await pushToSupabase(user.id, true);
+
+          // Notify components
           window.dispatchEvent(new Event("bq_stats_updated"));
-          // Force re-render on pages that read from localStorage on mount
-          window.dispatchEvent(new StorageEvent("storage", { key: LS_KEYS.xp }));
           return;
         }
 
-        // Supabase is empty → push localStorage up (first-time migration)
-        await pushToSupabase(user.id, true);
+        // Both sides empty — nothing to do
       } catch (err) {
         console.error("[Sync] Initial sync error:", err);
       }
@@ -285,30 +328,4 @@ export function useSupabaseSync() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [user, pushToSupabase]);
-}
-
-function syncToLocalStorage(profile: {
-  xp: number;
-  streak: number;
-  hands_played: number;
-  profile_type: string;
-  memory_best: number | null;
-  total_minutes: number;
-  text_size: string;
-  anim_speed: string;
-  sound_on: boolean;
-}) {
-  try {
-    localStorage.setItem(LS_KEYS.xp, String(profile.xp));
-    localStorage.setItem(LS_KEYS.streak, String(profile.streak));
-    localStorage.setItem(LS_KEYS.handsPlayed, String(profile.hands_played));
-    localStorage.setItem(LS_KEYS.profile, profile.profile_type);
-    if (profile.memory_best !== null) {
-      localStorage.setItem(LS_KEYS.memoryBest, String(profile.memory_best));
-    }
-    localStorage.setItem(LS_KEYS.totalMinutes, String(profile.total_minutes || 0));
-    localStorage.setItem(LS_KEYS.textSize, profile.text_size);
-    localStorage.setItem(LS_KEYS.animSpeed, profile.anim_speed);
-    localStorage.setItem(LS_KEYS.sound, profile.sound_on ? "true" : "false");
-  } catch {}
 }

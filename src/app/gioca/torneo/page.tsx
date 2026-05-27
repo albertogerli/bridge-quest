@@ -8,6 +8,7 @@ import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
 import type { Position } from "@/lib/bridge-engine";
+import { useGameStore } from "@/store/use-game-store";
 import {
   parseContract,
   toDisplayPosition,
@@ -255,10 +256,7 @@ export default function TorneoSettimanale() {
       // Award XP (only once per week via awardGameXp)
       awardGameXp(`torneo-week-${weekNum}`, result.xpEarned);
       // Tournament plays 5 hands — awardGameXp already counted 1, add remaining 4
-      try {
-        const hp = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-        localStorage.setItem("bq_hands_played", String(hp + TOURNAMENT_HAND_COUNT - 1));
-      } catch {}
+      useGameStore.getState().addHandsPlayed(TOURNAMENT_HAND_COUNT - 1);
 
       // Refresh leaderboard
       fetchLeaderboard(weekNum).then((lb) => setLeaderboard(lb));
