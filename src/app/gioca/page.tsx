@@ -14,11 +14,12 @@ import {
   Spade, BookOpen, Link2, BarChart3
 } from "lucide-react";
 import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
+import { useGameStore } from "@/store/use-game-store";
 
 export default function GiocaPage() {
   const profile = useProfile();
   const [dailyDone, setDailyDone] = useState(false);
-  const [handsPlayed, setHandsPlayed] = useState(0);
+  const handsPlayed = useGameStore((s) => s.handsPlayed);
   const [tournamentDone, setTournamentDone] = useState(false);
   const [onboarded, setOnboarded] = useState(false);
   const [randomIdx, setRandomIdx] = useState(0);
@@ -27,7 +28,6 @@ export default function GiocaPage() {
     try {
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
-      setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
       // Pratica Libera: pesca da playableSmazzate per evitare smazzate con HCP incoerenti.
       // Salviamo l'INDICE in playableSmazzate ma il routing usa allSmazzate, quindi
       // troviamo l'indice corrispondente in allSmazzate.

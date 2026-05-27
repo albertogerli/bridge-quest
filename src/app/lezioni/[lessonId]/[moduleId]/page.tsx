@@ -10,6 +10,7 @@ import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
 import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { useSounds } from "@/hooks/use-sounds";
+import { useGameStore } from "@/store/use-game-store";
 import { useAppunti } from "@/hooks/use-appunti";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { ComprehensionQuiz } from "@/components/comprehension-quiz";
@@ -178,15 +179,12 @@ export default function ModulePage({
     }
   }, [currentStep, profile.showTimer, profile.timerSeconds, mod, quizAnswers]);
 
-  // Persist XP delta to localStorage
+  // Persist XP delta to the game store
   useEffect(() => {
     if (xpEarned > prevXpRef.current) {
       const delta = xpEarned - prevXpRef.current;
       prevXpRef.current = xpEarned;
-      try {
-        const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-        localStorage.setItem("bq_xp", String(prev + delta));
-      } catch {}
+      useGameStore.getState().addXp(delta);
     }
   }, [xpEarned]);
 
@@ -219,11 +217,8 @@ export default function ModulePage({
   useEffect(() => {
     if (contentLength > 0 && currentStep >= contentLength - 1 && !completionSaved.current) {
       completionSaved.current = true;
+      useGameStore.getState().completeModule(lessonId, moduleId);
       try {
-        const key = "bq_completed_modules";
-        const prev = JSON.parse(localStorage.getItem(key) || "{}");
-        prev[`${lessonId}-${moduleId}`] = true;
-        localStorage.setItem(key, JSON.stringify(prev));
         localStorage.setItem("bq_last_lesson_ts", String(Date.now()));
 
         // Clear draft on completion
@@ -231,12 +226,15 @@ export default function ModulePage({
 
         // Update streak (home page handles daily login, but update here too as fallback)
         const today = new Date().toISOString().slice(0, 10);
-        const lastDay = localStorage.getItem("bq_last_login");
-        if (lastDay !== today) {
+        const { lastLogin } = useGameStore.getState();
+        if (lastLogin !== today) {
           const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-          const streak = parseInt(localStorage.getItem("bq_streak") || "0", 10);
-          localStorage.setItem("bq_streak", String(lastDay === yesterday ? streak + 1 : 1));
-          localStorage.setItem("bq_last_login", today);
+          if (lastLogin === yesterday) {
+            useGameStore.getState().incrementStreak();
+          } else {
+            useGameStore.getState().resetStreak();
+          }
+          useGameStore.getState().setLastLogin(today);
         }
 
         // Update last activity for notification reminders

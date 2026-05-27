@@ -10,6 +10,7 @@ import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { asdNameToSlug } from "@/lib/asd-utils";
 import { courses, getLessonIdsForCourse, type CourseId } from "@/data/courses";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2 } from "lucide-react";
+import { useGameStore } from "@/store/use-game-store";
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -1243,14 +1244,7 @@ function EmptyState({ message, showCta = false }: { message: string; showCta?: b
 }
 
 function LocalXpCard() {
-  const [localXp, setLocalXp] = useState(0);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("bq_xp");
-      if (stored) setLocalXp(parseInt(stored, 10) || 0);
-    } catch {}
-  }, []);
+  const localXp = useGameStore((s) => s.xp);
 
   const league = getLeague(localXp);
   const nextLeague = leagues.find((l) => l.minXp > localXp);

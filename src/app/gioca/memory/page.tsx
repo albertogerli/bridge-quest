@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useGameStore } from "@/store/use-game-store";
 import { useGameResults } from "@/hooks/use-game-results";
 import Link from "next/link";
 
@@ -146,9 +147,8 @@ export default function MemoryPage() {
           setShowCelebration(true);
           // Save XP
           const earned = getXP(cards.length / 2, moves + 1, timer);
+          useGameStore.getState().addXp(earned);
           try {
-            const xp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-            localStorage.setItem("bq_xp", String(xp + earned));
             // Save best time
             const currentBest = localStorage.getItem("bq_memory_best");
             if (!currentBest || timer < parseInt(currentBest, 10)) {

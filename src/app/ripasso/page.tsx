@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useSpacedReview, type ReviewItem } from "@/hooks/use-spaced-review";
 import { getLessonById, getModuleById, getCourseForLesson } from "@/data/courses";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
+import { useGameStore } from "@/store/use-game-store";
 import {
   Brain, ArrowLeft, Clock, AlertTriangle,
   CheckCircle2, Zap, BookOpen, ChevronRight,
@@ -89,10 +90,8 @@ const REVIEW_XP_KEY = "bq_ripasso_last_award";
 
 function awardReviewXP(): number {
   try {
-    const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-    const newXp = currentXp + REVIEW_XP_BONUS;
-    localStorage.setItem("bq_xp", String(newXp));
-    return newXp;
+    useGameStore.getState().addXp(REVIEW_XP_BONUS);
+    return useGameStore.getState().xp;
   } catch {
     return 0;
   }

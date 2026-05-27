@@ -8,6 +8,7 @@ import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 
 export default function LessonDetailPage({
   params,
@@ -28,15 +29,10 @@ export default function LessonDetailPage({
     );
   }
 
-  const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
+  const completedMap = useGameStore((s) => s.completedModules);
   const [draftsMap, setDraftsMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    try {
-      const cm = localStorage.getItem("bq_completed_modules");
-      if (cm) setCompletedMap(JSON.parse(cm));
-    } catch {}
-
     // Check for saved drafts on each module
     if (lesson) {
       const drafts: Record<string, boolean> = {};

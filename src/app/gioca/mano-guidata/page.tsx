@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { useGameStore } from "@/store/use-game-store";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { GUIDED_HANDS, type GuidedHand } from "@/data/guided-hands";
 import type { Position } from "@/lib/bridge-engine";
@@ -33,10 +34,8 @@ function isHandCompleted(handId: number): boolean {
 function markHandCompleted(handId: number) {
   try {
     localStorage.setItem(`bq_guided_hand_${handId}`, "1");
-    // Increment hands played
-    const current = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-    localStorage.setItem("bq_hands_played", String(current + 1));
   } catch {}
+  useGameStore.getState().recordHandPlayed();
 }
 
 // ─── Hand Selection ─────────────────────────────────────────────────────────

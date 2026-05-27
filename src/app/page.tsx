@@ -41,6 +41,7 @@ import { SurveyBanner } from "@/components/home/banners/survey-banner";
 import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { GuidedModeToggle } from "@/components/home/banners/guided-mode-toggle";
 import { useLocalStats } from "@/hooks/use-local-stats";
+import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { Zap, Target } from "lucide-react";
 
 // Derive world cards from ALL courses
@@ -72,9 +73,10 @@ export default function Home() {
   const [notOnboarded, setNotOnboarded] = useState(false);
   const [showWeeklyRecap, setShowWeeklyRecap] = useState(false);
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
-  const [handsPlayed, setHandsPlayed] = useState(0);
+  const handsPlayed = useGameStore((s) => s.handsPlayed);
   const [isGuest, setIsGuest] = useState(false);
   const [referralToast, setReferralToast] = useState(false);
+  const hydrated = useHasHydrated();
 
   useEffect(() => {
     try {
@@ -83,42 +85,43 @@ export default function Home() {
         setShowOnboarding(true);
         setNotOnboarded(true);
       }
-      setHandsPlayed(parseInt(localStorage.getItem("bq_hands_played") || "0", 10));
-
-      // Weekly recap: show on Monday if not shown this week
-      const today = new Date();
-      if (today.getDay() <= 1) { // Sunday or Monday
-        const weekKey = `bq_recap_${today.getFullYear()}-W${Math.ceil((today.getTime() - new Date(today.getFullYear(), 0, 1).getTime()) / 604800000)}`;
-        if (!localStorage.getItem(weekKey) && localStorage.getItem("bq_onboarded")) {
-          // Calculate weekly stats from snapshot
-          const lastSnapshot = JSON.parse(localStorage.getItem("bq_weekly_snapshot") || "{}");
-          const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          const currentModules = Object.keys(JSON.parse(localStorage.getItem("bq_completed_modules") || "{}")).length;
-          const currentHands = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-          if (lastSnapshot.xp !== undefined) {
-            setWeeklyData({
-              xpEarned: currentXp - (lastSnapshot.xp || 0),
-              modulesCompleted: currentModules - (lastSnapshot.modules || 0),
-              handsPlayed: currentHands - (lastSnapshot.hands || 0),
-              streakDays: parseInt(localStorage.getItem("bq_streak") || "0", 10),
-            });
-            if (currentXp > (lastSnapshot.xp || 0)) {
-              setShowWeeklyRecap(true);
-            }
-          }
-          localStorage.setItem(weekKey, "1");
-          // Save new snapshot
-          localStorage.setItem("bq_weekly_snapshot", JSON.stringify({ xp: currentXp, modules: currentModules, hands: currentHands }));
-        }
-        if (!localStorage.getItem("bq_weekly_snapshot")) {
-          const currentXp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-          const currentModules = Object.keys(JSON.parse(localStorage.getItem("bq_completed_modules") || "{}")).length;
-          const currentHands = parseInt(localStorage.getItem("bq_hands_played") || "0", 10);
-          localStorage.setItem("bq_weekly_snapshot", JSON.stringify({ xp: currentXp, modules: currentModules, hands: currentHands }));
-        }
-      }
     } catch {}
   }, []);
+
+  // Weekly recap — depends on hydrated store values, not stale localStorage.
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      const today = new Date();
+      if (today.getDay() > 1) return; // Sunday or Monday only
+
+      const weekKey = `bq_recap_${today.getFullYear()}-W${Math.ceil((today.getTime() - new Date(today.getFullYear(), 0, 1).getTime()) / 604800000)}`;
+      const snapshot = (): { xp: number; modules: number; hands: number } => {
+        const { xp, completedModules, handsPlayed } = useGameStore.getState();
+        return { xp, modules: Object.keys(completedModules).length, hands: handsPlayed };
+      };
+
+      if (!localStorage.getItem(weekKey) && localStorage.getItem("bq_onboarded")) {
+        const lastSnapshot = JSON.parse(localStorage.getItem("bq_weekly_snapshot") || "{}");
+        const current = snapshot();
+        const currentStreak = useGameStore.getState().streak;
+        if (lastSnapshot.xp !== undefined) {
+          setWeeklyData({
+            xpEarned: current.xp - (lastSnapshot.xp || 0),
+            modulesCompleted: current.modules - (lastSnapshot.modules || 0),
+            handsPlayed: current.hands - (lastSnapshot.hands || 0),
+            streakDays: currentStreak,
+          });
+          if (current.xp > (lastSnapshot.xp || 0)) setShowWeeklyRecap(true);
+        }
+        localStorage.setItem(weekKey, "1");
+        localStorage.setItem("bq_weekly_snapshot", JSON.stringify(current));
+      }
+      if (!localStorage.getItem("bq_weekly_snapshot")) {
+        localStorage.setItem("bq_weekly_snapshot", JSON.stringify(snapshot()));
+      }
+    } catch {}
+  }, [hydrated]);
 
   // Check notification reminders on page load and schedule future reminders
   useEffect(() => {

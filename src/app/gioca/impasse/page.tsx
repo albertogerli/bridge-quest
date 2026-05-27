@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { impasseScenarios, type ImpasseScenario } from "@/data/impasse-data";
+import { useGameStore } from "@/store/use-game-store";
 import { useProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
 
@@ -254,11 +255,8 @@ export default function ImpassePage() {
       setXpEarned(earned);
       setPhase("gameover");
 
+      useGameStore.getState().addXp(earned);
       try {
-        // Save XP
-        const prevXP = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-        localStorage.setItem("bq_xp", String(prevXP + earned));
-
         // Save best score
         const finalScore = score + (lastWasCorrect ? 120 : 0);
         const prevBest = parseInt(

@@ -7,6 +7,7 @@ import { courses, type CourseId, levelInfo } from "@/data/courses";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getInfographicForLesson } from "@/components/maestro-video";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
   fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700", border: "border-emerald-200" },
@@ -24,16 +25,9 @@ const courseGradients: Record<CourseId, string> = {
 
 export default function DispensePage() {
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
-  const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
+  const completedMap = useGameStore((s) => s.completedModules);
   const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];
   const profile = "junior"; // Currently only Junior infographics available
-
-  useEffect(() => {
-    try {
-      const cm = localStorage.getItem("bq_completed_modules");
-      if (cm) setCompletedMap(JSON.parse(cm));
-    } catch {}
-  }, []);
 
   // Check if a lesson has any completed modules
   const isLessonStarted = (lessonId: number) => {

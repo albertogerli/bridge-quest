@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Coins, ShoppingBag, Sparkles, Crown, Diamond, Frame, Palette, Image as ImageIcon, Check, Star, Flame, Rainbow, Award, Heart, Trophy, Gem, Type } from "lucide-react";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 
 /* ────────────────────────────────────────────── */
 /*  Types & Data                                   */
@@ -295,9 +296,8 @@ function getFiches(): number {
   try {
     const raw = localStorage.getItem("bq_fiches");
     if (raw !== null) return parseInt(raw, 10) || 0;
-    // Fallback: derive from XP as the profile page does
-    const xp = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-    const derived = Math.floor(xp / 10);
+    // Fallback: derive from XP (kept in the game store) as the profile page does
+    const derived = Math.floor(useGameStore.getState().xp / 10);
     // Persist so it is consistent
     localStorage.setItem("bq_fiches", String(derived));
     return derived;

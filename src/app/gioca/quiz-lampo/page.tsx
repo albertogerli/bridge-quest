@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { useGameStore } from "@/store/use-game-store";
 import { courses } from "@/data/courses";
 import type { ContentBlock } from "@/data/courses";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
@@ -450,11 +451,7 @@ export default function QuizLampoPage() {
     );
     setXpEarned(finalXP);
 
-    // Save to localStorage
-    try {
-      const prev = parseInt(localStorage.getItem("bq_xp") || "0", 10);
-      localStorage.setItem("bq_xp", String(prev + finalXP));
-    } catch {}
+    useGameStore.getState().addXp(finalXP);
 
     // Check/save best score
     try {
