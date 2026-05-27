@@ -1,0 +1,79 @@
+"use client";
+
+import { motion } from "motion/react";
+import Link from "next/link";
+import { GraduationCap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { getAvailableCourses, getCourseStats, levelInfo } from "@/data/courses";
+
+interface CoursesSectionProps {
+  completedModules: Record<string, boolean>;
+}
+
+export function CoursesSection({ completedModules }: CoursesSectionProps) {
+  const availableCourses = getAvailableCourses();
+
+  if (availableCourses.length <= 1) return null; // Don't show if only Fiori
+
+  return (
+    <section className="px-4 sm:px-5 pt-4">
+      <div className="mx-auto max-w-lg">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#003DA5]/10">
+              <GraduationCap className="w-4 h-4 text-[#003DA5]" />
+            </div>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+              I Corsi FIGB
+            </h2>
+          </div>
+          <Badge variant="outline" className="text-[10px] font-bold text-[#003DA5]/60 border-[#003DA5]/20">
+            {availableCourses.length} corsi
+          </Badge>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {availableCourses.map((course, i) => {
+            const stats = getCourseStats(course.id, completedModules);
+            const info = levelInfo[course.level];
+            return (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 + i * 0.08 }}
+              >
+                <Link href={`/lezioni?corso=${course.id}`}>
+                  <div className="btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#E8E4DC] dark:border-[#2a3040]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-bold text-lg`}>
+                        {course.icon}
+                      </div>
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${info.bg} ${info.color}`}>
+                        {info.label}
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                      {course.name.replace("Corso ", "")}
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5 truncate">
+                      {course.lessonCount} lezioni
+                    </p>
+                    <div className="mt-2.5 flex items-center gap-2">
+                      <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-r ${course.gradient}`}
+                          style={{ width: `${stats.progress}%` }}
+                        />
+                      </div>
+                      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">{stats.progress}%</span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
