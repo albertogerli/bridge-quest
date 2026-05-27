@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { MapPin, Navigation, School, Filter, ChevronDown, ExternalLink, Phone } from "lucide-react";
-import { ASD_CLUBS, type AsdClub } from "@/data/asd-clubs";
+import { useAsdClubs } from "@/store/use-asd-store";
+import type { AsdClub } from "@/lib/catalog";
 import { asdNameToSlug } from "@/lib/asd-utils";
 
 type FilterMode = "tutti" | "scuola";
@@ -31,6 +32,7 @@ function getMapsUrl(club: AsdClub): string {
 }
 
 export default function TrovaCircoloPage() {
+  const { clubs: allClubs } = useAsdClubs();
   const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [geoLoading, setGeoLoading] = useState(false);
@@ -68,7 +70,7 @@ export default function TrovaCircoloPage() {
   }, [requestLocation]);
 
   const filteredClubs = useMemo(() => {
-    let clubs = ASD_CLUBS;
+    let clubs: AsdClub[] = allClubs;
     if (showOnlyActive) clubs = clubs.filter((c) => c.active);
     if (filter === "scuola") clubs = clubs.filter((c) => c.hasSchool);
     if (searchText.trim()) {
@@ -82,7 +84,7 @@ export default function TrovaCircoloPage() {
       );
     }
     return clubs;
-  }, [filter, searchText, showOnlyActive]);
+  }, [allClubs, filter, searchText, showOnlyActive]);
 
   const sortedClubs = useMemo(() => {
     if (!userPos) {

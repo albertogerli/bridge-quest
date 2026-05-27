@@ -8,8 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { levelInfo, type CourseId } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { ASD_CLUBS } from "@/data/asd-clubs";
-import { getAsdNameByCode, asdNameToSlug } from "@/lib/asd-utils";
+import { useActiveAsdClubs, useAsdClub } from "@/store/use-asd-store";
+import { asdNameToSlug } from "@/lib/asd-utils";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel, getXpInLevel, getLevelProgress, getXpForNextLevel, MAX_LEVEL } from "@/lib/xp-levels";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
@@ -54,14 +54,9 @@ export default function ProfiloPage() {
   const [editAsdSearch, setEditAsdSearch] = useState("");
   const [editAsdCode, setEditAsdCode] = useState("");
   const [showAsdDropdown, setShowAsdDropdown] = useState(false);
-  const editAsdSelectedName = useMemo(
-    () => (editAsdCode ? getAsdNameByCode(editAsdCode) ?? "" : ""),
-    [editAsdCode]
-  );
-  const activeClubsSorted = useMemo(
-    () => ASD_CLUBS.filter((c) => c.active),
-    []
-  );
+  const editAsdClub = useAsdClub(editAsdCode || undefined);
+  const editAsdSelectedName = editAsdClub?.name ?? "";
+  const activeClubsSorted = useActiveAsdClubs();
   const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null);
   const [editAvatarPreview, setEditAvatarPreview] = useState("");
   const [saving, setSaving] = useState(false);

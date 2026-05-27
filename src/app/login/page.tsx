@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { ASD_CLUBS } from "@/data/asd-clubs";
+import { useActiveAsdClubs } from "@/store/use-asd-store";
 import Link from "next/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
@@ -44,7 +44,7 @@ function LoginContent() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
 
-  const activeClubs = useMemo(() => ASD_CLUBS.filter((c) => c.active), []);
+  const activeClubs = useActiveAsdClubs();
   const selectedAsdName = useMemo(
     () => activeClubs.find((c) => c.code === selectedAsdCode)?.name ?? "",
     [activeClubs, selectedAsdCode]

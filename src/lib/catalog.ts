@@ -674,3 +674,197 @@ export async function getLessonTitle(lessonId: number): Promise<string> {
   const lesson = await getLessonById(lessonId);
   return lesson?.title ?? lessonTitles[lessonId] ?? `Lezione ${lessonId}`;
 }
+
+// ─── Glossary (Phase 4.2) ────────────────────────────────────────────────
+
+export type GlossaryCategory = "base" | "licita" | "gioco" | "difesa" | "punteggio";
+
+export interface GlossaryQuiz {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+}
+
+export interface GlossaryEntry {
+  /** Slug used as DB id, URL anchor, and key in the GLOSSARY map. */
+  id: string;
+  term: string;
+  definition: string;
+  emoji: string;
+  category: GlossaryCategory;
+  example?: string;
+  cards?: string;
+  relatedTerms: string[];   // sanitised by the seeder (no dangling refs)
+  quiz: GlossaryQuiz;
+}
+
+interface RawGlossary {
+  id: string;
+  term: string;
+  definition: string;
+  emoji: string;
+  category: GlossaryCategory;
+  example: string | null;
+  cards: string | null;
+  related_terms: string[] | null;
+  quiz: GlossaryQuiz;
+}
+
+let glossaryPromise: Promise<Record<string, GlossaryEntry>> | null = null;
+
+async function loadGlossary(): Promise<Record<string, GlossaryEntry>> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glossary")
+    .select(
+      "id, term, definition, emoji, category, example, cards, related_terms, quiz",
+    );
+
+  if (error) {
+    throw new Error(`catalog: failed to load glossary: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawGlossary[];
+  const map: Record<string, GlossaryEntry> = {};
+  for (const r of rows) {
+    map[r.id] = {
+      id: r.id,
+      term: r.term,
+      definition: r.definition,
+      emoji: r.emoji,
+      category: r.category,
+      example: r.example ?? undefined,
+      cards: r.cards ?? undefined,
+      relatedTerms: r.related_terms ?? [],
+      quiz: r.quiz,
+    };
+  }
+  return map;
+}
+
+export function getGlossary(): Promise<Record<string, GlossaryEntry>> {
+  if (!glossaryPromise) {
+    glossaryPromise = loadGlossary().catch((err) => {
+      glossaryPromise = null;
+      throw err;
+    });
+  }
+  return glossaryPromise;
+}
+
+export function resetGlossaryCache(): void {
+  glossaryPromise = null;
+}
+
+export async function getGlossaryEntry(
+  id: string,
+): Promise<GlossaryEntry | undefined> {
+  const map = await getGlossary();
+  return map[id];
+}
+
+export async function getGlossaryEntries(): Promise<GlossaryEntry[]> {
+  const map = await getGlossary();
+  return Object.values(map);
+}
+
+// ─── ASD clubs (Phase 4.2) ───────────────────────────────────────────────
+
+export interface AsdClub {
+  /** FIGB code, e.g. "F0024" */
+  code: string;
+  /** Official denomination */
+  name: string;
+  /** Legal/type prefix: ASD, A.S.D., S.Br., A.D., G.S.D., GSAD, C.B.D., or "" */
+  kind: string;
+  /** True if present in the latest FIGB roster */
+  active: boolean;
+  /** True if listed as "scuola attiva" in the FIGB roster */
+  hasSchool: boolean;
+  /** FIGB 2-letter region code (LM, PM, TS, …). Empty if unknown. */
+  region: string;
+  /** Free-form full address */
+  address: string;
+  city: string;
+  /** 2-letter province code, e.g. "MI" */
+  province: string;
+  /** Postal code as string (preserves leading zeros) */
+  cap: string;
+  /** Latitude (0 if not yet geocoded) */
+  lat: number;
+  /** Longitude (0 if not yet geocoded) */
+  lng: number;
+}
+
+interface RawAsdClub {
+  code: string;
+  name: string;
+  kind: string;
+  active: boolean;
+  has_school: boolean;
+  region: string;
+  address: string;
+  city: string;
+  province: string;
+  cap: string;
+  lat: number;
+  lng: number;
+}
+
+let asdClubsPromise: Promise<AsdClub[]> | null = null;
+
+async function loadAsdClubs(): Promise<AsdClub[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("asd_clubs")
+    .select(
+      "code, name, kind, active, has_school, region, address, city, province, cap, lat, lng",
+    )
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load asd_clubs: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawAsdClub[];
+  return rows.map<AsdClub>((r) => ({
+    code: r.code,
+    name: r.name,
+    kind: r.kind ?? "",
+    active: r.active,
+    hasSchool: r.has_school,
+    region: r.region ?? "",
+    address: r.address ?? "",
+    city: r.city ?? "",
+    province: r.province ?? "",
+    cap: r.cap ?? "",
+    lat: r.lat ?? 0,
+    lng: r.lng ?? 0,
+  }));
+}
+
+export function getAsdClubs(): Promise<AsdClub[]> {
+  if (!asdClubsPromise) {
+    asdClubsPromise = loadAsdClubs().catch((err) => {
+      asdClubsPromise = null;
+      throw err;
+    });
+  }
+  return asdClubsPromise;
+}
+
+export function resetAsdClubsCache(): void {
+  asdClubsPromise = null;
+}
+
+export async function getAsdClubByCode(
+  code: string | null | undefined,
+): Promise<AsdClub | undefined> {
+  if (!code) return undefined;
+  return (await getAsdClubs()).find((c) => c.code === code);
+}
+
+export async function getActiveAsdClubs(): Promise<AsdClub[]> {
+  return (await getAsdClubs()).filter((c) => c.active);
+}

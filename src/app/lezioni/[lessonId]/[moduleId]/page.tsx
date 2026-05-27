@@ -18,7 +18,7 @@ import { ComprehensionQuiz } from "@/components/comprehension-quiz";
 import { getYouTubeEmbedUrl } from "@/components/maestro-video";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GLOSSARY } from "@/data/glossary";
+import { useGlossary } from "@/store/use-glossary-store";
 import { GlossaryTooltip } from "@/components/beginner/glossary-tooltip";
 
 // === DRAFT SAVE/RESTORE ===
@@ -534,15 +534,16 @@ export default function ModulePage({
     "cue_bid","presa_sicura","seme_lungo",
   ] as const;
 
-  // Build term→key map once
+  // Build term→key map once (catalog-backed)
+  const { glossary } = useGlossary();
   const glossaryTermMap = useMemo(() => {
     const map = new Map<string, string>();
     for (const key of GLOSSARY_AUTO_KEYS) {
-      const entry = GLOSSARY[key];
+      const entry = glossary[key];
       if (entry) map.set(entry.term.toLowerCase(), key);
     }
     return map;
-  }, []);
+  }, [glossary]);
 
   // Render text with both glossary tooltips and card symbols
   function renderEnrichedText(text: string) {

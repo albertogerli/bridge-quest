@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, type ReactNode } from "react";
-import { getGlossaryEntry } from "@/data/glossary";
+import { useGlossaryEntry } from "@/store/use-glossary-store";
 
 interface GlossaryTooltipProps {
   /** Key in the GLOSSARY dictionary */
@@ -11,7 +11,7 @@ interface GlossaryTooltipProps {
 }
 
 export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
-  const entry = getGlossaryEntry(term);
+  const entry = useGlossaryEntry(term);
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLSpanElement>(null);
