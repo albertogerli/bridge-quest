@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { usePlayableSmazzate } from "@/store/use-smazzate-store";
+import type { Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
@@ -28,14 +29,15 @@ import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 
 // Deterministic daily hand: hash date string to index
-function getDailySmazzata(): Smazzata {
+function getDailySmazzata(pool: Smazzata[]): Smazzata | null {
+  if (pool.length === 0) return null;
   const today = new Date().toISOString().slice(0, 10); // "2026-02-07"
   let hash = 0;
   for (let i = 0; i < today.length; i++) {
     hash = (hash * 31 + today.charCodeAt(i)) | 0;
   }
-  const index = Math.abs(hash) % playableSmazzate.length;
-  return playableSmazzate[index];
+  const index = Math.abs(hash) % pool.length;
+  return pool[index];
 }
 
 function isDailyChallengeCompleted(): boolean {
@@ -55,8 +57,20 @@ function markDailyCompleted() {
 }
 
 export default function SfidaDelGiornoPage() {
+  const playable = usePlayableSmazzate();
+  const smazzata = getDailySmazzata(playable);
+  if (!smazzata) {
+    return (
+      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento sfida del giorno">
+        Caricamento sfida del giorno…
+      </div>
+    );
+  }
+  return <SfidaContent smazzata={smazzata} />;
+}
+
+function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
   const router = useRouter();
-  const smazzata = getDailySmazzata();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);

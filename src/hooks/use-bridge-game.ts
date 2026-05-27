@@ -15,7 +15,7 @@ import {
   toDisplayPosition,
 } from "@/lib/bridge-engine";
 import { useSounds } from "@/hooks/use-sounds";
-import type { Vulnerability, BiddingData } from "@/data/smazzate";
+import type { Vulnerability, BiddingData } from "@/lib/catalog";
 import { checkBenHealth, benPlay } from "@/lib/ben-client";
 import { getAILevel, aiSelectWithDifficulty, type AILevel } from "@/lib/ai-difficulty";
 

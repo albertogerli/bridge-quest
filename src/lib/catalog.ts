@@ -19,6 +19,7 @@
  */
 
 import { createClient } from "@/lib/supabase/client";
+import type { Card, Position } from "@/lib/bridge-engine";
 
 // ─── Types (mirror legacy @/data/courses; small fields tweaked) ──────────
 
@@ -56,7 +57,6 @@ export interface Lesson {
   subtitle: string;
   icon: string;
   modules: LessonModule[];
-  smazzateIds: string[];
 }
 
 export interface World {
@@ -80,6 +80,36 @@ export interface Course {
   lessonCount: number;
   worlds: World[];
   lessons: Lesson[];
+}
+
+// ─── Smazzate (Phase 4.1) ────────────────────────────────────────────────
+
+export type Vulnerability = "none" | "ns" | "ew" | "both";
+
+export interface BiddingData {
+  dealer: Position;
+  /** Sequential bids starting from dealer. Canonical ASCII form post-seed:
+   *  ["1NT","P","3NT","P","P","P"] / ["1S","X","P","2H",...] */
+  bids: string[];
+}
+
+export interface Smazzata {
+  id: string;                  // "1-1", "Q1-1", "5-3", ...
+  lesson: number;              // global lesson id (Fiori 0-12, Quadri 51-62, …)
+  board: number;
+  title: string;
+  contract: string;            // "3NT", "4♠", "5♦X" (unicode preserved)
+  declarer: Position;
+  openingLead: Card;
+  vulnerability: Vulnerability;
+  hands: {
+    north: Card[];
+    south: Card[];
+    east: Card[];
+    west: Card[];
+  };
+  bidding?: BiddingData;
+  commentary: string;
 }
 
 // ─── Static UI metadata (no DB roundtrip needed) ─────────────────────────
@@ -124,7 +154,6 @@ interface RawLesson {
   subtitle: string | null;
   icon: string | null;
   position: number;
-  smazzate_ids: string[] | null;
 }
 
 interface RawModule {
@@ -157,7 +186,7 @@ async function loadCatalog(): Promise<Course[]> {
       .order("position", { ascending: true }),
     supabase
       .from("lessons")
-      .select("id, world_id, title, subtitle, icon, position, smazzate_ids")
+      .select("id, world_id, title, subtitle, icon, position")
       .order("position", { ascending: true }),
     supabase
       .from("lesson_modules")
@@ -210,7 +239,6 @@ async function loadCatalog(): Promise<Course[]> {
       subtitle: l.subtitle ?? "",
       icon: l.icon ?? "",
       modules: modulesByLesson.get(l.id) ?? [],
-      smazzateIds: l.smazzate_ids ?? [],
     });
     lessonsByWorld.set(l.world_id, list);
   }
@@ -353,4 +381,296 @@ export async function getCourseStats(
   const progress =
     totalModules > 0 ? Math.round((totalCompleted / totalModules) * 100) : 0;
   return { totalModules, totalCompleted, progress };
+}
+
+// ─── Smazzate fetcher + helpers ──────────────────────────────────────────
+
+interface RawSmazzata {
+  id: string;
+  lesson_id: number;
+  board: number;
+  title: string;
+  contract: string;
+  declarer: Position;
+  vulnerability: Vulnerability;
+  opening_lead: Card;
+  hands: { north: Card[]; south: Card[]; east: Card[]; west: Card[] };
+  bidding: { dealer: Position; bids: string[] } | null;
+  commentary: string;
+}
+
+let smazzatePromise: Promise<Smazzata[]> | null = null;
+
+async function loadSmazzate(): Promise<Smazzata[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("smazzate")
+    .select(
+      "id, lesson_id, board, title, contract, declarer, vulnerability, opening_lead, hands, bidding, commentary",
+    )
+    .order("lesson_id", { ascending: true })
+    .order("board", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load smazzate: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawSmazzata[];
+  return rows.map<Smazzata>((r) => ({
+    id: r.id,
+    lesson: r.lesson_id,
+    board: r.board,
+    title: r.title,
+    contract: r.contract,
+    declarer: r.declarer,
+    openingLead: r.opening_lead,
+    vulnerability: r.vulnerability,
+    hands: r.hands,
+    bidding: r.bidding ?? undefined,
+    commentary: r.commentary ?? "",
+  }));
+}
+
+/**
+ * Returns the full set of smazzate (validated + non-validated), cached
+ * for the lifetime of the session/process. Same retry-on-error pattern
+ * as `getCourses()`.
+ */
+export function getAllSmazzate(): Promise<Smazzata[]> {
+  if (!smazzatePromise) {
+    smazzatePromise = loadSmazzate().catch((err) => {
+      smazzatePromise = null;
+      throw err;
+    });
+  }
+  return smazzatePromise;
+}
+
+/** Forces the next `getAllSmazzate()` call to re-fetch from Supabase. */
+export function resetSmazzateCache(): void {
+  smazzatePromise = null;
+}
+
+export async function getSmazzataById(id: string): Promise<Smazzata | undefined> {
+  return (await getAllSmazzate()).find((s) => s.id === id);
+}
+
+export async function getSmazzateByLesson(
+  lessonId: number,
+  courseId?: CourseId,
+): Promise<Smazzata[]> {
+  let pool = await getAllSmazzate();
+  if (courseId) {
+    const ids = new Set(await getLessonIdsForCourse(courseId));
+    pool = pool.filter((s) => ids.has(s.lesson));
+  }
+  return pool.filter((s) => s.lesson === lessonId);
+}
+
+export async function getSmazzateByCourse(
+  courseId: CourseId,
+): Promise<Smazzata[]> {
+  const ids = new Set(await getLessonIdsForCourse(courseId));
+  return (await getAllSmazzate()).filter((s) => ids.has(s.lesson));
+}
+
+// ─── Smazzate pure utilities (no DB) ─────────────────────────────────────
+//
+// Reused from `@/data/all-smazzate.ts` and frozen here as the canonical
+// implementation. The seeder persists ALL smazzate (including malformed
+// ones) — these utilities filter / patch them at consumption time.
+
+const POSITIONS: Position[] = ["north", "south", "east", "west"];
+const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
+
+function nextPos(p: Position): Position {
+  const order: Position[] = ["north", "east", "south", "west"];
+  return order[(order.indexOf(p) + 1) % 4];
+}
+
+function declarerFromBidding(bidding: { dealer: Position; bids: string[] }): Position | null {
+  const order: Position[] = ["south", "west", "north", "east"];
+  const dealerIdx = order.indexOf(bidding.dealer);
+  if (dealerIdx === -1) return null;
+
+  let lastBidIdx = -1;
+  for (let i = bidding.bids.length - 1; i >= 0; i--) {
+    const b = bidding.bids[i];
+    if (b !== "P" && b !== "Dbl" && b !== "Rdbl" && b !== "X" && b !== "XX") {
+      lastBidIdx = i;
+      break;
+    }
+  }
+  if (lastBidIdx === -1) return null;
+
+  const lastBidderPos = order[(dealerIdx + lastBidIdx) % 4];
+  const winningSide = lastBidderPos === "north" || lastBidderPos === "south" ? "ns" : "ew";
+  const denom = bidding.bids[lastBidIdx].replace(/[0-9]/g, "").toUpperCase();
+
+  for (let i = 0; i < bidding.bids.length; i++) {
+    const pos = order[(dealerIdx + i) % 4];
+    const bid = bidding.bids[i];
+    if (bid === "P" || bid === "Dbl" || bid === "Rdbl" || bid === "X" || bid === "XX") continue;
+    const bidDenom = bid.replace(/[0-9]/g, "").toUpperCase();
+    const bidSide = pos === "north" || pos === "south" ? "ns" : "ew";
+    if (bidSide === winningSide && bidDenom === denom) return pos;
+  }
+  return lastBidderPos;
+}
+
+function pickOpeningLead(hand: Card[], trumpSuit: string | null): Card {
+  const suits = ["spade", "heart", "diamond", "club"] as const;
+  const nonTrump = suits.filter((s) => s !== trumpSuit);
+  const preferred = [...nonTrump, ...(trumpSuit ? [trumpSuit as typeof suits[number]] : [])];
+
+  for (const suit of preferred) {
+    const cards = hand
+      .filter((c) => c.suit === suit)
+      .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
+    if (cards.length >= 4) return cards[3];
+    if (cards.length >= 2) return cards[0];
+  }
+  return hand[0];
+}
+
+function contractTrumpSuit(contract: string): string | null {
+  const normalized = contract
+    .replace(/♠/g, "S")
+    .replace(/♥/g, "H")
+    .replace(/♦/g, "D")
+    .replace(/♣/g, "C");
+  const m = normalized.match(/\d(NT|S|H|D|C)/i);
+  if (!m) return null;
+  const s = m[1].toUpperCase();
+  if (s === "S") return "spade";
+  if (s === "H") return "heart";
+  if (s === "D") return "diamond";
+  if (s === "C") return "club";
+  return null;
+}
+
+function fixDeclarerFromBidding(s: Smazzata): Smazzata {
+  if (!s.bidding) return s;
+  const correct = declarerFromBidding(s.bidding);
+  if (!correct || correct === s.declarer) return s;
+
+  const newLeader = nextPos(correct);
+  const leaderHand = s.hands[newLeader];
+  const hasLead = leaderHand.some(
+    (c) => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank,
+  );
+
+  return {
+    ...s,
+    declarer: correct,
+    openingLead: hasLead
+      ? s.openingLead
+      : pickOpeningLead(leaderHand, contractTrumpSuit(s.contract)),
+  };
+}
+
+/**
+ * Apply `fixDeclarerFromBidding` and filter out smazzate with data
+ * issues: hand sizes ≠ 13, duplicated cards, opening lead missing from
+ * the leader's hand.
+ */
+export function validateSmazzate(hands: Smazzata[]): Smazzata[] {
+  return hands.map(fixDeclarerFromBidding).filter((s) => {
+    for (const pos of POSITIONS) {
+      if (s.hands[pos].length !== 13) return false;
+    }
+    const seen = new Set<string>();
+    for (const pos of POSITIONS) {
+      for (const c of s.hands[pos]) {
+        const key = `${c.suit}-${c.rank}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+      }
+    }
+    const leader = nextPos(s.declarer);
+    const hasLead = s.hands[leader].some(
+      (c) => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank,
+    );
+    return hasLead;
+  });
+}
+
+/** HCP plausibility heuristic — used by the random-pool playable filter. */
+const HCP_TABLE: Record<string, number> = { A: 4, K: 3, Q: 2, J: 1 };
+
+function handHcp(hand: Card[]): number {
+  let s = 0;
+  for (const c of hand) s += HCP_TABLE[c.rank] ?? 0;
+  return s;
+}
+
+function minHcpForContract(contract: string): number {
+  const normalized = contract
+    .replace(/♠/g, "S")
+    .replace(/♥/g, "H")
+    .replace(/♦/g, "D")
+    .replace(/♣/g, "C");
+  const isDoubled = /[XR]+$/.test(normalized);
+  const stripped = normalized.replace(/[XR]+$/g, "");
+  const m = stripped.match(/^(\d)(NT|S|H|D|C)$/i);
+  if (!m) return 0;
+  const lvl = parseInt(m[1], 10);
+  const strain = m[2].toUpperCase();
+  const isNT = strain === "NT";
+  const isMaj = strain === "S" || strain === "H";
+  let base: number;
+  if (lvl <= 2) base = 12;
+  else if (lvl === 3 && !isNT) base = 16;
+  else if (lvl === 3 && isNT) base = 19;
+  else if (lvl === 4 && isMaj) base = 18;
+  else if (lvl === 4 && !isMaj && !isNT) base = 17;
+  else if (lvl === 5) base = 21;
+  else if (lvl === 6) base = 25;
+  else if (lvl === 7) base = 27;
+  else return 0;
+  return isDoubled ? Math.max(0, base - 5) : base;
+}
+
+export function isPlausibleSmazzata(s: Smazzata): boolean {
+  const isNS = s.declarer === "north" || s.declarer === "south";
+  const declarerHcp = isNS
+    ? handHcp(s.hands.north) + handHcp(s.hands.south)
+    : handHcp(s.hands.east) + handHcp(s.hands.west);
+  const oppHcp = 40 - declarerHcp;
+  if (declarerHcp + 10 < oppHcp) return false;
+  if (declarerHcp < minHcpForContract(s.contract)) return false;
+  return true;
+}
+
+/** Filtered subset used by random-draw features (sfida del giorno, torneo). */
+export async function getPlayableSmazzate(): Promise<Smazzata[]> {
+  const all = await getAllSmazzate();
+  return validateSmazzate(all).filter(isPlausibleSmazzata);
+}
+
+// ─── Lesson title fallbacks (used when navigating a smazzata) ───────────
+
+/**
+ * Legacy Fiori lesson title overrides, kept as a last-resort fallback for
+ * smazzate that point to a lesson_id not currently in the catalog.
+ */
+export const lessonTitles: Record<number, string> = {
+  1: "Vincenti e affrancabili",
+  2: "Il punto di vista dei difensori",
+  3: "Affrancamenti di lunga e di posizione",
+  4: "Il piano di gioco a senz'atout",
+  5: "Il gioco con l'atout",
+  6: "Il piano di gioco con l'atout",
+  7: "La valutazione della mano",
+  8: "L'apertura e la risposta",
+  9: "La ridichiara dell'apertore",
+  10: "Le risposte a 1SA",
+  11: "L'intervento",
+  12: "Sviluppi dopo l'intervento",
+};
+
+/** Async title resolver: catalog → static fallback → "Lezione N". */
+export async function getLessonTitle(lessonId: number): Promise<string> {
+  const lesson = await getLessonById(lessonId);
+  return lesson?.title ?? lessonTitles[lessonId] ?? `Lezione ${lessonId}`;
 }

@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { usePlayableSmazzate } from "@/store/use-smazzate-store";
+import type { Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import {
   getCurrentWeeklyChallenge,
@@ -40,12 +41,11 @@ import { ArrowLeft, Trophy, Zap, Clock, Play, CheckCircle2, Target } from "lucid
 const HANDS_PER_WEEK = 5;
 
 /** Deterministic: pick 5 hands for this week based on ISO week */
-function getWeeklySmazzate(): Smazzata[] {
+function getWeeklySmazzate(pool: Smazzata[]): Smazzata[] {
+  if (pool.length === 0) return [];
   const now = Date.now();
   const weeksSinceEpoch = Math.floor(now / (7 * 24 * 3600 * 1000));
-  // Use a simple hash to scatter through the pool
   const result: Smazzata[] = [];
-  const pool = playableSmazzate;
   for (let i = 0; i < HANDS_PER_WEEK; i++) {
     const hash = ((weeksSinceEpoch * 31 + i * 7919) % pool.length + pool.length) % pool.length;
     result.push(pool[hash]);
@@ -60,7 +60,8 @@ export default function SfidaSettimanale() {
   const [progress, setProgress] = useState(() => getWeeklyChallengeProgress());
 
   const challenge = getCurrentWeeklyChallenge();
-  const weeklyHands = getWeeklySmazzate();
+  const playable = usePlayableSmazzate();
+  const weeklyHands = getWeeklySmazzate(playable);
 
   useEffect(() => {
     setMounted(true);

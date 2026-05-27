@@ -9,6 +9,7 @@ import {
   type CourseId,
 } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
+import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
@@ -37,6 +38,7 @@ const courseColors: Record<CourseId, { active: string; inactive: string; border:
 export default function LezioniPage() {
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
+  const { smazzate: allSmazzate } = useSmazzate();
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
   const [onboarded, setOnboarded] = useState(false);
 
@@ -473,14 +475,17 @@ export default function LezioniPage() {
                                     >
                                       Lez. {lessonNumber}
                                     </Badge>
-                                    {lesson.smazzateIds.length > 0 && (
-                                      <span
-                                        className="text-[10px] font-bold text-amber-600"
-                                        title={`${lesson.smazzateIds.length} mani pratiche disponibili`}
-                                      >
-                                        {lesson.smazzateIds.length} <Spade className="w-3 h-3 inline ml-0.5" />
-                                      </span>
-                                    )}
+                                    {(() => {
+                                      const smazzateCount = allSmazzate.filter((s) => s.lesson === lesson.id).length;
+                                      return smazzateCount > 0 ? (
+                                        <span
+                                          className="text-[10px] font-bold text-amber-600"
+                                          title={`${smazzateCount} mani pratiche disponibili`}
+                                        >
+                                          {smazzateCount} <Spade className="w-3 h-3 inline ml-0.5" />
+                                        </span>
+                                      ) : null;
+                                    })()}
                                   </div>
                                   <h3 className={`font-bold text-[15px] mt-0.5 truncate ${
                                     isCurrent ? "text-gray-900 dark:text-gray-100" : isComplete ? "text-gray-700 dark:text-gray-300" : "text-gray-500 dark:text-gray-400"

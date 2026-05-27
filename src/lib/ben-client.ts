@@ -4,7 +4,7 @@
  */
 
 import type { Card, Position, GameState } from "./bridge-engine";
-import type { Vulnerability, BiddingData } from "@/data/smazzate";
+import type { Vulnerability, BiddingData } from "@/lib/catalog";
 import {
   handToPBN,
   positionToBEN,

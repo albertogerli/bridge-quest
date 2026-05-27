@@ -1,20 +1,16 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import {
-  allSmazzate,
-  getLessonTitle,
-  getSmazzateByLesson,
-  getSmazzateByCourse,
-  type Smazzata,
-} from "@/data/all-smazzate";
+import { useSmazzate } from "@/store/use-smazzate-store";
+import type { Smazzata, CourseId } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
+import { lessonTitles as fallbackLessonTitles } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
@@ -45,12 +41,22 @@ export default function SmazzataBrowserPage() {
 function SmazzataBrowserContent() {
   const profile = useProfile();
   const { courses } = useCatalog();
+  const { smazzate: allSmazzate } = useSmazzate();
   const searchParams = useSearchParams();
   const lessonParam = searchParams.get("lesson");
   const courseParam = searchParams.get("course");
   const randomParam = searchParams.get("random");
-  const courseSmazzate = courseParam ? getSmazzateByCourse(courseParam) : allSmazzate;
-  const courseLessonIds = [...new Set(courseSmazzate.map((s) => s.lesson))].sort((a, b) => a - b);
+
+  // Derive course lesson IDs from the live catalog (was getCourseById().lessons)
+  const courseLessonIds = useMemo<number[]>(() => {
+    if (courseParam) {
+      const course = courses.find((c) => c.id === (courseParam as CourseId));
+      const ids = new Set(course?.lessons.map((l) => l.id) ?? []);
+      return [...new Set(allSmazzate.filter((s) => ids.has(s.lesson)).map((s) => s.lesson))].sort((a, b) => a - b);
+    }
+    return [...new Set(allSmazzate.map((s) => s.lesson))].sort((a, b) => a - b);
+  }, [courses, allSmazzate, courseParam]);
+
   const [selectedLesson, setSelectedLesson] = useState<number>(
     lessonParam ? parseInt(lessonParam) : (courseLessonIds[0] ?? 1)
   );
@@ -81,13 +87,26 @@ function SmazzataBrowserContent() {
         setIsPlaying(true);
       }
     }
-  }, [randomParam]);
+  }, [randomParam, allSmazzate]);
 
-  const lessonSmazzate = getSmazzateByLesson(selectedLesson, courseParam || undefined);
+  const lessonSmazzate = useMemo(
+    () => allSmazzate.filter((s) => s.lesson === selectedLesson),
+    [allSmazzate, selectedLesson],
+  );
+
+  // Title resolver: catalog → fallback hardcoded → "Lezione N"
+  function titleFor(lessonId: number): string {
+    for (const c of courses) {
+      const l = c.lessons.find((l) => l.id === lessonId);
+      if (l) return l.title;
+    }
+    return fallbackLessonTitles[lessonId] ?? `Lezione ${lessonId}`;
+  }
+
   const lessons = courseLessonIds.map((id) => ({
     id,
-    title: getLessonTitle(id),
-    count: getSmazzateByLesson(id, courseParam || undefined).length,
+    title: titleFor(id),
+    count: allSmazzate.filter((s) => s.lesson === id).length,
   }));
   const selectedLessonNumber = getLessonDisplayNumber(selectedLesson);
 
@@ -120,7 +139,7 @@ function SmazzataBrowserContent() {
             Smazzate del Corso
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            {courseSmazzate.length} mani pratiche dalle lezioni FIGB
+            {allSmazzate.filter((s) => courseLessonIds.includes(s.lesson)).length} mani pratiche dalle lezioni FIGB
           </p>
         </motion.div>
 
@@ -185,7 +204,7 @@ function SmazzataBrowserContent() {
             Lezione {selectedLessonNumber}
           </h2>
           <p className="text-sm text-gray-500">
-            {getLessonTitle(selectedLesson)} · {lessonSmazzate.length} mani
+            {titleFor(selectedLesson)} · {lessonSmazzate.length} mani
           </p>
         </motion.div>
 
@@ -295,6 +314,14 @@ function PlayingView({
 }) {
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
+  const { courses } = useCatalog();
+  const lessonTitle = (() => {
+    for (const c of courses) {
+      const l = c.lessons.find((l) => l.id === smazzata.lesson);
+      if (l) return l.title;
+    }
+    return fallbackLessonTitles[smazzata.lesson] ?? `Lezione ${smazzata.lesson}`;
+  })();
   const [xpSaved, setXpSaved] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   const [ddsResult, setDdsResult] = useState<DDSAnalysis | null>(null);
@@ -885,7 +912,7 @@ function PlayingView({
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Lezione</span>
-                    <span className="font-bold text-gray-900">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {getLessonTitle(smazzata.lesson)}</span>
+                    <span className="font-bold text-gray-900">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {lessonTitle}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Vulnerabilità</span>
