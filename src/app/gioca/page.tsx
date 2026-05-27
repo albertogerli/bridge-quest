@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { allSmazzate, fioriSmazzate, playableSmazzate } from "@/data/all-smazzate";
-import { quadriSmazzate } from "@/data/quadri-smazzate";
-import { cuoriGiocoSmazzate } from "@/data/cuori-gioco-smazzate";
+import { useSmazzate } from "@/store/use-smazzate-store";
+import { getCourseIdFromLessonId } from "@/data/lesson-meta";
 import { useProfile } from "@/hooks/use-profile";
 import {
   Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
@@ -23,24 +22,43 @@ export default function GiocaPage() {
   const [tournamentDone, setTournamentDone] = useState(false);
   const [onboarded, setOnboarded] = useState(false);
   const [randomIdx, setRandomIdx] = useState(0);
+  const { smazzate: allSmazzate, playable: playableSmazzate, isLoaded } = useSmazzate();
+
+  // Per-course splits, recomputed only when catalog changes.
+  const { fioriSmazzate, quadriSmazzate, cuoriGiocoSmazzate } = useMemo(() => {
+    const byCourse: Record<string, typeof allSmazzate> = {
+      fiori: [], quadri: [], "cuori-gioco": [], "cuori-licita": [],
+    };
+    for (const s of allSmazzate) {
+      const cid = getCourseIdFromLessonId(s.lesson);
+      if (cid) byCourse[cid].push(s);
+    }
+    return {
+      fioriSmazzate: byCourse.fiori,
+      quadriSmazzate: byCourse.quadri,
+      cuoriGiocoSmazzate: byCourse["cuori-gioco"],
+    };
+  }, [allSmazzate]);
 
   useEffect(() => {
+    if (!isLoaded) return;
     try {
       const today = new Date().toISOString().slice(0, 10);
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
-      // Pratica Libera: pesca da playableSmazzate per evitare smazzate con HCP incoerenti.
-      // Salviamo l'INDICE in playableSmazzate ma il routing usa allSmazzate, quindi
-      // troviamo l'indice corrispondente in allSmazzate.
-      const picked = playableSmazzate[Math.floor(Math.random() * playableSmazzate.length)];
-      const idxInAll = allSmazzate.findIndex((s) => s.id === picked.id);
-      setRandomIdx(idxInAll >= 0 ? idxInAll : 0);
+      // Pratica Libera: pesca da playable per evitare smazzate con HCP incoerenti.
+      // Salviamo l'INDICE in playable, ma il routing usa allSmazzate: convertiamo.
+      if (playableSmazzate.length > 0) {
+        const picked = playableSmazzate[Math.floor(Math.random() * playableSmazzate.length)];
+        const idxInAll = allSmazzate.findIndex((s) => s.id === picked.id);
+        setRandomIdx(idxInAll >= 0 ? idxInAll : 0);
+      }
       // Check tournament completion for current week
       const EPOCH_START = new Date("2024-01-01T00:00:00Z").getTime();
       const weekNum = Math.floor((Date.now() - EPOCH_START) / (7 * 24 * 60 * 60 * 1000));
       setTournamentDone(!!localStorage.getItem(`bq_tournament_week_${weekNum}`));
       setOnboarded(localStorage.getItem("bq_onboarded") === "1");
     } catch {}
-  }, []);
+  }, [isLoaded, allSmazzate, playableSmazzate]);
 
   return (
     <div className="pt-6 px-5 pb-24">

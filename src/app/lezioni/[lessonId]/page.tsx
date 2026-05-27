@@ -4,6 +4,7 @@ import { use, useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { useCatalog } from "@/store/use-catalog-store";
+import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
@@ -19,6 +20,7 @@ export default function LessonDetailPage({
   const lessonIdNum = parseInt(lessonId);
 
   const { courses, isLoaded: catalogLoaded } = useCatalog();
+  const { smazzate: allSmazzate } = useSmazzate();
   const completedMap = useGameStore((s) => s.completedModules);
   const [draftsMap, setDraftsMap] = useState<Record<string, boolean>>({});
   const [infographicLoaded, setInfographicLoaded] = useState(false);
@@ -319,7 +321,8 @@ export default function LessonDetailPage({
                 ) : (
                   <Link
                     href={
-                      module.type === "practice" && lesson.smazzateIds.length > 0
+                      module.type === "practice" &&
+                      allSmazzate.some((s) => s.lesson === lesson.id)
                         ? `/gioca/smazzata?lesson=${lesson.id}${course ? `&course=${course.id}` : ""}`
                         : `/lezioni/${lesson.id}/${module.id}`
                     }

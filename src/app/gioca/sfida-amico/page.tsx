@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { playableSmazzate, getSmazzataById, type Smazzata } from "@/data/all-smazzate";
+import { usePlayableSmazzate, useSmazzateStore } from "@/store/use-smazzate-store";
+import type { Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
@@ -87,6 +88,7 @@ function SfidaAmicoContent() {
   const challengeId = searchParams.get("id");
   const isMobile = useMobile();
   const profile = useProfile();
+  const playable = usePlayableSmazzate();
   const xpSaved = useRef(false);
 
   // Decode incoming challenge (if any)
@@ -103,10 +105,11 @@ function SfidaAmicoContent() {
   const [challengerTricks, setChallengerTricks] = useState<number | null>(null);
   const [challengerNeeded, setChallengerNeeded] = useState<number | null>(null);
 
-  // If we have an incoming challenge, set it up
+  // If we have an incoming challenge, set it up — but wait for smazzate to load.
   useEffect(() => {
     if (incomingChallenge) {
-      const found = getSmazzataById(incomingChallenge.s);
+      const all = useSmazzateStore.getState().smazzate;
+      const found = all.find((s) => s.id === incomingChallenge.s);
       if (found) {
         setSmazzata(found);
         setChallengerTricks(incomingChallenge.t);
@@ -114,18 +117,19 @@ function SfidaAmicoContent() {
         setMode("playing-challenge");
       }
     }
-  }, [incomingChallenge]);
+  }, [incomingChallenge, playable]);
 
   // Start creating a challenge: pick random hand
   const startCreate = useCallback(() => {
-    const randomIdx = Math.floor(Math.random() * playableSmazzate.length);
-    setSmazzata(playableSmazzate[randomIdx]);
+    if (playable.length === 0) return;
+    const randomIdx = Math.floor(Math.random() * playable.length);
+    setSmazzata(playable[randomIdx]);
     setMode("creating");
     setChallengeCode(null);
     setChallengerTricks(null);
     setChallengerNeeded(null);
     xpSaved.current = false;
-  }, []);
+  }, [playable]);
 
   if (!smazzata) {
     // Show landing / choice screen
@@ -886,6 +890,7 @@ function ActiveChallenge({
 
 function PastChallenges() {
   const [challenges, setChallenges] = useState<SavedChallenge[]>([]);
+  const allSmazzate = useSmazzateStore((s) => s.smazzate);
 
   useEffect(() => {
     setChallenges(getSavedChallenges());
@@ -909,7 +914,7 @@ function PastChallenges() {
         </div>
         <div className="space-y-2">
           {challenges.slice(0, 5).map((ch, i) => {
-            const smz = getSmazzataById(ch.smazzataId);
+            const smz = allSmazzate.find((s) => s.id === ch.smazzataId);
             const result = ch.myTricks - ch.tricksNeeded;
             const date = new Date(ch.createdAt);
             const dateStr = `${date.getDate()}/${date.getMonth() + 1}`;

@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { usePlayableSmazzate } from "@/store/use-smazzate-store";
+import type { Smazzata } from "@/lib/catalog";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import {
@@ -43,15 +44,16 @@ function getYesterday(): string {
 }
 
 /** Deterministic hash: same date -> same hand for all users */
-function dateToIndex(dateStr: string): number {
+function dateToIndex(dateStr: string, poolSize: number): number {
   const hash = dateStr
     .split("-")
     .reduce((acc, n) => acc * 31 + parseInt(n), 0);
-  return Math.abs(hash) % playableSmazzate.length;
+  return Math.abs(hash) % poolSize;
 }
 
-function getSmazzataForDate(dateStr: string): Smazzata {
-  return playableSmazzate[dateToIndex(dateStr)];
+function getSmazzataForDate(dateStr: string, pool: Smazzata[]): Smazzata | null {
+  if (pool.length === 0) return null;
+  return pool[dateToIndex(dateStr, pool.length)];
 }
 
 // ─── localStorage Helpers ────────────────────────────────────────────────────
@@ -243,9 +245,9 @@ export default function ManoDelGiornoPage() {
   const { saveGameResult } = useGameResults();
   const today = getToday();
   const yesterday = getYesterday();
-
-  const todayHand = getSmazzataForDate(today);
-  const yesterdayHand = getSmazzataForDate(yesterday);
+  const playable = usePlayableSmazzate();
+  const todayHand = getSmazzataForDate(today, playable);
+  const yesterdayHand = getSmazzataForDate(yesterday, playable);
 
   const [todayResult, setTodayResult] = useState<DailyResult | null>(null);
   const [streak, setStreak] = useState(0);
@@ -288,7 +290,7 @@ export default function ManoDelGiornoPage() {
         saveGameResult({
           gameType: "mano-del-giorno",
           score: xpEarned,
-          details: { tricks, result: resultDelta, made, stars, date: today, contract: todayHand.contract },
+          details: { tricks, result: resultDelta, made, stars, date: today, contract: todayHand?.contract ?? "" },
         });
       }
 
@@ -298,6 +300,15 @@ export default function ManoDelGiornoPage() {
     },
     [today, todayResult]
   );
+
+  // Need a loaded smazzate pool for everything below.
+  if (!todayHand || !yesterdayHand) {
+    return (
+      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento mano del giorno">
+        Caricamento mano del giorno…
+      </div>
+    );
+  }
 
   // ── Playing view ──
   if (isPlaying) {

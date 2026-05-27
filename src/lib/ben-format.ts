@@ -4,7 +4,7 @@
  */
 
 import type { Card, Suit, Rank, Position, GameState } from "./bridge-engine";
-import type { Vulnerability, BiddingData } from "@/data/smazzate";
+import type { Vulnerability, BiddingData } from "@/lib/catalog";
 
 // --- Suit mapping ---
 

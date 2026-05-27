@@ -29,6 +29,17 @@ import { createClient } from "@supabase/supabase-js";
 import { courses } from "../src/data/courses.ts";
 import type { Lesson, LessonModule, World } from "../src/data/courses.ts";
 
+// Smazzate sources — each file is loaded raw (NO `validateSmazzate`) so we
+// also persist the malformed 12/14-card hands. The FIGB review tooling will
+// surface them in DB just like every other row; future correction passes
+// will UPDATE them in place.
+import { smazzate as smazzate1to4 } from "../src/data/smazzate.ts";
+import { smazzate5to8 } from "../src/data/smazzate-5-8.ts";
+import { smazzate9to12 } from "../src/data/smazzate-9-12.ts";
+import { quadriSmazzate } from "../src/data/quadri-smazzate.ts";
+import { cuoriGiocoSmazzate } from "../src/data/cuori-gioco-smazzate.ts";
+import { cuoriLicitaSmazzate } from "../src/data/cuori-licita-smazzate.ts";
+
 // ─── Env / client ────────────────────────────────────────────────────────
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -127,7 +138,6 @@ async function seedLessons() {
     subtitle: string;
     icon: string;
     position: number;
-    smazzate_ids: string[];
   }> = [];
 
   for (const course of courses) {
@@ -140,7 +150,8 @@ async function seedLessons() {
           subtitle: lesson.subtitle,
           icon: lesson.icon,
           position: i,
-          smazzate_ids: lesson.smazzateIds ?? [],
+          // smazzate_ids removed in Phase 4.1.1 — the relationship is now
+          // owned by `smazzate.lesson_id` (FK), no need for a reverse array.
         });
       });
     }
@@ -202,6 +213,152 @@ async function seedModules() {
   console.log(`✓ lesson_modules   ${total} rows upserted (${Math.ceil(rows.length / CHUNK)} batches)`);
 }
 
+// ─── Smazzate helpers (Phase 4.1.2) ──────────────────────────────────────
+
+/**
+ * Normalise a bid token to its canonical ASCII form:
+ *   - unicode suit symbols ♠♥♦♣ → S H D C
+ *   - alternative double notations (Dbl, Double, Doppio) → X
+ *   - alternative redouble notations (Rdbl, Redouble, Surcontre) → XX
+ *   - alternative pass notations (Pass) → P
+ *   - whitespace trimmed
+ *
+ * `1NT` / `1S` / `1H` etc. stay unchanged. After this pass every bid token
+ * across all 5 source files is in one consistent shape, which makes the
+ * `bidding` GIN index actually useful for queries like
+ *   `bidding->'bids' @> '["1S"]'::jsonb`.
+ */
+function normalizeBid(raw: unknown): string {
+  if (typeof raw !== "string") return String(raw ?? "");
+  let bid = raw.trim();
+  bid = bid
+    .replace(/♠/g, "S")
+    .replace(/♥/g, "H")
+    .replace(/♦/g, "D")
+    .replace(/♣/g, "C");
+  const upper = bid.toUpperCase();
+  if (upper === "PASS") return "P";
+  if (upper === "DBL" || upper === "DOUBLE" || upper === "DOPPIO") return "X";
+  if (upper === "RDBL" || upper === "REDBL" || upper === "REDOUBLE" || upper === "SURCONTRE") return "XX";
+  return bid;
+}
+
+/** Normalise vulnerability legacy "all" alias to "both". */
+function normalizeVulnerability(v: unknown): "none" | "ns" | "ew" | "both" {
+  const s = typeof v === "string" ? v.toLowerCase().trim() : "";
+  if (s === "all" || s === "both") return "both";
+  if (s === "ns" || s === "ew" || s === "none") return s;
+  return "none";
+}
+
+/**
+ * Permissive shape across the 5 source files (some use `BridgeHand` from
+ * smazzate-5-8, some use `Smazzata` from smazzate.ts, all structurally
+ * equivalent except for the `vulnerability` "all" alias).
+ */
+interface AnySmazzata {
+  id: string;
+  lesson: number;
+  board: number;
+  title: string;
+  contract: string;
+  declarer: string;
+  openingLead: { suit: string; rank: string };
+  vulnerability: string;
+  hands: {
+    north: Array<{ suit: string; rank: string }>;
+    south: Array<{ suit: string; rank: string }>;
+    east: Array<{ suit: string; rank: string }>;
+    west: Array<{ suit: string; rank: string }>;
+  };
+  bidding?: { dealer: string; bids: string[] };
+  commentary: string;
+}
+
+/**
+ * Cuori-gioco smazzate use the global lesson IDs natively (100…). Fiori
+ * smazzate use the Fiori IDs natively (1…12). Quadri smazzate are already
+ * mapped to global IDs (51…) by `quadriSmazzate`'s own .map() on export.
+ * So `smazzata.lesson` is already a global lesson_id for every source.
+ *
+ * This helper just exists to make the assumption explicit and to fail loud
+ * if a future source breaks it.
+ */
+function toGlobalLessonId(smazzata: AnySmazzata): number {
+  return smazzata.lesson;
+}
+
+async function seedSmazzate() {
+  // Collect all raw sources. The TS types differ slightly (BridgeHand vs
+  // Smazzata) but the runtime shapes are compatible — cast through unknown
+  // for the few callers that have an "all" vulnerability alias.
+  const sources: AnySmazzata[] = [
+    ...(smazzate1to4 as unknown as AnySmazzata[]),
+    ...(smazzate5to8 as unknown as AnySmazzata[]),
+    ...(smazzate9to12 as unknown as AnySmazzata[]),
+    ...(quadriSmazzate as unknown as AnySmazzata[]),
+    ...(cuoriGiocoSmazzate as unknown as AnySmazzata[]),
+    ...(cuoriLicitaSmazzate as unknown as AnySmazzata[]),
+  ];
+
+  // Deduplicate by id — if the same id appears in multiple files, the last
+  // occurrence wins. (Currently there are no overlaps but seed-time
+  // duplicate detection guards against future regressions.)
+  const byId = new Map<string, AnySmazzata>();
+  for (const s of sources) byId.set(s.id, s);
+
+  const rows = Array.from(byId.values()).map((s) => ({
+    id: s.id,
+    lesson_id: toGlobalLessonId(s),
+    board: s.board,
+    title: s.title,
+    contract: s.contract,
+    declarer: s.declarer,
+    vulnerability: normalizeVulnerability(s.vulnerability),
+    opening_lead: s.openingLead,
+    hands: s.hands,
+    bidding: s.bidding
+      ? {
+          dealer: s.bidding.dealer,
+          bids: s.bidding.bids.map(normalizeBid),
+        }
+      : null,
+    commentary: s.commentary ?? "",
+  }));
+
+  // Sanity counters logged before the network call so we spot drift early.
+  const withBidding = rows.filter((r) => r.bidding).length;
+  const malformed = rows.filter((r) => {
+    const h = r.hands as unknown as Record<string, unknown[]>;
+    return (
+      h.north?.length !== 13 ||
+      h.south?.length !== 13 ||
+      h.east?.length !== 13 ||
+      h.west?.length !== 13
+    );
+  }).length;
+  console.log(
+    `  · ${rows.length} smazzate (${withBidding} con bidding, ${malformed} con hand sizes ≠ 13)`,
+  );
+
+  // Smazzate carry the full 4-hand JSONB plus auction + commentary, so the
+  // average row is ~3–5 KB. Same 200/batch ceiling we use for lesson_modules.
+  const CHUNK = 200;
+  let total = 0;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const slice = rows.slice(i, i + CHUNK);
+    const { error } = await supabase
+      .from("smazzate")
+      .upsert(slice, { onConflict: "id" });
+    if (error) {
+      console.error(`✗ smazzate batch ${i / CHUNK + 1}: ${error.message}`);
+      throw new Error(error.message);
+    }
+    total += slice.length;
+  }
+  console.log(`✓ smazzate         ${total} rows upserted (${Math.ceil(rows.length / CHUNK)} batches)`);
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -212,6 +369,7 @@ async function main() {
   await seedWorlds();
   await seedLessons();
   await seedModules();
+  await seedSmazzate();
 
   const dt = ((Date.now() - t0) / 1000).toFixed(2);
   console.log(`\nDone in ${dt}s. Catalog tables are in sync with src/data/.`);

@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { playableSmazzate, type Smazzata } from "@/data/all-smazzate";
+import { usePlayableSmazzate } from "@/store/use-smazzate-store";
+import type { Smazzata } from "@/lib/catalog";
 import type { Position } from "@/lib/bridge-engine";
 import { useGameStore } from "@/store/use-game-store";
 import {
@@ -55,28 +56,27 @@ function formatDateShort(d: Date): string {
  * Deterministic selection of tournament hands using the week number as seed.
  * Same week = same 5 hands for all users.
  */
-function getTournamentHands(weekNum: number, count: number): Smazzata[] {
-  if (playableSmazzate.length === 0) return [];
-  const ids = playableSmazzate.map((_, i) => i);
+function getTournamentHands(pool: Smazzata[], weekNum: number, count: number): Smazzata[] {
+  if (pool.length === 0) return [];
   const selected: number[] = [];
   const used = new Set<number>();
   let seed = weekNum * 2654435761; // large prime for spreading
 
-  for (let i = 0; i < count && i < ids.length; i++) {
+  for (let i = 0; i < count && i < pool.length; i++) {
     seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-    let idx = seed % ids.length;
+    let idx = seed % pool.length;
     // Avoid duplicates
     let attempts = 0;
-    while (used.has(idx) && attempts < ids.length) {
+    while (used.has(idx) && attempts < pool.length) {
       seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      idx = seed % ids.length;
+      idx = seed % pool.length;
       attempts++;
     }
     used.add(idx);
     selected.push(idx);
   }
 
-  return selected.map((i) => playableSmazzate[i]);
+  return selected.map((i) => pool[i]);
 }
 
 // ─── localStorage Helpers ───────────────────────────────────────────────────
@@ -228,9 +228,10 @@ export default function TorneoSettimanale() {
   const weekNum = getCurrentWeekNum();
   const { start, end } = getWeekDates(weekNum);
   const countdown = useWeekCountdown(weekNum);
+  const playable = usePlayableSmazzate();
   const tournamentHands = useMemo(
-    () => getTournamentHands(weekNum, TOURNAMENT_HAND_COUNT),
-    [weekNum]
+    () => getTournamentHands(playable, weekNum, TOURNAMENT_HAND_COUNT),
+    [playable, weekNum]
   );
 
   const [existingResult, setExistingResult] =
