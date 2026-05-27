@@ -3,7 +3,7 @@
 import { use, useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
-import { getCourseForLesson, getLessonById } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
@@ -16,21 +16,18 @@ export default function LessonDetailPage({
   params: Promise<{ lessonId: string }>;
 }) {
   const { lessonId } = use(params);
-  const lesson = getLessonById(parseInt(lessonId));
+  const lessonIdNum = parseInt(lessonId);
 
-  if (!lesson) {
-    return (
-      <div className="pt-10 px-5 text-center">
-        <p className="text-gray-500">Lezione non trovata</p>
-        <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
-          Torna alle lezioni
-        </Link>
-      </div>
-    );
-  }
-
+  const { courses, isLoaded: catalogLoaded } = useCatalog();
   const completedMap = useGameStore((s) => s.completedModules);
   const [draftsMap, setDraftsMap] = useState<Record<string, boolean>>({});
+  const [infographicLoaded, setInfographicLoaded] = useState(false);
+  const profileConfig = useProfile();
+
+  const lesson = courses
+    .flatMap((c) => c.lessons)
+    .find((l) => l.id === lessonIdNum);
+  const course = courses.find((c) => c.lessons.some((l) => l.id === lessonIdNum));
 
   useEffect(() => {
     // Check for saved drafts on each module
@@ -46,9 +43,25 @@ export default function LessonDetailPage({
     }
   }, [lesson]);
 
-  const [infographicLoaded, setInfographicLoaded] = useState(false);
-  const profileConfig = useProfile();
-  const course = getCourseForLesson(lesson.id);
+  if (!catalogLoaded) {
+    return (
+      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento lezione">
+        Caricamento lezione…
+      </div>
+    );
+  }
+
+  if (!lesson) {
+    return (
+      <div className="pt-10 px-5 text-center">
+        <p className="text-gray-500">Lezione non trovata</p>
+        <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
+          Torna alle lezioni
+        </Link>
+      </div>
+    );
+  }
+
   const lessonNumber = getLessonDisplayNumber(lesson.id);
   const maestroName = getMaestroName(profileConfig.profile);
   const infographic = getInfographicForLesson(lesson.id, profileConfig.profile);

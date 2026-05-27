@@ -14,7 +14,7 @@ import {
   getSmazzateByCourse,
   type Smazzata,
 } from "@/data/all-smazzate";
-import { getCourseForLesson } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
@@ -44,6 +44,7 @@ export default function SmazzataBrowserPage() {
 
 function SmazzataBrowserContent() {
   const profile = useProfile();
+  const { courses } = useCatalog();
   const searchParams = useSearchParams();
   const lessonParam = searchParams.get("lesson");
   const courseParam = searchParams.get("course");
@@ -135,7 +136,7 @@ function SmazzataBrowserContent() {
             const courseGroups: { courseName: string; lessons: typeof lessons }[] = [];
             const seen = new Set<string>();
             for (const lesson of lessons) {
-              const course = getCourseForLesson(lesson.id);
+              const course = courses.find((c) => c.lessons.some((l) => l.id === lesson.id));
               const name = course?.name ?? "Altro";
               if (!seen.has(name)) {
                 seen.add(name);

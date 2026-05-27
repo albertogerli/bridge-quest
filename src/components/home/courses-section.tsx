@@ -4,14 +4,16 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { GraduationCap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { getAvailableCourses, getCourseStats, levelInfo } from "@/data/courses";
+import { levelInfo } from "@/lib/catalog";
+import { useCatalog } from "@/store/use-catalog-store";
 
 interface CoursesSectionProps {
   completedModules: Record<string, boolean>;
 }
 
 export function CoursesSection({ completedModules }: CoursesSectionProps) {
-  const availableCourses = getAvailableCourses();
+  const { courses } = useCatalog();
+  const availableCourses = courses.filter((c) => c.lessons.length > 0);
 
   if (availableCourses.length <= 1) return null; // Don't show if only Fiori
 
@@ -33,7 +35,16 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
         </div>
         <div className="grid grid-cols-2 gap-3">
           {availableCourses.map((course, i) => {
-            const stats = getCourseStats(course.id, completedModules);
+            let totalMods = 0;
+            let doneMods = 0;
+            for (const lesson of course.lessons) {
+              for (const mod of lesson.modules) {
+                totalMods++;
+                if (completedModules[`${lesson.id}-${mod.id}`]) doneMods++;
+              }
+            }
+            const progress = totalMods > 0 ? Math.round((doneMods / totalMods) * 100) : 0;
+            const stats = { progress };
             const info = levelInfo[course.level];
             return (
               <motion.div

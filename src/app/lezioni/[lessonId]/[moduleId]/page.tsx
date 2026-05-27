@@ -4,7 +4,8 @@ import { use, useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { allWorlds, getLessonById, getModuleById, type ContentBlock } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
+import type { ContentBlock } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useProfile } from "@/hooks/use-profile";
@@ -92,8 +93,10 @@ export default function ModulePage({
 }) {
   const { lessonId, moduleId } = use(params);
   const router = useRouter();
-  const lesson = getLessonById(parseInt(lessonId));
-  const mod = getModuleById(parseInt(lessonId), moduleId);
+  const { courses, isLoaded: catalogLoaded } = useCatalog();
+  const lessonIdNum = parseInt(lessonId);
+  const lesson = courses.flatMap((c) => c.lessons).find((l) => l.id === lessonIdNum);
+  const mod = lesson?.modules.find((m) => m.id === moduleId);
 
   // Load draft from localStorage (lazy, runs once on mount)
   const [draft] = useState<ModuleDraft | null>(() => loadDraft(lessonId, moduleId));
@@ -298,6 +301,14 @@ export default function ModulePage({
     [quizAnswers, mod]
   );
 
+  if (!catalogLoaded) {
+    return (
+      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento modulo">
+        Caricamento modulo…
+      </div>
+    );
+  }
+
   if (!lesson || !mod) {
     return (
       <div className="pt-10 px-5 text-center">
@@ -323,6 +334,7 @@ export default function ModulePage({
   // Find the next lesson if all modules in this lesson are done
   const nextLesson = (() => {
     if (nextModule) return null; // Still have modules in this lesson
+    const allWorlds = courses.flatMap((c) => c.worlds);
     for (const world of allWorlds) {
       const lessonIdx = world.lessons.findIndex((l) => l.id === lesson.id);
       if (lessonIdx >= 0) {

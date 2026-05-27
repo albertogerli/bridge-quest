@@ -8,7 +8,8 @@ import { createClient } from "@/lib/supabase/client";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { asdNameToSlug } from "@/lib/asd-utils";
-import { courses, getLessonIdsForCourse, type CourseId } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
+import type { CourseId } from "@/lib/catalog";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2 } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 
@@ -760,6 +761,7 @@ function PerCorsoView({
 }) {
   const [coursePlayers, setCoursePlayers] = useState<(PlayerEntry & { courseXp: number })[]>([]);
   const [loading, setLoading] = useState(true);
+  const { courses } = useCatalog();
   const courseInfo = courses.find(c => c.id === courseId);
 
   useEffect(() => {
@@ -769,7 +771,7 @@ function PerCorsoView({
         const supabase = createClient();
 
         // Get completed modules for this course's lessons
-        const lessonIds = getLessonIdsForCourse(courseId).map(String);
+        const lessonIds = (courseInfo?.lessons.map((l) => l.id) ?? []).map(String);
         if (lessonIds.length === 0) {
           setCoursePlayers([]);
           setLoading(false);
@@ -818,7 +820,8 @@ function PerCorsoView({
       setLoading(false);
     };
     fetchCourseData();
-  }, [courseId, allPlayers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId, allPlayers, courseInfo?.id]);
 
   if (loading) return <LeaderboardSkeleton />;
 

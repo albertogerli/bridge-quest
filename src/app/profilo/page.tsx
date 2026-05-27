@@ -5,7 +5,8 @@ import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { courses, levelInfo, getCourseStats, type CourseId } from "@/data/courses";
+import { levelInfo, type CourseId } from "@/lib/catalog";
+import { useCatalog } from "@/store/use-catalog-store";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { ASD_CLUBS } from "@/data/asd-clubs";
 import { getAsdNameByCode, asdNameToSlug } from "@/lib/asd-utils";
@@ -35,13 +36,13 @@ import { useSecretAchievements } from "@/hooks/use-secret-achievements";
 import { useGameStore } from "@/store/use-game-store";
 import SecretAchievementPopup from "@/components/secret-achievement-popup";
 
-const allWorlds = courses.flatMap(c => c.worlds);
-
 const BQ_KEYS_PREFIX = "bq_";
 
 export default function ProfiloPage() {
   const router = useRouter();
   const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useSharedAuth();
+  const { courses } = useCatalog();
+  const allWorlds = useMemo(() => courses.flatMap((c) => c.worlds), [courses]);
   const cosmetics = useShopCosmetics();
   const [editing, setEditing] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -133,15 +134,24 @@ export default function ProfiloPage() {
     ];
 
     return courseConfigs.map((cfg) => {
-      const stats = getCourseStats(cfg.id, completedModules);
+      const course = courses.find((c) => c.id === cfg.id);
+      let total = 0;
+      let completed = 0;
+      for (const lesson of course?.lessons ?? []) {
+        for (const mod of lesson.modules) {
+          total++;
+          if (completedModules[`${lesson.id}-${mod.id}`]) completed++;
+        }
+      }
+      const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
       return {
         ...cfg,
-        progress: stats.progress,
-        completed: stats.totalCompleted,
-        total: stats.totalModules,
+        progress,
+        completed,
+        total,
       };
     });
-  }, [completedModules]);
+  }, [completedModules, courses]);
 
   // Chart 3: Game performance stats
   const gamePerformanceStats = useMemo(() => {

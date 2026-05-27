@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "audit:lessons": "npx --yes tsx scripts/audit-lesson-content.ts",
-    "review:lessons": "npx --yes tsx scripts/generate-review-doc.ts"
+    "review:lessons": "npx --yes tsx scripts/generate-review-doc.ts",
+    "seed:supabase": "npx --yes tsx scripts/seed-supabase.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.0",

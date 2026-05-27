@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, useMemo, Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { PrimaManoOnboarding } from "@/components/prima-mano-onboarding";
-import { courses } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { useProfile } from "@/hooks/use-profile";
@@ -44,26 +44,9 @@ import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { Zap, Target } from "lucide-react";
 
-// Derive world cards from ALL courses
-const allWorldsData = courses.flatMap(c => c.worlds);
-const worlds = allWorldsData.map((w) => {
-  const totalModules = w.lessons.reduce((sum, l) => sum + l.modules.length, 0);
-  return {
-    id: w.id,
-    name: w.name,
-    subtitle: w.subtitle,
-    icon: w.icon,
-    gradient: w.gradient,
-    iconBg: w.iconBg,
-    chapters: w.lessons.length,
-    totalModules,
-  };
-});
-
-const totalAllModules = worlds.reduce((s, w) => s + w.totalModules, 0);
-
 export default function Home() {
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
+  const { courses, isLoaded: catalogLoaded } = useCatalog();
   const stats = useLocalStats();
   const profile = useProfile();
   const { reviewCount } = useSpacedReview();
@@ -143,22 +126,31 @@ export default function Home() {
     setTimeout(() => setReferralToast(false), 4000);
   }).current;
 
-  // Count completed modules per world (all courses)
-  const worldCompletedCounts = worlds.map((w) => {
-    const worldData = allWorldsData.find((wd) => wd.id === w.id);
-    if (!worldData) return 0;
+  // World summaries derived from the live catalog (Phase 3.3).
+  // Memoised so the achievement checker doesn't re-trigger on unrelated state changes.
+  const allWorldsData = useMemo(
+    () => courses.flatMap((c) => c.worlds),
+    [courses],
+  );
+
+  const worldsCompleted = useMemo(() => {
     let count = 0;
-    for (const lesson of worldData.lessons) {
-      for (const mod of lesson.modules) {
-        if (stats.completedModules[`${lesson.id}-${mod.id}`]) count++;
+    for (const w of allWorldsData) {
+      const totalModules = w.lessons.reduce(
+        (sum, l) => sum + l.modules.length,
+        0,
+      );
+      if (totalModules === 0) continue;
+      let completedInWorld = 0;
+      for (const lesson of w.lessons) {
+        for (const mod of lesson.modules) {
+          if (stats.completedModules[`${lesson.id}-${mod.id}`]) completedInWorld++;
+        }
       }
+      if (completedInWorld === totalModules) count++;
     }
     return count;
-  });
-
-  const worldsCompleted = worlds.filter((w, i) => {
-    return w.totalModules > 0 && worldCompletedCounts[i] === w.totalModules;
-  }).length;
+  }, [allWorldsData, stats.completedModules]);
 
   const totalModulesCompleted = Object.keys(stats.completedModules).length;
 
@@ -172,20 +164,26 @@ export default function Home() {
   });
 
   // Find next incomplete module for "Riprendi" CTA (search all courses)
-  const nextModule = (() => {
+  const nextModule = useMemo(() => {
     for (const course of courses) {
       for (const w of course.worlds) {
         for (const lesson of w.lessons) {
           for (const mod of lesson.modules) {
             if (!stats.completedModules[`${lesson.id}-${mod.id}`]) {
-              return { lessonId: lesson.id, moduleId: mod.id, moduleTitle: mod.title, lessonTitle: lesson.title, lessonIcon: lesson.icon };
+              return {
+                lessonId: lesson.id,
+                moduleId: mod.id,
+                moduleTitle: mod.title,
+                lessonTitle: lesson.title,
+                lessonIcon: lesson.icon,
+              };
             }
           }
         }
       }
     }
     return null;
-  })();
+  }, [courses, stats.completedModules]);
 
   const hasStarted = totalModulesCompleted > 0;
 
@@ -209,6 +207,18 @@ export default function Home() {
 
   if (showOnboarding) {
     return <PrimaManoOnboarding onDismiss={handleOnboardingComplete} />;
+  }
+
+  // Dashboard needs the lesson catalog. Show spinner until the first
+  // successful Supabase fetch lands — non-authenticated visitors already
+  // returned above with the landing page, so we never spin for them.
+  if (!catalogLoaded) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center" role="status" aria-label="Caricamento in corso">
+        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+        <span className="sr-only">Caricamento...</span>
+      </div>
+    );
   }
 
   return (

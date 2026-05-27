@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
-import { courses } from "@/data/courses";
-import type { ContentBlock } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
+import type { Course, ContentBlock } from "@/lib/catalog";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
@@ -59,7 +59,7 @@ const TIMER_SECONDS = 30;
 
 // ===== Extract all quiz-type questions from courses =====
 
-function extractAllQuestions(): QuizQuestion[] {
+function extractAllQuestions(courses: Course[]): QuizQuestion[] {
   const questions: QuizQuestion[] = [];
 
   for (const course of courses) {
@@ -222,8 +222,9 @@ export default function QuizLampoPage() {
   const questionStartRef = useRef(0);
   const lockedRef = useRef(false);
 
-  // All available questions - memoized
-  const allQuestions = useMemo(() => extractAllQuestions(), []);
+  // All available questions - memoized; re-extract only when catalog changes.
+  const { courses } = useCatalog();
+  const allQuestions = useMemo(() => extractAllQuestions(courses), [courses]);
 
   // Load profile + best score
   useEffect(() => {

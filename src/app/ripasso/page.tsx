@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSpacedReview, type ReviewItem } from "@/hooks/use-spaced-review";
-import { getLessonById, getModuleById, getCourseForLesson } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
+import type { Course } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { useGameStore } from "@/store/use-game-store";
 import {
@@ -110,10 +111,18 @@ interface EnrichedReviewItem extends ReviewItem {
   urgency: Urgency;
 }
 
-function enrichItem(item: ReviewItem): EnrichedReviewItem {
-  const lesson = getLessonById(item.lessonId);
-  const mod = getModuleById(item.lessonId, item.moduleId);
-  const course = getCourseForLesson(item.lessonId);
+function enrichItem(item: ReviewItem, courses: Course[]): EnrichedReviewItem {
+  let lesson;
+  let course;
+  for (const c of courses) {
+    const l = c.lessons.find((l) => l.id === item.lessonId);
+    if (l) {
+      lesson = l;
+      course = c;
+      break;
+    }
+  }
+  const mod = lesson?.modules.find((m) => m.id === item.moduleId);
 
   return {
     ...item,
@@ -132,6 +141,7 @@ function enrichItem(item: ReviewItem): EnrichedReviewItem {
 
 export default function RipassoPage() {
   const { items, getItemsDue, markReviewed, reviewCount } = useSpacedReview();
+  const { courses } = useCatalog();
   const [enrichedItems, setEnrichedItems] = useState<EnrichedReviewItem[]>([]);
   const [xpAwarded, setXpAwarded] = useState(false);
   const [xpAmount, setXpAmount] = useState(0);
@@ -141,7 +151,7 @@ export default function RipassoPage() {
   useEffect(() => {
     const source = filter === "due" ? getItemsDue() : items;
     const enriched = source
-      .map(enrichItem)
+      .map((item) => enrichItem(item, courses))
       .sort((a, b) => {
         // Sort: overdue first, then today, then upcoming; within group sort by nextReview
         const urgencyOrder: Record<Urgency, number> = { overdue: 0, today: 1, upcoming: 2 };
@@ -150,7 +160,7 @@ export default function RipassoPage() {
         return a.nextReview.localeCompare(b.nextReview);
       });
     setEnrichedItems(enriched);
-  }, [items, filter, getItemsDue]);
+  }, [items, filter, getItemsDue, courses]);
 
   // Award XP when visiting with due items (once per session)
   const handleReviewStart = useCallback(
