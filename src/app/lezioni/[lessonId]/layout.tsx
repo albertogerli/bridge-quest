@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getLessonById, getCourseForLesson } from "@/data/courses";
+import { getLessonById, getCourseForLesson } from "@/lib/catalog";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,8 +13,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lessonId } = await params;
   const id = parseInt(lessonId);
-  const lesson = getLessonById(id);
-  const course = getCourseForLesson(id);
+  const [lesson, course] = await Promise.all([
+    getLessonById(id),
+    getCourseForLesson(id),
+  ]);
 
   if (!lesson || !course) {
     return {

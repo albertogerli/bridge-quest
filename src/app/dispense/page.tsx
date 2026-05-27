@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
-import { courses, type CourseId, levelInfo } from "@/data/courses";
+import { levelInfo, type CourseId } from "@/lib/catalog";
+import { useCatalog } from "@/store/use-catalog-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getInfographicForLesson } from "@/components/maestro-video";
 import Link from "next/link";
@@ -26,6 +27,7 @@ const courseGradients: Record<CourseId, string> = {
 export default function DispensePage() {
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
   const completedMap = useGameStore((s) => s.completedModules);
+  const { courses, isLoaded: catalogLoaded } = useCatalog();
   const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];
   const profile = "junior"; // Currently only Junior infographics available
 
@@ -51,6 +53,14 @@ export default function DispensePage() {
     0,
   );
   const isCourseCompleted = totalModules > 0 && completedModulesCount === totalModules;
+
+  if (!catalogLoaded || !currentCourse) {
+    return (
+      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento corsi">
+        Caricamento corsi…
+      </div>
+    );
+  }
 
   return (
     <div className="pt-6 px-5 pb-24">

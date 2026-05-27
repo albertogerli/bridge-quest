@@ -1,7 +1,14 @@
 // Maestro video - YouTube video IDs for all courses (per-profile)
 // Channel: https://www.youtube.com/@FIGBBridgeLab
-import { getCourseForLesson } from "@/data/courses";
-import { getLessonAssetNumber, getLessonDisplayNumber } from "@/data/lesson-meta";
+//
+// This module derives the course ID from the lesson ID via the pure
+// `getCourseIdFromLessonId` function (lesson-meta.ts), so it does NOT
+// need to hit the catalog store or Supabase. All helpers stay sync.
+import {
+  getCourseIdFromLessonId,
+  getLessonAssetNumber,
+  getLessonDisplayNumber,
+} from "@/data/lesson-meta";
 
 // ===== Profile Metadata =====
 
@@ -129,10 +136,9 @@ export function getInfographicForLesson(
   lessonId: number,
   profile: string
 ): { image: string; pdf: string; coursePdf: string } | null {
-  const course = getCourseForLesson(lessonId);
-  if (!course) return null;
+  const courseFolder = getCourseIdFromLessonId(lessonId);
+  if (!courseFolder) return null;
 
-  const courseFolder = course.id; // "fiori" | "quadri" | "cuori-gioco" | "cuori-licita"
   const formattedId = String(getLessonAssetNumber(lessonId)).padStart(2, "0");
   const requestedProfile = profile || "junior";
   const p = SUPPORTED_INFOGRAPHIC_PROFILES.has(requestedProfile)
@@ -165,22 +171,22 @@ function lookupVideoId(
 /** Get YouTube video ID for any lesson ID across all courses, with profile fallback */
 export function getVideoForLesson(lessonId: number, profile?: string): string | null {
   const p = profile || "junior";
-  const course = getCourseForLesson(lessonId);
+  const courseId = getCourseIdFromLessonId(lessonId);
 
   // Fiori: lessons 0-12
-  if (course?.id === "fiori" || FIORI_YOUTUBE.junior[lessonId] !== undefined) {
+  if (courseId === "fiori" || FIORI_YOUTUBE.junior[lessonId] !== undefined) {
     return lookupVideoId(lessonId, p, FIORI_YOUTUBE, lessonId);
   }
   // Quadri: lessons use display number 1-12
-  if (course?.id === "quadri") {
+  if (courseId === "quadri") {
     return lookupVideoId(lessonId, p, QUADRI_YOUTUBE, getLessonDisplayNumber(lessonId));
   }
   // Cuori Gioco: lessons 100-109
-  if (course?.id === "cuori-gioco") {
+  if (courseId === "cuori-gioco") {
     return lookupVideoId(lessonId, p, CUORI_GIOCO_YOUTUBE, lessonId);
   }
   // Cuori Licita: lessons 200-213
-  if (course?.id === "cuori-licita") {
+  if (courseId === "cuori-licita") {
     return lookupVideoId(lessonId, p, CUORI_LICITA_YOUTUBE, lessonId);
   }
   return null;

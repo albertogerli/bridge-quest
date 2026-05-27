@@ -1,69 +1,85 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { courses, levelInfo } from "@/data/courses";
+import { levelInfo } from "@/lib/catalog";
+import { useCatalog } from "@/store/use-catalog-store";
+import type { Course, World } from "@/lib/catalog";
 import { WorldCard, type WorldSummary } from "./world-card";
-
-// Derived world summaries from all courses (pure data, module-level).
-const allWorldsData = courses.flatMap((c) => c.worlds);
-
-const worlds: WorldSummary[] = allWorldsData.map((w) => ({
-  id: w.id,
-  name: w.name,
-  subtitle: w.subtitle,
-  icon: w.icon,
-  gradient: w.gradient,
-  iconBg: w.iconBg,
-  chapters: w.lessons.length,
-  totalModules: w.lessons.reduce((sum, l) => sum + l.modules.length, 0),
-}));
-
-function countCompletedInWorld(
-  worldId: number,
-  completedModules: Record<string, boolean>,
-): number {
-  const worldData = allWorldsData.find((wd) => wd.id === worldId);
-  if (!worldData) return 0;
-  let count = 0;
-  for (const lesson of worldData.lessons) {
-    for (const mod of lesson.modules) {
-      if (completedModules[`${lesson.id}-${mod.id}`]) count++;
-    }
-  }
-  return count;
-}
-
-function hrefForWorld(worldId: number, courseId?: string): string {
-  const wd = allWorldsData.find((w) => w.id === worldId);
-  const firstLessonId = wd?.lessons[0]?.id;
-  if (firstLessonId != null) return `/lezioni/${firstLessonId}`;
-  if (courseId) return `/lezioni?corso=${courseId}`;
-  return "/lezioni";
-}
 
 interface WorldsGridProps {
   completedModules: Record<string, boolean>;
 }
 
 export function WorldsGrid({ completedModules }: WorldsGridProps) {
+  const { courses } = useCatalog();
+
+  // Live-derived world summaries — recompute only when the catalog changes.
+  const worlds = useMemo<WorldSummary[]>(
+    () =>
+      courses.flatMap((c) =>
+        c.worlds.map((w) => ({
+          id: w.id,
+          name: w.name,
+          subtitle: w.subtitle,
+          icon: w.icon,
+          gradient: w.gradient,
+          iconBg: w.iconBg,
+          chapters: w.lessons.length,
+          totalModules: w.lessons.reduce(
+            (sum, l) => sum + l.modules.length,
+            0,
+          ),
+        })),
+      ),
+    [courses],
+  );
+
   const [expandedCourse, setExpandedCourse] = useState<string | null>(() => {
-    // Default: expand the first course that has incomplete modules
+    // Default: expand the first course that has incomplete modules. If the
+    // catalog hasn't loaded yet, this returns null; the parent page gates
+    // rendering on `catalogLoaded`, so in practice the catalog is ready
+    // by the time this component mounts.
     try {
       const completedCount = Object.keys(completedModules).length;
       for (const c of courses) {
-        const cWorlds = worlds.filter((w) =>
-          c.worlds.some((cw) => cw.id === w.id),
+        const totalMods = c.worlds.reduce(
+          (sum, w) =>
+            sum + w.lessons.reduce((s, l) => s + l.modules.length, 0),
+          0,
         );
-        const totalMods = cWorlds.reduce((sum, w) => sum + w.totalModules, 0);
         if (totalMods > 0 && completedCount < totalMods) return c.id;
       }
     } catch {}
     return courses[0]?.id ?? null;
   });
+
+  function countCompletedInWorld(worldId: number): number {
+    let count = 0;
+    for (const c of courses) {
+      const world = c.worlds.find((w) => w.id === worldId);
+      if (!world) continue;
+      for (const lesson of world.lessons) {
+        for (const mod of lesson.modules) {
+          if (completedModules[`${lesson.id}-${mod.id}`]) count++;
+        }
+      }
+      break;
+    }
+    return count;
+  }
+
+  function hrefForWorld(worldId: number, courseId?: string): string {
+    for (const c of courses) {
+      const world = c.worlds.find((w) => w.id === worldId);
+      if (world?.lessons[0]) return `/lezioni/${world.lessons[0].id}`;
+    }
+    if (courseId) return `/lezioni?corso=${courseId}`;
+    return "/lezioni";
+  }
 
   return (
     <section className="px-4 sm:px-5 pt-4 pb-6">
@@ -88,19 +104,16 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
         </div>
 
         <div className="space-y-3">
-          {courses.map((course) => {
-            const courseWorlds = worlds.filter((w) =>
-              course.worlds.some((cw) => cw.id === w.id),
+          {courses.map((course: Course) => {
+            const courseWorlds: WorldSummary[] = worlds.filter((w) =>
+              course.worlds.some((cw: World) => cw.id === w.id),
             );
             if (courseWorlds.length === 0) return null;
 
             const isExpanded = expandedCourse === course.id;
-            const completedWorlds = courseWorlds.filter((w) => {
-              return (
-                countCompletedInWorld(w.id, completedModules) ===
-                w.totalModules
-              );
-            }).length;
+            const completedWorlds = courseWorlds.filter(
+              (w) => countCompletedInWorld(w.id) === w.totalModules,
+            ).length;
 
             return (
               <div
@@ -157,10 +170,7 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
                           <WorldCard
                             key={world.id}
                             world={world}
-                            completedModules={countCompletedInWorld(
-                              world.id,
-                              completedModules,
-                            )}
+                            completedModules={countCompletedInWorld(world.id)}
                             href={hrefForWorld(world.id, course.id)}
                           />
                         ))}

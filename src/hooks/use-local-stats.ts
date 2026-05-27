@@ -10,7 +10,7 @@ import {
 } from "@/lib/xp-levels";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
-import { courses } from "@/data/courses";
+import { useCatalog } from "@/store/use-catalog-store";
 
 /**
  * Canonical "player stats" reader. Subscribes to the Zustand
@@ -38,6 +38,10 @@ export function useLocalStats() {
   const streak = useGameStore((s) => s.streak);
   const completedModules = useGameStore((s) => s.completedModules);
   const handsPlayed = useGameStore((s) => s.handsPlayed);
+
+  // Subscribe to the catalog (kicks off the fetch on first call from any
+  // consumer of `useLocalStats`).
+  const { courses } = useCatalog();
 
   const [dailyDone, setDailyDone] = useState(false);
   const [dailyLoginAwarded, setDailyLoginAwarded] = useState(false);

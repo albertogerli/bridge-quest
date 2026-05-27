@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import {
-  courses,
-  getAvailableCourses,
-  getCourseStats,
   levelInfo,
   type Course,
   type CourseId,
-} from "@/data/courses";
+} from "@/lib/catalog";
+import { useCatalog } from "@/store/use-catalog-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
@@ -38,10 +36,12 @@ const courseColors: Record<CourseId, { active: string; inactive: string; border:
 
 export default function LezioniPage() {
   const completedMap = useGameStore((s) => s.completedModules);
+  const { courses, isLoaded: catalogLoaded } = useCatalog();
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
   const [onboarded, setOnboarded] = useState(false);
 
   useEffect(() => {
+    if (!catalogLoaded) return;
     try {
       const saved = localStorage.getItem("bq_selected_course");
       if (saved && courses.some((c) => c.id === saved)) {
@@ -49,7 +49,7 @@ export default function LezioniPage() {
       }
       setOnboarded(localStorage.getItem("bq_onboarded") === "true");
     } catch {}
-  }, []);
+  }, [catalogLoaded, courses]);
 
   const handleCourseChange = (id: CourseId) => {
     setSelectedCourse(id);
@@ -58,15 +58,27 @@ export default function LezioniPage() {
     } catch {}
   };
 
-  const availableCourses = getAvailableCourses();
-  const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];
+  const availableCourses = courses.filter((c) => c.lessons.length > 0);
+  const currentCourse: Course | undefined = courses.find((c) => c.id === selectedCourse) ?? courses[0];
+
+  if (!catalogLoaded || !currentCourse) {
+    return (
+      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento corsi">
+        Caricamento corsi…
+      </div>
+    );
+  }
+
   const courseWorlds = currentCourse.worlds;
 
-  // Calculate overall progress for this course
-  const { totalModules, totalCompleted, progress: overallProgress } = getCourseStats(
-    currentCourse.id,
-    completedMap
-  );
+  // Calculate overall progress for this course from the live catalog
+  let totalModules = 0;
+  let totalCompleted = 0;
+  for (const lesson of currentCourse.lessons) {
+    totalModules += lesson.modules.length;
+    totalCompleted += lesson.modules.filter((m) => completedMap[`${lesson.id}-${m.id}`]).length;
+  }
+  const overallProgress = totalModules > 0 ? Math.round((totalCompleted / totalModules) * 100) : 0;
 
   return (
     <div className="pt-6 px-5 pb-24">
@@ -145,7 +157,15 @@ export default function LezioniPage() {
             {availableCourses.map((course) => {
               const isActive = course.id === selectedCourse;
               const colors = courseColors[course.id];
-              const stats = getCourseStats(course.id, completedMap);
+              let _total = 0;
+              let _done = 0;
+              for (const lesson of course.lessons) {
+                for (const mod of lesson.modules) {
+                  _total++;
+                  if (completedMap[`${lesson.id}-${mod.id}`]) _done++;
+                }
+              }
+              const stats = { progress: _total > 0 ? Math.round((_done / _total) * 100) : 0 };
               return (
                 <button
                   key={course.id}

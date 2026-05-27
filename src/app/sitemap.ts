@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
-import { courses } from "@/data/courses";
+import { getCourses } from "@/lib/catalog";
 import { getAllClubSlugs } from "@/lib/asd-utils";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const courses = await getCourses();
   const baseUrl = "https://bridgelab.it";
   const lastModified = new Date();
 
