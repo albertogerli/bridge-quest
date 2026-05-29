@@ -868,3 +868,476 @@ export async function getAsdClubByCode(
 export async function getActiveAsdClubs(): Promise<AsdClub[]> {
   return (await getAsdClubs()).filter((c) => c.active);
 }
+
+// ─── Minigames: collectible cards (Phase 4.3) ───────────────────────────
+
+export type CardRarity = "comune" | "rara" | "epica" | "leggendaria";
+export type CardCategory =
+  | "tecnica"
+  | "convenzione"
+  | "strategia"
+  | "storia"
+  | "mossa";
+
+export interface PlayerStats {
+  xp: number;
+  streak: number;
+  handsPlayed: number;
+  completedModules: number;
+  badges: string[];
+  quizLampoBest: number;
+  memoryBest: number;
+  dailyHandsTotal: number;
+}
+
+export type StatsField = keyof PlayerStats;
+export type CompareOp = ">=" | ">" | "<=" | "<" | "==" | "!=";
+
+/**
+ * JSONB DSL for `collectible_cards.unlock`. Persisted in Supabase as either
+ * a single comparison or a boolean tree (all/any). Evaluated client-side
+ * by `evaluateUnlock()`.
+ */
+export type UnlockExpr =
+  | { field: StatsField; op: CompareOp; value: number }
+  | { all: UnlockExpr[] }
+  | { any: UnlockExpr[] };
+
+export interface CollectibleCard {
+  id: string;
+  name: string;
+  description: string;
+  category: CardCategory;
+  rarity: CardRarity;
+  emoji: string;
+  gradient: string;
+  unlockCondition: string;       // Human-readable
+  unlock: UnlockExpr;            // Machine-evaluable
+}
+
+interface RawCollectibleCard {
+  id: string;
+  name: string;
+  description: string;
+  category: CardCategory;
+  rarity: CardRarity;
+  emoji: string;
+  gradient: string | null;
+  unlock_condition: string;
+  unlock: UnlockExpr;
+  position: number;
+}
+
+/** Static UI metadata for rarity (no DB roundtrip needed). */
+export const RARITY_CONFIG: Record<
+  CardRarity,
+  { label: string; color: string; bg: string; border: string }
+> = {
+  comune: { label: "Comune", color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300" },
+  rara: { label: "Rara", color: "text-blue-600", bg: "bg-blue-100", border: "border-blue-300" },
+  epica: { label: "Epica", color: "text-purple-600", bg: "bg-purple-100", border: "border-purple-300" },
+  leggendaria: { label: "Leggendaria", color: "text-amber-600", bg: "bg-amber-100", border: "border-amber-400" },
+};
+
+/** Static UI metadata for category (no DB roundtrip needed). */
+export const CATEGORY_CONFIG: Record<
+  CardCategory,
+  { label: string; emoji: string }
+> = {
+  tecnica: { label: "Tecnica", emoji: "🔧" },
+  convenzione: { label: "Convenzione", emoji: "📜" },
+  strategia: { label: "Strategia", emoji: "🧭" },
+  storia: { label: "Storia", emoji: "📖" },
+  mossa: { label: "Mossa", emoji: "♟️" },
+};
+
+/**
+ * Pure evaluator for the unlock DSL persisted in Supabase. Mirrors the
+ * parser in `scripts/seed-supabase.ts`. Throws on malformed input so we
+ * catch schema drift loudly rather than silently treating cards as locked.
+ */
+export function evaluateUnlock(expr: UnlockExpr, stats: PlayerStats): boolean {
+  if ("all" in expr) return expr.all.every((e) => evaluateUnlock(e, stats));
+  if ("any" in expr) return expr.any.some((e) => evaluateUnlock(e, stats));
+
+  const lhs = stats[expr.field];
+  if (typeof lhs !== "number") {
+    // `badges` is a string[]; no source card uses it as a numeric compare,
+    // but if a future one does the parser will need extending too.
+    throw new Error(
+      `evaluateUnlock: stats field "${expr.field}" is not numeric ` +
+        `(value: ${JSON.stringify(lhs)})`,
+    );
+  }
+  switch (expr.op) {
+    case ">=": return lhs >= expr.value;
+    case ">":  return lhs >  expr.value;
+    case "<=": return lhs <= expr.value;
+    case "<":  return lhs <  expr.value;
+    case "==": return lhs === expr.value;
+    case "!=": return lhs !== expr.value;
+  }
+}
+
+let collectibleCardsPromise: Promise<CollectibleCard[]> | null = null;
+
+async function loadCollectibleCards(): Promise<CollectibleCard[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("collectible_cards")
+    .select(
+      "id, name, description, category, rarity, emoji, gradient, unlock_condition, unlock, position",
+    )
+    .order("position", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load collectible_cards: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawCollectibleCard[];
+  return rows.map<CollectibleCard>((r) => ({
+    id: r.id,
+    name: r.name,
+    description: r.description,
+    category: r.category,
+    rarity: r.rarity,
+    emoji: r.emoji,
+    gradient: r.gradient ?? "",
+    unlockCondition: r.unlock_condition,
+    unlock: r.unlock,
+  }));
+}
+
+export function getCollectibleCards(): Promise<CollectibleCard[]> {
+  if (!collectibleCardsPromise) {
+    collectibleCardsPromise = loadCollectibleCards().catch((err) => {
+      collectibleCardsPromise = null;
+      throw err;
+    });
+  }
+  return collectibleCardsPromise;
+}
+
+export function resetCollectibleCardsCache(): void {
+  collectibleCardsPromise = null;
+}
+
+// ─── Minigames: weekly challenges (Phase 4.3) ───────────────────────────
+
+export interface WeeklyChallenge {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  gradient: string;
+  xpMultiplier: number;
+  badgeName: string;
+  tips: string[];
+}
+
+interface RawWeeklyChallenge {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  gradient: string | null;
+  xp_multiplier: number;
+  badge_name: string;
+  tips: string[] | null;
+}
+
+let weeklyChallengesPromise: Promise<WeeklyChallenge[]> | null = null;
+
+async function loadWeeklyChallenges(): Promise<WeeklyChallenge[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("weekly_challenges")
+    .select("id, name, description, icon, gradient, xp_multiplier, badge_name, tips")
+    .order("id", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load weekly_challenges: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawWeeklyChallenge[];
+  return rows.map<WeeklyChallenge>((r) => ({
+    id: r.id,
+    name: r.name,
+    description: r.description,
+    icon: r.icon,
+    gradient: r.gradient ?? "",
+    xpMultiplier: r.xp_multiplier,
+    badgeName: r.badge_name,
+    tips: r.tips ?? [],
+  }));
+}
+
+export function getWeeklyChallenges(): Promise<WeeklyChallenge[]> {
+  if (!weeklyChallengesPromise) {
+    weeklyChallengesPromise = loadWeeklyChallenges().catch((err) => {
+      weeklyChallengesPromise = null;
+      throw err;
+    });
+  }
+  return weeklyChallengesPromise;
+}
+
+export function resetWeeklyChallengesCache(): void {
+  weeklyChallengesPromise = null;
+}
+
+/**
+ * Pure: canonical week id used everywhere weekly content rotates.
+ * 1970-01-01 UTC was a Thursday, so a naive `Date.now() / week` would
+ * roll over on Thursdays. Shifting by 4 days anchors week 0 at
+ * Monday 1970-01-05 00:00 UTC, so this id increments at Monday 00:00 UTC.
+ * Used by `pickCurrentChallenge`, `getTimeRemainingInWeek`, and the
+ * sfida-settimanale hand-selection hash so they share one clock.
+ */
+export function getIsoWeekId(): number {
+  return Math.floor((Date.now() - 4 * 86400000) / (7 * 86400000));
+}
+
+/** Pure: ISO-week-derived rotation across a non-empty challenge list. */
+export function pickCurrentChallenge(
+  challenges: WeeklyChallenge[],
+): WeeklyChallenge | undefined {
+  if (challenges.length === 0) return undefined;
+  const weekId = getIsoWeekId();
+  const idx = ((weekId % challenges.length) + challenges.length) % challenges.length;
+  return challenges[idx];
+}
+
+/** Pure: time until next Monday 00:00 UTC (matches `getIsoWeekId` rollover). */
+export function getTimeRemainingInWeek(): { days: number; hours: number; minutes: number } {
+  const now = Date.now();
+  const weekId = getIsoWeekId();
+  // Next Monday 00:00 UTC == start of week (weekId + 1) under the same offset.
+  const nextMondayUTC = (weekId + 1) * 7 * 86400000 + 4 * 86400000;
+  const ms = nextMondayUTC - now;
+  return {
+    days: Math.floor(ms / 86400000),
+    hours: Math.floor((ms % 86400000) / 3600000),
+    minutes: Math.floor((ms % 3600000) / 60000),
+  };
+}
+
+export async function getCurrentWeeklyChallenge(): Promise<WeeklyChallenge | undefined> {
+  return pickCurrentChallenge(await getWeeklyChallenges());
+}
+
+// ─── Minigames: guided hands (Phase 4.3) ────────────────────────────────
+
+export interface GuidedHandHint {
+  trick: number;
+  text: string;
+}
+
+export interface GuidedHand {
+  id: number;
+  name: string;
+  description: string;
+  difficulty: "facile" | "medio";
+  hands: Record<Position, Card[]>;
+  contract: string;
+  declarer: Position;
+  openingLead: Card;
+  hints: GuidedHandHint[];
+  tricksNeeded: number;
+}
+
+interface RawGuidedHand {
+  id: number;
+  name: string;
+  description: string;
+  difficulty: "facile" | "medio";
+  hands: Record<Position, Card[]>;
+  contract: string;
+  declarer: Position;
+  opening_lead: Card;
+  hints: GuidedHandHint[] | null;
+  tricks_needed: number;
+}
+
+let guidedHandsPromise: Promise<GuidedHand[]> | null = null;
+
+async function loadGuidedHands(): Promise<GuidedHand[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("guided_hands")
+    .select(
+      "id, name, description, difficulty, hands, contract, declarer, opening_lead, hints, tricks_needed",
+    )
+    .order("id", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load guided_hands: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawGuidedHand[];
+  return rows.map<GuidedHand>((r) => ({
+    id: r.id,
+    name: r.name,
+    description: r.description,
+    difficulty: r.difficulty,
+    hands: r.hands,
+    contract: r.contract,
+    declarer: r.declarer,
+    openingLead: r.opening_lead,
+    hints: r.hints ?? [],
+    tricksNeeded: r.tricks_needed,
+  }));
+}
+
+export function getGuidedHands(): Promise<GuidedHand[]> {
+  if (!guidedHandsPromise) {
+    guidedHandsPromise = loadGuidedHands().catch((err) => {
+      guidedHandsPromise = null;
+      throw err;
+    });
+  }
+  return guidedHandsPromise;
+}
+
+export function resetGuidedHandsCache(): void {
+  guidedHandsPromise = null;
+}
+
+export async function getGuidedHand(id: number): Promise<GuidedHand | undefined> {
+  return (await getGuidedHands()).find((h) => h.id === id);
+}
+
+// ─── Minigames: eserciziario (Phase 4.3) ────────────────────────────────
+
+export interface EserciziarioExercise {
+  id: string;
+  lesson: number;
+  title: string;
+  content: ContentBlock[];
+}
+
+interface RawEserciziarioExercise {
+  id: string;
+  lesson_id: number;
+  title: string;
+  content: ContentBlock[];
+  position: number;
+}
+
+let eserciziarioPromise: Promise<EserciziarioExercise[]> | null = null;
+
+async function loadEserciziario(): Promise<EserciziarioExercise[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("eserciziario_exercises")
+    .select("id, lesson_id, title, content, position")
+    .order("lesson_id", { ascending: true })
+    .order("position", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load eserciziario_exercises: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawEserciziarioExercise[];
+  return rows.map<EserciziarioExercise>((r) => ({
+    id: r.id,
+    lesson: r.lesson_id,
+    title: r.title,
+    content: r.content ?? [],
+  }));
+}
+
+export function getEserciziario(): Promise<EserciziarioExercise[]> {
+  if (!eserciziarioPromise) {
+    eserciziarioPromise = loadEserciziario().catch((err) => {
+      eserciziarioPromise = null;
+      throw err;
+    });
+  }
+  return eserciziarioPromise;
+}
+
+export function resetEserciziarioCache(): void {
+  eserciziarioPromise = null;
+}
+
+export async function getEserciziarioForLesson(
+  lessonId: number,
+): Promise<EserciziarioExercise[]> {
+  return (await getEserciziario()).filter((e) => e.lesson === lessonId);
+}
+
+// ─── Minigames: trova-errore scenarios (Phase 4.3) ──────────────────────
+
+export type ErrorCategory = "licita" | "gioco" | "difesa";
+export type ErrorDifficulty = "facile" | "medio" | "difficile";
+
+export interface ErrorScenario {
+  id: number;
+  category: ErrorCategory;
+  difficulty: ErrorDifficulty;
+  situation: string;
+  cards?: string;
+  sequence?: string[];
+  errorDescription: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+}
+
+interface RawErrorScenario {
+  id: number;
+  category: ErrorCategory;
+  difficulty: ErrorDifficulty;
+  situation: string;
+  cards: string | null;
+  sequence: string[] | null;
+  error_description: string;
+  options: string[];
+  correct_answer: number;
+  explanation: string;
+}
+
+let errorScenariosPromise: Promise<ErrorScenario[]> | null = null;
+
+async function loadErrorScenarios(): Promise<ErrorScenario[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("trova_errore_scenarios")
+    .select(
+      "id, category, difficulty, situation, cards, sequence, error_description, options, correct_answer, explanation",
+    )
+    .order("id", { ascending: true });
+
+  if (error) {
+    throw new Error(`catalog: failed to load trova_errore_scenarios: ${error.message}`);
+  }
+
+  const rows = (data ?? []) as RawErrorScenario[];
+  return rows.map<ErrorScenario>((r) => ({
+    id: r.id,
+    category: r.category,
+    difficulty: r.difficulty,
+    situation: r.situation,
+    cards: r.cards ?? undefined,
+    sequence: r.sequence ?? undefined,
+    errorDescription: r.error_description,
+    options: r.options,
+    correctAnswer: r.correct_answer,
+    explanation: r.explanation,
+  }));
+}
+
+export function getErrorScenarios(): Promise<ErrorScenario[]> {
+  if (!errorScenariosPromise) {
+    errorScenariosPromise = loadErrorScenarios().catch((err) => {
+      errorScenariosPromise = null;
+      throw err;
+    });
+  }
+  return errorScenariosPromise;
+}
+
+export function resetErrorScenariosCache(): void {
+  errorScenariosPromise = null;
+}

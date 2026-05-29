@@ -145,10 +145,10 @@ export default function AdminPage() {
   const [asdTab, setAsdTab] = useState<"asd" | "province" | "regione">("asd");
   const [asdSearch, setAsdSearch] = useState("");
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(async (isBackground = false) => {
+    if (!isBackground) setLoading(true);
     setFetchError(null);
 
     try {
@@ -440,8 +440,8 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      fetchData();
-      const interval = setInterval(fetchData, 30000);
+      fetchData(false);
+      const interval = setInterval(() => fetchData(true), 30000);
       return () => clearInterval(interval);
     }
   }, [authLoading, user, fetchData]);
@@ -651,7 +651,7 @@ export default function AdminPage() {
                 📥 CSV
               </button>
               <button
-                onClick={fetchData}
+                onClick={() => fetchData(false)}
                 className="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
               >
                 🔄 Aggiorna
@@ -672,7 +672,7 @@ export default function AdminPage() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
             <p className="text-sm font-bold text-red-700">{fetchError}</p>
             <button
-              onClick={fetchData}
+              onClick={() => fetchData(false)}
               className="mt-2 text-xs bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
             >
               Riprova

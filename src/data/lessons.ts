@@ -1851,14 +1851,12 @@ const lezione8: Lesson = {
 // ===== LESSONS 9-12 (imported from separate file) =====
 import { lessons9to12 } from "./lessons-9-12";
 
-// ===== ESERCIZIARIO (exercise modules from FIGB official exercise book) =====
-import { eserciziarioModules } from "./eserciziario";
-
-// Append eserciziario exercise modules to each lesson
+// Eserciziario exercises moved to Supabase (Phase 4.3.3 — see catalog.ts
+// getEserciziarioForLesson). This legacy file is orphan and no longer
+// loaded by the frontend; the helper below is a no-op kept only so the
+// allLessons array compiles cleanly.
 function withEserciziario(lesson: Lesson): Lesson {
-  const extra = eserciziarioModules[lesson.id];
-  if (!extra || extra.length === 0) return lesson;
-  return { ...lesson, modules: [...lesson.modules, ...extra] };
+  return lesson;
 }
 
 // ===== LESSON INDEX =====

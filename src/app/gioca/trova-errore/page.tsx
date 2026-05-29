@@ -8,7 +8,8 @@ import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
-import { errorScenarios, type ErrorScenario } from "@/data/trova-errore-data";
+import { useErrorScenarios } from "@/store/use-trova-errore-store";
+import type { ErrorScenario } from "@/lib/catalog";
 
 type Difficulty = "facile" | "medio" | "difficile";
 type Phase = "menu" | "playing" | "gameover";
@@ -61,6 +62,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 export default function TrovaErrorePage() {
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
+  const { scenarios: errorScenarios } = useErrorScenarios();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const [phase, setPhase] = useState<Phase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("facile");
@@ -112,6 +114,7 @@ export default function TrovaErrorePage() {
     (diff?: Difficulty) => {
       const d = diff || difficulty;
       if (diff) setDifficulty(d);
+      if (errorScenarios.length === 0) return;
       // Filter by difficulty and shuffle, pick TOTAL_ROUNDS
       const filtered = errorScenarios.filter((s) => s.difficulty === d);
       const extra = errorScenarios.filter((s) => s.difficulty !== d);
@@ -130,7 +133,7 @@ export default function TrovaErrorePage() {
       setShowRecap(false);
       startTimer();
     },
-    [difficulty, startTimer]
+    [difficulty, startTimer, errorScenarios]
   );
 
   // Handle time running out

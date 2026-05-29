@@ -12,15 +12,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { usePlayableSmazzate } from "@/store/use-smazzate-store";
+import { usePlayableSmazzate, useSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
+import { useCurrentWeeklyChallenge } from "@/store/use-weekly-challenges-store";
+import { getIsoWeekId, getTimeRemainingInWeek, type WeeklyChallenge } from "@/lib/catalog";
 import {
-  getCurrentWeeklyChallenge,
-  getTimeRemainingInWeek,
   getWeeklyChallengeProgress,
   updateWeeklyChallengeProgress,
-} from "@/data/weekly-challenges";
+} from "@/lib/weekly-challenge-progress";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
 import { saveGameForAnalysis } from "@/lib/save-analysis-data";
@@ -40,44 +40,55 @@ import { ArrowLeft, Trophy, Zap, Clock, Play, CheckCircle2, Target } from "lucid
 
 const HANDS_PER_WEEK = 5;
 
-/** Deterministic: pick 5 hands for this week based on ISO week */
+/** Deterministic: pick 5 hands for this week based on the shared ISO week id. */
 function getWeeklySmazzate(pool: Smazzata[]): Smazzata[] {
   if (pool.length === 0) return [];
-  const now = Date.now();
-  const weeksSinceEpoch = Math.floor(now / (7 * 24 * 3600 * 1000));
+  const weekId = getIsoWeekId();
   const result: Smazzata[] = [];
   for (let i = 0; i < HANDS_PER_WEEK; i++) {
-    const hash = ((weeksSinceEpoch * 31 + i * 7919) % pool.length + pool.length) % pool.length;
+    const hash = ((weekId * 31 + i * 7919) % pool.length + pool.length) % pool.length;
     result.push(pool[hash]);
   }
   return result;
 }
 
 export default function SfidaSettimanale() {
+  const challenge = useCurrentWeeklyChallenge();
   const [mounted, setMounted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0 });
   const [currentHandIndex, setCurrentHandIndex] = useState<number | null>(null);
-  const [progress, setProgress] = useState(() => getWeeklyChallengeProgress());
+  const [progress, setProgress] = useState(() => getWeeklyChallengeProgress(challenge));
 
-  const challenge = getCurrentWeeklyChallenge();
+  const { isLoaded: isSmazzateLoaded } = useSmazzate();
   const playable = usePlayableSmazzate();
   const weeklyHands = getWeeklySmazzate(playable);
 
   useEffect(() => {
     setMounted(true);
-    setProgress(getWeeklyChallengeProgress());
+    setProgress(getWeeklyChallengeProgress(challenge));
     const updateTimer = () => setTimeRemaining(getTimeRemainingInWeek());
     updateTimer();
     const interval = setInterval(updateTimer, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [challenge]);
 
   // Find next unplayed hand
   const nextUnplayed = progress.completedHands.length < HANDS_PER_WEEK
     ? progress.completedHands.length
     : null;
 
-  if (!mounted) return null;
+  if (!mounted || !challenge) return null;
+
+  if (!isSmazzateLoaded) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center pb-24">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500 font-medium">Caricamento sfida in corso...</p>
+        </div>
+      </div>
+    );
+  }
 
   const progressPercent = (progress.played / progress.target) * 100;
 
@@ -90,11 +101,12 @@ export default function SfidaSettimanale() {
         challenge={challenge}
         onFinish={(score, xpGained) => {
           updateWeeklyChallengeProgress(
+            challenge,
             `weekly-${challenge.id}-hand-${currentHandIndex}`,
             score,
             xpGained
           );
-          setProgress(getWeeklyChallengeProgress());
+          setProgress(getWeeklyChallengeProgress(challenge));
           setCurrentHandIndex(null);
         }}
         onBack={() => setCurrentHandIndex(null)}
@@ -273,7 +285,7 @@ export default function SfidaSettimanale() {
 interface WeeklyHandGameProps {
   smazzata: Smazzata;
   handNumber: number;
-  challenge: ReturnType<typeof getCurrentWeeklyChallenge>;
+  challenge: WeeklyChallenge;
   onFinish: (score: number, xpGained: number) => void;
   onBack: () => void;
 }

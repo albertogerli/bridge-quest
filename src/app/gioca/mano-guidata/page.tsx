@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useGameStore } from "@/store/use-game-store";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
-import { GUIDED_HANDS, type GuidedHand } from "@/data/guided-hands";
+import { useGuidedHands } from "@/store/use-guided-hands-store";
+import type { GuidedHand } from "@/lib/catalog";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
@@ -40,7 +41,13 @@ function markHandCompleted(handId: number) {
 
 // ─── Hand Selection ─────────────────────────────────────────────────────────
 
-function HandSelector({ onSelect }: { onSelect: (hand: GuidedHand) => void }) {
+function HandSelector({
+  onSelect,
+  hands,
+}: {
+  onSelect: (hand: GuidedHand) => void;
+  hands: GuidedHand[];
+}) {
   return (
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219]">
       <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
@@ -83,7 +90,7 @@ function HandSelector({ onSelect }: { onSelect: (hand: GuidedHand) => void }) {
         </motion.div>
 
         {/* Hand cards */}
-        {GUIDED_HANDS.map((hand, i) => {
+        {hands.map((hand, i) => {
           const completed = isHandCompleted(hand.id);
           return (
             <motion.div
@@ -199,9 +206,11 @@ function HintOverlay({ text, onDismiss }: { text: string; onDismiss: () => void 
 
 function GuidedGameplay({
   hand,
+  allHands,
   onBack,
 }: {
   hand: GuidedHand;
+  allHands: GuidedHand[];
   onBack: () => void;
 }) {
   const declarer = hand.declarer;
@@ -307,7 +316,7 @@ function GuidedGameplay({
       : undefined;
 
   // Find the other hand for "Try next" CTA
-  const otherHand = GUIDED_HANDS.find((h) => h.id !== hand.id);
+  const otherHand = allHands.find((h) => h.id !== hand.id);
 
   return (
     <div className="pt-4 px-4">
@@ -557,16 +566,26 @@ function GuidedGameplay({
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function ManoGuidataPage() {
+  const { hands, isLoaded } = useGuidedHands();
   const [selectedHand, setSelectedHand] = useState<GuidedHand | null>(null);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] grid place-items-center">
+        <div className="text-sm text-gray-500">Caricamento mani...</div>
+      </div>
+    );
+  }
 
   if (selectedHand) {
     return (
       <GuidedGameplay
         hand={selectedHand}
+        allHands={hands}
         onBack={() => setSelectedHand(null)}
       />
     );
   }
 
-  return <HandSelector onSelect={setSelectedHand} />;
+  return <HandSelector hands={hands} onSelect={setSelectedHand} />;
 }

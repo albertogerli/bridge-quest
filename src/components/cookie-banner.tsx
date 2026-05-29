@@ -13,7 +13,7 @@ export function CookieBanner() {
     // Hide cookie banner inside Capacitor iOS app (Apple guideline 5.1.2)
     const isCapacitor = typeof window !== "undefined" && (
       (window as any).Capacitor?.isNativePlatform?.() ||
-      navigator.userAgent.includes("BridgeLab-iOS")
+      navigator.userAgent.includes("BridgeLab-Native")
     );
     if (isCapacitor) return;
 

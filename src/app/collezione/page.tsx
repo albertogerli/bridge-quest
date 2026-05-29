@@ -4,13 +4,14 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
+import { useCollectibleCards } from "@/store/use-collectible-cards-store";
 import {
-  collectibleCards,
   RARITY_CONFIG,
   CATEGORY_CONFIG,
+  evaluateUnlock,
   type CollectibleCard,
   type PlayerStats,
-} from "@/data/collectible-cards";
+} from "@/lib/catalog";
 
 /* ────────────────────────────────────────────── */
 /*  Types                                         */
@@ -78,6 +79,7 @@ const RARITY_EMOJI: Record<CollectibleCard["rarity"], string> = {
 
 export default function CollezionePage() {
   /* state */
+  const { cards: collectibleCards, isLoaded: cardsLoaded } = useCollectibleCards();
   const [stats, setStats] = useState<PlayerStats | null>(null);
   const [seenCards, setSeenCards] = useState<Set<string>>(new Set());
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
@@ -89,7 +91,7 @@ export default function CollezionePage() {
   /* hydrate from store + localStorage */
   const hydrated = useHasHydrated();
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || !cardsLoaded) return;
     try {
       const s = loadPlayerStats();
       setStats(s);
@@ -97,11 +99,11 @@ export default function CollezionePage() {
 
       const ids = new Set<string>();
       for (const card of collectibleCards) {
-        if (card.checkUnlock(s)) ids.add(card.id);
+        if (evaluateUnlock(card.unlock, s)) ids.add(card.id);
       }
       setUnlockedIds(ids);
     } catch {}
-  }, [hydrated]);
+  }, [hydrated, cardsLoaded, collectibleCards]);
 
   /* derived */
   const totalCards = collectibleCards.length;
@@ -163,7 +165,7 @@ export default function CollezionePage() {
   );
 
   /* loading state */
-  if (!stats) {
+  if (!stats || !cardsLoaded) {
     return (
       <div className="pt-6 px-5 pb-28">
         <div className="mx-auto max-w-lg">
