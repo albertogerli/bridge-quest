@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { collectibleCards } from "@/data/collectible-cards";
+import { useCollectibleCards } from "@/store/use-collectible-cards-store";
+import { evaluateUnlock } from "@/lib/catalog";
 
 interface CollectionTeaserProps {
   xp: number;
@@ -12,6 +13,7 @@ interface CollectionTeaserProps {
 }
 
 export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: CollectionTeaserProps) {
+  const { cards } = useCollectibleCards();
   const playerStats = {
     xp,
     streak,
@@ -23,9 +25,11 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
     dailyHandsTotal: 0,
   };
 
-  const unlocked = collectibleCards.filter((c) => c.checkUnlock(playerStats));
-  const total = collectibleCards.length;
-  const nextCard = collectibleCards.find((c) => !c.checkUnlock(playerStats));
+  const unlocked = cards.filter((c) => evaluateUnlock(c.unlock, playerStats));
+  const total = cards.length;
+  const nextCard = cards.find((c) => !evaluateUnlock(c.unlock, playerStats));
+
+  if (total === 0) return null;
 
   return (
     <section className="px-4 sm:px-5 pt-4">
@@ -53,7 +57,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
           <div className="btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#E8E4DC] dark:border-[#2a3040]">
             {/* Mini card preview - show last 4 unlocked or first 4 locked */}
             <div className="flex items-center gap-2 mb-3">
-              {(unlocked.length > 0 ? unlocked.slice(-4) : collectibleCards.slice(0, 4)).map((card) => {
+              {(unlocked.length > 0 ? unlocked.slice(-4) : cards.slice(0, 4)).map((card) => {
                 const isUnlocked = unlocked.includes(card);
                 return (
                   <div

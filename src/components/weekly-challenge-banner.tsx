@@ -9,37 +9,35 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ChevronDown, ChevronUp, Clock, Trophy, Zap } from "lucide-react";
-import {
-  getCurrentWeeklyChallenge,
-  getTimeRemainingInWeek,
-  getWeeklyChallengeProgress,
-} from "@/data/weekly-challenges";
+import { useCurrentWeeklyChallenge } from "@/store/use-weekly-challenges-store";
+import { getTimeRemainingInWeek } from "@/lib/catalog";
+import { getWeeklyChallengeProgress } from "@/lib/weekly-challenge-progress";
 
 interface WeeklyChallengeBannerProps {
   compact?: boolean;
 }
 
 export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBannerProps) {
+  const challenge = useCurrentWeeklyChallenge();
   const [mounted, setMounted] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0 });
-
-  const challenge = getCurrentWeeklyChallenge();
-  const progress = getWeeklyChallengeProgress();
+  const [progress, setProgress] = useState(() => getWeeklyChallengeProgress(challenge));
 
   // Update timer every minute
   useEffect(() => {
     setMounted(true);
+    setProgress(getWeeklyChallengeProgress(challenge));
     const updateTimer = () => {
       setTimeRemaining(getTimeRemainingInWeek());
     };
     updateTimer();
     const interval = setInterval(updateTimer, 60000); // Update every minute
     return () => clearInterval(interval);
-  }, []);
+  }, [challenge]);
 
-  if (!mounted) {
-    return null; // Prevent SSR mismatch
+  if (!mounted || !challenge) {
+    return null; // Prevent SSR mismatch / wait for catalog
   }
 
   const progressPercent = (progress.played / progress.target) * 100;
