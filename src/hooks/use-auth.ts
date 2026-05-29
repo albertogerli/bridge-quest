@@ -15,6 +15,7 @@ export interface Profile {
   asd_code: string | null;
   asd_name: string | null;
   profile_type: "junior" | "giovane" | "adulto" | "senior";
+  role: "user" | "instructor" | "admin";
   xp: number;
   streak: number;
   last_login: string | null;

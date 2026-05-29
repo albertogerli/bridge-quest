@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useStats } from "@/hooks/use-local-stats";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
-import { collectibleCards } from "@/data/collectible-cards";
+import { useCollectibleCards } from "@/store/use-collectible-cards-store";
+import { evaluateUnlock } from "@/lib/catalog";
 import { useProfile } from "@/hooks/use-profile";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { DailyCountdown } from "@/components/daily-countdown";
@@ -36,9 +37,12 @@ const objectiveEmojiMap: Record<string, string> = {
 export function DesktopSidebar() {
   const stats = useStats();
   const profile = useProfile();
-  const { user, signOut } = useSharedAuth();
+  const { user, signOut, profile: authProfile } = useSharedAuth();
+  const isInstructor = authProfile?.role === "instructor" || authProfile?.role === "admin";
+  const isAdmin = authProfile?.role === "admin";
   const { reviewCount } = useSpacedReview();
   const { objectives, allCompleted, bonusClaimed } = useWeeklyObjectives();
+  const { cards: collectibleCards } = useCollectibleCards();
 
   const playerStats = (() => {
     let badges: string[] = [];
@@ -62,7 +66,7 @@ export function DesktopSidebar() {
       dailyHandsTotal,
     };
   })();
-  const unlockedCards = collectibleCards.filter((c) => c.checkUnlock(playerStats));
+  const unlockedCards = collectibleCards.filter((c) => evaluateUnlock(c.unlock, playerStats));
   const totalCards = collectibleCards.length;
 
   return (
@@ -126,6 +130,96 @@ export function DesktopSidebar() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* ── Scuola di Bridge (BETA) ─────────────────────────────── */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 px-1 pt-1">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              Scuola di Bridge
+            </p>
+            <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
+              Beta
+            </span>
+          </div>
+
+          {/* Le mie classi (allievo) */}
+          <Link href="/classi" aria-label="Le mie classi">
+            <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800">
+                  <span className="text-lg">🎒</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Le mie classi</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">Compiti dai tuoi istruttori</p>
+                </div>
+                <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <polyline points="9,6 15,12 9,18" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+
+          {/* Portale Istruttori (solo ruolo instructor/admin) */}
+          {isInstructor && (
+            <Link href="/istruttori" aria-label="Portale Istruttori">
+              <div className="rounded-2xl bg-gradient-to-r from-[#1B5E3B] to-[#2A7A4F] p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                    <span className="text-lg">👨‍🏫</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-white">Portale Istruttori</p>
+                    <p className="text-[11px] text-white/70">Gestisci le tue classi</p>
+                  </div>
+                  <svg className="h-4 w-4 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <polyline points="9,6 15,12 9,18" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Diventa istruttore (solo utenti non istruttori) */}
+          {user && !isInstructor && (
+            <Link href="/diventa-istruttore" aria-label="Diventa istruttore">
+              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800">
+                    <span className="text-lg">👨‍🏫</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Diventa istruttore</p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">Insegni bridge? Richiedi l&apos;accesso</p>
+                  </div>
+                  <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <polyline points="9,6 15,12 9,18" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Richieste istruttori (solo admin) */}
+          {isAdmin && (
+            <Link href="/admin/istruttori" aria-label="Richieste istruttori">
+              <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-800">
+                    <span className="text-lg">📋</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Richieste istruttori</p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">Approva o rifiuta candidature</p>
+                  </div>
+                  <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <polyline points="9,6 15,12 9,18" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* Daily Challenge */}
