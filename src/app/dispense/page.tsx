@@ -64,7 +64,7 @@ export default function DispensePage() {
 
   return (
     <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}

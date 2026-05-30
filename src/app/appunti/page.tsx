@@ -28,7 +28,7 @@ export default function AppuntiPage() {
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pb-28 lg:pb-8">
       {/* Header */}
       <div className="bg-[#003DA5] px-5 pt-14 pb-8 lg:pt-8">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <Link href="/" className="text-white/70 text-sm font-medium hover:text-white transition-colors">
             ← Home
           </Link>
@@ -48,7 +48,7 @@ export default function AppuntiPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-lg px-5 -mt-4">
+      <div className="mx-auto max-w-6xl px-5 -mt-4">
         {appunti.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 12 }}

@@ -66,7 +66,7 @@ export default function AdminInstructorRequestsPage() {
 
   if (!authLoading && !isAdmin) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
+      <div className="mx-auto max-w-6xl px-4 py-16 text-center">
         <p className="text-sm text-muted-foreground">Accesso riservato all’amministratore.</p>
         <Link href="/" className="mt-4 inline-block text-sm text-primary hover:underline">
           ← Home

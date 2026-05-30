@@ -212,7 +212,7 @@ export default function ContaVelocePage() {
   if (phase === "menu") {
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
             <span>/</span>
@@ -271,7 +271,7 @@ export default function ContaVelocePage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <CelebrationCombo trigger={showCelebration} type={stars >= 3 ? 'epic' : stars >= 2 ? 'medium' : 'small'} />
-        <div className="mx-auto max-w-lg text-center">
+        <div className="mx-auto max-w-6xl text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -384,7 +384,7 @@ export default function ContaVelocePage() {
   // Playing phase
   return (
     <div className="pt-4 px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Top bar */}
         <div className="flex items-center justify-between mb-4">
           <button

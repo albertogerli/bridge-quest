@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ConfettiBurst } from "@/components/celebration-effects";
 import { StepShell } from "../step-shell";
+import { GlossaryText } from "@/components/beginner/glossary-text";
 import { MiniCard, type MiniCardData } from "../mini-card";
 import type { StepProps } from "../types";
 
@@ -254,7 +255,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
       </div>
 
       {/* Hint */}
-      <p className="mt-3 text-center text-sm italic text-[#5c677d]">{trick.hint}</p>
+      <p className="mt-3 text-center text-sm italic text-[#5c677d]"><GlossaryText>{trick.hint}</GlossaryText></p>
 
       {/* South options */}
       <div className="mt-3 grid grid-cols-2 gap-3">
@@ -284,7 +285,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
                 : "border-rose-300 bg-rose-50 text-rose-800"
             }`}
           >
-            {isCorrect ? trick.winMessage : trick.loseMessage}
+            <GlossaryText>{isCorrect ? trick.winMessage : trick.loseMessage}</GlossaryText>
           </motion.div>
         )}
       </AnimatePresence>

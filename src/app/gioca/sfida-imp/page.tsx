@@ -438,7 +438,7 @@ function SfidaIMPContent() {
   if (matchPhase === "loading") {
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="mx-auto max-w-6xl flex flex-col items-center justify-center min-h-[60vh]">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
@@ -455,7 +455,7 @@ function SfidaIMPContent() {
     const isNoChallengeId = !challengeIdParam;
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -502,7 +502,7 @@ function SfidaIMPContent() {
   if (matchPhase === "info" && challenge) {
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           {/* Back button */}
           <motion.div
             initial={{ opacity: 0, y: -12 }}
@@ -633,7 +633,7 @@ function SfidaIMPContent() {
 
     return (
       <div className="pt-4 px-4 pb-24">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-6xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -792,7 +792,7 @@ function SfidaIMPContent() {
 
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -892,7 +892,7 @@ function SfidaIMPContent() {
     if (submitting) {
       return (
         <div className="pt-6 px-5 pb-24">
-          <div className="mx-auto max-w-lg flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="mx-auto max-w-6xl flex flex-col items-center justify-center min-h-[60vh]">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
@@ -919,7 +919,7 @@ function SfidaIMPContent() {
 
       return (
         <div className="pt-6 px-5 pb-24">
-          <div className="mx-auto max-w-lg">
+          <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1019,7 +1019,7 @@ function SfidaIMPContent() {
     // Only one side has submitted -- show "waiting" state
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1076,7 +1076,7 @@ function SfidaIMPContent() {
   if (matchPhase === "waiting" && challenge) {
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1136,7 +1136,7 @@ function SfidaIMPContent() {
   // ── FALLBACK ──
   return (
     <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-lg flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="mx-auto max-w-6xl flex flex-col items-center justify-center min-h-[60vh]">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
@@ -1157,7 +1157,7 @@ export default function SfidaIMPPage() {
     <Suspense
       fallback={
         <div className="pt-6 px-5 pb-24">
-          <div className="mx-auto max-w-lg flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="mx-auto max-w-6xl flex flex-col items-center justify-center min-h-[60vh]">
             <div className="w-10 h-10 border-3 border-[#003DA5] border-t-transparent rounded-full animate-spin mb-4" />
             <p className="text-sm text-gray-500 font-medium">Caricamento sfida...</p>
           </div>

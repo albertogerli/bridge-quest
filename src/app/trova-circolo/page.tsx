@@ -107,7 +107,7 @@ export default function TrovaCircoloPage() {
     <div className="min-h-screen bg-[#F7F5F0] pb-24">
       {/* Hero */}
       <div className="bg-gradient-to-br from-[#003DA5] to-[#0052CC] text-white px-4 pt-8 pb-10">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 text-xs text-white/60 mb-3">
               <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
@@ -162,7 +162,7 @@ export default function TrovaCircoloPage() {
 
       {/* Content */}
       <div className="px-4 -mt-4">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-6xl">
           {/* Search + Filter Bar */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}

@@ -288,7 +288,7 @@ export default function TorneoSettimanale() {
 
   return (
     <div className="pt-6 px-5 pb-28">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Back nav */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -830,7 +830,7 @@ function TournamentPlayView({
 
     return (
       <div className="pt-6 px-5 pb-28">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1037,7 +1037,7 @@ function TournamentPlayView({
     const completedCount = handResults.length;
     return (
       <div className="pt-6 px-5 pb-28">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -1290,7 +1290,7 @@ function SingleHandView({
 
   return (
     <div className={`pt-4 ${isMobile ? "px-2" : "px-4"}`}>
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -1529,7 +1529,7 @@ function SingleHandView({
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-6 mx-auto max-w-lg"
+              className="mt-6 mx-auto max-w-6xl"
             >
               <div
                 className={`card-elevated rounded-2xl p-5 text-center ${

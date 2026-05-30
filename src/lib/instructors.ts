@@ -499,6 +499,88 @@ export async function reviewInstructorRequest(
 }
 
 // ----------------------------------------------------------------------------
+// Class chat
+// ----------------------------------------------------------------------------
+
+export interface ClassMessage {
+  id: string;
+  class_id: string;
+  user_id: string;
+  body: string;
+  created_at: string;
+  display_name: string | null;
+}
+
+/** Load the chat history for a class (oldest first), with sender names resolved. */
+export async function getClassMessages(classId: string): Promise<ClassMessage[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("class_messages")
+    .select("id, class_id, user_id, body, created_at")
+    .eq("class_id", classId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+
+  const rows = (data ?? []) as Omit<ClassMessage, "display_name">[];
+  const names = await resolveNames(rows.map((r) => r.user_id));
+  return rows.map((r) => ({ ...r, display_name: names.get(r.user_id) ?? null }));
+}
+
+/** Send a message to a class. RLS enforces membership + self-authorship. */
+export async function sendClassMessage(classId: string, body: string): Promise<void> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non autenticato");
+  const trimmed = body.trim();
+  if (!trimmed) return;
+
+  const { error } = await supabase
+    .from("class_messages")
+    .insert({ class_id: classId, user_id: user.id, body: trimmed.slice(0, 2000) });
+  if (error) throw error;
+}
+
+/** Resolve display names for a set of user ids (profiles are world-readable). */
+export async function resolveNames(userIds: string[]): Promise<Map<string, string | null>> {
+  const map = new Map<string, string | null>();
+  const unique = Array.from(new Set(userIds));
+  if (unique.length === 0) return map;
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, display_name")
+    .in("id", unique);
+  if (error) throw error;
+  for (const p of data ?? []) {
+    const row = p as { id: string; display_name: string | null };
+    map.set(row.id, row.display_name);
+  }
+  return map;
+}
+
+/** Subscribe to new chat messages for a class (Supabase Realtime). Returns an
+ *  unsubscribe function. The payload has no display_name — resolve it caller-side. */
+export function subscribeClassMessages(
+  classId: string,
+  onInsert: (row: { id: string; user_id: string; body: string; created_at: string }) => void
+): () => void {
+  const supabase = createClient();
+  const channel = supabase
+    .channel(`class-chat-${classId}`)
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "class_messages", filter: `class_id=eq.${classId}` },
+      (payload) => onInsert(payload.new as { id: string; user_id: string; body: string; created_at: string })
+    )
+    .subscribe();
+  return () => {
+    void supabase.removeChannel(channel);
+  };
+}
+
+// ----------------------------------------------------------------------------
 // Live classroom mode (Phase 3)
 // ----------------------------------------------------------------------------
 

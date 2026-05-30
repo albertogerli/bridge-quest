@@ -4,18 +4,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 
-const navItems = [
+const primaryNav = [
   { href: "/", icon: "home", label: "Home" },
-  { href: "/lezioni", icon: "book", label: "Lezioni" },
-  { href: "/dispense", icon: "dispense", label: "Dispense" },
+  { href: "/impara", icon: "book", label: "Impara" },
   { href: "/gioca", icon: "play", label: "Gioca" },
+  { href: "/scuola", icon: "scuola", label: "Scuola" },
   { href: "/amici", icon: "friends", label: "Amici" },
-  { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/classifica", icon: "trophy", label: "Classifica" },
+  { href: "/profilo", icon: "user", label: "Profilo" },
+];
+
+const moreNav = [
+  { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/negozio", icon: "shop", label: "Negozio" },
   { href: "/trova-circolo", icon: "circolo", label: "Trova ASD" },
   { href: "/scopri", icon: "scopri", label: "Scopri" },
-  { href: "/profilo", icon: "user", label: "Profilo" },
 ];
 
 const icons: Record<string, (active: boolean) => React.ReactNode> = {
@@ -42,6 +45,12 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
   play: () => (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-0.5">
       <path d="M8 5v14l11-7z" />
+    </svg>
+  ),
+  scuola: (a) => (
+    <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
+      <path d="M22 10L12 5 2 10l10 5 10-5z" />
+      <path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
     </svg>
   ),
   friends: (a) => (
@@ -100,6 +109,38 @@ export function DesktopNav() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const renderItem = (item: { href: string; icon: string; label: string }) => {
+    const active = isActive(item.href);
+    if (item.icon === "play") {
+      return (
+        <Link key={item.href} href={item.href} aria-label={item.label}>
+          <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.97] mt-2 mb-2 ${
+            active
+              ? "bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20"
+              : "bg-[#003DA5] text-white shadow-sm hover:shadow-md"
+          }`}>
+            {icons[item.icon](active)}
+            <span>{item.label}</span>
+          </div>
+        </Link>
+      );
+    }
+    return (
+      <Link key={item.href} href={item.href} aria-label={item.label}>
+        <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all active:scale-[0.97] ${
+          active
+            ? "bg-[#003DA5]/10 text-[#003DA5] font-semibold"
+            : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
+        }`}>
+          <span className={active ? "" : "text-gray-400"} aria-hidden="true">
+            {icons[item.icon](active)}
+          </span>
+          <span>{item.label}</span>
+        </div>
+      </Link>
+    );
+  };
+
   return (
     <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-white dark:bg-[#141821] border-r border-[#e5e7eb] dark:border-[#2a3040]" aria-label="Navigazione principale">
       {/* Logo */}
@@ -110,41 +151,16 @@ export function DesktopNav() {
       <div className="h-px bg-[#e5e7eb] dark:bg-[#2a3040] mx-4" />
 
       {/* Nav items */}
-      <div className="flex-1 px-3 py-4 space-y-1">
-        {navItems.map((item) => {
-          const active = isActive(item.href);
-          const isPlay = item.icon === "play";
+      <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {primaryNav.map(renderItem)}
 
-          if (isPlay) {
-            return (
-              <Link key={item.href} href={item.href} aria-label={item.label}>
-                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.97] mt-2 mb-2 ${
-                  active
-                    ? "bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20"
-                    : "bg-[#003DA5] text-white shadow-sm hover:shadow-md"
-                }`}>
-                  {icons[item.icon](active)}
-                  <span>{item.label}</span>
-                </div>
-              </Link>
-            );
-          }
-
-          return (
-            <Link key={item.href} href={item.href} aria-label={item.label}>
-              <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all active:scale-[0.97] ${
-                active
-                  ? "bg-[#003DA5]/10 text-[#003DA5] font-semibold"
-                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
-              }`}>
-                <span className={active ? "" : "text-gray-400"} aria-hidden="true">
-                  {icons[item.icon](active)}
-                </span>
-                <span>{item.label}</span>
-              </div>
-            </Link>
-          );
-        })}
+        {/* Secondary "Altro" group */}
+        <div className="pt-4">
+          <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-gray-300 dark:text-gray-600">
+            Altro
+          </p>
+          {moreNav.map(renderItem)}
+        </div>
       </div>
 
       {/* Settings at bottom */}

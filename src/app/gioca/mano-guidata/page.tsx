@@ -51,7 +51,7 @@ function HandSelector({
   return (
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219]">
       <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
-        <div className="mx-auto max-w-lg flex items-center gap-3 px-4 py-3.5">
+        <div className="mx-auto max-w-6xl flex items-center gap-3 px-4 py-3.5">
           <Link
             href="/gioca"
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm"
@@ -66,7 +66,7 @@ function HandSelector({
         </div>
       </header>
 
-      <div className="mx-auto max-w-lg px-4 py-6 space-y-4">
+      <div className="mx-auto max-w-6xl px-4 py-6 space-y-4">
         {/* Intro card */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -320,7 +320,7 @@ function GuidedGameplay({
 
   return (
     <div className="pt-4 px-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -506,7 +506,7 @@ function GuidedGameplay({
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-6 mx-auto max-w-lg"
+              className="mt-6 mx-auto max-w-6xl"
             >
               <CelebrationCombo
                 trigger={showCelebration}
@@ -546,7 +546,7 @@ function GuidedGameplay({
                 </div>
               </div>
 
-              <div className="mt-4 mx-auto max-w-lg">
+              <div className="mt-4 mx-auto max-w-6xl">
                 <ShareResult
                   contract={hand.contract}
                   tricksMade={game.result.tricksMade}

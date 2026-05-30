@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function AccessibilitaPage() {
   return (
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pt-8 pb-24 px-5">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-6xl">
         <Link
           href="/"
           className="inline-block mb-8 text-[#003DA5] hover:underline text-sm font-medium"

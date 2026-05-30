@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ClassChat } from "@/components/instructor/class-chat";
 import {
   getClassDetail,
   regenerateInviteCode,
@@ -89,7 +90,7 @@ export default function ClassDetailPage({
 
   if (error || !detail) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-destructive">{error ?? "Classe non trovata"}</p>
         <Link href="/istruttori" className="mt-4 inline-block text-sm text-primary hover:underline">
           ← Torna alle classi
@@ -152,6 +153,7 @@ export default function ClassDetailPage({
         <TabsList>
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
           <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
 
         {/* Compiti */}
@@ -211,6 +213,11 @@ export default function ClassDetailPage({
               ))}
             </div>
           )}
+        </TabsContent>
+
+        {/* Chat */}
+        <TabsContent value="chat" className="mt-4">
+          <ClassChat classId={classId} />
         </TabsContent>
       </Tabs>
     </div>

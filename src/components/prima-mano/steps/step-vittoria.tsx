@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
-import { Star } from "lucide-react";
+import { Star, Play } from "lucide-react";
 import { ConfettiBurst, StarBurst } from "@/components/celebration-effects";
 import { GuidedPath } from "@/components/beginner/guided-path";
 import { StepShell } from "../step-shell";
@@ -158,12 +159,45 @@ export function StepVittoria({
         </span>
       </motion.div>
 
-      {/* Guided next steps */}
+      {/* Recommended next step: MiniBridge */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.2 }}
+        className="mt-6"
+      >
+        <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
+          Il prossimo passo
+        </p>
+        <Link href="/gioca/minibridge" className="block">
+          <div className="relative overflow-hidden rounded-[24px] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-5 transition-all hover:shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-2xl shadow-md">
+                🎓
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="font-bold text-[#12305f]">Prova il MiniBridge</p>
+                  <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                    Consigliato
+                  </span>
+                </div>
+                <p className="mt-0.5 text-sm leading-6 text-[#5c677d]">
+                  Gioca una mano intera senza licita: conti i punti e scegli il contratto. Il modo migliore per continuare a imparare giocando.
+                </p>
+              </div>
+              <Play className="h-5 w-5 shrink-0 text-emerald-600" />
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+
+      {/* Other next steps */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.3 }}
-        className="mt-6"
+        transition={{ delay: 2.4 }}
+        className="mt-4"
       >
         <GuidedPath variant="full" />
       </motion.div>

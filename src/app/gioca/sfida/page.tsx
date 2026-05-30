@@ -181,7 +181,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
 
   return (
     <div className="pt-4 px-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -393,7 +393,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-6 mx-auto max-w-lg"
+              className="mt-6 mx-auto max-w-6xl"
             >
               <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? 'epic' : 'medium') : 'small'} />
               <div
@@ -437,7 +437,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               </div>
 
               {/* Share Result */}
-              <div className="mt-4 mx-auto max-w-lg">
+              <div className="mt-4 mx-auto max-w-6xl">
                 <ShareResult
                   contract={smazzata.contract}
                   tricksMade={game.result.tricksMade}
@@ -452,7 +452,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1 }}
-                className="mt-4 mx-auto max-w-lg"
+                className="mt-4 mx-auto max-w-6xl"
               >
                 <Link href="/gioca/analisi">
                   <div className="card-elevated rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
@@ -481,7 +481,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-6 mx-auto max-w-lg"
+            className="mt-6 mx-auto max-w-6xl"
           >
             <button
               onClick={() => setShowHint(!showHint)}

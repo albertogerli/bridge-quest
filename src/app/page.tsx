@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { Badge } from "@/components/ui/badge";
 import { PrimaManoOnboarding } from "@/components/prima-mano-onboarding";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
@@ -11,38 +11,22 @@ import { useProfile } from "@/hooks/use-profile";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
-import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
-import { DidactaBanner } from "@/components/didacta-banner";
-import { PendingChallengesBanner } from "@/components/pending-challenges-banner";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
-import { GuidedPath } from "@/components/beginner/guided-path";
 import { LostCard } from "@/components/beginner/lost-card";
 import { WeeklyRecapModal } from "@/components/home/weekly-recap-modal";
 import { HeroSection } from "@/components/home/hero-section";
-import { BentoGrid } from "@/components/home/bento-grid";
-import { SpacedReviewCard } from "@/components/home/spaced-review-card";
-import { GlossarioCard } from "@/components/home/glossario-card";
-import { ScopriBanner } from "@/components/home/scopri-banner";
 import { HomeFooter } from "@/components/home/home-footer";
-import { WorldsGrid } from "@/components/home/worlds-grid";
-import { InstallAppBanner } from "@/components/home/install-app-banner";
 import { ReferralHandler } from "@/components/home/referral-handler";
-import { DailyQuests } from "@/components/home/daily-quests";
 import { TreasureChests } from "@/components/home/treasure-chests";
-import { CoursesSection } from "@/components/home/courses-section";
-import { WeeklyObjectivesSection } from "@/components/home/weekly-objectives-section";
 import { CollectionTeaser } from "@/components/home/collection-teaser";
 import { LandingPage } from "@/components/home/landing-page";
 import { GuestLoginReminder } from "@/components/home/banners/guest-login-reminder";
 import { PrimaManoBanner } from "@/components/home/banners/prima-mano-banner";
 import { SuggestedNextStep } from "@/components/home/banners/suggested-next-step";
-import { DailyChallengeStreakMobile } from "@/components/home/banners/daily-challenge-streak-mobile";
-import { SurveyBanner } from "@/components/home/banners/survey-banner";
 import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
-import { GuidedModeToggle } from "@/components/home/banners/guided-mode-toggle";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
-import { Zap, Target } from "lucide-react";
+import { Zap } from "lucide-react";
 
 export default function Home() {
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
@@ -276,16 +260,30 @@ export default function Home() {
       {/* Prima Mano banner for users who skipped onboarding */}
       {notOnboarded && !showOnboarding && <PrimaManoBanner />}
 
-      {/* ===== GUIDED PATH (new users first 7 days) ===== */}
-      {isOnboarded && isNewUser && !isStuck && (
-        <section className="mx-auto max-w-lg px-4 mb-4">
-          <GuidedPath variant="compact" />
-        </section>
-      )}
+      {/* ===== HUB DI NAVIGAZIONE (Impara / Gioca / Scuola) ===== */}
+      <section className="px-4 sm:px-5 pt-4">
+        <div className="mx-auto grid max-w-3xl grid-cols-3 gap-3">
+          {[
+            { href: "/impara", emoji: "🎓", label: "Impara", desc: "Percorso e corsi", cls: "from-[#1B5E3B] to-[#2A7A4F]" },
+            { href: "/gioca", emoji: "🎮", label: "Gioca", desc: "Pratica e sfide", cls: "from-[#003DA5] to-[#0052CC]" },
+            { href: "/scuola", emoji: "👨‍🏫", label: "Scuola", desc: "Le tue classi", cls: "from-[#c8a44e] to-[#a8842e]" },
+          ].map((h) => (
+            <Link key={h.href} href={h.href} aria-label={h.label} className="block">
+              <div className={`flex h-full flex-col items-center gap-1 rounded-2xl bg-gradient-to-br ${h.cls} p-4 text-center text-white transition-all hover:translate-y-[-2px] hover:shadow-lg`}>
+                <span className="text-2xl">{h.emoji}</span>
+                <span className="text-sm font-bold">{h.label}</span>
+                <span className="text-[10px] text-white/75">{h.desc}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
 
       {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
       {isOnboarded && isStuck && (
-        <section className="mx-auto max-w-lg px-4 mb-4">
+        <section className="mx-auto max-w-6xl px-4 mb-4">
           <LostCard nextModule={nextModule} />
         </section>
       )}
@@ -309,95 +307,16 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ===== BENTO GRID ===== */}
-      <BentoGrid dailyDone={stats.dailyDone} />
-
-      {/* ===== PENDING IMP CHALLENGES ===== */}
-      <section className="px-4 sm:px-5 -mt-2 relative z-10">
-        <div className="mx-auto max-w-lg">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <PendingChallengesBanner />
-          </motion.div>
-        </div>
-      </section>
-
       {/* ===== PROSSIMO PASSO SUGGERITO ===== */}
       {hasStarted && !isGuidedMode && <SuggestedNextStep nextModule={nextModule} />}
-
-      {/* ===== DAILY CHALLENGE + STREAK ===== (hidden on desktop, sidebar shows these) */}
-      <DailyChallengeStreakMobile
-        dailyDone={stats.dailyDone}
-        streak={stats.streak}
-        streakAtRisk={stats.streakAtRisk}
-        dailyChallengeLabel={profile.dailyChallengeLabel}
-      />
-
-      {/* ===== DAILY QUESTS ===== */}
-      <section className="px-4 sm:px-5 pt-5">
-        <div className="mx-auto max-w-lg">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#c8a44e]/15">
-                <Target className="w-4 h-4 text-[#c8a44e]" />
-              </div>
-              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                Obiettivi del giorno
-              </h2>
-            </div>
-            <Badge variant="outline" className="text-[10px] font-bold text-[#c8a44e] border-[#c8a44e]/30">
-              Bonus XP
-            </Badge>
-          </div>
-          <DailyQuests
-            modulesCompleted={totalModulesCompleted}
-            handsPlayed={handsPlayed}
-            dailyDone={stats.dailyDone}
-          />
-        </div>
-      </section>
-
-      {/* ===== SONDAGGIO BANNER ===== */}
-      <SurveyBanner />
 
       {/* ===== TROVA ASD BANNER ===== (logged-in users without ASD) */}
       {user && !authProfile?.asd_code && <FindAsdBanner />}
 
-      {/* ===== DIDACTA 2026 BANNER ===== */}
-      <section className="px-4 sm:px-5 pt-4">
-        <div className="mx-auto max-w-lg">
-          <DidactaBanner />
-        </div>
-      </section>
-
-      {/* ===== WEEKLY CHALLENGE BANNER ===== (hidden in guided mode) */}
-      {!isGuidedMode && (
-        <section className="px-4 sm:px-5 pt-4">
-          <div className="mx-auto max-w-lg">
-            <WeeklyChallengeBanner compact />
-          </div>
-        </section>
-      )}
-
-      {/* ===== WEEKLY OBJECTIVES ===== (hidden in guided mode) */}
-      {!isGuidedMode && <WeeklyObjectivesSection />}
-
-      {/* ===== INSTALL APP BANNER ===== (mobile only) */}
-      <InstallAppBanner />
-
-      {/* ===== SPACED REVIEW ===== (hidden on desktop, sidebar shows it) */}
-      <SpacedReviewCard reviewCount={reviewCount} />
-
-      {/* ===== GLOSSARIO LINK ===== */}
-      <GlossarioCard />
-
       {/* ===== TREASURE CHESTS ===== (hidden in guided mode) */}
       {!isGuidedMode && (
         <section className="px-4 sm:px-5 pt-4">
-          <div className="mx-auto max-w-lg">
+          <div className="mx-auto max-w-6xl">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 Prossimo premio
@@ -427,25 +346,6 @@ export default function Home() {
         <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
         <div className="h-px w-12 bg-[#1B5E3B]/10" />
       </div>
-
-      {/* ===== COURSES ===== */}
-      <CoursesSection completedModules={stats.completedModules} />
-
-      {/* ===== WORLDS (All Courses) ===== */}
-      <WorldsGrid completedModules={stats.completedModules} />
-
-      {/* Suit divider */}
-      <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
-        <div className="h-px w-12 bg-[#1B5E3B]/10" />
-        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-[#1B5E3B]/10" />
-      </div>
-
-      {/* ===== SCOPRI IL BRIDGE ===== */}
-      <ScopriBanner />
-
-      {/* ===== GUIDED MODE TOGGLE ===== */}
-      {isGuidedMode && <GuidedModeToggle onToggle={toggleGuidedMode} />}
 
       {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}
       <HomeFooter />

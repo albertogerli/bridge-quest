@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { GlossaryText } from "@/components/beginner/glossary-text";
 
 export function StepShell({
   kicker,
@@ -19,7 +20,9 @@ export function StepShell({
       <h1 className="max-w-[16ch] text-3xl font-bold leading-[1.05] text-[#12305f] sm:text-4xl">
         {title}
       </h1>
-      <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#44536d]">{body}</p>
+      <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#44536d]">
+        <GlossaryText>{body}</GlossaryText>
+      </p>
       {children}
     </div>
   );

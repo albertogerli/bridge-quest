@@ -15,7 +15,7 @@ const fadeUp = {
 export default function ScopriPage() {
   return (
     <div className="pt-6 px-4 sm:px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
         <motion.div {...fadeUp} className="mb-2">
           <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">

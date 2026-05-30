@@ -84,7 +84,7 @@ export default function LezioniPage() {
 
   return (
     <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}

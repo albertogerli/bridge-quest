@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Shield, Swords } from "lucide-react";
 import { ConfettiBurst } from "@/components/celebration-effects";
 import { StepShell } from "../step-shell";
+import { GlossaryText } from "@/components/beginner/glossary-text";
 import type { StepProps } from "../types";
 
 function ChoiceCard({
@@ -45,8 +46,8 @@ function ChoiceCard({
             : "border-gray-200 bg-white hover:border-[#003DA5]/30 hover:bg-[#f7f9ff]"
       }`}
     >
-      <p className="text-sm font-bold text-[#12305f]">{label}</p>
-      <p className="mt-1 text-sm leading-6 text-[#5c677d]">{description}</p>
+      <p className="text-sm font-bold text-[#12305f]"><GlossaryText>{label}</GlossaryText></p>
+      <p className="mt-1 text-sm leading-6 text-[#5c677d]"><GlossaryText>{description}</GlossaryText></p>
     </motion.button>
   );
 }
@@ -125,7 +126,7 @@ export function StepRuoli({ onComplete, playSound }: StepProps) {
                   </div>
                   <div>
                     <p className="text-sm font-bold text-[#12305f]">{role.title}</p>
-                    <p className="text-sm leading-6 text-[#5c677d]">{role.description}</p>
+                    <p className="text-sm leading-6 text-[#5c677d]"><GlossaryText>{role.description}</GlossaryText></p>
                   </div>
                 </div>
               </motion.div>
@@ -174,9 +175,9 @@ export function StepRuoli({ onComplete, playSound }: StepProps) {
                 : "border-rose-300 bg-rose-50 text-rose-800"
             }`}
           >
-            {choice === "defender"
+            <GlossaryText>{choice === "defender"
               ? "Esatto! La prima carta (apertura) la gioca il difensore alla sinistra del dichiarante. Solo dopo il morto scopre le sue carte."
-              : "No, il dichiarante non gioca per primo. La prima carta la gioca il difensore alla sua sinistra."}
+              : "No, il dichiarante non gioca per primo. La prima carta la gioca il difensore alla sua sinistra."}</GlossaryText>
           </motion.div>
         )}
 

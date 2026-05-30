@@ -113,7 +113,7 @@ export default function NuovoPostPage() {
 
   return (
     <div className="pt-6 px-4 sm:px-5 pb-24">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-6xl">
         {/* Back */}
         <Link
           href="/forum"

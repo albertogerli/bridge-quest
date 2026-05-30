@@ -67,3 +67,41 @@ export function awardGameXp(gameId: string, xp: number): number {
     return 0;
   }
 }
+
+/**
+ * Award XP for a REPEATABLE practice mode (MiniBridge, guided hands, mini-games).
+ * Unlike awardGameXp, it pays out every time you play — but caps the total per
+ * (mode, day) to prevent grinding. Returns the XP actually awarded.
+ */
+export function awardPracticeXp(gameKey: string, xp: number, dailyCapXp = 200): number {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const capKey = `bq_practice_xp_${gameKey}_${today}`;
+    const earnedToday = parseInt(localStorage.getItem(capKey) || "0", 10);
+    const remaining = Math.max(0, dailyCapXp - earnedToday);
+
+    const store = useGameStore.getState();
+    // Always count the hand played, even once the daily cap is hit.
+    store.recordHandPlayed();
+    localStorage.setItem("bq_last_hand_ts", String(Date.now()));
+    const ht = parseInt(localStorage.getItem(`bq_hands_today_${today}`) || "0", 10);
+    localStorage.setItem(`bq_hands_today_${today}`, String(ht + 1));
+
+    if (remaining <= 0) return 0;
+
+    let xpToAward = xp;
+    const bonusMode = localStorage.getItem("bq_bonus_mode") === "1";
+    if (bonusMode) {
+      xpToAward *= 2;
+      localStorage.removeItem("bq_bonus_mode");
+    }
+    xpToAward = Math.min(xpToAward, remaining);
+
+    store.addXp(xpToAward);
+    localStorage.setItem(capKey, String(earnedToday + xpToAward));
+    hapticSuccess();
+    return xpToAward;
+  } catch {
+    return 0;
+  }
+}

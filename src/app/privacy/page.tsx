@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pt-8 pb-24 px-5">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-6xl">
         <Link href="/" className="text-sm text-[#003DA5] font-semibold mb-6 inline-block">&larr; Torna alla Home</Link>
 
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Privacy Policy e Cookie Policy</h1>
