@@ -119,7 +119,7 @@ export default function SfidaSettimanale() {
     <div className="min-h-screen bg-[#F7F5F0] pb-24">
       {/* Header */}
       <div className={`bg-gradient-to-br ${challenge.gradient} text-white px-4 pt-6 pb-10`}>
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-6xl">
           <Link href="/gioca" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Torna a Gioca
@@ -163,7 +163,7 @@ export default function SfidaSettimanale() {
 
       {/* Hands list */}
       <div className="px-4 -mt-4">
-        <div className="mx-auto max-w-2xl space-y-3">
+        <div className="mx-auto max-w-6xl space-y-3">
           {weeklyHands.map((hand, i) => {
             const isPlayed = i < progress.completedHands.length;
             const isNext = i === nextUnplayed;
@@ -240,7 +240,7 @@ export default function SfidaSettimanale() {
 
       {/* Tips */}
       <div className="px-4 mt-6">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-6xl">
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
             <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
               💡 Suggerimenti per questa settimana
@@ -260,7 +260,7 @@ export default function SfidaSettimanale() {
       {/* Badge section */}
       {progress.completed && (
         <div className="px-4 mt-6">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -392,7 +392,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
   return (
     <div className="pt-4 px-4 min-h-screen bg-[#F7F5F0]">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-3">
           <div className="flex items-center justify-center gap-2 mb-2">
@@ -555,7 +555,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-6 mx-auto max-w-lg"
+              className="mt-6 mx-auto max-w-6xl"
             >
               <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? "epic" : "medium") : "small"} />
               <div className={`card-elevated rounded-2xl p-6 text-center ${
@@ -597,7 +597,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
         {/* Hint */}
         {game.phase === "ready" && smazzata.commentary && (
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 mx-auto max-w-lg">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 mx-auto max-w-6xl">
             <button
               onClick={() => setShowHint(!showHint)}
               className="flex items-center gap-2 mx-auto mb-2 px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-sm font-semibold text-gray-600 transition-colors"

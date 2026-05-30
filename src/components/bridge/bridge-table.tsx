@@ -49,6 +49,32 @@ const suitColorClass: Record<string, string> = {
   club: "text-[#2E7D32]",
 };
 
+/** Side dummy (E/W): suits as rows, ranks laid horizontally within each suit.
+ *  Read-only — the dummy on a side is always controlled by the (AI) declarer. */
+function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string | null }) {
+  const order: string[] = trumpSuit
+    ? [trumpSuit, ...["spade", "heart", "diamond", "club"].filter((s) => s !== trumpSuit)]
+    : ["spade", "heart", "diamond", "club"];
+  const rankVal: Record<string, number> = { A: 14, K: 13, Q: 12, J: 11, "10": 10, "9": 9, "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2 };
+  return (
+    <div className="rounded-lg bg-white/90 px-2 py-1.5 shadow-md">
+      {order.map((suit) => {
+        const sc = cards
+          .filter((c) => c.suit === suit)
+          .sort((a, b) => (rankVal[b.rank] ?? 0) - (rankVal[a.rank] ?? 0));
+        return (
+          <div key={suit} className="flex items-center gap-1 leading-none">
+            <span className={`text-xs ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
+            <span className={`font-mono text-[11px] font-bold ${suitColorClass[suit]}`}>
+              {sc.length ? sc.map((c) => c.rank).join(" ") : "—"}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 /** Compact face-down card stack for mobile E/W positions */
 function CompactFaceDown({ count, gradient }: { count: number; gradient: string }) {
   return (
@@ -298,7 +324,9 @@ export function BridgeTable({
       {/* East hand */}
       <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
         <div className="flex items-center gap-1">
-          {isCompact && eastFaceDown ? (
+          {isDummy("east") && !eastFaceDown ? (
+            <SideDummy cards={east} trumpSuit={trumpSuit} />
+          ) : isCompact && eastFaceDown ? (
             <CompactFaceDown count={east.length} gradient={cosmetics.cardBackGradient} />
           ) : (
             <Hand
@@ -321,7 +349,9 @@ export function BridgeTable({
           <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
             Ovest
           </span>
-          {isCompact && westFaceDown ? (
+          {isDummy("west") && !westFaceDown ? (
+            <SideDummy cards={west} trumpSuit={trumpSuit} />
+          ) : isCompact && westFaceDown ? (
             <CompactFaceDown count={west.length} gradient={cosmetics.cardBackGradient} />
           ) : (
             <Hand

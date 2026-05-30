@@ -211,7 +211,7 @@ export default function RipassoPage() {
 
       {/* Header */}
       <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
-        <div className="mx-auto max-w-lg flex items-center gap-3 px-4 py-3.5">
+        <div className="mx-auto max-w-6xl flex items-center gap-3 px-4 py-3.5">
           <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm">
             <ArrowLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           </Link>
@@ -232,7 +232,7 @@ export default function RipassoPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-lg px-4 py-5 space-y-5">
+      <div className="mx-auto max-w-6xl px-4 py-5 space-y-5">
         {/* Stats bar */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}

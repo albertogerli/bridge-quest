@@ -8,6 +8,7 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { MiniCard } from "../mini-card";
 import { ConfettiBurst } from "@/components/celebration-effects";
 import { StepShell } from "../step-shell";
+import { GlossaryText } from "@/components/beginner/glossary-text";
 import type { StepProps } from "../types";
 import type { MiniCardData } from "../mini-card";
 
@@ -180,9 +181,9 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
                 animate={{ opacity: 1, height: "auto" }}
                 className="rounded-[24px] border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800"
               >
-                {scenario === 1
+                <GlossaryText>{scenario === 1
                   ? "Bravo! Avevi cuori in mano, quindi dovevi per forza rispondere a cuori. Le picche erano bloccate."
-                  : "Esatto! Senza cuori in mano, sei libero di giocare qualsiasi carta. Puoi tagliare, scartare... decidi tu."}
+                  : "Esatto! Senza cuori in mano, sei libero di giocare qualsiasi carta. Puoi tagliare, scartare... decidi tu."}</GlossaryText>
               </motion.div>
             )}
           </motion.div>

@@ -79,7 +79,7 @@ export default function LessonDetailPage({
 
   return (
     <div className="pt-6 px-5">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
         <motion.div
           initial={{ opacity: 0 }}

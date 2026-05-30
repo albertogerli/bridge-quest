@@ -135,7 +135,7 @@ function SfidaAmicoContent() {
     // Show landing / choice screen
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -12 }}
@@ -460,7 +460,7 @@ function ActiveChallenge({
 
   return (
     <div className="pt-4 px-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -639,7 +639,7 @@ function ActiveChallenge({
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-6 mx-auto max-w-lg space-y-4"
+              className="mt-6 mx-auto max-w-6xl space-y-4"
             >
               {/* Result card */}
               <div
@@ -744,7 +744,7 @@ function ActiveChallenge({
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-6 mx-auto max-w-lg space-y-4"
+              className="mt-6 mx-auto max-w-6xl space-y-4"
             >
               {/* Comparison card */}
               <div className="card-elevated rounded-2xl overflow-hidden border border-gray-200">
@@ -857,7 +857,7 @@ function ActiveChallenge({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-6 mx-auto max-w-lg"
+            className="mt-6 mx-auto max-w-6xl"
           >
             <div className="card-elevated rounded-2xl bg-white p-5">
               <div className="flex items-start gap-3.5">
@@ -1001,7 +1001,7 @@ export default function SfidaAmicoPage() {
     <Suspense
       fallback={
         <div className="pt-6 px-5 pb-24">
-          <div className="mx-auto max-w-lg text-center">
+          <div className="mx-auto max-w-6xl text-center">
             <div className="animate-pulse space-y-4">
               <div className="h-8 bg-gray-200 rounded-xl w-48 mx-auto" />
               <div className="h-40 bg-gray-100 rounded-2xl" />

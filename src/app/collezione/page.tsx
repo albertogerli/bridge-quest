@@ -168,7 +168,7 @@ export default function CollezionePage() {
   if (!stats || !cardsLoaded) {
     return (
       <div className="pt-6 px-5 pb-28">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <div className="h-8 w-40 bg-gray-100 rounded-lg animate-pulse mb-6" />
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -185,7 +185,7 @@ export default function CollezionePage() {
 
   return (
     <div className="pt-6 px-5 pb-28">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* ── Header ── */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}

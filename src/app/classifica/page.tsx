@@ -10,7 +10,7 @@ import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { asdNameToSlug } from "@/lib/asd-utils";
 import { useCatalog } from "@/store/use-catalog-store";
 import type { CourseId } from "@/lib/catalog";
-import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2 } from "lucide-react";
+import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2, Search, X } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 
 const medals = ["🥇", "🥈", "🥉"];
@@ -178,7 +178,7 @@ export default function ClassificaPage() {
         }
 
         if (data && data.length > 0) {
-          const players = data
+          const mapped = data
             .filter((u: Record<string, unknown>) => u.display_name)
             .map((u: Record<string, unknown>) => ({
               id: u.id as string,
@@ -187,6 +187,10 @@ export default function ClassificaPage() {
               updated_at: u.updated_at as string,
               asd_name: (u.asd_name as string | null) || null,
             }));
+          // Dedupe by id (the source can return a player more than once) so React
+          // keys stay unique.
+          const seen = new Set<string>();
+          const players = mapped.filter((p) => (seen.has(p.id) ? false : (seen.add(p.id), true)));
           setAllPlayers(players);
 
           // Calculate user's full rank (even if not in top 100)
@@ -290,6 +294,20 @@ export default function ClassificaPage() {
     [allPlayers]
   );
 
+  // Search/filter by player name
+  const [search, setSearch] = useState("");
+  const q = search.trim().toLowerCase();
+  const playerMatches = (p: PlayerEntry) =>
+    p.name.toLowerCase().includes(q) || (p.asd_name ?? "").toLowerCase().includes(q);
+  const filteredGlobal = useMemo(
+    () => (q ? allPlayers.filter(playerMatches) : allPlayers),
+    [allPlayers, q]
+  );
+  const filteredWeekly = useMemo(
+    () => (q ? weeklyPlayers.filter(playerMatches) : weeklyPlayers),
+    [weeklyPlayers, q]
+  );
+
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
     if (tab === "per-asd") {
@@ -299,7 +317,7 @@ export default function ClassificaPage() {
 
   return (
     <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -604,11 +622,14 @@ export default function ClassificaPage() {
                 ) : allPlayers.length === 0 ? (
                   <EmptyState message="La classifica è ancora vuota" showCta />
                 ) : (
-                  <LeaderboardList
-                    players={allPlayers}
-                    currentUserId={currentUserId}
-                    league={league}
-                  />
+                  <>
+                    <LeaderboardSearch value={search} onChange={setSearch} />
+                    {filteredGlobal.length === 0 ? (
+                      <EmptyState message={`Nessun giocatore trovato per "${search}"`} />
+                    ) : (
+                      <LeaderboardList players={filteredGlobal} currentUserId={currentUserId} league={league} />
+                    )}
+                  </>
                 )}
               </motion.div>
             )}
@@ -637,11 +658,12 @@ export default function ClassificaPage() {
                         Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di più sale in cima!
                       </p>
                     </motion.div>
-                    <LeaderboardList
-                      players={weeklyPlayers}
-                      currentUserId={currentUserId}
-                      league={league}
-                    />
+                    <LeaderboardSearch value={search} onChange={setSearch} />
+                    {filteredWeekly.length === 0 ? (
+                      <EmptyState message={`Nessun giocatore trovato per "${search}"`} />
+                    ) : (
+                      <LeaderboardList players={filteredWeekly} currentUserId={currentUserId} league={league} />
+                    )}
                   </>
                 )}
               </motion.div>
@@ -1044,6 +1066,29 @@ function PerGiocoView({
 /* ============================================================================
    LeaderboardList component
    ============================================================================ */
+function LeaderboardSearch({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="relative mb-3">
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Cerca un giocatore…"
+        className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-9 text-sm outline-none focus-visible:border-[#003DA5] focus-visible:ring-[3px] focus-visible:ring-[#003DA5]/15 dark:border-gray-700 dark:bg-[#1a1f2e]"
+      />
+      {value && (
+        <button
+          onClick={() => onChange("")}
+          aria-label="Cancella ricerca"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+}
+
 function LeaderboardList({
   players,
   currentUserId,
@@ -1053,8 +1098,9 @@ function LeaderboardList({
   currentUserId: string | null;
   league: (typeof leagues)[0];
 }) {
-  // Sort by XP and assign ranks
-  const sorted = [...players].sort((a, b) => b.xp - a.xp);
+  // Dedupe by id (defensive: the source may contain a player twice) then sort.
+  const unique = Array.from(new Map(players.map((p) => [p.id, p])).values());
+  const sorted = unique.sort((a, b) => b.xp - a.xp);
   const ranked = sorted.map((p, i) => ({ ...p, rank: i + 1 }));
   const totalPlayers = ranked.length;
 

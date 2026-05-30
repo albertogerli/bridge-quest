@@ -110,7 +110,7 @@ export default function ForumPage() {
 
   return (
     <div className="pt-6 px-4 sm:px-5 pb-24">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>

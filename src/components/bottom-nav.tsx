@@ -1,37 +1,97 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 import { hapticTap } from "@/lib/native-bridge";
+
+const MORE_LINKS = [
+  { href: "/profilo", emoji: "👤", label: "Profilo" },
+  { href: "/amici", emoji: "👥", label: "Amici" },
+  { href: "/classifica", emoji: "🏆", label: "Classifica" },
+  { href: "/forum", emoji: "💬", label: "Forum" },
+  { href: "/negozio", emoji: "🛍️", label: "Negozio" },
+  { href: "/trova-circolo", emoji: "📍", label: "Trova ASD" },
+  { href: "/scopri", emoji: "🌐", label: "Scopri" },
+  { href: "/impostazioni", emoji: "⚙️", label: "Impostazioni" },
+];
 
 export function BottomNav() {
   const pathname = usePathname();
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const moreActive = MORE_LINKS.some((l) => isActive(l.href));
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
-      <div className="bg-white dark:bg-[#141821] border-t border-[#e5e7eb] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
-        <div className="mx-auto flex max-w-2xl items-end px-0.5 py-1 safe-area-bottom">
-          {/* Left group */}
-          <div className="flex flex-1 justify-around">
-            <NavItem href="/" icon="home" label="Home" active={isActive("/")} />
-            <NavItem href="/lezioni" icon="book" label="Lezioni" active={isActive("/lezioni")} />
-          </div>
-          {/* Center - Gioca always centered */}
-          <div className="flex justify-center px-1">
-            <PlayButton active={isActive("/gioca")} />
-          </div>
-          {/* Right group */}
-          <div className="flex flex-1 justify-around">
-            <NavItem href="/amici" icon="friends" label="Amici" active={isActive("/amici")} />
-            <NavItem href="/classifica" icon="trophy" label="Classifica" active={isActive("/classifica")} />
-            <NavItem href="/profilo" icon="user" label="Profilo" active={isActive("/profilo")} />
+    <>
+      {/* "Altro" sheet */}
+      <AnimatePresence>
+        {moreOpen && (
+          <motion.div
+            className="fixed inset-0 z-[60] lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="absolute inset-0 bg-black/40" onClick={() => setMoreOpen(false)} />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 32 }}
+              className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white dark:bg-[#141821] p-5 pb-8 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] safe-area-bottom"
+            >
+              <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-300 dark:bg-gray-600" />
+              <p className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-gray-400">Altro</p>
+              <div className="grid grid-cols-4 gap-3">
+                {MORE_LINKS.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => {
+                      hapticTap();
+                      setMoreOpen(false);
+                    }}
+                    className={`flex flex-col items-center gap-1.5 rounded-2xl border p-3 text-center transition-colors ${
+                      isActive(l.href)
+                        ? "border-[#003DA5]/30 bg-[#003DA5]/5"
+                        : "border-gray-200 dark:border-gray-700 active:bg-gray-50 dark:active:bg-white/5"
+                    }`}
+                  >
+                    <span className="text-2xl">{l.emoji}</span>
+                    <span className="text-[11px] font-semibold text-gray-700 dark:text-gray-300">{l.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
+        <div className="bg-white dark:bg-[#141821] border-t border-[#e5e7eb] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
+          <div className="mx-auto flex max-w-2xl items-end px-0.5 py-1 safe-area-bottom">
+            {/* Left group */}
+            <div className="flex flex-1 justify-around">
+              <NavItem href="/" icon="home" label="Home" active={isActive("/")} />
+              <NavItem href="/impara" icon="book" label="Impara" active={isActive("/impara")} />
+            </div>
+            {/* Center - Gioca always centered */}
+            <div className="flex justify-center px-1">
+              <PlayButton active={isActive("/gioca")} />
+            </div>
+            {/* Right group */}
+            <div className="flex flex-1 justify-around">
+              <NavItem href="/scuola" icon="scuola" label="Scuola" active={isActive("/scuola")} />
+              <MoreButton active={moreActive || moreOpen} onClick={() => setMoreOpen((o) => !o)} />
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 
@@ -44,20 +104,36 @@ function PlayButton({ active }: { active: boolean }) {
       onClick={() => hapticTap()}
     >
       <div
-        className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 ${
-          active
-            ? "bg-[#003DA5] shadow-lg shadow-[#003DA5]/30 border border-[#0052CC]"
-            : "bg-[#003DA5] shadow-lg shadow-[#003DA5]/30 border border-[#0052CC]"
-        }`}
+        className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 bg-[#003DA5] shadow-lg shadow-[#003DA5]/30 border border-[#0052CC] ${active ? "" : ""}`}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 ml-0.5">
           <path d="M8 5v14l11-7z" />
         </svg>
       </div>
-      <span className={`mt-1 text-[10px] font-bold ${active ? "text-[#003DA5]" : "text-[#003DA5]"}`}>
-        Gioca
-      </span>
+      <span className="mt-1 text-[10px] font-bold text-[#003DA5]">Gioca</span>
     </Link>
+  );
+}
+
+function MoreButton({ active, onClick }: { active: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={() => {
+        hapticTap();
+        onClick();
+      }}
+      aria-label="Altro"
+      className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
+        active ? "text-[#003DA5] bg-[#003DA5]/8" : "text-gray-400 active:scale-95"
+      }`}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-[22px] w-[22px]">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+      <span className={`text-[10px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
+    </button>
   );
 }
 
@@ -85,33 +161,10 @@ function NavItem({
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
       </svg>
     ),
-    forum: (
+    scuola: (
       <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} className="h-[22px] w-[22px]">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
-    ),
-    friends: (
-      <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} className="h-[22px] w-[22px]">
-        <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 00-3-3.87" />
-        <path d="M16 3.13a4 4 0 010 7.75" />
-      </svg>
-    ),
-    trophy: (
-      <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} className="h-[22px] w-[22px]">
-        <path d="M6 9H4.5a2.5 2.5 0 010-5H6" />
-        <path d="M18 9h1.5a2.5 2.5 0 000-5H18" />
-        <path d="M4 22h16" />
-        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22" />
-        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22" />
-        <path d="M18 2H6v7a6 6 0 0012 0V2z" />
-      </svg>
-    ),
-    user: (
-      <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} className="h-[22px] w-[22px]">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
+        <path d="M22 10L12 5 2 10l10 5 10-5z" />
+        <path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
       </svg>
     ),
   };
@@ -121,19 +174,13 @@ function NavItem({
       href={href}
       onClick={() => hapticTap()}
       className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
-        active
-          ? "text-[#003DA5] bg-[#003DA5]/8"
-          : "text-gray-400 hover:text-gray-600 active:scale-95"
+        active ? "text-[#003DA5] bg-[#003DA5]/8" : "text-gray-400 hover:text-gray-600 active:scale-95"
       }`}
       aria-label={label}
     >
       {icons[icon]}
-      <span className={`text-[10px] ${active ? "font-bold" : "font-semibold"}`}>
-        {label}
-      </span>
-      {active && (
-        <div className="absolute -bottom-1 w-5 h-1 rounded-full bg-[#003DA5]" />
-      )}
+      <span className={`text-[10px] ${active ? "font-bold" : "font-semibold"}`}>{label}</span>
+      {active && <div className="absolute -bottom-1 w-5 h-1 rounded-full bg-[#003DA5]" />}
     </Link>
   );
 }

@@ -88,7 +88,7 @@ export default function CompitoPage({
 
   if (error || !assignment) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-destructive">{error ?? "Compito non trovato"}</p>
         <Link href={`/classi/${classId}`} className="mt-4 inline-block text-sm text-primary hover:underline">
           ← Torna alla classe
@@ -328,7 +328,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
 
   return (
     <div className="min-h-screen bg-background px-4 pt-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="relative mb-3 text-center">
           <button

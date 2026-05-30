@@ -549,7 +549,7 @@ export default function PostDetailPage() {
   if (loading) {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24">
-        <div className="mx-auto max-w-2xl animate-pulse">
+        <div className="mx-auto max-w-6xl animate-pulse">
           <div className="h-6 w-1/3 bg-gray-100 rounded mb-4" />
           <div className="bg-white rounded-2xl p-5">
             <div className="h-5 w-3/4 bg-gray-100 rounded mb-3" />
@@ -575,7 +575,7 @@ export default function PostDetailPage() {
 
   return (
     <div className="pt-6 px-4 sm:px-5 pb-24">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-6xl">
         {/* Back */}
         <Link
           href="/forum"

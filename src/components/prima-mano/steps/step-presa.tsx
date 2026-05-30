@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { ConfettiBurst } from "@/components/celebration-effects";
 import { StepShell } from "../step-shell";
+import { GlossaryText } from "@/components/beginner/glossary-text";
 import type { StepProps } from "../types";
 
 function ChoiceCard({
@@ -46,8 +47,8 @@ function ChoiceCard({
             : "border-gray-200 bg-white hover:border-[#003DA5]/30 hover:bg-[#f7f9ff]"
       }`}
     >
-      <p className="text-sm font-bold text-[#12305f]">{label}</p>
-      <p className="mt-1 text-sm leading-6 text-[#5c677d]">{description}</p>
+      <p className="text-sm font-bold text-[#12305f]"><GlossaryText>{label}</GlossaryText></p>
+      <p className="mt-1 text-sm leading-6 text-[#5c677d]"><GlossaryText>{description}</GlossaryText></p>
     </motion.button>
   );
 }
@@ -146,9 +147,9 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
                 : "border-rose-300 bg-rose-50 text-rose-800"
             }`}
           >
-            {choice === "ace"
+            <GlossaryText>{choice === "ace"
               ? "Giusto! La presa la vince la carta più alta del seme giocato."
-              : "Quasi. Qui vince l'Asso di picche, perché nel seme giocato è la carta più alta."}
+              : "Quasi. Qui vince l'Asso di picche, perché nel seme giocato è la carta più alta."}</GlossaryText>
           </motion.div>
         )}
 

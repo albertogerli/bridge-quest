@@ -15,6 +15,7 @@ import {
   type Assignment,
 } from "@/lib/instructors";
 import { useEnrolledClasses } from "@/store/use-classes-store";
+import { ClassChat } from "@/components/instructor/class-chat";
 
 export default function StudentClassPage({
   params,
@@ -100,6 +101,14 @@ export default function StudentClassPage({
           )}
         </div>
       )}
+
+      {/* Class chat */}
+      <section className="mt-8">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Chat della classe
+        </h2>
+        <ClassChat classId={classId} />
+      </section>
     </div>
   );
 }

@@ -1476,7 +1476,7 @@ export default function ModulePage({
 
   return (
     <div className="pt-6 px-5 pb-32">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
 
         {/* === FLOATING XP ANIMATIONS === */}
         {floatingXp.map((f) => (
@@ -1835,7 +1835,7 @@ export default function ModulePage({
           transition={{ delay: 0.3 }}
           className="fixed bottom-0 left-0 right-0 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+5rem)] lg:pb-6 z-40"
         >
-          <div className="mx-auto max-w-lg">
+          <div className="mx-auto max-w-6xl">
             {currentStep > 0 && !isLastStep && (
               <div className="flex justify-center mb-1.5">
                 <button

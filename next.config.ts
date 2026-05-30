@@ -14,6 +14,9 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  // Allow pointing the build dir outside iCloud-synced folders during local dev
+  // (e.g. NEXT_DIST_DIR=.next.nosync). Defaults to ".next" so Vercel/prod is unchanged.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: projectRoot,
   turbopack: {},
   async headers() {

@@ -9,6 +9,7 @@ import { useSupabaseSync } from "@/hooks/use-supabase-sync";
 import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider, useSharedAuth } from "@/contexts/auth-provider";
 import { CookieBanner } from "@/components/cookie-banner";
+import { NewVersionGuide } from "@/components/new-version-guide";
 import { SiteFooter } from "@/components/site-footer";
 import { useExitIntent } from "@/hooks/use-exit-intent";
 import { ExitIntentModal } from "@/components/exit-intent-modal";
@@ -115,6 +116,9 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Cookie consent banner */}
       <CookieBanner />
+
+      {/* One-time guide to the reorganised version */}
+      <NewVersionGuide />
 
       {/* Exit intent modal */}
       <ExitIntentModal

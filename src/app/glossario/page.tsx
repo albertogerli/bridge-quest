@@ -485,7 +485,7 @@ export default function GlossarioPage() {
       return (
         <div className="min-h-screen bg-[#F7F5F0]">
           <div className="pt-6 px-5 pb-28">
-            <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -701,7 +701,7 @@ export default function GlossarioPage() {
     return (
       <div className="min-h-screen bg-[#F7F5F0]">
         <div className="pt-6 px-5 pb-28">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-6xl">
             {/* Quiz header */}
             <div className="flex items-center justify-between mb-6">
               <button
@@ -857,7 +857,7 @@ export default function GlossarioPage() {
   return (
     <div className="min-h-screen bg-[#F7F5F0]">
       <div className="pt-6 px-5 pb-28">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-6">
             <Link

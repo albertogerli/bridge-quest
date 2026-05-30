@@ -383,7 +383,7 @@ export default function ProfiloPage() {
 
   return (
     <div className="pt-6 px-5">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Login/Register CTA */}
         {!authLoading && !user && (
           <motion.div

@@ -152,7 +152,7 @@ export default function CircoloPage() {
   if (!asdCode || !asdName) {
     return (
       <div className="pt-6 px-5 pb-24">
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -188,7 +188,7 @@ export default function CircoloPage() {
 
   return (
     <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
         <motion.nav
           initial={{ opacity: 0 }}

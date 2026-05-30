@@ -62,7 +62,7 @@ export default function GiocaPage() {
 
   return (
     <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -75,67 +75,7 @@ export default function GiocaPage() {
           </p>
         </motion.div>
 
-        {/* Prima Mano: full card if not done, compact link if completed */}
-        {!onboarded ? (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.06 }}
-            className="mb-4"
-          >
-            <Link href="/prima-mano" className="block" aria-label="Prima Mano: onboarding morbido per iniziare a giocare">
-              <div className="relative overflow-hidden rounded-3xl border border-[#c8a44e]/30 bg-[linear-gradient(135deg,#fffaf0_0%,#f0e4c8_50%,#e8d9b0_100%)] p-5 transition-all hover:shadow-xl">
-                <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#c8a44e]/15 blur-2xl" />
-                <div className="absolute -left-4 -bottom-4 h-20 w-20 rounded-full bg-[#003DA5]/8 blur-2xl" />
-                <div className="relative flex items-center gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-lg shadow-[#003DA5]/20">
-                    <BookOpen className="w-6 h-6" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex items-center gap-2">
-                      <h2 className="text-lg font-semibold text-[#12305f]">Prima Mano</h2>
-                      <Badge className="bg-[#c8a44e]/20 text-[#8f6b16] text-[10px] font-bold border-0">
-                        3 min
-                      </Badge>
-                      <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-bold border-0">
-                        +50 {profile.xpLabel}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-[#51627f]">
-                      3 quiz, 4 mini-prese e poi una mano vera. Il modo più veloce per iniziare.
-                    </p>
-                  </div>
-                  <svg
-                    className="h-6 w-6 shrink-0 text-[#12305f]/45"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <polyline points="9,6 15,12 9,18" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.06 }}
-            className="mb-3"
-          >
-            <Link href="/prima-mano" className="block" aria-label="Rifai Prima Mano">
-              <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 hover:shadow-md transition-shadow">
-                <BookOpen className="w-4 h-4 text-[#003DA5] shrink-0" />
-                <span className="text-sm font-medium text-[#12305f]">Rivedi Prima Mano</span>
-                <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-0 ml-auto">
-                  Completato
-                </Badge>
-              </div>
-            </Link>
-          </motion.div>
-        )}
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Inizia da qui</h2>
 
         {/* Mano Guidata card (after Prima Mano is done) */}
         {onboarded && (
@@ -163,6 +103,34 @@ export default function GiocaPage() {
             </Link>
           </motion.div>
         )}
+
+        {/* MiniBridge card (beginner method: from minibridge to bridge) */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.09 }}
+          className="mb-3"
+        >
+          <Link href="/gioca/minibridge" className="block" aria-label="MiniBridge: gioca senza licita, decidi col conteggio dei punti">
+            <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 px-4 py-3.5 hover:shadow-md transition-all dark:border-emerald-900 dark:from-emerald-950/40 dark:to-green-950/30">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-md">
+                  <span className="text-lg">🎓</span>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">MiniBridge</p>
+                    <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">Beta</span>
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">Gioca senza licita: conta i punti e scegli il contratto</p>
+                </div>
+                <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-bold border-0">Nuovo</Badge>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-gray-400">Sfide</h2>
 
         {/* Hero card: Sfida del Giorno */}
         <motion.div
@@ -306,16 +274,6 @@ export default function GiocaPage() {
           </Link>
         </motion.div>
 
-        {/* Weekly Challenge Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.14 }}
-          className="mt-4"
-        >
-          <WeeklyChallengeBanner />
-        </motion.div>
-
         {/* Mini-Games Section */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -324,9 +282,9 @@ export default function GiocaPage() {
           className="mt-6"
         >
           <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">Mini-Giochi</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Pratica</h2>
             <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
-              9 giochi
+              allenati su una mossa
             </Badge>
           </div>
           <div className="space-y-2.5">
@@ -504,6 +462,8 @@ export default function GiocaPage() {
           </div>
         </motion.div>
 
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-gray-400">Gioco libero</h2>
+
         {/* Two-column cards */}
         <div className="grid grid-cols-2 gap-3 mt-6">
           {/* Pratica Libera */}
@@ -636,105 +596,6 @@ export default function GiocaPage() {
             </Link>
           </motion.div>
         </div>
-
-        {/* Stats bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="mt-4"
-        >
-          <div className="card-clean rounded-2xl bg-white p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Le tue statistiche</h3>
-              <Badge variant="outline" className="text-[10px] font-bold text-gray-400 border-gray-200">
-                Pratica
-              </Badge>
-            </div>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <p className="text-2xl font-bold text-[#003DA5]">{handsPlayed}</p>
-                <p className="text-[11px] text-gray-500 font-medium">Mani giocate</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">{allSmazzate.length}</p>
-                <p className="text-[11px] text-gray-500 font-medium">Disponibili</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-amber-600">
-                  {handsPlayed > 0 ? Math.round((handsPlayed / allSmazzate.length) * 100) : 0}%
-                </p>
-                <p className="text-[11px] text-gray-500 font-medium">Esplorate</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Quick-play by lesson */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          className="mt-4"
-        >
-          <div className="card-clean rounded-2xl bg-white p-5">
-            <h3 className="font-semibold text-gray-900 mb-3">Per corso</h3>
-            <div className="space-y-4">
-              {/* Fiori */}
-              <div>
-                <p className="text-xs font-bold text-gray-500 mb-2">♣ Corso Fiori ({fioriSmazzate.length} mani)</p>
-                <div className="grid grid-cols-4 gap-2">
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map((lesson) => (
-                    <Link key={`f-${lesson}`} href={`/gioca/smazzata?course=fiori&lesson=${lesson}`}>
-                      <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-emerald-50 hover:text-emerald transition-colors p-2.5 cursor-pointer">
-                        <span className="text-sm font-bold text-gray-700">{lesson}</span>
-                        <span className="text-[9px] text-gray-500 font-bold mt-0.5">8 mani</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              {/* Quadri */}
-              {quadriSmazzate.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold text-gray-500 mb-2">♦ Corso Quadri ({quadriSmazzate.length} mani)</p>
-                  <div className="grid grid-cols-4 gap-2">
-                    {Array.from(new Set(quadriSmazzate.map(s => s.lesson))).sort((a,b) => a-b).map((lesson) => {
-                      const count = quadriSmazzate.filter(s => s.lesson === lesson).length;
-                      return (
-                        <Link key={`q-${lesson}`} href={`/gioca/smazzata?course=quadri&lesson=${lesson}`}>
-                          <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-orange-50 hover:text-orange-600 transition-colors p-2.5 cursor-pointer">
-                            <span className="text-sm font-bold text-gray-700">{lesson}</span>
-                            <span className="text-[9px] text-gray-500 font-bold mt-0.5">{count} mani</span>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-              {/* Cuori Gioco */}
-              {cuoriGiocoSmazzate.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold text-gray-500 mb-2">♥ Cuori Gioco ({cuoriGiocoSmazzate.length} mani)</p>
-                  <div className="grid grid-cols-4 gap-2">
-                    {Array.from(new Set(cuoriGiocoSmazzate.map(s => s.lesson))).sort((a,b) => a-b).map((lesson) => {
-                      const count = cuoriGiocoSmazzate.filter(s => s.lesson === lesson).length;
-                      return (
-                        <Link key={`cg-${lesson}`} href={`/gioca/smazzata?course=cuori-gioco&lesson=${lesson}`}>
-                          <div className="flex flex-col items-center justify-center rounded-xl bg-gray-50 border-2 border-gray-200 hover:bg-red-50 hover:text-red-600 transition-colors p-2.5 cursor-pointer">
-                            <span className="text-sm font-bold text-gray-700">{lesson}</span>
-                            <span className="text-[9px] text-gray-500 font-bold mt-0.5">{count} mani</span>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
 
         {/* Maestro Fiori tip */}
         <motion.div
