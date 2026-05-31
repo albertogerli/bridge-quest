@@ -431,6 +431,7 @@ export interface InstructorRequest {
   message: string | null;
   asd_code: string | null;
   created_at: string;
+  review_message: string | null;
 }
 
 /** Admin-facing row (joined with name + email). */
@@ -485,15 +486,18 @@ export async function listInstructorRequests(
   return (data ?? []) as InstructorRequestAdminRow[];
 }
 
-/** Admin: approve or reject a request (approval flips the user's role). */
+/** Admin: approve or reject a request (approval flips the user's role).
+ *  An optional message is shown to the applicant on their request page. */
 export async function reviewInstructorRequest(
   requestId: string,
-  approve: boolean
+  approve: boolean,
+  message?: string
 ): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.rpc("review_instructor_request", {
     p_request_id: requestId,
     p_approve: approve,
+    p_message: message?.trim() || null,
   });
   if (error) throw error;
 }
@@ -539,6 +543,23 @@ export async function adminClassDetail(classId: string): Promise<AdminClassDetai
   const { data, error } = await supabase.rpc("admin_class_detail", { p_class_id: classId });
   if (error) throw error;
   return (data ?? { members: [], assignments: [] }) as AdminClassDetail;
+}
+
+export interface AdminSchoolStats {
+  classes: number;
+  students: number;
+  assignments: number;
+  completionPct: number;
+  bestStudent: { name: string | null; completed: number } | null;
+  bestTeacher: { name: string | null; students: number; classes: number } | null;
+}
+
+/** Admin: school-wide aggregate stats for the dashboard boxes. */
+export async function adminSchoolStats(): Promise<AdminSchoolStats> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("admin_school_stats");
+  if (error) throw error;
+  return data as AdminSchoolStats;
 }
 
 // ----------------------------------------------------------------------------
