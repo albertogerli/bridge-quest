@@ -98,6 +98,11 @@ export default function DiventaIstruttorePage() {
               <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                 <span className="text-4xl">✅</span>
                 <p className="font-display text-lg font-semibold">Sei già istruttore</p>
+                {request?.review_message && (
+                  <p className="max-w-sm rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm text-foreground">
+                    💬 {request.review_message}
+                  </p>
+                )}
                 <Link href="/istruttori">
                   <Button>Vai al Portale Istruttori</Button>
                 </Link>
@@ -122,6 +127,11 @@ export default function DiventaIstruttorePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                {request?.review_message && (
+                  <p className="mb-4 rounded-lg border border-border bg-muted/40 p-3 text-sm">
+                    💬 {request.review_message}
+                  </p>
+                )}
                 <RequestForm
                   message={message}
                   setMessage={setMessage}

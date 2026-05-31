@@ -34,6 +34,7 @@ export default function AdminInstructorRequestsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actingId, setActingId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Record<string, string>>({});
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -55,7 +56,12 @@ export default function AdminInstructorRequestsPage() {
   async function act(id: string, approve: boolean) {
     setActingId(id);
     try {
-      await reviewInstructorRequest(id, approve);
+      await reviewInstructorRequest(id, approve, messages[id]);
+      setMessages((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Azione non riuscita");
@@ -134,24 +140,41 @@ export default function AdminInstructorRequestsPage() {
                 <p className="text-xs text-muted-foreground">
                   Inviata il {new Date(r.created_at).toLocaleString("it-IT")}
                 </p>
+
+                {/* Message sent to the applicant (already reviewed) */}
+                {r.status !== "pending" && r.review_message && (
+                  <p className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
+                    <span className="font-semibold">Tuo messaggio:</span> {r.review_message}
+                  </p>
+                )}
+
                 {r.status === "pending" && (
-                  <div className="flex gap-2 pt-1">
-                    <Button
-                      size="sm"
-                      onClick={() => act(r.id, true)}
-                      disabled={actingId === r.id}
-                    >
-                      ✓ Approva
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => act(r.id, false)}
-                      disabled={actingId === r.id}
-                    >
-                      Rifiuta
-                    </Button>
-                  </div>
+                  <>
+                    <textarea
+                      value={messages[r.id] ?? ""}
+                      onChange={(e) => setMessages((prev) => ({ ...prev, [r.id]: e.target.value }))}
+                      rows={2}
+                      placeholder="Messaggio per l'utente (facoltativo) — es. “Benvenuto! Per qualsiasi dubbio scrivici.”"
+                      className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                    />
+                    <div className="flex gap-2 pt-1">
+                      <Button
+                        size="sm"
+                        onClick={() => act(r.id, true)}
+                        disabled={actingId === r.id}
+                      >
+                        ✓ Approva
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => act(r.id, false)}
+                        disabled={actingId === r.id}
+                      >
+                        Rifiuta
+                      </Button>
+                    </div>
+                  </>
                 )}
               </CardContent>
             </Card>

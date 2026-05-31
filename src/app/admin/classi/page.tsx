@@ -8,8 +8,10 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import {
   adminListClasses,
   adminClassDetail,
+  adminSchoolStats,
   type AdminClassRow,
   type AdminClassDetail,
+  type AdminSchoolStats,
 } from "@/lib/instructors";
 
 export default function AdminClassesPage() {
@@ -21,13 +23,19 @@ export default function AdminClassesPage() {
   const [error, setError] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, AdminClassDetail>>({});
+  const [stats, setStats] = useState<AdminSchoolStats | null>(null);
 
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
       setLoading(true);
       try {
-        setRows(await adminListClasses());
+        const [classes, s] = await Promise.all([
+          adminListClasses(),
+          adminSchoolStats().catch(() => null),
+        ]);
+        setRows(classes);
+        setStats(s);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Errore nel caricamento");
       } finally {
@@ -82,11 +90,40 @@ export default function AdminClassesPage() {
         </div>
       ) : (
         <>
-          {/* Summary */}
-          <div className="mb-6 grid grid-cols-3 gap-3">
+          {/* Summary numbers */}
+          <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat label="Classi" value={rows.length} />
             <Stat label="Allievi iscritti" value={totalMembers} />
             <Stat label="Compiti assegnati" value={totalAssignments} />
+            <Stat
+              label="Compiti svolti"
+              value={stats ? `${stats.completionPct}%` : "—"}
+              hint="Mani completate sul totale assegnato"
+            />
+          </div>
+
+          {/* Highlights */}
+          <div className="mb-6 grid gap-3 sm:grid-cols-2">
+            <Highlight
+              emoji="🏅"
+              label="Miglior allievo"
+              name={stats?.bestStudent?.name ?? null}
+              detail={
+                stats?.bestStudent
+                  ? `${stats.bestStudent.completed} mani completate`
+                  : "Nessun dato"
+              }
+            />
+            <Highlight
+              emoji="🎓"
+              label="Miglior maestro"
+              name={stats?.bestTeacher?.name ?? null}
+              detail={
+                stats?.bestTeacher
+                  ? `${stats.bestTeacher.students} allievi · ${stats.bestTeacher.classes} classi`
+                  : "Nessun dato"
+              }
+            />
           </div>
 
           {rows.length === 0 ? (
@@ -178,11 +215,45 @@ export default function AdminClassesPage() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: number | string;
+  hint?: string;
+}) {
   return (
     <div className="rounded-xl border border-border bg-card p-4 text-center">
       <p className="font-display text-2xl font-bold text-primary">{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>
+      {hint && <p className="mt-0.5 text-[10px] text-muted-foreground/70">{hint}</p>}
+    </div>
+  );
+}
+
+function Highlight({
+  emoji,
+  label,
+  name,
+  detail,
+}: {
+  emoji: string;
+  label: string;
+  name: string | null;
+  detail: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#c8a44e]/15 text-xl">
+        {emoji}
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">{label}</p>
+        <p className="truncate font-display text-lg font-bold text-foreground">{name ?? "—"}</p>
+        <p className="text-xs text-muted-foreground">{detail}</p>
+      </div>
     </div>
   );
 }
