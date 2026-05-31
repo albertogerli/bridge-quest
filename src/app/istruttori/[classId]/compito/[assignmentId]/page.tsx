@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState, use } from "react";
+import { AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
+import { HandReplay } from "@/components/bridge/hand-replay";
+import { parseContract, type GameState } from "@/lib/bridge-engine";
 import {
   getAssignment,
   getClassDetail,
@@ -80,6 +83,29 @@ export default function AssignmentResultsPage({
     };
   }
 
+  // ── Card-by-card replay of a student's hand ──────────────────────────────
+  const [replay, setReplay] = useState<{ title: string; gameState: GameState } | null>(null);
+
+  function playOf(studentId: string, smazzataId: string) {
+    const r = resultMap.get(`${studentId}|${smazzataId}`);
+    const play = (r?.details as { play?: { hands?: unknown; tricks?: unknown } } | undefined)?.play;
+    return play?.tricks && play?.hands ? play : null;
+  }
+
+  function openReplay(studentId: string, smazzataId: string, studentName: string) {
+    const play = playOf(studentId, smazzataId);
+    const sm = validated.find((s) => s.id === smazzataId);
+    if (!play || !sm) return;
+    const gameState = {
+      hands: play.hands,
+      tricks: play.tricks,
+      contract: sm.contract,
+      declarer: sm.declarer,
+      trumpSuit: parseContract(sm.contract).trumpSuit,
+    } as unknown as GameState;
+    setReplay({ title: `${studentName} · ${sm.contract}`, gameState });
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -134,6 +160,7 @@ export default function AssignmentResultsPage({
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded border border-border bg-muted" /> Non giocata
         </span>
+        <span className="text-muted-foreground/80">▶ Clicca una cella giocata per rivedere la mano</span>
       </div>
 
       {members.length === 0 ? (
@@ -164,9 +191,18 @@ export default function AssignmentResultsPage({
                   </td>
                   {smazzataIds.map((id) => {
                     const cell = cellFor(m.student_id, id);
+                    const playable = !!playOf(m.student_id, id);
                     return (
                       <td key={id} className="px-2 py-2 text-center">
-                        <HeatCell cell={cell} />
+                        <HeatCell
+                          cell={cell}
+                          playable={playable}
+                          onClick={
+                            playable
+                              ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
+                              : undefined
+                          }
+                        />
                       </td>
                     );
                   })}
@@ -187,28 +223,54 @@ export default function AssignmentResultsPage({
           </table>
         </div>
       )}
+
+      <AnimatePresence>
+        {replay && (
+          <HandReplay gameState={replay.gameState} onClose={() => setReplay(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function HeatCell({ cell }: { cell: Cell }) {
+function HeatCell({
+  cell,
+  playable,
+  onClick,
+}: {
+  cell: Cell;
+  playable?: boolean;
+  onClick?: () => void;
+}) {
   if (cell.state === "empty") {
     return <span className="inline-block h-7 w-12 rounded border border-border bg-muted" aria-label="Non giocata" />;
   }
   const made = cell.state === "made";
   const label =
     cell.result === 0 ? "=" : cell.result > 0 ? `+${cell.result}` : `${cell.result}`;
+  const title =
+    cell.tricksMade != null && cell.tricksNeeded != null
+      ? `${cell.tricksMade}/${cell.tricksNeeded} prese${playable ? " · clicca per rivedere" : ""}`
+      : playable
+        ? "Clicca per rivedere la mano"
+        : undefined;
+  const base = `inline-flex h-7 w-12 items-center justify-center rounded text-xs font-bold text-white ${
+    made ? "bg-emerald-500" : "bg-red-500"
+  }`;
+  if (playable) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        title={title}
+        className={`${base} cursor-pointer ring-offset-1 transition hover:ring-2 hover:ring-primary/60`}
+      >
+        {label}
+      </button>
+    );
+  }
   return (
-    <span
-      className={`inline-flex h-7 w-12 items-center justify-center rounded text-xs font-bold text-white ${
-        made ? "bg-emerald-500" : "bg-red-500"
-      }`}
-      title={
-        cell.tricksMade != null && cell.tricksNeeded != null
-          ? `${cell.tricksMade}/${cell.tricksNeeded} prese`
-          : undefined
-      }
-    >
+    <span className={base} title={title}>
       {label}
     </span>
   );
