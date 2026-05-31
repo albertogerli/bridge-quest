@@ -631,6 +631,22 @@ function minHcpForContract(contract: string): number {
   return isDoubled ? Math.max(0, base - 5) : base;
 }
 
+/** Trump suit of a contract, or null for No Trump. Handles unicode + ASCII. */
+function trumpSuitOfContract(contract: string): Card["suit"] | null {
+  const c = (contract || "").toUpperCase();
+  if (c.includes("NT") || c.includes("SA")) return null;
+  if (contract.includes("♠") || /\dS\b/.test(c)) return "spade";
+  if (contract.includes("♥") || /\dH\b/.test(c)) return "heart";
+  if (contract.includes("♦") || /\dD\b/.test(c)) return "diamond";
+  if (contract.includes("♣") || /\dC\b/.test(c)) return "club";
+  return null;
+}
+
+/** Minimum combined trumps the declaring side must hold to play a suit contract.
+ *  Below this the contract is implausible (e.g. a 4♠ on a 5-0 fit). 7 allows
+ *  Moysian (4-3) fits while filtering the genuinely absurd ones. */
+const MIN_TRUMP_FIT = 7;
+
 export function isPlausibleSmazzata(s: Smazzata): boolean {
   const isNS = s.declarer === "north" || s.declarer === "south";
   const declarerHcp = isNS
@@ -639,6 +655,16 @@ export function isPlausibleSmazzata(s: Smazzata): boolean {
   const oppHcp = 40 - declarerHcp;
   if (declarerHcp + 10 < oppHcp) return false;
   if (declarerHcp < minHcpForContract(s.contract)) return false;
+
+  // Suit contracts need a sane trump fit between declarer and dummy.
+  const trump = trumpSuitOfContract(s.contract);
+  if (trump) {
+    const a = isNS ? s.hands.north : s.hands.east;
+    const b = isNS ? s.hands.south : s.hands.west;
+    const fit =
+      a.filter((c) => c.suit === trump).length + b.filter((c) => c.suit === trump).length;
+    if (fit < MIN_TRUMP_FIT) return false;
+  }
   return true;
 }
 
