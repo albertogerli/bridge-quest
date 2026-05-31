@@ -314,6 +314,10 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
             result: res.result,
             made: res.result >= 0,
             contract: smazzata.contract,
+            // Full card-by-card play so the instructor can replay the hand.
+            play: game.gameState
+              ? { hands: game.gameState.hands, tricks: game.gameState.tricks }
+              : undefined,
           }),
         2200
       );
