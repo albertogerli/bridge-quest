@@ -273,10 +273,8 @@ export default function QuizLampoPage() {
       setCombo(0);
       setTimeLeft(0);
       setAnswersHistory(prev => [...prev, { selected: null, correct: false }]);
-
-      setTimeout(() => {
-        advanceQuestion(false, 0);
-      }, 1800);
+      // No auto-advance on timeout either: let the user read the explanation and
+      // tap "Continua" when ready.
     };
   });
 
@@ -386,9 +384,13 @@ export default function QuizLampoPage() {
         setCombo(0);
       }
 
-      setTimeout(() => {
-        advanceQuestion(isCorrect, remaining);
-      }, 1800);
+      // Correct: auto-advance quickly. Wrong: wait for the user to tap "Continua"
+      // so they can actually read the explanation (it used to vanish in 1.8s).
+      if (isCorrect) {
+        setTimeout(() => {
+          advanceQuestion(true, remaining);
+        }, 1800);
+      }
     },
     [questions, currentIdx, combo, showResult]
   );
@@ -1115,6 +1117,14 @@ export default function QuizLampoPage() {
                 <p className="text-xs text-gray-500 mt-1 ml-7">
                   {currentQuestion.explanation}
                 </p>
+              )}
+              {!wasCorrect && (
+                <button
+                  onClick={() => advanceQuestion(false, 0)}
+                  className="mt-3 ml-7 rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-red-700"
+                >
+                  Continua →
+                </button>
               )}
               {wasCorrect && (
                 <div className="flex items-center gap-3 mt-1 ml-7">
