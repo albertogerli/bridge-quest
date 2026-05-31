@@ -45,6 +45,12 @@ export default function ScuolaPage() {
 
   if (isAdmin) {
     cards.push({
+      href: "/admin/classi",
+      emoji: "🗂️",
+      title: "Tutte le classi (admin)",
+      desc: "Vedi tutte le classi create, con istruttore, allievi e compiti.",
+    });
+    cards.push({
       href: "/admin/istruttori",
       emoji: "📋",
       title: "Richieste istruttori",

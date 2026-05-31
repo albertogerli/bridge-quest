@@ -499,6 +499,49 @@ export async function reviewInstructorRequest(
 }
 
 // ----------------------------------------------------------------------------
+// Admin: oversight of all classes
+// ----------------------------------------------------------------------------
+
+export interface AdminClassRow {
+  id: string;
+  name: string;
+  asd_code: string | null;
+  invite_code: string;
+  invite_active: boolean;
+  instructor_id: string;
+  instructor_name: string | null;
+  instructor_email: string | null;
+  member_count: number;
+  assignment_count: number;
+  created_at: string;
+}
+
+export interface AdminClassDetail {
+  members: { id: string; name: string | null; joined_at: string }[];
+  assignments: { id: string; title: string; created_at: string; hands: number }[];
+}
+
+/** Admin: list every class with instructor + counts (RPC is is_admin-guarded). */
+export async function adminListClasses(): Promise<AdminClassRow[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("admin_list_classes");
+  if (error) throw error;
+  return (data ?? []).map((r: AdminClassRow) => ({
+    ...r,
+    member_count: Number(r.member_count),
+    assignment_count: Number(r.assignment_count),
+  }));
+}
+
+/** Admin: members + assignments of one class. */
+export async function adminClassDetail(classId: string): Promise<AdminClassDetail> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("admin_class_detail", { p_class_id: classId });
+  if (error) throw error;
+  return (data ?? { members: [], assignments: [] }) as AdminClassDetail;
+}
+
+// ----------------------------------------------------------------------------
 // Class chat
 // ----------------------------------------------------------------------------
 
