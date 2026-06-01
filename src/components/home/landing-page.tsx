@@ -20,6 +20,25 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[#F7F5F0] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+      {/* Sticky top bar: keeps "Accedi" reachable at any scroll position */}
+      <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-black/5 bg-[#F7F5F0]/90 px-4 py-2.5 backdrop-blur-sm">
+        <span className="font-display text-lg font-bold tracking-tight text-[#003DA5]">BridgeLab</span>
+        <div className="flex items-center gap-2">
+          <a
+            href="/login?mode=login"
+            className="rounded-xl px-3 py-2 text-sm font-bold text-[#003DA5] transition-colors hover:bg-black/5"
+          >
+            Accedi
+          </a>
+          <a
+            href="/login?mode=signup"
+            className="rounded-xl bg-[#003DA5] px-3.5 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#003DA5]/90"
+          >
+            Inizia gratis
+          </a>
+        </div>
+      </header>
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#14472D] via-[#003DA5] to-[#2D7A50] px-5 pt-16 pb-20">
         <div className="relative mx-auto max-w-lg text-center">
