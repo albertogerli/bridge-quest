@@ -478,19 +478,31 @@ function PlayingView({
 
   // Compute DDS-based star rating (1-5 scale)
   const ddTricks = ddsResult?.ddTricks ?? null;
+  const declared = mode === "declare";
   const ddsStars = (() => {
     if (!game.result) return 0;
+    const r = game.result.result;
     if (ddTricks === null) {
-      // Fallback to old logic if DDS not available
-      return game.result.result > 0 ? 3 : game.result.result === 0 ? 2 : game.result.result === -1 ? 1 : 0;
+      if (!declared) return r < 0 ? 3 : r === 0 ? 1 : 0; // defender: beat the contract
+      return r > 0 ? 3 : r === 0 ? 2 : r === -1 ? 1 : 0;
     }
     const diff = game.result.tricksMade - ddTricks;
+    if (!declared) {
+      // Defender: holding declarer to (or below) the DD optimum is best defense.
+      if (diff <= 0) return 5;
+      if (diff === 1) return 4;
+      if (diff === 2) return 3;
+      if (diff === 3) return 2;
+      return 1;
+    }
     if (diff >= 0) return 5;       // Matched or exceeded DD
     if (diff === -1) return 4;     // DD - 1
     if (diff === -2) return 3;     // DD - 2
     if (diff === -3) return 2;     // DD - 3
     return 1;                      // Worse
   })();
+  // Success from the human's perspective: declarer makes / defender sets.
+  const success = game.result ? (declared ? game.result.result >= 0 : game.result.result < 0) : false;
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos = game.isPlayerTurn && game.gameState
@@ -688,7 +700,7 @@ function PlayingView({
               exit={{ opacity: 0, y: -4 }}
               className={`text-sm font-semibold ${
                 game.phase === "finished"
-                  ? game.result && game.result.result >= 0
+                  ? success
                     ? "text-emerald"
                     : "text-red-500"
                   : game.isPlayerTurn
@@ -742,7 +754,7 @@ function PlayingView({
               {/* Main Result Card */}
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
-                  game.result.result >= 0
+                  success
                     ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
                     : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
                 }`}
@@ -764,14 +776,20 @@ function PlayingView({
 
                 <h3
                   className={`text-xl font-bold ${
-                    game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
+                    success ? "text-emerald-dark" : "text-red-600"
                   }`}
                 >
-                  {game.result.result > 0
-                    ? `Fatto +${game.result.result}!`
-                    : game.result.result === 0
-                      ? "Contratto Mantenuto!"
-                      : `Caduto di ${Math.abs(game.result.result)}`}
+                  {declared
+                    ? game.result.result > 0
+                      ? `Fatto +${game.result.result}!`
+                      : game.result.result === 0
+                        ? "Contratto Mantenuto!"
+                        : `Caduto di ${Math.abs(game.result.result)}`
+                    : game.result.result < 0
+                      ? `Contratto battuto di ${Math.abs(game.result.result)}!`
+                      : game.result.result === 0
+                        ? "Contratto mantenuto"
+                        : `Mantenuto +${game.result.result}`}
                 </h3>
 
                 {/* Tricks breakdown bar */}
@@ -786,7 +804,7 @@ function PlayingView({
                       animate={{ width: `${Math.min((game.result.tricksMade / 13) * 100, 100)}%` }}
                       transition={{ delay: 0.5, duration: 0.8 }}
                       className={`h-full rounded-full ${
-                        game.result.result >= 0
+                        success
                           ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
                           : "bg-gradient-to-r from-red-400 to-red-500"
                       }`}
@@ -837,17 +855,23 @@ function PlayingView({
                         {ddTricks} prese ottimali
                       </p>
                       <p className={`text-xs font-semibold ${
-                        game.result.tricksMade >= ddTricks
+                        (declared ? game.result.tricksMade >= ddTricks : game.result.tricksMade <= ddTricks)
                           ? "text-emerald-600"
-                          : game.result.tricksMade >= ddTricks - 1
+                          : (declared ? game.result.tricksMade >= ddTricks - 1 : game.result.tricksMade <= ddTricks + 1)
                             ? "text-amber-600"
                             : "text-red-500"
                       }`}>
-                        {game.result.tricksMade >= ddTricks
-                          ? game.result.tricksMade === ddTricks
-                            ? `Hai raggiunto il risultato ottimale!`
-                            : `Hai superato il risultato ottimale di ${game.result.tricksMade - ddTricks}!`
-                          : `Hai fatto ${game.result.tricksMade}/${ddTricks} prese possibili`}
+                        {declared
+                          ? game.result.tricksMade >= ddTricks
+                            ? game.result.tricksMade === ddTricks
+                              ? `Hai raggiunto il risultato ottimale!`
+                              : `Hai superato il risultato ottimale di ${game.result.tricksMade - ddTricks}!`
+                            : `Hai fatto ${game.result.tricksMade}/${ddTricks} prese possibili`
+                          : game.result.tricksMade <= ddTricks
+                            ? game.result.tricksMade === ddTricks
+                              ? `Difesa ottimale: dichiarante tenuto all'ottimo!`
+                              : `Hai tenuto il dichiarante ${ddTricks - game.result.tricksMade} sotto l'ottimale!`
+                            : `Il dichiarante ha fatto ${game.result.tricksMade} (ottimale ${ddTricks})`}
                       </p>
                     </div>
                   ) : (
@@ -862,14 +886,16 @@ function PlayingView({
                     <p className="text-[9px] font-bold text-gray-500 uppercase">Prese</p>
                   </div>
                   <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className={`text-lg font-bold ${game.result.result >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    <p className={`text-lg font-bold ${success ? "text-emerald-600" : "text-red-600"}`}>
                       {game.result.result >= 0 ? `+${game.result.result}` : game.result.result}
                     </p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">Risultato</p>
                   </div>
                   <div className="bg-white/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-amber-600">
-                      +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10}
+                      +{declared
+                        ? 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10
+                        : 30 + (game.result.result < 0 ? 20 : 0) + Math.max(0, -game.result.result) * 10}
                     </p>
                     <p className="text-[9px] font-bold text-gray-500 uppercase">{profile.xpLabel}</p>
                   </div>
@@ -989,6 +1015,7 @@ function PlayingView({
                 tricksNeeded={game.result.tricksNeeded}
                 result={game.result.result}
                 stars={ddsStars}
+                defended={!declared}
               />
 
               {/* AI Analysis CTA */}
