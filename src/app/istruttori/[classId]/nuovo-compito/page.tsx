@@ -105,7 +105,7 @@ export default function NuovoCompitoPage({
     "rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50";
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8 pb-28 sm:px-6">
+    <div className="mx-auto w-full max-w-4xl px-4 py-8 pb-44 sm:px-6 lg:pb-28">
       <Link href={`/istruttori/${classId}`} className="text-sm text-muted-foreground hover:underline">
         ← Dettaglio classe
       </Link>
@@ -241,10 +241,13 @@ export default function NuovoCompitoPage({
       </div>
 
       {/* Sticky create bar */}
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-background/95 backdrop-blur lg:left-[88px]">
+      <div className="fixed inset-x-0 bottom-[76px] z-40 border-t border-border bg-background/95 backdrop-blur lg:bottom-0 lg:left-[88px]">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <div className="text-sm">
             <span className="font-semibold">{selected.size}</span> mani selezionate
+            {!title.trim() && selected.size > 0 && (
+              <span className="ml-3 text-amber-600">Inserisci un titolo per assegnare</span>
+            )}
             {saveError && <span className="ml-3 text-destructive">{saveError}</span>}
           </div>
           <Button
