@@ -9,7 +9,13 @@ const config: CapacitorConfig = {
     cleartext: false,
   },
   // Append to user-agent so the web app can detect it's running inside Capacitor
-  appendUserAgent: "BridgeLab-iOS",
+  appendUserAgent: "BridgeLab-Native",
+  android: {
+    backgroundColor: "#F5F2EB",
+    allowMixedContent: false,
+    captureInput: true,
+    webContentsDebuggingEnabled: false,
+  },
   ios: {
     scheme: "BridgeLab",
     contentInset: "automatic",
@@ -19,9 +25,10 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchAutoHide: true,
-      launchShowDuration: 2000,
+      launchShowDuration: 8000,
       backgroundColor: "#F5F2EB",
-      showSpinner: false,
+      showSpinner: true,
+      spinnerColor: "#1B5E3B",
     },
     StatusBar: {
       style: "dark",
