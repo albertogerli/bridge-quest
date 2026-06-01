@@ -57,17 +57,28 @@ function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string
     : ["spade", "heart", "diamond", "club"];
   const rankVal: Record<string, number> = { A: 14, K: 13, Q: 12, J: 11, "10": 10, "9": 9, "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2 };
   return (
-    <div className="rounded-lg bg-white/90 px-2 py-1.5 shadow-md">
+    <div className="rounded-xl bg-white/95 px-2 py-2 shadow-md ring-1 ring-black/5">
       {order.map((suit) => {
         const sc = cards
           .filter((c) => c.suit === suit)
           .sort((a, b) => (rankVal[b.rank] ?? 0) - (rankVal[a.rank] ?? 0));
         return (
-          <div key={suit} className="flex items-center gap-1 leading-none">
-            <span className={`text-xs ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
-            <span className={`font-mono text-[11px] font-bold ${suitColorClass[suit]}`}>
-              {sc.length ? sc.map((c) => c.rank).join(" ") : "—"}
-            </span>
+          <div key={suit} className="flex items-center gap-1.5 py-0.5 leading-none">
+            <span className={`w-4 text-base ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
+            <div className="flex flex-wrap gap-0.5">
+              {sc.length ? (
+                sc.map((c, i) => (
+                  <span
+                    key={i}
+                    className={`inline-flex h-6 min-w-[20px] items-center justify-center rounded-[5px] border border-gray-200 bg-white px-1 font-mono text-sm font-bold ${suitColorClass[suit]}`}
+                  >
+                    {c.rank}
+                  </span>
+                ))
+              ) : (
+                <span className="text-sm text-gray-300">—</span>
+              )}
+            </div>
           </div>
         );
       })}

@@ -9,6 +9,7 @@ interface ShareResultProps {
   tricksNeeded: number;
   result: number; // +N or -N relative to contract
   stars: number;  // 1-5 (or 1-3 depending on context)
+  defended?: boolean; // true when the human defended (setting the contract = success)
 }
 
 function buildShareText({
@@ -17,19 +18,26 @@ function buildShareText({
   tricksNeeded,
   result,
   stars,
+  defended,
 }: ShareResultProps): string {
   const maxStars = Math.max(stars, 1);
   const starString = Array.from({ length: maxStars }, () => "\u2B50").join("");
   const emptyStars = Math.max(0, 3 - maxStars);
   const grayStars = emptyStars > 0 ? Array.from({ length: emptyStars }, () => "\u2606").join("") : "";
 
-  const made = result >= 0;
-  const resultEmoji = made ? "\u2705" : "\u274C";
-  const verdict = result > 0
-    ? `Fatto +${result}!`
-    : result === 0
-      ? "Contratto fatto!"
-      : `Caduto di ${Math.abs(result)}`;
+  const success = defended ? result < 0 : result >= 0;
+  const resultEmoji = success ? "\u2705" : "\u274C";
+  const verdict = defended
+    ? result < 0
+      ? `Contratto battuto di ${Math.abs(result)}!`
+      : result === 0
+        ? "Contratto non battuto"
+        : `Mantenuto +${result}`
+    : result > 0
+      ? `Fatto +${result}!`
+      : result === 0
+        ? "Contratto fatto!"
+        : `Caduto di ${Math.abs(result)}`;
 
   const lines = [
     "\uD83C\uDCCF FIGB Bridge LAB - Sfida del Bridge!",
@@ -42,7 +50,7 @@ function buildShareText({
 }
 
 export function ShareResult(props: ShareResultProps) {
-  const { contract, tricksMade, tricksNeeded, result, stars } = props;
+  const { contract, tricksMade, tricksNeeded, result, stars, defended } = props;
   const [copied, setCopied] = useState(false);
 
   const shareText = buildShareText(props);
@@ -86,7 +94,7 @@ export function ShareResult(props: ShareResultProps) {
     }
   }, [shareText, handleCopy]);
 
-  const made = result >= 0;
+  const made = defended ? result < 0 : result >= 0;
   const maxStars = Math.max(stars, 1);
 
   return (
@@ -136,11 +144,17 @@ export function ShareResult(props: ShareResultProps) {
               ))}
             </div>
             <span className={`text-sm font-bold ${made ? "text-emerald-700" : "text-red-600"}`}>
-              {result > 0
-                ? `Fatto +${result}!`
-                : result === 0
-                  ? "Contratto fatto!"
-                  : `Caduto di ${Math.abs(result)}`}
+              {defended
+                ? result < 0
+                  ? `Battuto di ${Math.abs(result)}!`
+                  : result === 0
+                    ? "Non battuto"
+                    : `Mantenuto +${result}`
+                : result > 0
+                  ? `Fatto +${result}!`
+                  : result === 0
+                    ? "Contratto fatto!"
+                    : `Caduto di ${Math.abs(result)}`}
             </span>
           </div>
 
