@@ -165,7 +165,7 @@
     "lesson": "02"
   },
   "maestro-fiori-lezione03-giovane.mp4": {
-    "video_id": "72653cd9e92a4c4e8cc11702161ab3da",
+    "video_id": "4bb6153e83534b0690e8a064e7d606c2",
     "status": "failed",
     "course": "fiori",
     "profile": "giovane",
@@ -174,7 +174,7 @@
     "background": "green_screen"
   },
   "maestro-fiori-lezione04-giovane.mp4": {
-    "video_id": "d535012e577d4862860ee8bc0641a19d",
+    "video_id": "8368a6b1d564440e87c26a23e62b80bd",
     "status": "failed",
     "course": "fiori",
     "profile": "giovane",
@@ -183,7 +183,7 @@
     "background": "green_screen"
   },
   "maestro-fiori-lezione05-giovane.mp4": {
-    "video_id": "8358d7da83b2439a99b260848a39cdcc",
+    "video_id": "c1ad5c7285644f5096902f2fe73edba2",
     "status": "failed",
     "course": "fiori",
     "profile": "giovane",
@@ -192,7 +192,7 @@
     "background": "green_screen"
   },
   "maestro-fiori-lezione06-giovane.mp4": {
-    "video_id": "fe77f8140f5b426f8cb2d62d72c03142",
+    "video_id": "b0ef8f158d7d4cca8f05956a18442964",
     "status": "failed",
     "course": "fiori",
     "profile": "giovane",
@@ -201,7 +201,7 @@
     "background": "green_screen"
   },
   "maestro-fiori-lezione07-giovane.mp4": {
-    "video_id": "679554bd6c134b0d8ee540f814d798b2",
+    "video_id": "3149c9c6d5714051ae0fda10c8bbcd5b",
     "status": "failed",
     "course": "fiori",
     "profile": "giovane",
@@ -210,7 +210,7 @@
     "background": "green_screen"
   },
   "maestro-fiori-lezione08-giovane.mp4": {
-    "video_id": "14431f263c3d45aeaf0d17295148e9db",
+    "video_id": "6dd960bd95b74b9b88f9db18ef36a461",
     "status": "failed",
     "course": "fiori",
     "profile": "giovane",
@@ -363,79 +363,87 @@
     "background": "green_screen"
   },
   "maestro-cuori-gioco-lezione100-giovane.mp4": {
-    "video_id": "a9e5c5a76d2e4fa4bb012c0a93baecac",
-    "status": "failed",
+    "video_id": "a192fab258eb4e71bd91419ea76d06e2",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "100",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione101-giovane.mp4": {
-    "video_id": "98e71c796f664af1997ddac13a4112d1",
-    "status": "failed",
+    "video_id": "27a90b1aefe24d46bac46430bed7124a",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "101",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione102-giovane.mp4": {
-    "video_id": "836c025267b84fd6be9b1f1c112a2a7e",
-    "status": "failed",
+    "video_id": "67bd78f3cd974a728da266c1f2b51692",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "102",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione103-giovane.mp4": {
-    "video_id": "4a77bba1e1714c639723c4ab760e450d",
-    "status": "failed",
+    "video_id": "79e82a5b689e46d1aa9d2a8c683303d7",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "103",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione104-giovane.mp4": {
-    "video_id": "d8dffd5dbf3e44f3afe0b16ca01b56b0",
-    "status": "failed",
+    "video_id": "06b91af576664abd8a52249710524754",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "104",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione105-giovane.mp4": {
-    "video_id": "f22dc8fa396e4c28ab17ff347b983cc6",
-    "status": "failed",
+    "video_id": "bf94d8a2d78a437d82ffe3307e618736",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "105",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione106-giovane.mp4": {
-    "video_id": "d309fe42c2db4d6fb65d47519b14f081",
-    "status": "failed",
+    "video_id": "9febac2d0ee7429fb1ae96815d103685",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "106",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione107-giovane.mp4": {
-    "video_id": "052ad9ab9ace4b2d914afd29c2826b0e",
-    "status": "failed",
+    "video_id": "c5f39498c7a34b1e88f74f2c57620fa0",
+    "status": "done",
     "course": "cuori-gioco",
     "profile": "giovane",
     "lesson": "107",
     "retry": true,
-    "background": "green_screen"
+    "background": "green_screen",
+    "downloaded": true
   },
   "maestro-cuori-gioco-lezione108-giovane.mp4": {
-    "video_id": "81171e5c888f41f5b9fa920138fa4ab1",
+    "video_id": "9826e33f770e49019bad8ac0f7cfe515",
     "status": "failed",
     "course": "cuori-gioco",
     "profile": "giovane",

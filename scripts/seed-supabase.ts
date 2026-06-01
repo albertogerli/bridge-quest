@@ -44,6 +44,13 @@ import { cuoriLicitaSmazzate } from "../src/data/cuori-licita-smazzate.ts";
 import { GLOSSARY } from "../src/data/glossary.ts";
 import { ASD_CLUBS } from "../src/data/asd-clubs.ts";
 
+// Phase 4.3 — Minigames + collectibles + eserciziario + find-the-error
+import { collectibleCards } from "../src/data/collectible-cards.ts";
+import { WEEKLY_CHALLENGES } from "../src/data/weekly-challenges.ts";
+import { GUIDED_HANDS } from "../src/data/guided-hands.ts";
+import { allExercises } from "../src/data/eserciziario.ts";
+import { errorScenarios } from "../src/data/trova-errore-data.ts";
+
 // ─── Env / client ────────────────────────────────────────────────────────
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -457,6 +464,312 @@ async function seedAsdClubs() {
   console.log(`✓ asd_clubs        ${rows.length} rows upserted`);
 }
 
+// ─── checkUnlock → JSONB DSL parser (Phase 4.3.2) ────────────────────────
+//
+// The `collectibleCards[i].checkUnlock` field is a TypeScript arrow
+// function: `(s: PlayerStats) => boolean`. To persist it we extract the
+// expression body via `Function.toString()` and translate the tiny
+// expression language (single comparison, possibly && / ||) into a JSONB
+// DSL that the catalog lib can evaluate at runtime.
+//
+// Grammar handled:
+//   single:   s.<field> <op> <number>
+//   compound: <single> && <single>  →  { all: [...] }
+//             <single> || <single>  →  { any: [...] }
+//
+// Anything more exotic throws — keeps the parser honest and forces us to
+// extend it (in this file) whenever the source data grows.
+
+type StatsField =
+  | "xp"
+  | "streak"
+  | "handsPlayed"
+  | "completedModules"
+  | "badges"
+  | "quizLampoBest"
+  | "memoryBest"
+  | "dailyHandsTotal";
+
+type CompareOp = ">=" | ">" | "<=" | "<" | "==" | "!=";
+
+type UnlockExpr =
+  | { field: StatsField; op: CompareOp; value: number }
+  | { all: UnlockExpr[] }
+  | { any: UnlockExpr[] };
+
+const ALLOWED_FIELDS = new Set<StatsField>([
+  "xp",
+  "streak",
+  "handsPlayed",
+  "completedModules",
+  "badges",
+  "quizLampoBest",
+  "memoryBest",
+  "dailyHandsTotal",
+]);
+
+function parseUnlockBody(rawBody: string, cardId: string): UnlockExpr {
+  const body = rawBody.replace(/\s+/g, ""); // normalise whitespace
+  // Split on top-level && / || (no parentheses expected in source).
+  if (body.includes("||")) {
+    return { any: body.split("||").map((p) => parseSingleComparison(p, cardId)) };
+  }
+  if (body.includes("&&")) {
+    return { all: body.split("&&").map((p) => parseSingleComparison(p, cardId)) };
+  }
+  return parseSingleComparison(body, cardId);
+}
+
+function parseSingleComparison(part: string, cardId: string): UnlockExpr {
+  // Numeric literal: integer, optionally negative, optionally in JS exponent
+  // form (`1e3`) because tsx/esbuild rewrites large round numbers that way.
+  const m = part.match(/^s\.(\w+)(>=|<=|==|!=|>|<)(-?\d+(?:e\d+)?)$/i);
+  if (!m) {
+    throw new Error(
+      `checkUnlock parser: cannot parse "${part}" (card "${cardId}"). ` +
+        `Update parseSingleComparison() in seed-supabase.ts to handle new patterns.`,
+    );
+  }
+  const [, field, op, valueStr] = m;
+  if (!ALLOWED_FIELDS.has(field as StatsField)) {
+    throw new Error(
+      `checkUnlock parser: unknown stats field "${field}" (card "${cardId}"). ` +
+        `Add it to ALLOWED_FIELDS / PlayerStats first.`,
+    );
+  }
+  // `Number(...)` handles both "100" and "1e3" (== 1000) safely.
+  const value = Number(valueStr);
+  if (!Number.isFinite(value) || !Number.isInteger(value)) {
+    throw new Error(
+      `checkUnlock parser: non-integer value "${valueStr}" (card "${cardId}").`,
+    );
+  }
+  return {
+    field: field as StatsField,
+    op: op as CompareOp,
+    value,
+  };
+}
+
+function checkUnlockToDsl(
+  fn: (s: unknown) => boolean,
+  cardId: string,
+): UnlockExpr {
+  const src = fn.toString();
+  // tsx output is minified: `s=>s.xp>=100` or `(s)=>{return s.xp>=100;}`.
+  // Extract everything after the first `=>`.
+  const arrowIdx = src.indexOf("=>");
+  if (arrowIdx === -1) {
+    throw new Error(`checkUnlock for "${cardId}" is not an arrow fn: ${src}`);
+  }
+  let body = src.slice(arrowIdx + 2).trim();
+  // Strip braces/return if present: `{return s.xp>=100;}` → `s.xp>=100`
+  body = body
+    .replace(/^\{\s*return\s+/, "")
+    .replace(/;?\s*\}\s*$/, "")
+    .trim();
+  return parseUnlockBody(body, cardId);
+}
+
+// ─── Collectible cards (Phase 4.3.2) ─────────────────────────────────────
+
+async function seedCollectibleCards() {
+  const rows = collectibleCards.map((card, i) => ({
+    id: card.id,
+    name: card.name,
+    description: card.description,
+    category: card.category,
+    rarity: card.rarity,
+    emoji: card.emoji,
+    gradient: card.gradient ?? "",
+    unlock_condition: card.unlockCondition,
+    unlock: checkUnlockToDsl(
+      card.checkUnlock as unknown as (s: unknown) => boolean,
+      card.id,
+    ),
+    position: i,
+  }));
+
+  const byRarity: Record<string, number> = {};
+  for (const r of rows) byRarity[r.rarity] = (byRarity[r.rarity] ?? 0) + 1;
+  console.log(
+    `  · ${rows.length} collectible cards (` +
+      Object.entries(byRarity)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(", ") +
+      `)`,
+  );
+
+  const { error } = await supabase
+    .from("collectible_cards")
+    .upsert(rows, { onConflict: "id" });
+  if (error) {
+    console.error(`✗ collectible_cards: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(`✓ collectible_cards ${rows.length} rows upserted`);
+}
+
+// ─── Weekly challenges (Phase 4.3.2) ─────────────────────────────────────
+
+async function seedWeeklyChallenges() {
+  const rows = WEEKLY_CHALLENGES.map((c) => ({
+    id: c.id,
+    name: c.name,
+    description: c.description,
+    icon: c.icon,
+    gradient: c.gradient ?? "",
+    xp_multiplier: c.xpMultiplier,
+    badge_name: c.badgeName,
+    tips: c.tips ?? [],
+  }));
+
+  console.log(`  · ${rows.length} weekly challenges`);
+
+  const { error } = await supabase
+    .from("weekly_challenges")
+    .upsert(rows, { onConflict: "id" });
+  if (error) {
+    console.error(`✗ weekly_challenges: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(`✓ weekly_challenges ${rows.length} rows upserted`);
+}
+
+// ─── Guided hands (Phase 4.3.2) ──────────────────────────────────────────
+
+async function seedGuidedHands() {
+  const rows = GUIDED_HANDS.map((h) => ({
+    id: h.id,
+    name: h.name,
+    description: h.description,
+    difficulty: h.difficulty,
+    hands: h.hands,
+    contract: h.contract,
+    declarer: h.declarer,
+    opening_lead: h.openingLead,
+    hints: h.hints ?? [],
+    tricks_needed: h.tricksNeeded,
+  }));
+
+  // Sanity: each hand should have 13 cards per position.
+  let malformed = 0;
+  for (const r of rows) {
+    const h = r.hands as Record<string, unknown[]>;
+    if (
+      h.north?.length !== 13 ||
+      h.south?.length !== 13 ||
+      h.east?.length !== 13 ||
+      h.west?.length !== 13
+    ) {
+      malformed++;
+    }
+  }
+  console.log(
+    `  · ${rows.length} guided hands (${malformed} with non-13-card hands)`,
+  );
+
+  const { error } = await supabase
+    .from("guided_hands")
+    .upsert(rows, { onConflict: "id" });
+  if (error) {
+    console.error(`✗ guided_hands: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(`✓ guided_hands     ${rows.length} rows upserted`);
+}
+
+// ─── Eserciziario exercises (Phase 4.3.2) ────────────────────────────────
+
+async function seedEserciziario() {
+  // Group by lesson so we can assign a stable `position` within each lesson.
+  const byLesson = new Map<number, typeof allExercises>();
+  for (const ex of allExercises) {
+    const arr = byLesson.get(ex.lesson) ?? [];
+    arr.push(ex);
+    byLesson.set(ex.lesson, arr);
+  }
+
+  const rows: Array<{
+    id: string;
+    lesson_id: number;
+    title: string;
+    content: unknown;
+    position: number;
+  }> = [];
+  for (const [lessonId, exs] of byLesson) {
+    exs.forEach((ex, i) => {
+      rows.push({
+        id: ex.id,
+        lesson_id: lessonId,
+        title: ex.title,
+        content: ex.content,
+        position: i,
+      });
+    });
+  }
+
+  console.log(
+    `  · ${rows.length} eserciziario exercises across ${byLesson.size} lessons`,
+  );
+
+  const { error } = await supabase
+    .from("eserciziario_exercises")
+    .upsert(rows, { onConflict: "id" });
+  if (error) {
+    console.error(`✗ eserciziario_exercises: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(
+    `✓ eserciziario     ${rows.length} rows upserted`,
+  );
+}
+
+// ─── Trova-errore scenarios (Phase 4.3.2) ────────────────────────────────
+
+async function seedTrovaErroreScenarios() {
+  const rows = errorScenarios.map((s) => ({
+    id: s.id,
+    category: s.category,
+    difficulty: s.difficulty,
+    situation: s.situation,
+    cards: s.cards ?? null,
+    sequence: s.sequence ?? null, // preserved verbatim — UI display content
+    error_description: s.errorDescription,
+    options: s.options,
+    correct_answer: s.correctAnswer,
+    explanation: s.explanation,
+  }));
+
+  // Sanity: correctAnswer must be a valid index into options.
+  let invalid = 0;
+  for (const r of rows) {
+    if (r.correct_answer < 0 || r.correct_answer >= r.options.length) invalid++;
+  }
+  if (invalid > 0) {
+    console.warn(`  ⚠ ${invalid} trova_errore rows have correct_answer out of options range`);
+  }
+
+  const byDifficulty: Record<string, number> = {};
+  for (const r of rows) byDifficulty[r.difficulty] = (byDifficulty[r.difficulty] ?? 0) + 1;
+  console.log(
+    `  · ${rows.length} trova-errore scenarios (` +
+      Object.entries(byDifficulty)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(", ") +
+      `)`,
+  );
+
+  const { error } = await supabase
+    .from("trova_errore_scenarios")
+    .upsert(rows, { onConflict: "id" });
+  if (error) {
+    console.error(`✗ trova_errore_scenarios: ${error.message}`);
+    throw new Error(error.message);
+  }
+  console.log(`✓ trova_errore     ${rows.length} rows upserted`);
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -470,6 +783,11 @@ async function main() {
   await seedSmazzate();
   await seedGlossary();
   await seedAsdClubs();
+  await seedCollectibleCards();
+  await seedWeeklyChallenges();
+  await seedGuidedHands();
+  await seedEserciziario();
+  await seedTrovaErroreScenarios();
 
   const dt = ((Date.now() - t0) / 1000).toFixed(2);
   console.log(`\nDone in ${dt}s. Catalog tables are in sync with src/data/.`);

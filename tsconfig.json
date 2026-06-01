@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "webworker"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +24,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
@@ -28,7 +35,16 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next.nosync/types/**/*.ts",
+    ".next.nosync/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "public/sw.js", "capacitor.config.ts", "scripts/audit-lesson-content.ts", "scripts/generate-review-doc.ts", "scripts/seed-supabase.ts"]
+  "exclude": [
+    "node_modules",
+    "public/sw.js",
+    "capacitor.config.ts",
+    "scripts/audit-lesson-content.ts",
+    "scripts/generate-review-doc.ts",
+    "scripts/seed-supabase.ts"
+  ]
 }
