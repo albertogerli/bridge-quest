@@ -322,7 +322,7 @@ export function BridgeTable({
       </div>
 
       {/* East hand */}
-      <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute right-2 top-1/2 -translate-y-1/2 z-[5]">
         <div className="flex items-center gap-1">
           {isDummy("east") && !eastFaceDown ? (
             <SideDummy cards={east} trumpSuit={trumpSuit} />
@@ -344,7 +344,7 @@ export function BridgeTable({
       </div>
 
       {/* West hand */}
-      <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute left-2 top-1/2 -translate-y-1/2 z-[5]">
         <div className="flex items-center gap-1">
           <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
             Ovest
