@@ -16,7 +16,9 @@ import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import type { Card, Position } from "@/lib/bridge-engine";
-import { parseContract, toDisplayPosition, toGamePosition, cardToString, partnershipOf } from "@/lib/bridge-engine";
+import { parseContract, toDisplayPosition, toGamePosition, cardToString, partnershipOf, getDummy, nextPlayer } from "@/lib/bridge-engine";
+
+const DISPLAY_LETTER: Record<Position, string> = { north: "N", south: "S", east: "E", west: "W" };
 import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
@@ -331,23 +333,40 @@ function PlayingView({
   const dds = useDDS();
   const { saveGameResult } = useGameResults();
 
-  // Player controls declarer + dummy (dummy = north display position)
-  const dummyGamePos = toGamePosition("north", declarer);
+  // ── Mode: play as declarer (default) or defend the contract ──────────
+  const [mode, setMode] = useState<"declare" | "defend">("declare");
+  const dummy = getDummy(declarer);
+  // Anchor = the seat shown at the bottom (the human). Declaring → declarer;
+  // defending → the opening leader (the defender to declarer's left).
+  const anchor: Position = mode === "declare" ? declarer : nextPlayer(declarer);
+  const playerPositions = mode === "declare" ? [declarer, dummy] : [anchor];
 
   const game = useBridgeGame({
     hands: smazzata.hands,
     contract: smazzata.contract,
     declarer,
-    playerPositions: [declarer, dummyGamePos],
-    openingLead: smazzata.openingLead,
+    playerPositions,
+    // When defending, the human is the opening leader and makes the lead.
+    openingLead: mode === "declare" ? smazzata.openingLead : undefined,
     dealer: smazzata.bidding?.dealer,
     vulnerability: smazzata.vulnerability,
     bidding: smazzata.bidding,
   });
 
+  const leadDone =
+    !!game.gameState && (game.gameState.tricks.length > 0 || game.gameState.currentTrick.length > 0);
+
+  const gameAt = (slot: Position) => toGamePosition(slot, anchor);
+  const faceDownFor = (slot: Position) => {
+    const gp = gameAt(slot);
+    if (gp === anchor) return false;     // your own hand: always visible
+    if (gp === dummy) return !leadDone;   // dummy: revealed after the opening lead
+    return true;                          // hidden hands
+  };
+
   const handlePlayCard = (displayPosition: string, cardIndex: number) => {
     if (!game.gameState) return;
-    const gamePos = toGamePosition(displayPosition as Position, declarer);
+    const gamePos = toGamePosition(displayPosition as Position, anchor);
     const hand = game.gameState.hands[gamePos];
     if (!hand || cardIndex >= hand.length) return;
     game.handleCardPlay(hand[cardIndex]);
@@ -356,7 +375,7 @@ function PlayingView({
   // Map trick plays to display positions
   const mapTrickToDisplay = (plays: { position: string; card: CardData }[]) =>
     plays.map((tp) => ({
-      position: toDisplayPosition(tp.position as Position, declarer),
+      position: toDisplayPosition(tp.position as Position, anchor),
       card: tp.card,
     }));
 
@@ -376,14 +395,14 @@ function PlayingView({
         )
       : mapTrickToDisplay(trickDisplay);
 
-  // Map hands to display positions
+  // Map hands to display positions (anchor at the bottom = south)
   const displayHands = (gs: typeof game.gameState) => {
     if (!gs) return null;
     return {
-      north: gs.hands[toGamePosition("north", declarer)] as CardData[],
-      south: gs.hands[toGamePosition("south", declarer)] as CardData[],
-      east: gs.hands[toGamePosition("east", declarer)] as CardData[],
-      west: gs.hands[toGamePosition("west", declarer)] as CardData[],
+      north: gs.hands[gameAt("north")] as CardData[],
+      south: gs.hands[gameAt("south")] as CardData[],
+      east: gs.hands[gameAt("east")] as CardData[],
+      west: gs.hands[gameAt("west")] as CardData[],
     };
   };
 
@@ -391,7 +410,12 @@ function PlayingView({
   useEffect(() => {
     if (game.phase === "finished" && game.result && !xpSaved) {
       setXpSaved(true);
-      const earned = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
+      const r = game.result.result;
+      // Declaring rewards making the contract; defending rewards setting it.
+      const earned =
+        mode === "defend"
+          ? 30 + (r < 0 ? 20 : 0) + Math.max(0, -r) * 10
+          : 30 + (r >= 0 ? 20 : 0) + Math.max(0, r) * 10;
       // Only award XP on first completion of this hand
       const gameId = `smazzata-${smazzata.id}`;
       awardGameXp(gameId, earned);
@@ -470,7 +494,7 @@ function PlayingView({
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos = game.isPlayerTurn && game.gameState
-    ? toDisplayPosition(game.gameState.currentPlayer, declarer)
+    ? toDisplayPosition(game.gameState.currentPlayer, anchor)
     : undefined;
 
   return (
@@ -553,6 +577,27 @@ function PlayingView({
           </div>
         </motion.div>
 
+        {/* Mode selector: declare or defend (before the hand starts) */}
+        {game.phase === "ready" && (
+          <div className="mb-3 flex items-center justify-center gap-2">
+            <span className="text-xs font-semibold text-gray-500">Gioca come</span>
+            <div className="inline-flex rounded-xl border border-gray-200 bg-white p-0.5 shadow-sm">
+              <button
+                onClick={() => setMode("declare")}
+                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-gray-600 hover:bg-gray-50"}`}
+              >
+                Dichiarante
+              </button>
+              <button
+                onClick={() => setMode("defend")}
+                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-gray-600 hover:bg-gray-50"}`}
+              >
+                Difesa
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Start button - shown above table on mobile so it's visible */}
         {isMobile && game.phase === "ready" && (
           <div className="mb-3 flex justify-center">
@@ -580,15 +625,16 @@ function PlayingView({
                 south={hands.south}
                 east={hands.east}
                 west={hands.west}
-                northFaceDown={false}
-                southFaceDown={false}
-                eastFaceDown={true}
-                westFaceDown={true}
+                northFaceDown={faceDownFor("north")}
+                southFaceDown={faceDownFor("south")}
+                eastFaceDown={faceDownFor("east")}
+                westFaceDown={faceDownFor("west")}
                 currentTrick={displayTrick}
                 contract={smazzata.contract}
-                declarer="S"
+                declarer={DISPLAY_LETTER[toDisplayPosition(declarer, anchor)]}
+                dummy={DISPLAY_LETTER[toDisplayPosition(dummy, anchor)]}
                 vulnerability={smazzata.vulnerability}
-                trickCount={partnershipOf(declarer) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
+                trickCount={partnershipOf(anchor) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
                 onPlayCard={handlePlayCard}
                 highlightedCards={game.validCards as CardData[]}
                 activePosition={activeDisplayPos}
@@ -598,16 +644,17 @@ function PlayingView({
               />
             ) : (
               <BridgeTable
-                north={smazzata.hands[toGamePosition("north", declarer)] as CardData[]}
-                south={smazzata.hands[toGamePosition("south", declarer)] as CardData[]}
-                east={smazzata.hands[toGamePosition("east", declarer)] as CardData[]}
-                west={smazzata.hands[toGamePosition("west", declarer)] as CardData[]}
-                northFaceDown={false}
-                southFaceDown={false}
-                eastFaceDown={true}
-                westFaceDown={true}
+                north={smazzata.hands[gameAt("north")] as CardData[]}
+                south={smazzata.hands[gameAt("south")] as CardData[]}
+                east={smazzata.hands[gameAt("east")] as CardData[]}
+                west={smazzata.hands[gameAt("west")] as CardData[]}
+                northFaceDown={faceDownFor("north")}
+                southFaceDown={faceDownFor("south")}
+                eastFaceDown={faceDownFor("east")}
+                westFaceDown={faceDownFor("west")}
                 contract={smazzata.contract}
-                declarer="S"
+                declarer={DISPLAY_LETTER[toDisplayPosition(declarer, anchor)]}
+                dummy={DISPLAY_LETTER[toDisplayPosition(dummy, anchor)]}
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
