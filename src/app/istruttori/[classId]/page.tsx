@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClassChat } from "@/components/instructor/class-chat";
+import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import {
   getClassDetail,
   regenerateInviteCode,
@@ -153,6 +154,7 @@ export default function ClassDetailPage({
         <TabsList>
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
           <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
+          <TabsTrigger value="classifica">Classifica</TabsTrigger>
           <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
 
@@ -213,6 +215,11 @@ export default function ClassDetailPage({
               ))}
             </div>
           )}
+        </TabsContent>
+
+        {/* Classifica */}
+        <TabsContent value="classifica" className="mt-4">
+          <ClassLeaderboard classId={classId} />
         </TabsContent>
 
         {/* Chat */}

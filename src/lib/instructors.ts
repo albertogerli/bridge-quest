@@ -362,6 +362,30 @@ export interface HandResult {
   result: number;
 }
 
+export interface LeaderboardRow {
+  student_id: string;
+  student_name: string | null;
+  hands_made: number;
+  hands_played: number;
+  total_tricks: number;
+  total_ms: number;
+}
+
+/** Class-wide leaderboard: hands kept (1st attempt) → tricks → speed.
+ *  Visible to class members and the instructor. */
+export async function getClassLeaderboard(classId: string): Promise<LeaderboardRow[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("get_class_leaderboard", { p_class_id: classId });
+  if (error) throw error;
+  return (data ?? []).map((r: LeaderboardRow) => ({
+    ...r,
+    hands_made: Number(r.hands_made),
+    hands_played: Number(r.hands_played),
+    total_tricks: Number(r.total_tricks),
+    total_ms: Number(r.total_ms),
+  }));
+}
+
 /** The current student's per-hand result for one or more assignments:
  *  assignmentId -> (smazzataId -> latest result). Used to mark made/down hands. */
 export async function getMyAssignmentResults(
