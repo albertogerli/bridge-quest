@@ -28,10 +28,12 @@ import { awardGameXp } from "@/lib/xp-utils";
 import {
   getAssignment,
   getMyAssignmentProgress,
+  getMyAssignmentResults,
   recordAssignmentResult,
   type Assignment,
+  type HandResult,
 } from "@/lib/instructors";
-import { ArrowLeft, Play, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle2, XCircle } from "lucide-react";
 
 export default function CompitoPage({
   params,
@@ -45,6 +47,7 @@ export default function CompitoPage({
 
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [doneIds, setDoneIds] = useState<Set<string>>(new Set());
+  const [results, setResults] = useState<Map<string, HandResult>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -55,10 +58,14 @@ export default function CompitoPage({
       setLoading(true);
       try {
         const a = await getAssignment(assignmentId);
-        const prog = await getMyAssignmentProgress([assignmentId]);
+        const [prog, res] = await Promise.all([
+          getMyAssignmentProgress([assignmentId]),
+          getMyAssignmentResults([assignmentId]),
+        ]);
         if (active) {
           setAssignment(a);
           setDoneIds(prog.get(assignmentId) ?? new Set());
+          setResults(res.get(assignmentId) ?? new Map());
         }
       } catch (err) {
         if (active) setError(err instanceof Error ? err.message : "Errore nel caricamento");
@@ -117,6 +124,7 @@ export default function CompitoPage({
             // best-effort; the local state still advances so the student isn't stuck
           }
           setDoneIds((prev) => new Set(prev).add(smazzata.id));
+          setResults((prev) => new Map(prev).set(smazzata.id, { made: score >= 0, result: score }));
           setCurrentIndex(null);
         }}
         onBack={() => setCurrentIndex(null)}
@@ -125,6 +133,10 @@ export default function CompitoPage({
   }
 
   const completedCount = hands.filter((h) => doneIds.has(h.id)).length;
+  const downCount = hands.filter((h) => {
+    const r = results.get(h.id);
+    return r && !r.made;
+  }).length;
   const nextIndex = hands.findIndex((h) => !doneIds.has(h.id));
   const allDone = completedCount === hands.length && hands.length > 0;
 
@@ -159,7 +171,10 @@ export default function CompitoPage({
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
           {completedCount}/{hands.length} mani completate
-          {allDone && " — Compito completato! 🎉"}
+          {downCount > 0 && (
+            <span className="font-bold text-red-600"> · {downCount} {downCount === 1 ? "caduta" : "cadute"} da rigiocare</span>
+          )}
+          {allDone && downCount === 0 && " — Compito completato! 🎉"}
         </p>
       </div>
 
@@ -172,7 +187,10 @@ export default function CompitoPage({
       {/* Hands list */}
       <div className="space-y-3">
         {hands.map((hand, i) => {
-          const isPlayed = doneIds.has(hand.id);
+          const r = results.get(hand.id);
+          const isPlayed = doneIds.has(hand.id) || !!r;
+          const isDown = !!r && !r.made;
+          const isMade = !!r && r.made;
           const isNext = i === nextIndex;
           return (
             <motion.div
@@ -181,24 +199,28 @@ export default function CompitoPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               className={`rounded-2xl border bg-card p-4 transition-all ${
-                isPlayed
-                  ? "border-emerald-200 dark:border-emerald-900"
-                  : isNext
-                    ? "border-primary/40 shadow-md"
-                    : "border-border opacity-70"
+                isDown
+                  ? "border-red-300 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20"
+                  : isMade
+                    ? "border-emerald-200 dark:border-emerald-900"
+                    : isNext
+                      ? "border-primary/40 shadow-md"
+                      : "border-border opacity-70"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
-                    isPlayed
-                      ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50"
-                      : isNext
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
+                    isDown
+                      ? "bg-red-100 text-red-600 dark:bg-red-950/50"
+                      : isMade
+                        ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50"
+                        : isNext
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {isPlayed ? <CheckCircle2 className="h-5 w-5" /> : <span className="text-sm font-bold">{i + 1}</span>}
+                  {isDown ? <XCircle className="h-5 w-5" /> : isMade ? <CheckCircle2 className="h-5 w-5" /> : <span className="text-sm font-bold">{i + 1}</span>}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold">
@@ -207,13 +229,21 @@ export default function CompitoPage({
                   <p className="text-xs text-muted-foreground">
                     Contratto {hand.contract} · Lezione {getLessonDisplayNumber(hand.lesson)}
                   </p>
+                  {isDown && (
+                    <p className="mt-0.5 text-xs font-bold text-red-600">
+                      Caduto{r ? ` di ${Math.abs(r.result)}` : ""} — rigioca questa mano
+                    </p>
+                  )}
+                  {isMade && (
+                    <p className="mt-0.5 text-xs font-semibold text-emerald-600">Mantenuto ✓</p>
+                  )}
                 </div>
                 {(isNext || isPlayed) && (
                   <Button
                     onClick={() => setCurrentIndex(i)}
                     size="sm"
-                    variant={isPlayed ? "outline" : "default"}
-                    className="shrink-0"
+                    variant={isDown ? "default" : isPlayed ? "outline" : "default"}
+                    className={`shrink-0 ${isDown ? "bg-red-600 text-white hover:bg-red-700" : ""}`}
                   >
                     <Play className="mr-1 h-3.5 w-3.5" />
                     {isPlayed ? "Rigioca" : "Gioca"}

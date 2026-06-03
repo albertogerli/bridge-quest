@@ -357,6 +357,46 @@ export async function getMyAssignmentProgress(
   return result;
 }
 
+export interface HandResult {
+  made: boolean;
+  result: number;
+}
+
+/** The current student's per-hand result for one or more assignments:
+ *  assignmentId -> (smazzataId -> latest result). Used to mark made/down hands. */
+export async function getMyAssignmentResults(
+  assignmentIds: string[]
+): Promise<Map<string, Map<string, HandResult>>> {
+  const out = new Map<string, Map<string, HandResult>>();
+  if (assignmentIds.length === 0) return out;
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non autenticato");
+
+  const { data, error } = await supabase
+    .from("game_results")
+    .select("assignment_id, details, score, created_at")
+    .eq("user_id", user.id)
+    .in("assignment_id", assignmentIds)
+    .order("created_at", { ascending: true }); // earliest first → later rows overwrite = latest wins
+  if (error) throw error;
+
+  for (const row of data ?? []) {
+    const aId = (row as { assignment_id: string | null }).assignment_id;
+    const details = (row as { details: Record<string, unknown> | null }).details;
+    const score = (row as { score: number | null }).score ?? 0;
+    const sId = details && typeof details.smazzata_id === "string" ? details.smazzata_id : null;
+    if (!aId || !sId) continue;
+    const made = details && typeof details.made === "boolean" ? details.made : score >= 0;
+    if (!out.has(aId)) out.set(aId, new Map());
+    out.get(aId)!.set(sId, { made, result: score });
+  }
+  return out;
+}
+
 /** Assignments visible to the current student across all enrolled classes. */
 export async function getStudentAssignments(): Promise<Assignment[]> {
   const supabase = createClient();
