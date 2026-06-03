@@ -417,5 +417,6 @@ BEGIN
   FROM game_results gr
   LEFT JOIN profiles p ON p.id = gr.user_id
   WHERE gr.assignment_id = p_assignment_id
-  ORDER BY gr.user_id, gr.details->>'smazzata_id', gr.created_at DESC;
+  -- FIRST attempt per hand (fair assessment: a later retry no longer turns it green).
+  ORDER BY gr.user_id, gr.details->>'smazzata_id', gr.created_at ASC;
 END $$;

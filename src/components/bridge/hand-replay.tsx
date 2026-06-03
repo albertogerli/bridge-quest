@@ -378,19 +378,27 @@ export function HandReplay({
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
             Carte in mano (prima della presa)
           </p>
-          <div className="grid grid-cols-2 gap-2">
-            {positions.map((pos) => {
-              const dp = toDisplayPosition(pos, gameState.declarer);
+          {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
+          <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
+            {(["north", "west", "east", "south"] as Position[]).map((slot) => {
+              const pos = positions.find(
+                (p) => toDisplayPosition(p, gameState.declarer) === slot
+              )!;
               const hand = remainingHand(originalHands[pos], playedBefore);
+              const cellClass =
+                slot === "north"
+                  ? "col-start-2 row-start-1"
+                  : slot === "west"
+                    ? "col-start-1 row-start-2"
+                    : slot === "east"
+                      ? "col-start-3 row-start-2"
+                      : "col-start-2 row-start-3";
               return (
-                <div key={pos} className="rounded-lg bg-gray-50 px-2.5 py-1.5">
+                <div key={slot} className={`rounded-lg bg-gray-50 px-2.5 py-1.5 ${cellClass}`}>
                   <span className="text-[10px] font-bold text-gray-400 uppercase">
-                    {POSITION_LABELS[dp]}
+                    {POSITION_LABELS[slot]}
                   </span>
-                  <MiniHand
-                    cards={hand}
-                    playedCard={playedInTrick[pos]}
-                  />
+                  <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
                 </div>
               );
             })}
