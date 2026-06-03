@@ -16,6 +16,8 @@ import {
 } from "@/lib/instructors";
 import { useEnrolledClasses } from "@/store/use-classes-store";
 import { ClassChat } from "@/components/instructor/class-chat";
+import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
+import { useSharedAuth } from "@/contexts/auth-provider";
 
 export default function StudentClassPage({
   params,
@@ -25,6 +27,7 @@ export default function StudentClassPage({
   const { classId } = use(params);
   const { classes } = useEnrolledClasses();
   const classRoom = classes.find((c) => c.id === classId);
+  const { profile } = useSharedAuth();
 
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [progress, setProgress] = useState<Map<string, Set<string>>>(new Map());
@@ -101,6 +104,14 @@ export default function StudentClassPage({
           )}
         </div>
       )}
+
+      {/* Class leaderboard */}
+      <section className="mt-8">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          🏆 Classifica della classe
+        </h2>
+        <ClassLeaderboard classId={classId} highlightUserId={profile?.id} />
+      </section>
 
       {/* Class chat */}
       <section className="mt-8">

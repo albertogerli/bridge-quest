@@ -273,6 +273,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const saved = useRef(false);
+  const startRef = useRef<number>(Date.now()); // for the speed tiebreak in the class leaderboard
   const isMobile = useMobile();
   const { play } = useSound();
   const [showCelebration, setShowCelebration] = useState(false);
@@ -344,6 +345,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
             result: res.result,
             made: res.result >= 0,
             contract: smazzata.contract,
+            durationMs: Date.now() - startRef.current,
             // Full card-by-card play so the instructor can replay the hand.
             play: game.gameState
               ? { hands: game.gameState.hands, tricks: game.gameState.tricks }
