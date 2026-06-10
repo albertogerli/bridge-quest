@@ -76,44 +76,44 @@ export function DesktopSidebar() {
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
+        <div className="rounded-2xl bg-card card-clean p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
                 <span className="text-lg">⚡</span>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Livello {stats.level}</p>
-                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">{stats.levelName}</p>
+                <p className="text-sm font-semibold text-foreground">Livello {stats.level}</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{stats.levelName}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xl font-bold text-[#003DA5]">{stats.xp.toLocaleString()}</p>
-              <p className="text-[10px] text-gray-500 font-medium">{profile.xpLabel} totali</p>
+              <p className="text-xl font-bold text-primary">{stats.xp.toLocaleString()}</p>
+              <p className="text-[10px] text-muted-foreground font-medium">{profile.xpLabel} totali</p>
             </div>
           </div>
-          <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="h-3 rounded-full bg-muted border border-border overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#003DA5] to-[#0052CC] transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-figb to-figb-light transition-all"
               style={{ width: `${stats.levelProgress}%` }}
             />
           </div>
-          <p className="text-[10px] text-gray-500 mt-1.5 font-medium">
+          <p className="text-[10px] text-muted-foreground mt-1.5 font-medium">
             {stats.xpInLevel.toLocaleString()} / {stats.xpNeededForNext.toLocaleString()} {profile.xpLabel} · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
           </p>
         </div>
 
         {/* Streak */}
-        <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] card-clean p-4">
+        <div className="rounded-2xl bg-card card-clean p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xl">{stats.streak >= 7 ? "🔥" : "📅"}</span>
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-semibold text-foreground">
                 Streak: {stats.streak} {stats.streak === 1 ? "giorno" : "giorni"}
               </p>
             </div>
             {stats.streak > 0 && (
-              <span className="text-[10px] font-medium text-[#003DA5] bg-[#003DA5]/8 border border-[#003DA5]/20 rounded-full px-2 py-0.5">
+              <span className="text-[10px] font-medium text-primary bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5">
                 {`+${Math.min(stats.streak * 5, 50)} ${profile.xpLabel}/giorno`}
               </span>
             )}
@@ -124,8 +124,8 @@ export function DesktopSidebar() {
                 key={i}
                 className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-bold ${
                   i < Math.min(stats.streak, 7)
-                    ? "bg-[#003DA5] text-white"
-                    : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground border border-border"
                 }`}
               >
                 {day}
@@ -137,7 +137,7 @@ export function DesktopSidebar() {
         {/* Continue CTA */}
         {stats.nextModule && (
           <Link href={`/lezioni/${stats.nextModule.lessonId}/${stats.nextModule.moduleId}`} aria-label={`Riprendi: ${stats.nextModule.moduleTitle}`}>
-            <div className="rounded-2xl bg-[#003DA5] p-4 text-white shadow-sm hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all cursor-pointer">
+            <div className="rounded-2xl bg-gradient-to-r from-figb to-figb-light p-4 text-white shadow-sm hover:translate-y-[-1px] hover:shadow-md active:translate-y-[1px] transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
                 <div className="flex-1 min-w-0">
@@ -161,7 +161,7 @@ export function DesktopSidebar() {
               window.location.href = "/";
             }}
             aria-label="Esci dal tuo account"
-            className="w-full flex items-center gap-2.5 rounded-xl bg-white dark:bg-[#1a1f2e] card-clean p-3 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors group"
+            className="w-full flex items-center gap-2.5 rounded-xl bg-card card-clean p-3 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors group"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 group-hover:bg-rose-100">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -171,15 +171,15 @@ export function DesktopSidebar() {
               </svg>
             </div>
             <div className="text-left">
-              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 group-hover:text-rose-600">Esci</p>
-              <p className="text-[10px] text-gray-400">{user.email}</p>
+              <p className="text-xs font-semibold text-foreground/80 group-hover:text-rose-600">Esci</p>
+              <p className="text-[10px] text-muted-foreground/70">{user.email}</p>
             </div>
           </button>
         ) : stats.xp > 0 ? (
           <Link
             href="/login"
             aria-label="Accedi per sincronizzare"
-            className="w-full flex items-center gap-2.5 rounded-xl bg-white dark:bg-[#1a1f2e] card-clean p-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors group"
+            className="w-full flex items-center gap-2.5 rounded-xl bg-card card-clean p-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors group"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -188,15 +188,15 @@ export function DesktopSidebar() {
               </svg>
             </div>
             <div className="text-left flex-1">
-              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Livello {stats.level} · {stats.xp} XP</p>
-              <p className="text-[10px] text-gray-400 group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
+              <p className="text-xs font-semibold text-foreground/80">Livello {stats.level} · {stats.xp} XP</p>
+              <p className="text-[10px] text-muted-foreground/70 group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
             </div>
           </Link>
         ) : (
           <Link
             href="/login"
             aria-label="Accedi o Registrati"
-            className="w-full flex items-center gap-2.5 rounded-xl bg-[#003DA5] p-3 hover:bg-[#002E7A] transition-colors"
+            className="w-full flex items-center gap-2.5 rounded-xl bg-figb p-3 hover:bg-figb-dark transition-colors"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -210,19 +210,19 @@ export function DesktopSidebar() {
         )}
 
         {/* FIGB + CONI logos */}
-        <div className="rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4 text-center space-y-3">
+        <div className="rounded-xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/20 p-4 text-center space-y-3">
           <div className="flex items-center justify-center gap-4">
             <img src="/icons/logo-figb.png" alt="FIGB" className="h-10 w-auto" />
             <img src="/icons/logo-coni.png" alt="CONI - Disciplina Sportiva Associata" className="h-8 w-auto" />
           </div>
           <div>
-            <p className="text-[10px] font-medium text-[#003DA5] uppercase tracking-wider">
+            <p className="text-[10px] font-medium text-figb dark:text-primary uppercase tracking-wider">
               Un progetto della FIGB
             </p>
-            <p className="text-[10px] text-[#003DA5]/70 mt-0.5">
+            <p className="text-[10px] text-figb/70 dark:text-primary/70 mt-0.5">
               Commissione Insegnamento
             </p>
-            <p className="text-[9px] text-[#003DA5]/40 mt-1">
+            <p className="text-[9px] text-figb/40 dark:text-primary/50 mt-1">
               Sviluppo: A. G. Gerli / Tourbillon Tech
             </p>
           </div>

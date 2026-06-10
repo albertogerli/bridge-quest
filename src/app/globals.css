@@ -150,6 +150,12 @@
   }
 }
 
+/* Display typography — Bricolage Grotesque (loaded via next/font in layout.tsx) */
+.font-display {
+  font-family: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
 /* Suit colors - high contrast for readability */
 .suit-spade { color: #0f172a; }
 .suit-heart { color: #e11d48; }
@@ -174,22 +180,38 @@
 
 /* Clean card - subtle border, light shadow */
 .card-clean {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 .dark .card-clean {
-  border-color: #2a3040;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* Elevated card — more shadow for interactive/highlighted cards */
 .card-elevated {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 .dark .card-elevated {
-  border-color: #2a3040;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Interactive card — standard hover lift + tactile press for clickable cards */
+.card-interactive {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+@media (hover: hover) {
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  }
+  .dark .card-interactive:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+.card-interactive:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 /* Glassmorphism - light version */
@@ -268,9 +290,9 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Warm cream background — standard across all pages */
+/* Warm cream background — standard across all pages (token-aware: follows dark mode) */
 .bg-cream {
-  background-color: #F7F5F0;
+  background-color: var(--background);
 }
 
 /* Prevent text selection on game elements */
@@ -310,6 +332,15 @@
 [data-profile="senior"] {
   font-size: 17px;
   line-height: 1.7;
+  /* Token-level overrides: higher contrast + more vivid primary */
+  --primary: #0047c2;
+  --ring: #0047c2;
+  --muted-foreground: #4b5563;
+}
+.dark [data-profile="senior"] {
+  --primary: #6da3f0;
+  --ring: #6da3f0;
+  --muted-foreground: #b6c2d2;
 }
 
 [data-profile="senior"] h1 { font-size: 2rem; }
@@ -336,12 +367,11 @@
   padding: 1.25rem;
 }
 
-/* Higher contrast text */
+/* LEGACY class-targeting overrides — remove once the tokenization sweep is
+   complete (kept so un-swept pages keep their contrast boost in the meantime) */
 [data-profile="senior"] .text-gray-500 { color: #4b5563; }
 [data-profile="senior"] .text-gray-400 { color: #6b7280; }
 [data-profile="senior"] .text-gray-600 { color: #374151; }
-
-/* More vivid colors for primary actions */
 [data-profile="senior"] .bg-\[\#003DA5\] { background-color: #0047c2; }
 [data-profile="senior"] .text-\[\#003DA5\] { color: #0047c2; }
 [data-profile="senior"] .bg-blue-600 { background-color: #1d4ed8; }
@@ -363,9 +393,16 @@
 [data-profile="junior"] {
   font-size: 16px;
   line-height: 1.65;
+  /* Token-level overrides: brighter, more playful primary */
+  --primary: #2563eb;
+  --ring: #2563eb;
+}
+.dark [data-profile="junior"] {
+  --primary: #60a5fa;
+  --ring: #60a5fa;
 }
 
-/* Vibrant accent colors */
+/* LEGACY class-targeting overrides — remove once the tokenization sweep is complete */
 [data-profile="junior"] .bg-\[\#003DA5\] { background-color: #2563eb; }
 [data-profile="junior"] .text-\[\#003DA5\] { color: #2563eb; }
 [data-profile="junior"] .bg-blue-600 { background-color: #3b82f6; }
@@ -428,26 +465,24 @@
    SURFACE TIERS — depth system for cards
    ═══════════════════════════════════════════════════ */
 .surface-0 {
-  background: #F7F5F0;
+  background: var(--background);
 }
 .surface-1 {
-  background: #ffffff;
-  border: 1px solid #E8E4DC;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 1.25rem;
 }
 .surface-2 {
-  background: #ffffff;
-  border: 1px solid #E8E4DC;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 1.25rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.dark .surface-0 { background: #0D1A12; }
-.dark .surface-1 { background: #152019; border-color: #2a3a2e; }
-.dark .surface-2 { background: #152019; border-color: #2a3a2e; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.dark .surface-2 { box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
 /* Visible focus indicator for keyboard navigation */
 :focus-visible {
-  outline: 2px solid #003DA5;
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 

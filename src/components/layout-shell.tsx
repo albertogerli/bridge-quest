@@ -80,8 +80,8 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   // Show loading spinner while auth resolves on protected routes
   if (!isPublic && (authLoading || !user)) {
     return (
-      <div className="min-h-svh bg-[#F7F5F0] dark:bg-[#0f1219] flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-3 border-gray-200 border-t-[#003DA5]" />
+      <div className="min-h-svh bg-background flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-border border-t-primary" />
       </div>
     );
   }
@@ -96,7 +96,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-svh bg-[#F7F5F0] dark:bg-[#0f1219] safe-area-top" data-profile={profile}>
+    <div className="flex min-h-svh bg-background safe-area-top" data-profile={profile}>
       {/* Left nav - desktop only */}
       <DesktopNav />
 

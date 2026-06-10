@@ -42,10 +42,10 @@ export function BottomNav() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white dark:bg-[#141821] p-5 pb-8 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] safe-area-bottom"
+              className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-card p-5 pb-8 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] safe-area-bottom"
             >
-              <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-300 dark:bg-gray-600" />
-              <p className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-gray-400">Altro</p>
+              <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted-foreground/30" />
+              <p className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">Altro</p>
               <div className="grid grid-cols-4 gap-3">
                 {MORE_LINKS.map((l) => (
                   <Link
@@ -57,12 +57,12 @@ export function BottomNav() {
                     }}
                     className={`flex flex-col items-center gap-1.5 rounded-2xl border p-3 text-center transition-colors ${
                       isActive(l.href)
-                        ? "border-[#003DA5]/30 bg-[#003DA5]/5"
-                        : "border-gray-200 dark:border-gray-700 active:bg-gray-50 dark:active:bg-white/5"
+                        ? "border-primary/30 bg-primary/5"
+                        : "border-border active:bg-muted/50"
                     }`}
                   >
                     <span className="text-2xl">{l.emoji}</span>
-                    <span className="text-[11px] font-semibold text-gray-700 dark:text-gray-300">{l.label}</span>
+                    <span className="text-[11px] font-semibold text-foreground/80">{l.label}</span>
                   </Link>
                 ))}
               </div>
@@ -72,7 +72,7 @@ export function BottomNav() {
       </AnimatePresence>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
-        <div className="bg-white dark:bg-[#141821] border-t border-[#e5e7eb] dark:border-[#2a3040] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
+        <div className="bg-card/85 backdrop-blur-xl border-t border-border/50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.35)]">
           <div className="mx-auto flex max-w-2xl items-end px-0.5 py-1 safe-area-bottom">
             {/* Left group */}
             <div className="flex flex-1 justify-around">
@@ -104,13 +104,15 @@ function PlayButton({ active }: { active: boolean }) {
       onClick={() => hapticTap()}
     >
       <div
-        className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 bg-[#003DA5] shadow-lg shadow-[#003DA5]/30 border border-[#0052CC] ${active ? "" : ""}`}
+        className={`flex h-[60px] w-[60px] items-center justify-center rounded-2xl text-white transition-all active:scale-90 bg-gradient-to-br from-figb to-figb-light shadow-lg shadow-figb/35 ring-1 ring-white/20 ${
+          active ? "scale-105" : ""
+        }`}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 ml-0.5">
           <path d="M8 5v14l11-7z" />
         </svg>
       </div>
-      <span className="mt-1 text-[10px] font-bold text-[#003DA5]">Gioca</span>
+      <span className="mt-1 text-[10px] font-bold text-primary">Gioca</span>
     </Link>
   );
 }
@@ -124,15 +126,22 @@ function MoreButton({ active, onClick }: { active: boolean; onClick: () => void 
       }}
       aria-label="Altro"
       className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
-        active ? "text-[#003DA5] bg-[#003DA5]/8" : "text-gray-400 active:scale-95"
+        active ? "text-primary" : "text-muted-foreground active:scale-95"
       }`}
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-[22px] w-[22px]">
+      {active && (
+        <motion.div
+          layoutId="bottomnav-pill"
+          className="absolute inset-0 rounded-xl bg-primary/10"
+          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+        />
+      )}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="relative h-[22px] w-[22px]">
         <line x1="3" y1="6" x2="21" y2="6" />
         <line x1="3" y1="12" x2="21" y2="12" />
         <line x1="3" y1="18" x2="21" y2="18" />
       </svg>
-      <span className={`text-[10px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
+      <span className={`relative text-[10px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
     </button>
   );
 }
@@ -174,13 +183,19 @@ function NavItem({
       href={href}
       onClick={() => hapticTap()}
       className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
-        active ? "text-[#003DA5] bg-[#003DA5]/8" : "text-gray-400 hover:text-gray-600 active:scale-95"
+        active ? "text-primary" : "text-muted-foreground hover:text-foreground active:scale-95"
       }`}
       aria-label={label}
     >
-      {icons[icon]}
-      <span className={`text-[10px] ${active ? "font-bold" : "font-semibold"}`}>{label}</span>
-      {active && <div className="absolute -bottom-1 w-5 h-1 rounded-full bg-[#003DA5]" />}
+      {active && (
+        <motion.div
+          layoutId="bottomnav-pill"
+          className="absolute inset-0 rounded-xl bg-primary/10"
+          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+        />
+      )}
+      <span className="relative">{icons[icon]}</span>
+      <span className={`relative text-[10px] ${active ? "font-bold" : "font-semibold"}`}>{label}</span>
     </Link>
   );
 }
