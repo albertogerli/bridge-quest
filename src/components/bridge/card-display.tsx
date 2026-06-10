@@ -16,10 +16,10 @@ interface SuitGroup {
 }
 
 const SUIT_MAP: Record<string, { symbol: string; color: string; bgColor: string }> = {
-  "\u2660": { symbol: "\u2660", color: "text-[#1B2631]", bgColor: "bg-slate-50" },
-  "\u2665": { symbol: "\u2665", color: "text-[#D32F2F]", bgColor: "bg-red-50" },
-  "\u2666": { symbol: "\u2666", color: "text-[#FF6F00]", bgColor: "bg-orange-50" },
-  "\u2663": { symbol: "\u2663", color: "text-[#2E7D32]", bgColor: "bg-green-50" },
+  "\u2660": { symbol: "\u2660", color: "text-[#1B2631] dark:text-slate-200", bgColor: "bg-slate-50 dark:bg-slate-800/40" },
+  "\u2665": { symbol: "\u2665", color: "text-[#D32F2F] dark:text-red-400", bgColor: "bg-red-50 dark:bg-red-950/40" },
+  "\u2666": { symbol: "\u2666", color: "text-[#FF6F00] dark:text-orange-400", bgColor: "bg-orange-50 dark:bg-orange-950/40" },
+  "\u2663": { symbol: "\u2663", color: "text-[#2E7D32] dark:text-emerald-400", bgColor: "bg-green-50 dark:bg-green-950/40" },
 };
 
 function parseCardString(cards: string): SuitGroup[] {
@@ -88,7 +88,7 @@ export function CardDisplay({
   if (groups.length === 0) {
     // Fallback: show as text
     return (
-      <span className="font-black text-gray-900 tracking-wide">{cards}</span>
+      <span className="font-black text-foreground tracking-wide">{cards}</span>
     );
   }
 
@@ -142,9 +142,9 @@ export function HandDiagram({
   const groups = parseCardString(cards);
 
   return (
-    <div className="rounded-xl bg-white border border-gray-100 shadow-sm p-3">
+    <div className="rounded-xl bg-card border border-border shadow-sm p-3">
       {label && (
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+        <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
           {label}
         </p>
       )}
@@ -164,13 +164,13 @@ export function HandDiagram({
               {group.ranks.map((rank, rIdx) => (
                 <span
                   key={rIdx}
-                  className={`inline-flex items-center justify-center w-6 h-6 rounded bg-gray-50 border border-gray-100 text-xs font-black ${group.color}`}
+                  className={`inline-flex items-center justify-center w-6 h-6 rounded bg-muted border border-border text-xs font-black ${group.color}`}
                 >
                   {rank}
                 </span>
               ))}
               {group.ranks.length === 0 && (
-                <span className="text-xs text-gray-300">—</span>
+                <span className="text-xs text-muted-foreground/40">—</span>
               )}
             </div>
           </motion.div>

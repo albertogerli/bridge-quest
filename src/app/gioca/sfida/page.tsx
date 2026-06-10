@@ -61,7 +61,7 @@ export default function SfidaDelGiornoPage() {
   const smazzata = getDailySmazzata(playable);
   if (!smazzata) {
     return (
-      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento sfida del giorno">
+      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento sfida del giorno">
         Caricamento sfida del giorno…
       </div>
     );
@@ -191,26 +191,26 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           <div className="flex items-center justify-center gap-2 mb-2">
             <Link
               href="/gioca"
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="15,18 9,12 15,6" />
               </svg>
             </Link>
-            <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
+            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
               Sfida del Giorno
             </Badge>
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
             {alreadyCompleted && (
-              <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-0">
+              <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold border-0">
                 Completata
               </Badge>
             )}
           </div>
-          <h1 className="text-lg font-bold text-gray-900">
+          <h1 className="text-lg font-bold text-foreground">
             {smazzata.title}
           </h1>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Lezione {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
           </p>
         </motion.div>
@@ -222,20 +222,20 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           transition={{ delay: 0.1 }}
           className="mb-4 flex items-center justify-center"
         >
-          <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
+          <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-              <p className="text-lg font-bold text-gray-900">{tricksNeeded} prese</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                   : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
@@ -335,10 +335,10 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 game.phase === "finished"
                   ? game.result && game.result.result >= 0
                     ? "text-emerald"
-                    : "text-red-500"
+                    : "text-red-500 dark:text-red-400"
                   : game.isPlayerTurn
-                    ? "text-amber-600"
-                    : "text-gray-500"
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-muted-foreground"
               }`}
             >
               {game.message}
@@ -399,8 +399,8 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
+                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">
@@ -408,7 +408,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 </div>
                 <h3
                   className={`text-xl font-bold ${
-                    game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
+                    game.result.result >= 0 ? "text-emerald-dark dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {game.result.result >= 0
@@ -417,20 +417,20 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       : `Sfida Superata +${game.result.result}!`
                     : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
                 </p>
                 <div className="mt-4 flex items-center justify-center gap-3">
-                  <div className="inline-flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-2">
+                  <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl px-4 py-2">
                     <span className="text-lg">⚡</span>
-                    <span className="text-sm font-bold text-amber-700">
+                    <span className="text-sm font-bold text-amber-700 dark:text-amber-300">
                       +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10} {profile.xpLabel}
                     </span>
                   </div>
                   {!alreadyCompleted && (
-                    <div className="inline-flex items-center gap-2 bg-orange-50 rounded-xl px-4 py-2">
+                    <div className="inline-flex items-center gap-2 bg-orange-50 dark:bg-orange-950/40 rounded-xl px-4 py-2">
                       <span className="text-lg">🔥</span>
-                      <span className="text-sm font-bold text-orange-700">+40 {profile.xpLabel} Bonus</span>
+                      <span className="text-sm font-bold text-orange-700 dark:text-orange-300">+40 {profile.xpLabel} Bonus</span>
                     </div>
                   )}
                 </div>
@@ -455,14 +455,14 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 className="mt-4 mx-auto max-w-6xl"
               >
                 <Link href="/gioca/analisi">
-                  <div className="card-elevated rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                  <div className="card-elevated rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 dark:from-violet-950/40 dark:to-indigo-950/30 dark:border-violet-900 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-950/40 dark:border-violet-900">
                         <span className="text-lg">🤖</span>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-gray-900">Analizza con l&apos;AI</p>
-                        <p className="text-[11px] text-gray-500">Scopri dove potevi migliorare</p>
+                        <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
+                        <p className="text-[11px] text-muted-foreground">Scopri dove potevi migliorare</p>
                       </div>
                       <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
@@ -485,7 +485,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           >
             <button
               onClick={() => setShowHint(!showHint)}
-              className="flex items-center gap-2 mx-auto mb-2 px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-sm font-semibold text-gray-600 transition-colors"
+              className="flex items-center gap-2 mx-auto mb-2 px-4 py-2 rounded-xl bg-muted hover:bg-muted/70 text-sm font-semibold text-muted-foreground transition-colors"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 {showHint ? (
@@ -511,19 +511,19 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                   exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="card-elevated rounded-2xl bg-white p-5">
+                  <div className="card-elevated rounded-2xl bg-card p-5">
                     <div className="flex items-start gap-3.5">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
                         M
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1.5">
-                          <p className="font-bold text-sm text-gray-900">Maestro Fiori</p>
-                          <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
+                          <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
+                          <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
                             Suggerimento
                           </Badge>
                         </div>
-                        <p className="text-[13px] text-gray-600 leading-relaxed">
+                        <p className="text-[13px] text-muted-foreground leading-relaxed">
                           {smazzata.commentary}
                         </p>
                       </div>

@@ -52,28 +52,28 @@ function colorizeCards(text: string): React.ReactNode {
     if (ch === "\u2660") {
       // spade
       parts.push(
-        <span key={i} className="text-gray-900 font-bold">
+        <span key={i} className="text-foreground font-bold">
           {ch}
         </span>
       );
     } else if (ch === "\u2665") {
       // heart
       parts.push(
-        <span key={i} className="text-red-500 font-bold">
+        <span key={i} className="text-red-500 dark:text-red-400 font-bold">
           {ch}
         </span>
       );
     } else if (ch === "\u2666") {
       // diamond
       parts.push(
-        <span key={i} className="text-orange-500 font-bold">
+        <span key={i} className="text-orange-500 dark:text-orange-400 font-bold">
           {ch}
         </span>
       );
     } else if (ch === "\u2663") {
       // club
       parts.push(
-        <span key={i} className="text-emerald-600 font-bold">
+        <span key={i} className="text-emerald-600 dark:text-emerald-400 font-bold">
           {ch}
         </span>
       );
@@ -296,7 +296,7 @@ export default function ImpassePage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald-600 transition-colors"
@@ -304,7 +304,7 @@ export default function ImpassePage() {
               Gioca
             </Link>
             <span>/</span>
-            <span className="text-blue-600 font-semibold">
+            <span className="text-blue-600 dark:text-blue-400 font-semibold">
               Impasse o Drop?
             </span>
           </div>
@@ -333,20 +333,20 @@ export default function ImpassePage() {
               </svg>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               Impasse o Drop?
             </h1>
-            <p className="text-gray-500 mt-2 max-w-xs mx-auto">
+            <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Vedi la combinazione di carte: decidi in fretta se fare l'impasse o
               giocare per il drop!
             </p>
 
             {/* Rules */}
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">
                 Come si gioca?
               </h3>
-              <ul className="text-xs text-gray-500 space-y-1.5">
+              <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
                   Vedi la tua mano e il morto in un seme specifico
                 </li>
@@ -354,11 +354,11 @@ export default function ImpassePage() {
                   Ti manca un onore (K o Q): devi decidere la manovra
                 </li>
                 <li>
-                  <span className="font-bold text-blue-600">IMPASSE</span>{" "}
+                  <span className="font-bold text-blue-600 dark:text-blue-400">IMPASSE</span>{" "}
                   = finesse verso l'onore mancante
                 </li>
                 <li>
-                  <span className="font-bold text-amber-600">DROP</span>{" "}
+                  <span className="font-bold text-amber-600 dark:text-amber-400">DROP</span>{" "}
                   = gioca dall'alto sperando che cada
                 </li>
                 <li>
@@ -368,25 +368,25 @@ export default function ImpassePage() {
             </div>
 
             {/* Quick reference */}
-            <div className="mt-4 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">
+            <div className="mt-4 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">
                 Regole d'oro
               </h3>
-              <ul className="text-xs text-gray-500 space-y-1.5">
+              <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
-                  <span className="text-blue-600 font-bold">8 carte, manca K</span>{" "}
+                  <span className="text-blue-600 dark:text-blue-400 font-bold">8 carte, manca K</span>{" "}
                   = IMPASSE (50% vs 33%)
                 </li>
                 <li>
-                  <span className="text-amber-600 font-bold">9 carte, manca Q</span>{" "}
+                  <span className="text-amber-600 dark:text-amber-400 font-bold">9 carte, manca Q</span>{" "}
                   = DROP ("con 9, non finessare")
                 </li>
                 <li>
-                  <span className="text-blue-600 font-bold">9 carte, manca K</span>{" "}
+                  <span className="text-blue-600 dark:text-blue-400 font-bold">9 carte, manca K</span>{" "}
                   = IMPASSE (56% - regola diversa!)
                 </li>
                 <li>
-                  <span className="text-amber-600 font-bold">10+ carte</span>{" "}
+                  <span className="text-amber-600 dark:text-amber-400 font-bold">10+ carte</span>{" "}
                   = quasi sempre DROP
                 </li>
               </ul>
@@ -394,7 +394,7 @@ export default function ImpassePage() {
 
             {/* Difficulty buttons */}
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">
+              <h3 className="font-bold text-sm text-foreground text-left">
                 Scegli difficoltà
               </h3>
               {(
@@ -427,7 +427,7 @@ export default function ImpassePage() {
 
             {/* Best score */}
             {bestScore > 0 && (
-              <div className="mt-4 text-center text-sm text-gray-400 font-bold">
+              <div className="mt-4 text-center text-sm text-muted-foreground/70 font-bold">
                 Miglior punteggio: {bestScore} pts
               </div>
             )}
@@ -467,7 +467,7 @@ export default function ImpassePage() {
               ))}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {stars === 3
                 ? "Esperto di Manovre!"
                 : stars === 2
@@ -476,7 +476,7 @@ export default function ImpassePage() {
                     ? "Buon inizio!"
                     : "Ripassa la teoria!"}
             </h1>
-            <p className="text-lg font-bold text-gray-500 mt-1">
+            <p className="text-lg font-bold text-muted-foreground mt-1">
               {correctCount}/{TOTAL_ROUNDS} corrette ({accuracy}%)
             </p>
             <p className="text-2xl font-bold text-blue-500 mt-2">
@@ -485,31 +485,31 @@ export default function ImpassePage() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">
+                <p className="text-[10px] text-muted-foreground/70 font-bold">
                   Streak max
                 </p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
+              <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-blue-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
             {/* Recap hint */}
-            <div className="mt-4 card-clean rounded-xl bg-blue-50 p-3">
-              <p className="text-xs text-blue-700 font-bold">
+            <div className="mt-4 card-clean rounded-xl bg-blue-50 dark:bg-blue-950/40 p-3">
+              <p className="text-xs text-blue-700 dark:text-blue-300 font-bold">
                 Ricorda: "con 8, impasse il Re" e "con 9, drop la Donna"
               </p>
             </div>
@@ -549,7 +549,7 @@ export default function ImpassePage() {
         <div className="flex items-center justify-between mb-3">
           <Link
             href="/gioca"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
           >
             <svg
               className="h-4 w-4"
@@ -562,31 +562,31 @@ export default function ImpassePage() {
             </svg>
           </Link>
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-blue-400 to-cyan-500"
                 animate={{ width: `${((round + 1) / TOTAL_ROUNDS) * 100}%` }}
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-muted-foreground/70">
             {round + 1}/{TOTAL_ROUNDS}
           </span>
         </div>
 
         {/* Streak + Score row */}
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-bold text-gray-400">
+          <div className="text-sm font-bold text-muted-foreground/70">
             {correctCount}/{round} corrette
           </div>
           {streak > 1 && (
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-1 bg-blue-50 rounded-full px-3 py-1"
+              className="flex items-center gap-1 bg-blue-50 dark:bg-blue-950/40 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-blue-600">
+              <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
                 x{streak}
               </span>
             </motion.div>
@@ -596,7 +596,7 @@ export default function ImpassePage() {
 
         {/* Timer bar */}
         <div className="mb-5 relative">
-          <div className="h-3 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-3 rounded-full bg-muted overflow-hidden">
             <motion.div
               className={`h-full rounded-full transition-colors duration-300 ${
                 timerDanger
@@ -613,10 +613,10 @@ export default function ImpassePage() {
             <span
               className={`text-xs font-bold tabular-nums ${
                 timerDanger
-                  ? "text-red-500"
+                  ? "text-red-500 dark:text-red-400"
                   : timerWarn
-                    ? "text-amber-500"
-                    : "text-gray-400"
+                    ? "text-amber-500 dark:text-amber-400"
+                    : "text-muted-foreground/70"
               }`}
             >
               {(timeLeft / 1000).toFixed(1)}s
@@ -629,14 +629,14 @@ export default function ImpassePage() {
           key={round}
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="card-clean rounded-2xl bg-white p-5 mb-5"
+          className="card-clean rounded-2xl bg-card p-5 mb-5"
         >
           {/* Missing honor badge */}
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-muted-foreground/70 uppercase tracking-wider">
               Manca:
             </span>
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 text-red-600 font-bold text-sm">
+            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 font-bold text-sm">
               {colorizeCards(scenario.missingHonor)}
             </span>
           </div>
@@ -645,10 +645,10 @@ export default function ImpassePage() {
           <div className="grid grid-cols-2 gap-4">
             {/* Your hand */}
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
                 La tua mano
               </p>
-              <div className="bg-gradient-to-b from-blue-50 to-white rounded-xl p-3 border border-blue-100">
+              <div className="bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/40 dark:to-card rounded-xl p-3 border border-blue-100 dark:border-blue-900">
                 <p className="text-2xl sm:text-3xl tracking-wider leading-relaxed">
                   {colorizeCards(scenario.yourHand)}
                 </p>
@@ -657,10 +657,10 @@ export default function ImpassePage() {
 
             {/* Dummy */}
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
                 Il morto
               </p>
-              <div className="bg-gradient-to-b from-amber-50 to-white rounded-xl p-3 border border-amber-100">
+              <div className="bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-card rounded-xl p-3 border border-amber-100 dark:border-amber-900">
                 <p className="text-2xl sm:text-3xl tracking-wider leading-relaxed">
                   {colorizeCards(scenario.dummy)}
                 </p>
@@ -670,11 +670,11 @@ export default function ImpassePage() {
 
           {/* Info: total cards + missing */}
           <div className="flex items-center justify-center gap-4 mt-4">
-            <span className="text-xs font-bold text-gray-400">
+            <span className="text-xs font-bold text-muted-foreground/70">
               {scenario.totalCards} carte totali
             </span>
-            <span className="text-gray-200">|</span>
-            <span className="text-xs font-bold text-gray-400">
+            <span className="text-muted-foreground/40">|</span>
+            <span className="text-xs font-bold text-muted-foreground/70">
               {scenario.missingCards} mancanti
             </span>
           </div>
@@ -745,8 +745,8 @@ export default function ImpassePage() {
               exit={{ opacity: 0, y: -8 }}
               className={`mt-4 rounded-2xl p-4 ${
                 feedback.correct
-                  ? "bg-emerald-50 border border-emerald-200"
-                  : "bg-red-50 border border-red-200"
+                  ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900"
+                  : "bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900"
               }`}
             >
               {/* Result header */}
@@ -760,7 +760,7 @@ export default function ImpassePage() {
                 </span>
                 <span
                   className={`text-lg font-bold ${
-                    feedback.correct ? "text-emerald-700" : "text-red-600"
+                    feedback.correct ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {feedback.correct
@@ -776,21 +776,21 @@ export default function ImpassePage() {
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
                     feedback.scenario.correctAnswer === "impasse"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-amber-100 text-amber-700"
+                      ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                      : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
                   }`}
                 >
                   {feedback.scenario.correctAnswer === "impasse"
                     ? "IMPASSE"
                     : "DROP"}
                 </span>
-                <span className="text-sm font-bold text-gray-500">
+                <span className="text-sm font-bold text-muted-foreground">
                   Probabilità: {feedback.scenario.probability}%
                 </span>
               </div>
 
               {/* Explanation */}
-              <p className="text-xs text-gray-600 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 {feedback.scenario.explanation}
               </p>
             </motion.div>

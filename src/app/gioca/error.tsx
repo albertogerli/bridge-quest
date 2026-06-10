@@ -21,22 +21,22 @@ export default function GameError({
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-8 text-center"
+        className="w-full max-w-md bg-card rounded-2xl border border-border shadow-sm p-8 text-center"
       >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-950/40 dark:to-pink-950/30">
           <span className="text-3xl">🃏</span>
         </div>
 
-        <h1 className="text-xl font-bold text-gray-900 mb-2">
+        <h1 className="text-xl font-bold text-foreground font-display mb-2">
           Errore durante il gioco
         </h1>
-        <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+        <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
           Si è verificato un problema con il gioco. Riprova per ricominciare
           oppure torna alla selezione dei giochi.
         </p>
 
         {error.digest && (
-          <p className="text-xs text-gray-400 mb-4 font-mono">
+          <p className="text-xs text-muted-foreground/70 mb-4 font-mono">
             Codice: {error.digest}
           </p>
         )}
@@ -50,13 +50,13 @@ export default function GameError({
           </button>
           <Link
             href="/gioca"
-            className="w-full rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="w-full rounded-xl border border-border bg-card px-5 py-3 text-sm font-medium text-foreground/80 hover:bg-muted/50 transition-colors"
           >
             Torna ai Giochi
           </Link>
           <Link
             href="/"
-            className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-sm text-muted-foreground/70 hover:text-muted-foreground transition-colors"
           >
             Torna alla Home
           </Link>

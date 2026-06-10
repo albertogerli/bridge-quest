@@ -253,17 +253,17 @@ function SfidaLinkContent() {
 
   // Determine winner for comparison
   let comparisonVerdict = "";
-  let comparisonColor = "text-gray-700";
+  let comparisonColor = "text-foreground/80";
   if (mode === "finished" && creatorResult && myResult) {
     if (myResult.myTricks > creatorResult.myTricks) {
       comparisonVerdict = "Hai vinto la sfida!";
-      comparisonColor = "text-emerald-700";
+      comparisonColor = "text-emerald-700 dark:text-emerald-300";
     } else if (myResult.myTricks < creatorResult.myTricks) {
       comparisonVerdict = "Vince lo sfidante!";
-      comparisonColor = "text-red-600";
+      comparisonColor = "text-red-600 dark:text-red-400";
     } else {
       comparisonVerdict = "Pareggio!";
-      comparisonColor = "text-amber-600";
+      comparisonColor = "text-amber-600 dark:text-amber-400";
     }
   }
 
@@ -272,8 +272,8 @@ function SfidaLinkContent() {
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl text-center">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded-xl w-48 mx-auto" />
-            <div className="h-40 bg-gray-100 rounded-2xl" />
+            <div className="h-8 bg-muted rounded-xl w-48 mx-auto" />
+            <div className="h-40 bg-muted/60 rounded-2xl" />
           </div>
         </div>
       </div>
@@ -296,17 +296,17 @@ function SfidaLinkContent() {
             <div className="flex items-center gap-3 mb-2">
               <Link
                 href="/gioca"
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                   <polyline points="15,18 9,12 15,6" />
                 </svg>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-foreground font-display">
                   {mode === "create" ? "Crea Sfida via Link" : "Sfida Ricevuta!"}
                 </h1>
-                <p className="text-sm text-gray-500 mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {mode === "create" ? "Gioca questa mano e condividi il link" : "Un amico ti ha sfidato a questa mano"}
                 </p>
               </div>
@@ -320,7 +320,7 @@ function SfidaLinkContent() {
             transition={{ delay: 0.1 }}
             className="mb-6"
           >
-            <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-[#003DA5] to-[#002E7A]">
+            <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-figb to-figb-dark">
               <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
               <div className="relative text-center">
                 <div className="text-5xl mb-3">{"\u2694\uFE0F"}</div>
@@ -346,8 +346,8 @@ function SfidaLinkContent() {
             transition={{ delay: 0.2 }}
             className="mb-6"
           >
-            <div className="rounded-2xl bg-white p-6 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
-              <h3 className="font-bold text-gray-900 mb-4 text-center">La tua mano (Sud)</h3>
+            <div className="rounded-2xl bg-card p-6 border-2 border-border shadow-[0_4px_0_var(--border)]">
+              <h3 className="font-bold text-foreground mb-4 text-center">La tua mano (Sud)</h3>
               <div className="flex flex-wrap justify-center gap-2">
                 {southHand.map((card, idx) => (
                   <PlayingCard
@@ -370,24 +370,24 @@ function SfidaLinkContent() {
           >
             <Button
               onClick={handleStartGame}
-              className="w-full rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-base font-bold h-14 shadow-lg shadow-[#003DA5]/20"
+              className="w-full rounded-xl bg-figb hover:bg-figb-dark text-base font-bold h-14 shadow-lg shadow-figb/20"
             >
               {mode === "create" ? "Gioca questa mano" : "Accetta Sfida"}
             </Button>
 
             {mode === "create" && (
               <div className="text-center">
-                <p className="text-xs text-gray-500">Gioca prima la mano, poi potrai condividere il link con il tuo risultato</p>
+                <p className="text-xs text-muted-foreground">Gioca prima la mano, poi potrai condividere il link con il tuo risultato</p>
               </div>
             )}
 
             {mode === "challenge" && creatorResult && (
-              <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4">
+              <div className="rounded-2xl bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-900 p-4">
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">{"\uD83C\uDFAF"}</div>
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-amber-900">Obiettivo da battere</p>
-                    <p className="text-xs text-amber-700 mt-0.5">
+                    <p className="text-sm font-bold text-amber-900 dark:text-amber-200">Obiettivo da battere</p>
+                    <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
                       Lo sfidante ha fatto <span className="font-bold">{creatorResult.myTricks} prese</span>
                     </p>
                   </div>
@@ -415,19 +415,19 @@ function SfidaLinkContent() {
           <div className="flex items-center justify-center gap-2 mb-2">
             <Link
               href="/gioca"
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="15,18 9,12 15,6" />
               </svg>
             </Link>
-            <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
+            <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[10px] font-bold border-0">
               {mode === "playing-create" || mode === "finished" ? "Sfida via Link" : "Sfida Ricevuta"}
             </Badge>
             <BenStatus available={game.benAvailable} />
           </div>
-          <h1 className="text-lg font-bold text-gray-900">Sfida via Link</h1>
-          <p className="text-xs text-gray-500 mt-1">Seed: {seed}</p>
+          <h1 className="text-lg font-bold text-foreground font-display">Sfida via Link</h1>
+          <p className="text-xs text-muted-foreground mt-1">Seed: {seed}</p>
         </motion.div>
 
         {/* Contract bar */}
@@ -437,20 +437,20 @@ function SfidaLinkContent() {
           transition={{ delay: 0.1 }}
           className="mb-4 flex items-center justify-center"
         >
-          <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
+          <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{contract}</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-              <p className="text-lg font-bold text-gray-900">{tricksNeeded} prese</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                   : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
@@ -502,11 +502,11 @@ function SfidaLinkContent() {
               className={`text-sm font-semibold ${
                 game.phase === "finished"
                   ? game.result && game.result.result >= 0
-                    ? "text-emerald"
-                    : "text-red-500"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-red-500 dark:text-red-400"
                   : game.isPlayerTurn
-                    ? "text-amber-600"
-                    : "text-gray-500"
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-muted-foreground"
               }`}
             >
               {game.message}
@@ -527,8 +527,8 @@ function SfidaLinkContent() {
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
+                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">
@@ -536,7 +536,7 @@ function SfidaLinkContent() {
                 </div>
                 <h3
                   className={`text-xl font-bold ${
-                    game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
+                    game.result.result >= 0 ? "text-emerald-dark dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {game.result.result >= 0
@@ -545,12 +545,12 @@ function SfidaLinkContent() {
                       : `Fatto +${game.result.result}!`
                     : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
                 </p>
-                <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-2">
+                <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl px-4 py-2">
                   <span className="text-lg">{"\u26A1"}</span>
-                  <span className="text-sm font-bold text-amber-700">
+                  <span className="text-sm font-bold text-amber-700 dark:text-amber-300">
                     +{30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10} {profile.xpLabel}
                   </span>
                 </div>
@@ -563,28 +563,28 @@ function SfidaLinkContent() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="card-elevated rounded-2xl overflow-hidden border border-gray-200">
+                  <div className="card-elevated rounded-2xl overflow-hidden border border-border">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-[#003DA5] to-[#002E7A] px-5 py-4 text-center">
+                    <div className="bg-gradient-to-r from-figb to-figb-dark px-5 py-4 text-center">
                       <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
                       <h3 className="text-lg font-bold text-white">Confronto Risultati</h3>
                     </div>
 
                     {/* Two columns */}
-                    <div className="bg-white p-5">
+                    <div className="bg-card p-5">
                       <div className="grid grid-cols-2 gap-4 mb-5">
                         {/* Your result */}
-                        <div className="text-center rounded-2xl bg-gray-50 p-4 border border-gray-100">
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tu</p>
-                          <p className="text-4xl font-bold text-gray-900">{myResult.myTricks}</p>
-                          <p className="text-xs text-gray-500 mt-1">prese</p>
+                        <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
+                          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">Tu</p>
+                          <p className="text-4xl font-bold text-foreground">{myResult.myTricks}</p>
+                          <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>
 
                         {/* Creator result */}
-                        <div className="text-center rounded-2xl bg-gray-50 p-4 border border-gray-100">
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Sfidante</p>
-                          <p className="text-4xl font-bold text-gray-900">{creatorResult.myTricks}</p>
-                          <p className="text-xs text-gray-500 mt-1">prese</p>
+                        <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
+                          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">Sfidante</p>
+                          <p className="text-4xl font-bold text-foreground">{creatorResult.myTricks}</p>
+                          <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>
                       </div>
 
@@ -597,10 +597,10 @@ function SfidaLinkContent() {
                       >
                         <div className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 ${
                           myResult.myTricks > creatorResult.myTricks
-                            ? "bg-emerald-50 border border-emerald-200"
+                            ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900"
                             : myResult.myTricks < creatorResult.myTricks
-                              ? "bg-red-50 border border-red-200"
-                              : "bg-amber-50 border border-amber-200"
+                              ? "bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900"
+                              : "bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-900"
                         }`}>
                           <span className="text-xl">
                             {myResult.myTricks > creatorResult.myTricks ? "\uD83C\uDFC6" : myResult.myTricks < creatorResult.myTricks ? "\uD83D\uDE14" : "\uD83E\uDD1D"}
@@ -622,7 +622,7 @@ function SfidaLinkContent() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="rounded-2xl bg-gradient-to-br from-[#003DA5] to-[#002E7A] p-6 text-center text-white">
+                  <div className="rounded-2xl bg-gradient-to-br from-figb to-figb-dark p-6 text-center text-white">
                     <div className="text-3xl mb-2">{"\u2694\uFE0F"}</div>
                     <h3 className="text-lg font-bold mb-1">Sfida Pronta!</h3>
                     <p className="text-sm text-white/70 mb-5">
@@ -698,7 +698,7 @@ function SfidaLinkContent() {
                 </Button>
                 <Button
                   onClick={() => router.push("/gioca/sfida-link")}
-                  className="flex-1 rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-sm font-bold h-12 px-6 shadow-lg shadow-[#003DA5]/20"
+                  className="flex-1 rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/20"
                 >
                   Nuova Sfida
                 </Button>
@@ -722,8 +722,8 @@ export default function SfidaLinkPage() {
         <div className="pt-6 px-5 pb-24">
           <div className="mx-auto max-w-6xl text-center">
             <div className="animate-pulse space-y-4">
-              <div className="h-8 bg-gray-200 rounded-xl w-48 mx-auto" />
-              <div className="h-40 bg-gray-100 rounded-2xl" />
+              <div className="h-8 bg-muted rounded-xl w-48 mx-auto" />
+              <div className="h-40 bg-muted/60 rounded-2xl" />
             </div>
           </div>
         </div>

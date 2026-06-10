@@ -50,20 +50,20 @@ function HandSelector({
   hands: GuidedHand[];
 }) {
   return (
-    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219]">
-      <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="mx-auto max-w-6xl flex items-center gap-3 px-4 py-3.5">
           <Link
             href="/gioca"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-card border border-border shadow-sm"
           >
-            <ArrowLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">Mano Guidata</h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Pratica passo-passo</p>
+            <h1 className="text-lg font-bold text-foreground">Mano Guidata</h1>
+            <p className="text-xs text-muted-foreground">Pratica passo-passo</p>
           </div>
-          <Target className="w-5 h-5 text-[#003DA5]" />
+          <Target className="w-5 h-5 text-figb dark:text-primary" />
         </div>
       </header>
 
@@ -72,17 +72,17 @@ function HandSelector({
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-4"
+          className="rounded-2xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/20 p-4"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 shrink-0">
-              <Target className="w-5 h-5 text-[#003DA5]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15 shrink-0">
+              <Target className="w-5 h-5 text-figb dark:text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-semibold text-foreground">
                 Impara giocando
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
+              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                 Due mani progettate per consolidare le basi. La prima è facile con suggerimenti,
                 la seconda più impegnativa senza aiuti.
               </p>
@@ -102,7 +102,7 @@ function HandSelector({
             >
               <button
                 onClick={() => onSelect(hand)}
-                className="w-full text-left rounded-2xl border border-gray-200 dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all"
+                className="w-full text-left rounded-2xl border border-border bg-card shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all"
               >
                 {/* Gradient header */}
                 <div
@@ -133,21 +133,21 @@ function HandSelector({
 
                 {/* Content */}
                 <div className="px-5 py-4">
-                  <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+                  <h3 className="text-base font-bold text-foreground">
                     {hand.name}
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {hand.description}
                   </p>
                   <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-xs text-gray-400">
-                      <span>Contratto: <span className="font-bold text-gray-600">{hand.contract}</span></span>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground/70">
+                      <span>Contratto: <span className="font-bold text-foreground/80">{hand.contract}</span></span>
                       <span>{hand.tricksNeeded} prese</span>
                       {hand.hints.length > 0 && (
                         <span className="text-cyan-500 font-semibold">💡 Con suggerimenti</span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-[#003DA5] font-bold text-xs">
+                    <div className="flex items-center gap-1 text-figb dark:text-primary font-bold text-xs">
                       {completed ? "Rigioca" : "Gioca"}
                       <ChevronRight className="w-3.5 h-3.5" />
                     </div>
@@ -165,7 +165,7 @@ function HandSelector({
           transition={{ delay: 0.4 }}
           className="pt-2 text-center"
         >
-          <Link href="/gioca" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+          <Link href="/gioca" className="text-xs text-muted-foreground/70 hover:text-muted-foreground transition-colors">
             ← Torna a Gioca
           </Link>
         </motion.div>
@@ -332,27 +332,27 @@ function GuidedGameplay({
           <div className="flex items-center justify-center gap-2 mb-2">
             <button
               onClick={onBack}
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
             <Badge
               className={`text-[10px] font-bold border-0 ${
                 hand.difficulty === "facile"
-                  ? "bg-cyan-50 text-cyan-700"
-                  : "bg-purple-50 text-purple-700"
+                  ? "bg-cyan-50 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300"
+                  : "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300"
               }`}
             >
               Mano Guidata {hand.id}
             </Badge>
             {hand.hints.length > 0 && (
-              <Badge className="bg-cyan-50 text-cyan-600 text-[10px] font-bold border-0">
+              <Badge className="bg-cyan-50 text-cyan-600 dark:bg-cyan-950/40 dark:text-cyan-400 text-[10px] font-bold border-0">
                 💡 Guidata
               </Badge>
             )}
           </div>
-          <h1 className="text-lg font-bold text-gray-900">{hand.name}</h1>
-          <p className="text-xs text-gray-500 mt-1">{hand.description}</p>
+          <h1 className="text-lg font-bold text-foreground">{hand.name}</h1>
+          <p className="text-xs text-muted-foreground mt-1">{hand.description}</p>
         </motion.div>
 
         {/* Contract bar */}
@@ -362,20 +362,20 @@ function GuidedGameplay({
           transition={{ delay: 0.1 }}
           className="mb-4 flex items-center justify-center"
         >
-          <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
+          <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{hand.contract}</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-              <p className="text-lg font-bold text-gray-900">{hand.tricksNeeded} prese</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-lg font-bold text-foreground">{hand.tricksNeeded} prese</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                   : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
@@ -450,10 +450,10 @@ function GuidedGameplay({
                 game.phase === "finished"
                   ? game.result && game.result.result >= 0
                     ? "text-emerald"
-                    : "text-red-500"
+                    : "text-red-500 dark:text-red-400"
                   : game.isPlayerTurn
-                    ? "text-amber-600"
-                    : "text-gray-500"
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-muted-foreground"
               }`}
             >
               {game.message}
@@ -497,7 +497,7 @@ function GuidedGameplay({
                     xpSaved.current = false;
                     onBack();
                   }}
-                  className="rounded-xl bg-[#003DA5] hover:bg-[#002d7a] text-sm font-bold h-12 px-6 shadow-lg shadow-[#003DA5]/25"
+                  className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/25"
                 >
                   Prova Mano {otherHand.id}
                 </Button>
@@ -528,8 +528,8 @@ function GuidedGameplay({
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
+                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">
@@ -537,7 +537,7 @@ function GuidedGameplay({
                 </div>
                 <h3
                   className={`text-xl font-bold ${
-                    game.result.result >= 0 ? "text-emerald-dark" : "text-red-600"
+                    game.result.result >= 0 ? "text-emerald-dark dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {game.result.result >= 0
@@ -546,13 +546,13 @@ function GuidedGameplay({
                       : `Contratto Mantenuto +${game.result.result}!`
                     : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
                 </p>
                 <div className="mt-4 flex items-center justify-center gap-3">
-                  <div className="inline-flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-2">
+                  <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl px-4 py-2">
                     <span className="text-lg">⚡</span>
-                    <span className="text-sm font-bold text-amber-700">
+                    <span className="text-sm font-bold text-amber-700 dark:text-amber-300">
                       +{25 + (game.result.result >= 0 ? 10 : 0)} {profile.xpLabel}
                     </span>
                   </div>
@@ -584,8 +584,8 @@ export default function ManoGuidataPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] grid place-items-center">
-        <div className="text-sm text-gray-500">Caricamento mani...</div>
+      <div className="min-h-screen bg-background grid place-items-center">
+        <div className="text-sm text-muted-foreground">Caricamento mani...</div>
       </div>
     );
   }

@@ -39,7 +39,7 @@ import Link from "next/link";
 
 export default function SmazzataBrowserPage() {
   return (
-    <Suspense fallback={<div className="pt-10 text-center text-gray-400 text-sm">Caricamento...</div>}>
+    <Suspense fallback={<div className="pt-10 text-center text-muted-foreground/70 text-sm">Caricamento...</div>}>
       <SmazzataBrowserContent />
     </Suspense>
   );
@@ -135,17 +135,17 @@ function SmazzataBrowserContent() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
         >
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
             <Link href="/gioca" className="hover:text-emerald transition-colors">
               Gioca
             </Link>
             <span>/</span>
             <span className="text-emerald font-semibold">Smazzate</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground font-display">
             Smazzate del Corso
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {allSmazzate.filter((s) => courseLessonIds.includes(s.lesson)).length} mani pratiche dalle lezioni FIGB
           </p>
         </motion.div>
@@ -173,7 +173,7 @@ function SmazzataBrowserContent() {
             return courseGroups.map((group) => (
               <div key={group.courseName}>
                 {courseGroups.length > 1 && (
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1.5 ml-1">
                     {group.courseName}
                   </p>
                 )}
@@ -188,7 +188,7 @@ function SmazzataBrowserContent() {
                       className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
                         selectedLesson === lesson.id
                           ? "bg-emerald text-white shadow-md shadow-emerald/25"
-                          : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                          : "bg-muted text-muted-foreground hover:bg-muted/70"
                       }`}
                     >
                       Lez. {getLessonDisplayNumber(lesson.id)}
@@ -207,10 +207,10 @@ function SmazzataBrowserContent() {
           animate={{ opacity: 1, x: 0 }}
           className="mb-4"
         >
-          <h2 className="text-lg font-bold text-gray-900">
+          <h2 className="text-lg font-bold text-foreground">
             Lezione {selectedLessonNumber}
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {titleFor(selectedLesson)} · {lessonSmazzate.length} mani
           </p>
         </motion.div>
@@ -230,7 +230,7 @@ function SmazzataBrowserContent() {
               >
                 <button
                   onClick={() => setSelectedSmazzata(smazzata)}
-                  className={`w-full text-left card-elevated rounded-2xl bg-white p-4 transition-all ${
+                  className={`w-full text-left card-elevated rounded-2xl bg-card p-4 transition-all ${
                     isSelected
                       ? "ring-2 ring-emerald shadow-lg"
                       : "hover:shadow-lg"
@@ -247,10 +247,10 @@ function SmazzataBrowserContent() {
                       {smazzata.contract}
                     </span>
                   </div>
-                  <p className="text-[12px] font-semibold text-gray-700 leading-tight mt-1 mb-1 line-clamp-2">
+                  <p className="text-[12px] font-semibold text-foreground/80 leading-tight mt-1 mb-1 line-clamp-2">
                     {smazzata.title}
                   </p>
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Dich: {smazzata.declarer === "north" ? "N" : smazzata.declarer === "south" ? "S" : smazzata.declarer === "east" ? "E" : "O"}
                     {" · "}
                     {tricksNeeded} prese
@@ -268,29 +268,29 @@ function SmazzataBrowserContent() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="mt-5 card-elevated rounded-2xl bg-white p-5"
+              className="mt-5 card-elevated rounded-2xl bg-card p-5"
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h3 className="font-bold text-gray-900">
+                  <h3 className="font-bold text-foreground">
                     Smazzata {selectedSmazzata.id}
                   </h3>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {selectedSmazzata.title}
                   </p>
                 </div>
-                <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">
+                <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold border-0">
                   {selectedSmazzata.contract}
                 </Badge>
               </div>
 
               {selectedSmazzata.commentary && (
-                <div className="rounded-xl bg-amber-50 border border-amber-100 p-3 mb-4">
+                <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 p-3 mb-4">
                   <div className="flex items-start gap-2">
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-[10px]">
                       M
                     </div>
-                    <p className="text-[12px] text-amber-800 leading-relaxed">
+                    <p className="text-[12px] text-amber-800 dark:text-amber-300 leading-relaxed">
                       {selectedSmazzata.commentary}
                     </p>
                   </div>
@@ -584,7 +584,7 @@ function PlayingView({
           <div className="flex items-center gap-2 mb-1">
             <button
               onClick={onBack}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <svg
                 className="h-4 w-4"
@@ -600,13 +600,13 @@ function PlayingView({
               <div className="flex items-center gap-2">
                 <Badge
                   variant="outline"
-                  className="text-[10px] font-bold text-emerald border-emerald/30 bg-emerald-50 shrink-0"
+                  className="text-[10px] font-bold text-emerald dark:text-emerald-300 border-emerald/30 bg-emerald-50 dark:bg-emerald-950/40 shrink-0"
                 >
                   Lez. {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
                 </Badge>
                 <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
-              <h1 className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-gray-900 truncate`}>
+              <h1 className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-foreground truncate`}>
                 {smazzata.title}
               </h1>
             </div>
@@ -620,30 +620,30 @@ function PlayingView({
           transition={{ delay: 0.1 }}
           className="mb-3 flex items-center justify-center"
         >
-          <div className={`card-elevated rounded-xl bg-white flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}>
+          <div className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}>
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                 Contratto
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}>
                 {smazzata.contract}
               </p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                 Obiettivo
               </p>
-              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}>
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
                 {tricksNeeded} prese
               </p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                 Dich. / Dif.
               </p>
-              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}>
+              <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                   : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
@@ -655,17 +655,17 @@ function PlayingView({
         {/* Mode selector: declare or defend (before the hand starts) */}
         {game.phase === "ready" && (
           <div className="mb-3 flex items-center justify-center gap-2">
-            <span className="text-xs font-semibold text-gray-500">Gioca come</span>
-            <div className="inline-flex rounded-xl border border-gray-200 bg-white p-0.5 shadow-sm">
+            <span className="text-xs font-semibold text-muted-foreground">Gioca come</span>
+            <div className="inline-flex rounded-xl border border-border bg-card p-0.5 shadow-sm">
               <button
                 onClick={() => setMode("declare")}
-                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-gray-600 hover:bg-gray-50"}`}
+                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
               >
                 Dichiarante
               </button>
               <button
                 onClick={() => setMode("defend")}
-                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-gray-600 hover:bg-gray-50"}`}
+                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
               >
                 Difesa
               </button>
@@ -754,7 +754,7 @@ function PlayingView({
         </div>
 
         {/* Message */}
-        <div className={`mt-3 text-center ${isMobile ? "sticky bottom-16 z-20 bg-white/90 backdrop-blur-sm rounded-xl py-2 mx-auto max-w-xs shadow-sm" : ""}`}>
+        <div className={`mt-3 text-center ${isMobile ? "sticky bottom-16 z-20 bg-card/90 backdrop-blur-sm rounded-xl py-2 mx-auto max-w-xs shadow-sm" : ""}`}>
           <AnimatePresence mode="wait">
             <motion.p
               key={game.message}
@@ -767,8 +767,8 @@ function PlayingView({
                     ? "text-emerald"
                     : "text-red-500"
                   : game.isPlayerTurn
-                    ? "text-amber-600"
-                    : "text-gray-500"
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-muted-foreground"
               }`}
             >
               {game.message}
@@ -852,8 +852,8 @@ function PlayingView({
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   success
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
                 }`}
               >
                 {/* Star Rating (DDS-based, 1-5) */}
@@ -873,7 +873,7 @@ function PlayingView({
 
                 <h3
                   className={`text-xl font-bold ${
-                    success ? "text-emerald-dark" : "text-red-600"
+                    success ? "text-emerald-dark dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {declared
@@ -891,11 +891,11 @@ function PlayingView({
 
                 {/* Tricks breakdown bar */}
                 <div className="mt-4 mx-auto max-w-xs">
-                  <div className="flex items-center justify-between text-xs font-bold text-gray-500 mb-1.5">
+                  <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-1.5">
                     <span>Prese fatte</span>
                     <span>{game.result.tricksMade} / {game.result.tricksNeeded} necessarie</span>
                   </div>
-                  <div className="h-3 rounded-full bg-gray-200 overflow-hidden">
+                  <div className="h-3 rounded-full bg-muted overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${Math.min((game.result.tricksMade / 13) * 100, 100)}%` }}
@@ -910,7 +910,7 @@ function PlayingView({
                   {/* Target line */}
                   <div className="relative h-0">
                     <div
-                      className="absolute -top-3 w-0.5 h-3 bg-gray-900/40"
+                      className="absolute -top-3 w-0.5 h-3 bg-foreground/40"
                       style={{ left: `${(game.result.tricksNeeded / 13) * 100}%` }}
                     />
                   </div>
@@ -930,7 +930,7 @@ function PlayingView({
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="mt-4 rounded-xl bg-indigo-50/80 border border-indigo-200/60 p-3"
+                  className="mt-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-900 p-3"
                 >
                   <div className="flex items-center gap-2 mb-1.5">
                     <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-indigo-500 text-white">
@@ -938,7 +938,7 @@ function PlayingView({
                         <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <span className="text-xs font-bold text-indigo-700">Analisi Double-Dummy</span>
+                    <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">Analisi Double-Dummy</span>
                     {ddsLoading && (
                       <span className="text-[10px] text-indigo-400 animate-pulse">Calcolo...</span>
                     )}
@@ -948,15 +948,15 @@ function PlayingView({
                   </div>
                   {ddTricks !== null ? (
                     <div className="space-y-1">
-                      <p className="text-sm font-bold text-indigo-900">
+                      <p className="text-sm font-bold text-indigo-900 dark:text-indigo-200">
                         {ddTricks} prese ottimali
                       </p>
                       <p className={`text-xs font-semibold ${
                         (declared ? game.result.tricksMade >= ddTricks : game.result.tricksMade <= ddTricks)
-                          ? "text-emerald-600"
+                          ? "text-emerald-600 dark:text-emerald-400"
                           : (declared ? game.result.tricksMade >= ddTricks - 1 : game.result.tricksMade <= ddTricks + 1)
-                            ? "text-amber-600"
-                            : "text-red-500"
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-red-500 dark:text-red-400"
                       }`}>
                         {declared
                           ? game.result.tricksMade >= ddTricks
@@ -978,23 +978,23 @@ function PlayingView({
 
                 {/* Score detail grid */}
                 <div className="grid grid-cols-3 gap-2 mt-6">
-                  <div className="bg-white/60 rounded-xl p-2.5">
-                    <p className="text-lg font-bold text-gray-900">{game.result.tricksMade}</p>
-                    <p className="text-[9px] font-bold text-gray-500 uppercase">Prese</p>
+                  <div className="bg-card/60 rounded-xl p-2.5">
+                    <p className="text-lg font-bold text-foreground">{game.result.tricksMade}</p>
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase">Prese</p>
                   </div>
-                  <div className="bg-white/60 rounded-xl p-2.5">
+                  <div className="bg-card/60 rounded-xl p-2.5">
                     <p className={`text-lg font-bold ${success ? "text-emerald-600" : "text-red-600"}`}>
                       {game.result.result >= 0 ? `+${game.result.result}` : game.result.result}
                     </p>
-                    <p className="text-[9px] font-bold text-gray-500 uppercase">Risultato</p>
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase">Risultato</p>
                   </div>
-                  <div className="bg-white/60 rounded-xl p-2.5">
+                  <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-amber-600">
                       +{declared
                         ? 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10
                         : 30 + (game.result.result < 0 ? 20 : 0) + Math.max(0, -game.result.result) * 10}
                     </p>
-                    <p className="text-[9px] font-bold text-gray-500 uppercase">{profile.xpLabel}</p>
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase">{profile.xpLabel}</p>
                   </div>
                 </div>
 
@@ -1005,12 +1005,12 @@ function PlayingView({
                   transition={{ delay: 0.8 }}
                   className={`mt-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold ${
                     ddsStars >= 5
-                      ? "bg-emerald-100 text-emerald-700"
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                       : ddsStars >= 4
-                        ? "bg-blue-100 text-blue-700"
+                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
                         : ddsStars >= 3
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-red-100 text-red-700"
+                          ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                          : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
                   }`}
                 >
                   {ddsStars >= 5
@@ -1035,7 +1035,7 @@ function PlayingView({
                     <Button
                       variant="outline"
                       onClick={() => setShowReplay(true)}
-                      className="rounded-xl text-xs font-bold h-9 px-5 border-gray-300 text-gray-600 hover:text-gray-900 hover:border-gray-400"
+                      className="rounded-xl text-xs font-bold h-9 px-5 border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground/40"
                     >
                       <svg className="h-3.5 w-3.5 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="1,4 1,10 7,10" />
@@ -1053,17 +1053,17 @@ function PlayingView({
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="card-elevated rounded-2xl bg-white p-5 border border-amber-200"
+                  className="card-elevated rounded-2xl bg-card p-5 border border-amber-200 dark:border-amber-900"
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700 font-bold text-xs">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 font-bold text-xs">
                       !
                     </div>
-                    <h4 className="text-sm font-bold text-gray-900">Su cosa lavorare</h4>
+                    <h4 className="text-sm font-bold text-foreground">Su cosa lavorare</h4>
                   </div>
                   <ul className="space-y-2">
                     {playErrors.map((err, i) => (
-                      <li key={i} className="text-sm text-gray-700 leading-relaxed flex gap-2">
+                      <li key={i} className="text-sm text-foreground/80 leading-relaxed flex gap-2">
                         <span className="text-amber-500 font-bold shrink-0">•</span>
                         <span>{err.description}</span>
                       </li>
@@ -1073,7 +1073,7 @@ function PlayingView({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="mt-3 h-8 rounded-xl px-4 text-xs font-bold border-amber-300 text-amber-700 hover:bg-amber-50"
+                      className="mt-3 h-8 rounded-xl px-4 text-xs font-bold border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-950/40"
                     >
                       Aggiunto al tuo ripasso →
                     </Button>
@@ -1087,15 +1087,15 @@ function PlayingView({
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="card-elevated rounded-2xl bg-white p-5 border border-gray-100"
+                  className="card-elevated rounded-2xl bg-card p-5 border border-border"
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-xs">
                       M
                     </div>
-                    <h4 className="text-sm font-bold text-gray-900">Analisi del Maestro</h4>
+                    <h4 className="text-sm font-bold text-foreground">Analisi del Maestro</h4>
                   </div>
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                  <p className="text-sm text-foreground/80 leading-relaxed">
                     {smazzata.commentary}
                   </p>
                 </motion.div>
@@ -1106,31 +1106,31 @@ function PlayingView({
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="card-elevated rounded-2xl bg-white p-5 border border-gray-100"
+                className="card-elevated rounded-2xl bg-card p-5 border border-border"
               >
-                <h4 className="text-sm font-bold text-gray-900 mb-3">Riepilogo mano</h4>
+                <h4 className="text-sm font-bold text-foreground mb-3">Riepilogo mano</h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Contratto</span>
-                    <span className="font-bold text-gray-900">{smazzata.contract}</span>
+                    <span className="text-muted-foreground">Contratto</span>
+                    <span className="font-bold text-foreground">{smazzata.contract}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Lezione</span>
-                    <span className="font-bold text-gray-900">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {lessonTitle}</span>
+                    <span className="text-muted-foreground">Lezione</span>
+                    <span className="font-bold text-foreground">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {lessonTitle}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Vulnerabilità</span>
-                    <span className="font-bold text-gray-900">
+                    <span className="text-muted-foreground">Vulnerabilità</span>
+                    <span className="font-bold text-foreground">
                       {smazzata.vulnerability === "none" ? "Nessuna" : smazzata.vulnerability === "ns" ? "N-S" : smazzata.vulnerability === "ew" ? "E-O" : "Tutti"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Attacco</span>
-                    <span className="font-bold text-gray-900">{cardToString(smazzata.openingLead)}</span>
+                    <span className="text-muted-foreground">Attacco</span>
+                    <span className="font-bold text-foreground">{cardToString(smazzata.openingLead)}</span>
                   </div>
                   {ddTricks !== null && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">DD Ottimale</span>
+                      <span className="text-muted-foreground">DD Ottimale</span>
                       <span className="font-bold text-indigo-600">
                         {ddTricks} prese{ddsResult && !ddsResult.isExact ? " (stima)" : ""}
                       </span>
@@ -1156,14 +1156,14 @@ function PlayingView({
                 transition={{ delay: 1.2 }}
               >
                 <Link href="/gioca/analisi">
-                  <div className="card-elevated rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                  <div className="card-elevated card-interactive rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/30 border border-violet-200 dark:border-violet-900 p-4 cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-900/40 dark:border-violet-800">
                         <span className="text-lg">🤖</span>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-gray-900">Analizza con l&apos;AI</p>
-                        <p className="text-[11px] text-gray-500">Scopri dove potevi migliorare</p>
+                        <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
+                        <p className="text-[11px] text-muted-foreground">Scopri dove potevi migliorare</p>
                       </div>
                       <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />

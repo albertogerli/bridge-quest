@@ -295,7 +295,7 @@ export default function TorneoSettimanale() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
         >
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -315,7 +315,7 @@ export default function TorneoSettimanale() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
         >
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200/60 p-6">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/30 border border-indigo-200/60 dark:border-indigo-900 p-6">
             {/* Decorative circles */}
             <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-indigo-200/20 blur-3xl" />
             <div className="absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-purple-200/15 blur-2xl" />
@@ -324,14 +324,14 @@ export default function TorneoSettimanale() {
               {/* Title row */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-white shadow-md shadow-indigo-200/50 border border-indigo-100">
+                  <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-card shadow-md shadow-indigo-200/50 dark:shadow-none border border-indigo-100 dark:border-indigo-900">
                     <span className="text-2xl">🏆</span>
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold text-gray-900">
+                    <h1 className="text-xl font-bold text-foreground font-display">
                       Torneo Settimanale
                     </h1>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {mounted
                         ? `Settimana #${weekNum} · ${formatDateShort(start)} - ${formatDateShort(end)}`
                         : ""}
@@ -339,7 +339,7 @@ export default function TorneoSettimanale() {
                   </div>
                 </div>
                 {alreadyPlayed && (
-                  <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-bold border-0 shrink-0">
+                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[10px] font-bold border-0 shrink-0">
                     Completato
                   </Badge>
                 )}
@@ -347,9 +347,9 @@ export default function TorneoSettimanale() {
 
               {/* Tournament info */}
               <div className="space-y-3 mt-2">
-                <div className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-indigo-100 w-full">
+                <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-indigo-100 dark:border-indigo-900 w-full">
                   <div className="text-center flex-1">
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
+                    <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                       Mani
                     </p>
                     <p className="text-lg font-bold text-indigo-600 leading-tight">
@@ -358,16 +358,16 @@ export default function TorneoSettimanale() {
                   </div>
                   <div className="h-8 w-px bg-indigo-200/60" />
                   <div className="text-center flex-1">
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
+                    <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                       Prese necessarie
                     </p>
-                    <p className="text-lg font-bold text-gray-900 leading-tight">
+                    <p className="text-lg font-bold text-foreground leading-tight">
                       {totalNeeded}
                     </p>
                   </div>
                   <div className="h-8 w-px bg-indigo-200/60" />
                   <div className="text-center flex-1">
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">
+                    <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                       Tempo rimasto
                     </p>
                     <p className="text-sm font-bold text-purple-600 leading-tight tabular-nums">
@@ -376,7 +376,7 @@ export default function TorneoSettimanale() {
                   </div>
                 </div>
 
-                <p className="text-[13px] font-semibold text-gray-700 leading-snug">
+                <p className="text-[13px] font-semibold text-foreground/80 leading-snug">
                   Gioca 5 mani selezionate: la stessa sfida per tutti i
                   giocatori questa settimana. Vince chi totalizza più prese!
                 </p>
@@ -384,7 +384,7 @@ export default function TorneoSettimanale() {
 
               {/* Hand previews */}
               <div className="mt-4 space-y-2">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                   Le 5 mani del torneo
                 </p>
                 <div className="grid grid-cols-5 gap-2">
@@ -397,18 +397,18 @@ export default function TorneoSettimanale() {
                         className={`rounded-xl px-2 py-2.5 text-center border ${
                           handResult
                             ? handResult.result >= 0
-                              ? "bg-emerald-50 border-emerald-200"
-                              : "bg-red-50 border-red-200"
-                            : "bg-white/70 border-indigo-100"
+                              ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900"
+                              : "bg-red-50 border-red-200 dark:bg-red-950/40 dark:border-red-900"
+                            : "bg-card/70 border-indigo-100 dark:border-indigo-900"
                         }`}
                       >
-                        <p className="text-[10px] font-bold text-gray-400">
+                        <p className="text-[10px] font-bold text-muted-foreground/70">
                           #{i + 1}
                         </p>
-                        <p className="text-sm font-bold text-gray-900 leading-tight">
+                        <p className="text-sm font-bold text-foreground leading-tight">
                           {h.contract}
                         </p>
-                        <p className="text-[9px] text-gray-500">
+                        <p className="text-[9px] text-muted-foreground">
                           {tricksNeeded}p
                         </p>
                         {handResult && (
@@ -524,14 +524,14 @@ export default function TorneoSettimanale() {
                     : `Caduto di ${existingResult.totalNeeded - existingResult.totalTricks}`}
                 </h3>
 
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Prese totali: {existingResult.totalTricks} /{" "}
                   {existingResult.totalNeeded} necessarie
                 </p>
 
                 {/* Tricks bar */}
                 <div className="mt-4 mx-auto max-w-xs">
-                  <div className="h-3 rounded-full bg-gray-200 overflow-hidden">
+                  <div className="h-3 rounded-full bg-muted overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{
@@ -547,7 +547,7 @@ export default function TorneoSettimanale() {
                   </div>
                   <div className="relative h-0">
                     <div
-                      className="absolute -top-3 w-0.5 h-3 bg-gray-900/40"
+                      className="absolute -top-3 w-0.5 h-3 bg-foreground/40"
                       style={{
                         left: `${(existingResult.totalNeeded / (TOURNAMENT_HAND_COUNT * 13)) * 100}%`,
                       }}
@@ -561,17 +561,17 @@ export default function TorneoSettimanale() {
                     <div
                       key={i}
                       className={`rounded-lg p-2 ${
-                        hr.result >= 0 ? "bg-emerald-100/60" : "bg-red-100/60"
+                        hr.result >= 0 ? "bg-emerald-100/60 dark:bg-emerald-950/40" : "bg-red-100/60 dark:bg-red-950/40"
                       }`}
                     >
-                      <p className="text-[9px] font-bold text-gray-400">
+                      <p className="text-[9px] font-bold text-muted-foreground/70">
                         #{i + 1}
                       </p>
                       <p
                         className={`text-sm font-bold ${
                           hr.result >= 0
-                            ? "text-emerald-700"
-                            : "text-red-600"
+                            ? "text-emerald-700 dark:text-emerald-300"
+                            : "text-red-600 dark:text-red-400"
                         }`}
                       >
                         {hr.tricksMade}/{hr.tricksNeeded}
@@ -579,8 +579,8 @@ export default function TorneoSettimanale() {
                       <p
                         className={`text-[9px] font-bold ${
                           hr.result >= 0
-                            ? "text-emerald-600"
-                            : "text-red-500"
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-red-500 dark:text-red-400"
                         }`}
                       >
                         {hr.result >= 0 ? `+${hr.result}` : hr.result}
@@ -591,8 +591,8 @@ export default function TorneoSettimanale() {
 
                 {/* XP earned */}
                 <div className="mt-5 flex items-center justify-center">
-                  <div className="inline-flex items-center gap-2 bg-indigo-50 rounded-xl px-4 py-2">
-                    <span className="text-sm font-bold text-indigo-700">
+                  <div className="inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl px-4 py-2">
+                    <span className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
                       +{existingResult.xpEarned} {profile.xpLabel} guadagnati
                     </span>
                   </div>
@@ -609,12 +609,12 @@ export default function TorneoSettimanale() {
           transition={{ delay: 0.25 }}
           className="mt-5"
         >
-          <div className="card-elevated rounded-2xl bg-white p-5">
+          <div className="card-elevated rounded-2xl bg-card p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900">Classifica</h3>
+              <h3 className="font-bold text-foreground">Classifica</h3>
               <Badge
                 variant="outline"
-                className="text-[10px] font-bold text-gray-400 border-gray-200"
+                className="text-[10px] font-bold text-muted-foreground/70 border-border"
               >
                 Settimana #{weekNum}
               </Badge>
@@ -629,15 +629,15 @@ export default function TorneoSettimanale() {
                       key={i}
                       className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${
                         i === 0
-                          ? "bg-amber-50 border border-amber-200"
+                          ? "bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-900"
                           : i === 1
-                            ? "bg-gray-50 border border-gray-200"
+                            ? "bg-muted border border-border"
                             : i === 2
-                              ? "bg-orange-50 border border-orange-200"
-                              : "bg-gray-50/50"
+                              ? "bg-orange-50 border border-orange-200 dark:bg-orange-950/40 dark:border-orange-900"
+                              : "bg-muted/50"
                       }`}
                     >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold text-gray-700 shadow-sm">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card text-sm font-bold text-foreground/80 shadow-sm dark:shadow-none">
                         {i === 0
                           ? "\uD83E\uDD47"
                           : i === 1
@@ -647,19 +647,19 @@ export default function TorneoSettimanale() {
                               : `${i + 1}`}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900 truncate">
+                        <p className="text-sm font-bold text-foreground truncate">
                           {entry.displayName}
                         </p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-bold text-foreground">
                           {entry.totalTricks}/{entry.totalNeeded}
                         </p>
                         <p
                           className={`text-[10px] font-bold ${
                             delta >= 0
-                              ? "text-emerald-600"
-                              : "text-red-500"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-red-500 dark:text-red-400"
                           }`}
                         >
                           {delta >= 0 ? `+${delta}` : delta}
@@ -671,14 +671,14 @@ export default function TorneoSettimanale() {
               </div>
             ) : leaderboard === null ? (
               <div className="text-center py-6">
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-muted-foreground/70">
                   {alreadyPlayed
                     ? "Il tuo risultato è stato registrato!"
                     : "Gioca il torneo per entrare in classifica"}
                 </p>
                 {alreadyPlayed && existingResult && (
-                  <div className="mt-3 inline-flex items-center gap-2 bg-indigo-50 rounded-xl px-4 py-2">
-                    <span className="text-sm font-bold text-indigo-700">
+                  <div className="mt-3 inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl px-4 py-2">
+                    <span className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
                       {existingResult.totalTricks}/{existingResult.totalNeeded}{" "}
                       prese
                     </span>
@@ -687,7 +687,7 @@ export default function TorneoSettimanale() {
               </div>
             ) : (
               <div className="text-center py-6">
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-muted-foreground/70">
                   Nessun partecipante ancora questa settimana
                 </p>
               </div>
@@ -702,21 +702,21 @@ export default function TorneoSettimanale() {
           transition={{ delay: 0.35 }}
           className="mt-4 mb-6"
         >
-          <div className="card-elevated rounded-2xl bg-white p-5">
+          <div className="card-elevated rounded-2xl bg-card p-5">
             <div className="flex items-start gap-3.5">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
                 M
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <p className="font-bold text-sm text-gray-900">
+                  <p className="font-bold text-sm text-foreground">
                     Maestro Fiori
                   </p>
-                  <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
+                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
                     Consiglio
                   </Badge>
                 </div>
-                <p className="text-[13px] text-gray-600 leading-relaxed">
+                <p className="text-[13px] text-muted-foreground leading-relaxed">
                   Il Torneo Settimanale ti permette di sfidare tutti i
                   giocatori sulle stesse 5 mani. Ogni settimana nuove mani
                   e una nuova classifica. Concentrati su ogni presa!
@@ -838,7 +838,7 @@ function TournamentPlayView({
           >
             <button
               onClick={onBack}
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <svg
                 className="h-4 w-4"
@@ -913,19 +913,19 @@ function TournamentPlayView({
                       : `Caduto di ${Math.abs(totalDelta)}`}
               </h2>
 
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-muted-foreground mt-2">
                 Settimana #{weekNum} · {TOURNAMENT_HAND_COUNT} mani giocate
               </p>
 
               {/* Total tricks */}
               <div className="mt-5 mx-auto max-w-xs">
-                <div className="flex items-center justify-between text-xs font-bold text-gray-500 mb-1.5">
+                <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-1.5">
                   <span>Prese totali</span>
                   <span>
                     {totalTricks} / {totalNeeded}
                   </span>
                 </div>
-                <div className="h-4 rounded-full bg-gray-200 overflow-hidden">
+                <div className="h-4 rounded-full bg-muted overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{
@@ -941,7 +941,7 @@ function TournamentPlayView({
                 </div>
                 <div className="relative h-0">
                   <div
-                    className="absolute -top-4 w-0.5 h-4 bg-gray-900/40"
+                    className="absolute -top-4 w-0.5 h-4 bg-foreground/40"
                     style={{
                       left: `${(totalNeeded / (TOURNAMENT_HAND_COUNT * 13)) * 100}%`,
                     }}
@@ -959,21 +959,21 @@ function TournamentPlayView({
                     transition={{ delay: 0.8 + i * 0.1 }}
                     className={`rounded-xl p-2.5 ${
                       hr.result >= 0
-                        ? "bg-emerald-100/80 border border-emerald-200"
-                        : "bg-red-100/80 border border-red-200"
+                        ? "bg-emerald-100/80 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900"
+                        : "bg-red-100/80 border border-red-200 dark:bg-red-950/40 dark:border-red-900"
                     }`}
                   >
-                    <p className="text-[9px] font-bold text-gray-400">
+                    <p className="text-[9px] font-bold text-muted-foreground/70">
                       #{i + 1}
                     </p>
-                    <p className="text-xs font-bold text-gray-500">
+                    <p className="text-xs font-bold text-muted-foreground">
                       {hands[i].contract}
                     </p>
                     <p
                       className={`text-lg font-bold ${
                         hr.result >= 0
-                          ? "text-emerald-700"
-                          : "text-red-600"
+                          ? "text-emerald-700 dark:text-emerald-300"
+                          : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       {hr.tricksMade}/{hr.tricksNeeded}
@@ -981,8 +981,8 @@ function TournamentPlayView({
                     <p
                       className={`text-[10px] font-bold ${
                         hr.result >= 0
-                          ? "text-emerald-600"
-                          : "text-red-500"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-500 dark:text-red-400"
                       }`}
                     >
                       {hr.result >= 0 ? `+${hr.result}` : hr.result}
@@ -999,12 +999,12 @@ function TournamentPlayView({
                   transition={{ delay: 1.3 }}
                   className="mt-6 space-y-2"
                 >
-                  <div className="inline-flex items-center gap-2 bg-indigo-50 rounded-xl px-5 py-2.5">
-                    <span className="text-base font-bold text-indigo-700">
+                  <div className="inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl px-5 py-2.5">
+                    <span className="text-base font-bold text-indigo-700 dark:text-indigo-300">
                       +{xpEarned} {profile.xpLabel}
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-[11px] text-muted-foreground/70">
                     ({handXp} gioco + {tournamentBonus} bonus torneo)
                   </p>
                 </motion.div>
@@ -1056,12 +1056,12 @@ function TournamentPlayView({
                           : "bg-red-400"
                         : i === completedCount
                           ? "bg-indigo-400"
-                          : "bg-gray-200"
+                          : "bg-muted"
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-xs font-bold text-gray-400">
+              <p className="text-xs font-bold text-muted-foreground/70">
                 {completedCount} / {TOURNAMENT_HAND_COUNT} mani completate
               </p>
             </div>
@@ -1070,18 +1070,18 @@ function TournamentPlayView({
             <div
               className={`rounded-2xl p-6 mb-6 ${
                 lastResult.result >= 0
-                  ? "bg-emerald-50 border border-emerald-200"
-                  : "bg-red-50 border border-red-200"
+                  ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900"
+                  : "bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900"
               }`}
             >
-              <p className="text-sm font-bold text-gray-500 mb-1">
+              <p className="text-sm font-bold text-muted-foreground mb-1">
                 Mano #{completedCount}
               </p>
               <p
                 className={`text-2xl font-bold ${
                   lastResult.result >= 0
-                    ? "text-emerald-700"
-                    : "text-red-600"
+                    ? "text-emerald-700 dark:text-emerald-300"
+                    : "text-red-600 dark:text-red-400"
                 }`}
               >
                 {lastResult.tricksMade} / {lastResult.tricksNeeded} prese
@@ -1089,8 +1089,8 @@ function TournamentPlayView({
               <p
                 className={`text-sm font-bold mt-1 ${
                   lastResult.result >= 0
-                    ? "text-emerald-600"
-                    : "text-red-500"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-red-500 dark:text-red-400"
                 }`}
               >
                 {lastResult.result >= 0
@@ -1102,25 +1102,25 @@ function TournamentPlayView({
             </div>
 
             {/* Running total */}
-            <div className="rounded-2xl bg-white p-4 border border-gray-200 mb-6">
-              <p className="text-xs font-bold text-gray-400 mb-1">
+            <div className="rounded-2xl bg-card p-4 border border-border mb-6">
+              <p className="text-xs font-bold text-muted-foreground/70 mb-1">
                 Totale parziale
               </p>
               <div className="flex items-center justify-center gap-4">
                 <div className="text-center">
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-lg font-bold text-foreground">
                     {handResults.reduce((s, r) => s + r.tricksMade, 0)}
                   </p>
-                  <p className="text-[10px] text-gray-500">Prese fatte</p>
+                  <p className="text-[10px] text-muted-foreground">Prese fatte</p>
                 </div>
-                <div className="h-8 w-px bg-gray-200" />
+                <div className="h-8 w-px bg-border" />
                 <div className="text-center">
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-lg font-bold text-foreground">
                     {handResults.reduce((s, r) => s + r.tricksNeeded, 0)}
                   </p>
-                  <p className="text-[10px] text-gray-500">Necessarie</p>
+                  <p className="text-[10px] text-muted-foreground">Necessarie</p>
                 </div>
-                <div className="h-8 w-px bg-gray-200" />
+                <div className="h-8 w-px bg-border" />
                 <div className="text-center">
                   {(() => {
                     const delta =
@@ -1130,28 +1130,28 @@ function TournamentPlayView({
                       <p
                         className={`text-lg font-bold ${
                           delta >= 0
-                            ? "text-emerald-600"
-                            : "text-red-600"
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-red-600 dark:text-red-400"
                         }`}
                       >
                         {delta >= 0 ? `+${delta}` : delta}
                       </p>
                     );
                   })()}
-                  <p className="text-[10px] text-gray-500">Bilancio</p>
+                  <p className="text-[10px] text-muted-foreground">Bilancio</p>
                 </div>
               </div>
             </div>
 
             {/* Next hand preview */}
-            <div className="rounded-2xl bg-indigo-50 border border-indigo-200 p-5 mb-6">
-              <p className="text-xs font-bold text-indigo-500 mb-2">
+            <div className="rounded-2xl bg-indigo-50 border border-indigo-200 dark:bg-indigo-950/40 dark:border-indigo-900 p-5 mb-6">
+              <p className="text-xs font-bold text-indigo-500 dark:text-indigo-400 mb-2">
                 Prossima mano: #{completedCount + 1} di {TOURNAMENT_HAND_COUNT}
               </p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-lg font-bold text-foreground">
                 {hands[completedCount].title}
               </p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Contratto: {hands[completedCount].contract} · Obiettivo:{" "}
                 {parseContract(hands[completedCount].contract).tricksNeeded}{" "}
                 prese
@@ -1167,7 +1167,7 @@ function TournamentPlayView({
 
             <button
               onClick={onBack}
-              className="mt-3 text-sm font-semibold text-gray-400 hover:text-gray-600 transition-colors"
+              className="mt-3 text-sm font-semibold text-muted-foreground/70 hover:text-muted-foreground transition-colors"
             >
               Abbandona torneo
             </button>
@@ -1300,7 +1300,7 @@ function SingleHandView({
           <div className="flex items-center gap-2 mb-1">
             <button
               onClick={onBack}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <svg
                 className="h-4 w-4"
@@ -1320,7 +1320,7 @@ function SingleHandView({
                 <BenStatus available={game.benAvailable} />
               </div>
               <h1
-                className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-gray-900 truncate`}
+                className={`${isMobile ? "text-sm" : "text-lg"} font-bold text-foreground truncate`}
               >
                 {smazzata.title}
               </h1>
@@ -1339,7 +1339,7 @@ function SingleHandView({
                       : "bg-red-400"
                     : i === handNumber - 1
                       ? "bg-indigo-500"
-                      : "bg-gray-200"
+                      : "bg-muted"
                 }`}
               />
             ))}
@@ -1354,10 +1354,10 @@ function SingleHandView({
           className="mb-3 flex items-center justify-center"
         >
           <div
-            className={`card-elevated rounded-xl bg-white flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}
+            className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}
           >
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                 Contratto
               </p>
               <p
@@ -1366,24 +1366,24 @@ function SingleHandView({
                 {smazzata.contract}
               </p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                 Obiettivo
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}
               >
                 {tricksNeeded} prese
               </p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                 Dich. / Dif.
               </p>
               <p
-                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-gray-900`}
+                className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}
               >
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -1487,7 +1487,7 @@ function SingleHandView({
 
         {/* Message */}
         <div
-          className={`mt-3 text-center ${isMobile ? "sticky bottom-16 z-20 bg-white/90 backdrop-blur-sm rounded-xl py-2 mx-auto max-w-xs shadow-sm" : ""}`}
+          className={`mt-3 text-center ${isMobile ? "sticky bottom-16 z-20 bg-card/90 backdrop-blur-sm rounded-xl py-2 mx-auto max-w-xs shadow-sm" : ""}`}
         >
           <AnimatePresence mode="wait">
             <motion.p
@@ -1502,7 +1502,7 @@ function SingleHandView({
                     : "text-red-500"
                   : game.isPlayerTurn
                     ? "text-amber-600"
-                    : "text-gray-500"
+                    : "text-muted-foreground"
               }`}
             >
               {game.message}
@@ -1534,15 +1534,15 @@ function SingleHandView({
               <div
                 className={`card-elevated rounded-2xl p-5 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
+                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
                 }`}
               >
                 <h3
                   className={`text-xl font-bold ${
                     game.result.result >= 0
-                      ? "text-emerald-dark"
-                      : "text-red-600"
+                      ? "text-emerald-dark dark:text-emerald-300"
+                      : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {game.result.result > 0
@@ -1551,10 +1551,10 @@ function SingleHandView({
                       ? "Contratto Mantenuto!"
                       : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
                 </p>
-                <p className="text-xs text-gray-400 mt-3">
+                <p className="text-xs text-muted-foreground/70 mt-3">
                   {handNumber < totalHands
                     ? "Passaggio alla prossima mano..."
                     : "Calcolo risultati finali..."}
