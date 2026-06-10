@@ -49,7 +49,7 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
     },
     {
       id: "play",
-      icon: <Spade className="w-5 h-5 text-gray-700" />,
+      icon: <Spade className="w-5 h-5 text-gray-700 dark:text-gray-300" />,
       label: "Gioca 1 mano",
       progress: Math.min(dailyHands, 1),
       target: 1,
@@ -78,32 +78,32 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 + i * 0.05 }}
             className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
-              done ? "bg-[#1B5E3B]/5 border border-[#1B5E3B]/15" : "bg-white dark:bg-[#1a1f2e] border border-[#E8E4DC] dark:border-[#2a3040]"
+              done ? "bg-[#1B5E3B]/5 dark:bg-emerald-950/30 border border-[#1B5E3B]/15 dark:border-emerald-900" : "bg-card border border-border"
             }`}
           >
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-              done ? "bg-[#1B5E3B]/10" : "bg-gray-50 dark:bg-gray-800/50"
+              done ? "bg-[#1B5E3B]/10 dark:bg-emerald-900/40" : "bg-muted"
             }`}>
-              {done ? <CheckCircle2 className="w-5 h-5 text-[#1B5E3B]" /> : quest.icon}
+              {done ? <CheckCircle2 className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" /> : quest.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className={`text-sm font-bold ${done ? "text-[#1B5E3B] line-through" : "text-gray-900 dark:text-gray-100"}`}>
+              <p className={`text-sm font-bold ${done ? "text-[#1B5E3B] dark:text-emerald-400 line-through" : "text-foreground"}`}>
                 {quest.label}
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden max-w-[80px]">
+                <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden max-w-[80px]">
                   <div
                     className={`h-full rounded-full ${done ? "bg-[#1B5E3B]" : "bg-[#c8a44e]"}`}
                     style={{ width: `${(quest.progress / quest.target) * 100}%` }}
                   />
                 </div>
-                <span className="text-[10px] font-bold text-gray-500">
+                <span className="text-[10px] font-bold text-muted-foreground">
                   {quest.progress}/{quest.target}
                 </span>
               </div>
             </div>
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-              done ? "bg-[#1B5E3B]/10 text-[#1B5E3B]" : "bg-[#c8a44e]/10 text-[#c8a44e]"
+              done ? "bg-[#1B5E3B]/10 dark:bg-emerald-900/40 text-[#1B5E3B] dark:text-emerald-400" : "bg-[#c8a44e]/10 text-[#c8a44e]"
             }`}>
               +{quest.xp} XP
             </span>
@@ -119,11 +119,11 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
             ? "bg-gradient-to-r from-[#c8a44e]/10 to-[#c8a44e]/5 border border-[#c8a44e]/20"
-            : "bg-gray-50 dark:bg-gray-800/50 border border-[#E8E4DC] dark:border-gray-700"
+            : "bg-muted border border-border"
         }`}
       >
-        {allDone ? <Gift className="w-5 h-5 text-[#c8a44e]" /> : <Target className="w-5 h-5 text-gray-400" />}
-        <p className={`text-xs font-bold ${allDone ? "text-[#c8a44e]" : "text-gray-400"}`}>
+        {allDone ? <Gift className="w-5 h-5 text-[#c8a44e]" /> : <Target className="w-5 h-5 text-muted-foreground/70" />}
+        <p className={`text-xs font-bold ${allDone ? "text-[#c8a44e]" : "text-muted-foreground/70"}`}>
           {allDone ? "Bonus completamento: +50 XP!" : "Completa tutti per +50 XP bonus"}
         </p>
       </motion.div>

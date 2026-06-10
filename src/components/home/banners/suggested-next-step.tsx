@@ -35,15 +35,15 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
             if (suggestPlay) {
               return (
                 <Link href="/gioca/smazzata?random=1">
-                  <div className="rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50 p-4 hover:shadow-md transition-all">
+                  <div className="rounded-2xl border border-violet-200 dark:border-violet-900 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/40 dark:to-purple-950/40 p-4 hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200">
-                        <Gamepad2 className="w-5 h-5 text-violet-600" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-900/40 dark:border-violet-800">
+                        <Gamepad2 className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-violet-500 uppercase tracking-wider">Prossimo passo</p>
-                        <p className="text-sm font-bold text-gray-900">Metti in pratica!</p>
-                        <p className="text-xs text-gray-500">Gioca una mano per consolidare la teoria</p>
+                        <p className="text-[10px] font-bold text-violet-500 dark:text-violet-400 uppercase tracking-wider">Prossimo passo</p>
+                        <p className="text-sm font-bold text-foreground">Metti in pratica!</p>
+                        <p className="text-xs text-muted-foreground">Gioca una mano per consolidare la teoria</p>
                       </div>
                       <svg className="w-4 h-4 text-violet-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M9 18l6-6-6-6" /></svg>
                     </div>
@@ -55,15 +55,15 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
             if (nextModule) {
               return (
                 <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
-                  <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-4 hover:shadow-md transition-all">
+                  <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/40 dark:to-green-950/40 p-4 hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200">
-                        <GraduationCap className="w-5 h-5 text-emerald-600" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200 dark:bg-emerald-900/40 dark:border-emerald-800">
+                        <GraduationCap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Prossimo passo</p>
-                        <p className="text-sm font-bold text-gray-900 truncate">{nextModule.moduleTitle}</p>
-                        <p className="text-xs text-gray-500">Continua il percorso di apprendimento</p>
+                        <p className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider">Prossimo passo</p>
+                        <p className="text-sm font-bold text-foreground truncate">{nextModule.moduleTitle}</p>
+                        <p className="text-xs text-muted-foreground">Continua il percorso di apprendimento</p>
                       </div>
                       <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M9 18l6-6-6-6" /></svg>
                     </div>

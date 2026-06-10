@@ -11,7 +11,7 @@ interface LandingPageProps {
 export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
   const features = [
     { icon: <GraduationCap className="w-6 h-6 text-indigo-600" />, title: "49 Lezioni", desc: "4 corsi FIGB completi, dalla base all'avanzato" },
-    { icon: <Spade className="w-6 h-6 text-gray-700" />, title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
+    { icon: <Spade className="w-6 h-6 text-gray-700 dark:text-gray-300" />, title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
     { icon: <Brain className="w-6 h-6 text-purple-600" />, title: "Quiz & Mini-giochi", desc: "6 tipi di quiz, 9 mini-giochi, ripasso intelligente" },
     { icon: <Trophy className="w-6 h-6 text-amber-600" />, title: "Tornei & Sfide", desc: "Torneo settimanale, sfida amici, classifica" },
     { icon: <BarChart3 className="w-6 h-6 text-blue-600" />, title: "Analisi DDS", desc: "Analisi double-dummy post-mano professionale" },
@@ -19,20 +19,20 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#F7F5F0] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+    <div className="fixed inset-0 z-50 flex flex-col bg-background overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {/* Sticky top bar: keeps "Accedi" reachable at any scroll position */}
-      <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-black/5 bg-[#F7F5F0]/90 px-4 py-2.5 backdrop-blur-sm">
-        <span className="font-display text-lg font-bold tracking-tight text-[#003DA5]">BridgeLab</span>
+      <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-foreground/5 bg-background/90 px-4 py-2.5 backdrop-blur-sm">
+        <span className="font-display text-lg font-bold tracking-tight text-figb dark:text-primary">BridgeLab</span>
         <div className="flex items-center gap-2">
           <a
             href="/login?mode=login"
-            className="rounded-xl px-3 py-2 text-sm font-bold text-[#003DA5] transition-colors hover:bg-black/5"
+            className="rounded-xl px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-foreground/5"
           >
             Accedi
           </a>
           <a
             href="/login?mode=signup"
-            className="rounded-xl bg-[#003DA5] px-3.5 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#003DA5]/90"
+            className="rounded-xl bg-figb px-3.5 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-figb-light"
           >
             Inizia gratis
           </a>
@@ -115,7 +115,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
         </div>
 
         {/* Fade to content */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#F7F5F0]" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-background" aria-hidden="true" />
       </section>
 
       {/* Features */}
@@ -125,7 +125,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="text-lg font-bold text-gray-900 mb-4 text-center"
+            className="font-display text-lg font-bold text-foreground mb-4 text-center"
           >
             Tutto quello che serve per imparare il bridge
           </motion.h2>
@@ -137,11 +137,11 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.07 }}
-                className="rounded-2xl bg-white p-4 border border-gray-200 shadow-warm-sm"
+                className="rounded-2xl bg-card p-4 border border-border shadow-sm"
               >
                 <div className="mb-2">{feat.icon}</div>
-                <p className="text-sm font-semibold text-gray-900">{feat.title}</p>
-                <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{feat.desc}</p>
+                <p className="text-sm font-semibold text-foreground">{feat.title}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{feat.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -150,9 +150,9 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
       {/* Suit divider */}
       <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
-        <div className="h-px w-12 bg-[#1B5E3B]/10" />
-        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <div className="h-px w-12 bg-foreground/10" />
+        <span className="text-[10px] tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-foreground/10" />
       </div>
 
       {/* Stats */}
@@ -162,20 +162,20 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
-            className="rounded-2xl bg-[#003DA5]/5 border border-[#003DA5]/15 p-6 text-center"
+            className="rounded-2xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/20 p-6 text-center"
           >
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div>
-                <p className="text-2xl font-bold text-[#003DA5]">49</p>
-                <p className="text-[10px] font-bold text-[#003DA5]/80 uppercase">Lezioni</p>
+                <p className="text-2xl font-bold text-figb dark:text-primary">49</p>
+                <p className="text-[10px] font-bold text-figb/80 dark:text-primary/80 uppercase">Lezioni</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#003DA5]">4</p>
-                <p className="text-[10px] font-bold text-[#003DA5]/70 uppercase">Corsi</p>
+                <p className="text-2xl font-bold text-figb dark:text-primary">4</p>
+                <p className="text-[10px] font-bold text-figb/70 dark:text-primary/70 uppercase">Corsi</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#003DA5]">200+</p>
-                <p className="text-[10px] font-bold text-[#003DA5]/70 uppercase">Mani</p>
+                <p className="text-2xl font-bold text-figb dark:text-primary">200+</p>
+                <p className="text-[10px] font-bold text-figb/70 dark:text-primary/70 uppercase">Mani</p>
               </div>
             </div>
             <img src="/logo-bridgelab.svg" alt="Logo BridgeLab" className="h-10 mx-auto mb-4" />
@@ -183,13 +183,13 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               <img src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" className="h-12 w-auto" />
               <img src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" className="h-9 w-auto" />
             </div>
-            <p className="text-xs font-bold text-[#003DA5]/80 uppercase tracking-wider mb-1">
+            <p className="text-xs font-bold text-figb/80 dark:text-primary/80 uppercase tracking-wider mb-1">
               Un progetto della
             </p>
-            <p className="text-lg font-bold text-[#003DA5]">
+            <p className="text-lg font-bold text-figb dark:text-primary">
               Federazione Italiana Gioco Bridge
             </p>
-            <p className="mt-1 text-xs text-[#003DA5]/60">
+            <p className="mt-1 text-xs text-figb/60 dark:text-primary/60">
               Commissione Insegnamento
             </p>
           </motion.div>
@@ -207,20 +207,20 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           >
             <a
               href="/login?mode=signup"
-              className="flex items-center justify-center w-full h-12 rounded-2xl bg-[#003DA5] text-white font-semibold text-sm shadow-lg shadow-[#003DA5]/20 hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-gradient-to-r from-figb to-figb-light text-white font-semibold text-sm shadow-lg shadow-figb/20 hover:opacity-90 transition-opacity"
             >
               Inizia gratis
             </a>
-            <p className="text-center text-[11px] text-gray-400 -mt-1">Nessuna carta di credito richiesta</p>
+            <p className="text-center text-[11px] text-muted-foreground/70 -mt-1">Nessuna carta di credito richiesta</p>
             <a
               href="/login?mode=login"
-              className="flex items-center justify-center w-full h-12 rounded-2xl bg-white text-[#003DA5] font-semibold text-sm border-2 border-[#003DA5]/20 hover:border-[#003DA5]/40 transition-all"
+              className="flex items-center justify-center w-full h-12 rounded-2xl bg-card text-primary font-semibold text-sm border-2 border-primary/20 hover:border-primary/40 transition-all"
             >
               Accedi
             </a>
             <button
               onClick={onContinueAsGuest}
-              className="w-full text-center text-sm font-semibold text-gray-400 hover:text-gray-600 transition-colors py-2"
+              className="w-full text-center text-sm font-semibold text-muted-foreground/70 hover:text-foreground transition-colors py-2"
             >
               Continua senza account
             </button>
@@ -230,11 +230,11 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
       {/* Footer */}
       <footer className="px-5 pb-8 text-center space-y-1">
-        <p className="text-[10px] text-gray-400">
+        <p className="text-[10px] text-muted-foreground/70">
           Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.
         </p>
-        <p className="text-[11px] text-gray-400">
-          <a href="/privacy" className="underline hover:text-gray-600 transition-colors">Privacy e Cookie Policy</a>
+        <p className="text-[11px] text-muted-foreground/70">
+          <a href="/privacy" className="underline hover:text-foreground transition-colors">Privacy e Cookie Policy</a>
         </p>
       </footer>
     </div>

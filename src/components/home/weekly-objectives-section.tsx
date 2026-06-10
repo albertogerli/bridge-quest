@@ -21,7 +21,7 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 // Map weekly objective IDs to Lucide icons
 const objectiveIcons: Record<string, React.ReactNode> = {
   quiz: <FileText className="w-4 h-4 text-indigo-500" />,
-  hands: <Spade className="w-4 h-4 text-gray-700" />,
+  hands: <Spade className="w-4 h-4 text-gray-700 dark:text-gray-300" />,
   xp: <Star className="w-4 h-4 text-amber-500" />,
   modules: <BookOpen className="w-4 h-4 text-blue-500" />,
   streak: <Flame className="w-4 h-4 text-orange-500" />,
@@ -51,13 +51,13 @@ export function WeeklyObjectivesSection() {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1B5E3B]/10">
-              <Target className="w-4 h-4 text-[#1B5E3B]" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1B5E3B]/10 dark:bg-emerald-900/40">
+              <Target className="w-4 h-4 text-[#1B5E3B] dark:text-emerald-400" />
             </div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base font-semibold text-foreground">
               Obiettivi settimanali
             </h2>
-            <Badge className={`text-[10px] font-bold border-0 ${
+            <Badge className={`text-[10px] font-bold border-0 dark:bg-emerald-900/40 dark:text-emerald-400 ${
               completedCount === 3
                 ? "bg-[#1B5E3B]/10 text-[#1B5E3B]"
                 : "bg-[#1B5E3B]/8 text-[#1B5E3B]"
@@ -68,7 +68,7 @@ export function WeeklyObjectivesSection() {
           <Link href="/obiettivi">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold text-[#1B5E3B] border-[#1B5E3B]/20 cursor-pointer hover:bg-[#1B5E3B]/5 transition-colors"
+              className="text-[10px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
             >
               Vedi tutti →
             </Badge>
@@ -77,8 +77,8 @@ export function WeeklyObjectivesSection() {
 
         <div className={`rounded-2xl p-4 border transition-all ${
           completedCount === 3
-            ? "bg-gradient-to-br from-[#1B5E3B]/5 to-white dark:from-[#1B5E3B]/10 dark:to-[#1a1f2e] border-[#1B5E3B]/20"
-            : "bg-white dark:bg-[#1a1f2e] border-[#E8E4DC] dark:border-[#2a3040]"
+            ? "bg-gradient-to-br from-[#1B5E3B]/5 to-card dark:from-emerald-950/30 dark:to-card border-[#1B5E3B]/20 dark:border-emerald-900"
+            : "bg-card border-border"
         }`}>
           <div className="space-y-2.5">
             {objectives.map((obj) => {
@@ -98,36 +98,34 @@ export function WeeklyObjectivesSection() {
                 href={href}
                 key={obj.id}
                 className={`flex items-center gap-3 p-2.5 rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] ${
-                  obj.completed ? "bg-[#1B5E3B]/5 border border-[#1B5E3B]/15" : "bg-gray-50 dark:bg-gray-800/50 border border-[#E8E4DC] dark:border-gray-700 hover:border-[#1B5E3B]/30"
+                  obj.completed ? "bg-[#1B5E3B]/5 dark:bg-emerald-950/30 border border-[#1B5E3B]/15 dark:border-emerald-900" : "bg-muted border border-border hover:border-[#1B5E3B]/30 dark:hover:border-emerald-700"
                 }`}
               >
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg ${
-                  obj.completed ? "bg-[#1B5E3B]/10" : "bg-white dark:bg-[#1a1f2e]"
+                  obj.completed ? "bg-[#1B5E3B]/10 dark:bg-emerald-900/40" : "bg-card"
                 }`}>
-                  {obj.completed ? <CheckCircle2 className="w-5 h-5 text-[#1B5E3B]" /> : (objectiveIcons[obj.id] || obj.emoji)}
+                  {obj.completed ? <CheckCircle2 className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" /> : (objectiveIcons[obj.id] || obj.emoji)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold ${
-                    obj.completed ? "text-[#1B5E3B] dark:text-emerald-400 line-through" : "text-gray-900 dark:text-gray-100"
+                    obj.completed ? "text-[#1B5E3B] dark:text-emerald-400 line-through" : "text-foreground"
                   }`}>
                     {obj.title}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden max-w-[100px]">
+                    <div className="flex-1 h-2 rounded-full bg-muted-foreground/20 overflow-hidden max-w-[100px]">
                       <div
-                        className={`h-full rounded-full transition-all ${
-                          obj.completed ? "bg-[#1B5E3B]" : "bg-[#1B5E3B]"
-                        }`}
+                        className="h-full rounded-full transition-all bg-[#1B5E3B] dark:bg-emerald-500"
                         style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
                       />
                     </div>
-                    <span className="text-[10px] font-bold text-gray-500">
+                    <span className="text-[10px] font-bold text-muted-foreground">
                       {obj.current}/{obj.target}
                     </span>
                   </div>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  obj.completed ? "bg-[#1B5E3B]/10 text-[#1B5E3B]" : "bg-[#c8a44e]/10 text-[#c8a44e]"
+                  obj.completed ? "bg-[#1B5E3B]/10 dark:bg-emerald-900/40 text-[#1B5E3B] dark:text-emerald-400" : "bg-[#c8a44e]/10 text-[#c8a44e]"
                 }`}>
                   +{obj.xpReward} XP
                 </span>

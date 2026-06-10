@@ -22,14 +22,14 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#003DA5]/10">
-              <GraduationCap className="w-4 h-4 text-[#003DA5]" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
+              <GraduationCap className="w-4 h-4 text-primary" />
             </div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base font-semibold text-foreground">
               I Corsi FIGB
             </h2>
           </div>
-          <Badge variant="outline" className="text-[10px] font-bold text-[#003DA5]/60 border-[#003DA5]/20">
+          <Badge variant="outline" className="text-[10px] font-bold text-primary/60 border-primary/20">
             {availableCourses.length} corsi
           </Badge>
         </div>
@@ -54,7 +54,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                 transition={{ delay: 0.7 + i * 0.08 }}
               >
                 <Link href={`/lezioni?corso=${course.id}`}>
-                  <div className="btn-squishy rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 cursor-pointer border border-[#E8E4DC] dark:border-[#2a3040]">
+                  <div className="btn-squishy rounded-2xl bg-card p-4 cursor-pointer border border-border">
                     <div className="flex items-center gap-2 mb-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-bold text-lg`}>
                         {course.icon}
@@ -63,20 +63,20 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                         {info.label}
                       </span>
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                    <p className="text-sm font-semibold text-foreground truncate">
                       {course.name.replace("Corso ", "")}
                     </p>
-                    <p className="text-[11px] text-gray-400 mt-0.5 truncate">
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5 truncate">
                       {course.lessonCount} lezioni
                     </p>
                     <div className="mt-2.5 flex items-center gap-2">
-                      <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                      <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                         <div
                           className={`h-full rounded-full bg-gradient-to-r ${course.gradient}`}
                           style={{ width: `${stats.progress}%` }}
                         />
                       </div>
-                      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">{stats.progress}%</span>
+                      <span className="text-[10px] font-bold text-muted-foreground">{stats.progress}%</span>
                     </div>
                   </div>
                 </Link>
