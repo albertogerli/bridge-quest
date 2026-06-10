@@ -2,29 +2,27 @@
  * FIGB Bridge LAB - DDS Web Worker
  *
  * Runs the Double Dummy Solver off the main thread to avoid blocking the UI.
- * Communicates via postMessage with the use-dds hook.
+ * Communicates via postMessage with the use-dds hook (solve) and the
+ * dds-select client (selectCard, used by the expert AI).
  */
 
-import { solveDDS, estimateFromContract } from "./dds-solver";
-import type { DDSRequest, DDSResult } from "./dds-solver";
+import { solveDDS, estimateFromContract, selectBestCardDDS } from "./dds-solver";
+import type { DDSRequest, DDSResult, DDSSelectRequest, DDSSelectResult } from "./dds-solver";
 
-export interface DDSWorkerRequest {
-  type: "solve";
-  id: string;
-  request: DDSRequest;
-}
+export type DDSWorkerRequest =
+  | { type: "solve"; id: string; request: DDSRequest }
+  | { type: "selectCard"; id: string; request: DDSSelectRequest };
 
-export interface DDSWorkerResponse {
-  type: "result";
-  id: string;
-  result: DDSResult;
-}
+export type DDSWorkerResponse =
+  | { type: "result"; id: string; result: DDSResult }
+  | { type: "selectResult"; id: string; result: DDSSelectResult };
 
 // Web Worker message handler
 self.onmessage = (event: MessageEvent<DDSWorkerRequest>) => {
-  const { type, id, request } = event.data;
+  const data = event.data;
 
-  if (type === "solve") {
+  if (data.type === "solve") {
+    const { id, request } = data;
     try {
       const result = solveDDS(request);
 
@@ -49,5 +47,19 @@ self.onmessage = (event: MessageEvent<DDSWorkerRequest>) => {
       };
       self.postMessage(response);
     }
+  } else if (data.type === "selectCard") {
+    const { id, request } = data;
+    let result: DDSSelectResult;
+    try {
+      result = selectBestCardDDS(request);
+    } catch {
+      result = { card: null, available: false, timeMs: 0 };
+    }
+    const response: DDSWorkerResponse = {
+      type: "selectResult",
+      id,
+      result,
+    };
+    self.postMessage(response);
   }
 };

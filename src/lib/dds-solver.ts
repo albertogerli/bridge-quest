@@ -618,3 +618,158 @@ export function estimateFromContract(contract: string): number {
   const { tricksNeeded } = parseContractDDS(contract);
   return tricksNeeded;
 }
+
+// ──────────────────────────────────────────────────────────────
+// Best-card selection (for expert AI play)
+// ──────────────────────────────────────────────────────────────
+
+export interface DDSSelectRequest {
+  /** Remaining cards per hand (cards in currentTrick already removed) */
+  hands: Record<Position, Card[]>;
+  contract: string;
+  /** The position about to play */
+  position: Position;
+  /** Cards already played in the current trick, in play order */
+  currentTrick: { position: Position; card: Card }[];
+  /** Timeout in ms (default 1200) */
+  timeout?: number;
+  /** Max cards per hand for attempting exact search (default 7) */
+  maxCardsForSearch?: number;
+}
+
+export interface DDSSelectResult {
+  /** The DD-optimal card, or null if the search didn't complete */
+  card: Card | null;
+  /** True if a full exact search completed */
+  available: boolean;
+  timeMs: number;
+}
+
+/**
+ * Pick the double-dummy optimal card for `position` from a mid-trick state.
+ * Only attempts exact search for small positions (endgames); returns
+ * card: null when the position is too large or the search times out,
+ * so callers can fall back to a heuristic.
+ */
+export function selectBestCardDDS(request: DDSSelectRequest): DDSSelectResult {
+  const startTime = Date.now();
+  const timeout = request.timeout ?? 1200;
+  const maxCardsForSearch = request.maxCardsForSearch ?? 7;
+  const { trumpSuit } = parseContractDDS(request.contract);
+
+  const maxCards = Math.max(
+    request.hands.north.length,
+    request.hands.south.length,
+    request.hands.east.length,
+    request.hands.west.length,
+  );
+
+  if (maxCards > maxCardsForSearch) {
+    return { card: null, available: false, timeMs: 0 };
+  }
+
+  // Deep-clone hands into solver layout (N, E, S, W)
+  const solverHands: Card[][] = [
+    request.hands.north.map(c => ({ ...c })),
+    request.hands.east.map(c => ({ ...c })),
+    request.hands.south.map(c => ({ ...c })),
+    request.hands.west.map(c => ({ ...c })),
+  ];
+
+  const playerIdx = POS_TO_IDX[request.position];
+  const currentTrick = request.currentTrick.map(tp => ({
+    playerIdx: POS_TO_IDX[tp.position],
+    card: { ...tp.card },
+  }));
+  const trickLeader = currentTrick.length > 0 ? currentTrick[0].playerIdx : playerIdx;
+
+  const hand = solverHands[playerIdx];
+  const validCards = getValidCardsSolver(hand, currentTrick);
+
+  if (validCards.length === 0) {
+    return { card: null, available: false, timeMs: Date.now() - startTime };
+  }
+  if (validCards.length === 1) {
+    return { card: validCards[0], available: true, timeMs: Date.now() - startTime };
+  }
+
+  const allRemaining = [...solverHands.flat(), ...currentTrick.map(t => t.card)];
+  const candidates = deduplicateEquivalentCards(validCards, allRemaining, trumpSuit);
+
+  // The current player's remaining tricks (including this one)
+  const remainingTricks = hand.length;
+  const nsMaximizing = isNS(playerIdx);
+
+  // Reset solver state once for the whole candidate loop
+  solverTimedOut = false;
+  solverDeadline = startTime + timeout;
+  nodesSearched = 0;
+  transpositionTable.clear();
+
+  let bestCard: Card | null = null;
+  let bestValue = nsMaximizing ? -1 : 999;
+  let alpha = -1;
+  let beta = 14;
+
+  for (const card of candidates) {
+    if (solverTimedOut) break;
+
+    const newHand = hand.filter(c => !(c.suit === card.suit && c.rank === card.rank));
+    const newHands = [...solverHands];
+    newHands[playerIdx] = newHand;
+
+    const newTrick = [...currentTrick, { playerIdx, card }];
+
+    let childState: SolverState;
+    if (newTrick.length === 4) {
+      const winnerIdx = determineTrickWinnerSolver(newTrick, trumpSuit);
+      const nsWon = isNS(winnerIdx);
+      childState = {
+        hands: newHands,
+        currentPlayer: winnerIdx,
+        currentTrick: [],
+        trickLeader: winnerIdx,
+        nsTricks: nsWon ? 1 : 0,
+        ewTricks: nsWon ? 0 : 1,
+        trumpSuit,
+        remainingTricks: remainingTricks - 1,
+      };
+    } else {
+      childState = {
+        hands: newHands,
+        currentPlayer: nextPlayerIdx(playerIdx),
+        currentTrick: newTrick,
+        trickLeader,
+        nsTricks: 0,
+        ewTricks: 0,
+        trumpSuit,
+        remainingTricks,
+      };
+    }
+
+    const value = minimax(childState, alpha, beta);
+    if (solverTimedOut) break;
+
+    if (nsMaximizing) {
+      if (bestCard === null || value > bestValue) {
+        bestValue = value;
+        bestCard = card;
+      }
+      if (value > alpha) alpha = value;
+    } else {
+      if (bestCard === null || value < bestValue) {
+        bestValue = value;
+        bestCard = card;
+      }
+      if (value < beta) beta = value;
+    }
+  }
+
+  const timeMs = Date.now() - startTime;
+
+  if (solverTimedOut || bestCard === null) {
+    return { card: null, available: false, timeMs };
+  }
+
+  return { card: bestCard, available: true, timeMs };
+}

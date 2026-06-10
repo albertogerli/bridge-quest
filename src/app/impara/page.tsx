@@ -22,6 +22,7 @@ const STUDY_TOOLS: { href: string; emoji: string; title: string; desc: string }[
   { href: "/glossario", emoji: "📖", title: "Glossario", desc: "I termini del bridge spiegati" },
   { href: "/ripasso", emoji: "🔁", title: "Ripasso", desc: "Rivedi ciò su cui hai sbagliato" },
   { href: "/obiettivi", emoji: "🎯", title: "Obiettivi", desc: "Le tue sfide settimanali" },
+  { href: "/guida", emoji: "❓", title: "Guida all'app", desc: "Come funziona BridgeLab, spiegato semplice" },
 ];
 
 export default function ImparaPage() {

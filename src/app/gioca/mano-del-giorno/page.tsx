@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { GameActions } from "@/components/bridge/game-actions";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { usePlayableSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
@@ -27,6 +28,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
+import { useDailyFieldStats } from "@/hooks/use-daily-field";
 import Link from "next/link";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
@@ -256,6 +258,11 @@ export default function ManoDelGiornoPage() {
   const [playingYesterday, setPlayingYesterday] = useState(false);
   const [mounted, setMounted] = useState(false);
   const countdown = useCountdown();
+  // Field comparison (everyone plays the same hand): fetched once played
+  const fieldStats = useDailyFieldStats(
+    today,
+    todayResult ? todayResult.result : null
+  );
 
   // Load state from localStorage after mount
   useEffect(() => {
@@ -620,6 +627,63 @@ export default function ManoDelGiornoPage() {
                   Torna domani per una nuova mano!
                 </motion.p>
               </div>
+
+              {/* Field comparison: how the rest of today's players did */}
+              {fieldStats && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="mt-4 card-elevated rounded-2xl bg-white border border-gray-100 p-5"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-lg">👥</span>
+                    <h4 className="text-sm font-bold text-gray-900">
+                      Il campo di oggi
+                    </h4>
+                    <span className="ml-auto text-[11px] font-semibold text-gray-400">
+                      {fieldStats.players} giocatori
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    {fieldStats.percentile >= 50 ? (
+                      <>
+                        Hai fatto meglio del{" "}
+                        <span className="font-bold text-emerald-600">
+                          {fieldStats.percentile}%
+                        </span>{" "}
+                        del campo!
+                      </>
+                    ) : (
+                      <>
+                        Hai fatto meglio del{" "}
+                        <span className="font-bold text-amber-600">
+                          {fieldStats.percentile}%
+                        </span>{" "}
+                        del campo — domani andrà meglio!
+                      </>
+                    )}
+                  </p>
+                  <div className="mt-3 h-2.5 rounded-full bg-gray-100 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.max(4, fieldStats.percentile)}%` }}
+                      transition={{ delay: 0.8, duration: 0.8 }}
+                      className={`h-full rounded-full ${
+                        fieldStats.percentile >= 50
+                          ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
+                          : "bg-gradient-to-r from-amber-400 to-amber-500"
+                      }`}
+                    />
+                  </div>
+                  {fieldStats.best > todayResult.result && (
+                    <p className="mt-2 text-[11px] text-gray-400">
+                      Miglior risultato del campo:{" "}
+                      {fieldStats.best >= 0 ? `+${fieldStats.best}` : fieldStats.best}
+                    </p>
+                  )}
+                </motion.div>
+              )}
 
               {/* Share Result */}
               <div className="mt-4">
@@ -1210,6 +1274,17 @@ function PlayingView({
             </motion.p>
           </AnimatePresence>
         </div>
+
+        {/* In-game actions: claim */}
+        {(game.phase === "playing" || game.phase === "trick-complete") && (
+          <GameActions
+            canClaim={game.canClaim}
+            claimStatus={game.claimStatus}
+            onClaim={game.requestClaim}
+            canUndo={game.canUndo}
+            onUndo={game.undoLastPlay}
+          />
+        )}
 
         {/* Actions */}
         <div className="mt-4 flex justify-center gap-3">

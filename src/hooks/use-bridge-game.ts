@@ -10,16 +10,41 @@ import {
   playCard,
   getValidCards,
   getResult,
+  claimTricks,
   partnerOf,
   partnershipOf,
   toDisplayPosition,
 } from "@/lib/bridge-engine";
+import { ddsSolve } from "@/lib/dds-select";
 import { useSounds } from "@/hooks/use-sounds";
 import type { Vulnerability, BiddingData } from "@/lib/catalog";
 import { checkBenHealth, benPlay } from "@/lib/ben-client";
-import { getAILevel, aiSelectWithDifficulty, type AILevel } from "@/lib/ai-difficulty";
+import {
+  getAILevel,
+  aiSelectWithDifficulty,
+  aiSelectExpertCard,
+  type AILevel,
+} from "@/lib/ai-difficulty";
+
+/**
+ * Heuristic/DDS selection used when BEN is not available (or failed).
+ * At "esperto" level, tries DD-perfect endgame play first.
+ */
+async function selectAiCard(
+  state: GameState,
+  position: Position,
+  level: AILevel
+): Promise<Card> {
+  if (level === "esperto") {
+    const ddsCard = await aiSelectExpertCard(state, position);
+    if (ddsCard) return ddsCard;
+  }
+  return aiSelectWithDifficulty(state, position, level);
+}
 
 export type GamePhase = "ready" | "playing" | "trick-complete" | "finished";
+
+export type ClaimStatus = null | "checking" | "rejected";
 
 export interface BridgeGameHook {
   gameState: GameState | null;
@@ -34,6 +59,13 @@ export interface BridgeGameHook {
   highlightedCards: Card[];
   benAvailable: boolean | null; // null = checking, true/false = result
   aiLevel: AILevel;
+  /** Claim: "reclama le prese" — validated double-dummy before acceptance */
+  canClaim: boolean;
+  claimStatus: ClaimStatus;
+  requestClaim: () => Promise<boolean>;
+  /** Undo (didactic): take back the last card played by the human */
+  canUndo: boolean;
+  undoLastPlay: () => void;
 }
 
 interface GameConfig {
@@ -46,7 +78,14 @@ interface GameConfig {
   dealer?: Position;
   vulnerability?: Vulnerability;
   bidding?: BiddingData;
+  /** Enable the didactic undo (practice modes only — never challenges/tournaments) */
+  allowUndo?: boolean;
+  /** Enable claiming remaining tricks (default true; declarer side only) */
+  allowClaim?: boolean;
 }
+
+/** Max remaining tricks for showing the claim button (DDS must verify exactly) */
+const CLAIM_MAX_REMAINING = 8;
 
 const AI_DELAY = 600; // ms delay for AI plays (used when BEN not available)
 const BEN_DELAY = 100; // ms delay before BEN call (BEN adds its own latency)
@@ -60,12 +99,16 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const [highlightedCards, setHighlightedCards] = useState<Card[]>([]);
   const [benAvailable, setBenAvailable] = useState<boolean | null>(null);
   const [aiLevel, setAiLevel] = useState<AILevel>(() => getAILevel());
+  const [claimStatus, setClaimStatus] = useState<ClaimStatus>(null);
 
   const { playSound } = useSounds();
 
   const aiTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const trickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const claimTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // Full play history (for undo): every card in play order
+  const historyRef = useRef<TrickPlay[]>([]);
   const configRef = useRef(config);
   configRef.current = config;
 
@@ -100,6 +143,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     return () => {
       if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
       if (trickTimerRef.current) clearTimeout(trickTimerRef.current);
+      if (claimTimerRef.current) clearTimeout(claimTimerRef.current);
       if (abortRef.current) abortRef.current.abort();
     };
   }, []);
@@ -108,6 +152,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     (state: GameState, position: Position, card: Card) => {
       try {
         const newState = playCard(state, position, card);
+        historyRef.current = [...historyRef.current, { position, card }];
         setGameState(newState);
 
         // Sound: card played
@@ -248,14 +293,14 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             if (!response.fallback && response.card) {
               aiCard = response.card;
             } else {
-              aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
+              aiCard = await selectAiCard(currentState, currentPlayer, currentAiLevel);
             }
           } catch {
-            aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
+            aiCard = await selectAiCard(currentState, currentPlayer, currentAiLevel);
             setBenAvailable(false); // Stop trying after failure
           }
         } else {
-          aiCard = aiSelectWithDifficulty(currentState, currentPlayer, currentAiLevel);
+          aiCard = await selectAiCard(currentState, currentPlayer, currentAiLevel);
         }
 
         executePlay(currentState, currentPlayer, aiCard);
@@ -321,6 +366,8 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
       config.openingLead
     );
 
+    historyRef.current = [];
+    setClaimStatus(null);
     setGameState(state);
     setPhase("playing");
     setLastTrick(null);
@@ -348,12 +395,136 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const handleCardPlay = useCallback(
     (card: Card) => {
       if (!gameState || phase !== "playing") return;
+      if (claimStatus === "checking") return;
       if (!isPlayerPosition(gameState.currentPlayer)) return;
 
       executePlay(gameState, gameState.currentPlayer, card);
     },
-    [gameState, phase, isPlayerPosition, executePlay]
+    [gameState, phase, claimStatus, isPlayerPosition, executePlay]
   );
+
+  // ── Claim: reclama le prese rimanenti (validato double-dummy) ──
+  const remainingTricks = gameState
+    ? Math.max(
+        gameState.hands.north.length,
+        gameState.hands.south.length,
+        gameState.hands.east.length,
+        gameState.hands.west.length
+      )
+    : 0;
+
+  const canClaim =
+    gameState !== null &&
+    phase === "playing" &&
+    claimStatus !== "checking" &&
+    config.allowClaim !== false &&
+    gameState.currentTrick.length === 0 &&
+    isPlayerTurn &&
+    config.playerPositions.includes(config.declarer) &&
+    remainingTricks >= 1 &&
+    remainingTricks <= CLAIM_MAX_REMAINING;
+
+  const requestClaim = useCallback(async (): Promise<boolean> => {
+    const state = gameState;
+    if (!state || phase !== "playing" || claimStatus === "checking") return false;
+    if (state.currentTrick.length > 0) return false;
+    if (!isPlayerPosition(state.currentPlayer)) return false;
+
+    const cfg = configRef.current;
+    if (cfg.allowClaim === false) return false;
+    if (!cfg.playerPositions.includes(cfg.declarer)) return false;
+
+    const remaining = state.hands[state.currentPlayer].length;
+    if (remaining < 1) return false;
+
+    setClaimStatus("checking");
+    setMessage("Verifica del reclamo…");
+
+    const dds = await ddsSolve({
+      hands: state.hands,
+      contract: state.contract,
+      declarer: state.declarer,
+      leader: state.currentPlayer,
+      timeout: 2000,
+    });
+
+    if (dds.available && dds.tricks >= remaining) {
+      // Claim accepted: all remaining tricks to declarer's side
+      if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
+      if (trickTimerRef.current) clearTimeout(trickTimerRef.current);
+
+      const claimed = claimTricks(state, partnershipOf(state.declarer));
+      setGameState(claimed);
+      setLastTrick(null);
+      setHighlightedCards([]);
+      setClaimStatus(null);
+
+      const res = getResult(claimed);
+      playSound("trickWon");
+      if (res.result >= 0) {
+        setMessage(
+          res.result === 0
+            ? `Reclamo accettato! Contratto mantenuto: ${res.tricksMade} prese.`
+            : `Reclamo accettato! Contratto fatto con ${res.result} presa/e in più.`
+        );
+      } else {
+        setMessage(`Reclamo accettato. Prese: ${res.tricksMade}/${res.tricksNeeded}`);
+      }
+      setPhase("finished");
+      return true;
+    }
+
+    // Claim rejected
+    setClaimStatus("rejected");
+    setMessage(
+      dds.available
+        ? "Reclamo rifiutato: gli avversari possono ancora fare una presa."
+        : "Posizione troppo complessa da verificare: continua a giocare."
+    );
+    if (claimTimerRef.current) clearTimeout(claimTimerRef.current);
+    claimTimerRef.current = setTimeout(() => setClaimStatus(null), 3000);
+    return false;
+  }, [gameState, phase, claimStatus, isPlayerPosition, playSound]);
+
+  // ── Undo didattico: ritira l'ultima carta giocata dal giocatore ──
+  const canUndo =
+    config.allowUndo === true &&
+    (phase === "playing" || phase === "trick-complete") &&
+    claimStatus !== "checking" &&
+    historyRef.current.some(p => isPlayerPosition(p.position));
+
+  const undoLastPlay = useCallback(() => {
+    const cfg = configRef.current;
+    if (cfg.allowUndo !== true) return;
+    if (phase !== "playing" && phase !== "trick-complete") return;
+
+    // Rewind to just before the human's last card (undoing later AI plays too)
+    const hist = historyRef.current;
+    let idx = hist.length - 1;
+    while (idx >= 0 && !isPlayerPosition(hist[idx].position)) idx--;
+    if (idx < 0) return;
+
+    const newHist = hist.slice(0, idx);
+
+    // Rebuild the state by replaying from the start
+    let state = createGame(cfg.hands, cfg.contract, cfg.declarer, cfg.openingLead);
+    for (const play of newHist) {
+      state = playCard(state, play.position, play.card);
+    }
+    historyRef.current = newHist;
+
+    if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
+    if (trickTimerRef.current) clearTimeout(trickTimerRef.current);
+
+    setGameState(state);
+    setLastTrick(null);
+    setClaimStatus(null);
+    setPhase("playing");
+    setHighlightedCards(
+      getValidCards(state.hands[state.currentPlayer], state.currentTrick)
+    );
+    setMessage("Carta ritirata. Scegli di nuovo.");
+  }, [phase, isPlayerPosition]);
 
   return {
     gameState,
@@ -368,6 +539,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     highlightedCards,
     benAvailable,
     aiLevel,
+    canClaim,
+    claimStatus,
+    requestClaim,
+    canUndo,
+    undoLastPlay,
   };
 }
 

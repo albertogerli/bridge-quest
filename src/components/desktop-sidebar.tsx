@@ -21,6 +21,7 @@ const miniGames = [
   { href: "/gioca/pratica-licita", emoji: "🗣️", label: "Pratica Licita", color: "bg-teal-50 border-teal-200 text-teal-700" },
   { href: "/gioca/memory", emoji: "🧠", label: "Memory", color: "bg-purple-50 border-purple-200 text-purple-700" },
   { href: "/glossario", emoji: "📖", label: "Glossario", color: "bg-sky-50 border-sky-200 text-sky-700" },
+  { href: "/guida", emoji: "❓", label: "Guida", color: "bg-slate-50 border-slate-200 text-slate-700" },
 ];
 
 // Objective icon mapping for sidebar

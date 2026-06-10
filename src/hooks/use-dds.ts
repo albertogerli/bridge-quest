@@ -103,6 +103,7 @@ export function useDDS() {
       );
 
       worker.onmessage = (event: MessageEvent<DDSWorkerResponse>) => {
+        if (event.data.type !== "result") return;
         const { id, result } = event.data;
         const pending = pendingRef.current.get(id);
         if (pending) {

@@ -7,6 +7,10 @@ import { useValidatedSmazzate } from "@/store/use-smazzate-store";
 import { HandReplay } from "@/components/bridge/hand-replay";
 import { parseContract, type GameState } from "@/lib/bridge-engine";
 import {
+  PLAY_ERROR_LABELS,
+  type PlayErrorCategory,
+} from "@/lib/play-error-classifier";
+import {
   getAssignment,
   getClassDetail,
   getAssignmentResults,
@@ -94,7 +98,9 @@ export default function AssignmentResultsPage({
 
   function openReplay(studentId: string, smazzataId: string, studentName: string) {
     const play = playOf(studentId, smazzataId);
-    const sm = validated.find((s) => s.id === smazzataId);
+    const sm =
+      validated.find((s) => s.id === smazzataId) ??
+      assignment?.custom_hands?.find((s) => s.id === smazzataId);
     if (!play || !sm) return;
     const gameState = {
       hands: play.hands,
@@ -127,7 +133,9 @@ export default function AssignmentResultsPage({
 
   const smazzataIds = assignment.smazzata_ids;
   const colLabel = (id: string) => {
-    const s = validated.find((sm) => sm.id === id);
+    const s =
+      validated.find((sm) => sm.id === id) ??
+      assignment.custom_hands?.find((sm) => sm.id === id);
     return s ? s.contract : id;
   };
 
@@ -135,6 +143,40 @@ export default function AssignmentResultsPage({
   const downPerHand = smazzataIds.map(
     (id) => members.filter((m) => cellFor(m.student_id, id).state === "down").length
   );
+
+  // ── Error taxonomy: aggregate the rule-based play errors per student ─────
+  // (recorded by the student app in details.errors, see play-error-classifier)
+  const errorTaxonomy = members
+    .map((m) => {
+      const counts = new Map<PlayErrorCategory, number>();
+      for (const id of smazzataIds) {
+        const r = resultMap.get(`${m.student_id}|${id}`);
+        const errs = (r?.details as { errors?: { category?: string }[] } | undefined)
+          ?.errors;
+        if (!Array.isArray(errs)) continue;
+        for (const e of errs) {
+          if (e?.category && e.category in PLAY_ERROR_LABELS) {
+            const cat = e.category as PlayErrorCategory;
+            counts.set(cat, (counts.get(cat) ?? 0) + 1);
+          }
+        }
+      }
+      return {
+        studentId: m.student_id,
+        name: m.display_name ?? "Allievo",
+        counts: [...counts.entries()].sort((a, b) => b[1] - a[1]),
+      };
+    })
+    .filter((row) => row.counts.length > 0);
+
+  // Most frequent theme across the whole class (worth a recap in lesson)
+  const classTheme = (() => {
+    const totals = new Map<PlayErrorCategory, number>();
+    for (const row of errorTaxonomy)
+      for (const [cat, n] of row.counts) totals.set(cat, (totals.get(cat) ?? 0) + n);
+    const top = [...totals.entries()].sort((a, b) => b[1] - a[1])[0];
+    return top && top[1] >= 2 ? top : null;
+  })();
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
@@ -221,6 +263,58 @@ export default function AssignmentResultsPage({
               </tr>
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── Error taxonomy per student ── */}
+      {errorTaxonomy.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-1 font-display text-xl font-bold text-foreground">
+            Su cosa lavorare
+          </h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Errori di gioco rilevati automaticamente nelle mani del compito.
+          </p>
+
+          {classTheme && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+              <span className="font-bold">Tema della classe:</span>{" "}
+              {PLAY_ERROR_LABELS[classTheme[0]].toLowerCase()} ({classTheme[1]}{" "}
+              {classTheme[1] === 1 ? "caso" : "casi"}) — vale un ripasso alla
+              prossima lezione.
+            </div>
+          )}
+
+          <div className="overflow-hidden rounded-lg border border-border">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/40">
+                  <th className="px-3 py-2 text-left font-semibold">Allievo</th>
+                  <th className="px-3 py-2 text-left font-semibold">Errori ricorrenti</th>
+                </tr>
+              </thead>
+              <tbody>
+                {errorTaxonomy.map((row) => (
+                  <tr key={row.studentId} className="border-b border-border last:border-0">
+                    <td className="px-3 py-2 font-medium">{row.name}</td>
+                    <td className="px-3 py-2">
+                      <div className="flex flex-wrap gap-1.5">
+                        {row.counts.map(([cat, n]) => (
+                          <span
+                            key={cat}
+                            className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300"
+                          >
+                            {PLAY_ERROR_LABELS[cat]}
+                            {n > 1 && <span className="font-bold">×{n}</span>}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

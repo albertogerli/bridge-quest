@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, use } from "react";
+import { useMemo, useRef, useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
 import { useCatalog } from "@/store/use-catalog-store";
 import { createAssignment } from "@/lib/instructors";
+import { parsePbn } from "@/lib/pbn";
+import type { Smazzata } from "@/lib/catalog";
 import {
   smazzataDifficulty,
   DIFFICULTY_CHIP,
@@ -63,6 +65,43 @@ export default function NuovoCompitoPage({
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
+  // ── PBN import: custom hands from any dealing program ──────────────────
+  const [imported, setImported] = useState<Smazzata[]>([]);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handlePbnFile(file: File) {
+    try {
+      const text = await file.text();
+      // Unique-per-import id prefix so two imports never collide
+      const prefix = `pbn-${Date.now().toString(36)}`;
+      const { deals, errors } = parsePbn(text, prefix);
+      setImportErrors(errors);
+      if (deals.length > 0) {
+        setImported((prev) => [...prev, ...deals]);
+        // Imported hands start selected: that's why the instructor loaded them
+        setSelected((prev) => {
+          const next = new Set(prev);
+          for (const d of deals) next.add(d.id);
+          return next;
+        });
+      }
+    } catch {
+      setImportErrors(["Impossibile leggere il file PBN."]);
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  function removeImported(id: string) {
+    setImported((prev) => prev.filter((s) => s.id !== id));
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return smazzate.filter((s) => {
@@ -87,12 +126,14 @@ export default function NuovoCompitoPage({
     setSaving(true);
     setSaveError(null);
     try {
+      const customHands = imported.filter((s) => selected.has(s.id));
       await createAssignment({
         classId,
         title: title.trim(),
         smazzataIds: Array.from(selected),
         instructorNote: note.trim() || null,
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+        customHands,
       });
       router.push(`/istruttori/${classId}`);
     } catch (err) {
@@ -151,6 +192,90 @@ export default function NuovoCompitoPage({
             className={`${selectClass} w-full`}
           />
         </div>
+      </div>
+
+      {/* PBN import */}
+      <div className="mb-6 rounded-lg border border-dashed border-border bg-muted/30 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold">Importa mani da file PBN</p>
+            <p className="text-xs text-muted-foreground">
+              Carica smazzate dal tuo programma di smazzatura (Dealer4, BridgeComposer, BBO…).
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Scegli file .pbn
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pbn,text/plain"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void handlePbnFile(f);
+            }}
+          />
+        </div>
+
+        {importErrors.length > 0 && (
+          <ul className="mt-3 space-y-1 text-xs text-amber-700 dark:text-amber-400">
+            {importErrors.map((err, i) => (
+              <li key={i}>⚠ {err}</li>
+            ))}
+          </ul>
+        )}
+
+        {imported.length > 0 && (
+          <div className="mt-3 space-y-2">
+            {imported.map((s) => {
+              const isSel = selected.has(s.id);
+              return (
+                <div
+                  key={s.id}
+                  className={`flex w-full items-center gap-3 rounded-lg border p-3 ${
+                    isSel ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggle(s.id)}
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
+                      isSel
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border"
+                    }`}
+                    aria-label={isSel ? "Deseleziona" : "Seleziona"}
+                  >
+                    {isSel && "✓"}
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{s.title}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      Importata da PBN · Board {s.board}
+                    </p>
+                  </div>
+                  <Badge variant="outline" className="shrink-0 font-mono">
+                    {s.contract}
+                  </Badge>
+                  <button
+                    type="button"
+                    onClick={() => removeImported(s.id)}
+                    className="shrink-0 text-xs text-muted-foreground hover:text-destructive"
+                    aria-label="Rimuovi mano importata"
+                  >
+                    ✕
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Filters */}

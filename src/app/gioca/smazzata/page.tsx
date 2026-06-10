@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { GameActions } from "@/components/bridge/game-actions";
+import { HintPanel } from "@/components/bridge/hint-panel";
+import { PlanningQuiz } from "@/components/bridge/planning-quiz";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata, CourseId } from "@/lib/catalog";
@@ -30,6 +33,8 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { useDDS, type DDSAnalysis } from "@/hooks/use-dds";
 import { addGameRecordDirect } from "@/hooks/use-game-history";
+import { classifyPlayErrors, type PlayError } from "@/lib/play-error-classifier";
+import { useSpacedReview } from "@/hooks/use-spaced-review";
 import Link from "next/link";
 
 export default function SmazzataBrowserPage() {
@@ -332,6 +337,7 @@ function PlayingView({
   const profile = useProfile();
   const dds = useDDS();
   const { saveGameResult } = useGameResults();
+  const { addReviewItem } = useSpacedReview();
 
   // ── Mode: play as declarer (default) or defend the contract ──────────
   const [mode, setMode] = useState<"declare" | "defend">("declare");
@@ -351,7 +357,26 @@ function PlayingView({
     dealer: smazzata.bidding?.dealer,
     vulnerability: smazzata.vulnerability,
     bidding: smazzata.bidding,
+    allowUndo: true, // didactic free play: take back the last card
   });
+
+  // Cumulative XP penalty from progressive hints (level 2: 5, level 3: 10)
+  const hintPenaltyRef = useRef(0);
+  const handleHintUsed = (level: number) => {
+    if (level === 2) hintPenaltyRef.current = Math.min(30, hintPenaltyRef.current + 5);
+    if (level === 3) hintPenaltyRef.current = Math.min(30, hintPenaltyRef.current + 10);
+  };
+
+  // Planning quiz (count your tricks before playing) — once per hand, declare mode
+  const [planDismissed, setPlanDismissed] = useState(false);
+  const planBonusRef = useRef(0);
+  const showPlanQuiz =
+    mode === "declare" &&
+    !planDismissed &&
+    game.phase === "playing" &&
+    !!game.gameState &&
+    game.gameState.tricks.length === 0 &&
+    game.gameState.currentTrick.length === 1;
 
   const leadDone =
     !!game.gameState && (game.gameState.tricks.length > 0 || game.gameState.currentTrick.length > 0);
@@ -412,10 +437,12 @@ function PlayingView({
       setXpSaved(true);
       const r = game.result.result;
       // Declaring rewards making the contract; defending rewards setting it.
-      const earned =
+      const baseEarned =
         mode === "defend"
           ? 30 + (r < 0 ? 20 : 0) + Math.max(0, -r) * 10
           : 30 + (r >= 0 ? 20 : 0) + Math.max(0, r) * 10;
+      // Progressive hints reduce the reward; a correct pre-play plan adds a bonus
+      const earned = Math.max(10, baseEarned - hintPenaltyRef.current + planBonusRef.current);
       // Only award XP on first completion of this hand
       const gameId = `smazzata-${smazzata.id}`;
       awardGameXp(gameId, earned);
@@ -475,6 +502,42 @@ function PlayingView({
       });
     }
   }, [game.phase, ddsResult, ddsLoading, dds, smazzata]);
+
+  // Classify the human's play errors and feed the spaced-repetition queue
+  // (/ripasso). Runs once per hand, after the DD analysis is available.
+  const errorsLoggedRef = useRef(false);
+  const [playErrors, setPlayErrors] = useState<PlayError[]>([]);
+  useEffect(() => {
+    if (
+      game.phase !== "finished" ||
+      !game.result ||
+      !game.gameState ||
+      !ddsResult ||
+      errorsLoggedRef.current
+    )
+      return;
+    errorsLoggedRef.current = true;
+    try {
+      const { trumpSuit } = parseContract(smazzata.contract);
+      const errors = classifyPlayErrors({
+        tricks: game.gameState.tricks,
+        originalHands: smazzata.hands,
+        trumpSuit,
+        playerPositions,
+        declarer,
+        // Only grade against the DD optimum when the solver result is exact
+        ddTricks: ddsResult.isExact ? ddsResult.ddTricks : null,
+        tricksMade: game.result.tricksMade,
+      }).slice(0, 2); // at most 2 review items per hand
+      setPlayErrors(errors);
+      for (const err of errors) {
+        addReviewItem(err.lessonId, err.moduleId, err.description);
+      }
+    } catch {
+      // Classification is best-effort: never block the end-of-hand flow
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game.phase, game.result, game.gameState, ddsResult]);
 
   // Compute DDS-based star rating (1-5 scale)
   const ddTricks = ddsResult?.ddTricks ?? null;
@@ -713,6 +776,40 @@ function PlayingView({
           </AnimatePresence>
         </div>
 
+        {/* In-game actions: claim + undo */}
+        {(game.phase === "playing" || game.phase === "trick-complete") && (
+          <GameActions
+            canClaim={game.canClaim}
+            claimStatus={game.claimStatus}
+            onClaim={game.requestClaim}
+            canUndo={game.canUndo}
+            onUndo={game.undoLastPlay}
+          />
+        )}
+
+        {/* Planning quiz: count tricks after the lead, before playing from dummy */}
+        {showPlanQuiz && (
+          <PlanningQuiz
+            hands={smazzata.hands}
+            contract={smazzata.contract}
+            declarer={declarer}
+            openingLead={game.gameState!.currentTrick[0].card}
+            onAnswer={(correct) => {
+              if (correct) planBonusRef.current = 5;
+            }}
+            onDismiss={() => setPlanDismissed(true)}
+          />
+        )}
+
+        {/* Progressive hints (free play only) */}
+        {game.phase === "playing" && (
+          <HintPanel
+            gameState={game.gameState}
+            isPlayerTurn={game.isPlayerTurn}
+            onHintUsed={handleHintUsed}
+          />
+        )}
+
         {/* Actions */}
         <div className="mt-4 flex justify-center gap-3">
           {game.phase === "ready" && !isMobile && (
@@ -949,6 +1046,40 @@ function PlayingView({
                   </motion.div>
                 )}
               </div>
+
+              {/* Detected play errors → personalized review */}
+              {playErrors.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="card-elevated rounded-2xl bg-white p-5 border border-amber-200"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700 font-bold text-xs">
+                      !
+                    </div>
+                    <h4 className="text-sm font-bold text-gray-900">Su cosa lavorare</h4>
+                  </div>
+                  <ul className="space-y-2">
+                    {playErrors.map((err, i) => (
+                      <li key={i} className="text-sm text-gray-700 leading-relaxed flex gap-2">
+                        <span className="text-amber-500 font-bold shrink-0">•</span>
+                        <span>{err.description}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href="/ripasso">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3 h-8 rounded-xl px-4 text-xs font-bold border-amber-300 text-amber-700 hover:bg-amber-50"
+                    >
+                      Aggiunto al tuo ripasso →
+                    </Button>
+                  </Link>
+                </motion.div>
+              )}
 
               {/* Commentary / Maestro tip */}
               {smazzata.commentary && (
