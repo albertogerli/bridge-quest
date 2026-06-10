@@ -63,21 +63,21 @@ const urgencyConfig: Record<Urgency, { dot: string; border: string; bg: string; 
     dot: "bg-red-500",
     border: "border-red-200 dark:border-red-800",
     bg: "bg-red-50 dark:bg-red-950/20",
-    text: "text-red-600",
+    text: "text-red-600 dark:text-red-400",
     label: "In ritardo",
   },
   today: {
     dot: "bg-amber-500",
     border: "border-amber-200 dark:border-amber-800",
     bg: "bg-amber-50 dark:bg-amber-950/20",
-    text: "text-amber-600",
+    text: "text-amber-600 dark:text-amber-400",
     label: "Oggi",
   },
   upcoming: {
     dot: "bg-blue-400",
     border: "border-blue-200 dark:border-blue-800",
     bg: "bg-blue-50 dark:bg-blue-950/20",
-    text: "text-blue-500",
+    text: "text-blue-500 dark:text-blue-400",
     label: "Prossimamente",
   },
 };
@@ -190,7 +190,7 @@ export default function RipassoPage() {
   const totalCount = items.length;
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219]">
+    <div className="min-h-screen bg-background">
       {/* XP Toast */}
       <AnimatePresence>
         {xpAwarded && (
@@ -210,21 +210,21 @@ export default function RipassoPage() {
       </AnimatePresence>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-[#F7F5F0]/80 dark:bg-[#0f1219]/80 backdrop-blur-xl border-b border-gray-200 dark:border-[#2a3040]">
+      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="mx-auto max-w-6xl flex items-center gap-3 px-4 py-3.5">
-          <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm">
-            <ArrowLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-card border border-border shadow-sm">
+            <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">Ripasso</h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <h1 className="text-lg font-bold text-foreground font-display">Ripasso</h1>
+            <p className="text-xs text-muted-foreground">
               Sistema di ripasso spaziato
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-indigo-500" />
             {dueCount > 0 && (
-              <Badge className="bg-[#003DA5] text-white text-xs font-bold hover:bg-[#003DA5]">
+              <Badge className="bg-figb text-white text-xs font-bold hover:bg-figb">
                 {dueCount}
               </Badge>
             )}
@@ -239,17 +239,17 @@ export default function RipassoPage() {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-3 gap-3"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-3.5 text-center">
+          <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-red-500">{enrichedItems.filter(i => i.urgency === "overdue").length}</p>
-            <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5">In ritardo</p>
+            <p className="text-[10px] font-medium text-muted-foreground mt-0.5">In ritardo</p>
           </div>
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-3.5 text-center">
+          <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-amber-500">{enrichedItems.filter(i => i.urgency === "today").length}</p>
-            <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5">Oggi</p>
+            <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Oggi</p>
           </div>
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-3.5 text-center">
+          <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-indigo-500">{totalCount}</p>
-            <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5">Totale</p>
+            <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Totale</p>
           </div>
         </motion.div>
 
@@ -259,8 +259,8 @@ export default function RipassoPage() {
             onClick={() => setFilter("due")}
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               filter === "due"
-                ? "bg-[#003DA5] text-white shadow-md"
-                : "bg-white dark:bg-[#1a1f2e] text-gray-500 border border-gray-200 dark:border-[#2a3040]"
+                ? "bg-figb text-white shadow-md"
+                : "bg-card text-muted-foreground border border-border"
             }`}
           >
             Da ripassare ({dueCount})
@@ -269,8 +269,8 @@ export default function RipassoPage() {
             onClick={() => setFilter("all")}
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               filter === "all"
-                ? "bg-[#003DA5] text-white shadow-md"
-                : "bg-white dark:bg-[#1a1f2e] text-gray-500 border border-gray-200 dark:border-[#2a3040]"
+                ? "bg-figb text-white shadow-md"
+                : "bg-card text-muted-foreground border border-border"
             }`}
           >
             Tutti ({totalCount})
@@ -286,7 +286,7 @@ export default function RipassoPage() {
         >
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 dark:bg-indigo-900 shrink-0 mt-0.5">
-              <Brain className="w-5 h-5 text-indigo-600" />
+              <Brain className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
             </div>
             <div>
               <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">Come funziona</p>
@@ -305,7 +305,7 @@ export default function RipassoPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 20 }}
-            className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-8 text-center"
+            className="rounded-2xl bg-card border border-border shadow-sm p-8 text-center"
           >
             <motion.div
               initial={{ scale: 0 }}
@@ -315,17 +315,17 @@ export default function RipassoPage() {
             >
               <Trophy className="w-10 h-10 text-emerald-500" />
             </motion.div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            <h3 className="text-xl font-bold text-foreground">
               {filter === "due" ? "Nessun ripasso in programma" : "Nessun argomento da ripassare"}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-xs mx-auto">
+            <p className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">
               {filter === "due"
                 ? "Sei in pari con tutti i ripassi! Continua a studiare le lezioni per aggiungere nuovi argomenti."
                 : "Non hai ancora argomenti da ripassare. Gli errori nei quiz verranno aggiunti automaticamente qui."
               }
             </p>
             <Link href="/lezioni">
-              <Button className="mt-5 rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white font-semibold shadow-md">
+              <Button className="mt-5 rounded-xl bg-figb hover:bg-figb-dark text-white font-semibold shadow-md">
                 <BookOpen className="w-4 h-4 mr-2" />
                 Vai alle lezioni
               </Button>
@@ -345,7 +345,7 @@ export default function RipassoPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: -100, scale: 0.95 }}
                     transition={{ delay: index * 0.05, duration: 0.3 }}
-                    className={`rounded-2xl bg-white dark:bg-[#1a1f2e] border ${cfg.border} shadow-sm overflow-hidden`}
+                    className={`rounded-2xl bg-card border ${cfg.border} shadow-sm overflow-hidden`}
                   >
                     {/* Urgency indicator bar */}
                     <div className={`h-1 ${cfg.dot}`} />
@@ -353,34 +353,34 @@ export default function RipassoPage() {
                     <div className="p-4">
                       {/* Top row: lesson info + urgency badge */}
                       <div className="flex items-start gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xl shrink-0">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border text-xl shrink-0">
                           {item.lessonIcon}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">
+                            <p className="text-sm font-bold text-foreground truncate">
                               {item.moduleTitle}
                             </p>
                             <Badge variant="outline" className={`text-[9px] font-bold ${cfg.text} ${cfg.bg} border-0 shrink-0`}>
                               {cfg.label}
                             </Badge>
                           </div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
                             {item.courseIcon} {item.lessonTitle}
                           </p>
                         </div>
                       </div>
 
                       {/* Question preview */}
-                      <div className="mt-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 p-3 border border-gray-100 dark:border-gray-700/50">
-                        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
+                      <div className="mt-3 rounded-xl bg-muted/50 p-3 border border-border/60">
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                           {item.question}
                         </p>
                       </div>
 
                       {/* Bottom row: metadata + actions */}
                       <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-[11px] text-gray-400 dark:text-gray-500">
+                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground/70">
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             {dueLabel(item.nextReview)}
@@ -395,7 +395,7 @@ export default function RipassoPage() {
                           {/* Mark as mastered */}
                           <button
                             onClick={() => handleMarkMastered(item.lessonId, item.moduleId)}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 transition-colors"
+                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-950/50 transition-colors"
                             title="Segna come padroneggiato"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -404,7 +404,7 @@ export default function RipassoPage() {
 
                           {/* Go to lesson */}
                           <Link href={`/lezioni/${item.lessonId}/${item.moduleId}`}>
-                            <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#003DA5] bg-[#003DA5]/5 hover:bg-[#003DA5]/10 transition-colors">
+                            <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-figb dark:text-primary bg-figb/5 dark:bg-primary/10 hover:bg-figb/10 dark:hover:bg-primary/15 transition-colors">
                               Ripassa
                               <ChevronRight className="w-3.5 h-3.5" />
                             </button>
@@ -427,7 +427,7 @@ export default function RipassoPage() {
             transition={{ delay: 0.5 }}
             className="text-center py-4"
           >
-            <p className="text-xs text-gray-400 dark:text-gray-500">
+            <p className="text-xs text-muted-foreground/70">
               Ripassa regolarmente per consolidare la memoria a lungo termine
             </p>
           </motion.div>

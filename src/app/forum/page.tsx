@@ -114,8 +114,8 @@ export default function ForumPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Forum</h1>
-            <p className="text-sm text-gray-500 mt-0.5">La community dei bridgisti</p>
+            <h1 className="text-2xl font-bold text-foreground font-display">Forum</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">La community dei bridgisti</p>
           </div>
           <Link href="/forum/nuovo">
             <Button className="h-10 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm shadow-lg shadow-emerald-500/20">
@@ -135,8 +135,8 @@ export default function ForumPage() {
               onClick={() => setCategory(key)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 category === key
-                  ? "bg-emerald-100 text-emerald-700"
-                  : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                  ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
               }`}
             >
               <span>{emoji}</span>
@@ -157,8 +157,8 @@ export default function ForumPage() {
               onClick={() => setSortBy(key)}
               className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
                 sortBy === key
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-400 hover:text-gray-600"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground/70 hover:text-muted-foreground"
               }`}
             >
               {label}
@@ -170,9 +170,9 @@ export default function ForumPage() {
         {loading ? (
           <div className="space-y-3">
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-2xl p-4 animate-pulse">
-                <div className="h-4 w-2/3 bg-gray-100 rounded mb-2" />
-                <div className="h-3 w-1/3 bg-gray-50 rounded" />
+              <div key={i} className="bg-card rounded-2xl p-4 animate-pulse">
+                <div className="h-4 w-2/3 bg-muted rounded mb-2" />
+                <div className="h-3 w-1/3 bg-muted/50 rounded" />
               </div>
             ))}
           </div>
@@ -183,8 +183,8 @@ export default function ForumPage() {
             className="text-center py-16"
           >
             <span className="text-5xl block mb-4">💬</span>
-            <p className="text-lg font-bold text-gray-900">Nessun post ancora</p>
-            <p className="text-sm text-gray-500 mt-1">Sii il primo a scrivere!</p>
+            <p className="text-lg font-bold text-foreground">Nessun post ancora</p>
+            <p className="text-sm text-muted-foreground mt-1">Sii il primo a scrivere!</p>
             <Link href="/forum/nuovo">
               <Button className="mt-4 h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm">
                 Scrivi il primo post
@@ -202,7 +202,7 @@ export default function ForumPage() {
                   transition={{ delay: i * 0.03 }}
                 >
                   <Link href={`/forum/${post.id}`}>
-                    <div className={`bg-white rounded-2xl p-4 card-clean hover:shadow-lg transition-shadow ${
+                    <div className={`bg-card rounded-2xl p-4 card-clean hover:shadow-lg transition-shadow ${
                       post.pinned ? "ring-2 ring-amber-400/50" : ""
                     }`}>
                       <div className="flex items-start gap-3">
@@ -219,31 +219,31 @@ export default function ForumPage() {
                           {/* Pinned + Category */}
                           <div className="flex items-center gap-1.5 mb-1">
                             {post.pinned && (
-                              <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                              <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded">
                                 PINNED
                               </span>
                             )}
                             {post.poll_options && post.poll_options.length > 0 && (
-                              <span className="text-[10px] font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                              <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-1.5 py-0.5 rounded flex items-center gap-0.5">
                                 <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                                   <path d="M18 20V10M12 20V4M6 20v-6" />
                                 </svg>
                                 SONDAGGIO
                               </span>
                             )}
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-muted-foreground/70">
                               {categoryEmoji(post.category)} {post.category}
                             </span>
                           </div>
 
                           {/* Title */}
-                          <h3 className="text-sm font-bold text-gray-900 line-clamp-2">
+                          <h3 className="text-sm font-bold text-foreground line-clamp-2">
                             {post.title}
                           </h3>
 
                           {/* Meta */}
-                          <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400">
-                            <span className="font-semibold text-gray-500">
+                          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground/70">
+                            <span className="font-semibold text-muted-foreground">
                               {post.profiles?.display_name || "Anonimo"}
                             </span>
                             <span>{timeAgo(post.created_at)}</span>
@@ -254,7 +254,7 @@ export default function ForumPage() {
                               {post.likes_count}
                             </span>
                             {post.comments_count > 0 ? (
-                              <span className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-md font-bold">
+                              <span className="flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-md font-bold">
                                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                 </svg>

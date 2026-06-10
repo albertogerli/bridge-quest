@@ -366,8 +366,8 @@ export default function PostDetailPage() {
     return (
       <div key={comment.id}>
         <div
-          className={`bg-white rounded-xl p-4 card-elevated ${
-            isReply ? "ml-6 sm:ml-10 border-l-2 border-emerald-200" : ""
+          className={`bg-card rounded-xl p-4 card-elevated ${
+            isReply ? "ml-6 sm:ml-10 border-l-2 border-emerald-200 dark:border-emerald-900" : ""
           }`}
         >
           <div className="flex items-center gap-2 mb-2">
@@ -386,23 +386,23 @@ export default function PostDetailPage() {
                 (comment.profiles?.display_name || "?")[0].toUpperCase()
               )}
             </div>
-            <span className="text-xs font-bold text-gray-900">
+            <span className="text-xs font-bold text-foreground">
               {comment.profiles?.display_name || "Anonimo"}
             </span>
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px] text-muted-foreground/70">
               {timeAgo(comment.created_at)}
             </span>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">{comment.body}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{comment.body}</p>
 
           {/* Comment actions */}
-          <div className="flex items-center gap-3 mt-3 pt-2 border-t border-gray-50">
+          <div className="flex items-center gap-3 mt-3 pt-2 border-t border-border/60">
             {/* Like button */}
             <button
               onClick={() => handleCommentLike(comment)}
               disabled={!user}
               className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${
-                isLiked ? "text-red-500" : "text-gray-400 hover:text-red-400"
+                isLiked ? "text-red-500" : "text-muted-foreground/70 hover:text-red-400"
               } ${!user ? "opacity-40 cursor-not-allowed" : ""}`}
             >
               <svg
@@ -426,8 +426,8 @@ export default function PostDetailPage() {
                 }}
                 className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${
                   replyingTo === comment.id
-                    ? "text-emerald-600"
-                    : "text-gray-400 hover:text-emerald-500"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-muted-foreground/70 hover:text-emerald-500"
                 }`}
               >
                 <svg
@@ -447,7 +447,7 @@ export default function PostDetailPage() {
             {!isReply && hasReplies && (
               <button
                 onClick={() => toggleThread(comment.id)}
-                className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
+                className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
               >
                 <svg
                   className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-90" : ""}`}
@@ -466,7 +466,7 @@ export default function PostDetailPage() {
             {user && user.id === comment.user_id && (
               <button
                 onClick={() => handleDeleteComment(comment)}
-                className="ml-auto text-[10px] text-gray-400 hover:text-red-500 transition-colors"
+                className="ml-auto text-[10px] text-muted-foreground/70 hover:text-red-500 transition-colors"
               >
                 Elimina
               </button>
@@ -482,7 +482,7 @@ export default function PostDetailPage() {
             exit={{ opacity: 0, height: 0 }}
             className="ml-6 sm:ml-10 mt-1"
           >
-            <div className="bg-emerald-50/50 rounded-xl p-3 border border-emerald-100">
+            <div className="bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl p-3 border border-emerald-100 dark:border-emerald-900">
               <div className="flex items-center gap-1.5 mb-2">
                 <svg
                   className="w-3 h-3 text-emerald-500"
@@ -493,7 +493,7 @@ export default function PostDetailPage() {
                 >
                   <path d="M3 10l7-7v4c8 0 12 4 12 11-2-5-6-7-12-7v4l-7-7z" />
                 </svg>
-                <span className="text-[10px] font-bold text-emerald-600">
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
                   Rispondi a {comment.profiles?.display_name || "Anonimo"}
                 </span>
               </div>
@@ -503,7 +503,7 @@ export default function PostDetailPage() {
                 placeholder="Scrivi la tua risposta..."
                 rows={2}
                 autoFocus
-                className="w-full text-sm text-gray-900 placeholder:text-gray-400 resize-none focus:outline-none bg-white rounded-lg p-2.5 border border-gray-100"
+                className="w-full text-sm text-foreground placeholder:text-muted-foreground/70 resize-none focus:outline-none bg-card rounded-lg p-2.5 border border-border"
               />
               <div className="flex justify-end gap-2 mt-2">
                 <Button
@@ -513,7 +513,7 @@ export default function PostDetailPage() {
                     setReplyingTo(null);
                     setReplyText("");
                   }}
-                  className="h-7 px-3 rounded-lg text-xs font-bold text-gray-500"
+                  className="h-7 px-3 rounded-lg text-xs font-bold text-muted-foreground"
                 >
                   Annulla
                 </Button>
@@ -550,11 +550,11 @@ export default function PostDetailPage() {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24">
         <div className="mx-auto max-w-6xl animate-pulse">
-          <div className="h-6 w-1/3 bg-gray-100 rounded mb-4" />
-          <div className="bg-white rounded-2xl p-5">
-            <div className="h-5 w-3/4 bg-gray-100 rounded mb-3" />
-            <div className="h-4 w-full bg-gray-50 rounded mb-2" />
-            <div className="h-4 w-2/3 bg-gray-50 rounded" />
+          <div className="h-6 w-1/3 bg-muted rounded mb-4" />
+          <div className="bg-card rounded-2xl p-5">
+            <div className="h-5 w-3/4 bg-muted rounded mb-3" />
+            <div className="h-4 w-full bg-muted/50 rounded mb-2" />
+            <div className="h-4 w-2/3 bg-muted/50 rounded" />
           </div>
         </div>
       </div>
@@ -565,7 +565,7 @@ export default function PostDetailPage() {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24 text-center">
         <span className="text-5xl block mb-4">🔍</span>
-        <p className="text-lg font-bold text-gray-900">Post non trovato</p>
+        <p className="text-lg font-bold text-foreground">Post non trovato</p>
         <Link href="/forum">
           <Button variant="outline" className="mt-4">Torna al forum</Button>
         </Link>
@@ -579,7 +579,7 @@ export default function PostDetailPage() {
         {/* Back */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-emerald-600 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors mb-4"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <polyline points="15,18 9,12 15,6" />
@@ -591,7 +591,7 @@ export default function PostDetailPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-5 card-elevated"
+          className="bg-card rounded-2xl p-5 card-elevated"
         >
           {/* Author */}
           <div className="flex items-center gap-3 mb-4">
@@ -603,26 +603,26 @@ export default function PostDetailPage() {
               )}
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-900">
+              <p className="text-sm font-bold text-foreground">
                 {post.profiles?.display_name || "Anonimo"}
               </p>
-              <p className="text-[11px] text-gray-400">{timeAgo(post.created_at)}</p>
+              <p className="text-[11px] text-muted-foreground/70">{timeAgo(post.created_at)}</p>
             </div>
             {post.pinned && (
-              <span className="ml-auto text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">
+              <span className="ml-auto text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-lg">
                 PINNED
               </span>
             )}
           </div>
 
           {/* Category badge */}
-          <span className="inline-block text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg mb-3 uppercase">
+          <span className="inline-block text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded-lg mb-3 uppercase">
             {post.category}
           </span>
 
           {/* Title + Body */}
-          <h1 className="text-lg font-bold text-gray-900 mb-3">{post.title}</h1>
-          <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+          <h1 className="text-lg font-bold text-foreground mb-3">{post.title}</h1>
+          <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
             {post.body}
           </div>
 
@@ -630,11 +630,11 @@ export default function PostDetailPage() {
           {post.poll_options && post.poll_options.length > 0 && (
             <div className="mt-5 space-y-2">
               <div className="flex items-center gap-2 mb-3">
-                <svg className="w-4 h-4 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M18 20V10M12 20V4M6 20v-6" />
                 </svg>
-                <span className="text-sm font-bold text-purple-700">Sondaggio</span>
-                <span className="text-[11px] text-gray-400">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
+                <span className="text-sm font-bold text-purple-700 dark:text-purple-300">Sondaggio</span>
+                <span className="text-[11px] text-muted-foreground/70">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
               </div>
               {post.poll_options.map((option, idx) => {
                 const votes = pollVotes[idx] || 0;
@@ -650,10 +650,10 @@ export default function PostDetailPage() {
                     disabled={hasVoted || !user}
                     className={`w-full text-left relative rounded-xl border-2 overflow-hidden transition-all ${
                       isMyVote
-                        ? "border-purple-400 bg-purple-50"
+                        ? "border-purple-400 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/40"
                         : hasVoted
-                          ? "border-gray-100 bg-gray-50"
-                          : "border-gray-200 bg-white hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer"
+                          ? "border-border/60 bg-muted/50"
+                          : "border-border bg-card hover:border-purple-300 dark:hover:border-purple-700 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 cursor-pointer"
                     } ${!user ? "cursor-not-allowed opacity-60" : ""}`}
                     whileTap={!hasVoted && user ? { scale: 0.98 } : undefined}
                   >
@@ -664,7 +664,7 @@ export default function PostDetailPage() {
                         animate={{ width: `${pct}%` }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className={`absolute inset-y-0 left-0 ${
-                          isWinning ? "bg-purple-100" : "bg-gray-100"
+                          isWinning ? "bg-purple-100 dark:bg-purple-900/40" : "bg-muted"
                         }`}
                       />
                     )}
@@ -675,12 +675,12 @@ export default function PostDetailPage() {
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                         )}
-                        <span className={`text-sm font-medium ${isMyVote ? "text-purple-700 font-bold" : "text-gray-700"}`}>
+                        <span className={`text-sm font-medium ${isMyVote ? "text-purple-700 dark:text-purple-300 font-bold" : "text-foreground/80"}`}>
                           {option}
                         </span>
                       </div>
                       {hasVoted && (
-                        <span className={`text-sm font-bold flex-shrink-0 ml-2 ${isWinning ? "text-purple-700" : "text-gray-400"}`}>
+                        <span className={`text-sm font-bold flex-shrink-0 ml-2 ${isWinning ? "text-purple-700 dark:text-purple-300" : "text-muted-foreground/70"}`}>
                           {pct}%
                         </span>
                       )}
@@ -689,20 +689,20 @@ export default function PostDetailPage() {
                 );
               })}
               {!user && (
-                <p className="text-[11px] text-gray-400 text-center mt-1">
-                  <Link href="/login" className="text-purple-600 font-bold hover:underline">Accedi</Link> per votare
+                <p className="text-[11px] text-muted-foreground/70 text-center mt-1">
+                  <Link href="/login" className="text-purple-600 dark:text-purple-400 font-bold hover:underline">Accedi</Link> per votare
                 </p>
               )}
             </div>
           )}
 
           {/* Actions */}
-          <div className="flex items-center gap-4 mt-5 pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-4 mt-5 pt-4 border-t border-border">
             <button
               onClick={handleLike}
               disabled={!user}
               className={`flex items-center gap-1.5 text-sm font-bold transition-colors ${
-                hasLiked ? "text-red-500" : "text-gray-400 hover:text-red-400"
+                hasLiked ? "text-red-500" : "text-muted-foreground/70 hover:text-red-400"
               } ${!user ? "opacity-40 cursor-not-allowed" : ""}`}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill={hasLiked ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2}>
@@ -710,7 +710,7 @@ export default function PostDetailPage() {
               </svg>
               {post.likes_count}
             </button>
-            <span className="flex items-center gap-1.5 text-sm text-gray-400">
+            <span className="flex items-center gap-1.5 text-sm text-muted-foreground/70">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
@@ -719,7 +719,7 @@ export default function PostDetailPage() {
             {user && user.id === post.user_id && (
               <button
                 onClick={handleDelete}
-                className="ml-auto text-xs text-gray-400 hover:text-red-500 transition-colors"
+                className="ml-auto text-xs text-muted-foreground/70 hover:text-red-500 transition-colors"
               >
                 Elimina
               </button>
@@ -729,14 +729,14 @@ export default function PostDetailPage() {
 
         {/* Comments Section */}
         <div className="mt-6">
-          <h2 className="text-sm font-bold text-gray-900 mb-3">
+          <h2 className="text-sm font-bold text-foreground mb-3">
             Commenti ({comments.length})
           </h2>
 
           {comments.length === 0 ? (
             <div className="text-center py-8">
               <span className="text-3xl block mb-2">💬</span>
-              <p className="text-sm text-gray-400">Nessun commento ancora. Sii il primo!</p>
+              <p className="text-sm text-muted-foreground/70">Nessun commento ancora. Sii il primo!</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -755,16 +755,16 @@ export default function PostDetailPage() {
 
           {/* New Comment Input */}
           {user ? (
-            <div className="mt-4 bg-white rounded-2xl p-4 card-elevated">
+            <div className="mt-4 bg-card rounded-2xl p-4 card-elevated">
               <textarea
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Scrivi un commento..."
                 rows={3}
-                className="w-full text-sm text-gray-900 placeholder:text-gray-400 resize-none focus:outline-none"
+                className="w-full text-sm text-foreground placeholder:text-muted-foreground/70 resize-none focus:outline-none"
               />
               <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] text-gray-400">+5 XP per ogni commento</span>
+                <span className="text-[10px] text-muted-foreground/70">+5 XP per ogni commento</span>
                 <Button
                   onClick={handleComment}
                   disabled={!commentText.trim() || submitting}
@@ -775,9 +775,9 @@ export default function PostDetailPage() {
               </div>
             </div>
           ) : (
-            <div className="mt-4 text-center bg-gray-50 rounded-2xl p-4">
-              <p className="text-sm text-gray-500">
-                <Link href="/login" className="text-emerald-600 font-bold hover:underline">Accedi</Link>
+            <div className="mt-4 text-center bg-muted/50 rounded-2xl p-4">
+              <p className="text-sm text-muted-foreground">
+                <Link href="/login" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">Accedi</Link>
                 {" "}per commentare
               </p>
             </div>

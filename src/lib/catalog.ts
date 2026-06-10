@@ -959,10 +959,10 @@ export const RARITY_CONFIG: Record<
   CardRarity,
   { label: string; color: string; bg: string; border: string }
 > = {
-  comune: { label: "Comune", color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300" },
-  rara: { label: "Rara", color: "text-blue-600", bg: "bg-blue-100", border: "border-blue-300" },
-  epica: { label: "Epica", color: "text-purple-600", bg: "bg-purple-100", border: "border-purple-300" },
-  leggendaria: { label: "Leggendaria", color: "text-amber-600", bg: "bg-amber-100", border: "border-amber-400" },
+  comune: { label: "Comune", color: "text-gray-600 dark:text-gray-300", bg: "bg-gray-100 dark:bg-gray-800/60", border: "border-gray-300 dark:border-gray-600" },
+  rara: { label: "Rara", color: "text-blue-600 dark:text-blue-300", bg: "bg-blue-100 dark:bg-blue-950/40", border: "border-blue-300 dark:border-blue-900" },
+  epica: { label: "Epica", color: "text-purple-600 dark:text-purple-300", bg: "bg-purple-100 dark:bg-purple-950/40", border: "border-purple-300 dark:border-purple-900" },
+  leggendaria: { label: "Leggendaria", color: "text-amber-600 dark:text-amber-300", bg: "bg-amber-100 dark:bg-amber-950/40", border: "border-amber-400 dark:border-amber-900" },
 };
 
 /** Static UI metadata for category (no DB roundtrip needed). */

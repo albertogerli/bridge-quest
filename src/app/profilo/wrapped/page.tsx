@@ -445,46 +445,46 @@ export default function WrappedPage() {
               transition={{ duration: 0.6, type: "spring" }}
               className="w-full max-w-lg"
             >
-              <div className="card-clean rounded-2xl bg-white p-8 shadow-2xl">
+              <div className="card-clean rounded-2xl bg-card p-8 shadow-2xl">
                 <div className="mb-6 text-center text-4xl">🏆</div>
-                <h2 className="mb-6 text-center text-3xl font-bold text-gray-900">
+                <h2 className="mb-6 text-center text-3xl font-bold text-foreground font-display">
                   Il Tuo {monthName} in Numeri
                 </h2>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                    <span className="text-gray-600">Mani giocate</span>
-                    <span className="text-2xl font-bold text-indigo-600">
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <span className="text-muted-foreground">Mani giocate</span>
+                    <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                       {stats.handsPlayed}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                    <span className="text-gray-600">Percentuale vittoria</span>
-                    <span className="text-2xl font-bold text-purple-600">
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <span className="text-muted-foreground">Percentuale vittoria</span>
+                    <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                       {stats.winRate}%
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                    <span className="text-gray-600">Contratto preferito</span>
-                    <span className="text-2xl font-bold text-blue-600">
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <span className="text-muted-foreground">Contratto preferito</span>
+                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {stats.favoriteContract}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                    <span className="text-gray-600">XP guadagnati</span>
-                    <span className="text-2xl font-bold text-emerald-600">
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <span className="text-muted-foreground">XP guadagnati</span>
+                    <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                       {stats.xpGained}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                    <span className="text-gray-600">Streak record</span>
-                    <span className="text-2xl font-bold text-amber-600">
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <span className="text-muted-foreground">Streak record</span>
+                    <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                       {stats.streakBest}
                     </span>
                   </div>
                   <div className="flex items-center justify-between pb-3">
-                    <span className="text-gray-600">Giorno preferito</span>
-                    <span className="text-xl font-bold text-rose-600">
+                    <span className="text-muted-foreground">Giorno preferito</span>
+                    <span className="text-xl font-bold text-rose-600 dark:text-rose-400">
                       {stats.favoriteDay}
                     </span>
                   </div>
@@ -504,7 +504,7 @@ export default function WrappedPage() {
                       setCurrentCard(0);
                       setHasStarted(false);
                     }}
-                    className="text-sm text-gray-500 hover:text-gray-700"
+                    className="text-sm text-muted-foreground hover:text-foreground"
                   >
                     Guarda di nuovo
                   </button>

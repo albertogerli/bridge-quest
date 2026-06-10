@@ -44,11 +44,11 @@ const CATEGORY_LABELS: Record<Category, { label: string; emoji: string }> = {
 };
 
 const CATEGORY_BADGE_CLASSES: Record<GlossaryEntry["category"], string> = {
-  base: "bg-blue-100 text-blue-700",
-  licita: "bg-purple-100 text-purple-700",
-  gioco: "bg-emerald-100 text-emerald-700",
-  difesa: "bg-red-100 text-red-700",
-  punteggio: "bg-amber-100 text-amber-700",
+  base: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
+  licita: "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300",
+  gioco: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+  difesa: "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
+  punteggio: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",
 };
 
 const STORAGE_KEY = "bq_glossary_completed";
@@ -428,7 +428,7 @@ export default function GlossarioPage() {
       const progress = (seconds / TIMER_SECONDS) * circumference;
       const color =
         seconds > 10
-          ? "#003DA5"
+          ? "var(--primary)"
           : seconds > 5
           ? "#f59e0b"
           : "#ef4444";
@@ -441,7 +441,7 @@ export default function GlossarioPage() {
               cy="24"
               r={radius}
               fill="none"
-              stroke="#e5e7eb"
+              style={{ stroke: "var(--border)" }}
               strokeWidth="3"
             />
             <circle
@@ -449,7 +449,7 @@ export default function GlossarioPage() {
               cy="24"
               r={radius}
               fill="none"
-              stroke={color}
+              style={{ stroke: color }}
               strokeWidth="3"
               strokeDasharray={circumference}
               strokeDashoffset={circumference - progress}
@@ -472,8 +472,8 @@ export default function GlossarioPage() {
   // ── Loading ───────────────────────────────────────────
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -483,7 +483,7 @@ export default function GlossarioPage() {
     // Results screen
     if (quizFinished && quizResults) {
       return (
-        <div className="min-h-screen bg-[#F7F5F0]">
+        <div className="min-h-screen bg-background">
           <div className="pt-6 px-5 pb-28">
             <div className="mx-auto max-w-6xl">
               <motion.div
@@ -493,10 +493,10 @@ export default function GlossarioPage() {
                 className="text-center mb-8"
               >
                 <Trophy className="w-16 h-16 mx-auto text-amber-500 mb-4" />
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-foreground font-display mb-2">
                   Risultati
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   {quizResults.correctCount}/{quizResults.total} risposte corrette
                 </p>
               </motion.div>
@@ -530,17 +530,17 @@ export default function GlossarioPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="rounded-2xl border border-gray-200 bg-white p-6 mb-6"
+                className="rounded-2xl border border-border bg-card p-6 mb-6"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium text-gray-600">
+                  <span className="text-sm font-medium text-muted-foreground">
                     Punteggio
                   </span>
-                  <span className="text-sm font-bold text-[#003DA5]">
+                  <span className="text-sm font-bold text-figb dark:text-primary">
                     {Math.round(quizResults.percentage)}%
                   </span>
                 </div>
-                <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-6">
+                <div className="h-3 bg-muted rounded-full overflow-hidden mb-6">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${quizResults.percentage}%` }}
@@ -558,15 +558,15 @@ export default function GlossarioPage() {
                 </div>
 
                 {/* XP breakdown */}
-                <h3 className="text-sm font-bold text-gray-800 mb-3">
+                <h3 className="text-sm font-bold text-foreground mb-3">
                   {profile.xpLabel} guadagnati
                 </h3>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">
+                    <span className="text-muted-foreground">
                       Risposte corrette ({quizResults.correctCount} x {XP_PER_CORRECT})
                     </span>
-                    <span className="font-semibold text-gray-900">
+                    <span className="font-semibold text-foreground">
                       +{quizResults.baseXp}
                     </span>
                   </div>
@@ -591,8 +591,8 @@ export default function GlossarioPage() {
                     </div>
                   )}
                   <div className="border-t pt-2 flex justify-between text-sm font-bold">
-                    <span className="text-gray-900">Totale</span>
-                    <span className="text-[#003DA5]">
+                    <span className="text-foreground">Totale</span>
+                    <span className="text-figb dark:text-primary">
                       +{quizResults.totalXp} {profile.xpLabel}
                     </span>
                   </div>
@@ -604,17 +604,17 @@ export default function GlossarioPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
-                className="rounded-2xl border border-gray-200 bg-white overflow-hidden mb-6"
+                className="rounded-2xl border border-border bg-card overflow-hidden mb-6"
               >
                 <button
                   onClick={() => setShowRecap(!showRecap)}
                   className="w-full flex items-center justify-between px-6 py-4 text-left"
                 >
-                  <span className="text-sm font-bold text-gray-800">
+                  <span className="text-sm font-bold text-foreground">
                     Riepilogo risposte
                   </span>
                   <ChevronRight
-                    className={`w-5 h-5 text-gray-400 transition-transform ${
+                    className={`w-5 h-5 text-muted-foreground/70 transition-transform ${
                       showRecap ? "rotate-90" : ""
                     }`}
                   />
@@ -638,8 +638,8 @@ export default function GlossarioPage() {
                               key={i}
                               className={`p-3 rounded-xl border ${
                                 answer.correct
-                                  ? "border-emerald-200 bg-emerald-50"
-                                  : "border-red-200 bg-red-50"
+                                  ? "border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/40"
+                                  : "border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40"
                               }`}
                             >
                               <div className="flex items-start gap-2 mb-1">
@@ -647,14 +647,14 @@ export default function GlossarioPage() {
                                   {answer.correct ? "✅" : "❌"}
                                 </span>
                                 <div className="flex-1">
-                                  <p className="text-sm font-semibold text-gray-800">
+                                  <p className="text-sm font-semibold text-foreground">
                                     {i + 1}. {term?.term ?? answer.termKey}
                                   </p>
-                                  <p className="text-xs text-gray-600 mt-0.5">
+                                  <p className="text-xs text-muted-foreground mt-0.5">
                                     {answer.question}
                                   </p>
                                   {!answer.correct && (
-                                    <p className="text-xs text-emerald-700 mt-1">
+                                    <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1">
                                       Risposta corretta:{" "}
                                       {term?.quiz.options[term.quiz.correctAnswer]}
                                     </p>
@@ -677,13 +677,13 @@ export default function GlossarioPage() {
                     bonusAwarded.current = false;
                     startQuizGlobale();
                   }}
-                  className="flex-1 py-3.5 rounded-2xl bg-[#003DA5] text-white font-semibold text-sm hover:bg-[#002d7a] transition-colors"
+                  className="flex-1 py-3.5 rounded-2xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors"
                 >
                   Gioca ancora
                 </button>
                 <button
                   onClick={returnToBrowse}
-                  className="flex-1 py-3.5 rounded-2xl border-2 border-[#003DA5] text-[#003DA5] font-semibold text-sm hover:bg-[#003DA5]/5 transition-colors"
+                  className="flex-1 py-3.5 rounded-2xl border-2 border-figb dark:border-primary text-figb dark:text-primary font-semibold text-sm hover:bg-figb/5 dark:hover:bg-primary/10 transition-colors"
                 >
                   Torna al glossario
                 </button>
@@ -699,20 +699,20 @@ export default function GlossarioPage() {
     if (!currentTerm || !quizShuffled) return null;
 
     return (
-      <div className="min-h-screen bg-[#F7F5F0]">
+      <div className="min-h-screen bg-background">
         <div className="pt-6 px-5 pb-28">
           <div className="mx-auto max-w-6xl">
             {/* Quiz header */}
             <div className="flex items-center justify-between mb-6">
               <button
                 onClick={returnToBrowse}
-                className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground/80 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Esci
               </button>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-bold text-[#003DA5]">
+                <span className="text-sm font-bold text-figb dark:text-primary">
                   {quizIndex + 1}/{quizTerms.length}
                 </span>
                 <TimerCircle seconds={quizTimer} />
@@ -723,8 +723,8 @@ export default function GlossarioPage() {
             <div className="flex gap-1 mb-8">
               {quizTerms.map((_, i) => {
                 const answer = quizHistory[i];
-                let bg = "bg-gray-200";
-                if (i === quizIndex) bg = "bg-[#003DA5]";
+                let bg = "bg-muted";
+                if (i === quizIndex) bg = "bg-figb dark:bg-primary";
                 else if (answer?.correct) bg = "bg-emerald-500";
                 else if (answer && !answer.correct) bg = "bg-red-400";
                 return (
@@ -744,7 +744,7 @@ export default function GlossarioPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -40 }}
                 transition={{ duration: 0.3 }}
-                className="rounded-2xl border border-gray-200 bg-white p-6 mb-6"
+                className="rounded-2xl border border-border bg-card p-6 mb-6"
               >
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-2xl">{currentTerm.emoji}</span>
@@ -756,10 +756,10 @@ export default function GlossarioPage() {
                     {CATEGORY_LABELS[currentTerm.category].label}
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-gray-900 mb-1">
+                <h2 className="text-lg font-bold text-foreground mb-1">
                   {currentTerm.term}
                 </h2>
-                <p className="text-sm text-gray-600 mb-6">
+                <p className="text-sm text-muted-foreground mb-6">
                   {currentTerm.quiz.question}
                 </p>
 
@@ -769,14 +769,14 @@ export default function GlossarioPage() {
                       "w-full text-left px-4 py-3.5 rounded-xl border-2 text-sm font-medium transition-all ";
                     if (quizSelected === null) {
                       classes +=
-                        "border-gray-200 hover:border-[#003DA5] hover:bg-[#003DA5]/5 text-gray-800";
+                        "border-border hover:border-figb dark:hover:border-primary hover:bg-figb/5 dark:hover:bg-primary/10 text-foreground";
                     } else if (i === quizShuffled.correctIndex) {
                       classes +=
-                        "border-emerald-500 bg-emerald-50 text-emerald-800";
+                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300";
                     } else if (i === quizSelected && quizSelected !== -1) {
-                      classes += "border-red-400 bg-red-50 text-red-800";
+                      classes += "border-red-400 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300";
                     } else {
-                      classes += "border-gray-200 text-gray-400";
+                      classes += "border-border text-muted-foreground/40";
                     }
                     return (
                       <motion.button
@@ -788,7 +788,7 @@ export default function GlossarioPage() {
                         transition={{ delay: i * 0.06 }}
                         className={classes}
                       >
-                        <span className="mr-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-xs font-bold text-gray-500">
+                        <span className="mr-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-muted text-xs font-bold text-muted-foreground">
                           {String.fromCharCode(65 + i)}
                         </span>
                         {opt}
@@ -809,8 +809,8 @@ export default function GlossarioPage() {
                       <div
                         className={`mt-4 p-4 rounded-xl ${
                           quizSelected === quizShuffled.correctIndex
-                            ? "bg-emerald-50 border border-emerald-200"
-                            : "bg-amber-50 border border-amber-200"
+                            ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900"
+                            : "bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900"
                         }`}
                       >
                         <p className="text-sm font-semibold mb-1">
@@ -822,13 +822,13 @@ export default function GlossarioPage() {
                             ? "Tempo scaduto!"
                             : profile.wrongMessage}
                         </p>
-                        <p className="text-xs text-gray-700">
+                        <p className="text-xs text-foreground/80">
                           {currentTerm.quiz.explanation}
                         </p>
                       </div>
                       <button
                         onClick={nextQuizQuestion}
-                        className="mt-4 w-full py-3 rounded-xl bg-[#003DA5] text-white font-semibold text-sm hover:bg-[#002d7a] transition-colors flex items-center justify-center gap-2"
+                        className="mt-4 w-full py-3 rounded-xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors flex items-center justify-center gap-2"
                       >
                         {quizIndex < quizTerms.length - 1 ? (
                           <>
@@ -855,27 +855,27 @@ export default function GlossarioPage() {
 
   // ── Browse Phase ──────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#F7F5F0]">
+    <div className="min-h-screen bg-background">
       <div className="pt-6 px-5 pb-28">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-6">
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors mb-3"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground/80 transition-colors mb-3"
             >
               <ArrowLeft className="w-4 h-4" />
               Home
             </Link>
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#003DA5]/10">
-                <BookOpen className="w-6 h-6 text-[#003DA5]" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-figb/10 dark:bg-primary/15">
+                <BookOpen className="w-6 h-6 text-figb dark:text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+                <h1 className="text-2xl font-bold text-foreground font-display tracking-tight">
                   Glossario del Bridge
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   Impara i termini fondamentali
                 </p>
               </div>
@@ -883,23 +883,23 @@ export default function GlossarioPage() {
           </div>
 
           {/* Progress bar */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 mb-5">
+          <div className="rounded-2xl border border-border bg-card p-4 mb-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Termini completati
               </span>
-              <span className="text-sm font-bold text-[#003DA5]">
+              <span className="text-sm font-bold text-figb dark:text-primary">
                 {completedCount}/{totalCount}
               </span>
             </div>
-            <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-muted rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{
                   width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%`,
                 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="h-full bg-[#003DA5] rounded-full"
+                className="h-full bg-figb dark:bg-primary rounded-full"
               />
             </div>
           </div>
@@ -907,18 +907,18 @@ export default function GlossarioPage() {
           {/* Search + Quiz Globale */}
           <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
               <input
                 type="text"
                 placeholder="Cerca un termine..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
               />
             </div>
             <button
               onClick={startQuizGlobale}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#003DA5] text-white text-sm font-semibold hover:bg-[#002d7a] transition-colors whitespace-nowrap"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-figb text-white text-sm font-semibold hover:bg-figb-dark transition-colors whitespace-nowrap"
             >
               <Shuffle className="w-4 h-4" />
               <span className="hidden sm:inline">Quiz Globale</span>
@@ -936,8 +936,8 @@ export default function GlossarioPage() {
                   onClick={() => setActiveCategory(cat)}
                   className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
                     isActive
-                      ? "bg-[#003DA5] text-white shadow-sm"
-                      : "bg-white border border-gray-200 text-gray-600 hover:border-gray-300"
+                      ? "bg-figb text-white shadow-sm"
+                      : "bg-card border border-border text-foreground/80 hover:bg-muted/50"
                   }`}
                 >
                   <span className="text-xs">{emoji}</span>
@@ -948,7 +948,7 @@ export default function GlossarioPage() {
           </div>
 
           {/* Terms count */}
-          <p className="text-xs text-gray-400 mb-3 font-medium">
+          <p className="text-xs text-muted-foreground/70 mb-3 font-medium">
             {filteredTerms.length}{" "}
             {filteredTerms.length === 1 ? "termine" : "termini"}
           </p>
@@ -956,8 +956,8 @@ export default function GlossarioPage() {
           {/* Empty state */}
           {filteredTerms.length === 0 && (
             <div className="text-center py-16">
-              <Search className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">
+              <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm">
                 Nessun termine trovato
               </p>
               <button
@@ -965,7 +965,7 @@ export default function GlossarioPage() {
                   setSearch("");
                   setActiveCategory("tutti");
                 }}
-                className="mt-3 text-sm text-[#003DA5] font-medium hover:underline"
+                className="mt-3 text-sm text-figb dark:text-primary font-medium hover:underline"
               >
                 Mostra tutti
               </button>
@@ -991,10 +991,10 @@ export default function GlossarioPage() {
                 >
                   <motion.div
                     layout
-                    className={`rounded-2xl border bg-white overflow-hidden transition-shadow ${
+                    className={`rounded-2xl border bg-card overflow-hidden transition-shadow ${
                       isExpanded
-                        ? "border-[#003DA5]/30 shadow-lg shadow-[#003DA5]/5"
-                        : "border-gray-200 hover:shadow-md"
+                        ? "border-figb/30 dark:border-primary/40 shadow-lg shadow-figb/5"
+                        : "border-border hover:shadow-md"
                     }`}
                   >
                     {/* Card header (always visible) */}
@@ -1018,7 +1018,7 @@ export default function GlossarioPage() {
                         <span className="text-xl shrink-0">{entry.emoji}</span>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 mb-1">
-                            <h3 className="text-sm font-bold text-gray-900 truncate">
+                            <h3 className="text-sm font-bold text-foreground truncate">
                               {entry.term}
                             </h3>
                             {isCompleted && (
@@ -1033,7 +1033,7 @@ export default function GlossarioPage() {
                             {CATEGORY_LABELS[entry.category].label}
                           </span>
                           {!isExpanded && (
-                            <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
+                            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                               {entry.definition}
                             </p>
                           )}
@@ -1053,17 +1053,17 @@ export default function GlossarioPage() {
                         >
                           <div className="px-4 pb-4 space-y-4">
                             {/* Full definition */}
-                            <p className="text-sm text-gray-700 leading-relaxed">
+                            <p className="text-sm text-foreground/80 leading-relaxed">
                               {entry.definition}
                             </p>
 
                             {/* Example */}
                             {entry.example && (
-                              <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
-                                <p className="text-xs font-semibold text-amber-800 uppercase tracking-wide mb-1">
+                              <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 px-4 py-3">
+                                <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wide mb-1">
                                   Esempio
                                 </p>
-                                <p className="text-sm text-amber-900 leading-relaxed">
+                                <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
                                   {entry.example}
                                 </p>
                               </div>
@@ -1080,7 +1080,7 @@ export default function GlossarioPage() {
                             {entry.relatedTerms &&
                               entry.relatedTerms.length > 0 && (
                                 <div>
-                                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
                                     Termini correlati
                                   </p>
                                   <div className="flex flex-wrap gap-2">
@@ -1096,7 +1096,7 @@ export default function GlossarioPage() {
                                             e.stopPropagation();
                                             scrollToTerm(rk);
                                           }}
-                                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 transition-colors"
+                                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-muted hover:bg-muted/70 text-xs font-medium text-foreground/80 transition-colors"
                                         >
                                           <span>{related.emoji}</span>
                                           {related.term}
@@ -1114,7 +1114,7 @@ export default function GlossarioPage() {
                                   e.stopPropagation();
                                   openInlineQuiz(entry.key);
                                 }}
-                                className="w-full py-3 rounded-xl bg-[#003DA5] text-white font-semibold text-sm hover:bg-[#002d7a] transition-colors flex items-center justify-center gap-2"
+                                className="w-full py-3 rounded-xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors flex items-center justify-center gap-2"
                               >
                                 <Zap className="w-4 h-4" />
                                 Mettiti alla prova
@@ -1124,9 +1124,9 @@ export default function GlossarioPage() {
                               <motion.div
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="rounded-xl border border-[#003DA5]/20 bg-[#003DA5]/5 p-4"
+                                className="rounded-xl border border-figb/20 dark:border-primary/30 bg-figb/5 dark:bg-primary/10 p-4"
                               >
-                                <p className="text-sm font-semibold text-gray-900 mb-4">
+                                <p className="text-sm font-semibold text-foreground mb-4">
                                   {entry.quiz.question}
                                 </p>
                                 <div className="space-y-2.5">
@@ -1135,18 +1135,18 @@ export default function GlossarioPage() {
                                       "w-full text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ";
                                     if (inlineSelected === null) {
                                       classes +=
-                                        "border-gray-200 bg-white hover:border-[#003DA5] text-gray-800";
+                                        "border-border bg-card hover:border-figb dark:hover:border-primary text-foreground";
                                     } else if (
                                       i === inlineShuffled.correctIndex
                                     ) {
                                       classes +=
-                                        "border-emerald-500 bg-emerald-50 text-emerald-800";
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300";
                                     } else if (i === inlineSelected) {
                                       classes +=
-                                        "border-red-400 bg-red-50 text-red-800";
+                                        "border-red-400 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300";
                                     } else {
                                       classes +=
-                                        "border-gray-200 bg-white text-gray-400";
+                                        "border-border bg-card text-muted-foreground/40";
                                     }
                                     return (
                                       <button
@@ -1158,7 +1158,7 @@ export default function GlossarioPage() {
                                         disabled={inlineSelected !== null}
                                         className={classes}
                                       >
-                                        <span className="mr-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">
+                                        <span className="mr-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
                                           {String.fromCharCode(65 + i)}
                                         </span>
                                         {opt}
@@ -1180,8 +1180,8 @@ export default function GlossarioPage() {
                                         className={`mt-3 p-3 rounded-xl ${
                                           inlineSelected ===
                                           inlineShuffled?.correctIndex
-                                            ? "bg-emerald-50 border border-emerald-200"
-                                            : "bg-amber-50 border border-amber-200"
+                                            ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900"
+                                            : "bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900"
                                         }`}
                                       >
                                         <p className="text-sm font-semibold mb-1">
@@ -1196,12 +1196,12 @@ export default function GlossarioPage() {
                                               ]
                                             : profile.wrongMessage}
                                         </p>
-                                        <p className="text-xs text-gray-700">
+                                        <p className="text-xs text-foreground/80">
                                           {entry.quiz.explanation}
                                         </p>
                                         {inlineSelected ===
                                           inlineShuffled?.correctIndex && (
-                                          <p className="text-xs text-[#003DA5] font-semibold mt-2">
+                                          <p className="text-xs text-figb dark:text-primary font-semibold mt-2">
                                             +{inlineXpAwarded}{" "}
                                             {profile.xpLabel}
                                           </p>
@@ -1220,7 +1220,7 @@ export default function GlossarioPage() {
                                             goToNextTerm();
                                           }
                                         }}
-                                        className="mt-3 w-full py-2.5 rounded-xl bg-[#003DA5] text-white font-semibold text-sm hover:bg-[#002d7a] transition-colors flex items-center justify-center gap-2"
+                                        className="mt-3 w-full py-2.5 rounded-xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors flex items-center justify-center gap-2"
                                       >
                                         {inlineSelected !==
                                         inlineShuffled?.correctIndex ? (

@@ -14,7 +14,7 @@ import {
 // Map weekly objective IDs to Lucide icons
 const objectiveIcons: Record<string, React.ReactNode> = {
   quiz: <FileText className="w-6 h-6 text-indigo-500" />,
-  hands: <Spade className="w-6 h-6 text-gray-700" />,
+  hands: <Spade className="w-6 h-6 text-foreground/80" />,
   xp: <Star className="w-6 h-6 text-amber-500" />,
   modules: <BookOpen className="w-6 h-6 text-blue-500" />,
   streak: <Flame className="w-6 h-6 text-orange-500" />,
@@ -159,7 +159,7 @@ export default function ObiettiviPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="text-3xl font-bold text-white tracking-tight"
+                className="text-3xl font-bold text-white tracking-tight font-display"
               >
                 Obiettivi Settimanali
               </motion.h1>
@@ -220,22 +220,22 @@ export default function ObiettiviPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.1 }}
-          className="card-clean bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
+          className="card-clean bg-card rounded-2xl p-4 shadow-sm border border-border"
         >
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-semibold text-gray-900">Progresso Globale</p>
-            <p className="text-xs font-bold text-gray-400">
+            <p className="text-sm font-semibold text-foreground">Progresso Globale</p>
+            <p className="text-xs font-bold text-muted-foreground/70">
               {completedCount} di 3 completati
             </p>
           </div>
           <div className="flex gap-2">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+              <div key={i} className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                 <motion.div
                   className={`h-full rounded-full ${
                     i < completedCount
                       ? "bg-gradient-to-r from-emerald-500 to-emerald-400"
-                      : "bg-gray-100"
+                      : "bg-muted"
                   }`}
                   initial={{ width: 0 }}
                   animate={{ width: i < completedCount ? "100%" : "0%" }}
@@ -256,10 +256,10 @@ export default function ObiettiviPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
-              className={`card-clean rounded-2xl bg-white p-5 shadow-sm border transition-all duration-300 ${
+              className={`card-clean rounded-2xl bg-card p-5 shadow-sm border transition-all duration-300 ${
                 obj.completed
-                  ? "border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50"
-                  : "border-gray-100"
+                  ? "border-emerald-200 dark:border-emerald-900 bg-gradient-to-br from-card to-emerald-50/50 dark:to-emerald-950/30"
+                  : "border-border"
               }`}
             >
               <div className="flex items-start gap-4">
@@ -268,8 +268,8 @@ export default function ObiettiviPage() {
                   <div
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl text-2xl transition-all duration-300 ${
                       obj.completed
-                        ? "bg-emerald-100 shadow-sm shadow-emerald-200/50"
-                        : "bg-gray-50"
+                        ? "bg-emerald-100 dark:bg-emerald-900/40 shadow-sm shadow-emerald-200/50"
+                        : "bg-muted/50"
                     }`}
                   >
                     {objectiveIcons[obj.id] || obj.emoji}
@@ -302,7 +302,7 @@ export default function ObiettiviPage() {
                   <div className="flex items-center justify-between mb-0.5">
                     <h3
                       className={`font-semibold text-base ${
-                        obj.completed ? "text-emerald-700" : "text-gray-900"
+                        obj.completed ? "text-emerald-700 dark:text-emerald-300" : "text-foreground"
                       }`}
                     >
                       {obj.title}
@@ -310,34 +310,34 @@ export default function ObiettiviPage() {
                     <Badge
                       className={`text-[10px] font-bold shrink-0 ml-2 ${
                         obj.completed
-                          ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-100"
+                          ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-950/40"
+                          : "bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-950/40"
                       }`}
                     >
                       +{obj.xpReward} XP
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-500 mb-3">{obj.description}</p>
+                  <p className="text-xs text-muted-foreground mb-3">{obj.description}</p>
 
                   {/* Progress bar */}
                   <div className="relative">
                     <div className="flex items-center justify-between mb-1.5">
                       <span
                         className={`text-xs font-bold tabular-nums ${
-                          obj.completed ? "text-emerald-600" : "text-gray-600"
+                          obj.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"
                         }`}
                       >
                         {obj.current} / {obj.target}
                       </span>
                       <span
                         className={`text-[11px] font-bold tabular-nums ${
-                          obj.completed ? "text-emerald-500" : "text-gray-400"
+                          obj.completed ? "text-emerald-500" : "text-muted-foreground/70"
                         }`}
                       >
                         {progressPercent}%
                       </span>
                     </div>
-                    <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-2.5 rounded-full bg-muted overflow-hidden">
                       <motion.div
                         className={`h-full rounded-full ${
                           obj.completed
@@ -366,10 +366,10 @@ export default function ObiettiviPage() {
           <div
             className={`card-clean rounded-2xl overflow-hidden transition-all duration-500 ${
               bonusClaimed
-                ? "bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200"
+                ? "bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-900"
                 : allCompleted
-                  ? "bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-50 border-2 border-amber-200"
-                  : "bg-white border border-gray-100"
+                  ? "bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-950/40 dark:via-yellow-950/30 dark:to-amber-950/40 border-2 border-amber-200 dark:border-amber-900"
+                  : "bg-card border border-border"
             }`}
           >
             {/* Pulsing glow for claimable state */}
@@ -389,10 +389,10 @@ export default function ObiettiviPage() {
                 <div
                   className={`flex h-16 w-16 items-center justify-center rounded-2xl text-3xl transition-all duration-500 ${
                     bonusClaimed
-                      ? "bg-emerald-100"
+                      ? "bg-emerald-100 dark:bg-emerald-900/40"
                       : allCompleted
-                        ? "bg-amber-100 shadow-md shadow-amber-200/50"
-                        : "bg-gray-50"
+                        ? "bg-amber-100 dark:bg-amber-900/40 shadow-md shadow-amber-200/50"
+                        : "bg-muted/50"
                   }`}
                 >
                   {bonusClaimed ? (
@@ -402,7 +402,7 @@ export default function ObiettiviPage() {
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       className="flex items-center justify-center"
                     >
-                      <Trophy className="w-8 h-8 text-emerald-700" />
+                      <Trophy className="w-8 h-8 text-emerald-700 dark:text-emerald-300" />
                     </motion.span>
                   ) : allCompleted ? (
                     <motion.span
@@ -410,10 +410,10 @@ export default function ObiettiviPage() {
                       transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2 }}
                       className="flex items-center justify-center"
                     >
-                      <Gift className="w-8 h-8 text-amber-600" />
+                      <Gift className="w-8 h-8 text-amber-600 dark:text-amber-400" />
                     </motion.span>
                   ) : (
-                    <span className="opacity-40 flex items-center justify-center"><Gift className="w-8 h-8 text-gray-400" /></span>
+                    <span className="opacity-40 flex items-center justify-center"><Gift className="w-8 h-8 text-muted-foreground/70" /></span>
                   )}
                 </div>
 
@@ -421,10 +421,10 @@ export default function ObiettiviPage() {
                   <h3
                     className={`font-semibold text-lg ${
                       bonusClaimed
-                        ? "text-emerald-700"
+                        ? "text-emerald-700 dark:text-emerald-300"
                         : allCompleted
-                          ? "text-amber-700"
-                          : "text-gray-400"
+                          ? "text-amber-700 dark:text-amber-300"
+                          : "text-muted-foreground/70"
                     }`}
                   >
                     {bonusClaimed ? "Bonus Riscosso!" : "Bonus Settimanale"}
@@ -432,10 +432,10 @@ export default function ObiettiviPage() {
                   <p
                     className={`text-xs mt-0.5 ${
                       bonusClaimed
-                        ? "text-emerald-600"
+                        ? "text-emerald-600 dark:text-emerald-400"
                         : allCompleted
-                          ? "text-amber-600"
-                          : "text-gray-400"
+                          ? "text-amber-600 dark:text-amber-400"
+                          : "text-muted-foreground/70"
                     }`}
                   >
                     {bonusClaimed
@@ -450,7 +450,7 @@ export default function ObiettiviPage() {
               {/* Claim button or completed state */}
               <div className="mt-4">
                 {bonusClaimed ? (
-                  <div className="flex items-center justify-center gap-2 bg-emerald-100 rounded-xl py-3">
+                  <div className="flex items-center justify-center gap-2 bg-emerald-100 dark:bg-emerald-950/40 rounded-xl py-3">
                     <svg
                       width="18"
                       height="18"
@@ -463,7 +463,7 @@ export default function ObiettiviPage() {
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
-                    <span className="text-sm font-bold text-emerald-700">
+                    <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
                       +100 XP riscossi
                     </span>
                   </div>
@@ -481,7 +481,7 @@ export default function ObiettiviPage() {
                     </Button>
                   </motion.div>
                 ) : (
-                  <div className="flex items-center justify-center gap-2 bg-gray-50 rounded-xl py-3">
+                  <div className="flex items-center justify-center gap-2 bg-muted/50 rounded-xl py-3">
                     <svg
                       width="16"
                       height="16"
@@ -495,7 +495,7 @@ export default function ObiettiviPage() {
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
-                    <span className="text-sm font-bold text-gray-400">
+                    <span className="text-sm font-bold text-muted-foreground/70">
                       +100 XP bloccati
                     </span>
                   </div>
@@ -544,7 +544,7 @@ export default function ObiettiviPage() {
           transition={{ delay: 0.7 }}
           className="text-center pt-4 pb-2"
         >
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground/70">
             {allCompleted && bonusClaimed
               ? "Tutti gli obiettivi completati! Torna lunedi per nuove sfide."
               : allCompleted

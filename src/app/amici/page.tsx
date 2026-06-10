@@ -101,8 +101,8 @@ export default function AmiciPage() {
   // Auth loading
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-3 border-gray-200 border-t-[#003DA5]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-border border-t-primary" />
       </div>
     );
   }
@@ -110,25 +110,25 @@ export default function AmiciPage() {
   // Not logged in
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] px-4 py-8">
+      <div className="min-h-screen bg-background px-4 py-8">
         <div className="max-w-lg mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="card-clean rounded-2xl bg-white p-8"
+            className="card-clean rounded-2xl bg-card p-8"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#003DA5]/10 mx-auto mb-4">
-              <Users className="h-8 w-8 text-[#003DA5]" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-figb/10 dark:bg-primary/15 mx-auto mb-4">
+              <Users className="h-8 w-8 text-figb dark:text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Accedi per vedere i tuoi amici
             </h2>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-muted-foreground mb-6">
               Registrati o accedi per cercare altri giocatori, aggiungere amici e sfidarli a bridge!
             </p>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#003DA5] text-white font-semibold text-sm hover:bg-[#002E7A] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors"
             >
               Accedi o Registrati
             </Link>
@@ -150,7 +150,7 @@ export default function AmiciPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] px-4 py-6 pb-28 lg:pb-6">
+    <div className="min-h-screen bg-background px-4 py-6 pb-28 lg:pb-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <motion.div
@@ -158,8 +158,8 @@ export default function AmiciPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-bold text-gray-900">Amici</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground font-display">Amici</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Cerca giocatori e sfidali a bridge
           </p>
         </motion.div>
@@ -172,8 +172,8 @@ export default function AmiciPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === tab.id
-                  ? "bg-[#003DA5] text-white shadow-sm"
-                  : "bg-white border border-gray-200 text-gray-600 hover:border-gray-300"
+                  ? "bg-figb text-white shadow-sm"
+                  : "bg-card border border-border text-foreground/80 hover:bg-muted/50"
               }`}
             >
               {tab.icon}
@@ -193,7 +193,7 @@ export default function AmiciPage() {
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-3 border-gray-200 border-t-[#003DA5]" />
+            <div className="h-8 w-8 animate-spin rounded-full border-3 border-border border-t-primary" />
           </div>
         )}
 
@@ -205,19 +205,19 @@ export default function AmiciPage() {
             className="space-y-3"
           >
             {friends.length === 0 ? (
-              <div className="card-clean rounded-2xl bg-white p-8 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 mx-auto mb-4">
-                  <Users className="h-7 w-7 text-gray-400" />
+              <div className="card-clean rounded-2xl bg-card p-8 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted mx-auto mb-4">
+                  <Users className="h-7 w-7 text-muted-foreground/70" />
                 </div>
-                <p className="text-sm font-semibold text-gray-700 mb-1">
+                <p className="text-sm font-semibold text-foreground/80 mb-1">
                   Non hai ancora amici
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Cerca giocatori nella tab Cerca!
                 </p>
                 <button
                   onClick={() => setActiveTab("cerca")}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#003DA5] text-white text-sm font-semibold hover:bg-[#002E7A] transition-colors"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-figb text-white text-sm font-semibold hover:bg-figb-dark transition-colors"
                 >
                   <Search className="h-4 w-4" />
                   Cerca giocatori
@@ -229,7 +229,7 @@ export default function AmiciPage() {
                   key={friendship.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="card-clean rounded-2xl bg-white p-4"
+                  className="card-clean rounded-2xl bg-card p-4"
                 >
                   <div className="flex items-center gap-3">
                     {/* Avatar */}
@@ -237,11 +237,11 @@ export default function AmiciPage() {
                       <img
                         src={friendship.profile.avatar_url}
                         alt={friendship.profile.display_name || "Giocatore"}
-                        className="h-11 w-11 rounded-xl object-cover border border-gray-200"
+                        className="h-11 w-11 rounded-xl object-cover border border-border"
                       />
                     ) : (
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
-                        <span className="text-base font-bold text-[#003DA5]">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15 border border-figb/20 dark:border-primary/30">
+                        <span className="text-base font-bold text-figb dark:text-primary">
                           {(friendship.profile.display_name || "G").charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -249,17 +249,17 @@ export default function AmiciPage() {
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">
+                      <p className="text-sm font-semibold text-foreground truncate">
                         {friendship.profile.display_name || "Giocatore"}
                       </p>
                       <div className="flex items-center gap-2 mt-0.5">
                         {friendship.profile.bbo_username && (
-                          <span className="text-[11px] text-gray-400 font-mono">
+                          <span className="text-[11px] text-muted-foreground/70 font-mono">
                             @{friendship.profile.bbo_username}
                           </span>
                         )}
                         {friendship.profile.asd_name && (
-                          <span className="text-[10px] text-gray-400 truncate">
+                          <span className="text-[10px] text-muted-foreground/70 truncate">
                             {friendship.profile.asd_name}
                           </span>
                         )}
@@ -269,7 +269,7 @@ export default function AmiciPage() {
                     {/* XP Badge */}
                     <Badge
                       variant="secondary"
-                      className="bg-[#003DA5]/10 text-[#003DA5] border-[#003DA5]/20 text-[10px] font-bold shrink-0"
+                      className="bg-figb/10 text-figb border-figb/20 dark:bg-primary/15 dark:text-primary dark:border-primary/30 text-[10px] font-bold shrink-0"
                     >
                       {friendship.profile.xp} XP
                     </Badge>
@@ -290,10 +290,10 @@ export default function AmiciPage() {
                   </div>
 
                   {/* Remove option */}
-                  <div className="mt-2 pt-2 border-t border-gray-100 flex justify-end">
+                  <div className="mt-2 pt-2 border-t border-border flex justify-end">
                     <button
                       onClick={() => removeFriend(friendship.id)}
-                      className="text-[11px] text-red-400 hover:text-red-600 font-medium transition-colors"
+                      className="text-[11px] text-red-400 hover:text-red-600 dark:hover:text-red-300 font-medium transition-colors"
                     >
                       Rimuovi
                     </button>
@@ -313,12 +313,12 @@ export default function AmiciPage() {
           >
             {/* Ricevute */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                 Ricevute
               </h3>
               {pendingReceived.length === 0 ? (
-                <div className="card-clean rounded-2xl bg-white p-6 text-center">
-                  <p className="text-sm text-gray-400">
+                <div className="card-clean rounded-2xl bg-card p-6 text-center">
+                  <p className="text-sm text-muted-foreground/70">
                     Nessuna richiesta ricevuta
                   </p>
                 </div>
@@ -329,7 +329,7 @@ export default function AmiciPage() {
                       key={request.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="card-clean rounded-2xl bg-white p-4"
+                      className="card-clean rounded-2xl bg-card p-4"
                     >
                       <div className="flex items-center gap-3">
                         {/* Avatar */}
@@ -337,11 +337,11 @@ export default function AmiciPage() {
                           <img
                             src={request.profile.avatar_url}
                             alt={request.profile.display_name || "Giocatore"}
-                            className="h-11 w-11 rounded-xl object-cover border border-gray-200"
+                            className="h-11 w-11 rounded-xl object-cover border border-border"
                           />
                         ) : (
-                          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
-                            <span className="text-base font-bold text-[#003DA5]">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15 border border-figb/20 dark:border-primary/30">
+                            <span className="text-base font-bold text-figb dark:text-primary">
                               {(request.profile.display_name || "G").charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -349,11 +349,11 @@ export default function AmiciPage() {
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">
+                          <p className="text-sm font-semibold text-foreground truncate">
                             {request.profile.display_name || "Giocatore"}
                           </p>
                           {request.profile.bbo_username && (
-                            <span className="text-[11px] text-gray-400 font-mono">
+                            <span className="text-[11px] text-muted-foreground/70 font-mono">
                               @{request.profile.bbo_username}
                             </span>
                           )}
@@ -370,7 +370,7 @@ export default function AmiciPage() {
                           </button>
                           <button
                             onClick={() => declineFriend(request.id)}
-                            className="flex items-center gap-1 px-3 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-semibold hover:bg-red-200 transition-colors"
+                            className="flex items-center gap-1 px-3 py-2 rounded-xl bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-200 dark:hover:bg-red-950/60 transition-colors"
                           >
                             <X className="h-3.5 w-3.5" />
                             Rifiuta
@@ -385,12 +385,12 @@ export default function AmiciPage() {
 
             {/* Inviate */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                 Inviate
               </h3>
               {pendingSent.length === 0 ? (
-                <div className="card-clean rounded-2xl bg-white p-6 text-center">
-                  <p className="text-sm text-gray-400">
+                <div className="card-clean rounded-2xl bg-card p-6 text-center">
+                  <p className="text-sm text-muted-foreground/70">
                     Nessuna richiesta inviata
                   </p>
                 </div>
@@ -401,7 +401,7 @@ export default function AmiciPage() {
                       key={request.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="card-clean rounded-2xl bg-white p-4"
+                      className="card-clean rounded-2xl bg-card p-4"
                     >
                       <div className="flex items-center gap-3">
                         {/* Avatar */}
@@ -409,11 +409,11 @@ export default function AmiciPage() {
                           <img
                             src={request.profile.avatar_url}
                             alt={request.profile.display_name || "Giocatore"}
-                            className="h-11 w-11 rounded-xl object-cover border border-gray-200"
+                            className="h-11 w-11 rounded-xl object-cover border border-border"
                           />
                         ) : (
-                          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 border border-gray-200">
-                            <span className="text-base font-bold text-gray-400">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted border border-border">
+                            <span className="text-base font-bold text-muted-foreground/70">
                               {(request.profile.display_name || "G").charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -421,18 +421,18 @@ export default function AmiciPage() {
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">
+                          <p className="text-sm font-semibold text-foreground truncate">
                             {request.profile.display_name || "Giocatore"}
                           </p>
                           {request.profile.bbo_username && (
-                            <span className="text-[11px] text-gray-400 font-mono">
+                            <span className="text-[11px] text-muted-foreground/70 font-mono">
                               @{request.profile.bbo_username}
                             </span>
                           )}
                         </div>
 
                         {/* Status */}
-                        <span className="text-[11px] text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1 font-medium shrink-0">
+                        <span className="text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1 font-medium shrink-0">
                           In attesa...
                         </span>
                       </div>
@@ -453,41 +453,41 @@ export default function AmiciPage() {
           >
             {/* Search input */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Cerca per nome, username BBO o associazione..."
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#003DA5] focus:ring-2 focus:ring-[#003DA5]/20 transition-all card-clean"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all card-clean"
               />
               {searchLoading && (
                 <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-[#003DA5]" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-primary" />
                 </div>
               )}
             </div>
 
             {/* Results */}
             {searchQuery.trim().length > 0 && !searchLoading && searchResults.length === 0 && (
-              <div className="card-clean rounded-2xl bg-white p-8 text-center">
-                <Search className="h-8 w-8 text-gray-300 mx-auto mb-3" />
-                <p className="text-sm font-semibold text-gray-600">
+              <div className="card-clean rounded-2xl bg-card p-8 text-center">
+                <Search className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
+                <p className="text-sm font-semibold text-muted-foreground">
                   Nessun giocatore trovato
                 </p>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-muted-foreground/70 mt-1">
                   Prova con un altro nome o username
                 </p>
               </div>
             )}
 
             {searchQuery.trim().length === 0 && (
-              <div className="card-clean rounded-2xl bg-white p-8 text-center">
-                <UserPlus className="h-8 w-8 text-gray-300 mx-auto mb-3" />
-                <p className="text-sm font-semibold text-gray-600">
+              <div className="card-clean rounded-2xl bg-card p-8 text-center">
+                <UserPlus className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
+                <p className="text-sm font-semibold text-muted-foreground">
                   Cerca un giocatore
                 </p>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-muted-foreground/70 mt-1">
                   Inserisci il nome, lo username BBO o il nome dell&apos;associazione
                 </p>
               </div>
@@ -508,7 +508,7 @@ export default function AmiciPage() {
                     key={result.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="card-clean rounded-2xl bg-white p-4"
+                    className="card-clean rounded-2xl bg-card p-4"
                   >
                     <div className="flex items-center gap-3">
                       {/* Avatar */}
@@ -516,11 +516,11 @@ export default function AmiciPage() {
                         <img
                           src={result.avatar_url}
                           alt={result.display_name || "Giocatore"}
-                          className="h-11 w-11 rounded-xl object-cover border border-gray-200"
+                          className="h-11 w-11 rounded-xl object-cover border border-border"
                         />
                       ) : (
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#003DA5]/10 border border-[#003DA5]/20">
-                          <span className="text-base font-bold text-[#003DA5]">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15 border border-figb/20 dark:border-primary/30">
+                          <span className="text-base font-bold text-figb dark:text-primary">
                             {(result.display_name || "G").charAt(0).toUpperCase()}
                           </span>
                         </div>
@@ -528,17 +528,17 @@ export default function AmiciPage() {
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">
+                        <p className="text-sm font-semibold text-foreground truncate">
                           {result.display_name || "Giocatore"}
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           {result.bbo_username && (
-                            <span className="text-[11px] text-gray-400 font-mono">
+                            <span className="text-[11px] text-muted-foreground/70 font-mono">
                               @{result.bbo_username}
                             </span>
                           )}
                           {result.asd_name && (
-                            <span className="text-[10px] text-gray-400 truncate">
+                            <span className="text-[10px] text-muted-foreground/70 truncate">
                               {result.asd_name}
                             </span>
                           )}
@@ -547,17 +547,17 @@ export default function AmiciPage() {
 
                       {/* Action button */}
                       {isAlreadyFriend ? (
-                        <span className="text-[11px] text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 font-medium shrink-0">
+                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
                           Amico
                         </span>
                       ) : isPending || alreadySent ? (
-                        <span className="text-[11px] text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 font-medium shrink-0">
+                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
                           Richiesta inviata!
                         </span>
                       ) : (
                         <button
                           onClick={() => handleAddFriend(result.id)}
-                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#003DA5] text-white text-xs font-semibold hover:bg-[#002E7A] transition-colors shrink-0"
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-figb text-white text-xs font-semibold hover:bg-figb-dark transition-colors shrink-0"
                         >
                           <UserPlus className="h-3.5 w-3.5" />
                           Aggiungi
@@ -591,20 +591,20 @@ export default function AmiciPage() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+                className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-xl"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Modal header */}
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200">
-                      <Swords className="h-5 w-5 text-violet-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900">
+                      <Swords className="h-5 w-5 text-violet-600 dark:text-violet-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-sm font-bold text-foreground">
                         Sfida {selectedFriend.name}
                       </p>
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-[11px] text-muted-foreground">
                         Scegli il numero di mani
                       </p>
                     </div>
@@ -616,9 +616,9 @@ export default function AmiciPage() {
                         setSelectedFriend(null);
                       }
                     }}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-muted transition-colors"
                   >
-                    <X className="h-4 w-4 text-gray-400" />
+                    <X className="h-4 w-4 text-muted-foreground/70" />
                   </button>
                 </div>
 
@@ -629,17 +629,17 @@ export default function AmiciPage() {
                       key={count}
                       onClick={() => handleCreateChallenge(count)}
                       disabled={challengeLoading}
-                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-[#003DA5]/5 hover:border-[#003DA5]/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-border bg-muted/50 hover:bg-figb/5 dark:hover:bg-primary/10 hover:border-figb/30 dark:hover:border-primary/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-lg">
                           {count === 1 ? "1" : count === 4 ? "4" : "8"}
                         </span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-foreground">
                           {count === 1 ? "1 Mano" : `${count} Mani`}
                         </span>
                       </div>
-                      <span className="text-[10px] text-gray-400 font-medium">
+                      <span className="text-[10px] text-muted-foreground/70 font-medium">
                         {count === 1 ? "Veloce" : count === 4 ? "Standard" : "Lunga"}
                       </span>
                     </button>
@@ -648,7 +648,7 @@ export default function AmiciPage() {
 
                 {/* IMP scoring info */}
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
+                  <span className="text-[10px] text-muted-foreground/70 font-medium uppercase tracking-wider">
                     Punteggio IMP
                   </span>
                 </div>
@@ -656,8 +656,8 @@ export default function AmiciPage() {
                 {/* Loading indicator */}
                 {challengeLoading && (
                   <div className="flex items-center justify-center gap-2 mb-4">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-violet-600" />
-                    <span className="text-xs text-gray-500">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-violet-600" />
+                    <span className="text-xs text-muted-foreground">
                       Creazione sfida...
                     </span>
                   </div>
@@ -672,7 +672,7 @@ export default function AmiciPage() {
                     }
                   }}
                   disabled={challengeLoading}
-                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
                 >
                   Annulla
                 </button>

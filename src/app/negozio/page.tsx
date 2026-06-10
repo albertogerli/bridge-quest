@@ -115,7 +115,7 @@ const shopItems: ShopItem[] = [
     name: "Classico Blu",
     price: 0,
     category: "temi-carta",
-    preview: { gradient: "from-[#003DA5] to-[#0052CC]" },
+    preview: { gradient: "from-figb to-figb-light" },
     description: "Il retro carta classico blu",
     isFree: true,
   },
@@ -132,7 +132,7 @@ const shopItems: ShopItem[] = [
     name: "FIGB Ufficiale",
     price: 50,
     category: "temi-carta",
-    preview: { gradient: "from-[#003DA5] via-[#0052CC] to-[#003DA5]" },
+    preview: { gradient: "from-figb via-figb-light to-figb" },
     description: "Retro ufficiale della Federazione Italiana Gioco Bridge",
   },
   {
@@ -491,14 +491,14 @@ export default function NegozioPage() {
               <ShoppingBag className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Negozio</h1>
-              <p className="text-xs text-gray-500">Personalizza il tuo stile</p>
+              <h1 className="text-2xl font-bold text-foreground font-display">Negozio</h1>
+              <p className="text-xs text-muted-foreground">Personalizza il tuo stile</p>
             </div>
           </div>
           <Link href="/profilo">
-            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/60 border-2 border-amber-300 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/60 dark:from-amber-950/40 dark:to-amber-900/30 border-2 border-amber-300 dark:border-amber-800 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
               <Coins className="w-5 h-5 text-amber-600" />
-              <span className="text-lg font-bold text-amber-700">{fiches}</span>
+              <span className="text-lg font-bold text-amber-700 dark:text-amber-300">{fiches}</span>
             </div>
           </Link>
         </motion.div>
@@ -518,8 +518,8 @@ export default function NegozioPage() {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`flex-1 flex items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all active:scale-95 whitespace-nowrap ${
                   isSelected
-                    ? "bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20"
-                    : "bg-white text-gray-500 border-2 border-[#e5e7eb] shadow-sm hover:border-gray-300"
+                    ? "bg-figb text-white shadow-md shadow-figb/20"
+                    : "bg-card text-muted-foreground border-2 border-border shadow-sm hover:border-figb/30 dark:hover:border-primary/40"
                 }`}
               >
                 {cat.icon}
@@ -537,7 +537,7 @@ export default function NegozioPage() {
           transition={{ duration: 0.2 }}
           className="mb-5"
         >
-          <p className="text-sm text-gray-500 font-medium">
+          <p className="text-sm text-muted-foreground font-medium">
             {selectedCategory === "avatari" && "Cornici decorative per il tuo profilo"}
             {selectedCategory === "temi-carta" && "Personalizza il retro delle tue carte"}
             {selectedCategory === "sfondi-tavolo" && "Cambia l'aspetto del tavolo da gioco"}
@@ -564,10 +564,10 @@ export default function NegozioPage() {
                   className="relative"
                 >
                   <div
-                    className={`card-clean rounded-2xl bg-white overflow-hidden transition-all ${
+                    className={`card-clean rounded-2xl bg-card overflow-hidden transition-all ${
                       isActive
-                        ? "border-[3px] border-[#003DA5] shadow-md shadow-[#003DA5]/10"
-                        : "border-2 border-[#e5e7eb] shadow-sm"
+                        ? "border-[3px] border-figb dark:border-primary shadow-md shadow-figb/10"
+                        : "border-2 border-border shadow-sm"
                     }`}
                   >
                     {/* Preview area */}
@@ -621,7 +621,7 @@ export default function NegozioPage() {
                         {/* Active badge */}
                         {isActive && (
                           <div className="absolute top-2 left-2">
-                            <Badge className="bg-white text-[#003DA5] text-[9px] font-bold shadow-sm border-0 px-2 py-0.5">
+                            <Badge className="bg-white text-figb text-[9px] font-bold shadow-sm border-0 px-2 py-0.5">
                               IN USO
                             </Badge>
                           </div>
@@ -650,10 +650,10 @@ export default function NegozioPage() {
 
                     {/* Info & Action */}
                     <div className="p-3">
-                      <h3 className="text-sm font-bold text-gray-900 truncate">
+                      <h3 className="text-sm font-bold text-foreground truncate">
                         {item.name}
                       </h3>
-                      <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-1">
+                      <p className="text-[10px] text-muted-foreground/70 mt-0.5 line-clamp-1">
                         {item.description}
                       </p>
 
@@ -661,7 +661,7 @@ export default function NegozioPage() {
                       <div className="flex flex-col gap-1 mt-2 mb-2.5">
                         <div className="flex items-center gap-1">
                           {item.isFree ? (
-                            <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-emerald-200 border px-2 py-0.5">
+                            <Badge className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold border-emerald-200 dark:border-emerald-900 border px-2 py-0.5">
                               Gratuito
                             </Badge>
                           ) : (
@@ -674,7 +674,7 @@ export default function NegozioPage() {
                           )}
                           {/* XP tier badge for premium items */}
                           {!item.isFree && item.price >= 200 && (
-                            <Badge className="bg-purple-50 text-purple-600 text-[9px] font-bold border-purple-200 border px-1.5 py-0 ml-auto">
+                            <Badge className="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-300 text-[9px] font-bold border-purple-200 dark:border-purple-900 border px-1.5 py-0 ml-auto">
                               <Star className="w-2.5 h-2.5 mr-0.5" />
                               Premium
                             </Badge>
@@ -690,7 +690,7 @@ export default function NegozioPage() {
 
                       {/* Action button */}
                       {isActive ? (
-                        <div className="w-full h-9 rounded-xl bg-[#003DA5]/10 text-[#003DA5] flex items-center justify-center text-xs font-bold">
+                        <div className="w-full h-9 rounded-xl bg-figb/10 dark:bg-primary/15 text-figb dark:text-primary flex items-center justify-center text-xs font-bold">
                           <Check className="w-3.5 h-3.5 mr-1.5" />
                           Equipaggiato
                         </div>
@@ -698,7 +698,7 @@ export default function NegozioPage() {
                         <Button
                           onClick={() => handleEquip(item)}
                           variant="outline"
-                          className="w-full h-9 rounded-xl text-xs font-bold border-[#003DA5] text-[#003DA5] hover:bg-[#003DA5]/5"
+                          className="w-full h-9 rounded-xl text-xs font-bold border-figb dark:border-primary text-figb dark:text-primary hover:bg-figb/5 dark:hover:bg-primary/10"
                         >
                           Equipaggia
                         </Button>
@@ -708,8 +708,8 @@ export default function NegozioPage() {
                           disabled={isPurchasing || fiches < item.price}
                           className={`w-full h-9 rounded-xl text-xs font-bold shadow-sm transition-all ${
                             fiches < item.price
-                              ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
-                              : "bg-[#003DA5] hover:bg-[#002E7A] text-white shadow-md shadow-[#003DA5]/20"
+                              ? "bg-muted text-muted-foreground/70 cursor-not-allowed shadow-none"
+                              : "bg-figb hover:bg-figb-dark text-white shadow-md shadow-figb/20"
                           }`}
                         >
                           {isPurchasing ? (
@@ -741,10 +741,10 @@ export default function NegozioPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="card-clean rounded-2xl bg-white p-5 border-2 border-[#e5e7eb] shadow-sm mb-6"
+          className="card-clean rounded-2xl bg-card p-5 border-2 border-border shadow-sm mb-6"
         >
-          <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#003DA5]" />
+          <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-figb dark:text-primary" />
             Oggetti equipaggiati
           </h3>
           <div className="space-y-2.5">
@@ -753,14 +753,14 @@ export default function NegozioPage() {
               const activeItem = shopItems.find((i) => i.id === activeId);
               return (
                 <div key={cat.id} className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-50 text-gray-400 shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted/50 text-muted-foreground/70 shrink-0">
                     {cat.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">
+                    <p className="text-[10px] text-muted-foreground/70 font-semibold uppercase tracking-wider">
                       {cat.label}
                     </p>
-                    <p className="text-xs font-bold text-gray-700 truncate">
+                    <p className="text-xs font-bold text-foreground/80 truncate">
                       {activeItem ? activeItem.name : "Nessuno"}
                     </p>
                   </div>
@@ -780,15 +780,15 @@ export default function NegozioPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border-2 border-amber-200 p-4 mb-6"
+          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border-2 border-amber-200 dark:border-amber-900 p-4 mb-6"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-200/50 shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-200/50 dark:bg-amber-900/40 shrink-0">
               <Coins className="w-4.5 h-4.5 text-amber-600" />
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-900">Come guadagnare fiches?</p>
-              <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+              <p className="text-xs font-bold text-foreground">Come guadagnare fiches?</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
                 Guadagni fiches completando lezioni, giocando mani e mantenendo la tua streak giornaliera. Ogni 10 XP = 1 fiche.
               </p>
             </div>
