@@ -101,7 +101,7 @@ export default function NuovoPostPage() {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24 text-center">
         <span className="text-5xl block mb-4 mt-12">🔒</span>
-        <p className="text-lg font-bold text-gray-900">Devi accedere per scrivere</p>
+        <p className="text-lg font-bold text-foreground">Devi accedere per scrivere</p>
         <Link href="/login">
           <Button className="mt-4 h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm">
             Accedi
@@ -117,7 +117,7 @@ export default function NuovoPostPage() {
         {/* Back */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-emerald-600 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors mb-4"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <polyline points="15,18 9,12 15,6" />
@@ -129,12 +129,12 @@ export default function NuovoPostPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Nuovo post</h1>
+          <h1 className="text-2xl font-bold text-foreground font-display mb-6">Nuovo post</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category */}
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wider">
                 Categoria
               </label>
               <div className="flex flex-wrap gap-2">
@@ -145,8 +145,8 @@ export default function NuovoPostPage() {
                     onClick={() => setCategory(key)}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
                       category === key
-                        ? "bg-emerald-100 text-emerald-700 ring-2 ring-emerald-500"
-                        : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                        ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 ring-2 ring-emerald-500"
+                        : "bg-muted/50 text-muted-foreground hover:bg-muted"
                     }`}
                   >
                     <span>{emoji}</span>
@@ -163,8 +163,8 @@ export default function NuovoPostPage() {
                 onClick={() => setIsPoll(!isPoll)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
                   isPoll
-                    ? "bg-purple-100 text-purple-700 ring-2 ring-purple-500"
-                    : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                    ? "bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 ring-2 ring-purple-500"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted"
                 }`}
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -181,7 +181,7 @@ export default function NuovoPostPage() {
                 animate={{ opacity: 1, height: "auto" }}
                 className="space-y-2"
               >
-                <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">
                   Opzioni sondaggio
                 </label>
                 {pollOptions.map((opt, idx) => (
@@ -191,14 +191,14 @@ export default function NuovoPostPage() {
                       value={opt}
                       onChange={(e) => updatePollOption(idx, e.target.value)}
                       maxLength={100}
-                      className="flex-1 h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="flex-1 h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       placeholder={`Opzione ${idx + 1}`}
                     />
                     {pollOptions.length > 2 && (
                       <button
                         type="button"
                         onClick={() => removePollOption(idx)}
-                        className="h-10 w-10 rounded-xl bg-red-50 text-red-400 hover:text-red-600 flex items-center justify-center transition-colors"
+                        className="h-10 w-10 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-400 hover:text-red-600 dark:hover:text-red-300 flex items-center justify-center transition-colors"
                       >
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                           <path d="M18 6L6 18M6 6l12 12" />
@@ -211,7 +211,7 @@ export default function NuovoPostPage() {
                   <button
                     type="button"
                     onClick={addPollOption}
-                    className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1"
+                    className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 flex items-center gap-1"
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                       <path d="M12 5v14M5 12h14" />
@@ -224,7 +224,7 @@ export default function NuovoPostPage() {
 
             {/* Title */}
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">
                 Titolo
               </label>
               <input
@@ -232,21 +232,21 @@ export default function NuovoPostPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={200}
-                className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                 placeholder="Di cosa vuoi parlare?"
               />
             </div>
 
             {/* Body */}
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">
                 Contenuto
               </label>
               <textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 rows={8}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
                 placeholder="Scrivi il tuo messaggio..."
               />
             </div>
@@ -256,7 +256,7 @@ export default function NuovoPostPage() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-red-50 text-red-600 text-sm font-medium rounded-xl px-4 py-3"
+                className="bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-sm font-medium rounded-xl px-4 py-3"
               >
                 {error}
               </motion.div>

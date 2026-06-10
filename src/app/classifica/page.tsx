@@ -16,18 +16,18 @@ import { useGameStore } from "@/store/use-game-store";
 const medals = ["🥇", "🥈", "🥉"];
 
 const avatarColors = [
-  "bg-emerald-100 text-emerald-700",
-  "bg-[#003DA5]/10 text-[#003DA5]",
-  "bg-rose-100 text-rose-700",
-  "bg-amber-100 text-amber-700",
-  "bg-cyan-100 text-cyan-700",
-  "bg-purple-100 text-purple-700",
-  "bg-orange-100 text-orange-700",
-  "bg-teal-100 text-teal-700",
-  "bg-sky-100 text-sky-700",
-  "bg-lime-100 text-lime-700",
-  "bg-fuchsia-100 text-fuchsia-700",
-  "bg-red-100 text-red-700",
+  "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+  "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary",
+  "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300",
+  "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",
+  "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300",
+  "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300",
+  "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300",
+  "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300",
+  "bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300",
+  "bg-lime-100 text-lime-700 dark:bg-lime-950/40 dark:text-lime-300",
+  "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/40 dark:text-fuchsia-300",
+  "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
 ];
 
 function getLevel(xp: number) {
@@ -38,11 +38,11 @@ function getLevel(xp: number) {
 }
 
 const leagues = [
-  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-100", textColor: "text-emerald-700", iconBg: "bg-emerald-600", next: "Lega Quadri ♦" },
-  { name: "Lega Quadri", icon: "♦", minXp: 1000, color: "from-orange-50 to-orange-100/50", border: "border-orange-100", textColor: "text-orange-700", iconBg: "bg-orange-500", next: "Lega Cuori ♥" },
-  { name: "Lega Cuori", icon: "♥", minXp: 3000, color: "from-rose-50 to-rose-100/50", border: "border-rose-100", textColor: "text-rose-700", iconBg: "bg-rose-500", next: "Lega Picche ♠" },
-  { name: "Lega Picche", icon: "♠", minXp: 6000, color: "from-indigo-50 to-indigo-100/50", border: "border-indigo-100", textColor: "text-indigo-700", iconBg: "bg-indigo-600", next: "Lega SA" },
-  { name: "Lega SA", icon: "NT", minXp: 10000, color: "from-slate-100 to-slate-200/50", border: "border-slate-200", textColor: "text-slate-800", iconBg: "bg-slate-800", next: null },
+  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20", border: "border-emerald-100 dark:border-emerald-900", textColor: "text-emerald-700 dark:text-emerald-300", iconBg: "bg-emerald-600", next: "Lega Quadri ♦" },
+  { name: "Lega Quadri", icon: "♦", minXp: 1000, color: "from-orange-50 to-orange-100/50 dark:from-orange-950/40 dark:to-orange-900/20", border: "border-orange-100 dark:border-orange-900", textColor: "text-orange-700 dark:text-orange-300", iconBg: "bg-orange-500", next: "Lega Cuori ♥" },
+  { name: "Lega Cuori", icon: "♥", minXp: 3000, color: "from-rose-50 to-rose-100/50 dark:from-rose-950/40 dark:to-rose-900/20", border: "border-rose-100 dark:border-rose-900", textColor: "text-rose-700 dark:text-rose-300", iconBg: "bg-rose-500", next: "Lega Picche ♠" },
+  { name: "Lega Picche", icon: "♠", minXp: 6000, color: "from-indigo-50 to-indigo-100/50 dark:from-indigo-950/40 dark:to-indigo-900/20", border: "border-indigo-100 dark:border-indigo-900", textColor: "text-indigo-700 dark:text-indigo-300", iconBg: "bg-indigo-600", next: "Lega SA" },
+  { name: "Lega SA", icon: "NT", minXp: 10000, color: "from-slate-100 to-slate-200/50 dark:from-slate-800/40 dark:to-slate-700/20", border: "border-slate-200 dark:border-slate-700", textColor: "text-slate-800 dark:text-slate-200", iconBg: "bg-slate-800", next: null },
 ];
 
 function getLeague(xp: number) {
@@ -323,8 +323,8 @@ export default function ClassificaPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-2xl font-bold text-gray-900">Classifica</h1>
-          <p className="text-sm text-gray-500 mt-1">Scala le leghe e diventa Campione Azzurro</p>
+          <h1 className="text-2xl font-bold text-foreground font-display">Classifica</h1>
+          <p className="text-sm text-muted-foreground mt-1">Scala le leghe e diventa Campione Azzurro</p>
         </motion.div>
 
         {/* User's own rank - Sticky highlight card */}
@@ -335,7 +335,7 @@ export default function ClassificaPage() {
             transition={{ delay: 0.05 }}
             className="sticky top-2 z-20 mt-4"
           >
-            <div className="bg-gradient-to-r from-amber-50 via-white to-amber-50 card-clean rounded-2xl border-2 border-amber-200/60 p-4 shadow-lg shadow-amber-100/40">
+            <div className="bg-gradient-to-r from-amber-50 via-white to-amber-50 dark:from-amber-950/40 dark:via-card dark:to-amber-950/40 card-clean rounded-2xl border-2 border-amber-200/60 dark:border-amber-900 p-4 shadow-lg shadow-amber-100/40 dark:shadow-none">
               <div className="flex items-center gap-3">
                 {/* Rank badge */}
                 <div className="flex flex-col items-center justify-center min-w-[48px]">
@@ -350,7 +350,7 @@ export default function ClassificaPage() {
                     )}
                   </span>
                   {userFullTotal > 0 && (
-                    <span className="text-[9px] text-gray-400">
+                    <span className="text-[9px] text-muted-foreground/70">
                       su {userFullTotal}
                     </span>
                   )}
@@ -365,14 +365,14 @@ export default function ClassificaPage() {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-gray-900 truncate">
+                  <p className="font-bold text-sm text-foreground truncate">
                     {currentPlayer.name}
                   </p>
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Lv.{getLevel(currentPlayer.xp).level} · {getLevel(currentPlayer.xp).name}
                   </p>
                   {currentPlayer.asd_name && (
-                    <span className="inline-flex items-center gap-1 mt-0.5 text-[10px] text-indigo-600 bg-indigo-50 rounded-full px-2 py-0.5 font-medium">
+                    <span className="inline-flex items-center gap-1 mt-0.5 text-[10px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-2 py-0.5 font-medium">
                       <Landmark className="w-2.5 h-2.5" />
                       {currentPlayer.asd_name}
                     </span>
@@ -381,10 +381,10 @@ export default function ClassificaPage() {
 
                 {/* XP */}
                 <div className="text-right">
-                  <p className="font-black text-lg text-gray-900">
+                  <p className="font-black text-lg text-foreground">
                     {formatNumber(currentPlayer.xp)}
                   </p>
-                  <p className="text-[10px] text-gray-400 font-medium">XP</p>
+                  <p className="text-[10px] text-muted-foreground/70 font-medium">XP</p>
                 </div>
               </div>
 
@@ -396,10 +396,10 @@ export default function ClassificaPage() {
                   const above = sorted[idx - 1];
                   const gap = above.xp - currentPlayer.xp;
                   return (
-                    <div className="mt-2.5 pt-2 border-t border-amber-100/60">
+                    <div className="mt-2.5 pt-2 border-t border-amber-100/60 dark:border-amber-900/60">
                       <div className="flex items-center justify-center gap-1.5">
                         <ChevronUp className="w-3.5 h-3.5 text-amber-500" />
-                        <p className="text-[11px] text-gray-500">
+                        <p className="text-[11px] text-muted-foreground">
                           <span className="font-bold text-amber-600">{formatNumber(gap)} XP</span> per superare {above.name}
                         </p>
                       </div>
@@ -429,22 +429,22 @@ export default function ClassificaPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="mt-4 flex items-center justify-between bg-white card-clean rounded-xl p-3"
+          className="mt-4 flex items-center justify-between bg-card card-clean rounded-xl p-3"
         >
           <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-gray-600" />
+            <Clock className="w-5 h-5 text-muted-foreground" />
             <div>
-              <p className="text-xs font-bold text-gray-900">Fine settimana</p>
-              <p className="text-[10px] text-gray-400">Top 3 promossi!</p>
+              <p className="text-xs font-bold text-foreground">Fine settimana</p>
+              <p className="text-[10px] text-muted-foreground/70">Top 3 promossi!</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="bg-gray-900 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
+            <div className="bg-gray-900 dark:bg-gray-700 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
               <p className="text-sm font-bold">{countdown.days}</p>
               <p className="text-[8px] text-gray-400">GG</p>
             </div>
-            <span className="text-gray-300 font-bold">:</span>
-            <div className="bg-gray-900 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
+            <span className="text-muted-foreground/40 font-bold">:</span>
+            <div className="bg-gray-900 dark:bg-gray-700 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
               <p className="text-sm font-bold">{countdown.hours}</p>
               <p className="text-[8px] text-gray-400">ORE</p>
             </div>
@@ -457,17 +457,17 @@ export default function ClassificaPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mt-3 bg-white card-clean rounded-xl p-3"
+            className="mt-3 bg-card card-clean rounded-xl p-3"
           >
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-bold text-gray-700">
+              <p className="text-xs font-bold text-foreground/80">
                 Prossima lega: {nextLeague.name} {nextLeague.icon}
               </p>
-              <p className="text-[11px] font-bold text-gray-400">
+              <p className="text-[11px] font-bold text-muted-foreground/70">
                 {userXp}/{nextLeague.minXp} XP
               </p>
             </div>
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
                 style={{ background: `linear-gradient(to right, #059669, #34d399)` }}
@@ -476,7 +476,7 @@ export default function ClassificaPage() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
             </div>
-            <p className="text-[10px] text-gray-400 mt-1">
+            <p className="text-[10px] text-muted-foreground/70 mt-1">
               Mancano {formatNumber(nextLeague.minXp - userXp)} XP per la promozione
             </p>
           </motion.div>
@@ -508,7 +508,7 @@ export default function ClassificaPage() {
                   className={`relative flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                     isActive
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                      : "bg-white text-gray-600 card-clean hover:bg-gray-50"
+                      : "bg-card text-foreground/80 card-clean hover:bg-muted/50"
                   }`}
                   whileTap={{ scale: 0.96 }}
                 >
@@ -539,7 +539,7 @@ export default function ClassificaPage() {
             >
               <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label="Filtra per corso" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 <div className="flex items-center gap-1 mr-1 flex-shrink-0" aria-hidden="true">
-                  <Filter className="w-3.5 h-3.5 text-gray-400" />
+                  <Filter className="w-3.5 h-3.5 text-muted-foreground/70" />
                 </div>
                 {courseFilters.map((course) => {
                   const isActive = selectedCourse === course.id;
@@ -553,7 +553,7 @@ export default function ClassificaPage() {
                       className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                         isActive
                           ? course.activeColor + " shadow-sm"
-                          : "bg-white text-gray-500 card-clean hover:bg-gray-50"
+                          : "bg-card text-muted-foreground card-clean hover:bg-muted/50"
                       }`}
                       whileTap={{ scale: 0.96 }}
                     >
@@ -578,7 +578,7 @@ export default function ClassificaPage() {
             >
               <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label="Filtra per gioco" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 <div className="flex items-center gap-1 mr-1 flex-shrink-0" aria-hidden="true">
-                  <Gamepad2 className="w-3.5 h-3.5 text-gray-400" />
+                  <Gamepad2 className="w-3.5 h-3.5 text-muted-foreground/70" />
                 </div>
                 {gameFilters.map((game) => {
                   const isActive = selectedGame === game.id;
@@ -592,7 +592,7 @@ export default function ClassificaPage() {
                       className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                         isActive
                           ? game.activeColor + " shadow-sm"
-                          : "bg-white text-gray-500 card-clean hover:bg-gray-50"
+                          : "bg-card text-muted-foreground card-clean hover:bg-muted/50"
                       }`}
                       whileTap={{ scale: 0.96 }}
                     >
@@ -652,9 +652,9 @@ export default function ClassificaPage() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 card-clean rounded-xl p-3"
+                      className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/30 card-clean rounded-xl p-3"
                     >
-                      <p className="text-xs text-indigo-700 font-medium">
+                      <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
                         Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di più sale in cima!
                       </p>
                     </motion.div>
@@ -701,8 +701,8 @@ export default function ClassificaPage() {
                     animate={{ opacity: 1 }}
                     className="text-center py-12"
                   >
-                    <span className="flex justify-center mb-3"><Landmark className="w-10 h-10 text-gray-400" /></span>
-                    <p className="text-sm text-gray-500">
+                    <span className="flex justify-center mb-3"><Landmark className="w-10 h-10 text-muted-foreground/70" /></span>
+                    <p className="text-sm text-muted-foreground">
                       Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione
                     </p>
                   </motion.div>
@@ -714,31 +714,31 @@ export default function ClassificaPage() {
                         initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.03 }}
-                        className="card-clean rounded-2xl bg-white p-4"
+                        className="card-clean rounded-2xl bg-card p-4"
                       >
                         <div className="flex items-center gap-3">
                           <span className="w-8 text-center text-base font-bold">
-                            {i < 3 ? medals[i] : <span className="text-gray-400 text-sm">{i + 1}</span>}
+                            {i < 3 ? medals[i] : <span className="text-muted-foreground/70 text-sm">{i + 1}</span>}
                           </span>
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5]/10 text-[#003DA5] text-lg font-bold flex-shrink-0">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15 text-figb dark:text-primary text-lg font-bold flex-shrink-0">
                             {asd.asd_name[0]}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-bold text-sm text-gray-900 truncate">
-                              <Link href={`/circolo/${asdNameToSlug(asd.asd_name)}`} className="hover:underline hover:text-[#003DA5] transition-colors inline-flex items-center gap-1">
+                            <p className="font-bold text-sm text-foreground truncate">
+                              <Link href={`/circolo/${asdNameToSlug(asd.asd_name)}`} className="hover:underline hover:text-figb dark:hover:text-primary transition-colors inline-flex items-center gap-1">
                                 {asd.asd_name}
-                                <span className="text-gray-300 text-xs">&rsaquo;</span>
+                                <span className="text-muted-foreground/40 text-xs">&rsaquo;</span>
                               </Link>
                             </p>
-                            <p className="text-[11px] text-gray-500">
+                            <p className="text-[11px] text-muted-foreground">
                               {asd.member_count} {asd.member_count === 1 ? "membro" : "membri"}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold text-sm text-gray-900">
+                            <p className="font-bold text-sm text-foreground">
                               {formatNumber(asd.total_xp)}
                             </p>
-                            <p className="text-[10px] text-gray-400">XP totali</p>
+                            <p className="text-[10px] text-muted-foreground/70">XP totali</p>
                           </div>
                         </div>
                       </motion.div>
@@ -861,7 +861,7 @@ function PerCorsoView({
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card-clean rounded-2xl bg-white p-4 mb-4"
+        className="card-clean rounded-2xl bg-card p-4 mb-4"
       >
         <div className="flex items-center gap-3">
           <div className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white text-2xl font-bold shadow-md ${
@@ -873,10 +873,10 @@ function PerCorsoView({
             {courseInfo?.icon || "?"}
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-base text-gray-900">
+            <p className="font-semibold text-base text-foreground">
               {courseInfo?.name || "Corso"}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {coursePlayers.length} {coursePlayers.length === 1 ? "partecipante" : "partecipanti"} · {courseInfo?.lessonCount || 0} lezioni
             </p>
           </div>
@@ -895,14 +895,14 @@ function PerCorsoView({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.03 }}
             >
-              <div className={`card-clean rounded-2xl bg-white p-3.5 ${
+              <div className={`card-clean rounded-2xl bg-card p-3.5 ${
                 isCurrentUser ? "ring-2 ring-amber-300/50" : ""
               } ${rank <= 3 ? "border-l-[3px] border-l-emerald-400" : ""}`}>
                 <div className="flex items-center gap-3">
                   <span className="w-8 text-center text-base font-bold">
                     {rank <= 3
                       ? medals[rank - 1]
-                      : <span className="text-gray-400 text-sm">{rank}</span>}
+                      : <span className="text-muted-foreground/70 text-sm">{rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
                     <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
@@ -910,25 +910,25 @@ function PerCorsoView({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
+                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600 dark:text-amber-400" : "text-foreground"}`}>
                       {isCurrentUser ? `${player.name} (Tu)` : player.name}
                     </p>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-[11px] text-muted-foreground">
                         {formatNumber(player.courseXp)} XP corso
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[9px] text-indigo-600 bg-indigo-50 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[9px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-sm text-gray-900">
+                    <p className="font-bold text-sm text-foreground">
                       {player.courseXp}
                     </p>
-                    <p className="text-[10px] text-gray-400">XP</p>
+                    <p className="text-[10px] text-muted-foreground/70">XP</p>
                   </div>
                 </div>
               </div>
@@ -996,17 +996,17 @@ function PerGiocoView({
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card-clean rounded-2xl bg-white p-4 mb-4"
+        className="card-clean rounded-2xl bg-card p-4 mb-4"
       >
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl shadow-md">
             {gameFilters.find(g => g.id === gameType)?.icon || "🎮"}
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-base text-gray-900">
+            <p className="font-semibold text-base text-foreground">
               {gameName}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {gamePlayers.length} {gamePlayers.length === 1 ? "partecipante" : "partecipanti"} · Classifica per miglior punteggio
             </p>
           </div>
@@ -1025,14 +1025,14 @@ function PerGiocoView({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.03 }}
             >
-              <div className={`card-clean rounded-2xl bg-white p-3.5 ${
+              <div className={`card-clean rounded-2xl bg-card p-3.5 ${
                 isCurrentUser ? "ring-2 ring-amber-300/50" : ""
               } ${rank <= 3 ? "border-l-[3px] border-l-emerald-400" : ""}`}>
                 <div className="flex items-center gap-3">
                   <span className="w-8 text-center text-base font-bold">
                     {rank <= 3
                       ? medals[rank - 1]
-                      : <span className="text-gray-400 text-sm">{rank}</span>}
+                      : <span className="text-muted-foreground/70 text-sm">{rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
                     <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
@@ -1040,18 +1040,18 @@ function PerGiocoView({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
+                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600 dark:text-amber-400" : "text-foreground"}`}>
                       {isCurrentUser ? `${player.display_name} (Tu)` : player.display_name}
                     </p>
-                    <p className="text-[11px] text-gray-500">
+                    <p className="text-[11px] text-muted-foreground">
                       {player.games_played} {player.games_played === 1 ? "partita" : "partite"} giocate
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-sm text-gray-900">
+                    <p className="font-bold text-sm text-foreground">
                       {formatNumber(player.best_score)}
                     </p>
-                    <p className="text-[10px] text-gray-400">best</p>
+                    <p className="text-[10px] text-muted-foreground/70">best</p>
                   </div>
                 </div>
               </div>
@@ -1069,18 +1069,18 @@ function PerGiocoView({
 function LeaderboardSearch({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <div className="relative mb-3">
-      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70" />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Cerca un giocatore…"
-        className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-9 text-sm outline-none focus-visible:border-[#003DA5] focus-visible:ring-[3px] focus-visible:ring-[#003DA5]/15 dark:border-gray-700 dark:bg-[#1a1f2e]"
+        className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-9 text-sm outline-none focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/15"
       />
       {value && (
         <button
           onClick={() => onChange("")}
           aria-label="Cancella ricerca"
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground/70 hover:bg-muted"
         >
           <X className="h-4 w-4" />
         </button>
@@ -1139,14 +1139,14 @@ function LeaderboardList({
       >
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          <span className="text-[10px] font-bold text-gray-400">Promozione</span>
+          <span className="text-[10px] font-bold text-muted-foreground/70">Promozione</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-          <span className="text-[10px] font-bold text-gray-400">Retrocessione</span>
+          <span className="text-[10px] font-bold text-muted-foreground/70">Retrocessione</span>
         </div>
         <div className="flex-1" />
-        <span className="text-[10px] font-bold text-gray-300">{totalPlayers} giocatori</span>
+        <span className="text-[10px] font-bold text-muted-foreground/40">{totalPlayers} giocatori</span>
       </motion.div>
 
       {/* Leaderboard */}
@@ -1164,7 +1164,7 @@ function LeaderboardList({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 + index * 0.03 }}
             >
-              <div className={`card-clean rounded-2xl bg-white p-3.5 ${
+              <div className={`card-clean rounded-2xl bg-card p-3.5 ${
                 isCurrentUser ? "ring-2 ring-amber-300/50" : ""
               } ${isPromotion ? "border-l-[3px] border-l-emerald-400" : ""} ${
                 isRelegation ? "border-l-[3px] border-l-rose-300" : ""
@@ -1173,7 +1173,7 @@ function LeaderboardList({
                   <span className="w-8 text-center text-base font-bold">
                     {player.rank <= 3
                       ? medals[player.rank - 1]
-                      : <span className="text-gray-400 text-sm">{player.rank}</span>}
+                      : <span className="text-muted-foreground/70 text-sm">{player.rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
                     <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
@@ -1181,25 +1181,25 @@ function LeaderboardList({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600" : "text-gray-900"}`}>
+                    <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600 dark:text-amber-400" : "text-foreground"}`}>
                       {isCurrentUser ? `${player.name} (Tu)` : player.name}
                     </p>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-[11px] text-muted-foreground">
                         Lv.{pl.level} · {pl.name}
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[9px] text-indigo-600 bg-indigo-50 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[9px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-sm text-gray-900">
+                    <p className="font-bold text-sm text-foreground">
                       {formatNumber(player.xp)}
                     </p>
-                    <p className="text-[10px] text-gray-400">XP</p>
+                    <p className="text-[10px] text-muted-foreground/70">XP</p>
                   </div>
                 </div>
 
@@ -1210,17 +1210,17 @@ function LeaderboardList({
                   const remaining = milestone - player.xp;
                   const progress = (player.xp / milestone) * 100;
                   return (
-                    <div className="mt-2.5 pt-2 border-t border-gray-100">
+                    <div className="mt-2.5 pt-2 border-t border-border">
                       <div className="flex items-center gap-2">
                         <Target className="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <p className="text-[11px] text-gray-500">
-                              Prossimo traguardo: <span className="font-bold text-purple-600">{formatNumber(milestone)} XP</span>
+                            <p className="text-[11px] text-muted-foreground">
+                              Prossimo traguardo: <span className="font-bold text-purple-600 dark:text-purple-400">{formatNumber(milestone)} XP</span>
                             </p>
-                            <p className="text-[10px] font-medium text-gray-400">-{formatNumber(remaining)}</p>
+                            <p className="text-[10px] font-medium text-muted-foreground/70">-{formatNumber(remaining)}</p>
                           </div>
-                          <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+                          <div className="h-1 rounded-full bg-muted overflow-hidden">
                             <div
                               className="h-full rounded-full bg-gradient-to-r from-purple-400 to-purple-600"
                               style={{ width: `${Math.min(progress, 100)}%` }}
@@ -1235,16 +1235,16 @@ function LeaderboardList({
 
               {player.rank === 3 && totalPlayers > 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
-                  <div className="flex-1 h-px bg-emerald-200" />
-                  <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-wider">zona promozione</span>
-                  <div className="flex-1 h-px bg-emerald-200" />
+                  <div className="flex-1 h-px bg-emerald-200 dark:bg-emerald-900" />
+                  <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">zona promozione</span>
+                  <div className="flex-1 h-px bg-emerald-200 dark:bg-emerald-900" />
                 </div>
               )}
               {totalPlayers > 6 && player.rank === totalPlayers - 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
-                  <div className="flex-1 h-px bg-rose-200" />
+                  <div className="flex-1 h-px bg-rose-200 dark:bg-rose-900" />
                   <span className="text-[9px] font-bold text-rose-400 uppercase tracking-wider">zona retrocessione</span>
-                  <div className="flex-1 h-px bg-rose-200" />
+                  <div className="flex-1 h-px bg-rose-200 dark:bg-rose-900" />
                 </div>
               )}
             </motion.div>
@@ -1261,7 +1261,7 @@ function LeaderboardList({
 function EmptyState({ message, showCta = false }: { message: string; showCta?: boolean }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
-      <div className="card-clean rounded-2xl bg-gradient-to-br from-amber-50 via-white to-orange-50 border border-amber-100/60 p-8 mx-auto max-w-sm">
+      <div className="card-clean rounded-2xl bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-amber-950/40 dark:via-card dark:to-orange-950/30 border border-amber-100/60 dark:border-amber-900 p-8 mx-auto max-w-sm">
         <div className="flex justify-center mb-4">
           <div className="relative">
             <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-200/50">
@@ -1270,8 +1270,8 @@ function EmptyState({ message, showCta = false }: { message: string; showCta?: b
             <span className="absolute -top-1 -right-1 text-lg">🏅</span>
           </div>
         </div>
-        <p className="text-base font-bold text-gray-800">{showCta ? "Nessun giocatore in classifica" : message}</p>
-        <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+        <p className="text-base font-bold text-foreground">{showCta ? "Nessun giocatore in classifica" : message}</p>
+        <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
           {showCta
             ? "Sii il primo a scalare le posizioni! Completa lezioni e gioca partite per guadagnare XP."
             : "Completa lezioni e sfide per scalare le posizioni!"}
@@ -1300,7 +1300,7 @@ function LocalXpCard() {
   const milestone = getNextMilestone(localXp);
 
   return (
-    <div className="card-clean rounded-2xl bg-gradient-to-r from-slate-50 via-white to-indigo-50/30 border border-slate-200/60 p-4 shadow-sm">
+    <div className="card-clean rounded-2xl bg-gradient-to-r from-slate-50 via-white to-indigo-50/30 dark:from-slate-900/40 dark:via-card dark:to-indigo-950/30 border border-slate-200/60 dark:border-slate-700 p-4 shadow-sm">
       <div className="flex items-center gap-3">
         {/* League icon */}
         <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-xl font-bold shadow-md`}>
@@ -1310,14 +1310,14 @@ function LocalXpCard() {
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <p className="font-bold text-sm text-gray-900">I tuoi XP</p>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${league.textColor} bg-white border ${league.border}`}>
+            <p className="font-bold text-sm text-foreground">I tuoi XP</p>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${league.textColor} bg-card border ${league.border}`}>
               {league.name}
             </span>
           </div>
-          <p className="text-2xl font-black text-gray-900">{formatNumber(localXp)} <span className="text-sm font-bold text-gray-400">XP</span></p>
+          <p className="text-2xl font-black text-foreground">{formatNumber(localXp)} <span className="text-sm font-bold text-muted-foreground/70">XP</span></p>
           {milestone && (
-            <p className="text-[10px] text-gray-400 mt-0.5">
+            <p className="text-[10px] text-muted-foreground/70 mt-0.5">
               Prossimo traguardo: {formatNumber(milestone)} XP ({formatNumber(milestone - localXp)} rimanenti)
             </p>
           )}
@@ -1326,16 +1326,16 @@ function LocalXpCard() {
 
       {/* League progress (if not max league) */}
       {nextLeague && (
-        <div className="mt-3 pt-2 border-t border-gray-100">
+        <div className="mt-3 pt-2 border-t border-border">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-bold text-gray-500">
+            <p className="text-[10px] font-bold text-muted-foreground">
               {league.name} {league.icon} → {nextLeague.name} {nextLeague.icon}
             </p>
-            <p className="text-[10px] font-bold text-gray-400">
+            <p className="text-[10px] font-bold text-muted-foreground/70">
               {localXp}/{nextLeague.minXp}
             </p>
           </div>
-          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
             <div
               className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500"
               style={{ width: `${Math.min((localXp / nextLeague.minXp) * 100, 100)}%` }}
@@ -1345,7 +1345,7 @@ function LocalXpCard() {
       )}
 
       {/* CTA to log in */}
-      <div className="mt-3 pt-2 border-t border-gray-100">
+      <div className="mt-3 pt-2 border-t border-border">
         <Link href="/login">
           <motion.div
             whileTap={{ scale: 0.97 }}
@@ -1363,15 +1363,15 @@ function LeaderboardSkeleton() {
   return (
     <div className="space-y-2">
       {[0, 1, 2, 3, 4].map((i) => (
-        <div key={i} className="bg-white rounded-2xl p-4 animate-pulse card-clean">
+        <div key={i} className="bg-card rounded-2xl p-4 animate-pulse card-clean">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-4 bg-gray-100 rounded" />
-            <div className="h-10 w-10 bg-gray-100 rounded-full" />
+            <div className="w-8 h-4 bg-muted rounded" />
+            <div className="h-10 w-10 bg-muted rounded-full" />
             <div className="flex-1">
-              <div className="h-4 w-24 bg-gray-100 rounded mb-1" />
-              <div className="h-3 w-16 bg-gray-50 rounded" />
+              <div className="h-4 w-24 bg-muted rounded mb-1" />
+              <div className="h-3 w-16 bg-muted/50 rounded" />
             </div>
-            <div className="h-4 w-12 bg-gray-100 rounded" />
+            <div className="h-4 w-12 bg-muted rounded" />
           </div>
         </div>
       ))}

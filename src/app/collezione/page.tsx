@@ -169,12 +169,12 @@ export default function CollezionePage() {
     return (
       <div className="pt-6 px-5 pb-28">
         <div className="mx-auto max-w-6xl">
-          <div className="h-8 w-40 bg-gray-100 rounded-lg animate-pulse mb-6" />
+          <div className="h-8 w-40 bg-muted rounded-lg animate-pulse mb-6" />
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-[3/4] bg-gray-100 rounded-2xl animate-pulse"
+                className="aspect-[3/4] bg-muted rounded-2xl animate-pulse"
               />
             ))}
           </div>
@@ -193,19 +193,19 @@ export default function CollezionePage() {
           className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground font-display">
               Collezione
             </h1>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Sblocca tutte le carte leggendarie
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-white card-clean rounded-xl px-3 py-2">
+          <div className="flex items-center gap-1.5 bg-card card-clean rounded-xl px-3 py-2">
             <span className="text-lg">🃏</span>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm font-bold text-foreground">
               {unlockedCount}
             </span>
-            <span className="text-sm text-gray-400 font-bold">
+            <span className="text-sm text-muted-foreground/70 font-bold">
               /{totalCards}
             </span>
           </div>
@@ -216,17 +216,17 @@ export default function CollezionePage() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="mt-4 card-clean rounded-xl bg-white p-4"
+          className="mt-4 card-clean rounded-xl bg-card p-4"
         >
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-bold text-gray-700">
+            <p className="text-xs font-bold text-foreground/80">
               Progresso collezione
             </p>
-            <p className="text-xs font-bold text-emerald-600">
+            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
               {Math.round((unlockedCount / totalCards) * 100)}%
             </p>
           </div>
-          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-2.5 rounded-full bg-muted overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
               initial={{ width: 0 }}
@@ -241,7 +241,7 @@ export default function CollezionePage() {
             {rarityBreakdown.map((rb) => (
               <div key={rb.rarity} className="flex items-center gap-1">
                 <span className="text-xs">{RARITY_EMOJI[rb.rarity]}</span>
-                <span className="text-[10px] font-bold text-gray-500">
+                <span className="text-[10px] font-bold text-muted-foreground">
                   {rb.unlocked}/{rb.total}
                 </span>
               </div>
@@ -256,7 +256,7 @@ export default function CollezionePage() {
           transition={{ delay: 0.08 }}
           className="mt-4"
         >
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
             Rarità
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -276,8 +276,8 @@ export default function CollezionePage() {
                 onClick={() => setRarityFilter(opt.key)}
                 className={`rounded-xl text-xs font-bold ${
                   rarityFilter === opt.key
-                    ? "bg-gray-900 text-white shadow-sm"
-                    : "bg-white text-gray-600 border-gray-200"
+                    ? "bg-foreground text-background shadow-sm"
+                    : "bg-card text-muted-foreground border-border"
                 }`}
               >
                 {opt.label}
@@ -293,7 +293,7 @@ export default function CollezionePage() {
           transition={{ delay: 0.1 }}
           className="mt-3"
         >
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
             Categoria
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -303,8 +303,8 @@ export default function CollezionePage() {
               onClick={() => setCategoryFilter("tutte")}
               className={`rounded-xl text-xs font-bold ${
                 categoryFilter === "tutte"
-                  ? "bg-gray-900 text-white shadow-sm"
-                  : "bg-white text-gray-600 border-gray-200"
+                  ? "bg-foreground text-background shadow-sm"
+                  : "bg-card text-muted-foreground border-border"
               }`}
             >
               Tutte
@@ -317,8 +317,8 @@ export default function CollezionePage() {
                 onClick={() => setCategoryFilter(cat)}
                 className={`rounded-xl text-xs font-bold ${
                   categoryFilter === cat
-                    ? "bg-gray-900 text-white shadow-sm"
-                    : "bg-white text-gray-600 border-gray-200"
+                    ? "bg-foreground text-background shadow-sm"
+                    : "bg-card text-muted-foreground border-border"
                 }`}
               >
                 {CATEGORY_CONFIG[cat].emoji} {CATEGORY_CONFIG[cat].label}
@@ -342,7 +342,7 @@ export default function CollezionePage() {
                 transition={{ delay: 0.12 + i * 0.03, type: "spring", stiffness: 260, damping: 22 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleCardTap(card)}
-                className="relative text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#003DA5]"
+                className="relative text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 {/* New card sparkle indicator */}
                 {isNew && (
@@ -368,7 +368,7 @@ export default function CollezionePage() {
                   className={`relative z-10 aspect-[3/4] rounded-2xl overflow-hidden flex flex-col items-center justify-center transition-all ${
                     isUnlocked
                       ? `bg-gradient-to-br ${card.gradient} card-clean-lg`
-                      : "bg-gray-100 border-2 border-dashed border-gray-200"
+                      : "bg-muted border-2 border-dashed border-border"
                   }`}
                 >
                   {isUnlocked ? (
@@ -426,7 +426,7 @@ export default function CollezionePage() {
                       {/* Locked card */}
                       <div className="opacity-30">
                         <svg
-                          className="w-8 h-8 text-gray-400 mb-2"
+                          className="w-8 h-8 text-muted-foreground/70 mb-2"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
@@ -438,8 +438,8 @@ export default function CollezionePage() {
                           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
                       </div>
-                      <span className="text-3xl text-gray-300 mb-1">?</span>
-                      <p className="text-xs font-bold text-gray-300 text-center px-2">
+                      <span className="text-3xl text-muted-foreground/40 mb-1">?</span>
+                      <p className="text-xs font-bold text-muted-foreground/40 text-center px-2">
                         ???
                       </p>
                     </>
@@ -458,7 +458,7 @@ export default function CollezionePage() {
             className="text-center py-16"
           >
             <span className="text-4xl block mb-3">🔍</span>
-            <p className="text-sm text-gray-400 font-medium">
+            <p className="text-sm text-muted-foreground/70 font-medium">
               Nessuna carta con questi filtri
             </p>
           </motion.div>
@@ -469,21 +469,21 @@ export default function CollezionePage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-6 card-clean rounded-2xl bg-white p-5"
+          className="mt-6 card-clean rounded-2xl bg-card p-5"
         >
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">📊</span>
-            <h3 className="text-sm font-semibold text-gray-900">
+            <h3 className="text-sm font-semibold text-foreground">
               Riepilogo collezione
             </h3>
           </div>
 
           {/* Total */}
-          <div className="flex items-center justify-between py-2 border-b border-gray-50">
-            <span className="text-xs text-gray-500 font-medium">
+          <div className="flex items-center justify-between py-2 border-b border-border/60">
+            <span className="text-xs text-muted-foreground font-medium">
               Totale sbloccate
             </span>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm font-bold text-foreground">
               {unlockedCount}/{totalCards}
             </span>
           </div>
@@ -494,7 +494,7 @@ export default function CollezionePage() {
             return (
               <div
                 key={rb.rarity}
-                className="flex items-center justify-between py-2 border-b border-gray-50 last:border-b-0"
+                className="flex items-center justify-between py-2 border-b border-border/60 last:border-b-0"
               >
                 <div className="flex items-center gap-2">
                   <span
@@ -504,11 +504,11 @@ export default function CollezionePage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-16 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
                         rb.rarity === "comune"
-                          ? "bg-gray-400"
+                          ? "bg-muted-foreground/60"
                           : rb.rarity === "rara"
                           ? "bg-blue-400"
                           : rb.rarity === "epica"
@@ -520,7 +520,7 @@ export default function CollezionePage() {
                       }}
                     />
                   </div>
-                  <span className="text-xs font-bold text-gray-600 tabular-nums w-8 text-right">
+                  <span className="text-xs font-bold text-muted-foreground tabular-nums w-8 text-right">
                     {rb.unlocked}/{rb.total}
                   </span>
                 </div>
@@ -530,9 +530,9 @@ export default function CollezionePage() {
 
           {/* Completion bonus hint */}
           {completedCategories.length < categories.length && (
-            <div className="mt-3 flex items-center gap-2 bg-amber-50 rounded-xl p-3">
+            <div className="mt-3 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl p-3">
               <span className="text-base">🏆</span>
-              <p className="text-[11px] text-amber-700 font-semibold leading-tight">
+              <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold leading-tight">
                 Completa tutte le carte di una categoria per +100 XP bonus!
               </p>
             </div>
@@ -544,10 +544,10 @@ export default function CollezionePage() {
               {completedCategories.map((cat) => (
                 <div
                   key={cat}
-                  className="flex items-center gap-2 bg-emerald-50 rounded-xl p-3"
+                  className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl p-3"
                 >
                   <span className="text-base">✅</span>
-                  <p className="text-[11px] text-emerald-700 font-bold">
+                  <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
                     {CATEGORY_CONFIG[cat].emoji} {CATEGORY_CONFIG[cat].label}{" "}
                     completata!
                   </p>
@@ -603,7 +603,7 @@ export default function CollezionePage() {
                     className={`rounded-3xl overflow-hidden ${
                       isUnlocked
                         ? `bg-gradient-to-br ${selectedCard.gradient}`
-                        : "bg-gray-100"
+                        : "bg-muted"
                     }`}
                     style={{
                       boxShadow: isUnlocked
@@ -676,7 +676,7 @@ export default function CollezionePage() {
                       ) : (
                         <div className="relative z-10">
                           <svg
-                            className="w-16 h-16 text-gray-300"
+                            className="w-16 h-16 text-muted-foreground/40"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -693,7 +693,7 @@ export default function CollezionePage() {
                       {/* Name */}
                       <h2
                         className={`text-xl font-semibold mt-3 relative z-10 ${
-                          isUnlocked ? "text-gray-800" : "text-gray-400"
+                          isUnlocked ? "text-gray-800" : "text-muted-foreground/70"
                         }`}
                       >
                         {isUnlocked ? selectedCard.name : "???"}
@@ -701,10 +701,10 @@ export default function CollezionePage() {
                     </div>
 
                     {/* Info section */}
-                    <div className="bg-white rounded-t-3xl px-5 pt-5 pb-6">
+                    <div className="bg-card rounded-t-3xl px-5 pt-5 pb-6">
                       {isUnlocked ? (
                         <>
-                          <p className="text-sm text-gray-600 leading-relaxed">
+                          <p className="text-sm text-muted-foreground leading-relaxed">
                             {selectedCard.description}
                           </p>
 
@@ -715,28 +715,28 @@ export default function CollezionePage() {
                               {RARITY_EMOJI[selectedCard.rarity]}{" "}
                               {rarityConf.label}
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold bg-gray-100 text-gray-600">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold bg-muted text-muted-foreground">
                               {CATEGORY_CONFIG[selectedCard.category].emoji}{" "}
                               {CATEGORY_CONFIG[selectedCard.category].label}
                             </span>
                           </div>
 
-                          <div className="mt-4 bg-emerald-50 rounded-xl p-3 flex items-center gap-2">
+                          <div className="mt-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl p-3 flex items-center gap-2">
                             <span className="text-sm">✅</span>
-                            <p className="text-[11px] text-emerald-700 font-semibold">
+                            <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">
                               {selectedCard.unlockCondition}
                             </p>
                           </div>
                         </>
                       ) : (
                         <>
-                          <p className="text-sm text-gray-400 leading-relaxed">
+                          <p className="text-sm text-muted-foreground/70 leading-relaxed">
                             Questa carta non è ancora stata sbloccata.
                           </p>
 
-                          <div className="mt-4 bg-amber-50 rounded-xl p-3 flex items-center gap-2">
+                          <div className="mt-4 bg-amber-50 dark:bg-amber-950/40 rounded-xl p-3 flex items-center gap-2">
                             <span className="text-sm">🔒</span>
-                            <p className="text-[11px] text-amber-700 font-semibold">
+                            <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold">
                               {selectedCard.unlockCondition}
                             </p>
                           </div>
@@ -745,7 +745,7 @@ export default function CollezionePage() {
 
                       <Button
                         onClick={() => setSelectedCard(null)}
-                        className="w-full mt-4 h-11 rounded-xl bg-gray-900 text-white font-bold text-sm shadow-md"
+                        className="w-full mt-4 h-11 rounded-xl bg-foreground text-background font-bold text-sm shadow-md"
                       >
                         Chiudi
                       </Button>

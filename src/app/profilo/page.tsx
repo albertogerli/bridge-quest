@@ -374,7 +374,7 @@ export default function ProfiloPage() {
 
   const stats = [
     { label: "Moduli completati", value: String(totalModulesCompleted), icon: <BookOpen className="w-5 h-5 text-indigo-500" /> },
-    { label: "Mani giocate", value: String(handsPlayed), icon: <Spade className="w-5 h-5 text-gray-700" /> },
+    { label: "Mani giocate", value: String(handsPlayed), icon: <Spade className="w-5 h-5 text-foreground/80" /> },
     { label: "Completamento", value: `${completionPercent}%`, icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" /> },
     { label: "XP totali", value: String(xp), icon: <Zap className="w-5 h-5 text-amber-500" /> },
     { label: "Streak attuale", value: String(streak), icon: <Flame className="w-5 h-5 text-orange-500" /> },
@@ -389,19 +389,19 @@ export default function ProfiloPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 bg-[#003DA5]/5 rounded-2xl p-4 border-2 border-[#003DA5]/20 shadow-sm"
+            className="mb-4 bg-figb/5 dark:bg-primary/10 rounded-2xl p-4 border-2 border-figb/20 dark:border-primary/30 shadow-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5] text-white text-lg">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-figb text-white text-lg">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-gray-900">Accedi per salvare i progressi</p>
-                <p className="text-[11px] text-gray-500">Sincronizza su tutti i dispositivi</p>
+                <p className="text-sm font-bold text-foreground">Accedi per salvare i progressi</p>
+                <p className="text-[11px] text-muted-foreground">Sincronizza su tutti i dispositivi</p>
               </div>
-              <a href="/login" className="inline-flex h-9 px-4 items-center rounded-xl bg-[#003DA5] text-white font-semibold text-xs shadow-md hover:bg-[#003DA5]/90 transition-colors">
+              <a href="/login" className="inline-flex h-9 px-4 items-center rounded-xl bg-figb text-white font-semibold text-xs shadow-md hover:bg-figb/90 transition-colors">
                 Accedi
               </a>
             </div>
@@ -414,27 +414,27 @@ export default function ProfiloPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4"
         >
-          <Avatar className={`h-18 w-18 shadow-lg shadow-[#003DA5]/20 ${cosmetics.avatarFrame || ""}`}>
+          <Avatar className={`h-18 w-18 shadow-lg shadow-figb/20 ${cosmetics.avatarFrame || ""}`}>
             {user && authProfile?.avatar_url ? (
               <img src={authProfile.avatar_url} alt="Foto profilo" className="h-18 w-18 rounded-full object-cover" />
             ) : (
-              <AvatarFallback className="h-18 w-18 bg-[#003DA5] text-white text-2xl font-bold">
+              <AvatarFallback className="h-18 w-18 bg-figb text-white text-2xl font-bold">
                 {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "?"}
               </AvatarFallback>
             )}
           </Avatar>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground font-display">
               {user && authProfile?.display_name ? authProfile.display_name : "Bridgista"}
             </h1>
             {cosmetics.activeTitle && (
-              <p className="text-xs font-semibold text-[#003DA5]">{cosmetics.activeTitle}</p>
+              <p className="text-xs font-semibold text-figb dark:text-primary">{cosmetics.activeTitle}</p>
             )}
             {user && authProfile?.bbo_username && (
-              <p className="text-xs text-gray-500">BBO: {authProfile.bbo_username}</p>
+              <p className="text-xs text-muted-foreground">BBO: {authProfile.bbo_username}</p>
             )}
             {user && authProfile?.asd_code && authProfile?.asd_name && (
-              <Link href={`/circolo/${asdNameToSlug(authProfile.asd_name)}`} className="text-sm text-[#003DA5] hover:underline flex items-center gap-1 mt-0.5">
+              <Link href={`/circolo/${asdNameToSlug(authProfile.asd_name)}`} className="text-sm text-figb dark:text-primary hover:underline flex items-center gap-1 mt-0.5">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
@@ -442,18 +442,18 @@ export default function ProfiloPage() {
               </Link>
             )}
             <div className="flex items-center gap-2 mt-1.5">
-              <Badge className="bg-[#003DA5] text-white font-medium text-xs">
+              <Badge className="bg-figb text-white font-medium text-xs">
                 Livello {level}
               </Badge>
               <Badge
                 variant="outline"
-                className="text-xs text-gray-500 border-gray-200"
+                className="text-xs text-muted-foreground border-border"
               >
                 {levelName}
               </Badge>
             </div>
           </div>
-          <Link href="/impostazioni" className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
+          <Link href="/impostazioni" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-muted-foreground hover:bg-muted/70 transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
               <circle cx="12" cy="12" r="3" />
@@ -515,7 +515,7 @@ export default function ProfiloPage() {
         <div className="grid grid-cols-4 gap-2 mt-3">
           {[
             { icon: <BookOpen className="w-4 h-4 text-indigo-500" />, val: String(totalModulesCompleted), label: "Moduli" },
-            { icon: <Spade className="w-4 h-4 text-gray-700" />, val: String(handsPlayed), label: "Mani" },
+            { icon: <Spade className="w-4 h-4 text-foreground/80" />, val: String(handsPlayed), label: "Mani" },
             { icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, val: `${completionPercent}%`, label: "Completato" },
             { icon: <Globe className="w-4 h-4 text-blue-500" />, val: `${worldsCompleted}/${totalWorldsCount}`, label: "Mondi" },
           ].map((s, i) => (
@@ -524,11 +524,11 @@ export default function ProfiloPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.04 }}
-              className="rounded-xl bg-white p-2.5 text-center border border-gray-200 shadow-sm"
+              className="rounded-xl bg-card p-2.5 text-center border border-border shadow-sm"
             >
               <span className="flex justify-center">{s.icon}</span>
-              <p className="text-lg font-bold text-gray-900 mt-0.5">{s.val}</p>
-              <p className="text-[9px] text-gray-500 font-medium">{s.label}</p>
+              <p className="text-lg font-bold text-foreground mt-0.5">{s.val}</p>
+              <p className="text-[9px] text-muted-foreground font-medium">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -542,15 +542,15 @@ export default function ProfiloPage() {
         >
           <button
             onClick={() => setAdvancedStatsOpen(!advancedStatsOpen)}
-            className="w-full rounded-2xl bg-white p-4 text-left border-2 border-[#e5e7eb] shadow-sm hover:shadow-lg transition-shadow"
+            className="w-full rounded-2xl bg-card p-4 text-left border-2 border-border shadow-sm hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003DA5] text-white text-lg">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-figb text-white text-lg">
                 <BarChart3 className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-gray-900">Statistiche Avanzate</p>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-sm font-bold text-foreground">Statistiche Avanzate</p>
+                <p className="text-[11px] text-muted-foreground">
                   {gameStats.totalGames > 0
                     ? `${gameStats.totalGames} partite · ${gameStats.winRate}% vittorie`
                     : "Gioca per sbloccare le statistiche"}
@@ -559,7 +559,7 @@ export default function ProfiloPage() {
               <motion.svg
                 animate={{ rotate: advancedStatsOpen ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
-                className="w-5 h-5 text-gray-400"
+                className="w-5 h-5 text-muted-foreground/70"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -585,8 +585,8 @@ export default function ProfiloPage() {
                   <div className="mt-4 space-y-4">
 
                     {/* Chart 1: XP Progress Over Time (7-day bar chart) */}
-                    <div className="card-clean rounded-2xl bg-white p-4">
-                      <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    <div className="card-clean rounded-2xl bg-card p-4">
+                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
                         XP ultimi 7 giorni
                       </p>
                       {xpPerDay.hasData ? (
@@ -594,21 +594,21 @@ export default function ProfiloPage() {
                           {xpPerDay.days.map((d) => (
                             <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full">
                               {d.xp > 0 && (
-                                <span className="text-[8px] font-bold text-gray-500 mb-0.5">{d.xp}</span>
+                                <span className="text-[8px] font-bold text-muted-foreground mb-0.5">{d.xp}</span>
                               )}
                               <motion.div
                                 initial={{ height: 0 }}
                                 animate={{ height: Math.max((d.xp / xpPerDay.maxXp) * 80, d.xp > 0 ? 4 : 0) }}
                                 transition={{ delay: 0.2, duration: 0.5 }}
-                                className="w-full rounded-t bg-[#003DA5]/70"
+                                className="w-full rounded-t bg-figb/70 dark:bg-primary/70"
                               />
-                              <span className="text-[9px] text-gray-400 mt-1">{d.label}</span>
+                              <span className="text-[9px] text-muted-foreground/70 mt-1">{d.label}</span>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center h-24 rounded-xl bg-gray-50">
-                          <p className="text-xs text-gray-400 font-medium">
+                        <div className="flex items-center justify-center h-24 rounded-xl bg-muted">
+                          <p className="text-xs text-muted-foreground/70 font-medium">
                             Gioca di piu per vedere le statistiche
                           </p>
                         </div>
@@ -616,20 +616,20 @@ export default function ProfiloPage() {
                     </div>
 
                     {/* Chart 2: Competenze (Course progress horizontal bars) */}
-                    <div className="card-clean rounded-2xl bg-white p-4">
-                      <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    <div className="card-clean rounded-2xl bg-card p-4">
+                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
                         Competenze per corso
                       </p>
                       <div className="space-y-3">
                         {courseCompetence.map((course) => (
                           <div key={course.id}>
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs font-semibold text-gray-700">{course.name}</span>
-                              <span className="text-[10px] font-bold text-gray-400">
+                              <span className="text-xs font-semibold text-foreground/80">{course.name}</span>
+                              <span className="text-[10px] font-bold text-muted-foreground/70">
                                 {course.completed}/{course.total} ({course.progress}%)
                               </span>
                             </div>
-                            <div className="h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+                            <div className="h-2.5 rounded-full bg-muted border border-border overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${course.progress}%` }}
@@ -644,30 +644,30 @@ export default function ProfiloPage() {
                     </div>
 
                     {/* Chart 3: Game Performance (2x2 stat cards) */}
-                    <div className="card-clean rounded-2xl bg-white p-4">
-                      <p className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    <div className="card-clean rounded-2xl bg-card p-4">
+                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
                         Rendimento di gioco
                       </p>
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
-                          <Gamepad2 className="w-5 h-5 text-[#003DA5] mx-auto mb-1" />
-                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.totalGames}</p>
-                          <p className="text-[10px] text-gray-500 font-medium">Partite totali</p>
+                        <div className="rounded-xl bg-muted p-3 text-center">
+                          <Gamepad2 className="w-5 h-5 text-figb dark:text-primary mx-auto mb-1" />
+                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.totalGames}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium">Partite totali</p>
                         </div>
-                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                        <div className="rounded-xl bg-muted p-3 text-center">
                           <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
-                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.bestStreak}</p>
-                          <p className="text-[10px] text-gray-500 font-medium">Streak migliore</p>
+                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.bestStreak}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium">Streak migliore</p>
                         </div>
-                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                        <div className="rounded-xl bg-muted p-3 text-center">
                           <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
-                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.timeDisplay}</p>
-                          <p className="text-[10px] text-gray-500 font-medium">Tempo di gioco</p>
+                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.timeDisplay}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium">Tempo di gioco</p>
                         </div>
-                        <div className="rounded-xl bg-[#F7F5F0] p-3 text-center">
+                        <div className="rounded-xl bg-muted p-3 text-center">
                           <TrendingUp className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
-                          <p className="text-xl font-bold text-gray-900">{gamePerformanceStats.avgXp}</p>
-                          <p className="text-[10px] text-gray-500 font-medium">Media XP/partita</p>
+                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.avgXp}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium">Media XP/partita</p>
                         </div>
                       </div>
                     </div>
@@ -703,23 +703,23 @@ export default function ProfiloPage() {
             className="mt-4"
           >
             <button
-              className="w-full rounded-2xl bg-white border-2 border-[#e5e7eb] p-4 text-left shadow-sm hover:shadow-lg transition-shadow"
+              className="w-full rounded-2xl bg-card border-2 border-border p-4 text-left shadow-sm hover:shadow-lg transition-shadow"
               onClick={() => setChallengeHistoryOpen(!challengeHistoryOpen)}
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 border border-violet-200">
-                  <Swords className="w-5 h-5 text-violet-600" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900">
+                  <Swords className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-bold text-gray-900">Sfide IMP</p>
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-sm font-bold text-foreground">Sfide IMP</p>
+                  <p className="text-[11px] text-muted-foreground">
                     {challengeStats
                       ? `${challengeStats.played} sfide · ${challengeStats.won} vinte · ${challengeStats.played > 0 ? Math.round((challengeStats.won / challengeStats.played) * 100) : 0}%`
                       : "Sfida un amico per iniziare"}
                   </p>
                 </div>
                 <motion.svg
-                  className="h-5 w-5 text-gray-400 shrink-0"
+                  className="h-5 w-5 text-muted-foreground/70 shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -741,22 +741,22 @@ export default function ProfiloPage() {
                   <div className="mt-2 space-y-2">
                     {/* Stats summary */}
                     {challengeStats && challengeStats.played > 0 && (
-                      <div className="grid grid-cols-4 gap-2 rounded-xl bg-violet-50 border border-violet-200 p-3">
+                      <div className="grid grid-cols-4 gap-2 rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 p-3">
                         <div className="text-center">
-                          <p className="text-lg font-bold text-gray-900">{challengeStats.played}</p>
-                          <p className="text-[10px] text-gray-500">Giocate</p>
+                          <p className="text-lg font-bold text-foreground">{challengeStats.played}</p>
+                          <p className="text-[10px] text-muted-foreground">Giocate</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-lg font-bold text-emerald-600">{challengeStats.won}</p>
-                          <p className="text-[10px] text-gray-500">Vinte</p>
+                          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{challengeStats.won}</p>
+                          <p className="text-[10px] text-muted-foreground">Vinte</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-lg font-bold text-red-500">{challengeStats.lost}</p>
-                          <p className="text-[10px] text-gray-500">Perse</p>
+                          <p className="text-lg font-bold text-red-500 dark:text-red-400">{challengeStats.lost}</p>
+                          <p className="text-[10px] text-muted-foreground">Perse</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-lg font-bold text-[#003DA5]">{challengeStats.avg_imp_margin > 0 ? "+" : ""}{Math.round(challengeStats.avg_imp_margin)}</p>
-                          <p className="text-[10px] text-gray-500">IMP medio</p>
+                          <p className="text-lg font-bold text-figb dark:text-primary">{challengeStats.avg_imp_margin > 0 ? "+" : ""}{Math.round(challengeStats.avg_imp_margin)}</p>
+                          <p className="text-[10px] text-muted-foreground">IMP medio</p>
                         </div>
                       </div>
                     )}
@@ -773,20 +773,20 @@ export default function ProfiloPage() {
                         const netImp = (myImps ?? 0) - (theirImps ?? 0);
                         return (
                           <Link key={ch.id} href={`/gioca/sfida-imp?challengeId=${ch.id}`}>
-                            <div className="rounded-xl bg-white border border-gray-200 p-3 flex items-center gap-3 hover:shadow-md transition-shadow">
+                            <div className="rounded-xl bg-card border border-border p-3 flex items-center gap-3 hover:shadow-md transition-shadow">
                               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
-                                drawn ? "bg-gray-100 text-gray-500" : won ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"
+                                drawn ? "bg-muted text-muted-foreground" : won ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400" : "bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400"
                               }`}>
                                 {drawn ? "=" : won ? "W" : "L"}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-xs font-semibold text-gray-900 truncate">vs {opponentName}</p>
-                                <p className="text-[10px] text-gray-400">
+                                <p className="text-xs font-semibold text-foreground truncate">vs {opponentName}</p>
+                                <p className="text-[10px] text-muted-foreground/70">
                                   {ch.board_count} mani · {ch.completed_at ? new Date(ch.completed_at).toLocaleDateString("it-IT", { day: "numeric", month: "short" }) : ""}
                                 </p>
                               </div>
                               <div className="text-right shrink-0">
-                                <p className={`text-sm font-bold ${netImp > 0 ? "text-emerald-600" : netImp < 0 ? "text-red-500" : "text-gray-500"}`}>
+                                <p className={`text-sm font-bold ${netImp > 0 ? "text-emerald-600 dark:text-emerald-400" : netImp < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"}`}>
                                   {netImp > 0 ? "+" : ""}{netImp} IMP
                                 </p>
                               </div>
@@ -796,9 +796,9 @@ export default function ProfiloPage() {
                       })
                     ) : (
                       <div className="text-center py-6">
-                        <Swords className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                        <p className="text-xs text-gray-400">Nessuna sfida completata</p>
-                        <Link href="/amici" className="text-xs text-[#003DA5] font-semibold hover:underline mt-1 inline-block">
+                        <Swords className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+                        <p className="text-xs text-muted-foreground/70">Nessuna sfida completata</p>
+                        <Link href="/amici" className="text-xs text-figb dark:text-primary font-semibold hover:underline mt-1 inline-block">
                           Sfida un amico →
                         </Link>
                       </div>
@@ -820,7 +820,7 @@ export default function ProfiloPage() {
           <StreakFreezeCard streak={streak} xp={xp} />
         </motion.div>
 
-        <Separator className="my-6 bg-[#e5e7eb]" />
+        <Separator className="my-6 bg-border" />
 
         {/* Badges */}
         <motion.div
@@ -829,12 +829,12 @@ export default function ProfiloPage() {
           transition={{ delay: 0.3 }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-foreground">
               Badge Collezionati
             </h2>
             <Badge
               variant="outline"
-              className="text-[11px] text-gray-500 border-gray-200"
+              className="text-[11px] text-muted-foreground border-border"
             >
               {earnedCount} / {badges.length}
             </Badge>
@@ -859,7 +859,7 @@ export default function ProfiloPage() {
                 {badge.earned && (
                   <button
                     onClick={(e) => { e.stopPropagation(); handleShareBadge(badge.name); }}
-                    className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#003DA5] text-white shadow-sm hover:bg-[#002E7A] transition-colors"
+                    className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-figb text-white shadow-sm hover:bg-figb-dark transition-colors"
                     title="Condividi badge"
                   >
                     {sharedBadge === badge.name ? (
@@ -869,7 +869,7 @@ export default function ProfiloPage() {
                     )}
                   </button>
                 )}
-                <span className="text-[10px] text-center text-gray-500 font-semibold leading-tight">
+                <span className="text-[10px] text-center text-muted-foreground font-semibold leading-tight">
                   {badge.name}
                 </span>
               </motion.div>
@@ -884,7 +884,7 @@ export default function ProfiloPage() {
                 exit={{ opacity: 0, y: -8 }}
                 className="mt-3 text-center"
               >
-                <span className="inline-flex items-center gap-1.5 bg-[#003DA5]/10 text-[#003DA5] text-xs font-bold rounded-full px-3 py-1.5">
+                <span className="inline-flex items-center gap-1.5 bg-figb/10 dark:bg-primary/15 text-figb dark:text-primary text-xs font-bold rounded-full px-3 py-1.5">
                   <Check className="h-3.5 w-3.5" />
                   Badge condiviso!
                 </span>
@@ -895,11 +895,11 @@ export default function ProfiloPage() {
           {/* Secret Achievements */}
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+              <h3 className="text-sm font-semibold text-foreground/80 flex items-center gap-1.5">
                 <Star className="w-4 h-4 text-amber-500" />
                 Achievement Segreti
               </h3>
-              <Badge variant="outline" className="text-[11px] text-amber-600 border-amber-200">
+              <Badge variant="outline" className="text-[11px] text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900">
                 {earnedSecretAchievements.length} / {totalSecretAchievements}
               </Badge>
             </div>
@@ -907,17 +907,17 @@ export default function ProfiloPage() {
               <div className="grid grid-cols-5 gap-2">
                 {earnedSecretAchievements.map((a) => (
                   <div key={a.id} className="flex flex-col items-center gap-1">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 border border-amber-200 text-xl">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-950/40 dark:to-yellow-950/30 border border-amber-200 dark:border-amber-900 text-xl">
                       {a.icon}
                     </div>
-                    <span className="text-[9px] text-center text-amber-700 font-semibold leading-tight">{a.name}</span>
+                    <span className="text-[9px] text-center text-amber-700 dark:text-amber-300 font-semibold leading-tight">{a.name}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-100 px-4 py-3">
+              <div className="flex items-center gap-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 px-4 py-3">
                 <span className="text-lg">🔒</span>
-                <p className="text-xs text-amber-700">
+                <p className="text-xs text-amber-700 dark:text-amber-300">
                   Ci sono <span className="font-bold">{totalSecretAchievements} achievement nascosti</span> da scoprire. Gioca, esplora e completa sfide per sbloccarli!
                 </p>
               </div>
@@ -925,7 +925,7 @@ export default function ProfiloPage() {
           </div>
         </motion.div>
 
-        <Separator className="my-6 bg-[#e5e7eb]" />
+        <Separator className="my-6 bg-border" />
 
         {/* Course progress by world */}
         <motion.div
@@ -933,7 +933,7 @@ export default function ProfiloPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
         >
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">
+          <h2 className="text-lg font-semibold text-foreground mb-3">
             Progresso per Corso
           </h2>
           <div className="space-y-4">
@@ -944,7 +944,7 @@ export default function ProfiloPage() {
                 <div key={course.id}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-base">{course.icon}</span>
-                    <p className="text-sm font-semibold text-gray-700">{course.name}</p>
+                    <p className="text-sm font-semibold text-foreground/80">{course.name}</p>
                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
                       {levelInfo[course.level].label}
                     </span>
@@ -958,19 +958,19 @@ export default function ProfiloPage() {
                       );
                       const wPercent = wModules > 0 ? Math.round((wCompleted / wModules) * 100) : 0;
                       return (
-                        <div key={w.id} className="rounded-xl bg-white p-3.5 border-2 border-[#e5e7eb] shadow-sm">
+                        <div key={w.id} className="rounded-xl bg-card p-3.5 border-2 border-border shadow-sm">
                           <div className="flex items-center gap-3">
                             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg ${w.iconBg}`}>
                               {w.icon}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between mb-1">
-                                <p className="text-sm font-bold text-gray-900 truncate">{w.name}</p>
-                                <span className="text-[11px] font-bold text-gray-400 tabular-nums">
+                                <p className="text-sm font-bold text-foreground truncate">{w.name}</p>
+                                <span className="text-[11px] font-bold text-muted-foreground/70 tabular-nums">
                                   {wCompleted}/{wModules}
                                 </span>
                               </div>
-                              <div className="h-2.5 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+                              <div className="h-2.5 rounded-full bg-muted border border-border overflow-hidden">
                                 <div
                                   className={`h-full rounded-full bg-gradient-to-r ${w.gradient}`}
                                   style={{ width: `${wPercent}%` }}
@@ -991,7 +991,7 @@ export default function ProfiloPage() {
         {/* Edit Profile — logged-in users only */}
         {user && (
           <>
-            <Separator className="my-6 bg-[#e5e7eb]" />
+            <Separator className="my-6 bg-border" />
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1007,20 +1007,20 @@ export default function ProfiloPage() {
                     setEditAvatarPreview("");
                     setEditing(true);
                   }}
-                  className="w-full rounded-2xl bg-white p-4 text-left border-2 border-[#e5e7eb] shadow-sm hover:shadow-lg transition-shadow"
+                  className="w-full rounded-2xl bg-card p-4 text-left border-2 border-border shadow-sm hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-bold text-gray-900">Modifica profilo</p>
-                      <p className="text-[11px] text-gray-500">Foto, nome, BBO, associazione</p>
+                      <p className="text-sm font-bold text-foreground">Modifica profilo</p>
+                      <p className="text-[11px] text-muted-foreground">Foto, nome, BBO, associazione</p>
                     </div>
-                    <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <svg className="w-5 h-5 text-muted-foreground/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                       <polyline points="9,6 15,12 9,18" />
                     </svg>
                   </div>
@@ -1029,13 +1029,13 @@ export default function ProfiloPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl bg-white p-5 border-2 border-[#e5e7eb] shadow-sm"
+                  className="rounded-2xl bg-card p-5 border-2 border-border shadow-sm"
                 >
-                  <h3 className="text-sm font-bold text-gray-900 mb-4">Modifica profilo</h3>
+                  <h3 className="text-sm font-bold text-foreground mb-4">Modifica profilo</h3>
 
                   {/* Avatar upload */}
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="relative h-16 w-16 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                       {editAvatarPreview ? (
                         <img src={editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
                       ) : authProfile?.avatar_url ? (
@@ -1045,7 +1045,7 @@ export default function ProfiloPage() {
                       )}
                     </div>
                     <label className="cursor-pointer">
-                      <span className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+                      <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300">
                         Cambia foto
                       </span>
                       <input
@@ -1067,30 +1067,30 @@ export default function ProfiloPage() {
 
                   {/* Name */}
                   <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Nome</label>
+                    <label className="block text-[10px] font-bold text-muted-foreground/70 mb-1 uppercase tracking-wider">Nome</label>
                     <input
                       type="text"
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
+                      className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
 
                   {/* BBO */}
                   <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Username BBO</label>
+                    <label className="block text-[10px] font-bold text-muted-foreground/70 mb-1 uppercase tracking-wider">Username BBO</label>
                     <input
                       type="text"
                       value={editBbo}
                       onChange={(e) => setEditBbo(e.target.value)}
                       placeholder="Il tuo username su BridgeBase Online"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
+                      className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
 
                   {/* ASD */}
                   <div className="mb-4 relative">
-                    <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Associazione (ASD)</label>
+                    <label className="block text-[10px] font-bold text-muted-foreground/70 mb-1 uppercase tracking-wider">Associazione (ASD)</label>
                     <input
                       type="text"
                       value={editAsdSelectedName || editAsdSearch}
@@ -1101,12 +1101,12 @@ export default function ProfiloPage() {
                       }}
                       onFocus={() => setShowAsdDropdown(true)}
                       placeholder="Cerca la tua associazione..."
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
+                      className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     {showAsdDropdown && !editAsdCode && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setShowAsdDropdown(false)} />
-                        <div className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-xl max-h-40 overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                        <div className="absolute z-50 w-full mt-1 bg-card rounded-xl border border-border shadow-xl max-h-40 overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                           {activeClubsSorted
                             .filter((c) => !editAsdSearch || c.name.toLowerCase().includes(editAsdSearch.toLowerCase()))
                             .slice(0, 15)
@@ -1115,11 +1115,11 @@ export default function ProfiloPage() {
                                 key={club.code}
                                 type="button"
                                 onClick={() => { setEditAsdCode(club.code); setEditAsdSearch(""); setShowAsdDropdown(false); }}
-                                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                                className="w-full text-left px-3 py-2 text-sm text-foreground/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-300"
                               >
                                 <div>{club.name}</div>
                                 {club.city && (
-                                  <div className="text-[10px] text-gray-400">
+                                  <div className="text-[10px] text-muted-foreground/70">
                                     {club.city}{club.province ? ` (${club.province})` : ""}
                                   </div>
                                 )}
@@ -1162,7 +1162,7 @@ export default function ProfiloPage() {
                         setEditAsdSearch("");
                       }}
                       disabled={saving}
-                      className="flex-1 h-10 rounded-xl bg-[#003DA5] font-semibold text-xs shadow-md disabled:opacity-50"
+                      className="flex-1 h-10 rounded-xl bg-figb font-semibold text-xs shadow-md disabled:opacity-50"
                     >
                       {saving ? "Salvataggio..." : "Salva"}
                     </Button>
@@ -1173,7 +1173,7 @@ export default function ProfiloPage() {
           </>
         )}
 
-        <Separator className="my-6 bg-[#e5e7eb]" />
+        <Separator className="my-6 bg-border" />
 
         {/* Profile selector */}
         <motion.div
@@ -1181,7 +1181,7 @@ export default function ProfiloPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">
+          <h2 className="text-lg font-semibold text-foreground mb-3">
             Stile di gioco
           </h2>
           <div className="grid grid-cols-2 gap-2">
@@ -1199,13 +1199,13 @@ export default function ProfiloPage() {
                 }}
                 className={`rounded-xl p-3 text-center transition-all active:scale-95 ${
                   currentProfile === opt.id
-                    ? "bg-[#003DA5]/10 border-[3px] border-[#003DA5] shadow-sm"
-                    : "bg-white border-2 border-[#e5e7eb] shadow-sm"
+                    ? "bg-figb/10 dark:bg-primary/15 border-[3px] border-figb dark:border-primary shadow-sm"
+                    : "bg-card border-2 border-border shadow-sm"
                 }`}
               >
-                <span className={`flex items-center justify-center ${currentProfile === opt.id ? "text-[#003DA5]" : "text-gray-500"}`}>{opt.icon}</span>
+                <span className={`flex items-center justify-center ${currentProfile === opt.id ? "text-figb dark:text-primary" : "text-muted-foreground"}`}>{opt.icon}</span>
                 <p className={`text-xs font-bold mt-1 ${
-                  currentProfile === opt.id ? "text-[#003DA5]" : "text-gray-600"
+                  currentProfile === opt.id ? "text-figb dark:text-primary" : "text-foreground/80"
                 }`}>
                   {opt.label}
                 </p>
@@ -1214,14 +1214,14 @@ export default function ProfiloPage() {
           </div>
         </motion.div>
 
-        <Separator className="my-6 bg-[#e5e7eb]" />
+        <Separator className="my-6 bg-border" />
 
         {/* Fiches */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
-          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border-2 border-amber-300 shadow-sm p-5 mb-6"
+          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border-2 border-amber-300 dark:border-amber-800 shadow-sm p-5 mb-6"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -1229,8 +1229,8 @@ export default function ProfiloPage() {
                 <Coins className="w-6 h-6 text-amber-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900">Fiches</p>
-                <p className="text-xs text-gray-500">
+                <p className="font-semibold text-foreground">Fiches</p>
+                <p className="text-xs text-muted-foreground">
                   Per cosmetici e bonus
                 </p>
               </div>
@@ -1257,21 +1257,21 @@ export default function ProfiloPage() {
           transition={{ delay: 0.58 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-gradient-to-r from-[#003DA5]/5 to-indigo-50 border-2 border-[#003DA5]/20 shadow-sm p-5">
+          <div className="rounded-2xl bg-gradient-to-r from-figb/5 to-indigo-50 dark:from-primary/10 dark:to-indigo-950/30 border-2 border-figb/20 dark:border-primary/30 shadow-sm p-5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#003DA5] text-white shadow-md shadow-[#003DA5]/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-figb text-white shadow-md shadow-figb/20">
                 <UserPlus className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-gray-900">Invita un Amico</p>
-                <p className="text-xs text-gray-500">
+                <p className="font-semibold text-foreground">Invita un Amico</p>
+                <p className="text-xs text-muted-foreground">
                   Condividi Bridge LAB e guadagna +25 XP
                 </p>
               </div>
               {invitesSent > 0 && (
-                <div className="flex items-center gap-1.5 bg-[#003DA5]/10 rounded-full px-3 py-1">
-                  <Send className="w-3 h-3 text-[#003DA5]" />
-                  <span className="text-[11px] font-bold text-[#003DA5]">
+                <div className="flex items-center gap-1.5 bg-figb/10 dark:bg-primary/15 rounded-full px-3 py-1">
+                  <Send className="w-3 h-3 text-figb dark:text-primary" />
+                  <span className="text-[11px] font-bold text-figb dark:text-primary">
                     {invitesSent} invit{invitesSent === 1 ? "o" : "i"}
                   </span>
                 </div>
@@ -1280,17 +1280,17 @@ export default function ProfiloPage() {
 
             {/* Referral code card */}
             {referralCode && (
-              <div className="mb-4 rounded-xl bg-white/80 border border-[#003DA5]/10 p-3.5">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+              <div className="mb-4 rounded-xl bg-card/80 border border-figb/10 dark:border-primary/20 p-3.5">
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1.5">
                   Il tuo codice referral
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="flex-1 font-mono text-lg font-bold text-[#003DA5] tracking-widest">
+                  <span className="flex-1 font-mono text-lg font-bold text-figb dark:text-primary tracking-widest">
                     {referralCode}
                   </span>
                   <button
                     onClick={handleCopyLink}
-                    className="flex items-center gap-1.5 rounded-lg bg-[#003DA5]/10 hover:bg-[#003DA5]/20 text-[#003DA5] px-3 py-1.5 text-xs font-bold transition-colors"
+                    className="flex items-center gap-1.5 rounded-lg bg-figb/10 hover:bg-figb/20 text-figb dark:bg-primary/15 dark:hover:bg-primary/25 dark:text-primary px-3 py-1.5 text-xs font-bold transition-colors"
                   >
                     {linkCopied ? (
                       <>
@@ -1321,7 +1321,7 @@ export default function ProfiloPage() {
               {/* Generic share button */}
               <Button
                 onClick={handleInvite}
-                className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-white font-semibold h-11 text-sm shadow-md shadow-[#003DA5]/20 transition-colors"
+                className="rounded-xl bg-figb hover:bg-figb-dark text-white font-semibold h-11 text-sm shadow-md shadow-figb/20 transition-colors"
               >
                 <Share2 className="w-4 h-4 mr-2" />
                 Condividi
@@ -1337,7 +1337,7 @@ export default function ProfiloPage() {
                   exit={{ opacity: 0, y: -8 }}
                   className="mt-3 text-center"
                 >
-                  <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full px-3 py-1.5">
+                  <span className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold rounded-full px-3 py-1.5">
                     <Check className="h-3.5 w-3.5" />
                     {inviteToast}
                   </span>
@@ -1353,7 +1353,7 @@ export default function ProfiloPage() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="mt-2 text-center"
                 >
-                  <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-full px-3 py-1.5">
+                  <span className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-full px-3 py-1.5">
                     <Zap className="h-3.5 w-3.5" />
                     +25 XP guadagnati!
                   </span>
@@ -1378,10 +1378,10 @@ export default function ProfiloPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="rounded-2xl bg-white border-2 border-rose-200 shadow-sm p-5"
+                  className="rounded-2xl bg-card border-2 border-rose-200 dark:border-rose-900 shadow-sm p-5"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400">
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                         <polyline points="16 17 21 12 16 7" />
@@ -1389,8 +1389,8 @@ export default function ProfiloPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">Vuoi anche cancellare i dati locali?</p>
-                      <p className="text-[11px] text-gray-500">I progressi locali possono essere mantenuti o rimossi</p>
+                      <p className="text-sm font-bold text-foreground">Vuoi anche cancellare i dati locali?</p>
+                      <p className="text-[11px] text-muted-foreground">I progressi locali possono essere mantenuti o rimossi</p>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1405,14 +1405,14 @@ export default function ProfiloPage() {
                       onClick={() => handleLogout(false)}
                       disabled={loggingOut}
                       variant="outline"
-                      className="w-full rounded-xl text-sm font-semibold h-10 border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+                      className="w-full rounded-xl text-sm font-semibold h-10 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 disabled:opacity-50"
                     >
                       {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
                     </Button>
                     <Button
                       onClick={() => setShowLogoutConfirm(false)}
                       variant="outline"
-                      className="w-full rounded-xl text-sm font-semibold h-10 border-gray-300 text-gray-600"
+                      className="w-full rounded-xl text-sm font-semibold h-10 border-border text-muted-foreground"
                     >
                       Annulla
                     </Button>
@@ -1423,7 +1423,7 @@ export default function ProfiloPage() {
                   <Button
                     onClick={() => setShowLogoutConfirm(true)}
                     variant="outline"
-                    className="w-full rounded-xl border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-semibold h-12 text-sm border-2 shadow-sm"
+                    className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-semibold h-12 text-sm border-2 shadow-sm"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -1438,10 +1438,10 @@ export default function ProfiloPage() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-4"
+                        className="mt-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 p-4"
                       >
-                        <p className="text-sm font-bold text-rose-800 mb-1">Sei sicuro?</p>
-                        <p className="text-xs text-rose-600 mb-3">Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.</p>
+                        <p className="text-sm font-bold text-rose-800 dark:text-rose-300 mb-1">Sei sicuro?</p>
+                        <p className="text-xs text-rose-600 dark:text-rose-400 mb-3">Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.</p>
                         <div className="flex gap-2">
                           <Button
                             onClick={handleDeleteAccount}
@@ -1453,7 +1453,7 @@ export default function ProfiloPage() {
                           <Button
                             onClick={() => setShowDeleteConfirm(false)}
                             variant="outline"
-                            className="flex-1 rounded-xl text-xs font-semibold h-9 border-rose-200"
+                            className="flex-1 rounded-xl text-xs font-semibold h-9 border-rose-200 dark:border-rose-900"
                           >
                             Annulla
                           </Button>
@@ -1464,7 +1464,7 @@ export default function ProfiloPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         onClick={() => setShowDeleteConfirm(true)}
-                        className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border-2 border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:border-rose-300 transition-colors py-3 px-4 text-sm font-semibold"
+                        className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border-2 border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-800 transition-colors py-3 px-4 text-sm font-semibold"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="3 6 5 6 21 6" />
@@ -1480,7 +1480,7 @@ export default function ProfiloPage() {
           ) : (
             <a
               href="/login"
-              className="flex items-center justify-center w-full rounded-xl bg-[#003DA5] text-white font-semibold h-12 text-sm shadow-lg shadow-[#003DA5]/20 hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center w-full rounded-xl bg-figb text-white font-semibold h-12 text-sm shadow-lg shadow-figb/20 hover:opacity-90 transition-opacity"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />

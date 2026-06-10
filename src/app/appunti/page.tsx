@@ -25,9 +25,9 @@ export default function AppuntiPage() {
   const totalRules = appunti.reduce((sum, a) => sum + a.rules.length, 0);
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pb-28 lg:pb-8">
+    <div className="min-h-screen bg-background pb-28 lg:pb-8">
       {/* Header */}
-      <div className="bg-[#003DA5] px-5 pt-14 pb-8 lg:pt-8">
+      <div className="bg-figb px-5 pt-14 pb-8 lg:pt-8">
         <div className="mx-auto max-w-6xl">
           <Link href="/" className="text-white/70 text-sm font-medium hover:text-white transition-colors">
             ← Home
@@ -35,7 +35,7 @@ export default function AppuntiPage() {
           <div className="flex items-center gap-3 mt-3">
             <span className="text-4xl">📝</span>
             <div>
-              <h1 className={`font-bold text-white ${isSenior ? "text-2xl" : "text-xl"}`}>
+              <h1 className={`font-bold text-white font-display ${isSenior ? "text-2xl" : "text-xl"}`}>
                 I Miei Appunti
               </h1>
               <p className={`text-white/70 ${isSenior ? "text-base" : "text-sm"}`}>
@@ -53,17 +53,17 @@ export default function AppuntiPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl bg-white border border-[#e5e7eb] shadow-sm p-8 text-center"
+            className="rounded-2xl bg-card border border-border shadow-sm p-8 text-center"
           >
             <span className="text-5xl block mb-4">📖</span>
-            <h3 className={`font-bold text-gray-700 ${isSenior ? "text-lg" : "text-base"}`}>
+            <h3 className={`font-bold text-foreground ${isSenior ? "text-lg" : "text-base"}`}>
               Nessun appunto ancora
             </h3>
-            <p className={`text-gray-500 mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
+            <p className={`text-muted-foreground mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
               Completa i moduli delle lezioni e le regole importanti verranno salvate automaticamente qui.
             </p>
             <Link href="/lezioni">
-              <Button className="mt-4 rounded-xl bg-[#003DA5] hover:bg-[#003DA5]/90 font-bold">
+              <Button className="mt-4 rounded-xl bg-figb hover:bg-figb-dark font-bold">
                 Vai alle lezioni
               </Button>
             </Link>
@@ -82,27 +82,27 @@ export default function AppuntiPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
+                  className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden"
                 >
                   {/* Lesson header - clickable accordion */}
                   <button
                     onClick={() => setExpandedLesson(isExpanded ? null : lid)}
-                    className="w-full px-5 py-4 flex items-center gap-3 text-left hover:bg-gray-50/50 transition-colors"
+                    className="w-full px-5 py-4 flex items-center gap-3 text-left hover:bg-muted/50 transition-colors"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#003DA5] text-white font-bold text-sm shadow-md">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-figb text-white font-bold text-sm shadow-md">
                       {lid}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className={`font-bold text-gray-900 truncate ${isSenior ? "text-base" : "text-[15px]"}`}>
+                      <h3 className={`font-bold text-foreground truncate ${isSenior ? "text-base" : "text-[15px]"}`}>
                         {firstEntry.lessonTitle}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {lessonAppunti.length} moduli · {lessonRuleCount} regole
                       </p>
                     </div>
                     <motion.svg
                       animate={{ rotate: isExpanded ? 180 : 0 }}
-                      className="h-5 w-5 text-gray-400 shrink-0"
+                      className="h-5 w-5 text-muted-foreground/70 shrink-0"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -122,15 +122,15 @@ export default function AppuntiPage() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="px-5 pb-4 space-y-4 border-t border-gray-100 pt-3">
+                        <div className="px-5 pb-4 space-y-4 border-t border-border/60 pt-3">
                           {lessonAppunti.map((entry, mi) => (
                             <div key={mi}>
                               <div className="flex items-center gap-2 mb-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-[#003DA5]/60" />
-                                <span className={`font-semibold text-[#003DA5] ${isSenior ? "text-base" : "text-sm"}`}>
+                                <div className="h-1.5 w-1.5 rounded-full bg-figb/60 dark:bg-primary/60" />
+                                <span className={`font-semibold text-figb dark:text-primary ${isSenior ? "text-base" : "text-sm"}`}>
                                   {entry.moduleTitle}
                                 </span>
-                                <span className="text-[10px] text-gray-400 ml-auto">{entry.date}</span>
+                                <span className="text-[10px] text-muted-foreground/70 ml-auto">{entry.date}</span>
                               </div>
                               <ul className="space-y-1.5 ml-4">
                                 {entry.rules.map((rule, ri) => (
@@ -140,7 +140,7 @@ export default function AppuntiPage() {
                                         <polyline points="20 6 9 17 4 12" />
                                       </svg>
                                     </span>
-                                    <span className={`text-gray-700 leading-snug ${isSenior ? "text-base" : "text-sm"}`}>
+                                    <span className={`text-foreground/80 leading-snug ${isSenior ? "text-base" : "text-sm"}`}>
                                       {rule}
                                     </span>
                                   </li>
@@ -161,13 +161,13 @@ export default function AppuntiPage() {
               {!showConfirmClear ? (
                 <button
                   onClick={() => setShowConfirmClear(true)}
-                  className="text-sm text-gray-400 hover:text-red-500 transition-colors"
+                  className="text-sm text-muted-foreground/70 hover:text-red-500 transition-colors"
                 >
                   Cancella tutti gli appunti
                 </button>
               ) : (
-                <div className="rounded-xl bg-red-50 border border-red-200 p-4">
-                  <p className={`text-red-700 font-medium ${isSenior ? "text-base" : "text-sm"}`}>
+                <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-4">
+                  <p className={`text-red-700 dark:text-red-300 font-medium ${isSenior ? "text-base" : "text-sm"}`}>
                     Sei sicuro? Questa azione non si può annullare.
                   </p>
                   <div className="flex gap-3 justify-center mt-3">
