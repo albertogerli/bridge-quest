@@ -16,10 +16,10 @@ import { cardToString, suitSymbol, sortHand, toDisplayPosition } from "@/lib/bri
 // ── helpers ──────────────────────────────────────────────────────
 
 const SUIT_COLORS: Record<Suit, string> = {
-  spade: "text-[#1B2631]",
-  heart: "text-[#D32F2F]",
-  diamond: "text-[#FF6F00]",
-  club: "text-[#2E7D32]",
+  spade: "text-[#1B2631] dark:text-slate-200",
+  heart: "text-[#D32F2F] dark:text-red-400",
+  diamond: "text-[#FF6F00] dark:text-orange-400",
+  club: "text-[#2E7D32] dark:text-emerald-400",
 };
 
 const POSITION_LABELS: Record<Position, string> = {
@@ -98,7 +98,7 @@ function CardChip({
   return (
     <span
       className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-sm font-bold leading-none
-        ${highlight ? "bg-amber-100 ring-1 ring-amber-300" : "bg-gray-50"}
+        ${highlight ? "bg-amber-100 dark:bg-amber-950/40 ring-1 ring-amber-300" : "bg-muted"}
         ${SUIT_COLORS[card.suit]}`}
     >
       {suitSymbol(card.suit)}
@@ -167,7 +167,7 @@ function TrickTable({
     return (
       <div
         className={`flex items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-center transition-colors
-          ${isWinner ? "bg-emerald-100 ring-1 ring-emerald-300" : "bg-white"}`}
+          ${isWinner ? "bg-emerald-100 dark:bg-emerald-950/40 ring-1 ring-emerald-300" : "bg-card"}`}
       >
         <CardChip card={play.card} highlight={isWinner} />
       </div>
@@ -179,30 +179,30 @@ function TrickTable({
       {/* Row 1: North */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[9px] font-bold text-gray-400 uppercase">N</span>
+        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">N</span>
         <Cell pos="north" />
       </div>
       <div />
 
       {/* Row 2: West - center - East */}
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[9px] font-bold text-gray-400 uppercase">O</span>
+        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">O</span>
         <Cell pos="west" />
       </div>
       <div className="flex items-center justify-center">
-        <span className="text-[9px] font-bold text-gray-400">
+        <span className="text-[9px] font-bold text-muted-foreground/70">
           {trumpSuit ? suitSymbol(trumpSuit) : "SA"}
         </span>
       </div>
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[9px] font-bold text-gray-400 uppercase">E</span>
+        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">E</span>
         <Cell pos="east" />
       </div>
 
       {/* Row 3: South */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[9px] font-bold text-gray-400 uppercase">S</span>
+        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">S</span>
         <Cell pos="south" />
       </div>
       <div />
@@ -288,22 +288,22 @@ export function HandReplay({
         initial={{ opacity: 0, scale: 0.92, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
-        className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-gray-100 overflow-hidden"
+        className="relative w-full max-w-md rounded-2xl bg-card shadow-2xl border border-border overflow-hidden"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-foreground">
               Rivedi la mano
             </h3>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {gameState.contract} &middot; Dich.{" "}
               {displayLabel(gameState.declarer, gameState.declarer)}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70 transition-colors"
             aria-label="Chiudi"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
@@ -316,21 +316,21 @@ export function HandReplay({
         {/* Trick number + score bar */}
         <div className="px-5 pb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 px-2 text-xs font-bold text-emerald-700">
+            <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
               {currentTrickIdx + 1}/{totalTricks}
             </span>
-            <span className="text-xs font-bold text-gray-400">Presa</span>
+            <span className="text-xs font-bold text-muted-foreground/70">Presa</span>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold">
-            <span className="text-gray-500">N-S</span>
-            <span className="text-emerald-700 bg-emerald-50 rounded-md px-1.5 py-0.5">
+            <span className="text-muted-foreground">N-S</span>
+            <span className="text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-md px-1.5 py-0.5">
               {runningScore.ns}
             </span>
-            <span className="text-gray-300">-</span>
-            <span className="text-red-600 bg-red-50 rounded-md px-1.5 py-0.5">
+            <span className="text-muted-foreground/40">-</span>
+            <span className="text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5">
               {runningScore.ew}
             </span>
-            <span className="text-gray-500">E-O</span>
+            <span className="text-muted-foreground">E-O</span>
           </div>
         </div>
 
@@ -361,12 +361,12 @@ export function HandReplay({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="rounded-xl bg-gray-50 px-4 py-2.5 text-center"
+              className="rounded-xl bg-muted px-4 py-2.5 text-center"
             >
-              <p className="text-sm font-semibold text-gray-700">
+              <p className="text-sm font-semibold text-foreground/80">
                 {trickCommentary(trick, gameState.declarer)}
               </p>
-              <p className="text-[10px] text-gray-400 mt-0.5">
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
                 Attacco: {displayLabel(trick.leader, gameState.declarer)}
               </p>
             </motion.div>
@@ -375,7 +375,7 @@ export function HandReplay({
 
         {/* Hands at this point */}
         <div className="px-5 pb-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
             Carte in mano (prima della presa)
           </p>
           {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
@@ -394,8 +394,8 @@ export function HandReplay({
                       ? "col-start-3 row-start-2"
                       : "col-start-2 row-start-3";
               return (
-                <div key={slot} className={`rounded-lg bg-gray-50 px-2.5 py-1.5 ${cellClass}`}>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">
+                <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
+                  <span className="text-[10px] font-bold text-muted-foreground/70 uppercase">
                     {POSITION_LABELS[slot]}
                   </span>
                   <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
@@ -406,7 +406,7 @@ export function HandReplay({
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between border-t border-gray-100 px-5 py-4">
+        <div className="flex items-center justify-between border-t border-border px-5 py-4">
           <Button
             variant="outline"
             size="sm"
@@ -424,7 +424,7 @@ export function HandReplay({
             variant="outline"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-xs font-bold h-9 px-4 text-gray-500"
+            className="rounded-xl text-xs font-bold h-9 px-4 text-muted-foreground"
           >
             Chiudi
           </Button>

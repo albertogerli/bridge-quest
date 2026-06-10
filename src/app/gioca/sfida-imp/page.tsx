@@ -442,9 +442,9 @@ function SfidaIMPContent() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-            className="w-10 h-10 border-3 border-[#003DA5] border-t-transparent rounded-full mb-4"
+            className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full mb-4"
           />
-          <p className="text-sm text-gray-500 font-medium">Caricamento sfida...</p>
+          <p className="text-sm text-muted-foreground font-medium">Caricamento sfida...</p>
         </div>
       </div>
     );
@@ -462,7 +462,7 @@ function SfidaIMPContent() {
             className="text-center mt-20"
           >
             <div className={`flex h-16 w-16 items-center justify-center rounded-full mx-auto mb-4 ${
-              isNoChallengeId ? "bg-violet-50" : "bg-red-50"
+              isNoChallengeId ? "bg-violet-50 dark:bg-violet-950/40" : "bg-red-50 dark:bg-red-950/40"
             }`}>
               {isNoChallengeId ? (
                 <Swords className="w-8 h-8 text-violet-500" />
@@ -470,10 +470,10 @@ function SfidaIMPContent() {
                 <XCircle className="w-8 h-8 text-red-500" />
               )}
             </div>
-            <h2 className="text-lg font-bold text-gray-900 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               {isNoChallengeId ? "Sfida IMP" : "Errore"}
             </h2>
-            <p className="text-sm text-gray-500 mb-6">{error}</p>
+            <p className="text-sm text-muted-foreground mb-6">{error}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {isNoChallengeId && (
                 <Link href="/amici">
@@ -485,7 +485,7 @@ function SfidaIMPContent() {
               )}
               <Link href="/gioca">
                 <Button variant={isNoChallengeId ? "outline" : "default"} className={`rounded-xl text-sm font-bold h-11 px-6 ${
-                  isNoChallengeId ? "" : "bg-[#003DA5] hover:bg-[#002E7A]"
+                  isNoChallengeId ? "" : "bg-figb hover:bg-figb-dark"
                 }`}>
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Torna a Gioca
@@ -509,21 +509,21 @@ function SfidaIMPContent() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6"
           >
-            <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">
-              <Link href="/gioca" className="hover:text-[#003DA5] transition-colors font-bold">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+              <Link href="/gioca" className="hover:text-figb dark:hover:text-primary transition-colors font-bold">
                 Gioca
               </Link>
               <span>/</span>
-              <span className="text-[#003DA5] font-semibold">Sfida IMP</span>
+              <span className="text-figb dark:text-primary font-semibold">Sfida IMP</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
                 href="/gioca"
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Link>
-              <h1 className="text-2xl font-bold text-gray-900">Sfida IMP</h1>
+              <h1 className="text-2xl font-bold text-foreground font-display">Sfida IMP</h1>
             </div>
           </motion.div>
 
@@ -533,7 +533,7 @@ function SfidaIMPContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#003DA5] to-[#002E7A] p-6">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-figb to-figb-dark p-6">
               <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
               <div className="relative">
                 {/* Opponent */}
@@ -577,7 +577,7 @@ function SfidaIMPContent() {
                     resultsSubmittedRef.current = false;
                     setGameKey((k) => k + 1);
                   }}
-                  className="w-full py-4 rounded-2xl bg-white text-[#003DA5] font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
+                  className="w-full py-4 rounded-2xl bg-white text-figb font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
                 >
                   Inizia la Sfida
                 </button>
@@ -592,30 +592,30 @@ function SfidaIMPContent() {
             transition={{ delay: 0.2 }}
             className="mt-4"
           >
-            <div className="rounded-2xl bg-white p-5 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
-              <h3 className="font-bold text-gray-900 mb-3">Come funziona il punteggio IMP</h3>
+            <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
+              <h3 className="font-bold text-foreground mb-3">Come funziona il punteggio IMP</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#003DA5]/10 text-xs font-bold text-[#003DA5]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 text-xs font-bold text-figb dark:text-primary">
                     1
                   </div>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-muted-foreground">
                     Entrambi i giocatori giocano le stesse mani con lo stesso contratto.
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#003DA5]/10 text-xs font-bold text-[#003DA5]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 text-xs font-bold text-figb dark:text-primary">
                     2
                   </div>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-muted-foreground">
                     La differenza di punteggio viene convertita in IMP usando la tabella WBF.
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#003DA5]/10 text-xs font-bold text-[#003DA5]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 text-xs font-bold text-figb dark:text-primary">
                     3
                   </div>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-muted-foreground">
                     Chi ottiene pi&ugrave; IMP alla fine di tutte le mani vince il match.
                   </p>
                 </div>
@@ -643,15 +643,15 @@ function SfidaIMPContent() {
             <div className="flex items-center justify-center gap-2 mb-2">
               <Link
                 href="/gioca"
-                className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+                className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Link>
-              <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
+              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[10px] font-bold border-0">
                 Sfida IMP
               </Badge>
             </div>
-            <h1 className="text-lg font-bold text-gray-900">
+            <h1 className="text-lg font-bold text-foreground">
               Mano {currentBoard + 1} di {totalBoards}
             </h1>
             {/* Progress dots */}
@@ -663,8 +663,8 @@ function SfidaIMPContent() {
                     i < currentBoard
                       ? "bg-emerald-500"
                       : i === currentBoard
-                        ? "bg-[#003DA5]"
-                        : "bg-gray-200"
+                        ? "bg-figb dark:bg-primary"
+                        : "bg-muted"
                   }`}
                 />
               ))}
@@ -678,20 +678,20 @@ function SfidaIMPContent() {
             transition={{ delay: 0.1 }}
             className="mb-4 flex items-center justify-center"
           >
-            <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
+            <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
               <div className="text-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
-                <p className="text-lg font-bold text-emerald-700">{contractDisplay(boardContract.contract)}</p>
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+                <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{contractDisplay(boardContract.contract)}</p>
               </div>
-              <div className="h-8 w-px bg-gray-100" />
+              <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-                <p className="text-lg font-bold text-gray-900">{tricksNeeded} prese</p>
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+                <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
               </div>
-              <div className="h-8 w-px bg-gray-100" />
+              <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
-                <p className="text-lg font-bold text-gray-900">
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+                <p className="text-lg font-bold text-foreground">
                   {partnershipOf(declarer) === "ew"
                     ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                     : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
@@ -699,9 +699,9 @@ function SfidaIMPContent() {
               </div>
               {boardContract.vulnerable && (
                 <>
-                  <div className="h-8 w-px bg-gray-100" />
+                  <div className="h-8 w-px bg-border" />
                   <div className="text-center">
-                    <Badge className="bg-red-100 text-red-700 text-[10px] font-bold border-0">
+                    <Badge className="bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300 text-[10px] font-bold border-0">
                       Vuln.
                     </Badge>
                   </div>
@@ -739,7 +739,7 @@ function SfidaIMPContent() {
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <div className="flex items-center justify-center h-64 text-gray-400">
+              <div className="flex items-center justify-center h-64 text-muted-foreground/70">
                 <p className="text-sm">Preparazione della mano...</p>
               </div>
             )}
@@ -756,11 +756,11 @@ function SfidaIMPContent() {
                 className={`text-sm font-semibold ${
                   game.phase === "finished"
                     ? game.result && game.result.result >= 0
-                      ? "text-emerald-600"
-                      : "text-red-500"
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-red-500 dark:text-red-400"
                     : game.isPlayerTurn
-                      ? "text-amber-600"
-                      : "text-gray-500"
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-muted-foreground"
                 }`}
               >
                 {game.message}
@@ -773,7 +773,7 @@ function SfidaIMPContent() {
             <div className="mt-4 flex justify-center">
               <Button
                 onClick={game.startGame}
-                className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-sm font-bold h-12 px-8 shadow-lg shadow-[#003DA5]/20"
+                className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-8 shadow-lg shadow-figb/20"
               >
                 Gioca questa mano
               </Button>
@@ -800,7 +800,7 @@ function SfidaIMPContent() {
           >
             {/* Result Icon */}
             <div className={`flex h-20 w-20 items-center justify-center rounded-full mx-auto mb-4 ${
-              trickDiff >= 0 ? "bg-emerald-50" : "bg-red-50"
+              trickDiff >= 0 ? "bg-emerald-50 dark:bg-emerald-950/40" : "bg-red-50 dark:bg-red-950/40"
             }`}>
               {trickDiff >= 0 ? (
                 <CheckCircle2 className="w-10 h-10 text-emerald-500" />
@@ -809,36 +809,36 @@ function SfidaIMPContent() {
               )}
             </div>
 
-            <h2 className="text-xl font-bold text-gray-900 mb-1">
+            <h2 className="text-xl font-bold text-foreground mb-1">
               Mano {currentBoard + 1} di {totalBoards}
             </h2>
-            <p className={`text-lg font-bold ${trickDiff >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+            <p className={`text-lg font-bold ${trickDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
               {trickDiff >= 0
                 ? trickDiff === 0 ? "Contratto mantenuto!" : `Contratto fatto con ${trickDiff} extra!`
                 : `Contratto caduto di ${Math.abs(trickDiff)}`}
             </p>
 
             {/* Stats */}
-            <div className="mt-6 rounded-2xl bg-white p-5 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
+            <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Contratto</p>
-                  <p className="text-xl font-bold text-gray-900">{contractDisplay(boardContract.contract)}</p>
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Contratto</p>
+                  <p className="text-xl font-bold text-foreground">{contractDisplay(boardContract.contract)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Prese</p>
-                  <p className="text-xl font-bold text-gray-900">{currentBoardResult.tricksMade}/{tricksNeeded}</p>
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Prese</p>
+                  <p className="text-xl font-bold text-foreground">{currentBoardResult.tricksMade}/{tricksNeeded}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Risultato</p>
-                  <p className={`text-xl font-bold ${trickDiff >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Risultato</p>
+                  <p className={`text-xl font-bold ${trickDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                     {formatResult(trickDiff)}
                   </p>
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t border-gray-100 text-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Punteggio grezzo</p>
-                <p className={`text-lg font-bold ${currentBoardResult.rawScore >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+              <div className="mt-3 pt-3 border-t border-border text-center">
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Punteggio grezzo</p>
+                <p className={`text-lg font-bold ${currentBoardResult.rawScore >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                   {currentBoardResult.rawScore > 0 ? "+" : ""}{currentBoardResult.rawScore}
                 </p>
               </div>
@@ -850,7 +850,7 @@ function SfidaIMPContent() {
                 <div
                   key={i}
                   className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                    i <= currentBoard ? "bg-[#003DA5]" : "bg-gray-200"
+                    i <= currentBoard ? "bg-figb dark:bg-primary" : "bg-muted"
                   }`}
                 />
               ))}
@@ -859,7 +859,7 @@ function SfidaIMPContent() {
             {/* Action */}
             <button
               onClick={goNextBoard}
-              className="mt-6 w-full py-4 rounded-2xl bg-[#003DA5] text-white font-bold text-base shadow-lg hover:bg-[#002E7A] transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              className="mt-6 w-full py-4 rounded-2xl bg-figb text-white font-bold text-base shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             >
               {isLastBoard ? (
                 <>
@@ -896,9 +896,9 @@ function SfidaIMPContent() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-              className="w-10 h-10 border-3 border-[#003DA5] border-t-transparent rounded-full mb-4"
+              className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full mb-4"
             />
-            <p className="text-sm text-gray-500 font-medium">Invio risultati...</p>
+            <p className="text-sm text-muted-foreground font-medium">Invio risultati...</p>
           </div>
         </div>
       );
@@ -927,7 +927,7 @@ function SfidaIMPContent() {
             >
               {/* Verdict */}
               <div className={`flex h-20 w-20 items-center justify-center rounded-full mx-auto mb-4 ${
-                myNet > 0 ? "bg-emerald-50" : myNet < 0 ? "bg-red-50" : "bg-amber-50"
+                myNet > 0 ? "bg-emerald-50 dark:bg-emerald-950/40" : myNet < 0 ? "bg-red-50 dark:bg-red-950/40" : "bg-amber-50 dark:bg-amber-950/40"
               }`}>
                 {myNet > 0 ? (
                   <Trophy className="w-10 h-10 text-emerald-500" />
@@ -938,17 +938,17 @@ function SfidaIMPContent() {
                 )}
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">{verdict}</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-1">{verdict}</h2>
               <p className={`text-lg font-bold ${
-                myNet > 0 ? "text-emerald-600" : myNet < 0 ? "text-red-500" : "text-amber-600"
+                myNet > 0 ? "text-emerald-600 dark:text-emerald-400" : myNet < 0 ? "text-red-500 dark:text-red-400" : "text-amber-600 dark:text-amber-400"
               }`}>
                 {myNet > 0 ? "+" : ""}{myNet} IMP
               </p>
 
               {/* Comparison Table */}
-              <div className="mt-6 rounded-2xl bg-white border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb] overflow-hidden">
+              <div className="mt-6 rounded-2xl bg-card border-2 border-border shadow-[0_4px_0_var(--border)] overflow-hidden">
                 {/* Table Header */}
-                <div className="grid grid-cols-5 text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-gray-50 px-4 py-3">
+                <div className="grid grid-cols-5 text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider bg-muted/50 px-4 py-3">
                   <div className="text-left">Mano</div>
                   <div className="text-center">Contr.</div>
                   <div className="text-center">Tu</div>
@@ -968,18 +968,18 @@ function SfidaIMPContent() {
                   const theirDiff = (isChallenger ? or : cr).tricksMade - myTricksNeeded;
 
                   return (
-                    <div key={i} className="grid grid-cols-5 text-sm px-4 py-2.5 border-t border-gray-100 items-center">
-                      <div className="text-left font-bold text-gray-700">{i + 1}</div>
-                      <div className="text-center text-gray-600 text-xs font-medium">
+                    <div key={i} className="grid grid-cols-5 text-sm px-4 py-2.5 border-t border-border items-center">
+                      <div className="text-left font-bold text-foreground/80">{i + 1}</div>
+                      <div className="text-center text-muted-foreground text-xs font-medium">
                         {contractDisplay(cr.contract)}
                       </div>
-                      <div className={`text-center font-bold ${myDiff >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+                      <div className={`text-center font-bold ${myDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                         {formatResult(myDiff)}
                       </div>
-                      <div className={`text-center font-bold ${theirDiff >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+                      <div className={`text-center font-bold ${theirDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                         {formatResult(theirDiff)}
                       </div>
-                      <div className={`text-right font-bold ${myIMP > 0 ? "text-emerald-600" : myIMP < 0 ? "text-red-500" : "text-gray-400"}`}>
+                      <div className={`text-right font-bold ${myIMP > 0 ? "text-emerald-600 dark:text-emerald-400" : myIMP < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground/70"}`}>
                         {myIMP > 0 ? "+" : ""}{myIMP}
                       </div>
                     </div>
@@ -987,10 +987,10 @@ function SfidaIMPContent() {
                 })}
 
                 {/* Total row */}
-                <div className="grid grid-cols-5 text-sm px-4 py-3 border-t-2 border-[#003DA5]/20 bg-[#003DA5]/5 items-center">
-                  <div className="col-span-4 text-left font-bold text-[#003DA5]">Totale</div>
+                <div className="grid grid-cols-5 text-sm px-4 py-3 border-t-2 border-figb/20 bg-figb/5 dark:border-primary/30 dark:bg-primary/10 items-center">
+                  <div className="col-span-4 text-left font-bold text-figb dark:text-primary">Totale</div>
                   <div className={`text-right font-bold text-lg ${
-                    myNet > 0 ? "text-emerald-600" : myNet < 0 ? "text-red-500" : "text-amber-600"
+                    myNet > 0 ? "text-emerald-600 dark:text-emerald-400" : myNet < 0 ? "text-red-500 dark:text-red-400" : "text-amber-600 dark:text-amber-400"
                   }`}>
                     {myNet > 0 ? "+" : ""}{myNet}
                   </div>
@@ -1000,12 +1000,12 @@ function SfidaIMPContent() {
               {/* Actions */}
               <div className="mt-6 space-y-3">
                 <Link href="/amici" className="block">
-                  <button className="w-full py-3.5 rounded-2xl bg-[#003DA5] text-white font-bold text-sm shadow-lg hover:bg-[#002E7A] transition-all active:scale-[0.98]">
+                  <button className="w-full py-3.5 rounded-2xl bg-figb text-white font-bold text-sm shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98]">
                     Torna agli amici
                   </button>
                 </Link>
                 <Link href="/gioca" className="block">
-                  <button className="w-full py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition-all">
+                  <button className="w-full py-3 rounded-2xl bg-muted text-foreground/80 font-bold text-sm hover:bg-muted/70 transition-all">
                     Vai a Gioca
                   </button>
                 </Link>
@@ -1025,26 +1025,26 @@ function SfidaIMPContent() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-12"
           >
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#003DA5]/10 mx-auto mb-4">
-              <Clock className="w-10 h-10 text-[#003DA5]" />
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 mx-auto mb-4">
+              <Clock className="w-10 h-10 text-figb dark:text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Risultati inviati!</h2>
-            <p className="text-sm text-gray-500 mb-2 max-w-xs mx-auto">
+            <h2 className="text-xl font-bold text-foreground mb-2">Risultati inviati!</h2>
+            <p className="text-sm text-muted-foreground mb-2 max-w-xs mx-auto">
               I tuoi risultati sono stati registrati.
               Ti notificheremo quando il tuo avversario avr&agrave; completato la sfida.
             </p>
 
             {/* My results summary */}
             {myResults && myResults.length > 0 && (
-              <div className="mt-6 rounded-2xl bg-white p-4 border-2 border-gray-200 shadow-[0_4px_0_#e5e7eb]">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">I tuoi risultati</h3>
+              <div className="mt-6 rounded-2xl bg-card p-4 border-2 border-border shadow-[0_4px_0_var(--border)]">
+                <h3 className="text-xs font-bold text-muted-foreground/70 uppercase tracking-wider mb-3">I tuoi risultati</h3>
                 {myResults.map((r, i) => {
                   const needed = parseContract(r.contract).tricksNeeded;
                   const diff = r.tricksMade - needed;
                   return (
-                    <div key={i} className="flex items-center justify-between py-2 border-t border-gray-50 first:border-0">
-                      <span className="text-sm text-gray-600">Mano {i + 1}: {contractDisplay(r.contract)}</span>
-                      <span className={`text-sm font-bold ${diff >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+                    <div key={i} className="flex items-center justify-between py-2 border-t border-border/50 first:border-0">
+                      <span className="text-sm text-muted-foreground">Mano {i + 1}: {contractDisplay(r.contract)}</span>
+                      <span className={`text-sm font-bold ${diff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                         {formatResult(diff)} ({r.rawScore > 0 ? "+" : ""}{r.rawScore})
                       </span>
                     </div>
@@ -1056,12 +1056,12 @@ function SfidaIMPContent() {
             {/* Actions */}
             <div className="mt-6 space-y-3">
               <Link href="/amici" className="block">
-                <button className="w-full py-3.5 rounded-2xl bg-[#003DA5] text-white font-bold text-sm shadow-lg hover:bg-[#002E7A] transition-all active:scale-[0.98]">
+                <button className="w-full py-3.5 rounded-2xl bg-figb text-white font-bold text-sm shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98]">
                   Torna agli amici
                 </button>
               </Link>
               <Link href="/gioca" className="block">
-                <button className="w-full py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition-all">
+                <button className="w-full py-3 rounded-2xl bg-muted text-foreground/80 font-bold text-sm hover:bg-muted/70 transition-all">
                   Vai a Gioca
                 </button>
               </Link>
@@ -1085,12 +1085,12 @@ function SfidaIMPContent() {
             <motion.div
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-50 mx-auto mb-4"
+              className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/40 mx-auto mb-4"
             >
               <Clock className="w-10 h-10 text-amber-500" />
             </motion.div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">In attesa del risultato</h2>
-            <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
+            <h2 className="text-xl font-bold text-foreground mb-2">In attesa del risultato</h2>
+            <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
               Hai gi&agrave; giocato questa sfida. Stiamo aspettando che <strong>{opponentName}</strong> completi le sue mani.
             </p>
 
@@ -1110,19 +1110,19 @@ function SfidaIMPContent() {
                   }
                 }
               }}
-              className="mb-4 py-2.5 px-6 rounded-xl border-2 border-[#003DA5]/20 text-[#003DA5] font-bold text-sm hover:bg-[#003DA5]/5 transition-all"
+              className="mb-4 py-2.5 px-6 rounded-xl border-2 border-figb/20 text-figb hover:bg-figb/5 dark:border-primary/30 dark:text-primary dark:hover:bg-primary/10 font-bold text-sm transition-all"
             >
               Controlla aggiornamenti
             </button>
 
             <div className="space-y-3">
               <Link href="/amici" className="block">
-                <button className="w-full py-3.5 rounded-2xl bg-[#003DA5] text-white font-bold text-sm shadow-lg hover:bg-[#002E7A] transition-all active:scale-[0.98]">
+                <button className="w-full py-3.5 rounded-2xl bg-figb text-white font-bold text-sm shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98]">
                   Torna agli amici
                 </button>
               </Link>
               <Link href="/gioca" className="block">
-                <button className="w-full py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition-all">
+                <button className="w-full py-3 rounded-2xl bg-muted text-foreground/80 font-bold text-sm hover:bg-muted/70 transition-all">
                   Vai a Gioca
                 </button>
               </Link>
@@ -1140,9 +1140,9 @@ function SfidaIMPContent() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-          className="w-10 h-10 border-3 border-[#003DA5] border-t-transparent rounded-full mb-4"
+          className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full mb-4"
         />
-        <p className="text-sm text-gray-500 font-medium">Caricamento...</p>
+        <p className="text-sm text-muted-foreground font-medium">Caricamento...</p>
       </div>
     </div>
   );
@@ -1158,8 +1158,8 @@ export default function SfidaIMPPage() {
       fallback={
         <div className="pt-6 px-5 pb-24">
           <div className="mx-auto max-w-6xl flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="w-10 h-10 border-3 border-[#003DA5] border-t-transparent rounded-full animate-spin mb-4" />
-            <p className="text-sm text-gray-500 font-medium">Caricamento sfida...</p>
+            <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-sm text-muted-foreground font-medium">Caricamento sfida...</p>
           </div>
         </div>
       }

@@ -81,10 +81,10 @@ export default function SfidaSettimanale() {
 
   if (!isSmazzateLoaded) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center pb-24">
+      <div className="min-h-screen bg-background flex items-center justify-center pb-24">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500 font-medium">Caricamento sfida in corso...</p>
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground font-medium">Caricamento sfida in corso...</p>
         </div>
       </div>
     );
@@ -116,7 +116,7 @@ export default function SfidaSettimanale() {
 
   // Overview page
   return (
-    <div className="min-h-screen bg-[#F7F5F0] pb-24">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className={`bg-gradient-to-br ${challenge.gradient} text-white px-4 pt-6 pb-10`}>
         <div className="mx-auto max-w-6xl">
@@ -175,22 +175,22 @@ export default function SfidaSettimanale() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`bg-white rounded-2xl p-4 shadow-sm border transition-all ${
+                className={`bg-card rounded-2xl p-4 shadow-sm border transition-all ${
                   isPlayed
                     ? "border-emerald-200"
                     : isNext
-                      ? "border-[#003DA5]/30 shadow-md"
-                      : "border-gray-100 opacity-60"
+                      ? "border-figb/30 dark:border-primary/40 shadow-md"
+                      : "border-border opacity-60"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   {/* Status icon */}
                   <div className={`flex h-11 w-11 items-center justify-center rounded-xl shrink-0 ${
                     isPlayed
-                      ? "bg-emerald-100 text-emerald-600"
+                      ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
                       : isNext
                         ? `bg-gradient-to-br ${challenge.gradient} text-white`
-                        : "bg-gray-100 text-gray-400"
+                        : "bg-muted text-muted-foreground/70"
                   }`}>
                     {isPlayed ? (
                       <CheckCircle2 className="w-5 h-5" />
@@ -201,14 +201,14 @@ export default function SfidaSettimanale() {
 
                   {/* Hand info */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900 truncate">
+                    <p className="text-sm font-bold text-foreground truncate">
                       Mano {i + 1}: {hand.title}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Contratto {hand.contract} · Lezione {getLessonDisplayNumber(hand.lesson)}
                     </p>
                     {isPlayed && completedData && (
-                      <p className="text-xs text-emerald-600 font-semibold mt-0.5">
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
                         +{completedData.xpGained} XP · Punteggio: {completedData.score}
                       </p>
                     )}
@@ -219,7 +219,7 @@ export default function SfidaSettimanale() {
                     <Button
                       onClick={() => setCurrentHandIndex(i)}
                       size="sm"
-                      className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] font-bold text-xs h-9 px-4 shrink-0"
+                      className="rounded-xl bg-figb hover:bg-figb-dark font-bold text-xs h-9 px-4 shrink-0"
                     >
                       <Play className="w-3.5 h-3.5 mr-1" />
                       Gioca
@@ -228,7 +228,7 @@ export default function SfidaSettimanale() {
                   {isPlayed && (
                     <div className="flex items-center gap-1.5 shrink-0">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span className="text-xs font-bold text-emerald-600">Giocata</span>
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Giocata</span>
                     </div>
                   )}
                 </div>
@@ -241,14 +241,14 @@ export default function SfidaSettimanale() {
       {/* Tips */}
       <div className="px-4 mt-6">
         <div className="mx-auto max-w-6xl">
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <div className="bg-card rounded-2xl p-5 shadow-sm border border-border">
+            <h2 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
               💡 Suggerimenti per questa settimana
             </h2>
             <ul className="space-y-2">
               {challenge.tips.map((tip, i) => (
-                <li key={i} className="flex gap-2 text-sm text-gray-600">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#003DA5] text-white text-[10px] font-bold">{i + 1}</span>
+                <li key={i} className="flex gap-2 text-sm text-muted-foreground">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-figb text-white text-[10px] font-bold">{i + 1}</span>
                   {tip}
                 </li>
               ))}
@@ -391,56 +391,56 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
       : undefined;
 
   return (
-    <div className="pt-4 px-4 min-h-screen bg-[#F7F5F0]">
+    <div className="pt-4 px-4 min-h-screen bg-background">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-3">
           <div className="flex items-center justify-center gap-2 mb-2">
             <button
               onClick={onBack}
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
             <Badge className={`bg-gradient-to-r ${challenge.gradient} text-white text-[10px] font-bold border-0`}>
               {challenge.name}
             </Badge>
-            <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
+            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
               Mano {handNumber}/5
             </Badge>
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
           </div>
-          <h1 className="text-lg font-bold text-gray-900">{smazzata.title}</h1>
-          <p className="text-xs text-gray-500 mt-1">
+          <h1 className="text-lg font-bold text-foreground">{smazzata.title}</h1>
+          <p className="text-xs text-muted-foreground mt-1">
             Lezione {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
           </p>
         </motion.div>
 
         {/* Contract bar */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4 flex items-center justify-center">
-          <div className="card-elevated rounded-xl bg-white px-4 py-2 flex items-center gap-5 text-sm">
+          <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
-              <p className="text-lg font-bold text-[#003DA5]">{smazzata.contract}</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+              <p className="text-lg font-bold text-figb dark:text-primary">{smazzata.contract}</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Obiettivo</p>
-              <p className="text-lg font-bold text-gray-900">{tricksNeeded} prese</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dich. / Dif.</p>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                   : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
               </p>
             </div>
-            <div className="h-8 w-px bg-gray-100" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">XP</p>
-              <p className="text-lg font-bold text-amber-600">{challenge.xpMultiplier}x</p>
+              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">XP</p>
+              <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{challenge.xpMultiplier}x</p>
             </div>
           </div>
         </motion.div>
@@ -510,11 +510,11 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
               className={`text-sm font-semibold ${
                 game.phase === "finished"
                   ? game.result && game.result.result >= 0
-                    ? "text-emerald-600"
-                    : "text-red-500"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-red-500 dark:text-red-400"
                   : game.isPlayerTurn
-                    ? "text-amber-600"
-                    : "text-gray-500"
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-muted-foreground"
               }`}
             >
               {game.message}
@@ -540,7 +540,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
               </Button>
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
-                className="rounded-xl bg-[#003DA5] hover:bg-[#002E7A] text-sm font-bold h-12 px-6"
+                className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6"
               >
                 Rigioca
               </Button>
@@ -560,23 +560,23 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
               <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? "epic" : "medium") : "small"} />
               <div className={`card-elevated rounded-2xl p-6 text-center ${
                 game.result.result >= 0
-                  ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                  : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                  ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
+                  : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
               }`}>
                 <div className="text-4xl mb-3">{game.result.result >= 0 ? "🎉" : "😔"}</div>
-                <h3 className={`text-xl font-bold ${game.result.result >= 0 ? "text-emerald-700" : "text-red-600"}`}>
+                <h3 className={`text-xl font-bold ${game.result.result >= 0 ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>
                   {game.result.result >= 0
                     ? game.result.result === 0
                       ? "Contratto Mantenuto!"
                       : `Contratto +${game.result.result}!`
                     : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
                 </p>
-                <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-2">
-                  <Zap className="w-4 h-4 text-amber-600" />
-                  <span className="text-sm font-bold text-amber-700">
+                <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl px-4 py-2">
+                  <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                  <span className="text-sm font-bold text-amber-700 dark:text-amber-300">
                     +{Math.round((30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10) * challenge.xpMultiplier)} {profile.xpLabel} ({challenge.xpMultiplier}x)
                   </span>
                 </div>
@@ -600,15 +600,15 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 mx-auto max-w-6xl">
             <button
               onClick={() => setShowHint(!showHint)}
-              className="flex items-center gap-2 mx-auto mb-2 px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-sm font-semibold text-gray-600 transition-colors"
+              className="flex items-center gap-2 mx-auto mb-2 px-4 py-2 rounded-xl bg-muted hover:bg-muted/70 text-sm font-semibold text-muted-foreground transition-colors"
             >
               {showHint ? "Nascondi suggerimento" : "Mostra suggerimento"}
             </button>
             <AnimatePresence>
               {showHint && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                  <div className="card-elevated rounded-2xl bg-white p-5">
-                    <p className="text-sm text-gray-600 leading-relaxed">{smazzata.commentary}</p>
+                  <div className="card-elevated rounded-2xl bg-card p-5">
+                    <p className="text-sm text-muted-foreground leading-relaxed">{smazzata.commentary}</p>
                   </div>
                 </motion.div>
               )}

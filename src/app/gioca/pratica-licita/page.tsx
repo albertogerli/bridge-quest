@@ -15,23 +15,23 @@ import {
 
 // Suit styling for bid buttons
 const bidSuitColor = (bid: string): string => {
-  if (bid.includes("\u2660")) return "text-blue-900"; // spades
-  if (bid.includes("\u2665")) return "text-red-500"; // hearts
-  if (bid.includes("\u2666")) return "text-orange-500"; // diamonds
-  if (bid.includes("\u2663")) return "text-emerald-700"; // clubs
-  if (bid === "Passo") return "text-gray-500";
-  if (bid === "Contro") return "text-red-600";
-  return "text-[#003DA5]";
+  if (bid.includes("\u2660")) return "text-blue-900 dark:text-blue-300"; // spades
+  if (bid.includes("\u2665")) return "text-red-500 dark:text-red-400"; // hearts
+  if (bid.includes("\u2666")) return "text-orange-500 dark:text-orange-400"; // diamonds
+  if (bid.includes("\u2663")) return "text-emerald-700 dark:text-emerald-400"; // clubs
+  if (bid === "Passo") return "text-muted-foreground";
+  if (bid === "Contro") return "text-red-600 dark:text-red-400";
+  return "text-figb dark:text-primary";
 };
 
 const bidBgGradient = (bid: string): string => {
-  if (bid.includes("\u2660")) return "from-blue-50 to-slate-50";
-  if (bid.includes("\u2665")) return "from-red-50 to-pink-50";
-  if (bid.includes("\u2666")) return "from-orange-50 to-amber-50";
-  if (bid.includes("\u2663")) return "from-emerald-50 to-green-50";
-  if (bid === "Passo") return "from-gray-50 to-gray-100";
-  if (bid === "Contro") return "from-red-50 to-rose-50";
-  return "from-[#003DA5]/10 to-[#003DA5]/5";
+  if (bid.includes("\u2660")) return "from-blue-50 to-slate-50 dark:from-blue-950/40 dark:to-slate-900/40";
+  if (bid.includes("\u2665")) return "from-red-50 to-pink-50 dark:from-red-950/40 dark:to-pink-950/30";
+  if (bid.includes("\u2666")) return "from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/30";
+  if (bid.includes("\u2663")) return "from-emerald-50 to-green-50 dark:from-emerald-950/40 dark:to-green-950/30";
+  if (bid === "Passo") return "from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800";
+  if (bid === "Contro") return "from-red-50 to-rose-50 dark:from-red-950/40 dark:to-rose-950/30";
+  return "from-figb/10 to-figb/5 dark:from-primary/15 dark:to-primary/10";
 };
 
 type Difficulty = "facile" | "medio" | "difficile";
@@ -207,7 +207,7 @@ export default function PraticaLicitaPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -215,7 +215,7 @@ export default function PraticaLicitaPage() {
               Gioca
             </Link>
             <span>/</span>
-            <span className="text-[#003DA5] font-semibold">
+            <span className="text-figb dark:text-primary font-semibold">
               Pratica Licita
             </span>
           </div>
@@ -225,31 +225,31 @@ export default function PraticaLicitaPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-[#003DA5] text-white text-5xl shadow-xl shadow-[#003DA5]/20 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl shadow-figb/20 mb-6">
               🗣️
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               Pratica Licita
             </h1>
-            <p className="text-gray-500 mt-2 max-w-xs mx-auto">
+            <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Esercitati nella dichiarazione: il compagno ha aperto, quale bid
               fai tu?
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
-              <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-xs font-bold border-0">
+              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-xs font-bold border-0">
                 {TOTAL_ROUNDS} scenari
               </Badge>
-              <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">
+              <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold border-0">
                 +20-70 {profileConfig.xpLabel}
               </Badge>
             </div>
 
             {/* Rules card */}
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">
                 Come funziona
               </h3>
-              <ul className="text-xs text-gray-500 space-y-1.5">
+              <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>Vedi la tua mano e la storia della dichiarazione</li>
                 <li>Scegli la risposta corretta tra 4 opzioni</li>
                 <li>
@@ -260,8 +260,8 @@ export default function PraticaLicitaPage() {
             </div>
 
             {/* Topic preview */}
-            <div className="mt-4 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">
+            <div className="mt-4 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">
                 Argomenti
               </h3>
               <div className="flex flex-wrap gap-1.5">
@@ -277,7 +277,7 @@ export default function PraticaLicitaPage() {
                 ].map((t) => (
                   <span
                     key={t}
-                    className="text-[10px] font-bold text-[#003DA5] bg-[#003DA5]/10 rounded-full px-2.5 py-1"
+                    className="text-[10px] font-bold text-figb bg-figb/10 dark:text-primary dark:bg-primary/15 rounded-full px-2.5 py-1"
                   >
                     {t}
                   </span>
@@ -287,7 +287,7 @@ export default function PraticaLicitaPage() {
 
             {/* Difficulty selector */}
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">
+              <h3 className="font-bold text-sm text-foreground text-left">
                 Scegli difficoltà
               </h3>
               {(
@@ -348,7 +348,7 @@ export default function PraticaLicitaPage() {
                 </motion.span>
               ))}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {stars === 3
                 ? "Maestro Dichiarante!"
                 : stars === 2
@@ -357,31 +357,31 @@ export default function PraticaLicitaPage() {
                     ? "Buon inizio!"
                     : "Studia la licita!"}
             </h1>
-            <p className="text-lg font-bold text-gray-500 mt-1">
+            <p className="text-lg font-bold text-muted-foreground mt-1">
               {correct}/{TOTAL_ROUNDS} corrette ({accuracy}%)
             </p>
-            <p className="text-2xl font-bold text-[#003DA5] mt-2">
+            <p className="text-2xl font-bold text-figb dark:text-primary mt-2">
               {score} punti
             </p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{correct}</p>
-                <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{correct}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">
+                <p className="text-[10px] text-muted-foreground/70 font-bold">
                   Streak max
                 </p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-[#003DA5]">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-figb dark:text-primary">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">
+                <p className="text-[10px] text-muted-foreground/70 font-bold">
                   {profileConfig.xpLabel}
                 </p>
               </div>
@@ -398,7 +398,7 @@ export default function PraticaLicitaPage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-[#003DA5] font-bold shadow-lg"
+                className="flex-1 h-12 rounded-xl bg-figb hover:bg-figb-dark font-bold shadow-lg"
               >
                 Rigioca
               </Button>
@@ -421,7 +421,7 @@ export default function PraticaLicitaPage() {
               pausedElapsedRef.current = Date.now() - startRef.current;
               setPaused(true);
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
               <rect x="6" y="4" width="4" height="16" />
@@ -429,38 +429,38 @@ export default function PraticaLicitaPage() {
             </svg>
           </button>
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-[#003DA5]"
+                className="h-full rounded-full bg-figb dark:bg-primary"
                 animate={{
                   width: `${((roundIdx + 1) / TOTAL_ROUNDS) * 100}%`,
                 }}
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-muted-foreground/70">
             {roundIdx + 1}/{TOTAL_ROUNDS}
           </span>
         </div>
 
         {/* Timer + Streak + Score */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-bold tabular-nums text-gray-400">
+          <span className="text-sm font-bold tabular-nums text-muted-foreground/70">
             {(timer / 10).toFixed(1)}s
           </span>
           {streak > 0 && (
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-1 bg-purple-50 rounded-full px-3 py-1"
+              className="flex items-center gap-1 bg-purple-50 dark:bg-purple-950/40 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-purple-600">
+              <span className="text-xs font-bold text-purple-600 dark:text-purple-400">
                 x{streak}
               </span>
             </motion.div>
           )}
-          <span className="text-sm font-bold text-[#003DA5]">
+          <span className="text-sm font-bold text-figb dark:text-primary">
             {score} pts
           </span>
         </div>
@@ -469,12 +469,12 @@ export default function PraticaLicitaPage() {
           <>
             {/* Topic badge */}
             <div className="flex items-center gap-2 mb-3">
-              <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
+              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[10px] font-bold border-0">
                 {scenario.topic}
               </Badge>
               <Badge
                 variant="outline"
-                className="text-[10px] font-bold text-gray-400"
+                className="text-[10px] font-bold text-muted-foreground/70"
               >
                 {scenario.vulnerability !== "Nessuna"
                   ? `Vuln: ${scenario.vulnerability}`
@@ -488,15 +488,15 @@ export default function PraticaLicitaPage() {
                 key={`hist-${roundIdx}`}
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="card-clean rounded-2xl bg-white p-4 mb-3"
+                className="card-clean rounded-2xl bg-card p-4 mb-3"
               >
-                <p className="text-xs font-bold text-gray-400 mb-2">
+                <p className="text-xs font-bold text-muted-foreground/70 mb-2">
                   Dichiarazione finora:
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   {scenario.biddingHistory.map((entry, i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-bold text-gray-400 bg-gray-100 rounded px-1.5 py-0.5">
+                      <span className="text-[10px] font-bold text-muted-foreground/70 bg-muted rounded px-1.5 py-0.5">
                         {entry.seat}
                       </span>
                       <span
@@ -505,15 +505,15 @@ export default function PraticaLicitaPage() {
                         {entry.bid}
                       </span>
                       {i < scenario.biddingHistory.length - 1 && (
-                        <span className="text-gray-300 mx-0.5">→</span>
+                        <span className="text-muted-foreground/50 mx-0.5">→</span>
                       )}
                     </div>
                   ))}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-bold text-[#003DA5] bg-[#003DA5]/10 rounded px-1.5 py-0.5 animate-pulse">
+                    <span className="text-[10px] font-bold text-figb bg-figb/10 dark:text-primary dark:bg-primary/15 rounded px-1.5 py-0.5 animate-pulse">
                       {scenario.position}
                     </span>
-                    <span className="text-sm font-bold text-[#003DA5]">
+                    <span className="text-sm font-bold text-figb dark:text-primary">
                       ?
                     </span>
                   </div>
@@ -526,10 +526,10 @@ export default function PraticaLicitaPage() {
               key={`hand-${roundIdx}`}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="card-clean rounded-2xl bg-white p-5 mb-4"
+              className="card-clean rounded-2xl bg-card p-5 mb-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-bold text-gray-400">
+                <p className="text-xs font-bold text-muted-foreground/70">
                   La tua mano ({scenario.position})
                   {scenario.biddingHistory.length === 0 &&
                     " — Che apertura fai?"}
@@ -541,26 +541,26 @@ export default function PraticaLicitaPage() {
                 className={`space-y-1 font-mono font-bold ${profile === "senior" ? "text-xl" : "text-lg"}`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-900 w-6 text-right">♠</span>
-                  <span className="text-gray-900">
+                  <span className="text-blue-900 dark:text-blue-300 w-6 text-right">♠</span>
+                  <span className="text-foreground">
                     {scenario.hand.spades || "—"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-red-500 w-6 text-right">♥</span>
-                  <span className="text-gray-900">
+                  <span className="text-red-500 dark:text-red-400 w-6 text-right">♥</span>
+                  <span className="text-foreground">
                     {scenario.hand.hearts || "—"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-orange-500 w-6 text-right">♦</span>
-                  <span className="text-gray-900">
+                  <span className="text-orange-500 dark:text-orange-400 w-6 text-right">♦</span>
+                  <span className="text-foreground">
                     {scenario.hand.diamonds || "—"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-emerald-700 w-6 text-right">♣</span>
-                  <span className="text-gray-900">
+                  <span className="text-emerald-700 dark:text-emerald-400 w-6 text-right">♣</span>
+                  <span className="text-foreground">
                     {scenario.hand.clubs || "—"}
                   </span>
                 </div>
@@ -570,17 +570,17 @@ export default function PraticaLicitaPage() {
             {/* Bid options — bidding box style */}
             <div className="grid grid-cols-2 gap-3">
               {shuffledOptions.map((bid) => {
-                let btnClass = `bg-gradient-to-br ${bidBgGradient(bid)} border-2 border-gray-200 hover:shadow-lg hover:border-[#003DA5]/30`;
+                let btnClass = `bg-gradient-to-br ${bidBgGradient(bid)} border-2 border-border hover:shadow-lg hover:border-figb/30 dark:hover:border-primary/40`;
                 if (showFeedback) {
                   if (bid === scenario.correctBid) {
                     btnClass =
-                      "bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-emerald-400 shadow-lg shadow-emerald-200/50";
+                      "bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-950/40 dark:to-green-900/30 border-2 border-emerald-400 shadow-lg shadow-emerald-200/50 dark:shadow-none";
                   } else if (bid === selectedAnswer && !lastCorrect) {
                     btnClass =
-                      "bg-gradient-to-br from-red-50 to-rose-100 border-2 border-red-300 shadow-lg shadow-red-200/50";
+                      "bg-gradient-to-br from-red-50 to-rose-100 dark:from-red-950/40 dark:to-rose-900/30 border-2 border-red-300 shadow-lg shadow-red-200/50 dark:shadow-none";
                   } else {
                     btnClass =
-                      "bg-gray-50 border-2 border-gray-100 opacity-40";
+                      "bg-muted border-2 border-border opacity-40";
                   }
                 }
 
@@ -610,27 +610,27 @@ export default function PraticaLicitaPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className={`mt-4 p-4 rounded-xl ${lastCorrect ? "bg-emerald-50 border border-emerald-200" : "bg-red-50 border border-red-200"}`}
+                  className={`mt-4 p-4 rounded-xl ${lastCorrect ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900" : "bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900"}`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-lg">
                       {lastCorrect ? "✅" : "❌"}
                     </span>
                     <p
-                      className={`text-sm font-bold ${lastCorrect ? "text-emerald-700" : "text-red-600"}`}
+                      className={`text-sm font-bold ${lastCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}
                     >
                       {lastCorrect ? "Corretto!" : "Sbagliato!"}
                     </p>
                     {!lastCorrect && (
-                      <span className="text-xs font-bold text-gray-500">
+                      <span className="text-xs font-bold text-muted-foreground">
                         Era:{" "}
-                        <span className="text-[#003DA5] font-bold">
+                        <span className="text-figb dark:text-primary font-bold">
                           {scenario.correctBid}
                         </span>
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-600 leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     {scenario.explanation}
                   </p>
                   <button
@@ -643,7 +643,7 @@ export default function PraticaLicitaPage() {
                     className={`mt-3 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-[0.97] ${
                       lastCorrect
                         ? "bg-emerald-600 hover:bg-emerald-700"
-                        : "bg-[#003DA5] hover:bg-[#002E7A]"
+                        : "bg-figb hover:bg-figb-dark"
                     }`}
                   >
                     Continua
@@ -667,13 +667,13 @@ export default function PraticaLicitaPage() {
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
-                className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+                className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-semibold text-gray-900">
+                <h2 className="text-2xl font-semibold text-foreground">
                   Pausa
                 </h2>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Scenario {roundIdx + 1}/{TOTAL_ROUNDS} · {score} pts
                 </p>
                 <div className="mt-6 space-y-2">
@@ -690,7 +690,7 @@ export default function PraticaLicitaPage() {
                         );
                       }, 100);
                     }}
-                    className="w-full h-12 rounded-xl bg-[#003DA5] font-semibold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-figb hover:bg-figb-dark font-semibold shadow-lg"
                   >
                     Riprendi
                   </Button>

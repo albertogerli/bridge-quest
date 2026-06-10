@@ -171,13 +171,13 @@ function shuffleArray<T>(arr: T[]): T[] {
 function getTypeBadge(type: QuizQuestion["type"]) {
   switch (type) {
     case "quiz":
-      return { label: "Quiz", bg: "bg-blue-50", text: "text-blue-600" };
+      return { label: "Quiz", bg: "bg-blue-50 dark:bg-blue-950/40", text: "text-blue-600 dark:text-blue-400" };
     case "true-false":
-      return { label: "Vero/Falso", bg: "bg-violet-50", text: "text-violet-600" };
+      return { label: "Vero/Falso", bg: "bg-violet-50 dark:bg-violet-950/40", text: "text-violet-600 dark:text-violet-400" };
     case "bid-select":
-      return { label: "Dichiarazione", bg: "bg-[#003DA5]/10", text: "text-[#003DA5]" };
+      return { label: "Dichiarazione", bg: "bg-figb/10 dark:bg-primary/15", text: "text-figb dark:text-primary" };
     case "hand-eval":
-      return { label: "Valutazione", bg: "bg-amber-50", text: "text-amber-700" };
+      return { label: "Valutazione", bg: "bg-amber-50 dark:bg-amber-950/40", text: "text-amber-700 dark:text-amber-300" };
   }
 }
 
@@ -512,7 +512,7 @@ export default function QuizLampoPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -544,35 +544,35 @@ export default function QuizLampoPage() {
             </div>
 
             <h1
-              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               Quiz Lampo
             </h1>
             <p
-              className={`text-gray-500 mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : "text-sm"}`}
+              className={`text-muted-foreground mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : "text-sm"}`}
             >
               Domande a raffica da tutti i corsi. Velocità e precisione per
               scalare la classifica!
             </p>
 
             <div className="flex items-center justify-center gap-3 mt-4">
-              <Badge className="bg-amber-50 text-amber-700 text-xs font-bold border-0">
+              <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold border-0">
                 {allQuestions.length} domande
               </Badge>
-              <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">
+              <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold border-0">
                 30s a domanda
               </Badge>
             </div>
 
             {/* How to play */}
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
               <h3
-                className={`font-bold text-gray-900 mb-2 ${isSenior ? "text-base" : "text-sm"}`}
+                className={`font-bold text-foreground mb-2 ${isSenior ? "text-base" : "text-sm"}`}
               >
                 Come si gioca?
               </h3>
               <ul
-                className={`text-gray-500 space-y-1.5 ${isSenior ? "text-sm" : "text-xs"}`}
+                className={`text-muted-foreground space-y-1.5 ${isSenior ? "text-sm" : "text-xs"}`}
               >
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">1.</span>
@@ -599,7 +599,7 @@ export default function QuizLampoPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-bold"
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-sm font-bold"
               >
                 <span>🏆</span>
                 <span>Record: {bestScore} punti</span>
@@ -608,7 +608,7 @@ export default function QuizLampoPage() {
 
             {/* Difficulty selection */}
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">
+              <h3 className="font-bold text-sm text-foreground text-left">
                 Scegli difficoltà
               </h3>
               {(
@@ -678,7 +678,7 @@ export default function QuizLampoPage() {
             </div>
 
             <h1
-              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               {stars === 3
                 ? "Fulmine!"
@@ -716,31 +716,31 @@ export default function QuizLampoPage() {
               transition={{ delay: 0.6 }}
               className="grid grid-cols-4 gap-2 mt-6"
             >
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {correctCount}/{cfg.rounds}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{pct}%</p>
-                <p className="text-[10px] text-gray-400 font-bold">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{pct}%</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">
                   Precisione
                 </p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
+              <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-orange-500">
                   x{maxCombo}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">
+                <p className="text-[10px] text-muted-foreground/70 font-bold">
                   Max combo
                 </p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-emerald-600">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -749,43 +749,43 @@ export default function QuizLampoPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.75 }}
-              className="mt-4 card-clean rounded-2xl bg-white p-4"
+              className="mt-4 card-clean rounded-2xl bg-card p-4"
             >
-              <h3 className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">
+              <h3 className="text-xs font-bold text-muted-foreground/70 mb-3 uppercase tracking-wide">
                 {`Dettaglio ${profileConfig.xpLabel}`}
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">
+                  <span className="text-muted-foreground">
                     Risposte corrette ({correctCount} x 15)
                   </span>
-                  <span className="font-bold text-gray-900">
+                  <span className="font-bold text-foreground">
                     {correctCount * 15}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Bonus combo</span>
+                  <span className="text-muted-foreground">Bonus combo</span>
                   <span className="font-bold text-orange-500">
                     +{totalComboPoints}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Bonus velocità</span>
+                  <span className="text-muted-foreground">Bonus velocità</span>
                   <span className="font-bold text-blue-500">
                     +{totalSpeedBonus}
                   </span>
                 </div>
-                <div className="border-t border-gray-100 pt-2 flex justify-between">
-                  <span className="text-gray-500">
+                <div className="border-t border-border pt-2 flex justify-between">
+                  <span className="text-muted-foreground">
                     Moltiplicatore ({cfg.label})
                   </span>
-                  <span className="font-bold text-gray-900">
+                  <span className="font-bold text-foreground">
                     x{cfg.xpMult}
                   </span>
                 </div>
-                <div className="border-t border-gray-100 pt-2 flex justify-between text-base">
-                  <span className="font-bold text-gray-900">Totale</span>
-                  <span className="font-bold text-emerald-600">
+                <div className="border-t border-border pt-2 flex justify-between text-base">
+                  <span className="font-bold text-foreground">Totale</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
                     +{xpEarned} {profileConfig.xpLabel}
                   </span>
                 </div>
@@ -801,7 +801,7 @@ export default function QuizLampoPage() {
             >
               <button
                 onClick={() => setShowRecap(!showRecap)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted border border-border text-sm font-bold text-muted-foreground hover:bg-muted/70 transition-colors"
               >
                 <span>{showRecap ? "Nascondi" : "Mostra"} recap risposte</span>
                 <span className="text-xs">{showRecap ? "▲" : "▼"}</span>
@@ -829,21 +829,21 @@ export default function QuizLampoPage() {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className={`rounded-xl p-3 border ${wasRight ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
+                          className={`rounded-xl p-3 border ${wasRight ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                         >
                           <div className="flex items-start gap-2">
                             <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${wasRight ? "bg-emerald-500" : "bg-red-500"}`}>
                               {wasRight ? "✓" : "✗"}
                             </span>
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-medium text-gray-800 leading-relaxed">{q.content}</p>
-                              <p className="text-[11px] text-gray-500 mt-1">
+                              <p className="text-xs font-medium text-foreground/80 leading-relaxed">{q.content}</p>
+                              <p className="text-[11px] text-muted-foreground mt-1">
                                 {answer.selected !== null
                                   ? `Hai risposto: ${selectedOption}`
                                   : "Tempo scaduto"}
                               </p>
                               {!wasRight && (
-                                <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                                <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                   Corretta: {q.options[q.correctIndex]}
                                   {q.explanation && ` — ${q.explanation}`}
                                 </p>
@@ -901,7 +901,7 @@ export default function QuizLampoPage() {
         <div className="flex items-center justify-between mb-3">
           <Link
             href="/gioca"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
           >
             <svg
               className="h-4 w-4"
@@ -916,7 +916,7 @@ export default function QuizLampoPage() {
 
           {/* Progress bar */}
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500"
                 animate={{
@@ -927,13 +927,13 @@ export default function QuizLampoPage() {
             </div>
           </div>
 
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-muted-foreground/70">
             {currentIdx + 1}/{config.rounds}
           </span>
         </div>
 
         {/* Timer bar */}
-        <div className="relative h-3 rounded-full bg-gray-100 overflow-hidden mb-4">
+        <div className="relative h-3 rounded-full bg-muted overflow-hidden mb-4">
           <motion.div
             className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${timerBarColor}`}
             style={{ width: `${timerFraction * 100}%` }}
@@ -953,7 +953,7 @@ export default function QuizLampoPage() {
         <div className="flex items-center justify-between mb-4">
           <div
             className={`text-sm font-bold tabular-nums ${
-              timerFraction <= 0.2 ? "text-red-500" : "text-gray-400"
+              timerFraction <= 0.2 ? "text-red-500 dark:text-red-400" : "text-muted-foreground/70"
             }`}
           >
             {Math.ceil(timeLeft)}s
@@ -968,10 +968,10 @@ export default function QuizLampoPage() {
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                className="flex items-center gap-1.5 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200/50 rounded-full px-3 py-1"
+                className="flex items-center gap-1.5 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/30 border border-orange-200/50 dark:border-orange-900 rounded-full px-3 py-1"
               >
                 <span className="text-sm">🔥</span>
-                <span className="text-xs font-bold text-orange-600">
+                <span className="text-xs font-bold text-orange-600 dark:text-orange-400">
                   x{combo}
                 </span>
               </motion.div>
@@ -989,7 +989,7 @@ export default function QuizLampoPage() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -40, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="card-clean rounded-2xl bg-white p-5 mb-4"
+            className="card-clean rounded-2xl bg-card p-5 mb-4"
           >
             {/* Type badge + course */}
             <div className="flex items-center justify-between mb-3">
@@ -998,18 +998,18 @@ export default function QuizLampoPage() {
               >
                 {badge.label}
               </span>
-              <span className="text-[10px] font-medium text-gray-300 truncate ml-2">
+              <span className="text-[10px] font-medium text-muted-foreground/50 truncate ml-2">
                 {currentQuestion.courseName}
               </span>
             </div>
 
             {/* Cards display (if any) */}
             {currentQuestion.cards && (
-              <div className="mb-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+              <div className="mb-3 p-3 rounded-xl bg-muted/50 border border-border">
                 <p
                   className={`font-mono font-bold tracking-wide leading-relaxed ${
                     isSenior ? "text-lg" : "text-base"
-                  } text-gray-800`}
+                  } text-foreground`}
                 >
                   {currentQuestion.cards}
                 </p>
@@ -1018,7 +1018,7 @@ export default function QuizLampoPage() {
 
             {/* Question text */}
             <p
-              className={`font-bold text-gray-900 leading-relaxed ${
+              className={`font-bold text-foreground leading-relaxed ${
                 isSenior ? "text-lg" : "text-base"
               }`}
             >
@@ -1043,22 +1043,22 @@ export default function QuizLampoPage() {
         >
           {currentQuestion.options.map((option, idx) => {
             let btnStyle =
-              "bg-white card-clean hover:shadow-lg active:scale-[0.96]";
-            let textColor = "text-gray-900";
+              "bg-card card-clean hover:shadow-lg active:scale-[0.96]";
+            let textColor = "text-foreground";
             let borderExtra = "";
 
             if (showResult) {
               if (idx === currentQuestion.correctIndex) {
                 btnStyle =
-                  "bg-emerald-50 border-2 border-emerald-400 shadow-lg shadow-emerald-200/40";
-                textColor = "text-emerald-700";
+                  "bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 shadow-lg shadow-emerald-200/40 dark:shadow-none";
+                textColor = "text-emerald-700 dark:text-emerald-300";
               } else if (idx === selectedIdx && !wasCorrect) {
                 btnStyle =
-                  "bg-red-50 border-2 border-red-300 shadow-lg shadow-red-200/30";
-                textColor = "text-red-600";
+                  "bg-red-50 dark:bg-red-950/40 border-2 border-red-300 shadow-lg shadow-red-200/30 dark:shadow-none";
+                textColor = "text-red-600 dark:text-red-400";
               } else {
-                btnStyle = "bg-gray-50 opacity-40";
-                textColor = "text-gray-400";
+                btnStyle = "bg-muted opacity-40";
+                textColor = "text-muted-foreground/70";
               }
             }
 
@@ -1092,7 +1092,7 @@ export default function QuizLampoPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               className={`mt-4 p-3 rounded-xl ${
-                wasCorrect ? "bg-emerald-50" : "bg-red-50"
+                wasCorrect ? "bg-emerald-50 dark:bg-emerald-950/40" : "bg-red-50 dark:bg-red-950/40"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -1101,7 +1101,7 @@ export default function QuizLampoPage() {
                 </span>
                 <p
                   className={`text-sm font-bold ${
-                    wasCorrect ? "text-emerald-700" : "text-red-600"
+                    wasCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {wasCorrect
@@ -1114,7 +1114,7 @@ export default function QuizLampoPage() {
                 </p>
               </div>
               {currentQuestion.explanation && !wasCorrect && (
-                <p className="text-xs text-gray-500 mt-1 ml-7">
+                <p className="text-xs text-muted-foreground mt-1 ml-7">
                   {currentQuestion.explanation}
                 </p>
               )}

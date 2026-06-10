@@ -73,15 +73,15 @@ export function PlanningQuiz({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
-        className="mx-auto mt-3 max-w-md rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-sm"
+        className="mx-auto mt-3 max-w-md rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40 p-4 shadow-sm"
       >
         <div className="flex items-start gap-2">
-          <Target className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+          <Target className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
           <div className="flex-1">
-            <p className="text-sm font-bold text-amber-800">
+            <p className="text-sm font-bold text-amber-800 dark:text-amber-300">
               Fai il piano prima di giocare
             </p>
-            <p className="mt-1 text-xs font-medium text-amber-700">
+            <p className="mt-1 text-xs font-medium text-amber-700 dark:text-amber-300">
               Guarda il morto e conta: quante prese puoi realizzare con il gioco
               migliore?
             </p>
@@ -89,14 +89,14 @@ export function PlanningQuiz({
             {!answered && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {ddTricks === null ? (
-                  <span className="text-xs text-amber-600">Calcolo in corso…</span>
+                  <span className="text-xs text-amber-600 dark:text-amber-400">Calcolo in corso…</span>
                 ) : (
                   options.map((n) => (
                     <Button
                       key={n}
                       variant="outline"
                       size="sm"
-                      className="h-8 w-10 rounded-xl border-amber-300 bg-white text-sm font-bold"
+                      className="h-8 w-10 rounded-xl border-amber-300 dark:border-amber-800 bg-card text-sm font-bold"
                       onClick={() => {
                         setPicked(n);
                         onAnswer?.(isCorrectPick(n));
@@ -131,7 +131,7 @@ export function PlanningQuiz({
             {!answered && (
               <button
                 onClick={onDismiss}
-                className="mt-2 text-[11px] font-semibold text-amber-600 underline-offset-2 hover:underline"
+                className="mt-2 text-[11px] font-semibold text-amber-600 dark:text-amber-400 underline-offset-2 hover:underline"
               >
                 Salta
               </button>

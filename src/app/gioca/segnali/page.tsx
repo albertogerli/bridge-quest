@@ -31,10 +31,10 @@ const suitSymbols: Record<SuitKey, string> = {
   club: "♣",
 };
 const suitColors: Record<SuitKey, string> = {
-  spade: "text-gray-900",
-  heart: "text-red-500",
-  diamond: "text-red-500",
-  club: "text-gray-900",
+  spade: "text-foreground",
+  heart: "text-red-500 dark:text-red-400",
+  diamond: "text-red-500 dark:text-red-400",
+  club: "text-foreground",
 };
 
 const SPOTS = ["9", "8", "7", "6", "5", "4", "3", "2"] as const;
@@ -343,7 +343,7 @@ export default function SegnaliPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">
               Gioca
             </Link>
@@ -359,27 +359,27 @@ export default function SegnaliPage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white text-5xl shadow-xl shadow-violet-400/30 mb-6">
               📡
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Segnali in Difesa</h1>
-            <p className="text-gray-500 mt-2 max-w-xs mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Segnali in Difesa</h1>
+            <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               In difesa si parla con le carte: impara a dare (e leggere) i segnali del compagno.
             </p>
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">Le regole d&apos;oro</h3>
-              <ul className="text-xs text-gray-500 space-y-1.5">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">Le regole d&apos;oro</h3>
+              <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
-                  <span className="font-bold text-gray-700">Gradimento:</span> carta alta = «continua», carta bassa = «cambia colore»
+                  <span className="font-bold text-foreground/80">Gradimento:</span> carta alta = «continua», carta bassa = «cambia colore»
                 </li>
                 <li>
-                  <span className="font-bold text-gray-700">Conto:</span> alto-basso = numero pari, basso-alto = dispari
+                  <span className="font-bold text-foreground/80">Conto:</span> alto-basso = numero pari, basso-alto = dispari
                 </li>
                 <li>
-                  <span className="font-bold text-gray-700">Mai</span> sprecare un onore per segnalare
+                  <span className="font-bold text-foreground/80">Mai</span> sprecare un onore per segnalare
                 </li>
               </ul>
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficoltà</h3>
+              <h3 className="font-bold text-sm text-foreground text-left">Scegli difficoltà</h3>
               {(Object.entries(difficultyConfig) as [Difficulty, (typeof difficultyConfig)["facile"]][]).map(
                 ([key, cfg]) => (
                   <button
@@ -429,25 +429,25 @@ export default function SegnaliPage() {
               ))}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {stars === 3 ? "Difensore d'élite!" : stars === 2 ? "Ottima intesa!" : stars === 1 ? "Buon inizio!" : "Riprova!"}
             </h1>
             <p className="text-xl sm:text-2xl font-bold text-violet-500 mt-2">{score} punti</p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {correctCount}/{config.rounds}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{bestStreak}</p>
-                <p className="text-[10px] text-gray-400 font-bold">Streak max</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{bestStreak}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Streak max</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
+              <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-violet-500">+{xpEarned}</p>
-                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -481,37 +481,37 @@ export default function SegnaliPage() {
         <div className="flex items-center justify-between mb-4">
           <Link
             href="/gioca"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
             aria-label="Esci dal gioco"
           >
             ✕
           </Link>
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-500"
                 animate={{ width: `${(round / config.rounds) * 100}%` }}
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-muted-foreground/70">
             {round}/{config.rounds}
           </span>
         </div>
 
         {/* Streak + score */}
         <div className="flex items-center justify-between mb-4">
-          <span className="inline-flex items-center rounded-full bg-violet-50 px-3 py-1 text-[11px] font-bold text-violet-600">
+          <span className="inline-flex items-center rounded-full bg-violet-50 dark:bg-violet-950/40 px-3 py-1 text-[11px] font-bold text-violet-600 dark:text-violet-400">
             {KIND_LABELS[current.kind]}
           </span>
           {streak > 0 && (
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-1 bg-orange-50 rounded-full px-3 py-1"
+              className="flex items-center gap-1 bg-orange-50 dark:bg-orange-950/40 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-orange-600">x{streak}</span>
+              <span className="text-xs font-bold text-orange-600 dark:text-orange-400">x{streak}</span>
             </motion.div>
           )}
           <div className="text-sm font-bold text-violet-500">{score} pts</div>
@@ -522,11 +522,11 @@ export default function SegnaliPage() {
           key={round}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="card-clean rounded-2xl bg-white p-5 mb-4"
+          className="card-clean rounded-2xl bg-card p-5 mb-4"
         >
           <div className="space-y-1">
             {current.scenario.map((line, i) => (
-              <p key={i} className="text-sm text-gray-700">
+              <p key={i} className="text-sm text-foreground/80">
                 {line}
               </p>
             ))}
@@ -537,13 +537,13 @@ export default function SegnaliPage() {
               <span className={`${suitColors[current.holding.suit]} text-2xl font-bold`}>
                 {suitSymbols[current.holding.suit]}
               </span>
-              <span className="text-2xl font-bold tracking-[0.3em] text-gray-900">
+              <span className="text-2xl font-bold tracking-[0.3em] text-foreground">
                 {current.holding.ranks.join(" ")}
               </span>
             </div>
           )}
 
-          <p className="mt-4 text-center text-xs font-bold text-gray-400">{current.question}</p>
+          <p className="mt-4 text-center text-xs font-bold text-muted-foreground/70">{current.question}</p>
         </motion.div>
 
         {/* Answers: cards or text */}
@@ -560,11 +560,11 @@ export default function SegnaliPage() {
                   className={`card-clean rounded-2xl p-4 text-center transition-all ${
                     showFeedback
                       ? isCorrect
-                        ? "bg-emerald-50 ring-2 ring-emerald-400"
+                        ? "bg-emerald-50 dark:bg-emerald-950/40 ring-2 ring-emerald-400"
                         : isPicked
-                          ? "bg-red-50 ring-2 ring-red-400"
-                          : "bg-white opacity-50"
-                      : "bg-white active:scale-95 hover:shadow-lg"
+                          ? "bg-red-50 dark:bg-red-950/40 ring-2 ring-red-400"
+                          : "bg-card opacity-50"
+                      : "bg-card active:scale-95 hover:shadow-lg"
                   }`}
                 >
                   <p className={`text-2xl font-bold ${suitColors[current.holding!.suit]}`}>
@@ -590,11 +590,11 @@ export default function SegnaliPage() {
                   className={`card-clean w-full rounded-2xl p-4 text-left text-sm font-semibold transition-all ${
                     showFeedback
                       ? isCorrect
-                        ? "bg-emerald-50 ring-2 ring-emerald-400 text-emerald-800"
+                        ? "bg-emerald-50 dark:bg-emerald-950/40 ring-2 ring-emerald-400 text-emerald-800 dark:text-emerald-300"
                         : isPicked
-                          ? "bg-red-50 ring-2 ring-red-400 text-red-700"
-                          : "bg-white opacity-50 text-gray-600"
-                      : "bg-white text-gray-800 active:scale-[0.98] hover:shadow-lg"
+                          ? "bg-red-50 dark:bg-red-950/40 ring-2 ring-red-400 text-red-700 dark:text-red-300"
+                          : "bg-card opacity-50 text-muted-foreground"
+                      : "bg-card text-foreground/80 active:scale-[0.98] hover:shadow-lg"
                   }`}
                 >
                   {opt}
@@ -612,13 +612,13 @@ export default function SegnaliPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               className={`mt-4 rounded-2xl border p-4 ${
-                lastCorrect ? "bg-emerald-50 border-emerald-200" : "bg-red-50 border-red-200"
+                lastCorrect ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900" : "bg-red-50 border-red-200 dark:bg-red-950/40 dark:border-red-900"
               }`}
             >
-              <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700" : "text-red-600"}`}>
+              <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>
                 {lastCorrect ? "Segnale perfetto!" : "Segnale sbagliato"}
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-gray-600">{current.explanation}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{current.explanation}</p>
             </motion.div>
           )}
         </AnimatePresence>

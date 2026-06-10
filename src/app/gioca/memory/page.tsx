@@ -212,7 +212,7 @@ export default function MemoryPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
               Gioca
             </Link>
@@ -222,22 +222,22 @@ export default function MemoryPage() {
 
           <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-center mb-8">
-              <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-[#003DA5] text-4xl shadow-lg shadow-[#003DA5]/20 mb-4">
+              <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-figb text-4xl shadow-lg shadow-figb/20 mb-4">
                 🧠
               </div>
-              <h1 className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl"}`}>
+              <h1 className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl"}`}>
                 Memory Bridge
               </h1>
-              <p className={`text-gray-500 mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
+              <p className={`text-muted-foreground mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
                 Abbina le carte ai concetti del bridge!
               </p>
             </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <div className="card-clean rounded-2xl bg-white p-5 mb-4">
-              <h3 className="font-semibold text-gray-900 mb-3">Come si gioca</h3>
-              <ul className={`space-y-2 text-gray-600 ${isSenior ? "text-base" : "text-sm"}`}>
+            <div className="card-clean rounded-2xl bg-card p-5 mb-4">
+              <h3 className="font-semibold text-foreground mb-3">Come si gioca</h3>
+              <ul className={`space-y-2 text-muted-foreground ${isSenior ? "text-base" : "text-sm"}`}>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 font-bold">1.</span>
                   Tocca una carta per girarla
@@ -255,8 +255,8 @@ export default function MemoryPage() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <div className="card-clean rounded-2xl bg-white p-5 mb-6">
-              <h3 className="font-semibold text-gray-900 mb-3">Scegli difficoltà</h3>
+            <div className="card-clean rounded-2xl bg-card p-5 mb-6">
+              <h3 className="font-semibold text-foreground mb-3">Scegli difficoltà</h3>
               <div className="space-y-2">
                 {([
                   { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "from-green-500 to-emerald-500", shadow: "shadow-green-400/30" },
@@ -281,7 +281,7 @@ export default function MemoryPage() {
 
           {bestTime !== null && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-              <div className="text-center text-sm text-gray-400 font-bold">
+              <div className="text-center text-sm text-muted-foreground/70 font-bold">
                 ⏱️ Miglior tempo: {formatTime(bestTime)}
               </div>
             </motion.div>
@@ -302,27 +302,27 @@ export default function MemoryPage() {
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <Link href="/gioca" className="inline-flex items-center gap-1 text-sm text-gray-400 font-bold">
+            <Link href="/gioca" className="inline-flex items-center gap-1 text-sm text-muted-foreground/70 font-bold">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="15,18 9,12 15,6"/></svg>
               Esci
             </Link>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5 text-sm font-bold text-gray-600">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-muted-foreground">
                 <span>🎯</span> {matchedPairs}/{pairs}
               </div>
-              <div className="flex items-center gap-1.5 text-sm font-bold text-gray-600">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-muted-foreground">
                 <span>👆</span> {moves}
               </div>
-              <div className={`flex items-center gap-1.5 text-sm font-bold ${timer > pairs * 20 ? "text-red-500" : "text-gray-600"}`}>
+              <div className={`flex items-center gap-1.5 text-sm font-bold ${timer > pairs * 20 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"}`}>
                 <span>⏱️</span> {formatTime(timer)}
               </div>
             </div>
           </div>
 
           {/* Progress bar */}
-          <div className="h-2 rounded-full bg-gray-100 overflow-hidden mb-4">
+          <div className="h-2 rounded-full bg-muted overflow-hidden mb-4">
             <motion.div
-              className="h-full rounded-full bg-[#003DA5]"
+              className="h-full rounded-full bg-figb dark:bg-primary"
               animate={{ width: `${(matchedPairs / pairs) * 100}%` }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             />
@@ -335,7 +335,7 @@ export default function MemoryPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center mb-3"
             >
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-sm font-bold">
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-sm font-bold">
                 🔥 Streak x{streak}!
               </span>
             </motion.div>
@@ -369,14 +369,14 @@ export default function MemoryPage() {
                       isSenior ? "text-sm" : "text-xs"
                     } ${
                       isMatched
-                        ? "bg-emerald-50 border-2 border-emerald-300"
+                        ? "bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-300"
                         : isWrong
-                          ? "bg-red-50 border-2 border-red-300"
+                          ? "bg-red-50 dark:bg-red-950/40 border-2 border-red-300"
                           : faceUp
                             ? card.type === "card"
-                              ? "bg-white border-2 border-purple-300 shadow-lg shadow-purple-200/50"
-                              : "bg-white border-2 border-[#003DA5]/20 shadow-lg shadow-[#003DA5]/20"
-                            : "bg-[#003DA5] border-2 border-[#003DA5]/60 shadow-md cursor-pointer active:scale-95"
+                              ? "bg-card border-2 border-purple-300 shadow-lg shadow-purple-200/50 dark:shadow-none"
+                              : "bg-card border-2 border-figb/20 dark:border-primary/30 shadow-lg shadow-figb/20 dark:shadow-none"
+                            : "bg-figb border-2 border-figb/60 shadow-md cursor-pointer active:scale-95"
                     }`}
                     style={{ perspective: 1000 }}
                   >
@@ -385,14 +385,14 @@ export default function MemoryPage() {
                         {/* Type indicator */}
                         <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
                           card.type === "card"
-                            ? "bg-purple-50 text-purple-500"
-                            : "bg-[#003DA5]/10 text-[#003DA5]"
+                            ? "bg-purple-50 text-purple-500 dark:bg-purple-950/40 dark:text-purple-400"
+                            : "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary"
                         }`}>
                           {card.type === "card" ? "🃏 Carta" : "📖 Concetto"}
                         </span>
                         <span className={`text-center leading-tight ${
                           isSenior ? "text-sm" : "text-[11px]"
-                        } ${isMatched ? "text-emerald-700" : "text-gray-800"} font-semibold`}>
+                        } ${isMatched ? "text-emerald-700 dark:text-emerald-300" : "text-foreground"} font-semibold`}>
                           {card.content}
                         </span>
                         {isMatched && <span className="text-lg">✓</span>}
@@ -414,7 +414,7 @@ export default function MemoryPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-              className="text-center text-sm text-gray-400 mt-4"
+              className="text-center text-sm text-muted-foreground/70 mt-4"
             >
               💡 Gira due carte per trovare la coppia carta-concetto
             </motion.p>
@@ -458,7 +458,7 @@ export default function MemoryPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className={`font-bold text-gray-900 mb-2 ${isSenior ? "text-3xl" : "text-2xl"}`}
+            className={`font-bold text-foreground font-display mb-2 ${isSenior ? "text-3xl" : "text-2xl"}`}
           >
             {stars === 3 ? "Memoria Perfetta!" : stars === 2 ? "Ottimo lavoro!" : "Completato!"}
           </motion.h1>
@@ -468,7 +468,7 @@ export default function MemoryPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-purple-50 text-purple-600 font-bold text-lg">
+            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 font-bold text-lg">
               +{earned} {prof.xpLabel}
             </span>
           </motion.div>
@@ -480,42 +480,42 @@ export default function MemoryPage() {
             transition={{ delay: 0.8 }}
             className="mt-6"
           >
-            <div className="card-clean rounded-2xl bg-white p-5">
+            <div className="card-clean rounded-2xl bg-card p-5">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <p className="text-2xl font-bold text-purple-600">⏱️</p>
-                  <p className="text-lg font-bold text-gray-900 mt-1">{formatTime(timer)}</p>
-                  <p className="text-[11px] text-gray-500 font-medium">Tempo</p>
+                  <p className="text-lg font-bold text-foreground mt-1">{formatTime(timer)}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium">Tempo</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-amber-500">👆</p>
-                  <p className="text-lg font-bold text-gray-900 mt-1">{moves}</p>
-                  <p className="text-[11px] text-gray-500 font-medium">Mosse</p>
+                  <p className="text-lg font-bold text-foreground mt-1">{moves}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium">Mosse</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-orange-500">🔥</p>
-                  <p className="text-lg font-bold text-gray-900 mt-1">{maxStreak}</p>
-                  <p className="text-[11px] text-gray-500 font-medium">Max streak</p>
+                  <p className="text-lg font-bold text-foreground mt-1">{maxStreak}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium">Max streak</p>
                 </div>
               </div>
               {/* Efficiency */}
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-border">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500 font-medium">Efficienza</span>
-                  <span className="font-bold text-gray-900">
+                  <span className="text-muted-foreground font-medium">Efficienza</span>
+                  <span className="font-bold text-foreground">
                     {Math.round((pairs / moves) * 100)}%
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-gray-100 overflow-hidden mt-1.5">
+                <div className="h-2 rounded-full bg-muted overflow-hidden mt-1.5">
                   <div
-                    className="h-full rounded-full bg-[#003DA5]"
+                    className="h-full rounded-full bg-figb dark:bg-primary"
                     style={{ width: `${Math.min(100, Math.round((pairs / moves) * 100))}%` }}
                   />
                 </div>
               </div>
               {bestTime !== null && (
-                <div className="mt-3 pt-3 border-t border-gray-100 text-center">
-                  <p className="text-sm text-gray-400 font-bold">
+                <div className="mt-3 pt-3 border-t border-border text-center">
+                  <p className="text-sm text-muted-foreground/70 font-bold">
                     🏆 Miglior tempo: {formatTime(bestTime)}
                     {timer <= bestTime && timer > 0 && " — Nuovo record!"}
                   </p>
@@ -533,12 +533,12 @@ export default function MemoryPage() {
           >
             <button
               onClick={() => startGame(difficulty)}
-              className={`w-full py-4 rounded-2xl bg-[#003DA5] text-white font-semibold shadow-lg shadow-[#003DA5]/20 active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+              className={`w-full py-4 rounded-2xl bg-figb text-white font-semibold shadow-lg shadow-figb/20 active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
             >
               Gioca ancora
             </button>
             <Link href="/gioca" className="block">
-              <button className={`w-full py-4 rounded-2xl bg-gray-100 text-gray-700 font-semibold active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}>
+              <button className={`w-full py-4 rounded-2xl bg-muted text-foreground/80 font-semibold active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}>
                 Torna al menu
               </button>
             </Link>

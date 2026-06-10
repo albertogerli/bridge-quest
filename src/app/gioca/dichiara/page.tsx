@@ -11,7 +11,7 @@ import { useGameResults } from "@/hooks/use-game-results";
 
 const suitSymbols: Record<string, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
 const suitColors: Record<string, string> = {
-  spade: "text-gray-900", heart: "text-red-500", diamond: "text-red-500", club: "text-gray-900",
+  spade: "text-foreground", heart: "text-red-500 dark:text-red-400", diamond: "text-red-500 dark:text-red-400", club: "text-foreground",
 };
 
 type HandScenario = {
@@ -305,28 +305,28 @@ export default function DichiaraPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
             <span>/</span>
             <span className="text-emerald font-semibold">Dichiara!</span>
           </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mt-8">
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-[#003DA5] text-white text-5xl shadow-xl shadow-[#003DA5]/20 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl shadow-figb/20 mb-6">
               🗣️
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dichiara!</h1>
-            <p className="text-gray-500 mt-2 max-w-xs mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Dichiara!</h1>
+            <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Vedi una mano e scegli l'apertura corretta. Velocità e precisione!
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
-              <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-xs font-bold border-0">{TOTAL_ROUNDS} mani</Badge>
-              <Badge className="bg-emerald-50 text-emerald-700 text-xs font-bold border-0">+20-70 {profileConfig.xpLabel}</Badge>
+              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-xs font-bold border-0">{TOTAL_ROUNDS} mani</Badge>
+              <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold border-0">+20-70 {profileConfig.xpLabel}</Badge>
             </div>
 
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">Regole di apertura FIGB</h3>
-              <ul className="text-xs text-gray-500 space-y-1.5">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">Regole di apertura FIGB</h3>
+              <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>12+ HCP: puoi aprire</li>
                 <li>15-17 HCP bilanciata: apri 1NT</li>
                 <li>20-21 HCP bilanciata: apri 2NT</li>
@@ -336,7 +336,7 @@ export default function DichiaraPage() {
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficoltà</h3>
+              <h3 className="font-bold text-sm text-foreground text-left">Scegli difficoltà</h3>
               {(Object.entries(dichiaraDiffConfig) as [DichiaraDifficulty, typeof dichiaraDiffConfig.facile][]).map(([key, cfg]) => (
                 <button
                   key={key}
@@ -378,24 +378,24 @@ export default function DichiaraPage() {
                 </motion.span>
               ))}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {stars === 3 ? "Maestro!" : stars === 2 ? "Ottimo!" : stars === 1 ? "Non male!" : "Studia ancora!"}
             </h1>
-            <p className="text-lg font-bold text-gray-500 mt-1">{correct}/{TOTAL_ROUNDS} corrette ({accuracy}%)</p>
-            <p className="text-2xl font-bold text-[#003DA5] mt-2">{score} punti</p>
+            <p className="text-lg font-bold text-muted-foreground mt-1">{correct}/{TOTAL_ROUNDS} corrette ({accuracy}%)</p>
+            <p className="text-2xl font-bold text-figb dark:text-primary mt-2">{score} punti</p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{correct}</p>
-                <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{correct}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{bestStreak}</p>
-                <p className="text-[10px] text-gray-400 font-bold">Streak max</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{bestStreak}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Streak max</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-[#003DA5]">+{xpEarned}</p>
-                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-figb dark:text-primary">+{xpEarned}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -403,7 +403,7 @@ export default function DichiaraPage() {
             <div className="mt-4">
               <button
                 onClick={() => setShowRecap(!showRecap)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted border border-border text-sm font-bold text-muted-foreground hover:bg-muted/70 transition-colors"
               >
                 <span>{showRecap ? "Nascondi" : "Mostra"} recap risposte</span>
                 <span className="text-xs">{showRecap ? "▲" : "▼"}</span>
@@ -428,19 +428,19 @@ export default function DichiaraPage() {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className={`rounded-xl p-3 border ${answer.correct ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
+                          className={`rounded-xl p-3 border ${answer.correct ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                         >
                           <div className="flex items-start gap-2">
                             <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${answer.correct ? "bg-emerald-500" : "bg-red-500"}`}>
                               {answer.correct ? "✓" : "✗"}
                             </span>
                             <div className="flex-1 min-w-0">
-                              <p className="text-[11px] text-gray-500 mb-0.5">{s.hand}</p>
-                              <p className="text-xs text-gray-600">
+                              <p className="text-[11px] text-muted-foreground mb-0.5">{s.hand}</p>
+                              <p className="text-xs text-muted-foreground">
                                 Hai dichiarato: <span className="font-bold">{answer.selected}</span>
                               </p>
                               {!answer.correct && (
-                                <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                                <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                   Corretta: {s.correctBid} — {s.explanation}
                                 </p>
                               )}
@@ -460,7 +460,7 @@ export default function DichiaraPage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-[#003DA5] font-bold shadow-lg"
+                className="flex-1 h-12 rounded-xl bg-figb hover:bg-figb-dark font-bold shadow-lg"
               >
                 Rigioca
               </Button>
@@ -483,31 +483,31 @@ export default function DichiaraPage() {
               pausedElapsedRef.current = Date.now() - startRef.current;
               setPaused(true);
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
           </button>
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-[#003DA5]"
+                className="h-full rounded-full bg-figb dark:bg-primary"
                 animate={{ width: `${((roundIdx + 1) / TOTAL_ROUNDS) * 100}%` }}
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-gray-400">{roundIdx + 1}/{TOTAL_ROUNDS}</span>
+          <span className="text-xs font-bold text-muted-foreground/70">{roundIdx + 1}/{TOTAL_ROUNDS}</span>
         </div>
 
         {/* Timer + Streak */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-bold tabular-nums text-gray-400">{(timer / 10).toFixed(1)}s</span>
+          <span className="text-sm font-bold tabular-nums text-muted-foreground/70">{(timer / 10).toFixed(1)}s</span>
           {streak > 0 && (
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-purple-50 rounded-full px-3 py-1">
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-purple-50 dark:bg-purple-950/40 rounded-full px-3 py-1">
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-purple-600">x{streak}</span>
+              <span className="text-xs font-bold text-purple-600 dark:text-purple-400">x{streak}</span>
             </motion.div>
           )}
-          <span className="text-sm font-bold text-[#003DA5]">{score} pts</span>
+          <span className="text-sm font-bold text-figb dark:text-primary">{score} pts</span>
         </div>
 
         {scenario && (
@@ -517,12 +517,12 @@ export default function DichiaraPage() {
               key={roundIdx}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="card-clean rounded-2xl bg-white p-5 mb-4"
+              className="card-clean rounded-2xl bg-card p-5 mb-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-bold text-gray-400">Che apertura fai?</p>
+                <p className="text-xs font-bold text-muted-foreground/70">Che apertura fai?</p>
                 {(dCfg.showHCP || dCfg.showDist) && (
-                  <Badge variant="outline" className="text-[10px] font-bold text-gray-400">
+                  <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground/70">
                     {dCfg.showHCP ? `${scenario.hcp} HCP` : ""}
                     {dCfg.showHCP && dCfg.showDist ? " · " : ""}
                     {dCfg.showDist ? scenario.distribution : ""}
@@ -539,14 +539,14 @@ export default function DichiaraPage() {
             {/* Bid options */}
             <div className="grid grid-cols-2 gap-3">
               {scenario.options.map((bid) => {
-                let btnClass = "bg-white card-clean hover:shadow-lg";
+                let btnClass = "bg-card card-clean hover:shadow-lg";
                 if (showFeedback) {
                   if (bid === scenario.correctBid) {
-                    btnClass = "bg-emerald-50 border-2 border-emerald-400 shadow-lg";
+                    btnClass = "bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 shadow-lg dark:shadow-none";
                   } else if (bid === selectedAnswer && !lastCorrect) {
-                    btnClass = "bg-red-50 border-2 border-red-300";
+                    btnClass = "bg-red-50 dark:bg-red-950/40 border-2 border-red-300";
                   } else {
-                    btnClass = "bg-gray-50 opacity-50";
+                    btnClass = "bg-muted opacity-50";
                   }
                 }
 
@@ -560,7 +560,7 @@ export default function DichiaraPage() {
                     }`}
                   >
                     <p className={`font-bold ${profile === "senior" ? "text-2xl" : "text-xl"} ${
-                      bid === "Passo" ? "text-gray-600" : "text-[#003DA5]"
+                      bid === "Passo" ? "text-muted-foreground" : "text-figb dark:text-primary"
                     }`}>
                       {bid}
                     </p>
@@ -575,12 +575,12 @@ export default function DichiaraPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 p-3 rounded-xl ${lastCorrect ? "bg-emerald-50" : "bg-red-50"}`}
+                  className={`mt-4 p-3 rounded-xl ${lastCorrect ? "bg-emerald-50 dark:bg-emerald-950/40" : "bg-red-50 dark:bg-red-950/40"}`}
                 >
-                  <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700" : "text-red-600"}`}>
+                  <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>
                     {lastCorrect ? "Corretto!" : "Sbagliato!"}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">{scenario.explanation}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{scenario.explanation}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -600,11 +600,11 @@ export default function DichiaraPage() {
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
-                className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+                className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-semibold text-gray-900">Pausa</h2>
-                <p className="text-sm text-gray-500 mt-2">Domanda {roundIdx + 1}/{TOTAL_ROUNDS} · {score} pts</p>
+                <h2 className="text-2xl font-semibold text-foreground">Pausa</h2>
+                <p className="text-sm text-muted-foreground mt-2">Domanda {roundIdx + 1}/{TOTAL_ROUNDS} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
                     onClick={() => {
@@ -614,7 +614,7 @@ export default function DichiaraPage() {
                         setTimer(Math.floor((Date.now() - startRef.current) / 100));
                       }, 100);
                     }}
-                    className="w-full h-12 rounded-xl bg-[#003DA5] font-semibold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-figb hover:bg-figb-dark font-semibold shadow-lg"
                   >
                     Riprendi
                   </Button>

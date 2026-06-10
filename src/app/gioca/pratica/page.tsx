@@ -13,8 +13,8 @@ export default function PraticaPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-3 border-gray-200 border-t-[#003DA5]" />
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-3 border-border border-t-primary" />
     </div>
   );
 }

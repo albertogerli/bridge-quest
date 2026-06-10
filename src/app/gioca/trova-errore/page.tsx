@@ -45,9 +45,9 @@ const difficultyConfig = {
 };
 
 const categoryConfig = {
-  licita: { label: "Licita", icon: "🗣️", bg: "bg-[#003DA5]/10", text: "text-[#003DA5]" },
-  gioco: { label: "Gioco", icon: "🃏", bg: "bg-emerald-50", text: "text-emerald-700" },
-  difesa: { label: "Difesa", icon: "🛡️", bg: "bg-rose-50", text: "text-rose-700" },
+  licita: { label: "Licita", icon: "🗣️", bg: "bg-figb/10 dark:bg-primary/15", text: "text-figb dark:text-primary" },
+  gioco: { label: "Gioco", icon: "🃏", bg: "bg-emerald-50 dark:bg-emerald-950/40", text: "text-emerald-700 dark:text-emerald-300" },
+  difesa: { label: "Difesa", icon: "🛡️", bg: "bg-rose-50 dark:bg-rose-950/40", text: "text-rose-700 dark:text-rose-300" },
 };
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -254,7 +254,7 @@ export default function TrovaErrorePage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -274,31 +274,31 @@ export default function TrovaErrorePage() {
               🔍
             </div>
             <h1
-              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               Trova l&apos;Errore
             </h1>
             <p
-              className={`text-gray-500 mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : ""}`}
+              className={`text-muted-foreground mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : ""}`}
             >
               Ogni scenario ha un errore. Riesci a trovarlo?
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
-              <Badge className="bg-rose-50 text-rose-700 text-xs font-bold border-0">
+              <Badge className="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold border-0">
                 {TOTAL_ROUNDS} domande
               </Badge>
-              <Badge className="bg-amber-50 text-amber-700 text-xs font-bold border-0">
+              <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold border-0">
                 {TIME_LIMIT}s per domanda
               </Badge>
             </div>
 
             {/* How to play */}
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">
                 Come si gioca?
               </h3>
               <ul
-                className={`text-gray-500 space-y-1.5 ${isSenior ? "text-sm" : "text-xs"}`}
+                className={`text-muted-foreground space-y-1.5 ${isSenior ? "text-sm" : "text-xs"}`}
               >
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">1.</span>
@@ -321,7 +321,7 @@ export default function TrovaErrorePage() {
 
             {/* Difficulty selection */}
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">
+              <h3 className="font-bold text-sm text-foreground text-left">
                 Scegli difficoltà
               </h3>
               {(
@@ -358,7 +358,7 @@ export default function TrovaErrorePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-4 text-center text-sm text-gray-400 font-bold"
+                className="mt-4 text-center text-sm text-muted-foreground/70 font-bold"
               >
                 🏆 Miglior punteggio: {bestScore}
               </motion.div>
@@ -401,7 +401,7 @@ export default function TrovaErrorePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className={`font-bold text-gray-900 ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
+              className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
               {stars === 3
                 ? "Detective perfetto!"
@@ -415,7 +415,7 @@ export default function TrovaErrorePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
-              className="text-lg font-bold text-gray-500 mt-1"
+              className="text-lg font-bold text-muted-foreground mt-1"
             >
               {correctCount}/{TOTAL_ROUNDS} errori trovati ({accuracy}%)
             </motion.p>
@@ -435,25 +435,25 @@ export default function TrovaErrorePage() {
               transition={{ delay: 0.85 }}
               className="grid grid-cols-3 gap-3 mt-6"
             >
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">
+                <p className="text-[10px] text-muted-foreground/70 font-bold">
                   Streak max
                 </p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
+              <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-rose-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -466,7 +466,7 @@ export default function TrovaErrorePage() {
             >
               <button
                 onClick={() => setShowRecap(!showRecap)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted border border-border text-sm font-bold text-muted-foreground hover:bg-muted/70 transition-colors"
               >
                 <span>{showRecap ? "Nascondi" : "Mostra"} recap risposte</span>
                 <span className="text-xs">{showRecap ? "▲" : "▼"}</span>
@@ -492,21 +492,21 @@ export default function TrovaErrorePage() {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className={`rounded-xl p-3 border ${answer.correct ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
+                          className={`rounded-xl p-3 border ${answer.correct ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                         >
                           <div className="flex items-start gap-2">
                             <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${answer.correct ? "bg-emerald-500" : "bg-red-500"}`}>
                               {answer.correct ? "✓" : "✗"}
                             </span>
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-medium text-gray-800 leading-relaxed">{s.situation}</p>
-                              <p className="text-[11px] text-gray-500 mt-1">
+                              <p className="text-xs font-medium text-foreground/80 leading-relaxed">{s.situation}</p>
+                              <p className="text-[11px] text-muted-foreground mt-1">
                                 {answer.selected !== null
                                   ? `Hai risposto: ${selectedOption}`
                                   : "Tempo scaduto"}
                               </p>
                               {!answer.correct && (
-                                <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                                <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                   Corretta: {s.options[s.correctAnswer]} — {s.explanation}
                                 </p>
                               )}
@@ -564,7 +564,7 @@ export default function TrovaErrorePage() {
               pausedTimeRef.current = timer;
               setPaused(true);
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
           >
             <svg
               className="h-4 w-4"
@@ -578,7 +578,7 @@ export default function TrovaErrorePage() {
 
           {/* Progress bar */}
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-rose-400 to-red-500"
                 animate={{
@@ -588,7 +588,7 @@ export default function TrovaErrorePage() {
             </div>
           </div>
 
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-muted-foreground/70">
             {round + 1}/{TOTAL_ROUNDS}
           </span>
         </div>
@@ -602,7 +602,7 @@ export default function TrovaErrorePage() {
                 <path
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
-                  stroke="#f3f4f6"
+                  stroke="var(--muted)"
                   strokeWidth="3"
                 />
                 <motion.path
@@ -620,7 +620,7 @@ export default function TrovaErrorePage() {
               </svg>
               <span
                 className={`absolute inset-0 flex items-center justify-center text-xs font-bold tabular-nums ${
-                  timerUrgent ? "text-red-500" : "text-gray-700"
+                  timerUrgent ? "text-red-500 dark:text-red-400" : "text-foreground/80"
                 }`}
               >
                 {timer}
@@ -641,10 +641,10 @@ export default function TrovaErrorePage() {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-1 bg-rose-50 rounded-full px-3 py-1"
+              className="flex items-center gap-1 bg-rose-50 dark:bg-rose-950/40 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-rose-600">
+              <span className="text-xs font-bold text-rose-600 dark:text-rose-400">
                 x{streak}
               </span>
             </motion.div>
@@ -662,7 +662,7 @@ export default function TrovaErrorePage() {
               key={round}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              className="card-clean rounded-2xl bg-white p-5 mb-4"
+              className="card-clean rounded-2xl bg-card p-5 mb-4"
             >
               {/* Category + Difficulty badges */}
               <div className="flex items-center gap-2 mb-3">
@@ -674,10 +674,10 @@ export default function TrovaErrorePage() {
                 <span
                   className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                     scenario.difficulty === "facile"
-                      ? "bg-green-50 text-green-700"
+                      ? "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300"
                       : scenario.difficulty === "medio"
-                        ? "bg-amber-50 text-amber-700"
-                        : "bg-red-50 text-red-700"
+                        ? "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
+                        : "bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300"
                   }`}
                 >
                   {scenario.difficulty.charAt(0).toUpperCase() +
@@ -687,7 +687,7 @@ export default function TrovaErrorePage() {
 
               {/* Situation text */}
               <p
-                className={`font-bold text-gray-900 leading-relaxed ${
+                className={`font-bold text-foreground leading-relaxed ${
                   isSenior ? "text-base" : "text-sm"
                 }`}
               >
@@ -696,8 +696,8 @@ export default function TrovaErrorePage() {
 
               {/* Cards display */}
               {scenario.cards && (
-                <div className="mt-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+                <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">
                     Carte
                   </p>
                   <p
@@ -708,13 +708,13 @@ export default function TrovaErrorePage() {
                     {scenario.cards.split("").map((char, i) => {
                       if (char === "♠" || char === "♣")
                         return (
-                          <span key={i} className="text-gray-900">
+                          <span key={i} className="text-foreground">
                             {char}
                           </span>
                         );
                       if (char === "♥" || char === "♦")
                         return (
-                          <span key={i} className="text-red-500">
+                          <span key={i} className="text-red-500 dark:text-red-400">
                             {char}
                           </span>
                         );
@@ -726,8 +726,8 @@ export default function TrovaErrorePage() {
 
               {/* Bidding sequence */}
               {scenario.sequence && scenario.sequence.length > 0 && (
-                <div className="mt-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
                     Sequenza di licita
                   </p>
                   <div className="flex flex-wrap gap-1.5">
@@ -736,14 +736,14 @@ export default function TrovaErrorePage() {
                         key={i}
                         className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-bold ${
                           bid === "Passo"
-                            ? "bg-gray-200 text-gray-600"
+                            ? "bg-muted text-muted-foreground"
                             : bid.includes("♥") || bid.includes("♦")
-                              ? "bg-red-100 text-red-700"
+                              ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300"
                               : bid.includes("♠") || bid.includes("♣")
-                                ? "bg-gray-800 text-white"
+                                ? "bg-gray-800 text-white dark:bg-gray-700"
                                 : bid.includes("NT")
-                                  ? "bg-blue-100 text-blue-700"
-                                  : "bg-gray-200 text-gray-600"
+                                  ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                                  : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {bid}
@@ -758,15 +758,15 @@ export default function TrovaErrorePage() {
             <div className="space-y-2">
               {scenario.options.map((option, idx) => {
                 let btnClass =
-                  "bg-white card-clean hover:shadow-lg border-2 border-transparent";
+                  "bg-card card-clean hover:shadow-lg border-2 border-transparent";
                 if (showFeedback) {
                   if (idx === scenario.correctAnswer) {
                     btnClass =
-                      "bg-emerald-50 border-2 border-emerald-400 shadow-lg shadow-emerald-100";
+                      "bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 shadow-lg shadow-emerald-100 dark:shadow-none";
                   } else if (idx === selectedAnswer && !lastCorrect) {
-                    btnClass = "bg-red-50 border-2 border-red-300";
+                    btnClass = "bg-red-50 dark:bg-red-950/40 border-2 border-red-300";
                   } else {
-                    btnClass = "bg-gray-50 opacity-50 border-2 border-transparent";
+                    btnClass = "bg-muted opacity-50 border-2 border-transparent";
                   }
                 }
 
@@ -791,7 +791,7 @@ export default function TrovaErrorePage() {
                                 idx === selectedAnswer &&
                                 !lastCorrect
                               ? "bg-red-500 text-white"
-                              : "bg-gray-100 text-gray-600"
+                              : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {showFeedback && idx === scenario.correctAnswer
@@ -807,12 +807,12 @@ export default function TrovaErrorePage() {
                           isSenior ? "text-base" : "text-sm"
                         } ${
                           showFeedback && idx === scenario.correctAnswer
-                            ? "text-emerald-800"
+                            ? "text-emerald-800 dark:text-emerald-300"
                             : showFeedback &&
                                 idx === selectedAnswer &&
                                 !lastCorrect
-                              ? "text-red-700"
-                              : "text-gray-800"
+                              ? "text-red-700 dark:text-red-400"
+                              : "text-foreground/80"
                         }`}
                       >
                         {option}
@@ -831,7 +831,7 @@ export default function TrovaErrorePage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   className={`mt-4 p-4 rounded-xl ${
-                    lastCorrect ? "bg-emerald-50" : timer === 0 && selectedAnswer === null ? "bg-amber-50" : "bg-red-50"
+                    lastCorrect ? "bg-emerald-50 dark:bg-emerald-950/40" : timer === 0 && selectedAnswer === null ? "bg-amber-50 dark:bg-amber-950/40" : "bg-red-50 dark:bg-red-950/40"
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-2">
@@ -841,10 +841,10 @@ export default function TrovaErrorePage() {
                     <p
                       className={`font-bold ${
                         lastCorrect
-                          ? "text-emerald-700"
+                          ? "text-emerald-700 dark:text-emerald-300"
                           : timer === 0 && selectedAnswer === null
-                            ? "text-amber-700"
-                            : "text-red-600"
+                            ? "text-amber-700 dark:text-amber-300"
+                            : "text-red-600 dark:text-red-400"
                       } ${isSenior ? "text-base" : "text-sm"}`}
                     >
                       {lastCorrect
@@ -855,7 +855,7 @@ export default function TrovaErrorePage() {
                     </p>
                   </div>
                   <p
-                    className={`text-gray-600 leading-relaxed ${
+                    className={`text-muted-foreground leading-relaxed ${
                       isSenior ? "text-sm" : "text-xs"
                     }`}
                   >
@@ -880,13 +880,13 @@ export default function TrovaErrorePage() {
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
-                className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+                className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-semibold text-gray-900">
+                <h2 className="text-2xl font-semibold text-foreground">
                   Pausa
                 </h2>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Domanda {round + 1}/{TOTAL_ROUNDS} · {score} pts
                 </p>
                 <div className="mt-6 space-y-2">

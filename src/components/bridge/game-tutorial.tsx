@@ -186,18 +186,18 @@ export function GameTutorial() {
             >
               {arrowDirection === "up" && <ArrowUp />}
 
-              <div className="bg-white/95 backdrop-blur-md rounded-2xl px-5 py-4 shadow-2xl shadow-black/30 max-w-[280px] w-max">
+              <div className="bg-card/95 backdrop-blur-md rounded-2xl px-5 py-4 shadow-2xl shadow-black/30 max-w-[280px] w-max">
                 {/* Step number badge */}
                 <div className="flex items-center gap-2 mb-2">
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px] font-bold">
                     {currentStep + 1}
                   </span>
-                  <span className="text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
                     {step.title}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-700 leading-relaxed">
+                <p className="text-sm text-foreground/80 leading-relaxed">
                   {step.description}
                 </p>
 

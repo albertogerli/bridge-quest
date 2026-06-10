@@ -17,7 +17,7 @@ const ranks = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"]
 const hcpValues: Record<string, number> = { A: 4, K: 3, Q: 2, J: 1 };
 const suitSymbols: Record<string, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
 const suitColors: Record<string, string> = {
-  spade: "text-gray-900", heart: "text-red-500", diamond: "text-red-500", club: "text-gray-900",
+  spade: "text-foreground", heart: "text-red-500 dark:text-red-400", diamond: "text-red-500 dark:text-red-400", club: "text-foreground",
 };
 
 type Card = { rank: string; suit: string };
@@ -206,14 +206,14 @@ export default function ContaVelocePage() {
   }, [correctHCP, config]);
 
   // Profile-aware settings
-  const timerColor = profile === "giovane" && timer > 50 ? "text-red-500" : "text-gray-400";
+  const timerColor = profile === "giovane" && timer > 50 ? "text-red-500 dark:text-red-400" : "text-muted-foreground/70";
   const cardSize = profile === "senior" ? "text-lg" : "text-base";
 
   if (phase === "menu") {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
             <span>/</span>
             <span className="text-emerald font-semibold">Conta Veloce</span>
@@ -227,13 +227,13 @@ export default function ContaVelocePage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-5xl shadow-xl shadow-amber-400/30 mb-6">
               🧮
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Conta Veloce</h1>
-            <p className="text-gray-500 mt-2 max-w-xs mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Conta Veloce</h1>
+            <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Vedi una mano, conta i punti onori il più veloce possibile!
             </p>
-            <div className="mt-6 bg-white card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">Come si gioca?</h3>
-              <ul className="text-xs text-gray-500 space-y-1.5">
+            <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
+              <h3 className="font-bold text-sm text-foreground mb-2">Come si gioca?</h3>
+              <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>A = 4, K = 3, Q = 2, J = 1 punto</li>
                 <li>Conta i punti onori (HCP) della mano</li>
                 <li>Più sei veloce, più punti guadagni</li>
@@ -242,7 +242,7 @@ export default function ContaVelocePage() {
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-gray-900 text-left">Scegli difficoltà</h3>
+              <h3 className="font-bold text-sm text-foreground text-left">Scegli difficoltà</h3>
               {(Object.entries(difficultyConfig) as [Difficulty, typeof difficultyConfig.facile][]).map(([key, cfg]) => (
                 <button
                   key={key}
@@ -291,23 +291,23 @@ export default function ContaVelocePage() {
               ))}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {stars === 3 ? "Perfetto!" : stars === 2 ? "Ottimo!" : stars === 1 ? "Bene!" : "Riprova!"}
             </h1>
             <p className="text-xl sm:text-2xl font-bold text-amber-500 mt-2">{score} punti</p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{avgTime}s</p>
-                <p className="text-[10px] text-gray-400 font-bold">Media</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{avgTime}s</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Media</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
-                <p className="text-lg font-bold text-gray-900">{bestStreak}</p>
-                <p className="text-[10px] text-gray-400 font-bold">Streak max</p>
+              <div className="card-clean rounded-xl bg-card p-3">
+                <p className="text-lg font-bold text-foreground">{bestStreak}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">Streak max</p>
               </div>
-              <div className="card-clean rounded-xl bg-white p-3">
+              <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-amber-500">+{xpEarned}</p>
-                <p className="text-[10px] text-gray-400 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -315,7 +315,7 @@ export default function ContaVelocePage() {
             <div className="mt-4">
               <button
                 onClick={() => setShowRecap(!showRecap)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted border border-border text-sm font-bold text-muted-foreground hover:bg-muted/70 transition-colors"
               >
                 <span>{showRecap ? "Nascondi" : "Mostra"} recap risposte</span>
                 <span className="text-xs">{showRecap ? "▲" : "▼"}</span>
@@ -337,19 +337,19 @@ export default function ContaVelocePage() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className={`rounded-xl p-3 border ${r.correct ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
+                        className={`rounded-xl p-3 border ${r.correct ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                       >
                         <div className="flex items-start gap-2">
                           <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${r.correct ? "bg-emerald-500" : "bg-red-500"}`}>
                             {r.correct ? "✓" : "✗"}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[11px] text-gray-500 font-mono">{r.handStr}</p>
-                            <p className="text-xs text-gray-600 mt-0.5">
+                            <p className="text-[11px] text-muted-foreground font-mono">{r.handStr}</p>
+                            <p className="text-xs text-foreground/80 mt-0.5">
                               Hai risposto: <span className="font-bold">{r.selectedHCP} HCP</span>
                             </p>
                             {!r.correct && (
-                              <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                              <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                 Corretta: {r.correctHCP} HCP
                               </p>
                             )}
@@ -393,14 +393,14 @@ export default function ContaVelocePage() {
               pausedElapsedRef.current = Date.now() - startTimeRef.current;
               setPaused(true);
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
           </button>
 
           {/* Progress */}
           <div className="flex-1 mx-3">
-            <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500"
                 animate={{ width: `${(round / config.rounds) * 100}%` }}
@@ -408,7 +408,7 @@ export default function ContaVelocePage() {
             </div>
           </div>
 
-          <span className="text-xs font-bold text-gray-400">{round}/{config.rounds}</span>
+          <span className="text-xs font-bold text-muted-foreground/70">{round}/{config.rounds}</span>
         </div>
 
         {/* Timer + Streak */}
@@ -420,10 +420,10 @@ export default function ContaVelocePage() {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-1 bg-orange-50 rounded-full px-3 py-1"
+              className="flex items-center gap-1 bg-orange-50 dark:bg-orange-950/40 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-orange-600">x{streak}</span>
+              <span className="text-xs font-bold text-orange-600 dark:text-orange-400">x{streak}</span>
             </motion.div>
           )}
           <div className="text-sm font-bold text-amber-500">{score} pts</div>
@@ -434,9 +434,9 @@ export default function ContaVelocePage() {
           key={round}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="card-clean rounded-2xl bg-white p-4 mb-6"
+          className="card-clean rounded-2xl bg-card p-4 mb-6"
         >
-          <p className="text-center text-xs font-bold text-gray-400 mb-3">
+          <p className="text-center text-xs font-bold text-muted-foreground/70 mb-3">
             Quanti punti onori?
           </p>
 
@@ -456,8 +456,8 @@ export default function ContaVelocePage() {
                         key={i}
                         className={`${cardSize} font-bold ${
                           hcpValues[card.rank]
-                            ? showAnswer ? "text-amber-600 bg-amber-50 rounded px-1" : "text-gray-900"
-                            : "text-gray-400"
+                            ? showAnswer ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded px-1" : "text-foreground"
+                            : "text-muted-foreground/70"
                         }`}
                       >
                         {card.rank}
@@ -476,10 +476,10 @@ export default function ContaVelocePage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={`mt-3 text-center p-2 rounded-xl ${
-                  lastCorrect ? "bg-emerald-50" : "bg-red-50"
+                  lastCorrect ? "bg-emerald-50 dark:bg-emerald-950/40" : "bg-red-50 dark:bg-red-950/40"
                 }`}
               >
-                <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700" : "text-red-600"}`}>
+                <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>
                   {lastCorrect ? "Corretto!" : `Sbagliato! Erano ${correctHCP} HCP`}
                 </p>
               </motion.div>
@@ -498,12 +498,12 @@ export default function ContaVelocePage() {
               <button
                 key={opt}
                 onClick={() => handleAnswer(opt)}
-                className={`card-clean rounded-2xl bg-white p-4 text-center active:scale-95 transition-transform hover:shadow-lg ${
+                className={`card-clean rounded-2xl bg-card p-4 text-center active:scale-95 transition-transform hover:shadow-lg ${
                   profile === "senior" ? "py-5" : ""
                 }`}
               >
-                <p className={`font-bold ${profile === "senior" ? "text-3xl" : "text-2xl"} text-gray-900`}>{opt}</p>
-                <p className="text-[10px] text-gray-400 font-bold mt-1">HCP</p>
+                <p className={`font-bold ${profile === "senior" ? "text-3xl" : "text-2xl"} text-foreground`}>{opt}</p>
+                <p className="text-[10px] text-muted-foreground/70 font-bold mt-1">HCP</p>
               </button>
             ))}
           </motion.div>
@@ -511,7 +511,7 @@ export default function ContaVelocePage() {
 
         {/* Hint for senior */}
         {profile === "senior" && !showAnswer && (
-          <p className="text-center text-[11px] text-gray-400 mt-3">
+          <p className="text-center text-[11px] text-muted-foreground/70 mt-3">
             A=4, K=3, Q=2, J=1
           </p>
         )}
@@ -529,11 +529,11 @@ export default function ContaVelocePage() {
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
-                className="bg-white rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+                className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-semibold text-gray-900">Pausa</h2>
-                <p className="text-sm text-gray-500 mt-2">Round {round}/{config.rounds} · {score} pts</p>
+                <h2 className="text-2xl font-semibold text-foreground">Pausa</h2>
+                <p className="text-sm text-muted-foreground mt-2">Round {round}/{config.rounds} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
                     onClick={() => {

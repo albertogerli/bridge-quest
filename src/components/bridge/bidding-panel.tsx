@@ -19,7 +19,7 @@ const POS_LABELS: Record<string, string> = {
 function BidCell({ bid, delay }: { bid: string; delay: number }) {
   if (bid === "—") {
     return (
-      <span className="text-gray-300 text-xs font-medium">—</span>
+      <span className="text-muted-foreground/40 text-xs font-medium">—</span>
     );
   }
   if (bid === "P" || bid === "Passo") {
@@ -28,7 +28,7 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay }}
-        className="text-gray-400 text-xs font-semibold"
+        className="text-muted-foreground/70 text-xs font-semibold"
       >
         P
       </motion.span>
@@ -40,7 +40,7 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay }}
-        className="text-red-600 text-xs font-black"
+        className="text-red-600 dark:text-red-400 text-xs font-black"
       >
         X
       </motion.span>
@@ -52,7 +52,7 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay }}
-        className="text-blue-600 text-xs font-black"
+        className="text-blue-600 dark:text-blue-400 text-xs font-black"
       >
         XX
       </motion.span>
@@ -64,12 +64,12 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
   const suitPart = bid.slice(1).toUpperCase();
 
   const suitDisplay: Record<string, { symbol: string; color: string }> = {
-    S: { symbol: "\u2660", color: "text-[#1B2631]" },
-    H: { symbol: "\u2665", color: "text-[#D32F2F]" },
-    D: { symbol: "\u2666", color: "text-[#FF6F00]" },
-    C: { symbol: "\u2663", color: "text-[#2E7D32]" },
-    NT: { symbol: "SA", color: "text-gray-800" },
-    SA: { symbol: "SA", color: "text-gray-800" },
+    S: { symbol: "\u2660", color: "text-[#1B2631] dark:text-slate-200" },
+    H: { symbol: "\u2665", color: "text-[#D32F2F] dark:text-red-400" },
+    D: { symbol: "\u2666", color: "text-[#FF6F00] dark:text-orange-400" },
+    C: { symbol: "\u2663", color: "text-[#2E7D32] dark:text-emerald-400" },
+    NT: { symbol: "SA", color: "text-foreground" },
+    SA: { symbol: "SA", color: "text-foreground" },
   };
 
   const suit = suitDisplay[suitPart];
@@ -81,8 +81,8 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
       transition={{ delay }}
       className="text-xs font-black flex items-center justify-center gap-0.5"
     >
-      <span className="text-gray-900">{level}</span>
-      <span className={suit?.color ?? "text-gray-800"}>
+      <span className="text-foreground">{level}</span>
+      <span className={suit?.color ?? "text-foreground"}>
         {suit?.symbol ?? suitPart}
       </span>
     </motion.span>
@@ -186,11 +186,11 @@ export function BiddingPanel({
 
   return (
     <div
-      className={`rounded-xl bg-white/95 backdrop-blur-sm border border-gray-100 shadow-sm ${
+      className={`rounded-xl bg-card/95 backdrop-blur-sm border border-border shadow-sm ${
         compact ? "p-2" : "p-3"
       }`}
     >
-      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 text-center">
+      <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 text-center">
         Licita
       </p>
       <table className="w-full">
@@ -202,7 +202,7 @@ export function BiddingPanel({
                 className={`text-[10px] font-bold text-center pb-1 ${
                   pos === dealer
                     ? "text-emerald"
-                    : "text-gray-400"
+                    : "text-muted-foreground/70"
                 }`}
               >
                 {POS_LABELS[pos]}
@@ -215,7 +215,7 @@ export function BiddingPanel({
         </thead>
         <tbody>
           {rows.map((row, rowIdx) => (
-            <tr key={rowIdx} className="border-t border-gray-50">
+            <tr key={rowIdx} className="border-t border-border/50">
               {row.map((bid, colIdx) => (
                 <td
                   key={colIdx}
