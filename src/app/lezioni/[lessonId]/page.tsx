@@ -47,7 +47,7 @@ export default function LessonDetailPage({
 
   if (!catalogLoaded) {
     return (
-      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento lezione">
+      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento lezione">
         Caricamento lezione…
       </div>
     );
@@ -56,7 +56,7 @@ export default function LessonDetailPage({
   if (!lesson) {
     return (
       <div className="pt-10 px-5 text-center">
-        <p className="text-gray-500">Lezione non trovata</p>
+        <p className="text-muted-foreground">Lezione non trovata</p>
         <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
           Torna alle lezioni
         </Link>
@@ -84,7 +84,7 @@ export default function LessonDetailPage({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center gap-2 text-xs text-gray-400 mb-4"
+          className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4"
         >
           <Link href="/lezioni" className="hover:text-emerald transition-colors">
             Lezioni
@@ -110,7 +110,7 @@ export default function LessonDetailPage({
                 {totalDuration} min
               </Badge>
             </div>
-            <h1 className="text-2xl font-bold text-white">{lesson.title}</h1>
+            <h1 className="font-display text-2xl font-bold text-white">{lesson.title}</h1>
             <p className="text-sm text-white/70 mt-1">{lesson.subtitle}</p>
 
             <div className="mt-4 flex items-center gap-3">
@@ -133,7 +133,7 @@ export default function LessonDetailPage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="card-clean rounded-2xl bg-white overflow-hidden mb-4"
+            className="card-clean rounded-2xl bg-card overflow-hidden mb-4"
           >
             <div className="relative w-full" style={{ aspectRatio: "9/16" }}>
               <iframe
@@ -146,7 +146,7 @@ export default function LessonDetailPage({
             </div>
             <div className="p-3 flex items-center gap-2">
               <span className="text-lg">🎓</span>
-              <p className="text-sm font-bold text-gray-700">
+              <p className="text-sm font-bold text-foreground/80">
                 Maestro Franci introduce la lezione
               </p>
             </div>
@@ -159,7 +159,7 @@ export default function LessonDetailPage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: infographicLoaded ? 1 : 0, y: infographicLoaded ? 0 : 8 }}
             transition={{ delay: 0.12 }}
-            className={`card-clean rounded-2xl bg-white overflow-hidden mb-4 ${infographicLoaded ? "" : "hidden"}`}
+            className={`card-clean rounded-2xl bg-card overflow-hidden mb-4 ${infographicLoaded ? "" : "hidden"}`}
           >
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -174,7 +174,7 @@ export default function LessonDetailPage({
             <div className="p-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-lg">📋</span>
-                <p className="text-sm font-bold text-gray-700">
+                <p className="text-sm font-bold text-foreground/80">
                   Dispensa — {maestroName}
                 </p>
               </div>
@@ -199,15 +199,15 @@ export default function LessonDetailPage({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="card-clean rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-100 p-4 mb-6"
+          className="card-clean rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border border-amber-100 dark:border-amber-900 p-4 mb-6"
         >
           <div className="flex items-center gap-3">
             <span className="text-2xl">⚡</span>
             <div>
-              <p className="font-bold text-sm text-amber-800">
+              <p className="font-bold text-sm text-amber-800 dark:text-amber-300">
                 {totalXp} XP disponibili
               </p>
-              <p className="text-xs text-amber-600/70">
+              <p className="text-xs text-amber-600/70 dark:text-amber-400/80">
                 Completa tutti i moduli per guadagnare XP
               </p>
             </div>
@@ -224,16 +224,16 @@ export default function LessonDetailPage({
             const isLocked = prevModule ? !completedMap[`${lesson.id}-${prevModule.id}`] : false;
 
             const typeConfig = {
-              theory: { label: "Teoria", color: "bg-blue-50 text-blue-600", icon: "📖" },
-              exercise: { label: "Esercizio", color: "bg-purple-50 text-purple-600", icon: "✏️" },
-              quiz: { label: "Quiz", color: "bg-amber-50 text-amber-600", icon: "❓" },
-              practice: { label: "Pratica", color: "bg-emerald-50 text-emerald-700", icon: "🃏" },
+              theory: { label: "Teoria", color: "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400", icon: "📖" },
+              exercise: { label: "Esercizio", color: "bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400", icon: "✏️" },
+              quiz: { label: "Quiz", color: "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400", icon: "❓" },
+              practice: { label: "Pratica", color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300", icon: "🃏" },
             };
 
             const config = typeConfig[module.type];
 
             const cardContent = (
-              <div className={`group card-clean rounded-2xl bg-white p-4 transition-all ${isLocked ? "" : "cursor-pointer hover:shadow-lg active:scale-[0.99]"}`}>
+              <div className={`group card-clean rounded-2xl bg-card p-4 ${isLocked ? "" : "card-interactive cursor-pointer"}`}>
                 <div className="flex items-center gap-4">
                   {/* Step number */}
                   <div
@@ -241,8 +241,8 @@ export default function LessonDetailPage({
                       isCompleted
                         ? "bg-emerald text-white"
                         : isLocked
-                        ? "bg-gray-100 text-gray-300"
-                        : "bg-gray-100 text-gray-500"
+                        ? "bg-muted text-muted-foreground/50"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {isCompleted ? (
@@ -263,23 +263,23 @@ export default function LessonDetailPage({
                         {config.icon} {config.label}
                       </Badge>
                       {hasDraft && !isLocked && (
-                        <Badge className="text-[10px] font-bold border-0 bg-amber-100 text-amber-700">
+                        <Badge className="text-[10px] font-bold border-0 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                           Riprendi
                         </Badge>
                       )}
-                      <span className="text-[11px] text-gray-400">
+                      <span className="text-[11px] text-muted-foreground/70">
                         {module.duration} min
                       </span>
                     </div>
-                    <h3 className="font-bold text-gray-900 text-[15px]">
+                    <h3 className="font-bold text-foreground text-[15px]">
                       {module.title}
                     </h3>
                     {isLocked ? (
-                      <p className="text-[11px] text-amber-600/80 mt-0.5 flex items-center gap-1">
+                      <p className="text-[11px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 flex items-center gap-1">
                         <span>🔒</span> Completa il modulo precedente per sbloccare
                       </p>
                     ) : (
-                      <p className="text-[12px] text-gray-500 mt-0.5">
+                      <p className="text-[12px] text-muted-foreground mt-0.5">
                         +{module.xpReward} XP
                       </p>
                     )}
@@ -287,14 +287,14 @@ export default function LessonDetailPage({
 
                   {/* Arrow or lock badge */}
                   {isLocked ? (
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 shrink-0">
-                      <svg className="h-3.5 w-3.5 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted shrink-0">
+                      <svg className="h-3.5 w-3.5 text-muted-foreground/50" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
                       </svg>
                     </div>
                   ) : (
                     <svg
-                      className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
+                      className="h-5 w-5 text-muted-foreground/50 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"

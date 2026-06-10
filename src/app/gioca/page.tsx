@@ -69,13 +69,13 @@ export default function GiocaPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-bold text-gray-900">Gioca</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-3xl font-bold text-foreground font-display">Gioca</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Metti in pratica quello che hai imparato
           </p>
         </motion.div>
 
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Inizia da qui</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Inizia da qui</h2>
 
         {/* Mano Guidata card (after Prima Mano is done) */}
         {onboarded && (
@@ -86,16 +86,16 @@ export default function GiocaPage() {
             className="mb-3"
           >
             <Link href="/gioca/mano-guidata" className="block" aria-label="Mano Guidata: pratica passo-passo">
-              <div className="relative overflow-hidden rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50 px-4 py-3.5 hover:shadow-md transition-all">
+              <div className="relative overflow-hidden rounded-2xl border border-cyan-200 dark:border-cyan-900 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/40 dark:to-blue-950/30 px-4 py-3.5 hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 shadow-md">
                     <Target className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-gray-900">Mano Guidata</p>
-                    <p className="text-[11px] text-gray-500">Pratica passo-passo con suggerimenti</p>
+                    <p className="text-sm font-bold text-foreground">Mano Guidata</p>
+                    <p className="text-[11px] text-muted-foreground">Pratica passo-passo con suggerimenti</p>
                   </div>
-                  <Badge className="bg-cyan-100 text-cyan-700 text-[10px] font-bold border-0">
+                  <Badge className="bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300 text-[10px] font-bold border-0">
                     +35 XP
                   </Badge>
                 </div>
@@ -119,18 +119,18 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">MiniBridge</p>
+                    <p className="text-sm font-bold text-foreground">MiniBridge</p>
                     <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">Beta</span>
                   </div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">Gioca senza licita: conta i punti e scegli il contratto</p>
+                  <p className="text-[11px] text-muted-foreground">Gioca senza licita: conta i punti e scegli il contratto</p>
                 </div>
-                <Badge className="bg-emerald-100 text-emerald-700 text-[10px] font-bold border-0">Nuovo</Badge>
+                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[10px] font-bold border-0">Nuovo</Badge>
               </div>
             </div>
           </Link>
         </motion.div>
 
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-gray-400">Sfide</h2>
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Sfide</h2>
 
         {/* Hero card: Sfida del Giorno */}
         <motion.div
@@ -141,7 +141,7 @@ export default function GiocaPage() {
           <Link href="/gioca/sfida" className="block" aria-label="Sfida del Giorno: una nuova mano ogni giorno">
             <div className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl ${
               dailyDone
-                ? "bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200"
+                ? "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/40 dark:to-green-950/30 border border-green-200 dark:border-emerald-900"
                 : "hero-gradient"
             }`}>
               {!dailyDone && (
@@ -151,11 +151,11 @@ export default function GiocaPage() {
                 <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-3xl ${
                   dailyDone ? "bg-emerald/10" : "bg-white/15"
                 }`}>
-                  {dailyDone ? <CheckCircle2 className="w-7 h-7 text-emerald-600" /> : <Flame className="w-7 h-7 text-white" />}
+                  {dailyDone ? <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" /> : <Flame className="w-7 h-7 text-white" />}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className={`text-xl font-semibold ${dailyDone ? "text-emerald-dark" : "text-white"}`}>
+                    <h2 className={`text-xl font-semibold ${dailyDone ? "text-emerald-dark dark:text-emerald-300" : "text-white"}`}>
                       Sfida del Giorno
                     </h2>
                     {!dailyDone && (
@@ -164,7 +164,7 @@ export default function GiocaPage() {
                       </Badge>
                     )}
                   </div>
-                  <p className={`text-sm ${dailyDone ? "text-emerald-dark/60" : "text-white/70"}`}>
+                  <p className={`text-sm ${dailyDone ? "text-emerald-dark/60 dark:text-emerald-400/80" : "text-white/70"}`}>
                     {dailyDone
                       ? "Sfida completata! Torna domani per una nuova mano."
                       : `Una nuova mano ogni giorno. Gioca e guadagna ${profile.xpLabel} bonus!`}
@@ -194,21 +194,21 @@ export default function GiocaPage() {
           <Link href="/gioca/torneo" className="block" aria-label="Torneo Settimanale: 5 mani, stessa sfida per tutti">
             <div className={`relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl ${
               tournamentDone
-                ? "bg-[#003DA5]/5 border border-[#003DA5]/15"
-                : "bg-gradient-to-br from-[#003DA5] to-[#002E7A]"
+                ? "bg-primary/5 border border-primary/15"
+                : "bg-gradient-to-br from-figb to-figb-dark"
             }`}>
               {!tournamentDone && (
                 <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
               )}
               <div className="relative flex items-center gap-4">
                 <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl ${
-                  tournamentDone ? "bg-[#003DA5]/10" : "bg-white/15"
+                  tournamentDone ? "bg-primary/10" : "bg-white/15"
                 }`}>
-                  {tournamentDone ? <CheckCircle2 className="w-6 h-6 text-[#003DA5]" /> : <Trophy className="w-6 h-6 text-white" />}
+                  {tournamentDone ? <CheckCircle2 className="w-6 h-6 text-primary" /> : <Trophy className="w-6 h-6 text-white" />}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className={`text-lg font-semibold ${tournamentDone ? "text-[#003DA5]" : "text-white"}`}>
+                    <h2 className={`text-lg font-semibold ${tournamentDone ? "text-primary" : "text-white"}`}>
                       Torneo Settimanale
                     </h2>
                     {!tournamentDone && (
@@ -217,14 +217,14 @@ export default function GiocaPage() {
                       </Badge>
                     )}
                   </div>
-                  <p className={`text-sm ${tournamentDone ? "text-[#003DA5]/60" : "text-white/70"}`}>
+                  <p className={`text-sm ${tournamentDone ? "text-primary/60" : "text-white/70"}`}>
                     {tournamentDone
                       ? "Torneo completato! Nuove mani la prossima settimana."
                       : "5 mani, stessa sfida per tutti. Entra in classifica!"}
                   </p>
                 </div>
                 <svg
-                  className={`h-6 w-6 shrink-0 ${tournamentDone ? "text-[#003DA5]/60" : "text-white/60"}`}
+                  className={`h-6 w-6 shrink-0 ${tournamentDone ? "text-primary/60" : "text-white/60"}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -282,198 +282,198 @@ export default function GiocaPage() {
           className="mt-6"
         >
           <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">Pratica</h2>
-            <Badge className="bg-[#003DA5]/10 text-[#003DA5] text-[10px] font-bold border-0">
+            <h2 className="text-lg font-semibold text-foreground font-display">Pratica</h2>
+            <Badge className="bg-primary/10 text-primary text-[10px] font-bold border-0">
               allenati su una mossa
             </Badge>
           </div>
           <div className="space-y-2.5">
             {/* Mano del Giorno */}
             <Link href="/gioca/mano-del-giorno" className="block" aria-label="Mano del Giorno: una mano al giorno, uguale per tutti">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
                   <CalendarDays className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Mano del Giorno</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Una mano al giorno, uguale per tutti. Classifica!</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Mano del Giorno</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Una mano al giorno, uguale per tutti. Classifica!</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     +50 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Quiz Lampo */}
             <Link href="/gioca/quiz-lampo" className="block" aria-label="Quiz Lampo: raffica di domande, 30 secondi">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-2xl shadow-md shadow-rose-400/20">
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Quiz Lampo</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Raffica di domande, 30 secondi! Combo multiplier</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Quiz Lampo</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Raffica di domande, 30 secondi! Combo multiplier</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-rose-600 bg-rose-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/40 rounded-full px-2 py-0.5">
                     +100 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Trova l'Errore */}
             <Link href="/gioca/trova-errore" className="block" aria-label="Trova l'Errore: trova l'errore nella dichiarazione o giocata">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-2xl shadow-md shadow-red-400/20">
                   <Search className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Trova l&apos;Errore</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Trova l&apos;errore nella dichiarazione o giocata</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Trova l&apos;Errore</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Trova l&apos;errore nella dichiarazione o giocata</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-red-600 bg-red-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Impasse o Drop */}
             <Link href="/gioca/impasse" className="block" aria-label="Impasse o Drop: decidi in 5 secondi">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-2xl shadow-md shadow-cyan-400/20">
                   <Target className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Impasse o Drop?</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Decidi in 5 secondi: impasse o caduta?</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Impasse o Drop?</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Decidi in 5 secondi: impasse o caduta?</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-cyan-600 bg-cyan-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-cyan-600 bg-cyan-50 dark:text-cyan-400 dark:bg-cyan-950/40 rounded-full px-2 py-0.5">
                     +70 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Conta Veloce */}
             <Link href="/gioca/conta-veloce" className="block" aria-label="Conta Veloce: conta i punti onore a tempo">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-2xl shadow-md shadow-emerald-400/20">
                   <Hash className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Conta Veloce</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Conta i Punti Onore a tempo! Quanto sei veloce?</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Conta Veloce</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Conta i Punti Onore a tempo! Quanto sei veloce?</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Segnali in Difesa */}
             <Link href="/gioca/segnali" className="block" aria-label="Segnali in Difesa: dai e leggi i segnali del compagno">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl shadow-md shadow-violet-400/20">
                   <Radio className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Segnali in Difesa</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">In difesa si parla con le carte: dai e leggi i segnali</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Segnali in Difesa</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">In difesa si parla con le carte: dai e leggi i segnali</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Dichiara! */}
             <Link href="/gioca/dichiara" className="block" aria-label="Dichiara: scegli l'apertura giusta per ogni mano">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
                   <Megaphone className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Dichiara!</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Scegli l&apos;apertura giusta per ogni mano</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Dichiara!</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Scegli l&apos;apertura giusta per ogni mano</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Pratica Licita */}
             <Link href="/gioca/pratica-licita" className="block" aria-label="Pratica Licita: esercitati nella dichiarazione">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl shadow-md shadow-indigo-400/20">
                   <MessageCircle className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Pratica Licita</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Esercitati nella dichiarazione: Texas, Stayman e altro</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Pratica Licita</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Esercitati nella dichiarazione: Texas, Stayman e altro</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40 rounded-full px-2 py-0.5">
                     +20-70 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Memory Bridge */}
             <Link href="/gioca/memory" className="block" aria-label="Memory Bridge: abbina carte e concetti">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-2xl shadow-md shadow-purple-400/20">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Memory Bridge</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Abbina carte e concetti. Allena la memoria!</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Memory Bridge</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Abbina carte e concetti. Allena la memoria!</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-purple-600 bg-purple-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/40 rounded-full px-2 py-0.5">
                     +60 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
 
             {/* Sfida un Amico */}
             <Link href="/gioca/sfida-amico" className="block" aria-label="Sfida un Amico: gioca la stessa mano e confronta i risultati">
-              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 text-2xl shadow-md shadow-violet-400/20">
                   <Swords className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-[15px]">Sfida un Amico</h3>
-                  <p className="text-[12px] text-gray-500 mt-0.5">Gioca la stessa mano e confronta i risultati</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">Sfida un Amico</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Gioca la stessa mano e confronta i risultati</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full px-2 py-0.5">
                     +30 {profile.xpLabel}
                   </span>
-                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
             </Link>
@@ -481,7 +481,7 @@ export default function GiocaPage() {
           </div>
         </motion.div>
 
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-gray-400">Gioco libero</h2>
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Gioco libero</h2>
 
         {/* Two-column cards */}
         <div className="grid grid-cols-2 gap-3 mt-6">
@@ -492,18 +492,18 @@ export default function GiocaPage() {
             transition={{ delay: 0.25 }}
           >
             <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block" aria-label="Pratica Libera: gioca una mano casuale">
-              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 mb-3">
-                  <Spade className="w-6 h-6 text-indigo-600" />
+              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40 mb-3">
+                  <Spade className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-[15px]">
+                <h3 className="font-semibold text-foreground text-[15px]">
                   Pratica Libera
                 </h3>
-                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Gioca una mano casuale dalle {allSmazzate.length} disponibili
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40 rounded-full px-2 py-0.5">
                     +30 {profile.xpLabel}
                   </span>
                 </div>
@@ -518,18 +518,18 @@ export default function GiocaPage() {
             transition={{ delay: 0.3 }}
           >
             <Link href="/gioca/smazzata" className="block" aria-label="Tutte le Smazzate: sfoglia e gioca le mani per lezione">
-              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 mb-3">
-                  <BookOpen className="w-6 h-6 text-amber-600" />
+              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 mb-3">
+                  <BookOpen className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-[15px]">
+                <h3 className="font-semibold text-foreground text-[15px]">
                   Tutte le Smazzate
                 </h3>
-                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Sfoglia e gioca le {allSmazzate.length} mani per lezione
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     {allSmazzate.length} mani
                   </span>
                 </div>
@@ -544,18 +544,18 @@ export default function GiocaPage() {
             transition={{ delay: 0.32 }}
           >
             <Link href="/gioca/sfida-link" className="block" aria-label="Sfida via Link: condividi una mano e sfida un amico">
-              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 mb-3">
-                  <Link2 className="w-6 h-6 text-violet-600" />
+              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 mb-3">
+                  <Link2 className="w-6 h-6 text-violet-600 dark:text-violet-400" />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-[15px]">
+                <h3 className="font-semibold text-foreground text-[15px]">
                   Sfida via Link
                 </h3>
-                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Condividi un link, giocate la stessa mano e confrontate!
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full px-2 py-0.5">
                     +30 {profile.xpLabel}
                   </span>
                 </div>
@@ -570,18 +570,18 @@ export default function GiocaPage() {
             transition={{ delay: 0.34 }}
           >
             <Link href="/gioca/analisi" className="block" aria-label="Analisi AI: rivedi le tue mani con commenti dell'intelligenza artificiale">
-              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 mb-3">
-                  <BarChart3 className="w-6 h-6 text-emerald-600" />
+              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 mb-3">
+                  <BarChart3 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-[15px]">
+                <h3 className="font-semibold text-foreground text-[15px]">
                   Analisi AI
                 </h3>
-                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Rivedi le tue mani con commenti dell&apos;AI carta per carta
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
                     Post-partita
                   </span>
                 </div>
@@ -596,18 +596,18 @@ export default function GiocaPage() {
             transition={{ delay: 0.36 }}
           >
             <Link href="/glossario" className="block" aria-label="Glossario: impara tutti i termini del bridge">
-              <div className="card-clean rounded-2xl bg-white p-5 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 mb-3">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 dark:bg-sky-950/40 mb-3">
                   <span className="text-xl">📖</span>
                 </div>
-                <h3 className="font-semibold text-gray-900 text-[15px]">
+                <h3 className="font-semibold text-foreground text-[15px]">
                   Glossario
                 </h3>
-                <p className="text-[12px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Impara tutti i termini del bridge
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-sky-600 bg-sky-50 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/40 rounded-full px-2 py-0.5">
                     A-Z
                   </span>
                 </div>
@@ -623,19 +623,19 @@ export default function GiocaPage() {
           transition={{ delay: 0.55 }}
           className="mt-4 mb-6"
         >
-          <div className="card-clean rounded-2xl bg-white p-5">
+          <div className="card-clean rounded-2xl bg-card p-5">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#003DA5] text-white font-bold text-sm shadow-md shadow-[#003DA5]/20">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-figb text-white font-bold text-sm shadow-md shadow-figb/20">
                 M
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <p className="font-bold text-sm text-gray-900">Maestro Fiori</p>
-                  <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0">
+                  <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
+                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[10px] font-bold border-0">
                     Consiglio
                   </Badge>
                 </div>
-                <p className="text-[13px] text-gray-600 leading-relaxed">
+                <p className="text-[13px] text-muted-foreground leading-relaxed">
                   La pratica rende perfetti! Gioca le mani delle lezioni che hai completato per consolidare i concetti.
                   Prova i mini-giochi per allenare velocità e memoria!
                 </p>
