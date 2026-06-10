@@ -303,7 +303,7 @@ export default function ModulePage({
 
   if (!catalogLoaded) {
     return (
-      <div className="pt-10 text-center text-gray-400 text-sm" role="status" aria-label="Caricamento modulo">
+      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento modulo">
         Caricamento modulo…
       </div>
     );
@@ -312,7 +312,7 @@ export default function ModulePage({
   if (!lesson || !mod) {
     return (
       <div className="pt-10 px-5 text-center">
-        <p className="text-gray-500">Modulo non trovato</p>
+        <p className="text-muted-foreground">Modulo non trovato</p>
         <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
           Torna alle lezioni
         </Link>
@@ -582,7 +582,7 @@ export default function ModulePage({
             animate={{ opacity: 1, y: 0 }}
             className={isJunior ? "mb-6" : "mb-5"}
           >
-            <h2 className={`font-bold text-gray-900 leading-tight ${isJunior ? "text-[24px]" : "text-[22px]"}`}>
+            <h2 className={`font-display font-bold text-foreground leading-tight ${isJunior ? "text-[24px]" : "text-[22px]"}`}>
               {isJunior && "🎯 "}{block.content}
             </h2>
             <div className={`mt-2 h-1 rounded-full bg-gradient-to-r ${isJunior ? "w-20 from-pink-400 via-purple-400 to-indigo-400" : "w-12 from-emerald to-emerald-light"}`} />
@@ -596,7 +596,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: delay * profile.animSpeed }}
-            className={`text-gray-700 leading-relaxed ${isJunior ? "mb-5 text-[15.5px]" : "mb-4"} ${profile.contentClasses || "text-[15px]"}`}
+            className={`text-foreground/80 leading-relaxed ${isJunior ? "mb-5 text-[15.5px]" : "mb-4"} ${profile.contentClasses || "text-[15px]"}`}
           >
             {renderEnrichedText(block.content)}
           </motion.div>
@@ -611,8 +611,8 @@ export default function ModulePage({
             transition={{ delay: delay * profile.animSpeed, type: "spring", stiffness: 300, damping: 25 }}
             className={`rounded-2xl border p-4 mb-5 relative overflow-hidden ${profile.contentClasses} ${
               isJunior
-                ? "bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200/60"
-                : "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200/60"
+                ? "bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/40 dark:to-pink-950/30 border-purple-200/60 dark:border-purple-900"
+                : "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border-emerald-200/60 dark:border-emerald-900"
             }`}
           >
             <div className="absolute top-3 right-3 opacity-10">
@@ -626,10 +626,10 @@ export default function ModulePage({
               </div>
               <div>
                 <p className={`font-bold uppercase tracking-widest mb-1 ${
-                  isJunior ? "text-[11px] text-purple-600" : "text-[10px] text-emerald"
+                  isJunior ? "text-[11px] text-purple-600 dark:text-purple-400" : "text-[10px] text-emerald"
                 }`}>{isJunior ? "Regola Importante!" : "Regola"}</p>
                 <p className={`font-semibold leading-relaxed ${
-                  isJunior ? "text-[15px] text-purple-900" : "text-[14px] text-emerald-900"
+                  isJunior ? "text-[15px] text-purple-900 dark:text-purple-200" : "text-[14px] text-emerald-900 dark:text-emerald-200"
                 }`}>
                   {renderEnrichedText(block.content)}
                 </p>
@@ -647,22 +647,22 @@ export default function ModulePage({
             transition={{ delay }}
             className={`rounded-2xl border p-4 mb-5 ${
               isJunior
-                ? "bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200"
-                : "bg-gradient-to-br from-[#003DA5]/10 to-blue-50 border-[#003DA5]/20"
+                ? "bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/30 border-amber-200 dark:border-amber-900"
+                : "bg-gradient-to-br from-figb/10 to-blue-50 dark:from-primary/15 dark:to-blue-950/30 border-figb/20 dark:border-primary/25"
             }`}
           >
             <div className="flex items-start gap-3">
               <div className={`flex shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${
-                isJunior ? "h-10 w-10 bg-gradient-to-br from-amber-400 to-orange-500 text-lg" : "h-8 w-8 bg-[#003DA5]"
+                isJunior ? "h-10 w-10 bg-gradient-to-br from-amber-400 to-orange-500 text-lg" : "h-8 w-8 bg-figb"
               }`}>
                 {isJunior ? "👀" : <CardsIcon className="h-4 w-4" />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className={`font-bold uppercase tracking-widest mb-1 ${
-                  isJunior ? "text-[11px] text-amber-600" : "text-[10px] text-[#003DA5]"
+                  isJunior ? "text-[11px] text-amber-600 dark:text-amber-400" : "text-[10px] text-figb dark:text-primary"
                 }`}>{isJunior ? "Guarda Qui!" : "Esempio"}</p>
                 <p className={`leading-relaxed mb-2 ${
-                  isJunior ? "text-[15px] text-amber-900" : "text-[14px] text-indigo-900"
+                  isJunior ? "text-[15px] text-amber-900 dark:text-amber-200" : "text-[14px] text-indigo-900 dark:text-indigo-200"
                 }`}>{renderEnrichedText(block.content)}</p>
                 {block.cards && (
                   <div className="mt-2">
@@ -683,8 +683,8 @@ export default function ModulePage({
             transition={{ delay }}
             className={`rounded-2xl border p-4 mb-5 ${
               isJunior
-                ? "bg-gradient-to-br from-sky-50 to-cyan-50 border-sky-200/60"
-                : "bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200/60"
+                ? "bg-gradient-to-br from-sky-50 to-cyan-50 dark:from-sky-950/40 dark:to-cyan-950/30 border-sky-200/60 dark:border-sky-900"
+                : "bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border-amber-200/60 dark:border-amber-900"
             }`}
           >
             <div className="flex items-start gap-3">
@@ -697,16 +697,16 @@ export default function ModulePage({
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className={`font-bold text-sm ${isJunior ? "text-sky-800" : "text-gray-900"}`}>
+                  <p className={`font-bold text-sm ${isJunior ? "text-sky-800 dark:text-sky-300" : "text-foreground"}`}>
                     {isJunior ? "Il Maestro ti svela un segreto!" : "Maestro Fiori"}
                   </p>
                   {!isJunior && <LightbulbIcon className="h-3.5 w-3.5 text-amber-500" />}
                 </div>
-                <p className={`font-medium text-[13px] mb-1 ${isJunior ? "text-sky-900" : "text-gray-800"}`}>
+                <p className={`font-medium text-[13px] mb-1 ${isJunior ? "text-sky-900 dark:text-sky-200" : "text-foreground/90"}`}>
                   {block.content}
                 </p>
                 {block.explanation && (
-                  <p className={`text-[13px] leading-relaxed ${isJunior ? "text-sky-800/80" : "text-amber-900/80"}`}>
+                  <p className={`text-[13px] leading-relaxed ${isJunior ? "text-sky-800/80 dark:text-sky-300/80" : "text-amber-900/80 dark:text-amber-200/80"}`}>
                     {block.explanation}
                   </p>
                 )}
@@ -725,7 +725,7 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-clean p-5 mb-5 relative overflow-hidden"
+            className="rounded-2xl bg-card card-clean p-5 mb-5 relative overflow-hidden"
           >
             {/* Timer (giovane) + Streak indicator */}
             <div className="absolute top-3 right-3 flex items-center gap-2">
@@ -734,7 +734,7 @@ export default function ModulePage({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className={`flex items-center gap-1 rounded-full px-2.5 py-1 font-mono text-xs font-bold ${
-                    quizTimer <= 5 ? "bg-red-100 text-red-600 animate-pulse" : "bg-blue-50 text-blue-600"
+                    quizTimer <= 5 ? "bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400 animate-pulse" : "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
                   }`}
                 >
                   {quizTimer}s
@@ -744,32 +744,32 @@ export default function ModulePage({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="flex items-center gap-1 bg-amber-50 rounded-full px-2 py-0.5"
+                  className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 rounded-full px-2 py-0.5"
                 >
                   <span className="text-xs">🔥</span>
-                  <span className="text-[10px] font-bold text-amber-600">{correctStreak}x</span>
+                  <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">{correctStreak}x</span>
                 </motion.div>
               )}
             </div>
 
             <div className="flex items-center gap-2 mb-3">
               <div className={`flex items-center justify-center rounded-xl ${
-                isJunior ? "h-10 w-10 bg-gradient-to-br from-pink-400 to-purple-500 text-lg" : "h-8 w-8 bg-violet-100 text-violet-600"
+                isJunior ? "h-10 w-10 bg-gradient-to-br from-pink-400 to-purple-500 text-lg" : "h-8 w-8 bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-400"
               }`}>
                 {isJunior ? "🧠" : <BrainIcon className="h-4 w-4" />}
               </div>
               <div>
-                <p className={`font-bold text-gray-900 ${isJunior ? "text-[16px]" : "text-[15px]"}`}>
+                <p className={`font-bold text-foreground ${isJunior ? "text-[16px]" : "text-[15px]"}`}>
                   {isJunior ? "Mettiti alla Prova!" : "Quiz"}
                 </p>
                 {totalQuizzes > 1 && (
-                  <p className="text-[10px] text-gray-400 font-medium">
+                  <p className="text-[10px] text-muted-foreground/70 font-medium">
                     +20 {profile.xpLabel} per risposta corretta
                   </p>
                 )}
               </div>
             </div>
-            <p className={`text-gray-700 mb-4 leading-relaxed ${profile.profile === "senior" ? "text-base" : "text-[14px]"}`}>
+            <p className={`text-foreground/80 mb-4 leading-relaxed ${profile.profile === "senior" ? "text-base" : "text-[14px]"}`}>
               {renderEnrichedText(block.content)}
             </p>
 
@@ -780,7 +780,7 @@ export default function ModulePage({
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={() => useFiftyFifty(blockIndex)}
-                    className="flex items-center gap-1.5 rounded-xl bg-violet-100 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-200 transition-all"
+                    className="flex items-center gap-1.5 rounded-xl bg-violet-100 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-200 dark:bg-violet-900/40 dark:border-violet-800 dark:text-violet-300 dark:hover:bg-violet-900/60 transition-all"
                   >
                     <span className="text-sm">✂️</span> 50/50
                   </motion.button>
@@ -789,7 +789,7 @@ export default function ModulePage({
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={() => useSkip(blockIndex)}
-                    className="flex items-center gap-1.5 rounded-xl bg-blue-100 border border-blue-200 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-200 transition-all"
+                    className="flex items-center gap-1.5 rounded-xl bg-blue-100 border border-blue-200 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/60 transition-all"
                   >
                     <span className="text-sm">⏭️</span> Salta
                   </motion.button>
@@ -798,7 +798,7 @@ export default function ModulePage({
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={() => useExtraTime()}
-                    className="flex items-center gap-1.5 rounded-xl bg-green-100 border border-green-200 px-3 py-2 text-xs font-bold text-green-700 hover:bg-green-200 transition-all animate-pulse"
+                    className="flex items-center gap-1.5 rounded-xl bg-green-100 border border-green-200 px-3 py-2 text-xs font-bold text-green-700 hover:bg-green-200 dark:bg-green-900/40 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/60 transition-all animate-pulse"
                   >
                     <span className="text-sm">⏰</span> +15s
                   </motion.button>
@@ -814,16 +814,16 @@ export default function ModulePage({
                     onClick={() => setShowHint((prev) => ({ ...prev, [blockIndex]: true }))}
                     className="flex items-center gap-2 text-sm font-semibold text-blue-500 hover:text-blue-700 transition-colors"
                   >
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-50">💡</span>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/40">💡</span>
                     Mostra suggerimento
                   </button>
                 ) : (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
-                    className="rounded-xl bg-blue-50 border border-blue-100 p-3"
+                    className="rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 p-3"
                   >
-                    <p className="text-sm text-blue-700">
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
                       💡 Suggerimento: la risposta corretta è la {String.fromCharCode(65 + (shuffledQuizOptions[blockIndex]?.indexOf(block.correctAnswer ?? 0) ?? (block.correctAnswer ?? 0)))}
                     </p>
                   </motion.div>
@@ -840,14 +840,14 @@ export default function ModulePage({
                 const isSelected = quizAnswers[blockIndex] === origIdx;
                 const isCorrectOption = block.correctAnswer === origIdx;
 
-                let optionClass = "bg-gray-50 border-gray-200 text-gray-700";
+                let optionClass = "bg-muted/50 border-border text-foreground/80";
                 if (answered) {
                   if (isCorrectOption) {
-                    optionClass = "bg-emerald-50 border-emerald-300 text-emerald-800";
+                    optionClass = "bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-700 dark:text-emerald-300";
                   } else if (isSelected && !isCorrect) {
-                    optionClass = "bg-red-50 border-red-300 text-red-800";
+                    optionClass = "bg-red-50 border-red-300 text-red-800 dark:bg-red-950/40 dark:border-red-700 dark:text-red-300";
                   } else {
-                    optionClass = "bg-gray-50 border-gray-200 text-gray-400";
+                    optionClass = "bg-muted/50 border-border text-muted-foreground/70";
                   }
                 }
 
@@ -862,8 +862,8 @@ export default function ModulePage({
                     } ${
                       !answered
                         ? isJunior
-                          ? "hover:border-purple-400 hover:bg-purple-50/50 hover:scale-[1.01] cursor-pointer"
-                          : "hover:border-emerald/50 hover:bg-emerald-50/50 cursor-pointer"
+                          ? "hover:border-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 hover:scale-[1.01] cursor-pointer"
+                          : "hover:border-emerald/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer"
                         : ""
                     }`}
                   >
@@ -874,7 +874,7 @@ export default function ModulePage({
                             ? "bg-emerald text-white border-emerald"
                             : answered && isSelected && !isCorrect
                               ? "bg-red-500 text-white border-red-500"
-                              : "bg-white border-gray-200"
+                              : "bg-card border-border"
                         }`}
                       >
                         {answered && isCorrectOption
@@ -950,28 +950,28 @@ export default function ModulePage({
                         </div>
                       ) : profile.profile === "adulto" ? (
                         /* Adulto: Maestro Fiori encouragement */
-                        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 flex items-center gap-3">
+                        <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-3 flex items-center gap-3">
                           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md">
                             M
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-emerald-800">
+                            <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">
                               {profile.correctMessages[correctStreak % profile.correctMessages.length]} +20 {profile.xpLabel}
                             </p>
                             {correctStreak >= 2 && (
-                              <p className="text-xs text-emerald-600 mt-0.5">Serie di {correctStreak} risposte!</p>
+                              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Serie di {correctStreak} risposte!</p>
                             )}
                           </div>
                         </div>
                       ) : (
                         /* Senior: calm, warm congratulation */
-                        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-center gap-3">
+                        <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-4 flex items-center gap-3">
                           <span className="text-2xl">👏</span>
                           <div>
-                            <p className="text-base font-bold text-emerald-800">
+                            <p className="text-base font-bold text-emerald-800 dark:text-emerald-300">
                               Ottimo lavoro!
                             </p>
-                            <p className="text-sm text-emerald-600">
+                            <p className="text-sm text-emerald-600 dark:text-emerald-400">
                               Hai guadagnato 20 {profile.xpLabel}. Continua al tuo ritmo.
                             </p>
                           </div>
@@ -994,36 +994,36 @@ export default function ModulePage({
                             💪
                           </motion.span>
                           <div>
-                            <p className="text-sm font-bold text-orange-800">
+                            <p className="text-sm font-bold text-orange-800 dark:text-orange-300">
                               {profile.wrongMessage}
                             </p>
-                            <p className="text-xs text-orange-600 mt-0.5">
+                            <p className="text-xs text-orange-600 dark:text-orange-400 mt-0.5">
                               Leggi la spiegazione — imparerai qualcosa di nuovo!
                             </p>
                           </div>
                         </div>
                       ) : profile.profile === "senior" ? (
-                        <div className="rounded-xl bg-orange-50 border border-orange-200 p-4 flex items-center gap-3">
+                        <div className="rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900 p-4 flex items-center gap-3">
                           <span className="text-2xl">🤗</span>
                           <div>
-                            <p className="text-base font-semibold text-orange-800">
+                            <p className="text-base font-semibold text-orange-800 dark:text-orange-300">
                               {profile.wrongMessage}
                             </p>
                           </div>
                         </div>
                       ) : profile.profile === "giovane" ? (
-                        <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
+                        <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-2">
                           <span className="text-lg">💥</span>
-                          <p className="text-sm font-bold text-red-800">
+                          <p className="text-sm font-bold text-red-800 dark:text-red-300">
                             {profile.wrongMessage}
                           </p>
                         </div>
                       ) : (
-                        <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-3">
+                        <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-3">
                           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md">
                             M
                           </div>
-                          <p className="text-sm font-semibold text-red-800">
+                          <p className="text-sm font-semibold text-red-800 dark:text-red-300">
                             {profile.wrongMessage}
                           </p>
                         </div>
@@ -1031,8 +1031,8 @@ export default function ModulePage({
                     </motion.div>
                   )}
                   {block.explanation && (
-                    <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-                      <p className="text-[13px] text-blue-800 leading-relaxed">
+                    <div className="rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 p-3">
+                      <p className="text-[13px] text-blue-800 dark:text-blue-200 leading-relaxed">
                         💡 {block.explanation}
                       </p>
                     </div>
@@ -1054,30 +1054,30 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-clean p-5 mb-5"
+            className="rounded-2xl bg-card card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600 dark:bg-cyan-900/40 dark:text-cyan-400">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                   <circle cx="12" cy="12" r="10" />
                   <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                   <circle cx="12" cy="17" r="0.5" fill="currentColor" />
                 </svg>
               </div>
-              <p className="font-bold text-gray-900 text-[15px]">Vero o Falso?</p>
+              <p className="font-bold text-foreground text-[15px]">Vero o Falso?</p>
             </div>
-            <p className="text-[14px] text-gray-700 mb-4 leading-relaxed">
+            <p className="text-[14px] text-foreground/80 mb-4 leading-relaxed">
               {renderEnrichedText(block.content)}
             </p>
             <div className="grid grid-cols-2 gap-3">
               {["Vero", "Falso"].map((label, idx) => {
                 const isSelected = quizAnswers[blockIndex] === idx;
                 const isCorrectOpt = block.correctAnswer === idx;
-                let cls = "bg-gray-50 border-gray-200 text-gray-700";
+                let cls = "bg-muted/50 border-border text-foreground/80";
                 if (tfAnswered) {
-                  if (isCorrectOpt) cls = "bg-emerald-50 border-emerald-300 text-emerald-800";
-                  else if (isSelected && !tfCorrect) cls = "bg-red-50 border-red-300 text-red-800";
-                  else cls = "bg-gray-50 border-gray-200 text-gray-400";
+                  if (isCorrectOpt) cls = "bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-700 dark:text-emerald-300";
+                  else if (isSelected && !tfCorrect) cls = "bg-red-50 border-red-300 text-red-800 dark:bg-red-950/40 dark:border-red-700 dark:text-red-300";
+                  else cls = "bg-muted/50 border-border text-muted-foreground/70";
                 }
                 return (
                   <motion.button
@@ -1086,7 +1086,7 @@ export default function ModulePage({
                     onClick={() => !tfAnswered && handleQuizAnswer(blockIndex, idx)}
                     disabled={tfAnswered}
                     className={`rounded-xl border-2 p-4 text-center font-bold text-lg transition-all ${cls} ${
-                      !tfAnswered ? "hover:border-emerald/50 hover:bg-emerald-50/50 cursor-pointer" : ""
+                      !tfAnswered ? "hover:border-emerald/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer" : ""
                     }`}
                   >
                     {tfAnswered && isCorrectOpt && "✓ "}{tfAnswered && isSelected && !tfCorrect && "✗ "}{label}
@@ -1102,8 +1102,8 @@ export default function ModulePage({
                   exit={{ opacity: 0, height: 0 }}
                   className="mt-4"
                 >
-                  <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-                    <p className="text-[13px] text-blue-800 leading-relaxed">💡 {block.explanation}</p>
+                  <div className="rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 p-3">
+                    <p className="text-[13px] text-blue-800 dark:text-blue-200 leading-relaxed">💡 {block.explanation}</p>
                   </div>
                 </motion.div>
               )}
@@ -1124,17 +1124,17 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-clean p-5 mb-5"
+            className="rounded-2xl bg-card card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-400">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h10V4H7zm3 3h4v2h-4V7z" />
                 </svg>
               </div>
-              <p className="font-bold text-gray-900 text-[15px]">Scegli la carta</p>
+              <p className="font-bold text-foreground text-[15px]">Scegli la carta</p>
             </div>
-            <p className="text-[14px] text-gray-700 mb-4 leading-relaxed">
+            <p className="text-[14px] text-foreground/80 mb-4 leading-relaxed">
               {renderEnrichedText(block.content)}
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -1186,21 +1186,21 @@ export default function ModulePage({
                   className="mt-4 space-y-2"
                 >
                   {csCorrect ? (
-                    <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 flex items-center gap-2">
+                    <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-3 flex items-center gap-2">
                       <span className="text-lg">🎯</span>
-                      <p className="text-sm font-bold text-emerald-800">Carta giusta! +25 XP</p>
+                      <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">Carta giusta! +25 XP</p>
                     </div>
                   ) : (
-                    <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
+                    <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-2">
                       <span className="text-lg">💪</span>
-                      <p className="text-sm font-semibold text-red-800">
+                      <p className="text-sm font-semibold text-red-800 dark:text-red-300">
                         La carta corretta era <span className="font-bold">{block.correctCard}</span>
                       </p>
                     </div>
                   )}
                   {block.explanation && (
-                    <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-                      <p className="text-[13px] text-blue-800 leading-relaxed">💡 {block.explanation}</p>
+                    <div className="rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 p-3">
+                      <p className="text-[13px] text-blue-800 dark:text-blue-200 leading-relaxed">💡 {block.explanation}</p>
                     </div>
                   )}
                 </motion.div>
@@ -1220,21 +1220,21 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-clean p-5 mb-5"
+            className="rounded-2xl bg-card card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                 </svg>
               </div>
-              <p className="font-bold text-gray-900 text-[15px]">Valuta la mano</p>
+              <p className="font-bold text-foreground text-[15px]">Valuta la mano</p>
             </div>
-            <p className="text-[14px] text-gray-700 mb-3 leading-relaxed">
+            <p className="text-[14px] text-foreground/80 mb-3 leading-relaxed">
               {renderEnrichedText(block.content)}
             </p>
             {block.cards && (
-              <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
+              <div className="mb-4 p-3 rounded-xl bg-muted/50 border border-border">
                 <CardDisplay cards={block.cards} size="lg" />
               </div>
             )}
@@ -1256,19 +1256,19 @@ export default function ModulePage({
                         setCorrectStreak(0);
                       }
                     }}
-                    className="w-10 h-10 rounded-lg border-2 border-gray-200 bg-white text-sm font-bold text-gray-700 hover:border-amber-400 hover:bg-amber-50 transition-all cursor-pointer"
+                    className="w-10 h-10 rounded-lg border-2 border-border bg-card text-sm font-bold text-foreground/80 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-all cursor-pointer"
                   >
                     {pts}
                   </motion.button>
                 ))}
               </div>
             ) : (
-              <div className={`rounded-xl p-4 text-center ${heCorrect ? "bg-emerald-50 border border-emerald-200" : "bg-red-50 border border-red-200"}`}>
-                <p className={`text-2xl font-bold ${heCorrect ? "text-emerald-700" : "text-red-600"}`}>
+              <div className={`rounded-xl p-4 text-center ${heCorrect ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900" : "bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900"}`}>
+                <p className={`text-2xl font-bold ${heCorrect ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                   {heCorrect ? "✓" : "✗"} {block.correctValue} punti
                 </p>
                 {!heCorrect && (
-                  <p className="text-sm text-red-700 mt-1">
+                  <p className="text-sm text-red-700 dark:text-red-300 mt-1">
                     Hai risposto {quizAnswers[blockIndex]}
                   </p>
                 )}
@@ -1282,8 +1282,8 @@ export default function ModulePage({
                   exit={{ opacity: 0, height: 0 }}
                   className="mt-4"
                 >
-                  <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-                    <p className="text-[13px] text-blue-800 leading-relaxed">💡 {block.explanation}</p>
+                  <div className="rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 p-3">
+                    <p className="text-[13px] text-blue-800 dark:text-blue-200 leading-relaxed">💡 {block.explanation}</p>
                   </div>
                 </motion.div>
               )}
@@ -1303,22 +1303,22 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-clean p-5 mb-5"
+            className="rounded-2xl bg-card card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                   <path d="M9 8h6M9 12h6M9 16h4" />
                 </svg>
               </div>
-              <p className="font-bold text-gray-900 text-[15px]">Bidding Box</p>
+              <p className="font-bold text-foreground text-[15px]">Bidding Box</p>
             </div>
-            <p className="text-[14px] text-gray-700 mb-3 leading-relaxed">
+            <p className="text-[14px] text-foreground/80 mb-3 leading-relaxed">
               {renderEnrichedText(block.content)}
             </p>
             {block.cards && (
-              <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
+              <div className="mb-4 p-3 rounded-xl bg-muted/50 border border-border">
                 <CardDisplay cards={block.cards} size="lg" />
               </div>
             )}
@@ -1379,21 +1379,21 @@ export default function ModulePage({
                   className="mt-4 space-y-2"
                 >
                   {bsCorrect ? (
-                    <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 flex items-center gap-2">
+                    <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-3 flex items-center gap-2">
                       <span className="text-lg">🎯</span>
-                      <p className="text-sm font-bold text-emerald-800">Licita corretta! +20 XP</p>
+                      <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">Licita corretta! +20 XP</p>
                     </div>
                   ) : (
-                    <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
+                    <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-2">
                       <span className="text-lg">💪</span>
-                      <p className="text-sm font-semibold text-red-800">
+                      <p className="text-sm font-semibold text-red-800 dark:text-red-300">
                         La risposta corretta era <span className="font-bold">{bidOptions[block.correctAnswer ?? 0]}</span>
                       </p>
                     </div>
                   )}
                   {block.explanation && (
-                    <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-                      <p className="text-[13px] text-blue-800 leading-relaxed">💡 {block.explanation}</p>
+                    <div className="rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 p-3">
+                      <p className="text-[13px] text-blue-800 dark:text-blue-200 leading-relaxed">💡 {block.explanation}</p>
                     </div>
                   )}
                 </motion.div>
@@ -1411,27 +1411,27 @@ export default function ModulePage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="rounded-2xl bg-white card-clean p-5 mb-5"
+            className="rounded-2xl bg-card card-clean p-5 mb-5"
           >
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-100 text-teal-600 dark:bg-teal-900/40 dark:text-teal-400">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M4 6h16M4 12h16M4 18h10" />
                 </svg>
               </div>
-              <p className="font-bold text-gray-900 text-[15px]">Metti in ordine</p>
+              <p className="font-bold text-foreground text-[15px]">Metti in ordine</p>
             </div>
-            <p className="text-[14px] text-gray-700 mb-4 leading-relaxed">{block.content}</p>
+            <p className="text-[14px] text-foreground/80 mb-4 leading-relaxed">{block.content}</p>
             <div className="space-y-2">
               {(block.correctOrder ?? []).map((origIdx, step) => (
                 <div
                   key={step}
-                  className="flex items-center gap-3 rounded-xl bg-gray-50 border border-gray-100 p-3"
+                  className="flex items-center gap-3 rounded-xl bg-muted/50 border border-border p-3"
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald text-white text-xs font-bold">
                     {step + 1}
                   </span>
-                  <span className="text-[14px] text-gray-700 font-medium">
+                  <span className="text-[14px] text-foreground/80 font-medium">
                     {block.options?.[origIdx]}
                   </span>
                 </div>
@@ -1561,14 +1561,14 @@ export default function ModulePage({
         >
           <Link
             href={`/lezioni/${lessonId}`}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70 transition-colors"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <polyline points="15,18 9,12 15,6" />
             </svg>
           </Link>
           <div className="flex-1 relative">
-            <div className={`rounded-full bg-gray-100 overflow-hidden ${profile.profile === "giovane" ? "h-3" : "h-2.5"}`}>
+            <div className={`rounded-full bg-muted overflow-hidden ${profile.profile === "giovane" ? "h-3" : "h-2.5"}`}>
               <motion.div
                 className={`h-full rounded-full ${
                   profile.profile === "giovane"
@@ -1604,17 +1604,17 @@ export default function ModulePage({
                 <span className="text-[10px]">🔥</span>
               </motion.div>
             )}
-            <span className={`font-bold text-gray-400 ${profile.profile === "senior" ? "text-sm" : "text-xs"}`}>
+            <span className={`font-bold text-muted-foreground/70 ${profile.profile === "senior" ? "text-sm" : "text-xs"}`}>
               {currentStep + 1}/{totalSteps}
             </span>
             {xpEarned > 0 && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="flex items-center gap-0.5 bg-amber-50 rounded-full px-2 py-0.5"
+                className="flex items-center gap-0.5 bg-amber-50 dark:bg-amber-950/40 rounded-full px-2 py-0.5"
               >
                 <span className="text-[10px]">⚡</span>
-                <span className="text-[11px] font-bold text-amber-600">{xpEarned} {profile.xpLabel}</span>
+                <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">{xpEarned} {profile.xpLabel}</span>
               </motion.div>
             )}
           </div>
@@ -1625,14 +1625,14 @@ export default function ModulePage({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-4 rounded-xl bg-blue-50 border border-blue-100 px-4 py-2.5 flex items-center gap-3"
+            className="mb-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 px-4 py-2.5 flex items-center gap-3"
           >
             <span className="text-xl">📖</span>
             <div>
-              <p className="text-sm font-bold text-blue-800">
+              <p className="text-sm font-bold text-blue-800 dark:text-blue-200">
                 Passo {currentStep + 1} di {totalSteps}
               </p>
-              <p className="text-xs text-blue-600">
+              <p className="text-xs text-blue-600 dark:text-blue-300">
                 {isLastStep ? "Ultimo passo! Quasi finito." : "Prosegui al tuo ritmo, senza fretta."}
               </p>
             </div>
@@ -1645,10 +1645,10 @@ export default function ModulePage({
           animate={{ opacity: 1, y: 0 }}
           className="mb-3 flex items-center gap-2"
         >
-          <Badge className="bg-emerald-50 text-emerald-700 text-[10px] font-bold border-0">
+          <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold border-0">
             Lezione {lessonNumber}
           </Badge>
-          <span className="text-xs text-gray-400 font-medium">{mod.title}</span>
+          <span className="text-xs text-muted-foreground/70 font-medium">{mod.title}</span>
         </motion.div>
 
         {/* === GAMIFICATION BAR: Hearts + Multiplier + Power-ups === */}
@@ -1700,17 +1700,17 @@ export default function ModulePage({
             {/* Power-ups */}
             <div className="flex items-center gap-1.5">
               {powerups.fiftyFifty > 0 && (
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-xs font-bold text-violet-700 cursor-pointer" title="50/50">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-xs font-bold text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 cursor-pointer" title="50/50">
                   50
                 </div>
               )}
               {powerups.skip > 0 && (
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-sm cursor-pointer" title="Salta">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-sm cursor-pointer" title="Salta">
                   ⏭️
                 </div>
               )}
               {profile.showTimer && powerups.extraTime > 0 && (
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-sm cursor-pointer" title="+15s">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-sm cursor-pointer" title="+15s">
                   ⏰
                 </div>
               )}
@@ -1723,11 +1723,11 @@ export default function ModulePage({
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-5 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200 p-5 text-center"
+            className="mb-5 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/40 dark:to-orange-950/30 border-2 border-red-200 dark:border-red-900 p-5 text-center"
           >
             <span className="text-3xl">💔</span>
-            <p className="text-base font-bold text-red-800 mt-2">Vite esaurite!</p>
-            <p className="text-sm text-red-600 mt-1">Puoi continuare, ma non guadagnerai XP bonus.</p>
+            <p className="text-base font-bold text-red-800 dark:text-red-300 mt-2">Vite esaurite!</p>
+            <p className="text-sm text-red-600 dark:text-red-400 mt-1">Puoi continuare, ma non guadagnerai XP bonus.</p>
           </motion.div>
         )}
 
@@ -1769,7 +1769,7 @@ export default function ModulePage({
               initial={{ opacity: 0, y: 40, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.9 }}
-              className="fixed top-32 left-1/2 -translate-x-1/2 z-50 bg-[#003DA5] text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2"
+              className="fixed top-32 left-1/2 -translate-x-1/2 z-50 bg-figb text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2"
             >
               <span className="text-xl">🏅</span>
               {achievement}
@@ -1840,13 +1840,13 @@ export default function ModulePage({
               <div className="flex justify-center mb-1.5">
                 <button
                   onClick={handleSaveAndExit}
-                  className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
                 >
                   Salva e esci
                 </button>
               </div>
             )}
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-[#e5e7eb] shadow-sm p-3 flex gap-3">
+            <div className="bg-card/90 backdrop-blur-md rounded-2xl border border-border shadow-sm p-3 flex gap-3">
               {currentStep > 0 && (
                 <Button
                   variant="outline"
@@ -1863,7 +1863,7 @@ export default function ModulePage({
                   className={`flex-1 rounded-xl font-bold shadow-lg ${
                     canAdvance
                       ? "bg-emerald hover:bg-emerald-dark shadow-emerald/25"
-                      : "bg-gray-300 cursor-not-allowed shadow-none"
+                      : "bg-muted-foreground/30 cursor-not-allowed shadow-none"
                   } ${profile.profile === "senior" ? "h-14 text-base" : "h-12"}`}
                 >
                   {profile.profile === "senior" ? "Avanti →" : "Avanti"}
@@ -1920,7 +1920,7 @@ export default function ModulePage({
             </div>
 
             {/* Main completion card */}
-            <div className="rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-amber-50/30 border border-emerald-200 p-6 text-center relative overflow-hidden">
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-50 via-card to-amber-50/30 dark:from-emerald-950/40 dark:via-card dark:to-amber-950/20 border border-emerald-200 dark:border-emerald-900 p-6 text-center relative overflow-hidden">
               {/* Sparkle ring */}
               {[...Array(12)].map((_, i) => (
                 <motion.div
@@ -1945,7 +1945,7 @@ export default function ModulePage({
               >
                 {isLessonComplete ? "🎓" : "🏆"}
               </motion.div>
-              <h3 className="text-xl font-semibold text-emerald-dark">
+              <h3 className="text-xl font-semibold text-emerald-dark dark:text-emerald-300">
                 {isLessonComplete ? "Lezione completata!" : "Modulo completato!"}
               </h3>
 
@@ -1971,7 +1971,7 @@ export default function ModulePage({
               })()}
 
               {isLessonComplete && (
-                <p className="text-sm text-emerald-600 mt-1">
+                <p className="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
                   Hai terminato tutti i moduli della Lezione {lessonNumber}!
                 </p>
               )}
@@ -1982,29 +1982,29 @@ export default function ModulePage({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2 }}
-                  className="inline-flex items-center gap-1 bg-red-50 border border-red-200 rounded-full px-3 py-1 mt-2"
+                  className="inline-flex items-center gap-1 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-full px-3 py-1 mt-2"
                 >
                   <span>❤️❤️❤️</span>
-                  <span className="text-xs font-bold text-red-700">Vite intatte!</span>
+                  <span className="text-xs font-bold text-red-700 dark:text-red-300">Vite intatte!</span>
                 </motion.div>
               )}
 
               {/* Stats grid */}
               <div className={`grid gap-3 mt-4 ${totalQuizzes > 0 && bestStreak >= 2 ? "grid-cols-3" : totalQuizzes > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
-                <div className="rounded-xl bg-amber-50 p-3">
-                  <p className="text-2xl font-bold text-amber-600">{xpEarned + mod.xpReward}</p>
-                  <p className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">{profile.xpLabel} Totali</p>
+                <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 p-3">
+                  <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{xpEarned + mod.xpReward}</p>
+                  <p className="text-[10px] font-bold text-amber-500 dark:text-amber-400/80 uppercase tracking-wider">{profile.xpLabel} Totali</p>
                 </div>
                 {totalQuizzes > 0 && (
-                  <div className="rounded-xl bg-emerald-50 p-3">
-                    <p className="text-2xl font-bold text-emerald-600">{correctAnswers}/{totalQuizzes}</p>
-                    <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Quiz</p>
+                  <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 p-3">
+                    <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{correctAnswers}/{totalQuizzes}</p>
+                    <p className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400/80 uppercase tracking-wider">Quiz</p>
                   </div>
                 )}
                 {bestStreak >= 2 && (
-                  <div className="rounded-xl bg-orange-50 p-3">
-                    <p className="text-2xl font-bold text-orange-600">{bestStreak}</p>
-                    <p className="text-[10px] font-bold text-orange-500 uppercase tracking-wider">Best Streak</p>
+                  <div className="rounded-xl bg-orange-50 dark:bg-orange-950/40 p-3">
+                    <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{bestStreak}</p>
+                    <p className="text-[10px] font-bold text-orange-500 dark:text-orange-400/80 uppercase tracking-wider">Best Streak</p>
                   </div>
                 )}
               </div>
@@ -2016,10 +2016,10 @@ export default function ModulePage({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.5, type: "spring" }}
-                    className="inline-flex items-center gap-1 bg-violet-50 border border-violet-200 rounded-full px-3 py-1"
+                    className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 rounded-full px-3 py-1"
                   >
                     <span>🎯</span>
-                    <span className="text-xs font-bold text-violet-700">Punteggio Perfetto</span>
+                    <span className="text-xs font-bold text-violet-700 dark:text-violet-300">Punteggio Perfetto</span>
                   </motion.div>
                 )}
                 {bestStreak >= 3 && (
@@ -2027,10 +2027,10 @@ export default function ModulePage({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.7, type: "spring" }}
-                    className="inline-flex items-center gap-1 bg-orange-50 border border-orange-200 rounded-full px-3 py-1"
+                    className="inline-flex items-center gap-1 bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900 rounded-full px-3 py-1"
                   >
                     <span>🔥</span>
-                    <span className="text-xs font-bold text-orange-700">Streak {bestStreak}x</span>
+                    <span className="text-xs font-bold text-orange-700 dark:text-orange-300">Streak {bestStreak}x</span>
                   </motion.div>
                 )}
                 {xpEarned >= 100 && (
@@ -2038,10 +2038,10 @@ export default function ModulePage({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.9, type: "spring" }}
-                    className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-full px-3 py-1"
+                    className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1"
                   >
                     <span>⚡</span>
-                    <span className="text-xs font-bold text-amber-700">XP Master</span>
+                    <span className="text-xs font-bold text-amber-700 dark:text-amber-300">XP Master</span>
                   </motion.div>
                 )}
               </div>
@@ -2056,11 +2056,11 @@ export default function ModulePage({
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.0 }}
-                  className="rounded-2xl bg-gradient-to-br from-blue-50 via-white to-[#003DA5]/5 border border-blue-200 p-5"
+                  className="rounded-2xl bg-gradient-to-br from-blue-50 dark:from-blue-950/40 via-card to-figb/5 dark:to-primary/10 border border-blue-200 dark:border-blue-900 p-5"
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-2xl">📝</span>
-                    <h4 className="text-base font-semibold text-blue-900">Cosa hai imparato</h4>
+                    <h4 className="text-base font-semibold text-blue-900 dark:text-blue-200">Cosa hai imparato</h4>
                   </div>
                   <ul className="space-y-2">
                     {ruleBlocks.map((rule, i) => (
@@ -2070,14 +2070,14 @@ export default function ModulePage({
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                         </span>
-                        <span className={`text-blue-800 leading-snug ${profile.profile === "senior" ? "text-base" : "text-sm"}`}>
+                        <span className={`text-blue-800 dark:text-blue-200 leading-snug ${profile.profile === "senior" ? "text-base" : "text-sm"}`}>
                           {rule.content}
                         </span>
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-3 pt-3 border-t border-blue-100">
-                    <Link href="/appunti" className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">
+                  <div className="mt-3 pt-3 border-t border-blue-100 dark:border-blue-900">
+                    <Link href="/appunti" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
                       Vedi tutti i tuoi appunti →
                     </Link>
                   </div>
@@ -2114,7 +2114,7 @@ export default function ModulePage({
                 transition={{ delay: 0.8 }}
               >
                 <Link href={`/lezioni/${lessonId}/${nextModule.id}`}>
-                  <div className="group card-clean rounded-2xl bg-white p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
+                  <div className="group card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer">
                     <p className="text-[10px] font-bold text-emerald uppercase tracking-wider mb-2">
                       Prossimo modulo
                     </p>
@@ -2123,15 +2123,15 @@ export default function ModulePage({
                         {moduleIndex + 2}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-gray-900 text-[15px]">{nextModule.title}</h4>
+                        <h4 className="font-bold text-foreground text-[15px]">{nextModule.title}</h4>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <Badge className="text-[10px] font-bold border-0 bg-blue-50 text-blue-600">
+                          <Badge className="text-[10px] font-bold border-0 bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
                             {nextModule.type === "theory" ? "Teoria" : nextModule.type === "quiz" ? "Quiz" : nextModule.type === "exercise" ? "Esercizio" : "Pratica"}
                           </Badge>
-                          <span className="text-[11px] text-gray-400">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
+                          <span className="text-[11px] text-muted-foreground/70">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
                         </div>
                       </div>
-                      <svg className="h-5 w-5 text-gray-300 group-hover:text-emerald group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="h-5 w-5 text-muted-foreground/50 group-hover:text-emerald group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
                       </svg>
                     </div>
@@ -2148,8 +2148,8 @@ export default function ModulePage({
                 transition={{ delay: 0.8 }}
               >
                 <Link href={`/lezioni/${nextLesson.id}`}>
-                  <div className="group card-clean rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 border border-emerald-200 p-4 cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]">
-                    <p className="text-[10px] font-bold text-emerald-dark uppercase tracking-wider mb-2">
+                  <div className="group card-clean card-interactive rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900 p-4 cursor-pointer">
+                    <p className="text-[10px] font-bold text-emerald-dark dark:text-emerald-300 uppercase tracking-wider mb-2">
                       Prossima lezione
                     </p>
                     <div className="flex items-center gap-3">
@@ -2157,14 +2157,14 @@ export default function ModulePage({
                         {nextLesson.icon}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-gray-900 text-[15px]">
+                        <h4 className="font-bold text-foreground text-[15px]">
                           Lezione {getLessonDisplayNumber(nextLesson.id)}: {nextLesson.title}
                         </h4>
-                        <p className="text-[12px] text-gray-500 mt-0.5">
+                        <p className="text-[12px] text-muted-foreground mt-0.5">
                           {nextLesson.modules.length} moduli · {nextLesson.subtitle}
                         </p>
                       </div>
-                      <svg className="h-5 w-5 text-emerald-dark/50 group-hover:text-emerald-dark group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="h-5 w-5 text-emerald-dark/50 dark:text-emerald-300/50 group-hover:text-emerald-dark dark:group-hover:text-emerald-300 group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
                       </svg>
                     </div>
@@ -2179,11 +2179,11 @@ export default function ModulePage({
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-5 text-center"
+                className="rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200 dark:border-amber-900 p-5 text-center"
               >
                 <span className="text-3xl">🎓</span>
-                <h4 className="text-lg font-semibold text-amber-800 mt-2">Corso Fiori Completato!</h4>
-                <p className="text-sm text-amber-700 mt-1">Sei pronto per il circolo FIGB!</p>
+                <h4 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mt-2">Corso Fiori Completato!</h4>
+                <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">Sei pronto per il circolo FIGB!</p>
               </motion.div>
             )}
           </motion.div>
@@ -2211,7 +2211,7 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile, onDis
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ delay: 0.1 }}
-      className="mb-6 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm overflow-hidden"
+      className="mb-6 rounded-2xl bg-card border border-border shadow-sm overflow-hidden"
     >
       <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
         <iframe
@@ -2237,7 +2237,7 @@ function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile, onDis
       </div>
       <div className="p-3 flex items-center gap-2">
         <span className="text-lg">🎓</span>
-        <p className="text-sm font-bold text-gray-700">
+        <p className="text-sm font-bold text-foreground/80">
           Maestro Franci introduce la lezione
         </p>
       </div>

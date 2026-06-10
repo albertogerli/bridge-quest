@@ -308,12 +308,12 @@ export default function GuidaPage() {
               <div className="grid gap-3 sm:grid-cols-2">
                 {section.features.map((f) => {
                   const inner = (
-                    <div className="card-clean flex h-full flex-col rounded-2xl bg-white p-4 transition-all hover:translate-y-[-2px]">
+                    <div className="card-clean card-interactive flex h-full flex-col rounded-2xl bg-card p-4">
                       <div className="mb-1.5 flex items-center gap-2">
                         <span className="text-xl">{f.emoji}</span>
-                        <h3 className="text-[15px] font-semibold text-gray-900">{f.title}</h3>
+                        <h3 className="text-[15px] font-semibold text-foreground">{f.title}</h3>
                       </div>
-                      <p className="flex-1 text-[13px] leading-relaxed text-gray-500">{f.desc}</p>
+                      <p className="flex-1 text-[13px] leading-relaxed text-muted-foreground">{f.desc}</p>
                       {f.href && (
                         <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary">
                           {f.cta ?? "Provalo"} →
