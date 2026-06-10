@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { GameActions } from "@/components/bridge/game-actions";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { useSmazzate, useValidatedSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
@@ -18,6 +19,7 @@ import {
   partnershipOf,
 } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
+import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
 import { GameTutorial } from "@/components/bridge/game-tutorial";
@@ -78,10 +80,15 @@ export default function CompitoPage({
     };
   }, [assignmentId]);
 
-  // Ordered playable hands for this assignment.
+  // Ordered playable hands for this assignment: from the global catalog or,
+  // for ids not found there, from the assignment's own PBN-imported hands.
   const hands: Smazzata[] = assignment
     ? assignment.smazzata_ids
-        .map((id) => validated.find((s) => s.id === id))
+        .map(
+          (id) =>
+            validated.find((s) => s.id === id) ??
+            assignment.custom_hands?.find((s) => s.id === id)
+        )
         .filter((s): s is Smazzata => s !== undefined)
     : [];
 
@@ -227,7 +234,10 @@ export default function CompitoPage({
                     Mano {i + 1}: {hand.title}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Contratto {hand.contract} · Lezione {getLessonDisplayNumber(hand.lesson)}
+                    Contratto {hand.contract} ·{" "}
+                    {hand.lesson > 0
+                      ? `Lezione ${getLessonDisplayNumber(hand.lesson)}`
+                      : "Mano dell'istruttore"}
                   </p>
                   {isDown && (
                     <p className="mt-0.5 text-xs font-bold text-red-600">
@@ -336,6 +346,21 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
       const xp = 30 + (res.result >= 0 ? 20 : 0) + Math.max(0, res.result) * 10;
       awardGameXp(`compito-${smazzata.id}`, xp);
 
+      // Classify the student's play errors (rule-based, best-effort) so the
+      // instructor portal can aggregate them into a per-student taxonomy.
+      let errors: { category: string; trick?: number }[] = [];
+      try {
+        if (game.gameState) {
+          errors = classifyPlayErrors({
+            tricks: game.gameState.tricks,
+            originalHands: smazzata.hands,
+            trumpSuit: parseContract(smazzata.contract).trumpSuit,
+            playerPositions: [declarer, dummyGamePos],
+            declarer,
+          }).map((e) => ({ category: e.category, trick: e.trickNumber }));
+        }
+      } catch {}
+
       // score = bridge result (e.g. +1, 0, -2); details power the heatmap.
       setTimeout(
         () =>
@@ -346,6 +371,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
             made: res.result >= 0,
             contract: smazzata.contract,
             durationMs: Date.now() - startRef.current,
+            errors,
             // Full card-by-card play so the instructor can replay the hand.
             play: game.gameState
               ? { hands: game.gameState.hands, tricks: game.gameState.tricks }
@@ -380,7 +406,10 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
           </div>
           <h1 className="text-lg font-bold">{smazzata.title}</h1>
           <p className="mt-1 text-xs text-muted-foreground">
-            Lezione {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
+            {smazzata.lesson > 0
+              ? `Lezione ${getLessonDisplayNumber(smazzata.lesson)} · `
+              : "Mano dell'istruttore · "}
+            Board {smazzata.board}
           </p>
         </motion.div>
 
@@ -484,6 +513,17 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
             </motion.p>
           </AnimatePresence>
         </div>
+
+        {/* In-game actions: claim */}
+        {(game.phase === "playing" || game.phase === "trick-complete") && (
+          <GameActions
+            canClaim={game.canClaim}
+            claimStatus={game.claimStatus}
+            onClaim={game.requestClaim}
+            canUndo={game.canUndo}
+            onUndo={game.undoLastPlay}
+          />
+        )}
 
         {/* Actions */}
         <div className="mt-4 flex justify-center gap-3">

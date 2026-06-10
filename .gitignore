@@ -75,3 +75,19 @@ scripts/video-jobs.json
 
 # Feedback files
 Feedback/
+
+# Finder duplicate copies (e.g. "sw 2.js")
+public/sw [0-9]*.js
+public/swe-worker-* [0-9]*.js
+
+# Local test/scratch files
+/check-types.ts
+/test-schema.ts
+/test-infografica.png
+/tmp/
+/output/
+/.next.nosync/
+/.playwright-cli/
+scripts/__pycache__/
+scripts/*.log
+scripts/youtube_token.json

@@ -9,6 +9,7 @@
 // ============================================================================
 
 import { createClient } from "@/lib/supabase/client";
+import type { Smazzata } from "@/lib/catalog";
 
 // ----------------------------------------------------------------------------
 // Types (mirror the SQL tables)
@@ -50,6 +51,8 @@ export interface Assignment {
   unlock_mode: UnlockMode;
   live_active_index: number | null;
   created_at: string;
+  /** Hands imported from PBN, referenced by ids in smazzata_ids (pbn_import.sql) */
+  custom_hands?: Smazzata[] | null;
 }
 
 /** One latest result per (student, smazzata) for an assignment — heatmap source. */
@@ -282,19 +285,26 @@ export async function createAssignment(input: {
   instructorNote?: string | null;
   mode?: AssignmentMode;
   unlockMode?: UnlockMode;
+  /** Hands imported from PBN; their ids must also appear in smazzataIds */
+  customHands?: Smazzata[] | null;
 }): Promise<Assignment> {
   const supabase = createClient();
+  const row: Record<string, unknown> = {
+    class_id: input.classId,
+    title: input.title,
+    smazzata_ids: input.smazzataIds,
+    due_date: input.dueDate ?? null,
+    instructor_note: input.instructorNote ?? null,
+    mode: input.mode ?? "homework",
+    unlock_mode: input.unlockMode ?? "free",
+  };
+  // Only send the column when used, so DBs without pbn_import.sql keep working
+  if (input.customHands && input.customHands.length > 0) {
+    row.custom_hands = input.customHands;
+  }
   const { data, error } = await supabase
     .from("assignments")
-    .insert({
-      class_id: input.classId,
-      title: input.title,
-      smazzata_ids: input.smazzataIds,
-      due_date: input.dueDate ?? null,
-      instructor_note: input.instructorNote ?? null,
-      mode: input.mode ?? "homework",
-      unlock_mode: input.unlockMode ?? "free",
-    })
+    .insert(row)
     .select()
     .single();
 

@@ -760,6 +760,36 @@ export function toGamePosition(displayPos: Position, declarer: Position): Positi
   return displayPos;
 }
 
+/**
+ * Claim: assign all remaining tricks to `winner` and finish the game.
+ * Only valid between tricks (no cards on the table). The claim must be
+ * validated (e.g. via DDS) before calling this.
+ */
+export function claimTricks(state: GameState, winner: Partnership): GameState {
+  if (state.phase === "finished") {
+    throw new Error("Game is already finished");
+  }
+  if (state.currentTrick.length > 0) {
+    throw new Error("Cannot claim in the middle of a trick");
+  }
+
+  const remaining = Math.max(
+    state.hands.north.length,
+    state.hands.south.length,
+    state.hands.east.length,
+    state.hands.west.length
+  );
+
+  const newTrickCount = { ...state.trickCount };
+  newTrickCount[winner] += remaining;
+
+  return {
+    ...state,
+    trickCount: newTrickCount,
+    phase: "finished",
+  };
+}
+
 /** Calculate the result score */
 export function getResult(state: GameState): {
   tricksNeeded: number;

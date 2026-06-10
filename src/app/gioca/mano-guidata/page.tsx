@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { GameActions } from "@/components/bridge/game-actions";
 import { useGameStore } from "@/store/use-game-store";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { useGuidedHands } from "@/store/use-guided-hands-store";
@@ -231,6 +232,7 @@ function GuidedGameplay({
     declarer,
     playerPositions: [declarer, dummyGamePos],
     openingLead: hand.openingLead,
+    allowUndo: true, // guided practice: take back the last card
   });
 
   // Show hints at specific trick numbers
@@ -458,6 +460,17 @@ function GuidedGameplay({
             </motion.p>
           </AnimatePresence>
         </div>
+
+        {/* In-game actions: claim + undo */}
+        {(game.phase === "playing" || game.phase === "trick-complete") && (
+          <GameActions
+            canClaim={game.canClaim}
+            claimStatus={game.claimStatus}
+            onClaim={game.requestClaim}
+            canUndo={game.canUndo}
+            onUndo={game.undoLastPlay}
+          />
+        )}
 
         {/* Actions */}
         <div className="mt-4 flex justify-center gap-3">

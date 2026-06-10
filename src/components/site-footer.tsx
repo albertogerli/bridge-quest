@@ -16,6 +16,10 @@ export function SiteFooter() {
 
         {/* Links row */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-gray-400 dark:text-gray-500">
+          <Link href="/guida" className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            Guida
+          </Link>
+          <span className="select-none">·</span>
           <Link href="/privacy" className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
             Privacy Policy
           </Link>

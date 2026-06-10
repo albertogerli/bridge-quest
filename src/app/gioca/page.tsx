@@ -10,7 +10,7 @@ import { useProfile } from "@/hooks/use-profile";
 import {
   Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
   Target, Hash, Megaphone, MessageCircle, Brain, Swords,
-  Spade, BookOpen, Link2, BarChart3
+  Spade, BookOpen, Link2, BarChart3, Radio
 } from "lucide-react";
 import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
 import { useGameStore } from "@/store/use-game-store";
@@ -376,6 +376,25 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
+                    +80 {profile.xpLabel}
+                  </span>
+                  <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* Segnali in Difesa */}
+            <Link href="/gioca/segnali" className="block" aria-label="Segnali in Difesa: dai e leggi i segnali del compagno">
+              <div className="card-clean rounded-2xl bg-white p-4 cursor-pointer hover:translate-y-[-2px] transition-all active:translate-y-[2px] flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl shadow-md shadow-violet-400/20">
+                  <Radio className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-[15px]">Segnali in Difesa</h3>
+                  <p className="text-[12px] text-gray-500 mt-0.5">In difesa si parla con le carte: dai e leggi i segnali</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
