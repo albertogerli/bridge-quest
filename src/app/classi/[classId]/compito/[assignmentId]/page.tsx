@@ -219,9 +219,9 @@ export default function CompitoPage({
                 <div
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
                     isDown
-                      ? "bg-red-100 text-red-600 dark:bg-red-950/50"
+                      ? "bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400"
                       : isMade
-                        ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50"
+                        ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400"
                         : isNext
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground"
