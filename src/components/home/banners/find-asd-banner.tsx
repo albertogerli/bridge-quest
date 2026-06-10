@@ -12,7 +12,7 @@ export function FindAsdBanner() {
           transition={{ delay: 0.6 }}
         >
           <Link href="/trova-circolo">
-            <div className="rounded-2xl bg-gradient-to-r from-[#003DA5] to-[#0052CC] p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-lg transition-all">
+            <div className="rounded-2xl bg-gradient-to-r from-figb to-figb-light p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-lg transition-all">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shrink-0">
                   <MapPin className="w-5 h-5 text-white" />

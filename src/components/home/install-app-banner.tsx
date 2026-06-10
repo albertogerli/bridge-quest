@@ -20,16 +20,16 @@ export function InstallAppBanner() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="rounded-2xl bg-[#1B5E3B]/5 border border-[#1B5E3B]/15 p-4">
+              <div className="rounded-2xl bg-[#1B5E3B]/5 dark:bg-emerald-950/30 border border-[#1B5E3B]/15 dark:border-emerald-900 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10">
-                    <Smartphone className="w-5 h-5 text-[#1B5E3B]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10 dark:bg-emerald-900/40">
+                    <Smartphone className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    <p className="text-sm font-semibold text-foreground">
                       Installa Bridge LAB
                     </p>
-                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                    <p className="text-[11px] text-muted-foreground">
                       Aggiungilo alla schermata Home
                     </p>
                   </div>
@@ -52,7 +52,7 @@ export function InstallAppBanner() {
                     <button
                       onClick={() => setInstallDismissed(true)}
                       aria-label="Chiudi banner installazione"
-                      className="p-2.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:bg-gray-800 transition-colors"
+                      className="p-2.5 rounded-lg text-muted-foreground/70 hover:text-foreground hover:bg-muted transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                         <path d="M18 6L6 18M6 6l12 12" />
@@ -81,14 +81,14 @@ export function InstallAppBanner() {
               animate={{ y: 0 }}
               exit={{ y: 200 }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              className="bg-white dark:bg-[#1a1f2e] rounded-t-3xl p-6 w-full max-w-md shadow-2xl pb-10"
+              className="bg-card rounded-t-3xl p-6 w-full max-w-md shadow-2xl pb-10"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
               aria-label="Guida installazione su iPhone e iPad"
             >
-              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" aria-hidden="true" />
-              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
+              <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" aria-hidden="true" />
+              <h3 className="text-lg font-bold text-foreground text-center mb-4">
                 Installa su iPhone/iPad
               </h3>
               <div className="space-y-4">
@@ -96,7 +96,7 @@ export function InstallAppBanner() {
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-lg flex-shrink-0">
                     1
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-foreground/80">
                     Tocca il pulsante <strong>Condividi</strong>{" "}
                     <span className="inline-block align-middle">
                       <svg className="w-5 h-5 inline text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -112,7 +112,7 @@ export function InstallAppBanner() {
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-lg flex-shrink-0">
                     2
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-foreground/80">
                     Scorri e tocca <strong>&quot;Aggiungi a schermata Home&quot;</strong>
                   </p>
                 </div>
@@ -120,14 +120,14 @@ export function InstallAppBanner() {
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-lg flex-shrink-0">
                     3
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-foreground/80">
                     Tocca <strong>&quot;Aggiungi&quot;</strong> in alto a destra
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-6 w-full py-3 rounded-2xl bg-[#003DA5] text-white font-bold text-sm"
+                className="mt-6 w-full py-3 rounded-2xl bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition-transform"
               >
                 Ho capito
               </button>

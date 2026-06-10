@@ -12,21 +12,21 @@ export function ScopriBanner() {
           transition={{ delay: 1.2 }}
         >
           <Link href="/scopri">
-            <div className="btn-squishy rounded-2xl bg-gradient-to-r from-[#1B5E3B]/5 to-[#1B5E3B]/10 dark:from-[#1B5E3B]/10 dark:to-emerald-950/30 border border-[#1B5E3B]/15 p-4 cursor-pointer group">
+            <div className="btn-squishy rounded-2xl bg-gradient-to-r from-[#1B5E3B]/5 to-[#1B5E3B]/10 dark:from-[#1B5E3B]/10 dark:to-emerald-950/30 border border-[#1B5E3B]/15 dark:border-emerald-900 p-4 cursor-pointer group">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#1B5E3B] to-[#14472D]">
                   <Globe className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-bold text-foreground">
                     Scopri il Bridge
                   </p>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                  <p className="text-[11px] text-muted-foreground">
                     Storia, la FIGB, curiosità e link utili
                   </p>
                 </div>
                 <svg
-                  className="h-5 w-5 text-[#1B5E3B]/30 group-hover:text-[#1B5E3B] transition-colors shrink-0"
+                  className="h-5 w-5 text-[#1B5E3B]/30 dark:text-emerald-400/40 group-hover:text-[#1B5E3B] dark:group-hover:text-emerald-400 transition-colors shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"

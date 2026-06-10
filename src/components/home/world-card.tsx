@@ -25,7 +25,7 @@ export function WorldCard({ world, completedModules, href }: WorldCardProps) {
 
   return (
     <Link href={href}>
-      <div className="btn-squishy group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1f2e] transition-colors border border-[#E8E4DC] dark:border-[#2a3040] cursor-pointer">
+      <div className="btn-squishy group relative overflow-hidden rounded-2xl bg-card transition-colors border border-border cursor-pointer">
         <div className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`} />
 
         <div className="flex items-center gap-4 p-4 pl-5">
@@ -35,16 +35,16 @@ export function WorldCard({ world, completedModules, href }: WorldCardProps) {
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+              <h3 className="font-semibold text-foreground truncate">
                 {world.name}
               </h3>
               {progress === 100 && (
-                <span className="text-emerald-700 text-lg" aria-label="Completato">✓</span>
+                <span className="text-emerald-700 dark:text-emerald-400 text-lg" aria-label="Completato">✓</span>
               )}
             </div>
-            <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-0.5">{world.subtitle}</p>
+            <p className="text-[13px] text-muted-foreground mt-0.5">{world.subtitle}</p>
             <div className="mt-2.5 flex items-center gap-3">
-              <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                 <motion.div
                   className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
                   initial={{ width: 0 }}
@@ -52,14 +52,14 @@ export function WorldCard({ world, completedModules, href }: WorldCardProps) {
                   transition={{ delay: 1, duration: 0.8 }}
                 />
               </div>
-              <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400 tabular-nums">
+              <span className="text-[11px] font-bold text-muted-foreground tabular-nums">
                 {completedModules}/{world.totalModules}
               </span>
             </div>
           </div>
 
           <svg
-            className="h-5 w-5 text-gray-300 shrink-0 group-hover:text-[#1B5E3B] transition-colors"
+            className="h-5 w-5 text-muted-foreground/50 shrink-0 group-hover:text-[#1B5E3B] dark:group-hover:text-emerald-400 transition-colors"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

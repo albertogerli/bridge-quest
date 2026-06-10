@@ -42,12 +42,12 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
           </Link>
 
           {/* Lezioni (5 cols) */}
-          <Link href="/lezioni" className="col-span-5 btn-squishy btn-squishy-white rounded-2xl p-4 bg-white border border-[#E8E4DC] flex flex-col justify-between min-h-[130px]">
+          <Link href="/lezioni" className="col-span-5 btn-squishy btn-squishy-white rounded-2xl p-4 bg-card border border-border flex flex-col justify-between min-h-[130px]">
             <div>
               <span className="text-2xl mb-1.5 block">🎓</span>
-              <h3 className="font-bold text-[15px] leading-tight text-gray-900">Lezioni</h3>
+              <h3 className="font-bold text-[15px] leading-tight text-foreground">Lezioni</h3>
             </div>
-            <p className="text-[11px] text-gray-500 leading-snug">49 lezioni · 4 corsi</p>
+            <p className="text-[11px] text-muted-foreground leading-snug">49 lezioni · 4 corsi</p>
           </Link>
 
           {/* Torneo (7 cols) */}
@@ -60,21 +60,21 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
           </Link>
 
           {/* Quiz (6 cols) */}
-          <Link href="/gioca" className="col-span-6 btn-squishy btn-squishy-white rounded-2xl p-4 bg-white border border-[#E8E4DC] flex flex-col justify-between min-h-[110px]">
+          <Link href="/gioca" className="col-span-6 btn-squishy btn-squishy-white rounded-2xl p-4 bg-card border border-border flex flex-col justify-between min-h-[110px]">
             <div>
               <span className="text-xl mb-1 block">🧠</span>
-              <h3 className="font-bold text-sm leading-tight text-gray-900">Quiz & Minigiochi</h3>
+              <h3 className="font-bold text-sm leading-tight text-foreground">Quiz & Minigiochi</h3>
             </div>
-            <p className="text-[10px] text-gray-400">6 quiz · 9 giochi</p>
+            <p className="text-[10px] text-muted-foreground/70">6 quiz · 9 giochi</p>
           </Link>
 
           {/* Dispense (6 cols) */}
-          <Link href="/dispense" className="col-span-6 btn-squishy btn-squishy-white rounded-2xl p-4 bg-white border border-[#E8E4DC] flex flex-col justify-between min-h-[110px]">
+          <Link href="/dispense" className="col-span-6 btn-squishy btn-squishy-white rounded-2xl p-4 bg-card border border-border flex flex-col justify-between min-h-[110px]">
             <div>
               <span className="text-xl mb-1 block">📄</span>
-              <h3 className="font-bold text-sm leading-tight text-gray-900">Dispense FIGB</h3>
+              <h3 className="font-bold text-sm leading-tight text-foreground">Dispense FIGB</h3>
             </div>
-            <p className="text-[10px] text-gray-400">Materiale PDF</p>
+            <p className="text-[10px] text-muted-foreground/70">Materiale PDF</p>
           </Link>
 
           {/* Trova ASD (full width) */}

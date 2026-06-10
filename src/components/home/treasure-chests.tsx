@@ -9,7 +9,7 @@ import { useGameStore } from "@/store/use-game-store";
 
 const chestMilestoneIcons = {
   3: (size: string) => <Gift className={`${size} text-amber-700`} />,
-  10: (size: string) => <Package className={`${size} text-gray-600`} />,
+  10: (size: string) => <Package className={`${size} text-gray-600 dark:text-gray-300`} />,
   25: (size: string) => <Wrench className={`${size} text-amber-500`} />,
   50: (size: string) => <Crown className={`${size} text-amber-400`} />,
 } as Record<number, (size: string) => React.ReactNode>;
@@ -63,7 +63,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="bg-white dark:bg-[#1a1f2e] rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
+            className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -76,9 +76,9 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
             >
               {chestMilestoneIcons[showChestPopup.modules]?.("w-16 h-16")}
             </motion.div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{profile.chestTitle}</h2>
-            <p className="text-lg font-bold text-amber-600 mt-2">{showChestPopup.label}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{showChestPopup.reward}</p>
+            <h2 className="text-2xl font-bold text-foreground font-display">{profile.chestTitle}</h2>
+            <p className="text-lg font-bold text-amber-600 dark:text-amber-400 mt-2">{showChestPopup.label}</p>
+            <p className="text-sm text-muted-foreground mt-1">{showChestPopup.reward}</p>
             <div className="mt-4 flex justify-center gap-1">
               {[...Array(5)].map((_, i) => (
                 <motion.span
@@ -103,7 +103,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
       )}
     </AnimatePresence>
 
-    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] p-4 border border-[#E8E4DC] dark:border-[#2a3040]">
+    <div className="rounded-2xl bg-card p-4 border border-border">
       {/* Chest progress bar */}
       <div className="flex items-center gap-2 mb-4">
         {chestMilestones.map((chest, i) => {
@@ -117,7 +117,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
                     ? "bg-amber-100 dark:bg-amber-900/40 shadow-sm"
                     : isCurrent
                       ? "bg-amber-50 dark:bg-amber-950/30 ring-2 ring-amber-300 dark:ring-amber-700"
-                      : "bg-gray-50 dark:bg-gray-800/50"
+                      : "bg-muted"
                 }`}
                 animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
                 transition={isCurrent ? { duration: 2, repeat: Infinity } : {}}
@@ -125,7 +125,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
                 {isEarned ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : chestMilestoneIcons[chest.modules]?.("w-5 h-5")}
               </motion.div>
               <span className={`text-[9px] font-bold ${
-                isEarned ? "text-amber-700" : isCurrent ? "text-amber-600" : "text-gray-500"
+                isEarned ? "text-amber-700 dark:text-amber-400" : isCurrent ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
               }`}>
                 {chest.modules} mod
               </span>
@@ -138,14 +138,14 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
       {nextChest && (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-xs font-bold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+            <p className="text-xs font-bold text-foreground/80 flex items-center gap-1">
               {chestMilestoneIcons[nextChest.modules]?.("w-4 h-4")} {nextChest.label}
             </p>
-            <p className="text-[11px] font-bold text-amber-600">
+            <p className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
               {modulesCompleted}/{nextChest.modules}
             </p>
           </div>
-          <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="h-3 rounded-full bg-muted border border-border overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
               initial={{ width: 0 }}
@@ -153,7 +153,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
               transition={{ delay: 0.5, duration: 0.8 }}
             />
           </div>
-          <p className="text-[10px] text-gray-400 mt-1.5">
+          <p className="text-[10px] text-muted-foreground/70 mt-1.5">
             Premio: {nextChest.reward}
           </p>
         </div>
@@ -161,8 +161,8 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
 
       {!nextChest && (
         <div className="text-center py-2">
-          <p className="text-sm font-bold text-amber-700 flex items-center justify-center gap-1">Tutti i bauli aperti! <Crown className="w-4 h-4" /></p>
-          <p className="text-xs text-amber-700 mt-0.5">Sei un vero campione</p>
+          <p className="text-sm font-bold text-amber-700 dark:text-amber-400 flex items-center justify-center gap-1">Tutti i bauli aperti! <Crown className="w-4 h-4" /></p>
+          <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">Sei un vero campione</p>
         </div>
       )}
     </div>

@@ -174,8 +174,8 @@ export default function Home() {
   // While auth is loading, show spinner (prevents dashboard flash after logout)
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center" role="status" aria-label="Caricamento in corso">
-        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+      <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label="Caricamento in corso">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
         <span className="sr-only">Caricamento...</span>
       </div>
     );
@@ -198,8 +198,8 @@ export default function Home() {
   // returned above with the landing page, so we never spin for them.
   if (!catalogLoaded) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center" role="status" aria-label="Caricamento in corso">
-        <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+      <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label="Caricamento in corso">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
         <span className="sr-only">Caricamento...</span>
       </div>
     );
@@ -269,7 +269,7 @@ export default function Home() {
             { href: "/scuola", emoji: "👨‍🏫", label: "Scuola", desc: "Le tue classi", cls: "from-[#c8a44e] to-[#a8842e]" },
           ].map((h) => (
             <Link key={h.href} href={h.href} aria-label={h.label} className="block">
-              <div className={`flex h-full flex-col items-center gap-1 rounded-2xl bg-gradient-to-br ${h.cls} p-4 text-center text-white transition-all hover:translate-y-[-2px] hover:shadow-lg`}>
+              <div className={`flex h-full flex-col items-center gap-1 rounded-2xl bg-gradient-to-br ${h.cls} p-4 text-center text-white transition-all hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98]`}>
                 <span className="text-2xl">{h.emoji}</span>
                 <span className="text-sm font-bold">{h.label}</span>
                 <span className="text-[10px] text-white/75">{h.desc}</span>
@@ -318,7 +318,7 @@ export default function Home() {
         <section className="px-4 sm:px-5 pt-4">
           <div className="mx-auto max-w-6xl">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+              <h2 className="font-display text-base font-semibold text-foreground">
                 Prossimo premio
               </h2>
               <span className="text-xs font-bold text-amber-600">
@@ -342,9 +342,9 @@ export default function Home() {
 
       {/* Suit divider */}
       <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
-        <div className="h-px w-12 bg-[#1B5E3B]/10" />
-        <span className="text-[10px] tracking-[0.3em] text-[#1B5E3B]/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-[#1B5E3B]/10" />
+        <div className="h-px w-12 bg-foreground/10" />
+        <span className="text-[10px] tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
+        <div className="h-px w-12 bg-foreground/10" />
       </div>
 
       {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}

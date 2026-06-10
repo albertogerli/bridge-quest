@@ -112,7 +112,7 @@ export function HeroSection({
         >
           {hasStarted && nextModule ? (
             <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
-              <div className="btn-squishy btn-squishy-white w-full rounded-2xl bg-white dark:bg-[#1a1f2e] px-5 py-3.5 cursor-pointer">
+              <div className="btn-squishy btn-squishy-white w-full rounded-2xl bg-white px-5 py-3.5 cursor-pointer">
                 <div className="flex items-center gap-3 w-full">
                   <span className="text-2xl">{nextModule.lessonIcon}</span>
                   <div className="flex-1 text-left min-w-0">
@@ -127,7 +127,7 @@ export function HeroSection({
             </Link>
           ) : (
             <Link href="/lezioni">
-              <div className="btn-squishy btn-squishy-white w-full h-14 rounded-2xl bg-white dark:bg-[#1a1f2e] flex items-center justify-center gap-2 font-semibold text-base text-[#1B5E3B] cursor-pointer">
+              <div className="btn-squishy btn-squishy-white w-full h-14 rounded-2xl bg-white flex items-center justify-center gap-2 font-semibold text-base text-[#1B5E3B] cursor-pointer">
                 <Target className="w-5 h-5" aria-hidden="true" />
                 Inizia il tuo viaggio
               </div>
@@ -137,7 +137,7 @@ export function HeroSection({
       </div>
 
       {/* Smooth gradient fade to background */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-[#F7F5F0] dark:to-[#0D1A12]" aria-hidden="true" />
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-background" aria-hidden="true" />
     </section>
   );
 }

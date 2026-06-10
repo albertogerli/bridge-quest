@@ -19,18 +19,18 @@ export function SpacedReviewCard({ reviewCount }: SpacedReviewCardProps) {
           <Link href="/ripasso">
             <div className={`btn-squishy rounded-2xl p-4 cursor-pointer transition-colors ${
               reviewCount > 0
-                ? "bg-[#1B5E3B]/5 border border-[#1B5E3B]/15"
-                : "bg-white border border-[#E8E4DC]"
+                ? "bg-[#1B5E3B]/5 dark:bg-emerald-950/30 border border-[#1B5E3B]/15 dark:border-emerald-900"
+                : "bg-card border border-border"
             }`}>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10">
-                  <Brain className="w-5 h-5 text-[#1B5E3B]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10 dark:bg-emerald-900/40">
+                  <Brain className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-semibold text-foreground">
                     Ripasso del giorno
                   </p>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                  <p className="text-[11px] text-muted-foreground">
                     {reviewCount > 0
                       ? `${reviewCount} ${reviewCount === 1 ? "domanda" : "domande"} da ripassare`
                       : "Completa lezioni per sbloccare il ripasso"

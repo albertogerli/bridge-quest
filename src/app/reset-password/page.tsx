@@ -51,15 +51,15 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#003DA5]/5 via-[#003DA5]/3 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-primary/3 to-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+        <div className="bg-card rounded-2xl shadow-lg border border-border/50 p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#003DA5]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-[#003DA5]" />
+            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Nuova Password</h1>
-            <p className="text-sm text-gray-500 mt-2">
+            <h1 className="font-display text-2xl font-bold text-foreground">Nuova Password</h1>
+            <p className="text-sm text-muted-foreground mt-2">
               Inserisci la tua nuova password
             </p>
           </div>
@@ -70,14 +70,14 @@ export default function ResetPasswordPage() {
               <p className="text-green-700 font-semibold">
                 Password aggiornata con successo!
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Reindirizzamento in corso...
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
                   Nuova password
                 </label>
                 <div className="relative">
@@ -85,7 +85,7 @@ export default function ResetPasswordPage() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-12 px-4 pr-12 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
+                    className="w-full h-12 px-4 pr-12 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     placeholder="Almeno 6 caratteri"
                     autoFocus
                     required
@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-foreground"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -101,21 +101,21 @@ export default function ResetPasswordPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
                   Conferma password
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:border-transparent transition-all"
+                  className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder="Ripeti la password"
                   required
                 />
               </div>
 
               {error && (
-                <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                <p className="text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-300 text-sm p-3 rounded-lg">
                   {error}
                 </p>
               )}
@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
               <Button
                 type="submit"
                 disabled={loading || !password || !confirmPassword}
-                className="w-full h-12 bg-[#003DA5] hover:bg-[#003DA5]/90 text-white font-semibold rounded-xl"
+                className="w-full h-12 bg-gradient-to-r from-figb to-figb-light hover:shadow-lg text-white font-semibold rounded-xl active:scale-[0.98] transition-all"
               >
                 {loading ? "Aggiornamento..." : "Aggiorna Password"}
               </Button>
@@ -131,7 +131,7 @@ export default function ResetPasswordPage() {
               <div className="text-center">
                 <Link
                   href="/login"
-                  className="text-sm text-gray-500 hover:text-[#003DA5] transition-colors"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Torna al login
                 </Link>

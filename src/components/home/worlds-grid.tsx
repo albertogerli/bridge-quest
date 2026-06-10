@@ -86,17 +86,17 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
       <div className="mx-auto max-w-lg">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1B5E3B]/10">
-              <BookOpen className="w-4 h-4 text-[#1B5E3B]" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1B5E3B]/10 dark:bg-emerald-900/40">
+              <BookOpen className="w-4 h-4 text-[#1B5E3B] dark:text-emerald-400" />
             </div>
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg sm:text-xl font-semibold text-foreground font-display">
               Il tuo percorso
             </h2>
           </div>
           <Link href="/lezioni">
             <Badge
               variant="outline"
-              className="text-[11px] font-semibold text-[#1B5E3B] border-[#1B5E3B]/20 cursor-pointer hover:bg-[#1B5E3B]/5 transition-colors"
+              className="text-[11px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
             >
               Vedi tutto →
             </Badge>
@@ -118,18 +118,18 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
             return (
               <div
                 key={course.id}
-                className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-[#E8E4DC] dark:border-gray-700/50 overflow-hidden"
+                className="rounded-2xl bg-card border border-border overflow-hidden"
               >
                 <button
                   onClick={() =>
                     setExpandedCourse(isExpanded ? null : course.id)
                   }
-                  className="w-full flex items-center gap-2.5 p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors text-left"
+                  className="w-full flex items-center gap-2.5 p-3.5 hover:bg-muted/50 transition-colors text-left"
                 >
                   <span className="text-lg">{course.icon}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200 truncate">
+                      <h3 className="text-sm font-bold text-foreground/80 truncate">
                         {course.name}
                       </h3>
                       <span
@@ -139,13 +139,13 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
                       </span>
                     </div>
                     {!isExpanded && (
-                      <p className="text-[11px] text-gray-400 mt-0.5">
+                      <p className="text-[11px] text-muted-foreground/70 mt-0.5">
                         {completedWorlds}/{courseWorlds.length} mondi completati
                       </p>
                     )}
                   </div>
                   <svg
-                    className={`w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 text-muted-foreground/70 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
