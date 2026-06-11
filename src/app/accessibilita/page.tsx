@@ -12,23 +12,23 @@ export const metadata: Metadata = {
 
 export default function AccessibilitaPage() {
   return (
-    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pt-8 pb-24 px-5">
+    <div className="min-h-screen bg-background pt-8 pb-24 px-5">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/"
-          className="inline-block mb-8 text-[#003DA5] hover:underline text-sm font-medium"
+          className="inline-block mb-8 text-figb dark:text-primary hover:underline text-sm font-medium"
         >
           &larr; Torna alla Home
         </Link>
 
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">
+        <h1 className="text-3xl font-extrabold text-foreground font-display mb-8">
           Dichiarazione di Accessibilit&agrave;
         </h1>
 
         <div className="prose prose-sm dark:prose-invert max-w-none space-y-8">
           {/* Introduzione */}
           <section>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               La{" "}
               <strong>
                 Federazione Italiana Gioco Bridge (FIGB)
@@ -37,7 +37,7 @@ export default function AccessibilitaPage() {
               <strong>BridgeLab</strong> (
               <a
                 href="https://bridgelab.it"
-                className="text-[#003DA5] hover:underline font-medium"
+                className="text-figb dark:text-primary hover:underline font-medium"
               >
                 bridgelab.it
               </a>
@@ -48,7 +48,7 @@ export default function AccessibilitaPage() {
                 href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32019L0882"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#003DA5] hover:underline font-medium"
+                className="text-figb dark:text-primary hover:underline font-medium"
               >
                 European Accessibility Act (Direttiva UE 2019/882)
               </a>{" "}
@@ -57,7 +57,7 @@ export default function AccessibilitaPage() {
                 href="https://www.agid.gov.it/it/design-servizi/accessibilita"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#003DA5] hover:underline font-medium"
+                className="text-figb dark:text-primary hover:underline font-medium"
               >
                 Linee Guida AGID sull&apos;accessibilit&agrave; dei contenuti web
               </a>
@@ -67,10 +67,10 @@ export default function AccessibilitaPage() {
 
           {/* Standard di riferimento */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Standard di riferimento
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               La piattaforma BridgeLab &egrave; progettata con l&apos;obiettivo di
               raggiungere la conformit&agrave; al livello{" "}
               <strong>AA</strong> delle{" "}
@@ -78,7 +78,7 @@ export default function AccessibilitaPage() {
                 href="https://www.w3.org/TR/WCAG22/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#003DA5] hover:underline font-medium"
+                className="text-figb dark:text-primary hover:underline font-medium"
               >
                 Web Content Accessibility Guidelines (WCAG) 2.2
               </a>
@@ -91,14 +91,14 @@ export default function AccessibilitaPage() {
 
           {/* Tecnologie utilizzate */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Tecnologie utilizzate
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+            <p className="text-muted-foreground leading-relaxed mb-3">
               L&apos;accessibilit&agrave; di BridgeLab si basa sulle seguenti
               tecnologie:
             </p>
-            <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
                 <strong>HTML5</strong> semantico, con uso appropriato di landmark,
                 intestazioni e struttura del documento
@@ -121,18 +121,18 @@ export default function AccessibilitaPage() {
 
           {/* Misure adottate */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Misure di accessibilit&agrave; adottate
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+            <p className="text-muted-foreground leading-relaxed mb-3">
               BridgeLab adotta le seguenti misure per garantire
               l&apos;accessibilit&agrave; della piattaforma:
             </p>
 
-            <h3 className="text-base font-semibold text-gray-700 dark:text-gray-300 mt-4 mb-2">
+            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
               Navigazione e struttura
             </h3>
-            <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
                 <strong>Skip link</strong>: un collegamento &ldquo;Vai al
                 contenuto&rdquo; &egrave; disponibile all&apos;inizio di ogni pagina
@@ -141,27 +141,27 @@ export default function AccessibilitaPage() {
               </li>
               <li>
                 <strong>HTML semantico</strong>: utilizzo coerente di elementi come{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   &lt;main&gt;
                 </code>
                 ,{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   &lt;nav&gt;
                 </code>
                 ,{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   &lt;section&gt;
                 </code>
                 ,{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   &lt;article&gt;
                 </code>{" "}
                 e intestazioni gerarchiche (
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   h1
                 </code>
                 &ndash;
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   h6
                 </code>
                 )
@@ -177,17 +177,17 @@ export default function AccessibilitaPage() {
               </li>
             </ul>
 
-            <h3 className="text-base font-semibold text-gray-700 dark:text-gray-300 mt-4 mb-2">
+            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
               Contenuti e presentazione
             </h3>
-            <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
                 <strong>Attributi ARIA</strong>: etichette{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   aria-label
                 </code>
                 ,{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   aria-describedby
                 </code>{" "}
                 e ruoli ARIA per i componenti interattivi (quiz, minigiochi, menu)
@@ -195,11 +195,11 @@ export default function AccessibilitaPage() {
               <li>
                 <strong>Testo alternativo</strong>: le immagini significative
                 dispongono di attributi{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   alt
                 </code>{" "}
                 descrittivi; le immagini decorative sono contrassegnate con{" "}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">
+                <code className="bg-muted px-1 rounded text-sm">
                   alt=&quot;&quot;
                 </code>
               </li>
@@ -219,10 +219,10 @@ export default function AccessibilitaPage() {
               </li>
             </ul>
 
-            <h3 className="text-base font-semibold text-gray-700 dark:text-gray-300 mt-4 mb-2">
+            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
               Inclusivit&agrave; e adattamento
             </h3>
-            <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
                 <strong>Profili utente per fasce d&apos;et&agrave;</strong>: la
                 piattaforma offre quattro profili (Junior, Giovane, Adulto, Senior)
@@ -245,14 +245,14 @@ export default function AccessibilitaPage() {
 
           {/* Limitazioni note */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Limitazioni note
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+            <p className="text-muted-foreground leading-relaxed mb-3">
               Nonostante gli sforzi per garantire la piena accessibilit&agrave;,
               alcune aree della piattaforma presentano limitazioni note:
             </p>
-            <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
                 <strong>Minigiochi interattivi</strong>: alcuni moduli di pratica al
                 tavolo (gioco della carta, dichiarazione interattiva) utilizzano
@@ -272,7 +272,7 @@ export default function AccessibilitaPage() {
                 YouTube e dalla qualit&agrave; dei sottotitoli automatici
               </li>
             </ul>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
+            <p className="text-muted-foreground leading-relaxed mt-3">
               Ci impegniamo a risolvere progressivamente queste limitazioni e a
               migliorare continuamente l&apos;accessibilit&agrave; della piattaforma.
             </p>
@@ -280,10 +280,10 @@ export default function AccessibilitaPage() {
 
           {/* Compatibilita */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Compatibilit&agrave; con browser e tecnologie assistive
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               BridgeLab &egrave; progettata per essere compatibile con i principali
               browser moderni (Chrome, Firefox, Safari, Edge) e con le pi&ugrave;
               diffuse tecnologie assistive, tra cui screen reader (VoiceOver, NVDA,
@@ -293,21 +293,21 @@ export default function AccessibilitaPage() {
 
           {/* Feedback e contatti */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Feedback e segnalazioni
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               Accogliamo con favore segnalazioni e suggerimenti relativi
               all&apos;accessibilit&agrave; della piattaforma. Se riscontrate
               barriere di accessibilit&agrave; o difficolt&agrave;
               nell&apos;utilizzo di BridgeLab, vi invitiamo a contattarci:
             </p>
-            <ul className="list-none pl-0 text-gray-600 dark:text-gray-400 space-y-1 mt-3">
+            <ul className="list-none pl-0 text-muted-foreground space-y-1 mt-3">
               <li>
                 <strong>Email:</strong>{" "}
                 <a
                   href="mailto:info@bridgelab.it"
-                  className="text-[#003DA5] hover:underline font-medium"
+                  className="text-figb dark:text-primary hover:underline font-medium"
                 >
                   info@bridgelab.it
                 </a>
@@ -318,13 +318,13 @@ export default function AccessibilitaPage() {
                   href="https://www.federbridge.it"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003DA5] hover:underline font-medium"
+                  className="text-figb dark:text-primary hover:underline font-medium"
                 >
                   Federazione Italiana Gioco Bridge (FIGB)
                 </a>
               </li>
             </ul>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
+            <p className="text-muted-foreground leading-relaxed mt-3">
               Ci impegniamo a rispondere alle segnalazioni entro 10 giorni lavorativi
               e a proporre soluzioni adeguate nel pi&ugrave; breve tempo possibile.
             </p>
@@ -332,17 +332,17 @@ export default function AccessibilitaPage() {
 
           {/* Procedura di attuazione */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Procedura di attuazione
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               Qualora la risposta alla segnalazione non fosse soddisfacente, &egrave;
               possibile rivolgersi al{" "}
               <a
                 href="https://www.agid.gov.it/it/design-servizi/accessibilita"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#003DA5] hover:underline font-medium"
+                className="text-figb dark:text-primary hover:underline font-medium"
               >
                 Difensore civico per il digitale presso AGID
               </a>{" "}
@@ -353,16 +353,16 @@ export default function AccessibilitaPage() {
 
           {/* Riferimenti normativi */}
           <section>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+            <h2 className="text-lg font-bold text-foreground mb-2">
               Riferimenti normativi
             </h2>
-            <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
                 <a
                   href="https://www.w3.org/TR/WCAG22/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003DA5] hover:underline"
+                  className="text-figb dark:text-primary hover:underline"
                 >
                   WCAG 2.2
                 </a>{" "}
@@ -373,7 +373,7 @@ export default function AccessibilitaPage() {
                   href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32019L0882"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003DA5] hover:underline"
+                  className="text-figb dark:text-primary hover:underline"
                 >
                   Direttiva UE 2019/882
                 </a>{" "}
@@ -384,7 +384,7 @@ export default function AccessibilitaPage() {
                   href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32016L2102"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003DA5] hover:underline"
+                  className="text-figb dark:text-primary hover:underline"
                 >
                   Direttiva UE 2016/2102
                 </a>{" "}
@@ -401,7 +401,7 @@ export default function AccessibilitaPage() {
                   href="https://www.agid.gov.it/it/design-servizi/accessibilita"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003DA5] hover:underline"
+                  className="text-figb dark:text-primary hover:underline"
                 >
                   Linee Guida AGID sull&apos;accessibilit&agrave;
                 </a>
@@ -410,8 +410,8 @@ export default function AccessibilitaPage() {
           </section>
 
           {/* Data dichiarazione */}
-          <section className="pt-4 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-500">
+          <section className="pt-4 border-t border-border">
+            <p className="text-sm text-muted-foreground">
               La presente dichiarazione &egrave; stata redatta in data{" "}
               <strong>marzo 2026</strong> e viene aggiornata periodicamente in
               funzione delle evoluzioni della piattaforma e della normativa di
@@ -421,7 +421,7 @@ export default function AccessibilitaPage() {
 
           {/* Credits */}
           <section className="pt-2">
-            <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed">
+            <p className="text-[11px] text-muted-foreground/70 leading-relaxed">
               Sviluppo: Tourbillon Tech S.r.l. per FIGB
             </p>
           </section>

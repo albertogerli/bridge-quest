@@ -132,7 +132,7 @@ export default function LezioniPage() {
                       {onboarded ? "Completata ✓" : "3 min"}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-[#51627f] dark:text-gray-400">
+                  <p className="text-[11px] text-muted-foreground">
                     {onboarded
                       ? "Rivedi le basi: cos'è una presa, come si gioca, la tua prima mano"
                       : "Inizia da qui! Scopri il bridge in 3 minuti e gioca la tua prima mano"}

@@ -323,16 +323,16 @@ export function HandAnalysisPanel({
   const gradeColor = (grade: Grade) => {
     switch (grade) {
       case "good":
-        return "text-green-600";
+        return "text-green-600 dark:text-green-400";
       case "questionable":
-        return "text-amber-600";
+        return "text-amber-600 dark:text-amber-400";
       case "mistake":
-        return "text-red-600";
+        return "text-red-600 dark:text-red-400";
     }
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-white rounded-2xl overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-card rounded-2xl overflow-hidden">
       {/* Header with overall grade */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
         <div className="flex items-center justify-between">
@@ -351,12 +351,12 @@ export function HandAnalysisPanel({
       </div>
 
       {/* Key takeaways */}
-      <div className="bg-blue-50 border-b border-blue-100 p-4">
-        <h3 className="text-sm font-semibold text-gray-700 mb-2">Punti chiave</h3>
+      <div className="bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900 p-4">
+        <h3 className="text-sm font-semibold text-foreground/80 mb-2">Punti chiave</h3>
         <ul className="space-y-1">
           {keyTakeaways.map((takeaway, idx) => (
-            <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
-              <span className="text-blue-600 mt-0.5">•</span>
+            <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+              <span className="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
               <span>{takeaway}</span>
             </li>
           ))}
@@ -375,8 +375,8 @@ export function HandAnalysisPanel({
                 key={idx}
                 className={`card-clean p-3 transition-all ${
                   isCurrentTrickPlay
-                    ? "ring-2 ring-blue-500 bg-blue-50"
-                    : "bg-gray-50 hover:bg-gray-100"
+                    ? "ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-950/30"
+                    : "bg-muted/50 hover:bg-muted"
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -385,10 +385,10 @@ export function HandAnalysisPanel({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono text-gray-500">
+                      <span className="text-xs font-mono text-muted-foreground">
                         Presa {analysis.trickNumber + 1}.{analysis.playNumber + 1}
                       </span>
-                      <span className="text-xs font-semibold text-gray-700 uppercase">
+                      <span className="text-xs font-semibold text-foreground/80 uppercase">
                         {analysis.player}
                       </span>
                       <span className="text-sm font-bold">
@@ -408,25 +408,25 @@ export function HandAnalysisPanel({
       </div>
 
       {/* Stats summary */}
-      <div className="bg-gray-50 border-t border-gray-200 p-4">
+      <div className="bg-muted/50 border-t border-border p-4">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {analyses.filter((a) => a.grade === "good").length}
             </div>
-            <div className="text-xs text-gray-600">Ottime</div>
+            <div className="text-xs text-muted-foreground">Ottime</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-amber-600">
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
               {analyses.filter((a) => a.grade === "questionable").length}
             </div>
-            <div className="text-xs text-gray-600">Da migliorare</div>
+            <div className="text-xs text-muted-foreground">Da migliorare</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-red-600">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
               {analyses.filter((a) => a.grade === "mistake").length}
             </div>
-            <div className="text-xs text-gray-600">Errori</div>
+            <div className="text-xs text-muted-foreground">Errori</div>
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 // Map weekly objective IDs to Lucide icons
 const objectiveIcons: Record<string, React.ReactNode> = {
   quiz: <FileText className="w-4 h-4 text-indigo-500" />,
-  hands: <Spade className="w-4 h-4 text-gray-700 dark:text-gray-300" />,
+  hands: <Spade className="w-4 h-4 text-foreground/80" />,
   xp: <Star className="w-4 h-4 text-amber-500" />,
   modules: <BookOpen className="w-4 h-4 text-blue-500" />,
   streak: <Flame className="w-4 h-4 text-orange-500" />,

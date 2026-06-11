@@ -11,7 +11,7 @@ interface LandingPageProps {
 export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
   const features = [
     { icon: <GraduationCap className="w-6 h-6 text-indigo-600" />, title: "49 Lezioni", desc: "4 corsi FIGB completi, dalla base all'avanzato" },
-    { icon: <Spade className="w-6 h-6 text-gray-700 dark:text-gray-300" />, title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
+    { icon: <Spade className="w-6 h-6 text-foreground/80" />, title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
     { icon: <Brain className="w-6 h-6 text-purple-600" />, title: "Quiz & Mini-giochi", desc: "6 tipi di quiz, 9 mini-giochi, ripasso intelligente" },
     { icon: <Trophy className="w-6 h-6 text-amber-600" />, title: "Tornei & Sfide", desc: "Torneo settimanale, sfida amici, classifica" },
     { icon: <BarChart3 className="w-6 h-6 text-blue-600" />, title: "Analisi DDS", desc: "Analisi double-dummy post-mano professionale" },
@@ -40,7 +40,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#14472D] via-[#003DA5] to-[#2D7A50] px-5 pt-16 pb-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#14472D] via-figb to-[#2D7A50] px-5 pt-16 pb-20">
         <div className="relative mx-auto max-w-lg text-center">
           {/* Suit icons */}
           <motion.div
@@ -89,7 +89,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           >
             <a
               href="/login?mode=signup"
-              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-[#003DA5] font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
+              className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-figb font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
             >
               Inizia gratis
             </a>

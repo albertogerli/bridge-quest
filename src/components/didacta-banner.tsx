@@ -66,7 +66,7 @@ export function DidactaBanner() {
           onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
           className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/10 transition-colors z-10"
         >
-          <X className="w-4 h-4 text-gray-400" />
+          <X className="w-4 h-4 text-muted-foreground/70" />
         </button>
 
         <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ export function DidactaBanner() {
               exit={{ y: 100, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md mx-4 mb-4 sm:mb-0 bg-white dark:bg-[#1a1f2e] rounded-3xl shadow-2xl overflow-hidden"
+              className="w-full max-w-md mx-4 mb-4 sm:mb-0 bg-card rounded-3xl shadow-2xl overflow-hidden"
             >
               {/* Header */}
               <div className="relative bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 p-6 text-white text-center">
@@ -130,35 +130,35 @@ export function DidactaBanner() {
                 {/* Instructions */}
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs font-black">1</span>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 pt-0.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-black">1</span>
+                    <p className="text-sm text-foreground/80 pt-0.5">
                       Scatta una foto allo stand BridgeLab o mentre giochi sull&apos;app
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs font-black">2</span>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 pt-0.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-black">2</span>
+                    <p className="text-sm text-foreground/80 pt-0.5">
                       Pubblicala su <strong>Instagram</strong>, <strong>Facebook</strong> o <strong>TikTok</strong>
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs font-black">3</span>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 pt-0.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-black">3</span>
+                    <p className="text-sm text-foreground/80 pt-0.5">
                       Usa l&apos;hashtag <span className="font-black text-amber-600 dark:text-amber-400">{hashtag}</span>
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-black">4</span>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 pt-0.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-black">4</span>
+                    <p className="text-sm text-foreground/80 pt-0.5">
                       Torna qui e riscuoti <strong className="text-amber-600 dark:text-amber-400">+{XP_REWARD} XP</strong>!
                     </p>
                   </div>
                 </div>
 
                 {/* Copy text */}
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 border border-gray-200 dark:border-gray-700">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-bold">Testo da copiare:</p>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">{shareText}</p>
+                <div className="bg-muted/50 rounded-xl p-3 border border-border">
+                  <p className="text-xs text-muted-foreground mb-1 font-bold">Testo da copiare:</p>
+                  <p className="text-sm text-foreground/80 italic">{shareText}</p>
                   <button
                     onClick={() => navigator.clipboard?.writeText(shareText)}
                     className="mt-2 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline"

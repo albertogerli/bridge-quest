@@ -367,13 +367,10 @@
   padding: 1.25rem;
 }
 
-/* LEGACY class-targeting overrides — remove once the tokenization sweep is
-   complete (kept so un-swept pages keep their contrast boost in the meantime) */
-[data-profile="senior"] .text-gray-500 { color: #4b5563; }
-[data-profile="senior"] .text-gray-400 { color: #6b7280; }
-[data-profile="senior"] .text-gray-600 { color: #374151; }
-[data-profile="senior"] .bg-\[\#003DA5\] { background-color: #0047c2; }
-[data-profile="senior"] .text-\[\#003DA5\] { color: #0047c2; }
+/* Accent contrast boost: darken vivid accent colors for readability.
+   (Neutral grays + brand blue are handled at token level above —
+   the legacy .text-gray-* / .bg-[#003DA5] selectors were removed
+   after the tokenization sweep.) */
 [data-profile="senior"] .bg-blue-600 { background-color: #1d4ed8; }
 [data-profile="senior"] .bg-indigo-600 { background-color: #4338ca; }
 [data-profile="senior"] .bg-amber-500 { background-color: #d97706; }
@@ -402,9 +399,7 @@
   --ring: #60a5fa;
 }
 
-/* LEGACY class-targeting overrides — remove once the tokenization sweep is complete */
-[data-profile="junior"] .bg-\[\#003DA5\] { background-color: #2563eb; }
-[data-profile="junior"] .text-\[\#003DA5\] { color: #2563eb; }
+/* Playful saturation boost (brand blue handled at token level above) */
 [data-profile="junior"] .bg-blue-600 { background-color: #3b82f6; }
 [data-profile="junior"] .bg-gradient-to-br { filter: saturate(1.2); }
 
