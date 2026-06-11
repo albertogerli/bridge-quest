@@ -135,11 +135,11 @@ export function PendingChallengesBanner() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-1">
-        <Swords className="w-4 h-4 text-violet-600" />
-        <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <Swords className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+        <h3 className="text-sm font-bold text-foreground">
           Sfide in corso
         </h3>
-        <Badge className="bg-violet-100 text-violet-700 text-[10px] font-bold border-0">
+        <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 text-[10px] font-bold border-0">
           {challenges.length}
         </Badge>
       </div>
@@ -180,7 +180,7 @@ export function PendingChallengesBanner() {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">
+                      <p className="text-sm font-bold text-foreground truncate">
                         {isPending
                           ? `${opponentName} ti ha sfidato!`
                           : isWaitingForOpponent
@@ -193,7 +193,7 @@ export function PendingChallengesBanner() {
                         {challenge.board_count} mani
                       </Badge>
                     </div>
-                    <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       {isPending
                         ? "Accetta per giocare"
                         : isWaitingForOpponent
@@ -217,14 +217,14 @@ export function PendingChallengesBanner() {
                         </button>
                         <button
                           onClick={() => handleDecline(challenge.id)}
-                          className="rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1"
+                          className="rounded-xl bg-muted hover:bg-muted/70 text-muted-foreground px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1"
                         >
                           <X className="w-3 h-3" />
                           Rifiuta
                         </button>
                       </>
                     ) : isWaitingForOpponent ? (
-                      <div className="rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-3 py-1.5 text-xs font-bold flex items-center gap-1">
+                      <div className="rounded-xl bg-muted text-muted-foreground px-3 py-1.5 text-xs font-bold flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         Attesa
                       </div>
@@ -232,7 +232,7 @@ export function PendingChallengesBanner() {
                       <Link
                         href={`/gioca/sfida-imp?challengeId=${challenge.id}`}
                       >
-                        <button className="rounded-xl bg-[#003DA5] hover:bg-[#002d7a] text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1">
+                        <button className="rounded-xl bg-figb hover:bg-figb-dark text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1">
                           Gioca
                           <ChevronRight className="w-3 h-3" />
                         </button>
@@ -261,7 +261,7 @@ export function PendingChallengesBanner() {
       </AnimatePresence>
 
       {challenges.length > 3 && (
-        <p className="text-[11px] text-center text-gray-400 dark:text-gray-500">
+        <p className="text-[11px] text-center text-muted-foreground/70">
           +{challenges.length - 3} altre sfide
         </p>
       )}

@@ -4,25 +4,25 @@ import Link from "next/link";
 
 export default function TerminiPage() {
   return (
-    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0f1219] pt-8 pb-24 px-5">
+    <div className="min-h-screen bg-background pt-8 pb-24 px-5">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/"
-          className="inline-block mb-8 text-[#003DA5] hover:underline text-sm font-medium"
+          className="inline-block mb-8 text-figb dark:text-primary hover:underline text-sm font-medium"
         >
           &larr; Torna alla Home
         </Link>
 
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">
+        <h1 className="text-3xl font-extrabold text-foreground font-display mb-8">
           Termini e Condizioni d&apos;Uso
         </h1>
 
         {/* Premessa */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Premessa
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             BridgeLab è una piattaforma educativa digitale sviluppata dalla
             Federazione Italiana Gioco Bridge (FIGB) con l&apos;obiettivo di
             promuovere e insegnare il gioco del bridge a un pubblico ampio e
@@ -32,7 +32,7 @@ export default function TerminiPage() {
             divertente. I presenti Termini e Condizioni regolano l&apos;accesso e
             l&apos;utilizzo della piattaforma BridgeLab, accessibile
             all&apos;indirizzo{" "}
-            <span className="font-medium text-gray-700 dark:text-gray-300">
+            <span className="font-medium text-foreground/80">
               bridgelab.it
             </span>{" "}
             e tramite eventuali applicazioni mobili ad essa collegate.
@@ -41,10 +41,10 @@ export default function TerminiPage() {
 
         {/* Titolare */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Titolare del Servizio
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             Il titolare della piattaforma BridgeLab è la{" "}
             <strong>Federazione Italiana Gioco Bridge (FIGB)</strong>, con sede
             legale in Via Tuscolana 65, 00182 Roma (RM), Italia. Lo sviluppo
@@ -58,10 +58,10 @@ export default function TerminiPage() {
 
         {/* Accettazione */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Accettazione dei Termini
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             L&apos;accesso e l&apos;utilizzo della piattaforma BridgeLab
             implicano la piena e incondizionata accettazione dei presenti
             Termini e Condizioni d&apos;Uso. Se l&apos;utente non concorda con
@@ -75,10 +75,10 @@ export default function TerminiPage() {
 
         {/* Account */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Account e Registrazione
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             Per accedere a determinate funzionalità della piattaforma potrebbe
             essere necessaria la creazione di un account personale.
             L&apos;utente è responsabile della veridicità e
@@ -96,10 +96,10 @@ export default function TerminiPage() {
 
         {/* Contenuti */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Proprietà Intellettuale e Contenuti
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             Tutti i contenuti presenti sulla piattaforma BridgeLab — inclusi, a
             titolo esemplificativo e non esaustivo, testi didattici, video
             lezioni, immagini, grafiche, infografiche, esercizi, quiz, software,
@@ -117,16 +117,16 @@ export default function TerminiPage() {
 
         {/* Uso consentito */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Uso Consentito della Piattaforma
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             La piattaforma BridgeLab è destinata esclusivamente
             all&apos;apprendimento e alla pratica del gioco del bridge.
             L&apos;utente si impegna a utilizzare la piattaforma in modo lecito,
             corretto e conforme ai presenti termini. In particolare, è vietato:
           </p>
-          <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 mt-3 space-y-1 leading-relaxed">
+          <ul className="list-disc list-inside text-muted-foreground mt-3 space-y-1 leading-relaxed">
             <li>
               Utilizzare la piattaforma per scopi commerciali non autorizzati
               dalla FIGB;
@@ -155,15 +155,15 @@ export default function TerminiPage() {
 
         {/* Dati e privacy */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Trattamento dei Dati Personali
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             Il trattamento dei dati personali degli utenti è disciplinato dalla
             nostra{" "}
             <Link
               href="/privacy"
-              className="text-[#003DA5] hover:underline font-medium"
+              className="text-figb dark:text-primary hover:underline font-medium"
             >
               Informativa sulla Privacy
             </Link>
@@ -177,10 +177,10 @@ export default function TerminiPage() {
 
         {/* Comunicazioni */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Comunicazioni e Newsletter
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             Con il consenso esplicito dell&apos;utente, la FIGB potrà inviare
             comunicazioni relative a eventi, corsi, tornei, novità e iniziative
             legate al mondo del bridge. Tali comunicazioni potranno essere
@@ -197,10 +197,10 @@ export default function TerminiPage() {
 
         {/* Limitazione responsabilità */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Limitazione di Responsabilità
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             La piattaforma BridgeLab è fornita &quot;così com&apos;è&quot; (as
             is) e &quot;come disponibile&quot; (as available), senza garanzie di
             alcun tipo, esplicite o implicite. La FIGB si impegna a garantire il
@@ -219,10 +219,10 @@ export default function TerminiPage() {
 
         {/* Modifiche */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Modifiche ai Termini
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             La FIGB si riserva il diritto di modificare, integrare o aggiornare
             i presenti Termini e Condizioni in qualsiasi momento, pubblicando la
             versione aggiornata sulla piattaforma. Le modifiche saranno
@@ -236,10 +236,10 @@ export default function TerminiPage() {
 
         {/* Legge applicabile */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Legge Applicabile e Foro Competente
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             I presenti Termini e Condizioni sono regolati dalla legge italiana.
             Per qualsiasi controversia derivante dall&apos;interpretazione,
             validità o esecuzione dei presenti termini, sarà competente in via
@@ -252,16 +252,16 @@ export default function TerminiPage() {
 
         {/* Contatti */}
         <section className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+          <h2 className="text-lg font-bold text-foreground mb-2">
             Contatti
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             Per qualsiasi domanda, segnalazione o richiesta relativa ai presenti
             Termini e Condizioni, è possibile contattare la FIGB al seguente
             indirizzo e-mail:{" "}
             <a
               href="mailto:info@federbridge.it"
-              className="text-[#003DA5] hover:underline font-medium"
+              className="text-figb dark:text-primary hover:underline font-medium"
             >
               info@federbridge.it
             </a>
@@ -270,7 +270,7 @@ export default function TerminiPage() {
         </section>
 
         {/* Data aggiornamento */}
-        <p className="text-sm text-gray-500 dark:text-gray-500 mt-12 border-t border-gray-200 dark:border-gray-700 pt-6">
+        <p className="text-sm text-muted-foreground mt-12 border-t border-border pt-6">
           Ultimo aggiornamento: Marzo 2026
         </p>
       </div>

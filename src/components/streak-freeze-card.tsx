@@ -157,16 +157,16 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
             </AnimatePresence>
 
             <div>
-              <h3 className="font-bold text-lg">Streak Attuale</h3>
-              <p className="text-2xl font-bold text-[#003DA5]">
+              <h3 className="font-bold text-lg text-foreground">Streak Attuale</h3>
+              <p className="text-2xl font-bold text-figb dark:text-primary">
                 {streak} {streak === 1 ? "giorno" : "giorni"} 🔥
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <p className="text-sm text-gray-600">Congeli rimasti</p>
-            <p className="text-lg font-bold text-[#003DA5]">
+            <p className="text-sm text-muted-foreground">Congeli rimasti</p>
+            <p className="text-lg font-bold text-figb dark:text-primary">
               {freezesRemaining}/{MAX_FREEZES_PER_WEEK}
             </p>
           </div>
@@ -180,14 +180,14 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-200"
+              className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900"
             >
-              <Shield className="w-6 h-6 text-blue-600" />
+              <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               <div className="flex-1">
-                <p className="font-semibold text-blue-900">
+                <p className="font-semibold text-blue-900 dark:text-blue-200">
                   Streak protetto per oggi ❄️
                 </p>
-                <p className="text-sm text-blue-700">
+                <p className="text-sm text-blue-700 dark:text-blue-300">
                   Puoi saltare oggi senza perdere la tua serie
                 </p>
               </div>
@@ -201,8 +201,8 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               className="space-y-3"
             >
               {!hasFreezesLeft && (
-                <div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
-                  <p className="text-sm text-amber-800">
+                <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900">
+                  <p className="text-sm text-amber-800 dark:text-amber-300">
                     Hai esaurito i congeli settimanali. Riprova lunedì!
                   </p>
                 </div>
@@ -214,7 +214,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
                 className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
                   canFreeze
                     ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-muted text-muted-foreground/70 cursor-not-allowed"
                 }`}
               >
                 <Snowflake className="w-5 h-5" />
@@ -225,10 +225,10 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               </button>
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Le tue fiches:</span>
+                <span className="text-muted-foreground">Le tue fiches:</span>
                 <span
                   className={`font-bold ${
-                    canAfford ? "text-[#003DA5]" : "text-red-500"
+                    canAfford ? "text-figb dark:text-primary" : "text-red-500 dark:text-red-400"
                   }`}
                 >
                   {availableFiches} 🪙
@@ -236,7 +236,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               </div>
 
               {!canAfford && hasFreezesLeft && (
-                <p className="text-sm text-red-600 text-center">
+                <p className="text-sm text-red-600 dark:text-red-400 text-center">
                   Fiches insufficienti! Ti servono ancora{" "}
                   {FREEZE_COST - availableFiches} fiches.
                 </p>
@@ -252,7 +252,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-2xl"
+              className="absolute inset-0 flex items-center justify-center bg-card/90 backdrop-blur-sm rounded-2xl"
             >
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
@@ -261,7 +261,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
                 className="text-center"
               >
                 <Snowflake className="w-16 h-16 text-blue-500 mx-auto mb-2" />
-                <p className="text-xl font-bold text-blue-900">
+                <p className="text-xl font-bold text-blue-900 dark:text-blue-200">
                   Streak Congelato! ❄️
                 </p>
               </motion.div>

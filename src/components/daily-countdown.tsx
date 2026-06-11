@@ -109,7 +109,7 @@ function CompactCountdown({
   }
 
   return (
-    <span className="text-sm text-[#003DA5]/70 dark:text-blue-300/70">
+    <span className="text-sm text-figb/70 dark:text-primary/70">
       La sfida scade tra {timeStr}
     </span>
   );
@@ -137,11 +137,11 @@ function FullCountdown({
       ? "border-amber-400 dark:border-amber-500"
       : urgent
         ? "border-red-400 dark:border-red-500"
-        : "border-[#003DA5]/20 dark:border-blue-400/30";
+        : "border-figb/20 dark:border-primary/30";
 
   const bgColor = dailyDone
     ? "bg-emerald-50 dark:bg-emerald-950/40"
-    : "bg-[#F7F5F0] dark:bg-neutral-900";
+    : "bg-background";
 
   return (
     <motion.div
@@ -159,7 +159,7 @@ function FullCountdown({
         className={`text-xs font-medium text-center mb-2 ${
           dailyDone
             ? "text-emerald-600 dark:text-emerald-400"
-            : "text-[#003DA5]/60 dark:text-blue-300/60"
+            : "text-figb/60 dark:text-primary/60"
         }`}
       >
         {dailyDone ? "Completata! Nuova sfida tra" : "La sfida scade tra"}
@@ -210,7 +210,7 @@ function TimeDigit({
     ? "text-emerald-700 dark:text-emerald-300"
     : urgent
       ? "text-red-600 dark:text-red-400"
-      : "text-[#003DA5] dark:text-blue-200";
+      : "text-figb dark:text-primary";
 
   return (
     <div className="flex flex-col items-center">

@@ -1330,19 +1330,19 @@ export default function ModulePage({
                 const bidLevel = bid[0];
                 const bidSuit = bid.slice(1).toUpperCase();
                 const suitSymbols: Record<string, { sym: string; color: string }> = {
-                  S: { sym: "♠", color: "text-gray-900" },
-                  H: { sym: "♥", color: "text-red-600" },
+                  S: { sym: "♠", color: "text-foreground" },
+                  H: { sym: "♥", color: "text-red-600 dark:text-red-400" },
                   D: { sym: "♦", color: "text-orange-500" },
-                  C: { sym: "♣", color: "text-green-700" },
-                  NT: { sym: "SA", color: "text-gray-800" },
-                  SA: { sym: "SA", color: "text-gray-800" },
+                  C: { sym: "♣", color: "text-green-700 dark:text-green-500" },
+                  NT: { sym: "SA", color: "text-foreground/80" },
+                  SA: { sym: "SA", color: "text-foreground/80" },
                 };
                 const suitInfo = suitSymbols[bidSuit];
-                let bidCls = "bg-white border-gray-200 hover:border-purple-400 hover:bg-purple-50";
+                let bidCls = "bg-card border-border hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30";
                 if (bsAnswered) {
-                  if (isCorrectBid) bidCls = "bg-emerald-50 border-emerald-400 ring-2 ring-emerald/30";
-                  else if (isSelected && !bsCorrect) bidCls = "bg-red-50 border-red-400";
-                  else bidCls = "bg-gray-50 border-gray-200 opacity-50";
+                  if (isCorrectBid) bidCls = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 ring-2 ring-emerald/30";
+                  else if (isSelected && !bsCorrect) bidCls = "bg-red-50 dark:bg-red-950/40 border-red-400";
+                  else bidCls = "bg-muted/50 border-border opacity-50";
                 }
                 const isPasso = bid === "P" || bid === "Passo";
                 return (
@@ -1357,14 +1357,14 @@ export default function ModulePage({
                     className={`rounded-xl border-2 p-3 text-center font-bold transition-all cursor-pointer ${bidCls}`}
                   >
                     {isPasso ? (
-                      <span className="text-gray-500 text-sm">Passo</span>
+                      <span className="text-muted-foreground text-sm">Passo</span>
                     ) : suitInfo ? (
                       <span className="flex items-center justify-center gap-1">
-                        <span className="text-gray-900 text-lg">{bidLevel}</span>
+                        <span className="text-foreground text-lg">{bidLevel}</span>
                         <span className={`text-lg ${suitInfo.color}`}>{suitInfo.sym}</span>
                       </span>
                     ) : (
-                      <span className="text-sm text-gray-700">{bid}</span>
+                      <span className="text-sm text-foreground/80">{bid}</span>
                     )}
                   </motion.button>
                 );

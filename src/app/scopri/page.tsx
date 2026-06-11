@@ -18,12 +18,12 @@ export default function ScopriPage() {
       <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
         <motion.div {...fadeUp} className="mb-2">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">
-            <Link href="/" className="hover:text-[#003DA5] transition-colors">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+            <Link href="/" className="hover:text-figb dark:hover:text-primary transition-colors">
               Home
             </Link>
             <span>/</span>
-            <span className="text-[#003DA5] font-semibold">Scopri il Bridge</span>
+            <span className="text-figb dark:text-primary font-semibold">Scopri il Bridge</span>
           </div>
         </motion.div>
 
@@ -34,14 +34,14 @@ export default function ScopriPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#003DA5] to-[#0066FF] shadow-lg shadow-[#003DA5]/20">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-figb to-figb-light shadow-lg shadow-figb/20">
               <Globe className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <h1 className="text-2xl font-bold text-foreground font-display">
                 Scopri il Bridge
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 Storia, curiosità e link utili
               </p>
             </div>
@@ -54,9 +54,9 @@ export default function ScopriPage() {
           transition={{ delay: 0.1, duration: 0.5 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden">
             {/* FIGB Header */}
-            <div className="bg-gradient-to-r from-[#003DA5] to-[#0052CC] px-5 py-4">
+            <div className="bg-gradient-to-r from-figb to-figb-light px-5 py-4">
               <div className="flex items-center gap-3">
                 <Landmark className="w-5 h-5 text-white/80" />
                 <h2 className="text-lg font-bold text-white">La FIGB</h2>
@@ -78,7 +78,7 @@ export default function ScopriPage() {
                 />
               </div>
 
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              <p className="text-sm text-foreground/80 leading-relaxed mb-4">
                 La <strong>Federazione Italiana Gioco Bridge</strong> (FIGB) è l&apos;organismo
                 ufficiale che governa il bridge sportivo in Italia. Fondata nel <strong>1936</strong>,
                 è membro del <strong>CONI</strong> (Comitato Olimpico Nazionale Italiano) e conta
@@ -86,7 +86,7 @@ export default function ScopriPage() {
                 il territorio nazionale.
               </p>
 
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-5">
+              <p className="text-sm text-foreground/80 leading-relaxed mb-5">
                 La FIGB organizza campionati a livello regionale, nazionale e internazionale,
                 promuove l&apos;insegnamento del bridge nelle scuole e nei circoli, e rappresenta
                 l&apos;Italia nelle competizioni europee e mondiali.
@@ -98,32 +98,32 @@ export default function ScopriPage() {
                   href="https://www.federbridge.it"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 hover:bg-[#003DA5]/10 transition-colors group"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/25 hover:bg-figb/10 dark:hover:bg-primary/15 transition-colors group"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#003DA5]/10">
-                    <Globe className="w-4 h-4 text-[#003DA5]" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-figb/10 dark:bg-primary/15">
+                    <Globe className="w-4 h-4 text-figb dark:text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">federbridge.it</p>
-                    <p className="text-xs text-gray-500">Sito ufficiale della Federazione</p>
+                    <p className="text-sm font-bold text-foreground">federbridge.it</p>
+                    <p className="text-xs text-muted-foreground">Sito ufficiale della Federazione</p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-[#003DA5]/50 group-hover:text-[#003DA5] transition-colors shrink-0" />
+                  <ExternalLink className="w-4 h-4 text-figb/50 dark:text-primary/50 group-hover:text-figb dark:group-hover:text-primary transition-colors shrink-0" />
                 </a>
 
                 <a
                   href="https://www.bridgeditalia.it"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15 hover:bg-[#003DA5]/10 transition-colors group"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/25 hover:bg-figb/10 dark:hover:bg-primary/15 transition-colors group"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#003DA5]/10">
-                    <BookOpen className="w-4 h-4 text-[#003DA5]" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-figb/10 dark:bg-primary/15">
+                    <BookOpen className="w-4 h-4 text-figb dark:text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">bridgeditalia.it</p>
-                    <p className="text-xs text-gray-500">Bridge d&apos;Italia Magazine - Notizie e approfondimenti</p>
+                    <p className="text-sm font-bold text-foreground">bridgeditalia.it</p>
+                    <p className="text-xs text-muted-foreground">Bridge d&apos;Italia Magazine - Notizie e approfondimenti</p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-[#003DA5]/50 group-hover:text-[#003DA5] transition-colors shrink-0" />
+                  <ExternalLink className="w-4 h-4 text-figb/50 dark:text-primary/50 group-hover:text-figb dark:group-hover:text-primary transition-colors shrink-0" />
                 </a>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function ScopriPage() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden">
             {/* History Header */}
             <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-4">
               <div className="flex items-center gap-3">
@@ -173,16 +173,16 @@ export default function ScopriPage() {
                   year="1957-1975"
                   title="L'era della Squadra Azzurra"
                   description="L'Italia domina il bridge mondiale con la leggendaria Squadra Azzurra (Blue Team), vincendo 16 titoli mondiali in meno di vent'anni - un record senza precedenti nella storia dello sport della mente."
-                  color="bg-[#003DA5]"
+                  color="bg-figb dark:bg-primary"
                   highlight
                 />
               </div>
 
               {/* Blue Team Champions */}
-              <div className="mt-6 p-4 rounded-xl bg-[#003DA5]/5 border border-[#003DA5]/15">
+              <div className="mt-6 p-4 rounded-xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/25">
                 <div className="flex items-center gap-2 mb-3">
                   <Trophy className="w-5 h-5 text-amber-500" />
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <h3 className="text-sm font-bold text-foreground">
                     I campioni della Squadra Azzurra
                   </h3>
                 </div>
@@ -230,7 +230,7 @@ export default function ScopriPage() {
         >
           <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="w-5 h-5 text-amber-500" />
-            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Lo sapevi?</h2>
+            <h2 className="text-lg font-bold text-foreground">Lo sapevi?</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -267,7 +267,7 @@ export default function ScopriPage() {
           transition={{ delay: 0.4, duration: 0.5 }}
           className="mb-6"
         >
-          <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm overflow-hidden">
+          <div className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 px-5 py-4">
               <div className="flex items-center gap-3">
                 <ExternalLink className="w-5 h-5 text-white/80" />
@@ -281,7 +281,7 @@ export default function ScopriPage() {
                 href="https://www.federbridge.it"
                 title="Federazione Italiana Gioco Bridge"
                 subtitle="Sito ufficiale FIGB"
-                icon={<Landmark className="w-4 h-4 text-[#003DA5]" />}
+                icon={<Landmark className="w-4 h-4 text-figb dark:text-primary" />}
               />
 
               {/* Bridge d'Italia */}
@@ -289,7 +289,7 @@ export default function ScopriPage() {
                 href="https://www.bridgeditalia.it"
                 title="Bridge d'Italia Magazine"
                 subtitle="Notizie, tornei e approfondimenti"
-                icon={<BookOpen className="w-4 h-4 text-[#003DA5]" />}
+                icon={<BookOpen className="w-4 h-4 text-figb dark:text-primary" />}
               />
 
               {/* World Bridge Federation */}
@@ -297,11 +297,11 @@ export default function ScopriPage() {
                 href="https://www.worldbridge.org"
                 title="World Bridge Federation"
                 subtitle="Federazione mondiale di bridge"
-                icon={<Globe className="w-4 h-4 text-[#003DA5]" />}
+                icon={<Globe className="w-4 h-4 text-figb dark:text-primary" />}
               />
 
               {/* Divider */}
-              <div className="h-px bg-gray-100 my-3" />
+              <div className="h-px bg-border/60 my-3" />
 
               {/* YouTube */}
               <ExternalLinkCard
@@ -326,7 +326,7 @@ export default function ScopriPage() {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#003DA5] hover:text-[#002E7A] transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-figb dark:text-primary hover:text-figb-dark dark:hover:text-primary/80 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Torna alla Home
@@ -356,16 +356,16 @@ function TimelineItem({
     <div className="flex gap-4">
       <div className="flex flex-col items-center">
         <div className={`w-3 h-3 rounded-full ${color} shrink-0 mt-1.5`} />
-        <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700" />
+        <div className="w-0.5 flex-1 bg-border" />
       </div>
-      <div className={`pb-4 ${highlight ? "bg-[#003DA5]/5 -mx-2 px-3 py-3 rounded-xl border border-[#003DA5]/15" : ""}`}>
-        <span className={`text-xs font-bold ${highlight ? "text-[#003DA5]" : "text-gray-400"}`}>
+      <div className={`pb-4 ${highlight ? "bg-figb/5 dark:bg-primary/10 -mx-2 px-3 py-3 rounded-xl border border-figb/15 dark:border-primary/25" : ""}`}>
+        <span className={`text-xs font-bold ${highlight ? "text-figb dark:text-primary" : "text-muted-foreground/70"}`}>
           {year}
         </span>
-        <h3 className={`text-sm font-bold mt-0.5 ${highlight ? "text-[#003DA5]" : "text-gray-900 dark:text-gray-100"}`}>
+        <h3 className={`text-sm font-bold mt-0.5 ${highlight ? "text-figb dark:text-primary" : "text-foreground"}`}>
           {title}
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+        <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
           {description}
         </p>
       </div>
@@ -383,12 +383,12 @@ function ChampionCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="bg-white dark:bg-[#141821] rounded-xl p-3 border border-gray-200 dark:border-[#2a3040]">
+    <div className="bg-card rounded-xl p-3 border border-border">
       <div className="flex items-center gap-1.5 mb-1">
         {icon}
-        <p className="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">{name}</p>
+        <p className="text-xs font-bold text-foreground truncate">{name}</p>
       </div>
-      <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">{detail}</p>
+      <p className="text-[10px] text-muted-foreground leading-tight">{detail}</p>
     </div>
   );
 }
@@ -405,12 +405,12 @@ function FunFactCard({
   description: string;
 }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-[#2a3040] shadow-sm p-4">
+    <div className="rounded-2xl bg-card border border-border shadow-sm p-4">
       <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconBg} mb-3`}>
         {icon}
       </div>
-      <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
-      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{description}</p>
+      <h3 className="text-sm font-bold text-foreground mb-1">{title}</h3>
+      <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -431,16 +431,16 @@ function ExternalLinkCard({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
+      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors group"
     >
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted shrink-0">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{title}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{subtitle}</p>
+        <p className="text-sm font-bold text-foreground">{title}</p>
+        <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
-      <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-[#003DA5] transition-colors shrink-0" />
+      <ExternalLink className="w-4 h-4 text-muted-foreground/40 group-hover:text-figb dark:group-hover:text-primary transition-colors shrink-0" />
     </a>
   );
 }

@@ -62,11 +62,11 @@ export function ExitIntentModal({
               </div>
 
               <DialogHeader className="items-center">
-                <DialogTitle className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                <DialogTitle className="text-lg font-bold text-foreground">
                   Hai giocato solo {handsToday}{" "}
                   {handsToday === 1 ? "mano" : "mani"} oggi.
                 </DialogTitle>
-                <DialogDescription className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                <DialogDescription className="text-muted-foreground text-sm mt-1">
                   Una mano veloce prima di andare?
                 </DialogDescription>
               </DialogHeader>
@@ -74,14 +74,13 @@ export function ExitIntentModal({
               <DialogFooter className="flex-col gap-2 w-full mt-5 sm:flex-col">
                 <button
                   onClick={onPlay}
-                  className="w-full py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] cursor-pointer"
-                  style={{ backgroundColor: "#003DA5" }}
+                  className="w-full py-3 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors active:scale-[0.98] cursor-pointer"
                 >
                   Una mano veloce!
                 </button>
                 <button
                   onClick={handleDismiss}
-                  className="w-full py-2.5 rounded-xl text-gray-500 dark:text-gray-400 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl text-muted-foreground text-sm font-medium transition-colors hover:bg-muted cursor-pointer"
                 >
                   Basta per oggi
                 </button>

@@ -51,7 +51,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
           </Link>
 
           {/* Torneo (7 cols) */}
-          <Link href="/gioca/torneo" className="col-span-7 btn-squishy btn-squishy-blue rounded-2xl p-4 text-white flex flex-col justify-between min-h-[130px]" style={{ background: "linear-gradient(135deg, #003DA5, #0052CC)" }}>
+          <Link href="/gioca/torneo" className="col-span-7 btn-squishy btn-squishy-blue rounded-2xl p-4 text-white flex flex-col justify-between min-h-[130px] bg-gradient-to-br from-figb to-figb-light">
             <div>
               <Trophy className="w-6 h-6 text-white/90 mb-1.5" />
               <h3 className="font-bold text-[15px] leading-tight">Tornei & Sfide</h3>
@@ -78,7 +78,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
           </Link>
 
           {/* Trova ASD (full width) */}
-          <Link href="/trova-circolo" className="col-span-12 btn-squishy btn-squishy-blue rounded-2xl p-4 text-white flex items-center gap-4" style={{ background: "linear-gradient(135deg, #003DA5, #0052CC)" }}>
+          <Link href="/trova-circolo" className="col-span-12 btn-squishy btn-squishy-blue rounded-2xl p-4 text-white flex items-center gap-4 bg-gradient-to-br from-figb to-figb-light">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15">
               <MapPin className="w-5 h-5 text-white" />
             </div>

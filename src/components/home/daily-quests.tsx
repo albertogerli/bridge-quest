@@ -49,7 +49,7 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
     },
     {
       id: "play",
-      icon: <Spade className="w-5 h-5 text-gray-700 dark:text-gray-300" />,
+      icon: <Spade className="w-5 h-5 text-foreground/80" />,
       label: "Gioca 1 mano",
       progress: Math.min(dailyHands, 1),
       target: 1,

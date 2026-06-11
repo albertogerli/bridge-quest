@@ -74,15 +74,15 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-3xl p-6 text-center shadow-xl border border-gray-100"
+        className="bg-card rounded-3xl p-6 text-center shadow-xl border border-border"
       >
         <div className="text-5xl mb-3">
           {stars === 3 ? "🌟" : stars === 2 ? "⭐" : "💪"}
         </div>
-        <h3 className="text-xl font-semibold text-gray-900">
+        <h3 className="text-xl font-semibold text-foreground">
           {stars === 3 ? "Perfetto!" : stars === 2 ? "Ben fatto!" : "Continua a studiare!"}
         </h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           {score}/{total} risposte corrette
         </p>
         <div className="flex justify-center gap-1 mt-3">
@@ -106,7 +106,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl p-5 shadow-xl border border-gray-100"
+      className="bg-card rounded-3xl p-5 shadow-xl border border-border"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -118,7 +118,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
         </div>
         <button
           onClick={onSkip}
-          className="text-xs text-gray-400 hover:text-gray-600 font-medium"
+          className="text-xs text-muted-foreground/70 hover:text-muted-foreground font-medium"
         >
           Salta
         </button>
@@ -134,7 +134,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
                 ? "bg-emerald-400"
                 : i === currentIdx
                 ? "bg-emerald-600"
-                : "bg-gray-200"
+                : "bg-muted"
             }`}
           />
         ))}
@@ -148,7 +148,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
         >
-          <p className="text-sm font-bold text-gray-900 mb-4">
+          <p className="text-sm font-bold text-foreground mb-4">
             {question.question}
           </p>
 
@@ -156,21 +156,21 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
           <div className="space-y-2">
             {(shuffledIndices[currentIdx] || question.options.map((_: string, i: number) => i)).map((origIdx: number, displayIdx: number) => {
               const opt = question.options[origIdx];
-              let bg = "bg-gray-50 hover:bg-gray-100 border-gray-200";
-              let text = "text-gray-700";
+              let bg = "bg-muted/50 hover:bg-muted border-border";
+              let text = "text-foreground/80";
 
               if (showResult) {
                 if (origIdx === question.correctAnswer) {
-                  bg = "bg-emerald-50 border-emerald-400";
-                  text = "text-emerald-800";
+                  bg = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400";
+                  text = "text-emerald-800 dark:text-emerald-300";
                 } else if (origIdx === selected && !isCorrect) {
-                  bg = "bg-red-50 border-red-400";
-                  text = "text-red-800";
+                  bg = "bg-red-50 dark:bg-red-950/40 border-red-400";
+                  text = "text-red-800 dark:text-red-300";
                 } else {
-                  bg = "bg-gray-50 border-gray-200 opacity-50";
+                  bg = "bg-muted/50 border-border opacity-50";
                 }
               } else if (selected === origIdx) {
-                bg = "bg-emerald-50 border-emerald-300";
+                bg = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700";
               }
 
               return (
@@ -182,7 +182,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
                   whileTap={showResult ? {} : { scale: 0.98 }}
                 >
                   <span className="inline-flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold border border-gray-200 flex-shrink-0">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card text-xs font-bold border border-border flex-shrink-0">
                       {String.fromCharCode(65 + displayIdx)}
                     </span>
                     {opt}
@@ -204,8 +204,8 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
                 <div
                   className={`mt-3 p-3 rounded-xl text-xs ${
                     isCorrect
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "bg-amber-50 text-amber-700"
+                      ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
+                      : "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300"
                   }`}
                 >
                   <span className="font-bold">
@@ -215,7 +215,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
                 </div>
                 <Button
                   onClick={handleNext}
-                  className="mt-3 w-full h-10 rounded-xl bg-gray-900 font-bold text-sm"
+                  className="mt-3 w-full h-10 rounded-xl bg-foreground text-background font-bold text-sm"
                 >
                   {currentIdx + 1 >= total ? "Vedi risultato" : "Prossima"}
                 </Button>

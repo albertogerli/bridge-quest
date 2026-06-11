@@ -43,7 +43,7 @@ const SLIDES: Slide[] = [
     body: "Tutti i modi per giocare, ordinati: Pratica (allena una singola abilità), Sfide (competi) e Gioco libero. E prova il nuovo MiniBridge: giochi una mano intera senza licita, contando i punti.",
     href: "/gioca",
     cta: "Apri Gioca",
-    accent: "from-[#003DA5] to-[#0052CC]",
+    accent: "from-figb to-figb-light",
   },
   {
     emoji: "👨‍🏫",

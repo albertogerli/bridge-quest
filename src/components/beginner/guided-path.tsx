@@ -49,7 +49,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={`rounded-[22px] border border-gray-200 dark:border-[#2a3040] bg-white dark:bg-[#1a1f2e] overflow-hidden ${
+      className={`rounded-[22px] border border-border bg-card overflow-hidden ${
         isFull ? "shadow-lg" : "shadow-sm"
       }`}
     >
@@ -57,12 +57,12 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
       <div className={`px-5 ${isFull ? "pt-5 pb-3" : "pt-4 pb-2"}`}>
         <div className="flex items-center gap-2">
           <span className="text-base">🧭</span>
-          <h3 className={`font-bold text-[#12305f] dark:text-gray-100 ${isFull ? "text-lg" : "text-sm"}`}>
+          <h3 className={`font-bold text-foreground ${isFull ? "text-lg" : "text-sm"}`}>
             Percorso Consigliato
           </h3>
         </div>
         {isFull && (
-          <p className="mt-1 text-sm text-[#5c677d] dark:text-gray-400">
+          <p className="mt-1 text-sm text-muted-foreground">
             Tre passi per partire col piede giusto.
           </p>
         )}
@@ -89,7 +89,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                       ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20"
                       : isCurrent
                         ? "border-[#c8a44e]/40 dark:border-[#c8a44e]/30 bg-[#fffdf5] dark:bg-[#c8a44e]/10 shadow-sm shadow-[#c8a44e]/10"
-                        : "border-gray-200 dark:border-[#2a3040] bg-[#fafaf7] dark:bg-[#1a1f2e]/50"
+                        : "border-border bg-muted/30"
                   }`}
                 >
                   {/* Step number / check */}
@@ -99,13 +99,13 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                         ? "bg-emerald-100 dark:bg-emerald-900/40"
                         : isCurrent
                           ? `bg-gradient-to-br ${s.gradient} shadow-md`
-                          : "bg-gray-100 dark:bg-gray-800"
+                          : "bg-muted"
                     }`}
                   >
                     {isDone ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     ) : (
-                      <Icon className={`h-5 w-5 ${isCurrent ? "text-white" : "text-gray-400"}`} />
+                      <Icon className={`h-5 w-5 ${isCurrent ? "text-white" : "text-muted-foreground/70"}`} />
                     )}
                   </div>
 
@@ -116,14 +116,14 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                         isDone
                           ? "text-emerald-700 dark:text-emerald-400 line-through decoration-emerald-300"
                           : isCurrent
-                            ? "text-[#12305f] dark:text-gray-100"
-                            : "text-gray-400 dark:text-gray-500"
+                            ? "text-foreground"
+                            : "text-muted-foreground/70"
                       }`}
                     >
                       {s.label}
                     </p>
                     {(isFull || isCurrent) && (
-                      <p className="text-[11px] text-[#5c677d] dark:text-gray-400 mt-0.5 truncate">{s.sub}</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{s.sub}</p>
                     )}
                   </div>
 
@@ -131,7 +131,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                   {!isDone && (
                     <ChevronRight
                       className={`h-4 w-4 shrink-0 ${
-                        isCurrent ? "text-[#c8a44e]" : "text-gray-300 dark:text-gray-600"
+                        isCurrent ? "text-[#c8a44e]" : "text-muted-foreground/40"
                       }`}
                     />
                   )}

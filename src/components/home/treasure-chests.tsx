@@ -9,7 +9,7 @@ import { useGameStore } from "@/store/use-game-store";
 
 const chestMilestoneIcons = {
   3: (size: string) => <Gift className={`${size} text-amber-700`} />,
-  10: (size: string) => <Package className={`${size} text-gray-600 dark:text-gray-300`} />,
+  10: (size: string) => <Package className={`${size} text-muted-foreground`} />,
   25: (size: string) => <Wrench className={`${size} text-amber-500`} />,
   50: (size: string) => <Crown className={`${size} text-amber-400`} />,
 } as Record<number, (size: string) => React.ReactNode>;
