@@ -265,7 +265,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-3xl grid-cols-3 gap-3">
           {[
             { href: "/impara", emoji: "🎓", label: "Impara", desc: "Percorso e corsi", cls: "from-[#1B5E3B] to-[#2A7A4F]" },
-            { href: "/gioca", emoji: "🎮", label: "Gioca", desc: "Pratica e sfide", cls: "from-[#003DA5] to-[#0052CC]" },
+            { href: "/gioca", emoji: "🎮", label: "Gioca", desc: "Pratica e sfide", cls: "from-figb to-figb-light" },
             { href: "/scuola", emoji: "👨‍🏫", label: "Scuola", desc: "Le tue classi", cls: "from-[#c8a44e] to-[#a8842e]" },
           ].map((h) => (
             <Link key={h.href} href={h.href} aria-label={h.label} className="block">
