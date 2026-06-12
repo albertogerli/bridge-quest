@@ -186,17 +186,38 @@ export default function AdminPage() {
     setFetchError(null);
 
     try {
-      const { data: profiles, error } = await supabase
-        .from("profiles")
-        .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform")
-        .order("created_at", { ascending: false });
+      let allProfiles: any[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
 
-      if (error) {
-        console.error("Admin fetch error:", error);
-        setFetchError(`Errore DB: ${error.message}`);
-        setLoading(false);
-        return;
+      while (hasMore) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform")
+          .range(page * pageSize, (page + 1) * pageSize - 1)
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Admin fetch error:", error);
+          setFetchError(`Errore DB: ${error.message}`);
+          setLoading(false);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          allProfiles = allProfiles.concat(data);
+          if (data.length < pageSize) {
+            hasMore = false;
+          } else {
+            page++;
+          }
+        } else {
+          hasMore = false;
+        }
       }
+
+      const profiles = allProfiles;
 
       // Fetch login history (last 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
