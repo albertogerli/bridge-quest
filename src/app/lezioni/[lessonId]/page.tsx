@@ -76,6 +76,7 @@ export default function LessonDetailPage({
   const totalXp = lesson.modules.reduce((sum, m) => sum + m.xpReward, 0);
   const totalDuration = lesson.modules.reduce((sum, m) => sum + parseInt(m.duration), 0);
   const youtubeEmbed = getYouTubeEmbedUrl(lesson.id, profileConfig.profile);
+  const lessonSmazzateCount = allSmazzate.filter((s) => s.lesson === lesson.id).length;
 
   return (
     <div className="pt-6 px-5">
@@ -334,6 +335,51 @@ export default function LessonDetailPage({
             );
           })}
         </div>
+
+        {/* Pratica: mani collegate alla lezione (proposta a fine teoria) */}
+        {lessonSmazzateCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 + lesson.modules.length * 0.08 }}
+            className="mt-6"
+          >
+            <Link
+              href={`/gioca/smazzata?lesson=${lesson.id}${course ? `&course=${course.id}` : ""}`}
+            >
+              <div className="group card-clean card-interactive cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-100 dark:border-emerald-900 p-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald text-white text-xl">
+                    🃏
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <Badge className="text-[10px] font-bold border-0 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                        🃏 Pratica
+                      </Badge>
+                    </div>
+                    <h3 className="font-bold text-foreground text-[15px]">
+                      Esercitati con questa lezione
+                    </h3>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">
+                      {lessonSmazzateCount}{" "}
+                      {lessonSmazzateCount === 1 ? "mano pratica" : "mani pratiche"} FIGB da giocare
+                    </p>
+                  </div>
+                  <svg
+                    className="h-5 w-5 text-emerald/60 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <polyline points="9,6 15,12 9,18" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        )}
       </div>
     </div>
   );
