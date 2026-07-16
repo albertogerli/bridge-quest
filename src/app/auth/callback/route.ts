@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { sendWelcomeIfNeeded } from "@/lib/email/welcome";
 
 /**
  * Auth callback route handler for PKCE code exchange.
@@ -20,9 +21,19 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       // Password recovery: redirect to the reset-password page instead of next
-      const destination = (type === "recovery" || next === "/reset-password")
-        ? "/reset-password"
-        : next;
+      const isRecovery = type === "recovery" || next === "/reset-password";
+      const destination = isRecovery ? "/reset-password" : next;
+
+      // First email confirmation / login: send the welcome email once, after the
+      // redirect response (non-blocking). Deduped via email_events.
+      if (!isRecovery) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.id && user.email) {
+          const uid = user.id;
+          const mail = user.email;
+          after(() => sendWelcomeIfNeeded(uid, mail));
+        }
+      }
 
       const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";

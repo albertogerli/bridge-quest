@@ -36,7 +36,7 @@ export interface Database {
           asd_id: number | null;
           asd_code: string | null;
           asd_name: string | null;
-          profile_type: "giovane" | "adulto" | "senior";
+          profile_type: "junior" | "giovane" | "adulto" | "senior";
           xp: number;
           streak: number;
           last_login: string | null;
@@ -46,6 +46,8 @@ export interface Database {
           sound_on: boolean;
           memory_best: number | null;
           platform: string | null;
+          marketing_consent: boolean;
+          marketing_consent_date: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -58,7 +60,7 @@ export interface Database {
           asd_id?: number | null;
           asd_code?: string | null;
           asd_name?: string | null;
-          profile_type?: "giovane" | "adulto" | "senior";
+          profile_type?: "junior" | "giovane" | "adulto" | "senior";
           xp?: number;
           streak?: number;
           last_login?: string | null;
@@ -68,6 +70,8 @@ export interface Database {
           sound_on?: boolean;
           memory_best?: number | null;
           platform?: string | null;
+          marketing_consent?: boolean;
+          marketing_consent_date?: string | null;
         };
         Update: {
           username?: string | null;
@@ -77,7 +81,7 @@ export interface Database {
           asd_id?: number | null;
           asd_code?: string | null;
           asd_name?: string | null;
-          profile_type?: "giovane" | "adulto" | "senior";
+          profile_type?: "junior" | "giovane" | "adulto" | "senior";
           xp?: number;
           streak?: number;
           last_login?: string | null;
@@ -87,6 +91,8 @@ export interface Database {
           sound_on?: boolean;
           memory_best?: number | null;
           platform?: string | null;
+          marketing_consent?: boolean;
+          marketing_consent_date?: string | null;
         };
       };
       completed_modules: {
@@ -226,6 +232,39 @@ export interface Database {
           post_id?: number | null;
           comment_id?: number | null;
         };
+      };
+      email_events: {
+        Row: {
+          id: number;
+          user_id: string;
+          email_type: string;
+          sent_at: string;
+          meta: Json | null;
+        };
+        Insert: {
+          user_id: string;
+          email_type: string;
+          sent_at?: string;
+          meta?: Json | null;
+        };
+        Update: {
+          email_type?: string;
+          sent_at?: string;
+          meta?: Json | null;
+        };
+      };
+    };
+    Functions: {
+      get_engagement_targets: {
+        Args: { p_limit?: number };
+        Returns: {
+          user_id: string;
+          email: string;
+          display_name: string | null;
+          profile_type: string | null;
+          kind: string;
+          ctx: Json | null;
+        }[];
       };
     };
   };
