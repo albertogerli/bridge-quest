@@ -11,6 +11,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { useNotifications, updateLastActivity } from "@/hooks/use-notifications";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
+import { NotificationsNudge } from "@/components/notifications-nudge";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { LostCard } from "@/components/beginner/lost-card";
 import { WeeklyRecapModal } from "@/components/home/weekly-recap-modal";
@@ -278,6 +279,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* ===== ATTIVA PROMEMORIA ===== (logged-in; activates the reminder loop) */}
+      {user && <NotificationsNudge />}
 
       {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
 
