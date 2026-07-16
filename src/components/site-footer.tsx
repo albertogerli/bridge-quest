@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export function SiteFooter() {
   return (
@@ -8,10 +9,11 @@ export function SiteFooter() {
       <div className="mx-auto max-w-5xl px-5 py-6">
         {/* Top row: logos */}
         <div className="flex items-center justify-center gap-4 mb-4">
+          {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
           <img src="/logo-bridgelab.svg" alt="Logo BridgeLab" className="h-6 w-auto opacity-60" />
           <div className="h-4 w-px bg-border" aria-hidden="true" />
-          <img src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" className="h-7 w-auto opacity-60" />
-          <img src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" className="h-5 w-auto opacity-60" />
+          <Image src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" width={400} height={355} className="h-7 w-auto opacity-60" />
+          <Image src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" width={400} height={146} className="h-5 w-auto opacity-60" />
         </div>
 
         {/* Links row */}

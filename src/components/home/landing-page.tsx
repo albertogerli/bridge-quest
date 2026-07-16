@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import { GraduationCap, Spade, Brain, Trophy, BarChart3, Flame } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 
@@ -178,10 +179,11 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
                 <p className="text-[10px] font-bold text-figb/70 dark:text-primary/70 uppercase">Mani</p>
               </div>
             </div>
+            {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
             <img src="/logo-bridgelab.svg" alt="Logo BridgeLab" className="h-10 mx-auto mb-4" />
             <div className="flex items-center justify-center gap-5 mb-3">
-              <img src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" className="h-12 w-auto" />
-              <img src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" className="h-9 w-auto" />
+              <Image src="/icons/logo-figb.png" alt="Logo FIGB - Federazione Italiana Gioco Bridge" width={400} height={355} className="h-12 w-auto" />
+              <Image src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" width={400} height={146} className="h-9 w-auto" />
             </div>
             <p className="text-xs font-bold text-figb/80 dark:text-primary/80 uppercase tracking-wider mb-1">
               Un progetto della

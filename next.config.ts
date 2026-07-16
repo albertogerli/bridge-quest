@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+import withBundleAnalyzerInit from "@next/bundle-analyzer";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,12 +14,22 @@ const withSerwist = withSerwistInit({
   disable: process.env.NODE_ENV === "development",
 });
 
+// No-op unless ANALYZE=true. Generate a prod bundle report with:
+//   ANALYZE=true npm run build
+const withBundleAnalyzer = withBundleAnalyzerInit({
+  enabled: process.env.ANALYZE === "true",
+});
+
 const nextConfig: NextConfig = {
   // Allow pointing the build dir outside iCloud-synced folders during local dev
   // (e.g. NEXT_DIST_DIR=.next.nosync). Defaults to ".next" so Vercel/prod is unchanged.
   distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: projectRoot,
   turbopack: {},
+  images: {
+    // Allow next/image optimization of user avatars served from Supabase storage.
+    remotePatterns: [{ protocol: "https", hostname: "**.supabase.co" }],
+  },
   async headers() {
     return [
       {
@@ -82,4 +93,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSerwist(nextConfig);
+export default withBundleAnalyzer(withSerwist(nextConfig));
