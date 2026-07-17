@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { useGameStore } from "@/store/use-game-store";
+import { logError } from "@/lib/log";
 
 // Keys that still live in plain localStorage (not yet in the game store).
 const LS_KEYS = {
@@ -107,7 +108,9 @@ export function useSupabaseSync() {
               onConflict: "user_id,lesson_id,module_id",
             });
           }
-        } catch {}
+        } catch (e) {
+          logError("sync:completed_modules", e);
+        }
 
         // Push badges
         const badgesRaw = localStorage.getItem(LS_KEYS.badges);
@@ -123,7 +126,9 @@ export function useSupabaseSync() {
                 onConflict: "user_id,badge_id",
               });
             }
-          } catch {}
+          } catch (e) {
+            logError("sync:badges", e);
+          }
         }
 
         // Push review items
@@ -154,7 +159,9 @@ export function useSupabaseSync() {
               }));
               await supabase.from("review_items").insert(rows);
             }
-          } catch {}
+          } catch (e) {
+            logError("sync:review_items", e);
+          }
         }
 
         lastSyncedSnapshot = snapshot;
