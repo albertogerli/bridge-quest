@@ -46,7 +46,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           {/* Suit icons */}
           <motion.div
             className="mb-5 flex items-center justify-center gap-3"
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={false}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             aria-hidden="true"
@@ -54,7 +54,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             {(["club", "diamond", "heart", "spade"] as const).map((suit, i) => (
               <motion.div
                 key={suit}
-                initial={{ opacity: 0, y: -10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.1 }}
                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm border border-white/20"
@@ -65,7 +65,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="text-4xl sm:text-5xl font-bold text-white tracking-tight font-display"
@@ -73,7 +73,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             FIGB Bridge LAB
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className="mt-3 text-base sm:text-lg text-white/80 max-w-md mx-auto"
@@ -83,7 +83,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
           {/* CTA buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="mt-8 flex flex-col gap-3 max-w-xs mx-auto"
@@ -135,7 +135,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             {features.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                initial={{ opacity: 0, y: 16 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.07 }}
                 className="rounded-2xl bg-card p-4 border border-border shadow-sm"
