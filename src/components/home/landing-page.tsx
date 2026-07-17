@@ -123,7 +123,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       <section className="px-5 -mt-4 pb-8 relative z-10">
         <div className="mx-auto max-w-lg">
           <motion.h2
-            initial={{ opacity: 0, y: 12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
             className="font-display text-lg font-bold text-foreground mb-4 text-center"
@@ -160,7 +160,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       <section className="px-5 pb-8">
         <div className="mx-auto max-w-lg">
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
             className="rounded-2xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/20 p-6 text-center"
@@ -202,7 +202,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-xs">
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3 }}
             className="flex flex-col gap-3"
