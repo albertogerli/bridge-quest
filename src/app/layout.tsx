@@ -19,14 +19,13 @@ const bricolage = Bricolage_Grotesque({
 export const metadata: Metadata = {
   title: {
     default: "BridgeLab - Impara il Bridge giocando",
-    template: "%s",
+    template: "%s · BridgeLab",
   },
   description:
     "Impara il bridge con BridgeLab, la piattaforma ufficiale della Federazione Italiana Gioco Bridge (FIGB): 4 corsi, 49 lezioni e 152 moduli interattivi con video, quiz e pratica al tavolo.",
   metadataBase: new URL("https://bridgelab.it"),
-  alternates: {
-    canonical: "/",
-  },
+  // Note: no global `canonical` here — a site-wide "/" canonical wrongly points
+  // every page at the homepage. Each public route sets its own via a route layout.
   openGraph: {
     title: "BridgeLab - Impara il Bridge giocando",
     description:
