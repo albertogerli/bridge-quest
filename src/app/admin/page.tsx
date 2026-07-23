@@ -143,6 +143,9 @@ interface Stats {
   noBboNoAsd: number;
   platformSignups: PlatformBreakdown;
   platformLogins30d: PlatformBreakdown;
+  instructors: number;
+  classes: number;
+  students: number;
 }
 
 type SortKey = "display_name" | "profile_type" | "xp" | "streak" | "hands_played" | "asd" | "total_minutes" | "created_at" | "last_login";
@@ -194,7 +197,7 @@ export default function AdminPage() {
       while (hasMore) {
         const { data, error } = await supabase
           .from("profiles")
-          .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform")
+          .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform, role")
           .range(page * pageSize, (page + 1) * pageSize - 1)
           .order("created_at", { ascending: false });
 
@@ -235,6 +238,22 @@ export default function AdminPage() {
       } catch {
         setGameStats(null);
       }
+
+      // Instructor-portal counts: classes + distinct active students via the
+      // admin-only RPC (degrades to 0 if admin_school_stats.sql isn't installed);
+      // instructors counted from the profiles already loaded (role column).
+      let schoolClasses = 0;
+      let schoolStudents = 0;
+      try {
+        const { data: ss } = await supabase.rpc("admin_school_stats");
+        if (ss) {
+          schoolClasses = (ss as { classes?: number }).classes ?? 0;
+          schoolStudents = (ss as { students?: number }).students ?? 0;
+        }
+      } catch {}
+      const instructorsCount = profiles.filter(
+        (u: { role?: string }) => u.role === "instructor"
+      ).length;
 
       if (profiles) {
         const mappedUsers: UserRow[] = profiles.map((u: any) => ({
@@ -490,6 +509,9 @@ export default function AdminPage() {
           noBboNoAsd,
           platformSignups,
           platformLogins30d,
+          instructors: instructorsCount,
+          classes: schoolClasses,
+          students: schoolStudents,
         });
       }
     } catch (err) {
@@ -786,6 +808,14 @@ export default function AdminPage() {
               <StatCard label="Attivi 7 giorni" value={stats?.activeWeek ?? 0} icon="📱" color="bg-cyan-500" />
               <StatCard label="Mani giocate" value={stats?.totalHands ?? 0} icon="🃏" color="bg-amber-500" />
               <StatCard label="Streak max" value={stats?.maxStreak ?? 0} icon="🔥" color="bg-red-500" />
+            </div>
+
+            {/* Scuola · Portale Istruttori */}
+            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Scuola · Portale Istruttori</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+              <StatCard label="Istruttori" value={stats?.instructors ?? 0} icon="👨‍🏫" color="bg-rose-500" />
+              <StatCard label="Classi" value={stats?.classes ?? 0} icon="🏫" color="bg-fuchsia-500" />
+              <StatCard label="Allievi" value={stats?.students ?? 0} icon="🎓" color="bg-lime-600" />
             </div>
 
             {/* Engagement metrics */}
