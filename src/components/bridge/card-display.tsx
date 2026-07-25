@@ -23,7 +23,7 @@ const SUIT_MAP: Record<string, { symbol: string; color: string; bgColor: string 
 };
 
 /**
- * Un blocco `cards` può contenere più mani separate da "|", con un'etichetta
+ * Un blocco `cards` può contenere più mani separate da "|" o "+", con un'etichetta
  * opzionale prima dei semi ("Ovest (morto): ♠Q74 ♥98 …"). Senza questo split
  * la "|" veniva letta come se fosse il rango di una carta.
  */
@@ -34,7 +34,7 @@ function splitHands(cards: string): { label?: string; cards: string }[] {
   if (arrowIdx >= 0) src = src.slice(0, arrowIdx).trim();
 
   return src
-    .split("|")
+    .split(/[|+]/)
     .map((part) => part.trim())
     .filter((part) => part.length > 0)
     .map((part) => ({ label: extractLabel(part), cards: part }));
