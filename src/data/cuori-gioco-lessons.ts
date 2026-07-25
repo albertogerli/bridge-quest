@@ -755,7 +755,7 @@ const lezione5CG: Lesson = {
           ],
           correctAnswer: 1,
           explanation:
-            "Si batte l'Asso (l'onore vicino al J) e si muove verso K9. Se Sud ha Q10xx il 9 farà presa. Se Est ha Q10xx lo si scoprirà e si vincerà col Re per l'expasse. La giocata normale (K e piccola al J) perde 2 prese con Q10xx in Sud.",
+            "Si batte l'Asso (l'onore vicino al J) e si muove verso K9. Se Sud ha Q10xx il 9 farà presa. Se Nord ha Q10xx lo si scoprirà e si vincerà col Re per l'expasse. La giocata normale (K e piccola al J) perde 2 prese con Q10xx in Sud.",
         },
       ],
     },
@@ -778,7 +778,7 @@ const lezione5CG: Lesson = {
         {
           type: "rule",
           content:
-            "Se mancano J e 10 con 8 carte (KQ962 + A753): non si deve sguarnire la forza dei due onori raggruppati. Bisogna incassare l'onore isolato (Asso). Se J e 10 sono quarti a sinistra, li cattureremo grazie alla forchetta KQ9.",
+            "Se mancano J e 10 con 9 carte (KQ962 + A753): non si deve sguarnire la forza dei due onori raggruppati. Bisogna incassare l'onore isolato (Asso). Se J e 10 sono quarti a sinistra, li cattureremo grazie alla forchetta KQ9.",
         },
         {
           type: "example",
@@ -1525,7 +1525,7 @@ const lezione10CG: Lesson = {
         },
         {
           type: "example",
-          content: "Est passa e poi mostra 2 Assi (A♠ e A♥). Dovete indovinare chi ha Q♣: non può essere Est! Con 2 Assi + Q avrebbe aperto. Impasse a fiori su Ovest.",
+          content: "Est passa e poi mostra 2 Assi (A♠ e A♥) e il K♠. Dovete indovinare chi ha Q♣: non può essere Est! Con 2 Assi, un Re e la Dama avrebbe avuto 13 punti e avrebbe aperto. Impasse a fiori su Ovest.",
           cards: "♠4 ♥J854 ♦KJ964 ♣AJ9",
         },
         {
@@ -1594,7 +1594,7 @@ const lezione10CG: Lesson = {
         },
         {
           type: "true-false",
-          content: "Un Maggiore dichiarato in risposta (come 2♣ su 1♦) chiede una descrizione generica dell'apertura, non fit specifico in quel seme.",
+          content: "Un Maggiore dichiarato in risposta (come 1♥ su 1♦) chiede una descrizione generica dell'apertura, non fit specifico in quel seme.",
           correctAnswer: 1,
           explanation:
             "Falso! Un MINORE chiede una descrizione generica. Un MAGGIORE chiede di SÉ: cioè chiede se c'è fit in quel seme specifico. Ricordate: Maggiore chiede di sé, minore chiede descrizione!",

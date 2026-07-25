@@ -126,7 +126,7 @@ const lezione9: Lesson = {
           options: ["2♥", "3♥", "4♥", "1NT"],
           correctAnswer: 1,
           explanation:
-            "Avete 10 punti e fit di 3 carte a Cuori: è un appoggio invitante (livello 3). Se il compagno ha 14+, la manche sarà raggiungibile.",
+            "Avete 11 punti e fit di 3 carte a Cuori: è un appoggio invitante (livello 3). Se il compagno ha 14+, la manche sarà raggiungibile.",
         },
         {
           type: "hand-eval",
@@ -622,7 +622,7 @@ const lezione11: Lesson = {
         {
           type: "rule",
           content:
-            "Quando si è nella fascia 12-16: il Contro su 1♣ o 1♦ garantisce 4 Cuori e 4 Picche (o 4+3, mai 4+2). Il Contro su 1♥ garantisce 4 Picche. Il Contro su 1♠ garantisce 4 Cuori.",
+            "Quando si è nella fascia 12-16: il Contro su 1♣ o 1♦ promette entrambi i nobili, con almeno 4 carte in uno e 3 nell'altro (4-4 o 4-3, mai 4-2). Il Contro su 1♥ garantisce 4 Picche. Il Contro su 1♠ garantisce 4 Cuori.",
         },
         {
           type: "quiz",
