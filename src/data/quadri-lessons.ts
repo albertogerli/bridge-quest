@@ -172,8 +172,9 @@ const lezione1: QuadriLesson = {
         {
           type: "example",
           content:
-            "Est gioca 3NT, attacco Cuori su cui Nord gioca il Fante. Se l'impasse a quadri fallisce, Nord in presa gioca Cuori: mortale. Se invece l'impasse a Fiori fallisce, Sud prende col Re di Cuori senza poter continuare. Dunque scegliete Fiori!",
-          cards: "♠Q74 ♥KQ4 ♦AJ1097 ♣Q103 | ♠AK2 ♥Q8 ♦Q8 ♣AJ985",
+            "Est gioca 3NT. Sud attacca Cuori, Nord mette il Fante ed Est vince con la Dama restando con ♥K 4: è un fermo di posizione, perché il Re fa presa solo se le Cuori arrivano da Sud (Est gioca per ultimo); se invece è Nord a rigiocare Cuori, l'Asso di Sud cattura il Re. Per le prese che mancano Est deve scegliere un impasse: quello a Quadri (dalla mano verso ♦AJ109) se fallisce mette in presa Nord — l'avversario pericoloso — e le Cuori battono il contratto; quello a Fiori (dal morto verso ♣AJ) se fallisce mette in presa Sud, che non può far danno. Stessa percentuale, rischio opposto: scegliete Fiori!",
+          cards:
+            "Ovest (morto): ♠Q74 ♥98 ♦AJ1097 ♣Q103 | Est (dichiarante): ♠AK2 ♥KQ4 ♦Q8 ♣AJ985",
         },
         {
           type: "quiz",

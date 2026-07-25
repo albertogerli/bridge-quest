@@ -22,12 +22,49 @@ const SUIT_MAP: Record<string, { symbol: string; color: string; bgColor: string 
   "\u2663": { symbol: "\u2663", color: "text-[#2E7D32] dark:text-emerald-400", bgColor: "bg-green-50 dark:bg-green-950/40" },
 };
 
+/**
+ * Un blocco `cards` può contenere più mani separate da "|", con un'etichetta
+ * opzionale prima dei semi ("Ovest (morto): ♠Q74 ♥98 …"). Senza questo split
+ * la "|" veniva letta come se fosse il rango di una carta.
+ */
+function splitHands(cards: string): { label?: string; cards: string }[] {
+  let src = cards.trim();
+  // Remove arrow and anything after it (like "→ 1♦")
+  const arrowIdx = src.indexOf("→");
+  if (arrowIdx >= 0) src = src.slice(0, arrowIdx).trim();
+
+  return src
+    .split("|")
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+    .map((part) => ({ label: extractLabel(part), cards: part }));
+}
+
+/** Testo prima del primo simbolo di seme, ripulito dai due punti finali. */
+function extractLabel(hand: string): string | undefined {
+  const suitKeys = Object.keys(SUIT_MAP);
+  const firstSuit = Math.min(
+    ...suitKeys.map((s) => {
+      const idx = hand.indexOf(s);
+      return idx < 0 ? Number.POSITIVE_INFINITY : idx;
+    })
+  );
+  if (!Number.isFinite(firstSuit) || firstSuit === 0) return undefined;
+  const label = hand.slice(0, firstSuit).replace(/[:\-–—]\s*$/, "").trim();
+  return label.length > 0 ? label : undefined;
+}
+
+function stripLabel(hand: string): string {
+  const label = extractLabel(hand);
+  return label ? hand.slice(hand.indexOf(label) + label.length) : hand;
+}
+
 function parseCardString(cards: string): SuitGroup[] {
   const groups: SuitGroup[] = [];
   const suitKeys = Object.keys(SUIT_MAP);
 
   // Split by suit symbols
-  let remaining = cards.trim();
+  let remaining = stripLabel(cards).trim();
   // Remove arrow and anything after it (like "→ 1♦")
   const arrowIdx = remaining.indexOf("\u2192");
   if (arrowIdx >= 0) remaining = remaining.slice(0, arrowIdx).trim();
@@ -83,9 +120,12 @@ export function CardDisplay({
   cards: string;
   size?: "sm" | "md" | "lg";
 }) {
-  const groups = parseCardString(cards);
+  const hands = splitHands(cards).map((h) => ({
+    label: h.label,
+    groups: parseCardString(h.cards),
+  }));
 
-  if (groups.length === 0) {
+  if (hands.every((h) => h.groups.length === 0)) {
     // Fallback: show as text
     return (
       <span className="font-black text-foreground tracking-wide">{cards}</span>
@@ -101,29 +141,48 @@ export function CardDisplay({
   const s = sizeClasses[size];
 
   return (
-    <span className={`inline-flex flex-wrap items-center ${s.gap}`}>
-      {groups.map((group, gIdx) => (
-        <motion.span
-          key={gIdx}
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: gIdx * 0.08 }}
-          className={`inline-flex items-center ${s.gap} ${group.bgColor} rounded-lg px-1.5 py-0.5`}
-        >
-          <span className={`${group.color} ${s.symbol} font-bold`}>
-            {group.symbol}
-          </span>
-          <span className={`inline-flex items-center ${s.gap}`}>
-            {group.ranks.map((rank, rIdx) => (
-              <span
-                key={rIdx}
-                className={`${group.color} ${s.card} font-black inline-flex items-center justify-center`}
-              >
-                {rank}
+    <span className="inline-flex flex-wrap items-start gap-x-3 gap-y-2">
+      {hands.map((hand, hIdx) => (
+        <span key={hIdx} className="inline-flex items-start gap-x-3">
+          {hIdx > 0 && (
+            <span
+              className="mt-1 h-6 w-px shrink-0 bg-border"
+              aria-hidden="true"
+            />
+          )}
+          <span className="inline-flex flex-col gap-1">
+            {hand.label && (
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                {hand.label}
               </span>
-            ))}
+            )}
+            <span className={`inline-flex flex-wrap items-center ${s.gap}`}>
+              {hand.groups.map((group, gIdx) => (
+                <motion.span
+                  key={gIdx}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (hIdx * 4 + gIdx) * 0.08 }}
+                  className={`inline-flex items-center ${s.gap} ${group.bgColor} rounded-lg px-1.5 py-0.5`}
+                >
+                  <span className={`${group.color} ${s.symbol} font-bold`}>
+                    {group.symbol}
+                  </span>
+                  <span className={`inline-flex items-center ${s.gap}`}>
+                    {group.ranks.map((rank, rIdx) => (
+                      <span
+                        key={rIdx}
+                        className={`${group.color} ${s.card} font-black inline-flex items-center justify-center`}
+                      >
+                        {rank}
+                      </span>
+                    ))}
+                  </span>
+                </motion.span>
+              ))}
+            </span>
           </span>
-        </motion.span>
+        </span>
       ))}
     </span>
   );
