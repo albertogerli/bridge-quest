@@ -223,7 +223,7 @@ const lezione1: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Giochi 3NT. L'attacco è nel colore di cuori. Hai Ax in mano. Quando conviene lisciare?",
+            "Giochi 3NT, l'attacco è a Cuori e hai ♥Ax in mano: conviene lisciare il primo giro.",
           quizType: "true-false",
           correctAnswer: "true",
           explanation:
@@ -299,13 +299,13 @@ const lezione3: QuadriLesson = {
         {
           type: "example",
           content:
-            "Est gioca 6♠, attacco Q♦. Se si precipita a muovere atout, dovendo cedere la presa d'Asso, andrà inevitabilmente sotto al ritorno di quadri. Ovest deve procurarsi un controllo (taglio) nel colore di quadri, scartando subito la terza cuori del morto: KQ di ♥, fiori al Fante e A♥ scartando quadri. Ora si batte atout.",
+            "Est gioca 6♠, attacco Q♦. Se si precipita a muovere atout, dovendo cedere la presa d'Asso, andrà inevitabilmente sotto al ritorno di quadri. Est deve prima liberarsi della quadri perdente: incassa ♥K e ♥Q, va al morto con il Fante di Fiori e scarta il ♦7 sulla terza cuori del morto (l'Asso). Ora si batte atout.",
           cards: "♠KQ75 ♥A97 ♦863 ♣J84 | ♠J10984 ♥KQ ♦A7 ♣AKQ7",
         },
         {
           type: "quiz",
           content:
-            "In un contratto a colore, quando bisogna scartare le perdenti su vincenti laterali prima di battere atout?",
+            "In un contratto a colore, se gli avversari possono incassare prese in un colore scoperto appena entrano in presa, bisogna scartare le perdenti sui vincenti laterali PRIMA di battere atout.",
           quizType: "true-false",
           correctAnswer: "true",
           explanation:
@@ -697,7 +697,7 @@ const lezione2: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Hai ♠Q876543 ♥K2 ♦75 ♣J5 - Apri di barrage 3♠?",
+            "Con ♠Q876543 ♥K2 ♦75 ♣J5 si apre di barrage 3♠.",
           quizType: "true-false",
           correctAnswer: "false",
           explanation:
@@ -844,7 +844,7 @@ const lezione4: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Dopo 1♣-1♠, Nord con ♠K5 ♥J65 ♦AKJ965 ♣AJ2 replica...",
+            "Dopo 1♦-1♠, Nord con ♠K5 ♥J65 ♦AKJ965 ♣AJ2 replica...",
           quizType: "bid-select",
           options: ["1NT", "2♦", "3♦", "2NT"],
           correctAnswer: 2,
@@ -1080,7 +1080,7 @@ const lezione8: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "Nella sequenza 1♦-1♥-1♠-2♣, il 2♣ è...",
+            "Nella sequenza 1♦-1♥-2♦-2♣, il 2♣ è...",
           quizType: "multiple-choice",
           options: [
             "Forzante a manche",
@@ -1715,7 +1715,7 @@ const lezione9: QuadriLesson = {
         {
           type: "quiz",
           content:
-            "A 4♠ con ♦AJ3 in mano, l'attacco è ♦K. Conviene lisciare?",
+            "A 4♠ con ♦AJ3 in mano e attacco ♦K da parte di Ovest, conviene lisciare il primo giro.",
           quizType: "true-false",
           correctAnswer: "true",
           explanation:

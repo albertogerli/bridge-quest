@@ -812,7 +812,7 @@ const lezione206: Lesson = {
           options: ["3♣", "3♦", "3♥", "3♠"],
           correctAnswer: 0,
           explanation:
-            "3♣: punteggio minimo (8 punti) e colore brutto (solo la Q come onore maggiore, senza il 10). Il colore 'bello' richiederebbe 2 onori maggiori o A/K accompagnato da J10.",
+            "3♣: punteggio minimo (7 punti) e colore brutto, perché c'è solo la Dama come onore maggiore. Il colore 'bello' richiederebbe 2 onori maggiori o A/K accompagnato da J10.",
         },
         {
           type: "true-false",
