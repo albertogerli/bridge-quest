@@ -10,6 +10,7 @@ import { useActiveAsdClubs } from "@/store/use-asd-store";
 import Link from "next/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
+import { trackRegistration } from "@/lib/gads";
 import { type ReactNode } from "react";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
@@ -120,6 +121,8 @@ function LoginContent() {
             setError(err.message);
           }
         } else {
+          // Conversione Google Ads: registrazione completata
+          trackRegistration();
           // Upload avatar if selected
           if (avatarFile) {
             await uploadAvatar(avatarFile);
