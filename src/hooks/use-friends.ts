@@ -258,15 +258,28 @@ export function useFriends() {
       if (!currentUserId) return;
 
       try {
-        const { error } = await supabase.from("friendships").insert({
-          user_id: currentUserId,
-          friend_id: userId,
-          status: "pending",
-        });
+        const { data: inserted, error } = await supabase
+          .from("friendships")
+          .insert({
+            user_id: currentUserId,
+            friend_id: userId,
+            status: "pending",
+          })
+          .select("id")
+          .single();
 
         if (error) {
           console.error("Error adding friend:", error);
           return;
+        }
+
+        // Avvisa il destinatario via email (fire-and-forget)
+        if (inserted?.id) {
+          fetch("/api/friends/notify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ friendshipId: inserted.id }),
+          }).catch(() => {});
         }
 
         await fetchPending();

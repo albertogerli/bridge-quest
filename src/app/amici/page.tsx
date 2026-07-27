@@ -431,10 +431,19 @@ export default function AmiciPage() {
                           )}
                         </div>
 
-                        {/* Status */}
-                        <span className="text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1 font-medium shrink-0">
-                          In attesa...
-                        </span>
+                        {/* Status + Annulla */}
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1 font-medium">
+                            In attesa...
+                          </span>
+                          <button
+                            onClick={() => removeFriend(request.id)}
+                            className="flex items-center gap-1 px-3 py-2 rounded-xl bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-200 dark:hover:bg-red-950/60 transition-colors"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                            Annulla
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   ))}

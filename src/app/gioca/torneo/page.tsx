@@ -116,6 +116,55 @@ function saveTournamentResult(result: TournamentResult) {
   } catch {}
 }
 
+// ── In-progress state ──
+// Su mobile la pagina viene spesso scartata (standby, cambio app): senza
+// persistenza il torneo ripartiva dalla mano 1 perdendo le mani già giocate.
+
+interface TournamentProgress {
+  weekNum: number;
+  handIds: string[]; // per invalidare il progresso se il set di mani cambia
+  handResults: HandResult[];
+}
+
+function progressKey(weekNum: number): string {
+  return `bq_tournament_week_${weekNum}_progress`;
+}
+
+function getTournamentProgress(weekNum: number): TournamentProgress | null {
+  try {
+    const raw = localStorage.getItem(progressKey(weekNum));
+    if (!raw) return null;
+    return JSON.parse(raw) as TournamentProgress;
+  } catch {
+    return null;
+  }
+}
+
+function saveTournamentProgress(progress: TournamentProgress) {
+  try {
+    localStorage.setItem(progressKey(progress.weekNum), JSON.stringify(progress));
+  } catch {}
+}
+
+function clearTournamentProgress(weekNum: number) {
+  try {
+    localStorage.removeItem(progressKey(weekNum));
+  } catch {}
+}
+
+/** Restore saved hand results if they match the current hand set. */
+function restoreProgress(weekNum: number, hands: Smazzata[]): HandResult[] {
+  const saved = getTournamentProgress(weekNum);
+  if (!saved || hands.length === 0) return [];
+  const sameHands =
+    saved.handIds.join(",") === hands.map((h) => h.id).join(",");
+  if (!sameHands || saved.handResults.length >= hands.length) {
+    clearTournamentProgress(weekNum);
+    return [];
+  }
+  return saved.handResults;
+}
+
 /** Try to save to Supabase (gracefully fail if table doesn't exist) */
 async function saveTournamentToSupabase(result: TournamentResult) {
   try {
@@ -242,11 +291,15 @@ export default function TorneoSettimanale() {
     { displayName: string; totalTricks: number; totalNeeded: number }[] | null
   >(null);
 
+  // Mani già completate di un torneo interrotto (per il CTA "Riprendi")
+  const [inProgressCount, setInProgressCount] = useState(0);
+
   useEffect(() => {
     setMounted(true);
     setExistingResult(getTournamentResult(weekNum));
+    setInProgressCount(getTournamentProgress(weekNum)?.handResults.length ?? 0);
     fetchLeaderboard(weekNum).then((lb) => setLeaderboard(lb));
-  }, [weekNum]);
+  }, [weekNum, isPlaying]);
 
   const handleTournamentFinished = useCallback(
     (result: TournamentResult) => {
@@ -450,9 +503,12 @@ export default function TorneoSettimanale() {
                 {!alreadyPlayed ? (
                   <Button
                     onClick={() => setIsPlaying(true)}
+                    disabled={tournamentHands.length === 0}
                     className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30"
                   >
-                    Gioca il Torneo
+                    {inProgressCount > 0
+                      ? `Riprendi il Torneo (mano ${inProgressCount + 1}/${TOURNAMENT_HAND_COUNT})`
+                      : "Gioca il Torneo"}
                   </Button>
                 ) : (
                   <Button
@@ -751,12 +807,26 @@ function TournamentPlayView({
   isMobile: boolean;
   profile: import("@/hooks/use-profile").ProfileConfig;
 }) {
-  const [currentHandIdx, setCurrentHandIdx] = useState(0);
-  const [handResults, setHandResults] = useState<HandResult[]>([]);
+  // Riprende un eventuale torneo interrotto (reload/standby a metà)
+  const [restored] = useState<HandResult[]>(() =>
+    restoreProgress(weekNum, hands)
+  );
+  const [currentHandIdx, setCurrentHandIdx] = useState(restored.length);
+  const [handResults, setHandResults] = useState<HandResult[]>(restored);
   const [showSummary, setShowSummary] = useState(false);
   const [showTransition, setShowTransition] = useState(false);
 
   const currentHand = hands[currentHandIdx];
+
+  // Salva l'avanzamento dopo ogni mano completata (rimosso a torneo finito)
+  useEffect(() => {
+    if (handResults.length === 0 || handResults.length >= hands.length) return;
+    saveTournamentProgress({
+      weekNum,
+      handIds: hands.map((h) => h.id),
+      handResults,
+    });
+  }, [handResults, hands, weekNum]);
 
   const handleHandFinished = useCallback(
     (tricksMade: number, resultDelta: number) => {
@@ -804,6 +874,7 @@ function TournamentPlayView({
         if (!alreadyPlayed) {
           onFinish(tournamentResult);
         }
+        clearTournamentProgress(weekNum);
         setShowSummary(true);
       }
     },

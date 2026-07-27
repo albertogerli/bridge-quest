@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 
 const primaryNav = [
   { href: "/", icon: "home", label: "Home" },
@@ -106,6 +107,7 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
 
 export function DesktopNav() {
   const pathname = usePathname();
+  const pendingFriends = usePendingFriendRequests();
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
@@ -134,6 +136,14 @@ export function DesktopNav() {
             {icons[item.icon](active)}
           </span>
           <span>{item.label}</span>
+          {item.href === "/amici" && pendingFriends > 0 && (
+            <span
+              className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white"
+              aria-label={`${pendingFriends} richieste di amicizia in attesa`}
+            >
+              {pendingFriends > 9 ? "9+" : pendingFriends}
+            </span>
+          )}
         </div>
       </Link>
     );
