@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { hapticTap } from "@/lib/native-bridge";
+import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 
 const MORE_LINKS = [
   { href: "/profilo", emoji: "👤", label: "Profilo" },
@@ -20,6 +21,7 @@ const MORE_LINKS = [
 export function BottomNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const pendingFriends = usePendingFriendRequests();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -61,7 +63,14 @@ export function BottomNav() {
                         : "border-border active:bg-muted/50"
                     }`}
                   >
-                    <span className="text-2xl">{l.emoji}</span>
+                    <span className="relative text-2xl">
+                      {l.emoji}
+                      {l.href === "/amici" && pendingFriends > 0 && (
+                        <span className="absolute -top-1 -right-2.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                          {pendingFriends > 9 ? "9+" : pendingFriends}
+                        </span>
+                      )}
+                    </span>
                     <span className="text-[11px] font-semibold text-foreground/80">{l.label}</span>
                   </Link>
                 ))}
@@ -86,7 +95,11 @@ export function BottomNav() {
             {/* Right group */}
             <div className="flex flex-1 justify-around">
               <NavItem href="/scuola" icon="scuola" label="Scuola" active={isActive("/scuola")} />
-              <MoreButton active={moreActive || moreOpen} onClick={() => setMoreOpen((o) => !o)} />
+              <MoreButton
+                active={moreActive || moreOpen}
+                badge={pendingFriends > 0}
+                onClick={() => setMoreOpen((o) => !o)}
+              />
             </div>
           </div>
         </div>
@@ -117,7 +130,15 @@ function PlayButton({ active }: { active: boolean }) {
   );
 }
 
-function MoreButton({ active, onClick }: { active: boolean; onClick: () => void }) {
+function MoreButton({
+  active,
+  badge,
+  onClick,
+}: {
+  active: boolean;
+  badge?: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={() => {
@@ -136,11 +157,16 @@ function MoreButton({ active, onClick }: { active: boolean; onClick: () => void 
           transition={{ type: "spring", stiffness: 400, damping: 32 }}
         />
       )}
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="relative h-[22px] w-[22px]">
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-      </svg>
+      <span className="relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-[22px] w-[22px]">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+        {badge && (
+          <span className="absolute -top-0.5 -right-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-card" />
+        )}
+      </span>
       <span className={`relative text-[10px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
     </button>
   );

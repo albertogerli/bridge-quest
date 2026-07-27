@@ -9,7 +9,8 @@ export type EmailKind =
   | "onboarding_start"
   | "inactive_7"
   | "inactive_14"
-  | "streak_risk";
+  | "streak_risk"
+  | "friend_request";
 
 export interface EmailContext {
   name?: string | null;
@@ -17,6 +18,7 @@ export interface EmailContext {
   streak?: number;
   daysInactive?: number | null;
   modulesDone?: number;
+  senderName?: string | null; // friend_request: chi ha inviato la richiesta
 }
 
 export interface RenderedEmail {
@@ -216,6 +218,25 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           "Torna a giocare", play, unsubUrl
         ),
         transactional: false,
+      };
+    }
+
+    case "friend_request": {
+      const sender = (ctx.senderName || "Un giocatore").trim();
+      const amici = `${SITE}/amici`;
+      const heading = `${sender} vuole giocare con te 🤝`; // layout() fa già esc()
+      const bodyHtml = `
+        <p style="margin:0 0 14px;">${hi}! <strong>${esc(sender)}</strong> ti ha inviato una richiesta di amicizia su Bridge LAB.</p>
+        <p style="margin:0 0 14px;">Accettala per sfidarlo a colpi di smazzate e confrontare i vostri risultati.</p>
+        <p style="margin:0;">Trovi la richiesta nella sezione <strong>Amici → Richieste</strong>.</p>`;
+      return {
+        subject: `${sender} ti ha inviato una richiesta di amicizia 🤝`,
+        html: layout({ preheader: `Accetta la richiesta di ${sender} e sfidalo a bridge.`, emoji: "🤝", heading, bodyHtml, ctaLabel: "Vedi la richiesta", ctaUrl: amici }),
+        text: textFallback(
+          [`${hi.replace(/<[^>]+>/g, "")}! ${sender} ti ha inviato una richiesta di amicizia su Bridge LAB.`, "", "Accettala nella sezione Amici → Richieste per sfidarlo a bridge."],
+          "Vedi la richiesta", amici
+        ),
+        transactional: true,
       };
     }
 
