@@ -235,7 +235,7 @@ export default function TrovaErrorePage() {
         startTimer();
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [round, correctCount, score, config.xpMult, startTimer, difficulty, saveGameResult]
   );
 

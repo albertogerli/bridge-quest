@@ -86,7 +86,7 @@ export function useLocalStats() {
         setDailyLoginAwarded(true);
       }
     } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [hydrated]);
 
   // Derived display fields. Safe to compute even pre-hydration (xp=0 ⇒ level 1).

@@ -15,7 +15,9 @@ export const maxDuration = 60;
  * so the same drip is never sent twice. Marketing consent + timing rules all
  * live in the SQL function.
  *
- * Manual trigger: GET /api/cron/engagement?key=<CRON_SECRET>&limit=50
+ * Manual trigger:
+ *   curl https://bridgelab.it/api/cron/engagement?limit=50 \
+ *     -H "Authorization: Bearer $CRON_SECRET"
  */
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
@@ -26,9 +28,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // Solo header Authorization: il secret in query string finirebbe in access
+  // log e Referer (rilievo perizia sicurezza 2026-08).
   const auth = req.headers.get("authorization");
-  const keyParam = req.nextUrl.searchParams.get("key");
-  const authorized = auth === `Bearer ${secret}` || keyParam === secret;
+  const authorized = auth === `Bearer ${secret}`;
   if (!authorized) {
     return NextResponse.json({ error: "Non autorizzato" }, { status: 401 });
   }

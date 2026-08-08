@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
+import { isAuthenticated } from "@/lib/ben-guard";
 
 const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
 
 export async function GET() {
+  if (!(await isAuthenticated())) {
+    return NextResponse.json({ available: false, error: "Non autenticato" }, { status: 401 });
+  }
+
   const start = Date.now();
   try {
     const controller = new AbortController();
