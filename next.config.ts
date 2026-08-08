@@ -31,6 +31,16 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "**.supabase.co" }],
   },
   async headers() {
+    // 'unsafe-eval' serve solo in dev (React Fast Refresh); in produzione la
+    // CSP lo esclude (rilievo perizia sicurezza 2026-08). googletagmanager.com
+    // è necessario per il tag Google Ads caricato in src/app/layout.tsx.
+    const scriptSrc = [
+      "'self'",
+      "'unsafe-inline'",
+      ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
+      "https://va.vercel-scripts.com",
+      "https://www.googletagmanager.com",
+    ].join(" ");
     return [
       {
         source: "/(.*)",
@@ -44,11 +54,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+              `script-src ${scriptSrc}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
-              "frame-src https://www.youtube.com https://youtube.com",
+              "frame-src https://www.youtube.com https://youtube.com https://td.doubleclick.net",
               "connect-src 'self' https: wss://*.supabase.co",
               "media-src 'self' blob: https:",
               "worker-src 'self' blob:",

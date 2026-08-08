@@ -171,7 +171,7 @@ export function useFriends() {
       const sentFriendIds = (sent || []).map((f) => f.friend_id);
       const allProfileIds = [...receivedUserIds, ...sentFriendIds];
 
-      let profileMap = new Map<string, FriendProfile>();
+      const profileMap = new Map<string, FriendProfile>();
 
       if (allProfileIds.length > 0) {
         const { data: profiles, error: profilesError } = await supabase

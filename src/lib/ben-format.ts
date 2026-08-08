@@ -119,7 +119,7 @@ function bidToBEN(bid: string): string {
 
   // Contract bids: "1NT" → "1N", "2SA" → "2N", "3♠" → "3S", etc.
   // Handle Unicode suit symbols
-  let normalized = b
+  const normalized = b
     .replace("♠", "S").replace("♥", "H").replace("♦", "D").replace("♣", "C")
     .replace("NT", "N").replace("SA", "N");
 

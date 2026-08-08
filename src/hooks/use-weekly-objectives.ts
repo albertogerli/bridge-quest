@@ -181,10 +181,18 @@ export function useWeeklyObjectives() {
     loadProgress();
   }, [loadProgress]);
 
-  // Refresh every 5 seconds when tab is visible
+  // Refresh ogni 30 s + al ritorno sulla tab (era ogni 5 s: re-render inutili,
+  // rilievo perizia performance 2026-08; i dati sono locali, non serve tempo reale)
   useEffect(() => {
-    const interval = setInterval(refreshProgress, 5000);
-    return () => clearInterval(interval);
+    const interval = setInterval(refreshProgress, 30000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refreshProgress();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [refreshProgress]);
 
   return {

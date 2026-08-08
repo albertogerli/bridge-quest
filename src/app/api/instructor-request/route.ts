@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-const ADMIN_EMAIL = "alberto@albertogerli.it";
+const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || "alberto@albertogerli.it";
 
 /**
  * POST /api/instructor-request
@@ -20,9 +20,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
     }
 
-    const body = await req.json().catch(() => ({}));
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: "Body non valido" }, { status: 400 });
+    }
     const message: string = typeof body.message === "string" ? body.message.slice(0, 2000) : "";
-    const asdCode: string | null = typeof body.asdCode === "string" ? body.asdCode : null;
+    const asdCode: string | null =
+      typeof body.asdCode === "string" && body.asdCode.trim().length > 0
+        ? body.asdCode.trim().slice(0, 32)
+        : null;
 
     // Upsert so a rejected user can re-apply (resets to pending).
     const { error } = await supabase
@@ -40,7 +48,12 @@ export async function POST(req: NextRequest) {
       );
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      // Non propagare il messaggio grezzo del DB al client.
+      console.error("[instructor-request] upsert error", error.message);
+      return NextResponse.json(
+        { error: "Impossibile salvare la richiesta. Riprova più tardi." },
+        { status: 400 }
+      );
     }
 
     // Fetch a friendly name for the email.

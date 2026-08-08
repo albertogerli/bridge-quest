@@ -29,8 +29,6 @@ const PROVINCE_TO_REGION: Record<string, string> = {
   SS:"Sardegna",NU:"Sardegna",CA:"Sardegna",OR:"Sardegna",SU:"Sardegna",
 };
 
-const ADMIN_EMAIL = "alberto@albertogerli.it";
-
 interface UserRow {
   id: string;
   display_name: string | null;
@@ -164,7 +162,7 @@ function isFullTimestamp(val: string): boolean {
 }
 
 export default function AdminPage() {
-  const { user, loading: authLoading } = useSharedAuth();
+  const { user, profile, loading: authLoading } = useSharedAuth();
   const { clubs: asdClubs } = useAsdClubs();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
@@ -596,7 +594,19 @@ export default function AdminPage() {
     );
   }
 
-  if (!user || user.email !== ADMIN_EMAIL) {
+  // Il profilo arriva in background dopo la sessione: finché non c'è, spinner
+  // (evita il flash di "Accesso negato" per l'admin legittimo).
+  if (user && !profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Autorizzazione a ruolo (profiles.role), come /admin/classi e /admin/istruttori;
+  // la protezione reale dei dati resta nelle RLS/RPC con is_admin().
+  if (!user || profile?.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="text-center">

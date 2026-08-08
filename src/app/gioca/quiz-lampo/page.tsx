@@ -1045,7 +1045,7 @@ export default function QuizLampoPage() {
             let btnStyle =
               "bg-card card-clean hover:shadow-lg active:scale-[0.96]";
             let textColor = "text-foreground";
-            let borderExtra = "";
+            const borderExtra = "";
 
             if (showResult) {
               if (idx === currentQuestion.correctIndex) {
