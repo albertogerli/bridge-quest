@@ -1,0 +1,68 @@
+-- ============================================================================
+-- BridgeLab: dati che sopravvivono all'eliminazione dell'account
+--
+-- PROBLEMA (rilevato il 2026-08-09 rifattorizzando /profilo)
+-- Il pulsante "Elimina account e tutti i dati" promette una cancellazione
+-- completa, ma `game_results` NON viene cancellata:
+--   1. la tabella referenzia `auth.users` (non `public.profiles`), quindi
+--      cancellare la riga di `profiles` dal client NON produce cascata;
+--   2. le sue policy RLS non prevedono DELETE (log immutabile per scelta),
+--      quindi l'utente non può cancellare nemmeno le proprie righe.
+-- Restano quindi in produzione tutte le partite dell'utente, legate al suo id.
+--
+-- Il bug della colonna `challenged_id` (sfide ricevute mai cancellate) è già
+-- stato corretto lato client; questo file riguarda solo ciò che richiede DDL.
+--
+-- RILIEVO GDPR: in presenza di un accordo art. 28 con la Federazione, una
+-- funzione dichiarata "elimina tutti i dati" deve mantenere la promessa.
+--
+-- DUE STRADE — scegliere UNA. La (B) è quella consigliata.
+-- ============================================================================
+
+
+-- ----------------------------------------------------------------------------
+-- (A) Rapida: permettere all'utente di cancellare le proprie partite.
+-- Costo: si rinuncia all'immutabilità del log delle partite (oggi voluta:
+-- nessuna policy DELETE è presente proprio per questo).
+-- ----------------------------------------------------------------------------
+-- CREATE POLICY "Users can delete own game results"
+--   ON public.game_results
+--   FOR DELETE
+--   TO authenticated
+--   USING (user_id = auth.uid());
+
+
+-- ----------------------------------------------------------------------------
+-- (B) CONSIGLIATA: cancellazione server-side, che elimina anche l'utente di
+-- autenticazione. Solo così spariscono per cascata TUTTE le tabelle legate ad
+-- `auth.users` (game_results, challenges) senza allentare alcuna RLS.
+--
+-- Questa funzione non basta da sola: va invocata da una route server con la
+-- service role key (il client non può eliminare un utente di auth), che
+-- verifica la sessione e cancella SOLO il chiamante. Esempio d'uso lato
+-- server: `admin.auth.admin.deleteUser(user.id)` dopo aver ripulito le
+-- tabelle che non hanno la cascata su auth.users.
+--
+-- La cascata su auth.users copre: game_results, challenges.
+-- La cascata su profiles copre: login_history, email_events,
+-- tournament_results, completed_modules/badges/review_items (se dichiarate).
+-- ----------------------------------------------------------------------------
+-- Verifica di quali tabelle dipendono da auth.users e con quale azione:
+--   SELECT c.conrelid::regclass AS tabella, c.confdeltype AS on_delete
+--   FROM pg_constraint c
+--   JOIN pg_class f ON f.oid = c.confrelid
+--   WHERE c.contype = 'f' AND f.relname = 'users'
+--   ORDER BY 1;
+--   -- confdeltype: 'c' = CASCADE, 'a' = NO ACTION, 'n' = SET NULL
+
+
+-- ============================================================================
+-- VERIFICA dopo l'intervento
+-- Creare un utente di prova, fargli giocare una mano, eliminare l'account e
+-- controllare che non resti nulla:
+--   SELECT count(*) FROM game_results WHERE user_id = '<id>';
+--   SELECT count(*) FROM challenges
+--     WHERE challenger_id = '<id>' OR opponent_id = '<id>';
+--   SELECT count(*) FROM profiles WHERE id = '<id>';
+-- Tutti a 0.
+-- ============================================================================
