@@ -61,6 +61,27 @@ for (const t of PRIVATE_TABLES) {
   else fail(`${t}: ANON vede ${visible} righe`);
 }
 
+// Le funzioni SECURITY DEFINER scavalcano RLS e privilegi di colonna: se sono
+// eseguibili da anonimo riaprono da sola porta tutto ciò che si è chiuso.
+// Il 2026-08-09 `search_users` restituiva 20 profili completi a un chiamante
+// non autenticato. Nota: nascono eseguibili da PUBLIC, e `anon` eredita da lì.
+console.log("\n[1b] Funzioni SECURITY DEFINER — non eseguibili da anonimo");
+{
+  const probes = [
+    ["search_users", { p_query: "a", p_user_id: "00000000-0000-0000-0000-000000000000" }],
+    ["get_challenge_stats", { p_user_id: "00000000-0000-0000-0000-000000000000" }],
+    ["get_game_leaderboard", { p_game_type: "smazzata", p_limit: 5 }],
+    ["is_admin", {}],
+    ["admin_game_stats", {}],
+  ];
+  for (const [fn, args] of probes) {
+    const { data, error } = await anon.rpc(fn, args);
+    const rows = Array.isArray(data) ? data.length : data == null ? 0 : 1;
+    if (error || rows === 0) ok(`${fn}(): non eseguibile da anonimo`);
+    else fail(`${fn}(): un anonimo ottiene ${rows} righe`);
+  }
+}
+
 // Contenuti che DEVONO restare pubblici (glossario è SSR indicizzato da Google)
 console.log("\n[2] Contenuti pubblici — devono restare leggibili");
 for (const t of ["glossary", "lessons", "courses", "asd_clubs"]) {
