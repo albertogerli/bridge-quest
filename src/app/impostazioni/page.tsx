@@ -16,6 +16,8 @@ import {
   getAILevel,
   setAILevel as saveAILevel,
 } from "@/lib/ai-difficulty";
+import { reportError } from "@/lib/report-error";
+import { toast } from "sonner";
 
 const AI_LEVELS: AILevel[] = ["base", "intermedio", "esperto"];
 
@@ -158,7 +160,8 @@ export default function ImpostazioniPage() {
       // Hard redirect to force full page reload and clean auth state
       window.location.href = "/";
     } catch (err) {
-      console.error("Logout error:", err);
+      reportError("impostazioni:logout", err);
+      toast.error("Uscita non riuscita. Riprova.");
       setLoggingOut(false);
       setShowLogoutConfirm(false);
     }

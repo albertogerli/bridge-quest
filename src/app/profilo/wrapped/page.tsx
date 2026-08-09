@@ -6,6 +6,7 @@ import { ArrowLeft, Share2, TrendingUp, TrendingDown, Minus } from "lucide-react
 import Link from "next/link";
 import { shareContent } from "@/lib/share";
 import { useGameStore } from "@/store/use-game-store";
+import { reportError } from "@/lib/report-error";
 
 interface GameRecord {
   date: string;
@@ -167,8 +168,9 @@ export default function WrappedPage() {
         const computed = calculateMonthStats(records);
         setStats(computed);
       }
-    } catch {
-      // ignore
+    } catch (e) {
+      // Non è un puro accesso localStorage: c'è parsing + calcolo statistiche.
+      reportError("wrapped:load-stats", e);
     }
     setLoading(false);
   }, []);

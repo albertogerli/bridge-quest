@@ -1,6 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import {
+  migrateLegacyBox,
+  scheduleAfterCorrect,
+  scheduleAfterWrong,
+} from "@/lib/spaced-review";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -13,7 +18,9 @@ export interface ReviewItem {
   moduleId: string;
   /** The question text that was answered incorrectly */
   question: string;
-  /** How many times the user got this wrong (cumulative) */
+  /** Scatola di Leitner corrente (1..5); guida lo scheduling. */
+  box: number;
+  /** How many times the user got this wrong (cumulative, statistica) */
   wrongCount: number;
   /** ISO date string of the last review (or first wrong answer) */
   lastReview: string;
@@ -27,18 +34,6 @@ export interface ReviewItem {
 
 const STORAGE_KEY = "bq_review_items";
 
-/**
- * Interval schedule in days, indexed by wrongCount (1-based).
- *  - 1st wrong  -> review in 1 day
- *  - 2nd wrong  -> review in 3 days
- *  - 3rd+ wrong -> review in 7 days
- */
-const INTERVALS_DAYS: Record<number, number> = {
-  1: 1,
-  2: 3,
-};
-const DEFAULT_INTERVAL_DAYS = 7;
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -47,23 +42,14 @@ function todayISO(): string {
   return new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
 }
 
-function addDays(iso: string, days: number): string {
-  const d = new Date(iso);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
-function intervalForWrongCount(count: number): number {
-  return INTERVALS_DAYS[count] ?? DEFAULT_INTERVAL_DAYS;
-}
-
 function loadItems(): ReviewItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed as ReviewItem[];
+    // Migrazione formato pre-Leitner (item senza `box`).
+    return (parsed as ReviewItem[]).map((i) => ({ ...i, box: migrateLegacyBox(i) }));
   } catch {
     return [];
   }
@@ -114,27 +100,20 @@ export function useSpacedReview() {
       const today = todayISO();
 
       if (idx >= 0) {
-        // Item already tracked - increment wrongCount and reschedule
+        // Errore su item già tracciato: regressione alla scatola 1 (Leitner)
         const existing = current[idx];
-        const newCount = existing.wrongCount + 1;
-        const interval = intervalForWrongCount(newCount);
         current[idx] = {
           ...existing,
           question, // update to latest question text variant
-          wrongCount: newCount,
-          lastReview: today,
-          nextReview: addDays(today, interval),
+          ...scheduleAfterWrong(existing, today),
         };
       } else {
         // Brand new wrong answer
-        const interval = intervalForWrongCount(1);
         current.push({
           lessonId,
           moduleId,
           question,
-          wrongCount: 1,
-          lastReview: today,
-          nextReview: addDays(today, interval),
+          ...scheduleAfterWrong(null, today),
         });
       }
 
@@ -152,9 +131,9 @@ export function useSpacedReview() {
   }, [items]);
 
   // -----------------------------------------------------------------------
-  // markReviewed - called after a review attempt
-  //   correct = true  -> mastered, remove from list
-  //   correct = false -> increment wrongCount and reschedule
+  // markReviewed - called after a review attempt (Leitner, @/lib/spaced-review)
+  //   correct = true  -> avanza di scatola; oltre l'ultima esce dalla coda
+  //   correct = false -> regressione alla scatola 1
   // -----------------------------------------------------------------------
   const markReviewed = useCallback(
     (lessonId: number, moduleId: string, correct: boolean) => {
@@ -166,21 +145,20 @@ export function useSpacedReview() {
 
       if (idx < 0) return; // item not found, nothing to do
 
+      const today = todayISO();
+      const existing = current[idx];
+
       if (correct) {
-        // Mastered - remove from review list
-        current.splice(idx, 1);
+        // Leitner: avanza di scatola; oltre l'ultima → padroneggiato, esce
+        const advanced = scheduleAfterCorrect(existing, today);
+        if (advanced === null) {
+          current.splice(idx, 1);
+        } else {
+          current[idx] = { ...existing, ...advanced };
+        }
       } else {
-        // Got it wrong again - bump count and reschedule
-        const existing = current[idx];
-        const newCount = existing.wrongCount + 1;
-        const interval = intervalForWrongCount(newCount);
-        const today = todayISO();
-        current[idx] = {
-          ...existing,
-          wrongCount: newCount,
-          lastReview: today,
-          nextReview: addDays(today, interval),
-        };
+        // Sbagliato di nuovo: regressione alla scatola 1
+        current[idx] = { ...existing, ...scheduleAfterWrong(existing, today) };
       }
 
       persist(current);

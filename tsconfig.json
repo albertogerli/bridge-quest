@@ -45,6 +45,6 @@
     "capacitor.config.ts",
     "scripts/audit-lesson-content.ts",
     "scripts/generate-review-doc.ts",
-    "scripts/seed-supabase.ts"
+    "scripts/legacy/**"
   ]
 }

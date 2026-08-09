@@ -97,6 +97,16 @@ export function useSupabaseSync() {
         // Push completed modules from the store
         try {
           const keys = Object.keys(completedModules);
+          // INVARIANTE (rilievo perizia 2026-08, documentato invece che
+          // rifattorizzato): la chiave dello store è `${lessonId}-${moduleId}`
+          // e i moduli hanno id con trattini ("0-1", "Q1-1"), quindi questo
+          // split NON ricostruisce le colonne originali (es. lezione 3, modulo
+          // "0-1" -> lesson_id "3-0", module_id "1"). Va bene SOLO perché:
+          //   1) la lettura ricompone la stessa chiave concatenata;
+          //   2) nessuna query SQL aggrega per lesson_id su questa tabella
+          //      (solo COUNT per utente in email-automation.sql).
+          // Se servisse lesson_id affidabile lato SQL, migrare le righe
+          // esistenti insieme al formato della chiave.
           const rows = keys.map((moduleKey: string) => {
             const parts = moduleKey.split("-");
             const lessonId = parts.slice(0, -1).join("-");

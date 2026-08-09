@@ -189,13 +189,21 @@ export function useFriends() {
         }
       }
 
-      // Build pending received with sender's profile
+      // Build pending received with sender's profile. If the sender's profile
+      // fails to load, include the request anyway with a fallback profile:
+      // hiding it made incoming friend requests invisible (bug segnalato).
       const pendingReceivedList: Friendship[] = [];
       for (const f of received || []) {
-        const profile = profileMap.get(f.user_id);
-        if (profile) {
-          pendingReceivedList.push({ ...f, profile });
-        }
+        const profile: FriendProfile = profileMap.get(f.user_id) ?? {
+          id: f.user_id,
+          display_name: "Utente",
+          bbo_username: null,
+          avatar_url: null,
+          asd_code: null,
+          asd_name: null,
+          xp: 0,
+        };
+        pendingReceivedList.push({ ...f, profile });
       }
 
       // Build pending sent with recipient's profile

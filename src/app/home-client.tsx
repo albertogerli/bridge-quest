@@ -28,6 +28,7 @@ import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { Zap } from "lucide-react";
+import { reportError } from "@/lib/report-error";
 
 export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
@@ -88,7 +89,10 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       if (!localStorage.getItem("bq_weekly_snapshot")) {
         localStorage.setItem("bq_weekly_snapshot", JSON.stringify(snapshot()));
       }
-    } catch {}
+    } catch (e) {
+      // Non è un puro accesso localStorage: c'è parsing + calcolo del recap.
+      reportError("home:weekly-recap", e);
+    }
   }, [hydrated]);
 
   // Check notification reminders on page load and schedule future reminders

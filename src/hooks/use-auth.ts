@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getPlatform } from "@/lib/native-bridge";
+import { reportError } from "@/lib/report-error";
 import type { User, Session } from "@supabase/supabase-js";
 
 export interface Profile {
@@ -57,7 +58,9 @@ export function useAuth() {
         .eq("id", userId)
         .single();
       return data as Profile | null;
-    } catch {
+    } catch (e) {
+      // Niente toast: gira in background, ma l'errore non va scartato.
+      reportError("use-auth:fetchProfileInBackground", e);
       return null;
     }
   }, [supabase]);

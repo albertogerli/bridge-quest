@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { sendLifecycleEmail } from "@/lib/email/send";
@@ -15,12 +16,13 @@ export const dynamic = "force-dynamic";
  * esposta al client.
  */
 export async function POST(req: NextRequest) {
-  const { friendshipId } = (await req.json().catch(() => ({}))) as {
-    friendshipId?: number;
-  };
-  if (!friendshipId || typeof friendshipId !== "number") {
+  const parsed = z
+    .object({ friendshipId: z.number().int().positive() })
+    .safeParse(await req.json().catch(() => ({})));
+  if (!parsed.success) {
     return NextResponse.json({ error: "friendshipId mancante" }, { status: 400 });
   }
+  const { friendshipId } = parsed.data;
 
   // Chi chiama deve essere loggato
   const supabase = await createServerSupabaseClient();

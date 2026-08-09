@@ -1,25 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { pbnCardToCard } from "@/lib/ben-format";
-import { isAuthenticated, sanitizeBenParam } from "@/lib/ben-guard";
+import { getAuthUserId, benParam, benParamOpt, rateLimit } from "@/lib/ben-guard";
 
 const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
 const TIMEOUT_MS = 15000;
+const RATE_MAX_PER_MIN = 30;
+
+const bodySchema = z.object({
+  hand: benParam,
+  seat: benParam,
+  dealer: benParamOpt,
+  vul: benParamOpt,
+  ctx: benParamOpt,
+});
 
 export async function POST(req: NextRequest) {
-  if (!(await isAuthenticated())) {
+  const userId = await getAuthUserId();
+  if (!userId) {
     return NextResponse.json({ fallback: true, error: "Non autenticato" }, { status: 401 });
+  }
+  if (!rateLimit(`ben-lead:${userId}`, RATE_MAX_PER_MIN)) {
+    return NextResponse.json({ fallback: true, error: "Troppe richieste" }, { status: 429 });
   }
 
   try {
-    const body = await req.json();
+    const parsed = bodySchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ fallback: true, error: "Parametri non validi" }, { status: 400 });
+    }
 
     const params = new URLSearchParams();
-    for (const key of ["hand", "seat", "dealer", "vul", "ctx"] as const) {
-      const value = sanitizeBenParam(body[key]);
+    for (const [key, value] of Object.entries(parsed.data)) {
       if (value) params.set(key, value);
-    }
-    if (!params.has("hand") || !params.has("seat")) {
-      return NextResponse.json({ fallback: true, error: "Parametri non validi" }, { status: 400 });
     }
 
     const controller = new AbortController();

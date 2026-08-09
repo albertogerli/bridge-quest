@@ -11,6 +11,7 @@ import {
 import { useCatalog } from "@/store/use-catalog-store";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
+import { isWorldLocked } from "@/lib/progression";
 import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
@@ -301,20 +302,8 @@ export default function LezioniPage() {
                 ? Math.round((worldCompleted / worldModules) * 100)
                 : 0;
 
-              // Lock worlds 2+ until previous >= 50%
-              let isLocked = false;
-              if (worldIdx > 0) {
-                const prevWorld = courseWorlds[worldIdx - 1];
-                const prevTotal = prevWorld.lessons.reduce(
-                  (sum, l) => sum + l.modules.length, 0
-                );
-                const prevCompleted = prevWorld.lessons.reduce(
-                  (sum, l) =>
-                    sum + l.modules.filter((m) => completedMap[`${l.id}-${m.id}`]).length,
-                  0
-                );
-                isLocked = prevTotal > 0 && (prevCompleted / prevTotal) * 100 < 50;
-              }
+              // Lock worlds 2+ until previous >= 50% (regola in @/lib/progression)
+              const isLocked = isWorldLocked(courseWorlds, worldIdx, completedMap);
 
               return (
                 <div key={world.id} className="mb-6">
