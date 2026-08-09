@@ -15,6 +15,12 @@ declare global {
  * Conversione "registrazione utente completata".
  * Da chiamare SOLO nel callback di successo della registrazione.
  * No-op se: SSR, gtag non caricato (adblock), o label non configurata.
+ *
+ * VALORE: volutamente NON inviato. L'iscrizione è gratuita, quindi qualsiasi
+ * importo scritto qui sarebbe inventato — e un valore gonfiato farebbe tarare
+ * le offerte automatiche di Google su un ritorno inesistente. Omettendolo,
+ * Ads applica il valore configurato sull'azione di conversione: un solo posto
+ * da cambiare, senza deploy, senza due numeri che possono divergere.
  */
 export function trackRegistration() {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;
@@ -24,8 +30,6 @@ export function trackRegistration() {
 
   window.gtag("event", "conversion", {
     send_to: `${GADS_ID}/${label}`,
-    value: 10.0,
-    currency: "EUR",
     // il signup redirige subito dopo: beacon sopravvive alla navigazione
     transport_type: "beacon",
   });
