@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ToasterLazy } from "@/components/toaster-lazy";
 import { LayoutShell } from "@/components/layout-shell";
 import { GADS_ID } from "@/lib/gads";
+import { GA_ID } from "@/lib/ga";
 import "./globals.css";
 
 const inter = Inter({
@@ -199,15 +200,16 @@ export default function RootLayout({
         <LayoutShell>{children}</LayoutShell>
         <ToasterLazy />
         <Analytics />
-        {/* Google Ads (gtag.js) — tag base, caricato una sola volta */}
+        {/* Google tag (gtag.js) — caricato una sola volta, serve sia GA4 che Google Ads */}
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GADS_ID}`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
         />
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
+            gtag('config', '${GA_ID}');
             gtag('config', '${GADS_ID}');`}
         </Script>
       </body>
