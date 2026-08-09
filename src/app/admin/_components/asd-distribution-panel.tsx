@@ -1,6 +1,6 @@
 "use client";
 
-import { buildAsdRows, filterAsdRows, formatMinutes } from "@/lib/admin-stats";
+import { asdMediansAreApproximate, buildAsdRows, filterAsdRows, formatMinutes } from "@/lib/admin-stats";
 import type { AsdTab, Stats } from "../_types";
 
 /** Distribuzione ASD con tab per ASD / provincia / regione. */
@@ -48,6 +48,9 @@ export function AsdDistributionPanel({
         (() => {
           const dist = stats.asdDistribution;
           const q = asdSearch.toLowerCase();
+          // Per provincia/regione le mediane sono ricostruite dalle mediane per
+          // ASD (i dati per utente non arrivano fin qui): si dichiarano stime.
+          const approx = asdMediansAreApproximate(asdTab);
 
           // Build aggregated data based on tab
           const rows = buildAsdRows(dist, asdTab);
@@ -62,6 +65,11 @@ export function AsdDistributionPanel({
             <>
               <div className="flex items-center gap-2 text-[11px] text-gray-400 mb-2">
                 <span>{filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti</span>
+                {approx && (
+                  <span className="text-gray-400" title="Le mediane di gruppo sono ricostruite dalle mediane per ASD, non dai dati dei singoli utenti">
+                    mediane stimate
+                  </span>
+                )}
                 {lowEngagementCount > 0 && asdTab === "asd" && (
                   <span className="text-orange-500 font-semibold">{lowEngagementCount} da riattivare</span>
                 )}
@@ -86,11 +94,11 @@ export function AsdDistributionPanel({
                     {/* Group stats (without top user) */}
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
                       <span className="text-[10px] text-gray-500">
-                        Mediana XP: <span className="font-semibold text-gray-700">{row.restMedianXp.toLocaleString("it-IT")}</span>
+                        Mediana XP{approx ? " (stima)" : ""}: <span className="font-semibold text-gray-700">{row.restMedianXp.toLocaleString("it-IT")}</span>
                         {row.count > 1 && <span className="text-gray-400 ml-0.5">({row.count - 1} utenti)</span>}
                       </span>
                       <span className="text-[10px] text-gray-500">
-                        Uso mediano: <span className="font-semibold text-gray-700">{formatMinutes(row.restMedianMinutes)}</span>
+                        Uso mediano{approx ? " (stima)" : ""}: <span className="font-semibold text-gray-700">{formatMinutes(row.restMedianMinutes)}</span>
                       </span>
                       {row.firstSignup && row.lastActive && (
                         <span className="text-[10px] text-gray-400">

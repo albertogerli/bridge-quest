@@ -9,6 +9,8 @@ import {
   getTournamentHands,
   getWeekDates,
   getWeekNum,
+  handResultFor,
+  restorableHandCount,
   sumTricksNeeded,
   tournamentCtaLabel,
 } from "./tournament-stats";
@@ -292,6 +294,77 @@ describe("decideProgressRestore", () => {
       action: "restore",
       handResults: [],
     });
+  });
+
+  it("REGRESSIONE: il rigioco senza punti non riprende nulla", () => {
+    // Il torneo della settimana è già concluso: la CTA dice «Rigioca il torneo
+    // (senza punti)» e non annuncia nessuna ripresa, quindi il rigioco non
+    // deve ripartire da metà (e non salva progresso).
+    const saved = progress(["a", "b", "c"], [handResult(9, 9)]);
+    expect(decideProgressRestore(saved, hands, true)).toEqual({ action: "none" });
+    expect(decideProgressRestore(saved, hands, false)).toEqual({
+      action: "restore",
+      handResults: saved.handResults,
+    });
+  });
+});
+
+// ── restorableHandCount ────────────────────────────────────────────────────
+
+describe("restorableHandCount", () => {
+  const hands = [smazzata("a", "3NT"), smazzata("b", "4♠"), smazzata("c", "2♥")];
+
+  it("conta le mani davvero riprendibili", () => {
+    const saved = progress(["a", "b", "c"], [handResult(9, 9), handResult(10, 10)]);
+    expect(restorableHandCount(saved, hands)).toBe(2);
+    expect(tournamentCtaLabel(restorableHandCount(saved, hands), hands.length)).toBe(
+      "Riprendi il Torneo (mano 3/3)"
+    );
+  });
+
+  it("REGRESSIONE: un progresso con mani diverse non promette nessuna ripresa", () => {
+    // Il vecchio conteggio leggeva `handResults.length` senza validare gli
+    // handIds: la CTA annunciava «Riprendi (mano 2/5)» e la play view, che
+    // invece valida, ripartiva da capo.
+    const scaduto = progress(["a", "x", "c"], [handResult(9, 9)]);
+    expect(restorableHandCount(scaduto, hands)).toBe(0);
+    expect(tournamentCtaLabel(restorableHandCount(scaduto, hands), hands.length)).toBe(
+      "Gioca il Torneo"
+    );
+  });
+
+  it("REGRESSIONE: un progresso già completo (o senza mani caricate) non è una ripresa", () => {
+    const completo = progress(["a"], [handResult(9, 9)]);
+    expect(restorableHandCount(completo, [smazzata("a", "3NT")])).toBe(0);
+    expect(restorableHandCount(progress(["a", "b", "c"], [handResult(9, 9)]), [])).toBe(0);
+    expect(restorableHandCount(null, hands)).toBe(0);
+  });
+
+  it("REGRESSIONE: nel rigioco senza punti non c'è nulla da riprendere", () => {
+    const saved = progress(["a", "b", "c"], [handResult(9, 9)]);
+    expect(restorableHandCount(saved, hands, true)).toBe(0);
+  });
+});
+
+// ── handResultFor ──────────────────────────────────────────────────────────
+
+describe("handResultFor", () => {
+  const results = [
+    { smazzataId: "a", tricksMade: 9, tricksNeeded: 9, result: 0 },
+    { smazzataId: "b", tricksMade: 8, tricksNeeded: 10, result: -2 },
+  ];
+
+  it("REGRESSIONE: accoppia l'esito per smazzataId, non per posizione", () => {
+    // Se il set di mani della settimana cambia, l'accoppiamento per indice
+    // mostrerebbe l'esito della mano sbagliata.
+    expect(handResultFor(results, "b")?.result).toBe(-2);
+    expect(handResultFor(results, "a")?.tricksMade).toBe(9);
+  });
+
+  it("una mano senza esito registrato non ne prende uno altrui", () => {
+    expect(handResultFor(results, "z")).toBeUndefined();
+    expect(handResultFor(undefined, "a")).toBeUndefined();
+    expect(handResultFor([], "a")).toBeUndefined();
   });
 });
 

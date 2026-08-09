@@ -89,14 +89,15 @@ export function ChallengeHistorySection({
               {/* History list */}
               {challengeHistory.length > 0 ? (
                 challengeHistory.map((ch) => {
-                  const { opponentName, won, drawn, netImp } = describeChallenge(ch, userId);
+                  const { opponentName, scored, won, drawn, netImp } = describeChallenge(ch, userId);
                   return (
                     <Link key={ch.id} href={`/gioca/sfida-imp?challengeId=${ch.id}`}>
                       <div className="rounded-xl bg-card border border-border p-3 flex items-center gap-3 hover:shadow-md transition-shadow">
+                        {/* Sfida senza punteggi: non è un pareggio, è da finire */}
                         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
-                          drawn ? "bg-muted text-muted-foreground" : won ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400" : "bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400"
+                          !scored ? "bg-muted text-muted-foreground/70" : drawn ? "bg-muted text-muted-foreground" : won ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400" : "bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400"
                         }`}>
-                          {drawn ? "=" : won ? "W" : "L"}
+                          {!scored ? "…" : drawn ? "=" : won ? "W" : "L"}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-foreground truncate">vs {opponentName}</p>
@@ -105,9 +106,15 @@ export function ChallengeHistorySection({
                           </p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className={`text-sm font-bold ${netImp > 0 ? "text-emerald-600 dark:text-emerald-400" : netImp < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"}`}>
-                            {netImp > 0 ? "+" : ""}{netImp} IMP
-                          </p>
+                          {scored ? (
+                            <p className={`text-sm font-bold ${netImp > 0 ? "text-emerald-600 dark:text-emerald-400" : netImp < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"}`}>
+                              {netImp > 0 ? "+" : ""}{netImp} IMP
+                            </p>
+                          ) : (
+                            <p className="text-xs font-semibold text-muted-foreground">
+                              Da completare
+                            </p>
+                          )}
                         </div>
                       </div>
                     </Link>

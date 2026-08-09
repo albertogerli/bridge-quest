@@ -14,11 +14,12 @@ import { reportError } from "@/lib/report-error";
 import type { Course, World } from "@/lib/catalog";
 import {
   buildBadges,
-  buildXpPerDay,
+  buildGamesPerDay,
   computeCourseCompetence,
   computeFiches,
   computeGamePerformance,
   completionPercent as toCompletionPercent,
+  countCompletedModules,
   countCompletedWorlds,
   countEarnedBadges,
   countTotalModules,
@@ -29,9 +30,9 @@ import { getInviteCount } from "@/lib/share";
 import type {
   CourseCompetence,
   GamePerformanceStats,
+  GamesPerDay,
   PendingAchievement,
   ProfileBadge,
-  XpPerDay,
 } from "./_types";
 
 /** Legge una chiave di localStorage senza propagare le eccezioni (Safari privato). */
@@ -70,7 +71,7 @@ export interface ProfileData {
   earnedCount: number;
   // Grafici e statistiche
   gameStats: GameStats;
-  xpPerDay: XpPerDay;
+  gamesPerDay: GamesPerDay;
   courseCompetence: CourseCompetence[];
   gamePerformanceStats: GamePerformanceStats;
   // Achievement segreti
@@ -112,27 +113,27 @@ export function useProfileData(): ProfileData {
   const [currentProfile, setCurrentProfile] = useState<UserProfile>("adulto");
   const [invitesSent, setInvitesSent] = useState(0);
 
-  const { getStats } = useGameHistory();
-  const gameStats = getStats();
+  // `records` è lo stato React dello storico `bq_game_history`: le derivate
+  // qui sotto lo tengono nelle dipendenze e si ricalcolano quando cambia.
+  const { records, getStats } = useGameHistory();
+  // Memoizzato su `records`: senza, ogni render produrrebbe un oggetto nuovo e
+  // le derivate qui sotto si ricalcolerebbero a vuoto.
+  const gameStats = useMemo(() => getStats(), [getStats]);
   const { checkAchievements, earnedSecretAchievements, totalSecretAchievements } =
     useSecretAchievements();
   const [pendingAchievement, setPendingAchievement] = useState<PendingAchievement | null>(null);
   // Resta montato dopo il primo sblocco: preserva l'animazione di uscita.
+  // Armato insieme all'achievement (vedi effetto sotto): un effetto dedicato
+  // che reagiva a `pendingAchievement` era un render a cascata inutile.
   const [achievementPopupArmed, setAchievementPopupArmed] = useState(false);
-  useEffect(() => {
-    if (pendingAchievement) setAchievementPopupArmed(true);
-  }, [pendingAchievement]);
   const { getHistory, getStats: getChallengeStats } = useChallenges();
   const [challengeHistory, setChallengeHistory] = useState<ChallengeData[]>([]);
   const [challengeStats, setChallengeStats] = useState<ChallengeStats | null>(null);
 
   // ===== Chart Data Computations =====
 
-  // Chart 1: XP per day (last 7 days)
-  const xpPerDay = useMemo(
-    () => buildXpPerDay(new Date(), readLocalStorage("bq_game_results_queue")),
-    [],
-  );
+  // Chart 1: partite per giorno (ultimi 7 giorni), dallo storico
+  const gamesPerDay = useMemo(() => buildGamesPerDay(new Date(), records), [records]);
 
   // Chart 2: Course competence (% completed per course)
   const courseCompetence = useMemo(
@@ -140,21 +141,26 @@ export function useProfileData(): ProfileData {
     [completedModules, courses],
   );
 
-  // Chart 3: Game performance stats
+  // Chart 3: Game performance stats — stessa fonte dell'intestazione
+  // (`gameStats`) più streak dallo store e minuti da localStorage. Le
+  // dipendenze reali sostituiscono il vecchio `[]`, che fotografava
+  // localStorage al mount e non si aggiornava più.
   const gamePerformanceStats = useMemo(
     () =>
       computeGamePerformance({
-        rawQueue: readLocalStorage("bq_game_results_queue"),
+        gameStats,
         rawMinutes: readLocalStorage("bq_total_minutes"),
-        streak: useGameStore.getState().streak,
+        streak,
       }),
-    [],
+    [gameStats, streak],
   );
 
   useEffect(() => {
     const newOnes = checkAchievements();
     if (newOnes.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- gli achievement segreti stanno in localStorage: si possono controllare solo dopo il mount (stesso pattern degli altri stati client-only)
       setPendingAchievement(newOnes[0]);
+      setAchievementPopupArmed(true);
     }
   }, [checkAchievements]);
 
@@ -164,6 +170,7 @@ export function useProfileData(): ProfileData {
       localStorage.setItem("bq_fiches", String(computeFiches(xp)));
       const p = localStorage.getItem("bq_profile") as UserProfile | null;
       if (p) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setCurrentProfile(p);
       } else if (authProfile?.profile_type) {
         // Sync from Supabase if localStorage is empty (e.g. after clearing data)
@@ -193,11 +200,15 @@ export function useProfileData(): ProfileData {
   const xpInLevel = getXpInLevel(xp);
   const levelProgress = getLevelProgress(xp);
   const xpForNext = getXpForNextLevel(xp);
-  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
-  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
+  // `currentProfile` è già il profilo locale: parte da "adulto" (come il render
+  // server) e viene allineato a `bq_profile` dopo il mount. Leggere qui
+  // localStorage durante il render produceva un mismatch di idratazione.
+  const profileLevelNames = getProfileConfig(currentProfile).levelNames;
   const { levelName, nextLevelName } = resolveLevelNames(level, profileLevelNames);
 
-  const totalModulesCompleted = Object.keys(completedModules).length;
+  // Solo i moduli ancora a catalogo: le chiavi dei moduli ritirati facevano
+  // superare il 100% di completamento.
+  const totalModulesCompleted = countCompletedModules(allWorlds, completedModules);
   const totalModulesAvailable = countTotalModules(allWorlds);
   const completionPercent = toCompletionPercent(totalModulesCompleted, totalModulesAvailable);
 
@@ -236,7 +247,7 @@ export function useProfileData(): ProfileData {
     badges,
     earnedCount,
     gameStats,
-    xpPerDay,
+    gamesPerDay,
     courseCompetence,
     gamePerformanceStats,
     earnedSecretAchievements,

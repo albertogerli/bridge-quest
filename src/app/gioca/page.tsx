@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
+import { getWeekNum } from "@/lib/tournament-stats";
 import {
   Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
   Target, Hash, Megaphone, MessageCircle, Brain, Swords,
@@ -33,9 +34,9 @@ export default function GiocaPage() {
         const idxInAll = allSmazzate.findIndex((s) => s.id === picked.id);
         setRandomIdx(idxInAll >= 0 ? idxInAll : 0);
       }
-      // Check tournament completion for current week
-      const EPOCH_START = new Date("2024-01-01T00:00:00Z").getTime();
-      const weekNum = Math.floor((Date.now() - EPOCH_START) / (7 * 24 * 60 * 60 * 1000));
+      // Check tournament completion for current week (stesso calcolo della
+      // pagina torneo: duplicarlo qui rischiava di far divergere le settimane)
+      const weekNum = getWeekNum(Date.now());
       setTournamentDone(!!localStorage.getItem(`bq_tournament_week_${weekNum}`));
       setOnboarded(localStorage.getItem("bq_onboarded") === "1");
     } catch {}

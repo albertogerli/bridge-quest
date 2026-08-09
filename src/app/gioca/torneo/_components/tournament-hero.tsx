@@ -5,12 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { parseContract } from "@/lib/bridge-engine";
 import type { Smazzata } from "@/lib/catalog";
-import { formatDateShort, tournamentCtaLabel } from "@/lib/tournament-stats";
+import { formatDateShort, handResultFor, tournamentCtaLabel } from "@/lib/tournament-stats";
 import { TOURNAMENT_HAND_COUNT, type TournamentResult } from "../_types";
 
 /**
- * Card principale del torneo: stato della settimana, anteprima delle 5 mani e
+ * Card principale del torneo: stato della settimana, anteprima delle mani e
  * CTA di avvio/ripresa/rigioco.
+ *
+ * Tutti i conteggi seguono `tournamentHands.length`, non
+ * `TOURNAMENT_HAND_COUNT`: se la pool ha meno mani del previsto la sequenza ne
+ * gioca meno, e la hero deve raccontare la stessa cosa.
  *
  * Il `data-testid` `torneo-hands` è usato dai test E2E: non rinominarlo.
  */
@@ -41,6 +45,10 @@ export function TournamentHero({
   xpLabel: string;
   onPlay: () => void;
 }) {
+  // Mani realmente in programma questa settimana; finché la pool non è
+  // arrivata (0 mani, CTA disabilitata) si mostra il numero nominale.
+  const handCount = tournamentHands.length;
+  const displayCount = handCount || TOURNAMENT_HAND_COUNT;
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -85,7 +93,7 @@ export function TournamentHero({
                   Mani
                 </p>
                 <p className="text-lg font-bold text-indigo-600 leading-tight">
-                  {TOURNAMENT_HAND_COUNT}
+                  {displayCount}
                 </p>
               </div>
               <div className="h-8 w-px bg-indigo-200/60" />
@@ -109,7 +117,7 @@ export function TournamentHero({
             </div>
 
             <p className="text-[13px] font-semibold text-foreground/80 leading-snug">
-              Gioca 5 mani selezionate: la stessa sfida per tutti i
+              Gioca {displayCount} mani selezionate: la stessa sfida per tutti i
               giocatori questa settimana. Vince chi totalizza più prese!
             </p>
           </div>
@@ -117,12 +125,18 @@ export function TournamentHero({
           {/* Hand previews */}
           <div className="mt-4 space-y-2">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              Le 5 mani del torneo
+              Le {displayCount} mani del torneo
             </p>
-            <div className="grid grid-cols-5 gap-2" data-testid="torneo-hands">
+            <div
+              className="grid gap-2"
+              style={{ gridTemplateColumns: `repeat(${displayCount}, minmax(0, 1fr))` }}
+              data-testid="torneo-hands"
+            >
               {tournamentHands.map((h, i) => {
                 const { tricksNeeded } = parseContract(h.contract);
-                const handResult = existingResult?.handResults[i];
+                // Accoppiamento per smazzataId: per indice, un cambio del set
+                // di mani farebbe slittare gli esiti su mani diverse.
+                const handResult = handResultFor(existingResult?.handResults, h.id);
                 return (
                   <div
                     key={h.id}
@@ -185,7 +199,7 @@ export function TournamentHero({
                 disabled={tournamentHands.length === 0}
                 className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30"
               >
-                {tournamentCtaLabel(inProgressCount, TOURNAMENT_HAND_COUNT)}
+                {tournamentCtaLabel(inProgressCount, displayCount)}
               </Button>
             ) : (
               <Button
