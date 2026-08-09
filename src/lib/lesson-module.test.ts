@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  CONFETTI_FALL_FALLBACK_PX,
   GLOSSARY_AUTO_KEYS,
   MIN_READ_SECONDS,
   PARTICLE_EMOJI,
@@ -14,6 +15,8 @@ import {
   computeStars,
   computeTotalModuleXp,
   computeXpMultiplier,
+  confettiFallDistance,
+  correctAnswerFor,
   countCorrectAnswers,
   countQuizzes,
   findNextLesson,
@@ -177,6 +180,54 @@ describe("isAnswerCorrect", () => {
 
   it("è falso per un blocco assente", () => {
     expect(isAnswerCorrect(undefined, 0)).toBe(false);
+  });
+});
+
+describe("correctAnswerFor", () => {
+  /**
+   * È la soluzione che il power-up «salta» registra al posto dell'utente:
+   * deve essere espressa nella stessa unità in cui viene registrata la
+   * risposta, altrimenti il salta consegna una soluzione sbagliata (e il
+   * modulo la conta pure come errore).
+   */
+  it("dà l'indice dell'opzione per quiz, true-false e bid-select", () => {
+    expect(correctAnswerFor(block("quiz", { correctAnswer: 2, options: ["a", "b", "c"] }))).toBe(2);
+    expect(correctAnswerFor(block("true-false", { correctAnswer: 1 }))).toBe(1);
+    expect(correctAnswerFor(block("bid-select", { correctAnswer: 0 }))).toBe(0);
+  });
+
+  it("dà il valore in punti per hand-eval, non l'indice", () => {
+    expect(correctAnswerFor(block("hand-eval", { correctValue: 13, correctAnswer: 0 }))).toBe(13);
+  });
+
+  it("dà l'indice della carta dentro la mano per card-select", () => {
+    expect(correctAnswerFor(block("card-select", { cards: "♠AK7", correctCard: "♠7" }))).toBe(2);
+  });
+
+  it("segnala con -1 la carta corretta che non compare nella mano", () => {
+    expect(correctAnswerFor(block("card-select", { cards: "♠AK7", correctCard: "♥Q" }))).toBe(-1);
+  });
+
+  it("dà undefined quando il blocco non dichiara una soluzione", () => {
+    expect(correctAnswerFor(block("quiz", { options: ["a", "b"] }))).toBeUndefined();
+    expect(correctAnswerFor(block("hand-eval"))).toBeUndefined();
+    expect(correctAnswerFor(undefined)).toBeUndefined();
+  });
+
+  it("è la risposta che il modulo conta come giusta, per ogni tipo interattivo", () => {
+    // Valori attesi scritti a mano: l'oracolo non deve essere la funzione
+    // stessa, altrimenti il confronto sarebbe una tautologia.
+    const cases: [ContentBlock, number][] = [
+      [block("quiz", { correctAnswer: 2, options: ["a", "b", "c"] }), 2],
+      [block("true-false", { correctAnswer: 1 }), 1],
+      [block("bid-select", { correctAnswer: 3, options: ["1♣", "1♦", "1♥", "1♠"] }), 3],
+      [block("hand-eval", { correctValue: 13, correctAnswer: 0 }), 13],
+      [block("card-select", { cards: "♠AK7 ♥Q10", correctCard: "♥10" }), 4],
+    ];
+    for (const [b, expected] of cases) {
+      expect(correctAnswerFor(b)).toBe(expected);
+      expect(isAnswerCorrect(b, expected)).toBe(true);
+    }
   });
 });
 
@@ -478,6 +529,26 @@ describe("buildConfettiPieces", () => {
   });
 });
 
+describe("confettiFallDistance", () => {
+  it("non esplode senza finestra (SSR): usa il default", () => {
+    // `window?.innerHeight` non protegge da nulla lato server — l'optional
+    // chaining agisce sul valore, ma valutare l'identificatore non dichiarato
+    // solleva già `ReferenceError`. Qui i test girano in node: se la guardia
+    // non è `typeof`, questa riga lancia.
+    expect("window" in globalThis).toBe(false);
+    expect(confettiFallDistance()).toBe(CONFETTI_FALL_FALLBACK_PX);
+  });
+
+  it("nel browser cade per tutta l'altezza del viewport", () => {
+    (globalThis as { window?: unknown }).window = { innerHeight: 1234 };
+    try {
+      expect(confettiFallDistance()).toBe(1234);
+    } finally {
+      delete (globalThis as { window?: unknown }).window;
+    }
+  });
+});
+
 describe("pickParticleSpin", () => {
   it("sceglie rotazione ed emoji dal set previsto", () => {
     const spin = pickParticleSpin(seededRandom([0.5, 0.5]));
@@ -598,11 +669,11 @@ describe("findNextModule", () => {
     expect(findNextModule(lesson(1, ["m1", "m2"]), "m2")).toBeNull();
   });
 
-  it("su un id sconosciuto ricade sul primo modulo (comportamento storico)", () => {
-    // findIndex dà -1 e -1 < modules.length - 1: la pagina non arriva mai qui
-    // perché senza modulo mostra «Modulo non trovato». Comportamento
-    // conservato dal refactoring, non corretto di proposito.
-    expect(findNextModule(lesson(1, ["m1", "m2"]), "xxx")?.id).toBe("m1");
+  it("dà null su un id che non appartiene alla lezione", () => {
+    // `findIndex` dà -1 e `-1 + 1` è il primo modulo: la lezione dichiarava di
+    // avere un seguito e proponeva di ricominciare dall'inizio.
+    expect(findNextModule(lesson(1, ["m1", "m2"]), "xxx")).toBeNull();
+    expect(findNextModule(lesson(1, []), "m1")).toBeNull();
   });
 });
 

@@ -58,22 +58,37 @@ export function countQuizzes(content: ContentBlock[]): number {
 }
 
 /**
- * Vero se la risposta data al blocco è quella corretta. Ogni tipo interattivo
- * conserva la soluzione in un campo diverso: `card-select` nell'indice della
- * carta, `hand-eval` nel valore in punti, gli altri in `correctAnswer`.
+ * Risposta corretta del blocco, **nella stessa unità in cui viene registrata**
+ * in `quizAnswers`. Ogni tipo interattivo conserva la soluzione in un campo
+ * diverso: `card-select` nell'indice della carta dentro la mano, `hand-eval`
+ * nel valore in punti, gli altri nell'indice dell'opzione (`correctAnswer`).
+ *
+ * `undefined` quando il blocco non dichiara nessuna soluzione; `-1` quando la
+ * carta indicata da `correctCard` non compare nella mano del blocco.
+ *
+ * Unico punto di verità: `isAnswerCorrect` e il power-up «salta» la leggono da
+ * qui, così non possono divergere (il salta assegnava sempre `correctAnswer`,
+ * cioè una soluzione sbagliata su `card-select` e `hand-eval`).
  */
+export function correctAnswerFor(
+  block: ContentBlock | undefined
+): number | undefined {
+  if (!block) return undefined;
+  if (block.type === "card-select") {
+    const cards = block.cards ? parseCardSelectHand(block.cards) : [];
+    return cards.findIndex((c) => c === block.correctCard);
+  }
+  if (block.type === "hand-eval") return block.correctValue;
+  return block.correctAnswer;
+}
+
+/** Vero se la risposta data al blocco è quella corretta. */
 export function isAnswerCorrect(
   block: ContentBlock | undefined,
   answer: number
 ): boolean {
   if (!block) return false;
-  if (block.type === "card-select") {
-    const cards = block.cards ? parseCardSelectHand(block.cards) : [];
-    const correctIdx = cards.findIndex((c) => c === block.correctCard);
-    return answer === correctIdx;
-  }
-  if (block.type === "hand-eval") return answer === block.correctValue;
-  return answer === block.correctAnswer;
+  return answer === correctAnswerFor(block);
 }
 
 /** Risposte corrette date finora (le chiavi sono gli indici dei blocchi). */
@@ -284,6 +299,23 @@ export function buildConfettiPieces(
   }));
 }
 
+/** Altezza di caduta usata dai coriandoli quando non c'è un viewport (SSR). */
+export const CONFETTI_FALL_FALLBACK_PX = 800;
+
+/**
+ * Quanto in basso devono cadere i coriandoli: l'altezza del viewport, o un
+ * default se non c'è finestra.
+ *
+ * `window?.innerHeight` NON protegge dal server: l'optional chaining agisce sul
+ * valore, ma `window` lì non è nemmeno dichiarato e la sola valutazione
+ * dell'identificatore solleva `ReferenceError`. Serve `typeof`.
+ */
+export function confettiFallDistance(): number {
+  return typeof window === "undefined"
+    ? CONFETTI_FALL_FALLBACK_PX
+    : window.innerHeight;
+}
+
 /** Emoji sorteggiabili dalla pioggia di particelle (profilo giovane). */
 export const PARTICLE_EMOJI = ["⚡", "🔥", "💥", "✨", "🎯", "💫", "⭐", "🏆"];
 
@@ -406,12 +438,20 @@ export function splitTextByGlossaryTerms(
 
 // ─── Navigazione fra moduli e lezioni ───────────────────────────────────────
 
-/** Modulo successivo nella stessa lezione, o `null` se questo era l'ultimo. */
+/**
+ * Modulo successivo nella stessa lezione, o `null` se questo era l'ultimo —
+ * oppure se `moduleId` non appartiene alla lezione.
+ *
+ * Il caso «modulo sconosciuto» va reso esplicito: `findIndex` restituisce -1 e
+ * `-1 + 1` è il **primo** modulo, quindi la pagina avrebbe proposto «continua»
+ * verso l'inizio della lezione invece di dichiarare che non c'è un seguito.
+ */
 export function findNextModule(
   lesson: Lesson,
   moduleId: string
 ): LessonModule | null {
   const moduleIndex = lesson.modules.findIndex((m) => m.id === moduleId);
+  if (moduleIndex < 0) return null;
   return moduleIndex < lesson.modules.length - 1
     ? lesson.modules[moduleIndex + 1]
     : null;

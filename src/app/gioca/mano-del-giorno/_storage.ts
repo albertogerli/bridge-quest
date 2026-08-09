@@ -7,7 +7,12 @@
  * qui resta solo l'I/O (che fallisce sempre in silenzio, come prima).
  */
 
-import { getYesterdayString, nextStreak } from "@/lib/daily-hand";
+import {
+  effectiveStreak,
+  getTodayString,
+  getYesterdayString,
+  nextStreak,
+} from "@/lib/daily-hand";
 import type { DailyResult } from "./_types";
 
 const STREAK_KEY = "bq_daily_hand_streak";
@@ -46,9 +51,19 @@ export function saveDailyResult(dateStr: string, result: DailyResult) {
   } catch {}
 }
 
-export function getDailyStreak(): number {
+/**
+ * Serie di giorni consecutivi, ricalcolata in lettura: il valore salvato viene
+ * aggiornato solo da `saveDailyResult`, quindi dopo giorni saltati resterebbe
+ * quello vecchio finché non si torna a giocare.
+ */
+export function getDailyStreak(nowMs: number = Date.now()): number {
   try {
-    return parseInt(localStorage.getItem(STREAK_KEY) || "0", 10);
+    const stored = parseInt(localStorage.getItem(STREAK_KEY) || "0", 10);
+    return effectiveStreak(
+      stored,
+      !!getDailyResult(getTodayString(nowMs)),
+      !!getDailyResult(getYesterdayString(nowMs))
+    );
   } catch {
     return 0;
   }

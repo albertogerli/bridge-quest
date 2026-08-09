@@ -15,6 +15,7 @@ import {
   buildShuffledQuizOptions,
   collectRuleTexts,
   computeXpMultiplier,
+  correctAnswerFor,
   countCorrectAnswers,
   countQuizzes,
   computeQuizStreakBonus,
@@ -116,14 +117,17 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
 
   // Minimum reading time per step (prevents clicking "Avanti" instantly for XP)
   const [canAdvance, setCanAdvance] = useState(false);
-  const stepEnteredAt = useRef(Date.now());
 
   // === GAMIFICATION STATE ===
   const [lives, setLives] = useState(draft?.lives ?? 3); // ❤️ lives system
   const [livesLost, setLivesLost] = useState(false); // shake animation trigger
   const [powerups, setPowerups] = useState<Powerups>({ fiftyFifty: 1, skip: 1, extraTime: 1 }); // power-ups
   const [eliminated, setEliminated] = useState<Record<number, number[]>>({}); // 50/50: eliminated option indices per block
-  const [xpMultiplier, setXpMultiplier] = useState(1); // streak multiplier
+  // Moltiplicatore XP: derivato dalla serie durante il render, non tenuto in
+  // stato. Passando da uno `useState` aggiornato in effetto restava indietro di
+  // un render, e chi lo leggeva (`awardXp`) versava XP col moltiplicatore
+  // precedente.
+  const xpMultiplier = computeXpMultiplier(correctStreak);
   const [showLevelUp, setShowLevelUp] = useState(false); // level up popup
   const levelUpRef = useRef<HTMLDivElement>(null);
   const closeLevelUp = useCallback(() => setShowLevelUp(false), []);
@@ -152,7 +156,6 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
       return;
     }
     setCanAdvance(false);
-    stepEnteredAt.current = Date.now();
     const readTimer = setTimeout(() => setCanAdvance(true), MIN_READ_SECONDS * 1000);
     return () => clearTimeout(readTimer);
   }, [currentStep, mod, stepsViewed]);
@@ -273,10 +276,6 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
 
   // NOTE: tutti gli hook devono precedere i return condizionali della pagina
   // che consuma questo hook (rules-of-hooks).
-  // Update XP multiplier based on streak
-  useEffect(() => {
-    setXpMultiplier(computeXpMultiplier(correctStreak));
-  }, [correctStreak]);
 
   const handleStepAdvance = useCallback((nextStep: number) => {
     setCurrentStep(nextStep);
@@ -295,8 +294,11 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
       // Award small XP for reading content
       awardXp(READ_STEP_XP);
     }
+    // `xpMultiplier` non è usato qui direttamente ma dentro `awardXp`: senza di
+    // esso il callback restava fermo all'ultimo render in cui era cambiato
+    // `stepsViewed`, e gli XP di lettura usavano un moltiplicatore stantio.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- awardXp è una funzione di modulo-componente ricreata a ogni render: includerla vanificherebbe la memoizzazione senza cambiare il comportamento
-  }, [stepsViewed]);
+  }, [stepsViewed, xpMultiplier]);
 
   // Build term→key map once (catalog-backed)
   const { glossary } = useGlossary();
@@ -351,6 +353,20 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
     setTimeout(() => setFloatingXp((prev) => prev.filter((f) => f.id !== newFloating.id)), 1500);
   };
 
+  /**
+   * Serie corrente dopo una risposta esatta, con il record aggiornato.
+   *
+   * Unico punto in cui `bestStreak` cresce: prima lo alzava solo il quiz a
+   * scelta multipla, così una serie fatta di `card-select`/`hand-eval` non
+   * compariva nel «Best Streak» di fine modulo.
+   */
+  const registerCorrectStreak = (): number => {
+    const streak = correctStreak + 1;
+    setCorrectStreak(streak);
+    setBestStreak((prev) => Math.max(prev, streak));
+    return streak;
+  };
+
   const showAchievement = (text: string) => {
     setAchievement(text);
     setTimeout(() => setAchievement(null), 2500);
@@ -375,9 +391,7 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
 
     if (correct) {
       playSound("correct");
-      const streak = correctStreak + 1;
-      setCorrectStreak(streak);
-      if (streak > bestStreak) setBestStreak(streak);
+      const streak = registerCorrectStreak();
       awardXp(20 + computeQuizStreakBonus(streak));
       spawnParticles(); // giovane: emoji burst
 
@@ -407,8 +421,7 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
     setQuizAnswers((prev) => ({ ...prev, [blockIndex]: cardIndex }));
     setShowExplanation((prev) => ({ ...prev, [blockIndex]: true }));
     if (correct) {
-      const streak = correctStreak + 1;
-      setCorrectStreak(streak);
+      const streak = registerCorrectStreak();
       awardXp(25 + computeCardStreakBonus(streak));
     } else {
       setCorrectStreak(0);
@@ -420,8 +433,7 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
     setQuizAnswers((prev) => ({ ...prev, [blockIndex]: points }));
     setShowExplanation((prev) => ({ ...prev, [blockIndex]: true }));
     if (correct) {
-      const streak = correctStreak + 1;
-      setCorrectStreak(streak);
+      const streak = registerCorrectStreak();
       awardXp(30 + computeCardStreakBonus(streak));
     } else {
       setCorrectStreak(0);
@@ -445,7 +457,13 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
   const consumeSkip = (blockIndex: number) => {
     const block = content[blockIndex];
     if (!block || powerups.skip <= 0) return;
-    const correctIdx = block.correctAnswer ?? 0;
+    // La soluzione va letta nel campo giusto per il tipo di blocco: `hand-eval`
+    // la tiene in `correctValue`, `card-select` nell'indice della carta. Con
+    // `correctAnswer` il power-up registrava una risposta sbagliata.
+    const correctIdx = correctAnswerFor(block);
+    // Blocco senza soluzione nota: meglio non consumare il power-up che
+    // consegnare una risposta inventata.
+    if (correctIdx === undefined || correctIdx < 0) return;
     setQuizAnswers((prev) => ({ ...prev, [blockIndex]: correctIdx }));
     setShowExplanation((prev) => ({ ...prev, [blockIndex]: true }));
     awardXp(5); // minimal XP for skip

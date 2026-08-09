@@ -136,9 +136,8 @@ export function useDailyPlay({
         const earned = computeHandXp(game.result.result);
         awardGameXp(`mano-${smazzata.id}`, earned);
         try { updateLastActivity(); } catch {}
-        // Save for AI analysis
-        const parsed = parseContract(smazzata.contract);
-        saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
+        // NB: la partita è già stata salvata per l'analisi qui sopra, fuori dal
+        // ramo: ripeterlo qui la registrava due volte per la mano di ieri.
         // Sync to Supabase
         saveGameResult({
           gameType: "mano-del-giorno",
@@ -163,6 +162,9 @@ export function useDailyPlay({
 
   const replay = () => {
     xpSaved.current = false;
+    // `CelebrationCombo` fa partire l'effetto sul fronte di salita di `trigger`:
+    // lasciandolo a `true` la mano rigiocata finiva senza celebrazione.
+    setShowCelebration(false);
     game.startGame();
   };
 

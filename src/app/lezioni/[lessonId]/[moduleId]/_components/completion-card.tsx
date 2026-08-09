@@ -1,7 +1,12 @@
 "use client";
 
 import { motion } from "motion/react";
-import { buildConfettiPieces, computeStars, computeTotalModuleXp } from "@/lib/lesson-module";
+import {
+  buildConfettiPieces,
+  computeStars,
+  computeTotalModuleXp,
+  confettiFallDistance,
+} from "@/lib/lesson-module";
 
 /** Emoji dei coriandoli, assegnate a giro sui 30 pezzi. */
 const CONFETTI_EMOJI = ["🎉", "🎊", "⭐", "✨", "🏆", "💫", "🎯", "♠", "♥", "♦", "♣", "🃏", "👑", "🔥"];
@@ -32,6 +37,7 @@ export function CompletionCard({
   xpLabel: string;
 }) {
   const stars = computeStars(correctAnswers, totalQuizzes);
+  const fallDistance = confettiFallDistance();
 
   return (
     <>
@@ -45,7 +51,7 @@ export function CompletionCard({
             initial={{ opacity: 1, y: 0, rotate: 0 }}
             animate={{
               opacity: [1, 1, 0],
-              y: [0, window?.innerHeight ?? 800],
+              y: [0, fallDistance],
               x: [piece.driftFrom, piece.driftTo],
               rotate: [0, piece.rotate],
             }}

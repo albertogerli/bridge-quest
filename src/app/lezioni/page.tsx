@@ -78,9 +78,16 @@ export default function LezioniPage() {
 
   if (!catalogLoaded || !currentCourse) {
     return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
-        Caricamento corsi…
-      </div>
+      <>
+        {/* Il catalogo arriva dal DB: finché non c'è, la pagina restava senza
+            nessun h1 (violazione `page-has-heading-one` colta dall'audit axe
+            quando l'attesa si allunga). Il titolo della pagina esiste da
+            subito, solo per gli screen reader in questa fase. */}
+        <h1 className="sr-only">Il Percorso</h1>
+        <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
+          Caricamento corsi…
+        </div>
+      </>
     );
   }
 
@@ -276,9 +283,11 @@ export default function LezioniPage() {
             className="text-center py-16"
           >
             <div className="flex justify-center mb-4"><Construction className="w-12 h-12 text-amber-500" /></div>
-            <h3 className="text-lg font-semibold text-foreground/80 mb-2">
+            {/* h2: sezione di primo livello sotto l'h1 della pagina
+                (con h3 il salto violerebbe `heading-order`). */}
+            <h2 className="text-lg font-semibold text-foreground/80 mb-2">
               In arrivo!
-            </h3>
+            </h2>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
               Il {currentCourse.name} sarà disponibile presto. Intanto continua con il Corso Fiori!
             </p>
