@@ -51,11 +51,30 @@ export function useAdminData(): AdminData {
       // Il fallback sulla lettura diretta copre l'intervallo fra il deploy di
       // questo codice e l'esecuzione di scripts/sql/pii-columns-2026-08.sql.
       let allProfiles: ProfileRecord[] = [];
-      const { data: rpcProfiles, error: rpcError } = await supabase.rpc("admin_list_users");
+      // ATTENZIONE: PostgREST tronca OGNI risposta a 1000 righe, RPC incluse.
+      // Senza questo ciclo il pannello mostrava esattamente 1000 utenti su
+      // 1083 — un numero tondo e verosimile, quindi un errore che passa
+      // inosservato. Si pagina finché una pagina torna incompleta.
+      const RPC_PAGE = 1000;
+      let rpcOk = true;
+      for (let from = 0; ; from += RPC_PAGE) {
+        const { data, error } = await supabase
+          .rpc("admin_list_users")
+          .range(from, from + RPC_PAGE - 1);
 
-      if (!rpcError && Array.isArray(rpcProfiles)) {
-        allProfiles = rpcProfiles as ProfileRecord[];
-      } else {
+        if (error) {
+          // RPC non ancora creata (o non autorizzata): si usa il fallback.
+          rpcOk = false;
+          allProfiles = [];
+          break;
+        }
+
+        const page = (data ?? []) as ProfileRecord[];
+        allProfiles = allProfiles.concat(page);
+        if (page.length < RPC_PAGE) break;
+      }
+
+      if (!rpcOk) {
         let page = 0;
         const pageSize = 1000;
         let hasMore = true;
