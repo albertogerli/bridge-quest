@@ -532,6 +532,7 @@ export default function ProfiloPage() {
           ].map((s, i) => (
             <motion.div
               key={s.label}
+              data-testid={`profilo-stat-${s.label.toLowerCase()}`}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.04 }}

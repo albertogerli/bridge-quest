@@ -1815,7 +1815,7 @@ export default function ModulePage({
         />
 
         {/* Content blocks */}
-        <div>
+        <div data-testid="module-content">
           {mod.content.slice(0, currentStep + 1).map((block, idx) => (
             <div key={idx} data-step-block={idx} style={{ scrollMarginTop: 80 }}>
               {renderBlock(block, idx)}

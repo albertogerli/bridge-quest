@@ -450,7 +450,7 @@ export default function TorneoSettimanale() {
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Le 5 mani del torneo
                 </p>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-5 gap-2" data-testid="torneo-hands">
                   {tournamentHands.map((h, i) => {
                     const { tricksNeeded } = parseContract(h.contract);
                     const handResult = existingResult?.handResults[i];
