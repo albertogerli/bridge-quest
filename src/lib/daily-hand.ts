@@ -16,16 +16,30 @@ export const DAILY_BONUS_XP = 50;
 
 // ─── Date ───────────────────────────────────────────────────────────────────
 
-/** Data odierna in formato `YYYY-MM-DD` (UTC, come `toISOString`). */
-export function getTodayString(nowMs: number): string {
-  return new Date(nowMs).toISOString().slice(0, 10);
+/**
+ * Data di un istante in formato `YYYY-MM-DD`, nel **giorno civile locale**.
+ *
+ * Non si può usare `toISOString()`: quello rende il giorno UTC, che a est di
+ * Greenwich cambia prima della mezzanotte locale. Il countdown della pagina
+ * punta alla mezzanotte locale (`formatTimeToMidnight`): è la promessa fatta
+ * all'utente, e la data della mano deve cambiare nello stesso istante.
+ */
+function localDateString(d: Date): string {
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
 }
 
-/** Data di ieri in formato `YYYY-MM-DD` (giorno civile locale, resa in UTC). */
+/** Data odierna in formato `YYYY-MM-DD` (giorno civile locale). */
+export function getTodayString(nowMs: number): string {
+  return localDateString(new Date(nowMs));
+}
+
+/** Data di ieri in formato `YYYY-MM-DD` (giorno civile locale). */
 export function getYesterdayString(nowMs: number): string {
   const d = new Date(nowMs);
   d.setDate(d.getDate() - 1);
-  return d.toISOString().slice(0, 10);
+  return localDateString(d);
 }
 
 /** Tempo mancante alla mezzanotte locale, in formato `HH:MM:SS`. */
@@ -43,12 +57,29 @@ export function formatTimeToMidnight(nowMs: number): string {
 
 // ─── Selezione della mano ───────────────────────────────────────────────────
 
-/** Deterministic hash: same date -> same hand for all users */
+/**
+ * Indice deterministico della mano del giorno: stessa data → stessa mano per
+ * tutti, ma date vicine → indici scorrelati.
+ *
+ * La formula precedente (`anno*961 + mese*31 + giorno`) era lineare: due giorni
+ * consecutivi davano indici consecutivi, quindi vista la mano di oggi si
+ * deduceva quella di domani (e di tutta la settimana). Qui si usa FNV-1a a 32
+ * bit sull'intera stringa, seguito da un finalizzatore di tipo xorshift: resta
+ * una funzione pura della data — nessun caso, nessun orologio — ma un giorno di
+ * differenza cambia l'intero hash.
+ */
 export function dateToIndex(dateStr: string, poolSize: number): number {
-  const hash = dateStr
-    .split("-")
-    .reduce((acc, n) => acc * 31 + parseInt(n), 0);
-  return Math.abs(hash) % poolSize;
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash ^= dateStr.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  // Avalanche: senza questo i bit bassi (gli unici che sopravvivono al modulo)
+  // resterebbero quasi lineari nel giorno.
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x2545f491);
+  hash ^= hash >>> 15;
+  return (hash >>> 0) % poolSize;
 }
 
 /** Mano associata alla data, o `null` se la pool non è ancora caricata. */
@@ -88,6 +119,23 @@ export function computeDailyXp(
 /** Nuova serie di giorni consecutivi dopo aver giocato oggi. */
 export function nextStreak(prevStreak: number, playedYesterday: boolean): number {
   return playedYesterday ? prevStreak + 1 : 1;
+}
+
+/**
+ * Serie ancora valida al momento della lettura.
+ *
+ * Il valore salvato viene aggiornato solo quando si gioca: dopo giorni saltati
+ * resterebbe lì a promettere una serie ormai interrotta finché non si rigioca.
+ * Una serie è viva solo se l'ultima giocata è di oggi o di ieri (ieri: la
+ * giornata non è ancora finita, c'è tempo per rinnovarla).
+ */
+export function effectiveStreak(
+  storedStreak: number,
+  playedToday: boolean,
+  playedYesterday: boolean
+): number {
+  if (!Number.isFinite(storedStreak) || storedStreak <= 0) return 0;
+  return playedToday || playedYesterday ? storedStreak : 0;
 }
 
 // ─── Formattazioni ──────────────────────────────────────────────────────────

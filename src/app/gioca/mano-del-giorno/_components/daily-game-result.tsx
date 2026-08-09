@@ -51,8 +51,8 @@ export function DailyGameResult({
       <div
         className={`card-elevated rounded-2xl p-6 text-center ${
           result.result >= 0
-            ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-            : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+            ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
+            : "bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
         }`}
       >
         {/* Star Rating */}
@@ -80,8 +80,8 @@ export function DailyGameResult({
         <h3
           className={`text-xl font-bold ${
             result.result >= 0
-              ? "text-emerald-dark"
-              : "text-red-600"
+              ? "text-emerald-dark dark:text-emerald-300"
+              : "text-red-600 dark:text-red-400"
           }`}
         >
           {resultHeadline(result.result)}
@@ -132,7 +132,7 @@ export function DailyGameResult({
           </div>
           <div className="bg-card/60 rounded-xl p-2.5">
             <p
-              className={`text-lg font-bold ${result.result >= 0 ? "text-emerald-600" : "text-red-600"}`}
+              className={`text-lg font-bold ${result.result >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}
             >
               {result.result >= 0
                 ? `+${result.result}`
@@ -143,7 +143,7 @@ export function DailyGameResult({
             </p>
           </div>
           <div className="bg-card/60 rounded-xl p-2.5">
-            <p className="text-lg font-bold text-amber-600">
+            <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
               +{computeDailyXp(result.result, isDaily && !alreadyPlayed)}
             </p>
             <p className="text-[9px] font-bold text-muted-foreground uppercase">
@@ -158,9 +158,9 @@ export function DailyGameResult({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="mt-3 inline-flex items-center gap-2 bg-amber-50 rounded-full px-4 py-1.5"
+            className="mt-3 inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-full px-4 py-1.5"
           >
-            <span className="text-xs font-bold text-amber-700">
+            <span className="text-xs font-bold text-amber-700 dark:text-amber-300">
               +50 {xpLabel} Bonus Mano del Giorno incluso!
             </span>
           </motion.div>
@@ -173,12 +173,12 @@ export function DailyGameResult({
           transition={{ delay: 0.8 }}
           className={`mt-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold ${
             result.result > 0
-              ? "bg-emerald-100 text-emerald-700"
+              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
               : result.result === 0
-                ? "bg-blue-100 text-blue-700"
+                ? "bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
                 : result.result === -1
-                  ? "bg-amber-100 text-amber-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300"
+                  : "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
           }`}
         >
           {resultVerdict(result.result)}

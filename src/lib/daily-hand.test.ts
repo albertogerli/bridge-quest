@@ -1,10 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect } from "vitest";
 import {
   DAILY_BONUS_XP,
   calcStars,
   computeDailyXp,
   computeHandXp,
   dateToIndex,
+  effectiveStreak,
   formatContractItalian,
   formatDate,
   formatTimeToMidnight,
@@ -43,31 +44,73 @@ function pool(size: number): Smazzata[] {
 
 // ── Date ───────────────────────────────────────────────────────────────────
 
+/**
+ * Il giorno civile dipende dal fuso: i test che riguardano la mezzanotte devono
+ * fissarlo, altrimenti passerebbero o meno a seconda della macchina. Node
+ * rilegge `process.env.TZ` a ogni operazione su `Date`.
+ */
+const REAL_TZ = process.env.TZ;
+function inTimeZone(tz: string, fn: () => void) {
+  process.env.TZ = tz;
+  fn();
+}
+afterEach(() => {
+  if (REAL_TZ === undefined) delete process.env.TZ;
+  else process.env.TZ = REAL_TZ;
+});
+
 describe("getTodayString", () => {
-  it("rende la data UTC in formato YYYY-MM-DD", () => {
-    expect(getTodayString(Date.UTC(2026, 7, 8, 12))).toBe("2026-08-08");
-    expect(getTodayString(Date.UTC(2026, 0, 1, 12))).toBe("2026-01-01");
+  it("rende la data in formato YYYY-MM-DD", () => {
+    expect(getTodayString(new Date(2026, 7, 8, 12).getTime())).toBe("2026-08-08");
+    expect(getTodayString(new Date(2026, 0, 1, 12).getTime())).toBe("2026-01-01");
   });
 
   it("azzera l'orario: mattina e sera dello stesso giorno coincidono", () => {
-    expect(getTodayString(Date.UTC(2026, 7, 8, 0, 0, 1))).toBe(
-      getTodayString(Date.UTC(2026, 7, 8, 23, 59, 59))
+    expect(getTodayString(new Date(2026, 7, 8, 0, 0, 1).getTime())).toBe(
+      getTodayString(new Date(2026, 7, 8, 23, 59, 59).getTime())
     );
+  });
+
+  /**
+   * Il countdown della pagina (`formatTimeToMidnight`) punta alla mezzanotte
+   * LOCALE: è la promessa fatta all'utente. Se la data derivasse da
+   * `toISOString()` (UTC), a est di Greenwich per le prime ore dopo mezzanotte
+   * il countdown annuncerebbe il giorno nuovo mentre la mano resta quella di
+   * ieri — e a ovest succederebbe il contrario, la sera.
+   */
+  it("cambia giorno esattamente quando il countdown arriva a zero (fuso a est)", () => {
+    inTimeZone("Europe/Rome", () => {
+      const midnight = new Date(2026, 7, 9, 0, 0, 0).getTime();
+      expect(formatTimeToMidnight(midnight)).toBe("24:00:00");
+      expect(getTodayString(midnight)).toBe("2026-08-09");
+      expect(getTodayString(midnight - 1000)).toBe("2026-08-08");
+      expect(getYesterdayString(midnight)).toBe("2026-08-08");
+    });
+  });
+
+  it("cambia giorno esattamente quando il countdown arriva a zero (fuso a ovest)", () => {
+    inTimeZone("Pacific/Honolulu", () => {
+      const midnight = new Date(2026, 7, 9, 0, 0, 0).getTime();
+      expect(formatTimeToMidnight(midnight)).toBe("24:00:00");
+      expect(getTodayString(midnight)).toBe("2026-08-09");
+      expect(getTodayString(midnight - 1000)).toBe("2026-08-08");
+      expect(getYesterdayString(midnight)).toBe("2026-08-08");
+    });
   });
 });
 
 describe("getYesterdayString", () => {
   it("torna indietro di un giorno", () => {
-    expect(getYesterdayString(Date.UTC(2026, 7, 8, 12))).toBe("2026-08-07");
+    expect(getYesterdayString(new Date(2026, 7, 8, 12).getTime())).toBe("2026-08-07");
   });
 
   it("attraversa il cambio di mese e di anno", () => {
-    expect(getYesterdayString(Date.UTC(2026, 7, 1, 12))).toBe("2026-07-31");
-    expect(getYesterdayString(Date.UTC(2026, 0, 1, 12))).toBe("2025-12-31");
+    expect(getYesterdayString(new Date(2026, 7, 1, 12).getTime())).toBe("2026-07-31");
+    expect(getYesterdayString(new Date(2026, 0, 1, 12).getTime())).toBe("2025-12-31");
   });
 
   it("gestisce l'anno bisestile", () => {
-    expect(getYesterdayString(Date.UTC(2028, 2, 1, 12))).toBe("2028-02-29");
+    expect(getYesterdayString(new Date(2028, 2, 1, 12).getTime())).toBe("2028-02-29");
   });
 });
 
@@ -111,6 +154,39 @@ describe("dateToIndex", () => {
 
   it("cambia al cambiare del giorno", () => {
     expect(dateToIndex("2026-08-09", 40)).not.toBe(dateToIndex("2026-08-08", 40));
+  });
+
+  /**
+   * La formula lineare precedente (`anno*961 + mese*31 + giorno`) faceva
+   * scorrere l'indice di uno al giorno: chi vedeva la mano di oggi conosceva
+   * quella di domani e di tutta la settimana. Qui si misura proprio quello.
+   */
+  it("giorni consecutivi non danno indici consecutivi", () => {
+    const POOL = 40;
+    const DAYS = 365;
+    const start = Date.UTC(2026, 0, 1);
+    const dayString = (offset: number) =>
+      new Date(start + offset * 86_400_000).toISOString().slice(0, 10);
+
+    let consecutive = 0;
+    for (let i = 0; i < DAYS; i++) {
+      const today = dateToIndex(dayString(i), POOL);
+      const tomorrow = dateToIndex(dayString(i + 1), POOL);
+      if ((today + 1) % POOL === tomorrow) consecutive++;
+    }
+
+    // Con il passo fisso erano 359/365; per caso ci si aspetta ~1/40 dei giorni.
+    expect(consecutive).toBeLessThan(DAYS / 10);
+  });
+
+  it("date vicine non finiscono in indici vicini nemmeno su pool piccole", () => {
+    // Stesso mese, giorni adiacenti: gli indici devono sparpagliarsi.
+    const indices = ["2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17"].map(
+      (d) => dateToIndex(d, 1000)
+    );
+    for (let i = 1; i < indices.length; i++) {
+      expect(Math.abs(indices[i] - indices[i - 1])).toBeGreaterThan(5);
+    }
   });
 });
 
@@ -219,6 +295,29 @@ describe("nextStreak", () => {
   it("riparte da 1 se ieri è saltata", () => {
     expect(nextStreak(9, false)).toBe(1);
     expect(nextStreak(0, false)).toBe(1);
+  });
+});
+
+describe("effectiveStreak", () => {
+  it("tiene la serie se si è giocato oggi", () => {
+    expect(effectiveStreak(7, true, false)).toBe(7);
+    expect(effectiveStreak(7, true, true)).toBe(7);
+  });
+
+  it("tiene la serie se si è giocato ieri: oggi c'è ancora tempo", () => {
+    expect(effectiveStreak(7, false, true)).toBe(7);
+  });
+
+  it("azzera la serie dopo un giorno saltato", () => {
+    // Il valore su localStorage viene riscritto solo giocando: senza ricalcolo
+    // in lettura la scheda continuava a vantare una serie ormai interrotta.
+    expect(effectiveStreak(7, false, false)).toBe(0);
+  });
+
+  it("non inventa una serie da valori assenti o corrotti", () => {
+    expect(effectiveStreak(0, true, true)).toBe(0);
+    expect(effectiveStreak(NaN, true, true)).toBe(0);
+    expect(effectiveStreak(-3, true, true)).toBe(0);
   });
 });
 

@@ -44,8 +44,8 @@ export function DailyResultCard({
           <div
             className={`card-elevated rounded-2xl p-6 text-center ${
               todayResult.made
-                ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
+                : "bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
             }`}
           >
             {/* Star Rating */}
@@ -151,7 +151,7 @@ export function DailyResultCard({
                 {fieldStats.percentile >= 50 ? (
                   <>
                     Hai fatto meglio del{" "}
-                    <span className="font-bold text-emerald-600">
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
                       {fieldStats.percentile}%
                     </span>{" "}
                     del campo!
@@ -159,7 +159,7 @@ export function DailyResultCard({
                 ) : (
                   <>
                     Hai fatto meglio del{" "}
-                    <span className="font-bold text-amber-600">
+                    <span className="font-bold text-amber-600 dark:text-amber-400">
                       {fieldStats.percentile}%
                     </span>{" "}
                     del campo — domani andrà meglio!

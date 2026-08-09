@@ -553,10 +553,10 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                   />
                 </div>
 
-                {/* XP breakdown */}
-                <h3 className="text-sm font-bold text-foreground mb-3">
+                {/* XP breakdown — h2: primo livello sotto l'h1 «Risultati». */}
+                <h2 className="text-sm font-bold text-foreground mb-3">
                   {profile.xpLabel} guadagnati
-                </h3>
+                </h2>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
@@ -1014,9 +1014,12 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                         <span className="text-xl shrink-0">{entry.emoji}</span>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 mb-1">
-                            <h3 className="text-sm font-bold text-foreground truncate">
+                            {/* h2: sono le sezioni di primo livello sotto il
+                                titolo di pagina. Con h3 il salto h1→h3
+                                violava `heading-order` (axe, /glossario). */}
+                            <h2 className="text-sm font-bold text-foreground truncate">
                               {entry.term}
-                            </h3>
+                            </h2>
                             {isCompleted && (
                               <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                             )}

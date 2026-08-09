@@ -121,3 +121,167 @@ describe("profilo: dati reattivi e senza mismatch di idratazione", () => {
     expect(page).not.toMatch(/setInvitesSent\(\s*\(prev\)\s*=>/);
   });
 });
+
+// ── Mano del Giorno ────────────────────────────────────────────────────────
+
+describe("mano del giorno: fine partita e tema scuro", () => {
+  const play = "src/app/gioca/mano-del-giorno/_use-daily-play.ts";
+
+  it("la partita viene salvata per l'analisi una volta sola", () => {
+    // La chiamata comune fuori dal ramo + quella nel ramo «mano di ieri»
+    // registravano la stessa partita due volte.
+    const calls = source(play).match(/saveGameForAnalysis\(/g) ?? [];
+    expect(calls).toHaveLength(1);
+  });
+
+  it("«Rigioca» riarma la celebrazione", () => {
+    // `CelebrationCombo` parte sul fronte di salita di `trigger`: restando a
+    // `true` la mano rigiocata finiva senza effetto.
+    const replay = source(play).match(/const replay = \(\) => \{[\s\S]*?\n  \};/)?.[0];
+    expect(replay).toBeDefined();
+    expect(replay).toContain("setShowCelebration(false)");
+  });
+
+  const resultCards = [
+    "src/app/gioca/mano-del-giorno/_components/daily-game-result.tsx",
+    "src/app/gioca/mano-del-giorno/_components/daily-result-card.tsx",
+  ];
+
+  it.each(resultCards)("%s tinge la card di esito anche al buio", (file) => {
+    // Senza varianti scure la card restava un riquadro quasi bianco, con
+    // sopra testo chiaro (il resto della pagina le aveva già).
+    const src = source(file);
+    expect(src).toContain(
+      "from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
+    );
+    expect(src).toContain(
+      "from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
+    );
+  });
+
+  it("l'esito di fine partita non ha più tinte chiare senza controparte scura", () => {
+    // Ogni classe di tinta chiara (sfondo/testo/bordo su scala 50-200 o
+    // 600-900) deve comparire in una stringa di classi che dichiara anche la
+    // variante `dark:` per lo stesso ruolo e colore.
+    expect(
+      lightOnlyTints(
+        source("src/app/gioca/mano-del-giorno/_components/daily-game-result.tsx")
+      )
+    ).toEqual([]);
+  });
+});
+
+// ── Pagina modulo di lezione ───────────────────────────────────────────────
+
+describe("modulo di lezione: punteggio, XP e power-up", () => {
+  const session = "src/app/lezioni/[lessonId]/[moduleId]/_use-module-session.ts";
+
+  /** Corpo della funzione/arrow di primo livello `const <nome> = ...`. */
+  function handler(src: string, name: string): string {
+    const match = src.match(
+      new RegExp(`const ${name} = [^\\n]*=> \\{[\\s\\S]*?\\n  \\};`)
+    );
+    expect(match, `handler ${name} non trovato`).not.toBeNull();
+    return match![0];
+  }
+
+  it("il power-up «salta» legge la soluzione nel campo giusto per tipo", () => {
+    // Assegnava sempre `correctAnswer`: su `hand-eval` (soluzione in
+    // `correctValue`) e su `card-select` (indice della carta) consegnava una
+    // risposta sbagliata, contata anche come errore nel punteggio finale.
+    const skip = handler(source(session), "consumeSkip");
+    expect(skip).toContain("correctAnswerFor(block)");
+    expect(skip).not.toContain("block.correctAnswer ?? 0");
+  });
+
+  it("il moltiplicatore XP è derivato dalla serie, non tenuto in stato", () => {
+    const src = source(session);
+    expect(src).toContain("const xpMultiplier = computeXpMultiplier(correctStreak);");
+    expect(src).not.toContain("setXpMultiplier");
+  });
+
+  it("l'XP di lettura non usa un moltiplicatore di un render fa", () => {
+    // `handleStepAdvance` chiama `awardXp`, che moltiplica per `xpMultiplier`:
+    // con le sole `[stepsViewed]` il callback restava congelato all'ultimo
+    // render in cui erano cambiati i passi visti.
+    expect(source(session)).toContain("}, [stepsViewed, xpMultiplier]);");
+  });
+
+  it("ogni risposta corretta aggiorna anche il record di serie", () => {
+    // Solo il quiz a scelta multipla alzava `bestStreak`: una serie fatta di
+    // «scegli la carta»/«valuta la mano» non arrivava al Best Streak finale.
+    const src = source(session);
+    for (const name of ["handleQuizAnswer", "handleCardSelect", "handleHandEval"]) {
+      expect(handler(src, name)).toContain("registerCorrectStreak()");
+    }
+    // Un solo punto in cui il record cresce.
+    expect(src.match(/setBestStreak\(/g)).toHaveLength(1);
+  });
+
+  it("non resta la ref del tempo di ingresso nel passo, scritta e mai letta", () => {
+    expect(source(session)).not.toContain("stepEnteredAt");
+  });
+
+  it("i coriandoli non leggono `window` direttamente", () => {
+    // `window?.innerHeight` solleva `ReferenceError` in SSR: l'optional
+    // chaining agisce sul valore, non sull'identificatore non dichiarato.
+    const card = source(
+      "src/app/lezioni/[lessonId]/[moduleId]/_components/completion-card.tsx"
+    );
+    expect(card).toContain("confettiFallDistance()");
+    expect(card).not.toContain("window?.");
+  });
+});
+
+// ── Accessibilità: struttura dei titoli ────────────────────────────────────
+
+describe("struttura dei titoli", () => {
+  /**
+   * Salti di livello fra heading consecutivi nel sorgente (h1 → h3 = salto).
+   * Approssima l'ordine del DOM, ma basta a intercettare il caso che axe
+   * segnalava; la verifica vera gira nell'audit E2E (`e2e/a11y.spec.ts`, dove
+   * `heading-order` è bloccante).
+   */
+  function headingLevelJumps(src: string): string[] {
+    const levels = [...src.matchAll(/<h([1-6])[\s>]/g)].map((m) => parseInt(m[1]));
+    expect(levels.length, "nessun heading trovato: regex da rivedere").toBeGreaterThan(0);
+    const jumps: string[] = [];
+    for (let i = 1; i < levels.length; i++) {
+      if (levels[i] > levels[i - 1] + 1) jumps.push(`h${levels[i - 1]} → h${levels[i]}`);
+    }
+    return jumps;
+  }
+
+  it("/glossario non salta da h1 a h3 sulle schede dei termini", () => {
+    // Violazione `heading-order` rilevata da axe sulla prima scheda.
+    expect(headingLevelJumps(source("src/app/glossario/glossario-client.tsx"))).toEqual([]);
+  });
+
+  it("/lezioni ha un h1 anche mentre il catalogo carica", () => {
+    // Finché il catalogo non arriva la pagina rendeva solo il messaggio di
+    // attesa: nessun h1 → `page-has-heading-one`.
+    const src = source("src/app/lezioni/page.tsx");
+    const loading = src.match(
+      /if \(!catalogLoaded \|\| !currentCourse\) \{[\s\S]*?\n  \}/
+    )?.[0];
+    expect(loading).toBeDefined();
+    expect(loading).toMatch(/<h1[\s>]/);
+  });
+});
+
+/**
+ * Tinte chiare prive della corrispondente variante scura *nella stessa stringa
+ * di classi* (una riga di sorgente): è lì che Tailwind decide il colore.
+ */
+function lightOnlyTints(src: string): string[] {
+  const tint =
+    /(?<![\w:-])(bg|text|border)-(emerald|red|amber|blue|violet|orange|indigo)-(50|100|200|600|700|800|900)(\/\d+)?/g;
+  const offenders: string[] = [];
+  for (const line of src.split("\n")) {
+    for (const match of line.matchAll(tint)) {
+      const role = `dark:${match[1]}-${match[2]}-`;
+      if (!line.includes(role)) offenders.push(`${match[0]} → manca ${role}*`);
+    }
+  }
+  return offenders;
+}

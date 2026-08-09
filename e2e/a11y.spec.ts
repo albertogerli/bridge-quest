@@ -5,11 +5,27 @@ import { dismissCookieBanner, login } from "./helpers";
 /**
  * Audit automatico di accessibilità (rilievo perizie 2026-08: nessun audit in CI).
  *
- * Soglia: fallisce su violazioni `serious` e `critical`. `moderate`/`minor`
- * vengono raccolte e stampate come promemoria, ma non bloccano.
+ * Soglia: fallisce su violazioni `serious` e `critical`, più le regole di
+ * `ALWAYS_BLOCKING_RULES` (già corrette: il loro ritorno è una regressione).
+ * Le altre `moderate`/`minor` vengono raccolte e stampate come promemoria.
  */
 
 const BLOCKING_IMPACTS = new Set(["serious", "critical"]);
+
+/**
+ * Regole bloccanti a prescindere dall'impatto dichiarato da axe.
+ *
+ * `heading-order` (su /glossario) e `page-has-heading-one` (su /lezioni, mentre
+ * il catalogo carica) erano le uniche due violazioni `moderate` rimaste: sono
+ * state corrette nella struttura dei titoli, e da qui in poi il loro ritorno
+ * deve far fallire l'audit invece di finire in una riga di log.
+ */
+const ALWAYS_BLOCKING_RULES = new Set(["heading-order", "page-has-heading-one"]);
+
+function isBlocking(violation: { id: string; impact?: string | null }): boolean {
+  if (ALWAYS_BLOCKING_RULES.has(violation.id)) return true;
+  return !!violation.impact && BLOCKING_IMPACTS.has(violation.impact);
+}
 
 /**
  * Regole disattivate, con motivazione. Da tenere il più corto possibile:
@@ -79,12 +95,8 @@ async function auditPage(page: Page, path: string) {
 
   const results = await builder.analyze();
 
-  const blocking = results.violations.filter(
-    (v) => v.impact !== null && v.impact !== undefined && BLOCKING_IMPACTS.has(v.impact)
-  );
-  const informational = results.violations.filter(
-    (v) => !v.impact || !BLOCKING_IMPACTS.has(v.impact)
-  );
+  const blocking = results.violations.filter(isBlocking);
+  const informational = results.violations.filter((v) => !isBlocking(v));
 
   if (informational.length > 0) {
     console.log(
@@ -96,7 +108,7 @@ async function auditPage(page: Page, path: string) {
   const report = blocking
     .map(
       (v) =>
-        `\n• [${v.impact}] ${v.id}: ${v.help}\n  ${v.helpUrl}\n  nodi:\n` +
+        `\n• [${v.impact ?? "n/d"}] ${v.id}: ${v.help}\n  ${v.helpUrl}\n  nodi:\n` +
         v.nodes
           .slice(0, 5)
           .map((n) => `    - ${n.target.join(" ")}\n      ${n.failureSummary?.replace(/\n/g, "\n      ")}`)
@@ -104,7 +116,7 @@ async function auditPage(page: Page, path: string) {
     )
     .join("");
 
-  expect(blocking, `Violazioni serious/critical su ${path}:${report}`).toEqual([]);
+  expect(blocking, `Violazioni bloccanti su ${path}:${report}`).toEqual([]);
 }
 
 test.describe("audit accessibilità (axe)", () => {
