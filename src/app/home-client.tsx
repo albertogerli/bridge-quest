@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { PrimaManoOnboarding } from "@/components/prima-mano-onboarding";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
@@ -14,7 +14,6 @@ import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
 import { NotificationsNudge } from "@/components/notifications-nudge";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { LostCard } from "@/components/beginner/lost-card";
-import { WeeklyRecapModal } from "@/components/home/weekly-recap-modal";
 import { HeroSection } from "@/components/home/hero-section";
 import { HomeFooter } from "@/components/home/home-footer";
 import { ReferralHandler } from "@/components/home/referral-handler";
@@ -30,6 +29,25 @@ import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { Zap } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 
+// Percorso "Prima Mano": ~16 kB gz di step interattivi che sostituiscono l'intera
+// home solo per chi non è ancora onboardato. Fuori dal first load di tutti gli altri.
+const PrimaManoOnboarding = dynamic(
+  () => import("@/components/prima-mano-onboarding").then((m) => m.PrimaManoOnboarding),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex min-h-svh items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-border border-t-primary" />
+      </div>
+    ),
+  },
+);
+// Modale di riepilogo settimanale: si apre al massimo una volta a settimana.
+const WeeklyRecapModal = dynamic(
+  () => import("@/components/home/weekly-recap-modal").then((m) => m.WeeklyRecapModal),
+  { ssr: false },
+);
+
 export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
   const { courses, isLoaded: catalogLoaded } = useCatalog();
@@ -41,6 +59,9 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [notOnboarded, setNotOnboarded] = useState(false);
   const [showWeeklyRecap, setShowWeeklyRecap] = useState(false);
+  // Resta montato dopo la prima apertura: l'animazione di uscita di
+  // AnimatePresence continua a funzionare e il chunk parte solo se serve.
+  const [weeklyRecapArmed, setWeeklyRecapArmed] = useState(false);
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
   const handsPlayed = useGameStore((s) => s.handsPlayed);
   const [isGuest, setIsGuest] = useState(false);
@@ -83,7 +104,10 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
             handsPlayed: current.hands - (lastSnapshot.hands || 0),
             streakDays: currentStreak,
           });
-          if (current.xp > (lastSnapshot.xp || 0)) setShowWeeklyRecap(true);
+          if (current.xp > (lastSnapshot.xp || 0)) {
+            setWeeklyRecapArmed(true);
+            setShowWeeklyRecap(true);
+          }
         }
         localStorage.setItem(weekKey, "1");
         localStorage.setItem("bq_weekly_snapshot", JSON.stringify(current));
@@ -242,12 +266,14 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       <AchievementPopup badge={newBadge} onDismiss={dismiss} />
 
       {/* Weekly Recap Modal */}
-      <WeeklyRecapModal
-        open={showWeeklyRecap}
-        onClose={() => setShowWeeklyRecap(false)}
-        data={weeklyData}
-        title={profile.weeklyRecapTitle}
-      />
+      {weeklyRecapArmed && (
+        <WeeklyRecapModal
+          open={showWeeklyRecap}
+          onClose={() => setShowWeeklyRecap(false)}
+          data={weeklyData}
+          title={profile.weeklyRecapTitle}
+        />
+      )}
       {/* ===== HERO — compact green header with inline stats ===== */}
       <HeroSection
         stats={stats}

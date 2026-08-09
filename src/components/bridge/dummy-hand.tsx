@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { CardData } from "./playing-card";
+import { cardAriaLabel, handAriaLabel } from "@/lib/card-labels";
 
 /**
  * Dummy hand displayed as vertical columns by suit (classic bridge style)
@@ -63,7 +64,11 @@ export function DummyHand({
   const overlapY = compact ? -4 : -3;
 
   return (
-    <div className="flex w-full justify-evenly">
+    <div
+      className="flex w-full justify-evenly"
+      role="group"
+      aria-label={`Carte del morto. ${handAriaLabel(cards)}`}
+    >
       {displayOrder.map((suit) => {
         const suitCards = bySuit[suit];
         if (suitCards.length === 0) return null;
@@ -83,6 +88,8 @@ export function DummyHand({
                     transition={{ delay: i * 0.02 }}
                     onClick={() => !cardDisabled && onSelectCard?.(originalIndex)}
                     disabled={cardDisabled}
+                    type="button"
+                    aria-label={`Gioca ${cardAriaLabel(card)} dal morto`}
                     style={{ marginTop: i > 0 ? overlapY : 0, zIndex: i }}
                     className={`
                       relative ${cardW} ${cardH} rounded-sm bg-white
@@ -100,8 +107,8 @@ export function DummyHand({
                       }
                     `}
                   >
-                    <span>{card.rank}</span>
-                    <span className={suitSize}>{suitSymbol[suit]}</span>
+                    <span aria-hidden="true">{card.rank}</span>
+                    <span className={suitSize} aria-hidden="true">{suitSymbol[suit]}</span>
                   </motion.button>
                 );
               })}

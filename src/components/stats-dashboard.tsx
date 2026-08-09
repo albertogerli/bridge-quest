@@ -77,7 +77,7 @@ function WinRateRing({ rate }: { rate: number }) {
         <span className="text-3xl font-bold" style={{ color }}>
           {rate}%
         </span>
-        <span className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
           vittorie
         </span>
       </div>
@@ -120,7 +120,7 @@ function Last10Chart({ stats }: { stats: GameStats }) {
               style={{ minHeight: 4 }}
             />
             {/* Trick count label */}
-            <span className="text-[8px] font-bold text-muted-foreground/70">{game.tricksMade}</span>
+            <span className="text-[8px] font-bold text-muted-foreground">{game.tricksMade}</span>
           </div>
         );
       })}
@@ -147,7 +147,7 @@ function ContractBars({ stats }: { stats: GameStats }) {
                 >
                   {contractTypeLabel(cs.type)}
                 </span>
-                <span className="text-[10px] text-muted-foreground/70 font-semibold">
+                <span className="text-[10px] text-muted-foreground font-semibold">
                   {cs.played} partite
                 </span>
               </div>
@@ -218,7 +218,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           className="rounded-2xl bg-card border-2 border-border shadow-sm p-4 flex flex-col items-center justify-center"
         >
           <WinRateRing rate={stats.winRate} />
-          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mt-1">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1">
             Percentuale vittorie
           </p>
         </motion.div>
@@ -233,7 +233,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             className="rounded-2xl bg-card border-2 border-border shadow-sm p-3.5 flex-1 flex flex-col justify-center"
           >
             <p className="text-2xl font-bold text-figb dark:text-primary">{stats.avgTricks}</p>
-            <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
               Prese medie
             </p>
           </motion.div>
@@ -253,7 +253,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
                 </span>
               )}
             </div>
-            <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
               Miglior serie
             </p>
           </motion.div>
@@ -285,7 +285,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
               Ultime {stats.last10.length} partite
             </h4>
-            <div className="flex items-center gap-2 text-[9px] font-bold text-muted-foreground/70">
+            <div className="flex items-center gap-2 text-[9px] font-bold text-muted-foreground">
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-sm bg-emerald-500" />
                 Vinto
@@ -360,7 +360,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
         transition={{ delay: 0.45 }}
         className="text-center py-2"
       >
-        <p className="text-[11px] text-muted-foreground/70 font-semibold">
+        <p className="text-[11px] text-muted-foreground font-semibold">
           Basato su {stats.totalGames} {stats.totalGames === 1 ? "partita" : "partite"} registrate
         </p>
       </motion.div>

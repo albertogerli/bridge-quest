@@ -734,7 +734,7 @@ export default function ImpostazioniPage() {
               v{APP_VERSION}
             </Badge>
           </div>
-          <p className="text-muted-foreground/70 text-xs mt-2">FIGB - Federazione Italiana Gioco Bridge</p>
+          <p className="text-muted-foreground text-xs mt-2">FIGB - Federazione Italiana Gioco Bridge</p>
           <p className="text-muted-foreground/40 text-[10px] mt-1">Sviluppo: A. G. Gerli / Tourbillon Tech</p>
         </motion.div>
       </div>

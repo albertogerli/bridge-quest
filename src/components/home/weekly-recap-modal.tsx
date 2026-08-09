@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 export interface WeeklyRecapData {
   xpEarned: number;
@@ -17,6 +19,9 @@ interface WeeklyRecapModalProps {
 }
 
 export function WeeklyRecapModal({ open, onClose, data, title }: WeeklyRecapModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, open, { onEscape: onClose });
+
   return (
     <AnimatePresence>
       {open && (
@@ -28,6 +33,7 @@ export function WeeklyRecapModal({ open, onClose, data, title }: WeeklyRecapModa
           onClick={onClose}
         >
           <motion.div
+            ref={dialogRef}
             initial={{ scale: 0.8, y: 30 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.8, y: 30 }}
@@ -38,7 +44,7 @@ export function WeeklyRecapModal({ open, onClose, data, title }: WeeklyRecapModa
             aria-modal="true"
             aria-label="Riepilogo settimanale"
           >
-            <div className="flex justify-center mb-3">
+            <div className="flex justify-center mb-3" aria-hidden="true">
               <BarChart3 className="w-12 h-12 text-indigo-500" />
             </div>
             <h2 className="text-2xl font-bold text-foreground font-display">{title}</h2>

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import { hapticTap } from "@/lib/native-bridge";
+import { cardAriaLabel } from "@/lib/card-labels";
 
 export type Suit = "spade" | "heart" | "diamond" | "club";
 export type Rank = "A" | "K" | "Q" | "J" | "10" | "9" | "8" | "7" | "6" | "5" | "4" | "3" | "2";
@@ -86,6 +87,8 @@ export function PlayingCard({
   if (faceDown) {
     return (
       <motion.div
+        role="img"
+        aria-label="Carta coperta"
         className={`${dimClass} rounded bg-gradient-to-br ${cosmetics.cardBackGradient} border border-white/20 shadow-sm cursor-default`}
         style={{
           ...dynamicStyle,
@@ -98,7 +101,7 @@ export function PlayingCard({
           )`,
         }}
       >
-        <div className="flex h-full items-center justify-center">
+        <div className="flex h-full items-center justify-center" aria-hidden="true">
           <span className="text-white/30 text-lg font-bold">♣</span>
         </div>
       </motion.div>
@@ -109,6 +112,12 @@ export function PlayingCard({
     <motion.button
       onClick={disabled ? undefined : () => { hapticTap(); onClick?.(); }}
       disabled={disabled}
+      type="button"
+      aria-label={
+        onClick
+          ? `Gioca ${cardAriaLabel(card)}`
+          : cardAriaLabel(card)
+      }
       className={`
         ${dimClass} relative rounded bg-white
         border border-gray-200 shadow-sm transition-all touch-manipulation
@@ -123,7 +132,7 @@ export function PlayingCard({
       whileTap={disabled ? {} : { scale: 0.97 }}
     >
       {/* Simple clean layout: rank + suit, centered */}
-      <div className={`flex h-full flex-col items-center justify-center ${suitColors[card.suit]}`}>
+      <div className={`flex h-full flex-col items-center justify-center ${suitColors[card.suit]}`} aria-hidden="true">
         <span className={`${rankSizes[effectiveSize]} font-black leading-none`}>{card.rank}</span>
         <span className={`${suitSizes[effectiveSize]} leading-none`}>{suitSymbols[card.suit]}</span>
       </div>

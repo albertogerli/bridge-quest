@@ -167,7 +167,7 @@ export default function TrovaCircoloPage() {
           >
             {/* Search */}
             <div className="relative mb-3">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
               </svg>
@@ -209,7 +209,7 @@ export default function TrovaCircoloPage() {
             {/* Advanced Filters Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-1 mt-2 text-[11px] text-muted-foreground/70 font-bold hover:text-muted-foreground transition-colors"
+              className="flex items-center gap-1 mt-2 text-[11px] text-muted-foreground font-bold hover:text-muted-foreground transition-colors"
             >
               <Filter className="w-3 h-3" />
               Filtri avanzati

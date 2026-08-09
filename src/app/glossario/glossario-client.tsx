@@ -610,7 +610,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                     Riepilogo risposte
                   </span>
                   <ChevronRight
-                    className={`w-5 h-5 text-muted-foreground/70 transition-transform ${
+                    className={`w-5 h-5 text-muted-foreground transition-transform ${
                       showRecap ? "rotate-90" : ""
                     }`}
                   />
@@ -903,13 +903,13 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
           {/* Search + Quiz Globale */}
           <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Cerca un termine..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
               />
             </div>
             <button
@@ -944,7 +944,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
           </div>
 
           {/* Terms count */}
-          <p className="text-xs text-muted-foreground/70 mb-3 font-medium">
+          <p className="text-xs text-muted-foreground mb-3 font-medium">
             {filteredTerms.length}{" "}
             {filteredTerms.length === 1 ? "termine" : "termini"}
           </p>

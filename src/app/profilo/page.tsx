@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +16,12 @@ import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel, getXpInLevel, getLevelProgress, getXpForNextLevel, MAX_LEVEL } from "@/lib/xp-levels";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import { useGameHistory } from "@/hooks/use-game-history";
-import { StatsDashboard } from "@/components/stats-dashboard";
+// Statistiche avanzate: vivono dentro un accordion chiuso di default, quindi
+// non fanno parte del primo paint del profilo.
+const StatsDashboard = dynamic(
+  () => import("@/components/stats-dashboard").then((m) => m.StatsDashboard),
+  { ssr: false },
+);
 import {
   shareInvite, shareBadge, generateReferralCode, getReferralLink,
   copyReferralLink, shareViaWhatsApp, getInviteCount
@@ -34,7 +40,11 @@ import { useChallenges, type ChallengeData, type ChallengeStats } from "@/hooks/
 import { Swords } from "lucide-react";
 import { useSecretAchievements } from "@/hooks/use-secret-achievements";
 import { useGameStore } from "@/store/use-game-store";
-import SecretAchievementPopup from "@/components/secret-achievement-popup";
+// Popup di achievement segreto: compare solo quando se ne sblocca uno.
+const SecretAchievementPopup = dynamic(
+  () => import("@/components/secret-achievement-popup"),
+  { ssr: false },
+);
 import { reportError } from "@/lib/report-error";
 import { toast } from "sonner";
 
@@ -78,6 +88,11 @@ export default function ProfiloPage() {
   const gameStats = getStats();
   const { checkAchievements, earnedSecretAchievements, totalSecretAchievements } = useSecretAchievements();
   const [pendingAchievement, setPendingAchievement] = useState<{ id: string; name: string; icon: string; description: string } | null>(null);
+  // Resta montato dopo il primo sblocco: preserva l'animazione di uscita.
+  const [achievementPopupArmed, setAchievementPopupArmed] = useState(false);
+  useEffect(() => {
+    if (pendingAchievement) setAchievementPopupArmed(true);
+  }, [pendingAchievement]);
   const { getHistory, getStats: getChallengeStats } = useChallenges();
   const [challengeHistory, setChallengeHistory] = useState<ChallengeData[]>([]);
   const [challengeStats, setChallengeStats] = useState<ChallengeStats | null>(null);
@@ -555,7 +570,7 @@ export default function ProfiloPage() {
               <motion.svg
                 animate={{ rotate: advancedStatsOpen ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
-                className="w-5 h-5 text-muted-foreground/70"
+                className="w-5 h-5 text-muted-foreground"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -598,13 +613,13 @@ export default function ProfiloPage() {
                                 transition={{ delay: 0.2, duration: 0.5 }}
                                 className="w-full rounded-t bg-figb/70 dark:bg-primary/70"
                               />
-                              <span className="text-[9px] text-muted-foreground/70 mt-1">{d.label}</span>
+                              <span className="text-[9px] text-muted-foreground mt-1">{d.label}</span>
                             </div>
                           ))}
                         </div>
                       ) : (
                         <div className="flex items-center justify-center h-24 rounded-xl bg-muted">
-                          <p className="text-xs text-muted-foreground/70 font-medium">
+                          <p className="text-xs text-muted-foreground font-medium">
                             Gioca di piu per vedere le statistiche
                           </p>
                         </div>
@@ -621,7 +636,7 @@ export default function ProfiloPage() {
                           <div key={course.id}>
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-xs font-semibold text-foreground/80">{course.name}</span>
-                              <span className="text-[10px] font-bold text-muted-foreground/70">
+                              <span className="text-[10px] font-bold text-muted-foreground">
                                 {course.completed}/{course.total} ({course.progress}%)
                               </span>
                             </div>
@@ -715,7 +730,7 @@ export default function ProfiloPage() {
                   </p>
                 </div>
                 <motion.svg
-                  className="h-5 w-5 text-muted-foreground/70 shrink-0"
+                  className="h-5 w-5 text-muted-foreground shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -777,7 +792,7 @@ export default function ProfiloPage() {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-semibold text-foreground truncate">vs {opponentName}</p>
-                                <p className="text-[10px] text-muted-foreground/70">
+                                <p className="text-[10px] text-muted-foreground">
                                   {ch.board_count} mani · {ch.completed_at ? new Date(ch.completed_at).toLocaleDateString("it-IT", { day: "numeric", month: "short" }) : ""}
                                 </p>
                               </div>
@@ -793,7 +808,7 @@ export default function ProfiloPage() {
                     ) : (
                       <div className="text-center py-6">
                         <Swords className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-                        <p className="text-xs text-muted-foreground/70">Nessuna sfida completata</p>
+                        <p className="text-xs text-muted-foreground">Nessuna sfida completata</p>
                         <Link href="/amici" className="text-xs text-figb dark:text-primary font-semibold hover:underline mt-1 inline-block">
                           Sfida un amico →
                         </Link>
@@ -962,7 +977,7 @@ export default function ProfiloPage() {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between mb-1">
                                 <p className="text-sm font-bold text-foreground truncate">{w.name}</p>
-                                <span className="text-[11px] font-bold text-muted-foreground/70 tabular-nums">
+                                <span className="text-[11px] font-bold text-muted-foreground tabular-nums">
                                   {wCompleted}/{wModules}
                                 </span>
                               </div>
@@ -1016,7 +1031,7 @@ export default function ProfiloPage() {
                       <p className="text-sm font-bold text-foreground">Modifica profilo</p>
                       <p className="text-[11px] text-muted-foreground">Foto, nome, BBO, associazione</p>
                     </div>
-                    <svg className="w-5 h-5 text-muted-foreground/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                       <polyline points="9,6 15,12 9,18" />
                     </svg>
                   </div>
@@ -1064,7 +1079,7 @@ export default function ProfiloPage() {
 
                   {/* Name */}
                   <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-muted-foreground/70 mb-1 uppercase tracking-wider">Nome</label>
+                    <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Nome</label>
                     <input
                       type="text"
                       value={editName}
@@ -1075,7 +1090,7 @@ export default function ProfiloPage() {
 
                   {/* BBO */}
                   <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-muted-foreground/70 mb-1 uppercase tracking-wider">Username BBO</label>
+                    <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Username BBO</label>
                     <input
                       type="text"
                       value={editBbo}
@@ -1087,7 +1102,7 @@ export default function ProfiloPage() {
 
                   {/* ASD */}
                   <div className="mb-4 relative">
-                    <label className="block text-[10px] font-bold text-muted-foreground/70 mb-1 uppercase tracking-wider">Associazione (ASD)</label>
+                    <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Associazione (ASD)</label>
                     <input
                       type="text"
                       value={editAsdSelectedName || editAsdSearch}
@@ -1116,7 +1131,7 @@ export default function ProfiloPage() {
                               >
                                 <div>{club.name}</div>
                                 {club.city && (
-                                  <div className="text-[10px] text-muted-foreground/70">
+                                  <div className="text-[10px] text-muted-foreground">
                                     {club.city}{club.province ? ` (${club.province})` : ""}
                                   </div>
                                 )}
@@ -1286,7 +1301,7 @@ export default function ProfiloPage() {
             {/* Referral code card */}
             {referralCode && (
               <div className="mb-4 rounded-xl bg-card/80 border border-figb/10 dark:border-primary/20 p-3.5">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1.5">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
                   Il tuo codice referral
                 </p>
                 <div className="flex items-center gap-2">
@@ -1499,10 +1514,12 @@ export default function ProfiloPage() {
       </div>
 
       {/* Secret Achievement Popup */}
-      <SecretAchievementPopup
-        achievement={pendingAchievement}
-        onClose={() => setPendingAchievement(null)}
-      />
+      {achievementPopupArmed && (
+        <SecretAchievementPopup
+          achievement={pendingAchievement}
+          onClose={() => setPendingAchievement(null)}
+        />
+      )}
     </div>
   );
 }

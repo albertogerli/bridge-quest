@@ -121,7 +121,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
         </div>
         <button
           onClick={onSkip}
-          className="text-xs text-muted-foreground/70 hover:text-muted-foreground font-medium"
+          className="text-xs text-muted-foreground hover:text-muted-foreground font-medium"
         >
           Salta
         </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef, Suspense } from "react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
@@ -26,9 +27,22 @@ import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
-import { HandReplay } from "@/components/bridge/hand-replay";
-import { ShareResult } from "@/components/bridge/share-result";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
+// Replay della mano: si apre su richiesta a fine partita.
+const HandReplay = dynamic(
+  () => import("@/components/bridge/hand-replay").then((m) => m.HandReplay),
+  { ssr: false },
+);
+// Pannello di condivisione: esiste solo nella schermata di fine mano.
+const ShareResult = dynamic(
+  () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
+  { ssr: false },
+);
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { useDDS, type DDSAnalysis } from "@/hooks/use-dds";
@@ -39,7 +53,7 @@ import Link from "next/link";
 
 export default function SmazzataBrowserPage() {
   return (
-    <Suspense fallback={<div className="pt-10 text-center text-muted-foreground/70 text-sm">Caricamento...</div>}>
+    <Suspense fallback={<div className="pt-10 text-center text-muted-foreground text-sm">Caricamento...</div>}>
       <SmazzataBrowserContent />
     </Suspense>
   );
@@ -137,7 +151,7 @@ function SmazzataBrowserContent() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link href="/gioca" className="hover:text-emerald transition-colors">
               Gioca
             </Link>
@@ -175,7 +189,7 @@ function SmazzataBrowserContent() {
             return courseGroups.map((group) => (
               <div key={group.courseName}>
                 {courseGroups.length > 1 && (
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1.5 ml-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-1">
                     {group.courseName}
                   </p>
                 )}
@@ -624,7 +638,7 @@ function PlayingView({
         >
           <div className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}>
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Contratto
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}>
@@ -633,7 +647,7 @@ function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Obiettivo
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
@@ -642,7 +656,7 @@ function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Dich. / Dif.
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>

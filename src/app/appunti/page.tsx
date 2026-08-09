@@ -102,7 +102,7 @@ export default function AppuntiPage() {
                     </div>
                     <motion.svg
                       animate={{ rotate: isExpanded ? 180 : 0 }}
-                      className="h-5 w-5 text-muted-foreground/70 shrink-0"
+                      className="h-5 w-5 text-muted-foreground shrink-0"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -130,7 +130,7 @@ export default function AppuntiPage() {
                                 <span className={`font-semibold text-figb dark:text-primary ${isSenior ? "text-base" : "text-sm"}`}>
                                   {entry.moduleTitle}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground/70 ml-auto">{entry.date}</span>
+                                <span className="text-[10px] text-muted-foreground ml-auto">{entry.date}</span>
                               </div>
                               <ul className="space-y-1.5 ml-4">
                                 {entry.rules.map((rule, ri) => (
@@ -161,7 +161,7 @@ export default function AppuntiPage() {
               {!showConfirmClear ? (
                 <button
                   onClick={() => setShowConfirmClear(true)}
-                  className="text-sm text-muted-foreground/70 hover:text-red-500 transition-colors"
+                  className="text-sm text-muted-foreground hover:text-red-500 transition-colors"
                 >
                   Cancella tutti gli appunti
                 </button>

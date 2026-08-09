@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,12 @@ import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from 
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
 import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
@@ -143,7 +149,7 @@ function SfidaAmicoContent() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
               <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
                 Gioca
               </Link>
@@ -500,17 +506,17 @@ function ActiveChallenge({
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark dark:text-emerald-300">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -768,7 +774,7 @@ function ActiveChallenge({
                   <div className="grid grid-cols-2 gap-4 mb-5">
                     {/* Your result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">Tu</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
                       <p className="text-4xl font-bold text-foreground">{myTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
@@ -777,7 +783,7 @@ function ActiveChallenge({
                             {game.result.result === 0 ? "Fatto" : `+${game.result.result}`}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
                             {game.result.result}
                           </span>
                         )}
@@ -786,7 +792,7 @@ function ActiveChallenge({
 
                     {/* Challenger result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">Sfidante</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Sfidante</p>
                       <p className="text-4xl font-bold text-foreground">{challengerTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
@@ -797,7 +803,7 @@ function ActiveChallenge({
                               : `+${challengerTricks! - (challengerNeeded ?? tricksNeeded)}`}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
                             {challengerTricks! - (challengerNeeded ?? tricksNeeded)}
                           </span>
                         )}
@@ -915,7 +921,7 @@ function PastChallenges() {
       <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-foreground">Sfide Create</h3>
-          <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground/70 border-border">
+          <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground border-border">
             {challenges.length} sfide
           </Badge>
         </div>
@@ -942,7 +948,7 @@ function PastChallenges() {
                   <p className="text-sm font-bold text-foreground truncate">
                     {smz?.title ?? `Mano ${ch.smazzataId}`}
                   </p>
-                  <p className="text-[11px] text-muted-foreground/70">
+                  <p className="text-[11px] text-muted-foreground">
                     {ch.myTricks}/{ch.tricksNeeded} prese {"\u00B7"} {dateStr}
                   </p>
                 </div>
@@ -990,7 +996,7 @@ function CopyMiniButton({ challengeId }: { challengeId: string }) {
           <polyline points="20 6 9 17 4 12" />
         </svg>
       ) : (
-        <svg className="h-3.5 w-3.5 text-muted-foreground/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+        <svg className="h-3.5 w-3.5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
         </svg>

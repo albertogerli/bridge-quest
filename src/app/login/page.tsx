@@ -309,7 +309,7 @@ function LoginContent() {
                       >
                         <div className="flex justify-center">{icon}</div>
                         <span className="text-xs font-semibold text-foreground block mt-1">{label}</span>
-                        <span className="text-[10px] text-muted-foreground/70 block">{desc}</span>
+                        <span className="text-[10px] text-muted-foreground block">{desc}</span>
                       </button>
                     ))}
                   </div>
@@ -336,7 +336,7 @@ function LoginContent() {
                     <button
                       type="button"
                       onClick={() => { setSelectedAsdCode(""); setAsdSearch(""); }}
-                      className="absolute right-3 top-[38px] text-muted-foreground/70 hover:text-foreground"
+                      className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <path d="M18 6L6 18M6 6l12 12" />
@@ -368,7 +368,7 @@ function LoginContent() {
                             >
                               <div>{club.name}</div>
                               {club.city && (
-                                <div className="text-[11px] text-muted-foreground/70">
+                                <div className="text-[11px] text-muted-foreground">
                                   {club.city}{club.province ? ` (${club.province})` : ""}
                                 </div>
                               )}
@@ -493,7 +493,7 @@ function LoginContent() {
               try { localStorage.setItem("bq_guest", "1"); } catch {}
               window.location.href = "/";
             }}
-            className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Continua senza account
           </button>

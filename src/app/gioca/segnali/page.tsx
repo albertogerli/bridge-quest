@@ -344,7 +344,7 @@ export default function SegnaliPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">
               Gioca
             </Link>
@@ -440,15 +440,15 @@ export default function SegnaliPage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}/{config.rounds}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Streak max</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Streak max</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-violet-500">+{xpEarned}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -495,7 +495,7 @@ export default function SegnaliPage() {
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-muted-foreground/70">
+          <span className="text-xs font-bold text-muted-foreground">
             {round}/{config.rounds}
           </span>
         </div>
@@ -544,7 +544,7 @@ export default function SegnaliPage() {
             </div>
           )}
 
-          <p className="mt-4 text-center text-xs font-bold text-muted-foreground/70">{current.question}</p>
+          <p className="mt-4 text-center text-xs font-bold text-muted-foreground">{current.question}</p>
         </motion.div>
 
         {/* Answers: cards or text */}

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Camera, Share2, CheckCircle2, ExternalLink } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 const DIDACTA_END = new Date("2026-03-14T23:59:59+01:00"); // venerdì 14 marzo
 const STORAGE_KEY = "bq_didacta_claimed";
@@ -15,6 +16,8 @@ export function DidactaBanner() {
   const [claimed, setClaimed] = useState(false);
   const [justClaimed, setJustClaimed] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(modalRef, modalOpen, { onEscape: () => setModalOpen(false) });
 
   useEffect(() => {
     const now = new Date();
@@ -65,9 +68,10 @@ export function DidactaBanner() {
 
         <button
           onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
+          aria-label="Chiudi il banner DIDACTA"
           className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/10 transition-colors z-10"
         >
-          <X className="w-4 h-4 text-muted-foreground/70" />
+          <X className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
         </button>
 
         <div className="flex items-center gap-3">
@@ -106,6 +110,10 @@ export function DidactaBanner() {
             onClick={() => setModalOpen(false)}
           >
             <motion.div
+              ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="didacta-modal-title"
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 100, opacity: 0 }}
@@ -115,14 +123,14 @@ export function DidactaBanner() {
             >
               {/* Header */}
               <div className="relative bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 p-6 text-white text-center">
-                <div className="absolute inset-0 opacity-20">
+                <div className="absolute inset-0 opacity-20" aria-hidden="true">
                   <div className="absolute top-2 left-4 text-4xl opacity-30">&#9824;</div>
                   <div className="absolute top-6 right-8 text-3xl opacity-30">&#9829;</div>
                   <div className="absolute bottom-4 left-8 text-3xl opacity-30">&#9830;</div>
                   <div className="absolute bottom-2 right-4 text-4xl opacity-30">&#9827;</div>
                 </div>
-                <Camera className="w-10 h-10 mx-auto mb-2" />
-                <h2 className="text-2xl font-black">DIDACTA 2026</h2>
+                <Camera className="w-10 h-10 mx-auto mb-2" aria-hidden="true" />
+                <h2 id="didacta-modal-title" className="text-2xl font-black">DIDACTA 2026</h2>
                 <p className="text-sm opacity-90 mt-1">Firenze, 12-14 Marzo</p>
               </div>
 

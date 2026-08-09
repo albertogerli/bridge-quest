@@ -28,12 +28,23 @@ const worldColors = [
   { bg: "bg-indigo-500", ring: "ring-indigo-300", glow: "shadow-indigo-400/50", text: "text-indigo-700", light: "bg-indigo-100" },
 ];
 
-// Course tab colors
+/**
+ * I ritardi a cascata (0.15s per mondo) su un corso da ~20 mondi arrivavano a
+ * oltre 3s: il contenuto restava a `opacity: 0` — invisibile a lungo e segnalato
+ * da axe come testo a contrasto nullo. Tetto a 1s: la cascata resta percepibile
+ * ma tutto è visibile subito.
+ */
+const MAX_STAGGER_DELAY = 1;
+const staggerDelay = (d: number) => Math.min(d, MAX_STAGGER_DELAY);
+
+// Course tab colors.
+// Le tinte "active" sono al livello 700 (non 500) perché il testo bianco sopra
+// il 500 restava sotto 4.5:1 — violazione serious rilevata da axe su /lezioni.
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
-  fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700", border: "border-emerald-200" },
-  quadri: { active: "bg-orange-500 text-white", inactive: "text-orange-700", border: "border-orange-200" },
-  "cuori-gioco": { active: "bg-red-500 text-white", inactive: "text-red-700", border: "border-red-200" },
-  "cuori-licita": { active: "bg-rose-500 text-white", inactive: "text-rose-700", border: "border-rose-200" },
+  fiori: { active: "bg-emerald-700 text-white", inactive: "text-emerald-700", border: "border-emerald-200" },
+  quadri: { active: "bg-orange-700 text-white", inactive: "text-orange-700", border: "border-orange-200" },
+  "cuori-gioco": { active: "bg-red-700 text-white", inactive: "text-red-700", border: "border-red-200" },
+  "cuori-licita": { active: "bg-rose-700 text-white", inactive: "text-rose-700", border: "border-rose-200" },
 };
 
 export default function LezioniPage() {
@@ -67,7 +78,7 @@ export default function LezioniPage() {
 
   if (!catalogLoaded || !currentCourse) {
     return (
-      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento corsi">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
         Caricamento corsi…
       </div>
     );
@@ -186,7 +197,7 @@ export default function LezioniPage() {
                   <span className="text-lg">{course.icon}</span>
                   <div className="text-left">
                     <div className="text-[13px] font-semibold leading-tight">{course.name.replace("Corso ", "")}</div>
-                    <div className={`text-[10px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground/70"}`}>
+                    <div className={`text-[10px] leading-tight ${isActive ? "text-white" : "text-muted-foreground"}`}>
                       {stats.progress}%
                     </div>
                   </div>
@@ -206,7 +217,7 @@ export default function LezioniPage() {
           <Badge className={`${levelInfo[currentCourse.level].bg} ${levelInfo[currentCourse.level].color} text-[10px] font-bold border-0`}>
             {levelInfo[currentCourse.level].label}
           </Badge>
-          <span className="text-xs text-muted-foreground/70">{currentCourse.subtitle}</span>
+          <span className="text-xs text-muted-foreground">{currentCourse.subtitle}</span>
         </motion.div>
 
         {/* Dispense link */}
@@ -268,7 +279,7 @@ export default function LezioniPage() {
             <h3 className="text-lg font-semibold text-foreground/80 mb-2">
               In arrivo!
             </h3>
-            <p className="text-sm text-muted-foreground/70 max-w-xs mx-auto">
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
               Il {currentCourse.name} sarà disponibile presto. Intanto continua con il Corso Fiori!
             </p>
           </motion.div>
@@ -312,26 +323,26 @@ export default function LezioniPage() {
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: worldIdx * 0.15 }}
+                    transition={{ delay: staggerDelay(worldIdx * 0.15) }}
                     className="flex items-center gap-3 mb-4 ml-1"
                   >
                     <div className={`flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full text-2xl font-bold z-10 ${
                       isLocked
-                        ? "bg-muted text-muted-foreground/70"
+                        ? "bg-muted text-muted-foreground"
                         : `bg-gradient-to-br ${world.gradient} text-white shadow-lg border-2 border-background`
                     }`}>
                       {isLocked ? <Lock className="w-6 h-6" /> : world.icon}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h2 className={`text-lg font-semibold ${isLocked ? "text-muted-foreground/70" : "text-foreground"}`}>
+                        <h2 className={`text-lg font-semibold ${isLocked ? "text-muted-foreground" : "text-foreground"}`}>
                           {world.name}
                         </h2>
                         {worldProgress === 100 && (
                           <span className="text-emerald-700 text-lg" aria-label="Completato">✓</span>
                         )}
                       </div>
-                      <p className={`text-xs ${isLocked ? "text-muted-foreground/70" : "text-muted-foreground"}`}>
+                      <p className={`text-xs ${isLocked ? "text-muted-foreground" : "text-muted-foreground"}`}>
                         {world.subtitle}
                       </p>
                       {!isLocked && (
@@ -393,7 +404,7 @@ export default function LezioniPage() {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{
-                              delay: 0.2 + worldIdx * 0.15 + lessonIdx * 0.08,
+                              delay: staggerDelay(0.2 + worldIdx * 0.15 + lessonIdx * 0.08),
                             }}
                             className={`relative ${offset}`}
                           >
@@ -411,7 +422,7 @@ export default function LezioniPage() {
                                     ? `${colors.bg} text-white shadow-md border-2 border-background`
                                     : isCurrent
                                       ? `${colors.bg} text-white shadow-lg ${colors.glow} ring-4 ${colors.ring} ring-opacity-50`
-                                      : "bg-muted text-muted-foreground/70 border-2 border-border"
+                                      : "bg-muted text-muted-foreground border-2 border-border"
                                 }`}>
                                   {isComplete ? (
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
@@ -459,7 +470,7 @@ export default function LezioniPage() {
                                       className={`text-[10px] font-bold px-1.5 py-0 ${
                                         isComplete
                                           ? "text-emerald border-emerald/30"
-                                          : "text-muted-foreground/70 border-border"
+                                          : "text-muted-foreground border-border"
                                       }`}
                                       title={`Lezione ${lessonNumber} - ${lessonModules} moduli`}
                                     >
@@ -513,10 +524,10 @@ export default function LezioniPage() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3 + worldIdx * 0.15 }}
+                      transition={{ delay: staggerDelay(0.3 + worldIdx * 0.15) }}
                       className="ml-10 rounded-2xl bg-muted border-2 border-dashed border-border p-4 text-center"
                     >
-                      <p className="text-sm text-muted-foreground/70 font-medium flex items-center justify-center gap-1.5">
+                      <p className="text-sm text-muted-foreground font-medium flex items-center justify-center gap-1.5">
                         <Lock className="w-4 h-4" /> Completa il mondo precedente al 50% per sbloccare
                       </p>
                     </motion.div>
@@ -557,7 +568,7 @@ export default function LezioniPage() {
                     {overallProgress === 100 ? <Crown className="w-8 h-8" /> : <Target className="w-8 h-8" />}
                   </div>
                 </motion.div>
-                <p className="text-center text-xs text-muted-foreground/70 mt-2 font-semibold">
+                <p className="text-center text-xs text-muted-foreground mt-2 font-semibold">
                   {overallProgress === 100
                     ? `${currentCourse.name} completato!`
                     : `Diplomato ${currentCourse.name} FIGB`}

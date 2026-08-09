@@ -363,7 +363,7 @@ export default function RipassoPage() {
 
                       {/* Bottom row: metadata + actions */}
                       <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground/70">
+                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             {dueLabel(item.nextReview)}
@@ -410,7 +410,7 @@ export default function RipassoPage() {
             transition={{ delay: 0.5 }}
             className="text-center py-4"
           >
-            <p className="text-xs text-muted-foreground/70">
+            <p className="text-xs text-muted-foreground">
               Ripassa regolarmente per consolidare la memoria a lungo termine
             </p>
           </motion.div>

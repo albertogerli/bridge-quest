@@ -213,7 +213,7 @@ export default function MemoryPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
               Gioca
             </Link>
@@ -282,7 +282,7 @@ export default function MemoryPage() {
 
           {bestTime !== null && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-              <div className="text-center text-sm text-muted-foreground/70 font-bold">
+              <div className="text-center text-sm text-muted-foreground font-bold">
                 ⏱️ Miglior tempo: {formatTime(bestTime)}
               </div>
             </motion.div>
@@ -303,7 +303,7 @@ export default function MemoryPage() {
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <Link href="/gioca" className="inline-flex items-center gap-1 text-sm text-muted-foreground/70 font-bold">
+            <Link href="/gioca" className="inline-flex items-center gap-1 text-sm text-muted-foreground font-bold">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="15,18 9,12 15,6"/></svg>
               Esci
             </Link>
@@ -415,7 +415,7 @@ export default function MemoryPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-              className="text-center text-sm text-muted-foreground/70 mt-4"
+              className="text-center text-sm text-muted-foreground mt-4"
             >
               💡 Gira due carte per trovare la coppia carta-concetto
             </motion.p>
@@ -516,7 +516,7 @@ export default function MemoryPage() {
               </div>
               {bestTime !== null && (
                 <div className="mt-3 pt-3 border-t border-border text-center">
-                  <p className="text-sm text-muted-foreground/70 font-bold">
+                  <p className="text-sm text-muted-foreground font-bold">
                     🏆 Miglior tempo: {formatTime(bestTime)}
                     {timer <= bestTime && timer > 0 && " — Nuovo record!"}
                   </p>

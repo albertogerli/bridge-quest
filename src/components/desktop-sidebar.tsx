@@ -118,7 +118,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-left">
               <p className="text-xs font-semibold text-foreground/80 group-hover:text-rose-600">Esci</p>
-              <p className="text-[10px] text-muted-foreground/70">{user.email}</p>
+              <p className="text-[10px] text-muted-foreground">{user.email}</p>
             </div>
           </button>
         ) : stats.xp > 0 ? (
@@ -135,7 +135,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-left flex-1">
               <p className="text-xs font-semibold text-foreground/80">Livello {stats.level} · {stats.xp} XP</p>
-              <p className="text-[10px] text-muted-foreground/70 group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
+              <p className="text-[10px] text-muted-foreground group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
             </div>
           </Link>
         ) : (
@@ -165,10 +165,10 @@ export function DesktopSidebar() {
             <p className="text-[10px] font-medium text-figb dark:text-primary uppercase tracking-wider">
               Un progetto della FIGB
             </p>
-            <p className="text-[10px] text-figb/70 dark:text-primary/70 mt-0.5">
+            <p className="text-[10px] text-figb dark:text-primary mt-0.5">
               Commissione Insegnamento
             </p>
-            <p className="text-[9px] text-figb/40 dark:text-primary/50 mt-1">
+            <p className="text-[9px] text-figb dark:text-primary mt-1">
               Sviluppo: A. G. Gerli / Tourbillon Tech
             </p>
           </div>

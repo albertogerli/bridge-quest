@@ -163,7 +163,7 @@ export default function CircoloPage() {
             <div className="card-clean rounded-2xl bg-card p-8 mx-auto max-w-sm">
               <div className="flex justify-center mb-4">
                 <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center">
-                  <Users className="w-8 h-8 text-muted-foreground/70" />
+                  <Users className="w-8 h-8 text-muted-foreground" />
                 </div>
               </div>
               <h1 className="text-lg font-bold text-foreground mb-2">
@@ -195,7 +195,7 @@ export default function CircoloPage() {
         <motion.nav
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center gap-1.5 text-xs text-muted-foreground/70 mb-4"
+          className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4"
         >
           <Link
             href="/classifica"
@@ -373,7 +373,7 @@ export default function CircoloPage() {
                           {rank <= 3 ? (
                             medals[rank - 1]
                           ) : (
-                            <span className="text-muted-foreground/70 text-sm">
+                            <span className="text-muted-foreground text-sm">
                               {rank}
                             </span>
                           )}
@@ -419,7 +419,7 @@ export default function CircoloPage() {
                           <p className="font-bold text-sm text-foreground">
                             {formatNumber(member.xp)}
                           </p>
-                          <p className="text-[10px] text-muted-foreground/70">XP</p>
+                          <p className="text-[10px] text-muted-foreground">XP</p>
                         </div>
                       </div>
                     </div>

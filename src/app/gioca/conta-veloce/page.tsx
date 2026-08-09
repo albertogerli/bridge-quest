@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -76,11 +77,22 @@ export default function ContaVelocePage() {
   const [lastCorrect, setLastCorrect] = useState(false);
   const [xpEarned, setXpEarned] = useState(0);
   const [paused, setPaused] = useState(false);
+  const pauseDialogRef = useRef<HTMLDivElement>(null);
   const [roundHistory, setRoundHistory] = useState<Array<{ handStr: string; correctHCP: number; selectedHCP: number; correct: boolean }>>([]);
   const [showRecap, setShowRecap] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
   const startTimeRef = useRef(0);
   const pausedElapsedRef = useRef(0);
+
+  // Ripresa dalla pausa: usata sia dal bottone sia da Escape (focus trap).
+  const resumeFromPause = useCallback(() => {
+    setPaused(false);
+    startTimeRef.current = Date.now() - pausedElapsedRef.current;
+    timerRef.current = setInterval(() => {
+      setTimer(Math.floor((Date.now() - startTimeRef.current) / 100));
+    }, 100);
+  }, []);
+  useFocusTrap(pauseDialogRef, paused, { onEscape: resumeFromPause });
 
   useEffect(() => {
     try {
@@ -208,14 +220,14 @@ export default function ContaVelocePage() {
   }, [correctHCP, config]);
 
   // Profile-aware settings
-  const timerColor = profile === "giovane" && timer > 50 ? "text-red-500 dark:text-red-400" : "text-muted-foreground/70";
+  const timerColor = profile === "giovane" && timer > 50 ? "text-red-500 dark:text-red-400" : "text-muted-foreground";
   const cardSize = profile === "senior" ? "text-lg" : "text-base";
 
   if (phase === "menu") {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
             <span>/</span>
             <span className="text-emerald font-semibold">Conta Veloce</span>
@@ -300,15 +312,15 @@ export default function ContaVelocePage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{avgTime}s</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Media</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Media</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Streak max</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Streak max</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-amber-500">+{xpEarned}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -409,7 +421,7 @@ export default function ContaVelocePage() {
             </div>
           </div>
 
-          <span className="text-xs font-bold text-muted-foreground/70">{round}/{config.rounds}</span>
+          <span className="text-xs font-bold text-muted-foreground">{round}/{config.rounds}</span>
         </div>
 
         {/* Timer + Streak */}
@@ -437,7 +449,7 @@ export default function ContaVelocePage() {
           animate={{ opacity: 1, scale: 1 }}
           className="card-clean rounded-2xl bg-card p-4 mb-6"
         >
-          <p className="text-center text-xs font-bold text-muted-foreground/70 mb-3">
+          <p className="text-center text-xs font-bold text-muted-foreground mb-3">
             Quanti punti onori?
           </p>
 
@@ -458,7 +470,7 @@ export default function ContaVelocePage() {
                         className={`${cardSize} font-bold ${
                           hcpValues[card.rank]
                             ? showAnswer ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded px-1" : "text-foreground"
-                            : "text-muted-foreground/70"
+                            : "text-muted-foreground"
                         }`}
                       >
                         {card.rank}
@@ -504,7 +516,7 @@ export default function ContaVelocePage() {
                 }`}
               >
                 <p className={`font-bold ${profile === "senior" ? "text-3xl" : "text-2xl"} text-foreground`}>{opt}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold mt-1">HCP</p>
+                <p className="text-[10px] text-muted-foreground font-bold mt-1">HCP</p>
               </button>
             ))}
           </motion.div>
@@ -512,7 +524,7 @@ export default function ContaVelocePage() {
 
         {/* Hint for senior */}
         {profile === "senior" && !showAnswer && (
-          <p className="text-center text-[11px] text-muted-foreground/70 mt-3">
+          <p className="text-center text-[11px] text-muted-foreground mt-3">
             A=4, K=3, Q=2, J=1
           </p>
         )}
@@ -527,6 +539,10 @@ export default function ContaVelocePage() {
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             >
               <motion.div
+                ref={pauseDialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Gioco in pausa"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
@@ -537,13 +553,7 @@ export default function ContaVelocePage() {
                 <p className="text-sm text-muted-foreground mt-2">Round {round}/{config.rounds} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
-                    onClick={() => {
-                      setPaused(false);
-                      startTimeRef.current = Date.now() - pausedElapsedRef.current;
-                      timerRef.current = setInterval(() => {
-                        setTimer(Math.floor((Date.now() - startTimeRef.current) / 100));
-                      }, 100);
-                    }}
+                    onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg"
                   >
                     Riprendi

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,11 +16,25 @@ import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
-import { ShareResult } from "@/components/bridge/share-result";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
+// Pannello di condivisione: esiste solo nella schermata di fine mano.
+const ShareResult = dynamic(
+  () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
+  { ssr: false },
+);
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BonusHandModal } from "@/components/bonus-hand-modal";
+// Unica fonte di @radix-ui/react-dialog in questa route: si apre solo dopo una
+// mano riuscita, quindi il first load non deve pagarne il costo.
+const BonusHandModal = dynamic(
+  () => import("@/components/bonus-hand-modal").then((m) => m.BonusHandModal),
+  { ssr: false },
+);
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
@@ -61,7 +76,7 @@ export default function SfidaDelGiornoPage() {
   const smazzata = getDailySmazzata(playable);
   if (!smazzata) {
     return (
-      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento sfida del giorno">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento sfida del giorno">
         Caricamento sfida del giorno…
       </div>
     );
@@ -83,6 +98,8 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showBonus, setShowBonus] = useState(false);
+  // Resta montato dopo la prima apertura per non perdere l'animazione di chiusura.
+  const [bonusArmed, setBonusArmed] = useState(false);
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -153,7 +170,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
       const bonusUsed = localStorage.getItem(`bq_bonus_used_${today}`) === "1";
       if (!bonusUsed) {
         localStorage.setItem(`bq_bonus_available_${today}`, "1");
-        setTimeout(() => setShowBonus(true), 1500);
+        setTimeout(() => { setBonusArmed(true); setShowBonus(true); }, 1500);
       }
       // Save for AI analysis
       const parsed = parseContract(smazzata.contract);
@@ -225,17 +242,17 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -377,7 +394,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 return ba && !bu;
               })() && (
                 <Button
-                  onClick={() => setShowBonus(true)}
+                  onClick={() => { setBonusArmed(true); setShowBonus(true); }}
                   className="rounded-xl bg-amber-600 hover:bg-amber-700 text-sm font-bold h-12 px-6 shadow-lg shadow-amber-500/25"
                 >
                   Mano Bonus 2x
@@ -538,6 +555,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
       </div>
 
       {/* Bonus Hand Modal */}
+      {bonusArmed && (
       <BonusHandModal
         open={showBonus}
         onOpenChange={setShowBonus}
@@ -546,6 +564,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           router.push('/gioca/smazzata');
         }}
       />
+      )}
     </div>
   );
 }

@@ -172,11 +172,11 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">4</p>
-                <p className="text-[10px] font-bold text-figb/70 dark:text-primary/70 uppercase">Corsi</p>
+                <p className="text-[10px] font-bold text-figb dark:text-primary uppercase">Corsi</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">200+</p>
-                <p className="text-[10px] font-bold text-figb/70 dark:text-primary/70 uppercase">Mani</p>
+                <p className="text-[10px] font-bold text-figb dark:text-primary uppercase">Mani</p>
               </div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
@@ -213,7 +213,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             >
               Inizia gratis
             </a>
-            <p className="text-center text-[11px] text-muted-foreground/70 -mt-1">Nessuna carta di credito richiesta</p>
+            <p className="text-center text-[11px] text-muted-foreground -mt-1">Nessuna carta di credito richiesta</p>
             <a
               href="/login?mode=login"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-card text-primary font-semibold text-sm border-2 border-primary/20 hover:border-primary/40 transition-all"
@@ -222,7 +222,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             </a>
             <button
               onClick={onContinueAsGuest}
-              className="w-full text-center text-sm font-semibold text-muted-foreground/70 hover:text-foreground transition-colors py-2"
+              className="w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors py-2"
             >
               Continua senza account
             </button>
@@ -232,10 +232,10 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
       {/* Footer */}
       <footer className="px-5 pb-8 text-center space-y-1">
-        <p className="text-[10px] text-muted-foreground/70">
+        <p className="text-[10px] text-muted-foreground">
           Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.
         </p>
-        <p className="text-[11px] text-muted-foreground/70">
+        <p className="text-[11px] text-muted-foreground">
           <a href="/privacy" className="underline hover:text-foreground transition-colors">Privacy e Cookie Policy</a>
         </p>
       </footer>

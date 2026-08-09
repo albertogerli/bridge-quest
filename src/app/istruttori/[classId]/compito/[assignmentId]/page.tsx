@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState, use } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
-import { HandReplay } from "@/components/bridge/hand-replay";
+// Replay della mano: si apre su richiesta a fine partita.
+const HandReplay = dynamic(
+  () => import("@/components/bridge/hand-replay").then((m) => m.HandReplay),
+  { ssr: false },
+);
 import { parseContract, type GameState } from "@/lib/bridge-engine";
 import {
   PLAY_ERROR_LABELS,
@@ -202,7 +207,7 @@ export default function AssignmentResultsPage({
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded border border-border bg-muted" /> Non giocata
         </span>
-        <span className="text-muted-foreground/80">▶ Clicca una cella giocata per rivedere la mano</span>
+        <span className="text-muted-foreground">▶ Clicca una cella giocata per rivedere la mano</span>
       </div>
 
       {members.length === 0 ? (

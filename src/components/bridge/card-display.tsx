@@ -1,6 +1,8 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "motion/react";
+import { rankAriaLabel, suitAriaLabel } from "@/lib/card-labels";
 
 /**
  * CardDisplay - Renders card notation like "♠AQ854 ♥K9 ♦J87 ♣AKJ"
@@ -113,7 +115,21 @@ function splitRanks(rankStr: string): string[] {
   return ranks;
 }
 
-export function CardDisplay({
+/** "Picche: Asso, Donna, 8, 5, 4" — descrizione leggibile di un gruppo di seme. */
+function groupAriaLabel(group: SuitGroup): string {
+  const suit = suitAriaLabel(group.suit);
+  const name = suit ? suit.charAt(0).toUpperCase() + suit.slice(1) : "";
+  const ranks = group.ranks.map(rankAriaLabel).join(", ");
+  return name ? `${name}: ${ranks}` : ranks;
+}
+
+/** Etichetta completa di una mano (o di un blocco di semi) parsata dal testo. */
+function groupsAriaLabel(groups: SuitGroup[], label?: string): string {
+  const body = groups.map(groupAriaLabel).join(". ");
+  return label ? `${label}. ${body}` : body;
+}
+
+function CardDisplayImpl({
   cards,
   size = "md",
 }: {
@@ -150,13 +166,17 @@ export function CardDisplay({
               aria-hidden="true"
             />
           )}
-          <span className="inline-flex flex-col gap-1">
+          <span
+            className="inline-flex flex-col gap-1"
+            role="img"
+            aria-label={groupsAriaLabel(hand.groups, hand.label)}
+          >
             {hand.label && (
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" aria-hidden="true">
                 {hand.label}
               </span>
             )}
-            <span className={`inline-flex flex-wrap items-center ${s.gap}`}>
+            <span className={`inline-flex flex-wrap items-center ${s.gap}`} aria-hidden="true">
               {hand.groups.map((group, gIdx) => (
                 <motion.span
                   key={gIdx}
@@ -200,13 +220,17 @@ export function HandDiagram({
   const groups = parseCardString(cards);
 
   return (
-    <div className="rounded-xl bg-card border border-border shadow-sm p-3">
+    <div
+      className="rounded-xl bg-card border border-border shadow-sm p-3"
+      role="img"
+      aria-label={groupsAriaLabel(groups, label)}
+    >
       {label && (
-        <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2" aria-hidden="true">
           {label}
         </p>
       )}
-      <div className="space-y-1">
+      <div className="space-y-1" aria-hidden="true">
         {groups.map((group, gIdx) => (
           <motion.div
             key={gIdx}
@@ -237,3 +261,9 @@ export function HandDiagram({
     </div>
   );
 }
+
+// memo: le props sono solo stringhe, ma a ogni render il componente ri-parsa la
+// notazione delle carte. Nella pagina modulo (stato di quiz/video che cambia in
+// continuazione) e nel glossario filtrato in ricerca decine di istanze si
+// ri-renderizzavano identiche a ogni tasto premuto.
+export const CardDisplay = memo(CardDisplayImpl);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import type {
@@ -12,6 +12,8 @@ import type {
   Card,
 } from "@/lib/bridge-engine";
 import { cardToString, suitSymbol, sortHand, toDisplayPosition } from "@/lib/bridge-engine";
+import { cardAriaLabel, handAriaLabel, suitAriaLabel } from "@/lib/card-labels";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 // ── helpers ──────────────────────────────────────────────────────
 
@@ -100,9 +102,17 @@ function CardChip({
       className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-sm font-bold leading-none
         ${highlight ? "bg-amber-100 dark:bg-amber-950/40 ring-1 ring-amber-300" : "bg-muted"}
         ${SUIT_COLORS[card.suit]}`}
+      role="img"
+      aria-label={
+        highlight
+          ? `${cardAriaLabel(card)} (vince la presa)`
+          : cardAriaLabel(card)
+      }
     >
-      {suitSymbol(card.suit)}
-      {card.rank}
+      <span aria-hidden="true">
+        {suitSymbol(card.suit)}
+        {card.rank}
+      </span>
     </span>
   );
 }
@@ -119,7 +129,11 @@ function MiniHand({
   dimmed?: boolean;
 }) {
   return (
-    <div className={`flex flex-wrap gap-0.5 ${dimmed ? "opacity-40" : ""}`}>
+    <div
+      className={`flex flex-wrap gap-0.5 ${dimmed ? "opacity-40" : ""}`}
+      role="img"
+      aria-label={handAriaLabel(cards)}
+    >
       {cards.map((c, i) => {
         const isPlayed =
           playedCard &&
@@ -128,6 +142,7 @@ function MiniHand({
         return (
           <span
             key={`${c.rank}-${c.suit}-${i}`}
+            aria-hidden="true"
             className={`text-xs font-bold leading-none
               ${isPlayed ? "underline decoration-2 decoration-amber-400" : ""}
               ${SUIT_COLORS[c.suit]}`}
@@ -180,30 +195,46 @@ function TrickTable({
       {/* Row 1: North */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">N</span>
+        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+          <span aria-hidden="true">N</span>
+          <span className="sr-only">Nord</span>
+        </span>
         {renderCell("north")}
       </div>
       <div />
 
       {/* Row 2: West - center - East */}
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">O</span>
+        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+          <span aria-hidden="true">O</span>
+          <span className="sr-only">Ovest</span>
+        </span>
         {renderCell("west")}
       </div>
       <div className="flex items-center justify-center">
-        <span className="text-[9px] font-bold text-muted-foreground/70">
-          {trumpSuit ? suitSymbol(trumpSuit) : "SA"}
+        <span
+          className="text-[9px] font-bold text-muted-foreground"
+          role="img"
+          aria-label={trumpSuit ? `Atout: ${suitAriaLabel(trumpSuit)}` : "Senza atout"}
+        >
+          <span aria-hidden="true">{trumpSuit ? suitSymbol(trumpSuit) : "SA"}</span>
         </span>
       </div>
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">E</span>
+        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+          <span aria-hidden="true">E</span>
+          <span className="sr-only">Est</span>
+        </span>
         {renderCell("east")}
       </div>
 
       {/* Row 3: South */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">S</span>
+        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+          <span aria-hidden="true">S</span>
+          <span className="sr-only">Sud</span>
+        </span>
         {renderCell("south")}
       </div>
       <div />
@@ -231,6 +262,8 @@ export function HandReplay({
   onClose: () => void;
 }) {
   const [currentTrickIdx, setCurrentTrickIdx] = useState(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, true, { onEscape: onClose });
   const tricks = gameState.tricks;
   const totalTricks = tricks.length;
   const trick = tricks[currentTrickIdx];
@@ -286,6 +319,10 @@ export function HandReplay({
       }}
     >
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hand-replay-title"
         initial={{ opacity: 0, scale: 0.92, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -294,7 +331,7 @@ export function HandReplay({
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div>
-            <h3 className="text-lg font-semibold text-foreground">
+            <h3 id="hand-replay-title" className="text-lg font-semibold text-foreground">
               Rivedi la mano
             </h3>
             <p className="text-xs text-muted-foreground">
@@ -307,7 +344,7 @@ export function HandReplay({
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70 transition-colors"
             aria-label="Chiudi"
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -320,7 +357,7 @@ export function HandReplay({
             <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
               {currentTrickIdx + 1}/{totalTricks}
             </span>
-            <span className="text-xs font-bold text-muted-foreground/70">Presa</span>
+            <span className="text-xs font-bold text-muted-foreground">Presa</span>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold">
             <span className="text-muted-foreground">N-S</span>
@@ -328,7 +365,7 @@ export function HandReplay({
               {runningScore.ns}
             </span>
             <span className="text-muted-foreground/40">-</span>
-            <span className="text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5">
+            <span className="text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5">
               {runningScore.ew}
             </span>
             <span className="text-muted-foreground">E-O</span>
@@ -367,7 +404,7 @@ export function HandReplay({
               <p className="text-sm font-semibold text-foreground/80">
                 {trickCommentary(trick, gameState.declarer)}
               </p>
-              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+              <p className="text-[10px] text-muted-foreground mt-0.5">
                 Attacco: {displayLabel(trick.leader, gameState.declarer)}
               </p>
             </motion.div>
@@ -376,7 +413,7 @@ export function HandReplay({
 
         {/* Hands at this point */}
         <div className="px-5 pb-4">
-          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Carte in mano (prima della presa)
           </p>
           {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
@@ -396,7 +433,7 @@ export function HandReplay({
                       : "col-start-2 row-start-3";
               return (
                 <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
-                  <span className="text-[10px] font-bold text-muted-foreground/70 uppercase">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">
                     {POSITION_LABELS[slot]}
                   </span>
                   <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
@@ -415,7 +452,7 @@ export function HandReplay({
             onClick={() => setCurrentTrickIdx((i) => Math.max(0, i - 1))}
             className="rounded-xl text-xs font-bold h-9 px-4"
           >
-            <svg className="h-3.5 w-3.5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-3.5 w-3.5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <polyline points="15,18 9,12 15,6" />
             </svg>
             Precedente
@@ -440,7 +477,7 @@ export function HandReplay({
             className="rounded-xl text-xs font-bold h-9 px-4"
           >
             Successiva
-            <svg className="h-3.5 w-3.5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-3.5 w-3.5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <polyline points="9,6 15,12 9,18" />
             </svg>
           </Button>

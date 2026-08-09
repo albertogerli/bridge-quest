@@ -131,7 +131,7 @@ export function DesktopNav() {
             ? "bg-primary/10 text-primary font-semibold"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground font-medium"
         }`}>
-          <span className={active ? "" : "text-muted-foreground/70"} aria-hidden="true">
+          <span className={active ? "" : "text-muted-foreground"} aria-hidden="true">
             {icons[item.icon](active)}
           </span>
           <span>{item.label}</span>
@@ -164,7 +164,7 @@ export function DesktopNav() {
 
         {/* Secondary "Altro" group */}
         <div className="pt-4">
-          <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
+          <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Altro
           </p>
           {moreNav.map(renderItem)}
@@ -178,7 +178,7 @@ export function DesktopNav() {
           <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
             pathname === "/impostazioni"
               ? "bg-muted text-foreground/80"
-              : "text-muted-foreground/70 hover:bg-muted/50 hover:text-foreground/80"
+              : "text-muted-foreground hover:bg-muted/50 hover:text-foreground/80"
           }`}>
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />

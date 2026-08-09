@@ -486,7 +486,7 @@ function SfidaIMPContent() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6"
           >
-            <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
               <Link href="/gioca" className="hover:text-figb dark:hover:text-primary transition-colors font-bold">
                 Gioca
               </Link>
@@ -659,17 +659,17 @@ function SfidaIMPContent() {
           >
             <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
               <div className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
                 <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{contractDisplay(boardContract.contract)}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
                 <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
                 <p className="text-lg font-bold text-foreground">
                   {partnershipOf(declarer) === "ew"
                     ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -718,7 +718,7 @@ function SfidaIMPContent() {
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <div className="flex items-center justify-center h-64 text-muted-foreground/70">
+              <div className="flex items-center justify-center h-64 text-muted-foreground">
                 <p className="text-sm">Preparazione della mano...</p>
               </div>
             )}
@@ -801,22 +801,22 @@ function SfidaIMPContent() {
             <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Contratto</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Contratto</p>
                   <p className="text-xl font-bold text-foreground">{contractDisplay(boardContract.contract)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Prese</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Prese</p>
                   <p className="text-xl font-bold text-foreground">{currentBoardResult.tricksMade}/{tricksNeeded}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Risultato</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Risultato</p>
                   <p className={`text-xl font-bold ${trickDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                     {formatResult(trickDiff)}
                   </p>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-border text-center">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">Punteggio grezzo</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Punteggio grezzo</p>
                 <p className={`text-lg font-bold ${currentBoardResult.rawScore >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                   {currentBoardResult.rawScore > 0 ? "+" : ""}{currentBoardResult.rawScore}
                 </p>
@@ -926,7 +926,7 @@ function SfidaIMPContent() {
               {/* Comparison Table */}
               <div className="mt-6 rounded-2xl bg-card border-2 border-border shadow-[0_4px_0_var(--border)] overflow-hidden">
                 {/* Table Header */}
-                <div className="grid grid-cols-5 text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider bg-muted/50 px-4 py-3">
+                <div className="grid grid-cols-5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
                   <div className="text-left">Mano</div>
                   <div className="text-center">Contr.</div>
                   <div className="text-center">Tu</div>
@@ -957,7 +957,7 @@ function SfidaIMPContent() {
                       <div className={`text-center font-bold ${theirDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                         {formatResult(theirDiff)}
                       </div>
-                      <div className={`text-right font-bold ${myIMP > 0 ? "text-emerald-600 dark:text-emerald-400" : myIMP < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground/70"}`}>
+                      <div className={`text-right font-bold ${myIMP > 0 ? "text-emerald-600 dark:text-emerald-400" : myIMP < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"}`}>
                         {myIMP > 0 ? "+" : ""}{myIMP}
                       </div>
                     </div>
@@ -1015,7 +1015,7 @@ function SfidaIMPContent() {
             {/* My results summary */}
             {myResults && myResults.length > 0 && (
               <div className="mt-6 rounded-2xl bg-card p-4 border-2 border-border shadow-[0_4px_0_var(--border)]">
-                <h3 className="text-xs font-bold text-muted-foreground/70 uppercase tracking-wider mb-3">I tuoi risultati</h3>
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">I tuoi risultati</h3>
                 {myResults.map((r, i) => {
                   const needed = parseContract(r.contract).tricksNeeded;
                   const diff = r.tricksMade - needed;

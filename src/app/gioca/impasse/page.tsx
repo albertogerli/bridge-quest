@@ -298,7 +298,7 @@ export default function ImpassePage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald-600 transition-colors"
@@ -429,7 +429,7 @@ export default function ImpassePage() {
 
             {/* Best score */}
             {bestScore > 0 && (
-              <div className="mt-4 text-center text-sm text-muted-foreground/70 font-bold">
+              <div className="mt-4 text-center text-sm text-muted-foreground font-bold">
                 Miglior punteggio: {bestScore} pts
               </div>
             )}
@@ -491,13 +491,13 @@ export default function ImpassePage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">
+                <p className="text-[10px] text-muted-foreground font-bold">
                   Streak max
                 </p>
               </div>
@@ -505,7 +505,7 @@ export default function ImpassePage() {
                 <p className="text-lg font-bold text-blue-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -571,14 +571,14 @@ export default function ImpassePage() {
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-muted-foreground/70">
+          <span className="text-xs font-bold text-muted-foreground">
             {round + 1}/{TOTAL_ROUNDS}
           </span>
         </div>
 
         {/* Streak + Score row */}
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-bold text-muted-foreground/70">
+          <div className="text-sm font-bold text-muted-foreground">
             {correctCount}/{round} corrette
           </div>
           {streak > 1 && (
@@ -618,7 +618,7 @@ export default function ImpassePage() {
                   ? "text-red-500 dark:text-red-400"
                   : timerWarn
                     ? "text-amber-500 dark:text-amber-400"
-                    : "text-muted-foreground/70"
+                    : "text-muted-foreground"
               }`}
             >
               {(timeLeft / 1000).toFixed(1)}s
@@ -635,7 +635,7 @@ export default function ImpassePage() {
         >
           {/* Missing honor badge */}
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold text-muted-foreground/70 uppercase tracking-wider">
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Manca:
             </span>
             <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 font-bold text-sm">
@@ -647,7 +647,7 @@ export default function ImpassePage() {
           <div className="grid grid-cols-2 gap-4">
             {/* Your hand */}
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 La tua mano
               </p>
               <div className="bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/40 dark:to-card rounded-xl p-3 border border-blue-100 dark:border-blue-900">
@@ -659,7 +659,7 @@ export default function ImpassePage() {
 
             {/* Dummy */}
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 Il morto
               </p>
               <div className="bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-card rounded-xl p-3 border border-amber-100 dark:border-amber-900">
@@ -672,11 +672,11 @@ export default function ImpassePage() {
 
           {/* Info: total cards + missing */}
           <div className="flex items-center justify-center gap-4 mt-4">
-            <span className="text-xs font-bold text-muted-foreground/70">
+            <span className="text-xs font-bold text-muted-foreground">
               {scenario.totalCards} carte totali
             </span>
             <span className="text-muted-foreground/40">|</span>
-            <span className="text-xs font-bold text-muted-foreground/70">
+            <span className="text-xs font-bold text-muted-foreground">
               {scenario.missingCards} mancanti
             </span>
           </div>

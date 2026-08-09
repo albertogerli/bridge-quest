@@ -260,7 +260,7 @@ export function PendingChallengesBanner() {
       </AnimatePresence>
 
       {challenges.length > 3 && (
-        <p className="text-[11px] text-center text-muted-foreground/70">
+        <p className="text-[11px] text-center text-muted-foreground">
           +{challenges.length - 3} altre sfide
         </p>
       )}

@@ -36,7 +36,7 @@ export default function GlobalError({
         </p>
 
         {error.digest && (
-          <p className="text-xs text-muted-foreground/70 mb-4 font-mono">
+          <p className="text-xs text-muted-foreground mb-4 font-mono">
             Codice: {error.digest}
           </p>
         )}

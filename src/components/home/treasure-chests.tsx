@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, Gift, Package, Wrench, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/use-profile";
 import { useGameStore } from "@/store/use-game-store";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 const chestMilestoneIcons = {
   3: (size: string) => <Gift className={`${size} text-amber-700`} />,
@@ -24,6 +25,10 @@ const chestMilestones = [
 export function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
   const profile = useProfile();
   const [showChestPopup, setShowChestPopup] = useState<typeof chestMilestones[0] | null>(null);
+  const chestDialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(chestDialogRef, showChestPopup !== null, {
+    onEscape: () => setShowChestPopup(null),
+  });
 
   // Check for newly earned chest
   useEffect(() => {
@@ -60,6 +65,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
           onClick={() => setShowChestPopup(null)}
         >
           <motion.div
+            ref={chestDialogRef}
             initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0 }}
@@ -74,13 +80,14 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
               animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
               transition={{ duration: 0.8 }}
               className="flex justify-center mb-4"
+              aria-hidden="true"
             >
               {chestMilestoneIcons[showChestPopup.modules]?.("w-16 h-16")}
             </motion.div>
             <h2 className="text-2xl font-bold text-foreground font-display">{profile.chestTitle}</h2>
             <p className="text-lg font-bold text-amber-600 dark:text-amber-400 mt-2">{showChestPopup.label}</p>
             <p className="text-sm text-muted-foreground mt-1">{showChestPopup.reward}</p>
-            <div className="mt-4 flex justify-center gap-1">
+            <div className="mt-4 flex justify-center gap-1" aria-hidden="true">
               {[...Array(5)].map((_, i) => (
                 <motion.span
                   key={i}
@@ -154,7 +161,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
               transition={{ delay: 0.5, duration: 0.8 }}
             />
           </div>
-          <p className="text-[10px] text-muted-foreground/70 mt-1.5">
+          <p className="text-[10px] text-muted-foreground mt-1.5">
             Premio: {nextChest.reward}
           </p>
         </div>

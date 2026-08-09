@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -137,6 +138,11 @@ export default function ModulePage({
   const [eliminated, setEliminated] = useState<Record<number, number[]>>({}); // 50/50: eliminated option indices per block
   const [xpMultiplier, setXpMultiplier] = useState(1); // streak multiplier
   const [showLevelUp, setShowLevelUp] = useState(false); // level up popup
+  const levelUpRef = useRef<HTMLDivElement>(null);
+  const closeLevelUp = useCallback(() => setShowLevelUp(false), []);
+  // Popup celebrativo senza controlli: il trap serve a portarci il focus (così
+  // lo screen reader lo annuncia) e a renderlo chiudibile con Escape.
+  useFocusTrap(levelUpRef, showLevelUp, { onEscape: closeLevelUp });
   const [showComprehension, setShowComprehension] = useState(true); // comprehension quiz gate
   const [floatingXp, setFloatingXp] = useState<{ id: number; amount: number; x: number; y: number }[]>([]); // flying XP
   const floatingXpId = useRef(0);
@@ -371,7 +377,7 @@ export default function ModulePage({
 
   if (!catalogLoaded) {
     return (
-      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento modulo">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento modulo">
         Caricamento modulo…
       </div>
     );
@@ -789,7 +795,7 @@ export default function ModulePage({
                   {isJunior ? "Mettiti alla Prova!" : "Quiz"}
                 </p>
                 {totalQuizzes > 1 && (
-                  <p className="text-[10px] text-muted-foreground/70 font-medium">
+                  <p className="text-[10px] text-muted-foreground font-medium">
                     +20 {profile.xpLabel} per risposta corretta
                   </p>
                 )}
@@ -873,7 +879,7 @@ export default function ModulePage({
                   } else if (isSelected && !isCorrect) {
                     optionClass = "bg-red-50 border-red-300 text-red-800 dark:bg-red-950/40 dark:border-red-700 dark:text-red-300";
                   } else {
-                    optionClass = "bg-muted/50 border-border text-muted-foreground/70";
+                    optionClass = "bg-muted/50 border-border text-muted-foreground";
                   }
                 }
 
@@ -1103,7 +1109,7 @@ export default function ModulePage({
                 if (tfAnswered) {
                   if (isCorrectOpt) cls = "bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-700 dark:text-emerald-300";
                   else if (isSelected && !tfCorrect) cls = "bg-red-50 border-red-300 text-red-800 dark:bg-red-950/40 dark:border-red-700 dark:text-red-300";
-                  else cls = "bg-muted/50 border-border text-muted-foreground/70";
+                  else cls = "bg-muted/50 border-border text-muted-foreground";
                 }
                 return (
                   <motion.button
@@ -1512,9 +1518,13 @@ export default function ModulePage({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               className="fixed inset-0 z-[80] flex items-center justify-center bg-black/30 backdrop-blur-sm"
-              onClick={() => setShowLevelUp(false)}
+              onClick={closeLevelUp}
             >
               <motion.div
+                ref={levelUpRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="level-up-title"
                 initial={{ y: 50, rotate: -5 }}
                 animate={{ y: 0, rotate: 0 }}
                 exit={{ y: 50 }}
@@ -1525,14 +1535,15 @@ export default function ModulePage({
                   animate={{ rotate: [0, 10, -10, 10, 0], scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.8 }}
                   className="text-6xl mb-3"
+                  aria-hidden="true"
                 >
                   🎉
                 </motion.div>
-                <h3 className="text-2xl font-bold text-amber-900">{profile.levelUpTitle}</h3>
+                <h3 id="level-up-title" className="text-2xl font-bold text-amber-900">{profile.levelUpTitle}</h3>
                 <p className="text-amber-800 font-bold mt-2 text-lg">
                   Livello {getLevelFromXp(xpEarned)}
                 </p>
-                <div className="mt-4 flex justify-center gap-2">
+                <div className="mt-4 flex justify-center gap-2" aria-hidden="true">
                   {["⭐", "⭐", "⭐"].map((s, i) => (
                     <motion.span
                       key={i}
@@ -1616,7 +1627,7 @@ export default function ModulePage({
                 <span className="text-[10px]">🔥</span>
               </motion.div>
             )}
-            <span className={`font-bold text-muted-foreground/70 ${profile.profile === "senior" ? "text-sm" : "text-xs"}`}>
+            <span className={`font-bold text-muted-foreground ${profile.profile === "senior" ? "text-sm" : "text-xs"}`}>
               {currentStep + 1}/{totalSteps}
             </span>
             {xpEarned > 0 && (
@@ -1660,7 +1671,7 @@ export default function ModulePage({
           <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold border-0">
             Lezione {lessonNumber}
           </Badge>
-          <span className="text-xs text-muted-foreground/70 font-medium">{mod.title}</span>
+          <span className="text-xs text-muted-foreground font-medium">{mod.title}</span>
         </motion.div>
 
         {/* === GAMIFICATION BAR: Hearts + Multiplier + Power-ups === */}
@@ -1852,7 +1863,7 @@ export default function ModulePage({
               <div className="flex justify-center mb-1.5">
                 <button
                   onClick={handleSaveAndExit}
-                  className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Salva e esci
                 </button>
@@ -2140,7 +2151,7 @@ export default function ModulePage({
                           <Badge className="text-[10px] font-bold border-0 bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
                             {nextModule.type === "theory" ? "Teoria" : nextModule.type === "quiz" ? "Quiz" : nextModule.type === "exercise" ? "Esercizio" : "Pratica"}
                           </Badge>
-                          <span className="text-[11px] text-muted-foreground/70">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
+                          <span className="text-[11px] text-muted-foreground">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
                         </div>
                       </div>
                       <svg className="h-5 w-5 text-muted-foreground/50 group-hover:text-emerald group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>

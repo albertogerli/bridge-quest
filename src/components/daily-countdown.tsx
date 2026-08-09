@@ -111,7 +111,7 @@ function CompactCountdown({
   }
 
   return (
-    <span className="text-sm text-figb/70 dark:text-primary/70">
+    <span className="text-sm text-figb dark:text-primary">
       La sfida scade tra {timeStr}
     </span>
   );

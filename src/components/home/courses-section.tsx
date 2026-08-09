@@ -66,7 +66,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                     <p className="text-sm font-semibold text-foreground truncate">
                       {course.name.replace("Corso ", "")}
                     </p>
-                    <p className="text-[11px] text-muted-foreground/70 mt-0.5 truncate">
+                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
                       {course.lessonCount} lezioni
                     </p>
                     <div className="mt-2.5 flex items-center gap-2">

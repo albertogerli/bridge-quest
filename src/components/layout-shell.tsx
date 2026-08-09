@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { DesktopNav } from "@/components/desktop-nav";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
@@ -9,12 +10,23 @@ import { useSupabaseSync } from "@/hooks/use-supabase-sync";
 import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider, useSharedAuth } from "@/contexts/auth-provider";
 import { CookieBanner } from "@/components/cookie-banner";
-import { NewVersionGuide } from "@/components/new-version-guide";
 import { SiteFooter } from "@/components/site-footer";
 import { useExitIntent } from "@/hooks/use-exit-intent";
-import { ExitIntentModal } from "@/components/exit-intent-modal";
 import type { UserProfile } from "@/hooks/use-profile";
 import { configureStatusBar } from "@/lib/native-bridge";
+
+// Overlay one-shot presenti nel layout condiviso (quindi in TUTTE le route) ma
+// invisibili al primo paint: caricarli staticamente costava a ogni pagina il
+// loro codice + @radix-ui/react-dialog (usato solo da ExitIntentModal qui).
+// Entrambi renderizzano `null` finché non si aprono → ssr:false è trasparente.
+const NewVersionGuide = dynamic(
+  () => import("@/components/new-version-guide").then((m) => m.NewVersionGuide),
+  { ssr: false },
+);
+const ExitIntentModal = dynamic(
+  () => import("@/components/exit-intent-modal").then((m) => m.ExitIntentModal),
+  { ssr: false },
+);
 
 /** Routes that should be full-screen (no nav, no sidebar) */
 const FULL_SCREEN_ROUTES = ["/login", "/admin"];
@@ -40,6 +52,13 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   const isPublic = PUBLIC_ROUTES.some((r) => r === "/" ? pathname === "/" : pathname.startsWith(r));
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const { showExitModal, setShowExitModal } = useExitIntent();
+  // Una volta armato resta montato: così l'animazione di chiusura del Dialog
+  // continua a funzionare e il chunk viene scaricato solo alla prima apertura.
+  const [exitModalArmed, setExitModalArmed] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- latch monodirezionale: arma il modale alla prima apertura e non lo smonta più, così l'animazione di chiusura resta fluida
+    if (showExitModal) setExitModalArmed(true);
+  }, [showExitModal]);
 
   // Auth gate: redirect to login if not authenticated on protected routes
   useEffect(() => {
@@ -124,14 +143,16 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
       <NewVersionGuide />
 
       {/* Exit intent modal */}
-      <ExitIntentModal
-        open={showExitModal}
-        onOpenChange={setShowExitModal}
-        onPlay={() => {
-          setShowExitModal(false);
-          router.push('/gioca/smazzata');
-        }}
-      />
+      {exitModalArmed && (
+        <ExitIntentModal
+          open={showExitModal}
+          onOpenChange={setShowExitModal}
+          onPlay={() => {
+            setShowExitModal(false);
+            router.push('/gioca/smazzata');
+          }}
+        />
+      )}
     </div>
   );
 }

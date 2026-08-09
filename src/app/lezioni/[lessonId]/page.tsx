@@ -49,7 +49,7 @@ export default function LessonDetailPage({
 
   if (!catalogLoaded) {
     return (
-      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento lezione">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento lezione">
         Caricamento lezione…
       </div>
     );
@@ -87,7 +87,7 @@ export default function LessonDetailPage({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4"
+          className="flex items-center gap-2 text-xs text-muted-foreground mb-4"
         >
           <Link href="/lezioni" className="hover:text-emerald transition-colors">
             Lezioni
@@ -268,7 +268,7 @@ export default function LessonDetailPage({
                           Riprendi
                         </Badge>
                       )}
-                      <span className="text-[11px] text-muted-foreground/70">
+                      <span className="text-[11px] text-muted-foreground">
                         {module.duration} min
                       </span>
                     </div>

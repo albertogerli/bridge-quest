@@ -87,7 +87,7 @@ export function MarketingConsentBanner({
             {/* Decline button */}
             <button
               onClick={() => handleChoice(false)}
-              className="w-full py-2.5 mt-2 text-sm text-muted-foreground/70 hover:text-muted-foreground transition-colors"
+              className="w-full py-2.5 mt-2 text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
             >
               No grazie
             </button>

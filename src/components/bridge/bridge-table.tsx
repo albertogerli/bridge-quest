@@ -6,6 +6,11 @@ import { Hand } from "./hand";
 import { DummyHand } from "./dummy-hand";
 import type { CardData } from "./playing-card";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
+import {
+  handAriaLabel,
+  suitAriaLabel,
+  trickCardAriaLabel,
+} from "@/lib/card-labels";
 
 export interface TrickPlayDisplay {
   position: string;
@@ -57,13 +62,17 @@ function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string
     : ["spade", "heart", "diamond", "club"];
   const rankVal: Record<string, number> = { A: 14, K: 13, Q: 12, J: 11, "10": 10, "9": 9, "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2 };
   return (
-    <div className="rounded-xl bg-white/95 px-2 py-2 shadow-md ring-1 ring-black/5">
+    <div
+      className="rounded-xl bg-white/95 px-2 py-2 shadow-md ring-1 ring-black/5"
+      role="img"
+      aria-label={`Carte del morto. ${handAriaLabel(cards)}`}
+    >
       {order.map((suit) => {
         const sc = cards
           .filter((c) => c.suit === suit)
           .sort((a, b) => (rankVal[b.rank] ?? 0) - (rankVal[a.rank] ?? 0));
         return (
-          <div key={suit} className="flex items-center gap-1.5 py-0.5 leading-none">
+          <div key={suit} className="flex items-center gap-1.5 py-0.5 leading-none" aria-hidden="true">
             <span className={`w-4 text-base ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
             <div className="flex flex-wrap gap-0.5">
               {sc.length ? (
@@ -89,7 +98,11 @@ function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string
 /** Compact face-down card stack for mobile E/W positions */
 function CompactFaceDown({ count, gradient }: { count: number; gradient: string }) {
   return (
-    <div className="relative w-8 h-14 flex items-center justify-center">
+    <div
+      className="relative w-8 h-14 flex items-center justify-center"
+      role="img"
+      aria-label={`${count} carte coperte`}
+    >
       {/* Stacked card backs */}
       {[0, 1, 2].map((i) => (
         <div
@@ -99,7 +112,10 @@ function CompactFaceDown({ count, gradient }: { count: number; gradient: string 
         />
       ))}
       {/* Count badge */}
-      <div className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[8px] font-black text-gray-700 shadow-sm">
+      <div
+        className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[8px] font-black text-gray-700 shadow-sm"
+        aria-hidden="true"
+      >
         {count}
       </div>
     </div>
@@ -189,11 +205,18 @@ export function BridgeTable({
   };
 
   return (
-    <div ref={tableRef} className={`relative w-full max-w-3xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`} style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}>
+    <div
+      ref={tableRef}
+      role="group"
+      aria-label={`Tavolo da bridge${trumpSuit ? `, atout ${suitAriaLabel(trumpSuit)}` : ", senza atout"}${activePosition ? `, di turno ${posLabel(activePosition, "")}` : ""}`}
+      className={`relative w-full max-w-3xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`}
+      style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}
+    >
       {/* Felt background — uses shop cosmetic if purchased */}
       <div
         className={`absolute inset-0 rounded-3xl border-4 ${vulColor[vulnerability]} shadow-2xl overflow-hidden`}
         style={{ background: cosmetics.tableBg }}
+        aria-hidden="true"
       >
         <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')]" />
       </div>
@@ -203,8 +226,12 @@ export function BridgeTable({
         <div className={`relative ${isCompact ? "w-32 h-32" : "w-48 h-48"}`}>
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className={`${isCompact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}>
-              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[8px]" : "text-[10px]"} font-bold`}>
+            <div
+              className={`${isCompact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}
+              role="img"
+              aria-label={`Prese: dichiarante ${trickCount.ns}, difesa ${trickCount.ew}`}
+            >
+              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[8px]" : "text-[10px]"} font-bold`} aria-hidden="true">
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
                 <div />
@@ -256,11 +283,15 @@ export function BridgeTable({
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <div className={`${isCompact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}>
-                    <span className={`${isCompact ? "text-base" : "text-lg"} font-black leading-none`}>
+                  <div
+                    className={`${isCompact ? "w-10 h-[52px]" : "w-14 h-[76px]"} rounded bg-white border border-gray-200 shadow-lg flex flex-col items-center justify-center gap-0.5 ${suitColorClass[play.card.suit]}`}
+                    role="img"
+                    aria-label={trickCardAriaLabel(play.position, play.card)}
+                  >
+                    <span className={`${isCompact ? "text-base" : "text-lg"} font-black leading-none`} aria-hidden="true">
                       {play.card.rank}
                     </span>
-                    <span className={`${isCompact ? "text-base" : "text-lg"} leading-none`}>
+                    <span className={`${isCompact ? "text-base" : "text-lg"} leading-none`} aria-hidden="true">
                       {suitSymbol[play.card.suit]}
                     </span>
                   </div>

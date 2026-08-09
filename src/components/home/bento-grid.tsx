@@ -65,7 +65,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <span className="text-xl mb-1 block">🧠</span>
               <h3 className="font-bold text-sm leading-tight text-foreground">Quiz & Minigiochi</h3>
             </div>
-            <p className="text-[10px] text-muted-foreground/70">6 quiz · 9 giochi</p>
+            <p className="text-[10px] text-muted-foreground">6 quiz · 9 giochi</p>
           </Link>
 
           {/* Dispense (6 cols) */}
@@ -74,7 +74,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <span className="text-xl mb-1 block">📄</span>
               <h3 className="font-bold text-sm leading-tight text-foreground">Dispense FIGB</h3>
             </div>
-            <p className="text-[10px] text-muted-foreground/70">Materiale PDF</p>
+            <p className="text-[10px] text-muted-foreground">Materiale PDF</p>
           </Link>
 
           {/* Trova ASD (full width) */}

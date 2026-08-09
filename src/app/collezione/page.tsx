@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
@@ -87,6 +88,9 @@ export default function CollezionePage() {
   const [rarityFilter, setRarityFilter] = useState<RarityFilter>("tutte");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("tutte");
   const [selectedCard, setSelectedCard] = useState<CollectibleCard | null>(null);
+  const cardDialogRef = useRef<HTMLDivElement>(null);
+  const closeCardDetail = useCallback(() => setSelectedCard(null), []);
+  useFocusTrap(cardDialogRef, selectedCard !== null, { onEscape: closeCardDetail });
   const [revealingNew, setRevealingNew] = useState(false);
 
   /* hydrate from store + localStorage */
@@ -210,7 +214,7 @@ export default function CollezionePage() {
             <span className="text-sm font-bold text-foreground">
               {unlockedCount}
             </span>
-            <span className="text-sm text-muted-foreground/70 font-bold">
+            <span className="text-sm text-muted-foreground font-bold">
               /{totalCards}
             </span>
           </div>
@@ -261,7 +265,7 @@ export default function CollezionePage() {
           transition={{ delay: 0.08 }}
           className="mt-4"
         >
-          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Rarità
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -298,7 +302,7 @@ export default function CollezionePage() {
           transition={{ delay: 0.1 }}
           className="mt-3"
         >
-          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Categoria
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -431,7 +435,7 @@ export default function CollezionePage() {
                       {/* Locked card */}
                       <div className="opacity-30">
                         <svg
-                          className="w-8 h-8 text-muted-foreground/70 mb-2"
+                          className="w-8 h-8 text-muted-foreground mb-2"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
@@ -463,7 +467,7 @@ export default function CollezionePage() {
             className="text-center py-16"
           >
             <span className="text-4xl block mb-3">🔍</span>
-            <p className="text-sm text-muted-foreground/70 font-medium">
+            <p className="text-sm text-muted-foreground font-medium">
               Nessuna carta con questi filtri
             </p>
           </motion.div>
@@ -575,7 +579,7 @@ export default function CollezionePage() {
             onClick={() => setSelectedCard(null)}
           >
             {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
 
             {/* Card detail */}
             <motion.div
@@ -598,6 +602,10 @@ export default function CollezionePage() {
               }
               onClick={(e) => e.stopPropagation()}
               className="relative z-10 w-full max-w-xs"
+              ref={cardDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Dettaglio carta: ${selectedCard.name}`}
             >
               {(() => {
                 const isUnlocked = unlockedIds.has(selectedCard.id);
@@ -698,7 +706,7 @@ export default function CollezionePage() {
                       {/* Name */}
                       <h2
                         className={`text-xl font-semibold mt-3 relative z-10 ${
-                          isUnlocked ? "text-gray-800" : "text-muted-foreground/70"
+                          isUnlocked ? "text-gray-800" : "text-muted-foreground"
                         }`}
                       >
                         {isUnlocked ? selectedCard.name : "???"}
@@ -735,7 +743,7 @@ export default function CollezionePage() {
                         </>
                       ) : (
                         <>
-                          <p className="text-sm text-muted-foreground/70 leading-relaxed">
+                          <p className="text-sm text-muted-foreground leading-relaxed">
                             Questa carta non è ancora stata sbloccata.
                           </p>
 

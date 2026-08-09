@@ -139,13 +139,13 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
                       </span>
                     </div>
                     {!isExpanded && (
-                      <p className="text-[11px] text-muted-foreground/70 mt-0.5">
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
                         {completedWorlds}/{courseWorlds.length} mondi completati
                       </p>
                     )}
                   </div>
                   <svg
-                    className={`w-4 h-4 text-muted-foreground/70 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"

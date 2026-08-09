@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, Fragment, type ReactNode } from "react";
+import { useEffect, useRef, useState, memo, Fragment, type ReactNode } from "react";
 
 /**
  * Auto-wraps known bridge terms in a plain string with a beginner tooltip.
@@ -169,7 +169,7 @@ function BeginnerTip({ def, children }: { def: TermDef; children: ReactNode }) {
   );
 }
 
-export function GlossaryText({ children }: { children: ReactNode }) {
+function GlossaryTextImpl({ children }: { children: ReactNode }) {
   if (typeof children !== "string") return <>{children}</>;
   const text = children;
 
@@ -196,3 +196,8 @@ export function GlossaryText({ children }: { children: ReactNode }) {
   if (last < text.length) out.push(<Fragment key={key++}>{text.slice(last)}</Fragment>);
   return <>{out}</>;
 }
+
+// memo: negli step di Prima Mano `children` è una stringa costante mentre il
+// passo cambia stato di continuo (scelte, animazioni). Senza memo l'intero testo
+// veniva ri-tokenizzato con la regex dei termini a ogni render.
+export const GlossaryText = memo(GlossaryTextImpl);

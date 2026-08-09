@@ -25,7 +25,7 @@ export function GlossarioCard() {
                     49 termini con quiz interattivi
                   </p>
                 </div>
-                <svg className="w-4 h-4 text-muted-foreground/70 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                <svg className="w-4 h-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path d="M9 18l6-6-6-6" />
                 </svg>
               </div>

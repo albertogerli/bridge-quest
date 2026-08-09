@@ -74,7 +74,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
               })}
               <div className="flex-1 text-right">
                 <p className="text-2xl font-bold text-foreground">{unlocked.length}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">sbloccate</p>
+                <p className="text-[10px] text-muted-foreground font-bold">sbloccate</p>
               </div>
             </div>
 
@@ -89,7 +89,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
             {nextCard && (
               <p className="text-[11px] text-muted-foreground mt-2">
                 Prossima: <span className="font-bold text-foreground/80">{nextCard.emoji} {nextCard.name}</span>
-                <span className="text-muted-foreground/70"> — {nextCard.unlockCondition}</span>
+                <span className="text-muted-foreground"> — {nextCard.unlockCondition}</span>
               </p>
             )}
           </div>

@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Smartphone } from "lucide-react";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 export function InstallAppBanner() {
   const { canInstall, isInstalled, isIOS, install } = usePwaInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(false);
+  const iosGuideRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(iosGuideRef, showIOSGuide, {
+    onEscape: () => setShowIOSGuide(false),
+  });
 
   return (
     <>
@@ -52,7 +57,7 @@ export function InstallAppBanner() {
                     <button
                       onClick={() => setInstallDismissed(true)}
                       aria-label="Chiudi banner installazione"
-                      className="p-2.5 rounded-lg text-muted-foreground/70 hover:text-foreground hover:bg-muted transition-colors"
+                      className="p-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                         <path d="M18 6L6 18M6 6l12 12" />
@@ -77,6 +82,7 @@ export function InstallAppBanner() {
             onClick={() => setShowIOSGuide(false)}
           >
             <motion.div
+              ref={iosGuideRef}
               initial={{ y: 200 }}
               animate={{ y: 0 }}
               exit={{ y: 200 }}

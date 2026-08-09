@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { bidAriaLabel, positionAriaLabel } from "@/lib/card-labels";
 
 export interface BiddingData {
   dealer: "north" | "south" | "east" | "west";
@@ -19,7 +20,7 @@ const POS_LABELS: Record<string, string> = {
 function BidCell({ bid, delay }: { bid: string; delay: number }) {
   if (bid === "—") {
     return (
-      <span className="text-muted-foreground/40 text-xs font-medium">—</span>
+      <span className="text-muted-foreground/40 text-xs font-medium" aria-hidden="true">—</span>
     );
   }
   if (bid === "P" || bid === "Passo") {
@@ -28,9 +29,11 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay }}
-        className="text-muted-foreground/70 text-xs font-semibold"
+        className="text-muted-foreground text-xs font-semibold"
+        role="img"
+        aria-label={bidAriaLabel(bid)}
       >
-        P
+        <span aria-hidden="true">P</span>
       </motion.span>
     );
   }
@@ -41,8 +44,10 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay }}
         className="text-red-600 dark:text-red-400 text-xs font-black"
+        role="img"
+        aria-label={bidAriaLabel(bid)}
       >
-        X
+        <span aria-hidden="true">X</span>
       </motion.span>
     );
   }
@@ -53,8 +58,10 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay }}
         className="text-blue-600 dark:text-blue-400 text-xs font-black"
+        role="img"
+        aria-label={bidAriaLabel(bid)}
       >
-        XX
+        <span aria-hidden="true">XX</span>
       </motion.span>
     );
   }
@@ -80,9 +87,11 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay }}
       className="text-xs font-black flex items-center justify-center gap-0.5"
+      role="img"
+      aria-label={bidAriaLabel(bid)}
     >
-      <span className="text-foreground">{level}</span>
-      <span className={suit?.color ?? "text-foreground"}>
+      <span className="text-foreground" aria-hidden="true">{level}</span>
+      <span className={suit?.color ?? "text-foreground"} aria-hidden="true">
         {suit?.symbol ?? suitPart}
       </span>
     </motion.span>
@@ -190,24 +199,32 @@ export function BiddingPanel({
         compact ? "p-2" : "p-3"
       }`}
     >
-      <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 text-center">
+      <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 text-center" aria-hidden="true">
         Licita
       </p>
       <table className="w-full">
+        <caption className="sr-only">
+          Sequenza di licita, una colonna per posizione (Ovest, Nord, Est, Sud)
+        </caption>
         <thead>
           <tr>
             {POS_ORDER.map((pos) => (
               <th
                 key={pos}
+                scope="col"
                 className={`text-[10px] font-bold text-center pb-1 ${
                   pos === dealer
                     ? "text-emerald"
-                    : "text-muted-foreground/70"
+                    : "text-muted-foreground"
                 }`}
               >
-                {POS_LABELS[pos]}
+                <span aria-hidden="true">{POS_LABELS[pos]}</span>
+                <span className="sr-only">
+                  {positionAriaLabel(pos)}
+                  {pos === dealer ? " (dichiarante di mano)" : ""}
+                </span>
                 {pos === dealer && (
-                  <span className="text-[7px] block text-emerald/60">D</span>
+                  <span className="text-[7px] block text-emerald/60" aria-hidden="true">D</span>
                 )}
               </th>
             ))}
