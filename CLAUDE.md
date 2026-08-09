@@ -44,3 +44,5 @@ npm test           # vitest, deve passare
 - Gamification localStorage-first (store Zustand `use-game-store` + sync in `use-supabase-sync`): i componenti che leggono stato persistito devono attendere `useHasHydrated()`.
 - L'AI "esperto" degrada in cascata BEN → DDS → euristica: ogni integrazione BEN deve mantenere il fallback silenzioso.
 - I motori in `src/lib/` (engine, scoring, pbn, encoder…) sono puri e testati: modifiche lì richiedono l'aggiornamento dei relativi `*.test.ts`.
+- Errori: usare sempre `reportError(scope, err)` da `src/lib/report-error.ts` (console + Sentry con tag `scope`), mai `console.error` diretto in codice nuovo. `catch {}` è ammesso solo attorno a puri accessi `localStorage`.
+- Sentry è attivo solo con `NEXT_PUBLIC_SENTRY_DSN`: non inviare mai dati personali negli eventi (niente Session Replay, niente email/ID utente).

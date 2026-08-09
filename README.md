@@ -30,6 +30,8 @@ Variabili d'ambiente richieste (`.env.local`, mai committato):
 | `BEN_API_URL` | opzionale: server AI neurale BEN self-hosted (fallback automatico su solver/euristica se assente) |
 | `NEXT_PUBLIC_GADS_SIGNUP_LABEL` | label conversione Google Ads (registrazione) |
 | `ADMIN_NOTIFY_EMAIL` | opzionale: destinatario notifiche richieste istruttore |
+| `NEXT_PUBLIC_SENTRY_DSN` | error monitoring; **se assente Sentry è interamente no-op** |
+| `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN` | opzionali: upload source map in build (senza, gli stack trace restano minificati) |
 | `HEYGEN_API_KEY` | solo script di generazione video |
 
 ## Struttura
