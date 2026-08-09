@@ -37,3 +37,26 @@ export const DENY_URLS = [
   /^chrome-extension:\/\//i,
   /^moz-extension:\/\//i,
 ];
+
+/**
+ * La registrazione del service worker fallisce in ambienti che non lo
+ * supportano — e il primo caso reale è stato il renderer di Google (WRS), che
+ * la rifiuta sempre: il crawler di Google Ads ha aperto la landing e ha
+ * generato un `Error: Rejected` non gestito.
+ *
+ * Non è un difetto dell'app e nessun utente ne è toccato: la PWA degrada da
+ * sola. Segnalarlo consuma solo quota e notifiche, quindi questi eventi
+ * vengono scartati riconoscendoli dallo stack (il messaggio "Rejected", da
+ * solo, sarebbe troppo generico per filtrarlo senza rischi).
+ */
+const SERVICE_WORKER_NOISE = /serviceWorker\.register|wrsParams|_registerScript/;
+
+/** True se l'evento è rumore di registrazione del service worker. */
+export function isServiceWorkerNoise(event: {
+  exception?: { values?: Array<{ stacktrace?: { frames?: Array<{ function?: string; filename?: string }> } }> };
+}): boolean {
+  const frames = event.exception?.values?.flatMap((v) => v.stacktrace?.frames ?? []) ?? [];
+  return frames.some(
+    (f) => SERVICE_WORKER_NOISE.test(f.function ?? "") || SERVICE_WORKER_NOISE.test(f.filename ?? "")
+  );
+}

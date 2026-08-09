@@ -5,6 +5,7 @@ import {
   SENTRY_DSN,
   SENTRY_ENABLED,
   TRACES_SAMPLE_RATE,
+  isServiceWorkerNoise,
 } from "@/lib/sentry-shared";
 
 if (SENTRY_ENABLED) {
@@ -18,6 +19,10 @@ if (SENTRY_ENABLED) {
     // (dati personali) e non serve per la diagnosi degli errori.
     sendDefaultPii: false,
     beforeSend(event) {
+      // Crawler e browser senza service worker: rumore, non difetti (vedi
+      // isServiceWorkerNoise). Scartato prima di consumare quota e notifiche.
+      if (isServiceWorkerNoise(event)) return null;
+
       // Difesa in profondità: nessuna email/IP nell'evento.
       if (event.user) {
         delete event.user.email;
