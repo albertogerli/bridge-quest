@@ -29,6 +29,8 @@ Si impostano in **`.env.local`** in locale (mai committato, permessi 600) e su *
 | `CRON_SECRET` | autorizza `/api/cron/engagement` (header `Authorization: Bearer`) | Vercel |
 | `BEN_API_URL` | opzionale: server AI neurale BEN self-hosted; fallback automatico se assente | dove gira BEN |
 | `NEXT_PUBLIC_GADS_SIGNUP_LABEL` | label conversione Google Ads (registrazione) | locale + Vercel |
+| `NEXT_PUBLIC_SENTRY_DSN` | error monitoring; **assente = Sentry interamente disattivo** | Vercel (locale solo per test) |
+| `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN` | upload source map in build; senza, gli stack trace sono minificati | opzionale, Vercel |
 | `NEXT_PUBLIC_SITE_URL` | base URL nei link email (default `https://bridgelab.it`) | opzionale |
 | `EMAIL_ENABLED` | kill switch email: `false` = il cron gira ma non invia | opzionale |
 | `EMAIL_SECRET` | firma i token di unsubscribe (default = service role key) | opzionale |
@@ -77,4 +79,17 @@ CI: `.github/workflows/ci.yml` (typecheck + lint + test su push/PR).
 | `/api/cron/engagement` risponde 500 "CRON_SECRET non configurato" | Env mancante su Vercel | Impostare `CRON_SECRET` e rideployare |
 | Anon vede righe PII | RLS regredita (nuova tabella o policy toccata) | Eseguire lo script SQL di fix (vedi `scripts/sql/security-fixes-2026-08.sql` come riferimento) e riverificare con `node scripts/test-rls.mjs` |
 
-Error monitoring centralizzato: assente (debito noto da perizia). Le fonti di verità sono i log Vercel (Functions) e i log Supabase.
+## Error monitoring (Sentry)
+
+Attivo **solo** quando `NEXT_PUBLIC_SENTRY_DSN` è impostata: senza DSN l'SDK non si inizializza e il wrapper di build non si applica (build identica a prima).
+
+- **Cablaggio**: `instrumentation.ts` (server + edge, con `onRequestError` per route e server component), `instrumentation-client.ts` (browser + navigazioni App Router), `src/lib/sentry-shared.ts` (config comune), `src/lib/report-error.ts` (punto unico: logga in console e invia a Sentry con tag `scope`).
+- **Privacy**: `sendDefaultPii: false`, nessun Session Replay, e un `beforeSend` che rimuove comunque email/IP/username dagli eventi. Non viene inviato alcun identificativo utente: se in futuro servisse correlare gli errori per utente, valutarlo con il DPO (Sentry diventerebbe responsabile del trattamento ex art. 28).
+- **Adblocker**: gli eventi passano da `/monitoring` (tunnel same-origin), altrimenti gli adblocker bloccherebbero `ingest.sentry.io` e perderemmo gli errori dei browser reali.
+- **Rumore filtrato**: errori da estensioni del browser, `ResizeObserver`, `AbortError` e fetch interrotte dai cambi pagina (elenco in `sentry-shared.ts`).
+- **Campionamento**: tracce di performance al 10% in produzione, 100% in sviluppo. Gli errori sono sempre inviati per intero.
+- **Source map**: caricate in build solo se `SENTRY_AUTH_TOKEN` è presente; senza, gli stack trace in produzione restano minificati.
+
+**Verifica dopo l'attivazione**: con il DSN impostato, `throw new Error("test sentry")` da una pagina qualsiasi (o una visita a una route API che fallisce) deve comparire in Sentry entro pochi secondi, con tag `scope` se passa da `reportError`.
+
+Restano fonti di verità complementari i log Vercel (Functions) e i log Supabase.

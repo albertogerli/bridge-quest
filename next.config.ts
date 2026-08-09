@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
 import withBundleAnalyzerInit from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -103,4 +104,22 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBundleAnalyzer(withSerwist(nextConfig));
+const baseConfig = withBundleAnalyzer(withSerwist(nextConfig));
+
+// Sentry: il wrapper si applica solo quando il DSN è configurato, così build
+// locali e preview restano identiche a prima. L'upload delle source map
+// avviene solo se SENTRY_AUTH_TOKEN è presente (altrimenti la build fallirebbe).
+export default process.env.NEXT_PUBLIC_SENTRY_DSN
+  ? withSentryConfig(baseConfig, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: !process.env.CI,
+      sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+      // Proxy same-origin per gli eventi: gli adblocker bloccano le chiamate
+      // dirette a ingest.sentry.io e perderemmo gli errori dei browser reali.
+      tunnelRoute: "/monitoring",
+      widenClientFileUpload: true,
+      webpack: { treeshake: { removeDebugLogging: true } },
+    })
+  : baseConfig;
