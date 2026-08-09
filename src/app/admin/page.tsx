@@ -5,6 +5,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useAsdClubs } from "@/store/use-asd-store";
+import { reportError } from "@/lib/report-error";
 import Link from "next/link";
 
 const PROVINCE_TO_REGION: Record<string, string> = {
@@ -193,34 +194,45 @@ export default function AdminPage() {
     setFetchError(null);
 
     try {
+      // I dati personali degli iscritti passano dalla RPC admin_list_users(),
+      // protetta da is_admin() lato DB: le stesse colonne non sono più
+      // leggibili dal client con la sessione dell'utente.
+      // Il fallback sulla lettura diretta copre l'intervallo fra il deploy di
+      // questo codice e l'esecuzione di scripts/sql/pii-columns-2026-08.sql.
       let allProfiles: ProfileRecord[] = [];
-      let page = 0;
-      const pageSize = 1000;
-      let hasMore = true;
+      const { data: rpcProfiles, error: rpcError } = await supabase.rpc("admin_list_users");
 
-      while (hasMore) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform, role")
-          .range(page * pageSize, (page + 1) * pageSize - 1)
-          .order("created_at", { ascending: false });
+      if (!rpcError && Array.isArray(rpcProfiles)) {
+        allProfiles = rpcProfiles as ProfileRecord[];
+      } else {
+        let page = 0;
+        const pageSize = 1000;
+        let hasMore = true;
 
-        if (error) {
-          console.error("Admin fetch error:", error);
-          setFetchError(`Errore DB: ${error.message}`);
-          setLoading(false);
-          return;
-        }
+        while (hasMore) {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform, role")
+            .range(page * pageSize, (page + 1) * pageSize - 1)
+            .order("created_at", { ascending: false });
 
-        if (data && data.length > 0) {
-          allProfiles = allProfiles.concat(data as ProfileRecord[]);
-          if (data.length < pageSize) {
-            hasMore = false;
-          } else {
-            page++;
+          if (error) {
+            reportError("admin:fetch-profiles", error);
+            setFetchError(`Errore DB: ${error.message}`);
+            setLoading(false);
+            return;
           }
-        } else {
-          hasMore = false;
+
+          if (data && data.length > 0) {
+            allProfiles = allProfiles.concat(data as ProfileRecord[]);
+            if (data.length < pageSize) {
+              hasMore = false;
+            } else {
+              page++;
+            }
+          } else {
+            hasMore = false;
+          }
         }
       }
 

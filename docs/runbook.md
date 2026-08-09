@@ -79,6 +79,14 @@ CI: `.github/workflows/ci.yml` (typecheck + lint + test su push/PR).
 | `/api/cron/engagement` risponde 500 "CRON_SECRET non configurato" | Env mancante su Vercel | Impostare `CRON_SECRET` e rideployare |
 | Anon vede righe PII | RLS regredita (nuova tabella o policy toccata) | Eseguire lo script SQL di fix (vedi `scripts/sql/security-fixes-2026-08.sql` come riferimento) e riverificare con `node scripts/test-rls.mjs` |
 
+## Colonne personali di `profiles`
+
+Le colonne che l'app non mostra mai fra utenti (`marketing_consent`, `last_login`, `platform`, `total_minutes`, `streak`, `profile_type`, preferenze…) sono accessibili solo:
+- al proprietario, via RPC `get_own_profile()` (usata da `use-auth`);
+- all'amministratore, via RPC `admin_list_users()` guardata da `is_admin()`.
+
+Applicare con `scripts/sql/pii-columns-2026-08.sql`: **PARTE A** (crea le funzioni, nessun impatto) subito, **PARTE B** (revoca le colonne) dopo il deploy dell'app. Il codice ha un fallback sulla lettura diretta, quindi funziona in entrambi gli ordini; il fallback si può rimuovere una volta applicata la PARTE B. Verifica finale: `npm run test:rls` deve chiudersi senza fallimenti.
+
 ## Error monitoring (Sentry)
 
 Attivo **solo** quando `NEXT_PUBLIC_SENTRY_DSN` è impostata: senza DSN l'SDK non si inizializza e il wrapper di build non si applica (build identica a prima).

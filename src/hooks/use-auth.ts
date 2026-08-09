@@ -49,15 +49,27 @@ export function useAuth() {
 
   const supabase = createClient();
 
-  // Fetch profile from DB (non-blocking, updates state separately)
+  // Fetch profile from DB (non-blocking, updates state separately).
+  //
+  // Passa dalla RPC get_own_profile() perché le colonne personali di
+  // `profiles` (marketing_consent, last_login, total_minutes, platform…) non
+  // sono più leggibili direttamente: i privilegi di colonna valgono per ruolo
+  // e non per riga, quindi bloccherebbero anche il proprio profilo.
+  // Il fallback su select("*") copre l'intervallo fra il deploy di questo
+  // codice e l'esecuzione di scripts/sql/pii-columns-2026-08.sql; si potrà
+  // rimuovere una volta applicata la PARTE B di quello script.
   const fetchProfileInBackground = useCallback(async (userId: string) => {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase.rpc("get_own_profile");
+      if (!error && Array.isArray(data) && data.length > 0) {
+        return data[0] as Profile;
+      }
+      const { data: legacy } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .single();
-      return data as Profile | null;
+      return legacy as Profile | null;
     } catch (e) {
       // Niente toast: gira in background, ma l'errore non va scartato.
       reportError("use-auth:fetchProfileInBackground", e);
