@@ -5,9 +5,14 @@ import { Button } from "@/components/ui/button";
 import { parseContract } from "@/lib/bridge-engine";
 import type { Smazzata } from "@/lib/catalog";
 import { computeHandTotals } from "@/lib/tournament-stats";
-import { TOURNAMENT_HAND_COUNT, type HandResult } from "../_types";
+import { type HandResult } from "../_types";
 
-/** Schermata fra una mano e la successiva: esito appena ottenuto e totale parziale. */
+/**
+ * Schermata fra una mano e la successiva: esito appena ottenuto e totale parziale.
+ *
+ * I conteggi seguono `hands.length` (pool più corta di TOURNAMENT_HAND_COUNT =
+ * torneo più corto) e la mano successiva è letta in modo difensivo.
+ */
 export function HandTransition({
   hands,
   handResults,
@@ -21,6 +26,8 @@ export function HandTransition({
 }) {
   const lastResult = handResults[handResults.length - 1];
   const completedCount = handResults.length;
+  const totalHands = hands.length;
+  const nextHand = hands[completedCount];
   const { totalTricks, totalNeeded } = computeHandTotals(handResults);
   const delta = totalTricks - totalNeeded;
 
@@ -51,7 +58,7 @@ export function HandTransition({
               ))}
             </div>
             <p className="text-xs font-bold text-muted-foreground">
-              {completedCount} / {TOURNAMENT_HAND_COUNT} mani completate
+              {completedCount} / {totalHands} mani completate
             </p>
           </div>
 
@@ -126,19 +133,20 @@ export function HandTransition({
           </div>
 
           {/* Next hand preview */}
-          <div className="rounded-2xl bg-indigo-50 border border-indigo-200 dark:bg-indigo-950/40 dark:border-indigo-900 p-5 mb-6">
-            <p className="text-xs font-bold text-indigo-500 dark:text-indigo-400 mb-2">
-              Prossima mano: #{completedCount + 1} di {TOURNAMENT_HAND_COUNT}
-            </p>
-            <p className="text-lg font-bold text-foreground">
-              {hands[completedCount].title}
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Contratto: {hands[completedCount].contract} · Obiettivo:{" "}
-              {parseContract(hands[completedCount].contract).tricksNeeded}{" "}
-              prese
-            </p>
-          </div>
+          {nextHand && (
+            <div className="rounded-2xl bg-indigo-50 border border-indigo-200 dark:bg-indigo-950/40 dark:border-indigo-900 p-5 mb-6">
+              <p className="text-xs font-bold text-indigo-500 dark:text-indigo-400 mb-2">
+                Prossima mano: #{completedCount + 1} di {totalHands}
+              </p>
+              <p className="text-lg font-bold text-foreground">
+                {nextHand.title}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Contratto: {nextHand.contract} · Obiettivo:{" "}
+                {parseContract(nextHand.contract).tricksNeeded} prese
+              </p>
+            </div>
+          )}
 
           <Button
             onClick={onNextHand}

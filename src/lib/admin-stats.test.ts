@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
+  asdMediansAreApproximate,
   bucketPlatform,
   buildAsdRows,
+  dropOne,
   buildUserActivity,
   buildUsersCsv,
   computeStats,
@@ -148,8 +150,9 @@ describe("median / medianRaw", () => {
     expect(arr).toEqual([3, 1, 2]);
   });
 
-  it("medianRaw: NaN su lista vuota (variante senza guardia usata per province/regioni)", () => {
-    expect(Number.isNaN(medianRaw([]))).toBe(true);
+  it("REGRESSIONE: medianRaw ha la stessa guardia di median sulla lista vuota (niente NaN in UI)", () => {
+    expect(medianRaw([])).toBe(0);
+    expect(Number.isNaN(medianRaw([]))).toBe(false);
   });
 
   it("medianRaw: stessi risultati di median sulle liste non vuote", () => {
@@ -379,6 +382,85 @@ describe("buildAsdRows", () => {
     expect(buildAsdRows([], "province")).toEqual([]);
     expect(buildAsdRows([], "regione")).toEqual([]);
   });
+
+  // ── A2: il "resto" deve escludere davvero il top user ────────────────────
+
+  /**
+   * Due ASD nella stessa provincia. Nel pool aggregato il top user (Ada, ASD
+   * Grande) è rappresentato dalla mediana della sua ASD: 500 XP / 100 minuti.
+   * Il "resto" è quindi la sola ASD Piccola: 10 XP / 2 minuti.
+   */
+  const DIST_TOP: AsdDistributionRow[] = [
+    {
+      name: "ASD Grande", count: 1, province: "TO", region: "Piemonte",
+      medianXp: 500, medianMinutes: 100, topUser: "Ada", topUserXp: 900,
+      restMedianXp: 0, restMedianMinutes: 0,
+      firstSignup: "2026-01-01", lastActive: "2026-02-01", lowEngagement: false,
+    },
+    {
+      name: "ASD Piccola", count: 1, province: "TO", region: "Piemonte",
+      medianXp: 10, medianMinutes: 2, topUser: "Bea", topUserXp: 20,
+      restMedianXp: 0, restMedianMinutes: 0,
+      firstSignup: "2026-01-01", lastActive: "2026-02-01", lowEngagement: false,
+    },
+  ];
+
+  it("REGRESSIONE: il resto esclude il top user su XP e minuti (non ripete le mediane di gruppo)", () => {
+    const row = buildAsdRows(DIST_TOP, "province")[0];
+    expect(row.topUser).toBe("Ada");
+    // Mediane di gruppo: tutti e due gli utenti rappresentati.
+    expect(row.medianXp).toBe(255); // round((10 + 500) / 2)
+    expect(row.medianMinutes).toBe(51); // round((2 + 100) / 2)
+    // Resto: solo l'ASD senza il top user.
+    expect(row.restMedianXp).toBe(10);
+    expect(row.restMedianMinutes).toBe(2);
+    // Il bug: i minuti del resto erano identici a quelli di gruppo.
+    expect(row.restMedianMinutes).not.toBe(row.medianMinutes);
+  });
+
+  it("REGRESSIONE: toglie UNA sola occorrenza, non tutti i duplicati del valore", () => {
+    const dueUguali: AsdDistributionRow[] = [
+      { ...DIST_TOP[0], name: "A", count: 3, medianXp: 500, medianMinutes: 100 },
+    ];
+    const row = buildAsdRows(dueUguali, "province")[0];
+    // 3 utenti a 500 XP: tolto il top, restano due 500 (non zero).
+    expect(row.restMedianXp).toBe(500);
+    expect(row.restMedianMinutes).toBe(100);
+  });
+
+  it("gruppo con un solo utente: dopo l'esclusione del top non resta nessuno → 0", () => {
+    const row = buildAsdRows([DIST_TOP[0]], "regione")[0];
+    expect(row.count).toBe(1);
+    expect(row.restMedianXp).toBe(0);
+    expect(row.restMedianMinutes).toBe(0);
+  });
+});
+
+describe("dropOne", () => {
+  it("toglie solo la prima occorrenza", () => {
+    expect(dropOne([1, 2, 2, 3], 2)).toEqual([1, 2, 3]);
+  });
+
+  it("lascia l'array invariato se il valore non c'è", () => {
+    expect(dropOne([1, 2], 9)).toEqual([1, 2]);
+    expect(dropOne([], 1)).toEqual([]);
+  });
+
+  it("non muta l'array in ingresso", () => {
+    const arr = [1, 2, 3];
+    dropOne(arr, 2);
+    expect(arr).toEqual([1, 2, 3]);
+  });
+});
+
+describe("asdMediansAreApproximate", () => {
+  it("REGRESSIONE: dichiara stimate solo le mediane aggregate per provincia/regione", () => {
+    // Per ASD le mediane sono calcolate sugli utenti veri; per
+    // provincia/regione sono ricostruite dalle mediane per ASD.
+    expect(asdMediansAreApproximate("asd")).toBe(false);
+    expect(asdMediansAreApproximate("province")).toBe(true);
+    expect(asdMediansAreApproximate("regione")).toBe(true);
+  });
 });
 
 describe("filterAsdRows", () => {
@@ -445,6 +527,37 @@ describe("sortUsers / defaultSortDir", () => {
     const before = USERS.map((u) => u.id);
     sortUsers(USERS, "xp", "asc");
     expect(USERS.map((u) => u.id)).toEqual(before);
+  });
+
+  // ── A3: "Ultimo accesso" mescola date secche e timestamp ISO ─────────────
+
+  const BY_LOGIN: UserRow[] = mapProfilesToUsers([
+    // Ordine cronologico reale: primo (04:00Z) < secondo (08:00Z) < terzo.
+    profile({ id: "terzo", last_login: "2026-03-12" }),
+    profile({ id: "secondo", last_login: "2026-03-11T08:00:00Z" }),
+    profile({ id: "mai", last_login: null }),
+    profile({ id: "primo", last_login: "2026-03-11T09:00:00+05:00" }),
+  ]);
+
+  it("REGRESSIONE: ordina «Ultimo accesso» cronologicamente, non per stringa", () => {
+    // Confrontate come stringhe, "…T08:00:00Z" viene prima di
+    // "…T09:00:00+05:00" pur essendo QUATTRO ore dopo: il fuso e le date
+    // secche rendono l'ordine lessicografico non cronologico.
+    expect(sortUsers(BY_LOGIN, "last_login", "asc").map((u) => u.id)).toEqual([
+      "primo", "secondo", "terzo", "mai",
+    ]);
+    expect(sortUsers(BY_LOGIN, "last_login", "desc").map((u) => u.id)).toEqual([
+      "terzo", "secondo", "primo", "mai",
+    ]);
+  });
+
+  it("REGRESSIONE: mai acceduti e date non parsabili restano in fondo in entrambe le direzioni", () => {
+    const conRotti = mapProfilesToUsers([
+      profile({ id: "rotto", last_login: "mai-acceduto" }),
+      profile({ id: "buono", last_login: "2026-03-11T14:32:00Z" }),
+    ]);
+    expect(sortUsers(conRotti, "last_login", "asc").map((u) => u.id)).toEqual(["buono", "rotto"]);
+    expect(sortUsers(conRotti, "last_login", "desc").map((u) => u.id)).toEqual(["buono", "rotto"]);
   });
 
   it("lista vuota", () => {

@@ -10,6 +10,7 @@ import {
   getTournamentHands,
   getWeekDates,
   getWeekNum,
+  restorableHandCount,
   sumTricksNeeded,
 } from "@/lib/tournament-stats";
 import {
@@ -100,10 +101,16 @@ export function useTournamentWeek(): TournamentWeek {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setMounted(true);
-    setExistingResult(getTournamentResult(weekNum));
-    setInProgressCount(getTournamentProgress(weekNum)?.handResults.length ?? 0);
+    const result = getTournamentResult(weekNum);
+    setExistingResult(result);
+    // Stessa validazione della play view (handIds + torneo già concluso):
+    // contare le mani salvate senza validarle faceva promettere alla CTA una
+    // ripresa che poi ripartiva da capo.
+    setInProgressCount(
+      restorableHandCount(getTournamentProgress(weekNum), tournamentHands, !!result)
+    );
     fetchLeaderboard(weekNum).then((lb) => setLeaderboard(lb));
-  }, [weekNum, isPlaying]);
+  }, [weekNum, isPlaying, tournamentHands]);
 
   const onTournamentFinished = useCallback(
     (result: TournamentResult) => {
@@ -113,8 +120,11 @@ export function useTournamentWeek(): TournamentWeek {
 
       // Award XP (only once per week via awardGameXp)
       awardGameXp(`torneo-week-${weekNum}`, result.xpEarned);
-      // Tournament plays 5 hands — awardGameXp already counted 1, add remaining 4
-      useGameStore.getState().addHandsPlayed(TOURNAMENT_HAND_COUNT - 1);
+      // Mani effettivamente giocate (la pool può averne meno di
+      // TOURNAMENT_HAND_COUNT): awardGameXp ne ha già contata 1.
+      useGameStore
+        .getState()
+        .addHandsPlayed(Math.max(0, result.handResults.length - 1));
 
       // Refresh leaderboard
       fetchLeaderboard(weekNum).then((lb) => setLeaderboard(lb));

@@ -14,17 +14,23 @@ export const BQ_KEYS_PREFIX = "bq_";
 /** Etichette dei giorni indicizzate come `Date.getDay()` (0 = domenica). */
 export const DAY_LABELS = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
 
-// ── Chart 1: XP per giorno (ultimi 7 giorni) ────────────────────────────────
+// ── Chart 1: partite per giorno (ultimi 7 giorni) ───────────────────────────
+//
+// Fonte: `bq_game_history` (storico durevole delle mani giocate). Prima si
+// usava `bq_game_results_queue`, che è la coda dei risultati NON ancora
+// sincronizzati: si svuota al primo flush verso Supabase e azzerava il
+// grafico. Lo storico non registra gli XP della singola partita, quindi il
+// grafico conta le partite — che è ciò che quella fonte sa davvero.
 
-export interface XpDay {
+export interface GamesDay {
   label: string;
-  xp: number;
+  games: number;
   date: string;
 }
 
-export interface XpPerDay {
-  days: XpDay[];
-  maxXp: number;
+export interface GamesPerDay {
+  days: GamesDay[];
+  maxGames: number;
   hasData: boolean;
 }
 
@@ -53,10 +59,16 @@ export type CourseCompetence = CourseCompetenceConfig & {
 // ── Chart 3: rendimento di gioco ────────────────────────────────────────────
 
 export interface GamePerformanceStats {
+  /** Partite dello storico `bq_game_history`, la stessa fonte dell'intestazione. */
   totalGames: number;
-  bestStreak: number;
+  /**
+   * Streak di accessi CORRENTE. Il progetto non conserva il record storico
+   * della streak: la card diceva "Streak migliore" mostrando questo numero.
+   */
+  currentStreak: number;
   timeDisplay: string;
-  avgXp: number;
+  /** Media delle prese fatte per mano (dallo storico, come `totalGames`). */
+  avgTricks: number;
 }
 
 // ── Badge ───────────────────────────────────────────────────────────────────
@@ -96,6 +108,8 @@ export interface ChallengeOutcome {
   opponentName: string;
   myImps: number | null;
   theirImps: number | null;
+  /** Entrambi i lati hanno un punteggio: solo allora l'esito è confrontabile. */
+  scored: boolean;
   won: boolean;
   drawn: boolean;
   netImp: number;

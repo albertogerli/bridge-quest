@@ -59,13 +59,38 @@ export function median(arr: number[]): number {
 }
 
 /**
- * Mediana senza guardia sull'array vuoto: è la variante usata
- * nell'aggregazione per provincia/regione (su array vuoto restituisce NaN).
+ * Variante compatta della mediana usata nell'aggregazione per
+ * provincia/regione. Ha la stessa guardia sull'array vuoto di `median`: senza,
+ * un gruppo senza utenti (o il "resto" dopo aver tolto il top user) finiva in
+ * UI come `NaN` invece che come 0.
  */
 export function medianRaw(arr: number[]): number {
+  if (arr.length === 0) return 0;
   const s = [...arr].sort((a, b) => a - b);
   const m = Math.floor(s.length / 2);
   return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2);
+}
+
+/**
+ * Copia di `values` senza UNA sola occorrenza di `value` (la prima trovata).
+ *
+ * Serve a togliere il top user dal "resto" del gruppo: un `filter` toglierebbe
+ * anche tutti i duplicati del suo valore (cioè altri utenti con lo stesso XP),
+ * falsando la mediana del resto.
+ */
+export function dropOne(values: number[], value: number): number[] {
+  const i = values.indexOf(value);
+  if (i < 0) return [...values];
+  return [...values.slice(0, i), ...values.slice(i + 1)];
+}
+
+/**
+ * Nei tab "provincia" e "regione" le mediane non sono calcolate sugli utenti
+ * ma ricostruite ripetendo la mediana di ogni ASD `count` volte (vedi
+ * `buildAsdRows`): sono quindi stime, e la UI deve dirlo.
+ */
+export function asdMediansAreApproximate(asdTab: AsdTab): boolean {
+  return asdTab !== "asd";
 }
 
 export function mapProfilesToUsers(profiles: ProfileRecord[]): UserRow[] {
@@ -339,42 +364,92 @@ export function computeStats(params: {
   };
 }
 
+/**
+ * Accumulatore di un gruppo (provincia o regione).
+ *
+ * `xps`/`mins` NON sono i valori dei singoli utenti: sono la mediana di ogni
+ * ASD ripetuta `count` volte (i dati grezzi per utente non arrivano fin qui).
+ * Le mediane di gruppo sono quindi delle stime — la UI lo dichiara tramite
+ * `asdMediansAreApproximate`.
+ *
+ * `topMedianXp`/`topMedianMinutes` sono i valori con cui il top user è
+ * rappresentato dentro `xps`/`mins`: sono quelle le occorrenze da togliere per
+ * ottenere il "resto" del gruppo.
+ */
+interface AsdGroupAcc {
+  count: number;
+  xps: number[];
+  mins: number[];
+  topUser: string;
+  topUserXp: number;
+  topMedianXp: number;
+  topMedianMinutes: number;
+}
+
+function emptyAsdGroup(): AsdGroupAcc {
+  return { count: 0, xps: [], mins: [], topUser: "", topUserXp: 0, topMedianXp: 0, topMedianMinutes: 0 };
+}
+
+function accumulateAsdGroup(prev: AsdGroupAcc, a: AsdDistributionRow): AsdGroupAcc {
+  prev.count += a.count;
+  for (let i = 0; i < a.count; i++) { prev.xps.push(a.medianXp); prev.mins.push(a.medianMinutes); }
+  if (a.topUserXp > prev.topUserXp) {
+    prev.topUser = a.topUser;
+    prev.topUserXp = a.topUserXp;
+    prev.topMedianXp = a.medianXp;
+    prev.topMedianMinutes = a.medianMinutes;
+  }
+  return prev;
+}
+
+/**
+ * Statistiche del gruppo senza il top user.
+ *
+ * Il "resto" toglie UNA sola occorrenza del top user da XP e minuti. Se il
+ * gruppo ha un solo utente non resta nessuno: si riporta 0, com'è già per il
+ * tab ASD (`median([])`), invece di ripetere i numeri del top user.
+ */
+function asdGroupRest(d: AsdGroupAcc): { restMedianXp: number; restMedianMinutes: number } {
+  return {
+    restMedianXp: medianRaw(dropOne(d.xps, d.topMedianXp)),
+    restMedianMinutes: medianRaw(dropOne(d.mins, d.topMedianMinutes)),
+  };
+}
+
 /** Righe della distribuzione ASD aggregate secondo il tab selezionato. */
 export function buildAsdRows(dist: AsdDistributionRow[], asdTab: AsdTab): AsdRow[] {
   if (asdTab === "province") {
-    const pMap = new Map<string, { count: number; xps: number[]; mins: number[]; topUser: string; topUserXp: number; lowCount: number }>();
+    const pMap = new Map<string, AsdGroupAcc>();
     for (const a of dist) {
       const p = a.province || "N/D";
-      const prev = pMap.get(p) || { count: 0, xps: [], mins: [], topUser: "", topUserXp: 0, lowCount: 0 };
-      prev.count += a.count;
-      // Approximate: use medians as representative values (repeated by count)
-      for (let i = 0; i < a.count; i++) { prev.xps.push(a.medianXp); prev.mins.push(a.medianMinutes); }
-      if (a.topUserXp > prev.topUserXp) { prev.topUser = a.topUser; prev.topUserXp = a.topUserXp; }
-      if (a.lowEngagement) prev.lowCount++;
-      pMap.set(p, prev);
+      pMap.set(p, accumulateAsdGroup(pMap.get(p) || emptyAsdGroup(), a));
     }
     return [...pMap.entries()]
-      .map(([p, d]) => {
-        const restXps = d.xps.filter(x => x < d.topUserXp || d.xps.indexOf(x) > 0);
-        return { label: p, count: d.count, detail: PROVINCE_TO_REGION[p] || "", medianXp: medianRaw(d.xps), medianMinutes: medianRaw(d.mins), topUser: d.topUser, topUserXp: d.topUserXp, restMedianXp: restXps.length ? medianRaw(restXps) : 0, restMedianMinutes: medianRaw(d.mins), lowEngagement: false };
-      }).sort((a, b) => b.count - a.count);
+      .map(([p, d]) => ({
+        label: p, count: d.count, detail: PROVINCE_TO_REGION[p] || "",
+        medianXp: medianRaw(d.xps), medianMinutes: medianRaw(d.mins),
+        topUser: d.topUser, topUserXp: d.topUserXp,
+        ...asdGroupRest(d),
+        lowEngagement: false,
+      }))
+      .sort((a, b) => b.count - a.count);
   }
 
   if (asdTab === "regione") {
-    const rMap = new Map<string, { count: number; xps: number[]; mins: number[]; topUser: string; topUserXp: number }>();
+    const rMap = new Map<string, AsdGroupAcc>();
     for (const a of dist) {
       const r = a.region || "N/D";
-      const prev = rMap.get(r) || { count: 0, xps: [], mins: [], topUser: "", topUserXp: 0 };
-      prev.count += a.count;
-      for (let i = 0; i < a.count; i++) { prev.xps.push(a.medianXp); prev.mins.push(a.medianMinutes); }
-      if (a.topUserXp > prev.topUserXp) { prev.topUser = a.topUser; prev.topUserXp = a.topUserXp; }
-      rMap.set(r, prev);
+      rMap.set(r, accumulateAsdGroup(rMap.get(r) || emptyAsdGroup(), a));
     }
     return [...rMap.entries()]
-      .map(([r, d]) => {
-        const restXps = d.xps.filter(x => x < d.topUserXp || d.xps.indexOf(x) > 0);
-        return { label: r, count: d.count, medianXp: medianRaw(d.xps), medianMinutes: medianRaw(d.mins), topUser: d.topUser, topUserXp: d.topUserXp, restMedianXp: restXps.length ? medianRaw(restXps) : 0, restMedianMinutes: medianRaw(d.mins), lowEngagement: false };
-      }).sort((a, b) => b.count - a.count);
+      .map(([r, d]) => ({
+        label: r, count: d.count,
+        medianXp: medianRaw(d.xps), medianMinutes: medianRaw(d.mins),
+        topUser: d.topUser, topUserXp: d.topUserXp,
+        ...asdGroupRest(d),
+        lowEngagement: false,
+      }))
+      .sort((a, b) => b.count - a.count);
   }
 
   return dist.map(a => ({
@@ -408,6 +483,18 @@ export function filterUsers(users: UserRow[], search: string): UserRow[] {
 export function sortUsers(users: UserRow[], sortKey: SortKey, sortDir: SortDir): UserRow[] {
   return [...users].sort((a, b) => {
     const dir = sortDir === "asc" ? 1 : -1;
+    if (sortKey === "last_login") {
+      // `last_login` mescola date secche ("2026-03-11") e timestamp ISO
+      // ("2026-03-11T14:32:00Z"): confrontarli come stringhe non dà un ordine
+      // cronologico. Si ordina sull'istante reale, con i non parsabili
+      // trattati come mancanti e quindi in fondo (come le altre colonne).
+      const at = parseLogin(a.last_login)?.getTime() ?? null;
+      const bt = parseLogin(b.last_login)?.getTime() ?? null;
+      if (at == null && bt == null) return 0;
+      if (at == null) return 1;
+      if (bt == null) return -1;
+      return (at - bt) * dir;
+    }
     if (sortKey === "asd") {
       const av = a.asd_name;
       const bv = b.asd_name;

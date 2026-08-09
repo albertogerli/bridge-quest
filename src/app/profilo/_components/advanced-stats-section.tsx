@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { BarChart3, Sparkles } from "lucide-react";
 import type { GameStats } from "@/hooks/use-game-history";
 import { ProgressCharts } from "./progress-charts";
-import type { CourseCompetence, GamePerformanceStats, XpPerDay } from "../_types";
+import type { CourseCompetence, GamePerformanceStats, GamesPerDay } from "../_types";
 
 // Statistiche avanzate: vivono dentro un accordion chiuso di default, quindi
 // non fanno parte del primo paint del profilo.
@@ -20,14 +20,14 @@ export function AdvancedStatsSection({
   open,
   onToggle,
   gameStats,
-  xpPerDay,
+  gamesPerDay,
   courseCompetence,
   gamePerformanceStats,
 }: {
   open: boolean;
   onToggle: () => void;
   gameStats: GameStats;
-  xpPerDay: XpPerDay;
+  gamesPerDay: GamesPerDay;
   courseCompetence: CourseCompetence[];
   gamePerformanceStats: GamePerformanceStats;
 }) {
@@ -81,7 +81,7 @@ export function AdvancedStatsSection({
 
               {/* ===== Visual Progress Charts ===== */}
               <ProgressCharts
-                xpPerDay={xpPerDay}
+                gamesPerDay={gamesPerDay}
                 courseCompetence={courseCompetence}
                 gamePerformanceStats={gamePerformanceStats}
               />

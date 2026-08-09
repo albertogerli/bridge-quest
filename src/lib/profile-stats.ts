@@ -13,10 +13,10 @@ import {
   type ChallengeOutcome,
   type CourseCompetence,
   type GamePerformanceStats,
+  type GamesDay,
+  type GamesPerDay,
   type ProfileBadge,
   type WorldProgress,
-  type XpDay,
-  type XpPerDay,
 } from "@/app/profilo/_types";
 import type { Course, World } from "@/lib/catalog";
 import { MAX_LEVEL } from "@/lib/xp-levels";
@@ -39,41 +39,48 @@ export interface ChallengeStatsLike {
   won: number;
 }
 
-// ── Chart 1: XP per giorno ──────────────────────────────────────────────────
+// ── Chart 1: partite per giorno ─────────────────────────────────────────────
+
+/** Sottoinsieme di `GameRecord` (`bq_game_history`) usato dalle statistiche. */
+export interface GameRecordLike {
+  /** Timestamp ISO della partita. */
+  date: string;
+}
 
 /**
- * XP guadagnati negli ultimi 7 giorni (oggi incluso).
- * `rawQueue` è il contenuto grezzo di `bq_game_results_queue`.
+ * Partite giocate negli ultimi 7 giorni (oggi incluso), dallo storico
+ * `bq_game_history`.
+ *
+ * La fonte precedente (`bq_game_results_queue`) è la coda dei risultati non
+ * ancora sincronizzati: veniva svuotata al primo flush verso Supabase e il
+ * grafico si azzerava, contraddicendo il conteggio partite dell'intestazione
+ * (che lo storico lo usava già).
  */
-export function buildXpPerDay(now: Date, rawQueue: string | null): XpPerDay {
-  const days: XpDay[] = [];
+export function buildGamesPerDay(
+  now: Date,
+  records: GameRecordLike[] | null,
+): GamesPerDay {
+  const days: GamesDay[] = [];
 
   for (let i = 6; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
     days.push({
       label: DAY_LABELS[d.getDay()],
-      xp: 0,
+      games: 0,
       date: d.toISOString().slice(0, 10),
     });
   }
 
-  try {
-    if (rawQueue) {
-      const queue: { timestamp: string; score: number }[] = JSON.parse(rawQueue);
-      for (const entry of queue) {
-        const entryDate = entry.timestamp.slice(0, 10);
-        const day = days.find((d) => d.date === entryDate);
-        if (day) {
-          day.xp += entry.score || 0;
-        }
-      }
-    }
-  } catch {}
+  for (const record of records ?? []) {
+    if (typeof record?.date !== "string") continue;
+    const day = days.find((d) => d.date === record.date.slice(0, 10));
+    if (day) day.games += 1;
+  }
 
-  const maxXp = Math.max(...days.map((d) => d.xp), 1);
-  const hasData = days.some((d) => d.xp > 0);
-  return { days, maxXp, hasData };
+  const maxGames = Math.max(...days.map((d) => d.games), 1);
+  const hasData = days.some((d) => d.games > 0);
+  return { days, maxGames, hasData };
 }
 
 // ── Chart 2: competenze per corso ───────────────────────────────────────────
@@ -118,36 +125,37 @@ export function formatPlayTime(totalMinutes: number): string {
   return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
 }
 
+/** Sottoinsieme di `GameStats` (derivato da `bq_game_history`) usato dalle card. */
+export interface GameStatsLike {
+  totalGames: number;
+  avgTricks: number;
+}
+
 /**
  * Aggregato delle 4 card di rendimento.
- * `rawQueue`/`rawMinutes` sono i contenuti grezzi di `bq_game_results_queue` e
- * `bq_total_minutes`; `streak` arriva dallo store di gioco.
+ *
+ * Partite e media prese arrivano da `gameStats`, cioè dallo storico
+ * `bq_game_history` già usato dall'intestazione dell'accordion: prima
+ * venivano dalla coda `bq_game_results_queue`, che si svuota dopo il flush e
+ * faceva divergere i due numeri. `rawMinutes` è il contenuto grezzo di
+ * `bq_total_minutes`; `streak` è la streak CORRENTE dallo store di gioco (il
+ * progetto non conserva il record storico).
  */
 export function computeGamePerformance(params: {
-  rawQueue: string | null;
+  gameStats: GameStatsLike;
   rawMinutes: string | null;
   streak: number;
 }): GamePerformanceStats {
-  const { rawQueue, rawMinutes, streak } = params;
-
-  let totalGames = 0;
-  let totalScore = 0;
-
-  try {
-    if (rawQueue) {
-      const queue: { score: number }[] = JSON.parse(rawQueue);
-      totalGames = queue.length;
-      totalScore = queue.reduce((sum, e) => sum + (e.score || 0), 0);
-    }
-  } catch {}
-
-  const bestStreak = streak;
+  const { gameStats, rawMinutes, streak } = params;
 
   const totalMinutes = parseFloat(rawMinutes || "0");
 
-  const avgXp = totalGames > 0 ? Math.round(totalScore / totalGames) : 0;
-
-  return { totalGames, bestStreak, timeDisplay: formatPlayTime(totalMinutes), avgXp };
+  return {
+    totalGames: gameStats.totalGames,
+    currentStreak: streak,
+    timeDisplay: formatPlayTime(Number.isFinite(totalMinutes) ? totalMinutes : 0),
+    avgTricks: gameStats.avgTricks,
+  };
 }
 
 // ── Progresso moduli / mondi ────────────────────────────────────────────────
@@ -158,6 +166,28 @@ export function countTotalModules(worlds: World[]): number {
     (sum, w) => sum + w.lessons.reduce((s, l) => s + l.modules.length, 0),
     0,
   );
+}
+
+/**
+ * Moduli completati che esistono ANCORA nel catalogo corrente.
+ *
+ * `completedModules` conserva anche chiavi di lezioni/moduli ritirati dal
+ * catalogo: contarle tutte faceva superare il 100% di completamento (e
+ * sbloccava il badge "Diplomato" senza aver finito il catalogo vero).
+ */
+export function countCompletedModules(
+  worlds: World[],
+  completedModules: CompletedModules,
+): number {
+  let completed = 0;
+  for (const world of worlds) {
+    for (const lesson of world.lessons) {
+      for (const mod of lesson.modules) {
+        if (completedModules[`${lesson.id}-${mod.id}`]) completed++;
+      }
+    }
+  }
+  return completed;
 }
 
 /** Percentuale di completamento arrotondata (0 se non c'è nulla da completare). */
@@ -249,7 +279,13 @@ export function challengeWinRate(stats: ChallengeStatsLike): number {
   return stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
 }
 
-/** Esito di una sfida dal punto di vista dell'utente `userId`. */
+/**
+ * Esito di una sfida dal punto di vista dell'utente `userId`.
+ *
+ * Una sfida senza gli IMP di entrambi i lati non ha un esito: prima finiva
+ * fra i pareggi ("=" e "0 IMP"), indistinguibile da un pareggio vero. Ora
+ * `scored` è falso e né `won` né `drawn` la rivendicano.
+ */
 export function describeChallenge(ch: ChallengeLike, userId: string): ChallengeOutcome {
   const isChallenger = ch.challenger_id === userId;
   const opponentName = isChallenger
@@ -257,10 +293,11 @@ export function describeChallenge(ch: ChallengeLike, userId: string): ChallengeO
     : (ch.challenger_name || "Avversario");
   const myImps = isChallenger ? ch.challenger_imps : ch.opponent_imps;
   const theirImps = isChallenger ? ch.opponent_imps : ch.challenger_imps;
-  const won = (myImps ?? 0) > (theirImps ?? 0);
-  const drawn = myImps === theirImps;
+  const scored = myImps !== null && theirImps !== null;
+  const won = scored && (myImps ?? 0) > (theirImps ?? 0);
+  const drawn = scored && myImps === theirImps;
   const netImp = (myImps ?? 0) - (theirImps ?? 0);
-  return { isChallenger, opponentName, myImps, theirImps, won, drawn, netImp };
+  return { isChallenger, opponentName, myImps, theirImps, scored, won, drawn, netImp };
 }
 
 // ── Fiches ──────────────────────────────────────────────────────────────────

@@ -39,9 +39,10 @@ export function useTournamentPlay({
   alreadyPlayed: boolean;
   onFinish: (result: TournamentResult) => void;
 }): TournamentPlay {
-  // Riprende un eventuale torneo interrotto (reload/standby a metà)
+  // Riprende un eventuale torneo interrotto (reload/standby a metà).
+  // Il rigioco senza punti non riprende nulla: vedi il salvataggio qui sotto.
   const [restored] = useState<HandResult[]>(() =>
-    restoreProgress(weekNum, hands)
+    restoreProgress(weekNum, hands, alreadyPlayed)
   );
   const [currentHandIdx, setCurrentHandIdx] = useState(restored.length);
   const [handResults, setHandResults] = useState<HandResult[]>(restored);
@@ -50,15 +51,19 @@ export function useTournamentPlay({
 
   const currentHand = hands[currentHandIdx];
 
-  // Salva l'avanzamento dopo ogni mano completata (rimosso a torneo finito)
+  // Salva l'avanzamento dopo ogni mano completata (rimosso a torneo finito).
+  // Nel rigioco senza punti NON si salva: la CTA della hero resta "Rigioca il
+  // torneo (senza punti)" e non annuncia nessuna ripresa, quindi salvare
+  // significherebbe far ripartire il rigioco da metà senza dirlo.
   useEffect(() => {
+    if (alreadyPlayed) return;
     if (handResults.length === 0 || handResults.length >= hands.length) return;
     saveTournamentProgress({
       weekNum,
       handIds: hands.map((h) => h.id),
       handResults,
     });
-  }, [handResults, hands, weekNum]);
+  }, [alreadyPlayed, handResults, hands, weekNum]);
 
   const handleHandFinished = useCallback(
     (tricksMade: number, resultDelta: number) => {

@@ -4,9 +4,17 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import type { Smazzata } from "@/lib/catalog";
 import { calcStars, computeHandTotals, computeTournamentXp } from "@/lib/tournament-stats";
-import { TOURNAMENT_HAND_COUNT, type HandResult } from "../_types";
+import { type HandResult } from "../_types";
 
-/** Schermata finale del torneo appena giocato (stelle, prese totali, XP). */
+/** Massimo di prese ottenibili in una mano di bridge. */
+const TRICKS_PER_HAND = 13;
+
+/**
+ * Schermata finale del torneo appena giocato (stelle, prese totali, XP).
+ *
+ * Tutti i totali usano le mani effettivamente giocate: con una pool più corta
+ * di TOURNAMENT_HAND_COUNT la barra e il riepilogo davano numeri sbagliati.
+ */
 export function TournamentSummary({
   weekNum,
   hands,
@@ -25,6 +33,8 @@ export function TournamentSummary({
   const { totalTricks, totalNeeded } = computeHandTotals(handResults);
   const totalDelta = totalTricks - totalNeeded;
   const stars = calcStars(totalDelta);
+  const playedCount = handResults.length;
+  const maxTricks = Math.max(playedCount, 1) * TRICKS_PER_HAND;
 
   const { handXp, tournamentBonus, xpEarned } = computeTournamentXp(
     handResults,
@@ -117,7 +127,7 @@ export function TournamentSummary({
             </h2>
 
             <p className="text-sm text-muted-foreground mt-2">
-              Settimana #{weekNum} · {TOURNAMENT_HAND_COUNT} mani giocate
+              Settimana #{weekNum} · {playedCount} mani giocate
             </p>
 
             {/* Total tricks */}
@@ -132,7 +142,7 @@ export function TournamentSummary({
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{
-                    width: `${Math.min((totalTricks / (TOURNAMENT_HAND_COUNT * 13)) * 100, 100)}%`,
+                    width: `${Math.min((totalTricks / maxTricks) * 100, 100)}%`,
                   }}
                   transition={{ delay: 0.6, duration: 1 }}
                   className={`h-full rounded-full ${
@@ -146,14 +156,17 @@ export function TournamentSummary({
                 <div
                   className="absolute -top-4 w-0.5 h-4 bg-foreground/40"
                   style={{
-                    left: `${(totalNeeded / (TOURNAMENT_HAND_COUNT * 13)) * 100}%`,
+                    left: `${Math.min((totalNeeded / maxTricks) * 100, 100)}%`,
                   }}
                 />
               </div>
             </div>
 
             {/* Per-hand breakdown */}
-            <div className="mt-6 grid grid-cols-5 gap-2">
+            <div
+              className="mt-6 grid gap-2"
+              style={{ gridTemplateColumns: `repeat(${Math.max(playedCount, 1)}, minmax(0, 1fr))` }}
+            >
               {handResults.map((hr, i) => (
                 <motion.div
                   key={i}
@@ -170,7 +183,8 @@ export function TournamentSummary({
                     #{i + 1}
                   </p>
                   <p className="text-xs font-bold text-muted-foreground">
-                    {hands[i].contract}
+                    {/* per id, non per indice: le mani possono non allinearsi */}
+                    {hands.find((h) => h.id === hr.smazzataId)?.contract ?? "—"}
                   </p>
                   <p
                     className={`text-lg font-bold ${

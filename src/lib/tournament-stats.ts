@@ -142,17 +142,55 @@ export type ProgressRestoreDecision =
   | { action: "clear" }
   | { action: "restore"; handResults: HandResult[] };
 
-/** Il progresso salvato è utilizzabile con le mani correnti? */
+/**
+ * Il progresso salvato è utilizzabile con le mani correnti?
+ *
+ * `alreadyPlayed` = torneo della settimana già concluso: il rigioco è "senza
+ * punti" e non lascia traccia, quindi non riprende (e non salva) nessun
+ * progresso — altrimenti al rientro ripartirebbe da metà senza che la CTA lo
+ * dica.
+ */
 export function decideProgressRestore(
   saved: TournamentProgress | null,
   hands: { id: string }[],
+  alreadyPlayed = false,
 ): ProgressRestoreDecision {
+  if (alreadyPlayed) return { action: "none" };
   if (!saved || hands.length === 0) return { action: "none" };
   const sameHands = saved.handIds.join(",") === hands.map((h) => h.id).join(",");
   if (!sameHands || saved.handResults.length >= hands.length) {
     return { action: "clear" };
   }
   return { action: "restore", handResults: saved.handResults };
+}
+
+/**
+ * Mani davvero riprendibili di un torneo interrotto.
+ *
+ * Stessa decisione che applica la play view: contare le mani salvate senza
+ * validarle faceva annunciare alla CTA una ripresa ("mano 3/5") che poi
+ * ripartiva da capo, perché il progresso veniva scartato all'avvio.
+ */
+export function restorableHandCount(
+  saved: TournamentProgress | null,
+  hands: { id: string }[],
+  alreadyPlayed = false,
+): number {
+  const decision = decideProgressRestore(saved, hands, alreadyPlayed);
+  return decision.action === "restore" ? decision.handResults.length : 0;
+}
+
+/**
+ * Esito di una mano specifica, accoppiato per `smazzataId`.
+ *
+ * Accoppiare per indice fa slittare gli esiti mostrati se il set di mani della
+ * settimana cambia dopo che il torneo è stato giocato.
+ */
+export function handResultFor(
+  handResults: HandResult[] | undefined,
+  smazzataId: string,
+): HandResult | undefined {
+  return handResults?.find((r) => r.smazzataId === smazzataId);
 }
 
 /** Etichetta della CTA principale: avvio o ripresa alla mano successiva. */

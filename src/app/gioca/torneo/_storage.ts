@@ -65,9 +65,16 @@ export function clearTournamentProgress(weekNum: number) {
   } catch {}
 }
 
-/** Restore saved hand results if they match the current hand set. */
-export function restoreProgress(weekNum: number, hands: Smazzata[]): HandResult[] {
-  const decision = decideProgressRestore(getTournamentProgress(weekNum), hands);
+/**
+ * Restore saved hand results if they match the current hand set.
+ * Nel rigioco senza punti (`alreadyPlayed`) non si riprende nulla.
+ */
+export function restoreProgress(
+  weekNum: number,
+  hands: Smazzata[],
+  alreadyPlayed = false,
+): HandResult[] {
+  const decision = decideProgressRestore(getTournamentProgress(weekNum), hands, alreadyPlayed);
   if (decision.action === "clear") {
     clearTournamentProgress(weekNum);
     return [];

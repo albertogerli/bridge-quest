@@ -9,7 +9,7 @@ import { useGameStore } from "@/store/use-game-store";
 import type { UserProfile } from "@/hooks/use-profile";
 import {
   shareInvite, shareBadge, generateReferralCode, getReferralLink,
-  copyReferralLink, shareViaWhatsApp, getInviteCount
+  copyReferralLink, shareViaWhatsApp, getInviteCount, incrementInviteCount
 } from "@/lib/share";
 import { StreakFreezeCard } from "@/components/streak-freeze-card";
 // Popup di achievement segreto: compare solo quando se ne sblocca uno.
@@ -141,30 +141,28 @@ export default function ProfiloPage() {
     }
   }, [user?.id, setInvitesSent]);
 
+  /**
+   * Registra un invito: l'incremento su localStorage sta FUORI dall'updater di
+   * `setInvitesSent`. Sotto StrictMode React invoca l'updater due volte, e un
+   * side effect lì dentro contava l'invito due volte.
+   */
+  const registerInviteSent = useCallback(() => {
+    const count = incrementInviteCount();
+    if (count > 0) setInvitesSent(count);
+  }, [setInvitesSent]);
+
   const handleCopyLink = useCallback(async () => {
     await copyReferralLink(user?.id);
     setLinkCopied(true);
-    setInvitesSent((prev) => {
-      try {
-        const count = parseInt(localStorage.getItem("bq_invites_sent") || "0", 10) + 1;
-        localStorage.setItem("bq_invites_sent", String(count));
-        return count;
-      } catch { return prev; }
-    });
+    registerInviteSent();
     setTimeout(() => setLinkCopied(false), 2500);
-  }, [user?.id, setInvitesSent]);
+  }, [user?.id, registerInviteSent]);
 
   const handleWhatsApp = useCallback(() => {
     const text = "Impara il Bridge con me su Bridge LAB! L'app ufficiale della FIGB per imparare a giocare a bridge.";
     shareViaWhatsApp(text, referralLink);
-    setInvitesSent((prev) => {
-      try {
-        const count = parseInt(localStorage.getItem("bq_invites_sent") || "0", 10) + 1;
-        localStorage.setItem("bq_invites_sent", String(count));
-        return count;
-      } catch { return prev; }
-    });
-  }, [referralLink, setInvitesSent]);
+    registerInviteSent();
+  }, [referralLink, registerInviteSent]);
 
   const handleShareBadge = useCallback(async (badgeName: string) => {
     const outcome = await shareBadge(badgeName);
@@ -223,7 +221,7 @@ export default function ProfiloPage() {
           open={advancedStatsOpen}
           onToggle={() => setAdvancedStatsOpen(!advancedStatsOpen)}
           gameStats={data.gameStats}
-          xpPerDay={data.xpPerDay}
+          gamesPerDay={data.gamesPerDay}
           courseCompetence={data.courseCompetence}
           gamePerformanceStats={data.gamePerformanceStats}
         />

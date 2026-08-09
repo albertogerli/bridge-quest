@@ -1,12 +1,13 @@
 import { describe, it, expect } from "vitest";
 import {
   buildBadges,
-  buildXpPerDay,
+  buildGamesPerDay,
   challengeWinRate,
   completionPercent,
   computeCourseCompetence,
   computeFiches,
   computeGamePerformance,
+  countCompletedModules,
   countCompletedWorlds,
   countEarnedBadges,
   countTotalModules,
@@ -15,6 +16,7 @@ import {
   resolveLevelNames,
   worldProgress,
   type CompletedModules,
+  type GameRecordLike,
 } from "./profile-stats";
 import type { Course, Lesson, World } from "@/lib/catalog";
 import { MAX_LEVEL } from "@/lib/xp-levels";
@@ -69,51 +71,56 @@ function isoDay(offset: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-// ── buildXpPerDay ──────────────────────────────────────────────────────────
+// ── buildGamesPerDay ───────────────────────────────────────────────────────
 
-describe("buildXpPerDay", () => {
+/** Record dello storico `bq_game_history` a `offset` giorni da NOW. */
+function record(offset: number, hour = 10): GameRecordLike {
+  return { date: `${isoDay(offset)}T${String(hour).padStart(2, "0")}:00:00Z` };
+}
+
+describe("buildGamesPerDay", () => {
   it("costruisce 7 giorni consecutivi terminando con oggi", () => {
-    const { days } = buildXpPerDay(NOW, null);
+    const { days } = buildGamesPerDay(NOW, null);
     expect(days).toHaveLength(7);
     expect(days[6].date).toBe(isoDay(0));
     expect(days[0].date).toBe(isoDay(-6));
     expect(days[6].label).toBe("Mer"); // 2026-08-05 è mercoledì
   });
 
-  it("senza coda in localStorage azzera tutto e normalizza maxXp a 1", () => {
-    const { days, maxXp, hasData } = buildXpPerDay(NOW, null);
-    expect(days.every((d) => d.xp === 0)).toBe(true);
-    expect(maxXp).toBe(1);
+  it("senza storico azzera tutto e normalizza maxGames a 1", () => {
+    const { days, maxGames, hasData } = buildGamesPerDay(NOW, []);
+    expect(days.every((d) => d.games === 0)).toBe(true);
+    expect(maxGames).toBe(1);
     expect(hasData).toBe(false);
   });
 
-  it("somma i punteggi della coda sul giorno corrispondente", () => {
-    const raw = JSON.stringify([
-      { timestamp: `${isoDay(0)}T10:00:00Z`, score: 30 },
-      { timestamp: `${isoDay(0)}T18:00:00Z`, score: 12 },
-      { timestamp: `${isoDay(-2)}T09:00:00Z`, score: 5 },
+  it("conta le partite dello storico sul giorno corrispondente", () => {
+    const { days, maxGames, hasData } = buildGamesPerDay(NOW, [
+      record(0, 10),
+      record(0, 18),
+      record(-2, 9),
     ]);
-    const { days, maxXp, hasData } = buildXpPerDay(NOW, raw);
-    expect(days[6].xp).toBe(42);
-    expect(days[4].xp).toBe(5);
-    expect(maxXp).toBe(42);
+    expect(days[6].games).toBe(2);
+    expect(days[4].games).toBe(1);
+    expect(maxGames).toBe(2);
     expect(hasData).toBe(true);
   });
 
-  it("ignora le partite fuori finestra e i punteggi mancanti", () => {
-    const raw = JSON.stringify([
-      { timestamp: `${isoDay(-30)}T10:00:00Z`, score: 999 },
-      { timestamp: `${isoDay(0)}T10:00:00Z` },
+  it("ignora le partite fuori finestra e i record senza data", () => {
+    const { days, hasData } = buildGamesPerDay(NOW, [
+      record(-30),
+      { } as GameRecordLike,
     ]);
-    const { days, hasData } = buildXpPerDay(NOW, raw);
-    expect(days.reduce((s, d) => s + d.xp, 0)).toBe(0);
+    expect(days.reduce((s, d) => s + d.games, 0)).toBe(0);
     expect(hasData).toBe(false);
   });
 
-  it("non esplode su JSON corrotto", () => {
-    const { days, hasData } = buildXpPerDay(NOW, "{non-json");
-    expect(days).toHaveLength(7);
-    expect(hasData).toBe(false);
+  it("REGRESSIONE: il grafico sopravvive allo svuotamento della coda di sync", () => {
+    // `bq_game_results_queue` (vecchia fonte) viene cancellata dopo il flush
+    // verso Supabase: lo storico `bq_game_history` no, e i grafici restano.
+    const storico = [record(0), record(-1)];
+    expect(buildGamesPerDay(NOW, storico).hasData).toBe(true);
+    expect(buildGamesPerDay(NOW, storico).days[6].games).toBe(1);
   });
 });
 
@@ -162,26 +169,41 @@ describe("formatPlayTime", () => {
 });
 
 describe("computeGamePerformance", () => {
-  it("azzera tutto quando non c'è nulla in localStorage", () => {
+  const emptyStats = { totalGames: 0, avgTricks: 0 };
+
+  it("azzera tutto su profilo vuoto", () => {
     expect(
-      computeGamePerformance({ rawQueue: null, rawMinutes: null, streak: 0 }),
-    ).toEqual({ totalGames: 0, bestStreak: 0, timeDisplay: "< 1 min", avgXp: 0 });
+      computeGamePerformance({ gameStats: emptyStats, rawMinutes: null, streak: 0 }),
+    ).toEqual({ totalGames: 0, currentStreak: 0, timeDisplay: "< 1 min", avgTricks: 0 });
   });
 
-  it("calcola partite, media XP e tempo di gioco", () => {
-    const raw = JSON.stringify([{ score: 10 }, { score: 20 }, { score: 31 }]);
+  it("REGRESSIONE: partite e media prese vengono dallo storico, non dalla coda", () => {
+    // Stessa fonte dell'intestazione dell'accordion: dopo un flush della coda
+    // `bq_game_results_queue` i due numeri non possono più divergere.
     expect(
-      computeGamePerformance({ rawQueue: raw, rawMinutes: "90", streak: 4 }),
-    ).toEqual({ totalGames: 3, bestStreak: 4, timeDisplay: "1h 30m", avgXp: 20 });
+      computeGamePerformance({
+        gameStats: { totalGames: 12, avgTricks: 8.4 },
+        rawMinutes: "90",
+        streak: 4,
+      }),
+    ).toEqual({ totalGames: 12, currentStreak: 4, timeDisplay: "1h 30m", avgTricks: 8.4 });
   });
 
-  it("tratta i punteggi mancanti come zero e ignora una coda corrotta", () => {
+  it("REGRESSIONE: la streak riportata è quella corrente (nessun record storico salvato)", () => {
+    const stats = computeGamePerformance({
+      gameStats: emptyStats,
+      rawMinutes: "0",
+      streak: 3,
+    });
+    expect(stats.currentStreak).toBe(3);
+    expect(stats).not.toHaveProperty("bestStreak");
+  });
+
+  it("non esplode su minuti non numerici", () => {
     expect(
-      computeGamePerformance({ rawQueue: JSON.stringify([{}, {}]), rawMinutes: "0", streak: 1 }).avgXp,
-    ).toBe(0);
-    expect(
-      computeGamePerformance({ rawQueue: "[[[", rawMinutes: "0", streak: 1 }).totalGames,
-    ).toBe(0);
+      computeGamePerformance({ gameStats: emptyStats, rawMinutes: "boh", streak: 0 })
+        .timeDisplay,
+    ).toBe("< 1 min");
   });
 });
 
@@ -217,6 +239,26 @@ describe("countTotalModules / completionPercent / worldProgress / countCompleted
     expect(countCompletedWorlds(worlds, {})).toBe(0);
     expect(countCompletedWorlds(worlds, { "3-1": true, "3-2": true })).toBe(1);
     expect(countCompletedWorlds([], {})).toBe(0);
+  });
+
+  it("conta i moduli completati presenti nel catalogo", () => {
+    expect(countCompletedModules(worlds, {})).toBe(0);
+    expect(countCompletedModules(worlds, { "1-1": true, "3-2": true })).toBe(2);
+    expect(countCompletedModules([], { "1-1": true })).toBe(0);
+  });
+
+  it("REGRESSIONE: i moduli non più a catalogo non superano il 100%", () => {
+    // `bq-game-store` conserva le chiavi delle lezioni ritirate: contarle
+    // portava il completamento oltre il 100% e sbloccava «Diplomato».
+    const completati: CompletedModules = {
+      "1-1": true, "1-2": true, "2-1": true, "3-1": true, "3-2": true, // catalogo (5)
+      "99-1": true, "99-2": true, // lezione ritirata
+    };
+    const totale = countTotalModules(worlds);
+    const fatti = countCompletedModules(worlds, completati);
+    expect(Object.keys(completati).length).toBeGreaterThan(totale);
+    expect(fatti).toBe(totale);
+    expect(completionPercent(fatti, totale)).toBe(100);
   });
 });
 
@@ -323,33 +365,44 @@ describe("describeChallenge", () => {
   it("vista sfidante: IMP miei = challenger_imps", () => {
     expect(describeChallenge(base, "me")).toEqual({
       isChallenger: true, opponentName: "Rivale",
-      myImps: 12, theirImps: 5, won: true, drawn: false, netImp: 7,
+      myImps: 12, theirImps: 5, scored: true, won: true, drawn: false, netImp: 7,
     });
   });
 
   it("vista sfidato: i lati si invertono", () => {
     expect(describeChallenge(base, "altro")).toEqual({
       isChallenger: false, opponentName: "Io",
-      myImps: 5, theirImps: 12, won: false, drawn: false, netImp: -7,
+      myImps: 5, theirImps: 12, scored: true, won: false, drawn: false, netImp: -7,
     });
   });
 
   it("riconosce il pareggio", () => {
     const draw = describeChallenge({ ...base, challenger_imps: 8, opponent_imps: 8 }, "me");
+    expect(draw.scored).toBe(true);
     expect(draw.drawn).toBe(true);
     expect(draw.won).toBe(false);
     expect(draw.netImp).toBe(0);
   });
 
-  it("gli IMP null valgono 0 nei confronti ma restano null nel risultato", () => {
+  it("REGRESSIONE: una sfida senza IMP non è un pareggio ma una sfida da completare", () => {
     const nulls = describeChallenge(
       { challenger_id: "me", challenger_imps: null, opponent_imps: null },
       "me",
     );
     expect(nulls.myImps).toBeNull();
-    expect(nulls.netImp).toBe(0);
-    expect(nulls.drawn).toBe(true);
+    expect(nulls.scored).toBe(false);
+    expect(nulls.drawn).toBe(false);
     expect(nulls.won).toBe(false);
+  });
+
+  it("REGRESSIONE: anche un solo lato senza IMP non produce un esito", () => {
+    const half = describeChallenge(
+      { challenger_id: "me", challenger_imps: 9, opponent_imps: null },
+      "me",
+    );
+    expect(half.scored).toBe(false);
+    expect(half.won).toBe(false);
+    expect(half.drawn).toBe(false);
   });
 
   it("ripiega su «Avversario» quando manca il nome", () => {
@@ -361,6 +414,7 @@ describe("describeChallenge", () => {
       describeChallenge({ challenger_id: "tu", challenger_imps: 1, opponent_imps: 0 }, "me")
         .opponentName,
     ).toBe("Avversario");
+
   });
 });
 

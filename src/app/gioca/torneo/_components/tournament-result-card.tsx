@@ -2,9 +2,17 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { calcStars } from "@/lib/tournament-stats";
-import { TOURNAMENT_HAND_COUNT, type TournamentResult } from "../_types";
+import { type TournamentResult } from "../_types";
 
-/** Riepilogo del torneo già concluso questa settimana (stelle, prese, XP). */
+/** Massimo di prese ottenibili in una mano di bridge. */
+const TRICKS_PER_HAND = 13;
+
+/**
+ * Riepilogo del torneo già concluso questa settimana (stelle, prese, XP).
+ *
+ * I totali seguono le mani effettivamente giocate: con una pool più corta di
+ * TOURNAMENT_HAND_COUNT la barra usava un massimo inesistente.
+ */
 export function TournamentResultCard({
   alreadyPlayed,
   existingResult,
@@ -14,6 +22,8 @@ export function TournamentResultCard({
   existingResult: TournamentResult | null;
   xpLabel: string;
 }) {
+  const playedCount = existingResult?.handResults.length ?? 0;
+  const maxTricks = Math.max(playedCount, 1) * TRICKS_PER_HAND;
   return (
     <AnimatePresence>
       {alreadyPlayed && existingResult && (
@@ -81,7 +91,7 @@ export function TournamentResultCard({
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{
-                    width: `${Math.min((existingResult.totalTricks / (TOURNAMENT_HAND_COUNT * 13)) * 100, 100)}%`,
+                    width: `${Math.min((existingResult.totalTricks / maxTricks) * 100, 100)}%`,
                   }}
                   transition={{ delay: 0.5, duration: 0.8 }}
                   className={`h-full rounded-full ${
@@ -95,14 +105,17 @@ export function TournamentResultCard({
                 <div
                   className="absolute -top-3 w-0.5 h-3 bg-foreground/40"
                   style={{
-                    left: `${(existingResult.totalNeeded / (TOURNAMENT_HAND_COUNT * 13)) * 100}%`,
+                    left: `${Math.min((existingResult.totalNeeded / maxTricks) * 100, 100)}%`,
                   }}
                 />
               </div>
             </div>
 
             {/* Per-hand breakdown */}
-            <div className="mt-5 grid grid-cols-5 gap-2">
+            <div
+              className="mt-5 grid gap-2"
+              style={{ gridTemplateColumns: `repeat(${Math.max(playedCount, 1)}, minmax(0, 1fr))` }}
+            >
               {existingResult.handResults.map((hr, i) => (
                 <div
                   key={i}

@@ -1,37 +1,43 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Clock, Flame, Gamepad2, TrendingUp } from "lucide-react";
-import type { CourseCompetence, GamePerformanceStats, XpPerDay } from "../_types";
+import { Clock, Flame, Gamepad2, Target } from "lucide-react";
+import type { CourseCompetence, GamePerformanceStats, GamesPerDay } from "../_types";
 
-/** I tre grafici dentro l'accordion "Statistiche Avanzate". */
+/**
+ * I tre grafici dentro l'accordion "Statistiche Avanzate".
+ *
+ * Tutti i numeri di gioco vengono dallo storico `bq_game_history` (la stessa
+ * fonte dell'intestazione dell'accordion), non dalla coda dei risultati non
+ * sincronizzati che si svuota dopo il flush.
+ */
 export function ProgressCharts({
-  xpPerDay,
+  gamesPerDay,
   courseCompetence,
   gamePerformanceStats,
 }: {
-  xpPerDay: XpPerDay;
+  gamesPerDay: GamesPerDay;
   courseCompetence: CourseCompetence[];
   gamePerformanceStats: GamePerformanceStats;
 }) {
   return (
     <div className="mt-4 space-y-4">
 
-      {/* Chart 1: XP Progress Over Time (7-day bar chart) */}
+      {/* Chart 1: partite giocate negli ultimi 7 giorni */}
       <div className="card-clean rounded-2xl bg-card p-4">
         <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-          XP ultimi 7 giorni
+          Partite ultimi 7 giorni
         </p>
-        {xpPerDay.hasData ? (
+        {gamesPerDay.hasData ? (
           <div className="flex items-end gap-1 h-24">
-            {xpPerDay.days.map((d) => (
+            {gamesPerDay.days.map((d) => (
               <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full">
-                {d.xp > 0 && (
-                  <span className="text-[8px] font-bold text-muted-foreground mb-0.5">{d.xp}</span>
+                {d.games > 0 && (
+                  <span className="text-[8px] font-bold text-muted-foreground mb-0.5">{d.games}</span>
                 )}
                 <motion.div
                   initial={{ height: 0 }}
-                  animate={{ height: Math.max((d.xp / xpPerDay.maxXp) * 80, d.xp > 0 ? 4 : 0) }}
+                  animate={{ height: Math.max((d.games / gamesPerDay.maxGames) * 80, d.games > 0 ? 4 : 0) }}
                   transition={{ delay: 0.2, duration: 0.5 }}
                   className="w-full rounded-t bg-figb/70 dark:bg-primary/70"
                 />
@@ -87,20 +93,23 @@ export function ProgressCharts({
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.totalGames}</p>
             <p className="text-[10px] text-muted-foreground font-medium">Partite totali</p>
           </div>
+          {/* Streak ATTUALE: il progetto non salva il record storico */}
           <div className="rounded-xl bg-muted p-3 text-center">
             <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
-            <p className="text-xl font-bold text-foreground">{gamePerformanceStats.bestStreak}</p>
-            <p className="text-[10px] text-muted-foreground font-medium">Streak migliore</p>
+            <p className="text-xl font-bold text-foreground">{gamePerformanceStats.currentStreak}</p>
+            <p className="text-[10px] text-muted-foreground font-medium">Streak attuale</p>
           </div>
           <div className="rounded-xl bg-muted p-3 text-center">
             <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.timeDisplay}</p>
             <p className="text-[10px] text-muted-foreground font-medium">Tempo di gioco</p>
           </div>
+          {/* Gli XP della singola partita non sono nello storico: si mostra
+              la media prese, che quella fonte conosce davvero. */}
           <div className="rounded-xl bg-muted p-3 text-center">
-            <TrendingUp className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
-            <p className="text-xl font-bold text-foreground">{gamePerformanceStats.avgXp}</p>
-            <p className="text-[10px] text-muted-foreground font-medium">Media XP/partita</p>
+            <Target className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
+            <p className="text-xl font-bold text-foreground">{gamePerformanceStats.avgTricks}</p>
+            <p className="text-[10px] text-muted-foreground font-medium">Media prese/mano</p>
           </div>
         </div>
       </div>
