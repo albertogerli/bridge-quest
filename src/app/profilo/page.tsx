@@ -1,45 +1,17 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { motion } from "motion/react";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { levelInfo, type CourseId } from "@/lib/catalog";
-import { useCatalog } from "@/store/use-catalog-store";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { useActiveAsdClubs, useAsdClub } from "@/store/use-asd-store";
-import { asdNameToSlug } from "@/lib/asd-utils";
-import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
-import { getLevel, getXpInLevel, getLevelProgress, getXpForNextLevel, MAX_LEVEL } from "@/lib/xp-levels";
-import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
-import { useGameHistory } from "@/hooks/use-game-history";
-// Statistiche avanzate: vivono dentro un accordion chiuso di default, quindi
-// non fanno parte del primo paint del profilo.
-const StatsDashboard = dynamic(
-  () => import("@/components/stats-dashboard").then((m) => m.StatsDashboard),
-  { ssr: false },
-);
+import { useGameStore } from "@/store/use-game-store";
+import type { UserProfile } from "@/hooks/use-profile";
 import {
   shareInvite, shareBadge, generateReferralCode, getReferralLink,
   copyReferralLink, shareViaWhatsApp, getInviteCount
 } from "@/lib/share";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { AnimatePresence } from "motion/react";
-import {
-  Spade, BookOpen, Target, Flame, Trophy, Star, Crown, GraduationCap,
-  Globe, Medal, CheckCircle2, Zap, BookOpenCheck, BarChart3,
-  Gamepad2, Coffee, Coins, Share2, UserPlus, Check, Copy, MessageCircle, Send,
-  Sparkles, Clock, TrendingUp
-} from "lucide-react";
 import { StreakFreezeCard } from "@/components/streak-freeze-card";
-import { useChallenges, type ChallengeData, type ChallengeStats } from "@/hooks/use-challenges";
-import { Swords } from "lucide-react";
-import { useSecretAchievements } from "@/hooks/use-secret-achievements";
-import { useGameStore } from "@/store/use-game-store";
 // Popup di achievement segreto: compare solo quando se ne sblocca uno.
 const SecretAchievementPopup = dynamic(
   () => import("@/components/secret-achievement-popup"),
@@ -47,199 +19,42 @@ const SecretAchievementPopup = dynamic(
 );
 import { reportError } from "@/lib/report-error";
 import { toast } from "sonner";
-
-const BQ_KEYS_PREFIX = "bq_";
+import { BQ_KEYS_PREFIX } from "./_types";
+import { useProfileData } from "./_use-profile-data";
+import { useProfileEdit } from "./_use-profile-edit";
+import { LoginCta } from "./_components/login-cta";
+import { ProfileHeader } from "./_components/profile-header";
+import { LevelProgressCard } from "./_components/level-progress-card";
+import { QuickStats } from "./_components/quick-stats";
+import { AdvancedStatsSection } from "./_components/advanced-stats-section";
+import { ChallengeHistorySection } from "./_components/challenge-history-section";
+import { BadgesSection } from "./_components/badges-section";
+import { CourseProgressSection } from "./_components/course-progress-section";
+import { EditProfileSection } from "./_components/edit-profile-section";
+import { ProfileStyleSelector } from "./_components/profile-style-selector";
+import { FichesCard } from "./_components/fiches-card";
+import { InviteFriendSection } from "./_components/invite-friend-section";
+import { AccountActions } from "./_components/account-actions";
 
 export default function ProfiloPage() {
-  const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useSharedAuth();
-  const { courses } = useCatalog();
-  const allWorlds = useMemo(() => courses.flatMap((c) => c.worlds), [courses]);
-  const cosmetics = useShopCosmetics();
-  const [editing, setEditing] = useState(false);
+  const { user, profile: authProfile, loading: authLoading, signOut } = useSharedAuth();
+  const data = useProfileData();
+  const edit = useProfileEdit();
+
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [editBbo, setEditBbo] = useState("");
-  const [editAsdSearch, setEditAsdSearch] = useState("");
-  const [editAsdCode, setEditAsdCode] = useState("");
-  const [showAsdDropdown, setShowAsdDropdown] = useState(false);
-  const editAsdClub = useAsdClub(editAsdCode || undefined);
-  const editAsdSelectedName = editAsdClub?.name ?? "";
-  const activeClubsSorted = useActiveAsdClubs();
-  const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null);
-  const [editAvatarPreview, setEditAvatarPreview] = useState("");
-  const [saving, setSaving] = useState(false);
-  const xp = useGameStore((s) => s.xp);
-  const streak = useGameStore((s) => s.streak);
-  const handsPlayed = useGameStore((s) => s.handsPlayed);
-  const completedModules = useGameStore((s) => s.completedModules);
-  const [currentProfile, setCurrentProfile] = useState<UserProfile>("adulto");
   const [advancedStatsOpen, setAdvancedStatsOpen] = useState(false);
+  const [challengeHistoryOpen, setChallengeHistoryOpen] = useState(false);
   const [inviteToast, setInviteToast] = useState<string | null>(null);
   const [inviteXpToast, setInviteXpToast] = useState(false);
   const [sharedBadge, setSharedBadge] = useState<string | null>(null);
-  const [invitesSent, setInvitesSent] = useState(0);
   const [linkCopied, setLinkCopied] = useState(false);
   const referralCode = user?.id ? generateReferralCode(user.id) : null;
   const referralLink = user?.id ? getReferralLink(user.id) : getReferralLink();
-  const { getStats } = useGameHistory();
-  const gameStats = getStats();
-  const { checkAchievements, earnedSecretAchievements, totalSecretAchievements } = useSecretAchievements();
-  const [pendingAchievement, setPendingAchievement] = useState<{ id: string; name: string; icon: string; description: string } | null>(null);
-  // Resta montato dopo il primo sblocco: preserva l'animazione di uscita.
-  const [achievementPopupArmed, setAchievementPopupArmed] = useState(false);
-  useEffect(() => {
-    if (pendingAchievement) setAchievementPopupArmed(true);
-  }, [pendingAchievement]);
-  const { getHistory, getStats: getChallengeStats } = useChallenges();
-  const [challengeHistory, setChallengeHistory] = useState<ChallengeData[]>([]);
-  const [challengeStats, setChallengeStats] = useState<ChallengeStats | null>(null);
-  const [challengeHistoryOpen, setChallengeHistoryOpen] = useState(false);
 
-  // ===== Chart Data Computations =====
-
-  // Chart 1: XP per day (last 7 days)
-  const xpPerDay = useMemo(() => {
-    const dayLabels = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
-    const now = new Date();
-    const days: { label: string; xp: number; date: string }[] = [];
-
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(d.getDate() - i);
-      days.push({
-        label: dayLabels[d.getDay()],
-        xp: 0,
-        date: d.toISOString().slice(0, 10),
-      });
-    }
-
-    try {
-      const raw = localStorage.getItem("bq_game_results_queue");
-      if (raw) {
-        const queue: { timestamp: string; score: number }[] = JSON.parse(raw);
-        for (const entry of queue) {
-          const entryDate = entry.timestamp.slice(0, 10);
-          const day = days.find((d) => d.date === entryDate);
-          if (day) {
-            day.xp += entry.score || 0;
-          }
-        }
-      }
-    } catch {}
-
-    const maxXp = Math.max(...days.map((d) => d.xp), 1);
-    const hasData = days.some((d) => d.xp > 0);
-    return { days, maxXp, hasData };
-  }, []);
-
-  // Chart 2: Course competence (% completed per course)
-  const courseCompetence = useMemo(() => {
-    const courseConfigs: { id: CourseId; name: string; color: string; bgClass: string }[] = [
-      { id: "fiori", name: "Fiori", color: "#059669", bgClass: "bg-emerald-500" },
-      { id: "quadri", name: "Quadri", color: "#f97316", bgClass: "bg-orange-500" },
-      { id: "cuori-gioco", name: "Cuori Gioco", color: "#f43f5e", bgClass: "bg-rose-500" },
-      { id: "cuori-licita", name: "Cuori Licita", color: "#ec4899", bgClass: "bg-pink-500" },
-    ];
-
-    return courseConfigs.map((cfg) => {
-      const course = courses.find((c) => c.id === cfg.id);
-      let total = 0;
-      let completed = 0;
-      for (const lesson of course?.lessons ?? []) {
-        for (const mod of lesson.modules) {
-          total++;
-          if (completedModules[`${lesson.id}-${mod.id}`]) completed++;
-        }
-      }
-      const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-      return {
-        ...cfg,
-        progress,
-        completed,
-        total,
-      };
-    });
-  }, [completedModules, courses]);
-
-  // Chart 3: Game performance stats
-  const gamePerformanceStats = useMemo(() => {
-    let totalGames = 0;
-    let totalScore = 0;
-    let bestStreak = 0;
-    let totalMinutes = 0;
-
-    try {
-      const raw = localStorage.getItem("bq_game_results_queue");
-      if (raw) {
-        const queue: { score: number }[] = JSON.parse(raw);
-        totalGames = queue.length;
-        totalScore = queue.reduce((sum, e) => sum + (e.score || 0), 0);
-      }
-    } catch {}
-
-    bestStreak = useGameStore.getState().streak;
-
-    try {
-      totalMinutes = parseFloat(localStorage.getItem("bq_total_minutes") || "0");
-    } catch {}
-
-    const avgXp = totalGames > 0 ? Math.round(totalScore / totalGames) : 0;
-
-    // Format time nicely
-    let timeDisplay: string;
-    if (totalMinutes < 1) {
-      timeDisplay = "< 1 min";
-    } else if (totalMinutes < 60) {
-      timeDisplay = `${Math.round(totalMinutes)} min`;
-    } else {
-      const hours = Math.floor(totalMinutes / 60);
-      const mins = Math.round(totalMinutes % 60);
-      timeDisplay = mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-    }
-
-    return { totalGames, bestStreak, timeDisplay, avgXp };
-  }, []);
-
-  useEffect(() => {
-    const newOnes = checkAchievements();
-    if (newOnes.length > 0) {
-      setPendingAchievement(newOnes[0]);
-    }
-  }, [checkAchievements]);
-
-  useEffect(() => {
-    try {
-      // Sync fiches with negozio (derived from current XP).
-      localStorage.setItem("bq_fiches", String(Math.floor(xp / 10)));
-      const p = localStorage.getItem("bq_profile") as UserProfile | null;
-      if (p) {
-        setCurrentProfile(p);
-      } else if (authProfile?.profile_type) {
-        // Sync from Supabase if localStorage is empty (e.g. after clearing data)
-        const dbProfile = authProfile.profile_type as UserProfile;
-        setCurrentProfile(dbProfile);
-        localStorage.setItem("bq_profile", dbProfile);
-      }
-      setInvitesSent(getInviteCount());
-    } catch {}
-  }, [authProfile, xp]);
-
-  // Fetch challenge history & stats
-  useEffect(() => {
-    if (!user) return;
-    (async () => {
-      try {
-        const [history, stats] = await Promise.all([getHistory(10), getChallengeStats()]);
-        if (history) setChallengeHistory(history as ChallengeData[]);
-        if (stats) setChallengeStats(stats);
-      } catch (e) {
-        reportError("profilo:challenge-history", e);
-      }
-    })();
-  }, [user, getHistory, getChallengeStats]);
+  const { setInvitesSent, setCurrentProfile } = data;
 
   const handleLogout = useCallback(async (clearData: boolean) => {
     setLoggingOut(true);
@@ -309,7 +124,7 @@ export default function ProfiloPage() {
       setInviteXpToast(true);
       setTimeout(() => setInviteXpToast(false), 3000);
     }
-  }, [user?.id]);
+  }, [user?.id, setInvitesSent]);
 
   const handleCopyLink = useCallback(async () => {
     await copyReferralLink(user?.id);
@@ -322,7 +137,7 @@ export default function ProfiloPage() {
       } catch { return prev; }
     });
     setTimeout(() => setLinkCopied(false), 2500);
-  }, [user?.id]);
+  }, [user?.id, setInvitesSent]);
 
   const handleWhatsApp = useCallback(() => {
     const text = "Impara il Bridge con me su Bridge LAB! L'app ufficiale della FIGB per imparare a giocare a bridge.";
@@ -334,7 +149,7 @@ export default function ProfiloPage() {
         return count;
       } catch { return prev; }
     });
-  }, [referralLink]);
+  }, [referralLink, setInvitesSent]);
 
   const handleShareBadge = useCallback(async (badgeName: string) => {
     const outcome = await shareBadge(badgeName);
@@ -347,479 +162,66 @@ export default function ProfiloPage() {
     }
   }, []);
 
-  const level = getLevel(xp);
-  const xpInLevel = getXpInLevel(xp);
-  const levelProgress = getLevelProgress(xp);
-  const xpForNext = getXpForNextLevel(xp);
-  const profileKey = (typeof window !== "undefined" ? localStorage.getItem("bq_profile") : null) as UserProfile | null;
-  const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
-  const levelName = profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];
-  const nextLevelName = level < MAX_LEVEL ? profileLevelNames[Math.min(level, profileLevelNames.length - 1)] : levelName;
-
-  const totalModulesCompleted = Object.keys(completedModules).length;
-  const totalModulesAvailable = allWorlds.reduce(
-    (sum, w) => sum + w.lessons.reduce((s, l) => s + l.modules.length, 0),
-    0
-  );
-  const completionPercent = totalModulesAvailable > 0
-    ? Math.round((totalModulesCompleted / totalModulesAvailable) * 100)
-    : 0;
-
-  // Count completed worlds (all courses)
-  const worldsCompleted = allWorlds.filter((w) => {
-    const wModules = w.lessons.reduce((s, l) => s + l.modules.length, 0);
-    const wCompleted = w.lessons.reduce(
-      (s, l) => s + l.modules.filter((m) => completedModules[`${l.id}-${m.id}`]).length,
-      0
-    );
-    return wModules > 0 && wCompleted === wModules;
-  }).length;
-  const totalWorldsCount = allWorlds.length;
-
-  const badges = [
-    { name: "Prima Presa", icon: <Spade className="w-6 h-6" />, desc: "Completa 1 modulo", earned: totalModulesCompleted >= 1 },
-    { name: "Studente", icon: <BookOpenCheck className="w-6 h-6" />, desc: "Completa 5 moduli", earned: totalModulesCompleted >= 5 },
-    { name: "Impasse Riuscita", icon: <Target className="w-6 h-6" />, desc: "Completa 10 moduli", earned: totalModulesCompleted >= 10 },
-    { name: "Praticante", icon: <Gamepad2 className="w-6 h-6" />, desc: "Gioca 10 mani", earned: handsPlayed >= 10 },
-    { name: "Streak 7gg", icon: <Flame className="w-6 h-6" />, desc: "Streak di 7 giorni", earned: streak >= 7 },
-    { name: "Colpo in Bianco", icon: <Target className="w-6 h-6" />, desc: "Completa 20 moduli", earned: totalModulesCompleted >= 20 },
-    { name: "Veterano", icon: <Medal className="w-6 h-6" />, desc: "Gioca 50 mani", earned: handsPlayed >= 50 },
-    { name: "Piccolo Slam", icon: <Star className="w-6 h-6" />, desc: "Raggiungi 500 XP", earned: xp >= 500 },
-    { name: "Mondo Completo", icon: <Globe className="w-6 h-6" />, desc: "Completa un mondo", earned: worldsCompleted >= 1 },
-    { name: "Grande Slam", icon: <Crown className="w-6 h-6" />, desc: "Raggiungi 2000 XP", earned: xp >= 2000 },
-    { name: "Diplomato", icon: <GraduationCap className="w-6 h-6" />, desc: "100% completamento", earned: completionPercent >= 100 },
-    { name: "Campione", icon: <Trophy className="w-6 h-6" />, desc: "Top della classifica", earned: false },
-  ];
-  const earnedCount = badges.filter((b) => b.earned).length;
+  const handleSelectProfile = useCallback((profile: UserProfile) => {
+    setCurrentProfile(profile);
+    try { localStorage.setItem("bq_profile", profile); } catch {}
+  }, [setCurrentProfile]);
 
   return (
     <div className="pt-6 px-5">
       <div className="mx-auto max-w-6xl">
         {/* Login/Register CTA */}
-        {!authLoading && !user && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 bg-figb/5 dark:bg-primary/10 rounded-2xl p-4 border-2 border-figb/20 dark:border-primary/30 shadow-sm"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-figb text-white text-lg">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-foreground">Accedi per salvare i progressi</p>
-                <p className="text-[11px] text-muted-foreground">Sincronizza su tutti i dispositivi</p>
-              </div>
-              <a href="/login" className="inline-flex h-9 px-4 items-center rounded-xl bg-figb text-white font-semibold text-xs shadow-md hover:bg-figb/90 transition-colors">
-                Accedi
-              </a>
-            </div>
-          </motion.div>
-        )}
+        {!authLoading && !user && <LoginCta />}
 
         {/* Profile header */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-4"
-        >
-          <Avatar className={`h-18 w-18 shadow-lg shadow-figb/20 ${cosmetics.avatarFrame || ""}`}>
-            {user && authProfile?.avatar_url ? (
-              <Image src={authProfile.avatar_url} alt="Foto profilo" width={72} height={72} className="h-18 w-18 rounded-full object-cover" />
-            ) : (
-              <AvatarFallback className="h-18 w-18 bg-figb text-white text-2xl font-bold">
-                {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "?"}
-              </AvatarFallback>
-            )}
-          </Avatar>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-foreground font-display">
-              {user && authProfile?.display_name ? authProfile.display_name : "Bridgista"}
-            </h1>
-            {cosmetics.activeTitle && (
-              <p className="text-xs font-semibold text-figb dark:text-primary">{cosmetics.activeTitle}</p>
-            )}
-            {user && authProfile?.bbo_username && (
-              <p className="text-xs text-muted-foreground">BBO: {authProfile.bbo_username}</p>
-            )}
-            {user && authProfile?.asd_code && authProfile?.asd_name && (
-              <Link href={`/circolo/${asdNameToSlug(authProfile.asd_name)}`} className="text-sm text-figb dark:text-primary hover:underline flex items-center gap-1 mt-0.5">
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-                {authProfile.asd_name}
-              </Link>
-            )}
-            <div className="flex items-center gap-2 mt-1.5">
-              <Badge className="bg-figb text-white font-medium text-xs">
-                Livello {level}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="text-xs text-muted-foreground border-border"
-              >
-                {levelName}
-              </Badge>
-            </div>
-          </div>
-          <Link href="/impostazioni" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-muted-foreground hover:bg-muted/70 transition-colors">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          </Link>
-        </motion.div>
+        <ProfileHeader
+          user={user}
+          authProfile={authProfile}
+          cosmetics={data.cosmetics}
+          level={data.level}
+          levelName={data.levelName}
+        />
 
         {/* Stats Card with Progress Ring */}
-        <motion.section
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mt-6 rounded-2xl p-6 relative overflow-hidden border border-white/10 shadow-xl"
-          style={{ background: "linear-gradient(180deg, #1a3a4a 0%, #15302e 100%)" }}
-        >
-          <div className="text-center mb-5">
-            <h2 className="text-xl font-bold text-white">Livello {level} — {levelName}</h2>
-            <p className="text-sm text-[#8da4b8] mt-0.5">Prossimo livello: {nextLevelName}</p>
-          </div>
-          <div className="flex items-center justify-between">
-            {/* Streak */}
-            <div className="flex flex-col items-center w-1/4">
-              <Flame className="w-7 h-7 text-orange-500 mb-1.5" style={{ filter: "drop-shadow(0 0 8px rgba(249,115,22,0.7))" }} />
-              <p className="text-[10px] text-gray-400 font-medium">Streak</p>
-              <p className="font-bold text-white">{streak} gg</p>
-            </div>
-            {/* Progress Ring */}
-            <div className="relative flex items-center justify-center w-2/4">
-              <svg className="w-32 h-32" viewBox="0 0 120 120">
-                <circle cx="60" cy="60" fill="transparent" r="50" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
-                <motion.circle
-                  cx="60" cy="60" fill="transparent" r="50"
-                  stroke="#22c55e"
-                  strokeWidth="8"
-                  strokeDasharray="314"
-                  strokeLinecap="round"
-                  style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%", filter: "drop-shadow(0 0 6px rgba(34,197,94,0.5))" }}
-                  initial={{ strokeDashoffset: 314 }}
-                  animate={{ strokeDashoffset: 314 * (1 - levelProgress / 100) }}
-                  transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-                />
-              </svg>
-              <div className="absolute flex flex-col items-center">
-                <Zap className="w-3.5 h-3.5 text-gray-400 mb-0.5" />
-                <span className="text-[28px] font-bold text-white leading-none">{levelProgress}%</span>
-                <span className="text-xs text-gray-400 mt-0.5">{xpInLevel.toLocaleString()} / {xpForNext.toLocaleString()}</span>
-              </div>
-            </div>
-            {/* Total XP */}
-            <div className="flex flex-col items-center w-1/4">
-              <Star className="w-7 h-7 text-yellow-400 mb-1.5" style={{ filter: "drop-shadow(0 0 8px rgba(250,204,21,0.7))" }} />
-              <p className="text-[10px] text-gray-400 font-medium">Totale XP</p>
-              <p className="font-bold text-white">{xp.toLocaleString("it-IT")}</p>
-            </div>
-          </div>
-        </motion.section>
+        <LevelProgressCard
+          level={data.level}
+          levelName={data.levelName}
+          nextLevelName={data.nextLevelName}
+          streak={data.streak}
+          levelProgress={data.levelProgress}
+          xpInLevel={data.xpInLevel}
+          xpForNext={data.xpForNext}
+          xp={data.xp}
+        />
 
         {/* Quick stats */}
-        <div className="grid grid-cols-4 gap-2 mt-3">
-          {[
-            { icon: <BookOpen className="w-4 h-4 text-indigo-500" />, val: String(totalModulesCompleted), label: "Moduli" },
-            { icon: <Spade className="w-4 h-4 text-foreground/80" />, val: String(handsPlayed), label: "Mani" },
-            { icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, val: `${completionPercent}%`, label: "Completato" },
-            { icon: <Globe className="w-4 h-4 text-blue-500" />, val: `${worldsCompleted}/${totalWorldsCount}`, label: "Mondi" },
-          ].map((s, i) => (
-            <motion.div
-              key={s.label}
-              data-testid={`profilo-stat-${s.label.toLowerCase()}`}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + i * 0.04 }}
-              className="rounded-xl bg-card p-2.5 text-center border border-border shadow-sm"
-            >
-              <span className="flex justify-center">{s.icon}</span>
-              <p className="text-lg font-bold text-foreground mt-0.5">{s.val}</p>
-              <p className="text-[9px] text-muted-foreground font-medium">{s.label}</p>
-            </motion.div>
-          ))}
-        </div>
+        <QuickStats
+          totalModulesCompleted={data.totalModulesCompleted}
+          handsPlayed={data.handsPlayed}
+          completionPercent={data.completionPercent}
+          worldsCompleted={data.worldsCompleted}
+          totalWorldsCount={data.totalWorldsCount}
+        />
 
         {/* Advanced Stats - Expandable */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.22 }}
-          className="mt-4"
-        >
-          <button
-            onClick={() => setAdvancedStatsOpen(!advancedStatsOpen)}
-            className="w-full rounded-2xl bg-card p-4 text-left border-2 border-border shadow-sm hover:shadow-lg transition-shadow"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-figb text-white text-lg">
-                <BarChart3 className="w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-foreground">Statistiche Avanzate</p>
-                <p className="text-[11px] text-muted-foreground">
-                  {gameStats.totalGames > 0
-                    ? `${gameStats.totalGames} partite · ${gameStats.winRate}% vittorie`
-                    : "Gioca per sbloccare le statistiche"}
-                </p>
-              </div>
-              <motion.svg
-                animate={{ rotate: advancedStatsOpen ? 90 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="w-5 h-5 text-muted-foreground"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <polyline points="9,6 15,12 9,18" />
-              </motion.svg>
-            </div>
-          </button>
-          <AnimatePresence>
-            {advancedStatsOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                <div className="pt-3">
-                  <StatsDashboard stats={gameStats} />
-
-                  {/* ===== Visual Progress Charts ===== */}
-                  <div className="mt-4 space-y-4">
-
-                    {/* Chart 1: XP Progress Over Time (7-day bar chart) */}
-                    <div className="card-clean rounded-2xl bg-card p-4">
-                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-                        XP ultimi 7 giorni
-                      </p>
-                      {xpPerDay.hasData ? (
-                        <div className="flex items-end gap-1 h-24">
-                          {xpPerDay.days.map((d) => (
-                            <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full">
-                              {d.xp > 0 && (
-                                <span className="text-[8px] font-bold text-muted-foreground mb-0.5">{d.xp}</span>
-                              )}
-                              <motion.div
-                                initial={{ height: 0 }}
-                                animate={{ height: Math.max((d.xp / xpPerDay.maxXp) * 80, d.xp > 0 ? 4 : 0) }}
-                                transition={{ delay: 0.2, duration: 0.5 }}
-                                className="w-full rounded-t bg-figb/70 dark:bg-primary/70"
-                              />
-                              <span className="text-[9px] text-muted-foreground mt-1">{d.label}</span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-24 rounded-xl bg-muted">
-                          <p className="text-xs text-muted-foreground font-medium">
-                            Gioca di piu per vedere le statistiche
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Chart 2: Competenze (Course progress horizontal bars) */}
-                    <div className="card-clean rounded-2xl bg-card p-4">
-                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-                        Competenze per corso
-                      </p>
-                      <div className="space-y-3">
-                        {courseCompetence.map((course) => (
-                          <div key={course.id}>
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs font-semibold text-foreground/80">{course.name}</span>
-                              <span className="text-[10px] font-bold text-muted-foreground">
-                                {course.completed}/{course.total} ({course.progress}%)
-                              </span>
-                            </div>
-                            <div className="h-2.5 rounded-full bg-muted border border-border overflow-hidden">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${course.progress}%` }}
-                                transition={{ delay: 0.3, duration: 0.6 }}
-                                className="h-full rounded-full"
-                                style={{ backgroundColor: course.color }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Chart 3: Game Performance (2x2 stat cards) */}
-                    <div className="card-clean rounded-2xl bg-card p-4">
-                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-                        Rendimento di gioco
-                      </p>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="rounded-xl bg-muted p-3 text-center">
-                          <Gamepad2 className="w-5 h-5 text-figb dark:text-primary mx-auto mb-1" />
-                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.totalGames}</p>
-                          <p className="text-[10px] text-muted-foreground font-medium">Partite totali</p>
-                        </div>
-                        <div className="rounded-xl bg-muted p-3 text-center">
-                          <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
-                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.bestStreak}</p>
-                          <p className="text-[10px] text-muted-foreground font-medium">Streak migliore</p>
-                        </div>
-                        <div className="rounded-xl bg-muted p-3 text-center">
-                          <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
-                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.timeDisplay}</p>
-                          <p className="text-[10px] text-muted-foreground font-medium">Tempo di gioco</p>
-                        </div>
-                        <div className="rounded-xl bg-muted p-3 text-center">
-                          <TrendingUp className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
-                          <p className="text-xl font-bold text-foreground">{gamePerformanceStats.avgXp}</p>
-                          <p className="text-[10px] text-muted-foreground font-medium">Media XP/partita</p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Bridge Wrapped link */}
-          <Link
-            href="/profilo/wrapped"
-            className="mt-3 w-full rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 flex items-center gap-3 hover:shadow-lg transition-shadow"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-white">Bridge Wrapped</p>
-              <p className="text-[11px] text-white/70">Le tue statistiche del mese</p>
-            </div>
-            <svg className="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9,6 15,12 9,18" /></svg>
-          </Link>
-        </motion.div>
+        <AdvancedStatsSection
+          open={advancedStatsOpen}
+          onToggle={() => setAdvancedStatsOpen(!advancedStatsOpen)}
+          gameStats={data.gameStats}
+          xpPerDay={data.xpPerDay}
+          courseCompetence={data.courseCompetence}
+          gamePerformanceStats={data.gamePerformanceStats}
+        />
 
         {/* Challenge History IMP */}
         {user && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.23 }}
-            className="mt-4"
-          >
-            <button
-              className="w-full rounded-2xl bg-card border-2 border-border p-4 text-left shadow-sm hover:shadow-lg transition-shadow"
-              onClick={() => setChallengeHistoryOpen(!challengeHistoryOpen)}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900">
-                  <Swords className="w-5 h-5 text-violet-600 dark:text-violet-400" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-foreground">Sfide IMP</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {challengeStats
-                      ? `${challengeStats.played} sfide · ${challengeStats.won} vinte · ${challengeStats.played > 0 ? Math.round((challengeStats.won / challengeStats.played) * 100) : 0}%`
-                      : "Sfida un amico per iniziare"}
-                  </p>
-                </div>
-                <motion.svg
-                  className="h-5 w-5 text-muted-foreground shrink-0"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  animate={{ rotate: challengeHistoryOpen ? 90 : 0 }}
-                >
-                  <polyline points="9,6 15,12 9,18" />
-                </motion.svg>
-              </div>
-            </button>
-            <AnimatePresence>
-              {challengeHistoryOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="mt-2 space-y-2">
-                    {/* Stats summary */}
-                    {challengeStats && challengeStats.played > 0 && (
-                      <div className="grid grid-cols-4 gap-2 rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 p-3">
-                        <div className="text-center">
-                          <p className="text-lg font-bold text-foreground">{challengeStats.played}</p>
-                          <p className="text-[10px] text-muted-foreground">Giocate</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{challengeStats.won}</p>
-                          <p className="text-[10px] text-muted-foreground">Vinte</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-lg font-bold text-red-500 dark:text-red-400">{challengeStats.lost}</p>
-                          <p className="text-[10px] text-muted-foreground">Perse</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-lg font-bold text-figb dark:text-primary">{challengeStats.avg_imp_margin > 0 ? "+" : ""}{Math.round(challengeStats.avg_imp_margin)}</p>
-                          <p className="text-[10px] text-muted-foreground">IMP medio</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* History list */}
-                    {challengeHistory.length > 0 ? (
-                      challengeHistory.map((ch) => {
-                        const isChallenger = ch.challenger_id === user.id;
-                        const opponentName = isChallenger ? (ch.opponent_name || "Avversario") : (ch.challenger_name || "Avversario");
-                        const myImps = isChallenger ? ch.challenger_imps : ch.opponent_imps;
-                        const theirImps = isChallenger ? ch.opponent_imps : ch.challenger_imps;
-                        const won = (myImps ?? 0) > (theirImps ?? 0);
-                        const drawn = myImps === theirImps;
-                        const netImp = (myImps ?? 0) - (theirImps ?? 0);
-                        return (
-                          <Link key={ch.id} href={`/gioca/sfida-imp?challengeId=${ch.id}`}>
-                            <div className="rounded-xl bg-card border border-border p-3 flex items-center gap-3 hover:shadow-md transition-shadow">
-                              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
-                                drawn ? "bg-muted text-muted-foreground" : won ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400" : "bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400"
-                              }`}>
-                                {drawn ? "=" : won ? "W" : "L"}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-semibold text-foreground truncate">vs {opponentName}</p>
-                                <p className="text-[10px] text-muted-foreground">
-                                  {ch.board_count} mani · {ch.completed_at ? new Date(ch.completed_at).toLocaleDateString("it-IT", { day: "numeric", month: "short" }) : ""}
-                                </p>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <p className={`text-sm font-bold ${netImp > 0 ? "text-emerald-600 dark:text-emerald-400" : netImp < 0 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"}`}>
-                                  {netImp > 0 ? "+" : ""}{netImp} IMP
-                                </p>
-                              </div>
-                            </div>
-                          </Link>
-                        );
-                      })
-                    ) : (
-                      <div className="text-center py-6">
-                        <Swords className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-                        <p className="text-xs text-muted-foreground">Nessuna sfida completata</p>
-                        <Link href="/amici" className="text-xs text-figb dark:text-primary font-semibold hover:underline mt-1 inline-block">
-                          Sfida un amico →
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+          <ChallengeHistorySection
+            userId={user.id}
+            open={challengeHistoryOpen}
+            onToggle={() => setChallengeHistoryOpen(!challengeHistoryOpen)}
+            challengeStats={data.challengeStats}
+            challengeHistory={data.challengeHistory}
+          />
         )}
 
         {/* Streak Freeze */}
@@ -829,696 +231,77 @@ export default function ProfiloPage() {
           transition={{ delay: 0.24 }}
           className="mt-4"
         >
-          <StreakFreezeCard streak={streak} xp={xp} />
+          <StreakFreezeCard streak={data.streak} xp={data.xp} />
         </motion.div>
 
         <Separator className="my-6 bg-border" />
 
         {/* Badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-foreground">
-              Badge Collezionati
-            </h2>
-            <Badge
-              variant="outline"
-              className="text-[11px] text-muted-foreground border-border"
-            >
-              {earnedCount} / {badges.length}
-            </Badge>
-          </div>
-          <div className="grid grid-cols-4 gap-3">
-            {badges.map((badge, i) => (
-              <motion.div
-                key={badge.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.35 + i * 0.03 }}
-                className={`relative flex flex-col items-center gap-1.5 ${
-                  !badge.earned ? "opacity-25 grayscale" : ""
-                }`}
-              >
-                <div
-                  className="flex h-16 w-16 items-center justify-center rounded-full shadow-md"
-                  style={{ background: badge.earned ? "radial-gradient(circle at 30% 30%, #ffd700, #b8860b)" : "radial-gradient(circle at 30% 30%, #d1d5db, #9ca3af)" }}
-                >
-                  <span className="text-white/80">{badge.icon}</span>
-                </div>
-                {badge.earned && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleShareBadge(badge.name); }}
-                    className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-figb text-white shadow-sm hover:bg-figb-dark transition-colors"
-                    title="Condividi badge"
-                  >
-                    {sharedBadge === badge.name ? (
-                      <Check className="w-2.5 h-2.5" />
-                    ) : (
-                      <Share2 className="w-2.5 h-2.5" />
-                    )}
-                  </button>
-                )}
-                <span className="text-[10px] text-center text-muted-foreground font-semibold leading-tight">
-                  {badge.name}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-          {/* Badge share toast */}
-          <AnimatePresence>
-            {sharedBadge && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                className="mt-3 text-center"
-              >
-                <span className="inline-flex items-center gap-1.5 bg-figb/10 dark:bg-primary/15 text-figb dark:text-primary text-xs font-bold rounded-full px-3 py-1.5">
-                  <Check className="h-3.5 w-3.5" />
-                  Badge condiviso!
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Secret Achievements */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground/80 flex items-center gap-1.5">
-                <Star className="w-4 h-4 text-amber-500" />
-                Achievement Segreti
-              </h3>
-              <Badge variant="outline" className="text-[11px] text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900">
-                {earnedSecretAchievements.length} / {totalSecretAchievements}
-              </Badge>
-            </div>
-            {earnedSecretAchievements.length > 0 ? (
-              <div className="grid grid-cols-5 gap-2">
-                {earnedSecretAchievements.map((a) => (
-                  <div key={a.id} className="flex flex-col items-center gap-1">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-950/40 dark:to-yellow-950/30 border border-amber-200 dark:border-amber-900 text-xl">
-                      {a.icon}
-                    </div>
-                    <span className="text-[9px] text-center text-amber-700 dark:text-amber-300 font-semibold leading-tight">{a.name}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 px-4 py-3">
-                <span className="text-lg">🔒</span>
-                <p className="text-xs text-amber-700 dark:text-amber-300">
-                  Ci sono <span className="font-bold">{totalSecretAchievements} achievement nascosti</span> da scoprire. Gioca, esplora e completa sfide per sbloccarli!
-                </p>
-              </div>
-            )}
-          </div>
-        </motion.div>
+        <BadgesSection
+          badges={data.badges}
+          earnedCount={data.earnedCount}
+          sharedBadge={sharedBadge}
+          onShareBadge={handleShareBadge}
+          earnedSecretAchievements={data.earnedSecretAchievements}
+          totalSecretAchievements={data.totalSecretAchievements}
+        />
 
         <Separator className="my-6 bg-border" />
 
         {/* Course progress by world */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-        >
-          <h2 className="text-lg font-semibold text-foreground mb-3">
-            Progresso per Corso
-          </h2>
-          <div className="space-y-4">
-            {courses.map((course) => {
-              const courseWorldsData = allWorlds.filter(w => course.worlds.some(cw => cw.id === w.id));
-              if (courseWorldsData.length === 0) return null;
-              return (
-                <div key={course.id}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-base">{course.icon}</span>
-                    <p className="text-sm font-semibold text-foreground/80">{course.name}</p>
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
-                      {levelInfo[course.level].label}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    {courseWorldsData.map((w) => {
-                      const wModules = w.lessons.reduce((s, l) => s + l.modules.length, 0);
-                      const wCompleted = w.lessons.reduce(
-                        (s, l) => s + l.modules.filter((m) => completedModules[`${l.id}-${m.id}`]).length,
-                        0
-                      );
-                      const wPercent = wModules > 0 ? Math.round((wCompleted / wModules) * 100) : 0;
-                      return (
-                        <div key={w.id} className="rounded-xl bg-card p-3.5 border-2 border-border shadow-sm">
-                          <div className="flex items-center gap-3">
-                            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg ${w.iconBg}`}>
-                              {w.icon}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between mb-1">
-                                <p className="text-sm font-bold text-foreground truncate">{w.name}</p>
-                                <span className="text-[11px] font-bold text-muted-foreground tabular-nums">
-                                  {wCompleted}/{wModules}
-                                </span>
-                              </div>
-                              <div className="h-2.5 rounded-full bg-muted border border-border overflow-hidden">
-                                <div
-                                  className={`h-full rounded-full bg-gradient-to-r ${w.gradient}`}
-                                  style={{ width: `${wPercent}%` }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
+        <CourseProgressSection
+          courses={data.courses}
+          allWorlds={data.allWorlds}
+          completedModules={data.completedModules}
+        />
 
         {/* Edit Profile — logged-in users only */}
-        {user && (
-          <>
-            <Separator className="my-6 bg-border" />
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.47 }}
-            >
-              {!editing ? (
-                <button
-                  onClick={() => {
-                    setEditName(authProfile?.display_name || "");
-                    setEditBbo(authProfile?.bbo_username || "");
-                    setEditAsdCode(authProfile?.asd_code || "");
-                    setEditAvatarFile(null);
-                    setEditAvatarPreview("");
-                    setEditing(true);
-                  }}
-                  className="w-full rounded-2xl bg-card p-4 text-left border-2 border-border shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-foreground">Modifica profilo</p>
-                      <p className="text-[11px] text-muted-foreground">Foto, nome, BBO, associazione</p>
-                    </div>
-                    <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                      <polyline points="9,6 15,12 9,18" />
-                    </svg>
-                  </div>
-                </button>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl bg-card p-5 border-2 border-border shadow-sm"
-                >
-                  <h3 className="text-sm font-bold text-foreground mb-4">Modifica profilo</h3>
-
-                  {/* Avatar upload */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {editAvatarPreview ? (
-                        // eslint-disable-next-line @next/next/no-img-element -- anteprima locale (data URL) dal file input: next/image non la ottimizza
-                        <img src={editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
-                      ) : authProfile?.avatar_url ? (
-                        <Image src={authProfile.avatar_url} alt="Foto profilo" width={64} height={64} className="h-full w-full object-cover" />
-                      ) : (
-                        <span className="text-2xl">{(authProfile?.display_name || "B")[0].toUpperCase()}</span>
-                      )}
-                    </div>
-                    <label className="cursor-pointer">
-                      <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300">
-                        Cambia foto
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setEditAvatarFile(file);
-                            const reader = new FileReader();
-                            reader.onloadend = () => setEditAvatarPreview(reader.result as string);
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-
-                  {/* Name */}
-                  <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Nome</label>
-                    <input
-                      type="text"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-
-                  {/* BBO */}
-                  <div className="mb-3">
-                    <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Username BBO</label>
-                    <input
-                      type="text"
-                      value={editBbo}
-                      onChange={(e) => setEditBbo(e.target.value)}
-                      placeholder="Il tuo username su BridgeBase Online"
-                      className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-
-                  {/* ASD */}
-                  <div className="mb-4 relative">
-                    <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Associazione (ASD)</label>
-                    <input
-                      type="text"
-                      value={editAsdSelectedName || editAsdSearch}
-                      onChange={(e) => {
-                        setEditAsdSearch(e.target.value);
-                        setEditAsdCode("");
-                        setShowAsdDropdown(true);
-                      }}
-                      onFocus={() => setShowAsdDropdown(true)}
-                      placeholder="Cerca la tua associazione..."
-                      className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                    {showAsdDropdown && !editAsdCode && (
-                      <>
-                        <div className="fixed inset-0 z-40" onClick={() => setShowAsdDropdown(false)} />
-                        <div className="absolute z-50 w-full mt-1 bg-card rounded-xl border border-border shadow-xl max-h-40 overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-                          {activeClubsSorted
-                            .filter((c) => !editAsdSearch || c.name.toLowerCase().includes(editAsdSearch.toLowerCase()))
-                            .slice(0, 15)
-                            .map((club) => (
-                              <button
-                                key={club.code}
-                                type="button"
-                                onClick={() => { setEditAsdCode(club.code); setEditAsdSearch(""); setShowAsdDropdown(false); }}
-                                className="w-full text-left px-3 py-2 text-sm text-foreground/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-300"
-                              >
-                                <div>{club.name}</div>
-                                {club.city && (
-                                  <div className="text-[10px] text-muted-foreground">
-                                    {club.city}{club.province ? ` (${club.province})` : ""}
-                                  </div>
-                                )}
-                              </button>
-                            ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Buttons */}
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setEditing(false)}
-                      className="flex-1 h-10 rounded-xl font-semibold text-xs"
-                    >
-                      Annulla
-                    </Button>
-                    <Button
-                      onClick={async () => {
-                        setSaving(true);
-                        const updates: Record<string, unknown> = {};
-                        if (editName.trim()) updates.display_name = editName.trim();
-                        if (editBbo !== (authProfile?.bbo_username || "")) updates.bbo_username = editBbo.trim() || null;
-                        if (editAsdCode !== (authProfile?.asd_code || "")) {
-                          updates.asd_code = editAsdCode || null;
-                          updates.asd_name = editAsdSelectedName || null;
-                        }
-                        if (Object.keys(updates).length > 0) {
-                          const { error } = await updateProfile(updates);
-                          if (error) {
-                            reportError("profilo:salva-profilo", error);
-                            toast.error("Salvataggio del profilo non riuscito. Riprova.");
-                          }
-                        }
-                        if (editAvatarFile) {
-                          const { error } = await uploadAvatar(editAvatarFile);
-                          if (error) {
-                            reportError("profilo:upload-avatar", error);
-                            toast.error("Caricamento della foto non riuscito. Riprova.");
-                          }
-                        }
-                        await refreshProfile();
-                        setSaving(false);
-                        setEditing(false);
-                        setEditAsdCode("");
-                        setEditAsdSearch("");
-                      }}
-                      disabled={saving}
-                      className="flex-1 h-10 rounded-xl bg-figb font-semibold text-xs shadow-md disabled:opacity-50"
-                    >
-                      {saving ? "Salvataggio..." : "Salva"}
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
-          </>
-        )}
+        {user && <EditProfileSection edit={edit} authProfile={authProfile} />}
 
         <Separator className="my-6 bg-border" />
 
         {/* Profile selector */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <h2 className="text-lg font-semibold text-foreground mb-3">
-            Stile di gioco
-          </h2>
-          <div className="grid grid-cols-2 gap-2">
-            {([
-              { id: "junior" as const, icon: <Gamepad2 className="w-6 h-6" />, label: "8-17 anni" },
-              { id: "giovane" as const, icon: <Zap className="w-6 h-6" />, label: "18-35 anni" },
-              { id: "adulto" as const, icon: <Spade className="w-6 h-6" />, label: "36-55 anni" },
-              { id: "senior" as const, icon: <Coffee className="w-6 h-6" />, label: "55+ anni" },
-            ]).map((opt) => (
-              <button
-                key={opt.id}
-                onClick={() => {
-                  setCurrentProfile(opt.id);
-                  try { localStorage.setItem("bq_profile", opt.id); } catch {}
-                }}
-                className={`rounded-xl p-3 text-center transition-all active:scale-95 ${
-                  currentProfile === opt.id
-                    ? "bg-figb/10 dark:bg-primary/15 border-[3px] border-figb dark:border-primary shadow-sm"
-                    : "bg-card border-2 border-border shadow-sm"
-                }`}
-              >
-                <span className={`flex items-center justify-center ${currentProfile === opt.id ? "text-figb dark:text-primary" : "text-muted-foreground"}`}>{opt.icon}</span>
-                <p className={`text-xs font-bold mt-1 ${
-                  currentProfile === opt.id ? "text-figb dark:text-primary" : "text-foreground/80"
-                }`}>
-                  {opt.label}
-                </p>
-              </button>
-            ))}
-          </div>
-        </motion.div>
+        <ProfileStyleSelector
+          currentProfile={data.currentProfile}
+          onSelect={handleSelectProfile}
+        />
 
         <Separator className="my-6 bg-border" />
 
         {/* Fiches */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border-2 border-amber-300 dark:border-amber-800 shadow-sm p-5 mb-6"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber/10">
-                <Coins className="w-6 h-6 text-amber-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-foreground">Fiches</p>
-                <p className="text-xs text-muted-foreground">
-                  Per cosmetici e bonus
-                </p>
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-amber-dark">{Math.floor(xp / 10)}</p>
-          </div>
-          <Link
-            href="/negozio"
-            className="mt-4 flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold h-11 text-sm shadow-md shadow-amber-500/20 transition-all active:scale-[0.97]"
-          >
-            <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            Vai al Negozio
-          </Link>
-        </motion.div>
+        <FichesCard xp={data.xp} />
 
         {/* Invita un Amico */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.58 }}
-          className="mb-6"
-        >
-          <div className="rounded-2xl bg-gradient-to-r from-figb/5 to-indigo-50 dark:from-primary/10 dark:to-indigo-950/30 border-2 border-figb/20 dark:border-primary/30 shadow-sm p-5">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-figb text-white shadow-md shadow-figb/20">
-                <UserPlus className="w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-foreground">Invita un Amico</p>
-                <p className="text-xs text-muted-foreground">
-                  Condividi Bridge LAB e guadagna +25 XP
-                </p>
-              </div>
-              {invitesSent > 0 && (
-                <div className="flex items-center gap-1.5 bg-figb/10 dark:bg-primary/15 rounded-full px-3 py-1">
-                  <Send className="w-3 h-3 text-figb dark:text-primary" />
-                  <span className="text-[11px] font-bold text-figb dark:text-primary">
-                    {invitesSent} invit{invitesSent === 1 ? "o" : "i"}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Referral code card */}
-            {referralCode && (
-              <div className="mb-4 rounded-xl bg-card/80 border border-figb/10 dark:border-primary/20 p-3.5">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
-                  Il tuo codice referral
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="flex-1 font-mono text-lg font-bold text-figb dark:text-primary tracking-widest">
-                    {referralCode}
-                  </span>
-                  <button
-                    onClick={handleCopyLink}
-                    className="flex items-center gap-1.5 rounded-lg bg-figb/10 hover:bg-figb/20 text-figb dark:bg-primary/15 dark:hover:bg-primary/25 dark:text-primary px-3 py-1.5 text-xs font-bold transition-colors"
-                  >
-                    {linkCopied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" />
-                        Copiato!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        Copia link
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Share buttons row */}
-            <div className="grid grid-cols-2 gap-2 mb-2">
-              {/* WhatsApp button */}
-              <Button
-                onClick={handleWhatsApp}
-                className="rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold h-11 text-sm shadow-md shadow-[#25D366]/20 transition-colors"
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                WhatsApp
-              </Button>
-              {/* Generic share button */}
-              <Button
-                onClick={handleInvite}
-                className="rounded-xl bg-figb hover:bg-figb-dark text-white font-semibold h-11 text-sm shadow-md shadow-figb/20 transition-colors"
-              >
-                <Share2 className="w-4 h-4 mr-2" />
-                Condividi
-              </Button>
-            </div>
-
-            {/* Invite toast feedback */}
-            <AnimatePresence>
-              {inviteToast && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="mt-3 text-center"
-                >
-                  <span className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold rounded-full px-3 py-1.5">
-                    <Check className="h-3.5 w-3.5" />
-                    {inviteToast}
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            {/* XP award toast */}
-            <AnimatePresence>
-              {inviteXpToast && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="mt-2 text-center"
-                >
-                  <span className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-full px-3 py-1.5">
-                    <Zap className="h-3.5 w-3.5" />
-                    +25 XP guadagnati!
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </motion.div>
+        <InviteFriendSection
+          referralCode={referralCode}
+          invitesSent={data.invitesSent}
+          linkCopied={linkCopied}
+          inviteToast={inviteToast}
+          inviteXpToast={inviteXpToast}
+          onCopyLink={handleCopyLink}
+          onWhatsApp={handleWhatsApp}
+          onInvite={handleInvite}
+        />
 
         {/* Logout / Login */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mb-6"
-        >
-          {user ? (
-            <AnimatePresence mode="wait">
-              {showLogoutConfirm ? (
-                <motion.div
-                  key="logout-confirm"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="rounded-2xl bg-card border-2 border-rose-200 dark:border-rose-900 shadow-sm p-5"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" y1="12" x2="9" y2="12" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-foreground">Vuoi anche cancellare i dati locali?</p>
-                      <p className="text-[11px] text-muted-foreground">I progressi locali possono essere mantenuti o rimossi</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Button
-                      onClick={() => handleLogout(true)}
-                      disabled={loggingOut}
-                      className="w-full bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-semibold h-10 shadow-md disabled:opacity-50"
-                    >
-                      {loggingOut ? "Uscita..." : "Esci e cancella dati locali"}
-                    </Button>
-                    <Button
-                      onClick={() => handleLogout(false)}
-                      disabled={loggingOut}
-                      variant="outline"
-                      className="w-full rounded-xl text-sm font-semibold h-10 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 disabled:opacity-50"
-                    >
-                      {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
-                    </Button>
-                    <Button
-                      onClick={() => setShowLogoutConfirm(false)}
-                      variant="outline"
-                      className="w-full rounded-xl text-sm font-semibold h-10 border-border text-muted-foreground"
-                    >
-                      Annulla
-                    </Button>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div key="logout-button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <Button
-                    onClick={() => setShowLogoutConfirm(true)}
-                    variant="outline"
-                    className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-semibold h-12 text-sm border-2 shadow-sm"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                    Esci dall&apos;account
-                  </Button>
-                  <AnimatePresence>
-                    {showDeleteConfirm ? (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 p-4"
-                      >
-                        <p className="text-sm font-bold text-rose-800 dark:text-rose-300 mb-1">Sei sicuro?</p>
-                        <p className="text-xs text-rose-600 dark:text-rose-400 mb-3">Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.</p>
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={handleDeleteAccount}
-                            disabled={deleting}
-                            className="flex-1 bg-rose-700 hover:bg-rose-800 text-white rounded-xl text-xs font-semibold h-9"
-                          >
-                            {deleting ? "Eliminazione..." : "Conferma eliminazione"}
-                          </Button>
-                          <Button
-                            onClick={() => setShowDeleteConfirm(false)}
-                            variant="outline"
-                            className="flex-1 rounded-xl text-xs font-semibold h-9 border-rose-200 dark:border-rose-900"
-                          >
-                            Annulla
-                          </Button>
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.button
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        onClick={() => setShowDeleteConfirm(true)}
-                        className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border-2 border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-800 transition-colors py-3 px-4 text-sm font-semibold"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="3 6 5 6 21 6" />
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        </svg>
-                        Elimina account e tutti i dati
-                      </motion.button>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          ) : (
-            <a
-              href="/login"
-              className="flex items-center justify-center w-full rounded-xl bg-figb text-white font-semibold h-12 text-sm shadow-lg shadow-figb/20 hover:opacity-90 transition-opacity"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" y1="12" x2="3" y2="12" />
-              </svg>
-              Accedi o Registrati
-            </a>
-          )}
-        </motion.div>
+        <AccountActions
+          user={user}
+          showLogoutConfirm={showLogoutConfirm}
+          onShowLogoutConfirm={setShowLogoutConfirm}
+          loggingOut={loggingOut}
+          onLogout={handleLogout}
+          showDeleteConfirm={showDeleteConfirm}
+          onShowDeleteConfirm={setShowDeleteConfirm}
+          deleting={deleting}
+          onDeleteAccount={handleDeleteAccount}
+        />
       </div>
 
       {/* Secret Achievement Popup */}
-      {achievementPopupArmed && (
+      {data.achievementPopupArmed && (
         <SecretAchievementPopup
-          achievement={pendingAchievement}
-          onClose={() => setPendingAchievement(null)}
+          achievement={data.pendingAchievement}
+          onClose={() => data.setPendingAchievement(null)}
         />
       )}
     </div>
