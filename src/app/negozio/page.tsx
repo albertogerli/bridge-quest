@@ -657,7 +657,7 @@ export default function NegozioPage() {
                       <h3 className="text-sm font-bold text-foreground truncate">
                         {item.name}
                       </h3>
-                      <p className="text-[10px] text-muted-foreground/70 mt-0.5 line-clamp-1">
+                      <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
                         {item.description}
                       </p>
 
@@ -712,7 +712,7 @@ export default function NegozioPage() {
                           disabled={isPurchasing || fiches < item.price}
                           className={`w-full h-9 rounded-xl text-xs font-bold shadow-sm transition-all ${
                             fiches < item.price
-                              ? "bg-muted text-muted-foreground/70 cursor-not-allowed shadow-none"
+                              ? "bg-muted text-muted-foreground cursor-not-allowed shadow-none"
                               : "bg-figb hover:bg-figb-dark text-white shadow-md shadow-figb/20"
                           }`}
                         >
@@ -757,11 +757,11 @@ export default function NegozioPage() {
               const activeItem = shopItems.find((i) => i.id === activeId);
               return (
                 <div key={cat.id} className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted/50 text-muted-foreground/70 shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted/50 text-muted-foreground shrink-0">
                     {cat.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-muted-foreground/70 font-semibold uppercase tracking-wider">
+                    <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
                       {cat.label}
                     </p>
                     <p className="text-xs font-bold text-foreground/80 truncate">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -78,11 +79,28 @@ export default function TrovaErrorePage() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [xpEarned, setXpEarned] = useState(0);
   const [paused, setPaused] = useState(false);
+  const pauseDialogRef = useRef<HTMLDivElement>(null);
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [answersHistory, setAnswersHistory] = useState<Array<{ selected: number | null; correct: boolean }>>([]);
   const [showRecap, setShowRecap] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
   const pausedTimeRef = useRef(0);
+
+  // Ripresa dalla pausa: usata sia dal bottone sia da Escape (focus trap).
+  const resumeFromPause = useCallback(() => {
+    setPaused(false);
+    setTimer(pausedTimeRef.current);
+    timerRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+  useFocusTrap(pauseDialogRef, paused, { onEscape: resumeFromPause });
 
   // Load profile and best score
   useEffect(() => {
@@ -254,7 +272,7 @@ export default function TrovaErrorePage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -358,7 +376,7 @@ export default function TrovaErrorePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-4 text-center text-sm text-muted-foreground/70 font-bold"
+                className="mt-4 text-center text-sm text-muted-foreground font-bold"
               >
                 🏆 Miglior punteggio: {bestScore}
               </motion.div>
@@ -439,13 +457,13 @@ export default function TrovaErrorePage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">
+                <p className="text-[10px] text-muted-foreground font-bold">
                   Streak max
                 </p>
               </div>
@@ -453,7 +471,7 @@ export default function TrovaErrorePage() {
                 <p className="text-lg font-bold text-rose-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -588,7 +606,7 @@ export default function TrovaErrorePage() {
             </div>
           </div>
 
-          <span className="text-xs font-bold text-muted-foreground/70">
+          <span className="text-xs font-bold text-muted-foreground">
             {round + 1}/{TOTAL_ROUNDS}
           </span>
         </div>
@@ -697,7 +715,7 @@ export default function TrovaErrorePage() {
               {/* Cards display */}
               {scenario.cards && (
                 <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
                     Carte
                   </p>
                   <p
@@ -727,7 +745,7 @@ export default function TrovaErrorePage() {
               {/* Bidding sequence */}
               {scenario.sequence && scenario.sequence.length > 0 && (
                 <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
                     Sequenza di licita
                   </p>
                   <div className="flex flex-wrap gap-1.5">
@@ -877,6 +895,10 @@ export default function TrovaErrorePage() {
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             >
               <motion.div
+                ref={pauseDialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Gioco in pausa"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
@@ -891,21 +913,7 @@ export default function TrovaErrorePage() {
                 </p>
                 <div className="mt-6 space-y-2">
                   <Button
-                    onClick={() => {
-                      setPaused(false);
-                      // Resume timer from where it was
-                      setTimer(pausedTimeRef.current);
-                      timerRef.current = setInterval(() => {
-                        setTimer((prev) => {
-                          if (prev <= 1) {
-                            if (timerRef.current)
-                              clearInterval(timerRef.current);
-                            return 0;
-                          }
-                          return prev - 1;
-                        });
-                      }, 1000);
-                    }}
+                    onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-semibold shadow-lg"
                   >
                     Riprendi

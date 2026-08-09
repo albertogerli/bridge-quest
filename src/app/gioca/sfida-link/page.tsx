@@ -440,17 +440,17 @@ function SfidaLinkContent() {
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -576,14 +576,14 @@ function SfidaLinkContent() {
                       <div className="grid grid-cols-2 gap-4 mb-5">
                         {/* Your result */}
                         <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">Tu</p>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
                           <p className="text-4xl font-bold text-foreground">{myResult.myTricks}</p>
                           <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>
 
                         {/* Creator result */}
                         <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                          <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-2">Sfidante</p>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Sfidante</p>
                           <p className="text-4xl font-bold text-foreground">{creatorResult.myTricks}</p>
                           <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>

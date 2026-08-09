@@ -123,8 +123,8 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
             : "bg-muted border border-border"
         }`}
       >
-        {allDone ? <Gift className="w-5 h-5 text-[#c8a44e]" /> : <Target className="w-5 h-5 text-muted-foreground/70" />}
-        <p className={`text-xs font-bold ${allDone ? "text-[#c8a44e]" : "text-muted-foreground/70"}`}>
+        {allDone ? <Gift className="w-5 h-5 text-[#c8a44e]" /> : <Target className="w-5 h-5 text-muted-foreground" />}
+        <p className={`text-xs font-bold ${allDone ? "text-[#c8a44e]" : "text-muted-foreground"}`}>
           {allDone ? "Bonus completamento: +50 XP!" : "Completa tutti per +50 XP bonus"}
         </p>
       </motion.div>

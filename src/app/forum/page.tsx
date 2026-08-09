@@ -160,7 +160,7 @@ export default function ForumPage() {
               className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
                 sortBy === key
                   ? "bg-foreground text-background"
-                  : "text-muted-foreground/70 hover:text-muted-foreground"
+                  : "text-muted-foreground hover:text-muted-foreground"
               }`}
             >
               {label}
@@ -233,7 +233,7 @@ export default function ForumPage() {
                                 SONDAGGIO
                               </span>
                             )}
-                            <span className="text-[10px] text-muted-foreground/70">
+                            <span className="text-[10px] text-muted-foreground">
                               {categoryEmoji(post.category)} {post.category}
                             </span>
                           </div>
@@ -244,7 +244,7 @@ export default function ForumPage() {
                           </h3>
 
                           {/* Meta */}
-                          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground/70">
+                          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
                             <span className="font-semibold text-muted-foreground">
                               {post.profiles?.display_name || "Anonimo"}
                             </span>

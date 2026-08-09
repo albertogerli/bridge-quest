@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,12 @@ import {
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { awardGameXp } from "@/lib/xp-utils";
@@ -352,7 +358,7 @@ export default function TorneoSettimanale() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -406,7 +412,7 @@ export default function TorneoSettimanale() {
               <div className="space-y-3 mt-2">
                 <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-indigo-100 dark:border-indigo-900 w-full">
                   <div className="text-center flex-1">
-                    <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
                       Mani
                     </p>
                     <p className="text-lg font-bold text-indigo-600 leading-tight">
@@ -415,7 +421,7 @@ export default function TorneoSettimanale() {
                   </div>
                   <div className="h-8 w-px bg-indigo-200/60" />
                   <div className="text-center flex-1">
-                    <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
                       Prese necessarie
                     </p>
                     <p className="text-lg font-bold text-foreground leading-tight">
@@ -424,7 +430,7 @@ export default function TorneoSettimanale() {
                   </div>
                   <div className="h-8 w-px bg-indigo-200/60" />
                   <div className="text-center flex-1">
-                    <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
                       Tempo rimasto
                     </p>
                     <p className="text-sm font-bold text-purple-600 leading-tight tabular-nums">
@@ -441,7 +447,7 @@ export default function TorneoSettimanale() {
 
               {/* Hand previews */}
               <div className="mt-4 space-y-2">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Le 5 mani del torneo
                 </p>
                 <div className="grid grid-cols-5 gap-2">
@@ -459,7 +465,7 @@ export default function TorneoSettimanale() {
                             : "bg-card/70 border-indigo-100 dark:border-indigo-900"
                         }`}
                       >
-                        <p className="text-[10px] font-bold text-muted-foreground/70">
+                        <p className="text-[10px] font-bold text-muted-foreground">
                           #{i + 1}
                         </p>
                         <p className="text-sm font-bold text-foreground leading-tight">
@@ -624,7 +630,7 @@ export default function TorneoSettimanale() {
                         hr.result >= 0 ? "bg-emerald-100/60 dark:bg-emerald-950/40" : "bg-red-100/60 dark:bg-red-950/40"
                       }`}
                     >
-                      <p className="text-[9px] font-bold text-muted-foreground/70">
+                      <p className="text-[9px] font-bold text-muted-foreground">
                         #{i + 1}
                       </p>
                       <p
@@ -674,7 +680,7 @@ export default function TorneoSettimanale() {
               <h3 className="font-bold text-foreground">Classifica</h3>
               <Badge
                 variant="outline"
-                className="text-[10px] font-bold text-muted-foreground/70 border-border"
+                className="text-[10px] font-bold text-muted-foreground border-border"
               >
                 Settimana #{weekNum}
               </Badge>
@@ -731,7 +737,7 @@ export default function TorneoSettimanale() {
               </div>
             ) : leaderboard === null ? (
               <div className="text-center py-6">
-                <p className="text-sm text-muted-foreground/70">
+                <p className="text-sm text-muted-foreground">
                   {alreadyPlayed
                     ? "Il tuo risultato è stato registrato!"
                     : "Gioca il torneo per entrare in classifica"}
@@ -747,7 +753,7 @@ export default function TorneoSettimanale() {
               </div>
             ) : (
               <div className="text-center py-6">
-                <p className="text-sm text-muted-foreground/70">
+                <p className="text-sm text-muted-foreground">
                   Nessun partecipante ancora questa settimana
                 </p>
               </div>
@@ -1037,7 +1043,7 @@ function TournamentPlayView({
                         : "bg-red-100/80 border border-red-200 dark:bg-red-950/40 dark:border-red-900"
                     }`}
                   >
-                    <p className="text-[9px] font-bold text-muted-foreground/70">
+                    <p className="text-[9px] font-bold text-muted-foreground">
                       #{i + 1}
                     </p>
                     <p className="text-xs font-bold text-muted-foreground">
@@ -1078,7 +1084,7 @@ function TournamentPlayView({
                       +{xpEarned} {profile.xpLabel}
                     </span>
                   </div>
-                  <p className="text-[11px] text-muted-foreground/70">
+                  <p className="text-[11px] text-muted-foreground">
                     ({handXp} gioco + {tournamentBonus} bonus torneo)
                   </p>
                 </motion.div>
@@ -1135,7 +1141,7 @@ function TournamentPlayView({
                   />
                 ))}
               </div>
-              <p className="text-xs font-bold text-muted-foreground/70">
+              <p className="text-xs font-bold text-muted-foreground">
                 {completedCount} / {TOURNAMENT_HAND_COUNT} mani completate
               </p>
             </div>
@@ -1177,7 +1183,7 @@ function TournamentPlayView({
 
             {/* Running total */}
             <div className="rounded-2xl bg-card p-4 border border-border mb-6">
-              <p className="text-xs font-bold text-muted-foreground/70 mb-1">
+              <p className="text-xs font-bold text-muted-foreground mb-1">
                 Totale parziale
               </p>
               <div className="flex items-center justify-center gap-4">
@@ -1241,7 +1247,7 @@ function TournamentPlayView({
 
             <button
               onClick={onBack}
-              className="mt-3 text-sm font-semibold text-muted-foreground/70 hover:text-muted-foreground transition-colors"
+              className="mt-3 text-sm font-semibold text-muted-foreground hover:text-muted-foreground transition-colors"
             >
               Abbandona torneo
             </button>
@@ -1430,7 +1436,7 @@ function SingleHandView({
             className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}
           >
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Contratto
               </p>
               <p
@@ -1441,7 +1447,7 @@ function SingleHandView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Obiettivo
               </p>
               <p
@@ -1452,7 +1458,7 @@ function SingleHandView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Dich. / Dif.
               </p>
               <p
@@ -1627,7 +1633,7 @@ function SingleHandView({
                 <p className="text-sm text-muted-foreground mt-2">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-3">
+                <p className="text-xs text-muted-foreground mt-3">
                   {handNumber < totalHands
                     ? "Passaggio alla prossima mano..."
                     : "Calcolo risultati finali..."}

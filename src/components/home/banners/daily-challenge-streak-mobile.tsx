@@ -39,7 +39,7 @@ export function DailyChallengeStreakMobile({
                     {dailyDone ? <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden="true" /> : <Flame className="w-5 h-5 text-amber-600" aria-hidden="true" />}
                   </div>
                   {!dailyDone && (
-                    <span className="text-[9px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
+                    <span className="text-[9px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                       +40 XP
                     </span>
                   )}
@@ -93,7 +93,7 @@ export function DailyChallengeStreakMobile({
                     className={`flex h-6 w-6 items-center justify-center rounded-md text-[9px] font-bold ${
                       i < Math.min(streak, 7)
                         ? "bg-[#1B5E3B] text-white"
-                        : "bg-muted text-muted-foreground/70"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {day}

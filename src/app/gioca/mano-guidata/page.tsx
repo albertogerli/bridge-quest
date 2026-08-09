@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,17 @@ import type { GuidedHand } from "@/lib/catalog";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
-import { ShareResult } from "@/components/bridge/share-result";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
+// Pannello di condivisione: esiste solo nella schermata di fine mano.
+const ShareResult = dynamic(
+  () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
+  { ssr: false },
+);
 import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
@@ -140,7 +150,7 @@ function HandSelector({
                     {hand.description}
                   </p>
                   <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground/70">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span>Contratto: <span className="font-bold text-foreground/80">{hand.contract}</span></span>
                       <span>{hand.tricksNeeded} prese</span>
                       {hand.hints.length > 0 && (
@@ -165,7 +175,7 @@ function HandSelector({
           transition={{ delay: 0.4 }}
           className="pt-2 text-center"
         >
-          <Link href="/gioca" className="text-xs text-muted-foreground/70 hover:text-muted-foreground transition-colors">
+          <Link href="/gioca" className="text-xs text-muted-foreground hover:text-muted-foreground transition-colors">
             ← Torna a Gioca
           </Link>
         </motion.div>
@@ -366,17 +376,17 @@ function GuidedGameplay({
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{hand.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{hand.tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`

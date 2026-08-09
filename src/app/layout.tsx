@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Bricolage_Grotesque } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
-import { Toaster } from "sonner";
+import { ToasterLazy } from "@/components/toaster-lazy";
 import { LayoutShell } from "@/components/layout-shell";
 import { GADS_ID } from "@/lib/gads";
 import "./globals.css";
@@ -197,7 +197,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${bricolage.variable} font-sans antialiased`} suppressHydrationWarning>
         <a href="#main-content" className="skip-link">Vai al contenuto</a>
         <LayoutShell>{children}</LayoutShell>
-        <Toaster richColors position="top-center" />
+        <ToasterLazy />
         <Analytics />
         {/* Google Ads (gtag.js) — tag base, caricato una sola volta */}
         <Script

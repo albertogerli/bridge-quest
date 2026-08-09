@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -27,8 +28,17 @@ import { saveGameForAnalysis } from "@/lib/save-analysis-data";
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
-import { ShareResult } from "@/components/bridge/share-result";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
+// Pannello di condivisione: esiste solo nella schermata di fine mano.
+const ShareResult = dynamic(
+  () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
+  { ssr: false },
+);
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { useMobile } from "@/hooks/use-mobile";
@@ -191,7 +201,7 @@ export default function SfidaSettimanale() {
                       ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
                       : isNext
                         ? `bg-gradient-to-br ${challenge.gradient} text-white`
-                        : "bg-muted text-muted-foreground/70"
+                        : "bg-muted text-muted-foreground"
                   }`}>
                     {isPlayed ? (
                       <CheckCircle2 className="w-5 h-5" />
@@ -422,17 +432,17 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4 flex items-center justify-center">
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Contratto</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-figb dark:text-primary">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -441,7 +451,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">XP</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">XP</p>
               <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{challenge.xpMultiplier}x</p>
             </div>
           </div>

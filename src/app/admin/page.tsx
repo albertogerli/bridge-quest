@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useAsdClubs } from "@/store/use-asd-store";
@@ -177,6 +178,9 @@ export default function AdminPage() {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const userDialogRef = useRef<HTMLDivElement>(null);
+  const closeUserDetail = useCallback(() => setSelectedUserId(null), []);
+  useFocusTrap(userDialogRef, selectedUserId !== null, { onEscape: closeUserDetail });
   const [loginHistory, setLoginHistory] = useState<LoginRecord[]>([]);
   const [asdTab, setAsdTab] = useState<"asd" | "province" | "regione">("asd");
   const [asdSearch, setAsdSearch] = useState("");
@@ -1627,8 +1631,15 @@ export default function AdminPage() {
               const handsRank = [...users].sort((a, b) => b.hands_played - a.hands_played).findIndex(usr => usr.id === u.id) + 1;
 
               return (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setSelectedUserId(null)}>
-                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4" onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={closeUserDetail}>
+                  <div
+                    ref={userDialogRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="admin-user-dialog-title"
+                    className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4"
+                    onClick={e => e.stopPropagation()}
+                  >
                     {/* Header */}
                     <div className="bg-gradient-to-r from-[#003DA5] to-[#0052CC] text-white p-6 rounded-t-2xl">
                       <div className="flex items-start justify-between">
@@ -1637,14 +1648,14 @@ export default function AdminPage() {
                             {(u.display_name || "?")[0].toUpperCase()}
                           </div>
                           <div>
-                            <h2 className="text-xl font-bold">{u.display_name || "Anonimo"}</h2>
+                            <h2 id="admin-user-dialog-title" className="text-xl font-bold">{u.display_name || "Anonimo"}</h2>
                             <div className="flex items-center gap-3 mt-1 text-sm text-white/80">
                               <span>{profileEmoji[u.profile_type]} {u.profile_type}</span>
                               {u.bbo_username && <span>BBO: {u.bbo_username}</span>}
                             </div>
                           </div>
                         </div>
-                        <button onClick={() => setSelectedUserId(null)} className="text-white/70 hover:text-white text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10">✕</button>
+                        <button onClick={closeUserDetail} aria-label="Chiudi" className="text-white/70 hover:text-white text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10"><span aria-hidden="true">✕</span></button>
                       </div>
                     </div>
 

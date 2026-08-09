@@ -127,10 +127,14 @@ export function AchievementPopup({
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           className="fixed top-4 left-1/2 -translate-x-1/2 z-[60]"
           onClick={onDismiss}
+          // Toast, non dialog: si auto-chiude dopo 4s e non contiene azioni →
+          // niente focus trap, solo annuncio cortese allo screen reader.
+          role="status"
+          aria-live="polite"
         >
           <div className="flex items-center gap-3 bg-card rounded-2xl card-clean px-5 py-3.5 cursor-pointer border border-amber-200 dark:border-amber-900">
             {/* Badge icon with glow */}
-            <div className="relative">
+            <div className="relative" aria-hidden="true">
               <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-md" />
               <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 text-2xl">
                 {badge.icon}

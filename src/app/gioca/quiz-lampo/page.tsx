@@ -498,7 +498,7 @@ export default function QuizLampoPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -706,11 +706,11 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}/{cfg.rounds}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{pct}%</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">
+                <p className="text-[10px] text-muted-foreground font-bold">
                   Precisione
                 </p>
               </div>
@@ -718,7 +718,7 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-orange-500">
                   x{maxCombo}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">
+                <p className="text-[10px] text-muted-foreground font-bold">
                   Max combo
                 </p>
               </div>
@@ -726,7 +726,7 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -737,7 +737,7 @@ export default function QuizLampoPage() {
               transition={{ delay: 0.75 }}
               className="mt-4 card-clean rounded-2xl bg-card p-4"
             >
-              <h3 className="text-xs font-bold text-muted-foreground/70 mb-3 uppercase tracking-wide">
+              <h3 className="text-xs font-bold text-muted-foreground mb-3 uppercase tracking-wide">
                 {`Dettaglio ${profileConfig.xpLabel}`}
               </h3>
               <div className="space-y-2 text-sm">
@@ -913,7 +913,7 @@ export default function QuizLampoPage() {
             </div>
           </div>
 
-          <span className="text-xs font-bold text-muted-foreground/70">
+          <span className="text-xs font-bold text-muted-foreground">
             {currentIdx + 1}/{config.rounds}
           </span>
         </div>
@@ -939,7 +939,7 @@ export default function QuizLampoPage() {
         <div className="flex items-center justify-between mb-4">
           <div
             className={`text-sm font-bold tabular-nums ${
-              timerFraction <= 0.2 ? "text-red-500 dark:text-red-400" : "text-muted-foreground/70"
+              timerFraction <= 0.2 ? "text-red-500 dark:text-red-400" : "text-muted-foreground"
             }`}
           >
             {Math.ceil(timeLeft)}s
@@ -1044,7 +1044,7 @@ export default function QuizLampoPage() {
                 textColor = "text-red-600 dark:text-red-400";
               } else {
                 btnStyle = "bg-muted opacity-40";
-                textColor = "text-muted-foreground/70";
+                textColor = "text-muted-foreground";
               }
             }
 

@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { PlayingCard, type CardData } from "./playing-card";
+import { handAriaLabel, positionAriaLabel } from "@/lib/card-labels";
 
 const GAP = 2; // px gap between cards in fluid mode
 
@@ -50,6 +51,12 @@ export function Hand({
       <div
         className="flex items-end justify-center"
         style={{ gap: GAP }}
+        role="group"
+        aria-label={
+          faceDown
+            ? `Mano coperta di ${positionAriaLabel(position)}: ${cards.length} carte`
+            : handAriaLabel(cards, position)
+        }
       >
         {cards.map((card, index) => (
           <motion.div
@@ -89,6 +96,12 @@ export function Hand({
   return (
     <div
       className={`flex ${isVertical ? "flex-col" : "flex-row"} items-center justify-center`}
+      role="group"
+      aria-label={
+        faceDown
+          ? `Mano coperta di ${positionAriaLabel(position)}: ${cards.length} carte`
+          : handAriaLabel(cards, position)
+      }
     >
       {cards.map((card, index) => (
         <motion.div

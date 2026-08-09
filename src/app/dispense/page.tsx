@@ -56,7 +56,7 @@ export default function DispensePage() {
 
   if (!catalogLoaded || !currentCourse) {
     return (
-      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento corsi">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
         Caricamento corsi…
       </div>
     );
@@ -71,7 +71,7 @@ export default function DispensePage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-2"
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link href="/lezioni" className="hover:text-figb dark:hover:text-primary transition-colors">
               Lezioni
             </Link>
@@ -111,7 +111,7 @@ export default function DispensePage() {
                   <div className="text-[13px] font-semibold leading-tight">
                     {course.name.replace("Corso ", "")}
                   </div>
-                  <div className={`text-[10px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground/70"}`}>
+                  <div className={`text-[10px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground"}`}>
                     {course.lessonCount} lezioni
                   </div>
                 </div>

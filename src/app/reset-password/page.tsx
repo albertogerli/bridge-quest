@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
               </div>
 
               {error && (
-                <p className="text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-300 text-sm p-3 rounded-lg">
+                <p className="text-red-700 bg-red-50 dark:bg-red-950/40 dark:text-red-300 text-sm p-3 rounded-lg">
                   {error}
                 </p>
               )}

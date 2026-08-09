@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 /**
  * One-time "what's new" guide for existing users landing on the reorganised
@@ -81,18 +82,28 @@ export function NewVersionGuide() {
 
   const slide = SLIDES[step];
   const isLast = step === SLIDES.length - 1;
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, open, { onEscape: close });
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="new-version-guide-title"
           className="fixed inset-0 z-[100] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           {/* backdrop */}
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={close} />
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={close}
+            aria-hidden="true"
+          />
 
           <motion.div
             key={step}
@@ -104,8 +115,8 @@ export function NewVersionGuide() {
           >
             {/* header band */}
             <div className={`flex flex-col items-center gap-2 bg-gradient-to-br ${slide.accent} px-6 pb-6 pt-8 text-center text-white`}>
-              <span className="text-5xl">{slide.emoji}</span>
-              <h2 className="font-display text-2xl font-bold">{slide.title}</h2>
+              <span className="text-5xl" aria-hidden="true">{slide.emoji}</span>
+              <h2 id="new-version-guide-title" className="font-display text-2xl font-bold">{slide.title}</h2>
             </div>
 
             <div className="px-6 py-5">

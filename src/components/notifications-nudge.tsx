@@ -97,7 +97,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
                   </button>
                   <button
                     onClick={dismiss}
-                    className="px-2 py-2 text-xs font-medium text-muted-foreground/70 transition-colors hover:text-muted-foreground"
+                    className="px-2 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-muted-foreground"
                   >
                     Non ora
                   </button>

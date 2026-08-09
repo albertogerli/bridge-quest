@@ -229,7 +229,7 @@ export default function ObiettiviPage() {
         >
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-semibold text-foreground">Progresso Globale</p>
-            <p className="text-xs font-bold text-muted-foreground/70">
+            <p className="text-xs font-bold text-muted-foreground">
               {completedCount} di 3 completati
             </p>
           </div>
@@ -336,7 +336,7 @@ export default function ObiettiviPage() {
                       </span>
                       <span
                         className={`text-[11px] font-bold tabular-nums ${
-                          obj.completed ? "text-emerald-500" : "text-muted-foreground/70"
+                          obj.completed ? "text-emerald-500" : "text-muted-foreground"
                         }`}
                       >
                         {progressPercent}%
@@ -418,7 +418,7 @@ export default function ObiettiviPage() {
                       <Gift className="w-8 h-8 text-amber-600 dark:text-amber-400" />
                     </motion.span>
                   ) : (
-                    <span className="opacity-40 flex items-center justify-center"><Gift className="w-8 h-8 text-muted-foreground/70" /></span>
+                    <span className="opacity-40 flex items-center justify-center"><Gift className="w-8 h-8 text-muted-foreground" /></span>
                   )}
                 </div>
 
@@ -429,7 +429,7 @@ export default function ObiettiviPage() {
                         ? "text-emerald-700 dark:text-emerald-300"
                         : allCompleted
                           ? "text-amber-700 dark:text-amber-300"
-                          : "text-muted-foreground/70"
+                          : "text-muted-foreground"
                     }`}
                   >
                     {bonusClaimed ? "Bonus Riscosso!" : "Bonus Settimanale"}
@@ -440,7 +440,7 @@ export default function ObiettiviPage() {
                         ? "text-emerald-600 dark:text-emerald-400"
                         : allCompleted
                           ? "text-amber-600 dark:text-amber-400"
-                          : "text-muted-foreground/70"
+                          : "text-muted-foreground"
                     }`}
                   >
                     {bonusClaimed
@@ -500,7 +500,7 @@ export default function ObiettiviPage() {
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
-                    <span className="text-sm font-bold text-muted-foreground/70">
+                    <span className="text-sm font-bold text-muted-foreground">
                       +100 XP bloccati
                     </span>
                   </div>
@@ -549,7 +549,7 @@ export default function ObiettiviPage() {
           transition={{ delay: 0.7 }}
           className="text-center pt-4 pb-2"
         >
-          <p className="text-xs text-muted-foreground/70">
+          <p className="text-xs text-muted-foreground">
             {allCompleted && bonusClaimed
               ? "Tutti gli obiettivi completati! Torna lunedi per nuove sfide."
               : allCompleted

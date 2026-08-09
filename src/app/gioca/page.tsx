@@ -56,7 +56,7 @@ export default function GiocaPage() {
           </p>
         </motion.div>
 
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Inizia da qui</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Inizia da qui</h2>
 
         {/* Mano Guidata card (after Prima Mano is done) */}
         {onboarded && (
@@ -111,7 +111,7 @@ export default function GiocaPage() {
           </Link>
         </motion.div>
 
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Sfide</h2>
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">Sfide</h2>
 
         {/* Hero card: Sfida del Giorno */}
         <motion.div
@@ -280,7 +280,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-muted-foreground mt-0.5">Una mano al giorno, uguale per tutti. Classifica!</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     +50 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -299,7 +299,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-muted-foreground mt-0.5">Raffica di domande, 30 secondi! Combo multiplier</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-rose-700 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/40 rounded-full px-2 py-0.5">
                     +100 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -318,7 +318,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-muted-foreground mt-0.5">Trova l&apos;errore nella dichiarazione o giocata</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -337,7 +337,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-muted-foreground mt-0.5">Decidi in 5 secondi: impasse o caduta?</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-cyan-600 bg-cyan-50 dark:text-cyan-400 dark:bg-cyan-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-cyan-700 bg-cyan-50 dark:text-cyan-400 dark:bg-cyan-950/40 rounded-full px-2 py-0.5">
                     +70 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -394,7 +394,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-muted-foreground mt-0.5">Scegli l&apos;apertura giusta per ogni mano</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     +80 {profile.xpLabel}
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -462,7 +462,7 @@ export default function GiocaPage() {
           </div>
         </motion.div>
 
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Gioco libero</h2>
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">Gioco libero</h2>
 
         {/* Two-column cards */}
         <div className="grid grid-cols-2 gap-3 mt-6">
@@ -510,7 +510,7 @@ export default function GiocaPage() {
                   Sfoglia e gioca le {allSmazzate.length} mani per lezione
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     {allSmazzate.length} mani
                   </span>
                 </div>
@@ -562,7 +562,7 @@ export default function GiocaPage() {
                   Rivedi le tue mani con commenti dell&apos;AI carta per carta
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
                     Post-partita
                   </span>
                 </div>
@@ -588,7 +588,7 @@ export default function GiocaPage() {
                   Impara tutti i termini del bridge
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-sky-700 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/40 rounded-full px-2 py-0.5">
                     A-Z
                   </span>
                 </div>

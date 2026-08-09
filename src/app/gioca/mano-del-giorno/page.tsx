@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,8 +22,17 @@ import {
 import type { CardData } from "@/components/bridge/playing-card";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { BenStatus } from "@/components/bridge/ben-status";
-import { GameTutorial } from "@/components/bridge/game-tutorial";
-import { ShareResult } from "@/components/bridge/share-result";
+// Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
+// l'utente non lo apre → fuori dal first load della pagina di gioco.
+const GameTutorial = dynamic(
+  () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
+// Pannello di condivisione: esiste solo nella schermata di fine mano.
+const ShareResult = dynamic(
+  () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
+  { ssr: false },
+);
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
@@ -315,7 +325,7 @@ export default function ManoDelGiornoPage() {
   // Need a loaded smazzate pool for everything below.
   if (!todayHand || !yesterdayHand) {
     return (
-      <div className="pt-10 text-center text-muted-foreground/70 text-sm" role="status" aria-label="Caricamento mano del giorno">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento mano del giorno">
         Caricamento mano del giorno…
       </div>
     );
@@ -365,7 +375,7 @@ export default function ManoDelGiornoPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -430,7 +440,7 @@ export default function ManoDelGiornoPage() {
                   {/* Contract badge */}
                   <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-amber-100 dark:border-amber-900">
                     <div>
-                      <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+                      <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
                         Contratto
                       </p>
                       <p className="text-lg font-bold text-emerald-dark leading-tight">
@@ -439,7 +449,7 @@ export default function ManoDelGiornoPage() {
                     </div>
                     <div className="h-8 w-px bg-amber-200/60" />
                     <div>
-                      <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+                      <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
                         Dichiarante
                       </p>
                       <p className="text-lg font-bold text-foreground leading-tight">
@@ -477,7 +487,7 @@ export default function ManoDelGiornoPage() {
 
                 {/* South hand preview */}
                 <div className="shrink-0 bg-card/70 backdrop-blur-sm rounded-2xl px-3.5 py-3 border border-amber-100 dark:border-amber-900 shadow-sm">
-                  <p className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-1.5 text-center">
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 text-center">
                     La tua mano (Sud)
                   </p>
                   <HandFanPreview
@@ -626,7 +636,7 @@ export default function ManoDelGiornoPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8 }}
-                  className="text-xs text-muted-foreground/70 mt-4"
+                  className="text-xs text-muted-foreground mt-4"
                 >
                   Torna domani per una nuova mano!
                 </motion.p>
@@ -645,7 +655,7 @@ export default function ManoDelGiornoPage() {
                     <h4 className="text-sm font-bold text-foreground">
                       Il campo di oggi
                     </h4>
-                    <span className="ml-auto text-[11px] font-semibold text-muted-foreground/70">
+                    <span className="ml-auto text-[11px] font-semibold text-muted-foreground">
                       {fieldStats.players} giocatori
                     </span>
                   </div>
@@ -681,7 +691,7 @@ export default function ManoDelGiornoPage() {
                     />
                   </div>
                   {fieldStats.best > todayResult.result && (
-                    <p className="mt-2 text-[11px] text-muted-foreground/70">
+                    <p className="mt-2 text-[11px] text-muted-foreground">
                       Miglior risultato del campo:{" "}
                       {fieldStats.best >= 0 ? `+${fieldStats.best}` : fieldStats.best}
                     </p>
@@ -738,7 +748,7 @@ export default function ManoDelGiornoPage() {
           <div className="card-elevated rounded-2xl bg-card p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-muted-foreground/70 uppercase tracking-wider">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Nuova mano tra
                 </p>
                 <p className="text-2xl font-bold text-foreground tabular-nums mt-0.5">
@@ -815,7 +825,7 @@ export default function ManoDelGiornoPage() {
               <div className="flex items-center gap-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
                   <svg
-                    className="h-5 w-5 text-muted-foreground/70"
+                    className="h-5 w-5 text-muted-foreground"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -828,14 +838,14 @@ export default function ManoDelGiornoPage() {
                   <h3 className="text-sm font-bold text-foreground">
                     Mano di Ieri
                   </h3>
-                  <p className="text-[11px] text-muted-foreground/70">
+                  <p className="text-[11px] text-muted-foreground">
                     {mounted ? formatDate(yesterday) : ""}
                   </p>
                 </div>
               </div>
               <Badge
                 variant="outline"
-                className="text-[10px] font-bold text-muted-foreground/70 border-border"
+                className="text-[10px] font-bold text-muted-foreground border-border"
               >
                 {yesterdayHand.contract}
               </Badge>
@@ -1110,7 +1120,7 @@ function PlayingView({
             className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}
           >
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Contratto
               </p>
               <p
@@ -1121,7 +1131,7 @@ function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Obiettivo
               </p>
               <p
@@ -1132,7 +1142,7 @@ function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Dich. / Dif.
               </p>
               <p

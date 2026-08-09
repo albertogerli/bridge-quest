@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
@@ -40,9 +41,20 @@ export default function AmiciPage() {
   const [activeTab, setActiveTab] = useState<Tab>("amici");
   const [searchQuery, setSearchQuery] = useState("");
   const [showChallengeModal, setShowChallengeModal] = useState(false);
+  const challengeDialogRef = useRef<HTMLDivElement>(null);
   const [selectedFriend, setSelectedFriend] = useState<SelectedFriend | null>(null);
   const [challengeLoading, setChallengeLoading] = useState(false);
   const [sentRequests, setSentRequests] = useState<Set<string>>(new Set());
+
+  // Chiusura del modale sfida: backdrop, X, "Annulla" ed Escape passano di qui.
+  const closeChallengeModal = useCallback(() => {
+    if (challengeLoading) return;
+    setShowChallengeModal(false);
+    setSelectedFriend(null);
+  }, [challengeLoading]);
+  useFocusTrap(challengeDialogRef, showChallengeModal, {
+    onEscape: closeChallengeModal,
+  });
 
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -208,7 +220,7 @@ export default function AmiciPage() {
             {friends.length === 0 ? (
               <div className="card-clean rounded-2xl bg-card p-8 text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted mx-auto mb-4">
-                  <Users className="h-7 w-7 text-muted-foreground/70" />
+                  <Users className="h-7 w-7 text-muted-foreground" />
                 </div>
                 <p className="text-sm font-semibold text-foreground/80 mb-1">
                   Non hai ancora amici
@@ -257,12 +269,12 @@ export default function AmiciPage() {
                       </p>
                       <div className="flex items-center gap-2 mt-0.5">
                         {friendship.profile.bbo_username && (
-                          <span className="text-[11px] text-muted-foreground/70 font-mono">
+                          <span className="text-[11px] text-muted-foreground font-mono">
                             @{friendship.profile.bbo_username}
                           </span>
                         )}
                         {friendship.profile.asd_name && (
-                          <span className="text-[10px] text-muted-foreground/70 truncate">
+                          <span className="text-[10px] text-muted-foreground truncate">
                             {friendship.profile.asd_name}
                           </span>
                         )}
@@ -321,7 +333,7 @@ export default function AmiciPage() {
               </h3>
               {pendingReceived.length === 0 ? (
                 <div className="card-clean rounded-2xl bg-card p-6 text-center">
-                  <p className="text-sm text-muted-foreground/70">
+                  <p className="text-sm text-muted-foreground">
                     Nessuna richiesta ricevuta
                   </p>
                 </div>
@@ -358,7 +370,7 @@ export default function AmiciPage() {
                             {request.profile.display_name || "Giocatore"}
                           </p>
                           {request.profile.bbo_username && (
-                            <span className="text-[11px] text-muted-foreground/70 font-mono">
+                            <span className="text-[11px] text-muted-foreground font-mono">
                               @{request.profile.bbo_username}
                             </span>
                           )}
@@ -395,7 +407,7 @@ export default function AmiciPage() {
               </h3>
               {pendingSent.length === 0 ? (
                 <div className="card-clean rounded-2xl bg-card p-6 text-center">
-                  <p className="text-sm text-muted-foreground/70">
+                  <p className="text-sm text-muted-foreground">
                     Nessuna richiesta inviata
                   </p>
                 </div>
@@ -420,7 +432,7 @@ export default function AmiciPage() {
                           />
                         ) : (
                           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted border border-border">
-                            <span className="text-base font-bold text-muted-foreground/70">
+                            <span className="text-base font-bold text-muted-foreground">
                               {(request.profile.display_name || "G").charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -432,7 +444,7 @@ export default function AmiciPage() {
                             {request.profile.display_name || "Giocatore"}
                           </p>
                           {request.profile.bbo_username && (
-                            <span className="text-[11px] text-muted-foreground/70 font-mono">
+                            <span className="text-[11px] text-muted-foreground font-mono">
                               @{request.profile.bbo_username}
                             </span>
                           )}
@@ -469,13 +481,13 @@ export default function AmiciPage() {
           >
             {/* Search input */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Cerca per nome, username BBO o associazione..."
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all card-clean"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all card-clean"
               />
               {searchLoading && (
                 <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -491,7 +503,7 @@ export default function AmiciPage() {
                 <p className="text-sm font-semibold text-muted-foreground">
                   Nessun giocatore trovato
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Prova con un altro nome o username
                 </p>
               </div>
@@ -503,7 +515,7 @@ export default function AmiciPage() {
                 <p className="text-sm font-semibold text-muted-foreground">
                   Cerca un giocatore
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Inserisci il nome, lo username BBO o il nome dell&apos;associazione
                 </p>
               </div>
@@ -551,12 +563,12 @@ export default function AmiciPage() {
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           {result.bbo_username && (
-                            <span className="text-[11px] text-muted-foreground/70 font-mono">
+                            <span className="text-[11px] text-muted-foreground font-mono">
                               @{result.bbo_username}
                             </span>
                           )}
                           {result.asd_name && (
-                            <span className="text-[10px] text-muted-foreground/70 truncate">
+                            <span className="text-[10px] text-muted-foreground truncate">
                               {result.asd_name}
                             </span>
                           )}
@@ -597,14 +609,13 @@ export default function AmiciPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-              onClick={() => {
-                if (!challengeLoading) {
-                  setShowChallengeModal(false);
-                  setSelectedFriend(null);
-                }
-              }}
+              onClick={closeChallengeModal}
             >
               <motion.div
+                ref={challengeDialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="challenge-dialog-title"
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -619,7 +630,7 @@ export default function AmiciPage() {
                       <Swords className="h-5 w-5 text-violet-600 dark:text-violet-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground">
+                      <p id="challenge-dialog-title" className="text-sm font-bold text-foreground">
                         Sfida {selectedFriend.name}
                       </p>
                       <p className="text-[11px] text-muted-foreground">
@@ -628,15 +639,11 @@ export default function AmiciPage() {
                     </div>
                   </div>
                   <button
-                    onClick={() => {
-                      if (!challengeLoading) {
-                        setShowChallengeModal(false);
-                        setSelectedFriend(null);
-                      }
-                    }}
+                    onClick={closeChallengeModal}
+                    aria-label="Chiudi"
                     className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-muted transition-colors"
                   >
-                    <X className="h-4 w-4 text-muted-foreground/70" />
+                    <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -657,7 +664,7 @@ export default function AmiciPage() {
                           {count === 1 ? "1 Mano" : `${count} Mani`}
                         </span>
                       </div>
-                      <span className="text-[10px] text-muted-foreground/70 font-medium">
+                      <span className="text-[10px] text-muted-foreground font-medium">
                         {count === 1 ? "Veloce" : count === 4 ? "Standard" : "Lunga"}
                       </span>
                     </button>
@@ -666,7 +673,7 @@ export default function AmiciPage() {
 
                 {/* IMP scoring info */}
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <span className="text-[10px] text-muted-foreground/70 font-medium uppercase tracking-wider">
+                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                     Punteggio IMP
                   </span>
                 </div>
@@ -683,12 +690,7 @@ export default function AmiciPage() {
 
                 {/* Cancel */}
                 <button
-                  onClick={() => {
-                    if (!challengeLoading) {
-                      setShowChallengeModal(false);
-                      setSelectedFriend(null);
-                    }
-                  }}
+                  onClick={closeChallengeModal}
                   disabled={challengeLoading}
                   className="w-full py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
                 >

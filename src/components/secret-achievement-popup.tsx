@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 interface SecretAchievement {
   id: string;
@@ -32,6 +33,8 @@ export default function SecretAchievementPopup({
   onClose,
 }: SecretAchievementPopupProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, achievement !== null, { onEscape: onClose });
 
   useEffect(() => {
     if (achievement) {
@@ -111,6 +114,11 @@ export default function SecretAchievementPopup({
 
             {/* Achievement Card */}
             <motion.div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="secret-achievement-title"
+              aria-describedby="secret-achievement-desc"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               exit={{ scale: 0, rotate: 180 }}
@@ -148,9 +156,10 @@ export default function SecretAchievementPopup({
               {/* Close button */}
               <button
                 onClick={onClose}
+                aria-label="Chiudi"
                 className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
               >
-                <X className="w-5 h-5 text-white" />
+                <X className="w-5 h-5 text-white" aria-hidden="true" />
               </button>
 
               {/* Content */}
@@ -212,12 +221,13 @@ export default function SecretAchievementPopup({
                       boxShadow: "0 0 30px rgba(255, 193, 7, 0.6)",
                     }}
                   >
-                    {achievement.icon}
+                    <span aria-hidden="true">{achievement.icon}</span>
                   </div>
                 </motion.div>
 
                 {/* Achievement name */}
                 <motion.h2
+                  id="secret-achievement-title"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
@@ -228,6 +238,7 @@ export default function SecretAchievementPopup({
 
                 {/* Description */}
                 <motion.p
+                  id="secret-achievement-desc"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}

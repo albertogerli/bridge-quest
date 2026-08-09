@@ -228,7 +228,7 @@ function Stat({
     <div className="rounded-xl border border-border bg-card p-4 text-center">
       <p className="font-display text-2xl font-bold text-primary">{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>
-      {hint && <p className="mt-0.5 text-[10px] text-muted-foreground/70">{hint}</p>}
+      {hint && <p className="mt-0.5 text-[10px] text-muted-foreground">{hint}</p>}
     </div>
   );
 }

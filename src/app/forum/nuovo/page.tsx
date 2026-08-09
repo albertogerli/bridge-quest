@@ -117,7 +117,7 @@ export default function NuovoPostPage() {
         {/* Back */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors mb-4"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <polyline points="15,18 9,12 15,6" />

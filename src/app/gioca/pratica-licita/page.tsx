@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -83,10 +84,21 @@ export default function PraticaLicitaPage() {
   const [timer, setTimer] = useState(0);
   const [xpEarned, setXpEarned] = useState(0);
   const [paused, setPaused] = useState(false);
+  const pauseDialogRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startRef = useRef(0);
   const pausedElapsedRef = useRef(0);
   const pendingAdvanceRef = useRef<(() => void) | null>(null);
+
+  // Ripresa dalla pausa: usata sia dal bottone sia da Escape (focus trap).
+  const resumeFromPause = useCallback(() => {
+    setPaused(false);
+    startRef.current = Date.now() - pausedElapsedRef.current;
+    timerRef.current = setInterval(() => {
+      setTimer(Math.floor((Date.now() - startRef.current) / 100));
+    }, 100);
+  }, []);
+  useFocusTrap(pauseDialogRef, paused, { onEscape: resumeFromPause });
 
   useEffect(() => {
     try {
@@ -210,7 +222,7 @@ export default function PraticaLicitaPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link
               href="/gioca"
               className="hover:text-emerald transition-colors"
@@ -370,13 +382,13 @@ export default function PraticaLicitaPage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{correct}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">
+                <p className="text-[10px] text-muted-foreground font-bold">
                   Streak max
                 </p>
               </div>
@@ -384,7 +396,7 @@ export default function PraticaLicitaPage() {
                 <p className="text-lg font-bold text-figb dark:text-primary">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">
+                <p className="text-[10px] text-muted-foreground font-bold">
                   {profileConfig.xpLabel}
                 </p>
               </div>
@@ -441,14 +453,14 @@ export default function PraticaLicitaPage() {
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-muted-foreground/70">
+          <span className="text-xs font-bold text-muted-foreground">
             {roundIdx + 1}/{TOTAL_ROUNDS}
           </span>
         </div>
 
         {/* Timer + Streak + Score */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-bold tabular-nums text-muted-foreground/70">
+          <span className="text-sm font-bold tabular-nums text-muted-foreground">
             {(timer / 10).toFixed(1)}s
           </span>
           {streak > 0 && (
@@ -477,7 +489,7 @@ export default function PraticaLicitaPage() {
               </Badge>
               <Badge
                 variant="outline"
-                className="text-[10px] font-bold text-muted-foreground/70"
+                className="text-[10px] font-bold text-muted-foreground"
               >
                 {scenario.vulnerability !== "Nessuna"
                   ? `Vuln: ${scenario.vulnerability}`
@@ -493,13 +505,13 @@ export default function PraticaLicitaPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="card-clean rounded-2xl bg-card p-4 mb-3"
               >
-                <p className="text-xs font-bold text-muted-foreground/70 mb-2">
+                <p className="text-xs font-bold text-muted-foreground mb-2">
                   Dichiarazione finora:
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   {scenario.biddingHistory.map((entry, i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-bold text-muted-foreground/70 bg-muted rounded px-1.5 py-0.5">
+                      <span className="text-[10px] font-bold text-muted-foreground bg-muted rounded px-1.5 py-0.5">
                         {entry.seat}
                       </span>
                       <span
@@ -532,7 +544,7 @@ export default function PraticaLicitaPage() {
               className="card-clean rounded-2xl bg-card p-5 mb-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-bold text-muted-foreground/70">
+                <p className="text-xs font-bold text-muted-foreground">
                   La tua mano ({scenario.position})
                   {scenario.biddingHistory.length === 0 &&
                     " — Che apertura fai?"}
@@ -667,6 +679,10 @@ export default function PraticaLicitaPage() {
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             >
               <motion.div
+                ref={pauseDialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Gioco in pausa"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
@@ -681,18 +697,7 @@ export default function PraticaLicitaPage() {
                 </p>
                 <div className="mt-6 space-y-2">
                   <Button
-                    onClick={() => {
-                      setPaused(false);
-                      startRef.current =
-                        Date.now() - pausedElapsedRef.current;
-                      timerRef.current = setInterval(() => {
-                        setTimer(
-                          Math.floor(
-                            (Date.now() - startRef.current) / 100
-                          )
-                        );
-                      }, 100);
-                    }}
+                    onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-figb hover:bg-figb-dark font-semibold shadow-lg"
                   >
                     Riprendi

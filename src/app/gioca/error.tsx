@@ -36,7 +36,7 @@ export default function GameError({
         </p>
 
         {error.digest && (
-          <p className="text-xs text-muted-foreground/70 mb-4 font-mono">
+          <p className="text-xs text-muted-foreground mb-4 font-mono">
             Codice: {error.digest}
           </p>
         )}
@@ -56,7 +56,7 @@ export default function GameError({
           </Link>
           <Link
             href="/"
-            className="text-sm text-muted-foreground/70 hover:text-muted-foreground transition-colors"
+            className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
           >
             Torna alla Home
           </Link>

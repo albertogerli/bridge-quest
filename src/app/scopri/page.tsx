@@ -19,7 +19,7 @@ export default function ScopriPage() {
       <div className="mx-auto max-w-6xl">
         {/* Breadcrumb */}
         <motion.div {...fadeUp} className="mb-2">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-3">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link href="/" className="hover:text-figb dark:hover:text-primary transition-colors">
               Home
             </Link>
@@ -364,7 +364,7 @@ function TimelineItem({
         <div className="w-0.5 flex-1 bg-border" />
       </div>
       <div className={`pb-4 ${highlight ? "bg-figb/5 dark:bg-primary/10 -mx-2 px-3 py-3 rounded-xl border border-figb/15 dark:border-primary/25" : ""}`}>
-        <span className={`text-xs font-bold ${highlight ? "text-figb dark:text-primary" : "text-muted-foreground/70"}`}>
+        <span className={`text-xs font-bold ${highlight ? "text-figb dark:text-primary" : "text-muted-foreground"}`}>
           {year}
         </span>
         <h3 className={`text-sm font-bold mt-0.5 ${highlight ? "text-figb dark:text-primary" : "text-foreground"}`}>

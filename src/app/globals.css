@@ -83,7 +83,9 @@
   --secondary: #f0f1f4;
   --secondary-foreground: #1a1a2e;
   --muted: #f0f1f4;
-  --muted-foreground: #64748b;
+  /* WCAG AA: #64748b dava 4.37:1 sull'avorio #F7F5F0 (sotto la soglia 4.5).
+     #5b6779 porta il testo secondario a 5.26:1 su avorio e 5.74:1 su bianco. */
+  --muted-foreground: #5b6779;
   --accent: #c8a44e;
   --accent-foreground: #1a1a2e;
   --destructive: #e11d48;

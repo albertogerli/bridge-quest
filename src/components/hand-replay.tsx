@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import type { Card, Position } from "@/lib/bridge-engine";
+import { cardAriaLabel } from "@/lib/card-labels";
 
 interface HandReplayProps {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
@@ -130,9 +131,11 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
       <div
         className={`${sizeClass} bg-white border border-gray-300 rounded shadow-sm flex flex-col items-center justify-center`}
         style={{ color: SUIT_COLORS[card.suit] }}
+        role="img"
+        aria-label={cardAriaLabel(card)}
       >
-        <div className="font-bold">{card.rank}</div>
-        <div className="text-base leading-none">{SUIT_SYMBOLS[card.suit]}</div>
+        <div className="font-bold" aria-hidden="true">{card.rank}</div>
+        <div className="text-base leading-none" aria-hidden="true">{SUIT_SYMBOLS[card.suit]}</div>
       </div>
     );
   };

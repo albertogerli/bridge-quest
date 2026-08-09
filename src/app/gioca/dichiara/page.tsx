@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -202,11 +203,22 @@ export default function DichiaraPage() {
   const [timer, setTimer] = useState(0);
   const [xpEarned, setXpEarned] = useState(0);
   const [paused, setPaused] = useState(false);
+  const pauseDialogRef = useRef<HTMLDivElement>(null);
   const [answersHistory, setAnswersHistory] = useState<Array<{ selected: string; correct: boolean }>>([]);
   const [showRecap, setShowRecap] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startRef = useRef(0);
   const pausedElapsedRef = useRef(0);
+
+  // Ripresa dalla pausa: usata sia dal bottone sia da Escape (focus trap).
+  const resumeFromPause = useCallback(() => {
+    setPaused(false);
+    startRef.current = Date.now() - pausedElapsedRef.current;
+    timerRef.current = setInterval(() => {
+      setTimer(Math.floor((Date.now() - startRef.current) / 100));
+    }, 100);
+  }, []);
+  useFocusTrap(pauseDialogRef, paused, { onEscape: resumeFromPause });
 
   useEffect(() => {
     try {
@@ -302,7 +314,7 @@ export default function DichiaraPage() {
     return (
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
             <span>/</span>
             <span className="text-emerald font-semibold">Dichiara!</span>
@@ -384,15 +396,15 @@ export default function DichiaraPage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{correct}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Corrette</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">Streak max</p>
+                <p className="text-[10px] text-muted-foreground font-bold">Streak max</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-figb dark:text-primary">+{xpEarned}</p>
-                <p className="text-[10px] text-muted-foreground/70 font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -492,12 +504,12 @@ export default function DichiaraPage() {
               />
             </div>
           </div>
-          <span className="text-xs font-bold text-muted-foreground/70">{roundIdx + 1}/{TOTAL_ROUNDS}</span>
+          <span className="text-xs font-bold text-muted-foreground">{roundIdx + 1}/{TOTAL_ROUNDS}</span>
         </div>
 
         {/* Timer + Streak */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-bold tabular-nums text-muted-foreground/70">{(timer / 10).toFixed(1)}s</span>
+          <span className="text-sm font-bold tabular-nums text-muted-foreground">{(timer / 10).toFixed(1)}s</span>
           {streak > 0 && (
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-purple-50 dark:bg-purple-950/40 rounded-full px-3 py-1">
               <span className="text-sm">🔥</span>
@@ -517,9 +529,9 @@ export default function DichiaraPage() {
               className="card-clean rounded-2xl bg-card p-5 mb-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-bold text-muted-foreground/70">Che apertura fai?</p>
+                <p className="text-xs font-bold text-muted-foreground">Che apertura fai?</p>
                 {(dCfg.showHCP || dCfg.showDist) && (
-                  <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground/70">
+                  <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground">
                     {dCfg.showHCP ? `${scenario.hcp} HCP` : ""}
                     {dCfg.showHCP && dCfg.showDist ? " · " : ""}
                     {dCfg.showDist ? scenario.distribution : ""}
@@ -594,6 +606,10 @@ export default function DichiaraPage() {
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             >
               <motion.div
+                ref={pauseDialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Gioco in pausa"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
@@ -604,13 +620,7 @@ export default function DichiaraPage() {
                 <p className="text-sm text-muted-foreground mt-2">Domanda {roundIdx + 1}/{TOTAL_ROUNDS} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
-                    onClick={() => {
-                      setPaused(false);
-                      startRef.current = Date.now() - pausedElapsedRef.current;
-                      timerRef.current = setInterval(() => {
-                        setTimer(Math.floor((Date.now() - startRef.current) / 100));
-                      }, 100);
-                    }}
+                    onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-figb hover:bg-figb-dark font-semibold shadow-lg"
                   >
                     Riprendi

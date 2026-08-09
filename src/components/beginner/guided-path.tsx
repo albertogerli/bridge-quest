@@ -105,7 +105,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                     {isDone ? (
                       <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     ) : (
-                      <Icon className={`h-5 w-5 ${isCurrent ? "text-white" : "text-muted-foreground/70"}`} />
+                      <Icon className={`h-5 w-5 ${isCurrent ? "text-white" : "text-muted-foreground"}`} />
                     )}
                   </div>
 
@@ -117,7 +117,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                           ? "text-emerald-700 dark:text-emerald-400 line-through decoration-emerald-300"
                           : isCurrent
                             ? "text-foreground"
-                            : "text-muted-foreground/70"
+                            : "text-muted-foreground"
                       }`}
                     >
                       {s.label}
