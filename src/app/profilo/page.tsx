@@ -35,6 +35,8 @@ import { Swords } from "lucide-react";
 import { useSecretAchievements } from "@/hooks/use-secret-achievements";
 import { useGameStore } from "@/store/use-game-store";
 import SecretAchievementPopup from "@/components/secret-achievement-popup";
+import { reportError } from "@/lib/report-error";
+import { toast } from "sonner";
 
 const BQ_KEYS_PREFIX = "bq_";
 
@@ -219,7 +221,9 @@ export default function ProfiloPage() {
         const [history, stats] = await Promise.all([getHistory(10), getChallengeStats()]);
         if (history) setChallengeHistory(history as ChallengeData[]);
         if (stats) setChallengeStats(stats);
-      } catch {}
+      } catch (e) {
+        reportError("profilo:challenge-history", e);
+      }
     })();
   }, [user, getHistory, getChallengeStats]);
 
@@ -238,7 +242,8 @@ export default function ProfiloPage() {
       // Hard redirect to force full page reload and clean auth state
       window.location.href = "/";
     } catch (err) {
-      console.error("Logout error:", err);
+      reportError("profilo:logout", err);
+      toast.error("Uscita non riuscita. Riprova.");
       setLoggingOut(false);
       setShowLogoutConfirm(false);
     }
@@ -255,8 +260,8 @@ export default function ProfiloPage() {
         await supabase.from("review_items").delete().eq("user_id", user.id);
         await supabase.from("challenges").delete().eq("challenger_id", user.id);
         await supabase.from("challenges").delete().eq("challenged_id", user.id);
-        await supabase.from("friends").delete().eq("user_id", user.id);
-        await supabase.from("friends").delete().eq("friend_id", user.id);
+        await supabase.from("friendships").delete().eq("user_id", user.id);
+        await supabase.from("friendships").delete().eq("friend_id", user.id);
         await supabase.from("profiles").delete().eq("id", user.id);
       }
       // Clear all local data
@@ -266,7 +271,8 @@ export default function ProfiloPage() {
       await signOut();
       window.location.href = "/";
     } catch (err) {
-      console.error("Delete account error:", err);
+      reportError("profilo:delete-account", err);
+      toast.error("Eliminazione account non riuscita. Riprova.");
       setDeleting(false);
       setShowDeleteConfirm(false);
     }
@@ -1150,10 +1156,18 @@ export default function ProfiloPage() {
                           updates.asd_name = editAsdSelectedName || null;
                         }
                         if (Object.keys(updates).length > 0) {
-                          await updateProfile(updates);
+                          const { error } = await updateProfile(updates);
+                          if (error) {
+                            reportError("profilo:salva-profilo", error);
+                            toast.error("Salvataggio del profilo non riuscito. Riprova.");
+                          }
                         }
                         if (editAvatarFile) {
-                          await uploadAvatar(editAvatarFile);
+                          const { error } = await uploadAvatar(editAvatarFile);
+                          if (error) {
+                            reportError("profilo:upload-avatar", error);
+                            toast.error("Caricamento della foto non riuscito. Riprova.");
+                          }
                         }
                         await refreshProfile();
                         setSaving(false);

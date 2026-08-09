@@ -12,6 +12,7 @@ import { useCatalog } from "@/store/use-catalog-store";
 import type { CourseId } from "@/lib/catalog";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2, Search, X } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
+import { reportError } from "@/lib/report-error";
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -164,7 +165,9 @@ export default function ClassificaPage() {
           const { data: { user: authUser } } = await supabase.auth.getUser();
           user = authUser;
           if (user) setCurrentUserId(user.id);
-        } catch {}
+        } catch (e) {
+          reportError("classifica:get-user", e);
+        }
 
         // Fetch all profiles
         const { data, error } = await supabase
@@ -243,7 +246,9 @@ export default function ClassificaPage() {
             }
           }
         }
-      } catch {}
+      } catch (e) {
+        reportError("classifica:fetch-players", e);
+      }
       clearTimeout(safetyTimer);
       setPlayersLoading(false);
     };
@@ -275,7 +280,9 @@ export default function ClassificaPage() {
           .sort((a, b) => b.total_xp - a.total_xp);
         setAsdRankings(rankings);
       }
-    } catch {}
+    } catch (e) {
+      reportError("classifica:fetch-asd", e);
+    }
     setAsdLoading(false);
   };
 
@@ -836,7 +843,8 @@ function PerCorsoView({
         } else {
           setCoursePlayers([]);
         }
-      } catch {
+      } catch (e) {
+        reportError("classifica:fetch-per-corso", e);
         setCoursePlayers([]);
       }
       setLoading(false);
@@ -972,7 +980,8 @@ function PerGiocoView({
             (data as { user_id: string; display_name: string; best_score: number; games_played: number }[])
           );
         }
-      } catch {
+      } catch (e) {
+        reportError("classifica:fetch-per-gioco", e);
         setGamePlayers([]);
       }
       setLoading(false);

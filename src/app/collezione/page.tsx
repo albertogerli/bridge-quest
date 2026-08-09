@@ -12,6 +12,7 @@ import {
   type CollectibleCard,
   type PlayerStats,
 } from "@/lib/catalog";
+import { reportError } from "@/lib/report-error";
 
 /* ────────────────────────────────────────────── */
 /*  Types                                         */
@@ -102,7 +103,10 @@ export default function CollezionePage() {
         if (evaluateUnlock(card.unlock, s)) ids.add(card.id);
       }
       setUnlockedIds(ids);
-    } catch {}
+    } catch (e) {
+      // Non è un puro accesso localStorage: c'è parsing + valutazione sblocchi.
+      reportError("collezione:hydrate", e);
+    }
   }, [hydrated, cardsLoaded, collectibleCards]);
 
   /* derived */

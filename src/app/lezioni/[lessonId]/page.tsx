@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
+import { isModuleLocked } from "@/lib/progression";
 import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
@@ -220,9 +221,7 @@ export default function LessonDetailPage({
           {lesson.modules.map((module, index) => {
             const isCompleted = !!completedMap[`${lesson.id}-${module.id}`];
             const hasDraft = !!draftsMap[`${lesson.id}-${module.id}`] && !isCompleted;
-            // A module is locked if the previous module is not completed (first module is always unlocked)
-            const prevModule = index > 0 ? lesson.modules[index - 1] : null;
-            const isLocked = prevModule ? !completedMap[`${lesson.id}-${prevModule.id}`] : false;
+            const isLocked = isModuleLocked(lesson, index, completedMap);
 
             const typeConfig = {
               theory: { label: "Teoria", color: "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400", icon: "📖" },

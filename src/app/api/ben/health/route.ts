@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
-import { isAuthenticated } from "@/lib/ben-guard";
+import { getAuthUserId, rateLimit } from "@/lib/ben-guard";
 
 const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
 
 export async function GET() {
-  if (!(await isAuthenticated())) {
+  const userId = await getAuthUserId();
+  if (!userId) {
     return NextResponse.json({ available: false, error: "Non autenticato" }, { status: 401 });
+  }
+  if (!rateLimit(`ben-health:${userId}`, 30)) {
+    return NextResponse.json({ available: false, error: "Troppe richieste" }, { status: 429 });
   }
 
   const start = Date.now();

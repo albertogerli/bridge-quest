@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || "alberto@albertogerli.it";
@@ -20,17 +21,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
     }
 
-    let body: Record<string, unknown>;
+    let rawBody: unknown;
     try {
-      body = await req.json();
+      rawBody = await req.json();
     } catch {
       return NextResponse.json({ error: "Body non valido" }, { status: 400 });
     }
-    const message: string = typeof body.message === "string" ? body.message.slice(0, 2000) : "";
-    const asdCode: string | null =
-      typeof body.asdCode === "string" && body.asdCode.trim().length > 0
-        ? body.asdCode.trim().slice(0, 32)
-        : null;
+    const parsed = z
+      .object({
+        message: z.string().max(2000).optional(),
+        asdCode: z.string().trim().min(1).max(32).nullish(),
+      })
+      .safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Body non valido" }, { status: 400 });
+    }
+    const message = parsed.data.message ?? "";
+    const asdCode = parsed.data.asdCode ?? null;
 
     // Upsert so a rejected user can re-apply (resets to pending).
     const { error } = await supabase
