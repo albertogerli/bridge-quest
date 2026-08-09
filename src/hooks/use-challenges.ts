@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { reportError } from "@/lib/report-error";
 import { generateSeed } from "@/lib/hand-encoder";
 import { calculateBoardIMP } from "@/lib/bridge-scoring";
 
@@ -63,11 +64,13 @@ export function useChallenges() {
       const userId = await getUserId();
       if (!userId) return;
 
+      // La funzione richiede p_user_id: senza argomento PostgREST rispondeva
+      // 404 e le sfide ricevute non comparivano mai (bug in produzione).
       const { data: pending, error: pendingError } = await supabase
-        .rpc("get_pending_challenges");
+        .rpc("get_pending_challenges", { p_user_id: userId });
 
       if (pendingError) {
-        console.error("Failed to fetch pending challenges:", pendingError);
+        reportError("use-challenges:pending", pendingError);
       } else {
         setPendingChallenges((pending as ChallengeData[]) ?? []);
       }
@@ -281,39 +284,51 @@ export function useChallenges() {
   const getHistory = useCallback(
     async (limit?: number): Promise<ChallengeData[]> => {
       try {
+        const userId = await getUserId();
+        if (!userId) return [];
+        // Firma reale: (p_user_id uuid, p_limit int). Prima passava
+        // `result_limit` -> 404, storico sfide sempre vuoto.
         const { data, error } = await supabase.rpc("get_challenge_history", {
-          result_limit: limit ?? 50,
+          p_user_id: userId,
+          p_limit: limit ?? 50,
         });
 
         if (error) {
-          console.error("Failed to get challenge history:", error);
+          reportError("use-challenges:history", error);
           return [];
         }
 
         return (data as ChallengeData[]) ?? [];
       } catch (err) {
-        console.error("Failed to get challenge history:", err);
+        reportError("use-challenges:history", err);
         return [];
       }
     },
-    [supabase]
+    [supabase, getUserId]
   );
 
   const getStats = useCallback(async (): Promise<ChallengeStats | null> => {
     try {
-      const { data, error } = await supabase.rpc("get_challenge_stats");
+      const userId = await getUserId();
+      if (!userId) return null;
+      // Firma reale: (p_user_id uuid). Prima nessun argomento -> 404.
+      const { data, error } = await supabase.rpc("get_challenge_stats", {
+        p_user_id: userId,
+      });
 
       if (error) {
-        console.error("Failed to get challenge stats:", error);
+        reportError("use-challenges:stats", error);
         return null;
       }
 
-      return (data as ChallengeStats) ?? null;
+      // La funzione ritorna un set di una riga.
+      const row = Array.isArray(data) ? data[0] : data;
+      return (row as ChallengeStats) ?? null;
     } catch (err) {
-      console.error("Failed to get challenge stats:", err);
+      reportError("use-challenges:stats", err);
       return null;
     }
-  }, [supabase]);
+  }, [supabase, getUserId]);
 
   const findRandomOpponent = useCallback(
     async (boardCount: 1 | 4 | 8): Promise<string | null> => {

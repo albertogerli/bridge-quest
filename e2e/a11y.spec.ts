@@ -1,7 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dismissCookieBanner, login } from "./helpers";
 
 /**
  * Audit automatico di accessibilità (rilievo perizie 2026-08: nessun audit in CI).
@@ -22,30 +21,6 @@ const DISABLED_RULES: { id: string; why: string }[] = [
   // tinte badge/tab). Aggiungere una voce qui solo per falsi positivi REALI,
   // sempre con la motivazione in `why`.
 ];
-
-function testCreds(): { email: string; password: string } {
-  return JSON.parse(readFileSync(join(__dirname, ".test-user.json"), "utf8"));
-}
-
-/** Stesso flusso di smoke-auth.spec.ts (banner cookie incluso). */
-async function login(page: Page) {
-  const { email, password } = testCreds();
-  await page.goto("/login");
-  await dismissCookieBanner(page);
-  await page.getByPlaceholder("la-tua@email.com").fill(email);
-  await page.getByPlaceholder("La tua password").fill(password);
-  await page.locator('button[type="submit"]').click();
-  await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 30_000 });
-}
-
-/** Il banner cookie è un overlay fisso: va chiuso o falsa ogni scansione. */
-async function dismissCookieBanner(page: Page) {
-  const cookieBtn = page.getByRole("button", { name: "Accetta" });
-  if (await cookieBtn.isVisible().catch(() => false)) {
-    await cookieBtn.click();
-    await expect(cookieBtn).toBeHidden();
-  }
-}
 
 /**
  * Le sezioni animate con motion partono da `opacity: 0` e si rivelano solo
