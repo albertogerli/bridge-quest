@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
@@ -92,19 +91,6 @@ export default function ContaVelocePage() {
 
   const config = difficultyConfig[difficulty];
 
-  const startGame = useCallback((diff?: Difficulty) => {
-    if (diff) setDifficulty(diff);
-    setPhase("playing");
-    setRound(1);
-    setScore(0);
-    setStreak(0);
-    setBestStreak(0);
-    setTotalTime(0);
-    setRoundHistory([]);
-    setShowRecap(false);
-    nextHand();
-  }, []);
-
   const nextHand = useCallback(() => {
     const h = generateHand();
     setHand(h);
@@ -116,6 +102,20 @@ export default function ContaVelocePage() {
       setTimer(Math.floor((Date.now() - startTimeRef.current) / 100));
     }, 100);
   }, []);
+
+  const startGame = useCallback((diff?: Difficulty) => {
+    if (diff) setDifficulty(diff);
+    setPhase("playing");
+    setRound(1);
+    setScore(0);
+    setStreak(0);
+    setBestStreak(0);
+    setTotalTime(0);
+    setRoundHistory([]);
+    setShowRecap(false);
+    nextHand();
+  }, [nextHand]);
+
 
   const handleAnswer = useCallback((answer: number) => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -174,7 +174,7 @@ export default function ContaVelocePage() {
         nextHand();
       }
     }, 1500);
-  }, [correctHCP, round, score, streak, nextHand, config, play, saveGameResult, totalTime, bestStreak, difficulty]);
+  }, [correctHCP, hand, round, score, streak, nextHand, config, play, saveGameResult, totalTime, bestStreak, difficulty]);
 
   useEffect(() => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
@@ -188,6 +188,7 @@ export default function ContaVelocePage() {
     let attempts = 0;
     while (opts.size < numOptions && attempts < 200) {
       attempts++;
+      // eslint-disable-next-line react-hooks/purity -- opzioni di risposta casuali, memoizzate per mano: casualità intenzionale
       const offset = Math.floor(Math.random() * (spread * 2 + 1)) - spread;
       const val = correctHCP + offset;
       if (val >= 0 && val <= 37 && val !== correctHCP) opts.add(val);
@@ -199,6 +200,7 @@ export default function ContaVelocePage() {
     // Fisher-Yates shuffle to randomize position of correct answer
     const arr = Array.from(opts);
     for (let i = arr.length - 1; i > 0; i--) {
+      // eslint-disable-next-line react-hooks/purity -- shuffle memoizzato della posizione della risposta corretta: casualità intenzionale
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
@@ -265,7 +267,6 @@ export default function ContaVelocePage() {
 
   if (phase === "gameover") {
     const avgTime = (totalTime / config.rounds).toFixed(1);
-    const accuracy = Math.round((score / (config.rounds * 300)) * 100);
     const stars = score >= 2500 ? 3 : score >= 1500 ? 2 : score >= 500 ? 1 : 0;
 
     return (

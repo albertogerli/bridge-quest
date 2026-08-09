@@ -33,6 +33,18 @@ interface ModuleDraft {
   savedAt: string;
 }
 
+// Interactive quiz block types (scoring)
+const quizTypes = ["quiz", "true-false", "card-select", "hand-eval", "bid-select"];
+
+// Bridge-specific terms safe for auto-linking (no common Italian words)
+const GLOSSARY_AUTO_KEYS = [
+  "atout","dichiarante","morto","licita","fit","taglio","impasse",
+  "surtaglio","sottomano","rientro","onori","manche","slam","libro",
+  "bilanciata","forzante","ruff","eliminazione","squeeze","parziale",
+  "stayman","transfer","ducking","mazziere","vulnerabile","hold_up",
+  "cue_bid","presa_sicura","seme_lungo",
+] as const;
+
 function getDraftKey(lessonId: string, moduleId: string) {
   return `bq_module_draft_${lessonId}_${moduleId}`;
 }
@@ -125,7 +137,6 @@ export default function ModulePage({
   const [eliminated, setEliminated] = useState<Record<number, number[]>>({}); // 50/50: eliminated option indices per block
   const [xpMultiplier, setXpMultiplier] = useState(1); // streak multiplier
   const [showLevelUp, setShowLevelUp] = useState(false); // level up popup
-  const [showConfetti, setShowConfetti] = useState(false); // big confetti on completion
   const [showComprehension, setShowComprehension] = useState(true); // comprehension quiz gate
   const [floatingXp, setFloatingXp] = useState<{ id: number; amount: number; x: number; y: number }[]>([]); // flying XP
   const floatingXpId = useRef(0);
@@ -153,7 +164,7 @@ export default function ModulePage({
     stepEnteredAt.current = Date.now();
     const readTimer = setTimeout(() => setCanAdvance(true), MIN_READ_SECONDS * 1000);
     return () => clearTimeout(readTimer);
-  }, [currentStep, mod]);
+  }, [currentStep, mod, stepsViewed]);
 
   // Quiz timer for "giovane" profile
   useEffect(() => {
@@ -280,7 +291,6 @@ export default function ModulePage({
   }, [mod]);
 
   // Count quizzes for scoring (all interactive types)
-  const quizTypes = ["quiz", "true-false", "card-select", "hand-eval", "bid-select"];
   const totalQuizzes = useMemo(
     () => mod?.content.filter((b) => quizTypes.includes(b.type)).length ?? 0,
     [mod]
@@ -300,6 +310,64 @@ export default function ModulePage({
       }).length,
     [quizAnswers, mod]
   );
+
+  // NOTE: tutti gli hook devono precedere i return condizionali qui sotto (rules-of-hooks).
+  // Update XP multiplier based on streak
+  useEffect(() => {
+    if (correctStreak >= 5) setXpMultiplier(3);
+    else if (correctStreak >= 3) setXpMultiplier(2);
+    else setXpMultiplier(1);
+  }, [correctStreak]);
+
+  const handleStepAdvance = useCallback((nextStep: number) => {
+    setCurrentStep(nextStep);
+    // Scroll the newly-revealed block into view (not back to top) — previous
+    // blocks stay rendered, so jumping to the top would force re-scrolling.
+    requestAnimationFrame(() => {
+      const target = document.querySelector(
+        `[data-step-block="${nextStep}"]`
+      ) as HTMLElement | null;
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+    if (!stepsViewed.has(nextStep)) {
+      setStepsViewed((prev) => new Set(prev).add(nextStep));
+      // Award small XP for reading content
+      awardXp(5);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- awardXp è una funzione di modulo-componente ricreata a ogni render: includerla vanificherebbe la memoizzazione senza cambiare il comportamento
+  }, [stepsViewed]);
+
+  // Build term→key map once (catalog-backed)
+  const { glossary } = useGlossary();
+  const glossaryTermMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const key of GLOSSARY_AUTO_KEYS) {
+      const entry = glossary[key];
+      if (entry) map.set(entry.term.toLowerCase(), key);
+    }
+    return map;
+  }, [glossary]);
+
+  // Save and exit handler
+  const handleSaveAndExit = useCallback(() => {
+    saveDraft();
+    setSaveToast(true);
+    setTimeout(() => {
+      setSaveToast(false);
+      router.push(`/lezioni/${lessonId}`);
+    }, 800);
+  }, [saveDraft, router, lessonId]);
+
+
+
+  // Giovane: particles on correct answer
+  const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
+  const particleId = useRef(0);
+
+  // Senior: hint system
+  const [showHint, setShowHint] = useState<Record<number, boolean>>({});
 
   if (!catalogLoaded) {
     return (
@@ -350,12 +418,6 @@ export default function ModulePage({
 
   const isLessonComplete = !nextModule;
 
-  // Update XP multiplier based on streak
-  useEffect(() => {
-    if (correctStreak >= 5) setXpMultiplier(3);
-    else if (correctStreak >= 3) setXpMultiplier(2);
-    else setXpMultiplier(1);
-  }, [correctStreak]);
 
   const awardXp = (baseAmount: number) => {
     const amount = baseAmount * xpMultiplier;
@@ -392,24 +454,6 @@ export default function ModulePage({
     setTimeout(() => setAchievement(null), 2500);
   };
 
-  const handleStepAdvance = useCallback((nextStep: number) => {
-    setCurrentStep(nextStep);
-    // Scroll the newly-revealed block into view (not back to top) — previous
-    // blocks stay rendered, so jumping to the top would force re-scrolling.
-    requestAnimationFrame(() => {
-      const target = document.querySelector(
-        `[data-step-block="${nextStep}"]`
-      ) as HTMLElement | null;
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-    if (!stepsViewed.has(nextStep)) {
-      setStepsViewed((prev) => new Set(prev).add(nextStep));
-      // Award small XP for reading content
-      awardXp(5);
-    }
-  }, [stepsViewed]);
 
   const handleQuizAnswer = (blockIndex: number, answerIndex: number) => {
     const block = mod.content[blockIndex];
@@ -448,7 +492,7 @@ export default function ModulePage({
   };
 
   // Power-up: 50/50 - eliminate 2 wrong options
-  const useFiftyFifty = (blockIndex: number) => {
+  const consumeFiftyFifty = (blockIndex: number) => {
     const block = mod?.content[blockIndex];
     if (!block || !block.options || powerups.fiftyFifty <= 0) return;
     const correctIdx = block.correctAnswer ?? 0;
@@ -463,7 +507,7 @@ export default function ModulePage({
   };
 
   // Power-up: Skip question (auto-correct)
-  const useSkip = (blockIndex: number) => {
+  const consumeSkip = (blockIndex: number) => {
     const block = mod?.content[blockIndex];
     if (!block || powerups.skip <= 0) return;
     const correctIdx = block.correctAnswer ?? 0;
@@ -474,7 +518,7 @@ export default function ModulePage({
   };
 
   // Power-up: Extra Time (+15s)
-  const useExtraTime = () => {
+  const consumeExtraTime = () => {
     if (powerups.extraTime <= 0) return;
     setQuizTimer((prev) => prev + 15);
     setPowerups((prev) => ({ ...prev, extraTime: prev.extraTime - 1 }));
@@ -525,25 +569,7 @@ export default function ModulePage({
     });
   }
 
-  // Bridge-specific terms safe for auto-linking (no common Italian words)
-  const GLOSSARY_AUTO_KEYS = [
-    "atout","dichiarante","morto","licita","fit","taglio","impasse",
-    "surtaglio","sottomano","rientro","onori","manche","slam","libro",
-    "bilanciata","forzante","ruff","eliminazione","squeeze","parziale",
-    "stayman","transfer","ducking","mazziere","vulnerabile","hold_up",
-    "cue_bid","presa_sicura","seme_lungo",
-  ] as const;
 
-  // Build term→key map once (catalog-backed)
-  const { glossary } = useGlossary();
-  const glossaryTermMap = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const key of GLOSSARY_AUTO_KEYS) {
-      const entry = glossary[key];
-      if (entry) map.set(entry.term.toLowerCase(), key);
-    }
-    return map;
-  }, [glossary]);
 
   // Render text with both glossary tooltips and card symbols
   function renderEnrichedText(text: string) {
@@ -779,7 +805,7 @@ export default function ModulePage({
                 {powerups.fiftyFifty > 0 && block.options && block.options.length >= 4 && !eliminated[blockIndex] && (
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => useFiftyFifty(blockIndex)}
+                    onClick={() => consumeFiftyFifty(blockIndex)}
                     className="flex items-center gap-1.5 rounded-xl bg-violet-100 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-200 dark:bg-violet-900/40 dark:border-violet-800 dark:text-violet-300 dark:hover:bg-violet-900/60 transition-all"
                   >
                     <span className="text-sm">✂️</span> 50/50
@@ -788,7 +814,7 @@ export default function ModulePage({
                 {powerups.skip > 0 && (
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => useSkip(blockIndex)}
+                    onClick={() => consumeSkip(blockIndex)}
                     className="flex items-center gap-1.5 rounded-xl bg-blue-100 border border-blue-200 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/60 transition-all"
                   >
                     <span className="text-sm">⏭️</span> Salta
@@ -797,7 +823,7 @@ export default function ModulePage({
                 {profile.showTimer && powerups.extraTime > 0 && quizTimer > 0 && quizTimer <= 5 && (
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => useExtraTime()}
+                    onClick={() => consumeExtraTime()}
                     className="flex items-center gap-1.5 rounded-xl bg-green-100 border border-green-200 px-3 py-2 text-xs font-bold text-green-700 hover:bg-green-200 dark:bg-green-900/40 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/60 transition-all animate-pulse"
                   >
                     <span className="text-sm">⏰</span> +15s
@@ -1446,23 +1472,11 @@ export default function ModulePage({
     }
   };
 
-  // Save and exit handler
-  const handleSaveAndExit = useCallback(() => {
-    saveDraft();
-    setSaveToast(true);
-    setTimeout(() => {
-      setSaveToast(false);
-      router.push(`/lezioni/${lessonId}`);
-    }, 800);
-  }, [saveDraft, router, lessonId]);
 
-  // Giovane: particles on correct answer
-  const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
-  const particleId = useRef(0);
 
   const spawnParticles = () => {
     if (profile.profile !== "giovane") return;
-    const newParticles = Array.from({ length: 8 }, (_, i) => ({
+    const newParticles = Array.from({ length: 8 }, () => ({
       id: particleId.current++,
       x: 30 + Math.random() * 40,
       y: 20 + Math.random() * 30,
@@ -1471,8 +1485,6 @@ export default function ModulePage({
     setTimeout(() => setParticles((prev) => prev.filter((p) => !newParticles.includes(p))), 1200);
   };
 
-  // Senior: hint system
-  const [showHint, setShowHint] = useState<Record<number, boolean>>({});
 
   return (
     <div className="pt-6 px-5 pb-32">

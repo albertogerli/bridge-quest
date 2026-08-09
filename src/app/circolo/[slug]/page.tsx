@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { useAsdClubBySlug } from "@/store/use-asd-store";
-import { asdNameToSlug } from "@/lib/asd-utils";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
@@ -92,10 +91,12 @@ export default function CircoloPage() {
         const supabase = createClient();
 
         // Try to get current user if not already resolved via context
-        if (!currentUserId) {
+        // (local copy: the render-scope variable must not be reassigned here)
+        let resolvedUserId = currentUserId;
+        if (!resolvedUserId) {
           try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (user) currentUserId = user.id;
+            if (user) resolvedUserId = user.id;
           } catch {}
         }
 
@@ -146,6 +147,7 @@ export default function CircoloPage() {
     };
 
     fetchClubData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- currentUserId è solo un seed opzionale (fallback interno via getUser): includerlo rifarebbe il fetch del circolo a ogni cambio di sessione
   }, [asdCode]);
 
   // Club not found

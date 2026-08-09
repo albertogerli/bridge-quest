@@ -1,49 +1,30 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
-import { getCourseIdFromLessonId } from "@/data/lesson-meta";
 import { useProfile } from "@/hooks/use-profile";
 import {
   Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
   Target, Hash, Megaphone, MessageCircle, Brain, Swords,
   Spade, BookOpen, Link2, BarChart3, Radio
 } from "lucide-react";
-import { WeeklyChallengeBanner } from "@/components/weekly-challenge-banner";
-import { useGameStore } from "@/store/use-game-store";
 
 export default function GiocaPage() {
   const profile = useProfile();
   const [dailyDone, setDailyDone] = useState(false);
-  const handsPlayed = useGameStore((s) => s.handsPlayed);
   const [tournamentDone, setTournamentDone] = useState(false);
   const [onboarded, setOnboarded] = useState(false);
   const [randomIdx, setRandomIdx] = useState(0);
   const { smazzate: allSmazzate, playable: playableSmazzate, isLoaded } = useSmazzate();
 
-  // Per-course splits, recomputed only when catalog changes.
-  const { fioriSmazzate, quadriSmazzate, cuoriGiocoSmazzate } = useMemo(() => {
-    const byCourse: Record<string, typeof allSmazzate> = {
-      fiori: [], quadri: [], "cuori-gioco": [], "cuori-licita": [],
-    };
-    for (const s of allSmazzate) {
-      const cid = getCourseIdFromLessonId(s.lesson);
-      if (cid) byCourse[cid].push(s);
-    }
-    return {
-      fioriSmazzate: byCourse.fiori,
-      quadriSmazzate: byCourse.quadri,
-      cuoriGiocoSmazzate: byCourse["cuori-gioco"],
-    };
-  }, [allSmazzate]);
-
   useEffect(() => {
     if (!isLoaded) return;
     try {
       const today = new Date().toISOString().slice(0, 10);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
       // Pratica Libera: pesca da playable per evitare smazzate con HCP incoerenti.
       // Salviamo l'INDICE in playable, ma il routing usa allSmazzate: convertiamo.

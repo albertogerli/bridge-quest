@@ -84,6 +84,7 @@ export default function MiniBridgePage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- la smazzata iniziale usa Math.random: deve essere generata solo sul client dopo il mount (SSR-safe)
     newDeal();
 
   }, []);
@@ -351,6 +352,7 @@ function PlayStep({
       const xp = 30 + (humanWon ? 25 : 0) + (isDeclarer ? Math.max(0, res.result) * 8 : 0);
       // Repeatable practice XP: paid every game, capped per day (anti-grind).
       const awarded = awardPracticeXp("minibridge", xp, 250);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setXpEarned(awarded);
       try { localStorage.setItem("bq_minibridge_played", "1"); } catch {}
 

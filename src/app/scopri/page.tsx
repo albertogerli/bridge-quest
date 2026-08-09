@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Globe, ExternalLink, BookOpen, Trophy, Users, Brain,
@@ -66,14 +67,18 @@ export default function ScopriPage() {
             <div className="p-5">
               {/* Logos */}
               <div className="flex items-center justify-center gap-6 mb-5">
-                <img
+                <Image
                   src="/icons/logo-figb.png"
                   alt="FIGB - Federazione Italiana Gioco Bridge"
+                  width={400}
+                  height={355}
                   className="h-16 w-auto"
                 />
-                <img
+                <Image
                   src="/icons/logo-coni.png"
                   alt="CONI - Comitato Olimpico Nazionale Italiano"
+                  width={400}
+                  height={146}
                   className="h-12 w-auto"
                 />
               </div>

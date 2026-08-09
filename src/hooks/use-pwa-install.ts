@@ -39,6 +39,7 @@ export function usePwaInstall() {
     });
 
     return () => window.removeEventListener("beforeinstallprompt", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- listener globali registrati una sola volta al mount; isInstalled è solo un guard iniziale e ri-registrare duplicherebbe i listener
   }, []);
 
   const install = useCallback(async () => {

@@ -5,7 +5,7 @@
  * Extracted from official FIGB teaching materials (Commissione Insegnamento, settembre 2017)
  */
 
-import type { Suit, Rank, Position, Card } from "../lib/bridge-engine";
+import type { Rank, Position, Card } from "../lib/bridge-engine";
 
 type Vulnerability = "none" | "ns" | "ew" | "all";
 

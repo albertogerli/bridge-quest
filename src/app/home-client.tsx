@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { PrimaManoOnboarding } from "@/components/prima-mano-onboarding";
@@ -35,9 +35,9 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const stats = useLocalStats();
   const profile = useProfile();
-  const { reviewCount } = useSpacedReview();
+  useSpacedReview();
   const { checkReminders, scheduleReminder } = useNotifications();
-  const { isNewUser, isGuidedMode, isStuck, toggleGuidedMode, isOnboarded } = useBeginnerStatus();
+  const { isGuidedMode, isStuck, isOnboarded } = useBeginnerStatus();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [notOnboarded, setNotOnboarded] = useState(false);
   const [showWeeklyRecap, setShowWeeklyRecap] = useState(false);
@@ -49,6 +49,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
 
   useEffect(() => {
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setIsGuest(localStorage.getItem("bq_guest") === "1");
       if (!localStorage.getItem("bq_onboarded")) {
         setShowOnboarding(true);
@@ -75,6 +76,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         const current = snapshot();
         const currentStreak = useGameStore.getState().streak;
         if (lastSnapshot.xp !== undefined) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- confronto col precedente snapshot settimanale (localStorage), calcolabile solo sul client dopo il mount
           setWeeklyData({
             xpEarned: current.xp - (lastSnapshot.xp || 0),
             modulesCompleted: current.modules - (lastSnapshot.modules || 0),
@@ -110,10 +112,10 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     setShowOnboarding(false);
   };
 
-  const handleReferralBonus = useRef(() => {
+  const handleReferralBonus = useCallback(() => {
     setReferralToast(true);
     setTimeout(() => setReferralToast(false), 4000);
-  }).current;
+  }, []);
 
   // World summaries derived from the live catalog (Phase 3.3).
   // Memoised so the achievement checker doesn't re-trigger on unrelated state changes.
@@ -153,6 +155,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   });
 
   // Find next incomplete module for "Riprendi" CTA (search all courses)
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- il compiler non garantisce l'immutabilità delle dipendenze (dati del catalogo/derivati): salta solo l'ottimizzazione, la memo manuale resta corretta
   const nextModule = useMemo(() => {
     for (const course of courses) {
       for (const w of course.worlds) {

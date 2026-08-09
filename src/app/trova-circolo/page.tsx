@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { MapPin, Navigation, School, Filter, ChevronDown, ExternalLink, Phone } from "lucide-react";
+import { MapPin, Navigation, School, Filter, ChevronDown, ExternalLink } from "lucide-react";
 import { useAsdClubs } from "@/store/use-asd-store";
 import type { AsdClub } from "@/lib/catalog";
 import { asdNameToSlug } from "@/lib/asd-utils";
@@ -18,12 +18,6 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
     Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function formatDistance(km: number): string {
-  if (km < 1) return `${Math.round(km * 1000)} m`;
-  if (km < 10) return `${km.toFixed(1)} km`;
-  return `${Math.round(km)} km`;
 }
 
 function getMapsUrl(club: AsdClub): string {
@@ -66,6 +60,7 @@ export default function TrovaCircoloPage() {
 
   // Auto-request on mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- avvio geolocalizzazione al mount: lo stato di loading fa parte del flusso asincrono
     requestLocation();
   }, [requestLocation]);
 

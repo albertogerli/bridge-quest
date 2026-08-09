@@ -22,6 +22,7 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
       if (saved) {
         const data = JSON.parse(saved);
         if (data.date === today) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
           setDailyModules(data.modules || 0);
           setDailyHands(data.hands || 0);
           return;

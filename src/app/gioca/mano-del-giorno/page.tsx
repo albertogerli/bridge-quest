@@ -266,13 +266,16 @@ export default function ManoDelGiornoPage() {
 
   // Load state from localStorage after mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setMounted(true);
     setTodayResult(getDailyResult(today));
     setStreak(getDailyStreak());
     setTotal(getDailyTotal());
   }, [today]);
 
+  const todayHandContract = todayHand?.contract;
   const handleGameFinished = useCallback(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- il compiler non garantisce l'immutabilità delle dipendenze (dati del catalogo/derivati): salta solo l'ottimizzazione, la memo manuale resta corretta
     (tricks: number, resultDelta: number, made: boolean) => {
       const stars = calcStars(resultDelta);
       const baseXp =
@@ -297,7 +300,7 @@ export default function ManoDelGiornoPage() {
         saveGameResult({
           gameType: "mano-del-giorno",
           score: xpEarned,
-          details: { tricks, result: resultDelta, made, stars, date: today, contract: todayHand?.contract ?? "" },
+          details: { tricks, result: resultDelta, made, stars, date: today, contract: todayHandContract ?? "" },
         });
       }
 
@@ -305,7 +308,8 @@ export default function ManoDelGiornoPage() {
       setStreak(getDailyStreak());
       setTotal(getDailyTotal());
     },
-    [today, todayResult]
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- il compiler non garantisce l'immutabilità delle dipendenze (dati del catalogo/derivati): salta solo l'ottimizzazione, la memo manuale resta corretta
+    [today, todayResult, saveGameResult, todayHandContract]
   );
 
   // Need a loaded smazzate pool for everything below.
@@ -1012,6 +1016,7 @@ function PlayingView({
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
       play(game.result.result >= 0 ? 'contractMade' : 'contractFailed');
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setShowCelebration(true);
       // Save for AI analysis (both daily and yesterday)
       { const p = parseContract(smazzata.contract); saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: p.level, suit: p.trumpSuit, declarer: smazzata.declarer }, game.result); }
@@ -1046,7 +1051,7 @@ function PlayingView({
         });
       }
     }
-  }, [game.phase, game.result, isDaily, onFinish]);
+  }, [game.phase, game.result, game.gameState?.tricks, isDaily, onFinish, play, saveGameResult, smazzata.contract, smazzata.declarer, smazzata.hands, smazzata.id]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =

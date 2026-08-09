@@ -59,6 +59,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setIsFrozen(isStreakFrozenToday());
     setAvailableFiches(getAvailableFiches(xp));
     setFreezesRemaining(getFreezesRemaining());

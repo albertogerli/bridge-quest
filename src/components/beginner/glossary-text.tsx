@@ -177,9 +177,10 @@ export function GlossaryText({ children }: { children: ReactNode }) {
   const used = new Set<string>();
   let last = 0;
   let key = 0;
-  TERM_RE.lastIndex = 0;
+  // Istanza locale: evita di mutare lastIndex della regex condivisa a livello di modulo
+  const termRe = new RegExp(TERM_RE.source, TERM_RE.flags);
   let m: RegExpExecArray | null;
-  while ((m = TERM_RE.exec(text)) !== null) {
+  while ((m = termRe.exec(text)) !== null) {
     const surface = m[0];
     const gkey = SURFACE_TO_KEY[surface.toLowerCase()];
     if (!gkey || used.has(gkey)) continue;

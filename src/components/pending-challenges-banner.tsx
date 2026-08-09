@@ -7,7 +7,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { Swords, Check, X, ChevronRight, Clock } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface Challenge {
   id: string;
@@ -28,7 +27,6 @@ export function PendingChallengesBanner() {
   const { user } = useSharedAuth();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   const fetchChallenges = useCallback(async () => {
     if (!user) return;
@@ -90,6 +88,7 @@ export function PendingChallengesBanner() {
   // Initial fetch + polling
   useEffect(() => {
     if (!user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato aggiornato in risposta a un flusso asincrono (fetch/store): pattern legittimo
       setLoading(false);
       return;
     }

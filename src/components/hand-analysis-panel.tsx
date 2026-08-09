@@ -76,8 +76,6 @@ function analyzePlay(
   trickNumber: number
 ): PlayAnalysis {
   const { player, card } = play;
-  const isDefender = player !== declarer && player !== getPartner(declarer);
-  const leadSuit = trickCards[0].card.suit;
   const isLeader = playIndex === 0;
   const isSecondHand = playIndex === 1;
   const isThirdHand = playIndex === 2;
@@ -88,7 +86,7 @@ function analyzePlay(
 
   // Opening lead analysis (trick 1, first card)
   if (trickNumber === 0 && isLeader) {
-    if (hasSequence(card, trickCards)) {
+    if (hasSequence(card)) {
       grade = "good";
       commentary = `Ottima uscita dalla sequenza con ${card.rank}${SUIT_SYMBOLS[card.suit]}`;
     } else if (isHonor(card) && card.rank !== "A") {
@@ -124,7 +122,6 @@ function analyzePlay(
 
   // Third hand analysis
   if (isThirdHand) {
-    const currentWinner = getCurrentWinner(trickCards.slice(0, 2), trumpSuit);
     const partnerLeading = trickCards[0].player === getPartner(player);
     const highestPlayed = Math.max(...trickCards.slice(0, 2).map((p) => cardValue(p.card)));
 
@@ -179,7 +176,7 @@ function analyzePlay(
   };
 }
 
-function hasSequence(card: Card, allPlays: { player: string; card: Card }[]): boolean {
+function hasSequence(card: Card): boolean {
   // Simplified: check if rank is J or higher (sequence indicator)
   return isHonor(card) && cardValue(card) >= 11;
 }
@@ -245,7 +242,6 @@ function canWin(
 
 export function HandAnalysisPanel({
   tricks,
-  hands,
   contract,
   currentTrick,
 }: HandAnalysisPanelProps) {

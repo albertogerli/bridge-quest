@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -293,26 +293,27 @@ export default function ClassificaPage() {
   const nextLeague = leagues.find((l) => l.minXp > userXp);
 
   // Filter players by activity period
-  const now = new Date();
-  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-  const weeklyPlayers = useMemo(
-    () => allPlayers.filter((p) => new Date(p.updated_at) >= weekAgo),
-    [allPlayers]
-  );
+  const weeklyPlayers = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity -- cutoff temporale (ultimi 7 giorni) per il filtro attività: dipendenza dal tempo intenzionale
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    return allPlayers.filter((p) => new Date(p.updated_at) >= weekAgo);
+  }, [allPlayers]);
 
   // Search/filter by player name
   const [search, setSearch] = useState("");
   const q = search.trim().toLowerCase();
-  const playerMatches = (p: PlayerEntry) =>
-    p.name.toLowerCase().includes(q) || (p.asd_name ?? "").toLowerCase().includes(q);
+  const playerMatches = useCallback(
+    (p: PlayerEntry) =>
+      p.name.toLowerCase().includes(q) || (p.asd_name ?? "").toLowerCase().includes(q),
+    [q]
+  );
   const filteredGlobal = useMemo(
     () => (q ? allPlayers.filter(playerMatches) : allPlayers),
-    [allPlayers, q]
+    [allPlayers, q, playerMatches]
   );
   const filteredWeekly = useMemo(
     () => (q ? weeklyPlayers.filter(playerMatches) : weeklyPlayers),
-    [weeklyPlayers, q]
+    [weeklyPlayers, q, playerMatches]
   );
 
   const handleTabChange = (tab: TabId) => {

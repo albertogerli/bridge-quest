@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -148,6 +148,21 @@ export default function ImpassePage() {
     []
   );
 
+  // ── Round timer ─────────────────────────────────────────────
+  const startRoundTimer = useCallback((totalMs: number) => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setTimeLeft(totalMs);
+    roundStartRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      const elapsed = Date.now() - roundStartRef.current;
+      const remaining = Math.max(0, totalMs - elapsed);
+      setTimeLeft(remaining);
+      if (remaining <= 0) {
+        if (timerRef.current) clearInterval(timerRef.current);
+      }
+    }, 50);
+  }, []);
+
   // ── Start game ──────────────────────────────────────────────
   const startGame = useCallback(
     (diff?: Difficulty) => {
@@ -165,23 +180,9 @@ export default function ImpassePage() {
       setXpEarned(0);
       startRoundTimer(diffConfig[d].time);
     },
-    [difficulty, pickScenarios]
+    [difficulty, pickScenarios, startRoundTimer]
   );
 
-  // ── Round timer ─────────────────────────────────────────────
-  const startRoundTimer = useCallback((totalMs: number) => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setTimeLeft(totalMs);
-    roundStartRef.current = Date.now();
-    timerRef.current = setInterval(() => {
-      const elapsed = Date.now() - roundStartRef.current;
-      const remaining = Math.max(0, totalMs - elapsed);
-      setTimeLeft(remaining);
-      if (remaining <= 0) {
-        if (timerRef.current) clearInterval(timerRef.current);
-      }
-    }, 50);
-  }, []);
 
   // Cleanup
   useEffect(() => {
@@ -197,6 +198,42 @@ export default function ImpassePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, phase, feedback, scenarios.length]);
+
+  // ── End game ────────────────────────────────────────────────
+  const endGame = useCallback(
+    (lastWasCorrect: boolean) => {
+      const finalCorrect = correctCount + (lastWasCorrect ? 1 : 0);
+      const earned = Math.floor(finalCorrect * 12 * cfg.xpMult);
+      setXpEarned(earned);
+      setPhase("gameover");
+
+      useGameStore.getState().addXp(earned);
+      try {
+        // Save best score
+        const finalScore = score + (lastWasCorrect ? 120 : 0);
+        const prevBest = parseInt(
+          localStorage.getItem("bq_impasse_best") || "0",
+          10
+        );
+        if (finalScore > prevBest) {
+          localStorage.setItem("bq_impasse_best", String(finalScore));
+          setBestScore(finalScore);
+        }
+      } catch {}
+
+      // Sync to Supabase
+      saveGameResult({
+        gameType: "impasse",
+        score: earned,
+        details: {
+          correctAnswers: finalCorrect,
+          total: TOTAL_ROUNDS,
+          difficulty,
+        },
+      });
+    },
+    [correctCount, score, cfg.xpMult, saveGameResult, difficulty]
+  );
 
   // ── Handle answer ───────────────────────────────────────────
   const handleAnswer = useCallback(
@@ -244,44 +281,9 @@ export default function ImpassePage() {
         }
       }, 2200);
     },
-    [feedback, scenarios, round, cfg.time, streak, startRoundTimer]
+    [feedback, scenarios, round, cfg.time, streak, startRoundTimer, endGame]
   );
 
-  // ── End game ────────────────────────────────────────────────
-  const endGame = useCallback(
-    (lastWasCorrect: boolean) => {
-      const finalCorrect = correctCount + (lastWasCorrect ? 1 : 0);
-      const earned = Math.floor(finalCorrect * 12 * cfg.xpMult);
-      setXpEarned(earned);
-      setPhase("gameover");
-
-      useGameStore.getState().addXp(earned);
-      try {
-        // Save best score
-        const finalScore = score + (lastWasCorrect ? 120 : 0);
-        const prevBest = parseInt(
-          localStorage.getItem("bq_impasse_best") || "0",
-          10
-        );
-        if (finalScore > prevBest) {
-          localStorage.setItem("bq_impasse_best", String(finalScore));
-          setBestScore(finalScore);
-        }
-      } catch {}
-
-      // Sync to Supabase
-      saveGameResult({
-        gameType: "impasse",
-        score: earned,
-        details: {
-          correctAnswers: finalCorrect,
-          total: TOTAL_ROUNDS,
-          difficulty,
-        },
-      });
-    },
-    [correctCount, score, cfg.xpMult, saveGameResult, difficulty]
-  );
 
   // ── Current scenario ────────────────────────────────────────
   const scenario = scenarios[round];
@@ -337,7 +339,7 @@ export default function ImpassePage() {
               Impasse o Drop?
             </h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              Vedi la combinazione di carte: decidi in fretta se fare l'impasse o
+              Vedi la combinazione di carte: decidi in fretta se fare l&apos;impasse o
               giocare per il drop!
             </p>
 
@@ -355,11 +357,11 @@ export default function ImpassePage() {
                 </li>
                 <li>
                   <span className="font-bold text-blue-600 dark:text-blue-400">IMPASSE</span>{" "}
-                  = finesse verso l'onore mancante
+                  = finesse verso l&apos;onore mancante
                 </li>
                 <li>
                   <span className="font-bold text-amber-600 dark:text-amber-400">DROP</span>{" "}
-                  = gioca dall'alto sperando che cada
+                  = gioca dall&apos;alto sperando che cada
                 </li>
                 <li>
                   Hai pochi secondi per decidere! 15 mani per partita
@@ -370,7 +372,7 @@ export default function ImpassePage() {
             {/* Quick reference */}
             <div className="mt-4 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">
-                Regole d'oro
+                Regole d&apos;oro
               </h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
@@ -379,7 +381,7 @@ export default function ImpassePage() {
                 </li>
                 <li>
                   <span className="text-amber-600 dark:text-amber-400 font-bold">9 carte, manca Q</span>{" "}
-                  = DROP ("con 9, non finessare")
+                  = DROP (&quot;con 9, non finessare&quot;)
                 </li>
                 <li>
                   <span className="text-blue-600 dark:text-blue-400 font-bold">9 carte, manca K</span>{" "}
@@ -510,7 +512,7 @@ export default function ImpassePage() {
             {/* Recap hint */}
             <div className="mt-4 card-clean rounded-xl bg-blue-50 dark:bg-blue-950/40 p-3">
               <p className="text-xs text-blue-700 dark:text-blue-300 font-bold">
-                Ricorda: "con 8, impasse il Re" e "con 9, drop la Donna"
+                Ricorda: &quot;con 8, impasse il Re&quot; e &quot;con 9, drop la Donna&quot;
               </p>
             </div>
 
@@ -730,7 +732,7 @@ export default function ImpassePage() {
               </svg>
               <p className="text-xl font-bold">DROP</p>
               <p className="text-[10px] text-white/70 font-bold mt-1">
-                Gioca dall'alto
+                Gioca dall&apos;alto
               </p>
             </button>
           </motion.div>

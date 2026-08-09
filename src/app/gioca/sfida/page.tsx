@@ -140,6 +140,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
       play(game.result.result >= 0 ? 'contractMade' : 'contractFailed');
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setShowCelebration(true);
       const gameXp = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
       const dailyBonus = alreadyCompleted ? 0 : 40;
@@ -171,7 +172,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
         },
       });
     }
-  }, [game.phase, game.result, alreadyCompleted, saveGameResult]);
+  }, [game.phase, game.result, game.gameState?.tricks, alreadyCompleted, saveGameResult, play, smazzata.contract, smazzata.declarer, smazzata.hands]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =

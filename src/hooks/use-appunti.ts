@@ -19,6 +19,7 @@ export function useAppunti() {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       if (stored) setAppunti(JSON.parse(stored));
     } catch {}
   }, []);

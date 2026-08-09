@@ -166,6 +166,7 @@ export default function WrappedPage() {
       if (raw) {
         const records: GameRecord[] = JSON.parse(raw);
         const computed = calculateMonthStats(records);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setStats(computed);
       }
     } catch (e) {
@@ -527,6 +528,7 @@ function CountUp({ value }: { value: string | number }) {
 
   useEffect(() => {
     if (!isNumeric) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset dell’animazione count-up quando la prop non è numerica, prima di avviare il timer
       setCount(0);
       return;
     }

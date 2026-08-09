@@ -16,7 +16,7 @@ const FULL_DECK: Card[] = SUITS.flatMap(suit =>
 );
 
 const DEALER_MAP: string[] = ["north", "east", "south", "west"];
-const VULN_MAP: string[] = ["none", "ns", "ew", "both"];
+const VULN_MAP = ["none", "ns", "ew", "both"] as const;
 
 /**
  * Mulberry32 PRNG - fast, simple, deterministic
@@ -78,7 +78,7 @@ export function dealFromSeed(seed: string): {
   south: Card[];
   west: Card[];
   dealer: string;
-  vulnerability: string;
+  vulnerability: (typeof VULN_MAP)[number];
 } {
   const numericSeed = seedToNumber(seed);
   const rng = mulberry32(numericSeed);

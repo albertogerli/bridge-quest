@@ -11,6 +11,7 @@ interface ConfettiBurstProps {
   count?: number;
 }
 
+/* eslint-disable react-hooks/purity -- effetti di celebrazione decorativi (coriandoli/stelle): casualità intenzionale a ogni render */
 export function ConfettiBurst({
   trigger,
   colors = ['#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6', '#ec4899', '#10b981'],
@@ -149,11 +150,14 @@ interface ScreenFlashProps {
   color?: string;
 }
 
+/* eslint-enable react-hooks/purity */
+
 export function ScreenFlash({ trigger, color = 'rgb(251, 191, 36)' }: ScreenFlashProps) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (trigger) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- flash avviato dalla prop trigger con auto-spegnimento via timer: pattern evento→animazione
       setShow(true);
       const timer = setTimeout(() => setShow(false), 400);
       return () => clearTimeout(timer);

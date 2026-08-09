@@ -353,6 +353,7 @@ const defaultActives: Record<CategoryId, string> = {
 /*  Confetti particle component                    */
 /* ────────────────────────────────────────────── */
 
+/* eslint-disable react-hooks/purity -- particelle di coriandoli decorative: casualità intenzionale a ogni render */
 function ConfettiParticle({ index }: { index: number }) {
   const colors = ["#003DA5", "#FFD700", "#FF6B6B", "#4ADE80", "#A855F7", "#F59E0B"];
   const color = colors[index % colors.length];
@@ -390,6 +391,8 @@ function ConfettiParticle({ index }: { index: number }) {
   );
 }
 
+/* eslint-enable react-hooks/purity */
+
 /* ────────────────────────────────────────────── */
 /*  Main page                                      */
 /* ────────────────────────────────────────────── */
@@ -406,6 +409,7 @@ export default function NegozioPage() {
   // Load data from localStorage
   useEffect(() => {
     const f = getFiches();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setFichesState(f);
 
     const o = getOwnedItems();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef, Suspense } from "react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,7 @@ import {
   toGamePosition,
   partnershipOf,
   type Card,
+  type GameState,
   type Position,
 } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
@@ -60,14 +62,6 @@ function contractSuitChar(contract: string): "S" | "H" | "D" | "C" | "NT" {
     S: "S", H: "H", D: "D", C: "C", NT: "NT",
   };
   return map[stripped] ?? "NT";
-}
-
-/** Nome della posizione in italiano. */
-function positionLabel(pos: Position): string {
-  const labels: Record<Position, string> = {
-    north: "Nord", south: "Sud", east: "Est", west: "Ovest",
-  };
-  return labels[pos];
 }
 
 /** Formattazione del risultato della mano (es. "+1", "-2", "="). */
@@ -110,7 +104,7 @@ function SfidaIMPContent() {
   const isMobile = useMobile();
   const auth = useSharedAuth();
   const supabase = createClient();
-  const { submitResults, refresh: refreshChallenges } = useChallenges();
+  const { submitResults } = useChallenges();
 
   // ---------------------------------------------------------------------------
   // State
@@ -269,7 +263,7 @@ function SfidaIMPContent() {
     if (game.phase !== "finished" || !game.result || !boardContract || gameFinishedRef.current) return;
     gameFinishedRef.current = true;
 
-    const { tricksMade, tricksNeeded, result: trickDiff } = game.result;
+    const { tricksMade } = game.result;
 
     // Calculate raw score
     const suitChar = contractSuitChar(boardContract.contract);
@@ -345,26 +339,9 @@ function SfidaIMPContent() {
   }, [matchPhase, challenge, boardResults, isChallenger, submitResults, supabase]);
 
   // ---------------------------------------------------------------------------
-  // Compute match IMP results (when both sides have played)
-  // ---------------------------------------------------------------------------
-  const matchResult = useMemo(() => {
-    if (!challenge) return null;
-    const cResults = challenge.challenger_results;
-    const oResults = challenge.opponent_results;
-    if (!cResults || !oResults) return null;
-
-    const boards = cResults.map((cr, i) => ({
-      challengerScore: cr.rawScore,
-      opponentScore: oResults[i]?.rawScore ?? 0,
-    }));
-
-    return calculateMatchIMP(boards);
-  }, [challenge]);
-
-  // ---------------------------------------------------------------------------
   // Display helpers
   // ---------------------------------------------------------------------------
-  const displayHands = useCallback((gs: typeof game.gameState) => {
+  const displayHands = useCallback((gs: GameState | null) => {
     if (!gs) return null;
     return {
       north: gs.hands[toGamePosition("north" as Position, declarer)] as CardData[],
@@ -540,9 +517,11 @@ function SfidaIMPContent() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/15 text-2xl">
                     {opponentAvatar ? (
-                      <img
+                      <Image
                         src={opponentAvatar}
                         alt={opponentName}
+                        width={56}
+                        height={56}
                         className="w-full h-full rounded-full object-cover"
                       />
                     ) : (
@@ -887,7 +866,6 @@ function SfidaIMPContent() {
 
     // If we just submitted, use our local boardResults
     const myResults = isChallenger ? cResults : oResults;
-    const theirResults = isChallenger ? oResults : cResults;
 
     if (submitting) {
       return (

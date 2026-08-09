@@ -21,6 +21,7 @@ export function DidactaBanner() {
     if (now > DIDACTA_END) return;
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "claimed") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setClaimed(true);
     }
     if (stored === "dismissed") {

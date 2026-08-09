@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 
 const primaryNav = [
@@ -153,6 +152,7 @@ export function DesktopNav() {
     <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-card border-r border-border" aria-label="Navigazione principale">
       {/* Logo */}
       <div className="px-4 pt-4 pb-3">
+        {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
         <img src="/logo-bridgelab.svg" alt="BridgeLab - Impara il Bridge giocando" className="w-full h-10 object-contain object-left" />
       </div>
 

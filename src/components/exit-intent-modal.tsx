@@ -28,6 +28,7 @@ export function ExitIntentModal({
     if (open) {
       const today = new Date().toISOString().slice(0, 10);
       const stored = localStorage.getItem(`bq_hands_today_${today}`);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setHandsToday(stored ? parseInt(stored, 10) || 0 : 0);
     }
   }, [open]);

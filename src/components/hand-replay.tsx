@@ -35,7 +35,7 @@ const POSITION_LABELS: Record<string, string> = {
 
 type PlaySpeed = 1 | 2 | 4;
 
-export function HandReplay({ hands, tricks, contract, onTrickChange }: HandReplayProps) {
+export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
   const [currentPlay, setCurrentPlay] = useState(0); // 0-51 (13 tricks x 4 cards)
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState<PlaySpeed>(1);
@@ -75,6 +75,7 @@ export function HandReplay({ hands, tricks, contract, onTrickChange }: HandRepla
   useEffect(() => {
     if (!isPlaying || currentPlay >= totalPlays) {
       if (timerRef.current) clearTimeout(timerRef.current);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stop dell’autoplay quando il replay raggiunge la fine: transizione guidata dallo stato di riproduzione
       setIsPlaying(false);
       return;
     }
@@ -155,17 +156,6 @@ export function HandReplay({ hands, tricks, contract, onTrickChange }: HandRepla
         <div className="text-xs text-gray-500">{cards.length} carte</div>
       </div>
     );
-  };
-
-  // Position cards in center based on player position
-  const getCardPosition = (player: string) => {
-    const positions: Record<string, React.CSSProperties> = {
-      north: { top: "10%", left: "50%", transform: "translateX(-50%)" },
-      south: { bottom: "10%", left: "50%", transform: "translateX(-50%)" },
-      east: { right: "10%", top: "50%", transform: "translateY(-50%)" },
-      west: { left: "10%", top: "50%", transform: "translateY(-50%)" },
-    };
-    return positions[player] || positions.north;
   };
 
   return (

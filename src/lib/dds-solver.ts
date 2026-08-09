@@ -205,7 +205,7 @@ function getValidCardsSolver(hand: Card[], currentTrick: { playerIdx: number; ca
 // We pick the highest of each equivalence class.
 // ──────────────────────────────────────────────────────────────
 
-function deduplicateEquivalentCards(validCards: Card[], allRemainingCards: Card[], trumpSuit: Suit | null): Card[] {
+function deduplicateEquivalentCards(validCards: Card[], allRemainingCards: Card[]): Card[] {
   if (validCards.length <= 1) return validCards;
 
   // Group by suit
@@ -328,7 +328,7 @@ function minimax(
 
   // Deduplicate equivalent cards
   const allRemaining = state.hands.flat();
-  const candidates = deduplicateEquivalentCards(validCards, allRemaining, state.trumpSuit);
+  const candidates = deduplicateEquivalentCards(validCards, allRemaining);
 
   let bestValue = nsMaximizing ? -1 : 999;
 
@@ -477,7 +477,7 @@ function heuristicEstimate(
 export function solveDDS(request: DDSRequest): DDSResult {
   const startTime = Date.now();
   const timeout = request.timeout ?? DEFAULT_TIMEOUT;
-  const { trumpSuit, tricksNeeded } = parseContractDDS(request.contract);
+  const { trumpSuit } = parseContractDDS(request.contract);
   const declarerPartnership = partnershipOf(request.declarer);
 
   // Deep-clone hands
@@ -496,8 +496,6 @@ export function solveDDS(request: DDSRequest): DDSResult {
     // Default: left of declarer
     leader = NEXT_PLAYER[request.declarer];
   }
-
-  const cardsPerHand = hands.north.length;
 
   // If opening lead specified, play it first
   let currentTrick: { playerIdx: number; card: Card }[] = [];
@@ -694,7 +692,7 @@ export function selectBestCardDDS(request: DDSSelectRequest): DDSSelectResult {
   }
 
   const allRemaining = [...solverHands.flat(), ...currentTrick.map(t => t.card)];
-  const candidates = deduplicateEquivalentCards(validCards, allRemaining, trumpSuit);
+  const candidates = deduplicateEquivalentCards(validCards, allRemaining);
 
   // The current player's remaining tricks (including this one)
   const remainingTricks = hand.length;

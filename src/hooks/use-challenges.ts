@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { generateSeed, dealFromSeed } from "@/lib/hand-encoder";
-import { calculateBoardIMP, calculateMatchIMP, getIMPVerdict } from "@/lib/bridge-scoring";
+import { generateSeed } from "@/lib/hand-encoder";
+import { calculateBoardIMP } from "@/lib/bridge-scoring";
 
 export interface BoardResult {
   boardIndex: number;
@@ -244,8 +244,6 @@ export function useChallenges() {
               opponentTotalIMPs += boardIMP.opponentIMP;
             }
           }
-
-          const matchResult = calculateMatchIMP(boardScores);
 
           const { error: completeError } = await supabase
             .from("challenges")

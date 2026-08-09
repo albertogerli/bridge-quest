@@ -335,6 +335,7 @@ export default function SegnaliPage() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset della celebrazione sincronizzato al cambio di fase di gioco: non derivabile senza duplicare lo stato
     setShowCelebration(false);
   }, [phase]);
 

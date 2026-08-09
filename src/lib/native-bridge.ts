@@ -6,14 +6,32 @@
  * npm imports so the web build doesn't need Capacitor dependencies.
  */
 
+type CapacitorGlobal = {
+  isNativePlatform?: () => boolean;
+  getPlatform?: () => string;
+  Plugins?: {
+    Haptics?: {
+      impact?: (opts: { style: string }) => Promise<void>;
+      notification?: (opts: { type: string }) => Promise<void>;
+    };
+    StatusBar?: {
+      setStyle?: (opts: { style: string }) => Promise<void>;
+    };
+  };
+};
+
+function getCapacitor(): CapacitorGlobal | undefined {
+  return (window as Window & { Capacitor?: CapacitorGlobal }).Capacitor;
+}
+
 export function isNativeApp(): boolean {
   if (typeof window === "undefined") return false;
-  return !!(window as any).Capacitor?.isNativePlatform?.();
+  return !!getCapacitor()?.isNativePlatform?.();
 }
 
 export function isIOS(): boolean {
   if (typeof window === "undefined") return false;
-  return (window as any).Capacitor?.getPlatform?.() === "ios";
+  return getCapacitor()?.getPlatform?.() === "ios";
 }
 
 export type Platform = "ios" | "android" | "pwa" | "web";
@@ -21,7 +39,7 @@ export type Platform = "ios" | "android" | "pwa" | "web";
 /** Detect the platform the user is currently running on. */
 export function getPlatform(): Platform {
   if (typeof window === "undefined") return "web";
-  const cap = (window as any).Capacitor;
+  const cap = getCapacitor();
   if (cap?.isNativePlatform?.()) {
     const p = cap.getPlatform?.();
     if (p === "ios") return "ios";
@@ -40,7 +58,7 @@ export function getPlatform(): Platform {
 export async function hapticTap() {
   if (!isNativeApp()) return;
   try {
-    const Haptics = (window as any).Capacitor?.Plugins?.Haptics;
+    const Haptics = getCapacitor()?.Plugins?.Haptics;
     await Haptics?.impact?.({ style: "Light" });
   } catch {}
 }
@@ -49,7 +67,7 @@ export async function hapticTap() {
 export async function hapticSuccess() {
   if (!isNativeApp()) return;
   try {
-    const Haptics = (window as any).Capacitor?.Plugins?.Haptics;
+    const Haptics = getCapacitor()?.Plugins?.Haptics;
     await Haptics?.notification?.({ type: "SUCCESS" });
   } catch {}
 }
@@ -58,7 +76,7 @@ export async function hapticSuccess() {
 export async function hapticError() {
   if (!isNativeApp()) return;
   try {
-    const Haptics = (window as any).Capacitor?.Plugins?.Haptics;
+    const Haptics = getCapacitor()?.Plugins?.Haptics;
     await Haptics?.notification?.({ type: "ERROR" });
   } catch {}
 }
@@ -67,7 +85,7 @@ export async function hapticError() {
 export async function configureStatusBar() {
   if (!isNativeApp()) return;
   try {
-    const StatusBar = (window as any).Capacitor?.Plugins?.StatusBar;
+    const StatusBar = getCapacitor()?.Plugins?.StatusBar;
     await StatusBar?.setStyle?.({ style: "Dark" });
   } catch {}
 }

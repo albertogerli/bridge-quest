@@ -97,6 +97,15 @@ export default function PraticaLicitaPage() {
 
   const dCfg = diffConfig[difficulty];
 
+  const startTimer = () => {
+    setTimer(0);
+    startRef.current = Date.now();
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setTimer(Math.floor((Date.now() - startRef.current) / 100));
+    }, 100);
+  };
+
   const startGame = useCallback(
     (diff?: Difficulty) => {
       const d = diff || difficulty;
@@ -126,20 +135,13 @@ export default function PraticaLicitaPage() {
     [difficulty]
   );
 
-  const startTimer = () => {
-    setTimer(0);
-    startRef.current = Date.now();
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setTimer(Math.floor((Date.now() - startRef.current) / 100));
-    }, 100);
-  };
 
   // Shuffle options once per scenario so they don't jump around
   const shuffledOptions = useMemo(() => {
     if (!scenarios[roundIdx]) return [];
     const s = scenarios[roundIdx];
     const all = [s.correctBid, ...s.wrongBids];
+    // eslint-disable-next-line react-hooks/purity -- shuffle memoizzato delle opzioni (una volta per scenario): casualità intenzionale
     return all.sort(() => Math.random() - 0.5);
   }, [scenarios, roundIdx]);
 
@@ -153,6 +155,7 @@ export default function PraticaLicitaPage() {
     setShowFeedback(true);
 
     if (isCorrect) {
+      // eslint-disable-next-line react-hooks/purity -- handler di risposta utente: misura il tempo di reazione, non eseguito durante il render
       const speed = (Date.now() - startRef.current) / 1000;
       const speedBonus = Math.max(0, Math.floor(150 - speed * 15));
       const streakBonus = streak * 15;

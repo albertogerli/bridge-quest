@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Share2, ArrowLeft } from "lucide-react";
 import { HandReplay } from "@/components/hand-replay";
 import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
-import type { Card, Position } from "@/lib/bridge-engine";
+import type { Card } from "@/lib/bridge-engine";
 
 interface GameData {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
@@ -69,6 +69,7 @@ function AnalisiPage() {
       }
 
       if (data) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setGameData(data);
       }
     } catch (err) {
@@ -133,7 +134,7 @@ Gioca su bridgelab.it`;
             Nessuna mano da analizzare
           </h1>
           <p className="text-muted-foreground mb-6">
-            Completa una mano nel gioco per vedere l'analisi dettagliata.
+            Completa una mano nel gioco per vedere l&apos;analisi dettagliata.
           </p>
           <Link
             href="/gioca"

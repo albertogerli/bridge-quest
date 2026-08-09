@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -77,9 +78,10 @@ export default function ForumPage() {
       setPosts([]);
     }
     setLoading(false);
-  }, [category, sortBy]);
+  }, [category, sortBy, supabase]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato aggiornato in risposta a un flusso asincrono (fetch/store): pattern legittimo
     fetchPosts();
   }, [fetchPosts]);
 
@@ -209,7 +211,7 @@ export default function ForumPage() {
                         {/* Avatar */}
                         <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
                           {post.profiles?.avatar_url ? (
-                            <img src={post.profiles.avatar_url} alt="Avatar utente" className="h-full w-full object-cover" />
+                            <Image src={post.profiles.avatar_url} alt="Avatar utente" width={36} height={36} className="h-full w-full object-cover" />
                           ) : (
                             (post.profiles?.display_name || "?")[0].toUpperCase()
                           )}

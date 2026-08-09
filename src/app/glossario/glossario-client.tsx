@@ -367,13 +367,6 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
       setQuizTimerActive(false);
       setQuizFinished(true);
 
-      // Award bonuses
-      const correctCount = quizHistory.filter((a) => a.correct).length +
-        (quizSelected !== null && quizSelected !== -1 && quizShuffled
-          ? quizSelected === quizShuffled.correctIndex
-            ? 1
-            : 0
-          : 0);
       // Re-count from the complete history which is already updated
       // bonuses will be calculated in the results screen
       return;
@@ -389,7 +382,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
     setQuizSelected(null);
     setQuizTimer(TIMER_SECONDS);
     setQuizTimerActive(true);
-  }, [quizIndex, quizTerms, quizHistory, quizSelected, quizShuffled]);
+  }, [quizIndex, quizTerms]);
 
   // Quiz results calculations
   const quizResults = useMemo(() => {
@@ -1192,6 +1185,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                                           inlineShuffled?.correctIndex
                                             ? profile.correctMessages[
                                                 Math.floor(
+                                                  // eslint-disable-next-line react-hooks/purity -- messaggio di feedback pescato a caso: varietà intenzionale
                                                   Math.random() *
                                                     profile.correctMessages
                                                       .length

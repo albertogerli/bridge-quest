@@ -22,7 +22,6 @@ import {
   validateSmazzate,
   type Smazzata,
 } from "@/lib/catalog";
-import type { CourseId } from "@/lib/catalog";
 
 // ─── State + actions ─────────────────────────────────────────────────────
 

@@ -95,6 +95,7 @@ export default function CollezionePage() {
     if (!hydrated || !cardsLoaded) return;
     try {
       const s = loadPlayerStats();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setStats(s);
       setSeenCards(loadSeenCards());
 

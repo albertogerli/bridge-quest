@@ -117,7 +117,6 @@ export function BridgeTable({
   eastFaceDown = true,
   westFaceDown = true,
   currentTrick = [],
-  contract,
   declarer,
   dummy,
   trickCount = { ns: 0, ew: 0 },

@@ -144,6 +144,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
       if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
       if (trickTimerRef.current) clearTimeout(trickTimerRef.current);
       if (claimTimerRef.current) clearTimeout(claimTimerRef.current);
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- cleanup solo allo smontaggio: deve leggere il valore corrente del ref (abort), non una copia catturata al mount
       if (abortRef.current) abortRef.current.abort();
     };
   }, []);

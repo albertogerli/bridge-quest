@@ -178,6 +178,7 @@ export function useWeeklyObjectives() {
   }, [state]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     loadProgress();
   }, [loadProgress]);
 

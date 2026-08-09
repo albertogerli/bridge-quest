@@ -26,6 +26,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
 
   // Update timer every minute
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setMounted(true);
     setProgress(getWeeklyChallengeProgress(challenge));
     const updateTimer = () => {
@@ -142,7 +143,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
             className="mt-3 bg-white/20 backdrop-blur-sm rounded-xl p-3 flex items-center gap-2"
           >
             <Trophy className="h-5 w-5 text-yellow-300" />
-            <span className="font-semibold">Sfida completata! Badge "{challenge.badgeName}" sbloccato!</span>
+            <span className="font-semibold">Sfida completata! Badge &quot;{challenge.badgeName}&quot; sbloccato!</span>
           </motion.div>
         )}
       </div>

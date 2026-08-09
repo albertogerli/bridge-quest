@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -22,12 +23,11 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "motion/react";
-import { useRouter } from "next/navigation";
 import {
   Spade, BookOpen, Target, Flame, Trophy, Star, Crown, GraduationCap,
   Globe, Medal, CheckCircle2, Zap, BookOpenCheck, BarChart3,
   Gamepad2, Coffee, Coins, Share2, UserPlus, Check, Copy, MessageCircle, Send,
-  Sparkles, Snowflake, Clock, TrendingUp
+  Sparkles, Clock, TrendingUp
 } from "lucide-react";
 import { StreakFreezeCard } from "@/components/streak-freeze-card";
 import { useChallenges, type ChallengeData, type ChallengeStats } from "@/hooks/use-challenges";
@@ -41,7 +41,6 @@ import { toast } from "sonner";
 const BQ_KEYS_PREFIX = "bq_";
 
 export default function ProfiloPage() {
-  const router = useRouter();
   const { user, profile: authProfile, loading: authLoading, signOut, updateProfile, uploadAvatar, refreshProfile } = useSharedAuth();
   const { courses } = useCatalog();
   const allWorlds = useMemo(() => courses.flatMap((c) => c.worlds), [courses]);
@@ -378,15 +377,6 @@ export default function ProfiloPage() {
   ];
   const earnedCount = badges.filter((b) => b.earned).length;
 
-  const stats = [
-    { label: "Moduli completati", value: String(totalModulesCompleted), icon: <BookOpen className="w-5 h-5 text-indigo-500" /> },
-    { label: "Mani giocate", value: String(handsPlayed), icon: <Spade className="w-5 h-5 text-foreground/80" /> },
-    { label: "Completamento", value: `${completionPercent}%`, icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" /> },
-    { label: "XP totali", value: String(xp), icon: <Zap className="w-5 h-5 text-amber-500" /> },
-    { label: "Streak attuale", value: String(streak), icon: <Flame className="w-5 h-5 text-orange-500" /> },
-    { label: "Mondi completati", value: `${worldsCompleted}/${totalWorldsCount}`, icon: <Globe className="w-5 h-5 text-blue-500" /> },
-  ];
-
   return (
     <div className="pt-6 px-5">
       <div className="mx-auto max-w-6xl">
@@ -422,7 +412,7 @@ export default function ProfiloPage() {
         >
           <Avatar className={`h-18 w-18 shadow-lg shadow-figb/20 ${cosmetics.avatarFrame || ""}`}>
             {user && authProfile?.avatar_url ? (
-              <img src={authProfile.avatar_url} alt="Foto profilo" className="h-18 w-18 rounded-full object-cover" />
+              <Image src={authProfile.avatar_url} alt="Foto profilo" width={72} height={72} className="h-18 w-18 rounded-full object-cover" />
             ) : (
               <AvatarFallback className="h-18 w-18 bg-figb text-white text-2xl font-bold">
                 {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "?"}
@@ -1043,9 +1033,10 @@ export default function ProfiloPage() {
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                       {editAvatarPreview ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- anteprima locale (data URL) dal file input: next/image non la ottimizza
                         <img src={editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
                       ) : authProfile?.avatar_url ? (
-                        <img src={authProfile.avatar_url} alt="Foto profilo" className="h-full w-full object-cover" />
+                        <Image src={authProfile.avatar_url} alt="Foto profilo" width={64} height={64} className="h-full w-full object-cover" />
                       ) : (
                         <span className="text-2xl">{(authProfile?.display_name || "B")[0].toUpperCase()}</span>
                       )}

@@ -37,6 +37,7 @@ export function useDailyFieldStats(
 
   useEffect(() => {
     if (!user?.id || myResult === null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset dello stato prima del fetch asincrono dei dati di campo
       setStats(null);
       return;
     }

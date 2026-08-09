@@ -280,6 +280,7 @@ export default function TorneoSettimanale() {
   const playable = usePlayableSmazzate();
   const tournamentHands = useMemo(
     () => getTournamentHands(playable, weekNum, TOURNAMENT_HAND_COUNT),
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- weekNum è derivato dalla data: il compiler salta solo l'ottimizzazione, la memo manuale resta corretta
     [playable, weekNum]
   );
 
@@ -295,6 +296,7 @@ export default function TorneoSettimanale() {
   const [inProgressCount, setInProgressCount] = useState(0);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setMounted(true);
     setExistingResult(getTournamentResult(weekNum));
     setInProgressCount(getTournamentProgress(weekNum)?.handResults.length ?? 0);
@@ -302,6 +304,7 @@ export default function TorneoSettimanale() {
   }, [weekNum, isPlaying]);
 
   const handleTournamentFinished = useCallback(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- weekNum è derivato dalla data: il compiler salta solo l'ottimizzazione, la memo manuale resta corretta
     (result: TournamentResult) => {
       setExistingResult(result);
       saveTournamentResult(result);
@@ -315,6 +318,7 @@ export default function TorneoSettimanale() {
       // Refresh leaderboard
       fetchLeaderboard(weekNum).then((lb) => setLeaderboard(lb));
     },
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- weekNum è derivato dalla data: il compiler salta solo l'ottimizzazione, la memo manuale resta corretta
     [weekNum]
   );
 
@@ -853,7 +857,6 @@ function TournamentPlayView({
           (s, r) => s + r.tricksNeeded,
           0
         );
-        const totalDelta = totalTricks - totalNeeded;
 
         // Calculate XP: 30 base per hand + 20 if made + 10 per overtrick + 150 tournament bonus
         const handXp = newResults.reduce((sum, r) => {
@@ -1276,7 +1279,6 @@ function SingleHandView({
   onFinish,
   onBack,
   isMobile,
-  profile,
 }: {
   smazzata: Smazzata;
   handNumber: number;

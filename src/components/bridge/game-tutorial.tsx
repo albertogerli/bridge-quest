@@ -109,6 +109,7 @@ export function GameTutorial() {
   useEffect(() => {
     try {
       if (localStorage.getItem(STORAGE_KEY) !== "true") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setVisible(true);
       }
     } catch {

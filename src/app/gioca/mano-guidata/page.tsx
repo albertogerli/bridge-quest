@@ -23,7 +23,7 @@ import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
-import { ArrowLeft, Target, Swords, CheckCircle2, ChevronRight } from "lucide-react";
+import { ArrowLeft, Target, CheckCircle2, ChevronRight } from "lucide-react";
 
 function isHandCompleted(handId: number): boolean {
   try {
@@ -242,9 +242,10 @@ function GuidedGameplay({
     const hint = hand.hints.find((h) => h.trick === trickNum);
     if (hint && !shownHints.current.has(trickNum)) {
       shownHints.current.add(trickNum);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- suggerimento mostrato in reazione all’avanzamento asincrono della partita (guard su ref)
       setActiveHint(hint.text);
     }
-  }, [game.phase, game.gameState?.trickCount.ns, game.gameState?.trickCount.ew, hand.hints]);
+  }, [game.phase, game.gameState, hand.hints]);
 
   const handlePlayCard = (displayPosition: string, cardIndex: number) => {
     if (!game.gameState) return;
@@ -291,6 +292,7 @@ function GuidedGameplay({
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
       play(game.result.result >= 0 ? "contractMade" : "contractFailed");
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setShowCelebration(true);
       const xp = 25 + (game.result.result >= 0 ? 10 : 0);
       awardGameXp(`guided-hand-${hand.id}`, xp);

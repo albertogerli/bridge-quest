@@ -5,7 +5,7 @@
  * 5 hands per week, played directly in-page with progress tracking
  */
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +36,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
-import { ArrowLeft, Trophy, Zap, Clock, Play, CheckCircle2, Target } from "lucide-react";
+import { ArrowLeft, Trophy, Zap, Clock, Play, CheckCircle2 } from "lucide-react";
 
 const HANDS_PER_WEEK = 5;
 
@@ -64,6 +64,7 @@ export default function SfidaSettimanale() {
   const weeklyHands = getWeeklySmazzate(playable);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setMounted(true);
     setProgress(getWeeklyChallengeProgress(challenge));
     const updateTimer = () => setTimeRemaining(getTimeRemainingInWeek());
@@ -268,7 +269,7 @@ export default function SfidaSettimanale() {
             >
               <Trophy className="h-12 w-12 mx-auto mb-3 text-yellow-300" />
               <h2 className="text-xl font-bold mb-1">Sfida Completata!</h2>
-              <p className="text-white/80 text-base mb-2">Badge "{challenge.badgeName}" sbloccato</p>
+              <p className="text-white/80 text-base mb-2">Badge &quot;{challenge.badgeName}&quot; sbloccato</p>
               <p className="text-sm text-white/60">
                 XP totali: {progress.xpEarned} XP
               </p>
@@ -353,6 +354,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
     if (game.phase === "finished" && game.result && !xpSaved.current) {
       xpSaved.current = true;
       play(game.result.result >= 0 ? "contractMade" : "contractFailed");
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setShowCelebration(true);
 
       const baseXp = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
@@ -382,7 +384,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
       // Notify parent after a short delay
       setTimeout(() => onFinish(game.result!.result, multipliedXp), 2500);
     }
-  }, [game.phase, game.result, challenge, handNumber, saveGameResult, onFinish, play]);
+  }, [game.phase, game.result, game.gameState?.tricks, challenge, handNumber, saveGameResult, onFinish, play, smazzata.contract, smazzata.declarer, smazzata.hands]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =

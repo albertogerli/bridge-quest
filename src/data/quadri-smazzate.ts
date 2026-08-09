@@ -16,8 +16,7 @@
  * Lesson 12: Interventi e riaperture
  */
 
-import type { Suit, Rank, Card, Position } from "../lib/bridge-engine";
-import type { Vulnerability, BiddingData } from "./smazzate";
+import type { Suit, Rank, Card } from "../lib/bridge-engine";
 import { toQuadriLessonId } from "./lesson-meta";
 
 // Re-export the Smazzata type

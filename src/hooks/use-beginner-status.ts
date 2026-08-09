@@ -34,6 +34,7 @@ export function useBeginnerStatus() {
   // Load from localStorage
   useEffect(() => {
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setOnboardedDate(localStorage.getItem("bq_onboarded_date") || null);
       setOnboardedFlag(localStorage.getItem("bq_onboarded") === "1");
       setGuidedSteps(readJSON<number[]>("bq_guided_steps", []));

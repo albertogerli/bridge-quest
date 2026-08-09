@@ -20,7 +20,9 @@ import { configureStatusBar } from "@/lib/native-bridge";
 const FULL_SCREEN_ROUTES = ["/login", "/admin"];
 
 /** Routes accessible without authentication */
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita"];
+// /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi
+// arriva da Google veniva rimbalzato al login e il lavoro SEO era vanificato.
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
@@ -50,6 +52,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem("bq_profile") as UserProfile | null;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       if (stored) setProfile(stored);
     } catch {}
 

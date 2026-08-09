@@ -240,22 +240,6 @@ export default function QuizLampoPage() {
 
   // ===== Timer countdown =====
 
-  const startTimer = useCallback(() => {
-    setTimeLeft(TIMER_SECONDS);
-    questionStartRef.current = Date.now();
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      const elapsed = (Date.now() - questionStartRef.current) / 1000;
-      const remaining = Math.max(0, TIMER_SECONDS - elapsed);
-      setTimeLeft(remaining);
-      if (remaining <= 0) {
-        if (timerRef.current) clearInterval(timerRef.current);
-        // Time's up - treat as wrong answer
-        handleTimeout();
-      }
-    }, 50);
-  }, []);
-
   // Timeout handler (wrapped in ref to avoid stale closures)
   const handleTimeoutRef = useRef<() => void>(() => {});
 
@@ -340,6 +324,52 @@ export default function QuizLampoPage() {
     [difficulty, allQuestions]
   );
 
+  // ===== Advance to next question or game over =====
+
+  const advanceQuestion = useCallback(
+    () => {
+      const cfg = difficultyConfig[difficulty];
+      const nextIdx = currentIdx + 1;
+
+      if (nextIdx >= cfg.rounds || nextIdx >= questions.length) {
+        // Game over - calculate XP
+        // We need final tallies. Use functional state to get latest values.
+        setPhase("gameover");
+
+        // Calculate stars to determine celebration level and sound
+        const finalPct = correctCount / cfg.rounds;
+        const finalStars = finalPct >= 0.9 ? 3 : finalPct >= 0.65 ? 2 : finalPct >= 0.4 ? 1 : 0;
+        play(finalStars >= 2 ? 'success' : 'error');
+        setShowCelebration(true);
+
+        // Calculate XP from current accumulated state
+        // We'll compute it in a useEffect that watches phase === 'gameover'
+      } else {
+        setCurrentIdx(nextIdx);
+        setSelectedIdx(null);
+        setShowResult(false);
+        lockedRef.current = false;
+
+        // Start timer for next question
+        setTimeout(() => {
+          setTimeLeft(TIMER_SECONDS);
+          questionStartRef.current = Date.now();
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = setInterval(() => {
+            const elapsed = (Date.now() - questionStartRef.current) / 1000;
+            const remaining = Math.max(0, TIMER_SECONDS - elapsed);
+            setTimeLeft(remaining);
+            if (remaining <= 0) {
+              if (timerRef.current) clearInterval(timerRef.current);
+              handleTimeout();
+            }
+          }, 50);
+        }, 200);
+      }
+    },
+    [difficulty, currentIdx, questions.length, correctCount, play]
+  );
+
   // ===== Handle answer =====
 
   const handleAnswer = useCallback(
@@ -388,58 +418,13 @@ export default function QuizLampoPage() {
       // so they can actually read the explanation (it used to vanish in 1.8s).
       if (isCorrect) {
         setTimeout(() => {
-          advanceQuestion(true, remaining);
+          advanceQuestion();
         }, 1800);
       }
     },
-    [questions, currentIdx, combo, showResult]
+    [questions, currentIdx, combo, showResult, advanceQuestion, play]
   );
 
-  // ===== Advance to next question or game over =====
-
-  const advanceQuestion = useCallback(
-    (wasCorrectAnswer: boolean, timeRemainingAtAnswer: number) => {
-      const cfg = difficultyConfig[difficulty];
-      const nextIdx = currentIdx + 1;
-
-      if (nextIdx >= cfg.rounds || nextIdx >= questions.length) {
-        // Game over - calculate XP
-        // We need final tallies. Use functional state to get latest values.
-        setPhase("gameover");
-
-        // Calculate stars to determine celebration level and sound
-        const finalPct = correctCount / cfg.rounds;
-        const finalStars = finalPct >= 0.9 ? 3 : finalPct >= 0.65 ? 2 : finalPct >= 0.4 ? 1 : 0;
-        play(finalStars >= 2 ? 'success' : 'error');
-        setShowCelebration(true);
-
-        // Calculate XP from current accumulated state
-        // We'll compute it in a useEffect that watches phase === 'gameover'
-      } else {
-        setCurrentIdx(nextIdx);
-        setSelectedIdx(null);
-        setShowResult(false);
-        lockedRef.current = false;
-
-        // Start timer for next question
-        setTimeout(() => {
-          setTimeLeft(TIMER_SECONDS);
-          questionStartRef.current = Date.now();
-          if (timerRef.current) clearInterval(timerRef.current);
-          timerRef.current = setInterval(() => {
-            const elapsed = (Date.now() - questionStartRef.current) / 1000;
-            const remaining = Math.max(0, TIMER_SECONDS - elapsed);
-            setTimeLeft(remaining);
-            if (remaining <= 0) {
-              if (timerRef.current) clearInterval(timerRef.current);
-              handleTimeout();
-            }
-          }, 50);
-        }, 200);
-      }
-    },
-    [difficulty, currentIdx, questions.length]
-  );
 
   // ===== Calculate XP when game ends =====
 
@@ -478,6 +463,7 @@ export default function QuizLampoPage() {
         maxCombo,
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- effetto fire-once al gameover: aggiungere score/saveGameResult ecc. lo rieseguirebbe accreditando XP due volte
   }, [phase]);
 
   // ===== Current question =====
@@ -1120,7 +1106,7 @@ export default function QuizLampoPage() {
               )}
               {!wasCorrect && (
                 <button
-                  onClick={() => advanceQuestion(false, 0)}
+                  onClick={() => advanceQuestion()}
                   className="mt-3 ml-7 rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-red-700"
                 >
                   Continua →

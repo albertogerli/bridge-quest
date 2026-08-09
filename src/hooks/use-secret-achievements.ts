@@ -81,19 +81,6 @@ export function useSecretAchievements() {
     []
   );
 
-  useEffect(() => {
-    // Load earned achievements from localStorage
-    const stored = localStorage.getItem("bq_secret_achievements");
-    const earned = stored ? JSON.parse(stored) : [];
-    setEarnedSecretAchievements(earned);
-
-    // Check for new achievements on mount
-    const newlyUnlocked = checkAchievements(earned);
-    if (newlyUnlocked.length > 0) {
-      setNewAchievements(newlyUnlocked);
-    }
-  }, []);
-
   const checkAchievements = (
     passedEarned?: string[]
   ): SecretAchievement[] => {
@@ -245,6 +232,21 @@ export function useSecretAchievements() {
 
     return newlyUnlocked;
   };
+
+  useEffect(() => {
+    // Load earned achievements from localStorage
+    const stored = localStorage.getItem("bq_secret_achievements");
+    const earned = stored ? JSON.parse(stored) : [];
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
+    setEarnedSecretAchievements(earned);
+
+    // Check for new achievements on mount
+    const newlyUnlocked = checkAchievements(earned);
+    if (newlyUnlocked.length > 0) {
+      setNewAchievements(newlyUnlocked);
+    }
+  }, []);
+
 
   const earnedSecretAchievementObjects = SECRET_ACHIEVEMENTS.filter((a) =>
     earnedSecretAchievements.includes(a.id)

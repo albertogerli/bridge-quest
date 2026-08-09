@@ -42,6 +42,7 @@ function useCountdown(): TimeLeft {
 
   useEffect(() => {
     // Sync immediately on mount
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync del countdown al mount per evitare hydration mismatch SSR (orario del client)
     setTimeLeft(calcTimeLeft());
 
     const id = setInterval(() => {
@@ -70,6 +71,7 @@ function useIsInactive(): boolean {
     try {
       const raw = localStorage.getItem("bq_last_activity");
       if (!raw) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setInactive(false);
         return;
       }

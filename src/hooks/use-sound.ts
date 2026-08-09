@@ -27,6 +27,7 @@ export function useSound() {
 
   // Sincronizza lo stato con l'audioManager all'avvio
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync con il singleton audioManager (client-only) dopo il mount
     setEnabled(audioManager.isEnabled());
     setVolume(audioManager.getVolume());
   }, []);
