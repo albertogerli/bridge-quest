@@ -1,4 +1,8 @@
 -- ============================================================================
+-- STATO: RISOLTO il 2026-08-09 con l'opzione (B), senza DDL: la route
+--   POST /api/account/delete elimina l'utente di auth con la service role e
+--   la cascata copre tutto. Verificato su utenti di prova: 9 righe su 8
+--   tabelle -> 0. Nessuna RLS allentata. File conservato come documentazione.
 -- BridgeLab: dati che sopravvivono all'eliminazione dell'account
 --
 -- PROBLEMA (rilevato il 2026-08-09 rifattorizzando /profilo)

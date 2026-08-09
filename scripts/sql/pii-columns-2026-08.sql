@@ -1,4 +1,9 @@
 -- ============================================================================
+-- STATO: APPLICATO in produzione il 2026-08-09 (migrazioni Supabase
+--   `pii_access_functions` e `pii_columns_revoke`). Verificato con
+--   `npm run test:rls`. Conservato come documentazione della decisione.
+--   NB: `last_login` e' di tipo `date`, non timestamptz: le firme applicate
+--   differiscono da quelle abbozzate qui sotto.
 -- BridgeLab: isolamento delle colonne personali di `profiles`
 -- (rilievo perizie 2026-08, misurato con `npm run test:rls`)
 --

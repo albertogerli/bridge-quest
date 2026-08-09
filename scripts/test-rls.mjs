@@ -131,14 +131,28 @@ try {
     else ok(`${t}: righe altrui non leggibili`);
   }
 
-  // Il proprio profilo deve restare completamente leggibile (serve all'app)
-  const { data: own, error: ownErr } = await user
+  // Il proprio profilo deve restare completamente leggibile, ma NON con una
+  // SELECT diretta: i privilegi di colonna valgono per ruolo e non per riga,
+  // quindi dopo la revoca l'unica via è la RPC SECURITY DEFINER.
+  const { data: own, error: ownErr } = await user.rpc("get_own_profile");
+  const ownRow = Array.isArray(own) ? own[0] : own;
+  if (!ownErr && ownRow?.marketing_consent !== undefined) {
+    ok("get_own_profile(): il proprio profilo è leggibile per intero");
+  } else {
+    fail(
+      `get_own_profile() non restituisce il profilo completo (${ownErr?.message ?? "colonne mancanti"}) — rompe use-auth`
+    );
+  }
+
+  // Corollario: la SELECT diretta di tutte le colonne DEVE fallire, altrimenti
+  // la revoca non è attiva.
+  const { error: rawErr } = await user
     .from("profiles")
     .select("*")
     .eq("id", testUserId)
     .single();
-  if (!ownErr && own) ok("profiles: il proprio profilo è leggibile per intero (select *)");
-  else fail(`profiles: il proprio profilo NON è leggibile (${ownErr?.message}) — rompe use-auth`);
+  if (rawErr) ok("profiles: select(*) diretta negata anche sulla propria riga (atteso)");
+  else fail("profiles: select(*) diretta ancora permessa — la revoca delle colonne non è attiva");
 } catch (e) {
   fail(`verifica autenticata non eseguita: ${e.message}`);
 } finally {

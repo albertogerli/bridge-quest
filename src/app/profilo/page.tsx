@@ -81,33 +81,22 @@ export default function ProfiloPage() {
   const handleDeleteAccount = useCallback(async () => {
     setDeleting(true);
     try {
-      const supabase = (await import("@/lib/supabase/client")).createClient();
-      if (user?.id) {
-        // Cancellazione dei dati personali. `profiles` va per ultimo: le
-        // tabelle che lo referenziano (login_history, email_events,
-        // tournament_results) spariscono a cascata.
-        //
-        // NB: le colonne sono `challenger_id`/`opponent_id`. Prima la seconda
-        // delete usava `challenged_id`, colonna inesistente: falliva in
-        // silenzio e le sfide RICEVUTE restavano nel database.
-        const deletions: Array<[string, PromiseLike<{ error: unknown }>]> = [
-          ["completed_modules", supabase.from("completed_modules").delete().eq("user_id", user.id)],
-          ["badges", supabase.from("badges").delete().eq("user_id", user.id)],
-          ["review_items", supabase.from("review_items").delete().eq("user_id", user.id)],
-          ["challenges:challenger", supabase.from("challenges").delete().eq("challenger_id", user.id)],
-          ["challenges:opponent", supabase.from("challenges").delete().eq("opponent_id", user.id)],
-          ["friendships:user", supabase.from("friendships").delete().eq("user_id", user.id)],
-          ["friendships:friend", supabase.from("friendships").delete().eq("friend_id", user.id)],
-          ["profiles", supabase.from("profiles").delete().eq("id", user.id)],
-        ];
-
-        for (const [table, query] of deletions) {
-          const { error } = await query;
-          // Un fallimento non deve restare invisibile: senza questo, dati
-          // personali sopravvivono a un'eliminazione dichiarata completa.
-          if (error) reportError(`profilo:delete-account:${table}`, error);
-        }
+      // La cancellazione avviene lato server (POST /api/account/delete):
+      // elimina l'utente di autenticazione e, per cascata, TUTTI i dati
+      // collegati. Dal client non era possibile: `game_results` e `challenges`
+      // dipendono da auth.users e le RLS delle partite non prevedono DELETE,
+      // quindi restavano in produzione dopo un'eliminazione dichiarata totale.
+      const res = await fetch("/api/account/delete", { method: "POST" });
+      if (!res.ok) {
+        // Nessun logout: l'account esiste ancora, dirlo è più onesto che
+        // far sparire l'utente lasciandogli i dati nel database.
+        reportError("profilo:delete-account", new Error(`HTTP ${res.status}`));
+        toast.error("Eliminazione account non riuscita. Riprova.");
+        setDeleting(false);
+        setShowDeleteConfirm(false);
+        return;
       }
+
       // Clear all local data
       const keys = Object.keys(localStorage).filter((k) => k.startsWith(BQ_KEYS_PREFIX));
       keys.forEach((k) => localStorage.removeItem(k));
@@ -120,7 +109,8 @@ export default function ProfiloPage() {
       setDeleting(false);
       setShowDeleteConfirm(false);
     }
-  }, [user, signOut]);
+    // `user` non serve più: l'id da eliminare lo ricava il server dalla sessione.
+  }, [signOut]);
 
   const handleInvite = useCallback(async () => {
     const { outcome, xpAwarded } = await shareInvite(user?.id);
