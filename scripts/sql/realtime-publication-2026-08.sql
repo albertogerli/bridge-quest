@@ -1,4 +1,9 @@
 -- ============================================================================
+-- STATO: APPLICATO in produzione il 2026-08-09 (migrazione Supabase
+--   `realtime_publication_friendships_challenges`). Verificato empiricamente:
+--   una subscription postgres_changes su friendships riceve ora gli eventi.
+--   NB: il servizio Realtime tiene in cache la publication — dopo l'ALTER
+--   servono alcuni minuti prima che gli eventi comincino ad arrivare.
 -- BridgeLab: abilitare Supabase Realtime su amicizie e sfide
 --
 -- PERCHÉ
