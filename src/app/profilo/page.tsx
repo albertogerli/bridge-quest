@@ -83,15 +83,30 @@ export default function ProfiloPage() {
     try {
       const supabase = (await import("@/lib/supabase/client")).createClient();
       if (user?.id) {
-        // Delete user data from all tables
-        await supabase.from("completed_modules").delete().eq("user_id", user.id);
-        await supabase.from("badges").delete().eq("user_id", user.id);
-        await supabase.from("review_items").delete().eq("user_id", user.id);
-        await supabase.from("challenges").delete().eq("challenger_id", user.id);
-        await supabase.from("challenges").delete().eq("challenged_id", user.id);
-        await supabase.from("friendships").delete().eq("user_id", user.id);
-        await supabase.from("friendships").delete().eq("friend_id", user.id);
-        await supabase.from("profiles").delete().eq("id", user.id);
+        // Cancellazione dei dati personali. `profiles` va per ultimo: le
+        // tabelle che lo referenziano (login_history, email_events,
+        // tournament_results) spariscono a cascata.
+        //
+        // NB: le colonne sono `challenger_id`/`opponent_id`. Prima la seconda
+        // delete usava `challenged_id`, colonna inesistente: falliva in
+        // silenzio e le sfide RICEVUTE restavano nel database.
+        const deletions: Array<[string, PromiseLike<{ error: unknown }>]> = [
+          ["completed_modules", supabase.from("completed_modules").delete().eq("user_id", user.id)],
+          ["badges", supabase.from("badges").delete().eq("user_id", user.id)],
+          ["review_items", supabase.from("review_items").delete().eq("user_id", user.id)],
+          ["challenges:challenger", supabase.from("challenges").delete().eq("challenger_id", user.id)],
+          ["challenges:opponent", supabase.from("challenges").delete().eq("opponent_id", user.id)],
+          ["friendships:user", supabase.from("friendships").delete().eq("user_id", user.id)],
+          ["friendships:friend", supabase.from("friendships").delete().eq("friend_id", user.id)],
+          ["profiles", supabase.from("profiles").delete().eq("id", user.id)],
+        ];
+
+        for (const [table, query] of deletions) {
+          const { error } = await query;
+          // Un fallimento non deve restare invisibile: senza questo, dati
+          // personali sopravvivono a un'eliminazione dichiarata completa.
+          if (error) reportError(`profilo:delete-account:${table}`, error);
+        }
       }
       // Clear all local data
       const keys = Object.keys(localStorage).filter((k) => k.startsWith(BQ_KEYS_PREFIX));
