@@ -189,6 +189,7 @@ export function useHasHydrated(): boolean {
   useEffect(() => {
     // If hydration already finished before this effect ran, sync immediately.
     if (useGameStore.persist.hasHydrated()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync del flag di idratazione zustand-persist dopo il mount: pattern anti hydration mismatch
       setHydrated(true);
       return;
     }

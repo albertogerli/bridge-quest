@@ -1668,9 +1668,7 @@ export const cuoriGiocoWorlds: World[] = [
     icon: "🎯",
     gradient: "from-red-500 to-rose-500",
     iconBg: "bg-red-100",
-    lessons: [
-      { ...({} as any) }, // placeholder, replaced below
-    ] as any,
+    lessons: [], // placeholder, replaced below
   },
   {
     id: 11,
@@ -1679,7 +1677,7 @@ export const cuoriGiocoWorlds: World[] = [
     icon: "🧠",
     gradient: "from-rose-500 to-pink-500",
     iconBg: "bg-rose-100",
-    lessons: [] as any,
+    lessons: [],
   },
   {
     id: 12,
@@ -1688,7 +1686,7 @@ export const cuoriGiocoWorlds: World[] = [
     icon: "🏆",
     gradient: "from-pink-500 to-red-700",
     iconBg: "bg-pink-100",
-    lessons: [] as any,
+    lessons: [],
   },
 ];
 

@@ -1,75 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useStats } from "@/hooks/use-local-stats";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { useCollectibleCards } from "@/store/use-collectible-cards-store";
-import { evaluateUnlock } from "@/lib/catalog";
 import { useProfile } from "@/hooks/use-profile";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { DailyCountdown } from "@/components/daily-countdown";
-
-const miniGames = [
-  { href: "/gioca/minibridge", emoji: "🎓", label: "MiniBridge", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
-  { href: "/gioca/mano-del-giorno", emoji: "🎯", label: "Mano del Giorno", color: "bg-blue-50 border-blue-200 text-blue-700" },
-  { href: "/gioca/quiz-lampo", emoji: "⚡", label: "Quiz Lampo", color: "bg-rose-50 border-rose-200 text-rose-700" },
-  { href: "/gioca/trova-errore", emoji: "🔍", label: "Trova l'Errore", color: "bg-orange-50 border-orange-200 text-orange-700" },
-  { href: "/gioca/impasse", emoji: "🎲", label: "Impasse o Drop?", color: "bg-indigo-50 border-indigo-200 text-indigo-700" },
-  { href: "/gioca/conta-veloce", emoji: "🔢", label: "Conta Veloce", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
-  { href: "/gioca/dichiara", emoji: "📢", label: "Dichiara!", color: "bg-amber-50 border-amber-200 text-amber-700" },
-  { href: "/gioca/pratica-licita", emoji: "🗣️", label: "Pratica Licita", color: "bg-teal-50 border-teal-200 text-teal-700" },
-  { href: "/gioca/memory", emoji: "🧠", label: "Memory", color: "bg-purple-50 border-purple-200 text-purple-700" },
-  { href: "/glossario", emoji: "📖", label: "Glossario", color: "bg-sky-50 border-sky-200 text-sky-700" },
-  { href: "/guida", emoji: "❓", label: "Guida", color: "bg-slate-50 border-slate-200 text-slate-700" },
-];
-
-// Objective icon mapping for sidebar
-const objectiveEmojiMap: Record<string, string> = {
-  quiz: "📝",
-  hands: "🃏",
-  xp: "⭐",
-  modules: "📚",
-  streak: "🔥",
-  minigames: "🎮",
-  daily: "📅",
-  perfect: "💯",
-};
 
 export function DesktopSidebar() {
   const stats = useStats();
   const profile = useProfile();
-  const { user, signOut, profile: authProfile } = useSharedAuth();
-  const isInstructor = authProfile?.role === "instructor" || authProfile?.role === "admin";
-  const isAdmin = authProfile?.role === "admin";
-  const { reviewCount } = useSpacedReview();
-  const { objectives, allCompleted, bonusClaimed } = useWeeklyObjectives();
-  const { cards: collectibleCards } = useCollectibleCards();
-
-  const playerStats = (() => {
-    let badges: string[] = [];
-    let quizLampoBest = 0;
-    let memoryBest = 0;
-    let dailyHandsTotal = 0;
-    try {
-      badges = JSON.parse(localStorage.getItem("bq_badges") || "[]");
-      quizLampoBest = parseInt(localStorage.getItem("bq_quiz_lampo_best") || "0", 10);
-      memoryBest = parseInt(localStorage.getItem("bq_memory_best") || "0", 10);
-      dailyHandsTotal = parseInt(localStorage.getItem("bq_daily_hand_total") || "0", 10);
-    } catch {}
-    return {
-      xp: stats.xp,
-      streak: stats.streak,
-      handsPlayed: stats.handsPlayed,
-      completedModules: stats.totalModulesCompleted,
-      badges,
-      quizLampoBest,
-      memoryBest,
-      dailyHandsTotal,
-    };
-  })();
-  const unlockedCards = collectibleCards.filter((c) => evaluateUnlock(c.unlock, playerStats));
-  const totalCards = collectibleCards.length;
+  const { user, signOut } = useSharedAuth();
+  useSpacedReview();
+  useWeeklyObjectives();
+  useCollectibleCards();
 
   return (
     <aside className="hidden lg:block w-[320px] shrink-0" aria-label="Barra laterale">
@@ -212,8 +158,8 @@ export function DesktopSidebar() {
         {/* FIGB + CONI logos */}
         <div className="rounded-xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/20 p-4 text-center space-y-3">
           <div className="flex items-center justify-center gap-4">
-            <img src="/icons/logo-figb.png" alt="FIGB" className="h-10 w-auto" />
-            <img src="/icons/logo-coni.png" alt="CONI - Disciplina Sportiva Associata" className="h-8 w-auto" />
+            <Image src="/icons/logo-figb.png" alt="FIGB" width={400} height={355} className="h-10 w-auto" />
+            <Image src="/icons/logo-coni.png" alt="CONI - Disciplina Sportiva Associata" width={400} height={146} className="h-8 w-auto" />
           </div>
           <div>
             <p className="text-[10px] font-medium text-figb dark:text-primary uppercase tracking-wider">

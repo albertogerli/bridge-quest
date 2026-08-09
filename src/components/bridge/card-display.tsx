@@ -192,7 +192,6 @@ export function CardDisplay({
 export function HandDiagram({
   cards,
   label,
-  position,
 }: {
   cards: string;
   label?: string;

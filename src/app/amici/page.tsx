@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { useFriends } from "@/hooks/use-friends";
@@ -234,9 +235,11 @@ export default function AmiciPage() {
                   <div className="flex items-center gap-3">
                     {/* Avatar */}
                     {friendship.profile.avatar_url ? (
-                      <img
+                      <Image
                         src={friendship.profile.avatar_url}
                         alt={friendship.profile.display_name || "Giocatore"}
+                        width={44}
+                        height={44}
                         className="h-11 w-11 rounded-xl object-cover border border-border"
                       />
                     ) : (
@@ -334,9 +337,11 @@ export default function AmiciPage() {
                       <div className="flex items-center gap-3">
                         {/* Avatar */}
                         {request.profile.avatar_url ? (
-                          <img
+                          <Image
                             src={request.profile.avatar_url}
                             alt={request.profile.display_name || "Giocatore"}
+                            width={44}
+                            height={44}
                             className="h-11 w-11 rounded-xl object-cover border border-border"
                           />
                         ) : (
@@ -406,9 +411,11 @@ export default function AmiciPage() {
                       <div className="flex items-center gap-3">
                         {/* Avatar */}
                         {request.profile.avatar_url ? (
-                          <img
+                          <Image
                             src={request.profile.avatar_url}
                             alt={request.profile.display_name || "Giocatore"}
+                            width={44}
+                            height={44}
                             className="h-11 w-11 rounded-xl object-cover border border-border"
                           />
                         ) : (
@@ -522,9 +529,11 @@ export default function AmiciPage() {
                     <div className="flex items-center gap-3">
                       {/* Avatar */}
                       {result.avatar_url ? (
-                        <img
+                        <Image
                           src={result.avatar_url}
                           alt={result.display_name || "Giocatore"}
+                          width={44}
+                          height={44}
                           className="h-11 w-11 rounded-xl object-cover border border-border"
                         />
                       ) : (

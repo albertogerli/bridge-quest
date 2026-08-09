@@ -101,6 +101,7 @@ export function useShopCosmetics(): ShopCosmetics {
       const cardStyle = (activeCard && CARD_BACK_STYLES[activeCard]) || DEFAULT_CARD_BACK;
       const tableStyle = (activeTable && TABLE_BG_STYLES[activeTable]) || DEFAULT_TABLE_BG;
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setCosmetics({
         avatarFrame: activeFrame ? (AVATAR_FRAME_STYLES[activeFrame] || null) : null,
         cardBackGradient: cardStyle.gradient,

@@ -55,7 +55,6 @@ function shuffleArray<T>(arr: T[]): T[] {
 export default function MemoryPage() {
   const prof = useProfile();
   const isSenior = prof.profile === "senior";
-  const isGiovane = prof.profile === "giovane";
   const { play } = useSound();
   const { saveGameResult } = useGameResults();
   const [showCelebration, setShowCelebration] = useState(false);
@@ -78,6 +77,7 @@ export default function MemoryPage() {
   useEffect(() => {
     try {
       const bt = localStorage.getItem("bq_memory_best");
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       if (bt) setBestTime(parseInt(bt, 10));
     } catch {}
   }, []);
@@ -111,6 +111,17 @@ export default function MemoryPage() {
     lockRef.current = false;
     setPhase("playing");
   }, []);
+
+  const getXP = (pairs: number, totalMoves: number, time: number): number => {
+    let xp = pairs * 10; // base
+    const perfect = pairs; // minimum moves = pairs
+    const efficiency = Math.max(0, 1 - (totalMoves - perfect) / (perfect * 3));
+    xp += Math.round(efficiency * 30);
+    // Speed bonus
+    if (time < pairs * 8) xp += 20;
+    else if (time < pairs * 15) xp += 10;
+    return xp;
+  };
 
   const handleCardClick = useCallback((cardId: number) => {
     if (lockRef.current) return;
@@ -180,18 +191,8 @@ export default function MemoryPage() {
         }, isSenior ? 1200 : 800);
       }
     }
-  }, [flipped, matched, cards, moves, timer, isSenior, saveGameResult]);
+  }, [flipped, matched, cards, moves, timer, isSenior, saveGameResult, play]);
 
-  const getXP = (pairs: number, totalMoves: number, time: number): number => {
-    let xp = pairs * 10; // base
-    const perfect = pairs; // minimum moves = pairs
-    const efficiency = Math.max(0, 1 - (totalMoves - perfect) / (perfect * 3));
-    xp += Math.round(efficiency * 30);
-    // Speed bonus
-    if (time < pairs * 8) xp += 20;
-    else if (time < pairs * 15) xp += 10;
-    return xp;
-  };
 
   const getStars = (): number => {
     const pairs = cards.length / 2;

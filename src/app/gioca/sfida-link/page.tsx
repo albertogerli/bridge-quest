@@ -74,6 +74,7 @@ function SfidaLinkContent() {
   useEffect(() => {
     if (seedParam) {
       // Challenge mode: seed provided in URL
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- inizializzazione da parametro URL al mount (client-only, generazione deal dal seed)
       setSeed(seedParam);
       const generatedDeal = dealFromSeed(seedParam);
       setDeal(generatedDeal);
@@ -117,7 +118,7 @@ function SfidaLinkContent() {
     declarer,
     playerPositions: [declarer, dummyGamePos],
     dealer: deal?.dealer as Position,
-    vulnerability: deal?.vulnerability as any,
+    vulnerability: deal?.vulnerability,
   });
 
   // Handle game start
@@ -132,7 +133,6 @@ function SfidaLinkContent() {
     if (game.phase === "finished" && game.result && !xpSaved.current && seed) {
       xpSaved.current = true;
 
-      const tricksNeeded = game.result.tricksNeeded;
       const tricksMade = game.result.tricksMade;
       const contractMade = game.result.result >= 0;
       const score = contractMade ? 100 + game.result.result * 30 : -50 * Math.abs(game.result.result);
@@ -144,6 +144,7 @@ function SfidaLinkContent() {
       const gameXp = 30 + (contractMade ? 20 : 0) + Math.max(0, game.result.result) * 10;
       awardGameXp(`sfida-link-${seed}`, gameXp);
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setMode("finished");
     }
   }, [game.phase, game.result, seed]);
@@ -479,7 +480,7 @@ function SfidaLinkContent() {
               currentTrick={displayTrick}
               contract={contract}
               declarer="S"
-              vulnerability={deal.vulnerability as any}
+              vulnerability={deal.vulnerability}
               trickCount={game.gameState!.trickCount}
               onPlayCard={handlePlayCard}
               highlightedCards={game.validCards as CardData[]}

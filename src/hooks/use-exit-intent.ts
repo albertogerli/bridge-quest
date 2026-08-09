@@ -20,6 +20,7 @@ export function useExitIntent() {
         localStorage.getItem("bq_hands_today_" + today) || "0",
         10
       );
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- rilevamento di navigazione (exit intent) con lettura localStorage: client-only
       setHandsToday(hands);
 
       if (

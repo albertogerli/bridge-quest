@@ -122,6 +122,7 @@ export function useDDS() {
       };
 
       workerRef.current = worker;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- inizializzazione una-tantum del Web Worker al mount: client-only
       setWorkerReady(true);
     } catch (err) {
       console.warn("[DDS] Worker not available, will use inline solver:", err);

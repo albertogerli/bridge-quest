@@ -283,6 +283,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const saved = useRef(false);
+  // eslint-disable-next-line react-hooks/purity -- timestamp di inizio catturato una sola volta (init del ref) per il tiebreak di velocità
   const startRef = useRef<number>(Date.now()); // for the speed tiebreak in the class leaderboard
   const isMobile = useMobile();
   const { play } = useSound();
@@ -380,7 +381,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
         2200
       );
     }
-  }, [game.phase, game.result, smazzata, onFinish, play]);
+  }, [game.phase, game.result, game.gameState, declarer, dummyGamePos, smazzata, onFinish, play]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =

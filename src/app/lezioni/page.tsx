@@ -48,6 +48,7 @@ export default function LezioniPage() {
     try {
       const saved = localStorage.getItem("bq_selected_course");
       if (saved && courses.some((c) => c.id === saved)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setSelectedCourse(saved as CourseId);
       }
       setOnboarded(localStorage.getItem("bq_onboarded") === "true");

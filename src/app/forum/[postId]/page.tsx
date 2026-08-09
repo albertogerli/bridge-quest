@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useSharedAuth } from "@/contexts/auth-provider";
@@ -345,6 +346,7 @@ export default function PostDetailPage() {
   };
 
   const timeAgo = (date: string) => {
+    // eslint-disable-next-line react-hooks/purity -- formattazione tempo-relativo ("x min fa"): dipende intrinsecamente dall'ora corrente
     const diff = Date.now() - new Date(date).getTime();
     const mins = Math.floor(diff / 60000);
     if (mins < 1) return "ora";
@@ -377,9 +379,11 @@ export default function PostDetailPage() {
               } rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden flex-shrink-0`}
             >
               {comment.profiles?.avatar_url ? (
-                <img
+                <Image
                   src={comment.profiles.avatar_url}
                   alt="Avatar utente"
+                  width={40}
+                  height={40}
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -597,7 +601,7 @@ export default function PostDetailPage() {
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden">
               {post.profiles?.avatar_url ? (
-                <img src={post.profiles.avatar_url} alt="Avatar utente" className="h-full w-full object-cover" />
+                <Image src={post.profiles.avatar_url} alt="Avatar utente" width={40} height={40} className="h-full w-full object-cover" />
               ) : (
                 (post.profiles?.display_name || "?")[0].toUpperCase()
               )}

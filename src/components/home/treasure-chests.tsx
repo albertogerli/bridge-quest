@@ -31,6 +31,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
       const claimed = JSON.parse(localStorage.getItem("bq_chests_claimed") || "[]") as number[];
       for (const chest of chestMilestones) {
         if (modulesCompleted >= chest.modules && !claimed.includes(chest.modules)) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
           setShowChestPopup(chest);
           // Award XP
           const xpReward = chest.modules === 3 ? 50 : chest.modules === 10 ? 150 : chest.modules === 25 ? 300 : 500;

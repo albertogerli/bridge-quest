@@ -45,7 +45,7 @@ class AudioManager {
 
     if (!this.ctx) {
       try {
-        this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        this.ctx = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext!)();
       } catch (e) {
         console.warn('Web Audio API non supportata:', e);
         return null;
@@ -273,7 +273,7 @@ class AudioManager {
     const duration = 0.4;
     const baseFreq = 1318.51; // E6
 
-    [1, 2, 3].forEach((harmonic, i) => {
+    [1, 2, 3].forEach((harmonic) => {
       const osc = ctx.createOscillator();
       osc.type = 'sine';
       osc.frequency.value = baseFreq * harmonic;

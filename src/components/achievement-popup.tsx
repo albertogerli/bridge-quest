@@ -70,6 +70,7 @@ export function useAchievementChecker(stats: AchievementStats) {
 
     if (newlyEarned.length > 0) {
       saveEarnedBadgeIds(earned);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- accodamento badge in reazione al cambiamento asincrono delle statistiche
       setQueue(newlyEarned);
     }
   }, [stats]);
@@ -78,6 +79,7 @@ export function useAchievementChecker(stats: AchievementStats) {
   useEffect(() => {
     if (queue.length > 0 && !newBadge) {
       const [first, ...rest] = queue;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- elaborazione a coda dei badge (uno alla volta): transizione di stato intenzionale
       setNewBadge(first);
       setQueue(rest);
     }

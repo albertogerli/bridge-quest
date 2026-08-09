@@ -42,6 +42,7 @@ export default function LessonDetailPage({
           drafts[`${lesson.id}-${m.id}`] = true;
         }
       }
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setDraftsMap(drafts);
     }
   }, [lesson]);

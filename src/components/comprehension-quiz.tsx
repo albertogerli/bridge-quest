@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { comprehensionData, type ComprehensionQuestion } from "@/data/comprensione-data";
+import { comprehensionData } from "@/data/comprensione-data";
 
 interface ComprehensionQuizProps {
   lessonId: number;
@@ -26,6 +26,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
       if (q.options.length <= 2) return q.options.map((_: string, i: number) => i);
       const indices = q.options.map((_: string, i: number) => i);
       for (let j = indices.length - 1; j > 0; j--) {
+        // eslint-disable-next-line react-hooks/purity -- shuffle memoizzato delle opzioni (una volta per set di domande): casualità intenzionale
         const k = Math.floor(Math.random() * (j + 1));
         [indices[j], indices[k]] = [indices[k], indices[j]];
       }
@@ -33,18 +34,18 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
     });
   }, [data]);
 
-  if (!data || data.questions.length === 0) return null;
-
-  const question = data.questions[currentIdx];
+  // NB: niente return prima degli hook (rules-of-hooks): data può mancare,
+  // quindi question/total sono derivati in modo difensivo.
+  const question = data?.questions[currentIdx];
   const isCorrect = selected === question?.correctAnswer;
-  const total = data.questions.length;
+  const total = data?.questions.length ?? 0;
 
   const handleSelect = useCallback(
     (idx: number) => {
       if (showResult) return;
       setSelected(idx);
       setShowResult(true);
-      if (idx === question.correctAnswer) {
+      if (idx === question?.correctAnswer) {
         setScore((s) => s + 1);
       }
       // Increment weekly quiz counter
@@ -59,14 +60,16 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
   const handleNext = useCallback(() => {
     if (currentIdx + 1 >= total) {
       setFinished(true);
-      const finalScore = score + (selected === question.correctAnswer ? 0 : 0); // score already updated
       onComplete(score, total);
     } else {
       setCurrentIdx((i) => i + 1);
       setSelected(null);
       setShowResult(false);
     }
-  }, [currentIdx, total, score, onComplete, selected, question]);
+  }, [currentIdx, total, score, onComplete]);
+
+  if (!data || data.questions.length === 0) return null;
+  if (!question) return null; // fuori range: stato impossibile durante il quiz
 
   if (finished) {
     const stars = score === total ? 3 : score >= total * 0.66 ? 2 : 1;

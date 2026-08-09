@@ -160,7 +160,8 @@ function TrickTable({
 
   const winner = trick.winner;
 
-  function Cell({ pos }: { pos: Position }) {
+  // Funzione di render (non componente): evita di creare un tipo di componente nuovo a ogni render
+  function renderCell(pos: Position) {
     const play = playByDisplay[pos];
     if (!play) return <div />;
     const isWinner = play.position === winner;
@@ -180,14 +181,14 @@ function TrickTable({
       <div />
       <div className="flex flex-col items-center gap-0.5">
         <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">N</span>
-        <Cell pos="north" />
+        {renderCell("north")}
       </div>
       <div />
 
       {/* Row 2: West - center - East */}
       <div className="flex flex-col items-center gap-0.5 justify-center">
         <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">O</span>
-        <Cell pos="west" />
+        {renderCell("west")}
       </div>
       <div className="flex items-center justify-center">
         <span className="text-[9px] font-bold text-muted-foreground/70">
@@ -196,14 +197,14 @@ function TrickTable({
       </div>
       <div className="flex flex-col items-center gap-0.5 justify-center">
         <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">E</span>
-        <Cell pos="east" />
+        {renderCell("east")}
       </div>
 
       {/* Row 3: South */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
         <span className="text-[9px] font-bold text-muted-foreground/70 uppercase">S</span>
-        <Cell pos="south" />
+        {renderCell("south")}
       </div>
       <div />
     </div>

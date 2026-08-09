@@ -388,6 +388,7 @@ function LoginContent() {
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                       {avatarPreview ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- anteprima locale (data URL) dal file input: next/image non la ottimizza
                         <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
                       ) : (
                         <svg className="w-6 h-6 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>

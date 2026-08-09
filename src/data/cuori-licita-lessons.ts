@@ -1443,7 +1443,7 @@ export const cuoriLicitaWorlds: World[] = [
     icon: "📐",
     gradient: "from-rose-500 to-red-500",
     iconBg: "bg-rose-100",
-    lessons: [] as any,
+    lessons: [],
   },
   {
     id: 21,
@@ -1452,7 +1452,7 @@ export const cuoriLicitaWorlds: World[] = [
     icon: "📈",
     gradient: "from-red-500 to-rose-600",
     iconBg: "bg-red-100",
-    lessons: [] as any,
+    lessons: [],
   },
   {
     id: 22,
@@ -1461,7 +1461,7 @@ export const cuoriLicitaWorlds: World[] = [
     icon: "♟️",
     gradient: "from-rose-600 to-pink-600",
     iconBg: "bg-pink-100",
-    lessons: [] as any,
+    lessons: [],
   },
   {
     id: 23,
@@ -1470,7 +1470,7 @@ export const cuoriLicitaWorlds: World[] = [
     icon: "⚡",
     gradient: "from-pink-600 to-red-700",
     iconBg: "bg-rose-200",
-    lessons: [] as any,
+    lessons: [],
   },
 ];
 

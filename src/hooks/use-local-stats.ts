@@ -54,6 +54,7 @@ export function useLocalStats() {
       const today = new Date().toISOString().slice(0, 10);
 
       // Daily challenge completion — still in its own legacy key.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setDailyDone(localStorage.getItem("bq_daily_completed") === today);
 
       // Streak at risk: >18h since last activity.

@@ -20,6 +20,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
 
   useEffect(() => {
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setDismissed(localStorage.getItem(LS_DISMISSED) === "1");
     } catch {
       setDismissed(false);

@@ -91,3 +91,8 @@ public/swe-worker-* [0-9]*.js
 scripts/__pycache__/
 scripts/*.log
 scripts/youtube_token.json
+
+# Playwright / E2E
+e2e/.test-user.json
+test-results/
+playwright-report/

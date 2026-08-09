@@ -163,6 +163,7 @@ export function useAuth() {
       clearTimeout(timeout);
       subscription.unsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- subscription auth registrata una sola volta al mount; ri-eseguirla perderebbe/duplicherebbe eventi di login
   }, []);
 
   // Inactivity timeout: auto-logout after 30 minutes of no interaction

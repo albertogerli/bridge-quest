@@ -12,13 +12,14 @@ export function CookieBanner() {
   useEffect(() => {
     // Hide cookie banner inside Capacitor iOS app (Apple guideline 5.1.2)
     const isCapacitor = typeof window !== "undefined" && (
-      (window as any).Capacitor?.isNativePlatform?.() ||
+      (window as Window & { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() ||
       navigator.userAgent.includes("BridgeLab-Native")
     );
     if (isCapacitor) return;
 
     const consent = localStorage.getItem(STORAGE_KEY);
     if (!consent) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setShow(true);
     }
   }, []);

@@ -56,15 +56,17 @@ Lo schema vive su Supabase e si evolve tramite gli script in `scripts/sql/` (ese
 ## Qualità
 
 ```bash
-npx tsc --noEmit   # typecheck (bloccante in CI)
-npm test           # unit test dei motori di dominio (vitest, bloccante in CI)
-npm run lint       # NON ancora un gate: ~1.100 errori pregressi dalla
-                   # migrazione alle regole react-hooks v6 (baseline nota)
+npx tsc --noEmit           # typecheck (bloccante in CI)
+npx eslint src             # lint, zero errori/warning (bloccante in CI)
+npm test                   # unit test motori di dominio (vitest, bloccante in CI)
+npm run test:rls           # verifica RLS con anon key (dopo modifiche schema)
+npm run test:e2e           # smoke E2E Playwright (solo locale: crea/elimina
+                           # un utente di test via service role)
 ```
 
-CI: `.github/workflows/ci.yml` (typecheck + test su ogni push/PR).
+CI: `.github/workflows/ci.yml` (typecheck + lint + test su ogni push/PR).
 
-Debito noto (perizie tecniche in `PERIZIA-*.md`, agosto 2026): pagine monolitiche (fino a 2.246 righe), lint da azzerare, niente i18n (scelta di prodotto), error monitoring assente.
+Debito noto (perizie tecniche in `PERIZIA-*.md` e piano in `PIANO-MIGLIORAMENTO-2026-08.md`): pagine monolitiche (fino a ~2.200 righe), niente i18n (scelta di prodotto), error monitoring assente (aggancio pronto in `src/lib/report-error.ts`), schema DB senza migrazioni versionate.
 
 ## Note operative
 

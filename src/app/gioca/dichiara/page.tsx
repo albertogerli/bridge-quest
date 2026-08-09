@@ -9,11 +9,6 @@ import { useGameStore } from "@/store/use-game-store";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
 
-const suitSymbols: Record<string, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
-const suitColors: Record<string, string> = {
-  spade: "text-foreground", heart: "text-red-500 dark:text-red-400", diamond: "text-red-500 dark:text-red-400", club: "text-foreground",
-};
-
 type HandScenario = {
   hand: string; // Formatted: "♠ AK32 ♥ Q87 ♦ KJ5 ♣ 943"
   hcp: number;
@@ -222,6 +217,15 @@ export default function DichiaraPage() {
 
   const dCfg = dichiaraDiffConfig[dichiaraDiff];
 
+  const startTimer = () => {
+    setTimer(0);
+    startRef.current = Date.now();
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setTimer(Math.floor((Date.now() - startRef.current) / 100));
+    }, 100);
+  };
+
   const startGame = useCallback((diff?: DichiaraDifficulty) => {
     if (diff) setDichiaraDiff(diff);
     // Shuffle and pick 10 scenarios
@@ -239,14 +243,6 @@ export default function DichiaraPage() {
     startTimer();
   }, []);
 
-  const startTimer = () => {
-    setTimer(0);
-    startRef.current = Date.now();
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setTimer(Math.floor((Date.now() - startRef.current) / 100));
-    }, 100);
-  };
 
   const handleAnswer = (bid: string) => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -258,6 +254,7 @@ export default function DichiaraPage() {
     setAnswersHistory(prev => [...prev, { selected: bid, correct: isCorrect }]);
 
     if (isCorrect) {
+      // eslint-disable-next-line react-hooks/purity -- handler di risposta utente: misura il tempo di reazione, non eseguito durante il render
       const speed = (Date.now() - startRef.current) / 1000;
       const speedBonus = Math.max(0, Math.floor(150 - speed * 15));
       const streakBonus = streak * 15;
@@ -317,7 +314,7 @@ export default function DichiaraPage() {
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Dichiara!</h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              Vedi una mano e scegli l'apertura corretta. Velocità e precisione!
+              Vedi una mano e scegli l&apos;apertura corretta. Velocità e precisione!
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-xs font-bold border-0">{TOTAL_ROUNDS} mani</Badge>

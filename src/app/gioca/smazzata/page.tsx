@@ -18,7 +18,7 @@ import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
-import type { Card, Position } from "@/lib/bridge-engine";
+import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, cardToString, partnershipOf, getDummy, nextPlayer } from "@/lib/bridge-engine";
 
 const DISPLAY_LETTER: Record<Position, string> = { north: "N", south: "S", east: "E", west: "W" };
@@ -46,7 +46,6 @@ export default function SmazzataBrowserPage() {
 }
 
 function SmazzataBrowserContent() {
-  const profile = useProfile();
   const { courses } = useCatalog();
   const { smazzate: allSmazzate } = useSmazzate();
   const searchParams = useSearchParams();
@@ -74,11 +73,13 @@ function SmazzataBrowserContent() {
 
   // Update when URL param changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync dello stato dal parametro URL: lo stato è modificabile anche dall’utente, non derivabile
     if (lessonParam) setSelectedLesson(parseInt(lessonParam));
   }, [lessonParam]);
 
   useEffect(() => {
     if (!lessonParam && courseLessonIds.length > 0 && !courseLessonIds.includes(selectedLesson)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- riallineamento della lezione selezionata al load asincrono del corso
       setSelectedLesson(courseLessonIds[0]);
     }
   }, [courseLessonIds, lessonParam, selectedLesson]);
@@ -89,6 +90,7 @@ function SmazzataBrowserContent() {
       const idx = parseInt(randomParam);
       if (idx >= 0 && idx < allSmazzate.length) {
         const hand = allSmazzate[idx];
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- avvio automatico da parametro URL dopo il load asincrono delle smazzate
         setSelectedLesson(hand.lesson);
         setSelectedSmazzata(hand);
         setIsPlaying(true);
@@ -483,7 +485,7 @@ function PlayingView({
         },
       });
     }
-  }, [game.phase, game.result, xpSaved, smazzata, saveGameResult]);
+  }, [game.phase, game.result, game.gameState?.tricks, mode, xpSaved, smazzata, saveGameResult]);
 
   // Run DDS analysis when game finishes
   useEffect(() => {

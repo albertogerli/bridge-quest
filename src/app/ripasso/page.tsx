@@ -11,7 +11,7 @@ import type { Course } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { useGameStore } from "@/store/use-game-store";
 import {
-  Brain, ArrowLeft, Clock, AlertTriangle,
+  Brain, ArrowLeft, Clock,
   CheckCircle2, Zap, BookOpen, ChevronRight,
   RotateCcw, Trophy,
 } from "lucide-react";
@@ -38,14 +38,6 @@ function dueLabel(dateISO: string): string {
   if (d === 0) return "Da ripassare oggi";
   if (d === 1) return "Domani";
   return `Tra ${d} giorni`;
-}
-
-/** Human-readable "last reviewed" label */
-function lastReviewedLabel(dateISO: string): string {
-  const d = daysUntil(dateISO);
-  if (d === 0) return "Rivisto oggi";
-  const abs = Math.abs(d);
-  return `Rivisto ${abs} ${abs === 1 ? "giorno" : "giorni"} fa`;
 }
 
 /** Urgency: overdue > today > upcoming */
@@ -87,7 +79,6 @@ const urgencyConfig: Record<Urgency, { dot: string; border: string; bg: string; 
 // ---------------------------------------------------------------------------
 
 const REVIEW_XP_BONUS = 15;
-const REVIEW_XP_KEY = "bq_ripasso_last_award";
 
 function awardReviewXP(): number {
   try {
@@ -140,11 +131,11 @@ function enrichItem(item: ReviewItem, courses: Course[]): EnrichedReviewItem {
 // ---------------------------------------------------------------------------
 
 export default function RipassoPage() {
-  const { items, getItemsDue, markReviewed, reviewCount } = useSpacedReview();
+  const { items, getItemsDue, markReviewed } = useSpacedReview();
   const { courses } = useCatalog();
   const [enrichedItems, setEnrichedItems] = useState<EnrichedReviewItem[]>([]);
   const [xpAwarded, setXpAwarded] = useState(false);
-  const [xpAmount, setXpAmount] = useState(0);
+  const [, setXpAmount] = useState(0);
   const [filter, setFilter] = useState<"due" | "all">("due");
 
   // Enrich items with lesson metadata
@@ -159,17 +150,9 @@ export default function RipassoPage() {
         if (diff !== 0) return diff;
         return a.nextReview.localeCompare(b.nextReview);
       });
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- arricchimento con urgenza basata sulla data corrente, ricalcolato in risposta al load asincrono degli item
     setEnrichedItems(enriched);
   }, [items, filter, getItemsDue, courses]);
-
-  // Award XP when visiting with due items (once per session)
-  const handleReviewStart = useCallback(
-    (lessonId: number, moduleId: string) => {
-      // We don't mark reviewed here - the lesson page will handle the quiz
-      // But we can track that the user started the review
-    },
-    []
-  );
 
   const handleMarkMastered = useCallback(
     (lessonId: number, moduleId: string) => {

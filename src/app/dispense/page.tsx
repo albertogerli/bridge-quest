@@ -145,7 +145,7 @@ export default function DispensePage() {
                 </div>
                 {coursePdf && isCourseCompleted ? (
                   <button
-                    onClick={() => downloadPdf(coursePdf, `corso-${selectedCourse}.pdf`)}
+                    onClick={() => downloadPdf(coursePdf)}
                     className="flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white hover:bg-white/30 transition-colors active:scale-95"
                     title="Scarica il corso intero in PDF"
                   >
@@ -203,7 +203,7 @@ export default function DispensePage() {
   );
 }
 
-function downloadPdf(url: string, _filename: string) {
+function downloadPdf(url: string) {
   // Open PDF in new tab - most reliable across all hosting environments
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -233,6 +233,7 @@ function InfographicCard({
   // Check if image already loaded (from cache)
   useEffect(() => {
     if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- rilevamento immagine già in cache: richiede il DOM (ref), possibile solo post-mount
       setLoaded(true);
     }
   }, []);
@@ -291,7 +292,7 @@ function InfographicCard({
         {/* PDF download button (overlay) - hidden when locked */}
         {pdfSrc && !locked && (
           <button
-            onClick={() => downloadPdf(pdfSrc, `dispensa-lezione-${lessonNumber}.pdf`)}
+            onClick={() => downloadPdf(pdfSrc)}
             className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-figb text-white shadow-lg transition-all hover:bg-figb-dark active:scale-90 opacity-0 group-hover:opacity-100 lg:opacity-100"
             title="Scarica PDF"
           >

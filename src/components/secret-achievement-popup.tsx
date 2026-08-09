@@ -56,6 +56,7 @@ export default function SecretAchievementPopup({
         });
       }
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- particelle generate (Math.random) alla comparsa del popup: solo client, post-mount
       setParticles(newParticles);
 
       // Auto-close after 5 seconds

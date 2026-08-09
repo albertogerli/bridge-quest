@@ -367,7 +367,6 @@ function currentWinningPlay(
 // smart opening leads, trump management, entry preservation
 // ═══════════════════════════════════════════════════════════════
 
-const ALL_RANKS: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 
 /** High Card Points for a single card */
 function hcp(rank: Rank): number {
@@ -390,18 +389,6 @@ function getPlayedCards(state: GameState): Set<string> {
     played.add(`${play.card.rank}-${play.card.suit}`);
   }
   return played;
-}
-
-/** Count remaining cards in a suit (not yet played and not in our hand) */
-function countOutstandingInSuit(suit: Suit, hand: Card[], playedCards: Set<string>): number {
-  let count = 0;
-  for (const rank of ALL_RANKS) {
-    const key = `${rank}-${suit}`;
-    if (playedCards.has(key)) continue;
-    if (hand.some(c => c.suit === suit && c.rank === rank)) continue;
-    count++;
-  }
-  return count;
 }
 
 /** Detect known voids: players who showed out of a suit */
@@ -431,16 +418,6 @@ function getKnownVoids(state: GameState): Map<Position, Set<Suit>> {
   return voids;
 }
 
-/** Check if cards form a sequence (e.g. KQJ, QJ10) */
-function isSequence(cards: Card[]): boolean {
-  if (cards.length < 2) return false;
-  const sorted = [...cards].sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
-  for (let i = 0; i < sorted.length - 1; i++) {
-    if (rankValue(sorted[i].rank) - rankValue(sorted[i + 1].rank) !== 1) return false;
-  }
-  return true;
-}
-
 /** Find the top of a sequence in hand for a suit (e.g. KQJ → K) */
 function topOfSequence(hand: Card[], suit: Suit): Card | null {
   const suitCards = hand.filter(c => c.suit === suit)
@@ -458,15 +435,6 @@ function topOfSequence(hand: Card[], suit: Suit): Card | null {
     return suitCards[0]; // Top of honor sequence
   }
   return null;
-}
-
-/** Check if a card is an unsupported honor (Kx, Qx, Jx with no other honors) */
-function isUnsupportedHonor(card: Card, hand: Card[]): boolean {
-  if (hcp(card.rank) === 0) return false;
-  const suitCards = hand.filter(c => c.suit === card.suit);
-  if (suitCards.length > 2) return false; // Not "short" enough to be unsupported
-  const honors = suitCards.filter(c => hcp(c.rank) > 0);
-  return honors.length === 1 && suitCards.length <= 2;
 }
 
 /** Whether position is a defender (not declarer or dummy) */

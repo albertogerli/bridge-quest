@@ -46,6 +46,8 @@ interface UserRow {
   platform: string | null;
 }
 
+type ProfileRecord = UserRow & { role?: string | null };
+
 interface LoginRecord {
   id: string;
   user_id: string;
@@ -187,7 +189,7 @@ export default function AdminPage() {
     setFetchError(null);
 
     try {
-      let allProfiles: any[] = [];
+      let allProfiles: ProfileRecord[] = [];
       let page = 0;
       const pageSize = 1000;
       let hasMore = true;
@@ -207,7 +209,7 @@ export default function AdminPage() {
         }
 
         if (data && data.length > 0) {
-          allProfiles = allProfiles.concat(data);
+          allProfiles = allProfiles.concat(data as ProfileRecord[]);
           if (data.length < pageSize) {
             hasMore = false;
           } else {
@@ -250,11 +252,11 @@ export default function AdminPage() {
         }
       } catch {}
       const instructorsCount = profiles.filter(
-        (u: { role?: string }) => u.role === "instructor"
+        (u) => u.role === "instructor"
       ).length;
 
       if (profiles) {
-        const mappedUsers: UserRow[] = profiles.map((u: any) => ({
+        const mappedUsers: UserRow[] = profiles.map((u) => ({
           id: u.id,
           display_name: u.display_name,
           bbo_username: u.bbo_username,
@@ -355,7 +357,7 @@ export default function AdminPage() {
           const dayKey = logDate.toISOString().split("T")[0];
           const dayMap = dailyActiveMap.get(dayKey);
           if (dayMap && !dayMap.has(log.user_id)) {
-            const profile = profiles.find((p: any) => p.id === log.user_id);
+            const profile = profiles.find((p) => p.id === log.user_id);
             dayMap.set(log.user_id, {
               id: log.user_id,
               display_name: profile?.display_name ?? null,
@@ -519,6 +521,7 @@ export default function AdminPage() {
 
     setLoading(false);
     setLastUpdated(new Date());
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- asdClubs si popola async dallo store: includerlo rilancerebbe l'intero fetch admin a ogni load dei circoli
   }, [supabase]);
 
   useEffect(() => {
@@ -1677,7 +1680,7 @@ export default function AdminPage() {
                             </span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Giorni dall'iscrizione</span>
+                            <span className="text-gray-500">Giorni dall&apos;iscrizione</span>
                             <span className="font-semibold text-gray-900">{daysSinceReg}</span>
                           </div>
                           <div className="flex justify-between">

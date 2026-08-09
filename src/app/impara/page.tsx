@@ -36,6 +36,7 @@ export default function ImparaPage() {
 
   useEffect(() => {
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setOnboarded(localStorage.getItem("bq_onboarded") === "1");
       setMinibridgePlayed(localStorage.getItem("bq_minibridge_played") === "1");
       // "guided hands" leaves a results trail; treat any guided completion as started

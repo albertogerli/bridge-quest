@@ -24,6 +24,7 @@ const objectiveIcons: Record<string, React.ReactNode> = {
 };
 
 // Sparkle particle for confetti effect
+/* eslint-disable react-hooks/purity -- particelle decorative: casualità intenzionale a ogni render */
 function Sparkle({ delay, x, y }: { delay: number; x: number; y: number }) {
   const colors = ["#059669", "#f59e0b", "#10b981", "#fbbf24", "#34d399", "#fcd34d"];
   const color = colors[Math.floor(Math.random() * colors.length)];
@@ -53,6 +54,8 @@ function Sparkle({ delay, x, y }: { delay: number; x: number; y: number }) {
     />
   );
 }
+
+/* eslint-enable react-hooks/purity */
 
 // Get current week number for display
 function getWeekDisplay(): string {
@@ -110,6 +113,7 @@ export default function ObiettiviPage() {
   }, [claimBonus]);
 
   // Confetti particles
+  /* eslint-disable react-hooks/purity -- particelle decorative memoizzate: casualità intenzionale una-tantum */
   const confettiParticles = useMemo(() => {
     return Array.from({ length: 40 }, (_, i) => ({
       id: i,
@@ -118,6 +122,7 @@ export default function ObiettiviPage() {
       y: (Math.random() - 0.5) * 200 - 100,
     }));
   }, []);
+  /* eslint-enable react-hooks/purity */
 
   const completedCount = objectives.filter((o) => o.completed).length;
 

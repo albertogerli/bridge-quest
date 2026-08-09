@@ -111,6 +111,7 @@ function SfidaAmicoContent() {
       const all = useSmazzateStore.getState().smazzate;
       const found = all.find((s) => s.id === incomingChallenge.s);
       if (found) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- setup della sfida in reazione al load asincrono delle smazzate dallo store
         setSmazzata(found);
         setChallengerTricks(incomingChallenge.t);
         setChallengerNeeded(incomingChallenge.n);
@@ -366,6 +367,7 @@ function ActiveChallenge({
   // Save XP + generate challenge code when game finishes
   useEffect(() => {
     if (game.phase === "finished" && game.result && !xpSaved.current) {
+      // eslint-disable-next-line react-hooks/immutability -- flag anti doppio-accredito: mutazione intenzionale del ref condiviso dal parent
       xpSaved.current = true;
       const gameXp = 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10;
       awardGameXp(`sfida-amico-${smazzata.id}`, gameXp);
@@ -623,7 +625,11 @@ function ActiveChallenge({
                 </Button>
               </Link>
               <Button
-                onClick={() => { xpSaved.current = false; game.startGame(); }}
+                onClick={() => {
+                  // eslint-disable-next-line react-hooks/immutability -- reset intenzionale del flag anti doppio-accredito (ref condiviso dal parent)
+                  xpSaved.current = false;
+                  game.startGame();
+                }}
                 className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/20"
               >
                 Rigioca
@@ -893,6 +899,7 @@ function PastChallenges() {
   const allSmazzate = useSmazzateStore((s) => s.smazzate);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setChallenges(getSavedChallenges());
   }, []);
 

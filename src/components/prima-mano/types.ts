@@ -1,5 +1,3 @@
-import type { Card, Position } from "@/lib/bridge-engine";
-
 export type StepId =
   | "benvenuto"
   | "tavolo"

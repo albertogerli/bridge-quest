@@ -14,8 +14,8 @@
  * Lesson 10: Le deduzioni del giocante
  */
 
-import type { Suit, Rank, Card, Position } from "../lib/bridge-engine";
-import type { Vulnerability, BiddingData, Smazzata } from "./smazzate";
+import type { Suit, Rank, Card } from "../lib/bridge-engine";
+import type { Smazzata } from "./smazzate";
 
 function c(suit: Suit, rank: Rank): Card {
   return { suit, rank };

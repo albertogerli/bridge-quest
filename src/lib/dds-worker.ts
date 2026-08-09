@@ -33,7 +33,7 @@ self.onmessage = (event: MessageEvent<DDSWorkerRequest>) => {
       };
 
       self.postMessage(response);
-    } catch (error) {
+    } catch {
       // On any error, fall back to contract estimate
       const fallbackTricks = estimateFromContract(request.contract);
       const response: DDSWorkerResponse = {

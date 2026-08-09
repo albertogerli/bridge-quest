@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useTheme, type ThemeMode } from "@/hooks/use-theme";
@@ -77,7 +76,6 @@ const BQ_KEYS_PREFIX = "bq_";
 const APP_VERSION = "1.0.0";
 
 export default function ImpostazioniPage() {
-  const router = useRouter();
   const { user, loading: authLoading, signOut } = useSharedAuth();
   const notifications = useNotifications();
   const { theme, setTheme } = useTheme();
@@ -93,6 +91,7 @@ export default function ImpostazioniPage() {
   const [aiLevel, setAiLevel] = useState<AILevel>("intermedio");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setTextSize(localStorage.getItem("bq_text_size") || "medio");
     setAnimSpeed(localStorage.getItem("bq_anim_speed") || "normale");
     setSound(localStorage.getItem("bq_sound") !== "off");
