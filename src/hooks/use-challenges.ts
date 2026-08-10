@@ -6,6 +6,20 @@ import { reportError } from "@/lib/report-error";
 import { generateSeed } from "@/lib/hand-encoder";
 import { calculateBoardIMP } from "@/lib/bridge-scoring";
 
+/**
+ * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
+ * (sospensione del dispositivo, cambio rete, proxy) e gli eventi persi mentre
+ * il socket è giù NON vengono ritrasmessi alla riconnessione. Il polling resta
+ * come rete ma a intervallo lungo — 5 min invece di 30 s — perché la
+ * reattività ora la dà il canale Realtime.
+ *
+ * Copre anche un buco strutturale verificato il 2026-08-10: `challenges` ha
+ * REPLICA IDENTITY di default (sola chiave primaria), quindi gli eventi DELETE
+ * arrivano privi delle colonne su cui filtriamo e il server non li consegna.
+ * Una sfida ritirata sparisce al primo refresh utile, non in tempo reale.
+ */
+const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
+
 export interface BoardResult {
   boardIndex: number;
   contract: string;
@@ -46,21 +60,26 @@ export function useChallenges() {
   const [pendingChallenges, setPendingChallenges] = useState<ChallengeData[]>([]);
   const [activeChallenges, setActiveChallenges] = useState<ChallengeData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [realtimeUserId, setRealtimeUserId] = useState<string | null>(null);
 
   const supabase = createClient();
 
   const getUserId = useCallback(async (): Promise<string | null> => {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) {
-      console.error("Failed to get user:", error);
+      reportError("use-challenges:getUser", error);
       return null;
     }
     return user?.id ?? null;
   }, [supabase]);
 
-  const fetchChallenges = useCallback(async () => {
+  /** `quiet` evita di rialzare `loading` sui refresh in background (Realtime,
+   *  timer di sicurezza, ritorno sulla tab): la lista è già a schermo e non
+   *  deve tornare a scheletro a ogni evento. */
+  const fetchChallenges = useCallback(async (options?: { quiet?: boolean }) => {
+    const quiet = options?.quiet === true;
     try {
-      setLoading(true);
+      if (!quiet) setLoading(true);
       const userId = await getUserId();
       if (!userId) return;
 
@@ -83,27 +102,113 @@ export function useChallenges() {
         .order("created_at", { ascending: false });
 
       if (activeError) {
-        console.error("Failed to fetch active challenges:", activeError);
+        reportError("use-challenges:active", activeError);
       } else {
         setActiveChallenges((active as ChallengeData[]) ?? []);
       }
     } catch (err) {
-      console.error("Failed to fetch challenges:", err);
+      reportError("use-challenges:fetch", err);
     } finally {
-      setLoading(false);
+      if (!quiet) setLoading(false);
     }
   }, [supabase, getUserId]);
+
+  const refreshQuiet = useCallback(async () => {
+    await fetchChallenges({ quiet: true });
+  }, [fetchChallenges]);
 
   // Fetch on mount
   useEffect(() => {
     fetchChallenges();
   }, [fetchChallenges]);
 
-  // Poll every 30 seconds
+  // Utente corrente per il canale Realtime: tenuto in stato perché il canale
+  // va ricreato a ogni cambio utente (login/logout).
   useEffect(() => {
-    const interval = setInterval(fetchChallenges, 30_000);
-    return () => clearInterval(interval);
-  }, [fetchChallenges]);
+    let cancelled = false;
+
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        if (!cancelled) setRealtimeUserId(data.user?.id ?? null);
+      })
+      .catch((err) => reportError("use-challenges:getUser", err));
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setRealtimeUserId(session?.user?.id ?? null);
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  // Supabase Realtime, due sottoscrizioni mirate sullo stesso canale:
+  //  - `opponent_id=eq.<me>`: sfide che ricevo, e sfide aperte a cui vengo
+  //    agganciato (l'UPDATE che valorizza opponent_id);
+  //  - `challenger_id=eq.<me>`: le mie sfide quando l'avversario accetta,
+  //    rifiuta o consegna i risultati.
+  // I filtri sono lato server e le RLS di `challenges` valgono anche qui.
+  useEffect(() => {
+    if (!realtimeUserId) return;
+
+    const onChange = () => {
+      void refreshQuiet();
+    };
+
+    const channel = supabase
+      .channel(`challenges-${realtimeUserId}-${Math.random().toString(36).slice(2, 10)}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "challenges",
+          filter: `opponent_id=eq.${realtimeUserId}`,
+        },
+        onChange
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "challenges",
+          filter: `challenger_id=eq.${realtimeUserId}`,
+        },
+        onChange
+      )
+      .subscribe((status, error) => {
+        if (error) reportError("use-challenges:realtime", error);
+        else if (status === "CHANNEL_ERROR") {
+          reportError("use-challenges:realtime", new Error(`canale in stato ${status}`));
+        }
+      });
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [supabase, realtimeUserId, refreshQuiet]);
+
+  // Rete di sicurezza (vedi SAFETY_POLL_INTERVAL).
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void refreshQuiet();
+    }, SAFETY_POLL_INTERVAL);
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") void refreshQuiet();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [refreshQuiet]);
 
   const createChallenge = useCallback(
     async (
@@ -132,14 +237,14 @@ export function useChallenges() {
           .single();
 
         if (error) {
-          console.error("Failed to create challenge:", error);
+          reportError("use-challenges:create", error);
           return null;
         }
 
         await fetchChallenges();
         return data.id;
       } catch (err) {
-        console.error("Failed to create challenge:", err);
+        reportError("use-challenges:create", err);
         return null;
       }
     },
@@ -155,13 +260,13 @@ export function useChallenges() {
           .eq("id", challengeId);
 
         if (error) {
-          console.error("Failed to accept challenge:", error);
+          reportError("use-challenges:accept", error);
           return;
         }
 
         await fetchChallenges();
       } catch (err) {
-        console.error("Failed to accept challenge:", err);
+        reportError("use-challenges:accept", err);
       }
     },
     [supabase, fetchChallenges]
@@ -176,13 +281,13 @@ export function useChallenges() {
           .eq("id", challengeId);
 
         if (error) {
-          console.error("Failed to decline challenge:", error);
+          reportError("use-challenges:decline", error);
           return;
         }
 
         await fetchChallenges();
       } catch (err) {
-        console.error("Failed to decline challenge:", err);
+        reportError("use-challenges:decline", err);
       }
     },
     [supabase, fetchChallenges]
@@ -206,7 +311,7 @@ export function useChallenges() {
           .eq("id", challengeId);
 
         if (updateError) {
-          console.error("Failed to submit results:", updateError);
+          reportError("use-challenges:submit", updateError);
           return;
         }
 
@@ -218,7 +323,7 @@ export function useChallenges() {
           .single();
 
         if (fetchError || !challenge) {
-          console.error("Failed to re-fetch challenge:", fetchError);
+          reportError("use-challenges:submit", fetchError);
           return;
         }
 
@@ -259,7 +364,7 @@ export function useChallenges() {
             .eq("id", challengeId);
 
           if (completeError) {
-            console.error("Failed to complete challenge:", completeError);
+            reportError("use-challenges:submit", completeError);
           }
         } else {
           // Only one side has submitted so far
@@ -269,13 +374,13 @@ export function useChallenges() {
             .eq("id", challengeId);
 
           if (playingError) {
-            console.error("Failed to update status to playing:", playingError);
+            reportError("use-challenges:submit", playingError);
           }
         }
 
         await fetchChallenges();
       } catch (err) {
-        console.error("Failed to submit results:", err);
+        reportError("use-challenges:submit", err);
       }
     },
     [supabase, fetchChallenges]
@@ -348,7 +453,7 @@ export function useChallenges() {
           .limit(1);
 
         if (searchError) {
-          console.error("Failed to search for open challenges:", searchError);
+          reportError("use-challenges:random", searchError);
           return null;
         }
 
@@ -365,7 +470,7 @@ export function useChallenges() {
             .eq("id", match.id);
 
           if (joinError) {
-            console.error("Failed to join open challenge:", joinError);
+            reportError("use-challenges:random", joinError);
             return null;
           }
 
@@ -376,7 +481,7 @@ export function useChallenges() {
         // No open challenge found -- create a new one waiting for an opponent
         return await createChallenge(null, boardCount);
       } catch (err) {
-        console.error("Failed to find random opponent:", err);
+        reportError("use-challenges:random", err);
         return null;
       }
     },

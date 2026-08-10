@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import {
   asdMediansAreApproximate,
   bucketPlatform,
@@ -703,6 +703,16 @@ describe("resolveDayUsers", () => {
 
 describe("buildUserActivity", () => {
   const [ada] = mapProfilesToUsers([PROFILES[0]]);
+
+  // Il raggruppamento e' per giorno LOCALE (l'admin legge nel proprio fuso):
+  // senza fissare il fuso, gli stessi timestamp cadono in giorni diversi a
+  // seconda della macchina e il test diventa vero solo in Europa.
+  const REAL_TZ = process.env.TZ;
+  beforeAll(() => { process.env.TZ = "Europe/Rome"; });
+  afterAll(() => {
+    if (REAL_TZ === undefined) delete process.env.TZ;
+    else process.env.TZ = REAL_TZ;
+  });
 
   it("raggruppa gli accessi per giorno locale, dal più recente", () => {
     const history: LoginRecord[] = [

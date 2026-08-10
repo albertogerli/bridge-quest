@@ -42,6 +42,24 @@ export function getYesterdayString(nowMs: number): string {
   return localDateString(d);
 }
 
+/**
+ * Giorno precedente a una data `YYYY-MM-DD`, senza passare dall'orologio.
+ *
+ * Serve per ragionare sulla serie in modo relativo alla data salvata invece
+ * che a "adesso": `saveDailyResult` calcolava "ieri" con `Date.now()`, quindi
+ * il suo esito dipendeva dal giorno in cui girava — e un test scritto il 9
+ * agosto falliva il 10.
+ *
+ * La data viene interpretata a mezzogiorno locale: sottrarre 24 ore da
+ * mezzanotte finirebbe nel giorno sbagliato nei cambi di ora legale.
+ */
+export function previousDateString(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const date = new Date(y, m - 1, d, 12);
+  date.setDate(date.getDate() - 1);
+  return localDateString(date);
+}
+
 /** Tempo mancante alla mezzanotte locale, in formato `HH:MM:SS`. */
 export function formatTimeToMidnight(nowMs: number): string {
   const now = new Date(nowMs);

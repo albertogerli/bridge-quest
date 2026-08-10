@@ -11,6 +11,7 @@
     "audit:lessons": "npx --yes tsx scripts/audit-lesson-content.ts",
     "review:lessons": "npx --yes tsx scripts/generate-review-doc.ts",
     "test:rls": "node scripts/test-rls.mjs",
+    "test:realtime": "node scripts/test-realtime.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
