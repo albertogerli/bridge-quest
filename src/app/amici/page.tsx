@@ -177,6 +177,23 @@ export default function AmiciPage() {
           </p>
         </motion.div>
 
+        {/* La ricerca per nome funziona solo se sai già chi cercare: chi non
+            conosce nessuno arriva qui e non ha nulla da fare. */}
+        <Link
+          href="/trova-compagno"
+          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 mb-5 hover:bg-muted transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
+            <Users className="w-5 h-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-sm">Non conosci nessuno con cui giocare?</p>
+            <p className="text-xs text-muted-foreground">
+              Trova un compagno vicino a te, per livello e disponibilità
+            </p>
+          </div>
+        </Link>
+
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           {tabs.map((tab) => (
