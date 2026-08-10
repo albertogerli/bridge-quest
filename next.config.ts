@@ -74,6 +74,10 @@ const nextConfig: NextConfig = {
       ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
       "https://va.vercel-scripts.com",
       "https://www.googletagmanager.com",
+      // Meta Pixel. Lo script viene scaricato solo dopo il consenso
+      // pubblicitario (src/components/meta-pixel-loader.tsx): la CSP lo
+      // consente, il consenso decide se caricarlo.
+      "https://connect.facebook.net",
     ].join(" ");
     return [
       {

@@ -6,6 +6,7 @@ import { ToasterLazy } from "@/components/toaster-lazy";
 import { LayoutShell } from "@/components/layout-shell";
 import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
+import { MetaPixelLoader } from "@/components/meta-pixel-loader";
 import "./globals.css";
 
 const inter = Inter({
@@ -205,13 +206,39 @@ export default function RootLayout({
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
         />
+        {/*
+          Google Consent Mode v2. Il default è "denied" per TUTTI i segnali
+          pubblicitari e statistici: gtag si carica ma non scrive cookie né
+          invia identificatori finché non arriva un consenso esplicito. Il
+          valore salvato viene riletto qui in modo sincrono, prima del config,
+          così chi ha già acconsentito non perde la prima pagina vista.
+          La scelta si aggiorna da consent-client.ts (`gtag('consent','update')`).
+        */}
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied'
+            });
+            try {
+              var c = JSON.parse(localStorage.getItem('bq_consent_v2') || 'null');
+              if (c && c.marketing === true) {
+                gtag('consent', 'update', {
+                  ad_storage: 'granted',
+                  ad_user_data: 'granted',
+                  ad_personalization: 'granted',
+                  analytics_storage: 'granted'
+                });
+              }
+            } catch (e) {}
             gtag('js', new Date());
             gtag('config', '${GA_ID}');
             gtag('config', '${GADS_ID}');`}
         </Script>
+        <MetaPixelLoader />
       </body>
     </html>
   );

@@ -11,6 +11,7 @@ import Link from "next/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
 import { trackRegistration } from "@/lib/gads";
+import { trackMetaEvent } from "@/lib/meta-pixel";
 import { createClient } from "@/lib/supabase/client";
 import { BBO_USERNAME_TAKEN_MESSAGE, isBboUsernameTaken } from "@/lib/bbo-username";
 import { suggestEmailCorrection } from "@/lib/email-domain-hint";
@@ -157,8 +158,10 @@ function LoginContent() {
             setError(err.message);
           }
         } else {
-          // Conversione Google Ads: registrazione completata
+          // Conversione: registrazione completata. Due destinazioni distinte,
+          // con regole di consenso diverse — vedi src/lib/gads.ts.
           trackRegistration();
+          trackMetaEvent("CompleteRegistration");
           // Upload avatar if selected
           if (avatarFile) {
             await uploadAvatar(avatarFile);

@@ -1,6 +1,18 @@
 /**
  * Google Ads conversion tracking.
  * Tag base caricato in src/app/layout.tsx (gtag.js, una volta sola).
+ *
+ * CONSENSO — perché qui non c'è un controllo esplicito e nel Meta Pixel sì
+ * gtag è governato da Google Consent Mode v2, impostato in layout.tsx con
+ * TUTTI i segnali su "denied" per impostazione predefinita. Con il consenso
+ * negato gtag non scrive cookie e non invia identificatori: manda un ping
+ * senza dati personali, che è il meccanismo previsto e accettato in UE. Un
+ * ulteriore blocco qui perderebbe le conversioni modellate senza aggiungere
+ * tutela.
+ *
+ * Meta non ha un equivalente: il suo Pixel imposta i cookie `_fbp`/`_fbc` non
+ * appena viene caricato. Per questo lì il consenso è una condizione per
+ * scaricare lo script (vedi src/lib/meta-pixel.ts), non per inviare eventi.
  */
 
 export const GADS_ID = "AW-482620196";

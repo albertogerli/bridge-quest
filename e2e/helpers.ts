@@ -20,9 +20,15 @@ export function testCreds(): TestCreds {
   return JSON.parse(readFileSync(join(__dirname, ".test-user.json"), "utf8"));
 }
 
-/** Il banner cookie è un overlay fisso: se resta aperto copre form e CTA. */
+/**
+ * Il banner cookie è un overlay fisso: se resta aperto copre form e CTA.
+ *
+ * Si sceglie "Solo necessari" di proposito: così le prove non caricano mai
+ * tracciatori pubblicitari, ed è anche il percorso che vale la pena esercitare
+ * (il consenso negato è il default e non deve rompere nulla).
+ */
 export async function dismissCookieBanner(page: Page) {
-  const cookieBtn = page.getByRole("button", { name: "Accetta" });
+  const cookieBtn = page.getByRole("button", { name: "Solo necessari" });
   if (await cookieBtn.isVisible().catch(() => false)) {
     await cookieBtn.click();
     await expect(cookieBtn).toBeHidden();

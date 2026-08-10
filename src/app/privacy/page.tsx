@@ -84,9 +84,21 @@ export default function PrivacyPage() {
               <li><strong>Cookie tecnici:</strong> necessari per il funzionamento (autenticazione, preferenze tema). Non richiedono consenso.</li>
               <li><strong>Cookie analitici:</strong> Vercel Analytics per statistiche aggregate e anonime sull&apos;utilizzo.</li>
               <li><strong>Cookie di terze parti:</strong> YouTube può impostare cookie quando si visualizzano i video embedded.</li>
+              <li>
+                <strong>Cookie statistici e pubblicitari:</strong> Google Analytics,
+                Google Ads e Meta Pixel, utilizzati per misurare l&apos;efficacia
+                delle campagne con cui facciamo conoscere il bridge e per non
+                mostrare gli annunci a chi è già iscritto.{" "}
+                <strong>Vengono attivati solo con il tuo consenso</strong> e
+                restano disattivati se scegli &laquo;Solo necessari&raquo;.
+              </li>
             </ul>
             <p className="text-muted-foreground mt-2">
-              Non utilizziamo cookie di profilazione o pubblicitari.
+              I cookie statistici e pubblicitari comportano un trasferimento di
+              dati verso Google LLC e Meta Platforms Ireland Ltd. Puoi cambiare
+              idea in qualsiasi momento cancellando i dati del sito dal tuo
+              browser: la scelta ti verrà richiesta di nuovo alla visita
+              successiva.
             </p>
           </section>
 
