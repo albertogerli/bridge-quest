@@ -13,10 +13,12 @@ import { calculateBoardIMP } from "@/lib/bridge-scoring";
  * come rete ma a intervallo lungo — 5 min invece di 30 s — perché la
  * reattività ora la dà il canale Realtime.
  *
- * Copre anche un buco strutturale verificato il 2026-08-10: `challenges` ha
- * REPLICA IDENTITY di default (sola chiave primaria), quindi gli eventi DELETE
- * arrivano privi delle colonne su cui filtriamo e il server non li consegna.
- * Una sfida ritirata sparisce al primo refresh utile, non in tempo reale.
+ * Nota storica: fino al 2026-08-10 le tabelle avevano REPLICA IDENTITY di
+ * default (sola chiave primaria), quindi il record `old` degli eventi DELETE
+ * non conteneva le colonne su cui filtriamo e il server non li consegnava.
+ * Risolto con `REPLICA IDENTITY FULL` (migrazione
+ * `replica_identity_full_realtime_delete`): ora anche "amico rimosso" e
+ * "sfida ritirata" arrivano in tempo reale. Coperto da `npm run test:realtime`.
  */
 const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 
