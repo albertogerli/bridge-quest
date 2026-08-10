@@ -184,6 +184,106 @@ try {
   }
 }
 
+// ---------------------------------------------------------------------------
+// 4. Unicità del nome BBO — is_bbo_username_taken()
+//    (vedi scripts/sql/bbo-username-unique-2026-08.sql)
+// ---------------------------------------------------------------------------
+console.log("\n[4] Nome BBO unico — is_bbo_username_taken()");
+
+const bboEmail = `bbo-test-${Date.now()}@bridgelab-test.invalid`;
+const bboPassword = `Bbo!${Math.random().toString(36).slice(2, 12)}`;
+// Handle usa-e-getta: non può collidere con un handle BBO reale.
+const bboHandle = `bqtest-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+const bboFree = `${bboHandle}-libero`;
+let bboUserId = null;
+
+try {
+  // (a) un handle mai visto risulta libero, anche da anonimo (registrazione)
+  {
+    const { data, error } = await anon.rpc("is_bbo_username_taken", {
+      p_bbo_username: bboFree,
+    });
+    if (error) fail(`anonimo non può chiamare is_bbo_username_taken (${error.message}) — la registrazione si romperebbe`);
+    else if (data === false) ok("(a) handle mai usato: libero (chiamata da anonimo)");
+    else fail(`(a) handle mai usato riportato come occupato (${JSON.stringify(data)})`);
+  }
+
+  // Campo facoltativo: vuoto/spazi/NULL non sono mai "occupati"
+  for (const [label, value] of [["vuoto", ""], ["spazi", "   "], ["NULL", null]]) {
+    const { data, error } = await anon.rpc("is_bbo_username_taken", { p_bbo_username: value });
+    if (!error && data === false) ok(`(a) handle ${label}: non occupato — il campo resta facoltativo`);
+    else fail(`(a) handle ${label} riportato come occupato o in errore (${error?.message ?? JSON.stringify(data)})`);
+  }
+
+  // Utente di test con un handle noto
+  const { data: created, error: createErr } = await admin.auth.admin.createUser({
+    email: bboEmail,
+    password: bboPassword,
+    email_confirm: true,
+  });
+  if (createErr || !created.user) throw new Error(createErr?.message || "creazione fallita");
+  bboUserId = created.user.id;
+  const { error: upsertErr } = await admin
+    .from("profiles")
+    .upsert({ id: bboUserId, display_name: "RLS BBO test", bbo_username: bboHandle }, { onConflict: "id" });
+  if (upsertErr) throw new Error(`profilo di test non scritto: ${upsertErr.message}`);
+
+  // (b) l'handle ora è occupato per chiunque altro, anche ignorando maiuscole e spazi
+  for (const [label, probe] of [
+    ["identico", bboHandle],
+    ["maiuscole", bboHandle.toUpperCase()],
+    ["spazi ai bordi", `  ${bboHandle}  `],
+  ]) {
+    const { data, error } = await anon.rpc("is_bbo_username_taken", { p_bbo_username: probe });
+    if (!error && data === true) ok(`(b) handle già in uso (${label}): occupato`);
+    else fail(`(b) handle già in uso (${label}) NON riportato come occupato (${error?.message ?? JSON.stringify(data)})`);
+  }
+
+  // (c) per il proprietario, il proprio handle non risulta occupato
+  {
+    const owner = createClient(URL_, ANON, { auth: { persistSession: false } });
+    const { error: signInErr } = await owner.auth.signInWithPassword({
+      email: bboEmail,
+      password: bboPassword,
+    });
+    if (signInErr) throw new Error(`login utente BBO fallito: ${signInErr.message}`);
+
+    const { data, error } = await owner.rpc("is_bbo_username_taken", {
+      p_bbo_username: bboHandle.toUpperCase(),
+    });
+    if (!error && data === false) ok("(c) il proprio handle non risulta occupato per sé stesso");
+    else fail(`(c) il proprietario viene bloccato sul proprio handle (${error?.message ?? JSON.stringify(data)})`);
+
+    // (d) la risposta è SOLO un booleano: nessun dato personale può uscire da qui
+    const { data: shape } = await owner.rpc("is_bbo_username_taken", { p_bbo_username: bboHandle });
+    if (typeof shape === "boolean") ok("(d) la risposta è un booleano — nessun dato personale");
+    else fail(`(d) la funzione restituisce ${typeof shape} invece di un booleano: ${JSON.stringify(shape)}`);
+  }
+
+  // (d bis) stessa verifica da anonimo, il caso che conta di più
+  {
+    const { data } = await anon.rpc("is_bbo_username_taken", { p_bbo_username: bboHandle });
+    if (typeof data === "boolean") ok("(d) anche da anonimo la risposta è un booleano");
+    else fail(`(d) da anonimo la funzione restituisce ${typeof data}: ${JSON.stringify(data)}`);
+  }
+
+  // Corollario: l'handle altrui resta illeggibile con una SELECT diretta.
+  {
+    const { data, error } = await anon.from("profiles").select("bbo_username").limit(1);
+    const leaked = !error && (data?.length ?? 0) > 0;
+    if (leaked) fail("profiles.bbo_username: leggibile da anonimo — la RPC non sarebbe l'unica via");
+    else ok("profiles.bbo_username: non leggibile da anonimo");
+  }
+} catch (e) {
+  fail(`verifica nome BBO non eseguita: ${e.message}`);
+} finally {
+  if (bboUserId) {
+    const { error } = await admin.auth.admin.deleteUser(bboUserId);
+    if (error) info(`utente BBO di test NON eliminato (${error.message}) — rimuoverlo a mano`);
+    else info("utente BBO di test eliminato");
+  }
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"
