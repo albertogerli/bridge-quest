@@ -13,6 +13,7 @@ import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
 import { trackRegistration } from "@/lib/gads";
 import { createClient } from "@/lib/supabase/client";
 import { BBO_USERNAME_TAKEN_MESSAGE, isBboUsernameTaken } from "@/lib/bbo-username";
+import { suggestEmailCorrection } from "@/lib/email-domain-hint";
 import { type ReactNode } from "react";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
@@ -46,6 +47,25 @@ function LoginContent() {
   const [showAsdDropdown, setShowAsdDropdown] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
+
+  // Indirizzo per cui l'utente ha già rifiutato il suggerimento sul dominio:
+  // se conferma che è giusto non glielo si ripropone a ogni tasto premuto.
+  const [emailHintDismissed, setEmailHintDismissed] = useState("");
+
+  /**
+   * Correzione proposta per un probabile refuso nel dominio dell'email.
+   *
+   * Solo in registrazione: in fase di accesso l'indirizzo "sbagliato" è quello
+   * con cui l'account esiste davvero, e suggerire di correggerlo porterebbe
+   * fuori strada. Vedi `@/lib/email-domain-hint` per il caso reale che ha
+   * motivato il controllo (tre account su yahoo.it, yaoo.it e uahoo.it).
+   */
+  const emailSuggestion = useMemo(() => {
+    if (mode !== "signup") return null;
+    const trimmed = email.trim();
+    if (trimmed === emailHintDismissed) return null;
+    return suggestEmailCorrection(trimmed);
+  }, [mode, email, emailHintDismissed]);
 
   // Serve solo per la RPC di verifica dell'handle BBO, che avviene PRIMA della
   // registrazione e quindi da chiamante anonimo.
@@ -220,6 +240,36 @@ function LoginContent() {
               className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               placeholder="la-tua@email.com"
             />
+            {/* Suggerimento, mai un blocco: i domini rari e legittimi qui sono
+                la norma (studi, scuole, domini personali). L'ultima parola
+                resta all'utente. */}
+            <AnimatePresence>
+              {emailSuggestion && (
+                <motion.p
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="mt-1.5 text-xs text-amber-700 dark:text-amber-300"
+                >
+                  Forse intendevi{" "}
+                  <button
+                    type="button"
+                    onClick={() => setEmail(emailSuggestion)}
+                    className="font-semibold underline underline-offset-2 hover:no-underline"
+                  >
+                    {emailSuggestion}
+                  </button>
+                  ?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setEmailHintDismissed(email.trim())}
+                    className="underline underline-offset-2 hover:no-underline"
+                  >
+                    No, è corretto
+                  </button>
+                </motion.p>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Password */}
