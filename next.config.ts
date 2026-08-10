@@ -35,6 +35,39 @@ const nextConfig: NextConfig = {
     // 'unsafe-eval' serve solo in dev (React Fast Refresh); in produzione la
     // CSP lo esclude (rilievo perizia sicurezza 2026-08). googletagmanager.com
     // è necessario per il tag Google Ads caricato in src/app/layout.tsx.
+    //
+    // ─────────────────────────────────────────────────────────────────────────
+    // Perché script-src ha ancora 'unsafe-inline' (decisione 2026-08)
+    //
+    // Il rilievo della perizia chiede di toglierlo passando a una CSP con
+    // nonce per-richiesta. È stato implementato e verificato: funziona (0
+    // violazioni CSP su 5 pagine in build di produzione, gtag e Vercel
+    // Analytics caricati, script del tema anti-flash eseguito). NON è stato
+    // adottato per il costo, che è strutturale e non aggirabile:
+    //
+    // Il nonce cambia a ogni richiesta, quindi il layout deve leggerlo da
+    // headers() → il root layout diventa dinamico → TUTTE le pagine perdono
+    // il prerendering. Misurato: 58 → 5 rotte prerenderizzate (restano solo
+    // robots.txt, sitemap.xml, manifest.webmanifest). Non è un difetto di
+    // implementazione: ogni pagina prerenderizzata contiene ~11 <script>
+    // inline di Next (flight data RSC) generati a build time, quindi privi di
+    // nonce; con una CSP a nonce verrebbero bloccati e la pagina resterebbe
+    // un guscio non idratato. Nemmeno gli hash sono praticabili (contenuto
+    // diverso per pagina e rigenerato a ogni revalidate ISR).
+    //
+    // Costo concreto misurato in locale: /glossario (ISR 1h, ottimizzazione
+    // SEO/LCP del 2026-07) passa da 4ms a 93ms di TTFB perché perde la cache.
+    // In produzione su Vercel l'impatto è maggiore: l'HTML non è più servito
+    // dalla CDN edge ma da una function a ogni richiesta.
+    //
+    // La patch funzionante è conservata in tmp/csp-nonce.patch (non tracciata).
+    // Riaprire la decisione ha senso solo se si accetta il render dinamico.
+    //
+    // style-src mantiene 'unsafe-inline' in ogni caso: React inietta stili
+    // inline (style={{...}}, motion) e Tailwind 4 emette <style> a runtime;
+    // toglierlo romperebbe il rendering. Il rischio non è equiparabile a
+    // quello di script-src.
+    // ─────────────────────────────────────────────────────────────────────────
     const scriptSrc = [
       "'self'",
       "'unsafe-inline'",
