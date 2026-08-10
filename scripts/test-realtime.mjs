@@ -183,6 +183,24 @@ try {
   if (gotOwn) ok("il canale di C è vivo (riceve la propria richiesta)");
   else fail("il canale di C non riceve nemmeno i propri eventi — verifica RLS non attendibile");
 
+  // DELETE — richiede REPLICA IDENTITY FULL sulla tabella: con la replica
+  // identity di default il WAL registra solo la chiave primaria, il record
+  // `old` non contiene le colonne su cui filtriamo e Realtime scarta l'evento.
+  // Prima della migrazione del 2026-08-10 questi eventi non arrivavano mai, e
+  // "un amico ti ha rimosso" restava a carico del refresh lento.
+  const beforeDelete = Date.now();
+  const { error: delErr } = await B.client.from("friendships").delete().eq("id", friendship.id);
+  if (delErr) throw new Error(`delete friendship: ${delErr.message}`);
+
+  const gotDelete = await listenA.waitFor(
+    (e) => e.type === "DELETE" && e.at >= beforeDelete
+  );
+  if (gotDelete) {
+    ok(`A riceve il DELETE della richiesta in ${gotDelete.at - beforeDelete} ms`);
+  } else {
+    fail("A non riceve il DELETE — REPLICA IDENTITY FULL non è attiva sulla tabella");
+  }
+
   await sleep(SILENCE_GRACE);
   const leakedFriend = listenC.events.filter((e) => e.row?.id === friendship.id);
   if (leakedFriend.length === 0) {

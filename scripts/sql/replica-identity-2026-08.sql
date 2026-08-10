@@ -1,0 +1,46 @@
+-- ============================================================================
+-- STATO: APPLICATO in produzione il 2026-08-10 (migrazione Supabase
+--   `replica_identity_full_realtime_delete`). Verificato con
+--   `npm run test:realtime`, che ora contiene il caso DELETE.
+--
+-- BridgeLab: consegna degli eventi DELETE via Realtime
+-- ============================================================================
+--
+-- PROBLEMA (misurato, non teorico)
+-- Dopo aver aggiunto `friendships` e `challenges` alla publication, gli INSERT
+-- e gli UPDATE arrivavano correttamente ma i DELETE non arrivavano MAI.
+--
+-- Causa: con REPLICA IDENTITY di default il WAL registra, per la riga
+-- cancellata, la sola chiave primaria. Il record `old` non contiene quindi
+-- `friend_id`, `opponent_id` ecc., e Realtime non può applicare né i filtri di
+-- sottoscrizione né le RLS: davanti a un evento che non sa a chi consegnare,
+-- lo scarta.
+--
+-- Conseguenza in app: "un amico ti ha rimosso" e "sfida ritirata" restavano a
+-- carico del refresh di sicurezza (5 minuti) invece che del tempo reale.
+--
+-- COSTO
+-- Con FULL, UPDATE e DELETE scrivono nel WAL la riga vecchia per intero.
+-- Su queste tabelle è irrilevante: friendships 145 righe / 136 kB,
+-- challenges 501 righe / 360 kB, con volumi di modifica molto bassi.
+-- Su una tabella grande e molto scritta la valutazione sarebbe diversa.
+-- ============================================================================
+
+ALTER TABLE public.friendships REPLICA IDENTITY FULL;
+ALTER TABLE public.challenges  REPLICA IDENTITY FULL;
+
+-- ============================================================================
+-- VERIFICA
+--   npm run test:realtime      -> deve includere "A riceve il DELETE ..."
+--
+--   SELECT c.relname,
+--          CASE c.relreplident WHEN 'd' THEN 'default (solo PK)'
+--               WHEN 'f' THEN 'FULL' WHEN 'n' THEN 'nothing'
+--               WHEN 'i' THEN 'index' END AS replica_identity
+--   FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+--   WHERE n.nspname = 'public' AND c.relname IN ('friendships','challenges');
+--
+-- RIPRISTINO
+--   ALTER TABLE public.friendships REPLICA IDENTITY DEFAULT;
+--   ALTER TABLE public.challenges  REPLICA IDENTITY DEFAULT;
+-- ============================================================================
