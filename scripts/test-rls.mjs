@@ -52,6 +52,7 @@ const PRIVATE_TABLES = [
   "classes",
   "class_members",
   "instructor_requests",
+  "partner_profiles",
 ];
 
 for (const t of PRIVATE_TABLES) {
@@ -297,6 +298,128 @@ try {
     if (error) info(`utente BBO di test NON eliminato (${error.message}) — rimuoverlo a mano`);
     else info("utente BBO di test eliminato");
   }
+}
+
+
+// ---------------------------------------------------------------------------
+// 5. Trova un compagno — partner_profiles + list_partner_candidates
+//    (vedi scripts/sql/partner-matching-2026-08.sql)
+//
+//    La funzione pubblica nome, livello, provincia e disponibilità: la
+//    proprietà che conta è che vi finisca SOLO chi l'ha chiesto, e che
+//    nessuno possa scrivere la scheda di un altro.
+// ---------------------------------------------------------------------------
+console.log("\n[5] Trova un compagno — partner_profiles");
+
+const pmEmail = `pm-test-${Date.now()}@bridgelab-test.invalid`;
+const pmEmail2 = `pm2-test-${Date.now()}@bridgelab-test.invalid`;
+const pmPassword = `Pm!${Math.random().toString(36).slice(2, 12)}`;
+let pmId = null;
+let pmId2 = null;
+
+try {
+  // (a) un anonimo non deve poter chiamare l'elenco
+  {
+    const { data, error } = await anon.rpc("list_partner_candidates", {});
+    const rows = Array.isArray(data) ? data.length : 0;
+    if (error || rows === 0) ok("(a) list_partner_candidates(): nessun risultato per anonimi");
+    else fail(`(a) un anonimo ottiene ${rows} schede di partner`);
+  }
+
+  // Due utenti veri: A si mette in cerca, B no.
+  const a = createClient(URL_, ANON, { auth: { persistSession: false } });
+  const b = createClient(URL_, ANON, { auth: { persistSession: false } });
+  const { data: sa } = await a.auth.signUp({ email: pmEmail, password: pmPassword });
+  const { data: sb } = await b.auth.signUp({ email: pmEmail2, password: pmPassword });
+  pmId = sa?.user?.id ?? null;
+  pmId2 = sb?.user?.id ?? null;
+  if (!pmId || !pmId2) throw new Error("creazione utenti di test non riuscita");
+  await admin.from("profiles").upsert([
+    { id: pmId, display_name: "PM Uno" },
+    { id: pmId2, display_name: "PM Due" },
+  ]);
+
+  // (b) A entra nell'elenco
+  {
+    const { error } = await a.from("partner_profiles").upsert({
+      user_id: pmId, looking: true, level: "intermedio",
+      province: "MI", availability: ["sera"],
+    });
+    if (!error) ok("(b) un utente può creare la PROPRIA scheda");
+    else fail(`(b) un utente non riesce a creare la propria scheda: ${error.message}`);
+  }
+
+  // (c) B prova a scrivere la scheda di A — deve fallire
+  {
+    const { error } = await b.from("partner_profiles").upsert({
+      user_id: pmId, looking: true, level: "avanzato", province: "RM", availability: [],
+    });
+    if (error) ok("(c) scrivere la scheda di un ALTRO utente è negato");
+    else fail("(c) un utente ha potuto sovrascrivere la scheda di un altro");
+  }
+
+  // (d) B prova a modificare la riga di A con UPDATE diretto
+  {
+    const { data } = await b.from("partner_profiles")
+      .update({ province: "NA" }).eq("user_id", pmId).select("user_id");
+    if ((data?.length ?? 0) === 0) ok("(d) UPDATE sulla riga altrui non tocca nulla");
+    else fail("(d) un utente ha modificato la riga di un altro");
+  }
+
+  // (e) B, che non si è messo in cerca, NON deve comparire a nessuno
+  {
+    const { data } = await a.rpc("list_partner_candidates", {});
+    const rows = Array.isArray(data) ? data : [];
+    if (!rows.some((r) => r.user_id === pmId2)) ok("(e) chi non si è iscritto non compare nell'elenco");
+    else fail("(e) un utente che NON si è messo in cerca compare fra i candidati");
+  }
+
+  // (f) nessuno deve vedere sé stesso fra i candidati
+  {
+    const { data } = await a.rpc("list_partner_candidates", {});
+    const rows = Array.isArray(data) ? data : [];
+    if (!rows.some((r) => r.user_id === pmId)) ok("(f) non si compare mai fra i propri candidati");
+    else fail("(f) l'utente vede sé stesso fra i candidati");
+  }
+
+  // (g) A si ritira: sparisce per gli altri ma continua a vedere la propria
+  {
+    await a.from("partner_profiles").update({ looking: false }).eq("user_id", pmId);
+    const { data: visibileAB } = await b.from("partner_profiles").select("user_id").eq("user_id", pmId);
+    if ((visibileAB?.length ?? 0) === 0) ok("(g) chi esce dall'elenco non è più visibile agli altri");
+    else fail("(g) una scheda ritirata resta visibile agli altri utenti");
+
+    const { data: propria } = await a.from("partner_profiles").select("user_id").eq("user_id", pmId);
+    if ((propria?.length ?? 0) === 1) ok("(g) la propria scheda resta leggibile anche da ritirati");
+    else fail("(g) dopo il ritiro l'utente non vede più le proprie impostazioni");
+  }
+
+  // (h) il livello è un elenco chiuso lato database, non solo nella UI
+  {
+    const { error } = await a.from("partner_profiles").upsert({
+      user_id: pmId, looking: true, level: "campione-del-mondo", availability: [],
+    });
+    if (error) ok("(h) un livello inventato è rifiutato dal database");
+    else fail("(h) il database accetta un livello arbitrario");
+  }
+
+  // (i) idem per le fasce di disponibilità
+  {
+    const { error } = await a.from("partner_profiles").upsert({
+      user_id: pmId, looking: true, level: "intermedio", availability: ["notte-fonda"],
+    });
+    if (error) ok("(i) una fascia inventata è rifiutata dal database");
+    else fail("(i) il database accetta una fascia di disponibilità arbitraria");
+  }
+} catch (e) {
+  fail(`verifica partner matching non eseguita: ${e.message}`);
+} finally {
+  for (const id of [pmId, pmId2]) {
+    if (!id) continue;
+    const { error } = await admin.auth.admin.deleteUser(id);
+    if (error) info(`utente partner di test NON eliminato (${error.message}) — rimuoverlo a mano`);
+  }
+  if (pmId || pmId2) info("utenti partner di test eliminati");
 }
 
 console.log(
