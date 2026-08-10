@@ -101,8 +101,19 @@ export function EditProfileSection({
                 value={edit.editBbo}
                 onChange={(e) => edit.setEditBbo(e.target.value)}
                 placeholder="Il tuo username su BridgeBase Online"
-                className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                aria-invalid={edit.editBboError ? true : undefined}
+                aria-describedby={edit.editBboError ? "bbo-error" : undefined}
+                className={`w-full h-10 px-3 rounded-xl border bg-card text-foreground text-sm focus:outline-none focus:ring-2 ${
+                  edit.editBboError
+                    ? "border-destructive focus:ring-destructive"
+                    : "border-border focus:ring-primary"
+                }`}
               />
+              {edit.editBboError && (
+                <p id="bbo-error" role="alert" className="mt-1 text-[11px] font-semibold text-destructive">
+                  {edit.editBboError}
+                </p>
+              )}
             </div>
 
             {/* ASD */}

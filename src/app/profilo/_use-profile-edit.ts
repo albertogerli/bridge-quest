@@ -1,10 +1,16 @@
 "use client";
 
-import { useCallback, useState, type Dispatch, type SetStateAction } from "react";
+import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useActiveAsdClubs, useAsdClub } from "@/store/use-asd-store";
 import type { AsdClub } from "@/lib/catalog";
 import { reportError } from "@/lib/report-error";
+import { createClient } from "@/lib/supabase/client";
+import {
+  BBO_USERNAME_TAKEN_MESSAGE,
+  isBboUsernameTaken,
+  shouldCheckBboUsername,
+} from "@/lib/bbo-username";
 import { toast } from "sonner";
 
 export interface ProfileEdit {
@@ -13,7 +19,9 @@ export interface ProfileEdit {
   editName: string;
   setEditName: Dispatch<SetStateAction<string>>;
   editBbo: string;
-  setEditBbo: Dispatch<SetStateAction<string>>;
+  setEditBbo: (value: string) => void;
+  /** Messaggio sotto il campo BBO quando l'handle è già di un altro account ("" = nessun errore). */
+  editBboError: string;
   editAsdSearch: string;
   setEditAsdSearch: Dispatch<SetStateAction<string>>;
   editAsdCode: string;
@@ -45,7 +53,8 @@ export function useProfileEdit(): ProfileEdit {
   const { profile: authProfile, updateProfile, uploadAvatar, refreshProfile } = useSharedAuth();
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
-  const [editBbo, setEditBbo] = useState("");
+  const [editBbo, setEditBboState] = useState("");
+  const [editBboError, setEditBboError] = useState("");
   const [editAsdSearch, setEditAsdSearch] = useState("");
   const [editAsdCode, setEditAsdCode] = useState("");
   const [showAsdDropdown, setShowAsdDropdown] = useState(false);
@@ -55,6 +64,13 @@ export function useProfileEdit(): ProfileEdit {
   const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null);
   const [editAvatarPreview, setEditAvatarPreview] = useState("");
   const [saving, setSaving] = useState(false);
+  const supabase = useMemo(() => createClient(), []);
+
+  /** Ogni modifica del campo azzera l'errore: il messaggio vale per il valore che l'ha prodotto. */
+  const setEditBbo = useCallback((value: string) => {
+    setEditBboState(value);
+    setEditBboError("");
+  }, []);
 
   const startEditing = useCallback(() => {
     setEditName(authProfile?.display_name || "");
@@ -63,7 +79,7 @@ export function useProfileEdit(): ProfileEdit {
     setEditAvatarFile(null);
     setEditAvatarPreview("");
     setEditing(true);
-  }, [authProfile]);
+  }, [authProfile, setEditBbo]);
 
   const selectAvatarFile = useCallback((file: File) => {
     setEditAvatarFile(file);
@@ -74,6 +90,25 @@ export function useProfileEdit(): ProfileEdit {
 
   const save = useCallback(async () => {
     setSaving(true);
+    setEditBboError("");
+
+    // Il nome BBO va verificato solo se è valorizzato E davvero cambiato: chi
+    // lo lascia vuoto o ri-salva il proprio stesso handle non deve essere
+    // bloccato — nemmeno i profili con un handle storicamente duplicato, che
+    // devono poter continuare a modificare il resto del profilo.
+    // Resta una finestra di corsa fra questo controllo e la UPDATE; la garanzia
+    // forte sarà l'indice unico parziale lato database (vedi
+    // scripts/sql/bbo-username-unique-2026-08.sql).
+    if (shouldCheckBboUsername(editBbo, authProfile?.bbo_username)) {
+      const taken = await isBboUsernameTaken(supabase, editBbo, "profilo:verifica-bbo");
+      if (taken) {
+        setEditBboError(BBO_USERNAME_TAKEN_MESSAGE);
+        toast.error(BBO_USERNAME_TAKEN_MESSAGE);
+        setSaving(false);
+        return;
+      }
+    }
+
     const updates: Record<string, unknown> = {};
     if (editName.trim()) updates.display_name = editName.trim();
     if (editBbo !== (authProfile?.bbo_username || "")) updates.bbo_username = editBbo.trim() || null;
@@ -108,6 +143,7 @@ export function useProfileEdit(): ProfileEdit {
     editBbo,
     editName,
     refreshProfile,
+    supabase,
     updateProfile,
     uploadAvatar,
   ]);
@@ -119,6 +155,7 @@ export function useProfileEdit(): ProfileEdit {
     setEditName,
     editBbo,
     setEditBbo,
+    editBboError,
     editAsdSearch,
     setEditAsdSearch,
     editAsdCode,

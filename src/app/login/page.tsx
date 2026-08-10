@@ -11,6 +11,8 @@ import Link from "next/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
 import { trackRegistration } from "@/lib/gads";
+import { createClient } from "@/lib/supabase/client";
+import { BBO_USERNAME_TAKEN_MESSAGE, isBboUsernameTaken } from "@/lib/bbo-username";
 import { type ReactNode } from "react";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
@@ -44,6 +46,10 @@ function LoginContent() {
   const [showAsdDropdown, setShowAsdDropdown] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
+
+  // Serve solo per la RPC di verifica dell'handle BBO, che avviene PRIMA della
+  // registrazione e quindi da chiamante anonimo.
+  const supabase = useMemo(() => createClient(), []);
 
   const activeClubs = useActiveAsdClubs();
   const selectedAsdName = useMemo(
@@ -98,6 +104,16 @@ function LoginContent() {
         }
         if (password.length < 6) {
           setError("La password deve avere almeno 6 caratteri");
+          setLoading(false);
+          return;
+        }
+
+        // Il nome BBO è facoltativo: si controlla solo se è stato compilato.
+        // Resta una finestra di corsa fra questo controllo e l'inserimento del
+        // profilo; la garanzia forte sarà l'indice unico parziale lato database
+        // (vedi scripts/sql/bbo-username-unique-2026-08.sql).
+        if (await isBboUsernameTaken(supabase, bboUsername, "login:verifica-bbo")) {
+          setError(BBO_USERNAME_TAKEN_MESSAGE);
           setLoading(false);
           return;
         }
