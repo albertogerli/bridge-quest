@@ -55,6 +55,18 @@ export function UserDetailModal({
                   <span>{PROFILE_EMOJI[u.profile_type]} {u.profile_type}</span>
                   {u.bbo_username && <span>BBO: {u.bbo_username}</span>}
                 </div>
+                {/* Link mailto: da qui si scrive all'utente senza passare per
+                    copia-e-incolla, che è il modo tipico di sbagliare
+                    destinatario. */}
+                {u.email && (
+                  <a
+                    href={`mailto:${u.email}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="block mt-1 text-sm text-white/90 underline underline-offset-2 hover:text-white break-all"
+                  >
+                    {u.email}
+                  </a>
+                )}
               </div>
             </div>
             <button onClick={onClose} aria-label="Chiudi" className="text-white/70 hover:text-white text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10"><span aria-hidden="true">✕</span></button>

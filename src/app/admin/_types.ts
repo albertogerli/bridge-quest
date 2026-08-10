@@ -44,6 +44,12 @@ export interface UserRow {
   created_at: string;
   last_login: string | null;
   platform: string | null;
+  /**
+   * Da `auth.users`, servita solo dalla RPC `admin_list_users`, che rifiuta
+   * chi non è amministratore. Può essere null: il LEFT JOIN tiene in elenco
+   * anche un profilo senza riga di autenticazione, invece di farlo sparire.
+   */
+  email: string | null;
 }
 
 export type ProfileRecord = UserRow & { role?: string | null };

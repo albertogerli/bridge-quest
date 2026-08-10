@@ -33,7 +33,7 @@ export function UsersTable({
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Cerca utente..."
+          placeholder="Cerca per nome, BBO o email..."
           className="w-60 h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
         />
       </div>
@@ -56,8 +56,15 @@ export function UsersTable({
           <tbody className="divide-y divide-gray-100">
             {users.map((u) => (
               <tr key={u.id} className="hover:bg-blue-50/50 transition-colors cursor-pointer" onClick={() => onSelectUser(u.id)}>
+                {/* L'email sta sotto il nome invece che in una colonna sua:
+                    la tabella ha già dieci colonne e un indirizzo è lungo. */}
                 <td className="px-5 py-3 font-semibold text-gray-900">
                   <span className="hover:text-[#003DA5] hover:underline">{u.display_name || "—"}</span>
+                  {u.email && (
+                    <span className="block font-normal text-xs text-gray-400 truncate max-w-[15rem]" title={u.email}>
+                      {u.email}
+                    </span>
+                  )}
                 </td>
                 <td className="px-5 py-3">
                   <span className="inline-flex items-center gap-1">
