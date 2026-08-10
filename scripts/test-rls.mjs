@@ -174,6 +174,21 @@ try {
     .single();
   if (rawErr) ok("profiles: select(*) diretta negata anche sulla propria riga (atteso)");
   else fail("profiles: select(*) diretta ancora permessa — la revoca delle colonne non è attiva");
+
+  // admin_list_users() restituisce le EMAIL di tutti gli iscritti. È eseguibile
+  // dal ruolo `authenticated`, quindi l'unica cosa che separa un utente
+  // qualunque dall'anagrafica completa è il controllo is_admin() dentro il
+  // corpo. Se qualcuno lo togliesse, o ricreasse la funzione dimenticandolo,
+  // questa riga è ciò che se ne accorge.
+  const { data: adminRows, error: adminErr } = await user.rpc("admin_list_users");
+  const leakedRows = Array.isArray(adminRows) ? adminRows.length : 0;
+  if (adminErr && leakedRows === 0) {
+    ok("admin_list_users(): negata a un utente non amministratore");
+  } else {
+    fail(
+      `admin_list_users(): un utente qualunque ottiene ${leakedRows} righe con le email di tutti`
+    );
+  }
 } catch (e) {
   fail(`verifica autenticata non eseguita: ${e.message}`);
 } finally {

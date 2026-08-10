@@ -109,6 +109,7 @@ export function mapProfilesToUsers(profiles: ProfileRecord[]): UserRow[] {
     created_at: u.created_at,
     last_login: u.last_login,
     platform: u.platform ?? null,
+    email: u.email ?? null,
   }));
 }
 
@@ -470,12 +471,21 @@ export function filterAsdRows(rows: AsdRow[], q: string): AsdRow[] {
     : rows;
 }
 
+/**
+ * Filtra per nome, handle BBO o email.
+ *
+ * L'email è spesso l'unico dato che si ha in mano quando un utente scrive per
+ * un problema: cercarlo per indirizzo è il motivo principale per cui la
+ * colonna esiste.
+ */
 export function filterUsers(users: UserRow[], search: string): UserRow[] {
-  return search.trim()
+  const needle = search.trim().toLowerCase();
+  return needle
     ? users.filter(
         (u) =>
-          u.display_name?.toLowerCase().includes(search.toLowerCase()) ||
-          u.bbo_username?.toLowerCase().includes(search.toLowerCase())
+          u.display_name?.toLowerCase().includes(needle) ||
+          u.bbo_username?.toLowerCase().includes(needle) ||
+          u.email?.toLowerCase().includes(needle)
       )
     : users;
 }

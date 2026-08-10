@@ -36,6 +36,7 @@ function profile(over: Partial<ProfileRecord> & { id: string }): ProfileRecord {
   return {
     display_name: null,
     bbo_username: null,
+    email: null,
     profile_type: "adulto",
     xp: 0,
     streak: 0,
@@ -504,6 +505,31 @@ describe("filterUsers", () => {
 
   it("non esplode sui campi nulli", () => {
     expect(filterUsers(USERS, "xyz")).toEqual([]);
+  });
+
+  it("cerca anche per email, che spesso è l'unico dato che si ha", () => {
+    const conEmail = [
+      { ...USERS[0], id: "e1", display_name: "Tizio", bbo_username: null, email: "mario.rossi@libero.it" },
+      { ...USERS[0], id: "e2", display_name: "Caio", bbo_username: null, email: null },
+    ];
+    expect(filterUsers(conEmail, "mario.rossi").map((u) => u.id)).toEqual(["e1"]);
+    expect(filterUsers(conEmail, "LIBERO.IT").map((u) => u.id)).toEqual(["e1"]);
+    // Un profilo senza email non deve far saltare il filtro.
+    expect(filterUsers(conEmail, "@").map((u) => u.id)).toEqual(["e1"]);
+  });
+});
+
+describe("buildUsersCsv — l'email resta fuori dall'export", () => {
+  it("non include l'indirizzo email fra le colonne", () => {
+    // Scelta deliberata: l'email si consulta a schermo nel pannello admin, ma
+    // un CSV con centinaia di indirizzi che finisce nei Download di un
+    // portatile è un'esposizione di natura diversa. Se un giorno servirà
+    // davvero, va aggiunta consapevolmente — non per errore.
+    const csv = buildUsersCsv([
+      { ...USERS[0], display_name: "Tizio", email: "mario.rossi@libero.it" },
+    ]);
+    expect(csv).not.toContain("mario.rossi@libero.it");
+    expect(csv.split("\n")[0]).not.toMatch(/email/i);
   });
 });
 
