@@ -2,6 +2,21 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { reportError } from "@/lib/report-error";
+
+/**
+ * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
+ * (sospensione del dispositivo, cambio rete, proxy) e alla riconnessione gli
+ * eventi persi NON vengono ritrasmessi. Il polling resta quindi come rete, ma
+ * a intervallo lungo: da 30 s a 5 min (-90% richieste). La reattività la dà
+ * il canale Realtime, non il timer.
+ *
+ * Copre anche un buco strutturale verificato il 2026-08-10: `friendships` ha
+ * REPLICA IDENTITY di default (sola chiave primaria), quindi gli eventi DELETE
+ * arrivano senza le colonne su cui filtriamo e il server non li consegna. Un
+ * "amico rimosso" si vede quindi al primo refresh utile, non in tempo reale.
+ */
+const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 
 export interface FriendProfile {
   id: string;
@@ -39,6 +54,7 @@ export function useFriends() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const currentUserIdRef = useRef<string | null>(null);
+  const [realtimeUserId, setRealtimeUserId] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -54,7 +70,7 @@ export function useFriends() {
       }
       return null;
     } catch (error) {
-      console.error("Error getting current user:", error);
+      reportError("use-friends:getUser", error);
       return null;
     }
   }, [supabase]);
@@ -72,7 +88,7 @@ export function useFriends() {
         .eq("status", "accepted");
 
       if (sentError) {
-        console.error("Error fetching sent friendships:", sentError);
+        reportError("use-friends:fetchFriends", sentError);
         return;
       }
 
@@ -84,7 +100,7 @@ export function useFriends() {
         .eq("status", "accepted");
 
       if (receivedError) {
-        console.error("Error fetching received friendships:", receivedError);
+        reportError("use-friends:fetchFriends", receivedError);
         return;
       }
 
@@ -105,7 +121,7 @@ export function useFriends() {
         .in("id", allProfileIds);
 
       if (profilesError) {
-        console.error("Error fetching friend profiles:", profilesError);
+        reportError("use-friends:fetchFriends", profilesError);
         return;
       }
 
@@ -133,7 +149,7 @@ export function useFriends() {
 
       setFriends(combinedFriends);
     } catch (error) {
-      console.error("Error fetching friends:", error);
+      reportError("use-friends:fetchFriends", error);
     }
   }, [supabase, getCurrentUserId]);
 
@@ -150,7 +166,7 @@ export function useFriends() {
         .eq("status", "pending");
 
       if (receivedError) {
-        console.error("Error fetching pending received:", receivedError);
+        reportError("use-friends:fetchPending", receivedError);
         return;
       }
 
@@ -162,7 +178,7 @@ export function useFriends() {
         .eq("status", "pending");
 
       if (sentError) {
-        console.error("Error fetching pending sent:", sentError);
+        reportError("use-friends:fetchPending", sentError);
         return;
       }
 
@@ -180,7 +196,7 @@ export function useFriends() {
           .in("id", allProfileIds);
 
         if (profilesError) {
-          console.error("Error fetching pending profiles:", profilesError);
+          reportError("use-friends:fetchPending", profilesError);
           return;
         }
 
@@ -218,7 +234,7 @@ export function useFriends() {
       setPendingReceived(pendingReceivedList);
       setPendingSent(pendingSentList);
     } catch (error) {
-      console.error("Error fetching pending friendships:", error);
+      reportError("use-friends:fetchPending", error);
     }
   }, [supabase, getCurrentUserId]);
 
@@ -226,6 +242,13 @@ export function useFriends() {
     setLoading(true);
     await Promise.all([fetchFriends(), fetchPending()]);
     setLoading(false);
+  }, [fetchFriends, fetchPending]);
+
+  /** Come fetchAll ma senza toccare `loading`: usato dai refresh in background
+   *  (Realtime, timer di sicurezza, ritorno sulla tab) per non far lampeggiare
+   *  gli scheletri di caricamento a schermo. */
+  const refreshQuiet = useCallback(async () => {
+    await Promise.all([fetchFriends(), fetchPending()]);
   }, [fetchFriends, fetchPending]);
 
   const searchUsers = useCallback(
@@ -244,14 +267,14 @@ export function useFriends() {
         });
 
         if (error) {
-          console.error("Error searching users:", error);
+          reportError("use-friends:search", error);
           setSearchResults([]);
           return;
         }
 
         setSearchResults((data as SearchResult[]) || []);
       } catch (error) {
-        console.error("Error searching users:", error);
+        reportError("use-friends:search", error);
         setSearchResults([]);
       } finally {
         setSearchLoading(false);
@@ -277,7 +300,7 @@ export function useFriends() {
           .single();
 
         if (error) {
-          console.error("Error adding friend:", error);
+          reportError("use-friends:add", error);
           return;
         }
 
@@ -292,7 +315,7 @@ export function useFriends() {
 
         await fetchPending();
       } catch (error) {
-        console.error("Error adding friend:", error);
+        reportError("use-friends:add", error);
       }
     },
     [supabase, getCurrentUserId, fetchPending]
@@ -307,13 +330,13 @@ export function useFriends() {
           .eq("id", friendshipId);
 
         if (error) {
-          console.error("Error accepting friend:", error);
+          reportError("use-friends:accept", error);
           return;
         }
 
         await fetchAll();
       } catch (error) {
-        console.error("Error accepting friend:", error);
+        reportError("use-friends:accept", error);
       }
     },
     [supabase, fetchAll]
@@ -328,13 +351,13 @@ export function useFriends() {
           .eq("id", friendshipId);
 
         if (error) {
-          console.error("Error declining friend:", error);
+          reportError("use-friends:decline", error);
           return;
         }
 
         await fetchPending();
       } catch (error) {
-        console.error("Error declining friend:", error);
+        reportError("use-friends:decline", error);
       }
     },
     [supabase, fetchPending]
@@ -349,13 +372,13 @@ export function useFriends() {
           .eq("id", friendshipId);
 
         if (error) {
-          console.error("Error removing friend:", error);
+          reportError("use-friends:remove", error);
           return;
         }
 
         await fetchAll();
       } catch (error) {
-        console.error("Error removing friend:", error);
+        reportError("use-friends:remove", error);
       }
     },
     [supabase, fetchAll]
@@ -366,14 +389,101 @@ export function useFriends() {
     fetchAll();
   }, [fetchAll]);
 
-  // Poll pending count every 30 seconds
+  // Utente corrente per il canale Realtime. Va tenuto in stato (non solo nel
+  // ref) perché il canale deve essere ricreato al cambio utente: login, logout
+  // e refresh del token passano tutti da onAuthStateChange.
+  useEffect(() => {
+    let cancelled = false;
+
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        if (!cancelled) setRealtimeUserId(data.user?.id ?? null);
+      })
+      .catch((error) => reportError("use-friends:getUser", error));
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const id = session?.user?.id ?? null;
+      currentUserIdRef.current = id;
+      setRealtimeUserId(id);
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  // Supabase Realtime: due sottoscrizioni mirate sulla stessa connessione.
+  // `friend_id=eq.<me>` copre le richieste RICEVUTE (insert) e il loro ciclo di
+  // vita; `user_id=eq.<me>` copre quelle INVIATE (accettate/rifiutate da altri).
+  // Il filtro è lato server e le RLS di `friendships` valgono anche qui: se una
+  // riga non sarebbe leggibile via SELECT, l'evento non arriva.
+  // Il suffisso casuale nel nome del canale evita collisioni di topic quando il
+  // hook è montato da più componenti contemporaneamente (o in StrictMode, dove
+  // l'effetto viene eseguito due volte).
+  useEffect(() => {
+    if (!realtimeUserId) return;
+
+    const onChange = () => {
+      void refreshQuiet();
+    };
+
+    const channel = supabase
+      .channel(`friendships-${realtimeUserId}-${Math.random().toString(36).slice(2, 10)}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "friendships",
+          filter: `friend_id=eq.${realtimeUserId}`,
+        },
+        onChange
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "friendships",
+          filter: `user_id=eq.${realtimeUserId}`,
+        },
+        onChange
+      )
+      .subscribe((status, error) => {
+        if (error) reportError("use-friends:realtime", error);
+        else if (status === "CHANNEL_ERROR") {
+          reportError("use-friends:realtime", new Error(`canale in stato ${status}`));
+        }
+      });
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [supabase, realtimeUserId, refreshQuiet]);
+
+  // Rete di sicurezza (vedi SAFETY_POLL_INTERVAL): il Realtime può perdere
+  // eventi mentre il socket è giù e non li ritrasmette alla riconnessione.
+  // Un timer lento più un refresh quando la tab torna in primo piano coprono
+  // il buco senza reintrodurre il costo del polling a 30 s.
   useEffect(() => {
     const interval = setInterval(() => {
-      fetchPending();
-    }, 30_000);
+      void refreshQuiet();
+    }, SAFETY_POLL_INTERVAL);
 
-    return () => clearInterval(interval);
-  }, [fetchPending]);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") void refreshQuiet();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [refreshQuiet]);
 
   return {
     friends,

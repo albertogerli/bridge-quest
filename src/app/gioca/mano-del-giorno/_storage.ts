@@ -12,6 +12,7 @@ import {
   getTodayString,
   getYesterdayString,
   nextStreak,
+  previousDateString,
 } from "@/lib/daily-hand";
 import type { DailyResult } from "./_types";
 
@@ -36,8 +37,10 @@ export function saveDailyResult(dateStr: string, result: DailyResult) {
   try {
     localStorage.setItem(resultKey(dateStr), JSON.stringify(result));
 
-    // Update streak
-    const yesterday = getYesterdayString(Date.now());
+    // Update streak — "ieri" è relativo alla data che si sta salvando, non
+    // all'orologio: usando Date.now() l'esito dipendeva dal giorno in cui la
+    // funzione girava (un test scritto il 9 agosto falliva il 10).
+    const yesterday = previousDateString(dateStr);
     const yesterdayResult = getDailyResult(yesterday);
     const prevStreak = parseInt(localStorage.getItem(STREAK_KEY) || "0", 10);
     localStorage.setItem(

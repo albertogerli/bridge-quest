@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { reportError } from "@/lib/report-error";
 import { Swords, Check, X, ChevronRight, Clock } from "lucide-react";
 import Link from "next/link";
 
@@ -21,7 +22,14 @@ interface Challenge {
   opponent_completed: boolean;
 }
 
-const POLL_INTERVAL = 30_000; // 30 seconds
+/**
+ * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
+ * (sospensione del dispositivo, cambio rete, proxy) e gli eventi persi non
+ * vengono ritrasmessi alla riconnessione. Il polling resta ma a intervallo
+ * lungo — 5 min invece di 30 s — perché la reattività la dà il canale
+ * Realtime, affiancato da un refresh al ritorno sulla tab.
+ */
+const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 
 export function PendingChallengesBanner() {
   const { user } = useSharedAuth();
@@ -85,7 +93,7 @@ export function PendingChallengesBanner() {
     setLoading(false);
   }, [user]);
 
-  // Initial fetch + polling
+  // Fetch iniziale + rete di sicurezza (timer lento + ritorno sulla tab)
   useEffect(() => {
     if (!user) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- stato aggiornato in risposta a un flusso asincrono (fetch/store): pattern legittimo
@@ -94,8 +102,66 @@ export function PendingChallengesBanner() {
     }
 
     fetchChallenges();
-    const interval = setInterval(fetchChallenges, POLL_INTERVAL);
-    return () => clearInterval(interval);
+    const interval = setInterval(fetchChallenges, SAFETY_POLL_INTERVAL);
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") fetchChallenges();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [user, fetchChallenges]);
+
+  // Supabase Realtime: sfide in cui sono avversario (ricevute, o aperte a cui
+  // vengo agganciato) e sfide che ho lanciato io (accettate/rifiutate).
+  // Filtri lato server; le RLS di `challenges` valgono anche sugli eventi.
+  // Il canale è legato a `user.id`: al logout viene smontato e ricreato.
+  useEffect(() => {
+    if (!user) return;
+
+    const supabase = createClient();
+    const onChange = () => {
+      void fetchChallenges();
+    };
+
+    const channel = supabase
+      .channel(`banner-challenges-${user.id}-${Math.random().toString(36).slice(2, 10)}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "challenges",
+          filter: `opponent_id=eq.${user.id}`,
+        },
+        onChange
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "challenges",
+          filter: `challenger_id=eq.${user.id}`,
+        },
+        onChange
+      )
+      .subscribe((status, error) => {
+        if (error) reportError("pending-challenges-banner:realtime", error);
+        else if (status === "CHANNEL_ERROR") {
+          reportError(
+            "pending-challenges-banner:realtime",
+            new Error(`canale in stato ${status}`)
+          );
+        }
+      });
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
   }, [user, fetchChallenges]);
 
   const handleAccept = useCallback(

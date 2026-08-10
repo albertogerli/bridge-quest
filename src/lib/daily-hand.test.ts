@@ -17,6 +17,7 @@ import {
   positionLabelIt,
   resultHeadline,
   resultVerdict,
+  previousDateString,
 } from "./daily-hand";
 import type { Smazzata } from "@/lib/catalog";
 
@@ -368,5 +369,27 @@ describe("resultVerdict", () => {
     expect(resultVerdict(0)).toBe("Ben giocato! Contratto esatto");
     expect(resultVerdict(-1)).toBe("Quasi! Solo una presa in meno");
     expect(resultVerdict(-2)).toBe("Da rivedere - riprova la mano!");
+  });
+});
+
+describe("previousDateString", () => {
+  // La serie giornaliera deve essere relativa alla data salvata, non
+  // all'orologio: prima `saveDailyResult` usava Date.now() e il risultato
+  // cambiava a seconda del giorno in cui girava.
+  it("torna al giorno precedente", () => {
+    expect(previousDateString("2026-08-10")).toBe("2026-08-09");
+  });
+
+  it("attraversa inizio mese, inizio anno e il 29 febbraio", () => {
+    expect(previousDateString("2026-08-01")).toBe("2026-07-31");
+    expect(previousDateString("2026-01-01")).toBe("2025-12-31");
+    expect(previousDateString("2024-03-01")).toBe("2024-02-29");
+  });
+
+  it("non slitta nel giorno sbagliato al cambio di ora legale", () => {
+    // In Europa l'ora legale 2026 inizia il 29 marzo: sottrarre 24 ore da
+    // mezzanotte finirebbe ancora nel 29.
+    expect(previousDateString("2026-03-30")).toBe("2026-03-29");
+    expect(previousDateString("2026-10-26")).toBe("2026-10-25");
   });
 });
