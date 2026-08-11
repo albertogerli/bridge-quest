@@ -15,6 +15,7 @@ import { trackMetaEvent } from "@/lib/meta-pixel";
 import { createClient } from "@/lib/supabase/client";
 import { BBO_USERNAME_TAKEN_MESSAGE, isBboUsernameTaken } from "@/lib/bbo-username";
 import { suggestEmailCorrection } from "@/lib/email-domain-hint";
+import { authErrorMessage, isAlreadyRegistered } from "@/lib/auth-errors";
 import { type ReactNode } from "react";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
@@ -103,16 +104,7 @@ function LoginContent() {
       if (mode === "login") {
         const { error: err } = await signIn(email, password);
         if (err) {
-          const msg = err.message.toLowerCase();
-          if (msg.includes("invalid login credentials") || msg.includes("invalid_credentials")) {
-            setError("Email o password errati");
-          } else if (msg.includes("email not confirmed")) {
-            setError("Devi confermare la tua email prima di accedere. Controlla la casella di posta.");
-          } else if (msg.includes("rate limit") || msg.includes("too many")) {
-            setError("Troppi tentativi. Attendi qualche minuto e riprova.");
-          } else {
-            setError("Errore di accesso. Riprova.");
-          }
+          setError(authErrorMessage(err.message));
         } else {
           window.location.href = redirectTo;
           return;
@@ -150,13 +142,11 @@ function LoginContent() {
         });
 
         if (err) {
-          if (err.message.toLowerCase().includes("rate limit")) {
-            setError("Troppe richieste. Attendi qualche minuto e riprova.");
-          } else if (err.message.includes("already registered")) {
-            setError("already_registered");
-          } else {
-            setError(err.message);
-          }
+          // "already_registered" e' un sentinella: la UI mostra un blocco con
+          // i pulsanti "Vai al login" e "Password dimenticata?" invece di un
+          // testo. Tutto il resto passa dalla traduzione, che non restituisce
+          // mai il messaggio inglese grezzo di Supabase.
+          setError(isAlreadyRegistered(err.message) ? "already_registered" : authErrorMessage(err.message));
         } else {
           // Conversione: registrazione completata. Due destinazioni distinte,
           // con regole di consenso diverse — vedi src/lib/gads.ts.
