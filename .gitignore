@@ -96,3 +96,5 @@ scripts/youtube_token.json
 e2e/.test-user.json
 test-results/
 playwright-report/
+_dump-contenuti.json
+audit-contenuti.json
