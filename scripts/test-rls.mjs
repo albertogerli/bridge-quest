@@ -181,6 +181,22 @@ try {
   // qualunque dall'anagrafica completa è il controllo is_admin() dentro il
   // corpo. Se qualcuno lo togliesse, o ricreasse la funzione dimenticandolo,
   // questa riga è ciò che se ne accorge.
+  // get_engagement_targets() restituisce le EMAIL degli iscritti ed esisteva
+  // per il solo cron delle email (che usa la service role). L'11/08/2026 era
+  // eseguibile da QUALSIASI utente autenticato: un account creato al momento
+  // otteneva indirizzi reali. Causa: le funzioni nascono eseguibili da PUBLIC
+  // e `authenticated` eredita da lì — stessa causa del caso `search_users`.
+  {
+    const { data, error } = await user.rpc("get_engagement_targets", { p_limit: 5 });
+    const rows = Array.isArray(data) ? data : [];
+    const withEmail = rows.filter((r) => typeof r?.email === "string" && r.email.includes("@")).length;
+    if (error && rows.length === 0) {
+      ok("get_engagement_targets(): negata a un utente qualunque");
+    } else {
+      fail(`get_engagement_targets(): un utente qualunque ottiene ${rows.length} righe, ${withEmail} con email`);
+    }
+  }
+
   const { data: adminRows, error: adminErr } = await user.rpc("admin_list_users");
   const leakedRows = Array.isArray(adminRows) ? adminRows.length : 0;
   if (adminErr && leakedRows === 0) {
