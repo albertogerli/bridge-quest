@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Download, RefreshCw, Wand2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,9 @@ import {
   type DealConstraints,
 } from "@/lib/deal-generator";
 import { dealsToPbn } from "@/lib/pbn";
+import { dealsToSmazzate } from "@/lib/deals-to-smazzate";
+import { createAssignment, getMyClasses, type ClassRoom } from "@/lib/instructors";
+import { reportError } from "@/lib/report-error";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const SEATS: { key: Position; label: string }[] = [
@@ -48,6 +51,22 @@ export default function GeneraManiPage() {
   const [result, setResult] = useState<ReturnType<typeof generateDeals> | null>(null);
   const [working, setWorking] = useState(false);
 
+  // Assegnazione a una classe
+  const [classes, setClasses] = useState<ClassRoom[]>([]);
+  const [classId, setClassId] = useState("");
+  const [contract, setContract] = useState("3NT");
+  const [declarer, setDeclarer] = useState<Position>("south");
+  const [assigning, setAssigning] = useState(false);
+  const [assigned, setAssigned] = useState("");
+
+  useEffect(() => {
+    // Se non insegna in nessuna classe, il riquadro di assegnazione non
+    // compare affatto: meglio di un elenco vuoto che sembra un guasto.
+    getMyClasses()
+      .then(setClasses)
+      .catch((err) => reportError("genera-mani:classi", err));
+  }, []);
+
   const template = useMemo(
     () => DEAL_TEMPLATES.find((t) => t.id === templateId) ?? DEAL_TEMPLATES[0],
     [templateId]
@@ -78,6 +97,36 @@ export default function GeneraManiPage() {
     a.click();
     URL.revokeObjectURL(url);
   }, [result, template, seed]);
+
+  const assign = async () => {
+    if (!result?.deals.length || !classId) return;
+    setAssigning(true);
+    setAssigned("");
+    try {
+      const smazzate = dealsToSmazzate(result.deals, {
+        // Il seme entra nell'id: due compiti generati con semi diversi non si
+        // sovrappongono, e lo stesso seme resta riconoscibile.
+        idPrefix: `gen-${template.id}-${seed}`,
+        contract,
+        declarer,
+        title: template.label,
+        commentary: template.description,
+      });
+      await createAssignment({
+        classId,
+        title: `${template.label} (${smazzate.length} mani)`,
+        smazzataIds: smazzate.map((s) => s.id),
+        customHands: smazzate,
+        instructorNote: template.description,
+      });
+      setAssigned(`Compito creato con ${smazzate.length} mani.`);
+    } catch (err) {
+      reportError("genera-mani:assegna", err);
+      setAssigned("Non è stato possibile creare il compito. Riprova.");
+    } finally {
+      setAssigning(false);
+    }
+  };
 
   if (authLoading) {
     return (
@@ -210,6 +259,71 @@ export default function GeneraManiPage() {
             {result.attempts.toLocaleString("it-IT")} tentativi. Il vincolo è
             molto stretto: distribuzioni così sono rare anche al tavolo.
           </p>
+        </div>
+      )}
+
+      {result && result.deals.length > 0 && classes.length > 0 && (
+        <div className="rounded-2xl border border-figb/30 bg-figb/5 p-5 mb-6">
+          <h2 className="font-bold mb-1">Assegna alla classe</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Le mani diventano un compito che gli allievi trovano nella loro
+            classe. Contratto e dichiarante valgono per tutte: sono la cornice
+            dell&apos;esercizio, non un dato della mano, quindi li scegli tu.
+          </p>
+
+          <div className="flex flex-wrap gap-3 mb-4">
+            <div>
+              <label htmlFor="classe" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                Classe
+              </label>
+              <select
+                id="classe"
+                value={classId}
+                onChange={(e) => setClassId(e.target.value)}
+                className="h-12 px-4 rounded-xl border border-border bg-card text-sm min-w-[12rem]"
+              >
+                <option value="">Scegli…</option>
+                {classes.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="contratto" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                Contratto
+              </label>
+              <select
+                id="contratto"
+                value={contract}
+                onChange={(e) => setContract(e.target.value)}
+                className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
+              >
+                {["1NT", "2NT", "3NT", "2♠", "3♠", "4♠", "2♥", "3♥", "4♥", "3♦", "5♦", "3♣", "5♣"].map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="dichiarante" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                Dichiarante
+              </label>
+              <select
+                id="dichiarante"
+                value={declarer}
+                onChange={(e) => setDeclarer(e.target.value as typeof declarer)}
+                className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
+              >
+                {SEATS.map((s) => (
+                  <option key={s.key} value={s.key}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <Button disabled={assigning || !classId} onClick={assign}>
+            {assigning ? "Creo il compito…" : `Assegna ${result.deals.length} mani`}
+          </Button>
+          {assigned && <p className="text-sm mt-3 font-medium">{assigned}</p>}
         </div>
       )}
 
