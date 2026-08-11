@@ -282,3 +282,68 @@ export function parsePbn(text: string, idPrefix = "pbn"): PbnImportResult {
   }
   return { deals, errors };
 }
+
+// ─── PBN export ──────────────────────────────────────────────────────────
+
+/**
+ * Serializza una smazzata nel valore del tag `[Deal]`, es.
+ * `N:AK5.QJ3.T92.K876 QJ2.A87.AKQ.9543 ... ...`
+ *
+ * Le mani seguono l'ordine orario a partire da quella nominata; i semi vanno
+ * sempre picche.cuori.quadri.fiori e le carte in ordine decrescente. Il dieci
+ * si scrive `T`: è la convenzione PBN, e scriverlo "10" romperebbe i lettori
+ * che contano un carattere per carta.
+ */
+export function dealToPbnString(hands: Record<Position, Card[]>): string {
+  const suitOrder: Suit[] = ["spade", "heart", "diamond", "club"];
+  const rankOrder: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+  const seats: Position[] = ["north", "east", "south", "west"];
+
+  const handToString = (hand: readonly Card[]) =>
+    suitOrder
+      .map((suit) =>
+        hand
+          .filter((c) => c.suit === suit)
+          .sort((a, b) => rankOrder.indexOf(a.rank) - rankOrder.indexOf(b.rank))
+          .map((c) => (c.rank === "10" ? "T" : c.rank))
+          .join("")
+      )
+      .join(".");
+
+  return `N:${seats.map((s) => handToString(hands[s])).join(" ")}`;
+}
+
+/**
+ * File PBN completo con una o più smazzate, pronto da scaricare e aprire in
+ * Dealer4, BridgeComposer o BBO.
+ *
+ * Dealer e vulnerabilità seguono la rotazione standard dei board, così una
+ * serie generata si comporta come una vera serie di smazzate da torneo invece
+ * che come 16 board tutti "Nessuna / Nord".
+ */
+export function dealsToPbn(
+  deals: readonly Record<Position, Card[]>[],
+  event = "BridgeLab - mani generate"
+): string {
+  const dealers = ["N", "E", "S", "W"];
+  const vulnerabilities = [
+    "None", "NS", "EW", "All",
+    "NS", "EW", "All", "None",
+    "EW", "All", "None", "NS",
+    "All", "None", "NS", "EW",
+  ];
+
+  return deals
+    .map((hands, i) => {
+      const board = i + 1;
+      return [
+        `[Event "${event}"]`,
+        `[Board "${board}"]`,
+        `[Dealer "${dealers[i % 4]}"]`,
+        `[Vulnerable "${vulnerabilities[i % 16]}"]`,
+        `[Deal "${dealToPbnString(hands)}"]`,
+        "",
+      ].join("\n");
+    })
+    .join("\n");
+}
