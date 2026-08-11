@@ -28,6 +28,7 @@ import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { Zap } from "lucide-react";
 import { reportError } from "@/lib/report-error";
+import { InstructorCard } from "@/components/home/instructor-card";
 
 // Percorso "Prima Mano": ~16 kB gz di step interattivi che sostituiscono l'intera
 // home solo per chi non è ancora onboardato. Fuori dal first load di tutti gli altri.
@@ -361,6 +362,9 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           </div>
         </section>
       )}
+
+      {/* ===== PER L'INSEGNANTE ===== (non rende nulla se non hai classi) */}
+      {!isGuidedMode && <InstructorCard />}
 
       {/* ===== COLLEZIONE CARTE ===== (hidden in guided mode) */}
       {!isGuidedMode && (

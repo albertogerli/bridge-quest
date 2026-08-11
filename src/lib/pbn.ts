@@ -177,7 +177,7 @@ function parseVulnerability(value: string | undefined): Vulnerability {
 /** Classic default lead when the PBN has no Play section: from declarer's
  *  left, longest non-trump suit — 4th highest with 4+, top of a doubleton,
  *  otherwise lowest. */
-function defaultOpeningLead(hand: Card[], trumpLetter: string | null): Card {
+export function defaultOpeningLead(hand: Card[], trumpLetter: string | null): Card {
   const trump = trumpLetter ? PBN_SUIT_LETTER[trumpLetter] ?? null : null;
   const bySuit = new Map<Suit, Card[]>();
   for (const c of hand) {
