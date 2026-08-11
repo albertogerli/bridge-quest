@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Lock, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { authErrorMessage } from "@/lib/auth-errors";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -38,11 +39,10 @@ export default function ResetPasswordPage() {
     setLoading(false);
 
     if (updateError) {
-      if (updateError.message.includes("same")) {
-        setError("La nuova password deve essere diversa dalla precedente.");
-      } else {
-        setError("Errore nell'aggiornamento della password. Riprova.");
-      }
+      // Prima mostrava "Riprova" per ogni errore: con la protezione contro le
+      // password compromesse (attiva dall'11/08/2026) quel consiglio invitava
+      // a ripetere una cosa destinata a fallire sempre.
+      setError(authErrorMessage(updateError.message));
       return;
     }
 
