@@ -27,6 +27,21 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: projectRoot,
   turbopack: {},
+  webpack: (config) => {
+    // `bridge-dds` incorpora il double dummy solver C++ compilato con
+    // Emscripten. Il suo codice di aggancio è scritto per girare sia in Node
+    // sia nel browser e nomina `module`, `fs` e `path`: nel bundle del browser
+    // quei moduli non esistono e la compilazione si ferma. Dichiararli come
+    // assenti fa prendere all'Emscripten il ramo browser, che è quello giusto.
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      module: false,
+      fs: false,
+      path: false,
+      crypto: false,
+    };
+    return config;
+  },
   images: {
     // Allow next/image optimization of user avatars served from Supabase storage.
     remotePatterns: [{ protocol: "https", hostname: "**.supabase.co" }],
