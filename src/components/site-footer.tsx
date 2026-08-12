@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { openConsentPreferences } from "@/lib/consent-client";
 
 export function SiteFooter() {
   return (
@@ -29,6 +30,18 @@ export function SiteFooter() {
           <Link href="/privacy#cookie" className="hover:text-foreground/70 transition-colors">
             Cookie Policy
           </Link>
+          <span className="select-none">·</span>
+          {/* Riapre il banner. Senza, chi ha scelto «Solo necessari» non
+              potrebbe più cambiare idea se non cancellando i dati del sito:
+              un consenso non revocabile con la stessa facilità con cui è
+              stato dato non è un consenso valido. */}
+          <button
+            type="button"
+            onClick={openConsentPreferences}
+            className="hover:text-foreground/70 transition-colors underline-offset-2 hover:underline"
+          >
+            Preferenze cookie
+          </button>
           <span className="select-none">·</span>
           <Link href="/termini" className="hover:text-foreground/70 transition-colors">
             Termini di Servizio

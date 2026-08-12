@@ -27,6 +27,16 @@ export const CONSENT_KEY = "bq_consent_v2";
 /** Evento su `window` emesso quando il consenso cambia nella stessa scheda. */
 export const CONSENT_EVENT = "bq-consent-change";
 
+/**
+ * Evento che riapre il pannello delle preferenze.
+ *
+ * Senza, chi sceglie «Solo necessari» non ha più alcun modo di cambiare idea:
+ * l'unica via sarebbe cancellare i dati del sito dal browser, che non è una
+ * scelta che si possa chiedere a un utente. Un consenso non revocabile con la
+ * stessa facilità con cui è stato dato non è un consenso valido.
+ */
+export const CONSENT_REOPEN_EVENT = "bq-consent-reopen";
+
 export interface Consent {
   /** Cookie pubblicitari e di profilazione (Google Ads, Meta Pixel). */
   marketing: boolean;

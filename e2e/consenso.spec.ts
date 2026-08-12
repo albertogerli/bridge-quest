@@ -113,4 +113,29 @@ test.describe("consenso cookie e Consent Mode v2", () => {
     expect(sets).toContain("ads_data_redaction");
     expect(sets).toContain("url_passthrough");
   });
+
+  test("«Preferenze cookie» riapre il pannello a chi ha già scelto", async ({ page }) => {
+    // Su /privacy e non sulla home: lì, dopo il banner, compare la guida una
+    // tantum della nuova versione, un pannello a tutto schermo che coprirebbe
+    // il footer. È comportamento previsto, non un difetto da aggirare.
+    await page.goto("/privacy");
+    await page.getByRole("button", { name: "Solo necessari" }).click();
+    await expect(page.getByRole("button", { name: "Accetta tutti" })).toBeHidden();
+
+    // Il caso che conta: chi ha rifiutato deve poter tornare sui propri passi
+    // senza cancellare i dati del sito. Un consenso revocabile solo così non
+    // sarebbe un consenso valido.
+    await page.getByRole("button", { name: "Preferenze cookie" }).click();
+    const accetta = page.getByRole("button", { name: "Accetta tutti" });
+    await expect(accetta).toBeVisible();
+
+    await accetta.click();
+    const entries = await dataLayer(page);
+    const updates = entries.filter((e) => e[0] === "consent" && e[1] === "update");
+    // Due aggiornamenti: prima il rifiuto, poi la concessione. L'ultimo vince.
+    expect(updates.length).toBe(2);
+    expect((updates[1] as [string, string, Record<string, string>])[2]).toMatchObject({
+      ad_storage: "granted",
+    });
+  });
 });

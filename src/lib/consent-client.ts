@@ -8,6 +8,7 @@
 import {
   CONSENT_EVENT,
   CONSENT_KEY,
+  CONSENT_REOPEN_EVENT,
   consentModeSignals,
   hasMarketingConsent,
   serializeConsent,
@@ -53,6 +54,17 @@ export function setMarketingConsent(marketing: boolean): void {
 
   window.gtag?.("consent", "update", consentModeSignals(marketing));
   window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: { marketing } }));
+}
+
+/**
+ * Riapre il pannello delle preferenze, da qualunque punto dell'app.
+ *
+ * Non cancella la scelta precedente: la registrazione di quando è stata data
+ * resta, e viene sostituita solo se l'utente ne compie una nuova.
+ */
+export function openConsentPreferences(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(CONSENT_REOPEN_EVENT));
 }
 
 /** Si iscrive ai cambi di consenso. Restituisce la funzione di disiscrizione. */
