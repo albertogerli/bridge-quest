@@ -3,6 +3,11 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import {
+  evaluateChannel,
+  persistentFailureMessage,
+  POLL_HEALTHY_MS,
+} from "@/lib/realtime-health";
 
 /**
  * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
@@ -18,7 +23,6 @@ import { reportError } from "@/lib/report-error";
  * `replica_identity_full_realtime_delete`): ora anche "amico rimosso" e
  * "sfida ritirata" arrivano in tempo reale. Coperto da `npm run test:realtime`.
  */
-const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 
 export interface FriendProfile {
   id: string;
@@ -57,6 +61,11 @@ export function useFriends() {
   const [searchLoading, setSearchLoading] = useState(false);
   const currentUserIdRef = useRef<string | null>(null);
   const [realtimeUserId, setRealtimeUserId] = useState<string | null>(null);
+  // Quanto spesso interrogare il server: si accorcia da solo quando il canale
+  // Realtime non consegna, così l'utente vede un ritardo di secondi invece di
+  // minuti. Il contatore sta in un ref perché non deve far ridisegnare nulla.
+  const [pollMs, setPollMs] = useState(POLL_HEALTHY_MS);
+  const failuresRef = useRef(0);
 
   const supabase = createClient();
 
@@ -456,9 +465,17 @@ export function useFriends() {
         onChange
       )
       .subscribe((status, error) => {
-        if (error) reportError("use-friends:realtime", error);
-        else if (status === "CHANNEL_ERROR") {
-          reportError("use-friends:realtime", new Error(`canale in stato ${status}`));
+        // Un canale che cade su rete mobile è ordinaria amministrazione: si
+        // degrada il ripiegamento invece di segnalare. Solo un guasto
+        // ripetuto viene riportato, e una volta sola. Vedi realtime-health.ts.
+        const esito = evaluateChannel(status, failuresRef.current);
+        failuresRef.current = esito.failures;
+        setPollMs(esito.pollMs);
+        if (esito.shouldReport) {
+          reportError(
+            "use-friends:realtime",
+            error ?? new Error(persistentFailureMessage("use-friends:realtime", status, esito.failures))
+          );
         }
       });
 
@@ -467,14 +484,14 @@ export function useFriends() {
     };
   }, [supabase, realtimeUserId, refreshQuiet]);
 
-  // Rete di sicurezza (vedi SAFETY_POLL_INTERVAL): il Realtime può perdere
+  // Rete di sicurezza (intervallo dinamico, vedi realtime-health.ts): il Realtime può perdere
   // eventi mentre il socket è giù e non li ritrasmette alla riconnessione.
   // Un timer lento più un refresh quando la tab torna in primo piano coprono
   // il buco senza reintrodurre il costo del polling a 30 s.
   useEffect(() => {
     const interval = setInterval(() => {
       void refreshQuiet();
-    }, SAFETY_POLL_INTERVAL);
+    }, pollMs);
 
     const onVisibility = () => {
       if (document.visibilityState === "visible") void refreshQuiet();
@@ -485,7 +502,7 @@ export function useFriends() {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [refreshQuiet]);
+  }, [refreshQuiet, pollMs]);
 
   return {
     friends,
