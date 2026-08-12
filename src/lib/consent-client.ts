@@ -9,6 +9,7 @@ import {
   CONSENT_EVENT,
   CONSENT_KEY,
   CONSENT_REOPEN_EVENT,
+  parseConsent,
   consentModeSignals,
   hasMarketingConsent,
   serializeConsent,
@@ -75,4 +76,56 @@ export function onConsentChange(handler: (marketing: boolean) => void): () => vo
   };
   window.addEventListener(CONSENT_EVENT, listener);
   return () => window.removeEventListener(CONSENT_EVENT, listener);
+}
+
+
+/**
+ * Stato del consenso leggibile da console, per chi verifica il sito.
+ *
+ * PERCHÉ ESISTE
+ * Tre audit esterni consecutivi hanno concluso che «il consenso resta denied
+ * per tutti». Gli strumenti automatici cercano l'API IAB `__tcfapi` per
+ * riconoscere un CMP e, non trovandola, riportano un falso negativo; in più
+ * leggono il dataLayer senza cliccare il banner, quindi vedono solo il
+ * consenso di default — che è lo stato corretto di chi non ha ancora scelto.
+ *
+ * Qui lo stato diventa ispezionabile senza congetture:
+ *     window.bridgelabConsent.status()   // "pending" | "granted" | "denied"
+ *
+ * DELIBERATAMENTE SENZA `grant()`
+ * Un metodo che concedesse il consenso da codice permetterebbe a qualunque
+ * script di terze parti di autorizzare il tracciamento al posto della persona.
+ * Si può solo LEGGERE lo stato e RIAPRIRE il pannello: la scelta resta un
+ * gesto umano.
+ */
+export interface ConsentApi {
+  version: 2;
+  /** "pending" se non ha ancora scelto. */
+  status(): "pending" | "granted" | "denied";
+  /** Momento della scelta in ISO 8601, o null. */
+  decidedAt(): string | null;
+  /** Riapre il pannello delle preferenze. */
+  open(): void;
+}
+
+declare global {
+  interface Window {
+    bridgelabConsent?: ConsentApi;
+  }
+}
+
+export function exposeConsentApi(): void {
+  if (typeof window === "undefined") return;
+  window.bridgelabConsent = {
+    version: 2,
+    status() {
+      const c = parseConsent(readRaw());
+      if (c === null) return "pending";
+      return c.marketing ? "granted" : "denied";
+    },
+    decidedAt() {
+      return parseConsent(readRaw())?.ts || null;
+    },
+    open: openConsentPreferences,
+  };
 }
