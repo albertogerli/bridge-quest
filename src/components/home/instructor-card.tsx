@@ -5,6 +5,7 @@ import Link from "next/link";
 import { GraduationCap, Wand2, ChevronRight } from "lucide-react";
 import { getMyClasses } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
+import { useSharedAuth } from "@/contexts/auth-provider";
 
 /**
  * Scorciatoie per chi insegna, in homepage.
@@ -19,24 +20,32 @@ import { reportError } from "@/lib/report-error";
  * generatore di mani non era raggiungibile da nessun percorso di navigazione.
  */
 export function InstructorCard() {
+  const { user, loading } = useSharedAuth();
   const [classCount, setClassCount] = useState<number | null>(null);
 
   useEffect(() => {
+    // Senza sessione non si chiede nulla. Prima si chiamava sempre, e per ogni
+    // visitatore anonimo `getMyClasses()` sollevava «Non autenticato»: un
+    // evento Sentry a ogni visita della home, cioè la pagina più battuta del
+    // sito. Non era un guasto, era la condizione normale di chi non ha ancora
+    // fatto accesso.
+    if (loading || !user) return;
+
     let alive = true;
     getMyClasses()
       .then((classes) => {
         if (alive) setClassCount(classes.length);
       })
       .catch((err) => {
-        // Un errore qui non deve rovinare la home: semplicemente il riquadro
-        // non compare.
+        // Un guasto vero qui non deve rovinare la home: il riquadro non
+        // compare e basta.
         reportError("home:classi-istruttore", err);
         if (alive) setClassCount(0);
       });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [user, loading]);
 
   if (!classCount) return null;
 
