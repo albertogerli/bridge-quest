@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { consentPending, setMarketingConsent } from "@/lib/consent-client";
+import { consentPending, exposeConsentApi, setMarketingConsent } from "@/lib/consent-client";
 import { CONSENT_REOPEN_EVENT } from "@/lib/consent";
 
 /**
@@ -30,6 +30,11 @@ export function CookieBanner() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setShow(true);
     }
+  }, []);
+
+  // Stato ispezionabile da console per chi verifica il sito.
+  useEffect(() => {
+    exposeConsentApi();
   }, []);
 
   // Riapertura da «Preferenze cookie»: vale anche per chi ha già scelto, ed è

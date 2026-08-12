@@ -138,4 +138,25 @@ test.describe("consenso cookie e Consent Mode v2", () => {
       ad_storage: "granted",
     });
   });
+
+  test("lo stato è ispezionabile da console senza poterlo falsificare", async ({ page }) => {
+    await page.goto("/privacy");
+
+    // Tre audit esterni hanno concluso "consenso negato per tutti" leggendo il
+    // dataLayer senza cliccare. Questo dà una risposta univoca.
+    expect(await page.evaluate(() => window.bridgelabConsent?.status())).toBe("pending");
+
+    await page.getByRole("button", { name: "Accetta tutti" }).click();
+    expect(await page.evaluate(() => window.bridgelabConsent?.status())).toBe("granted");
+    expect(await page.evaluate(() => window.bridgelabConsent?.decidedAt())).toBeTruthy();
+
+    // Nessun modo di concedere il consenso da codice: un metodo del genere
+    // lascerebbe che uno script di terze parti autorizzi il tracciamento al
+    // posto della persona.
+    const metodi = await page.evaluate(() =>
+      Object.keys(window.bridgelabConsent ?? {})
+    );
+    expect(metodi).not.toContain("grant");
+    expect(metodi).not.toContain("set");
+  });
 });
