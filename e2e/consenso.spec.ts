@@ -49,6 +49,9 @@ test.describe("consenso cookie e Consent Mode v2", () => {
       ad_user_data: "denied",
       ad_personalization: "denied",
       analytics_storage: "denied",
+      // Trattiene i tag in attesa di un eventuale aggiornamento: senza,
+      // chi ha già acconsentito perderebbe la prima pagina vista.
+      wait_for_update: 500,
     });
   });
 

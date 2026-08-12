@@ -233,7 +233,12 @@ export default function RootLayout({
               ad_storage: 'denied',
               ad_user_data: 'denied',
               ad_personalization: 'denied',
-              analytics_storage: 'denied'
+              analytics_storage: 'denied',
+              /* Trattiene i tag per mezzo secondo in attesa di un eventuale
+                 aggiornamento del consenso. Serve a chi ha già acconsentito in
+                 una visita precedente: senza, la prima pagina vista partirebbe
+                 come negata e andrebbe persa nella misurazione. */
+              wait_for_update: 500
             });
             try {
               var c = JSON.parse(localStorage.getItem('bq_consent_v2') || 'null');
