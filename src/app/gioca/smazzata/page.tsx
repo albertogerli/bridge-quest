@@ -919,6 +919,22 @@ function PlayingView({
                         : `Mantenuto +${game.result.result}`}
                 </h3>
 
+                {/* Metro di paragone a carte scoperte.
+                    Mostrato SOLO dopo aver giocato, e formulato come
+                    riferimento e non come rimprovero: il double dummy vede
+                    tutte e 52 le carte, quindi una presa che "si poteva fare"
+                    poteva essere invisibile al tavolo. Dire all'allievo che ha
+                    sbagliato sarebbe falso oltre che scoraggiante. */}
+                {typeof smazzata.ddTricks === "number" && (
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    A carte scoperte il dichiarante ne fa{" "}
+                    <span className="font-bold text-foreground">{smazzata.ddTricks}</span>
+                    {declared && game.result.tricksMade === smazzata.ddTricks && " — il massimo possibile"}
+                    {declared && game.result.tricksMade > smazzata.ddTricks &&
+                      " — hai fatto meglio: la difesa non ha trovato il gioco migliore"}
+                  </p>
+                )}
+
                 {/* Tricks breakdown bar */}
                 <div className="mt-4 mx-auto max-w-xs">
                   <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-1.5">
