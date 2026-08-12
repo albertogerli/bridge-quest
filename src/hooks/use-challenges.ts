@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import {
+  evaluateChannel,
+  persistentFailureMessage,
+  POLL_HEALTHY_MS,
+} from "@/lib/realtime-health";
 import { generateSeed } from "@/lib/hand-encoder";
 import { calculateBoardIMP } from "@/lib/bridge-scoring";
 
@@ -20,7 +25,6 @@ import { calculateBoardIMP } from "@/lib/bridge-scoring";
  * `replica_identity_full_realtime_delete`): ora anche "amico rimosso" e
  * "sfida ritirata" arrivano in tempo reale. Coperto da `npm run test:realtime`.
  */
-const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 
 export interface BoardResult {
   boardIndex: number;
@@ -63,6 +67,11 @@ export function useChallenges() {
   const [activeChallenges, setActiveChallenges] = useState<ChallengeData[]>([]);
   const [loading, setLoading] = useState(true);
   const [realtimeUserId, setRealtimeUserId] = useState<string | null>(null);
+  // Quanto spesso interrogare il server: si accorcia da solo quando il canale
+  // Realtime non consegna, così l'utente vede un ritardo di secondi invece di
+  // minuti. Il contatore sta in un ref perché non deve far ridisegnare nulla.
+  const [pollMs, setPollMs] = useState(POLL_HEALTHY_MS);
+  const failuresRef = useRef(0);
 
   const supabase = createClient();
 
@@ -184,9 +193,17 @@ export function useChallenges() {
         onChange
       )
       .subscribe((status, error) => {
-        if (error) reportError("use-challenges:realtime", error);
-        else if (status === "CHANNEL_ERROR") {
-          reportError("use-challenges:realtime", new Error(`canale in stato ${status}`));
+        // Un canale che cade su rete mobile è ordinaria amministrazione: si
+        // degrada il ripiegamento invece di segnalare. Solo un guasto
+        // ripetuto viene riportato, e una volta sola. Vedi realtime-health.ts.
+        const esito = evaluateChannel(status, failuresRef.current);
+        failuresRef.current = esito.failures;
+        setPollMs(esito.pollMs);
+        if (esito.shouldReport) {
+          reportError(
+            "use-challenges:realtime",
+            error ?? new Error(persistentFailureMessage("use-challenges:realtime", status, esito.failures))
+          );
         }
       });
 
@@ -195,11 +212,11 @@ export function useChallenges() {
     };
   }, [supabase, realtimeUserId, refreshQuiet]);
 
-  // Rete di sicurezza (vedi SAFETY_POLL_INTERVAL).
+  // Rete di sicurezza: intervallo dinamico, vedi realtime-health.ts.
   useEffect(() => {
     const interval = setInterval(() => {
       void refreshQuiet();
-    }, SAFETY_POLL_INTERVAL);
+    }, pollMs);
 
     const onVisibility = () => {
       if (document.visibilityState === "visible") void refreshQuiet();
@@ -210,7 +227,7 @@ export function useChallenges() {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [refreshQuiet]);
+  }, [refreshQuiet, pollMs]);
 
   const createChallenge = useCallback(
     async (

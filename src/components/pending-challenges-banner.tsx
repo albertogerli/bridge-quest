@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
+import { evaluateChannel, persistentFailureMessage } from "@/lib/realtime-health";
 import { Swords, Check, X, ChevronRight, Clock } from "lucide-react";
 import Link from "next/link";
 
@@ -34,6 +35,7 @@ const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 export function PendingChallengesBanner() {
   const { user } = useSharedAuth();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const failuresRef = useRef(0);
   const [loading, setLoading] = useState(true);
 
   const fetchChallenges = useCallback(async () => {
@@ -150,11 +152,23 @@ export function PendingChallengesBanner() {
         onChange
       )
       .subscribe((status, error) => {
-        if (error) reportError("pending-challenges-banner:realtime", error);
-        else if (status === "CHANNEL_ERROR") {
+        // Questo banner non ha una rete di sicurezza propria: si affida al
+        // ricaricamento della pagina. Un canale caduto lo lascia
+        // semplicemente fermo, quindi qui non c'è ripiegamento da degradare —
+        // resta solo la regola sul quando segnalare. Vedi realtime-health.ts.
+        const esito = evaluateChannel(status, failuresRef.current);
+        failuresRef.current = esito.failures;
+        if (esito.shouldReport) {
           reportError(
             "pending-challenges-banner:realtime",
-            new Error(`canale in stato ${status}`)
+            error ??
+              new Error(
+                persistentFailureMessage(
+                  "pending-challenges-banner:realtime",
+                  status,
+                  esito.failures
+                )
+              )
           );
         }
       });
