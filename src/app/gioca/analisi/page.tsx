@@ -6,7 +6,8 @@ import Link from "next/link";
 import { Share2, ArrowLeft } from "lucide-react";
 import { HandReplay } from "@/components/hand-replay";
 import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
-import type { Card } from "@/lib/bridge-engine";
+import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import { TurningPointPanel } from "@/components/turning-point-panel";
 
 interface GameData {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
@@ -226,6 +227,22 @@ Gioca su bridgelab.it`;
             ✅ Copiato negli appunti!
           </div>
         )}
+
+        {/* Dove è cambiata la mano (double dummy, su richiesta) */}
+        <div className="mb-4">
+          <TurningPointPanel
+            hands={gameData.hands}
+            tricks={gameData.tricks}
+            // Il contratto porta "NT"/"SA" per il senza atout; il solver vuole
+            // null, non una stringa che non è un seme.
+            strain={
+              gameData.contract.suit === "NT" || gameData.contract.suit === "SA"
+                ? null
+                : (gameData.contract.suit as Suit)
+            }
+            declarer={gameData.contract.declarer as Position}
+          />
+        </div>
 
         {/* Main content: Replay + Analysis */}
         <div className="grid lg:grid-cols-2 gap-4">
