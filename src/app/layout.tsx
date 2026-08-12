@@ -217,6 +217,18 @@ export default function RootLayout({
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            /* Vanno impostati PRIMA del consenso di default, altrimenti la
+               prima richiesta parte senza. Servono a chi rifiuta:
+               - ads_data_redaction: con ad_storage negato, gli identificatori
+                 di clic vengono oscurati nelle chiamate a Google. Si continua
+                 a contare la conversione in forma modellata senza inviare
+                 dati che l'utente non ha autorizzato.
+               - url_passthrough: senza cookie, il gclid viaggia
+                 nell'indirizzo fra una pagina e l'altra. Senza, una
+                 registrazione arrivata da un annuncio non è attribuibile a
+                 quell'annuncio. */
+            gtag('set', 'ads_data_redaction', true);
+            gtag('set', 'url_passthrough', true);
             gtag('consent', 'default', {
               ad_storage: 'denied',
               ad_user_data: 'denied',
