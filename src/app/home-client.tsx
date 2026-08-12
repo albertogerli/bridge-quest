@@ -377,7 +377,10 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       )}
 
       {/* Suit divider */}
-      <div className="flex items-center justify-center gap-3 py-2" aria-hidden="true">
+      {/* pointer-events-none: è decorativo e, essendo dentro un <main>
+          che si estende, intercettava i clic sui comandi del footer
+          sottostante — fra cui «Preferenze cookie». */}
+      <div className="flex items-center justify-center gap-3 py-2 pointer-events-none" aria-hidden="true">
         <div className="h-px w-12 bg-foreground/10" />
         <span className="text-[10px] tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
         <div className="h-px w-12 bg-foreground/10" />

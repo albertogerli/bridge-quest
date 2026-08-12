@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { consentPending, setMarketingConsent } from "@/lib/consent-client";
+import { CONSENT_REOPEN_EVENT } from "@/lib/consent";
 
 /**
  * Richiesta di consenso ai cookie.
@@ -29,6 +30,14 @@ export function CookieBanner() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setShow(true);
     }
+  }, []);
+
+  // Riapertura da «Preferenze cookie»: vale anche per chi ha già scelto, ed è
+  // ciò che rende la scelta revocabile.
+  useEffect(() => {
+    const riapri = () => setShow(true);
+    window.addEventListener(CONSENT_REOPEN_EVENT, riapri);
+    return () => window.removeEventListener(CONSENT_REOPEN_EVENT, riapri);
   }, []);
 
   const decide = (marketing: boolean) => {
