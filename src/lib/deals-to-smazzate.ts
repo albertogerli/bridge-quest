@@ -53,6 +53,15 @@ export interface ToSmazzateOptions {
   title: string;
   /** Nota didattica ripetuta su ogni mano; di norma la descrizione del modello. */
   commentary?: string;
+  /**
+   * Contratto e dichiarante per singola mano, nell'ordine delle smazzate.
+   *
+   * Quando il par è stato calcolato si usa questo: un contratto unico per
+   * tutte le mani è per forza sbagliato su alcune — impossibile su quelle
+   * deboli e troppo timido su quelle forti. Le voci mancanti o nulle
+   * ricadono su `contract`/`declarer`.
+   */
+  perHand?: (({ contract: string; declarer: Position }) | null)[];
 }
 
 /**
@@ -64,10 +73,12 @@ export function dealsToSmazzate(
   deals: readonly Record<Position, Card[]>[],
   options: ToSmazzateOptions
 ): Smazzata[] {
-  const trump = trumpLetterOf(options.contract);
-
   return deals.map((hands, index) => {
-    const leader = nextPlayer(options.declarer);
+    const perHand = options.perHand?.[index];
+    const contract = perHand?.contract ?? options.contract;
+    const declarer = perHand?.declarer ?? options.declarer;
+    const trump = trumpLetterOf(contract);
+    const leader = nextPlayer(declarer);
     return {
       id: `${options.idPrefix}-${index + 1}`,
       // 0 = non appartiene a nessuna lezione del catalogo: sono mani del
@@ -75,8 +86,8 @@ export function dealsToSmazzate(
       lesson: 0,
       board: index + 1,
       title: `${options.title} — mano ${index + 1}`,
-      contract: options.contract,
-      declarer: options.declarer,
+      contract,
+      declarer,
       openingLead: defaultOpeningLead(hands[leader], trump),
       vulnerability: VULNERABILITY_CYCLE[index % VULNERABILITY_CYCLE.length],
       hands: {

@@ -67,3 +67,45 @@ describe("dealsToSmazzate — attacco", () => {
     expect(s.hands.west).toHaveLength(13);
   });
 });
+
+describe("dealsToSmazzate — contratto per singola mano", () => {
+  it("usa il contratto specifico dove c'è, il generale dove manca", () => {
+    // Un contratto unico per tutte le mani è per forza sbagliato su alcune:
+    // impossibile su quelle deboli, troppo timido su quelle forti.
+    const s = dealsToSmazzate(deals, {
+      ...base,
+      perHand: [
+        { contract: "4♠", declarer: "north" },
+        null,
+        { contract: "2♥", declarer: "east" },
+      ],
+    });
+    expect(s[0].contract).toBe("4♠");
+    expect(s[0].declarer).toBe("north");
+    expect(s[1].contract).toBe("3NT");   // ricade sul generale
+    expect(s[1].declarer).toBe("south");
+    expect(s[2].contract).toBe("2♥");
+    expect(s[3].contract).toBe("3NT");   // oltre la fine dell'elenco
+  });
+
+  it("l'attacco segue il dichiarante della singola mano", () => {
+    // Con Nord dichiarante attacca Est: se l'attacco restasse legato al
+    // dichiarante generale, la carta apparterrebbe al giocatore sbagliato.
+    const s = dealsToSmazzate(deals, {
+      ...base,
+      perHand: [{ contract: "4♠", declarer: "north" }],
+    })[0];
+    expect(
+      s.hands.east.some((c) => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank)
+    ).toBe(true);
+  });
+
+  it("l'atout dell'attacco segue il contratto della singola mano", () => {
+    const s = dealsToSmazzate(deals, {
+      ...base,
+      perHand: [{ contract: "4♠", declarer: "south" }],
+    })[0];
+    const haAltro = s.hands.west.some((c) => c.suit !== "spade");
+    if (haAltro) expect(s.openingLead.suit).not.toBe("spade");
+  });
+});

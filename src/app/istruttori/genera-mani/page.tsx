@@ -64,7 +64,12 @@ export default function GeneraManiPage() {
   // Non parte da sola: e' un calcolo, e chi genera venti mani per scorrerle
   // non deve pagarlo se non gli serve.
   const [analisi, setAnalisi] = useState<
-    { par: ParResult; suggerito: string | null }[] | null
+    {
+      par: ParResult;
+      suggerito: string | null;
+      /** Contratto e dichiarante da usare per questa mano nel compito. */
+      migliore: { contract: string; declarer: Position } | null;
+    }[] | null
   >(null);
   const [analizzando, setAnalizzando] = useState(false);
 
@@ -116,7 +121,7 @@ export default function GeneraManiPage() {
     setAnalizzando(true);
     setAnalisi([]);
     try {
-      const out: { par: ParResult; suggerito: string | null }[] = [];
+      const out: NonNullable<typeof analisi> = [];
       for (const [i, deal] of result.deals.entries()) {
         // Dichiarante e vulnerabilità seguono la rotazione dei board, la
         // stessa che finisce nelle smazzate assegnate: il par mostrato qui è
@@ -130,6 +135,7 @@ export default function GeneraManiPage() {
           suggerito: best
             ? `${best.contract} ${SEATS.find((s) => s.key === best.declarer)?.label}`
             : null,
+          migliore: best ? { contract: best.contract, declarer: best.declarer } : null,
         });
         // Si mostra man mano e si cede il controllo al browser: venti mani a
         // qualche centinaio di millisecondi ciascuna congelerebbero la pagina
@@ -150,6 +156,10 @@ export default function GeneraManiPage() {
     setAssigned("");
     try {
       const smazzate = dealsToSmazzate(result.deals, {
+        // Se il par e' stato calcolato, ogni mano prende il contratto che
+        // regge davvero: un contratto unico e' impossibile su alcune mani e
+        // troppo timido su altre.
+        perHand: analisi?.map((a) => a.migliore) ?? undefined,
         // Il seme entra nell'id: due compiti generati con semi diversi non si
         // sovrappongono, e lo stesso seme resta riconoscibile.
         idPrefix: `gen-${template.id}-${seed}`,
@@ -320,9 +330,22 @@ export default function GeneraManiPage() {
           <h2 className="font-bold mb-1">Assegna alla classe</h2>
           <p className="text-sm text-muted-foreground mb-4">
             Le mani diventano un compito che gli allievi trovano nella loro
-            classe. Contratto e dichiarante valgono per tutte: sono la cornice
-            dell&apos;esercizio, non un dato della mano, quindi li scegli tu.
+            classe.
           </p>
+          {analisi?.length === result.deals.length ? (
+            <p className="text-sm text-figb font-medium mb-4">
+              Hai calcolato il par: ogni mano userà il contratto più alto che
+              regge davvero, invece di uno uguale per tutte. Le scelte qui sotto
+              valgono solo per le mani senza un contratto mantenibile.
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground mb-4">
+              Contratto e dichiarante valgono per tutte le mani. Se prima premi
+              «Calcola par», ognuna prende invece il contratto che le sue carte
+              reggono — un contratto unico è impossibile su alcune mani e troppo
+              timido su altre.
+            </p>
+          )}
 
           <div className="flex flex-wrap gap-3 mb-4">
             <div>
