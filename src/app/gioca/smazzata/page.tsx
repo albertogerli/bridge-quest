@@ -356,7 +356,21 @@ function PlayingView({
   const { addReviewItem } = useSpacedReview();
 
   // ── Mode: play as declarer (default) or defend the contract ──────────
-  const [mode, setMode] = useState<"declare" | "defend">("declare");
+  /**
+   * Modalità iniziale.
+   *
+   * 56 delle 272 smazzate del catalogo (il 21%) non si mantengono nemmeno a
+   * carte scoperte: aprirle come dichiarante condanna l'allievo a «Caduto di
+   * 1 — Da rivedere» per quanto bene giochi. Non sono contenuti sbagliati,
+   * sono esercizi di controgioco proposti nel verso sbagliato. Quando il
+   * contratto è imbattibile si apre in difesa, dove l'esercizio ha senso e si
+   * può vincere. Resta commutabile a mano.
+   */
+  const contrattoImbattibile =
+    typeof smazzata.ddTricks === "number" && smazzata.ddTricks < tricksNeeded;
+  const [mode, setMode] = useState<"declare" | "defend">(
+    contrattoImbattibile ? "defend" : "declare"
+  );
   const dummy = getDummy(declarer);
   // Anchor = the seat shown at the bottom (the human). Declaring → declarer;
   // defending → the opening leader (the defender to declarer's left).

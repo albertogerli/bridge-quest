@@ -110,6 +110,13 @@ export interface Smazzata {
   };
   bidding?: BiddingData;
   commentary: string;
+  /**
+   * Prese del dichiarante a carte scoperte, dopo l'attacco indicato.
+   * Se è minore di livello+6 il contratto è imbattibile e la mano ha senso
+   * solo come esercizio di controgioco. `null` se non ancora calcolato.
+   * Vedi scripts/valida-smazzate-dds.mjs.
+   */
+  ddTricks?: number | null;
 }
 
 // ─── Static UI metadata (no DB roundtrip needed) ─────────────────────────
@@ -397,6 +404,7 @@ interface RawSmazzata {
   hands: { north: Card[]; south: Card[]; east: Card[]; west: Card[] };
   bidding: { dealer: Position; bids: string[] } | null;
   commentary: string;
+  dd_tricks: number | null;
 }
 
 let smazzatePromise: Promise<Smazzata[]> | null = null;
@@ -406,7 +414,7 @@ async function loadSmazzate(): Promise<Smazzata[]> {
   const { data, error } = await supabase
     .from("smazzate")
     .select(
-      "id, lesson_id, board, title, contract, declarer, vulnerability, opening_lead, hands, bidding, commentary",
+      "id, lesson_id, board, title, contract, declarer, vulnerability, opening_lead, hands, bidding, commentary, dd_tricks",
     )
     .order("lesson_id", { ascending: true })
     .order("board", { ascending: true });
@@ -428,6 +436,7 @@ async function loadSmazzate(): Promise<Smazzata[]> {
     hands: r.hands,
     bidding: r.bidding ?? undefined,
     commentary: r.commentary ?? "",
+    ddTricks: r.dd_tricks ?? null,
   }));
 }
 
