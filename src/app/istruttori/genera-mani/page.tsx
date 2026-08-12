@@ -17,6 +17,7 @@ import {
 } from "@/lib/deal-generator";
 import { dealsToPbn } from "@/lib/pbn";
 import { dealsToSmazzate } from "@/lib/deals-to-smazzate";
+import { bestContractFor, calcTableAndPar, type ParResult } from "@/lib/dds-table";
 import { createAssignment, getMyClasses, type ClassRoom } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 
@@ -59,6 +60,14 @@ export default function GeneraManiPage() {
   const [assigning, setAssigning] = useState(false);
   const [assigned, setAssigned] = useState("");
 
+  // Analisi double dummy, una voce per mano nello stesso ordine dei risultati.
+  // Non parte da sola: e' un calcolo, e chi genera venti mani per scorrerle
+  // non deve pagarlo se non gli serve.
+  const [analisi, setAnalisi] = useState<
+    { par: ParResult; suggerito: string | null }[] | null
+  >(null);
+  const [analizzando, setAnalizzando] = useState(false);
+
   useEffect(() => {
     // Se non insegna in nessuna classe, il riquadro di assegnazione non
     // compare affatto: meglio di un elenco vuoto che sembra un guasto.
@@ -79,6 +88,9 @@ export default function GeneraManiPage() {
       // secondo, così il pulsante mostra lo stato invece di bloccarsi muto.
       requestAnimationFrame(() => {
         setResult(generateDeals(constraints, { count, seed: useSeed }));
+        // L'analisi vale per le mani precedenti: tenerla mostrerebbe il par
+        // di una mano accanto alle carte di un'altra.
+        setAnalisi(null);
         setWorking(false);
       });
     },
@@ -97,6 +109,40 @@ export default function GeneraManiPage() {
     a.click();
     URL.revokeObjectURL(url);
   }, [result, template, seed]);
+
+  /** Calcola par e contratto consigliato per ogni mano generata. */
+  const analizza = async () => {
+    if (!result?.deals.length) return;
+    setAnalizzando(true);
+    setAnalisi([]);
+    try {
+      const out: { par: ParResult; suggerito: string | null }[] = [];
+      for (const [i, deal] of result.deals.entries()) {
+        // Dichiarante e vulnerabilità seguono la rotazione dei board, la
+        // stessa che finisce nelle smazzate assegnate: il par mostrato qui è
+        // quello del compito, non di una mano astratta.
+        const dealer = SEATS[i % 4].key;
+        const vuln = (["none", "ns", "ew", "both"] as const)[i % 4];
+        const { table, par } = await calcTableAndPar(deal, dealer, vuln);
+        const best = bestContractFor(table, "ns");
+        out.push({
+          par,
+          suggerito: best
+            ? `${best.contract} ${SEATS.find((s) => s.key === best.declarer)?.label}`
+            : null,
+        });
+        // Si mostra man mano e si cede il controllo al browser: venti mani a
+        // qualche centinaio di millisecondi ciascuna congelerebbero la pagina
+        // per secondi, e l'insegnante non saprebbe se sta lavorando.
+        setAnalisi([...out]);
+        await new Promise((r) => setTimeout(r, 0));
+      }
+    } catch (err) {
+      reportError("genera-mani:dds", err);
+    } finally {
+      setAnalizzando(false);
+    }
+  };
 
   const assign = async () => {
     if (!result?.deals.length || !classId) return;
@@ -243,6 +289,13 @@ export default function GeneraManiPage() {
             Altre mani
           </Button>
           {result?.deals.length ? (
+            <Button variant="outline" disabled={analizzando} onClick={analizza}>
+              {analizzando
+              ? `Calcolo il par… ${analisi?.length ?? 0}/${result?.deals.length ?? 0}`
+              : "Calcola par"}
+            </Button>
+          ) : null}
+          {result?.deals.length ? (
             <Button variant="outline" onClick={download}>
               <Download className="w-4 h-4 mr-1" aria-hidden="true" />
               Scarica PBN
@@ -342,6 +395,23 @@ export default function GeneraManiPage() {
                     N-S {handHcp(deal.north) + handHcp(deal.south)} PO
                   </Badge>
                 </div>
+                {analisi?.[i] && (
+                  <div className="mb-3 rounded-xl bg-figb/5 border border-figb/20 px-3 py-2">
+                    <p className="text-xs">
+                      <span className="font-bold text-figb">Par:</span>{" "}
+                      {analisi[i].par.contracts.join(", ")}{" "}
+                      <span className="text-muted-foreground">
+                        ({analisi[i].par.score > 0 ? "+" : ""}
+                        {analisi[i].par.score} per N-S)
+                      </span>
+                    </p>
+                    {analisi[i].suggerito && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Contratto più alto mantenibile da N-S: {analisi[i].suggerito}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="grid grid-cols-2 gap-3">
                   {SEATS.map(({ key, label }) => (
                     <div key={key}>
