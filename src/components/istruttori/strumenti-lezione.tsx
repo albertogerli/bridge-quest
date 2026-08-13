@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Presentation, Printer, Users, Wand2 } from "lucide-react";
+import { ChevronRight, FlaskConical, Presentation, Printer, Users, Wand2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 /**
@@ -31,6 +31,12 @@ export const STRUMENTI_LEZIONE: Strumento[] = [
     titolo: "Genera mani",
     descrizione: "Mani su misura per l'argomento della lezione",
     icona: Wand2,
+  },
+  {
+    href: "/istruttori/studio",
+    titolo: "Tavolo di studio",
+    descrizione: "Cambia una carta e vedi quanto costa, presa per presa",
+    icona: FlaskConical,
   },
   {
     href: "/istruttori/lavagna",
