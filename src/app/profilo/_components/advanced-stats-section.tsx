@@ -93,7 +93,7 @@ export function AdvancedStatsSection({
       {/* Bridge Wrapped link */}
       <Link
         href="/profilo/wrapped"
-        className="mt-3 w-full rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 flex items-center gap-3 hover:shadow-lg transition-shadow"
+        className="mt-3 w-full rounded-2xl bg-gradient-to-r from-gold-dark to-gold p-4 flex items-center gap-3 hover:shadow-lg transition-shadow"
       >
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
           <Sparkles className="w-5 h-5 text-white" />

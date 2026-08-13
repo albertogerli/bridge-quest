@@ -52,6 +52,10 @@
   --color-figb-dark: #002E7A;
   --color-gold: #c8a44e;
   --color-gold-light: #d4b76a;
+  /* L'oro serve per fondi, bordi e superfici ampie. NON usarlo come colore
+     di testo sotto i 14px su fondo chiaro: #a88a3a su avorio dà 3,06 di
+     contrasto contro i 4,5 richiesti (verificato da e2e/a11y.spec.ts il
+     13/08/2026). Per un testo su fondo dorato usare text-foreground. */
   --color-gold-dark: #a88a3a;
   --color-amber: #f59e0b;
   --color-amber-light: #fbbf24;

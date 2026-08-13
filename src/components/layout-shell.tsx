@@ -124,7 +124,11 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Center: main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <main id="main-content" className="flex-1 pb-20 lg:pb-6">{children}</main>
+        {/* pb-28: il bottone "Gioca" e' alto 60px e sporge di 24 sopra la barra
+            (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
+            contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
+            "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
+        <main id="main-content" className="flex-1 pb-28 lg:pb-6">{children}</main>
         <div className="hidden lg:block">
           <SiteFooter />
         </div>
