@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { bestContractFor, calcTableAndPar, TABLE_STRAINS } from "./dds-table";
+import { calcTableAndPar, fitFor, TABLE_STRAINS } from "./dds-table";
+import type { Card, Position } from "./bridge-engine";
 import { generateDeals } from "./deal-generator";
 import { solveExact } from "./dds-exact";
 
@@ -70,23 +71,38 @@ describe("la libreria concorda con il nostro solver indipendente", () => {
   }, 200000);
 });
 
-describe("bestContractFor", () => {
-  it("propone un contratto che le carte reggono", async () => {
-    const { table } = await calcTableAndPar(deals[0], "north", "none");
-    const best = bestContractFor(table, "ns");
-    expect(best).not.toBeNull();
-    // Il livello proposto non deve superare le prese realizzabili.
-    expect(best!.tricks).toBeGreaterThanOrEqual(7);
-    expect(Number(best!.contract[0])).toBe(best!.tricks - 6);
-  }, 60000);
+describe("fitFor — quante carte ha davvero la linea", () => {
+  /** Mani con una lunghezza voluta di picche fra Nord e Sud. */
+  function maniConFitPicche(fit: number): Record<Position, Card[]> {
+    const ordine: Card["rank"][] = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
+    const nord: Card[] = [];
+    const sud: Card[] = [];
+    for (let i = 0; i < fit; i++) {
+      (i % 2 === 0 ? nord : sud).push({ suit: "spade", rank: ordine[i] });
+    }
+    const riempi = (h: Card[]) => {
+      const semi: Card["suit"][] = ["heart", "diamond", "club"];
+      let k = 0;
+      while (h.length < 13) {
+        h.push({ suit: semi[k % 3], rank: ordine[Math.floor(k / 3) % 13] });
+        k++;
+      }
+      return h;
+    };
+    return { north: riempi(nord), east: [], south: riempi(sud), west: [] };
+  }
 
-  it("restituisce null quando la coppia non mantiene nulla", () => {
-    const vuota = {
-      tricks: Object.fromEntries(
-        TABLE_STRAINS.map((s) => [s, { north: 0, east: 13, south: 0, west: 13 }])
-      ),
-    } as Parameters<typeof bestContractFor>[0];
-    expect(bestContractFor(vuota, "ns")).toBeNull();
-    expect(bestContractFor(vuota, "ew")).not.toBeNull();
+  it("somma le carte delle due mani della linea", () => {
+    expect(fitFor(maniConFitPicche(8), "ns", "spade")).toBe(8);
+    expect(fitFor(maniConFitPicche(6), "ns", "spade")).toBe(6);
+  });
+
+  it("guarda la linea giusta", () => {
+    // Est e Ovest sono vuoti in queste mani di prova.
+    expect(fitFor(maniConFitPicche(8), "ew", "spade")).toBe(0);
+  });
+
+  it("al senza atout il fit non esiste", () => {
+    expect(fitFor(maniConFitPicche(8), "ns", "notrump")).toBeNull();
   });
 });

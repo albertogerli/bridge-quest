@@ -17,7 +17,8 @@ import {
 } from "@/lib/deal-generator";
 import { dealsToPbn } from "@/lib/pbn";
 import { dealsToSmazzate } from "@/lib/deals-to-smazzate";
-import { bestContractFor, calcTableAndPar, type ParResult } from "@/lib/dds-table";
+import { calcTableAndPar, fitFor, FIT_MINIMO, type ParResult } from "@/lib/dds-table";
+import { describePar, parAssignmentFromContracts, type ParContract } from "@/lib/par-contract";
 import { createAssignment, getMyClasses, type ClassRoom } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 
@@ -28,6 +29,15 @@ const SEATS: { key: Position; label: string }[] = [
   { key: "south", label: "Sud" },
   { key: "west", label: "Ovest" },
 ];
+
+/**
+ * Tutti i contratti dichiarabili, in ordine di licitazione: il par può essere
+ * qualunque di questi, quindi un elenco ridotto lascerebbe mani senza la voce
+ * giusta.
+ */
+const CONTRATTI = [1, 2, 3, 4, 5, 6, 7].flatMap((l) =>
+  ["♣", "♦", "♥", "♠", "SA"].map((s) => `${l}${s}`)
+);
 
 /**
  * Generatore di mani con vincoli, per insegnanti.
@@ -55,7 +65,7 @@ export default function GeneraManiPage() {
   // Assegnazione a una classe
   const [classes, setClasses] = useState<ClassRoom[]>([]);
   const [classId, setClassId] = useState("");
-  const [contract, setContract] = useState("3NT");
+  const [contract, setContract] = useState("3SA");
   const [declarer, setDeclarer] = useState<Position>("south");
   const [assigning, setAssigning] = useState(false);
   const [assigned, setAssigned] = useState("");
@@ -66,12 +76,23 @@ export default function GeneraManiPage() {
   const [analisi, setAnalisi] = useState<
     {
       par: ParResult;
-      suggerito: string | null;
-      /** Contratto e dichiarante da usare per questa mano nel compito. */
-      migliore: { contract: string; declarer: Position } | null;
+      /** Il par letto in forma strutturata, quando è interpretabile. */
+      letto: ParContract | null;
+      /** Carte d'atout della linea, se sono meno del minimo dichiarabile. */
+      fitCorto: number | null;
+      /** Contratto e dichiarante che questa mano porterà nel compito. */
+      scelta: { contract: string; declarer: Position } | null;
     }[] | null
   >(null);
   const [analizzando, setAnalizzando] = useState(false);
+
+  /** Cambia il contratto di una singola mano, lasciando intatte le altre. */
+  const cambiaScelta = (i: number, patch: Partial<{ contract: string; declarer: Position }>) =>
+    setAnalisi((prev) =>
+      prev?.map((a, j) =>
+        j === i && a.scelta ? { ...a, scelta: { ...a.scelta, ...patch } } : a
+      ) ?? prev
+    );
 
   useEffect(() => {
     // Se non insegna in nessuna classe, il riquadro di assegnazione non
@@ -115,7 +136,7 @@ export default function GeneraManiPage() {
     URL.revokeObjectURL(url);
   }, [result, template, seed]);
 
-  /** Calcola par e contratto consigliato per ogni mano generata. */
+  /** Calcola il par di ogni mano e lo propone come contratto da assegnare. */
   const analizza = async () => {
     if (!result?.deals.length) return;
     setAnalizzando(true);
@@ -129,13 +150,21 @@ export default function GeneraManiPage() {
         const dealer = SEATS[i % 4].key;
         const vuln = (["none", "ns", "ew", "both"] as const)[i % 4];
         const { table, par } = await calcTableAndPar(deal, dealer, vuln);
-        const best = bestContractFor(table, "ns");
+        // Il contratto proposto è il PAR, non il massimo mantenibile: su una
+        // mano il cui par è 4♠ il double dummy vede spesso undici prese, ma
+        // 5♠ nessuno lo dichiarerebbe e assegnarlo insegnerebbe il contrario.
+        // Il par tiene già conto di punteggio, vulnerabilità e del fatto che
+        // a volte la mano è degli avversari.
+        const scelta = parAssignmentFromContracts(par.contracts, table, deal);
+        // Il par è corretto per definizione, ma su distribuzioni estreme può
+        // essere un contratto a colore con pochissime carte: si segnala, non
+        // si corregge — correggere il par significherebbe non mostrarlo.
+        const fit = scelta ? fitFor(deal, scelta.par.side, scelta.par.strain) : null;
         out.push({
           par,
-          suggerito: best
-            ? `${best.contract} ${SEATS.find((s) => s.key === best.declarer)?.label}`
-            : null,
-          migliore: best ? { contract: best.contract, declarer: best.declarer } : null,
+          letto: scelta?.par ?? null,
+          fitCorto: fit !== null && fit < FIT_MINIMO ? fit : null,
+          scelta: scelta ? { contract: scelta.contract, declarer: scelta.declarer } : null,
         });
         // Si mostra man mano e si cede il controllo al browser: venti mani a
         // qualche centinaio di millisecondi ciascuna congelerebbero la pagina
@@ -156,10 +185,10 @@ export default function GeneraManiPage() {
     setAssigned("");
     try {
       const smazzate = dealsToSmazzate(result.deals, {
-        // Se il par e' stato calcolato, ogni mano prende il contratto che
-        // regge davvero: un contratto unico e' impossibile su alcune mani e
-        // troppo timido su altre.
-        perHand: analisi?.map((a) => a.migliore) ?? undefined,
+        // Ogni mano porta il proprio contratto — il suo par, o quello che
+        // l'insegnante ha scelto al posto del par. Un contratto unico per
+        // tutte è impossibile su alcune mani e troppo timido su altre.
+        perHand: analisi?.map((a) => a.scelta) ?? undefined,
         // Il seme entra nell'id: due compiti generati con semi diversi non si
         // sovrappongono, e lo stesso seme resta riconoscibile.
         idPrefix: `gen-${template.id}-${seed}`,
@@ -334,16 +363,16 @@ export default function GeneraManiPage() {
           </p>
           {analisi?.length === result.deals.length ? (
             <p className="text-sm text-figb font-medium mb-4">
-              Hai calcolato il par: ogni mano userà il contratto più alto che
-              regge davvero, invece di uno uguale per tutte. Le scelte qui sotto
-              valgono solo per le mani senza un contratto mantenibile.
+              Ogni mano porta il proprio contratto: lo trovi sotto le carte, qui
+              sotto, e puoi cambiarlo mano per mano. Contratto e dichiarante di
+              riserva servono solo alle mani il cui par non è interpretabile.
             </p>
           ) : (
             <p className="text-sm text-muted-foreground mb-4">
-              Contratto e dichiarante valgono per tutte le mani. Se prima premi
-              «Calcola par», ognuna prende invece il contratto che le sue carte
-              reggono — un contratto unico è impossibile su alcune mani e troppo
-              timido su altre.
+              Senza il par, tutte le mani prenderebbero lo stesso contratto — un
+              contratto unico è impossibile su alcune e troppo timido su altre.
+              Premi <strong>Calcola par</strong> e ognuna riceverà il suo,
+              modificabile.
             </p>
           )}
 
@@ -366,7 +395,7 @@ export default function GeneraManiPage() {
             </div>
             <div>
               <label htmlFor="contratto" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Contratto
+                Contratto di riserva
               </label>
               <select
                 id="contratto"
@@ -374,14 +403,14 @@ export default function GeneraManiPage() {
                 onChange={(e) => setContract(e.target.value)}
                 className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
               >
-                {["1NT", "2NT", "3NT", "2♠", "3♠", "4♠", "2♥", "3♥", "4♥", "3♦", "5♦", "3♣", "5♣"].map((c) => (
+                {CONTRATTI.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
             <div>
               <label htmlFor="dichiarante" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Dichiarante
+                Dichiarante di riserva
               </label>
               <select
                 id="dichiarante"
@@ -422,15 +451,65 @@ export default function GeneraManiPage() {
                   <div className="mb-3 rounded-xl bg-figb/5 border border-figb/20 px-3 py-2">
                     <p className="text-xs">
                       <span className="font-bold text-figb">Par:</span>{" "}
-                      {analisi[i].par.contracts.join(", ")}{" "}
-                      <span className="text-muted-foreground">
-                        ({analisi[i].par.score > 0 ? "+" : ""}
-                        {analisi[i].par.score} per N-S)
-                      </span>
+                      {analisi[i].letto
+                        ? describePar(analisi[i].letto, analisi[i].par.score)
+                        : analisi[i].par.contracts.join(", ")}
                     </p>
-                    {analisi[i].suggerito && (
+                    {analisi[i].scelta ? (
+                      // Il contratto di QUESTA mano, modificabile qui: è il par
+                      // per definizione giusto, ma l'insegnante può volere una
+                      // manche da provare al posto di un parziale.
+                      <div className="mt-2 flex flex-wrap items-end gap-2">
+                        <div>
+                          <label
+                            htmlFor={`contratto-${i}`}
+                            className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                          >
+                            Contratto
+                          </label>
+                          <select
+                            id={`contratto-${i}`}
+                            value={analisi[i].scelta.contract}
+                            onChange={(e) => cambiaScelta(i, { contract: e.target.value })}
+                            className="h-9 px-2 rounded-lg border border-border bg-card text-xs"
+                          >
+                            {CONTRATTI.map((c) => (
+                              <option key={c} value={c}>{c}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor={`dichiarante-${i}`}
+                            className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                          >
+                            Dichiarante
+                          </label>
+                          <select
+                            id={`dichiarante-${i}`}
+                            value={analisi[i].scelta.declarer}
+                            onChange={(e) =>
+                              cambiaScelta(i, { declarer: e.target.value as Position })
+                            }
+                            className="h-9 px-2 rounded-lg border border-border bg-card text-xs"
+                          >
+                            {SEATS.map((s) => (
+                              <option key={s.key} value={s.key}>{s.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    ) : (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Contratto più alto mantenibile da N-S: {analisi[i].suggerito}
+                        Par non interpretabile: questa mano userà il contratto di
+                        riserva.
+                      </p>
+                    )}
+                    {analisi[i].fitCorto !== null && (
+                      <p className="text-xs text-amber-700 dark:text-amber-400 mt-1.5">
+                        Attenzione: solo {analisi[i].fitCorto} carte d&apos;atout in
+                        due. A carte scoperte regge, ma al tavolo un contratto
+                        così non si dichiara.
                       </p>
                     )}
                   </div>
