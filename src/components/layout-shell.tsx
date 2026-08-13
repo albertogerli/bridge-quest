@@ -29,7 +29,9 @@ const ExitIntentModal = dynamic(
 );
 
 /** Routes that should be full-screen (no nav, no sidebar) */
-const FULL_SCREEN_ROUTES = ["/login", "/admin"];
+// La lavagna va proiettata in aula: barra di navigazione, punteggi e inviti a
+// giocare sullo schermo grande sono rumore che distrae la classe.
+const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna"];
 
 /** Routes accessible without authentication */
 // /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi
