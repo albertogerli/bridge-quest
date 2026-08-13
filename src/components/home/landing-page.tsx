@@ -11,12 +11,15 @@ interface LandingPageProps {
 
 export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
   const features = [
-    { icon: <GraduationCap className="w-6 h-6 text-indigo-600" />, title: "49 Lezioni", desc: "4 corsi FIGB completi, dalla base all'avanzato" },
-    { icon: <Spade className="w-6 h-6 text-foreground/80" />, title: "Gioca Subito", desc: "Mani interattive con AI avversaria intelligente" },
-    { icon: <Brain className="w-6 h-6 text-purple-600" />, title: "Quiz & Mini-giochi", desc: "6 tipi di quiz, 9 mini-giochi, ripasso intelligente" },
-    { icon: <Trophy className="w-6 h-6 text-amber-600" />, title: "Tornei & Sfide", desc: "Torneo settimanale, sfida amici, classifica" },
-    { icon: <BarChart3 className="w-6 h-6 text-blue-600" />, title: "Analisi DDS", desc: "Analisi double-dummy post-mano professionale" },
-    { icon: <Flame className="w-6 h-6 text-orange-500" />, title: "Gamification", desc: "XP, streak, badge, premi e collezionabili" },
+    // Titoli e descrizioni in parole di chi legge, non nostre. Prima c'erano
+    // «Analisi DDS» e «Gamification»: la prima non dice nulla a chi non
+    // conosce il termine tecnico, la seconda è gergo di chi fa software.
+    { icon: <GraduationCap className="w-6 h-6 text-figb" />, title: "I 4 corsi ufficiali FIGB", desc: "49 lezioni, dalle prime prese alla dichiarazione avanzata" },
+    { icon: <Spade className="w-6 h-6 text-figb" />, title: "Un tavolo sempre pronto", desc: "Gioca mani vere quando vuoi, contro un avversario che gioca sul serio" },
+    { icon: <Brain className="w-6 h-6 text-figb" />, title: "Esercizi e quiz", desc: "Metti alla prova quello che hai studiato, dieci minuti alla volta" },
+    { icon: <Trophy className="w-6 h-6 text-figb" />, title: "Tornei e sfide", desc: "Il torneo della settimana, le sfide con gli amici, la classifica" },
+    { icon: <BarChart3 className="w-6 h-6 text-figb" />, title: "Rivedi le tue mani", desc: "A fine partita ti mostriamo in quale presa la mano è cambiata" },
+    { icon: <Flame className="w-6 h-6 text-figb" />, title: "I tuoi progressi", desc: "Quanto hai studiato, quanto hai giocato, quanto sei migliorato" },
   ];
 
   return (
@@ -41,8 +44,13 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#14472D] via-figb to-[#2D7A50] px-5 pt-16 pb-20">
-        <div className="relative mx-auto max-w-lg text-center">
+      {/* shrink-0: il contenitore è `flex flex-col`, e senza questo la sezione
+          veniva COMPRESSA da ~400px a 144. Titolo, promessa e i tre pulsanti
+          finivano fuori dal gradiente, in bianco su fondo avorio: invisibili.
+          Ogni visitatore vedeva una fascia colorata vuota al posto della
+          pagina di presentazione. */}
+      <section className="shrink-0 relative overflow-hidden bg-gradient-to-br from-[#14472D] via-figb to-[#2D7A50] px-5 pt-16 pb-20">
+        <div className="relative mx-auto max-w-lg lg:max-w-2xl text-center">
           {/* Suit icons */}
           <motion.div
             className="mb-5 flex items-center justify-center gap-3"
@@ -68,17 +76,20 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-4xl sm:text-5xl font-bold text-white tracking-tight font-display"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight font-display"
           >
-            FIGB Bridge LAB
+            Impara il bridge.
+            <br />
+            E poi giocalo.
           </motion.h1>
           <motion.p
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-3 text-base sm:text-lg text-white/80 max-w-md mx-auto"
+            className="mt-4 text-base sm:text-lg lg:text-xl text-white/85 max-w-xl mx-auto"
           >
-            Impara il bridge giocando. Il corso ufficiale della Federazione Italiana Gioco Bridge, gamificato.
+            Il corso ufficiale della Federazione Italiana Gioco Bridge, con un
+            tavolo sempre pronto per fare pratica. Gratis.
           </motion.p>
 
           {/* CTA buttons */}
@@ -120,8 +131,8 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       </section>
 
       {/* Features */}
-      <section className="px-5 -mt-4 pb-8 relative z-10">
-        <div className="mx-auto max-w-lg">
+      <section className="shrink-0 px-5 -mt-4 pb-8 relative z-10">
+        <div className="mx-auto max-w-lg lg:max-w-4xl">
           <motion.h2
             initial={false}
             animate={{ opacity: 1, y: 0 }}
@@ -131,7 +142,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             Tutto quello che serve per imparare il bridge
           </motion.h2>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {features.map((feat, i) => (
               <motion.div
                 key={feat.title}
@@ -160,7 +171,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       </div>
 
       {/* Stats */}
-      <section className="px-5 pb-8">
+      <section className="shrink-0 px-5 pb-8">
         <div className="mx-auto max-w-lg">
           <motion.div
             initial={false}
@@ -202,7 +213,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       </section>
 
       {/* Bottom CTA */}
-      <section className="px-5 pb-12">
+      <section className="shrink-0 px-5 pb-12">
         <div className="mx-auto max-w-xs">
           <motion.div
             initial={false}
