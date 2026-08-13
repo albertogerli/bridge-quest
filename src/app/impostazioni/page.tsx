@@ -12,6 +12,7 @@ import {
   type AILevel,
   AI_LEVEL_LABELS,
   AI_LEVEL_DESCRIPTIONS,
+  AI_LEVEL_PREDEFINITO,
   getAILevel,
   setAILevel as saveAILevel,
 } from "@/lib/ai-difficulty";
@@ -89,7 +90,7 @@ export default function ImpostazioniPage() {
   const [mounted, setMounted] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [aiLevel, setAiLevel] = useState<AILevel>("intermedio");
+  const [aiLevel, setAiLevel] = useState<AILevel>(AI_LEVEL_PREDEFINITO);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
@@ -142,7 +143,7 @@ export default function ImpostazioniPage() {
     setAnimSpeed("normale");
     setSound(true);
     setProfile("adulto");
-    setAiLevel("intermedio");
+    setAiLevel(AI_LEVEL_PREDEFINITO);
     setShowResetConfirm(false);
     setResetDone(true);
     setTimeout(() => setResetDone(false), 3000);

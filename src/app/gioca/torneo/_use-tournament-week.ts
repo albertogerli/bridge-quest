@@ -15,6 +15,7 @@ import {
 } from "@/lib/tournament-stats";
 import {
   fetchLeaderboard,
+  fetchMyTournamentHistory,
   getTournamentProgress,
   getTournamentResult,
   saveTournamentResult,
@@ -23,6 +24,7 @@ import {
 import {
   TOURNAMENT_HAND_COUNT,
   type LeaderboardEntry,
+  type TournamentHistoryEntry,
   type TournamentResult,
 } from "./_types";
 
@@ -65,6 +67,10 @@ export interface TournamentWeek {
   leaderboard: LeaderboardEntry[] | null;
   /** Mani già completate di un torneo interrotto (per il CTA "Riprendi"). */
   inProgressCount: number;
+  /** Settimane già giocate, dalla più recente. */
+  history: TournamentHistoryEntry[];
+  /** Vero finché lo storico non è stato caricato. */
+  historyLoading: boolean;
   /** Falso al primo render: evita mismatch di hydration sui dati client-only. */
   mounted: boolean;
   isPlaying: boolean;
@@ -94,6 +100,8 @@ export function useTournamentWeek(): TournamentWeek {
   const [isPlaying, setIsPlaying] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[] | null>(null);
+  const [history, setHistory] = useState<TournamentHistoryEntry[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
 
   // Mani già completate di un torneo interrotto (per il CTA "Riprendi")
   const [inProgressCount, setInProgressCount] = useState(0);
@@ -110,6 +118,11 @@ export function useTournamentWeek(): TournamentWeek {
       restorableHandCount(getTournamentProgress(weekNum), tournamentHands, !!result)
     );
     fetchLeaderboard(weekNum).then((lb) => setLeaderboard(lb));
+    // Lo storico non dipende dalla settimana corrente, ma va riletto quando si
+    // finisce un torneo: la settimana appena chiusa deve comparire subito.
+    fetchMyTournamentHistory()
+      .then(setHistory)
+      .finally(() => setHistoryLoading(false));
   }, [weekNum, isPlaying, tournamentHands]);
 
   const onTournamentFinished = useCallback(
@@ -142,6 +155,8 @@ export function useTournamentWeek(): TournamentWeek {
     existingResult,
     alreadyPlayed: !!existingResult,
     leaderboard,
+    history,
+    historyLoading,
     inProgressCount,
     mounted,
     isPlaying,

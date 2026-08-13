@@ -1386,6 +1386,33 @@ END;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.my_tournament_history(limite integer DEFAULT 12)
+ RETURNS TABLE(week_num integer, total_tricks integer, total_needed integer, completed_at timestamp with time zone, posizione integer, partecipanti integer)
+ LANGUAGE sql
+ STABLE
+ SET search_path TO 'public'
+AS $function$
+  with mie as (
+    select t.week_num, t.total_tricks, t.total_needed, t.completed_at
+    from public.tournament_results t
+    where t.user_id = auth.uid()
+    order by t.week_num desc
+    limit greatest(1, least(coalesce(limite, 12), 52))
+  )
+  select
+    m.week_num,
+    m.total_tricks,
+    m.total_needed,
+    m.completed_at,
+    (select count(*) from public.tournament_results r
+      where r.week_num = m.week_num and r.total_tricks > m.total_tricks)::integer + 1,
+    (select count(*) from public.tournament_results r
+      where r.week_num = m.week_num)::integer
+  from mie m
+  order by m.week_num desc;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text DEFAULT NULL::text)
  RETURNS void
  LANGUAGE plpgsql
@@ -2702,6 +2729,9 @@ GRANT EXECUTE ON FUNCTION public.list_partner_candidates(p_level text, p_provinc
 REVOKE ALL ON FUNCTION public.log_user_login() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
+REVOKE ALL ON FUNCTION public.my_tournament_history(limite integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO service_role;
 REVOKE ALL ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO service_role;

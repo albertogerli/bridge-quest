@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   calcStars,
+  mergeHistory,
   computeHandTotals,
   computeTournamentXp,
   decideProgressRestore,
@@ -14,6 +15,7 @@ import {
   sumTricksNeeded,
   tournamentCtaLabel,
 } from "./tournament-stats";
+import type { TournamentHistoryEntry } from "@/app/gioca/torneo/_types";
 import {
   EPOCH_MS,
   EPOCH_START,
@@ -382,5 +384,57 @@ describe("tournamentCtaLabel", () => {
     expect(tournamentCtaLabel(4, TOURNAMENT_HAND_COUNT)).toBe(
       "Riprendi il Torneo (mano 5/5)"
     );
+  });
+});
+
+// ─── Storico personale ──────────────────────────────────────────────────────
+
+describe("mergeHistory", () => {
+  const locale = (weekNum: number, totalTricks: number): TournamentHistoryEntry => ({
+    weekNum, totalTricks, totalNeeded: 50, completedAt: "2026-08-01T10:00:00Z",
+    posizione: null, partecipanti: null,
+  });
+  const remoto = (
+    weekNum: number, totalTricks: number, posizione: number, partecipanti: number
+  ): TournamentHistoryEntry => ({
+    weekNum, totalTricks, totalNeeded: 50, completedAt: "2026-08-01T10:00:00Z",
+    posizione, partecipanti,
+  });
+
+  it("tiene le settimane che stanno solo da una parte", () => {
+    const out = mergeHistory([locale(130, 40)], [remoto(131, 45, 3, 20)]);
+    expect(out.map((e) => e.weekNum)).toEqual([131, 130]);
+  });
+
+  it("ordina dalla settimana più recente", () => {
+    const out = mergeHistory([locale(128, 40), locale(135, 41)], [remoto(131, 45, 3, 20)]);
+    expect(out.map((e) => e.weekNum)).toEqual([135, 131, 128]);
+  });
+
+  it("per una settimana presente in entrambe vince il server", () => {
+    // È la riga che ha prodotto la classifica: un punteggio diverso accanto
+    // alla posizione farebbe sembrare sbagliata la classifica.
+    const out = mergeHistory([locale(131, 40)], [remoto(131, 45, 3, 20)]);
+    expect(out).toHaveLength(1);
+    expect(out[0].totalTricks).toBe(45);
+    expect(out[0].posizione).toBe(3);
+    expect(out[0].partecipanti).toBe(20);
+  });
+
+  it("una settimana solo locale non inventa una posizione", () => {
+    // «1º su 1» sarebbe una bugia gentile, che è comunque una bugia.
+    const out = mergeHistory([locale(130, 40)], []);
+    expect(out[0].posizione).toBeNull();
+    expect(out[0].partecipanti).toBeNull();
+  });
+
+  it("recupera dal locale la data che al server mancasse", () => {
+    const senzaData = { ...remoto(131, 45, 3, 20), completedAt: null };
+    expect(mergeHistory([locale(131, 40)], [senzaData])[0].completedAt)
+      .toBe("2026-08-01T10:00:00Z");
+  });
+
+  it("regge le liste vuote", () => {
+    expect(mergeHistory([], [])).toEqual([]);
   });
 });

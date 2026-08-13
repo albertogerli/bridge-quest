@@ -7,11 +7,12 @@
  * l'I/O (che fallisce sempre in silenzio, come prima).
  */
 
-import { decideProgressRestore } from "@/lib/tournament-stats";
+import { decideProgressRestore, mergeHistory } from "@/lib/tournament-stats";
 import type { Smazzata } from "@/lib/catalog";
 import type {
   HandResult,
   LeaderboardEntry,
+  TournamentHistoryEntry,
   TournamentProgress,
   TournamentResult,
 } from "./_types";
@@ -26,6 +27,38 @@ export function getTournamentResult(weekNum: number): TournamentResult | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Tutte le settimane concluse su QUESTO dispositivo.
+ *
+ * Serve come rete: chi ha giocato prima che i risultati finissero sul server,
+ * o da sloggato, ha il proprio torneo solo qui. Meglio mostrarlo senza
+ * posizione che dirgli che non ha mai giocato.
+ */
+export function getLocalTournamentHistory(): TournamentHistoryEntry[] {
+  const out: TournamentHistoryEntry[] = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      // Solo i risultati conclusi: `..._progress` è un torneo a metà.
+      const m = key?.match(/^bq_tournament_week_(\d+)$/);
+      if (!m) continue;
+      const raw = localStorage.getItem(key!);
+      if (!raw) continue;
+      const r = JSON.parse(raw) as TournamentResult;
+      if (typeof r?.totalTricks !== "number") continue;
+      out.push({
+        weekNum: Number(m[1]),
+        totalTricks: r.totalTricks,
+        totalNeeded: r.totalNeeded,
+        completedAt: r.completedAt ?? null,
+        posizione: null,
+        partecipanti: null,
+      });
+    }
+  } catch {}
+  return out;
 }
 
 export function saveTournamentResult(result: TournamentResult) {
@@ -108,6 +141,38 @@ export async function saveTournamentToSupabase(result: TournamentResult) {
     );
   } catch {
     // Gracefully handle: table may not exist yet
+  }
+}
+
+/**
+ * Storico personale: le settimane già giocate, con posizione e partecipanti.
+ *
+ * Due sorgenti, unite: il server sa di tutti i dispositivi e sa dire «5º su
+ * 49»; il localStorage copre chi ha giocato prima che il salvataggio remoto
+ * esistesse. Se la funzione sul database non c'è ancora, resta il locale — la
+ * schermata perde la posizione, non il risultato.
+ */
+export async function fetchMyTournamentHistory(
+  limite = 12
+): Promise<TournamentHistoryEntry[]> {
+  const locali = getLocalTournamentHistory();
+  try {
+    const { createClient } = await import("@/lib/supabase/client");
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("my_tournament_history", { limite });
+    if (error || !data) return mergeHistory(locali, []).slice(0, limite);
+
+    const remoti: TournamentHistoryEntry[] = (data as Record<string, unknown>[]).map((r) => ({
+      weekNum: r.week_num as number,
+      totalTricks: r.total_tricks as number,
+      totalNeeded: r.total_needed as number,
+      completedAt: (r.completed_at as string | null) ?? null,
+      posizione: (r.posizione as number | null) ?? null,
+      partecipanti: (r.partecipanti as number | null) ?? null,
+    }));
+    return mergeHistory(locali, remoti).slice(0, limite);
+  } catch {
+    return mergeHistory(locali, []).slice(0, limite);
   }
 }
 
