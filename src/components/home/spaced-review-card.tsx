@@ -30,7 +30,7 @@ export function SpacedReviewCard({ reviewCount }: SpacedReviewCardProps) {
                   <p className="text-sm font-semibold text-foreground">
                     Ripasso del giorno
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     {reviewCount > 0
                       ? `${reviewCount} ${reviewCount === 1 ? "domanda" : "domande"} da ripassare`
                       : "Completa lezioni per sbloccare il ripasso"

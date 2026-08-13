@@ -30,12 +30,12 @@ export function DesktopSidebar() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-foreground">Livello {stats.level}</p>
-                <p className="text-[11px] text-muted-foreground font-medium">{stats.levelName}</p>
+                <p className="text-[12px] text-muted-foreground font-medium">{stats.levelName}</p>
               </div>
             </div>
             <div className="text-right">
               <p className="text-xl font-bold text-primary">{stats.xp.toLocaleString()}</p>
-              <p className="text-[10px] text-muted-foreground font-medium">{profile.xpLabel} totali</p>
+              <p className="text-[12px] text-muted-foreground font-medium">{profile.xpLabel} totali</p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-muted border border-border overflow-hidden">
@@ -44,7 +44,7 @@ export function DesktopSidebar() {
               style={{ width: `${stats.levelProgress}%` }}
             />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1.5 font-medium">
+          <p className="text-[12px] text-muted-foreground mt-1.5 font-medium">
             {stats.xpInLevel.toLocaleString()} / {stats.xpNeededForNext.toLocaleString()} {profile.xpLabel} · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
           </p>
         </div>
@@ -59,7 +59,7 @@ export function DesktopSidebar() {
               </p>
             </div>
             {stats.streak > 0 && (
-              <span className="text-[10px] font-medium text-primary bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5">
+              <span className="text-[12px] font-medium text-primary bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5">
                 {`+${Math.min(stats.streak * 5, 50)} ${profile.xpLabel}/giorno`}
               </span>
             )}
@@ -68,7 +68,7 @@ export function DesktopSidebar() {
             {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
               <div
                 key={i}
-                className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[10px] font-bold ${
+                className={`flex h-8 w-8 flex-1 items-center justify-center rounded-lg text-[12px] font-bold ${
                   i < Math.min(stats.streak, 7)
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground border border-border"
@@ -87,7 +87,7 @@ export function DesktopSidebar() {
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-medium text-white/70 uppercase tracking-wider">Riprendi</p>
+                  <p className="text-[12px] font-medium text-white/70 uppercase tracking-wider">Riprendi</p>
                   <p className="text-sm font-semibold truncate">{stats.nextModule.moduleTitle}</p>
                 </div>
                 <svg className="h-5 w-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -118,7 +118,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-left">
               <p className="text-xs font-semibold text-foreground/80 group-hover:text-rose-600">Esci</p>
-              <p className="text-[10px] text-muted-foreground">{user.email}</p>
+              <p className="text-[12px] text-muted-foreground">{user.email}</p>
             </div>
           </button>
         ) : stats.xp > 0 ? (
@@ -135,7 +135,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-left flex-1">
               <p className="text-xs font-semibold text-foreground/80">Livello {stats.level} · {stats.xp} XP</p>
-              <p className="text-[10px] text-muted-foreground group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
+              <p className="text-[12px] text-muted-foreground group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
             </div>
           </Link>
         ) : (
@@ -162,13 +162,13 @@ export function DesktopSidebar() {
             <Image src="/icons/logo-coni.png" alt="CONI - Disciplina Sportiva Associata" width={400} height={146} className="h-8 w-auto" />
           </div>
           <div>
-            <p className="text-[10px] font-medium text-figb dark:text-primary uppercase tracking-wider">
+            <p className="text-[12px] font-medium text-figb dark:text-primary uppercase tracking-wider">
               Un progetto della FIGB
             </p>
-            <p className="text-[10px] text-figb dark:text-primary mt-0.5">
+            <p className="text-[12px] text-figb dark:text-primary mt-0.5">
               Commissione Insegnamento
             </p>
-            <p className="text-[9px] text-figb dark:text-primary mt-1">
+            <p className="text-[12px] text-figb dark:text-primary mt-1">
               Sviluppo: A. G. Gerli / Tourbillon Tech
             </p>
           </div>

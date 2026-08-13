@@ -144,7 +144,7 @@ export default function LezioniPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <p className="text-sm font-bold text-[#12305f] dark:text-gray-100">Prima Mano</p>
-                    <Badge className={`text-[10px] font-bold border-0 ${
+                    <Badge className={`text-[12px] font-bold border-0 ${
                       onboarded
                         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                         : "bg-[#c8a44e]/20 text-[#8f6b16]"
@@ -152,7 +152,7 @@ export default function LezioniPage() {
                       {onboarded ? "Completata ✓" : "3 min"}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     {onboarded
                       ? "Rivedi le basi: cos'è una presa, come si gioca, la tua prima mano"
                       : "Inizia da qui! Scopri il bridge in 3 minuti e gioca la tua prima mano"}
@@ -204,7 +204,7 @@ export default function LezioniPage() {
                   <span className="text-lg">{course.icon}</span>
                   <div className="text-left">
                     <div className="text-[13px] font-semibold leading-tight">{course.name.replace("Corso ", "")}</div>
-                    <div className={`text-[10px] leading-tight ${isActive ? "text-white" : "text-muted-foreground"}`}>
+                    <div className={`text-[12px] leading-tight ${isActive ? "text-white" : "text-muted-foreground"}`}>
                       {stats.progress}%
                     </div>
                   </div>
@@ -221,7 +221,7 @@ export default function LezioniPage() {
           transition={{ delay: 0.08 }}
           className="mb-4 flex items-center gap-2"
         >
-          <Badge className={`${levelInfo[currentCourse.level].bg} ${levelInfo[currentCourse.level].color} text-[10px] font-bold border-0`}>
+          <Badge className={`${levelInfo[currentCourse.level].bg} ${levelInfo[currentCourse.level].color} text-[12px] font-bold border-0`}>
             {levelInfo[currentCourse.level].label}
           </Badge>
           <span className="text-xs text-muted-foreground">{currentCourse.subtitle}</span>
@@ -246,7 +246,7 @@ export default function LezioniPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-foreground">Dispense & Infografiche</p>
-                <p className="text-[11px] text-muted-foreground">Scarica il materiale didattico</p>
+                <p className="text-[12px] text-muted-foreground">Scarica il materiale didattico</p>
               </div>
               <svg className="h-5 w-5 text-muted-foreground/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="9,6 15,12 9,18" />
@@ -362,7 +362,7 @@ export default function LezioniPage() {
                               style={{ width: `${worldProgress}%` }}
                             />
                           </div>
-                          <span className="text-[11px] font-bold text-muted-foreground">
+                          <span className="text-[12px] font-bold text-muted-foreground">
                             {worldCompleted}/{worldModules}
                           </span>
                         </div>
@@ -476,7 +476,7 @@ export default function LezioniPage() {
                                   <div className="flex items-center gap-2">
                                     <Badge
                                       variant="outline"
-                                      className={`text-[10px] font-bold px-1.5 py-0 ${
+                                      className={`text-[12px] font-bold px-1.5 py-0 ${
                                         isComplete
                                           ? "text-emerald border-emerald/30"
                                           : "text-muted-foreground border-border"
@@ -489,7 +489,7 @@ export default function LezioniPage() {
                                       const smazzateCount = allSmazzate.filter((s) => s.lesson === lesson.id).length;
                                       return smazzateCount > 0 ? (
                                         <span
-                                          className="text-[10px] font-bold text-amber-600 dark:text-amber-400"
+                                          className="text-[12px] font-bold text-amber-600 dark:text-amber-400"
                                           title={`${smazzateCount} mani pratiche disponibili`}
                                         >
                                           {smazzateCount} <Spade className="w-3 h-3 inline ml-0.5" />
@@ -552,7 +552,7 @@ export default function LezioniPage() {
                       <Trophy className="w-6 h-6 text-amber-700 dark:text-amber-400" />
                       <div>
                         <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Mondo completato!</p>
-                        <p className="text-[11px] text-amber-600/60 dark:text-amber-500/60">+200 XP bonus</p>
+                        <p className="text-[12px] text-amber-600/60 dark:text-amber-500/60">+200 XP bonus</p>
                       </div>
                     </motion.div>
                   )}

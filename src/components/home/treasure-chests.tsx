@@ -132,7 +132,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
               >
                 {isEarned ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : chestMilestoneIcons[chest.modules]?.("w-5 h-5")}
               </motion.div>
-              <span className={`text-[9px] font-bold ${
+              <span className={`text-[12px] font-bold ${
                 isEarned ? "text-amber-700 dark:text-amber-400" : isCurrent ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
               }`}>
                 {chest.modules} mod
@@ -149,7 +149,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
             <p className="text-xs font-bold text-foreground/80 flex items-center gap-1">
               {chestMilestoneIcons[nextChest.modules]?.("w-4 h-4")} {nextChest.label}
             </p>
-            <p className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
+            <p className="text-[12px] font-bold text-amber-600 dark:text-amber-400">
               {modulesCompleted}/{nextChest.modules}
             </p>
           </div>
@@ -161,7 +161,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
               transition={{ delay: 0.5, duration: 0.8 }}
             />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1.5">
+          <p className="text-[12px] text-muted-foreground mt-1.5">
             Premio: {nextChest.reward}
           </p>
         </div>

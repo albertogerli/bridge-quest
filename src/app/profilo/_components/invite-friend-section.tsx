@@ -45,7 +45,7 @@ export function InviteFriendSection({
           {invitesSent > 0 && (
             <div className="flex items-center gap-1.5 bg-figb/10 dark:bg-primary/15 rounded-full px-3 py-1">
               <Send className="w-3 h-3 text-figb dark:text-primary" />
-              <span className="text-[11px] font-bold text-figb dark:text-primary">
+              <span className="text-[12px] font-bold text-figb dark:text-primary">
                 {invitesSent} invit{invitesSent === 1 ? "o" : "i"}
               </span>
             </div>
@@ -55,7 +55,7 @@ export function InviteFriendSection({
         {/* Referral code card */}
         {referralCode && (
           <div className="mb-4 rounded-xl bg-card/80 border border-figb/10 dark:border-primary/20 p-3.5">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+            <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
               Il tuo codice referral
             </p>
             <div className="flex items-center gap-2">

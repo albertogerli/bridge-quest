@@ -62,7 +62,7 @@ export function LostCard({ nextModule }: LostCardProps) {
         </div>
         <div>
           <p className="text-sm font-bold text-[#12305f]">Non sai da dove ricominciare?</p>
-          <p className="text-[11px] text-[#5c677d]">Ecco qualche idea per riprendere</p>
+          <p className="text-[12px] text-[#5c677d]">Ecco qualche idea per riprendere</p>
         </div>
       </div>
 

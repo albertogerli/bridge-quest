@@ -211,7 +211,7 @@ export default function ObiettiviPage() {
                 </span>
               </div>
             </div>
-            <Badge className="bg-white/15 text-white/90 text-[10px] font-bold hover:bg-white/15 border border-white/10">
+            <Badge className="bg-white/15 text-white/90 text-[12px] font-bold hover:bg-white/15 border border-white/10">
               {completedCount}/3
             </Badge>
           </motion.div>
@@ -313,7 +313,7 @@ export default function ObiettiviPage() {
                       {obj.title}
                     </h3>
                     <Badge
-                      className={`text-[10px] font-bold shrink-0 ml-2 ${
+                      className={`text-[12px] font-bold shrink-0 ml-2 ${
                         obj.completed
                           ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-950/40"
                           : "bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-950/40"
@@ -335,7 +335,7 @@ export default function ObiettiviPage() {
                         {obj.current} / {obj.target}
                       </span>
                       <span
-                        className={`text-[11px] font-bold tabular-nums ${
+                        className={`text-[12px] font-bold tabular-nums ${
                           obj.completed ? "text-emerald-500" : "text-muted-foreground"
                         }`}
                       >

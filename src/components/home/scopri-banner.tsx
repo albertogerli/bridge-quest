@@ -21,7 +21,7 @@ export function ScopriBanner() {
                   <p className="text-sm font-bold text-foreground">
                     Scopri il Bridge
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     Storia, la FIGB, curiosità e link utili
                   </p>
                 </div>

@@ -128,11 +128,11 @@ function HandSelector({
                       <span className="text-sm font-bold text-white">Mano {hand.id}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-white/20 text-white text-[10px] font-bold border-0 backdrop-blur-sm">
+                      <Badge className="bg-white/20 text-white text-[12px] font-bold border-0 backdrop-blur-sm">
                         {hand.difficulty === "facile" ? "Facile" : "Medio"}
                       </Badge>
                       {completed && (
-                        <Badge className="bg-emerald-400/30 text-white text-[10px] font-bold border-0 backdrop-blur-sm">
+                        <Badge className="bg-emerald-400/30 text-white text-[12px] font-bold border-0 backdrop-blur-sm">
                           <CheckCircle2 className="w-3 h-3 mr-1" />
                           Completata
                         </Badge>
@@ -203,7 +203,7 @@ function HintOverlay({ text, onDismiss }: { text: string; onDismiss: () => void 
           </div>
           <button
             onClick={onDismiss}
-            className="shrink-0 rounded-lg px-3 py-1 text-[10px] font-bold text-cyan-600 bg-cyan-100 hover:bg-cyan-200 transition-colors"
+            className="shrink-0 rounded-lg px-3 py-1 text-[12px] font-bold text-cyan-600 bg-cyan-100 hover:bg-cyan-200 transition-colors"
           >
             OK
           </button>
@@ -349,7 +349,7 @@ function GuidedGameplay({
               <ArrowLeft className="h-4 w-4" />
             </button>
             <Badge
-              className={`text-[10px] font-bold border-0 ${
+              className={`text-[12px] font-bold border-0 ${
                 hand.difficulty === "facile"
                   ? "bg-cyan-50 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300"
                   : "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300"
@@ -358,7 +358,7 @@ function GuidedGameplay({
               Mano Guidata {hand.id}
             </Badge>
             {hand.hints.length > 0 && (
-              <Badge className="bg-cyan-50 text-cyan-600 dark:bg-cyan-950/40 dark:text-cyan-400 text-[10px] font-bold border-0">
+              <Badge className="bg-cyan-50 text-cyan-600 dark:bg-cyan-950/40 dark:text-cyan-400 text-[12px] font-bold border-0">
                 💡 Guidata
               </Badge>
             )}
@@ -376,17 +376,17 @@ function GuidedGameplay({
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{hand.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{hand.tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`

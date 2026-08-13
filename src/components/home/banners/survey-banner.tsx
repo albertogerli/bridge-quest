@@ -19,9 +19,9 @@ export function SurveyBanner() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-white">Tu che bridgista sei?</p>
-                  <p className="text-[11px] text-white/60">Partecipa al sondaggio della community!</p>
+                  <p className="text-[12px] text-white/60">Partecipa al sondaggio della community!</p>
                 </div>
-                <span className="shrink-0 text-[10px] font-bold text-white bg-white/15 px-2.5 py-1 rounded-full">
+                <span className="shrink-0 text-[12px] font-bold text-white bg-white/15 px-2.5 py-1 rounded-full">
                   VOTA
                 </span>
               </div>

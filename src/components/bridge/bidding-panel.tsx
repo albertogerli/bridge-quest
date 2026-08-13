@@ -199,7 +199,7 @@ export function BiddingPanel({
         compact ? "p-2" : "p-3"
       }`}
     >
-      <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 text-center" aria-hidden="true">
+      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 text-center" aria-hidden="true">
         Licita
       </p>
       <table className="w-full">
@@ -212,7 +212,7 @@ export function BiddingPanel({
               <th
                 key={pos}
                 scope="col"
-                className={`text-[10px] font-bold text-center pb-1 ${
+                className={`text-[12px] font-bold text-center pb-1 ${
                   pos === dealer
                     ? "text-emerald"
                     : "text-muted-foreground"
@@ -224,7 +224,7 @@ export function BiddingPanel({
                   {pos === dealer ? " (dichiarante di mano)" : ""}
                 </span>
                 {pos === dealer && (
-                  <span className="text-[7px] block text-emerald/60" aria-hidden="true">D</span>
+                  <span className="text-[12px] block text-emerald/60" aria-hidden="true">D</span>
                 )}
               </th>
             ))}

@@ -141,11 +141,11 @@ export function AchievementPopup({
               </div>
             </div>
             <div>
-              <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
                 Nuovo Achievement!
               </p>
               <p className="text-sm font-bold text-foreground">{badge.name}</p>
-              <p className="text-[11px] text-muted-foreground">{badge.desc}</p>
+              <p className="text-[12px] text-muted-foreground">{badge.desc}</p>
             </div>
           </div>
         </motion.div>

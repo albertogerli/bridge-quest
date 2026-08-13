@@ -41,7 +41,7 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
                         <Gamepad2 className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-violet-500 dark:text-violet-400 uppercase tracking-wider">Prossimo passo</p>
+                        <p className="text-[12px] font-bold text-violet-500 dark:text-violet-400 uppercase tracking-wider">Prossimo passo</p>
                         <p className="text-sm font-bold text-foreground">Metti in pratica!</p>
                         <p className="text-xs text-muted-foreground">Gioca una mano per consolidare la teoria</p>
                       </div>
@@ -61,7 +61,7 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
                         <GraduationCap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider">Prossimo passo</p>
+                        <p className="text-[12px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider">Prossimo passo</p>
                         <p className="text-sm font-bold text-foreground truncate">{nextModule.moduleTitle}</p>
                         <p className="text-xs text-muted-foreground">Continua il percorso di apprendimento</p>
                       </div>

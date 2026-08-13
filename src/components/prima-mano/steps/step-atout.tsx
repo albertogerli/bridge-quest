@@ -114,7 +114,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
 
         {/* Animation area */}
         <div className="rounded-[28px] border border-gray-200 bg-white p-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-4 text-center">
+          <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-4 text-center">
             Il taglio in azione
           </p>
 
@@ -178,7 +178,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
           transition={{ delay: 0.6 }}
           className="rounded-[28px] border border-gray-200 bg-white p-5"
         >
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
+          <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
             Il taglio è obbligatorio?
           </p>
           <div className="grid gap-3">

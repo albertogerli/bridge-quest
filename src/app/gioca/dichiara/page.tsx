@@ -396,15 +396,15 @@ export default function DichiaraPage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{correct}</p>
-                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[10px] text-muted-foreground font-bold">Streak max</p>
+                <p className="text-[12px] text-muted-foreground font-bold">Streak max</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-figb dark:text-primary">+{xpEarned}</p>
-                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -440,16 +440,16 @@ export default function DichiaraPage() {
                           className={`rounded-xl p-3 border ${answer.correct ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                         >
                           <div className="flex items-start gap-2">
-                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${answer.correct ? "bg-emerald-500" : "bg-red-500"}`}>
+                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-white mt-0.5 ${answer.correct ? "bg-emerald-500" : "bg-red-500"}`}>
                               {answer.correct ? "✓" : "✗"}
                             </span>
                             <div className="flex-1 min-w-0">
-                              <p className="text-[11px] text-muted-foreground mb-0.5">{s.hand}</p>
+                              <p className="text-[12px] text-muted-foreground mb-0.5">{s.hand}</p>
                               <p className="text-xs text-muted-foreground">
                                 Hai dichiarato: <span className="font-bold">{answer.selected}</span>
                               </p>
                               {!answer.correct && (
-                                <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
+                                <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                   Corretta: {s.correctBid} — {s.explanation}
                                 </p>
                               )}
@@ -531,7 +531,7 @@ export default function DichiaraPage() {
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs font-bold text-muted-foreground">Che apertura fai?</p>
                 {(dCfg.showHCP || dCfg.showDist) && (
-                  <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground">
+                  <Badge variant="outline" className="text-[12px] font-bold text-muted-foreground">
                     {dCfg.showHCP ? `${scenario.hcp} HCP` : ""}
                     {dCfg.showHCP && dCfg.showDist ? " · " : ""}
                     {dCfg.showDist ? scenario.distribution : ""}

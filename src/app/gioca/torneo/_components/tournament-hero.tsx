@@ -79,7 +79,7 @@ export function TournamentHero({
               </div>
             </div>
             {alreadyPlayed && (
-              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[10px] font-bold border-0 shrink-0">
+              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[12px] font-bold border-0 shrink-0">
                 Completato
               </Badge>
             )}
@@ -89,7 +89,7 @@ export function TournamentHero({
           <div className="space-y-3 mt-2">
             <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-indigo-100 dark:border-indigo-900 w-full">
               <div className="text-center flex-1">
-                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                   Mani
                 </p>
                 <p className="text-lg font-bold text-indigo-600 leading-tight">
@@ -98,7 +98,7 @@ export function TournamentHero({
               </div>
               <div className="h-8 w-px bg-indigo-200/60" />
               <div className="text-center flex-1">
-                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                   Prese necessarie
                 </p>
                 <p className="text-lg font-bold text-foreground leading-tight">
@@ -107,7 +107,7 @@ export function TournamentHero({
               </div>
               <div className="h-8 w-px bg-indigo-200/60" />
               <div className="text-center flex-1">
-                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                   Tempo rimasto
                 </p>
                 <p className="text-sm font-bold text-purple-600 leading-tight tabular-nums">
@@ -124,7 +124,7 @@ export function TournamentHero({
 
           {/* Hand previews */}
           <div className="mt-4 space-y-2">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+            <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
               Le {displayCount} mani del torneo
             </p>
             <div
@@ -148,18 +148,18 @@ export function TournamentHero({
                         : "bg-card/70 border-indigo-100 dark:border-indigo-900"
                     }`}
                   >
-                    <p className="text-[10px] font-bold text-muted-foreground">
+                    <p className="text-[12px] font-bold text-muted-foreground">
                       #{i + 1}
                     </p>
                     <p className="text-sm font-bold text-foreground leading-tight">
                       {h.contract}
                     </p>
-                    <p className="text-[9px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       {tricksNeeded}p
                     </p>
                     {handResult && (
                       <p
-                        className={`text-[10px] font-bold mt-0.5 ${
+                        className={`text-[12px] font-bold mt-0.5 ${
                           handResult.result >= 0
                             ? "text-emerald-600"
                             : "text-red-600"
@@ -184,7 +184,7 @@ export function TournamentHero({
             >
               <div className="inline-flex items-center gap-1.5 bg-indigo-100/80 rounded-full px-3 py-1">
                 <span className="text-xs">+150 {xpLabel}</span>
-                <span className="text-[10px] font-bold text-indigo-700">
+                <span className="text-[12px] font-bold text-indigo-700">
                   Bonus Torneo
                 </span>
               </div>

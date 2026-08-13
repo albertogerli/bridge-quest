@@ -706,11 +706,11 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}/{cfg.rounds}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{pct}%</p>
-                <p className="text-[10px] text-muted-foreground font-bold">
+                <p className="text-[12px] text-muted-foreground font-bold">
                   Precisione
                 </p>
               </div>
@@ -718,7 +718,7 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-orange-500">
                   x{maxCombo}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-bold">
+                <p className="text-[12px] text-muted-foreground font-bold">
                   Max combo
                 </p>
               </div>
@@ -726,7 +726,7 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -818,18 +818,18 @@ export default function QuizLampoPage() {
                           className={`rounded-xl p-3 border ${wasRight ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                         >
                           <div className="flex items-start gap-2">
-                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${wasRight ? "bg-emerald-500" : "bg-red-500"}`}>
+                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-white mt-0.5 ${wasRight ? "bg-emerald-500" : "bg-red-500"}`}>
                               {wasRight ? "✓" : "✗"}
                             </span>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-medium text-foreground/80 leading-relaxed">{q.content}</p>
-                              <p className="text-[11px] text-muted-foreground mt-1">
+                              <p className="text-[12px] text-muted-foreground mt-1">
                                 {answer.selected !== null
                                   ? `Hai risposto: ${selectedOption}`
                                   : "Tempo scaduto"}
                               </p>
                               {!wasRight && (
-                                <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
+                                <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                   Corretta: {q.options[q.correctIndex]}
                                   {q.explanation && ` — ${q.explanation}`}
                                 </p>
@@ -980,11 +980,11 @@ export default function QuizLampoPage() {
             {/* Type badge + course */}
             <div className="flex items-center justify-between mb-3">
               <span
-                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.bg} ${badge.text}`}
+                className={`text-[12px] font-bold px-2 py-0.5 rounded-full ${badge.bg} ${badge.text}`}
               >
                 {badge.label}
               </span>
-              <span className="text-[10px] font-medium text-muted-foreground/50 truncate ml-2">
+              <span className="text-[12px] font-medium text-muted-foreground/50 truncate ml-2">
                 {currentQuestion.courseName}
               </span>
             </div>
@@ -1116,7 +1116,7 @@ export default function QuizLampoPage() {
                 <div className="flex items-center gap-3 mt-1 ml-7">
                   {Math.max(0, Math.floor((timeLeft > 0 ? timeLeft : 0) * 2)) >
                     0 && (
-                    <span className="text-[10px] font-bold text-blue-500">
+                    <span className="text-[12px] font-bold text-blue-500">
                       +
                       {Math.floor(
                         Math.max(0, timeLeft) * 2
@@ -1125,7 +1125,7 @@ export default function QuizLampoPage() {
                     </span>
                   )}
                   {combo > 1 && (
-                    <span className="text-[10px] font-bold text-orange-500">
+                    <span className="text-[12px] font-bold text-orange-500">
                       +{(combo - 1) * 10} combo
                     </span>
                   )}

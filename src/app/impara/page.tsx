@@ -144,7 +144,7 @@ export default function ImparaPage() {
                       <div className="flex items-center gap-2">
                         <p className="font-display text-lg font-semibold">{step.title}</p>
                         {isNext && (
-                          <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                          <span className="rounded-full bg-primary px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-primary-foreground">
                             Prossimo passo
                           </span>
                         )}

@@ -250,7 +250,7 @@ export default function CollezionePage() {
             {rarityBreakdown.map((rb) => (
               <div key={rb.rarity} className="flex items-center gap-1">
                 <span className="text-xs">{RARITY_EMOJI[rb.rarity]}</span>
-                <span className="text-[10px] font-bold text-muted-foreground">
+                <span className="text-[12px] font-bold text-muted-foreground">
                   {rb.unlocked}/{rb.total}
                 </span>
               </div>
@@ -265,7 +265,7 @@ export default function CollezionePage() {
           transition={{ delay: 0.08 }}
           className="mt-4"
         >
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Rarità
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -302,7 +302,7 @@ export default function CollezionePage() {
           transition={{ delay: 0.1 }}
           className="mt-3"
         >
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Categoria
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -388,7 +388,7 @@ export default function CollezionePage() {
                       {/* Rarity badge top-right */}
                       <div className="absolute top-2 right-2">
                         <span
-                          className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wide ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border`}
+                          className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[12px] font-semibold uppercase tracking-wide ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border`}
                         >
                           {rarityConf.label[0]}
                         </span>
@@ -425,7 +425,7 @@ export default function CollezionePage() {
                       </p>
 
                       {/* Category */}
-                      <p className="text-[9px] text-gray-500/80 font-semibold mt-1 relative z-10">
+                      <p className="text-[12px] text-gray-500/80 font-semibold mt-1 relative z-10">
                         {CATEGORY_CONFIG[card.category].emoji}{" "}
                         {CATEGORY_CONFIG[card.category].label}
                       </p>
@@ -507,7 +507,7 @@ export default function CollezionePage() {
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-semibold uppercase tracking-wide ${conf.bg} ${conf.color} ${conf.border} border`}
+                    className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[12px] font-semibold uppercase tracking-wide ${conf.bg} ${conf.color} ${conf.border} border`}
                   >
                     {conf.label}
                   </span>
@@ -541,7 +541,7 @@ export default function CollezionePage() {
           {completedCategories.length < categories.length && (
             <div className="mt-3 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl p-3">
               <span className="text-base">🏆</span>
-              <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold leading-tight">
+              <p className="text-[12px] text-amber-700 dark:text-amber-300 font-semibold leading-tight">
                 Completa tutte le carte di una categoria per +100 XP bonus!
               </p>
             </div>
@@ -556,7 +556,7 @@ export default function CollezionePage() {
                   className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl p-3"
                 >
                   <span className="text-base">✅</span>
-                  <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
+                  <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-bold">
                     {CATEGORY_CONFIG[cat].emoji} {CATEGORY_CONFIG[cat].label}{" "}
                     completata!
                   </p>
@@ -668,7 +668,7 @@ export default function CollezionePage() {
 
                       {/* Rarity badge */}
                       <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border mb-4 relative z-10`}
+                        className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[12px] font-semibold uppercase tracking-wider ${rarityConf.bg} ${rarityConf.color} ${rarityConf.border} border mb-4 relative z-10`}
                       >
                         {rarityConf.label}
                       </span>
@@ -723,12 +723,12 @@ export default function CollezionePage() {
 
                           <div className="flex items-center gap-2 mt-4">
                             <span
-                              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold ${rarityConf.bg} ${rarityConf.color}`}
+                              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[12px] font-bold ${rarityConf.bg} ${rarityConf.color}`}
                             >
                               {RARITY_EMOJI[selectedCard.rarity]}{" "}
                               {rarityConf.label}
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold bg-muted text-muted-foreground">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[12px] font-bold bg-muted text-muted-foreground">
                               {CATEGORY_CONFIG[selectedCard.category].emoji}{" "}
                               {CATEGORY_CONFIG[selectedCard.category].label}
                             </span>
@@ -736,7 +736,7 @@ export default function CollezionePage() {
 
                           <div className="mt-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl p-3 flex items-center gap-2">
                             <span className="text-sm">✅</span>
-                            <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">
+                            <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-semibold">
                               {selectedCard.unlockCondition}
                             </p>
                           </div>
@@ -749,7 +749,7 @@ export default function CollezionePage() {
 
                           <div className="mt-4 bg-amber-50 dark:bg-amber-950/40 rounded-xl p-3 flex items-center gap-2">
                             <span className="text-sm">🔒</span>
-                            <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold">
+                            <p className="text-[12px] text-amber-700 dark:text-amber-300 font-semibold">
                               {selectedCard.unlockCondition}
                             </p>
                           </div>

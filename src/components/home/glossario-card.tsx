@@ -21,7 +21,7 @@ export function GlossarioCard() {
                   <p className="text-sm font-semibold text-foreground">
                     Glossario del Bridge
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     49 termini con quiz interattivi
                   </p>
                 </div>

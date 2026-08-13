@@ -59,7 +59,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
             className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 rounded-full px-2 py-0.5"
           >
             <span className="text-xs">🔥</span>
-            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">{correctStreak}x</span>
+            <span className="text-[12px] font-bold text-amber-600 dark:text-amber-400">{correctStreak}x</span>
           </motion.div>
         )}
       </div>
@@ -75,7 +75,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
             {isJunior ? "Mettiti alla Prova!" : "Quiz"}
           </p>
           {totalQuizzes > 1 && (
-            <p className="text-[10px] text-muted-foreground font-medium">
+            <p className="text-[12px] text-muted-foreground font-medium">
               +20 {profile.xpLabel} per risposta corretta
             </p>
           )}

@@ -189,7 +189,7 @@ function SmazzataBrowserContent() {
             return courseGroups.map((group) => (
               <div key={group.courseName}>
                 {courseGroups.length > 1 && (
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-1">
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-1">
                     {group.courseName}
                   </p>
                 )}
@@ -255,7 +255,7 @@ function SmazzataBrowserContent() {
                   <div className="flex items-center justify-between mb-2">
                     <Badge
                       variant="outline"
-                      className="text-[10px] font-bold"
+                      className="text-[12px] font-bold"
                     >
                       Board {smazzata.board}
                     </Badge>
@@ -266,7 +266,7 @@ function SmazzataBrowserContent() {
                   <p className="text-[12px] font-semibold text-foreground/80 leading-tight mt-1 mb-1 line-clamp-2">
                     {smazzata.title}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     Dich: {smazzata.declarer === "north" ? "N" : smazzata.declarer === "south" ? "S" : smazzata.declarer === "east" ? "E" : "O"}
                     {" · "}
                     {tricksNeeded} prese
@@ -303,7 +303,7 @@ function SmazzataBrowserContent() {
               {selectedSmazzata.commentary && (
                 <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 p-3 mb-4">
                   <div className="flex items-start gap-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-[10px]">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-[12px]">
                       M
                     </div>
                     <p className="text-[12px] text-amber-800 dark:text-amber-300 leading-relaxed">
@@ -630,7 +630,7 @@ function PlayingView({
               <div className="flex items-center gap-2">
                 <Badge
                   variant="outline"
-                  className="text-[10px] font-bold text-emerald dark:text-emerald-300 border-emerald/30 bg-emerald-50 dark:bg-emerald-950/40 shrink-0"
+                  className="text-[12px] font-bold text-emerald dark:text-emerald-300 border-emerald/30 bg-emerald-50 dark:bg-emerald-950/40 shrink-0"
                 >
                   Lez. {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
                 </Badge>
@@ -652,7 +652,7 @@ function PlayingView({
         >
           <div className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}>
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                 Contratto
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}>
@@ -661,7 +661,7 @@ function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                 Obiettivo
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
@@ -670,7 +670,7 @@ function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                 Dich. / Dif.
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
@@ -986,10 +986,10 @@ function PlayingView({
                     </div>
                     <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">Analisi Double-Dummy</span>
                     {ddsLoading && (
-                      <span className="text-[10px] text-indigo-400 animate-pulse">Calcolo...</span>
+                      <span className="text-[12px] text-indigo-400 animate-pulse">Calcolo...</span>
                     )}
                     {ddsResult && !ddsResult.isExact && (
-                      <span className="text-[10px] text-indigo-400">(stima)</span>
+                      <span className="text-[12px] text-indigo-400">(stima)</span>
                     )}
                   </div>
                   {ddTricks !== null ? (
@@ -1026,13 +1026,13 @@ function PlayingView({
                 <div className="grid grid-cols-3 gap-2 mt-6">
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-foreground">{game.result.tricksMade}</p>
-                    <p className="text-[9px] font-bold text-muted-foreground uppercase">Prese</p>
+                    <p className="text-[12px] font-bold text-muted-foreground uppercase">Prese</p>
                   </div>
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className={`text-lg font-bold ${success ? "text-emerald-600" : "text-red-600"}`}>
                       {game.result.result >= 0 ? `+${game.result.result}` : game.result.result}
                     </p>
-                    <p className="text-[9px] font-bold text-muted-foreground uppercase">Risultato</p>
+                    <p className="text-[12px] font-bold text-muted-foreground uppercase">Risultato</p>
                   </div>
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-amber-600">
@@ -1040,7 +1040,7 @@ function PlayingView({
                         ? 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10
                         : 30 + (game.result.result < 0 ? 20 : 0) + Math.max(0, -game.result.result) * 10}
                     </p>
-                    <p className="text-[9px] font-bold text-muted-foreground uppercase">{profile.xpLabel}</p>
+                    <p className="text-[12px] font-bold text-muted-foreground uppercase">{profile.xpLabel}</p>
                   </div>
                 </div>
 
@@ -1209,7 +1209,7 @@ function PlayingView({
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
-                        <p className="text-[11px] text-muted-foreground">Scopri dove potevi migliorare</p>
+                        <p className="text-[12px] text-muted-foreground">Scopri dove potevi migliorare</p>
                       </div>
                       <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />

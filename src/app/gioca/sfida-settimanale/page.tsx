@@ -259,7 +259,7 @@ export default function SfidaSettimanale() {
             <ul className="space-y-2">
               {challenge.tips.map((tip, i) => (
                 <li key={i} className="flex gap-2 text-sm text-muted-foreground">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-figb text-white text-[10px] font-bold">{i + 1}</span>
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-figb text-white text-[12px] font-bold">{i + 1}</span>
                   {tip}
                 </li>
               ))}
@@ -414,10 +414,10 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
-            <Badge className={`bg-gradient-to-r ${challenge.gradient} text-white text-[10px] font-bold border-0`}>
+            <Badge className={`bg-gradient-to-r ${challenge.gradient} text-white text-[12px] font-bold border-0`}>
               {challenge.name}
             </Badge>
-            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
+            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
               Mano {handNumber}/5
             </Badge>
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
@@ -432,17 +432,17 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4 flex items-center justify-center">
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-figb dark:text-primary">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -451,7 +451,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">XP</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">XP</p>
               <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{challenge.xpMultiplier}x</p>
             </div>
           </div>

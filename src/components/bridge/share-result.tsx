@@ -112,7 +112,7 @@ export function ShareResult(props: ShareResultProps) {
             <span className="text-lg">{"\uD83C\uDCCF"}</span>
             <span className="text-sm font-bold tracking-wide">FIGB Bridge LAB</span>
           </div>
-          <p className="text-[11px] text-white/70 font-medium">Sfida del Bridge</p>
+          <p className="text-[12px] text-white/70 font-medium">Sfida del Bridge</p>
         </div>
 
         {/* Result body */}
@@ -120,11 +120,11 @@ export function ShareResult(props: ShareResultProps) {
           {/* Contract + Tricks */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
               <p className="text-xl font-black text-gray-900">{contract}</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Prese</p>
+              <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">Prese</p>
               <p className={`text-xl font-black ${made ? "text-emerald-600" : "text-red-500"}`}>
                 {tricksMade}/{tricksNeeded}
               </p>
@@ -159,7 +159,7 @@ export function ShareResult(props: ShareResultProps) {
           </div>
 
           {/* URL hint */}
-          <p className="text-[11px] text-gray-400">bridgelab.it</p>
+          <p className="text-[12px] text-gray-400">bridgelab.it</p>
         </div>
       </div>
 

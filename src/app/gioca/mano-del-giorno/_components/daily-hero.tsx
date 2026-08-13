@@ -50,7 +50,7 @@ export function DailyHero({
             <div className="flex items-center gap-3">
               {/* Calendar icon */}
               <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-card shadow-md shadow-amber-200/50 dark:shadow-none border border-amber-100 dark:border-amber-900">
-                <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest leading-none">
+                <span className="text-[12px] font-bold text-amber-600 uppercase tracking-widest leading-none">
                   {mounted
                     ? new Date().toLocaleDateString("it-IT", {
                         weekday: "short",
@@ -71,7 +71,7 @@ export function DailyHero({
               </div>
             </div>
             {alreadyPlayed && (
-              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[10px] font-bold border-0 shrink-0">
+              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[12px] font-bold border-0 shrink-0">
                 Completata
               </Badge>
             )}
@@ -84,7 +84,7 @@ export function DailyHero({
               {/* Contract badge */}
               <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-amber-100 dark:border-amber-900">
                 <div>
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                     Contratto
                   </p>
                   <p className="text-lg font-bold text-emerald-dark leading-tight">
@@ -93,7 +93,7 @@ export function DailyHero({
                 </div>
                 <div className="h-8 w-px bg-amber-200/60" />
                 <div>
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                     Dichiarante
                   </p>
                   <p className="text-lg font-bold text-foreground leading-tight">
@@ -118,7 +118,7 @@ export function DailyHero({
 
             {/* South hand preview */}
             <div className="shrink-0 bg-card/70 backdrop-blur-sm rounded-2xl px-3.5 py-3 border border-amber-100 dark:border-amber-900 shadow-sm">
-              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 text-center">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 text-center">
                 La tua mano (Sud)
               </p>
               <HandFanPreview
@@ -141,7 +141,7 @@ export function DailyHero({
             >
               <div className="inline-flex items-center gap-1.5 bg-amber-100/80 rounded-full px-3 py-1">
                 <span className="text-xs">+50 {xpLabel}</span>
-                <span className="text-[10px] font-bold text-amber-700">
+                <span className="text-[12px] font-bold text-amber-700">
                   Bonus Giornaliero
                 </span>
               </div>

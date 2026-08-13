@@ -520,7 +520,7 @@ export default function NegozioPage() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex-1 flex items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all active:scale-95 whitespace-nowrap ${
+                className={`flex-1 flex items-center justify-center gap-1 py-3 rounded-xl text-[12px] font-bold transition-all active:scale-95 whitespace-nowrap ${
                   isSelected
                     ? "bg-figb text-white shadow-md shadow-figb/20"
                     : "bg-card text-muted-foreground border-2 border-border shadow-sm hover:border-figb/30 dark:hover:border-primary/40"
@@ -597,7 +597,7 @@ export default function NegozioPage() {
                           <div className="w-20 h-14 rounded-lg bg-white/10 backdrop-blur-sm border-2 border-white/20 flex items-center justify-center shadow-lg">
                             <div className="grid grid-cols-2 gap-1">
                               {["N", "E", "S", "O"].map((dir) => (
-                                <span key={dir} className="text-white/60 text-[9px] font-bold w-4 h-4 flex items-center justify-center">
+                                <span key={dir} className="text-white/60 text-[12px] font-bold w-4 h-4 flex items-center justify-center">
                                   {dir}
                                 </span>
                               ))}
@@ -608,7 +608,7 @@ export default function NegozioPage() {
                           <div className="flex flex-col items-center gap-1.5">
                             {item.preview.icon || <Star className="w-6 h-6 text-white/90" />}
                             <div className="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/30">
-                              <span className="text-white text-[10px] font-bold tracking-wide">{item.name}</span>
+                              <span className="text-white text-[12px] font-bold tracking-wide">{item.name}</span>
                             </div>
                           </div>
                         )}
@@ -625,7 +625,7 @@ export default function NegozioPage() {
                         {/* Active badge */}
                         {isActive && (
                           <div className="absolute top-2 left-2">
-                            <Badge className="bg-white text-figb text-[9px] font-bold shadow-sm border-0 px-2 py-0.5">
+                            <Badge className="bg-white text-figb text-[12px] font-bold shadow-sm border-0 px-2 py-0.5">
                               IN USO
                             </Badge>
                           </div>
@@ -634,7 +634,7 @@ export default function NegozioPage() {
                         {/* XP requirement badge for expensive items */}
                         {!isOwned && !isActive && item.price >= 200 && (
                           <div className="absolute bottom-2 left-2">
-                            <Badge className="bg-black/50 backdrop-blur-sm text-white text-[9px] font-bold border-0 px-2 py-0.5 flex items-center gap-1">
+                            <Badge className="bg-black/50 backdrop-blur-sm text-white text-[12px] font-bold border-0 px-2 py-0.5 flex items-center gap-1">
                               <Gem className="w-2.5 h-2.5" />
                               {item.price >= 300 ? "Esclusivo" : "Raro"}
                             </Badge>
@@ -657,7 +657,7 @@ export default function NegozioPage() {
                       <h3 className="text-sm font-bold text-foreground truncate">
                         {item.name}
                       </h3>
-                      <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
+                      <p className="text-[12px] text-muted-foreground mt-0.5 line-clamp-1">
                         {item.description}
                       </p>
 
@@ -665,7 +665,7 @@ export default function NegozioPage() {
                       <div className="flex flex-col gap-1 mt-2 mb-2.5">
                         <div className="flex items-center gap-1">
                           {item.isFree ? (
-                            <Badge className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold border-emerald-200 dark:border-emerald-900 border px-2 py-0.5">
+                            <Badge className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[12px] font-bold border-emerald-200 dark:border-emerald-900 border px-2 py-0.5">
                               Gratuito
                             </Badge>
                           ) : (
@@ -678,7 +678,7 @@ export default function NegozioPage() {
                           )}
                           {/* XP tier badge for premium items */}
                           {!item.isFree && item.price >= 200 && (
-                            <Badge className="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-300 text-[9px] font-bold border-purple-200 dark:border-purple-900 border px-1.5 py-0 ml-auto">
+                            <Badge className="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-300 text-[12px] font-bold border-purple-200 dark:border-purple-900 border px-1.5 py-0 ml-auto">
                               <Star className="w-2.5 h-2.5 mr-0.5" />
                               Premium
                             </Badge>
@@ -686,7 +686,7 @@ export default function NegozioPage() {
                         </div>
                         {/* Not enough fiches warning */}
                         {!isOwned && !item.isFree && fiches < item.price && (
-                          <p className="text-[9px] font-semibold text-rose-500 leading-tight">
+                          <p className="text-[12px] font-semibold text-rose-500 leading-tight">
                             Non abbastanza fiches
                           </p>
                         )}
@@ -761,7 +761,7 @@ export default function NegozioPage() {
                     {cat.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+                    <p className="text-[12px] text-muted-foreground font-semibold uppercase tracking-wider">
                       {cat.label}
                     </p>
                     <p className="text-xs font-bold text-foreground/80 truncate">
@@ -792,7 +792,7 @@ export default function NegozioPage() {
             </div>
             <div>
               <p className="text-xs font-bold text-foreground">Come guadagnare fiches?</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
+              <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">
                 Guadagni fiches completando lezioni, giocando mani e mantenendo la tua streak giornaliera. Ogni 10 XP = 1 fiche.
               </p>
             </div>

@@ -212,11 +212,11 @@ export function PrimaManoV2({
           {!isManoVera && (
             <div className="mb-4 rounded-2xl border border-gray-200 bg-white/80 px-4 py-2.5 backdrop-blur-sm lg:hidden">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-bold text-[#8f6b16]">
+                <span className="text-[12px] font-bold text-[#8f6b16]">
                   {STEPS[currentStep].kicker}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-[#5c677d]">
+                  <span className="text-[12px] text-[#5c677d]">
                     {currentStep + 1}/{STEPS.length}
                   </span>
                   {totalXp > 0 && (
@@ -224,7 +224,7 @@ export function PrimaManoV2({
                       key={totalXp}
                       initial={{ scale: 1.4, color: "#c8a44e" }}
                       animate={{ scale: 1, color: "#8f6b16" }}
-                      className="text-[11px] font-bold"
+                      className="text-[12px] font-bold"
                     >
                       +{totalXp} XP
                     </motion.span>

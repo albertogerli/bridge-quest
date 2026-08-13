@@ -53,7 +53,7 @@ export function AccountActions({
                 </div>
                 <div>
                   <p className="text-sm font-bold text-foreground">Vuoi anche cancellare i dati locali?</p>
-                  <p className="text-[11px] text-muted-foreground">I progressi locali possono essere mantenuti o rimossi</p>
+                  <p className="text-[12px] text-muted-foreground">I progressi locali possono essere mantenuti o rimossi</p>
                 </div>
               </div>
               <div className="flex flex-col gap-2">

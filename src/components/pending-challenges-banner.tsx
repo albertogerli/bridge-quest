@@ -218,7 +218,7 @@ export function PendingChallengesBanner() {
         <h3 className="text-sm font-bold text-foreground">
           Sfide in corso
         </h3>
-        <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 text-[10px] font-bold border-0">
+        <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 text-[12px] font-bold border-0">
           {challenges.length}
         </Badge>
       </div>
@@ -268,11 +268,11 @@ export function PendingChallengesBanner() {
                               ? `In attesa di ${opponentName}`
                               : `Sfida con ${opponentName}`}
                       </p>
-                      <Badge className="bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 text-[10px] font-bold border-0 shrink-0">
+                      <Badge className="bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 text-[12px] font-bold border-0 shrink-0">
                         {challenge.board_count} mani
                       </Badge>
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-[12px] text-muted-foreground mt-0.5">
                       {isPending
                         ? "Accetta per giocare"
                         : isWaitingForOpponent
@@ -340,7 +340,7 @@ export function PendingChallengesBanner() {
       </AnimatePresence>
 
       {challenges.length > 3 && (
-        <p className="text-[11px] text-center text-muted-foreground">
+        <p className="text-[12px] text-center text-muted-foreground">
           +{challenges.length - 3} altre sfide
         </p>
       )}

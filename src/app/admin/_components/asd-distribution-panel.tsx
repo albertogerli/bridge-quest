@@ -63,7 +63,7 @@ export function AsdDistributionPanel({
 
           return (
             <>
-              <div className="flex items-center gap-2 text-[11px] text-gray-400 mb-2">
+              <div className="flex items-center gap-2 text-[12px] text-gray-400 mb-2">
                 <span>{filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti</span>
                 {approx && (
                   <span className="text-gray-400" title="Le mediane di gruppo sono ricostruite dalle mediane per ASD, non dai dati dei singoli utenti">
@@ -81,11 +81,11 @@ export function AsdDistributionPanel({
                     <div className="flex items-start justify-between gap-2 mb-1.5">
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-gray-800 break-words">{row.label}</p>
-                        {row.detail && <p className="text-[10px] text-gray-400">{row.detail}</p>}
+                        {row.detail && <p className="text-[12px] text-gray-400">{row.detail}</p>}
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {row.lowEngagement && (
-                          <span className="text-[9px] font-bold text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">RIATTIVARE</span>
+                          <span className="text-[12px] font-bold text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">RIATTIVARE</span>
                         )}
                         <span className="text-sm font-bold text-[#003DA5]">{row.count}</span>
                       </div>
@@ -93,15 +93,15 @@ export function AsdDistributionPanel({
 
                     {/* Group stats (without top user) */}
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
-                      <span className="text-[10px] text-gray-500">
+                      <span className="text-[12px] text-gray-500">
                         Mediana XP{approx ? " (stima)" : ""}: <span className="font-semibold text-gray-700">{row.restMedianXp.toLocaleString("it-IT")}</span>
                         {row.count > 1 && <span className="text-gray-400 ml-0.5">({row.count - 1} utenti)</span>}
                       </span>
-                      <span className="text-[10px] text-gray-500">
+                      <span className="text-[12px] text-gray-500">
                         Uso mediano{approx ? " (stima)" : ""}: <span className="font-semibold text-gray-700">{formatMinutes(row.restMedianMinutes)}</span>
                       </span>
                       {row.firstSignup && row.lastActive && (
-                        <span className="text-[10px] text-gray-400">
+                        <span className="text-[12px] text-gray-400">
                           {row.firstSignup} → {row.lastActive}
                         </span>
                       )}
@@ -109,8 +109,8 @@ export function AsdDistributionPanel({
 
                     {/* Top performer — separated */}
                     <div className="flex items-center gap-1.5 mb-1.5 pl-2 border-l-2 border-amber-300">
-                      <span className="text-[10px] text-amber-700 font-semibold">{row.topUser}</span>
-                      <span className="text-[10px] text-amber-500">{row.topUserXp.toLocaleString("it-IT")} XP · {formatMinutes(row.medianMinutes)}</span>
+                      <span className="text-[12px] text-amber-700 font-semibold">{row.topUser}</span>
+                      <span className="text-[12px] text-amber-500">{row.topUserXp.toLocaleString("it-IT")} XP · {formatMinutes(row.medianMinutes)}</span>
                     </div>
 
                     {/* Bar */}

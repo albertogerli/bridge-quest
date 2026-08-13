@@ -384,7 +384,7 @@ export default function MemoryPage() {
                     {faceUp ? (
                       <div className="absolute inset-0 flex flex-col items-center justify-center p-1.5 gap-1">
                         {/* Type indicator */}
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                        <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full ${
                           card.type === "card"
                             ? "bg-purple-50 text-purple-500 dark:bg-purple-950/40 dark:text-purple-400"
                             : "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary"
@@ -392,7 +392,7 @@ export default function MemoryPage() {
                           {card.type === "card" ? "🃏 Carta" : "📖 Concetto"}
                         </span>
                         <span className={`text-center leading-tight ${
-                          isSenior ? "text-sm" : "text-[11px]"
+                          isSenior ? "text-sm" : "text-[12px]"
                         } ${isMatched ? "text-emerald-700 dark:text-emerald-300" : "text-foreground"} font-semibold`}>
                           {card.content}
                         </span>
@@ -486,17 +486,17 @@ export default function MemoryPage() {
                 <div>
                   <p className="text-2xl font-bold text-purple-600">⏱️</p>
                   <p className="text-lg font-bold text-foreground mt-1">{formatTime(timer)}</p>
-                  <p className="text-[11px] text-muted-foreground font-medium">Tempo</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">Tempo</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-amber-500">👆</p>
                   <p className="text-lg font-bold text-foreground mt-1">{moves}</p>
-                  <p className="text-[11px] text-muted-foreground font-medium">Mosse</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">Mosse</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-orange-500">🔥</p>
                   <p className="text-lg font-bold text-foreground mt-1">{maxStreak}</p>
-                  <p className="text-[11px] text-muted-foreground font-medium">Max streak</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">Max streak</p>
                 </div>
               </div>
               {/* Efficiency */}

@@ -211,7 +211,7 @@ export default function AmiciPage() {
               {tab.badge !== undefined && tab.badge > 0 && (
                 <Badge
                   variant="destructive"
-                  className="ml-1 h-5 min-w-[20px] flex items-center justify-center rounded-full text-[10px] px-1.5"
+                  className="ml-1 h-5 min-w-[20px] flex items-center justify-center rounded-full text-[12px] px-1.5"
                 >
                   {tab.badge}
                 </Badge>
@@ -286,12 +286,12 @@ export default function AmiciPage() {
                       </p>
                       <div className="flex items-center gap-2 mt-0.5">
                         {friendship.profile.bbo_username && (
-                          <span className="text-[11px] text-muted-foreground font-mono">
+                          <span className="text-[12px] text-muted-foreground font-mono">
                             @{friendship.profile.bbo_username}
                           </span>
                         )}
                         {friendship.profile.asd_name && (
-                          <span className="text-[10px] text-muted-foreground truncate">
+                          <span className="text-[12px] text-muted-foreground truncate">
                             {friendship.profile.asd_name}
                           </span>
                         )}
@@ -301,7 +301,7 @@ export default function AmiciPage() {
                     {/* XP Badge */}
                     <Badge
                       variant="secondary"
-                      className="bg-figb/10 text-figb border-figb/20 dark:bg-primary/15 dark:text-primary dark:border-primary/30 text-[10px] font-bold shrink-0"
+                      className="bg-figb/10 text-figb border-figb/20 dark:bg-primary/15 dark:text-primary dark:border-primary/30 text-[12px] font-bold shrink-0"
                     >
                       {friendship.profile.xp} XP
                     </Badge>
@@ -325,7 +325,7 @@ export default function AmiciPage() {
                   <div className="mt-2 pt-2 border-t border-border flex justify-end">
                     <button
                       onClick={() => removeFriend(friendship.id)}
-                      className="text-[11px] text-red-400 hover:text-red-600 dark:hover:text-red-300 font-medium transition-colors"
+                      className="text-[12px] text-red-400 hover:text-red-600 dark:hover:text-red-300 font-medium transition-colors"
                     >
                       Rimuovi
                     </button>
@@ -387,7 +387,7 @@ export default function AmiciPage() {
                             {request.profile.display_name || "Giocatore"}
                           </p>
                           {request.profile.bbo_username && (
-                            <span className="text-[11px] text-muted-foreground font-mono">
+                            <span className="text-[12px] text-muted-foreground font-mono">
                               @{request.profile.bbo_username}
                             </span>
                           )}
@@ -461,7 +461,7 @@ export default function AmiciPage() {
                             {request.profile.display_name || "Giocatore"}
                           </p>
                           {request.profile.bbo_username && (
-                            <span className="text-[11px] text-muted-foreground font-mono">
+                            <span className="text-[12px] text-muted-foreground font-mono">
                               @{request.profile.bbo_username}
                             </span>
                           )}
@@ -469,7 +469,7 @@ export default function AmiciPage() {
 
                         {/* Status + Annulla */}
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1 font-medium">
+                          <span className="text-[12px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1 font-medium">
                             In attesa...
                           </span>
                           <button
@@ -580,12 +580,12 @@ export default function AmiciPage() {
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           {result.bbo_username && (
-                            <span className="text-[11px] text-muted-foreground font-mono">
+                            <span className="text-[12px] text-muted-foreground font-mono">
                               @{result.bbo_username}
                             </span>
                           )}
                           {result.asd_name && (
-                            <span className="text-[10px] text-muted-foreground truncate">
+                            <span className="text-[12px] text-muted-foreground truncate">
                               {result.asd_name}
                             </span>
                           )}
@@ -594,11 +594,11 @@ export default function AmiciPage() {
 
                       {/* Action button */}
                       {isAlreadyFriend ? (
-                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
+                        <span className="text-[12px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
                           Amico
                         </span>
                       ) : isPending || alreadySent ? (
-                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
+                        <span className="text-[12px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
                           Richiesta inviata!
                         </span>
                       ) : (
@@ -650,7 +650,7 @@ export default function AmiciPage() {
                       <p id="challenge-dialog-title" className="text-sm font-bold text-foreground">
                         Sfida {selectedFriend.name}
                       </p>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-[12px] text-muted-foreground">
                         Scegli il numero di mani
                       </p>
                     </div>
@@ -681,7 +681,7 @@ export default function AmiciPage() {
                           {count === 1 ? "1 Mano" : `${count} Mani`}
                         </span>
                       </div>
-                      <span className="text-[10px] text-muted-foreground font-medium">
+                      <span className="text-[12px] text-muted-foreground font-medium">
                         {count === 1 ? "Veloce" : count === 4 ? "Standard" : "Lunga"}
                       </span>
                     </button>
@@ -690,7 +690,7 @@ export default function AmiciPage() {
 
                 {/* IMP scoring info */}
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                  <span className="text-[12px] text-muted-foreground font-medium uppercase tracking-wider">
                     Punteggio IMP
                   </span>
                 </div>

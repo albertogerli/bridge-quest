@@ -221,19 +221,19 @@ export default function ForumPage() {
                           {/* Pinned + Category */}
                           <div className="flex items-center gap-1.5 mb-1">
                             {post.pinned && (
-                              <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded">
+                              <span className="text-[12px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded">
                                 PINNED
                               </span>
                             )}
                             {post.poll_options && post.poll_options.length > 0 && (
-                              <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                              <span className="text-[12px] font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-1.5 py-0.5 rounded flex items-center gap-0.5">
                                 <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                                   <path d="M18 20V10M12 20V4M6 20v-6" />
                                 </svg>
                                 SONDAGGIO
                               </span>
                             )}
-                            <span className="text-[10px] text-muted-foreground">
+                            <span className="text-[12px] text-muted-foreground">
                               {categoryEmoji(post.category)} {post.category}
                             </span>
                           </div>
@@ -244,7 +244,7 @@ export default function ForumPage() {
                           </h3>
 
                           {/* Meta */}
-                          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
+                          <div className="flex items-center gap-3 mt-2 text-[12px] text-muted-foreground">
                             <span className="font-semibold text-muted-foreground">
                               {post.profiles?.display_name || "Anonimo"}
                             </span>

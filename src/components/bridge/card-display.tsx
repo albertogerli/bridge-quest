@@ -149,7 +149,7 @@ function CardDisplayImpl({
   }
 
   const sizeClasses = {
-    sm: { card: "h-5 px-1 text-[10px]", symbol: "text-[10px]", gap: "gap-0.5" },
+    sm: { card: "h-5 px-1 text-[12px]", symbol: "text-[12px]", gap: "gap-0.5" },
     md: { card: "h-7 px-1.5 text-xs", symbol: "text-xs", gap: "gap-1" },
     lg: { card: "h-8 px-2 text-sm", symbol: "text-sm", gap: "gap-1" },
   };
@@ -172,7 +172,7 @@ function CardDisplayImpl({
             aria-label={groupsAriaLabel(hand.groups, hand.label)}
           >
             {hand.label && (
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" aria-hidden="true">
+              <span className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground" aria-hidden="true">
                 {hand.label}
               </span>
             )}
@@ -226,7 +226,7 @@ export function HandDiagram({
       aria-label={groupsAriaLabel(groups, label)}
     >
       {label && (
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2" aria-hidden="true">
+        <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2" aria-hidden="true">
           {label}
         </p>
       )}

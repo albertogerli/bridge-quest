@@ -141,7 +141,7 @@ export default function PrivacyPage() {
 
           {/* Credits */}
           <section className="pt-4 border-t border-border">
-            <p className="text-[11px] text-muted-foreground leading-relaxed">
+            <p className="text-[12px] text-muted-foreground leading-relaxed">
               Bridge LAB è un progetto della Federazione Italiana Gioco Bridge (FIGB) - Commissione Insegnamento.
               Sviluppo e hosting a cura di Alberto Giovanni Gerli / Tourbillon Tech S.r.l., a titolo gratuito.
             </p>

@@ -129,7 +129,7 @@ export function StepVittoria({
         transition={{ delay: 1.5, type: "spring", stiffness: 200 }}
         className="mt-6 rounded-[28px] border border-[#c8a44e]/30 bg-gradient-to-br from-[#fffdf5] to-[#fff8e1] p-6 text-center shadow-[0_10px_40px_rgba(200,164,78,0.15)]"
       >
-        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
+        <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
           XP Totali Guadagnati
         </p>
         <p className="mt-3 text-5xl font-black text-[#c8a44e]" style={{ textShadow: "0 0 20px rgba(200,164,78,0.3)" }}>
@@ -166,7 +166,7 @@ export function StepVittoria({
         transition={{ delay: 2.2 }}
         className="mt-6"
       >
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
+        <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
           Il prossimo passo
         </p>
         <Link href="/gioca/minibridge" className="block">
@@ -178,7 +178,7 @@ export function StepVittoria({
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-[#12305f]">Prova il MiniBridge</p>
-                  <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                  <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-white">
                     Consigliato
                   </span>
                 </div>

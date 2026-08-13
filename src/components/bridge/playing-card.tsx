@@ -69,7 +69,7 @@ export function PlayingCard({
   };
 
   const suitSizes = {
-    xs: "text-[10px]",
+    xs: "text-[12px]",
     sm: "text-sm",
     md: "text-lg",
     lg: "text-xl",

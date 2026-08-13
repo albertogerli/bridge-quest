@@ -26,14 +26,14 @@ export function SignupCharts({ stats }: { stats: Stats | null }) {
                 title={`${hour}:00 — ${count} iscrizioni`}
               >
                 {count > 0 && (
-                  <span className="text-[8px] font-bold text-gray-500 mb-0.5">{count}</span>
+                  <span className="text-[12px] font-bold text-gray-500 mb-0.5">{count}</span>
                 )}
                 <div
                   className={`w-full rounded-t transition-all ${isNow ? "bg-emerald-500" : "bg-[#003DA5]/70"}`}
                   style={{ height: barH }}
                 />
                 {hour % 4 === 0 && (
-                  <span className="text-[9px] text-gray-400 mt-1">{hour}</span>
+                  <span className="text-[12px] text-gray-400 mt-1">{hour}</span>
                 )}
               </div>
             );
@@ -59,7 +59,7 @@ export function SignupCharts({ stats }: { stats: Stats | null }) {
                 title={`${d.date}: ${d.count} iscrizioni`}
               >
                 {d.count > 0 && ratio >= 0.5 && (
-                  <span className="text-[7px] font-bold text-gray-500 mb-0.5">{d.count}</span>
+                  <span className="text-[12px] font-bold text-gray-500 mb-0.5">{d.count}</span>
                 )}
                 <div
                   className={`w-full rounded-t transition-all ${isToday ? "bg-emerald-500" : isDidacta ? "bg-amber-400" : "bg-[#003DA5]/60"}`}
@@ -70,8 +70,8 @@ export function SignupCharts({ stats }: { stats: Stats | null }) {
           })}
         </div>
         <div className="flex justify-between mt-1">
-          <span className="text-[9px] text-gray-400">{stats?.dailySignups[0]?.date.slice(5)}</span>
-          <span className="text-[9px] text-gray-400">oggi</span>
+          <span className="text-[12px] text-gray-400">{stats?.dailySignups[0]?.date.slice(5)}</span>
+          <span className="text-[12px] text-gray-400">oggi</span>
         </div>
       </div>
     </div>

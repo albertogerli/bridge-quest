@@ -33,7 +33,7 @@ export function DailyStatsCard({
             <p className="text-2xl font-bold text-emerald">
               {mounted ? streak : 0}
             </p>
-            <p className="text-[11px] text-muted-foreground font-medium">
+            <p className="text-[12px] text-muted-foreground font-medium">
               Giorni consecutivi
             </p>
           </div>
@@ -41,7 +41,7 @@ export function DailyStatsCard({
             <p className="text-2xl font-bold text-foreground">
               {mounted ? total : 0}
             </p>
-            <p className="text-[11px] text-muted-foreground font-medium">
+            <p className="text-[12px] text-muted-foreground font-medium">
               Mani giornaliere
             </p>
           </div>
@@ -51,7 +51,7 @@ export function DailyStatsCard({
                 ? `${todayResult.stars}/3`
                 : "--"}
             </p>
-            <p className="text-[11px] text-muted-foreground font-medium">
+            <p className="text-[12px] text-muted-foreground font-medium">
               Stelle oggi
             </p>
           </div>

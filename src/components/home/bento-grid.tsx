@@ -24,7 +24,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <p className="text-sm text-white/70 mt-1">Carte, licita e gioco con AI</p>
             </div>
             <div className="flex items-center gap-1.5 mt-3">
-              <span className="text-[10px] font-bold text-white/50 bg-white/10 rounded-full px-2.5 py-1 uppercase tracking-wider">+20 XP</span>
+              <span className="text-[12px] font-bold text-white/50 bg-white/10 rounded-full px-2.5 py-1 uppercase tracking-wider">+20 XP</span>
             </div>
           </Link>
 
@@ -35,9 +35,9 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <h3 className="font-bold text-sm leading-tight text-white">Sfida<br/>del giorno</h3>
             </div>
             {dailyDone ? (
-              <span className="text-[10px] font-bold text-white/80 bg-white/20 rounded-full px-2 py-0.5">Fatta!</span>
+              <span className="text-[12px] font-bold text-white/80 bg-white/20 rounded-full px-2 py-0.5">Fatta!</span>
             ) : (
-              <span className="text-[10px] font-bold text-white/80 bg-white/15 rounded-full px-2 py-0.5">+40 XP</span>
+              <span className="text-[12px] font-bold text-white/80 bg-white/15 rounded-full px-2 py-0.5">+40 XP</span>
             )}
           </Link>
 
@@ -47,7 +47,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <span className="text-2xl mb-1.5 block">🎓</span>
               <h3 className="font-bold text-[15px] leading-tight text-foreground">Lezioni</h3>
             </div>
-            <p className="text-[11px] text-muted-foreground leading-snug">49 lezioni · 4 corsi</p>
+            <p className="text-[12px] text-muted-foreground leading-snug">49 lezioni · 4 corsi</p>
           </Link>
 
           {/* Torneo (7 cols) */}
@@ -56,7 +56,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <Trophy className="w-6 h-6 text-white/90 mb-1.5" />
               <h3 className="font-bold text-[15px] leading-tight">Tornei & Sfide</h3>
             </div>
-            <p className="text-[11px] text-white/70 leading-snug">Settimanale, amici, classifica</p>
+            <p className="text-[12px] text-white/70 leading-snug">Settimanale, amici, classifica</p>
           </Link>
 
           {/* Quiz (6 cols) */}
@@ -65,7 +65,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <span className="text-xl mb-1 block">🧠</span>
               <h3 className="font-bold text-sm leading-tight text-foreground">Quiz & Minigiochi</h3>
             </div>
-            <p className="text-[10px] text-muted-foreground">6 quiz · 9 giochi</p>
+            <p className="text-[12px] text-muted-foreground">6 quiz · 9 giochi</p>
           </Link>
 
           {/* Dispense (6 cols) */}
@@ -74,7 +74,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
               <span className="text-xl mb-1 block">📄</span>
               <h3 className="font-bold text-sm leading-tight text-foreground">Dispense FIGB</h3>
             </div>
-            <p className="text-[10px] text-muted-foreground">Materiale PDF</p>
+            <p className="text-[12px] text-muted-foreground">Materiale PDF</p>
           </Link>
 
           {/* Trova ASD (full width) */}
@@ -84,7 +84,7 @@ export function BentoGrid({ dailyDone }: BentoGridProps) {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm leading-tight">Trova la tua ASD</h3>
-              <p className="text-[11px] text-white/60">146 associazioni FIGB in Italia</p>
+              <p className="text-[12px] text-white/60">146 associazioni FIGB in Italia</p>
             </div>
             <svg className="w-4 h-4 text-white/40 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path d="M9 18l6-6-6-6" />

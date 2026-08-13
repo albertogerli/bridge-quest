@@ -143,7 +143,7 @@ export function DailyResultCard({
                 <h4 className="text-sm font-bold text-foreground">
                   Il campo di oggi
                 </h4>
-                <span className="ml-auto text-[11px] font-semibold text-muted-foreground">
+                <span className="ml-auto text-[12px] font-semibold text-muted-foreground">
                   {fieldStats.players} giocatori
                 </span>
               </div>
@@ -179,7 +179,7 @@ export function DailyResultCard({
                 />
               </div>
               {fieldStats.best > todayResult.result && (
-                <p className="mt-2 text-[11px] text-muted-foreground">
+                <p className="mt-2 text-[12px] text-muted-foreground">
                   Miglior risultato del campo:{" "}
                   {fieldStats.best >= 0 ? `+${fieldStats.best}` : fieldStats.best}
                 </p>
@@ -213,7 +213,7 @@ export function DailyResultCard({
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
-                    <p className="text-[11px] text-muted-foreground">Scopri dove potevi migliorare</p>
+                    <p className="text-[12px] text-muted-foreground">Scopri dove potevi migliorare</p>
                   </div>
                   <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                     <polyline points="9,6 15,12 9,18" />

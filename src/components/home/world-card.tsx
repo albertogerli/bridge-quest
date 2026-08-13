@@ -52,7 +52,7 @@ export function WorldCard({ world, completedModules, href }: WorldCardProps) {
                   transition={{ delay: 1, duration: 0.8 }}
                 />
               </div>
-              <span className="text-[11px] font-bold text-muted-foreground tabular-nums">
+              <span className="text-[12px] font-bold text-muted-foreground tabular-nums">
                 {completedModules}/{world.totalModules}
               </span>
             </div>

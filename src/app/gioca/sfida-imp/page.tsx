@@ -626,7 +626,7 @@ function SfidaIMPContent() {
               >
                 <ArrowLeft className="h-4 w-4" />
               </Link>
-              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[10px] font-bold border-0">
+              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
                 Sfida IMP
               </Badge>
             </div>
@@ -659,17 +659,17 @@ function SfidaIMPContent() {
           >
             <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
               <div className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
                 <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{contractDisplay(boardContract.contract)}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
                 <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
                 <p className="text-lg font-bold text-foreground">
                   {partnershipOf(declarer) === "ew"
                     ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -680,7 +680,7 @@ function SfidaIMPContent() {
                 <>
                   <div className="h-8 w-px bg-border" />
                   <div className="text-center">
-                    <Badge className="bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300 text-[10px] font-bold border-0">
+                    <Badge className="bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300 text-[12px] font-bold border-0">
                       Vuln.
                     </Badge>
                   </div>
@@ -801,22 +801,22 @@ function SfidaIMPContent() {
             <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Contratto</p>
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Contratto</p>
                   <p className="text-xl font-bold text-foreground">{contractDisplay(boardContract.contract)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Prese</p>
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Prese</p>
                   <p className="text-xl font-bold text-foreground">{currentBoardResult.tricksMade}/{tricksNeeded}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Risultato</p>
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Risultato</p>
                   <p className={`text-xl font-bold ${trickDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                     {formatResult(trickDiff)}
                   </p>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-border text-center">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Punteggio grezzo</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Punteggio grezzo</p>
                 <p className={`text-lg font-bold ${currentBoardResult.rawScore >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                   {currentBoardResult.rawScore > 0 ? "+" : ""}{currentBoardResult.rawScore}
                 </p>
@@ -926,7 +926,7 @@ function SfidaIMPContent() {
               {/* Comparison Table */}
               <div className="mt-6 rounded-2xl bg-card border-2 border-border shadow-[0_4px_0_var(--border)] overflow-hidden">
                 {/* Table Header */}
-                <div className="grid grid-cols-5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
+                <div className="grid grid-cols-5 text-[12px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
                   <div className="text-left">Mano</div>
                   <div className="text-center">Contr.</div>
                   <div className="text-center">Tu</div>

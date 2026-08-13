@@ -40,9 +40,9 @@ export function MiniCard({ label, value, color }: { label: string; value: number
 export function UserStatBox({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
   return (
     <div className="bg-gray-50 rounded-xl p-3 text-center">
-      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</div>
+      <div className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">{label}</div>
       <div className={`text-xl font-bold mt-1 ${color}`}>{value}</div>
-      <div className="text-[10px] text-gray-400 mt-0.5">{sub}</div>
+      <div className="text-[12px] text-gray-400 mt-0.5">{sub}</div>
     </div>
   );
 }

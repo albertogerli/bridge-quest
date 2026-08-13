@@ -39,7 +39,7 @@ export function BenStatus({ available, aiLevel = "intermedio" }: BenStatusProps)
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold"
       style={{
         backgroundColor: colors.bg,
         color: colors.text,

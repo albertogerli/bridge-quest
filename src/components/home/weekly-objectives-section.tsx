@@ -57,7 +57,7 @@ export function WeeklyObjectivesSection() {
             <h2 className="text-base font-semibold text-foreground">
               Obiettivi settimanali
             </h2>
-            <Badge className={`text-[10px] font-bold border-0 dark:bg-emerald-900/40 dark:text-emerald-400 ${
+            <Badge className={`text-[12px] font-bold border-0 dark:bg-emerald-900/40 dark:text-emerald-400 ${
               completedCount === 3
                 ? "bg-[#1B5E3B]/10 text-[#1B5E3B]"
                 : "bg-[#1B5E3B]/8 text-[#1B5E3B]"
@@ -68,7 +68,7 @@ export function WeeklyObjectivesSection() {
           <Link href="/obiettivi">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
+              className="text-[12px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
             >
               Vedi tutti →
             </Badge>
@@ -119,12 +119,12 @@ export function WeeklyObjectivesSection() {
                         style={{ width: `${Math.min((obj.current / obj.target) * 100, 100)}%` }}
                       />
                     </div>
-                    <span className="text-[10px] font-bold text-muted-foreground">
+                    <span className="text-[12px] font-bold text-muted-foreground">
                       {obj.current}/{obj.target}
                     </span>
                   </div>
                 </div>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                <span className={`text-[12px] font-bold px-2 py-0.5 rounded-full ${
                   obj.completed ? "bg-[#1B5E3B]/10 dark:bg-emerald-900/40 text-[#1B5E3B] dark:text-emerald-400" : "bg-[#c8a44e]/10 text-[#c8a44e]"
                 }`}>
                   +{obj.xpReward} XP

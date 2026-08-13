@@ -252,7 +252,7 @@ export default function CircoloPage() {
                     {stats.member_count}
                   </p>
                 </div>
-                <p className="text-[10px] text-white/50 font-medium">Membri</p>
+                <p className="text-[12px] text-white/50 font-medium">Membri</p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <div className="flex items-center gap-1.5 mb-0.5">
@@ -261,7 +261,7 @@ export default function CircoloPage() {
                     {formatNumber(stats.total_xp)}
                   </p>
                 </div>
-                <p className="text-[10px] text-white/50 font-medium">
+                <p className="text-[12px] text-white/50 font-medium">
                   XP totale
                 </p>
               </div>
@@ -272,7 +272,7 @@ export default function CircoloPage() {
                     {formatNumber(stats.avg_xp)}
                   </p>
                 </div>
-                <p className="text-[10px] text-white/50 font-medium">
+                <p className="text-[12px] text-white/50 font-medium">
                   XP medio
                 </p>
               </div>
@@ -281,17 +281,17 @@ export default function CircoloPage() {
             <div className="mt-4 flex gap-3">
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <p className="text-lg font-black text-white">--</p>
-                <p className="text-[10px] text-white/50 font-medium">Membri</p>
+                <p className="text-[12px] text-white/50 font-medium">Membri</p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <p className="text-lg font-black text-white">--</p>
-                <p className="text-[10px] text-white/50 font-medium">
+                <p className="text-[12px] text-white/50 font-medium">
                   XP totale
                 </p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <p className="text-lg font-black text-white">--</p>
-                <p className="text-[10px] text-white/50 font-medium">
+                <p className="text-[12px] text-white/50 font-medium">
                   XP medio
                 </p>
               </div>
@@ -343,7 +343,7 @@ export default function CircoloPage() {
               <p className="text-xs font-bold text-muted-foreground">
                 Classifica del circolo
               </p>
-              <span className="text-[10px] font-bold text-muted-foreground/40">
+              <span className="text-[12px] font-bold text-muted-foreground/40">
                 {members.length}{" "}
                 {members.length === 1 ? "membro" : "membri"}
               </span>
@@ -409,7 +409,7 @@ export default function CircoloPage() {
                               ? `${member.display_name} (Tu)`
                               : member.display_name}
                           </p>
-                          <p className="text-[11px] text-muted-foreground">
+                          <p className="text-[12px] text-muted-foreground">
                             Lv.{pl.level} &middot; {pl.name}
                           </p>
                         </div>
@@ -419,7 +419,7 @@ export default function CircoloPage() {
                           <p className="font-bold text-sm text-foreground">
                             {formatNumber(member.xp)}
                           </p>
-                          <p className="text-[10px] text-muted-foreground">XP</p>
+                          <p className="text-[12px] text-muted-foreground">XP</p>
                         </div>
                       </div>
                     </div>

@@ -375,7 +375,7 @@ export default function PostDetailPage() {
           <div className="flex items-center gap-2 mb-2">
             <div
               className={`${
-                isReply ? "h-6 w-6 text-[9px]" : "h-7 w-7 text-[10px]"
+                isReply ? "h-6 w-6 text-[12px]" : "h-7 w-7 text-[12px]"
               } rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden flex-shrink-0`}
             >
               {comment.profiles?.avatar_url ? (
@@ -393,7 +393,7 @@ export default function PostDetailPage() {
             <span className="text-xs font-bold text-foreground">
               {comment.profiles?.display_name || "Anonimo"}
             </span>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-[12px] text-muted-foreground">
               {timeAgo(comment.created_at)}
             </span>
           </div>
@@ -405,7 +405,7 @@ export default function PostDetailPage() {
             <button
               onClick={() => handleCommentLike(comment)}
               disabled={!user}
-              className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${
+              className={`flex items-center gap-1 text-[12px] font-bold transition-colors ${
                 isLiked ? "text-red-500" : "text-muted-foreground hover:text-red-400"
               } ${!user ? "opacity-40 cursor-not-allowed" : ""}`}
             >
@@ -428,7 +428,7 @@ export default function PostDetailPage() {
                   setReplyingTo(replyingTo === comment.id ? null : comment.id);
                   setReplyText("");
                 }}
-                className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${
+                className={`flex items-center gap-1 text-[12px] font-bold transition-colors ${
                   replyingTo === comment.id
                     ? "text-emerald-600 dark:text-emerald-400"
                     : "text-muted-foreground hover:text-emerald-500"
@@ -451,7 +451,7 @@ export default function PostDetailPage() {
             {!isReply && hasReplies && (
               <button
                 onClick={() => toggleThread(comment.id)}
-                className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+                className="flex items-center gap-1 text-[12px] font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
               >
                 <svg
                   className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-90" : ""}`}
@@ -470,7 +470,7 @@ export default function PostDetailPage() {
             {user && user.id === comment.user_id && (
               <button
                 onClick={() => handleDeleteComment(comment)}
-                className="ml-auto text-[10px] text-muted-foreground hover:text-red-500 transition-colors"
+                className="ml-auto text-[12px] text-muted-foreground hover:text-red-500 transition-colors"
               >
                 Elimina
               </button>
@@ -497,7 +497,7 @@ export default function PostDetailPage() {
                 >
                   <path d="M3 10l7-7v4c8 0 12 4 12 11-2-5-6-7-12-7v4l-7-7z" />
                 </svg>
-                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400">
                   Rispondi a {comment.profiles?.display_name || "Anonimo"}
                 </span>
               </div>
@@ -610,17 +610,17 @@ export default function PostDetailPage() {
               <p className="text-sm font-bold text-foreground">
                 {post.profiles?.display_name || "Anonimo"}
               </p>
-              <p className="text-[11px] text-muted-foreground">{timeAgo(post.created_at)}</p>
+              <p className="text-[12px] text-muted-foreground">{timeAgo(post.created_at)}</p>
             </div>
             {post.pinned && (
-              <span className="ml-auto text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-lg">
+              <span className="ml-auto text-[12px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-lg">
                 PINNED
               </span>
             )}
           </div>
 
           {/* Category badge */}
-          <span className="inline-block text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded-lg mb-3 uppercase">
+          <span className="inline-block text-[12px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded-lg mb-3 uppercase">
             {post.category}
           </span>
 
@@ -638,7 +638,7 @@ export default function PostDetailPage() {
                   <path d="M18 20V10M12 20V4M6 20v-6" />
                 </svg>
                 <span className="text-sm font-bold text-purple-700 dark:text-purple-300">Sondaggio</span>
-                <span className="text-[11px] text-muted-foreground">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
+                <span className="text-[12px] text-muted-foreground">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
               </div>
               {post.poll_options.map((option, idx) => {
                 const votes = pollVotes[idx] || 0;
@@ -693,7 +693,7 @@ export default function PostDetailPage() {
                 );
               })}
               {!user && (
-                <p className="text-[11px] text-muted-foreground text-center mt-1">
+                <p className="text-[12px] text-muted-foreground text-center mt-1">
                   <Link href="/login" className="text-purple-600 dark:text-purple-400 font-bold hover:underline">Accedi</Link> per votare
                 </p>
               )}
@@ -768,7 +768,7 @@ export default function PostDetailPage() {
                 className="w-full text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none"
               />
               <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] text-muted-foreground">+5 XP per ogni commento</span>
+                <span className="text-[12px] text-muted-foreground">+5 XP per ogni commento</span>
                 <Button
                   onClick={handleComment}
                   disabled={!commentText.trim() || submitting}

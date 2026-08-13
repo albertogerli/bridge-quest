@@ -36,7 +36,7 @@ export function ActiveDayDetail({
         <div className="overflow-x-auto max-h-80 overflow-y-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="bg-gray-50 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+              <tr className="bg-gray-50 text-left text-[12px] font-bold text-gray-500 uppercase tracking-wider">
                 <th className="px-3 py-2">Utente</th>
                 <th className="px-3 py-2">Tipo</th>
                 <th className="px-3 py-2">BBO</th>

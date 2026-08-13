@@ -312,15 +312,15 @@ export default function ContaVelocePage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{avgTime}s</p>
-                <p className="text-[10px] text-muted-foreground font-bold">Media</p>
+                <p className="text-[12px] text-muted-foreground font-bold">Media</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[10px] text-muted-foreground font-bold">Streak max</p>
+                <p className="text-[12px] text-muted-foreground font-bold">Streak max</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-amber-500">+{xpEarned}</p>
-                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -353,16 +353,16 @@ export default function ContaVelocePage() {
                         className={`rounded-xl p-3 border ${r.correct ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                       >
                         <div className="flex items-start gap-2">
-                          <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${r.correct ? "bg-emerald-500" : "bg-red-500"}`}>
+                          <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-white mt-0.5 ${r.correct ? "bg-emerald-500" : "bg-red-500"}`}>
                             {r.correct ? "✓" : "✗"}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[11px] text-muted-foreground font-mono">{r.handStr}</p>
+                            <p className="text-[12px] text-muted-foreground font-mono">{r.handStr}</p>
                             <p className="text-xs text-foreground/80 mt-0.5">
                               Hai risposto: <span className="font-bold">{r.selectedHCP} HCP</span>
                             </p>
                             {!r.correct && (
-                              <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
+                              <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                 Corretta: {r.correctHCP} HCP
                               </p>
                             )}
@@ -516,7 +516,7 @@ export default function ContaVelocePage() {
                 }`}
               >
                 <p className={`font-bold ${profile === "senior" ? "text-3xl" : "text-2xl"} text-foreground`}>{opt}</p>
-                <p className="text-[10px] text-muted-foreground font-bold mt-1">HCP</p>
+                <p className="text-[12px] text-muted-foreground font-bold mt-1">HCP</p>
               </button>
             ))}
           </motion.div>
@@ -524,7 +524,7 @@ export default function ContaVelocePage() {
 
         {/* Hint for senior */}
         {profile === "senior" && !showAnswer && (
-          <p className="text-center text-[11px] text-muted-foreground mt-3">
+          <p className="text-center text-[12px] text-muted-foreground mt-3">
             A=4, K=3, Q=2, J=1
           </p>
         )}
