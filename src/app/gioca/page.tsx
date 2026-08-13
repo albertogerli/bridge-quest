@@ -67,16 +67,16 @@ export default function GiocaPage() {
             className="mb-3"
           >
             <Link href="/gioca/mano-guidata" className="block" aria-label="Mano Guidata: pratica passo-passo">
-              <div className="relative overflow-hidden rounded-2xl border border-cyan-200 dark:border-cyan-900 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/40 dark:to-blue-950/30 px-4 py-3.5 hover:shadow-md transition-all">
+              <div className="relative overflow-hidden rounded-2xl border border-figb/20 bg-figb/5 px-4 py-3.5 hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 shadow-md">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-figb shadow-md">
                     <Target className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold text-foreground">Mano Guidata</p>
                     <p className="text-[11px] text-muted-foreground">Pratica passo-passo con suggerimenti</p>
                   </div>
-                  <Badge className="bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300 text-[10px] font-bold border-0">
+                  <Badge className="bg-muted text-muted-foreground text-[10px] font-bold border-0">
                     +35 XP
                   </Badge>
                 </div>
@@ -105,7 +105,6 @@ export default function GiocaPage() {
                   </div>
                   <p className="text-[11px] text-muted-foreground">Gioca senza licita: conta i punti e scegli il contratto</p>
                 </div>
-                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[10px] font-bold border-0">Nuovo</Badge>
               </div>
             </div>
           </Link>
@@ -185,7 +184,7 @@ export default function GiocaPage() {
                 <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl ${
                   tournamentDone ? "bg-primary/10" : "bg-white/15"
                 }`}>
-                  {tournamentDone ? <CheckCircle2 className="w-6 h-6 text-primary" /> : <Trophy className="w-6 h-6 text-white" />}
+                  {tournamentDone ? <CheckCircle2 className="w-6 h-6 text-primary" /> : <Trophy className="w-6 h-6 text-figb" />}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -226,16 +225,15 @@ export default function GiocaPage() {
           className="mt-4"
         >
           <Link href="/amici" className="block" aria-label="Sfida IMP: sfida un amico a 1, 4 o 8 mani con punteggio IMP">
-            <div className="relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-violet-600 to-indigo-700">
+            <div className="relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-figb-dark to-figb">
               <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
               <div className="relative flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl">
-                  <Swords className="w-6 h-6 text-white" />
+                  <Swords className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h2 className="text-lg font-semibold text-white">Sfida IMP</h2>
-                    <Badge className="bg-amber-400/20 text-amber-200 text-[10px] font-bold border-0 animate-pulse">NUOVO</Badge>
                   </div>
                   <p className="text-sm text-white/70">
                     Sfida un amico a 1, 4 o 8 mani con punteggio IMP
@@ -272,17 +270,14 @@ export default function GiocaPage() {
             {/* Mano del Giorno */}
             <Link href="/gioca/mano-del-giorno" className="block" aria-label="Mano del Giorno: una mano al giorno, uguale per tutti">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
-                  <CalendarDays className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <CalendarDays className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Mano del Giorno</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Una mano al giorno, uguale per tutti. Classifica!</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
-                    +50 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -291,17 +286,14 @@ export default function GiocaPage() {
             {/* Quiz Lampo */}
             <Link href="/gioca/quiz-lampo" className="block" aria-label="Quiz Lampo: raffica di domande, 30 secondi">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-2xl shadow-md shadow-rose-400/20">
-                  <Zap className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Zap className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Quiz Lampo</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Raffica di domande, 30 secondi! Combo multiplier</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-rose-700 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/40 rounded-full px-2 py-0.5">
-                    +100 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -310,15 +302,15 @@ export default function GiocaPage() {
             {/* Quante prese — mani generate, risposta dal double dummy */}
             <Link href="/gioca/quiz-prese" className="block" aria-label="Quante prese: conta le prese di Nord-Sud">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl shadow-md shadow-indigo-400/20">
-                  <Calculator className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Calculator className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Quante prese?</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Vedi tutte le mani e conta le prese di Nord-Sud</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
                     Nuovo
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -329,17 +321,14 @@ export default function GiocaPage() {
             {/* Trova l'Errore */}
             <Link href="/gioca/trova-errore" className="block" aria-label="Trova l'Errore: trova l'errore nella dichiarazione o giocata">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-2xl shadow-md shadow-red-400/20">
-                  <Search className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Search className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Trova l&apos;Errore</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Trova l&apos;errore nella dichiarazione o giocata</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-full px-2 py-0.5">
-                    +80 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -348,17 +337,14 @@ export default function GiocaPage() {
             {/* Impasse o Drop */}
             <Link href="/gioca/impasse" className="block" aria-label="Impasse o Drop: decidi in 5 secondi">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-2xl shadow-md shadow-cyan-400/20">
-                  <Target className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Target className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Impasse o Drop?</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Decidi in 5 secondi: impasse o caduta?</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-cyan-700 bg-cyan-50 dark:text-cyan-400 dark:bg-cyan-950/40 rounded-full px-2 py-0.5">
-                    +70 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -367,17 +353,14 @@ export default function GiocaPage() {
             {/* Conta Veloce */}
             <Link href="/gioca/conta-veloce" className="block" aria-label="Conta Veloce: conta i punti onore a tempo">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-2xl shadow-md shadow-emerald-400/20">
-                  <Hash className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Hash className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Conta Veloce</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Conta i Punti Onore a tempo! Quanto sei veloce?</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
-                    +80 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -386,17 +369,14 @@ export default function GiocaPage() {
             {/* Segnali in Difesa */}
             <Link href="/gioca/segnali" className="block" aria-label="Segnali in Difesa: dai e leggi i segnali del compagno">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl shadow-md shadow-violet-400/20">
-                  <Radio className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Radio className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Segnali in Difesa</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">In difesa si parla con le carte: dai e leggi i segnali</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full px-2 py-0.5">
-                    +80 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -405,17 +385,14 @@ export default function GiocaPage() {
             {/* Dichiara! */}
             <Link href="/gioca/dichiara" className="block" aria-label="Dichiara: scegli l'apertura giusta per ogni mano">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl shadow-md shadow-amber-400/20">
-                  <Megaphone className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Megaphone className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Dichiara!</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Scegli l&apos;apertura giusta per ogni mano</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
-                    +80 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -424,17 +401,14 @@ export default function GiocaPage() {
             {/* Pratica Licita */}
             <Link href="/gioca/pratica-licita" className="block" aria-label="Pratica Licita: esercitati nella dichiarazione">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl shadow-md shadow-indigo-400/20">
-                  <MessageCircle className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <MessageCircle className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Pratica Licita</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Esercitati nella dichiarazione: Texas, Stayman e altro</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40 rounded-full px-2 py-0.5">
-                    +20-70 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -443,17 +417,14 @@ export default function GiocaPage() {
             {/* Memory Bridge */}
             <Link href="/gioca/memory" className="block" aria-label="Memory Bridge: abbina carte e concetti">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-2xl shadow-md shadow-purple-400/20">
-                  <Brain className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Brain className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Memory Bridge</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Abbina carte e concetti. Allena la memoria!</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/40 rounded-full px-2 py-0.5">
-                    +60 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -462,17 +433,14 @@ export default function GiocaPage() {
             {/* Sfida un Amico */}
             <Link href="/gioca/sfida-amico" className="block" aria-label="Sfida un Amico: gioca la stessa mano e confronta i risultati">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 text-2xl shadow-md shadow-violet-400/20">
-                  <Swords className="w-6 h-6 text-white" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Swords className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Sfida un Amico</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Gioca la stessa mano e confronta i risultati</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full px-2 py-0.5">
-                    +30 {profile.xpLabel}
-                  </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -493,8 +461,8 @@ export default function GiocaPage() {
           >
             <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block" aria-label="Pratica Libera: gioca una mano casuale">
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40 mb-3">
-                  <Spade className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
+                  <Spade className="w-6 h-6 text-figb" />
                 </div>
                 <h3 className="font-semibold text-foreground text-[15px]">
                   Pratica Libera
@@ -503,9 +471,6 @@ export default function GiocaPage() {
                   Gioca una mano casuale dalle {allSmazzate.length} disponibili
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40 rounded-full px-2 py-0.5">
-                    +30 {profile.xpLabel}
-                  </span>
                 </div>
               </div>
             </Link>
@@ -545,8 +510,8 @@ export default function GiocaPage() {
           >
             <Link href="/gioca/sfida-link" className="block" aria-label="Sfida via Link: condividi una mano e sfida un amico">
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 mb-3">
-                  <Link2 className="w-6 h-6 text-violet-600 dark:text-violet-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
+                  <Link2 className="w-6 h-6 text-figb" />
                 </div>
                 <h3 className="font-semibold text-foreground text-[15px]">
                   Sfida via Link
@@ -555,9 +520,6 @@ export default function GiocaPage() {
                   Condividi un link, giocate la stessa mano e confrontate!
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full px-2 py-0.5">
-                    +30 {profile.xpLabel}
-                  </span>
                 </div>
               </div>
             </Link>
@@ -597,7 +559,7 @@ export default function GiocaPage() {
           >
             <Link href="/glossario" className="block" aria-label="Glossario: impara tutti i termini del bridge">
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 dark:bg-sky-950/40 mb-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <span className="text-xl">📖</span>
                 </div>
                 <h3 className="font-semibold text-foreground text-[15px]">
@@ -607,7 +569,7 @@ export default function GiocaPage() {
                   Impara tutti i termini del bridge
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-sky-700 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     A-Z
                   </span>
                 </div>
