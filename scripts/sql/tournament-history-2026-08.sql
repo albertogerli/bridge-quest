@@ -74,9 +74,13 @@ $$;
 comment on function public.my_tournament_history(integer) is
   'Storico dei tornei settimanali dell''utente corrente, con posizione e numero di partecipanti per ogni settimana giocata.';
 
--- ATTENZIONE: Postgres concede EXECUTE a PUBLIC su ogni nuova funzione, e
--- `anon` eredita da PUBLIC. Togliere il permesso al solo `anon` non serve a
--- niente — verificato: dopo un `revoke ... from anon`
--- has_function_privilege('anon', ...) restava true. Va revocato a PUBLIC.
+-- ATTENZIONE, e servono ENTRAMBE le revoche.
+-- Postgres concede EXECUTE a PUBLIC su ogni nuova funzione; in più Supabase
+-- ha dei default privileges che concedono ESPLICITAMENTE a `anon`. Sono due
+-- strade diverse per lo stesso permesso: revocare a PUBLIC lascia in piedi la
+-- concessione esplicita, revocare al solo `anon` lascia in piedi quella a
+-- PUBLIC. Si vede in `pg_proc.proacl`: una voce `anon=X/postgres` è esplicita
+-- e non se ne va con un revoke a PUBLIC.
 revoke execute on function public.my_tournament_history(integer) from public;
+revoke execute on function public.my_tournament_history(integer) from anon;
 grant execute on function public.my_tournament_history(integer) to authenticated;

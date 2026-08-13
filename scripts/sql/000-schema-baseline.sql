@@ -326,6 +326,22 @@ CREATE TABLE IF NOT EXISTS public.lessons (
   updated_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.live_tables (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  instructor_id uuid NOT NULL,
+  hands jsonb NOT NULL,
+  titolo text,
+  contract text,
+  declarer text,
+  revealed text[] NOT NULL,
+  seat_of jsonb NOT NULL,
+  show_contract boolean NOT NULL,
+  closed_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.login_history (
   id uuid NOT NULL,
   user_id uuid NOT NULL,
@@ -1390,6 +1406,91 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.live_table_open(p_class_id uuid)
+ RETURNS uuid
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT t.id
+  FROM public.live_tables t
+  WHERE t.class_id = p_class_id
+    AND t.closed_at IS NULL
+    AND (
+      t.instructor_id = auth.uid()
+      OR EXISTS (SELECT 1 FROM public.class_members m
+                 WHERE m.class_id = t.class_id AND m.student_id = auth.uid())
+    )
+  ORDER BY t.created_at DESC
+  LIMIT 1;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.live_table_view(p_table_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  t          public.live_tables%ROWTYPE;
+  v_is_owner boolean;
+  v_is_member boolean;
+  v_seat     text;
+  v_visible  text[];
+  v_hands    jsonb := '{}'::jsonb;
+  s          text;
+BEGIN
+  SELECT * INTO t FROM public.live_tables WHERE id = p_table_id;
+  IF NOT FOUND THEN
+    RETURN NULL;
+  END IF;
+
+  v_is_owner := (t.instructor_id = auth.uid());
+  SELECT EXISTS (
+    SELECT 1 FROM public.class_members m
+    WHERE m.class_id = t.class_id AND m.student_id = auth.uid()
+  ) INTO v_is_member;
+
+  IF NOT v_is_owner AND NOT v_is_member THEN
+    RETURN NULL;
+  END IF;
+
+  v_seat := t.seat_of ->> auth.uid()::text;
+
+  IF v_is_owner THEN
+    v_visible := ARRAY['north','east','south','west'];
+  ELSE
+    v_visible := t.revealed;
+    IF v_seat IS NOT NULL AND NOT (v_seat = ANY(v_visible)) THEN
+      v_visible := array_append(v_visible, v_seat);
+    END IF;
+  END IF;
+
+  FOREACH s IN ARRAY v_visible LOOP
+    IF t.hands ? s THEN
+      v_hands := v_hands || jsonb_build_object(s, t.hands -> s);
+    END IF;
+  END LOOP;
+
+  RETURN jsonb_build_object(
+    'id',            t.id,
+    'classId',       t.class_id,
+    'titolo',        t.titolo,
+    'hands',         v_hands,
+    'revealed',      to_jsonb(t.revealed),
+    'seat',          v_seat,
+    'isInstructor',  v_is_owner,
+    'contract',      CASE WHEN v_is_owner OR t.show_contract THEN t.contract END,
+    'declarer',      CASE WHEN v_is_owner OR t.show_contract THEN t.declarer END,
+    'showContract',  t.show_contract,
+    'closed',        t.closed_at IS NOT NULL,
+    'updatedAt',     t.updated_at
+  );
+END
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.log_user_login()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -1583,6 +1684,12 @@ ALTER TABLE public.lesson_modules ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.lesson_modules ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.lessons ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.lessons ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.live_tables ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.live_tables ALTER COLUMN revealed SET DEFAULT '{}'::text[];
+ALTER TABLE public.live_tables ALTER COLUMN seat_of SET DEFAULT '{}'::jsonb;
+ALTER TABLE public.live_tables ALTER COLUMN show_contract SET DEFAULT false;
+ALTER TABLE public.live_tables ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.live_tables ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.login_history ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.login_history ALTER COLUMN logged_in_at SET DEFAULT now();
 ALTER TABLE public.partner_profiles ALTER COLUMN looking SET DEFAULT true;
@@ -1645,6 +1752,7 @@ ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_pkey PRIMARY KEY (id
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_pkey PRIMARY KEY (id);
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_pkey PRIMARY KEY (lesson_id, module_id);
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
+ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
@@ -1742,6 +1850,8 @@ ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_review
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_world_id_fkey FOREIGN KEY (world_id) REFERENCES course_worlds(id) ON DELETE CASCADE;
+ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd_id) REFERENCES asd(id);
@@ -1790,6 +1900,7 @@ CREATE INDEX idx_tournament_results_week ON public.tournament_results USING btre
 CREATE INDEX lesson_modules_content_gin ON public.lesson_modules USING gin (content jsonb_path_ops);
 CREATE INDEX lesson_modules_lesson_id_idx ON public.lesson_modules USING btree (lesson_id);
 CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
+CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, created_at DESC);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX profiles_asd_code_idx ON public.profiles USING btree (asd_code);
 CREATE INDEX smazzate_bidding_gin ON public.smazzate USING gin (bidding jsonb_path_ops);
@@ -1842,6 +1953,7 @@ ALTER TABLE public.guided_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.instructor_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lesson_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -1910,6 +2022,11 @@ CREATE POLICY "Self or admin can update request" ON public.instructor_requests A
 CREATE POLICY "Users can file own request" ON public.instructor_requests AS PERMISSIVE FOR INSERT TO public WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY lesson_modules_public_read ON public.lesson_modules AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY lessons_public_read ON public.lessons AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "Instructor manages own live tables" ON public.live_tables AS PERMISSIVE FOR ALL TO authenticated USING (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM classes c
+  WHERE ((c.id = live_tables.class_id) AND (c.instructor_id = auth.uid())))))) WITH CHECK (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM classes c
+  WHERE ((c.id = live_tables.class_id) AND (c.instructor_id = auth.uid()))))));
 CREATE POLICY "Authenticated can insert own login history" ON public.login_history AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Users can read own login history" ON public.login_history AS PERMISSIVE FOR SELECT TO authenticated USING ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_delete ON public.partner_profiles AS PERMISSIVE FOR DELETE TO authenticated USING ((user_id = auth.uid()));
@@ -2007,6 +2124,9 @@ GRANT DELETE ON public.lesson_modules TO service_role;
 GRANT DELETE ON public.lessons TO anon;
 GRANT DELETE ON public.lessons TO authenticated;
 GRANT DELETE ON public.lessons TO service_role;
+GRANT DELETE ON public.live_tables TO anon;
+GRANT DELETE ON public.live_tables TO authenticated;
+GRANT DELETE ON public.live_tables TO service_role;
 GRANT DELETE ON public.login_history TO anon;
 GRANT DELETE ON public.login_history TO authenticated;
 GRANT DELETE ON public.login_history TO service_role;
@@ -2112,6 +2232,9 @@ GRANT INSERT ON public.lesson_modules TO service_role;
 GRANT INSERT ON public.lessons TO anon;
 GRANT INSERT ON public.lessons TO authenticated;
 GRANT INSERT ON public.lessons TO service_role;
+GRANT INSERT ON public.live_tables TO anon;
+GRANT INSERT ON public.live_tables TO authenticated;
+GRANT INSERT ON public.live_tables TO service_role;
 GRANT INSERT ON public.login_history TO anon;
 GRANT INSERT ON public.login_history TO authenticated;
 GRANT INSERT ON public.login_history TO service_role;
@@ -2217,6 +2340,9 @@ GRANT REFERENCES ON public.lesson_modules TO service_role;
 GRANT REFERENCES ON public.lessons TO anon;
 GRANT REFERENCES ON public.lessons TO authenticated;
 GRANT REFERENCES ON public.lessons TO service_role;
+GRANT REFERENCES ON public.live_tables TO anon;
+GRANT REFERENCES ON public.live_tables TO authenticated;
+GRANT REFERENCES ON public.live_tables TO service_role;
 GRANT REFERENCES ON public.login_history TO anon;
 GRANT REFERENCES ON public.login_history TO authenticated;
 GRANT REFERENCES ON public.login_history TO service_role;
@@ -2322,6 +2448,9 @@ GRANT SELECT ON public.lesson_modules TO service_role;
 GRANT SELECT ON public.lessons TO anon;
 GRANT SELECT ON public.lessons TO authenticated;
 GRANT SELECT ON public.lessons TO service_role;
+GRANT SELECT ON public.live_tables TO anon;
+GRANT SELECT ON public.live_tables TO authenticated;
+GRANT SELECT ON public.live_tables TO service_role;
 GRANT SELECT ON public.login_history TO anon;
 GRANT SELECT ON public.login_history TO authenticated;
 GRANT SELECT ON public.login_history TO service_role;
@@ -2426,6 +2555,9 @@ GRANT TRIGGER ON public.lesson_modules TO service_role;
 GRANT TRIGGER ON public.lessons TO anon;
 GRANT TRIGGER ON public.lessons TO authenticated;
 GRANT TRIGGER ON public.lessons TO service_role;
+GRANT TRIGGER ON public.live_tables TO anon;
+GRANT TRIGGER ON public.live_tables TO authenticated;
+GRANT TRIGGER ON public.live_tables TO service_role;
 GRANT TRIGGER ON public.login_history TO anon;
 GRANT TRIGGER ON public.login_history TO authenticated;
 GRANT TRIGGER ON public.login_history TO service_role;
@@ -2531,6 +2663,9 @@ GRANT TRUNCATE ON public.lesson_modules TO service_role;
 GRANT TRUNCATE ON public.lessons TO anon;
 GRANT TRUNCATE ON public.lessons TO authenticated;
 GRANT TRUNCATE ON public.lessons TO service_role;
+GRANT TRUNCATE ON public.live_tables TO anon;
+GRANT TRUNCATE ON public.live_tables TO authenticated;
+GRANT TRUNCATE ON public.live_tables TO service_role;
 GRANT TRUNCATE ON public.login_history TO anon;
 GRANT TRUNCATE ON public.login_history TO authenticated;
 GRANT TRUNCATE ON public.login_history TO service_role;
@@ -2636,6 +2771,9 @@ GRANT UPDATE ON public.lesson_modules TO service_role;
 GRANT UPDATE ON public.lessons TO anon;
 GRANT UPDATE ON public.lessons TO authenticated;
 GRANT UPDATE ON public.lessons TO service_role;
+GRANT UPDATE ON public.live_tables TO anon;
+GRANT UPDATE ON public.live_tables TO authenticated;
+GRANT UPDATE ON public.live_tables TO service_role;
 GRANT UPDATE ON public.login_history TO anon;
 GRANT UPDATE ON public.login_history TO authenticated;
 GRANT UPDATE ON public.login_history TO service_role;
@@ -2678,7 +2816,6 @@ REVOKE ALL ON FUNCTION public.admin_list_users() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_list_users() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_list_users() TO service_role;
 REVOKE ALL ON FUNCTION public.admin_login_history(p_days integer) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO anon;
 GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_role;
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC;
@@ -2750,6 +2887,12 @@ GRANT EXECUTE ON FUNCTION public.list_instructor_requests(p_status text) TO serv
 REVOKE ALL ON FUNCTION public.list_partner_candidates(p_level text, p_province text, p_availability text[], p_limit integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.list_partner_candidates(p_level text, p_province text, p_availability text[], p_limit integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.list_partner_candidates(p_level text, p_province text, p_availability text[], p_limit integer) TO service_role;
+REVOKE ALL ON FUNCTION public.live_table_open(p_class_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.live_table_open(p_class_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.live_table_open(p_class_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.live_table_view(p_table_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.log_user_login() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
@@ -2771,3 +2914,4 @@ GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO service_role;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.challenges;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.class_messages;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.friendships;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.live_tables;
