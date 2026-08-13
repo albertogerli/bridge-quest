@@ -87,3 +87,41 @@ export function isServiceWorkerNoise(event: {
     ) || values.some((v) => WAITING_SU_UNDEFINED.test(v.value ?? ""))
   );
 }
+
+/**
+ * Rumore dei browser dentro le app (Facebook, Instagram e simili).
+ *
+ * Evento reale del 13/08/2026 su /trova-circolo, da un Oppo con Android 13
+ * dentro il browser di Facebook:
+ *
+ *   Error invoking enableDidUserTypeOnKeyboardLogging: Java object is gone
+ *     at sendBeforeUnloadMessage (app://navigation_performance_logger_android)
+ *
+ * È la strumentazione di Facebook che si scollega dal proprio ponte Java
+ * mentre la pagina viene chiusa. Non c'è una riga di codice nostro nello
+ * stack, non c'è niente da correggere e nessun utente se ne accorge: la
+ * pagina si stava chiudendo comunque.
+ *
+ * COME SI RICONOSCE
+ * Il nostro codice compare sempre come `app:///_next/...` — tre barre, perché
+ * l'host è vuoto. Queste librerie usano `app://<nome>`, con due barre e un
+ * host. La differenza di una barra è l'intero confine, quindi va scritta con
+ * cura: `app://x` è rumore, `app:///x` siamo noi.
+ */
+const FRAME_ESTERNO_APP = /^app:\/\/[^/]/;
+
+/** True se l'evento arriva dalla strumentazione di un browser dentro un'app. */
+export function isInAppBrowserNoise(event: {
+  exception?: {
+    values?: Array<{
+      stacktrace?: { frames?: Array<{ filename?: string }> };
+    }>;
+  };
+}): boolean {
+  const frames =
+    event.exception?.values?.flatMap((v) => v.stacktrace?.frames ?? []) ?? [];
+  if (frames.length === 0) return false;
+  // TUTTI i fotogrammi devono essere esterni. Se anche uno solo è nostro,
+  // l'errore ci riguarda: la libreria potrebbe averlo solo fatto emergere.
+  return frames.every((f) => FRAME_ESTERNO_APP.test(f.filename ?? ""));
+}
