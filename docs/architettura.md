@@ -15,7 +15,7 @@ src/
   data/         seed iniziale dei contenuti (ATTENZIONE: il live è nel DB)
   proxy.ts      "middleware" Next 16: refresh sessione + protezione rotte
 scripts/        pipeline video HeyGen, validatori smazzate, seed, test RLS
-scripts/sql/    schema incrementale Supabase (esecuzione manuale, in ordine)
+scripts/sql/    000 = schema di riferimento (rigenerabile); il resto = storia delle modifiche
 public/         asset statici pesanti (video lezioni, infografiche, icone)
 ios/ android/   wrapper Capacitor
 docs/           questa documentazione + email-automation.md
@@ -110,7 +110,23 @@ I principali: `use-bridge-game` (orchestrazione completa di una partita: licita,
 
 ## Schema DB (Supabase Postgres, tutto con RLS)
 
-Non esiste una catena di migrazioni: le tabelle core sono nate da dashboard, l'evoluzione vive negli script `scripts/sql/` (eseguiti a mano, in ordine cronologico — vedi runbook). Tabelle referenziate dal codice, per area:
+**Ricostruire il database da zero** (dal 2026-08-13 è possibile: prima non lo era):
+
+1. `scripts/sql/001-supabase-substrate.sql` — solo FUORI da Supabase (ruoli, schema `auth`, publication). Su un progetto Supabase esiste già tutto.
+2. `scripts/sql/000-schema-baseline.sql` — schema completo: tabelle, vincoli, indici, funzioni, trigger, RLS, policy, permessi.
+3. I dati di partenza (contenuti didattici, catalogo circoli).
+
+Verificato eseguendolo davvero su un PostgreSQL 14 vuoto: 35 tabelle, 72 policy, 99 indici, 13 trigger, gli stessi numeri della produzione.
+
+Il file 000 è **generato**, non scritto a mano:
+
+```bash
+node scripts/dump-schema.mjs   # rilegge la produzione e riscrive il file
+```
+
+Va rigenerato e committato dopo **ogni** modifica allo schema, insieme allo script che l'ha causata. Gli altri script in `scripts/sql/` restano la STORIA delle modifiche — utili per capire *perché* una cosa è com'è — mentre il 000 è lo STATO, ed è l'unico punto da cui ripartire.
+
+Non esiste una catena di migrazioni automatiche: le tabelle core sono nate da dashboard e l'evoluzione vive negli script, eseguiti a mano in ordine cronologico (vedi runbook). Tabelle referenziate dal codice, per area:
 
 - **Profili/auth**: `profiles`, `login_history`, `avatars`
 - **Contenuti**: `courses`, `course_worlds`, `lessons`, `lesson_modules`, `smazzate`, `guided_hands`, `glossary`, `eserciziario_exercises`, `trova_errore_scenarios`

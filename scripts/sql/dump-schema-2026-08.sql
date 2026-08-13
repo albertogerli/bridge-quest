@@ -1,0 +1,56 @@
+-- ============================================================================
+-- STATO: APPLICATO in produzione il 2026-08-13 (migrazione Supabase
+--   `dump_schema_function`, poi affinata due volte dopo le prove locali).
+--
+-- BridgeLab: `public.dump_schema()` — rende il database ricostruibile
+-- ============================================================================
+--
+-- IL PROBLEMA
+-- Il database non era ricostruibile dal solo repository. C'erano 33 script
+-- applicati a mano, in un ordine documentato a parole; nessuno schema base; e
+-- una storia delle migrazioni lato Supabase che copre soltanto le ultime
+-- settimane. Chi dovesse ripartire da zero — un ambiente nuovo, un ripristino,
+-- un secondo sviluppatore — non aveva da dove cominciare, e nessuno poteva
+-- verificare che repository e produzione dicessero la stessa cosa.
+--
+-- LA SOLUZIONE
+-- Questa funzione genera lo schema completo come SQL rieseguibile;
+-- `scripts/dump-schema.mjs` lo scrive in `000-schema-baseline.sql`. Essendo
+-- rigenerabile con un comando, il file può restare allineato invece di essere
+-- una fotografia che invecchia in silenzio.
+--
+-- L'ORDINE È LA PARTE DIFFICILE, e l'ho sbagliato due volte
+-- Due dipendenze tirano in direzioni opposte:
+--   * una tabella può avere un valore predefinito che CHIAMA una funzione
+--     (`classes.invite_code` usa `generate_invite_code()`);
+--   * una funzione può RESTITUIRE il tipo di una tabella (`SETOF profiles`).
+-- Non esiste un ordine fra "tutte le tabelle" e "tutte le funzioni" che vada
+-- bene per entrambe. Si sciolgono staccando i valori predefiniti dalla
+-- CREATE TABLE ed emettendoli come ALTER TABLE dopo le funzioni — è quello che
+-- fa pg_dump.
+--
+-- Mancavano anche le SEQUENZE: le tabelle con `nextval(...)` fallivano tutte.
+-- Nessuno dei due difetti si vedeva leggendo il file: sono emersi solo
+-- eseguendolo davvero su un PostgreSQL vuoto.
+--
+-- VERIFICA ESEGUITA, non dedotta
+-- Con `001-supabase-substrate.sql` + `000-schema-baseline.sql` su un
+-- PostgreSQL 14 vuoto: 35 tabelle, 72 policy, 99 indici, 13 trigger, 35
+-- tabelle con RLS, 31 funzioni non di estensione — gli stessi numeri della
+-- produzione. Unico errore: `supabase_vault`, estensione della piattaforma che
+-- fuori da Supabase non esiste.
+--
+-- Riservata alla service role: restituisce la struttura completa del database.
+-- Il corpo aggiornato si legge in produzione con:
+--   SELECT pg_get_functiondef('public.dump_schema()'::regprocedure);
+-- ============================================================================
+
+-- Il corpo della funzione è lungo e vive nel database. Per rigenerarlo qui:
+--   psql> \df+ public.dump_schema
+-- oppure la query indicata sopra.
+--
+-- USO:
+--   node scripts/dump-schema.mjs      -- riscrive 000-schema-baseline.sql
+--
+-- Da rieseguire dopo OGNI modifica allo schema, e da committare insieme allo
+-- script che l'ha causata.
