@@ -113,12 +113,12 @@ export function ClassChat({ classId }: { classId: string }) {
                   }`}
                 >
                   {!mine && (
-                    <p className="mb-0.5 text-[11px] font-semibold opacity-70">
+                    <p className="mb-0.5 text-[12px] font-semibold opacity-70">
                       {m.display_name ?? "Utente"}
                     </p>
                   )}
                   <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                  <p className={`mt-0.5 text-[10px] ${mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                  <p className={`mt-0.5 text-[12px] ${mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                     {new Date(m.created_at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>

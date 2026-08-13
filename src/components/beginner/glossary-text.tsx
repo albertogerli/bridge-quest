@@ -149,7 +149,7 @@ function BeginnerTip({ def, children }: { def: TermDef; children: ReactNode }) {
         }}
       >
         {children}
-        <span className="ml-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#c8a44e]/20 text-[8px] font-bold text-[#8f6b16] align-text-top">
+        <span className="ml-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#c8a44e]/20 text-[12px] font-bold text-[#8f6b16] align-text-top">
           ?
         </span>
       </span>

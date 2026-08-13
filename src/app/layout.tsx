@@ -97,6 +97,14 @@ export const viewport: Viewport = {
 const themeScript = `
 (function(){
   try {
+    // Dimensione del testo: applicata PRIMA del primo disegno, come il tema.
+    // Applicarla dopo il montaggio farebbe vedere per un istante la pagina
+    // alla dimensione sbagliata — fastidioso soprattutto per chi l'ha
+    // ingrandita apposta perché fatica a leggere.
+    var s = localStorage.getItem('bq_text_size');
+    var scale = s === 'grande' ? '112.5%' : s === 'piccolo' ? '93.75%' : null;
+    if (scale) document.documentElement.style.fontSize = scale;
+
     var t = localStorage.getItem('bq_theme') || 'light';
     var d = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     if (d) document.documentElement.classList.add('dark');

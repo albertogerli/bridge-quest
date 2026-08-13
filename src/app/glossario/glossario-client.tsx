@@ -745,7 +745,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-2xl">{currentTerm.emoji}</span>
                   <span
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
+                    className={`text-[12px] font-bold uppercase px-2 py-0.5 rounded-full ${
                       CATEGORY_BADGE_CLASSES[currentTerm.category]
                     }`}
                   >
@@ -1025,7 +1025,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                             )}
                           </div>
                           <span
-                            className={`inline-block text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-full mb-1.5 ${
+                            className={`inline-block text-[12px] font-bold uppercase px-1.5 py-0.5 rounded-full mb-1.5 ${
                               CATEGORY_BADGE_CLASSES[entry.category]
                             }`}
                           >
@@ -1157,7 +1157,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                                         disabled={inlineSelected !== null}
                                         className={classes}
                                       >
-                                        <span className="mr-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+                                        <span className="mr-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-muted text-[12px] font-bold text-muted-foreground">
                                           {String.fromCharCode(65 + i)}
                                         </span>
                                         {opt}

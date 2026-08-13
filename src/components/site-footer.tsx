@@ -18,7 +18,7 @@ export function SiteFooter() {
         </div>
 
         {/* Links row */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
           <Link href="/guida" className="hover:text-foreground/70 transition-colors">
             Guida
           </Link>
@@ -61,7 +61,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom line */}
-        <p className="text-center text-[10px] text-muted-foreground mt-3">
+        <p className="text-center text-[12px] text-muted-foreground mt-3">
           Sviluppo: Tourbillon Tech S.r.l. · {new Date().getFullYear()} FIGB
         </p>
       </div>

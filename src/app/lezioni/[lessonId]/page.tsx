@@ -106,10 +106,10 @@ export default function LessonDetailPage({
           <div className="relative">
             <div className="text-4xl mb-3">{lesson.icon}</div>
             <div className="flex items-center gap-2 mb-2">
-              <Badge className="bg-white/20 text-white text-[10px] font-bold border-0">
+              <Badge className="bg-white/20 text-white text-[12px] font-bold border-0">
                 Lezione {lessonNumber}
               </Badge>
-              <Badge className="bg-white/10 text-white/70 text-[10px] font-bold border-0">
+              <Badge className="bg-white/10 text-white/70 text-[12px] font-bold border-0">
                 {totalDuration} min
               </Badge>
             </div>
@@ -260,15 +260,15 @@ export default function LessonDetailPage({
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <Badge className={`text-[10px] font-bold border-0 ${config.color}`}>
+                      <Badge className={`text-[12px] font-bold border-0 ${config.color}`}>
                         {config.icon} {config.label}
                       </Badge>
                       {hasDraft && !isLocked && (
-                        <Badge className="text-[10px] font-bold border-0 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                        <Badge className="text-[12px] font-bold border-0 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                           Riprendi
                         </Badge>
                       )}
-                      <span className="text-[11px] text-muted-foreground">
+                      <span className="text-[12px] text-muted-foreground">
                         {module.duration} min
                       </span>
                     </div>
@@ -276,7 +276,7 @@ export default function LessonDetailPage({
                       {module.title}
                     </h3>
                     {isLocked ? (
-                      <p className="text-[11px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 flex items-center gap-1">
+                      <p className="text-[12px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 flex items-center gap-1">
                         <span>🔒</span> Completa il modulo precedente per sbloccare
                       </p>
                     ) : (
@@ -354,7 +354,7 @@ export default function LessonDetailPage({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <Badge className="text-[10px] font-bold border-0 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                      <Badge className="text-[12px] font-bold border-0 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
                         🃏 Pratica
                       </Badge>
                     </div>

@@ -40,13 +40,13 @@ export function DailyActivePanel({
                 title={`${d.date}: ${count} utenti attivi`}
               >
                 {count > 0 && (
-                  <span className="text-[8px] font-bold text-gray-500 mb-0.5">{count}</span>
+                  <span className="text-[12px] font-bold text-gray-500 mb-0.5">{count}</span>
                 )}
                 <div
                   className={`w-full rounded-t transition-all ${isExpanded ? "bg-violet-500" : isToday ? "bg-emerald-500" : "bg-teal-500/70"}`}
                   style={{ height: barH }}
                 />
-                <span className="text-[8px] text-gray-400 mt-0.5">
+                <span className="text-[12px] text-gray-400 mt-0.5">
                   {d.date.slice(8)}
                 </span>
               </div>
@@ -55,8 +55,8 @@ export function DailyActivePanel({
         })()}
       </div>
       <div className="flex justify-between mb-3">
-        <span className="text-[9px] text-gray-400">{stats?.dailyActive?.[13]?.date.slice(5)}</span>
-        <span className="text-[9px] text-gray-400">oggi</span>
+        <span className="text-[12px] text-gray-400">{stats?.dailyActive?.[13]?.date.slice(5)}</span>
+        <span className="text-[12px] text-gray-400">oggi</span>
       </div>
 
       {/* Expanded day detail — full data table */}

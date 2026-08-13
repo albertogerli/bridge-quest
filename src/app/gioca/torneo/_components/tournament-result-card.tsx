@@ -123,7 +123,7 @@ export function TournamentResultCard({
                     hr.result >= 0 ? "bg-emerald-100/60 dark:bg-emerald-950/40" : "bg-red-100/60 dark:bg-red-950/40"
                   }`}
                 >
-                  <p className="text-[9px] font-bold text-muted-foreground">
+                  <p className="text-[12px] font-bold text-muted-foreground">
                     #{i + 1}
                   </p>
                   <p
@@ -136,7 +136,7 @@ export function TournamentResultCard({
                     {hr.tricksMade}/{hr.tricksNeeded}
                   </p>
                   <p
-                    className={`text-[9px] font-bold ${
+                    className={`text-[12px] font-bold ${
                       hr.result >= 0
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-red-500 dark:text-red-400"

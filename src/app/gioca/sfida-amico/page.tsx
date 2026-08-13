@@ -484,7 +484,7 @@ function ActiveChallenge({
                 <polyline points="15,18 9,12 15,6" />
               </svg>
             </Link>
-            <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[10px] font-bold border-0">
+            <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
               {mode === "creating" || mode === "finished-create" ? "Crea Sfida" : "Sfida Ricevuta"}
             </Badge>
             <BenStatus available={game.benAvailable} />
@@ -506,17 +506,17 @@ function ActiveChallenge({
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark dark:text-emerald-300">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -738,7 +738,7 @@ function ActiveChallenge({
 
                     {/* Link preview */}
                     <div className="mt-4 bg-black/20 rounded-xl px-4 py-2.5">
-                      <p className="text-[11px] text-white/50 font-mono break-all">
+                      <p className="text-[12px] text-white/50 font-mono break-all">
                         bridgelab.it/gioca/sfida-amico?id=...
                       </p>
                     </div>
@@ -774,16 +774,16 @@ function ActiveChallenge({
                   <div className="grid grid-cols-2 gap-4 mb-5">
                     {/* Your result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
+                      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
                       <p className="text-4xl font-bold text-foreground">{myTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
                         {game.result.result >= 0 ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
                             {game.result.result === 0 ? "Fatto" : `+${game.result.result}`}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
                             {game.result.result}
                           </span>
                         )}
@@ -792,18 +792,18 @@ function ActiveChallenge({
 
                     {/* Challenger result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Sfidante</p>
+                      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Sfidante</p>
                       <p className="text-4xl font-bold text-foreground">{challengerTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
                         {challengerTricks! - (challengerNeeded ?? tricksNeeded) >= 0 ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
                             {challengerTricks! - (challengerNeeded ?? tricksNeeded) === 0
                               ? "Fatto"
                               : `+${challengerTricks! - (challengerNeeded ?? tricksNeeded)}`}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
                             {challengerTricks! - (challengerNeeded ?? tricksNeeded)}
                           </span>
                         )}
@@ -879,7 +879,7 @@ function ActiveChallenge({
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1.5">
                     <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
-                    <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
+                    <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
                       Suggerimento
                     </Badge>
                   </div>
@@ -921,7 +921,7 @@ function PastChallenges() {
       <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-foreground">Sfide Create</h3>
-          <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground border-border">
+          <Badge variant="outline" className="text-[12px] font-bold text-muted-foreground border-border">
             {challenges.length} sfide
           </Badge>
         </div>
@@ -948,7 +948,7 @@ function PastChallenges() {
                   <p className="text-sm font-bold text-foreground truncate">
                     {smz?.title ?? `Mano ${ch.smazzataId}`}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     {ch.myTricks}/{ch.tricksNeeded} prese {"\u00B7"} {dateStr}
                   </p>
                 </div>

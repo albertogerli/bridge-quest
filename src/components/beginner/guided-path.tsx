@@ -123,7 +123,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                       {s.label}
                     </p>
                     {(isFull || isCurrent) && (
-                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{s.sub}</p>
+                      <p className="text-[12px] text-muted-foreground mt-0.5 truncate">{s.sub}</p>
                     )}
                   </div>
 

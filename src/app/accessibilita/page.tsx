@@ -421,7 +421,7 @@ export default function AccessibilitaPage() {
 
           {/* Credits */}
           <section className="pt-2">
-            <p className="text-[11px] text-muted-foreground leading-relaxed">
+            <p className="text-[12px] text-muted-foreground leading-relaxed">
               Sviluppo: Tourbillon Tech S.r.l. per FIGB
             </p>
           </section>

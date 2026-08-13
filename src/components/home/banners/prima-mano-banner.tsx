@@ -20,9 +20,9 @@ export function PrimaManoBanner() {
           </div>
           <div className="flex-1">
             <p className="text-sm font-bold text-[#12305f]">Hai 3 minuti? Prova Prima Mano</p>
-            <p className="text-[11px] text-[#51627f]">Impara le basi del bridge e guadagna +50 XP</p>
+            <p className="text-[12px] text-[#51627f]">Impara le basi del bridge e guadagna +50 XP</p>
           </div>
-          <span className="shrink-0 rounded-full bg-[#c8a44e]/15 px-2.5 py-1 text-[10px] font-bold text-[#8f6b16]">+50 XP</span>
+          <span className="shrink-0 rounded-full bg-[#c8a44e]/15 px-2.5 py-1 text-[12px] font-bold text-[#8f6b16]">+50 XP</span>
         </div>
       </Link>
     </motion.div>

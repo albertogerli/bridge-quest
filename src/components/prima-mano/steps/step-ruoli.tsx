@@ -141,7 +141,7 @@ export function StepRuoli({ onComplete, playSound }: StepProps) {
           transition={{ delay: 0.65 }}
           className="rounded-[28px] border border-gray-200 bg-white p-5"
         >
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
+          <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
             Chi gioca la prima carta della mano?
           </p>
           <div className="grid gap-3">

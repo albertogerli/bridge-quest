@@ -8,7 +8,7 @@ const suitConfig: Record<Suit, { symbol: string; className: string }> = {
 };
 
 const sizes = {
-  xs: "text-[10px]",
+  xs: "text-[12px]",
   sm: "text-sm",
   md: "text-lg",
   lg: "text-2xl",

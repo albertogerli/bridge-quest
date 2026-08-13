@@ -21,10 +21,10 @@ export function HomeFooter() {
           <p className="mt-2 text-xs text-figb/60 dark:text-primary/60">
             Commissione Insegnamento · Corsi Fiori, Quadri, Cuori
           </p>
-          <p className="mt-2 text-[10px] text-figb dark:text-primary">
+          <p className="mt-2 text-[12px] text-figb dark:text-primary">
             Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.
           </p>
-          <Link href="/privacy" className="mt-2 inline-block text-[10px] text-figb/50 dark:text-primary/60 underline">
+          <Link href="/privacy" className="mt-2 inline-block text-[12px] text-figb/50 dark:text-primary/60 underline">
             Privacy e Cookie Policy
           </Link>
         </div>

@@ -87,7 +87,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
 
       <div className="mt-6 space-y-4">
         <div className="rounded-[28px] border border-gray-200 bg-white p-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
+          <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
             Chi vince questa presa?
           </p>
           <div className="mt-4 grid grid-cols-4 gap-3">
@@ -108,7 +108,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
                   choice === "ace" && card.label === "A" ? "ring-2 ring-[#c8a44e]" : ""
                 }`}
               >
-                <p className="text-[10px] font-bold text-[#8a94a8] mb-1">{card.player}</p>
+                <p className="text-[12px] font-bold text-[#8a94a8] mb-1">{card.player}</p>
                 <p className="text-2xl font-black text-[#12305f]">{card.label}</p>
                 <div className="mt-2 flex justify-center">
                   <SuitSymbol suit="spade" size="md" />

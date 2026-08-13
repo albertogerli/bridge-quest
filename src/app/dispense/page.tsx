@@ -111,7 +111,7 @@ export default function DispensePage() {
                   <div className="text-[13px] font-semibold leading-tight">
                     {course.name.replace("Corso ", "")}
                   </div>
-                  <div className={`text-[10px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground"}`}>
+                  <div className={`text-[12px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground"}`}>
                     {course.lessonCount} lezioni
                   </div>
                 </div>
@@ -133,7 +133,7 @@ export default function DispensePage() {
             <div className={`rounded-2xl bg-gradient-to-r ${courseGradients[selectedCourse]} p-5 mb-5`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <Badge className="bg-white/20 text-white text-[10px] font-bold border-0 mb-2">
+                  <Badge className="bg-white/20 text-white text-[12px] font-bold border-0 mb-2">
                     {levelInfo[currentCourse.level].label}
                   </Badge>
                   <h2 className="text-lg font-bold text-white">
@@ -166,7 +166,7 @@ export default function DispensePage() {
                     </svg>
                     <div className="flex flex-col items-start leading-tight">
                       <span>Tutte</span>
-                      <span className="text-[10px] font-medium text-white/60">
+                      <span className="text-[12px] font-medium text-white/60">
                         {completedModulesCount}/{totalModules} moduli
                       </span>
                     </div>
@@ -265,7 +265,7 @@ function InfographicCard({
         ) : (
           <div className={`absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40 ${locked ? "grayscale opacity-50" : ""}`}>
             <span className="text-3xl mb-1">{icon}</span>
-            <span className="text-[10px] font-medium">Anteprima non disponibile</span>
+            <span className="text-[12px] font-medium">Anteprima non disponibile</span>
           </div>
         )}
 
@@ -284,7 +284,7 @@ function InfographicCard({
 
         {/* Lesson number badge */}
         <div className="absolute top-2 left-2">
-          <Badge className={`${colors.active} text-[10px] font-bold border-0 shadow-sm`}>
+          <Badge className={`${colors.active} text-[12px] font-bold border-0 shadow-sm`}>
             Lez. {lessonNumber}
           </Badge>
         </div>
@@ -311,13 +311,13 @@ function InfographicCard({
           {title}
         </h3>
         {locked ? (
-          <p className="text-[10px] font-medium text-amber-600/80 dark:text-amber-400/80 mt-1 flex items-center gap-1">
+          <p className="text-[12px] font-medium text-amber-600/80 dark:text-amber-400/80 mt-1 flex items-center gap-1">
             <span>🔒</span> Completa la lezione per sbloccare
           </p>
         ) : (
           <Link
             href={`/lezioni/${lessonId}`}
-            className="text-[10px] font-semibold text-figb dark:text-primary mt-1 inline-block hover:underline"
+            className="text-[12px] font-semibold text-figb dark:text-primary mt-1 inline-block hover:underline"
           >
             Vai alla lezione →
           </Link>

@@ -130,7 +130,7 @@ export default function AppuntiPage() {
                                 <span className={`font-semibold text-figb dark:text-primary ${isSenior ? "text-base" : "text-sm"}`}>
                                   {entry.moduleTitle}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground ml-auto">{entry.date}</span>
+                                <span className="text-[12px] text-muted-foreground ml-auto">{entry.date}</span>
                               </div>
                               <ul className="space-y-1.5 ml-4">
                                 {entry.rules.map((rule, ri) => (

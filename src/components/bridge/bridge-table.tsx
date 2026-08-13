@@ -113,7 +113,7 @@ function CompactFaceDown({ count, gradient }: { count: number; gradient: string 
       ))}
       {/* Count badge */}
       <div
-        className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[8px] font-black text-gray-700 shadow-sm"
+        className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[12px] font-black text-gray-700 shadow-sm"
         aria-hidden="true"
       >
         {count}
@@ -231,7 +231,7 @@ export function BridgeTable({
               role="img"
               aria-label={`Prese: dichiarante ${trickCount.ns}, difesa ${trickCount.ew}`}
             >
-              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[8px]" : "text-[10px]"} font-bold`} aria-hidden="true">
+              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[12px]" : "text-[12px]"} font-bold`} aria-hidden="true">
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
                 <div />
@@ -239,7 +239,7 @@ export function BridgeTable({
                 <div className="flex flex-col items-center justify-center leading-tight">
                   <span className="text-amber text-xs font-black">{trickCount.ns}-{trickCount.ew}</span>
                   {(trickCount.ns > 0 || trickCount.ew > 0) && (
-                    <span className="text-[7px] text-white/50 font-medium">dich-dif</span>
+                    <span className="text-[12px] text-white/50 font-medium">dich-dif</span>
                   )}
                 </div>
                 <div className={`flex items-center justify-center ${isActive("east") ? "text-amber" : ""}`}>E</div>
@@ -305,7 +305,7 @@ export function BridgeTable({
       {/* North hand */}
       <div className="absolute top-2 inset-x-4 z-10">
         <div className="text-center mb-1">
-          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/80"}`}>
+          <span className={`text-[12px] font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/80"}`}>
             {posLabel("north", "N")}
           </span>
         </div>
@@ -356,7 +356,7 @@ export function BridgeTable({
           />
         )}
         <div className="text-center mt-1">
-          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive("south") ? "text-amber" : isDummy("south") ? "text-white/80" : "text-white/80"}`}>
+          <span className={`text-[12px] font-bold uppercase tracking-wider ${isActive("south") ? "text-amber" : isDummy("south") ? "text-white/80" : "text-white/80"}`}>
             {posLabel("south", "S")}
           </span>
         </div>
@@ -378,7 +378,7 @@ export function BridgeTable({
               disabled={true}
             />
           )}
-          <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
+          <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
             Est
           </span>
         </div>
@@ -387,7 +387,7 @@ export function BridgeTable({
       {/* West hand */}
       <div className="absolute left-2 top-1/2 -translate-y-1/2 z-[5]">
         <div className="flex items-center gap-1">
-          <span className={`text-[10px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
+          <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
             Ovest
           </span>
           {isDummy("west") && !westFaceDown ? (

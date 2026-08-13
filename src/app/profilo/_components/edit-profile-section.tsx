@@ -37,7 +37,7 @@ export function EditProfileSection({
               </div>
               <div className="flex-1">
                 <p className="text-sm font-bold text-foreground">Modifica profilo</p>
-                <p className="text-[11px] text-muted-foreground">Foto, nome, BBO, associazione</p>
+                <p className="text-[12px] text-muted-foreground">Foto, nome, BBO, associazione</p>
               </div>
               <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <polyline points="9,6 15,12 9,18" />
@@ -84,7 +84,7 @@ export function EditProfileSection({
 
             {/* Name */}
             <div className="mb-3">
-              <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Nome</label>
+              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Nome</label>
               <input
                 type="text"
                 value={edit.editName}
@@ -95,7 +95,7 @@ export function EditProfileSection({
 
             {/* BBO */}
             <div className="mb-3">
-              <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Username BBO</label>
+              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Username BBO</label>
               <input
                 type="text"
                 value={edit.editBbo}
@@ -110,7 +110,7 @@ export function EditProfileSection({
                 }`}
               />
               {edit.editBboError && (
-                <p id="bbo-error" role="alert" className="mt-1 text-[11px] font-semibold text-destructive">
+                <p id="bbo-error" role="alert" className="mt-1 text-[12px] font-semibold text-destructive">
                   {edit.editBboError}
                 </p>
               )}
@@ -118,7 +118,7 @@ export function EditProfileSection({
 
             {/* ASD */}
             <div className="mb-4 relative">
-              <label className="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Associazione (ASD)</label>
+              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Associazione (ASD)</label>
               <input
                 type="text"
                 value={edit.editAsdSelectedName || edit.editAsdSearch}
@@ -147,7 +147,7 @@ export function EditProfileSection({
                         >
                           <div>{club.name}</div>
                           {club.city && (
-                            <div className="text-[10px] text-muted-foreground">
+                            <div className="text-[12px] text-muted-foreground">
                               {club.city}{club.province ? ` (${club.province})` : ""}
                             </div>
                           )}

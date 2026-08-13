@@ -98,12 +98,12 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
                     style={{ width: `${(quest.progress / quest.target) * 100}%` }}
                   />
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground">
+                <span className="text-[12px] font-bold text-muted-foreground">
                   {quest.progress}/{quest.target}
                 </span>
               </div>
             </div>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+            <span className={`text-[12px] font-bold px-2 py-0.5 rounded-full ${
               done ? "bg-[#1B5E3B]/10 dark:bg-emerald-900/40 text-[#1B5E3B] dark:text-emerald-400" : "bg-[#c8a44e]/10 text-[#c8a44e]"
             }`}>
               +{quest.xp} XP

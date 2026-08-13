@@ -72,7 +72,7 @@ export default function DiventaIstruttorePage() {
         <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">
           Portale Istruttori
         </p>
-        <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
+        <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
           Beta
         </span>
       </div>

@@ -228,7 +228,7 @@ function TimeDigit({
       >
         {value}
       </motion.span>
-      <span className="text-[10px] mt-0.5 text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
+      <span className="text-[12px] mt-0.5 text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
         {label}
       </span>
     </div>

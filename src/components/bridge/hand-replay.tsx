@@ -195,7 +195,7 @@ function TrickTable({
       {/* Row 1: North */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+        <span className="text-[12px] font-bold text-muted-foreground uppercase">
           <span aria-hidden="true">N</span>
           <span className="sr-only">Nord</span>
         </span>
@@ -205,7 +205,7 @@ function TrickTable({
 
       {/* Row 2: West - center - East */}
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+        <span className="text-[12px] font-bold text-muted-foreground uppercase">
           <span aria-hidden="true">O</span>
           <span className="sr-only">Ovest</span>
         </span>
@@ -213,7 +213,7 @@ function TrickTable({
       </div>
       <div className="flex items-center justify-center">
         <span
-          className="text-[9px] font-bold text-muted-foreground"
+          className="text-[12px] font-bold text-muted-foreground"
           role="img"
           aria-label={trumpSuit ? `Atout: ${suitAriaLabel(trumpSuit)}` : "Senza atout"}
         >
@@ -221,7 +221,7 @@ function TrickTable({
         </span>
       </div>
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+        <span className="text-[12px] font-bold text-muted-foreground uppercase">
           <span aria-hidden="true">E</span>
           <span className="sr-only">Est</span>
         </span>
@@ -231,7 +231,7 @@ function TrickTable({
       {/* Row 3: South */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">
+        <span className="text-[12px] font-bold text-muted-foreground uppercase">
           <span aria-hidden="true">S</span>
           <span className="sr-only">Sud</span>
         </span>
@@ -416,7 +416,7 @@ export function HandReplay({
               <p className="text-sm font-semibold text-foreground/80">
                 {trickCommentary(trick, gameState.declarer)}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">
+              <p className="text-[12px] text-muted-foreground mt-0.5">
                 Attacco: {displayLabel(trick.leader, gameState.declarer)}
               </p>
             </motion.div>
@@ -425,7 +425,7 @@ export function HandReplay({
 
         {/* Hands at this point */}
         <div className="px-5 pb-4">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Carte in mano (prima della presa)
           </p>
           {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
@@ -445,7 +445,7 @@ export function HandReplay({
                       : "col-start-2 row-start-3";
               return (
                 <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                  <span className="text-[12px] font-bold text-muted-foreground uppercase">
                     {POSITION_LABELS[slot]}
                   </span>
                   <MiniHand cards={hand} playedCard={playedInTrick[pos]} />

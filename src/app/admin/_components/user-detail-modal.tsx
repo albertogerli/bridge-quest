@@ -110,7 +110,7 @@ export function UserDetailModal({
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">ID</span>
-                <span className="font-mono text-[10px] text-gray-400 max-w-[160px] truncate" title={u.id}>{u.id}</span>
+                <span className="font-mono text-[12px] text-gray-400 max-w-[160px] truncate" title={u.id}>{u.id}</span>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@ export function UserDetailModal({
                 const isFirstOfWeek = d.getDay() === 1;
                 return (
                   <div key={key} className={`flex flex-col items-center gap-0.5 ${isFirstOfWeek && i > 0 ? "ml-1" : ""}`} title={`${key}: ${wasActive ? "attivo" : "inattivo"}`}>
-                    <div className={`w-7 h-7 rounded-md flex items-center justify-center text-[10px] font-bold transition-all ${
+                    <div className={`w-7 h-7 rounded-md flex items-center justify-center text-[12px] font-bold transition-all ${
                       wasActive
                         ? "bg-emerald-500 text-white"
                         : isToday
@@ -137,12 +137,12 @@ export function UserDetailModal({
                     }`}>
                       {dayNum}
                     </div>
-                    {(i === 0 || isFirstOfWeek) && <span className="text-[8px] text-gray-400">{dayName}</span>}
+                    {(i === 0 || isFirstOfWeek) && <span className="text-[12px] text-gray-400">{dayName}</span>}
                   </div>
                 );
               })}
             </div>
-            <div className="mt-2 flex items-center gap-3 text-[10px] text-gray-400">
+            <div className="mt-2 flex items-center gap-3 text-[12px] text-gray-400">
               <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-500" /> Attivo</span>
               <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-100" /> Inattivo</span>
               <span className="ml-auto font-semibold">{activeDaySet.size} giorni attivi su 30</span>
@@ -160,7 +160,7 @@ export function UserDetailModal({
                     <div key={ad.date} className="flex items-center justify-between text-xs bg-gray-50 rounded-lg px-3 py-2">
                       <span className="font-semibold text-gray-700">
                         {new Date(ad.date + "T12:00:00").toLocaleDateString("it-IT", { weekday: "short", day: "numeric", month: "short" })}
-                        {isRegistration && <span className="ml-1.5 text-[10px] font-bold text-blue-500">registrazione</span>}
+                        {isRegistration && <span className="ml-1.5 text-[12px] font-bold text-blue-500">registrazione</span>}
                       </span>
                       <span className="text-gray-400 flex items-center gap-1.5">
                         {ad.logins.map((login, i) => {

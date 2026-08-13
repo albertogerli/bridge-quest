@@ -28,7 +28,7 @@ export function TournamentLeaderboard({
           <h3 className="font-bold text-foreground">Classifica</h3>
           <Badge
             variant="outline"
-            className="text-[10px] font-bold text-muted-foreground border-border"
+            className="text-[12px] font-bold text-muted-foreground border-border"
           >
             Settimana #{weekNum}
           </Badge>
@@ -70,7 +70,7 @@ export function TournamentLeaderboard({
                       {entry.totalTricks}/{entry.totalNeeded}
                     </p>
                     <p
-                      className={`text-[10px] font-bold ${
+                      className={`text-[12px] font-bold ${
                         delta >= 0
                           ? "text-emerald-600 dark:text-emerald-400"
                           : "text-red-500 dark:text-red-400"

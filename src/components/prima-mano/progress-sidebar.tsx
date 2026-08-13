@@ -19,7 +19,7 @@ export function ProgressSidebar({
   if (collapsed) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-[20px] border border-[#d7d0bf] bg-[#0f2f5f] px-2 py-4 shadow-lg">
-        <div className="text-[10px] font-bold text-white/80">{currentStep + 1}/{steps.length}</div>
+        <div className="text-[12px] font-bold text-white/80">{currentStep + 1}/{steps.length}</div>
         <div className="flex flex-col gap-1.5">
           {steps.map((_, i) => (
             <div
@@ -35,7 +35,7 @@ export function ProgressSidebar({
           ))}
         </div>
         {xpEarned > 0 && (
-          <div className="mt-2 text-[10px] font-bold text-[#f0d37a]">{xpEarned}</div>
+          <div className="mt-2 text-[12px] font-bold text-[#f0d37a]">{xpEarned}</div>
         )}
       </div>
     );
@@ -83,7 +83,7 @@ export function ProgressSidebar({
               <div className="flex items-center gap-2">
                 {done && <Check className="h-3.5 w-3.5 text-[#f0d37a]" />}
                 <p
-                  className={`text-[11px] font-bold uppercase tracking-[0.18em] ${
+                  className={`text-[12px] font-bold uppercase tracking-[0.18em] ${
                     active ? "text-white/70" : done ? "text-[#f0d37a]" : "text-white/35"
                   }`}
                 >
@@ -104,7 +104,7 @@ export function ProgressSidebar({
 
       {/* XP counter */}
       <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-5">
-        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45">
+        <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-white/45">
           XP Guadagnati
         </p>
         <div className="mt-3 flex items-center gap-3">

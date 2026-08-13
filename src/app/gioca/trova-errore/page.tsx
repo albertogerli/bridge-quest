@@ -457,13 +457,13 @@ export default function TrovaErrorePage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-bold">
+                <p className="text-[12px] text-muted-foreground font-bold">
                   Streak max
                 </p>
               </div>
@@ -471,7 +471,7 @@ export default function TrovaErrorePage() {
                 <p className="text-lg font-bold text-rose-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </motion.div>
 
@@ -513,18 +513,18 @@ export default function TrovaErrorePage() {
                           className={`rounded-xl p-3 border ${answer.correct ? "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900" : "bg-red-50/50 border-red-200 dark:bg-red-950/30 dark:border-red-900"}`}
                         >
                           <div className="flex items-start gap-2">
-                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white mt-0.5 ${answer.correct ? "bg-emerald-500" : "bg-red-500"}`}>
+                            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-white mt-0.5 ${answer.correct ? "bg-emerald-500" : "bg-red-500"}`}>
                               {answer.correct ? "✓" : "✗"}
                             </span>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-medium text-foreground/80 leading-relaxed">{s.situation}</p>
-                              <p className="text-[11px] text-muted-foreground mt-1">
+                              <p className="text-[12px] text-muted-foreground mt-1">
                                 {answer.selected !== null
                                   ? `Hai risposto: ${selectedOption}`
                                   : "Tempo scaduto"}
                               </p>
                               {!answer.correct && (
-                                <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
+                                <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
                                   Corretta: {s.options[s.correctAnswer]} — {s.explanation}
                                 </p>
                               )}
@@ -685,12 +685,12 @@ export default function TrovaErrorePage() {
               {/* Category + Difficulty badges */}
               <div className="flex items-center gap-2 mb-3">
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${catCfg.bg} ${catCfg.text}`}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[12px] font-bold ${catCfg.bg} ${catCfg.text}`}
                 >
                   {catCfg.icon} {catCfg.label}
                 </span>
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                  className={`px-2 py-0.5 rounded-full text-[12px] font-bold ${
                     scenario.difficulty === "facile"
                       ? "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300"
                       : scenario.difficulty === "medio"
@@ -715,7 +715,7 @@ export default function TrovaErrorePage() {
               {/* Cards display */}
               {scenario.cards && (
                 <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
                     Carte
                   </p>
                   <p
@@ -745,7 +745,7 @@ export default function TrovaErrorePage() {
               {/* Bidding sequence */}
               {scenario.sequence && scenario.sequence.length > 0 && (
                 <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
                     Sequenza di licita
                   </p>
                   <div className="flex flex-wrap gap-1.5">

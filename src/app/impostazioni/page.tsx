@@ -17,6 +17,7 @@ import {
 } from "@/lib/ai-difficulty";
 import { reportError } from "@/lib/report-error";
 import { toast } from "sonner";
+import { applyTextSize, parseTextSize, TEXT_SIZE_KEY } from "@/lib/text-size";
 
 const AI_LEVELS: AILevel[] = ["base", "intermedio", "esperto"];
 
@@ -92,7 +93,7 @@ export default function ImpostazioniPage() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
-    setTextSize(localStorage.getItem("bq_text_size") || "medio");
+    setTextSize(parseTextSize(localStorage.getItem(TEXT_SIZE_KEY)));
     setAnimSpeed(localStorage.getItem("bq_anim_speed") || "normale");
     setSound(localStorage.getItem("bq_sound") !== "off");
     setProfile(localStorage.getItem("bq_profile") || "adulto");
@@ -102,7 +103,10 @@ export default function ImpostazioniPage() {
 
   const updateTextSize = useCallback((value: string) => {
     setTextSize(value);
-    localStorage.setItem("bq_text_size", value);
+    localStorage.setItem(TEXT_SIZE_KEY, value);
+    // Applicata subito: prima veniva solo salvata, e chi sceglieva «Grande»
+    // non vedeva cambiare nulla.
+    applyTextSize(parseTextSize(value));
   }, []);
 
   const updateAnimSpeed = useCallback((value: string) => {
@@ -428,7 +432,7 @@ export default function ImpostazioniPage() {
               </Badge>
             </div>
             {notifications.permission === "denied" && (
-              <p className="mt-2 text-[11px] text-red-500/80">
+              <p className="mt-2 text-[12px] text-red-500/80">
                 Le notifiche sono bloccate dal browser. Per riattivarle, modifica le impostazioni del sito nel browser.
               </p>
             )}
@@ -470,7 +474,7 @@ export default function ImpostazioniPage() {
                     {AI_LEVEL_LABELS[level]}
                   </span>
                   {aiLevel === level && (
-                    <Badge className="ml-auto bg-figb text-white text-[10px] hover:bg-figb">
+                    <Badge className="ml-auto bg-figb text-white text-[12px] hover:bg-figb">
                       Attivo
                     </Badge>
                   )}
@@ -523,7 +527,7 @@ export default function ImpostazioniPage() {
                     {p.label}
                   </span>
                   {profile === p.key && (
-                    <Badge className="ml-auto bg-figb text-white text-[10px] hover:bg-figb">
+                    <Badge className="ml-auto bg-figb text-white text-[12px] hover:bg-figb">
                       Attivo
                     </Badge>
                   )}
@@ -730,12 +734,12 @@ export default function ImpostazioniPage() {
         >
           <div className="inline-flex items-center gap-2 bg-card/80 border border-border rounded-full px-4 py-2 shadow-sm">
             <span className="text-figb dark:text-primary font-bold text-sm">Bridge LAB</span>
-            <Badge variant="secondary" className="bg-muted text-muted-foreground text-[10px] hover:bg-muted">
+            <Badge variant="secondary" className="bg-muted text-muted-foreground text-[12px] hover:bg-muted">
               v{APP_VERSION}
             </Badge>
           </div>
           <p className="text-muted-foreground text-xs mt-2">FIGB - Federazione Italiana Gioco Bridge</p>
-          <p className="text-muted-foreground/40 text-[10px] mt-1">Sviluppo: A. G. Gerli / Tourbillon Tech</p>
+          <p className="text-muted-foreground/40 text-[12px] mt-1">Sviluppo: A. G. Gerli / Tourbillon Tech</p>
         </motion.div>
       </div>
     </div>

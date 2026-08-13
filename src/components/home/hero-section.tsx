@@ -47,13 +47,13 @@ export function HeroSection({
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 border border-white/10 text-lg">🃏</div>
             <div>
               <h1 className="text-xl font-bold text-white tracking-tight font-display">BridgeLab</h1>
-              <p className="text-[10px] font-semibold text-white/50 uppercase tracking-wider">FIGB</p>
+              <p className="text-[12px] font-semibold text-white/50 uppercase tracking-wider">FIGB</p>
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1.5">
             <Zap className="w-3.5 h-3.5 text-[#c8a44e]" aria-hidden="true" />
             <span className="text-xs font-bold text-white">Lv. {stats.level}</span>
-            <span className="text-[10px] text-white/60">{stats.levelName}</span>
+            <span className="text-[12px] text-white/60">{stats.levelName}</span>
           </div>
         </motion.div>
 
@@ -66,19 +66,19 @@ export function HeroSection({
         >
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{stats.xp.toLocaleString()}</p>
-            <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">XP</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">XP</p>
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{stats.streak}</p>
-            <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">Streak</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Streak</p>
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{totalModulesCompleted}</p>
-            <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">Moduli</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Moduli</p>
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{handsPlayed}</p>
-            <p className="text-[9px] font-semibold text-white/50 uppercase mt-1">Mani</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Mani</p>
           </div>
         </motion.div>
 
@@ -90,8 +90,8 @@ export function HeroSection({
           className="mt-3 lg:hidden"
         >
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-semibold text-white/60">Livello {stats.level} → {stats.level + 1}</p>
-            <p className="text-[10px] font-bold text-[#c8a44e]">{stats.xpInLevel} XP</p>
+            <p className="text-[12px] font-semibold text-white/60">Livello {stats.level} → {stats.level + 1}</p>
+            <p className="text-[12px] font-bold text-[#c8a44e]">{stats.xpInLevel} XP</p>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
             <motion.div
@@ -116,7 +116,7 @@ export function HeroSection({
                 <div className="flex items-center gap-3 w-full">
                   <span className="text-2xl">{nextModule.lessonIcon}</span>
                   <div className="flex-1 text-left min-w-0">
-                    <p className="text-[10px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">Riprendi</p>
+                    <p className="text-[12px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">Riprendi</p>
                     <p className="text-sm font-bold text-[#1B5E3B] truncate">{nextModule.moduleTitle}</p>
                   </div>
                   <svg className="h-5 w-5 text-[#1B5E3B]/40 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

@@ -347,7 +347,7 @@ export default function ClassificaPage() {
               <div className="flex items-center gap-3">
                 {/* Rank badge */}
                 <div className="flex flex-col items-center justify-center min-w-[48px]">
-                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Pos.</span>
+                  <span className="text-[12px] font-bold text-amber-600 uppercase tracking-wider">Pos.</span>
                   <span className="text-2xl font-black text-amber-600">
                     {userFullRank ? `#${userFullRank}` : (
                       (() => {
@@ -358,7 +358,7 @@ export default function ClassificaPage() {
                     )}
                   </span>
                   {userFullTotal > 0 && (
-                    <span className="text-[9px] text-muted-foreground">
+                    <span className="text-[12px] text-muted-foreground">
                       su {userFullTotal}
                     </span>
                   )}
@@ -376,11 +376,11 @@ export default function ClassificaPage() {
                   <p className="font-bold text-sm text-foreground truncate">
                     {currentPlayer.name}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[12px] text-muted-foreground">
                     Lv.{getLevel(currentPlayer.xp).level} · {getLevel(currentPlayer.xp).name}
                   </p>
                   {currentPlayer.asd_name && (
-                    <span className="inline-flex items-center gap-1 mt-0.5 text-[10px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-2 py-0.5 font-medium">
+                    <span className="inline-flex items-center gap-1 mt-0.5 text-[12px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-2 py-0.5 font-medium">
                       <Landmark className="w-2.5 h-2.5" />
                       {currentPlayer.asd_name}
                     </span>
@@ -392,7 +392,7 @@ export default function ClassificaPage() {
                   <p className="font-black text-lg text-foreground">
                     {formatNumber(currentPlayer.xp)}
                   </p>
-                  <p className="text-[10px] text-muted-foreground font-medium">XP</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">XP</p>
                 </div>
               </div>
 
@@ -407,7 +407,7 @@ export default function ClassificaPage() {
                     <div className="mt-2.5 pt-2 border-t border-amber-100/60 dark:border-amber-900/60">
                       <div className="flex items-center justify-center gap-1.5">
                         <ChevronUp className="w-3.5 h-3.5 text-amber-500" />
-                        <p className="text-[11px] text-muted-foreground">
+                        <p className="text-[12px] text-muted-foreground">
                           <span className="font-bold text-amber-600">{formatNumber(gap)} XP</span> per superare {above.name}
                         </p>
                       </div>
@@ -443,18 +443,18 @@ export default function ClassificaPage() {
             <Clock className="w-5 h-5 text-muted-foreground" />
             <div>
               <p className="text-xs font-bold text-foreground">Fine settimana</p>
-              <p className="text-[10px] text-muted-foreground">Top 3 promossi!</p>
+              <p className="text-[12px] text-muted-foreground">Top 3 promossi!</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="bg-gray-900 dark:bg-gray-700 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
               <p className="text-sm font-bold">{countdown.days}</p>
-              <p className="text-[8px] text-gray-400">GG</p>
+              <p className="text-[12px] text-gray-400">GG</p>
             </div>
             <span className="text-muted-foreground/40 font-bold">:</span>
             <div className="bg-gray-900 dark:bg-gray-700 text-white rounded-lg px-2 py-1 text-center min-w-[32px]">
               <p className="text-sm font-bold">{countdown.hours}</p>
-              <p className="text-[8px] text-gray-400">ORE</p>
+              <p className="text-[12px] text-gray-400">ORE</p>
             </div>
           </div>
         </motion.div>
@@ -471,7 +471,7 @@ export default function ClassificaPage() {
               <p className="text-xs font-bold text-foreground/80">
                 Prossima lega: {nextLeague.name} {nextLeague.icon}
               </p>
-              <p className="text-[11px] font-bold text-muted-foreground">
+              <p className="text-[12px] font-bold text-muted-foreground">
                 {userXp}/{nextLeague.minXp} XP
               </p>
             </div>
@@ -484,7 +484,7 @@ export default function ClassificaPage() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
             </div>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-[12px] text-muted-foreground mt-1">
               Mancano {formatNumber(nextLeague.minXp - userXp)} XP per la promozione
             </p>
           </motion.div>
@@ -558,7 +558,7 @@ export default function ClassificaPage() {
                       role="tab"
                       aria-selected={isActive}
                       aria-label={`Corso ${course.label}`}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                         isActive
                           ? course.activeColor + " shadow-sm"
                           : "bg-card text-muted-foreground card-clean hover:bg-muted/50"
@@ -597,7 +597,7 @@ export default function ClassificaPage() {
                       role="tab"
                       aria-selected={isActive}
                       aria-label={`Gioco ${game.label}`}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                         isActive
                           ? game.activeColor + " shadow-sm"
                           : "bg-card text-muted-foreground card-clean hover:bg-muted/50"
@@ -738,7 +738,7 @@ export default function ClassificaPage() {
                                 <span className="text-muted-foreground/40 text-xs">&rsaquo;</span>
                               </Link>
                             </p>
-                            <p className="text-[11px] text-muted-foreground">
+                            <p className="text-[12px] text-muted-foreground">
                               {asd.member_count} {asd.member_count === 1 ? "membro" : "membri"}
                             </p>
                           </div>
@@ -746,7 +746,7 @@ export default function ClassificaPage() {
                             <p className="font-bold text-sm text-foreground">
                               {formatNumber(asd.total_xp)}
                             </p>
-                            <p className="text-[10px] text-muted-foreground">XP totali</p>
+                            <p className="text-[12px] text-muted-foreground">XP totali</p>
                           </div>
                         </div>
                       </motion.div>
@@ -923,11 +923,11 @@ function PerCorsoView({
                       {isCurrentUser ? `${player.name} (Tu)` : player.name}
                     </p>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-[12px] text-muted-foreground">
                         {formatNumber(player.courseXp)} XP corso
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[9px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[12px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
@@ -937,7 +937,7 @@ function PerCorsoView({
                     <p className="font-bold text-sm text-foreground">
                       {player.courseXp}
                     </p>
-                    <p className="text-[10px] text-muted-foreground">XP</p>
+                    <p className="text-[12px] text-muted-foreground">XP</p>
                   </div>
                 </div>
               </div>
@@ -1053,7 +1053,7 @@ function PerGiocoView({
                     <p className={`font-bold text-sm truncate ${isCurrentUser ? "text-amber-600 dark:text-amber-400" : "text-foreground"}`}>
                       {isCurrentUser ? `${player.display_name} (Tu)` : player.display_name}
                     </p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       {player.games_played} {player.games_played === 1 ? "partita" : "partite"} giocate
                     </p>
                   </div>
@@ -1061,7 +1061,7 @@ function PerGiocoView({
                     <p className="font-bold text-sm text-foreground">
                       {formatNumber(player.best_score)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground">best</p>
+                    <p className="text-[12px] text-muted-foreground">best</p>
                   </div>
                 </div>
               </div>
@@ -1149,14 +1149,14 @@ function LeaderboardList({
       >
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          <span className="text-[10px] font-bold text-muted-foreground">Promozione</span>
+          <span className="text-[12px] font-bold text-muted-foreground">Promozione</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-          <span className="text-[10px] font-bold text-muted-foreground">Retrocessione</span>
+          <span className="text-[12px] font-bold text-muted-foreground">Retrocessione</span>
         </div>
         <div className="flex-1" />
-        <span className="text-[10px] font-bold text-muted-foreground/40">{totalPlayers} giocatori</span>
+        <span className="text-[12px] font-bold text-muted-foreground/40">{totalPlayers} giocatori</span>
       </motion.div>
 
       {/* Leaderboard */}
@@ -1195,11 +1195,11 @@ function LeaderboardList({
                       {isCurrentUser ? `${player.name} (Tu)` : player.name}
                     </p>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-[12px] text-muted-foreground">
                         Lv.{pl.level} · {pl.name}
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[9px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[12px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
@@ -1209,7 +1209,7 @@ function LeaderboardList({
                     <p className="font-bold text-sm text-foreground">
                       {formatNumber(player.xp)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground">XP</p>
+                    <p className="text-[12px] text-muted-foreground">XP</p>
                   </div>
                 </div>
 
@@ -1225,10 +1225,10 @@ function LeaderboardList({
                         <Target className="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <p className="text-[11px] text-muted-foreground">
+                            <p className="text-[12px] text-muted-foreground">
                               Prossimo traguardo: <span className="font-bold text-purple-600 dark:text-purple-400">{formatNumber(milestone)} XP</span>
                             </p>
-                            <p className="text-[10px] font-medium text-muted-foreground">-{formatNumber(remaining)}</p>
+                            <p className="text-[12px] font-medium text-muted-foreground">-{formatNumber(remaining)}</p>
                           </div>
                           <div className="h-1 rounded-full bg-muted overflow-hidden">
                             <div
@@ -1246,14 +1246,14 @@ function LeaderboardList({
               {player.rank === 3 && totalPlayers > 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
                   <div className="flex-1 h-px bg-emerald-200 dark:bg-emerald-900" />
-                  <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">zona promozione</span>
+                  <span className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">zona promozione</span>
                   <div className="flex-1 h-px bg-emerald-200 dark:bg-emerald-900" />
                 </div>
               )}
               {totalPlayers > 6 && player.rank === totalPlayers - 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
                   <div className="flex-1 h-px bg-rose-200 dark:bg-rose-900" />
-                  <span className="text-[9px] font-bold text-rose-400 uppercase tracking-wider">zona retrocessione</span>
+                  <span className="text-[12px] font-bold text-rose-400 uppercase tracking-wider">zona retrocessione</span>
                   <div className="flex-1 h-px bg-rose-200 dark:bg-rose-900" />
                 </div>
               )}
@@ -1321,13 +1321,13 @@ function LocalXpCard() {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <p className="font-bold text-sm text-foreground">I tuoi XP</p>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${league.textColor} bg-card border ${league.border}`}>
+            <span className={`text-[12px] font-bold px-2 py-0.5 rounded-full ${league.textColor} bg-card border ${league.border}`}>
               {league.name}
             </span>
           </div>
           <p className="text-2xl font-black text-foreground">{formatNumber(localXp)} <span className="text-sm font-bold text-muted-foreground">XP</span></p>
           {milestone && (
-            <p className="text-[10px] text-muted-foreground mt-0.5">
+            <p className="text-[12px] text-muted-foreground mt-0.5">
               Prossimo traguardo: {formatNumber(milestone)} XP ({formatNumber(milestone - localXp)} rimanenti)
             </p>
           )}
@@ -1338,10 +1338,10 @@ function LocalXpCard() {
       {nextLeague && (
         <div className="mt-3 pt-2 border-t border-border">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-bold text-muted-foreground">
+            <p className="text-[12px] font-bold text-muted-foreground">
               {league.name} {league.icon} → {nextLeague.name} {nextLeague.icon}
             </p>
-            <p className="text-[10px] font-bold text-muted-foreground">
+            <p className="text-[12px] font-bold text-muted-foreground">
               {localXp}/{nextLeague.minXp}
             </p>
           </div>

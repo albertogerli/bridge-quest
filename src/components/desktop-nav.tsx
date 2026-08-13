@@ -137,7 +137,7 @@ export function DesktopNav() {
           <span>{item.label}</span>
           {item.href === "/amici" && pendingFriends > 0 && (
             <span
-              className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white"
+              className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[12px] font-bold text-white"
               aria-label={`${pendingFriends} richieste di amicizia in attesa`}
             >
               {pendingFriends > 9 ? "9+" : pendingFriends}
@@ -164,7 +164,7 @@ export function DesktopNav() {
 
         {/* Secondary "Altro" group */}
         <div className="pt-4">
-          <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          <p className="px-4 pb-1 text-[12px] font-bold uppercase tracking-wider text-muted-foreground">
             Altro
           </p>
           {moreNav.map(renderItem)}

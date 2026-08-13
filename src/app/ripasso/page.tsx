@@ -224,15 +224,15 @@ export default function RipassoPage() {
         >
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-red-500">{enrichedItems.filter(i => i.urgency === "overdue").length}</p>
-            <p className="text-[10px] font-medium text-muted-foreground mt-0.5">In ritardo</p>
+            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">In ritardo</p>
           </div>
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-amber-500">{enrichedItems.filter(i => i.urgency === "today").length}</p>
-            <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Oggi</p>
+            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">Oggi</p>
           </div>
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-indigo-500">{totalCount}</p>
-            <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Totale</p>
+            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">Totale</p>
           </div>
         </motion.div>
 
@@ -344,7 +344,7 @@ export default function RipassoPage() {
                             <p className="text-sm font-bold text-foreground truncate">
                               {item.moduleTitle}
                             </p>
-                            <Badge variant="outline" className={`text-[9px] font-bold ${cfg.text} ${cfg.bg} border-0 shrink-0`}>
+                            <Badge variant="outline" className={`text-[12px] font-bold ${cfg.text} ${cfg.bg} border-0 shrink-0`}>
                               {cfg.label}
                             </Badge>
                           </div>
@@ -363,7 +363,7 @@ export default function RipassoPage() {
 
                       {/* Bottom row: metadata + actions */}
                       <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                        <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             {dueLabel(item.nextReview)}
@@ -378,7 +378,7 @@ export default function RipassoPage() {
                           {/* Mark as mastered */}
                           <button
                             onClick={() => handleMarkMastered(item.lessonId, item.moduleId)}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-950/50 transition-colors"
+                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-950/50 transition-colors"
                             title="Segna come padroneggiato"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -387,7 +387,7 @@ export default function RipassoPage() {
 
                           {/* Go to lesson */}
                           <Link href={`/lezioni/${item.lessonId}/${item.moduleId}`}>
-                            <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-figb dark:text-primary bg-figb/5 dark:bg-primary/10 hover:bg-figb/10 dark:hover:bg-primary/15 transition-colors">
+                            <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-figb dark:text-primary bg-figb/5 dark:bg-primary/10 hover:bg-figb/10 dark:hover:bg-primary/15 transition-colors">
                               Ripassa
                               <ChevronRight className="w-3.5 h-3.5" />
                             </button>

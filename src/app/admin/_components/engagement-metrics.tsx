@@ -55,7 +55,7 @@ export function EngagementMetrics({ stats }: { stats: Stats | null }) {
             <span className="text-gray-300 mx-1">/</span>
             <span className="text-red-500">{stats?.marketingDeclined ?? 0}</span>
           </div>
-          <div className="text-[10px] text-gray-400 mt-0.5">
+          <div className="text-[12px] text-gray-400 mt-0.5">
             {stats?.marketingPending ?? 0} non chiesto
           </div>
         </div>

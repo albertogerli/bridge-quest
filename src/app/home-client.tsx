@@ -302,7 +302,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
               <div className={`flex h-full flex-col items-center gap-1 rounded-2xl bg-gradient-to-br ${h.cls} p-4 text-center text-white transition-all hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98]`}>
                 <span className="text-2xl">{h.emoji}</span>
                 <span className="text-sm font-bold">{h.label}</span>
-                <span className="text-[10px] text-white/75">{h.desc}</span>
+                <span className="text-[12px] text-white/75">{h.desc}</span>
               </div>
             </Link>
           ))}
@@ -382,7 +382,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           sottostante — fra cui «Preferenze cookie». */}
       <div className="flex items-center justify-center gap-3 py-2 pointer-events-none" aria-hidden="true">
         <div className="h-px w-12 bg-foreground/10" />
-        <span className="text-[10px] tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
+        <span className="text-[12px] tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
         <div className="h-px w-12 bg-foreground/10" />
       </div>
 

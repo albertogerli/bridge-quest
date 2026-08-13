@@ -96,7 +96,7 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
           <Link href="/lezioni">
             <Badge
               variant="outline"
-              className="text-[11px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
+              className="text-[12px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
             >
               Vedi tutto →
             </Badge>
@@ -133,13 +133,13 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
                         {course.name}
                       </h3>
                       <span
-                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}
+                        className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}
                       >
                         {levelInfo[course.level].label}
                       </span>
                     </div>
                     {!isExpanded && (
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                      <p className="text-[12px] text-muted-foreground mt-0.5">
                         {completedWorlds}/{courseWorlds.length} mondi completati
                       </p>
                     )}

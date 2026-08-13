@@ -29,7 +29,7 @@ export function ExampleBlock({ block, delay, ctx }: ContentBlockProps) {
         </div>
         <div className="flex-1 min-w-0">
           <p className={`font-bold uppercase tracking-widest mb-1 ${
-            isJunior ? "text-[11px] text-amber-600 dark:text-amber-400" : "text-[10px] text-figb dark:text-primary"
+            isJunior ? "text-[12px] text-amber-600 dark:text-amber-400" : "text-[12px] text-figb dark:text-primary"
           }`}>{isJunior ? "Guarda Qui!" : "Esempio"}</p>
           <p className={`leading-relaxed mb-2 ${
             isJunior ? "text-[15px] text-amber-900 dark:text-amber-200" : "text-[14px] text-indigo-900 dark:text-indigo-200"

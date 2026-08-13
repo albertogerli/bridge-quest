@@ -215,12 +215,12 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 <polyline points="15,18 9,12 15,6" />
               </svg>
             </Link>
-            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
+            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
               Sfida del Giorno
             </Badge>
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
             {alreadyCompleted && (
-              <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold border-0">
+              <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[12px] font-bold border-0">
                 Completata
               </Badge>
             )}
@@ -242,17 +242,17 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
               <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -480,7 +480,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
-                        <p className="text-[11px] text-muted-foreground">Scopri dove potevi migliorare</p>
+                        <p className="text-[12px] text-muted-foreground">Scopri dove potevi migliorare</p>
                       </div>
                       <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
@@ -537,7 +537,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1.5">
                           <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
-                          <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold border-0">
+                          <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
                             Suggerimento
                           </Badge>
                         </div>

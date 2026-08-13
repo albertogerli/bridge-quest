@@ -99,17 +99,17 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
           >
             {/* Scenario header */}
             <div className="flex items-center gap-2">
-              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#003DA5] text-[11px] font-bold text-white">
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#003DA5] text-[12px] font-bold text-white">
                 {scenario}
               </span>
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
+              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
                 {scenario === 1 ? "Hai il seme giocato" : "Non hai il seme giocato"}
               </p>
             </div>
 
             {/* Lead card */}
             <div className="rounded-[28px] border border-gray-200 bg-white p-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
+              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
                 Ovest gioca:
               </p>
               <div className="flex justify-center">
@@ -118,14 +118,14 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
                   <div className="mt-1.5 flex justify-center">
                     <SuitSymbol suit="heart" size="md" />
                   </div>
-                  <p className="mt-1 text-[10px] font-bold text-[#8a94a8]">Ovest</p>
+                  <p className="mt-1 text-[12px] font-bold text-[#8a94a8]">Ovest</p>
                 </div>
               </div>
             </div>
 
             {/* Player hand */}
             <div className="rounded-[28px] border border-gray-200 bg-[#fffaf0] p-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
+              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
                 La tua mano &mdash; scegli una carta:
               </p>
               <div className="grid grid-cols-5 gap-2">

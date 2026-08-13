@@ -78,12 +78,12 @@ export function BottomNav() {
                     <span className="relative text-2xl" aria-hidden="true">
                       {l.emoji}
                       {l.href === "/amici" && pendingFriends > 0 && (
-                        <span className="absolute -top-1 -right-2.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                        <span className="absolute -top-1 -right-2.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-red-500 px-1 text-[12px] font-bold text-white">
                           {pendingFriends > 9 ? "9+" : pendingFriends}
                         </span>
                       )}
                     </span>
-                    <span className="text-[11px] font-semibold text-foreground/80">{l.label}</span>
+                    <span className="text-[12px] font-semibold text-foreground/80">{l.label}</span>
                   </Link>
                 ))}
               </div>
@@ -138,7 +138,7 @@ function PlayButton({ active }: { active: boolean }) {
           <path d="M8 5v14l11-7z" />
         </svg>
       </div>
-      <span className="mt-1 text-[10px] font-bold text-primary">Gioca</span>
+      <span className="mt-1 text-[12px] font-bold text-primary">Gioca</span>
     </Link>
   );
 }
@@ -189,7 +189,7 @@ function MoreButton({
           />
         )}
       </span>
-      <span className={`relative text-[10px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
+      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
     </button>
   );
 }
@@ -243,7 +243,7 @@ function NavItem({
         />
       )}
       <span className="relative">{icons[icon]}</span>
-      <span className={`relative text-[10px] ${active ? "font-bold" : "font-semibold"}`}>{label}</span>
+      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>{label}</span>
     </Link>
   );
 }

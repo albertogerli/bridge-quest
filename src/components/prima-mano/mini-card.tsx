@@ -51,7 +51,7 @@ export function MiniCard({
       }`}
     >
       {locked && (
-        <div className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#8a94a8] text-[9px] text-white">
+        <div className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#8a94a8] text-[12px] text-white">
           🔒
         </div>
       )}

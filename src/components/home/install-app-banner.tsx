@@ -34,7 +34,7 @@ export function InstallAppBanner() {
                     <p className="text-sm font-semibold text-foreground">
                       Installa Bridge LAB
                     </p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       Aggiungilo alla schermata Home
                     </p>
                   </div>

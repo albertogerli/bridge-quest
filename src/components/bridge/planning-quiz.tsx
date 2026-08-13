@@ -131,7 +131,7 @@ export function PlanningQuiz({
             {!answered && (
               <button
                 onClick={onDismiss}
-                className="mt-2 text-[11px] font-semibold text-amber-600 dark:text-amber-400 underline-offset-2 hover:underline"
+                className="mt-2 text-[12px] font-semibold text-amber-600 dark:text-amber-400 underline-offset-2 hover:underline"
               >
                 Salta
               </button>

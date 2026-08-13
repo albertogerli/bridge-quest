@@ -136,18 +136,18 @@ export function CompletionCard({
         <div className={`grid gap-3 mt-4 ${totalQuizzes > 0 && bestStreak >= 2 ? "grid-cols-3" : totalQuizzes > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
           <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 p-3">
             <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{computeTotalModuleXp(xpEarned, xpReward)}</p>
-            <p className="text-[10px] font-bold text-amber-500 dark:text-amber-400/80 uppercase tracking-wider">{xpLabel} Totali</p>
+            <p className="text-[12px] font-bold text-amber-500 dark:text-amber-400/80 uppercase tracking-wider">{xpLabel} Totali</p>
           </div>
           {totalQuizzes > 0 && (
             <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 p-3">
               <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{correctAnswers}/{totalQuizzes}</p>
-              <p className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400/80 uppercase tracking-wider">Quiz</p>
+              <p className="text-[12px] font-bold text-emerald-500 dark:text-emerald-400/80 uppercase tracking-wider">Quiz</p>
             </div>
           )}
           {bestStreak >= 2 && (
             <div className="rounded-xl bg-orange-50 dark:bg-orange-950/40 p-3">
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{bestStreak}</p>
-              <p className="text-[10px] font-bold text-orange-500 dark:text-orange-400/80 uppercase tracking-wider">Best Streak</p>
+              <p className="text-[12px] font-bold text-orange-500 dark:text-orange-400/80 uppercase tracking-wider">Best Streak</p>
             </div>
           )}
         </div>

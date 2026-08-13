@@ -74,9 +74,9 @@ export default function GiocaPage() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold text-foreground">Mano Guidata</p>
-                    <p className="text-[11px] text-muted-foreground">Pratica passo-passo con suggerimenti</p>
+                    <p className="text-[12px] text-muted-foreground">Pratica passo-passo con suggerimenti</p>
                   </div>
-                  <Badge className="bg-muted text-muted-foreground text-[10px] font-bold border-0">
+                  <Badge className="bg-muted text-muted-foreground text-[12px] font-bold border-0">
                     +35 XP
                   </Badge>
                 </div>
@@ -101,9 +101,9 @@ export default function GiocaPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-bold text-foreground">MiniBridge</p>
-                    <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">Beta</span>
+                    <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">Beta</span>
                   </div>
-                  <p className="text-[11px] text-muted-foreground">Gioca senza licita: conta i punti e scegli il contratto</p>
+                  <p className="text-[12px] text-muted-foreground">Gioca senza licita: conta i punti e scegli il contratto</p>
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@ export default function GiocaPage() {
                       Sfida del Giorno
                     </h2>
                     {!dailyDone && (
-                      <Badge className="bg-amber/20 text-amber-light text-[10px] font-bold border-0">
+                      <Badge className="bg-amber/20 text-amber-light text-[12px] font-bold border-0">
                         +40 {profile.xpLabel}
                       </Badge>
                     )}
@@ -192,7 +192,7 @@ export default function GiocaPage() {
                       Torneo Settimanale
                     </h2>
                     {!tournamentDone && (
-                      <Badge className="bg-white/15 text-white/90 text-[10px] font-bold border-0">
+                      <Badge className="bg-white/15 text-white/90 text-[12px] font-bold border-0">
                         +150 {profile.xpLabel}
                       </Badge>
                     )}
@@ -262,7 +262,7 @@ export default function GiocaPage() {
         >
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-lg font-semibold text-foreground font-display">Pratica</h2>
-            <Badge className="bg-primary/10 text-primary text-[10px] font-bold border-0">
+            <Badge className="bg-primary/10 text-primary text-[12px] font-bold border-0">
               allenati su una mossa
             </Badge>
           </div>
@@ -310,7 +310,7 @@ export default function GiocaPage() {
                   <p className="text-[12px] text-muted-foreground mt-0.5">Vedi tutte le mani e conta le prese di Nord-Sud</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[10px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
                     Nuovo
                   </span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -494,7 +494,7 @@ export default function GiocaPage() {
                   Sfoglia e gioca le {allSmazzate.length} mani per lezione
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[12px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                     {allSmazzate.length} mani
                   </span>
                 </div>
@@ -543,7 +543,7 @@ export default function GiocaPage() {
                   Rivedi le tue mani con commenti dell&apos;AI carta per carta
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
+                  <span className="text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
                     Post-partita
                   </span>
                 </div>
@@ -569,7 +569,7 @@ export default function GiocaPage() {
                   Impara tutti i termini del bridge
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-muted-foreground bg-muted rounded-full px-2 py-0.5">
+                  <span className="text-[12px] font-bold text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     A-Z
                   </span>
                 </div>
@@ -593,7 +593,7 @@ export default function GiocaPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1.5">
                   <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
-                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[10px] font-bold border-0">
+                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[12px] font-bold border-0">
                     Consiglio
                   </Badge>
                 </div>

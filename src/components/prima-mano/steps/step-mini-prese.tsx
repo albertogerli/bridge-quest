@@ -229,24 +229,24 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
 
       {/* Table cards */}
       <div className="mt-4 rounded-[28px] border border-gray-200 bg-white p-5">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
+        <p className="mb-3 text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
           Carte sul tavolo
         </p>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center">
-            <p className="mb-1 text-[10px] font-bold text-[#8a94a8]">Ovest</p>
+            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">Ovest</p>
             <div className="flex justify-center">
               <MiniCard card={trick.west} disabled locked={false} delay={0.1} size="small" />
             </div>
           </div>
           <div className="text-center">
-            <p className="mb-1 text-[10px] font-bold text-[#8a94a8]">Nord</p>
+            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">Nord</p>
             <div className="flex justify-center">
               <MiniCard card={trick.north} disabled locked={false} delay={0.25} size="small" />
             </div>
           </div>
           <div className="text-center">
-            <p className="mb-1 text-[10px] font-bold text-[#8a94a8]">Est</p>
+            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">Est</p>
             <div className="flex justify-center">
               <MiniCard card={trick.east} disabled locked={false} delay={0.4} size="small" />
             </div>

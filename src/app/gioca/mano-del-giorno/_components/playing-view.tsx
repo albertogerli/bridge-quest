@@ -81,7 +81,7 @@ export function PlayingView({
             </button>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <Badge className="bg-amber-50 text-amber-700 text-[10px] font-bold border-0 shrink-0">
+                <Badge className="bg-amber-50 text-amber-700 text-[12px] font-bold border-0 shrink-0">
                   {isDaily ? "Mano del Giorno" : "Mano di Ieri"}
                 </Badge>
                 <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
@@ -106,7 +106,7 @@ export function PlayingView({
             className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}
           >
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                 Contratto
               </p>
               <p
@@ -117,7 +117,7 @@ export function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                 Obiettivo
               </p>
               <p
@@ -128,7 +128,7 @@ export function PlayingView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                 Dich. / Dif.
               </p>
               <p
