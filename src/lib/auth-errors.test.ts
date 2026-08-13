@@ -1,6 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { authErrorMessage, isAlreadyRegistered } from "./auth-errors";
 
+/**
+ * Supabase risponde allo STESSO modo per «password sbagliata» e per «questa
+ * email non è registrata», per non far scoprire chi è iscritto provando
+ * indirizzi a caso. Non potendo dire la causa, il messaggio deve almeno dare
+ * la via d'uscita — che vale in entrambi i casi.
+ */
+const CREDENZIALI =
+  "Email o password errati. Se hai appena creato l'account, usa «Password dimenticata?» qui sotto: reimpostarla è la via più rapida.";
+
 describe("authErrorMessage — password compromessa", () => {
   it("traduce il messaggio reale restituito dalla produzione", () => {
     // Testo verificato sul progetto l'11/08/2026 tentando la registrazione con
@@ -33,7 +42,7 @@ describe("authErrorMessage — password compromessa", () => {
 
 describe("authErrorMessage — altri casi", () => {
   it.each([
-    ["Invalid login credentials", "Email o password errati."],
+    ["Invalid login credentials", CREDENZIALI],
     ["Email not confirmed", "Devi confermare la tua email prima di accedere. Controlla la casella di posta."],
     ["New password should be different from the old password.", "La nuova password deve essere diversa da quella attuale."],
     ["Password should be at least 6 characters.", "La password è troppo corta. Usane una di almeno 6 caratteri."],
@@ -43,7 +52,7 @@ describe("authErrorMessage — altri casi", () => {
   });
 
   it("non distingue maiuscole e minuscole", () => {
-    expect(authErrorMessage("INVALID LOGIN CREDENTIALS")).toBe("Email o password errati.");
+    expect(authErrorMessage("INVALID LOGIN CREDENTIALS")).toBe(CREDENZIALI);
   });
 });
 
@@ -83,5 +92,16 @@ describe("isAlreadyRegistered", () => {
     expect(isAlreadyRegistered("Invalid login credentials")).toBe(false);
     expect(isAlreadyRegistered(null)).toBe(false);
     expect(isAlreadyRegistered("")).toBe(false);
+  });
+});
+
+describe("il messaggio delle credenziali indica cosa fare", () => {
+  it("nomina la reimpostazione della password", () => {
+    // Due utenti in una settimana si sono registrati con il dominio scritto
+    // male (gmaol.com, gmal.com) e all'accesso hanno letto «errati»,
+    // convincendosi di aver sbagliato la password. Uno si è re-iscritto da
+    // capo. Il messaggio non può dire quale sia la causa, ma può indicare la
+    // strada che le risolve entrambe.
+    expect(authErrorMessage("Invalid login credentials")).toContain("Password dimenticata");
   });
 });

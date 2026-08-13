@@ -49,7 +49,15 @@ const RULES: Rule[] = [
   },
   {
     match: ["invalid login credentials", "invalid_credentials"],
-    message: "Email o password errati.",
+    // Supabase restituisce lo STESSO errore per «password sbagliata» e per
+    // «questa email non è registrata»: è voluto, altrimenti si potrebbe
+    // scoprire chi è iscritto provando indirizzi a caso. Il prezzo è che il
+    // messaggio non può dire quale dei due sia, e chi si è appena registrato
+    // legge «errati» convincendosi di aver sbagliato a scegliere la password.
+    // Non potendo dire la causa, si indica la via d'uscita che funziona in
+    // entrambi i casi.
+    message:
+      "Email o password errati. Se hai appena creato l'account, usa «Password dimenticata?» qui sotto: reimpostarla è la via più rapida.",
   },
   {
     match: ["email not confirmed"],
