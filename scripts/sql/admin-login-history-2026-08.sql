@@ -65,5 +65,12 @@ $function$;
 comment on function public.admin_login_history(integer) is
   'Accessi degli ultimi N giorni per il pannello admin. Solo is_admin(); nessuna email.';
 
+-- Servono ENTRAMBE le revoche: PUBLIC riceve EXECUTE da Postgres su ogni
+-- funzione nuova, e i default privileges di Supabase concedono ESPLICITAMENTE
+-- ad `anon`. Con la sola revoca a PUBLIC questa funzione è rimasta eseguibile
+-- da anonimo — innocua perché il controllo `is_admin()` la ferma comunque, ma
+-- una porta aperta che non ha motivo di esserlo. Si verifica in
+-- `pg_proc.proacl`: una voce `anon=X/postgres` è esplicita.
 revoke execute on function public.admin_login_history(integer) from public;
+revoke execute on function public.admin_login_history(integer) from anon;
 grant execute on function public.admin_login_history(integer) to authenticated;
