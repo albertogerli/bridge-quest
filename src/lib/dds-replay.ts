@@ -18,20 +18,14 @@
  * che non ha e impara la lezione sbagliata.
  */
 
-import { Dds, loadDds } from "bridge-dds";
 import type { Card, Position, Rank, Suit } from "./bridge-engine";
+import { solveBoard } from "./dds-table";
 
 const SUIT_ORDER: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 const SEATS: Position[] = ["north", "east", "south", "west"];
 const DDS_SEAT: Record<Position, number> = { north: 0, east: 1, south: 2, west: 3 };
 const DDS_STRAIN: Record<string, number> = { spade: 0, heart: 1, diamond: 2, club: 3, notrump: 4 };
-
-let modulePromise: Promise<Dds> | null = null;
-function getDds(): Promise<Dds> {
-  if (!modulePromise) modulePromise = loadDds().then((m) => new Dds(m));
-  return modulePromise;
-}
 
 function sameCard(a: Card, b: Card): boolean {
   return a.suit === b.suit && a.rank === b.rank;
@@ -91,7 +85,6 @@ export async function analyseReplay(
   strain: Suit | null,
   declarer: Position
 ): Promise<ReplayAnalysis> {
-  const dds = await getDds();
   const trumpIndex = DDS_STRAIN[strain ?? "notrump"];
 
   // Copia di lavoro: le carte vengono tolte man mano.
@@ -103,28 +96,17 @@ export async function analyseReplay(
   };
 
   /** Prese ancora ottenibili dal dichiarante con `leader` di mano. */
-  const potentialFrom = (leader: Position, cardsLeft: number): number => {
+  const potentialFrom = async (leader: Position, cardsLeft: number): Promise<number> => {
     if (cardsLeft === 0) return 0;
-    const fut = dds.SolveBoardPBN(
-      {
-        trump: trumpIndex,
-        first: DDS_SEAT[leader],
-        currentTrickSuit: [],
-        currentTrickRank: [],
-        remainCards: toPbn(remaining),
-      },
-      -1,
-      1,
-      1
-    );
+    const res = await solveBoard(toPbn(remaining), trumpIndex, DDS_SEAT[leader]);
     // `score` è riferito alla linea che deve giocare: se non è quella del
     // dichiarante, va complementato rispetto alle prese ancora in palio.
-    const best = fut.cards > 0 ? Math.max(...fut.score.slice(0, fut.cards)) : 0;
+    const best = res.cards > 0 ? Math.max(...res.score.slice(0, res.cards)) : 0;
     return isDeclarerSide(leader, declarer) ? best : cardsLeft - best;
   };
 
   const firstLeader = tricks[0]?.cards[0]?.player as Position | undefined;
-  const initialPotential = firstLeader ? potentialFrom(firstLeader, 13) : 0;
+  const initialPotential = firstLeader ? await potentialFrom(firstLeader, 13) : 0;
 
   const points: TurningPoint[] = [];
   let won = 0;
@@ -139,7 +121,7 @@ export async function analyseReplay(
     if (isDeclarerSide(trick.winner as Position, declarer)) won++;
 
     const left = 13 - (index + 1);
-    const potential = won + potentialFrom(trick.winner as Position, left);
+    const potential = won + (await potentialFrom(trick.winner as Position, left));
     points.push({ trick: index + 1, won, potential, delta: potential - previous });
     previous = potential;
   }

@@ -21,7 +21,6 @@
  * sprecherebbe centinaia di millisecondi. La promessa è condivisa.
  */
 
-import { Dds, loadDds } from "bridge-dds";
 import type { Card, Position, Suit } from "./bridge-engine";
 import { dealToPbnString } from "./pbn";
 import type { Vulnerability } from "./catalog";
@@ -44,14 +43,41 @@ const SYMBOL: Record<TableStrain, string> = {
 /** Codici di vulnerabilità attesi da `DealerPar`. */
 const VULN_CODE: Record<Vulnerability, number> = { none: 0, both: 1, ns: 2, ew: 3 };
 
-let modulePromise: Promise<Dds> | null = null;
+/**
+ * Accesso al motore double dummy.
+ *
+ * ATTENZIONE ALLA CSP
+ * È WebAssembly: senza `'wasm-unsafe-eval'` in `script-src` la compilazione
+ * viene rifiutata, e Emscripten muore con un errore che non c'entra nulla
+ * («startsWith is not a function», sollevato dal suo ripiego). In sviluppo il
+ * problema non si vede perché lì la CSP include `'unsafe-eval'`, che copre
+ * anche il wasm: è così che il difetto è arrivato in produzione senza che
+ * nessuna prova lo cogliesse. La direttiva è in next.config.ts, e
+ * `next-config.test.ts` verifica che non sparisca.
+ */
+type DdsApi = {
+  CalcDDTablePBN(d: { cards: string }): { resTable: number[][] };
+  DealerPar(t: { resTable: number[][] }, dealer: number, vul: number): { score: number; contracts: string[] };
+  SolveBoardPBN(
+    d: { trump: number; first: number; currentTrickSuit: number[]; currentTrickRank: number[]; remainCards: string },
+    target: number, solutions: number, mode: number
+  ): { cards: number; suit: number[]; rank: number[]; equals: number[]; score: number[] };
+};
 
-/** Istanza condivisa: il WebAssembly si inizializza una volta per sessione. */
-function getDds(): Promise<Dds> {
-  if (!modulePromise) {
-    modulePromise = loadDds().then((m) => new Dds(m));
+let ddsPromise: Promise<DdsApi> | null = null;
+
+function loadModule(): Promise<{ Dds: new (m: unknown) => DdsApi; loadDds: () => Promise<unknown> }> {
+  return import("bridge-dds") as unknown as Promise<{
+    Dds: new (m: unknown) => DdsApi;
+    loadDds: () => Promise<unknown>;
+  }>;
+}
+
+function getDds(): Promise<DdsApi> {
+  if (!ddsPromise) {
+    ddsPromise = loadModule().then(async ({ Dds, loadDds }) => new Dds(await loadDds()));
   }
-  return modulePromise;
+  return ddsPromise;
 }
 
 export interface DdsTable {
@@ -68,17 +94,8 @@ export interface ParResult {
 
 /** Tabella completa: 5 semi × 4 dichiaranti. */
 export async function calcDdsTable(hands: Record<Position, Card[]>): Promise<DdsTable> {
-  const dds = await getDds();
-  const res = dds.CalcDDTablePBN({ cards: dealToPbnString(hands) }).resTable;
-
-  const tricks = {} as Record<TableStrain, Record<Position, number>>;
-  STRAIN_ORDER.forEach((strain, s) => {
-    tricks[strain] = {} as Record<Position, number>;
-    DECLARER_ORDER.forEach((declarer, d) => {
-      tricks[strain][declarer] = res[s][d];
-    });
-  });
-  return { tricks };
+  const { table } = await calcTableAndPar(hands, "north", "none");
+  return table;
 }
 
 /**
@@ -94,10 +111,8 @@ export async function calcPar(
   dealer: Position,
   vulnerability: Vulnerability
 ): Promise<ParResult> {
-  const dds = await getDds();
-  const table = dds.CalcDDTablePBN({ cards: dealToPbnString(hands) });
-  const par = dds.DealerPar(table, DECLARER_ORDER.indexOf(dealer), VULN_CODE[vulnerability]);
-  return { score: par.score, contracts: par.contracts };
+  const { par } = await calcTableAndPar(hands, dealer, vulnerability);
+  return par;
 }
 
 /** Tabella e par in una sola risoluzione, che è la parte costosa. */
@@ -108,6 +123,7 @@ export async function calcTableAndPar(
 ): Promise<{ table: DdsTable; par: ParResult }> {
   const dds = await getDds();
   const raw = dds.CalcDDTablePBN({ cards: dealToPbnString(hands) });
+  const par = dds.DealerPar(raw, DECLARER_ORDER.indexOf(dealer), VULN_CODE[vulnerability]);
 
   const tricks = {} as Record<TableStrain, Record<Position, number>>;
   STRAIN_ORDER.forEach((strain, s) => {
@@ -117,7 +133,6 @@ export async function calcTableAndPar(
     });
   });
 
-  const par = dds.DealerPar(raw, DECLARER_ORDER.indexOf(dealer), VULN_CODE[vulnerability]);
   return { table: { tricks }, par: { score: par.score, contracts: par.contracts } };
 }
 
@@ -167,4 +182,14 @@ export const TABLE_STRAINS: readonly TableStrain[] = STRAIN_ORDER;
 /** Converte un seme di gioco nella colonna corrispondente. */
 export function strainOf(suit: Suit | null): TableStrain {
   return suit === null ? "notrump" : suit;
+}
+
+
+/** Risoluzione di una posizione parziale, usata da `dds-replay.ts`. */
+export async function solveBoard(pbn: string, trump: number, first: number) {
+  const dds = await getDds();
+  return dds.SolveBoardPBN(
+    { trump, first, currentTrickSuit: [], currentTrickRank: [], remainCards: pbn },
+    -1, 3, 1
+  );
 }
