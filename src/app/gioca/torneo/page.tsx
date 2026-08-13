@@ -7,6 +7,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { useTournamentWeek } from "./_use-tournament-week";
 import { MaestroTip } from "./_components/maestro-tip";
 import { TournamentHero } from "./_components/tournament-hero";
+import { TournamentHistory } from "./_components/tournament-history";
 import { TournamentLeaderboard } from "./_components/tournament-leaderboard";
 import { TournamentPlayView } from "./_components/tournament-play-view";
 import { TournamentResultCard } from "./_components/tournament-result-card";
@@ -83,6 +84,13 @@ export default function TorneoSettimanale() {
           leaderboard={week.leaderboard}
           alreadyPlayed={week.alreadyPlayed}
           existingResult={week.existingResult}
+        />
+
+        {/* ── Le settimane già giocate ── */}
+        <TournamentHistory
+          entries={week.history}
+          weekNumCorrente={week.weekNum}
+          loading={week.historyLoading}
         />
 
         {/* ── Maestro Fiori Tip ── */}

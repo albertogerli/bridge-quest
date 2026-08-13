@@ -50,3 +50,19 @@ export interface LeaderboardEntry {
   totalTricks: number;
   totalNeeded: number;
 }
+
+/**
+ * Una settimana già giocata, per lo storico personale.
+ *
+ * `posizione` e `partecipanti` sono nulli quando il risultato viene dal solo
+ * localStorage: senza il server non si può sapere quanti hanno giocato, e
+ * inventare un «1º su 1» sarebbe peggio che non dirlo.
+ */
+export interface TournamentHistoryEntry {
+  weekNum: number;
+  totalTricks: number;
+  totalNeeded: number;
+  completedAt: string | null;
+  posizione: number | null;
+  partecipanti: number | null;
+}

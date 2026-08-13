@@ -1,10 +1,22 @@
 /**
- * AI Difficulty System for FIGB Bridge LAB
- * Provides three difficulty levels for AI opponents:
- * - Base: makes plausible beginner mistakes ~20% of the time
- * - Intermedio: standard heuristic AI (default)
- * - Esperto: BEN when available, otherwise DDS-perfect endgame play
- *   (falls back to the standard heuristic in large positions)
+ * Livelli dell'avversario artificiale.
+ * - Base: euristica più un errore da principiante nel 20% delle scelte
+ * - Intermedio: sola euristica
+ * - Esperto: BEN quando c'è, altrimenti gioco perfetto nei finali (nelle
+ *   posizioni grandi ricade sull'euristica)
+ *
+ * PERCHÉ IL PREDEFINITO È «ESPERTO»
+ * Un utente ha scritto che i robot «commettono errori banali e sconcertanti,
+ * così si vince anche sbagliando e non ce se ne rende conto: diseducativo».
+ * Misurato su 30 mani (`robot-quality.test.ts`), prese buttate per mano
+ * rispetto al gioco perfetto a carte scoperte:
+ *
+ *   intermedio   3,13 dal dichiarante + 2,17 dalla difesa
+ *   base         3,33 + 2,10   — indistinguibile da intermedio
+ *   esperto      1,60 + 1,40   — circa la metà
+ *
+ * Il predefinito era quindi fra i peggiori disponibili. Chi ha già scelto un
+ * livello se lo tiene: qui cambia solo cosa trova chi non ha mai scelto.
  */
 
 import type { Card, Position, Rank, Suit, GameState, TrickPlay } from "./bridge-engine";
@@ -22,13 +34,16 @@ export const AI_LEVEL_LABELS: Record<AILevel, string> = {
 export const AI_LEVEL_DESCRIPTIONS: Record<AILevel, string> = {
   base: "Avversari che commettono errori occasionali",
   intermedio: "Avversari con buona strategia di gioco",
-  esperto: "AI neurale BEN (se disponibile) o gioco perfetto nei finali",
+  esperto: "Gioco perfetto nei finali: sbaglia circa la metà degli altri livelli",
 };
+
+/** Livello di chi non ha mai scelto. */
+export const AI_LEVEL_PREDEFINITO: AILevel = "esperto";
 
 /** Read current AI level from localStorage */
 export function getAILevel(): AILevel {
-  if (typeof window === "undefined") return "intermedio";
-  return (localStorage.getItem("bq_ai_level") as AILevel) || "intermedio";
+  if (typeof window === "undefined") return AI_LEVEL_PREDEFINITO;
+  return (localStorage.getItem("bq_ai_level") as AILevel) || AI_LEVEL_PREDEFINITO;
 }
 
 /** Save AI level to localStorage */

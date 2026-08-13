@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "motion/react";
-import { type AILevel, AI_LEVEL_LABELS } from "@/lib/ai-difficulty";
+import { type AILevel, AI_LEVEL_LABELS, AI_LEVEL_PREDEFINITO } from "@/lib/ai-difficulty";
 
 interface BenStatusProps {
   available: boolean | null; // null = checking
   aiLevel?: AILevel;
 }
 
-export function BenStatus({ available, aiLevel = "intermedio" }: BenStatusProps) {
+export function BenStatus({ available, aiLevel = AI_LEVEL_PREDEFINITO }: BenStatusProps) {
   if (available === null) return null; // Still checking
 
   // Determine display label and color based on AI level + BEN availability

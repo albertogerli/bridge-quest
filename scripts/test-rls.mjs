@@ -438,6 +438,56 @@ try {
   if (pmId || pmId2) info("utenti partner di test eliminati");
 }
 
+// ---------------------------------------------------------------------------
+// 6. Storico personale del torneo — my_tournament_history()
+//    (vedi scripts/sql/tournament-history-2026-08.sql)
+//
+//    La funzione non prende l'utente come parametro: usa auth.uid(). La
+//    proprietà da difendere è che non esista modo di farsi restituire lo
+//    storico di un altro, e che un anonimo non la possa nemmeno chiamare.
+//
+//    Il permesso a `anon` va tolto a PUBLIC, non ad `anon`: Postgres concede
+//    EXECUTE a PUBLIC su ogni nuova funzione e `anon` eredita da lì. Con un
+//    `revoke ... from anon` la funzione restava eseguibile — verificato.
+// ---------------------------------------------------------------------------
+console.log("\n[6] Storico del torneo — my_tournament_history");
+
+try {
+  // (a) un anonimo non deve poter eseguire la funzione
+  {
+    const { data, error } = await anon.rpc("my_tournament_history", {});
+    const rows = Array.isArray(data) ? data.length : 0;
+    if (error) ok("(a) my_tournament_history(): negata all'anonimo");
+    else if (rows === 0) ok("(a) my_tournament_history(): nessuna riga per l'anonimo");
+    else fail(`(a) un anonimo ottiene ${rows} righe di storico`);
+  }
+
+  // (b) un utente vero non deve vedere lo storico di nessun altro: la
+  //     funzione non espone un parametro utente, e le righe che tornano sono
+  //     solo le sue (qui: nessuna, perché non ha mai giocato).
+  {
+    const email = `th-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Th!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(b) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+      const { data, error } = await u.rpc("my_tournament_history", {});
+      if (error) fail(`(b) un utente autenticato non riesce a leggere il proprio storico: ${error.message}`);
+      else if (Array.isArray(data) && data.length === 0)
+        ok("(b) chi non ha mai giocato riceve uno storico vuoto, non quello altrui");
+      else fail(`(b) un utente nuovo riceve ${Array.isArray(data) ? data.length : "?"} righe di storico`);
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente storico di test eliminato");
+    }
+  }
+} catch (e) {
+  fail(`verifica storico torneo non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"

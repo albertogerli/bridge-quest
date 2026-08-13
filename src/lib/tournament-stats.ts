@@ -12,6 +12,7 @@ import {
   EPOCH_MS,
   EPOCH_START,
   type HandResult,
+  type TournamentHistoryEntry,
   type TournamentProgress,
 } from "@/app/gioca/torneo/_types";
 import { parseContract } from "@/lib/bridge-engine";
@@ -201,4 +202,36 @@ export function tournamentCtaLabel(
   return inProgressCount > 0
     ? `Riprendi il Torneo (mano ${inProgressCount + 1}/${handCount})`
     : "Gioca il Torneo";
+}
+
+/**
+ * Unisce lo storico locale con quello del server, una riga per settimana.
+ *
+ * Le due sorgenti dicono cose diverse e non sostituibili: il localStorage
+ * copre chi ha giocato prima che il salvataggio remoto esistesse o da un altro
+ * dispositivo scollegato; il server è l'unico a sapere quanti hanno giocato
+ * quella settimana, e quindi l'unico a poter dire «5º su 49».
+ *
+ * Per il punteggio vince il SERVER: è la riga che ha prodotto la classifica in
+ * cui l'utente si vede, e mostrare accanto un numero diverso letto dal
+ * dispositivo farebbe sembrare sbagliata la classifica.
+ * La posizione, quando il server non ce l'ha, resta nulla: «1º su 1» calcolato
+ * su una sola riga locale sarebbe una bugia gentile, che è comunque una bugia.
+ */
+export function mergeHistory(
+  locali: readonly TournamentHistoryEntry[],
+  remoti: readonly TournamentHistoryEntry[],
+): TournamentHistoryEntry[] {
+  const perSettimana = new Map<number, TournamentHistoryEntry>();
+  for (const e of locali) perSettimana.set(e.weekNum, e);
+  for (const e of remoti) {
+    const locale = perSettimana.get(e.weekNum);
+    perSettimana.set(e.weekNum, {
+      ...e,
+      // L'unico dato che il server non ha mai: quando è stato concluso, se la
+      // riga remota fosse stata scritta senza data.
+      completedAt: e.completedAt ?? locale?.completedAt ?? null,
+    });
+  }
+  return [...perSettimana.values()].sort((a, b) => b.weekNum - a.weekNum);
 }
