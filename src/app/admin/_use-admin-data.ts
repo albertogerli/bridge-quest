@@ -13,6 +13,12 @@ export interface AdminData {
   stats: Stats | null;
   gameStats: GameStats | null;
   loginHistory: LoginRecord[];
+  /**
+   * Falso quando gli accessi non sono stati letti: il grafico degli utenti
+   * attivi va dichiarato inattendibile invece di mostrare il ripiego su
+   * `last_login`, che risponde a un'altra domanda.
+   */
+  accessiAttendibili: boolean;
   loading: boolean;
   fetchError: string | null;
   lastUpdated: Date | null;
@@ -37,6 +43,7 @@ export function useAdminData(): AdminData {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [loginHistory, setLoginHistory] = useState<LoginRecord[]>([]);
   const [gameStats, setGameStats] = useState<GameStats | null>(null);
+  const [accessiAttendibili, setAccessiAttendibili] = useState(true);
 
   const supabase = useMemo(() => createClient(), []);
 
@@ -108,29 +115,31 @@ export function useAdminData(): AdminData {
 
       const profiles = allProfiles;
 
-      // Accessi degli ultimi 30 giorni.
+      // Accessi degli ultimi 30 giorni, dalla RPC riservata agli admin.
       //
-      // Anche qui va paginato, per la stessa ragione delle anagrafiche: il
-      // server tronca a 1000 righe e non lo dice. Trenta giorni sono circa
-      // 2000 accessi, quindi la richiesta secca ne riportava poco più della
-      // metà — e ordinando dal più recente sparivano i giorni VECCHI. Il
-      // grafico dei 14 giorni ci stava dentro per un soffio (circa 900 righe),
-      // ma la mappa «attività ultimi 30 giorni» di ogni utente era dimezzata,
-      // e bastava un po' di crescita perché iniziassero a svuotarsi anche le
-      // colonne più a sinistra del grafico. Il numero tornava plausibile, e un
-      // numero plausibile è un errore che non si nota.
-      const trentaGiorniFa = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      // NON si legge `login_history` direttamente: la sua unica policy di
+      // lettura è `user_id = auth.uid()` e non prevede eccezioni per gli
+      // amministratori, quindi la lettura diretta riportava le sole righe di
+      // chi guardava. Il grafico «utenti attivi per giorno» finiva disegnato
+      // dal ripiego su `profiles.last_login`, che colloca ogni utente in UN
+      // SOLO giorno — l'ultimo in cui è entrato — e mostrava 5, 5, 6, 9, …,
+      // 26, 53 al posto di 64, 64, 71, …, 49. Una curva sempre crescente
+      // verso oggi, che sembrava un andamento e invece era un artefatto.
+      //
+      // Paginato lo stesso: il server tronca a 1000 righe senza dirlo, RPC
+      // incluse, e trenta giorni sono circa 2000 accessi.
       const PAGINA_ACCESSI = 1000;
       let accessi: LoginRecord[] = [];
+      let accessiOk = true;
       for (let from = 0; ; from += PAGINA_ACCESSI) {
         const { data, error } = await supabase
-          .from("login_history")
-          .select("id, user_id, logged_in_at, platform")
-          .gte("logged_in_at", trentaGiorniFa)
-          .order("logged_in_at", { ascending: false })
+          .rpc("admin_login_history", { p_days: 30 })
           .range(from, from + PAGINA_ACCESSI - 1);
         if (error) {
+          // Senza la RPC non si finge: meglio un pannello che dichiara di non
+          // sapere che uno che mostra numeri inventati da un ripiego.
           reportError("admin:fetch-accessi", error);
+          accessiOk = false;
           break;
         }
         const pagina = (data as LoginRecord[]) ?? [];
@@ -139,6 +148,7 @@ export function useAdminData(): AdminData {
       }
       const logins = accessi;
       setLoginHistory(accessi);
+      setAccessiAttendibili(accessiOk);
 
       // Game stats — degrades gracefully if admin_game_stats.sql isn't installed
       try {
@@ -197,5 +207,5 @@ export function useAdminData(): AdminData {
     }
   }, [authLoading, user, fetchData]);
 
-  return { users, stats, gameStats, loginHistory, loading, fetchError, lastUpdated, fetchData };
+  return { users, stats, gameStats, loginHistory, accessiAttendibili, loading, fetchError, lastUpdated, fetchData };
 }

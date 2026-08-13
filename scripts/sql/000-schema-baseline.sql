@@ -613,6 +613,26 @@ END;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.admin_login_history(p_days integer DEFAULT 30)
+ RETURNS TABLE(user_id uuid, logged_in_at timestamp with time zone, platform text)
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+BEGIN
+  IF NOT is_admin() THEN
+    RAISE EXCEPTION 'not authorized' USING ERRCODE = '42501';
+  END IF;
+
+  RETURN QUERY
+  SELECT h.user_id, h.logged_in_at, h.platform
+  FROM login_history h
+  WHERE h.logged_in_at >= now() - (least(greatest(coalesce(p_days, 30), 1), 365) || ' days')::interval
+  ORDER BY h.logged_in_at DESC;
+END
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.admin_school_stats()
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -2657,6 +2677,10 @@ GRANT EXECUTE ON FUNCTION public.admin_list_classes() TO service_role;
 REVOKE ALL ON FUNCTION public.admin_list_users() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_list_users() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_list_users() TO service_role;
+REVOKE ALL ON FUNCTION public.admin_login_history(p_days integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO anon;
+GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_role;
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;

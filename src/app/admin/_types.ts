@@ -55,7 +55,9 @@ export interface UserRow {
 export type ProfileRecord = UserRow & { role?: string | null };
 
 export interface LoginRecord {
-  id: string;
+  /** Assente quando gli accessi arrivano da `admin_login_history()`, che non
+   *  restituisce la chiave: al pannello serve chi e quando, non l'id di riga. */
+  id?: string;
   user_id: string;
   logged_in_at: string;
   platform: string | null;

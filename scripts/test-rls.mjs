@@ -488,6 +488,47 @@ try {
   fail(`verifica storico torneo non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+// 7. Accessi per il pannello admin — admin_login_history()
+//    (vedi scripts/sql/admin-login-history-2026-08.sql)
+//
+//    È SECURITY DEFINER e scavalca la policy di `login_history`: se fosse
+//    eseguibile da chiunque, restituirebbe gli accessi di tutti gli iscritti.
+//    L'unica cosa che lo impedisce è il controllo is_admin() nel corpo.
+// ---------------------------------------------------------------------------
+console.log("\n[7] Accessi admin — admin_login_history");
+
+try {
+  {
+    const { data, error } = await anon.rpc("admin_login_history", { p_days: 7 });
+    const rows = Array.isArray(data) ? data.length : 0;
+    if (error || rows === 0) ok("(a) admin_login_history(): non eseguibile da anonimo");
+    else fail(`(a) un anonimo ottiene ${rows} accessi`);
+  }
+
+  {
+    const email = `alh-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Alh!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(b) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+      const { data, error } = await u.rpc("admin_login_history", { p_days: 7 });
+      const rows = Array.isArray(data) ? data.length : 0;
+      if (error) ok("(b) un utente NON admin riceve un errore, non gli accessi altrui");
+      else if (rows === 0) ok("(b) un utente NON admin non ottiene alcun accesso");
+      else fail(`(b) un utente qualunque ottiene ${rows} accessi di tutti gli iscritti`);
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente accessi di test eliminato");
+    }
+  }
+} catch (e) {
+  fail(`verifica accessi admin non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"

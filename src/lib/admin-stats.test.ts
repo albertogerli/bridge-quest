@@ -775,3 +775,73 @@ describe("buildUserActivity", () => {
     expect(activeDaysLog[0].date).toBe("2026-05-01");
   });
 });
+
+/**
+ * Il difetto del 13/08/2026: il pannello mostrava «utenti attivi per giorno»
+ * come 5, 5, 6, 9, …, 26, 53 invece di 64, 64, 71, …, 49 — una curva sempre
+ * crescente verso oggi. La causa non era in questa funzione ma nella lettura
+ * degli accessi (`login_history` è leggibile solo dal proprietario, quindi
+ * arrivava vuota) e nel ripiego su `last_login`, che colloca ogni utente in
+ * UN SOLO giorno: l'ultimo in cui è entrato.
+ *
+ * Questi test fissano le due proprietà che distinguono le due grandezze.
+ */
+describe("utenti attivi per giorno — «attivo» non è «ultima visita»", () => {
+  const giorno = (n: number) =>
+    new Date(NOW.getTime() - n * 86400000).toISOString().split("T")[0];
+
+  const profilo = (id: string, lastLogin: string) => ({
+    id,
+    display_name: id,
+    profile_type: "adulto",
+    xp: 0,
+    streak: 0,
+    hands_played: 0,
+    created_at: "2026-01-01T00:00:00Z",
+    last_login: lastLogin,
+  }) as unknown as Parameters<typeof computeStats>[0]["profiles"][number];
+
+  it("chi entra tutti i giorni compare in TUTTI i giorni, non solo nell'ultimo", () => {
+    // È esattamente ciò che il ripiego su last_login sbagliava.
+    const profiles = [profilo("assiduo", giorno(0))];
+    const logins = [0, 1, 2, 3].map((n) => ({
+      user_id: "assiduo",
+      logged_in_at: `${giorno(n)}T09:00:00Z`,
+      platform: null,
+    }));
+    const s = computeStats({
+      profiles, users: mapProfilesToUsers(profiles), logins,
+      asdClubs: [], now: NOW, instructors: 0, classes: 0, students: 0,
+    });
+    for (const n of [0, 1, 2, 3]) {
+      const g = s.dailyActive.find((d) => d.date === giorno(n));
+      expect(g?.activeUsers.map((u) => u.id), `giorno -${n}`).toEqual(["assiduo"]);
+    }
+  });
+
+  it("senza accessi il conteggio NON è quello degli attivi", () => {
+    // Documenta il comportamento del ripiego: con login_history vuota ogni
+    // utente finisce solo nel giorno della sua ultima visita. Il pannello per
+    // questo non disegna il grafico quando la lettura fallisce.
+    const profiles = [profilo("a", giorno(0)), profilo("b", giorno(3))];
+    const s = computeStats({
+      profiles, users: mapProfilesToUsers(profiles), logins: [],
+      asdClubs: [], now: NOW, instructors: 0, classes: 0, students: 0,
+    });
+    expect(s.dailyActive.find((d) => d.date === giorno(0))?.activeUsers).toHaveLength(1);
+    expect(s.dailyActive.find((d) => d.date === giorno(1))?.activeUsers).toHaveLength(0);
+    expect(s.dailyActive.find((d) => d.date === giorno(3))?.activeUsers).toHaveLength(1);
+  });
+
+  it("non conta due volte chi entra più volte nello stesso giorno", () => {
+    const profiles = [profilo("a", giorno(0))];
+    const logins = ["08:00", "13:00", "21:00"].map((h) => ({
+      user_id: "a", logged_in_at: `${giorno(0)}T${h}:00Z`, platform: null,
+    }));
+    const s = computeStats({
+      profiles, users: mapProfilesToUsers(profiles), logins,
+      asdClubs: [], now: NOW, instructors: 0, classes: 0, students: 0,
+    });
+    expect(s.dailyActive[0].activeUsers).toHaveLength(1);
+  });
+});

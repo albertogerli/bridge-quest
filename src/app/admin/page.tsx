@@ -36,7 +36,7 @@ import { UserDetailModal } from "./_components/user-detail-modal";
 
 export default function AdminPage() {
   const { user, profile, loading: authLoading } = useSharedAuth();
-  const { users, stats, gameStats, loginHistory, loading, fetchError, lastUpdated, fetchData } = useAdminData();
+  const { users, stats, gameStats, loginHistory, accessiAttendibili, loading, fetchError, lastUpdated, fetchData } = useAdminData();
   const [search, setSearch] = useState("");
   const [authTimeout, setAuthTimeout] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
@@ -165,6 +165,7 @@ export default function AdminPage() {
               expandedDay={expandedDay}
               onExpandDay={setExpandedDay}
               onSelectUser={setSelectedUserId}
+              accessiAttendibili={accessiAttendibili}
             />
 
             {/* Game stats (RPC admin_game_stats) */}
