@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { GraduationCap, Presentation, Wand2, ChevronRight } from "lucide-react";
+import { GraduationCap, Presentation, Printer, Wand2, ChevronRight } from "lucide-react";
 import { getMyClasses } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { useSharedAuth } from "@/contexts/auth-provider";
@@ -99,6 +99,22 @@ export function InstructorCard() {
             <p className="font-semibold text-sm">Lavagna</p>
             <p className="text-xs text-muted-foreground">
               Da proiettare in aula: si scopre una mano per volta
+            </p>
+          </div>
+          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
+        </Link>
+
+        <Link
+          href="/istruttori/dispensa"
+          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
+            <Printer className="w-5 h-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-sm">Dispensa</p>
+            <p className="text-xs text-muted-foreground">
+              Il foglio da consegnare, con le soluzioni in fondo
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
