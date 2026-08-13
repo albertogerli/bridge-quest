@@ -27,7 +27,7 @@ Si impostano in **`.env.local`** in locale (mai committato, permessi 600) e su *
 | `SUPABASE_SERVICE_ROLE_KEY` | solo server (cron, unsubscribe, admin); bypassa RLS | locale + Vercel |
 | `RESEND_API_KEY` / `RESEND_FROM` | invio email | Vercel (locale solo per test) |
 | `CRON_SECRET` | autorizza `/api/cron/engagement` (header `Authorization: Bearer`) | Vercel |
-| `BEN_API_URL` | opzionale: server AI neurale BEN self-hosted; fallback automatico se assente | Vercel (vedi `deploy/ben-railway/`) |
+| `BEN_API_URL` | server AI neurale BEN. **In produzione dal 13/08/2026**: Railway, progetto `bridgelab-ben`, regione `europe-west4`. Fallback automatico se assente | Vercel (vedi `deploy/ben-railway/`) |
 | `BEN_API_TOKEN` | segreto condiviso con la guardia davanti a BEN; senza, la guardia non parte | Vercel + Railway |
 | `NEXT_PUBLIC_GADS_SIGNUP_LABEL` | label conversione Google Ads (registrazione) | locale + Vercel |
 | `NEXT_PUBLIC_SENTRY_DSN` | error monitoring; **assente = Sentry interamente disattivo** | Vercel (locale solo per test) |
@@ -74,7 +74,7 @@ CI: `.github/workflows/ci.yml` (typecheck + lint + test su push/PR).
 
 | Sintomo | Causa | Cosa fare |
 |---|---|---|
-| AI "esperto" gioca come "intermedio", badge BEN offline | Server BEN spento/irraggiungibile (`BEN_API_URL`) | Nulla di urgente: il fallback BEN → DDS → euristica è automatico e silenzioso. Riavviare BEN con `scripts/start-ben.sh` (locale) o controllare il servizio su Railway. Se risponde 404 a tutto, `BEN_API_TOKEN` su Vercel e su Railway non coincidono |
+| AI "esperto" gioca come "intermedio", badge BEN offline | Server BEN spento/irraggiungibile (`BEN_API_URL`) | Nulla di urgente: il fallback BEN → DDS → euristica è automatico e silenzioso. Riavviare BEN con `scripts/start-ben.sh` (locale) o controllare il servizio su Railway. **Se risponde 404 a tutto, i due `BEN_API_TOKEN` non coincidono.** Si confrontano senza leggerli: `railway variables list --kv \| grep BEN_API_TOKEN \| cut -d= -f2- \| shasum -a 256` contro la stessa cosa da `vercel env pull` |
 | Email non partite | Resend down o `RESEND_API_KEY` errata | Nessun retry automatico nel run: gli invii falliti sono persi (non registrati in `email_events`; il cron del giorno dopo può riproporre il drip solo se l'utente è ancora eleggibile). Verificare log Vercel del cron + dashboard Resend |
 | App carica ma niente contenuti/login | Supabase down | L'app degrada: gamification continua su localStorage, contenuti e auth falliscono (la cache del catalog riprova alla richiesta successiva). Attendere il ripristino; nessuna azione lato app |
 | `/api/cron/engagement` risponde 500 "CRON_SECRET non configurato" | Env mancante su Vercel | Impostare `CRON_SECRET` e rideployare |
