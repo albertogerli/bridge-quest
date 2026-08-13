@@ -42,6 +42,13 @@ dice solo se il processo dietro è vivo.
 BEN resta in ascolto su `127.0.0.1:8085`: da fuori si passa dalla guardia o da
 niente.
 
+La guardia ha una sua verifica, che non richiede né BEN né Docker: mette un
+finto motore dietro e controlla chi riesce a parlargli.
+
+```bash
+cd deploy/ben-railway && python3 test_guard.py
+```
+
 ## Passi
 
 ### 1. Genera il segreto
