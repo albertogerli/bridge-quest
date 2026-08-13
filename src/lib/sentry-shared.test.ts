@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isServiceWorkerNoise } from "./sentry-shared";
+import { isInAppBrowserNoise, isServiceWorkerNoise } from "./sentry-shared";
 
 /**
  * Il primo evento reale arrivato in produzione: il renderer di Google (WRS),
@@ -97,3 +97,44 @@ describe("isServiceWorkerNoise — .waiting su undefined", () => {
 function msgNoise(value: string, frames: Array<{ function?: string }> = []) {
   return isServiceWorkerNoise(msg(value, frames));
 }
+
+/**
+ * Browser dentro le app. Il confine è una barra sola: `app:///_next/...` è
+ * nostro, `app://qualcosa` è la strumentazione di Facebook. Scriverlo male
+ * significherebbe buttare via tutti i nostri errori del client.
+ */
+const app = (...filenames: string[]) => ({
+  exception: { values: [{ stacktrace: { frames: filenames.map((filename) => ({ filename })) } }] },
+});
+
+describe("isInAppBrowserNoise", () => {
+  it("scarta l'evento reale del 2026-08-13 dal browser di Facebook", () => {
+    expect(
+      isInAppBrowserNoise(
+        app("app://navigation_performance_logger_android", "app://navigation_performance_logger_android")
+      )
+    ).toBe(true);
+  });
+
+  it("NON scarta i nostri errori: `app:///_next` ha tre barre", () => {
+    // Il caso che, se sbagliato, ci farebbe perdere ogni errore del client.
+    expect(isInAppBrowserNoise(app("app:///_next/static/chunks/main.js"))).toBe(false);
+    expect(isInAppBrowserNoise(app("app:///_next/static/chunks/5306.js"))).toBe(false);
+  });
+
+  it("NON scarta se anche un solo fotogramma è nostro", () => {
+    // La libreria potrebbe aver solo fatto emergere un difetto nostro.
+    expect(
+      isInAppBrowserNoise(app("app://navigation_performance_logger_android", "app:///_next/static/chunks/gioco.js"))
+    ).toBe(false);
+  });
+
+  it("NON scarta un evento senza stack", () => {
+    expect(isInAppBrowserNoise({})).toBe(false);
+    expect(isInAppBrowserNoise(app())).toBe(false);
+  });
+
+  it("NON scarta gli errori da https://", () => {
+    expect(isInAppBrowserNoise(app("https://bridgelab.it/_next/static/chunks/main.js"))).toBe(false);
+  });
+});

@@ -5,6 +5,7 @@ import {
   SENTRY_DSN,
   SENTRY_ENABLED,
   TRACES_SAMPLE_RATE,
+  isInAppBrowserNoise,
   isServiceWorkerNoise,
 } from "@/lib/sentry-shared";
 
@@ -22,6 +23,11 @@ if (SENTRY_ENABLED) {
       // Crawler e browser senza service worker: rumore, non difetti (vedi
       // isServiceWorkerNoise). Scartato prima di consumare quota e notifiche.
       if (isServiceWorkerNoise(event)) return null;
+
+      // Browser dentro le app (Facebook, Instagram): la loro strumentazione
+      // si scollega mentre la pagina si chiude. Nessuna riga nostra nello
+      // stack, niente da correggere.
+      if (isInAppBrowserNoise(event)) return null;
 
       // Difesa in profondità: nessuna email/IP nell'evento.
       if (event.user) {
