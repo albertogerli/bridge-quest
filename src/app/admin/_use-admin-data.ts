@@ -108,14 +108,37 @@ export function useAdminData(): AdminData {
 
       const profiles = allProfiles;
 
-      // Fetch login history (last 30 days)
-      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-      const { data: logins } = await supabase
-        .from("login_history")
-        .select("id, user_id, logged_in_at, platform")
-        .gte("logged_in_at", thirtyDaysAgo)
-        .order("logged_in_at", { ascending: false });
-      setLoginHistory((logins as LoginRecord[]) ?? []);
+      // Accessi degli ultimi 30 giorni.
+      //
+      // Anche qui va paginato, per la stessa ragione delle anagrafiche: il
+      // server tronca a 1000 righe e non lo dice. Trenta giorni sono circa
+      // 2000 accessi, quindi la richiesta secca ne riportava poco più della
+      // metà — e ordinando dal più recente sparivano i giorni VECCHI. Il
+      // grafico dei 14 giorni ci stava dentro per un soffio (circa 900 righe),
+      // ma la mappa «attività ultimi 30 giorni» di ogni utente era dimezzata,
+      // e bastava un po' di crescita perché iniziassero a svuotarsi anche le
+      // colonne più a sinistra del grafico. Il numero tornava plausibile, e un
+      // numero plausibile è un errore che non si nota.
+      const trentaGiorniFa = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const PAGINA_ACCESSI = 1000;
+      let accessi: LoginRecord[] = [];
+      for (let from = 0; ; from += PAGINA_ACCESSI) {
+        const { data, error } = await supabase
+          .from("login_history")
+          .select("id, user_id, logged_in_at, platform")
+          .gte("logged_in_at", trentaGiorniFa)
+          .order("logged_in_at", { ascending: false })
+          .range(from, from + PAGINA_ACCESSI - 1);
+        if (error) {
+          reportError("admin:fetch-accessi", error);
+          break;
+        }
+        const pagina = (data as LoginRecord[]) ?? [];
+        accessi = accessi.concat(pagina);
+        if (pagina.length < PAGINA_ACCESSI) break;
+      }
+      const logins = accessi;
+      setLoginHistory(accessi);
 
       // Game stats — degrades gracefully if admin_game_stats.sql isn't installed
       try {
@@ -147,7 +170,7 @@ export function useAdminData(): AdminData {
           computeStats({
             profiles,
             users: mappedUsers,
-            logins: (logins as LoginRecord[]) ?? [],
+            logins,
             asdClubs,
             now: new Date(),
             instructors: instructorsCount,
