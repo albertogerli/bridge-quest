@@ -10,7 +10,7 @@ import { getWeekNum } from "@/lib/tournament-stats";
 import {
   Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
   Target, Hash, Megaphone, MessageCircle, Brain, Swords,
-  Spade, BookOpen, Link2, BarChart3, Radio, Calculator } from "lucide-react";
+  Spade, BookOpen, Link2, BarChart3, Radio, Calculator, Gavel } from "lucide-react";
 
 export default function GiocaPage() {
   const profile = useProfile();
@@ -308,6 +308,25 @@ export default function GiocaPage() {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">Quante prese?</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Vedi tutte le mani e conta le prese di Nord-Sud</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
+                    Nuovo
+                  </span>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* Cosa apri — licita su mani generate, risposta dedotta dalla mano */}
+            <Link href="/gioca/cosa-apri" className="block" aria-label="Cosa apri: scegli l'apertura giusta">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Gavel className="w-6 h-6 text-figb" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-foreground text-[15px]">Cosa apri?</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Mani sempre nuove: scegli l&apos;apertura giusta</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
