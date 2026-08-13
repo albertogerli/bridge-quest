@@ -1591,6 +1591,23 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.sync_asd_name()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+BEGIN
+  IF NEW.asd_code IS NULL THEN
+    NEW.asd_name := NULL;
+  ELSE
+    SELECT c.name INTO NEW.asd_name FROM public.asd_clubs c WHERE c.code = NEW.asd_code;
+  END IF;
+  RETURN NEW;
+END
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.touch_updated_at()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -1922,6 +1939,7 @@ CREATE TRIGGER guided_hands_touch BEFORE UPDATE ON public.guided_hands FOR EACH 
 CREATE TRIGGER lesson_modules_touch BEFORE UPDATE ON public.lesson_modules FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER lessons_touch BEFORE UPDATE ON public.lessons FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER on_login_update AFTER UPDATE OF last_login ON public.profiles FOR EACH ROW EXECUTE FUNCTION log_user_login();
+CREATE TRIGGER profiles_sync_asd_name BEFORE INSERT OR UPDATE OF asd_code, asd_name ON public.profiles FOR EACH ROW EXECUTE FUNCTION sync_asd_name();
 CREATE TRIGGER smazzate_touch BEFORE UPDATE ON public.smazzate FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER trova_errore_touch BEFORE UPDATE ON public.trova_errore_scenarios FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER weekly_challenges_touch BEFORE UPDATE ON public.weekly_challenges FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -2905,6 +2923,10 @@ GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_
 REVOKE ALL ON FUNCTION public.search_users(p_query text, p_user_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.sync_asd_name() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO anon;
+GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO service_role;
 REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO anon;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO authenticated;
