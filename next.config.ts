@@ -86,6 +86,14 @@ const nextConfig: NextConfig = {
     const scriptSrc = [
       "'self'",
       "'unsafe-inline'",
+      // Il double dummy solver è WebAssembly. Senza questa direttiva la CSP
+      // ne blocca la compilazione: in sviluppo non si notava perché lì
+      // `'unsafe-eval'` la copre, in produzione il quiz "Quante prese?"
+      // moriva con un errore fuorviante («startsWith is not a function»,
+      // sollevato dal ripiego di Emscripten dopo il rifiuto).
+      // `wasm-unsafe-eval` autorizza SOLO WebAssembly, non `eval` di
+      // JavaScript: è la direttiva nata apposta per questo caso.
+      "'wasm-unsafe-eval'",
       ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
       "https://va.vercel-scripts.com",
       "https://www.googletagmanager.com",

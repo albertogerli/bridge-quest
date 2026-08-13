@@ -99,3 +99,4 @@ playwright-report/
 _dump-contenuti.json
 audit-contenuti.json
 validazione-smazzate.json
+/public/vendor/
