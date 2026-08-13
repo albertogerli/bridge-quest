@@ -2,26 +2,30 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { GraduationCap, Presentation, Printer, Users, Wand2, ChevronRight } from "lucide-react";
+import { ChevronRight, GraduationCap } from "lucide-react";
+import { useSharedAuth } from "@/contexts/auth-provider";
 import { getMyClasses } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
-import { useSharedAuth } from "@/contexts/auth-provider";
+import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 
 /**
- * Scorciatoie per chi insegna, in homepage.
+ * Il riquadro degli insegnanti in home.
  *
- * Compare SOLO a chi ha almeno una classe: per tutti gli altri non rende nulla,
- * così la home non si riempie di voci inutilizzabili. È anche il motivo per cui
- * il controllo non è sul ruolo ma sulle classi possedute — un ruolo assegnato e
- * mai usato non giustifica un riquadro in prima pagina.
+ * COMPARE PER RUOLO, NON PER NUMERO DI CLASSI
+ * Prima si mostrava solo a chi aveva già almeno una classe. In produzione gli
+ * istruttori sono quindici e solo sette hanno una classe: gli altri otto
+ * aprivano la home e non trovavano nulla — nemmeno il modo di crearne una.
+ * Chi ha appena ricevuto il ruolo è esattamente la persona che ha più bisogno
+ * di vedere da dove si comincia.
  *
- * Serve a risolvere un problema misurato: le funzioni per gli istruttori
- * esistono da mesi ma `/istruttori` ha avuto 46 visitatori in tre mesi, e il
- * generatore di mani non era raggiungibile da nessun percorso di navigazione.
+ * Gli strumenti sono quelli di `StrumentiLezione`, gli stessi del portale: due
+ * elenchi separati divergono al primo strumento nuovo.
  */
 export function InstructorCard() {
-  const { user, loading } = useSharedAuth();
+  const { user, profile, loading } = useSharedAuth();
   const [classCount, setClassCount] = useState<number | null>(null);
+
+  const isIstruttore = profile?.role === "instructor" || profile?.role === "admin";
 
   useEffect(() => {
     // Senza sessione non si chiede nulla. Prima si chiamava sempre, e per ogni
@@ -29,7 +33,7 @@ export function InstructorCard() {
     // evento Sentry a ogni visita della home, cioè la pagina più battuta del
     // sito. Non era un guasto, era la condizione normale di chi non ha ancora
     // fatto accesso.
-    if (loading || !user) return;
+    if (loading || !user || !isIstruttore) return;
 
     let alive = true;
     getMyClasses()
@@ -37,24 +41,28 @@ export function InstructorCard() {
         if (alive) setClassCount(classes.length);
       })
       .catch((err) => {
-        // Un guasto vero qui non deve rovinare la home: il riquadro non
-        // compare e basta.
+        // Un guasto vero qui non deve rovinare la home: si mostrano comunque
+        // gli strumenti, senza il conteggio.
         reportError("home:classi-istruttore", err);
         if (alive) setClassCount(0);
       });
     return () => {
       alive = false;
     };
-  }, [user, loading]);
+  }, [user, loading, isIstruttore]);
 
-  if (!classCount) return null;
+  if (loading || !user || !isIstruttore) return null;
 
   return (
-    <section className="px-4 mb-8" aria-labelledby="home-istruttore">
-      <h2 id="home-istruttore" className="text-lg font-bold font-display mb-3">
-        Per l&apos;insegnante
+    <section className="px-5 mt-6" aria-labelledby="riquadro-istruttori">
+      <h2
+        id="riquadro-istruttori"
+        className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3"
+      >
+        Per insegnare
       </h2>
-      <div className="grid gap-3 sm:grid-cols-2">
+
+      <div className="space-y-3">
         <Link
           href="/istruttori"
           className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors"
@@ -65,76 +73,17 @@ export function InstructorCard() {
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-sm">Le tue classi</p>
             <p className="text-xs text-muted-foreground">
-              {classCount === 1 ? "1 classe" : `${classCount} classi`} · compiti e
-              andamento
+              {classCount === null
+                ? "compiti e andamento"
+                : classCount === 0
+                  ? "Crea la prima classe e ottieni il codice invito"
+                  : `${classCount === 1 ? "1 classe" : `${classCount} classi`} · compiti e andamento`}
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
         </Link>
 
-        <Link
-          href="/istruttori/genera-mani"
-          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
-            <Wand2 className="w-5 h-5" aria-hidden="true" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">Genera mani</p>
-            <p className="text-xs text-muted-foreground">
-              Mani su misura per l&apos;argomento della lezione
-            </p>
-          </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
-        </Link>
-
-        <Link
-          href="/istruttori/tavolo"
-          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
-            <Users className="w-5 h-5" aria-hidden="true" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">Tavolo condiviso</p>
-            <p className="text-xs text-muted-foreground">
-              Tu vedi tutte le mani, gli allievi solo la propria
-            </p>
-          </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
-        </Link>
-
-        <Link
-          href="/istruttori/lavagna"
-          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
-            <Presentation className="w-5 h-5" aria-hidden="true" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">Lavagna</p>
-            <p className="text-xs text-muted-foreground">
-              Da proiettare in aula: si scopre una mano per volta
-            </p>
-          </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
-        </Link>
-
-        <Link
-          href="/istruttori/dispensa"
-          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
-            <Printer className="w-5 h-5" aria-hidden="true" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">Dispensa</p>
-            <p className="text-xs text-muted-foreground">
-              Il foglio da consegnare, con le soluzioni in fondo
-            </p>
-          </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
-        </Link>
+        <StrumentiLezione />
       </div>
     </section>
   );
