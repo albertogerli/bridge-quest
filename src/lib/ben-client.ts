@@ -11,6 +11,8 @@ import {
   vulToBEN,
   biddingToCTX,
   gameStateToPBNPlayed,
+  originalHand,
+  otherVisibleSeat,
 } from "./ben-format";
 
 // --- Types ---
@@ -53,8 +55,12 @@ export async function benPlay(req: BenPlayRequest): Promise<BenPlayResponse> {
   try {
     const { gameState, position, dealer, vulnerability, bidding } = req;
 
-    const hand = handToPBN(gameState.hands[position]);
-    const dummy = handToPBN(gameState.hands[gameState.dummy]);
+    // Mani ORIGINALI da tredici carte: BEN ricostruisce da sé cosa è uscito
+    // usando `played`. Con le mani correnti rispondeva «Hand should have 13
+    // cards» — e con HTTP 200, quindi il proxy lo leggeva come un fallimento e
+    // ripiegava in silenzio: BEN non veniva mai usato e nulla lo segnalava.
+    const hand = handToPBN(originalHand(gameState, position));
+    const dummy = handToPBN(originalHand(gameState, otherVisibleSeat(gameState, position)));
     const seat = positionToBEN(position);
     const dealerBen = positionToBEN(dealer);
     const vul = vulToBEN(vulnerability);

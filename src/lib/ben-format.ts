@@ -165,3 +165,34 @@ export function gameStateToPBNPlayed(state: GameState): string {
 export function dealToPBN(hands: Record<Position, Card[]>): string {
   return `N:${handToPBN(hands.north)} ${handToPBN(hands.east)} ${handToPBN(hands.south)} ${handToPBN(hands.west)}`;
 }
+
+/**
+ * La mano ORIGINALE di un posto: quelle che ha ancora più quelle già giocate.
+ *
+ * BEN vuole le tredici carte di partenza e ricostruisce da sé cosa è uscito,
+ * usando `played`. Mandargli la mano corrente lo fa rispondere
+ * `{"message": "Hand should have 13 cards"}` — con HTTP 200, il che è la parte
+ * insidiosa: la risposta non contiene `card`, il proxy la tratta come un
+ * fallimento e ripiega in silenzio sul double dummy. Il gioco continua a
+ * funzionare, BEN non viene mai usato, e nessun errore lo dice.
+ */
+export function originalHand(state: GameState, seat: Position): Card[] {
+  const giocate: Card[] = [];
+  for (const trick of state.tricks) {
+    for (const play of trick.plays) if (play.position === seat) giocate.push(play.card);
+  }
+  for (const play of state.currentTrick) if (play.position === seat) giocate.push(play.card);
+  return [...state.hands[seat], ...giocate];
+}
+
+/**
+ * L'altra mano scoperta, dal punto di vista di chi deve giocare.
+ *
+ * Per un difensore o per il dichiarante è il morto. Ma quando la carta va
+ * giocata DAL morto, chi sceglie è il dichiarante, e la mano che vede in più è
+ * la propria: BEN in quel caso vuole lì il dichiarante. Passargli di nuovo il
+ * morto gli fa rispondere «Hand and dummy are identical».
+ */
+export function otherVisibleSeat(state: GameState, seat: Position): Position {
+  return seat === state.dummy ? state.declarer : state.dummy;
+}
