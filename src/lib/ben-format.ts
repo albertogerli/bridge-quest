@@ -186,13 +186,29 @@ export function originalHand(state: GameState, seat: Position): Card[] {
 }
 
 /**
- * L'altra mano scoperta, dal punto di vista di chi deve giocare.
+ * I tre parametri con cui si chiede a BEN la carta di `seat`.
  *
- * Per un difensore o per il dichiarante è il morto. Ma quando la carta va
- * giocata DAL morto, chi sceglie è il dichiarante, e la mano che vede in più è
- * la propria: BEN in quel caso vuole lì il dichiarante. Passargli di nuovo il
- * morto gli fa rispondere «Hand and dummy are identical».
+ * IL CASO DEL MORTO
+ * BEN si rifiuta di essere interrogato come morto — nel suo modello è il
+ * dichiarante a giocare entrambe le mani, e risponde «Called as dummy or with
+ * wrong dealer». Quando tocca al morto va quindi chiamato COME DICHIARANTE:
+ * vede le due mani, deduce da `played` che il turno è del morto e restituisce
+ * una carta del morto. Verificato: la carta torna sempre fra quelle legali del
+ * morto.
+ *
+ * Sta qui, in un posto solo, perché lo usano sia il gioco sia il banco di
+ * prova: se divergessero, misureremmo un avversario diverso da quello che
+ * incontrano i giocatori.
  */
-export function otherVisibleSeat(state: GameState, seat: Position): Position {
-  return seat === state.dummy ? state.declarer : state.dummy;
+export function benSeatParams(
+  state: GameState,
+  seat: Position
+): { hand: string; dummy: string; seat: string } {
+  const perIlMorto = seat === state.dummy;
+  const chiParla = perIlMorto ? state.declarer : seat;
+  return {
+    hand: handToPBN(originalHand(state, chiParla)),
+    dummy: handToPBN(originalHand(state, state.dummy)),
+    seat: positionToBEN(chiParla),
+  };
 }

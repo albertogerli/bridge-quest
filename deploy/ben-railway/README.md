@@ -121,6 +121,20 @@ Senza `--platform` la costruzione fallisce: `psutil==5.9.0` non ha pacchetti
 già compilati per ARM e `gevent` nemmeno, e nell'immagine non c'è un
 compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
 
+## Ne vale la pena?
+
+Misurato il 13/08/2026 su 10 mani, con lo stesso metro per tutti e tre i
+motori (`src/lib/robot-quality-ben.test.ts`): prese buttate per mano rispetto
+al gioco perfetto a carte scoperte.
+
+| motore | dichiarante | difesa | totale | mani perfette |
+|---|---|---|---|---|
+| euristica | 2,20 | 2,00 | 4,20 | 0/10 |
+| double dummy (livello «esperto») | 1,20 | 1,50 | 2,70 | 0/10 |
+| **BEN** | **0,60** | **0,70** | **1,30** | **4/10** |
+
+BEN dimezza il double dummy. Il secondo per carta è speso bene.
+
 ## Quanto è lento
 
 **La regione conta più di quanto sembri.** Stesse identiche immagine e
@@ -166,6 +180,20 @@ docker run --rm -p 8080:8080 -e BEN_API_TOKEN="$(openssl rand -hex 32)" ben
 Senza `--platform` la costruzione fallisce: `psutil==5.9.0` non ha pacchetti
 già compilati per ARM e `gevent` nemmeno, e nell'immagine non c'è un
 compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
+
+## Ne vale la pena?
+
+Misurato il 13/08/2026 su 10 mani, con lo stesso metro per tutti e tre i
+motori (`src/lib/robot-quality-ben.test.ts`): prese buttate per mano rispetto
+al gioco perfetto a carte scoperte.
+
+| motore | dichiarante | difesa | totale | mani perfette |
+|---|---|---|---|---|
+| euristica | 2,20 | 2,00 | 4,20 | 0/10 |
+| double dummy (livello «esperto») | 1,20 | 1,50 | 2,70 | 0/10 |
+| **BEN** | **0,60** | **0,70** | **1,30** | **4/10** |
+
+BEN dimezza il double dummy. Il secondo per carta è speso bene.
 
 ## Quanto è lento
 
