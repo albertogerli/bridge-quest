@@ -1,0 +1,150 @@
+"use client";
+
+import { use, useEffect, useState } from "react";
+import Link from "next/link";
+import { Users } from "lucide-react";
+import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { useSharedAuth } from "@/contexts/auth-provider";
+import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import { handHcp } from "@/lib/deal-generator";
+import { getOpenLiveTable, watchLiveTable, type LiveTable } from "@/lib/live-table";
+
+const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
+const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+const ETICHETTA: Record<Position, string> = {
+  north: "Nord", east: "Est", south: "Sud", west: "Ovest",
+};
+
+/**
+ * Il tavolo condiviso, lato allievo.
+ *
+ * Si vede la propria mano e quelle che l'insegnante ha scoperto. Le altre non
+ * sono nascoste dall'interfaccia: non arrivano proprio — il filtro sta dentro
+ * il database (`live_table_view`), quindi aprire gli strumenti per
+ * sviluppatori non serve a nulla. È l'unica difesa che regge in una classe.
+ *
+ * Chi non ha ancora un posto assegnato vede solo ciò che è scoperto per tutti:
+ * è la situazione normale all'inizio della lezione, non un errore.
+ */
+export default function TavoloAllievoPage({
+  params,
+}: {
+  params: Promise<{ classId: string }>;
+}) {
+  const { classId } = use(params);
+  const { user, loading } = useSharedAuth();
+  const [tableId, setTableId] = useState<string | null>(null);
+  const [stato, setStato] = useState<LiveTable | null>(null);
+  const [cercato, setCercato] = useState(false);
+
+  useEffect(() => {
+    getOpenLiveTable(classId)
+      .then(setTableId)
+      .finally(() => setCercato(true));
+  }, [classId]);
+
+  useEffect(() => {
+    if (!tableId) return;
+    return watchLiveTable(tableId, setStato);
+  }, [tableId]);
+
+  if (loading) return null;
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 text-center">
+        <p className="text-sm text-muted-foreground">
+          <Link href={`/login?redirect=/classe/${classId}/tavolo`} className="underline">Accedi</Link>{" "}
+          per vedere il tavolo della tua classe.
+        </p>
+      </div>
+    );
+  }
+
+  if (cercato && !tableId) {
+    return (
+      <div className="min-h-screen px-4 py-16 max-w-md mx-auto text-center">
+        <Users className="w-10 h-10 text-muted-foreground mx-auto mb-3" aria-hidden="true" />
+        <h1 className="text-xl font-bold font-display mb-2">Nessun tavolo aperto</h1>
+        <p className="text-sm text-muted-foreground">
+          Quando l&apos;insegnante apre il tavolo, la mano comparirà qui da sola:
+          puoi lasciare la pagina aperta.
+        </p>
+      </div>
+    );
+  }
+
+  const visibili = (Object.keys(stato?.hands ?? {}) as Position[]).filter(
+    (p) => (stato?.hands[p]?.length ?? 0) > 0
+  );
+
+  return (
+    <div className="min-h-screen px-4 py-6 max-w-2xl mx-auto">
+      <header className="mb-4 text-center">
+        <h1 className="text-xl font-bold font-display">{stato?.titolo ?? "Tavolo della classe"}</h1>
+        {stato?.seat ? (
+          <p className="text-sm text-muted-foreground mt-1">
+            Sei <strong>{ETICHETTA[stato.seat]}</strong>
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground mt-1">
+            Non hai ancora un posto: vedi le mani che l&apos;insegnante scopre.
+          </p>
+        )}
+      </header>
+
+      {stato?.contract && (
+        <p className="text-center text-lg font-bold text-figb mb-4">
+          {stato.contract}
+          {stato.declarer ? ` — dichiara ${ETICHETTA[stato.declarer]}` : ""}
+        </p>
+      )}
+
+      {visibili.length === 0 ? (
+        <p className="py-16 text-center text-sm text-muted-foreground">
+          L&apos;insegnante non ha ancora scoperto nessuna mano.
+        </p>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {visibili.map((p) => (
+            <div
+              key={p}
+              className={`rounded-2xl border-2 p-4 ${
+                p === stato?.seat ? "border-figb bg-figb/5" : "border-border bg-card"
+              }`}
+            >
+              <div className="flex items-baseline justify-between mb-2">
+                <span className="font-bold text-lg">
+                  {ETICHETTA[p]}
+                  {p === stato?.seat && (
+                    <span className="ml-2 text-xs font-semibold text-figb">la tua mano</span>
+                  )}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {handHcp(stato?.hands[p] ?? [])} PO
+                </span>
+              </div>
+              {SUITS.map((suit) => (
+                <p key={suit} className="text-xl font-mono flex items-center gap-2 leading-snug">
+                  <SuitSymbol suit={suit} size="sm" />
+                  {formatSuit(stato?.hands[p] ?? [], suit)}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p className="text-center text-xs text-muted-foreground mt-6">
+        La pagina si aggiorna da sola quando l&apos;insegnante cambia mano.
+      </p>
+    </div>
+  );
+}
+
+function formatSuit(hand: readonly Card[], suit: Suit): string {
+  const cards = hand
+    .filter((c) => c.suit === suit)
+    .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
+    .map((c) => c.rank);
+  return cards.length ? cards.join(" ") : "—";
+}

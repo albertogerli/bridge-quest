@@ -529,6 +529,56 @@ try {
   fail(`verifica accessi admin non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+// 8. Tavolo condiviso — live_tables
+//    (vedi scripts/sql/tavolo-condiviso-2026-08.sql)
+//
+//    La proprietà che regge tutto: le mani coperte non devono ARRIVARE al
+//    browser dell'allievo. Non basta non disegnarle — chi apre gli strumenti
+//    per sviluppatori le leggerebbe. Perciò la tabella non è leggibile e si
+//    passa da live_table_view(), che filtra dentro il database.
+// ---------------------------------------------------------------------------
+console.log("\n[8] Tavolo condiviso — live_tables");
+
+try {
+  {
+    const { data, error } = await anon.from("live_tables").select("hands").limit(1);
+    const rows = error ? 0 : data?.length ?? 0;
+    if (rows === 0) ok("(a) live_tables: nessuna riga per l'anonimo");
+    else fail(`(a) un anonimo legge ${rows} tavoli, mani comprese`);
+  }
+
+  for (const fn of ["live_table_view", "live_table_open"]) {
+    const args = fn === "live_table_view"
+      ? { p_table_id: "00000000-0000-0000-0000-000000000000" }
+      : { p_class_id: "00000000-0000-0000-0000-000000000000" };
+    const { data, error } = await anon.rpc(fn, args);
+    if (error || data === null) ok(`(b) ${fn}(): non eseguibile da anonimo`);
+    else fail(`(b) ${fn}(): un anonimo ottiene una risposta`);
+  }
+
+  {
+    const email = `lt-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Lt!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(c) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+      const { data, error } = await u.from("live_tables").select("hands").limit(1);
+      const rows = error ? 0 : data?.length ?? 0;
+      if (rows === 0) ok("(c) un utente qualunque non legge le mani dalla tabella");
+      else fail(`(c) un utente qualunque legge ${rows} tavoli con le mani dentro`);
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente tavolo di test eliminato");
+    }
+  }
+} catch (e) {
+  fail(`verifica tavolo condiviso non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"
