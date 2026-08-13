@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getAuthUserId, benParam, benParamOpt, rateLimit } from "@/lib/ben-guard";
+import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
 
-const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
 const TIMEOUT_MS = 30000; // Autoplay can take longer
 const RATE_MAX_PER_MIN = 10; // chiamata pesante lato BEN
 
@@ -40,8 +39,10 @@ export async function POST(req: NextRequest) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-    const res = await fetch(`${BEN_URL}/autoplay?${params.toString()}`, {
+    const { url: benUrl, headers: benHeaders } = benEndpoint();
+    const res = await fetch(`${benUrl}/autoplay?${params.toString()}`, {
       signal: controller.signal,
+      headers: benHeaders,
     });
     clearTimeout(timeout);
 

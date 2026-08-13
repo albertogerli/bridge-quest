@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthUserId, rateLimit } from "@/lib/ben-guard";
-
-const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
+import { getAuthUserId, rateLimit, benEndpoint } from "@/lib/ben-guard";
 
 export async function GET() {
   const userId = await getAuthUserId();
@@ -17,7 +15,8 @@ export async function GET() {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
 
-    const res = await fetch(`${BEN_URL}/`, { signal: controller.signal });
+    const { url: benUrl, headers: benHeaders } = benEndpoint();
+    const res = await fetch(`${benUrl}/`, { signal: controller.signal, headers: benHeaders });
     clearTimeout(timeout);
 
     const latency = Date.now() - start;
