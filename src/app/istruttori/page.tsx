@@ -24,6 +24,7 @@ import {
 import { useMyClasses } from "@/store/use-classes-store";
 import { createClass } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 
 export default function IstruttoriPage() {
   const { profile } = useSharedAuth();
@@ -80,6 +81,19 @@ export default function IstruttoriPage() {
           + Nuova classe
         </Button>
       </div>
+
+      {/* Strumenti per la lezione: stessi della home, definiti una volta sola.
+          Stanno PRIMA delle classi perché si usano a ogni lezione, mentre una
+          classe si crea una volta e poi si apre di rado. */}
+      <section className="mb-8" aria-labelledby="strumenti-lezione">
+        <h2
+          id="strumenti-lezione"
+          className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground"
+        >
+          Strumenti per la lezione
+        </h2>
+        <StrumentiLezione />
+      </section>
 
       {/* States */}
       {error && (
