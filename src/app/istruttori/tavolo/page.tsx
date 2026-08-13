@@ -3,12 +3,13 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Users, Play, Square } from "lucide-react";
+import { Eye, EyeOff, Users, Play, Square, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import { getValidCards, parseContract } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { getClassDetail, getMyClasses, type ClassMember, type ClassRoom } from "@/lib/instructors";
 import {
@@ -17,8 +18,11 @@ import {
   openLiveTable,
   setLiveHands,
   setRevealed,
+  playLiveCard,
   setSeats,
   setShowContract,
+  statoDelGioco,
+  undoLiveCard,
   watchLiveTable,
   type LiveTable,
 } from "@/lib/live-table";
@@ -150,6 +154,24 @@ function Tavolo() {
 
   const manoCorrente = stato?.hands ?? mani[indice];
 
+  // Turno e presa in corso dalle carte giocate, con le stesse regole del resto
+  // del gioco. L'insegnante gioca per CHIUNQUE: serve quando un allievo non sa
+  // che fare o gli cade la connessione, ed è la differenza fra un tavolo
+  // didattico e un tavolo da torneo.
+  const trump = stato?.contract ? parseContract(stato.contract).trumpSuit : null;
+  const gioco = stato?.declarer
+    ? statoDelGioco(stato.played ?? [], stato.declarer, trump)
+    : null;
+  const giocabiliOra = gioco && stato
+    ? getValidCards(stato.hands[gioco.turno] ?? [], gioco.presaCorrente)
+    : [];
+  const giocabiliSet = new Set(giocabiliOra.map((c) => `${c.suit}-${c.rank}`));
+
+  const giocaPer = async (seat: Position, carta: Card) => {
+    if (!tableId) return;
+    await playLiveCard(tableId, carta, seat);
+  };
+
   return (
     <div className="min-h-screen px-4 py-6 max-w-5xl mx-auto">
       <header className="mb-5">
@@ -267,18 +289,46 @@ function Tavolo() {
         </div>
       )}
 
+      {gioco && tableId && (
+        <div className="rounded-2xl border border-border bg-card p-3 mb-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">
+            Presa {gioco.prese.length + 1} · Nord-Sud {gioco.preseNs} · Est-Ovest {gioco.preseEw}
+          </p>
+          <div className="flex items-center justify-center gap-3 min-h-[2rem]">
+            {gioco.presaCorrente.map((p, i) => (
+              <span key={i} className="text-lg font-mono flex items-center gap-1">
+                <SuitSymbol suit={p.card.suit} size="xs" />
+                {p.card.rank}
+              </span>
+            ))}
+            {gioco.presaCorrente.length === 0 && (
+              <span className="text-xs text-muted-foreground">presa nuova</span>
+            )}
+          </div>
+          <div className="flex items-center justify-center gap-3 mt-2">
+            <span className="text-sm font-semibold">
+              Gioca {SEATS.find((s) => s.key === gioco.turno)?.label}
+            </span>
+            <Button variant="outline" onClick={() => undoLiveCard(tableId)}>
+              <Undo2 className="w-4 h-4 mr-1" aria-hidden="true" />
+              Annulla l&apos;ultima
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Il tavolo: Nord in alto, Sud in basso, Ovest ed Est ai lati. */}
       <div className="grid grid-cols-3 gap-3">
         <div />
-        <Posto seat="north" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} />
+        <Posto seat="north" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
         <div />
-        <Posto seat="west" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} />
+        <Posto seat="west" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
         <div className="flex items-center justify-center">
           <div className="rounded-2xl border-2 border-dashed border-border w-full h-full min-h-[7rem]" aria-hidden="true" />
         </div>
-        <Posto seat="east" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} />
+        <Posto seat="east" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
         <div />
-        <Posto seat="south" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} />
+        <Posto seat="south" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
         <div />
       </div>
 
@@ -309,38 +359,68 @@ function Tavolo() {
  * l'hanno davanti anche loro».
  */
 function Posto({
-  seat,
-  hands,
-  stato,
-  onToggle,
-  attivo,
+  seat, hands, stato, onToggle, attivo, turno, giocabiliSet, onGioca,
 }: {
   seat: Position;
   hands: Partial<Record<Position, Card[]>> | undefined;
   stato: LiveTable | null;
   onToggle: (s: Position) => void;
   attivo: boolean;
+  turno?: Position;
+  giocabiliSet: Set<string>;
+  onGioca: (seat: Position, c: Card) => void;
 }) {
   const etichetta = SEATS.find((s) => s.key === seat)!.label;
   const cards = hands?.[seat] ?? [];
   const vistaDaTutti = stato?.revealed.includes(seat) ?? false;
+  const suoTurno = turno === seat;
 
   return (
     <div
       className={`rounded-2xl border-2 p-3 ${
-        vistaDaTutti ? "border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20" : "border-border bg-card"
+        suoTurno
+          ? "border-figb bg-figb/5"
+          : vistaDaTutti
+            ? "border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20"
+            : "border-border bg-card"
       }`}
     >
       <div className="flex items-baseline justify-between mb-1">
         <span className="font-bold">{etichetta}</span>
         <span className="text-xs text-muted-foreground">{handHcp(cards)} PO</span>
       </div>
-      {SUITS.map((suit) => (
-        <p key={suit} className="text-base font-mono flex items-center gap-1.5 leading-snug">
-          <SuitSymbol suit={suit} size="xs" />
-          {formatSuit(cards, suit)}
-        </p>
-      ))}
+      {SUITS.map((suit) => {
+        const delSeme = cards
+          .filter((c) => c.suit === suit)
+          .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
+        if (delSeme.length === 0) {
+          return (
+            <p key={suit} className="text-base font-mono flex items-center gap-1.5 leading-snug">
+              <SuitSymbol suit={suit} size="xs" />—
+            </p>
+          );
+        }
+        return (
+          <div key={suit} className="flex items-center gap-1 flex-wrap leading-snug">
+            <SuitSymbol suit={suit} size="xs" />
+            {delSeme.map((c) => {
+              const giocabile = attivo && turno === seat && giocabiliSet.has(`${c.suit}-${c.rank}`);
+              return (
+                <button
+                  key={`${c.suit}-${c.rank}`}
+                  disabled={!giocabile}
+                  onClick={() => onGioca(seat, c)}
+                  className={`text-base font-mono px-1 rounded ${
+                    giocabile ? "bg-figb/10 hover:bg-figb/20 border border-figb/40" : ""
+                  }`}
+                >
+                  {c.rank}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })}
       {attivo && (
         <button
           onClick={() => onToggle(seat)}
@@ -352,12 +432,4 @@ function Posto({
       )}
     </div>
   );
-}
-
-function formatSuit(hand: readonly Card[], suit: Suit): string {
-  const cards = hand
-    .filter((c) => c.suit === suit)
-    .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
-    .map((c) => c.rank);
-  return cards.length ? cards.join(" ") : "—";
 }
