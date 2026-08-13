@@ -10,13 +10,41 @@ export function DailyActivePanel({
   expandedDay,
   onExpandDay,
   onSelectUser,
+  accessiAttendibili = true,
 }: {
   stats: Stats | null;
   users: UserRow[];
   expandedDay: string | null;
   onExpandDay: (date: string | null) => void;
   onSelectUser: (id: string) => void;
+  accessiAttendibili?: boolean;
 }) {
+  // Senza gli accessi il grafico verrebbe disegnato dal ripiego su
+  // `last_login`, che colloca ogni utente nel SOLO giorno della sua ultima
+  // visita: una curva sempre crescente verso oggi, che sembra un andamento.
+  // È il difetto che ha prodotto 5, 5, 6, …, 26, 53 al posto di 64, 64, 71,
+  // …, 49. Meglio dichiarare di non sapere che mostrare quella curva.
+  if (!accessiAttendibili) {
+    return (
+      <div className="bg-white rounded-2xl border border-amber-300 p-5 mb-8">
+        <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">
+          Utenti attivi per giorno (ultimi 14 giorni)
+        </h2>
+        <p className="text-sm text-amber-800">
+          Dato non disponibile: la lettura degli accessi non è riuscita. Il
+          grafico non viene mostrato perché l&apos;unico ripiego disponibile
+          conta ogni utente una volta sola, nel giorno della sua ultima visita,
+          e risponderebbe a una domanda diversa.
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          Serve la funzione <code>admin_login_history</code>: vedi
+          {" "}
+          <code>scripts/sql/admin-login-history-2026-08.sql</code>.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
