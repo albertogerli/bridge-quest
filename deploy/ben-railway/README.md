@@ -107,6 +107,44 @@ curl -s -o /dev/null -w '%{http_code}\n' \
   -H "X-BEN-Token: IL-SEGRETO" https://TUO-DOMINIO.up.railway.app/explain
 ```
 
+## Costruirla in locale
+
+Railway costruisce su amd64 e non serve fare nulla. Se invece vuoi provare
+l'immagine sul tuo computer, su Mac Apple Silicon **va forzata la piattaforma**:
+
+```bash
+docker build --platform linux/amd64 -t ben .
+docker run --rm -p 8080:8080 -e BEN_API_TOKEN="$(openssl rand -hex 32)" ben
+```
+
+Senza `--platform` la costruzione fallisce: `psutil==5.9.0` non ha pacchetti
+già compilati per ARM e `gevent` nemmeno, e nell'immagine non c'è un
+compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
+
+## Quanto è lento
+
+Misurato il 13/08/2026 sull'immagine costruita qui, **sotto emulazione**
+(amd64 su un Mac ARM), quindi sono valori pessimistici:
+
+| chiamata | tempo |
+|---|---|
+| `/lead` (attacco, con simulazioni) | 2,0 – 2,4 s |
+| `/play` con una scelta vera | 1,4 – 3,2 s |
+| `/play` quando la carta è obbligata (`"who": "Forced"`) | 0,08 s |
+
+Su Railway gira nativamente e sarà parecchio più rapido, ma **di quanto va
+verificato sul posto**: l'emulazione costa tipicamente da tre a dieci volte.
+
+Due cose da tenere a mente:
+
+- **le carte obbligate non costano nulla.** In una mano buona parte delle
+  giocate lo è, quindi il costo reale è molto sotto «39 decisioni × il tempo
+  di una»;
+- **il costo si moltiplica per i giocatori contemporanei.** Ogni decisione
+  occupa una CPU: con più partite in corso insieme è la CPU, non la memoria,
+  a decidere se il servizio regge. Il proxy di BridgeLab lascia 15 secondi
+  prima di arrendersi e ripiegare sul double dummy.
+
 ## Costi e dimensionamento
 
 TensorFlow più i modelli stanno in memoria: **almeno 2 GB di RAM**, meglio 4.

@@ -31,12 +31,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Checkout parziale: il repository di BEN pesa oltre 2 GB fra storia, partite
-# di esempio e script di addestramento. Qui servono solo il sorgente, i modelli
-# e l'elenco delle dipendenze.
+# di esempio e script di addestramento. Qui servono solo il sorgente, i modelli,
+# l'elenco delle dipendenze e `bin/`.
+#
+# `bin/` non è opzionale, anche se sembra: all'avvio BEN stampa «Disabling
+# PIMC/BBA/SuitC as platform is not win32» e subito dopo prova comunque a
+# caricare `bin/libsuitc.so`, e senza muore. Scoperto accendendo l'immagine —
+# leggendo il Dockerfile ufficiale non si vedeva, perché lì il repository viene
+# copiato intero.
 RUN git init -q . \
  && git remote add origin https://github.com/lorserker/ben.git \
  && git config core.sparseCheckout true \
- && git sparse-checkout set src models/TF2models requirements.txt \
+ && git sparse-checkout set src models/TF2models bin requirements.txt \
  && git fetch --depth 1 -q origin "${BEN_COMMIT}" \
  && git checkout -q FETCH_HEAD \
  && rm -rf .git
