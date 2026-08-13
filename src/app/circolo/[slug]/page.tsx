@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { BachecaCircolo } from "@/components/circolo/bacheca";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
@@ -429,6 +430,11 @@ export default function CircoloPage() {
             </div>
           </motion.div>
         )}
+
+        {/* Bacheca: gli avvisi ai soci. Il componente si nasconde da solo se
+            non c'è nulla e chi guarda non può scrivere — una bacheca vuota
+            fa sembrare il circolo abbandonato. */}
+        <BachecaCircolo asdCode={asdCode} />
 
         {/* Back to classifica */}
         <motion.div

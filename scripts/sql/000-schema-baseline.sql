@@ -133,6 +133,15 @@ CREATE TABLE IF NOT EXISTS public.classes (
   created_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.club_posts (
+  id uuid NOT NULL,
+  asd_code text NOT NULL,
+  author_id uuid NOT NULL,
+  titolo text NOT NULL,
+  corpo text NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.collectible_cards (
   id text NOT NULL,
   name text NOT NULL,
@@ -722,6 +731,21 @@ BEGIN
     'bestTeacher', best_teacher
   );
 END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.can_post_for_asd(p_asd_code text)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid()
+      AND role IN ('instructor', 'admin')
+      AND (role = 'admin' OR asd_code = p_asd_code)
+  );
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.dump_schema()
@@ -1506,6 +1530,14 @@ END;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.my_asd_code()
+ RETURNS text
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$ SELECT asd_code FROM public.profiles WHERE id = auth.uid(); $function$
+;
+
 CREATE OR REPLACE FUNCTION public.my_tournament_history(limite integer DEFAULT 12)
  RETURNS TABLE(week_num integer, total_tricks integer, total_needed integer, completed_at timestamp with time zone, posizione integer, partecipanti integer)
  LANGUAGE sql
@@ -1655,6 +1687,8 @@ ALTER TABLE public.classes ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.classes ALTER COLUMN invite_code SET DEFAULT generate_invite_code();
 ALTER TABLE public.classes ALTER COLUMN invite_active SET DEFAULT true;
 ALTER TABLE public.classes ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.collectible_cards ALTER COLUMN gradient SET DEFAULT ''::text;
 ALTER TABLE public.collectible_cards ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.collectible_cards ALTER COLUMN updated_at SET DEFAULT now();
@@ -1751,6 +1785,7 @@ ALTER TABLE public.challenges ADD CONSTRAINT challenges_pkey PRIMARY KEY (id);
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_pkey PRIMARY KEY (class_id, student_id);
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_pkey PRIMARY KEY (id);
 ALTER TABLE public.classes ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
+ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_pkey PRIMARY KEY (id);
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_pkey PRIMARY KEY (id);
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_pkey PRIMARY KEY (id);
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_pkey PRIMARY KEY (id);
@@ -1800,6 +1835,8 @@ ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHEC
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text])));
+ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_corpo_check CHECK (((char_length(btrim(corpo)) >= 1) AND (char_length(btrim(corpo)) <= 4000)));
+ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_category_check CHECK ((category = ANY (ARRAY['tecnica'::text, 'convenzione'::text, 'strategia'::text, 'storia'::text, 'mossa'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_rarity_check CHECK ((rarity = ANY (ARRAY['comune'::text, 'rara'::text, 'epica'::text, 'leggendaria'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_unlock_check CHECK ((jsonb_typeof(unlock) = 'object'::text));
@@ -1845,6 +1882,7 @@ ALTER TABLE public.class_members ADD CONSTRAINT class_members_student_id_fkey FO
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.classes ADD CONSTRAINT classes_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_course_id_fkey FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE;
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -1882,6 +1920,7 @@ CREATE INDEX asd_clubs_active_idx ON public.asd_clubs USING btree (active);
 CREATE INDEX asd_clubs_name_idx ON public.asd_clubs USING btree (name);
 CREATE INDEX asd_clubs_province_idx ON public.asd_clubs USING btree (province) WHERE (province <> ''::text);
 CREATE INDEX asd_clubs_region_idx ON public.asd_clubs USING btree (region) WHERE (region <> ''::text);
+CREATE INDEX club_posts_asd_idx ON public.club_posts USING btree (asd_code, created_at DESC);
 CREATE INDEX collectible_cards_category_idx ON public.collectible_cards USING btree (category);
 CREATE INDEX collectible_cards_rarity_idx ON public.collectible_cards USING btree (rarity);
 CREATE INDEX course_worlds_course_id_idx ON public.course_worlds USING btree (course_id);
@@ -1953,6 +1992,7 @@ ALTER TABLE public.challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.club_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.collectible_cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.completed_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_worlds ENABLE ROW LEVEL SECURITY;
@@ -2007,6 +2047,9 @@ CREATE POLICY "Instructors can create classes" ON public.classes AS PERMISSIVE F
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
 CREATE POLICY "Instructors can delete own classes" ON public.classes AS PERMISSIVE FOR DELETE TO public USING ((instructor_id = auth.uid()));
 CREATE POLICY "Instructors can update own classes" ON public.classes AS PERMISSIVE FOR UPDATE TO public USING ((instructor_id = auth.uid()));
+CREATE POLICY "Author or admin deletes" ON public.club_posts AS PERMISSIVE FOR DELETE TO authenticated USING (((author_id = auth.uid()) OR is_admin()));
+CREATE POLICY "Instructors write for own club" ON public.club_posts AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((author_id = auth.uid()) AND can_post_for_asd(asd_code)));
+CREATE POLICY "Members read own club posts" ON public.club_posts AS PERMISSIVE FOR SELECT TO authenticated USING (((asd_code = my_asd_code()) OR can_post_for_asd(asd_code)));
 CREATE POLICY collectible_cards_public_read ON public.collectible_cards AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Own modules" ON public.completed_modules AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
 CREATE POLICY course_worlds_public_read ON public.course_worlds AS PERMISSIVE FOR SELECT TO public USING (true);
@@ -2090,6 +2133,9 @@ GRANT DELETE ON public.class_messages TO service_role;
 GRANT DELETE ON public.classes TO anon;
 GRANT DELETE ON public.classes TO authenticated;
 GRANT DELETE ON public.classes TO service_role;
+GRANT DELETE ON public.club_posts TO anon;
+GRANT DELETE ON public.club_posts TO authenticated;
+GRANT DELETE ON public.club_posts TO service_role;
 GRANT DELETE ON public.collectible_cards TO anon;
 GRANT DELETE ON public.collectible_cards TO authenticated;
 GRANT DELETE ON public.collectible_cards TO service_role;
@@ -2198,6 +2244,9 @@ GRANT INSERT ON public.class_messages TO service_role;
 GRANT INSERT ON public.classes TO anon;
 GRANT INSERT ON public.classes TO authenticated;
 GRANT INSERT ON public.classes TO service_role;
+GRANT INSERT ON public.club_posts TO anon;
+GRANT INSERT ON public.club_posts TO authenticated;
+GRANT INSERT ON public.club_posts TO service_role;
 GRANT INSERT ON public.collectible_cards TO anon;
 GRANT INSERT ON public.collectible_cards TO authenticated;
 GRANT INSERT ON public.collectible_cards TO service_role;
@@ -2306,6 +2355,9 @@ GRANT REFERENCES ON public.class_messages TO service_role;
 GRANT REFERENCES ON public.classes TO anon;
 GRANT REFERENCES ON public.classes TO authenticated;
 GRANT REFERENCES ON public.classes TO service_role;
+GRANT REFERENCES ON public.club_posts TO anon;
+GRANT REFERENCES ON public.club_posts TO authenticated;
+GRANT REFERENCES ON public.club_posts TO service_role;
 GRANT REFERENCES ON public.collectible_cards TO anon;
 GRANT REFERENCES ON public.collectible_cards TO authenticated;
 GRANT REFERENCES ON public.collectible_cards TO service_role;
@@ -2414,6 +2466,9 @@ GRANT SELECT ON public.class_messages TO service_role;
 GRANT SELECT ON public.classes TO anon;
 GRANT SELECT ON public.classes TO authenticated;
 GRANT SELECT ON public.classes TO service_role;
+GRANT SELECT ON public.club_posts TO anon;
+GRANT SELECT ON public.club_posts TO authenticated;
+GRANT SELECT ON public.club_posts TO service_role;
 GRANT SELECT ON public.collectible_cards TO anon;
 GRANT SELECT ON public.collectible_cards TO authenticated;
 GRANT SELECT ON public.collectible_cards TO service_role;
@@ -2521,6 +2576,9 @@ GRANT TRIGGER ON public.class_messages TO service_role;
 GRANT TRIGGER ON public.classes TO anon;
 GRANT TRIGGER ON public.classes TO authenticated;
 GRANT TRIGGER ON public.classes TO service_role;
+GRANT TRIGGER ON public.club_posts TO anon;
+GRANT TRIGGER ON public.club_posts TO authenticated;
+GRANT TRIGGER ON public.club_posts TO service_role;
 GRANT TRIGGER ON public.collectible_cards TO anon;
 GRANT TRIGGER ON public.collectible_cards TO authenticated;
 GRANT TRIGGER ON public.collectible_cards TO service_role;
@@ -2629,6 +2687,9 @@ GRANT TRUNCATE ON public.class_messages TO service_role;
 GRANT TRUNCATE ON public.classes TO anon;
 GRANT TRUNCATE ON public.classes TO authenticated;
 GRANT TRUNCATE ON public.classes TO service_role;
+GRANT TRUNCATE ON public.club_posts TO anon;
+GRANT TRUNCATE ON public.club_posts TO authenticated;
+GRANT TRUNCATE ON public.club_posts TO service_role;
 GRANT TRUNCATE ON public.collectible_cards TO anon;
 GRANT TRUNCATE ON public.collectible_cards TO authenticated;
 GRANT TRUNCATE ON public.collectible_cards TO service_role;
@@ -2737,6 +2798,9 @@ GRANT UPDATE ON public.class_messages TO service_role;
 GRANT UPDATE ON public.classes TO anon;
 GRANT UPDATE ON public.classes TO authenticated;
 GRANT UPDATE ON public.classes TO service_role;
+GRANT UPDATE ON public.club_posts TO anon;
+GRANT UPDATE ON public.club_posts TO authenticated;
+GRANT UPDATE ON public.club_posts TO service_role;
 GRANT UPDATE ON public.collectible_cards TO anon;
 GRANT UPDATE ON public.collectible_cards TO authenticated;
 GRANT UPDATE ON public.collectible_cards TO service_role;
@@ -2838,6 +2902,9 @@ GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
+REVOKE ALL ON FUNCTION public.can_post_for_asd(p_asd_code text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
 REVOKE ALL ON FUNCTION public.generate_invite_code() FROM PUBLIC;
@@ -2913,6 +2980,9 @@ GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO service_rol
 REVOKE ALL ON FUNCTION public.log_user_login() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
+REVOKE ALL ON FUNCTION public.my_asd_code() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.my_asd_code() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.my_asd_code() TO service_role;
 REVOKE ALL ON FUNCTION public.my_tournament_history(limite integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO service_role;

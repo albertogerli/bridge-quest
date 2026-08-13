@@ -579,6 +579,71 @@ try {
   fail(`verifica tavolo condiviso non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+// 9. Bacheca del circolo — club_posts
+//    (vedi scripts/sql/bacheca-circolo-2026-08.sql)
+//
+//    Gli avvisi sono PER I SOCI: chi non è del circolo non deve leggerli, e
+//    soprattutto nessuno deve poter pubblicare a nome di un circolo che non è
+//    il suo. Non esisteva un ruolo «amministratore di circolo»: la regola è
+//    ruolo istruttore PIÙ lo stesso asd_code.
+// ---------------------------------------------------------------------------
+console.log("\n[9] Bacheca del circolo — club_posts");
+
+try {
+  {
+    const { data, error } = await anon.from("club_posts").select("titolo").limit(1);
+    const rows = error ? 0 : data?.length ?? 0;
+    if (rows === 0) ok("(a) club_posts: nessun avviso per l'anonimo");
+    else fail(`(a) un anonimo legge ${rows} avvisi`);
+  }
+
+  {
+    const email = `bc-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Bc!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(b) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+
+      // (b) un utente normale non può pubblicare per nessun circolo
+      const { error: insErr } = await u.from("club_posts").insert({
+        asd_code: "F0150", author_id: created.user.id,
+        titolo: "prova", corpo: "prova",
+      });
+      if (insErr) ok("(b) un utente senza ruolo NON pubblica per un circolo");
+      else fail("(b) un utente qualunque ha pubblicato un avviso di circolo");
+
+      // (c) e non può nemmeno spacciarsi per un altro autore
+      const { error: fakeErr } = await u.from("club_posts").insert({
+        asd_code: "F0150", author_id: "00000000-0000-0000-0000-000000000000",
+        titolo: "prova", corpo: "prova",
+      });
+      if (fakeErr) ok("(c) non si può pubblicare a nome di un altro");
+      else fail("(c) è stato possibile pubblicare a nome di un altro utente");
+
+      // (d) can_post_for_asd() deve dire di no
+      const { data: puo } = await u.rpc("can_post_for_asd", { p_asd_code: "F0150" });
+      if (puo !== true) ok("(d) can_post_for_asd(): no per chi non ha il ruolo");
+      else fail("(d) can_post_for_asd(): sì a un utente senza ruolo");
+
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente bacheca di test eliminato");
+    }
+  }
+
+  {
+    const { data, error } = await anon.rpc("my_asd_code", {});
+    if (error || data === null) ok("(e) my_asd_code(): non eseguibile da anonimo");
+    else fail("(e) my_asd_code(): un anonimo ottiene una risposta");
+  }
+} catch (e) {
+  fail(`verifica bacheca non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"
