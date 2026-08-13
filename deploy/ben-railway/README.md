@@ -123,6 +123,52 @@ compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
 
 ## Quanto è lento
 
+**La regione conta più di quanto sembri.** Stesse identiche immagine e
+configurazione, misurate il 13/08/2026 dall'Italia:
+
+| chiamata | Railway US | **Railway `europe-west4`** |
+|---|---|---|
+| `/lead` (attacco, con simulazioni) | 2,0 – 4,0 s | **1,0 – 2,2 s** |
+| `/play` con una scelta vera | 4,4 – 5,4 s | **0,89 – 1,33 s** |
+| `/play` con carta obbligata (`"who": "Forced"`) | 0,4 s | 0,46 s |
+| sola connessione di rete | 0,04 – 0,16 s | 0,03 s |
+
+Quattro volte più veloce, e **non per la distanza**: il viaggio dei pacchetti
+valeva un decimo di secondo, il resto era CPU. Se un giorno il servizio
+sembrasse lento, la regione è la prima cosa da guardare.
+
+Due cose da tenere a mente:
+
+- **le carte obbligate costano meno ma non zero** (mezzo secondo). In una mano
+  buona parte delle giocate lo è, quindi il conto non è «39 decisioni per il
+  tempo di una», ma nemmeno trascurabile;
+- **il costo si moltiplica per i giocatori contemporanei.** Ogni decisione
+  occupa una CPU: con più partite insieme è la CPU, non la memoria, a decidere
+  se il servizio regge. Il proxy di BridgeLab aspetta 15 secondi prima di
+  arrendersi e ripiegare sul double dummy.
+
+Se servisse guadagnare altro tempo, le leve sono nel conf di BEN:
+`sample_hands_play` (200) e `sample_boards_for_play` (5000) governano il costo
+del gioco della carta. La guardia accetta `BEN_CONFIG`, quindi si può puntare
+a un conf ridotto senza toccare l'immagine — misurando poi cosa si perde con
+`MISURA_ROBOT=1`.
+
+## Costruirla in locale
+
+Railway costruisce su amd64 e non serve fare nulla. Se invece vuoi provare
+l'immagine sul tuo computer, su Mac Apple Silicon **va forzata la piattaforma**:
+
+```bash
+docker build --platform linux/amd64 -t ben .
+docker run --rm -p 8080:8080 -e BEN_API_TOKEN="$(openssl rand -hex 32)" ben
+```
+
+Senza `--platform` la costruzione fallisce: `psutil==5.9.0` non ha pacchetti
+già compilati per ARM e `gevent` nemmeno, e nell'immagine non c'è un
+compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
+
+## Quanto è lento
+
 Misurato il 13/08/2026 sull'immagine costruita qui, **sotto emulazione**
 (amd64 su un Mac ARM), quindi sono valori pessimistici:
 
