@@ -23,12 +23,6 @@ import {
 } from "@/lib/trick-quiz";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
-const SEATS: { key: Position; label: string }[] = [
-  { key: "north", label: "Nord" },
-  { key: "west", label: "Ovest" },
-  { key: "east", label: "Est" },
-  { key: "south", label: "Sud" },
-];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 const ROUNDS = 8;
 
@@ -204,18 +198,24 @@ export default function QuizPresePage() {
                 N-S {handHcp(question.deal.north) + handHcp(question.deal.south)} PO
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {SEATS.map(({ key, label }) => (
-                <div key={key}>
-                  <p className="text-xs font-bold text-muted-foreground mb-1">{label}</p>
-                  {SUITS.map((suit) => (
-                    <p key={suit} className="text-xs font-mono flex items-center gap-1">
-                      <SuitSymbol suit={suit} size="xs" />
-                      {formatSuit(question.deal[key], suit)}
-                    </p>
-                  ))}
-                </div>
-              ))}
+            {/* Disposizione del TAVOLO, non ordine di lettura: Nord in alto,
+                Sud in basso, Ovest ed Est ai lati. Prima erano quattro riquadri
+                in griglia (Nord, Ovest / Est, Sud) e la mano non si capiva —
+                un giocatore legge una smazzata solo in questa forma. */}
+            <div className="grid grid-cols-3 gap-2 items-start">
+              <div />
+              <Mano seat="north" label="Nord" deal={question.deal} />
+              <div />
+
+              <Mano seat="west" label="Ovest" deal={question.deal} />
+              <div className="flex items-center justify-center py-4" aria-hidden="true">
+                <div className="h-12 w-12 rounded-lg border border-border/60" />
+              </div>
+              <Mano seat="east" label="Est" deal={question.deal} />
+
+              <div />
+              <Mano seat="south" label="Sud" deal={question.deal} />
+              <div />
             </div>
           </div>
 
@@ -267,6 +267,29 @@ export default function QuizPresePage() {
           </AnimatePresence>
         </>
       )}
+    </div>
+  );
+}
+
+/** Una mano nella sua casella del tavolo. */
+function Mano({
+  seat,
+  label,
+  deal,
+}: {
+  seat: Position;
+  label: string;
+  deal: Record<Position, Card[]>;
+}) {
+  return (
+    <div className="min-w-0">
+      <p className="text-xs font-bold text-muted-foreground mb-1">{label}</p>
+      {SUITS.map((suit) => (
+        <p key={suit} className="text-xs font-mono flex items-center gap-1 whitespace-nowrap">
+          <SuitSymbol suit={suit} size="xs" />
+          {formatSuit(deal[seat], suit)}
+        </p>
+      ))}
     </div>
   );
 }

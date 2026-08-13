@@ -137,38 +137,24 @@ export async function calcTableAndPar(
 }
 
 /**
- * Contratto giocabile più alto per una coppia, dedotto dalla tabella.
+ * Fit minimo perché un contratto a colore sia dichiarabile davvero.
  *
- * Serve al generatore: invece di far scegliere all'insegnante un contratto
- * uguale per tutte le mani — che su alcune sarebbe impossibile e su altre
- * troppo timido — si propone quello che le carte reggono davvero.
- * Restituisce `null` se la coppia non mantiene nemmeno un contratto a livello 1.
+ * A carte scoperte un 4♠ può "passare" con sei carte di picche in due: il
+ * double dummy lo vede, nessun giocatore lo dichiarerebbe mai. Sotto questa
+ * soglia un contratto a colore va segnalato all'insegnante, non proposto in
+ * silenzio a una classe.
  */
-export function bestContractFor(
-  table: DdsTable,
-  side: "ns" | "ew"
-): { contract: string; declarer: Position; tricks: number } | null {
-  const seats: Position[] = side === "ns" ? ["north", "south"] : ["east", "west"];
-  let best: { contract: string; declarer: Position; tricks: number } | null = null;
+export const FIT_MINIMO = 7;
 
-  for (const strain of STRAIN_ORDER) {
-    for (const declarer of seats) {
-      const tricks = table.tricks[strain][declarer];
-      const level = tricks - 6;
-      if (level < 1) continue;
-      // A parità di livello si preferisce il senza atout, che vale di più:
-      // è l'ordine in cui STRAIN_ORDER mette per ultimo il senza, quindi si
-      // confronta esplicitamente invece di affidarsi all'ordine di scansione.
-      if (
-        !best ||
-        level > best.tricks - 6 ||
-        (level === best.tricks - 6 && strain === "notrump" && !best.contract.endsWith("SA"))
-      ) {
-        best = { contract: `${level}${SYMBOL[strain]}`, declarer, tricks };
-      }
-    }
-  }
-  return best;
+/** Carte di un colore nelle due mani di una linea. */
+export function fitFor(
+  hands: Record<Position, Card[]>,
+  side: "ns" | "ew",
+  strain: TableStrain
+): number | null {
+  if (strain === "notrump") return null;
+  const seats: Position[] = side === "ns" ? ["north", "south"] : ["east", "west"];
+  return seats.reduce((n, seat) => n + hands[seat].filter((c) => c.suit === strain).length, 0);
 }
 
 /** Simbolo del seme per una colonna della tabella. */
