@@ -51,12 +51,39 @@ export const DENY_URLS = [
  */
 const SERVICE_WORKER_NOISE = /serviceWorker\.register|wrsParams|_registerScript/;
 
+/**
+ * Seconda forma della stessa cosa, vista in produzione il 13/08/2026.
+ *
+ * Dove `navigator.serviceWorker.register()` non fallisce ma risolve
+ * `undefined` — succede con i renderer dei crawler e con le estensioni che lo
+ * sostituiscono con un finto — la libreria della PWA legge `.waiting` su
+ * niente e produce un `TypeError` non gestito.
+ *
+ * Il filtro sopra non lo prendeva: cerca il NOME della funzione, e in
+ * produzione la minificazione l'aveva ridotta a `o.register`. Cercare `o\.`
+ * sarebbe assurdo, quindi qui si riconosce il messaggio, che è specifico: in
+ * tutto il nostro codice non esiste una sola lettura di `.waiting`, quindi
+ * questo errore può venire solo da lì. Ogni browser lo formula a modo suo.
+ *
+ * Nessun utente ne è toccato: senza service worker la PWA degrada da sola.
+ */
+const WAITING_SU_UNDEFINED =
+  /(undefined|null).*\bwaiting\b|\bwaiting\b.*\b(undefined|null)\b|_registration is (undefined|null)/i;
+
 /** True se l'evento è rumore di registrazione del service worker. */
 export function isServiceWorkerNoise(event: {
-  exception?: { values?: Array<{ stacktrace?: { frames?: Array<{ function?: string; filename?: string }> } }> };
+  exception?: {
+    values?: Array<{
+      value?: string;
+      stacktrace?: { frames?: Array<{ function?: string; filename?: string }> };
+    }>;
+  };
 }): boolean {
-  const frames = event.exception?.values?.flatMap((v) => v.stacktrace?.frames ?? []) ?? [];
-  return frames.some(
-    (f) => SERVICE_WORKER_NOISE.test(f.function ?? "") || SERVICE_WORKER_NOISE.test(f.filename ?? "")
+  const values = event.exception?.values ?? [];
+  const frames = values.flatMap((v) => v.stacktrace?.frames ?? []);
+  return (
+    frames.some(
+      (f) => SERVICE_WORKER_NOISE.test(f.function ?? "") || SERVICE_WORKER_NOISE.test(f.filename ?? "")
+    ) || values.some((v) => WAITING_SU_UNDEFINED.test(v.value ?? ""))
   );
 }

@@ -51,3 +51,49 @@ describe("isServiceWorkerNoise", () => {
     expect(isServiceWorkerNoise(evt([]))).toBe(false);
   });
 });
+
+/**
+ * Seconda forma: la registrazione non fallisce, risolve `undefined`, e la
+ * libreria della PWA legge `.waiting` su niente. Il filtro sullo stack non
+ * bastava — in produzione la funzione era minificata in `o.register`, un nome
+ * su cui non si può filtrare senza scartare mezzo mondo.
+ */
+const msg = (value: string, frames: Array<{ function?: string }> = []) => ({
+  exception: { values: [{ value, stacktrace: { frames } }] },
+});
+
+describe("isServiceWorkerNoise — .waiting su undefined", () => {
+  it("scarta l'evento reale del 2026-08-13, minificato", () => {
+    expect(
+      msgNoise("Cannot read properties of undefined (reading 'waiting')", [
+        { function: "o.register" },
+      ])
+    ).toBe(true);
+  });
+
+  it("riconosce la stessa cosa detta da Firefox e da Safari", () => {
+    expect(msgNoise("this._registration is undefined")).toBe(true);
+    expect(
+      msgNoise("undefined is not an object (evaluating 'this._registration.waiting')")
+    ).toBe(true);
+  });
+
+  it("scarta anche la variante con null", () => {
+    expect(msgNoise("Cannot read properties of null (reading 'waiting')")).toBe(true);
+  });
+
+  it("NON scarta un errore nostro che parla d'altro", () => {
+    // Il confine che conta: se un giorno il gioco leggesse una proprietà su
+    // undefined, quell'errore deve continuare ad arrivare.
+    expect(msgNoise("Cannot read properties of undefined (reading 'tricks')")).toBe(false);
+    expect(msgNoise("Cannot read properties of undefined (reading 'hands')")).toBe(false);
+  });
+
+  it("NON scarta un errore che nomina l'attesa senza essere quello", () => {
+    expect(msgNoise("Timeout waiting for the tournament leaderboard")).toBe(false);
+  });
+});
+
+function msgNoise(value: string, frames: Array<{ function?: string }> = []) {
+  return isServiceWorkerNoise(msg(value, frames));
+}
