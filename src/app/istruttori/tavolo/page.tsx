@@ -10,13 +10,14 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
-import { getMyClasses, type ClassRoom } from "@/lib/instructors";
+import { getClassDetail, getMyClasses, type ClassMember, type ClassRoom } from "@/lib/instructors";
 import {
   closeLiveTable,
   getOpenLiveTable,
   openLiveTable,
   setLiveHands,
   setRevealed,
+  setSeats,
   setShowContract,
   watchLiveTable,
   type LiveTable,
@@ -61,6 +62,7 @@ function Tavolo() {
   const [seed, setSeed] = useState(2026);
   const [indice, setIndice] = useState(0);
   const [occupato, setOccupato] = useState(false);
+  const [allievi, setAllievi] = useState<ClassMember[]>([]);
 
   useEffect(() => {
     getMyClasses()
@@ -74,6 +76,9 @@ function Tavolo() {
   useEffect(() => {
     if (!classId) return;
     getOpenLiveTable(classId).then(setTableId);
+    getClassDetail(classId)
+      .then((d) => setAllievi(d.members.filter((m) => m.status === "active")))
+      .catch((err) => reportError("tavolo:allievi", err));
   }, [classId]);
 
   useEffect(() => {
@@ -109,6 +114,18 @@ function Tavolo() {
     if (!tableId || !mani[i]) return;
     setIndice(i);
     await setLiveHands(tableId, mani[i], { titolo: `${modello.label} — mano ${i + 1}` });
+  };
+
+  // I posti già assegnati arrivano dal tavolo stesso, così due insegnanti sullo
+  // stesso tavolo vedono la stessa cosa.
+  const postoDi = stato?.seatOf ?? {};
+
+  const assegnaPosto = async (studentId: string, seat: string) => {
+    if (!tableId) return;
+    const next: Record<string, Position> = { ...postoDi };
+    if (seat) next[studentId] = seat as Position;
+    else delete next[studentId];
+    await setSeats(tableId, next);
   };
 
   const scopri = async (seat: Position) => {
@@ -212,6 +229,39 @@ function Tavolo() {
               >
                 Mano {i + 1}
               </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tableId && stato && allievi.length > 0 && (
+        <div className="rounded-2xl border border-border bg-card p-4 mb-5">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-1">
+            Chi siede dove
+          </h2>
+          <p className="text-xs text-muted-foreground mb-3">
+            Ogni allievo vede la mano del posto che gli assegni. Senza posto vede
+            solo quello che scopri a tutti — ed è la situazione normale a inizio
+            lezione, non un errore.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {allievi.map((a) => (
+              <div key={a.student_id} className="flex items-center gap-2">
+                <span className="text-sm min-w-0 flex-1 truncate">
+                  {a.display_name || "Allievo"}
+                </span>
+                <select
+                  aria-label={`Posto di ${a.display_name || "allievo"}`}
+                  value={postoDi[a.student_id] ?? ""}
+                  onChange={(e) => assegnaPosto(a.student_id, e.target.value)}
+                  className="h-9 px-2 rounded-lg border border-border bg-card text-xs"
+                >
+                  <option value="">nessun posto</option>
+                  {SEATS.map((s) => (
+                    <option key={s.key} value={s.key}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
             ))}
           </div>
         </div>

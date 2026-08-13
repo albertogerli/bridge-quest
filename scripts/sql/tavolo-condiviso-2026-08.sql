@@ -130,6 +130,9 @@ BEGIN
     'hands',         v_hands,
     'revealed',      to_jsonb(t.revealed),
     'seat',          v_seat,
+    -- La mappa completa dei posti serve solo a chi assegna: un allievo non ha
+    -- motivo di sapere dove siedono i compagni.
+    'seatOf',        CASE WHEN v_is_owner THEN t.seat_of ELSE NULL END,
     'isInstructor',  v_is_owner,
     -- Il contratto è parte della soluzione: esce solo se l'insegnante lo mostra.
     'contract',      CASE WHEN v_is_owner OR t.show_contract THEN t.contract END,

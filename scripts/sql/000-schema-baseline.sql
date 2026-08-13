@@ -1442,9 +1442,7 @@ DECLARE
   s          text;
 BEGIN
   SELECT * INTO t FROM public.live_tables WHERE id = p_table_id;
-  IF NOT FOUND THEN
-    RETURN NULL;
-  END IF;
+  IF NOT FOUND THEN RETURN NULL; END IF;
 
   v_is_owner := (t.instructor_id = auth.uid());
   SELECT EXISTS (
@@ -1452,9 +1450,7 @@ BEGIN
     WHERE m.class_id = t.class_id AND m.student_id = auth.uid()
   ) INTO v_is_member;
 
-  IF NOT v_is_owner AND NOT v_is_member THEN
-    RETURN NULL;
-  END IF;
+  IF NOT v_is_owner AND NOT v_is_member THEN RETURN NULL; END IF;
 
   v_seat := t.seat_of ->> auth.uid()::text;
 
@@ -1480,6 +1476,9 @@ BEGIN
     'hands',         v_hands,
     'revealed',      to_jsonb(t.revealed),
     'seat',          v_seat,
+    -- La mappa completa dei posti serve solo a chi assegna: un allievo non ha
+    -- motivo di sapere dove siedono i compagni.
+    'seatOf',        CASE WHEN v_is_owner THEN t.seat_of ELSE NULL END,
     'isInstructor',  v_is_owner,
     'contract',      CASE WHEN v_is_owner OR t.show_contract THEN t.contract END,
     'declarer',      CASE WHEN v_is_owner OR t.show_contract THEN t.declarer END,
