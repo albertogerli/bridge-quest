@@ -27,6 +27,9 @@ export interface LiveTable {
   revealed: Position[];
   /** Il posto assegnato a chi guarda, se ne ha uno. */
   seat: Position | null;
+  /** Chi siede dove. Solo per l'insegnante: un allievo non ha motivo di
+   *  sapere dove siedono i compagni. */
+  seatOf: Record<string, Position> | null;
   isInstructor: boolean;
   contract: string | null;
   declarer: Position | null;
