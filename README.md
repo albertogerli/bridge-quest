@@ -27,7 +27,8 @@ Variabili d'ambiente richieste (`.env.local`, mai committato):
 | `SUPABASE_SERVICE_ROLE_KEY` | solo server (route API admin/email); bypassa RLS |
 | `RESEND_API_KEY` / `RESEND_FROM` | invio email |
 | `CRON_SECRET` | autorizza `/api/cron/engagement` (header `Authorization: Bearer`) |
-| `BEN_API_URL` | opzionale: server AI neurale BEN self-hosted (fallback automatico su solver/euristica se assente) |
+| `BEN_API_URL` | opzionale: server AI neurale BEN self-hosted (fallback automatico su solver/euristica se assente); per ospitarlo vedi `deploy/ben-railway/` |
+| `BEN_API_TOKEN` | segreto condiviso con la guardia davanti a BEN; obbligatorio se BEN è ospitato, inutile in locale |
 | `NEXT_PUBLIC_GADS_SIGNUP_LABEL` | label conversione Google Ads (registrazione) |
 | `ADMIN_NOTIFY_EMAIL` | opzionale: destinatario notifiche richieste istruttore |
 | `NEXT_PUBLIC_SENTRY_DSN` | error monitoring; **se assente Sentry è interamente no-op** |

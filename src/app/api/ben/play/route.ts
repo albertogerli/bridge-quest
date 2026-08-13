@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { pbnCardToCard } from "@/lib/ben-format";
-import { getAuthUserId, benParam, benParamOpt, rateLimit } from "@/lib/ben-guard";
+import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
 
-const BEN_URL = process.env.BEN_API_URL || "http://localhost:8085";
 const TIMEOUT_MS = 15000;
 
 // Una mano può generare ~40 chiamate AI in rapida successione: limite largo.
@@ -42,8 +41,10 @@ export async function POST(req: NextRequest) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-    const res = await fetch(`${BEN_URL}/play?${params.toString()}`, {
+    const { url: benUrl, headers: benHeaders } = benEndpoint();
+    const res = await fetch(`${benUrl}/play?${params.toString()}`, {
       signal: controller.signal,
+      headers: benHeaders,
     });
     clearTimeout(timeout);
 

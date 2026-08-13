@@ -47,3 +47,23 @@ export function rateLimit(key: string, max: number, windowMs = 60_000): boolean 
   bucket.count += 1;
   return true;
 }
+
+/**
+ * Indirizzo del server BEN e intestazioni con cui parlargli.
+ *
+ * BEN non ha autenticazione propria: è nato per stare su localhost. Ospitato
+ * (Railway) diventa un indirizzo pubblico, e senza un segreto condiviso
+ * chiunque lo trovasse potrebbe far girare inferenze TensorFlow sulla macchina
+ * che paghiamo noi. Davanti a BEN sta una guardia che pretende questa
+ * intestazione: vedi `deploy/ben-railway/guard.py`.
+ *
+ * In locale il segreto non serve e non si mette: `start-ben.sh` avvia BEN nudo
+ * su 127.0.0.1, dove non è raggiungibile da fuori.
+ */
+export function benEndpoint(): { url: string; headers: HeadersInit } {
+  const token = process.env.BEN_API_TOKEN;
+  return {
+    url: process.env.BEN_API_URL || "http://localhost:8085",
+    headers: token ? { "X-BEN-Token": token } : {},
+  };
+}
