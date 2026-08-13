@@ -238,7 +238,11 @@ export function useAuth() {
     profileType?: "junior" | "giovane" | "adulto" | "senior";
   }) => {
     const { data, error } = await supabase.auth.signUp({
-      email,
+      // Spazi in coda: i correttori dei telefoni ne aggiungono uno dopo il
+      // completamento automatico, e chi incolla l'indirizzo se lo porta
+      // dietro. Nome e utente BBO venivano già ripuliti, l'email no — e
+      // un'email diversa di uno spazio è un altro account.
+      email: email.trim(),
       password,
       options: {
         data: { display_name: displayName },
@@ -269,7 +273,10 @@ export function useAuth() {
   // Sign in with email/password
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      // Stessa pulizia della registrazione: se le due strade normalizzano in
+      // modo diverso, ci si registra con un indirizzo e si tenta l'accesso
+      // con un altro, e il messaggio dice «password errata».
+      email: email.trim(),
       password,
     });
     return { data, error };
