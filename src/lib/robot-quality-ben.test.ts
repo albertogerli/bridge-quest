@@ -3,11 +3,9 @@ import type { Card, Position } from "./bridge-engine";
 import { getValidCards, type GameState } from "./bridge-engine";
 import { aiSelectExpertCard, aiSelectWithDifficulty } from "./ai-difficulty";
 import {
+  benSeatParams,
   biddingToCTX,
   gameStateToPBNPlayed,
-  handToPBN,
-  originalHand,
-  otherVisibleSeat,
   pbnCardToCard,
   positionToBEN,
 } from "./ben-format";
@@ -30,6 +28,22 @@ import { formatta, misura, type Scelta } from "./robot-quality-harness";
  *   MISURA_BEN=1 npx vitest run src/lib/robot-quality-ben.test.ts --disable-console-intercept
  *
  * Poche mani per volta: sono ~52 chiamate di rete a mano.
+ *
+ * ESITO del 13/08/2026 — 10 mani (seme 4242), prese buttate per mano:
+ *
+ *   euristica       2,20 dichiarante + 2,00 difesa = 4,20   0 mani perfette
+ *   double dummy    1,20 + 1,50 = 2,70                      0 mani perfette
+ *   BEN             0,60 + 0,70 = 1,30                      4 mani su 10
+ *
+ * BEN dimezza il double dummy, e in quattro mani su dieci non lascia nulla
+ * per strada. Il secondo per carta è quindi speso bene.
+ *
+ * ATTENZIONE: questi valori NON si confrontano con quelli di
+ * `robot-quality.test.ts`, che misura 30 mani. Stesso metro, campione diverso.
+ *
+ * Le tre misure valgono solo con `ripieghi=0`: se BEN non risponde, quella
+ * riga è l'euristica travestita. È già successo due volte — mani accorciate e
+ * carte del morto — e in entrambi i casi il numero sembrava plausibile.
  */
 
 const QUANTE = Number(process.env.MISURA_BEN_MANI ?? 10);
@@ -57,9 +71,10 @@ function licitaPer(contract: string): string {
 
 async function chiediABen(state: GameState, chi: Position): Promise<Card | null> {
   const primaCarta = state.tricks.length === 0 && state.currentTrick.length === 0;
+  const { hand, dummy, seat } = benSeatParams(state, chi);
   const params = new URLSearchParams({
-    hand: handToPBN(originalHand(state, chi)),
-    seat: positionToBEN(chi),
+    hand,
+    seat,
     // Il dichiarante è anche il mazziere nella licita sintetica: così il posto
     // che deve attaccare è quello giusto.
     dealer: positionToBEN(state.declarer),
@@ -67,7 +82,7 @@ async function chiediABen(state: GameState, chi: Position): Promise<Card | null>
     ctx: licitaPer(state.contract),
   });
   if (!primaCarta) {
-    params.set("dummy", handToPBN(originalHand(state, otherVisibleSeat(state, chi))));
+    params.set("dummy", dummy);
     params.set("played", gameStateToPBNPlayed(state));
   }
 
