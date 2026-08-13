@@ -14,7 +14,8 @@
  */
 
 import { createClient } from "@/lib/supabase/client";
-import type { Card, Position } from "./bridge-engine";
+import type { Card, Position, Suit } from "./bridge-engine";
+import { determineTrickWinner, nextPlayer } from "./bridge-engine";
 import { reportError } from "./report-error";
 
 export interface LiveTable {
@@ -23,6 +24,8 @@ export interface LiveTable {
   titolo: string | null;
   /** Solo le mani che chi guarda ha diritto di vedere. */
   hands: Partial<Record<Position, Card[]>>;
+  /** Le carte già giocate, in ordine. Pubbliche: le ha viste tutto il tavolo. */
+  played: { seat: Position; card: Card }[];
   /** Posti scoperti a tutta la classe. */
   revealed: Position[];
   /** Il posto assegnato a chi guarda, se ne ha uno. */
@@ -117,8 +120,10 @@ export async function setLiveHands(
       titolo: extra.titolo ?? null,
       contract: extra.contract ?? null,
       declarer: extra.declarer ?? null,
-      // Mano nuova, tutto coperto: è il punto dell'esercizio in aula.
+      // Mano nuova: tutto coperto e nessuna carta giocata. È il punto
+      // dell'esercizio in aula.
       revealed: [],
+      played: [],
       show_contract: false,
       updated_at: new Date().toISOString(),
     })
@@ -154,6 +159,49 @@ export async function setSeats(id: string, seatOf: Record<string, Position>): Pr
     .update({ seat_of: seatOf, updated_at: new Date().toISOString() })
     .eq("id", id);
   if (error) reportError("live-table:posti", error);
+}
+
+/**
+ * Gioca una carta.
+ *
+ * Il posto lo decide il DATABASE: l'insegnante può indicarne uno, un allievo
+ * gioca comunque il proprio. Qui non si controlla nulla di sicurezza — il
+ * controllo che la carta sia davvero in quella mano sta in `live_table_play`,
+ * dove nessuno può aggirarlo cambiando quello che il browser manda.
+ */
+export async function playLiveCard(
+  id: string,
+  card: Card,
+  seat?: Position
+): Promise<{ ok: boolean; errore?: string }> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("live_table_play", {
+      p_table_id: id,
+      p_seat: seat ?? null,
+      p_card: card,
+    });
+    if (error) {
+      reportError("live-table:gioca", error);
+      return { ok: false, errore: "Non è stato possibile giocare la carta." };
+    }
+    const esito = data as { ok: boolean; errore?: string };
+    return esito?.ok ? { ok: true } : { ok: false, errore: esito?.errore };
+  } catch (err) {
+    reportError("live-table:gioca", err);
+    return { ok: false, errore: "Non è stato possibile giocare la carta." };
+  }
+}
+
+/** Annulla l'ultima carta giocata. Solo l'insegnante. */
+export async function undoLiveCard(id: string): Promise<void> {
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.rpc("live_table_undo", { p_table_id: id });
+    if (error) reportError("live-table:annulla", error);
+  } catch (err) {
+    reportError("live-table:annulla", err);
+  }
 }
 
 export async function closeLiveTable(id: string): Promise<void> {
@@ -207,4 +255,61 @@ export function watchLiveTable(
     clearInterval(timer);
     void supabase.removeChannel(channel);
   };
+}
+
+// ─── Da «le carte giocate» a «tocca a chi» ──────────────────────────────────
+
+export interface StatoGioco {
+  /** Prese complete, in ordine, con il vincitore. */
+  prese: { plays: { position: Position; card: Card }[]; winner: Position }[];
+  /** Carte della presa in corso. */
+  presaCorrente: { position: Position; card: Card }[];
+  /** Chi deve giocare adesso. */
+  turno: Position;
+  /** Prese vinte dalle due linee. */
+  preseNs: number;
+  preseEw: number;
+}
+
+const LINEA_NS: Position[] = ["north", "south"];
+
+/**
+ * Ricostruisce lo stato del gioco dalla sola lista delle carte giocate.
+ *
+ * Il database conserva SOLO la successione delle carte: chi ha vinto una
+ * presa e di chi è il turno si ricavano da qui, con le stesse funzioni che
+ * usa il resto del gioco (`bridge-engine`). Scrivere quelle regole una
+ * seconda volta in SQL avrebbe significato due versioni che prima o poi
+ * divergono, e un tavolo che dice due cose diverse a due persone.
+ */
+export function statoDelGioco(
+  played: readonly { seat: Position; card: Card }[],
+  declarer: Position,
+  trump: Suit | null
+): StatoGioco {
+  const prese: StatoGioco["prese"] = [];
+  let presaCorrente: { position: Position; card: Card }[] = [];
+  // Attacca chi sta alla sinistra del dichiarante.
+  let leader = nextPlayer(declarer);
+  let preseNs = 0;
+  let preseEw = 0;
+
+  for (const g of played) {
+    presaCorrente.push({ position: g.seat, card: g.card });
+    if (presaCorrente.length === 4) {
+      const winner = determineTrickWinner(presaCorrente, trump);
+      prese.push({ plays: presaCorrente, winner });
+      if (LINEA_NS.includes(winner)) preseNs++;
+      else preseEw++;
+      leader = winner;
+      presaCorrente = [];
+    }
+  }
+
+  const turno =
+    presaCorrente.length === 0
+      ? leader
+      : nextPlayer(presaCorrente[presaCorrente.length - 1].position);
+
+  return { prese, presaCorrente, turno, preseNs, preseEw };
 }

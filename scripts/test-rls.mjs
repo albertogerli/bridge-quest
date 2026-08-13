@@ -644,6 +644,62 @@ try {
   fail(`verifica bacheca non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+// 10. Tavolo giocabile — live_table_play / live_table_undo
+//     (vedi scripts/sql/tavolo-giocabile-2026-08.sql)
+//
+//     Le carte ora si giocano. La proprietà da difendere è che nessuno possa
+//     giocare una carta che non ha: la funzione conosce le mani (è SECURITY
+//     DEFINER) e non deve diventare un modo per indovinarle.
+// ---------------------------------------------------------------------------
+console.log("\n[10] Tavolo giocabile — live_table_play");
+
+try {
+  for (const [fn, args] of [
+    ["live_table_play", { p_table_id: "00000000-0000-0000-0000-000000000000", p_seat: "north", p_card: { suit: "spade", rank: "A" } }],
+    ["live_table_undo", { p_table_id: "00000000-0000-0000-0000-000000000000" }],
+  ]) {
+    const { data, error } = await anon.rpc(fn, args);
+    if (error || data === null) ok(`(a) ${fn}(): non eseguibile da anonimo`);
+    else fail(`(a) ${fn}(): un anonimo ottiene una risposta`);
+  }
+
+  {
+    const email = `lp-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Lp!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(b) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+
+      // Un utente che non fa parte di nessuna classe non deve poter giocare
+      // su un tavolo, nemmeno indicando un posto.
+      const { data } = await u.rpc("live_table_play", {
+        p_table_id: "00000000-0000-0000-0000-000000000000",
+        p_seat: "north",
+        p_card: { suit: "spade", rank: "A" },
+      });
+      if (!data || data.ok !== true) ok("(b) un estraneo non gioca su un tavolo");
+      else fail("(b) un estraneo ha giocato una carta");
+
+      // E non deve poter annullare le mosse altrui.
+      const { data: undo } = await u.rpc("live_table_undo", {
+        p_table_id: "00000000-0000-0000-0000-000000000000",
+      });
+      if (undo !== true) ok("(c) un estraneo non annulla le mosse");
+      else fail("(c) un estraneo ha annullato una mossa");
+
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente tavolo giocabile di test eliminato");
+    }
+  }
+} catch (e) {
+  fail(`verifica tavolo giocabile non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"

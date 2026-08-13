@@ -7,7 +7,14 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
-import { getOpenLiveTable, watchLiveTable, type LiveTable } from "@/lib/live-table";
+import {
+  getOpenLiveTable,
+  playLiveCard,
+  statoDelGioco,
+  watchLiveTable,
+  type LiveTable,
+} from "@/lib/live-table";
+import { getValidCards, parseContract } from "@/lib/bridge-engine";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -36,6 +43,7 @@ export default function TavoloAllievoPage({
   const [tableId, setTableId] = useState<string | null>(null);
   const [stato, setStato] = useState<LiveTable | null>(null);
   const [cercato, setCercato] = useState(false);
+  const [errore, setErrore] = useState("");
 
   useEffect(() => {
     getOpenLiveTable(classId)
@@ -77,6 +85,25 @@ export default function TavoloAllievoPage({
     (p) => (stato?.hands[p]?.length ?? 0) > 0
   );
 
+  // Turno e presa in corso si ricavano dalle carte giocate: il database
+  // conserva solo quelle, le regole stanno in un posto solo.
+  const trump = stato?.contract ? parseContract(stato.contract).trumpSuit : null;
+  const gioco = stato?.declarer
+    ? statoDelGioco(stato.played ?? [], stato.declarer, trump)
+    : null;
+  const tocca = gioco?.turno === stato?.seat && stato?.seat != null;
+  const miePlayable = tocca && stato?.seat
+    ? getValidCards(stato.hands[stato.seat] ?? [], gioco?.presaCorrente ?? [])
+    : [];
+  const playableSet = new Set(miePlayable.map((c) => `${c.suit}-${c.rank}`));
+
+  const gioca = async (carta: Card) => {
+    if (!tableId) return;
+    setErrore("");
+    const esito = await playLiveCard(tableId, carta);
+    if (!esito.ok) setErrore(esito.errore ?? "Carta non giocabile.");
+  };
+
   return (
     <div className="min-h-screen px-4 py-6 max-w-2xl mx-auto">
       <header className="mb-4 text-center">
@@ -98,6 +125,30 @@ export default function TavoloAllievoPage({
           {stato.declarer ? ` — dichiara ${ETICHETTA[stato.declarer]}` : ""}
         </p>
       )}
+
+      {gioco && (
+        <div className="rounded-2xl border border-border bg-card p-3 mb-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">
+            Presa {gioco.prese.length + 1} · Nord-Sud {gioco.preseNs} · Est-Ovest {gioco.preseEw}
+          </p>
+          <div className="flex items-center justify-center gap-3 min-h-[2rem]">
+            {gioco.presaCorrente.map((p, i) => (
+              <span key={i} className="text-lg font-mono flex items-center gap-1">
+                <SuitSymbol suit={p.card.suit} size="xs" />
+                {p.card.rank}
+              </span>
+            ))}
+            {gioco.presaCorrente.length === 0 && (
+              <span className="text-xs text-muted-foreground">presa nuova</span>
+            )}
+          </div>
+          <p className="text-sm font-semibold mt-1">
+            {tocca ? "Tocca a te" : `Gioca ${ETICHETTA[gioco.turno]}`}
+          </p>
+        </div>
+      )}
+
+      {errore && <p className="text-sm text-destructive text-center mb-3">{errore}</p>}
 
       {visibili.length === 0 ? (
         <p className="py-16 text-center text-sm text-muted-foreground">
@@ -123,12 +174,41 @@ export default function TavoloAllievoPage({
                   {handHcp(stato?.hands[p] ?? [])} PO
                 </span>
               </div>
-              {SUITS.map((suit) => (
-                <p key={suit} className="text-xl font-mono flex items-center gap-2 leading-snug">
-                  <SuitSymbol suit={suit} size="sm" />
-                  {formatSuit(stato?.hands[p] ?? [], suit)}
-                </p>
-              ))}
+              {SUITS.map((suit) => {
+                const delSeme = (stato?.hands[p] ?? [])
+                  .filter((c) => c.suit === suit)
+                  .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
+                if (delSeme.length === 0) {
+                  return (
+                    <p key={suit} className="text-xl font-mono flex items-center gap-2 leading-snug">
+                      <SuitSymbol suit={suit} size="sm" />—
+                    </p>
+                  );
+                }
+                return (
+                  <div key={suit} className="flex items-center gap-2 flex-wrap leading-snug">
+                    <SuitSymbol suit={suit} size="sm" />
+                    {delSeme.map((c) => {
+                      const mia = p === stato?.seat;
+                      const giocabile = mia && playableSet.has(`${c.suit}-${c.rank}`);
+                      return (
+                        <button
+                          key={`${c.suit}-${c.rank}`}
+                          disabled={!giocabile}
+                          onClick={() => gioca(c)}
+                          className={`text-xl font-mono px-1 rounded ${
+                            giocabile
+                              ? "bg-figb/10 hover:bg-figb/20 border border-figb/40"
+                              : mia ? "opacity-50" : ""
+                          }`}
+                        >
+                          {c.rank}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -139,12 +219,4 @@ export default function TavoloAllievoPage({
       </p>
     </div>
   );
-}
-
-function formatSuit(hand: readonly Card[], suit: Suit): string {
-  const cards = hand
-    .filter((c) => c.suit === suit)
-    .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
-    .map((c) => c.rank);
-  return cards.length ? cards.join(" ") : "—";
 }

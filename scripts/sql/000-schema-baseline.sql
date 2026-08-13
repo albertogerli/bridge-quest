@@ -348,7 +348,8 @@ CREATE TABLE IF NOT EXISTS public.live_tables (
   show_contract boolean NOT NULL,
   closed_at timestamp with time zone,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  played jsonb NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.login_history (
@@ -1450,6 +1451,82 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  t public.live_tables%ROWTYPE;
+  v_is_owner boolean; v_my_seat text; v_seat text;
+  v_in_mano boolean; v_gia_uscita boolean;
+BEGIN
+  SELECT * INTO t FROM public.live_tables WHERE id = p_table_id FOR UPDATE;
+  IF NOT FOUND OR t.closed_at IS NOT NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'tavolo non disponibile');
+  END IF;
+
+  v_is_owner := (t.instructor_id = auth.uid());
+  v_my_seat  := t.seat_of ->> auth.uid()::text;
+  v_seat := CASE WHEN v_is_owner THEN coalesce(p_seat, v_my_seat) ELSE v_my_seat END;
+
+  IF v_seat IS NULL OR v_seat NOT IN ('north','east','south','west') THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'nessun posto assegnato');
+  END IF;
+
+  IF NOT v_is_owner AND NOT EXISTS (
+    SELECT 1 FROM public.class_members m
+    WHERE m.class_id = t.class_id AND m.student_id = auth.uid()
+  ) THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'non fai parte di questa classe');
+  END IF;
+
+  SELECT EXISTS (
+    SELECT 1 FROM jsonb_array_elements(t.hands -> v_seat) c
+    WHERE c ->> 'suit' = p_card ->> 'suit' AND c ->> 'rank' = p_card ->> 'rank'
+  ) INTO v_in_mano;
+
+  SELECT EXISTS (
+    SELECT 1 FROM jsonb_array_elements(t.played) g
+    WHERE g -> 'card' ->> 'suit' = p_card ->> 'suit'
+      AND g -> 'card' ->> 'rank' = p_card ->> 'rank'
+  ) INTO v_gia_uscita;
+
+  IF NOT v_in_mano OR v_gia_uscita THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'carta non giocabile');
+  END IF;
+
+  UPDATE public.live_tables
+  SET played = played || jsonb_build_array(jsonb_build_object('seat', v_seat, 'card', p_card)),
+      updated_at = now()
+  WHERE id = p_table_id;
+
+  RETURN jsonb_build_object('ok', true, 'seat', v_seat);
+END
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.live_table_undo(p_table_id uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE t public.live_tables%ROWTYPE;
+BEGIN
+  SELECT * INTO t FROM public.live_tables WHERE id = p_table_id FOR UPDATE;
+  IF NOT FOUND OR t.instructor_id <> auth.uid() THEN RETURN false; END IF;
+  UPDATE public.live_tables
+  SET played = CASE WHEN jsonb_array_length(played) = 0 THEN played
+                    ELSE played - (jsonb_array_length(played) - 1) END,
+      updated_at = now()
+  WHERE id = p_table_id;
+  RETURN true;
+END
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.live_table_view(p_table_id uuid)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -1457,13 +1534,9 @@ CREATE OR REPLACE FUNCTION public.live_table_view(p_table_id uuid)
  SET search_path TO 'public'
 AS $function$
 DECLARE
-  t          public.live_tables%ROWTYPE;
-  v_is_owner boolean;
-  v_is_member boolean;
-  v_seat     text;
-  v_visible  text[];
-  v_hands    jsonb := '{}'::jsonb;
-  s          text;
+  t public.live_tables%ROWTYPE;
+  v_is_owner boolean; v_is_member boolean; v_seat text;
+  v_visible text[]; v_hands jsonb := '{}'::jsonb; s text; v_restanti jsonb;
 BEGIN
   SELECT * INTO t FROM public.live_tables WHERE id = p_table_id;
   IF NOT FOUND THEN RETURN NULL; END IF;
@@ -1473,7 +1546,6 @@ BEGIN
     SELECT 1 FROM public.class_members m
     WHERE m.class_id = t.class_id AND m.student_id = auth.uid()
   ) INTO v_is_member;
-
   IF NOT v_is_owner AND NOT v_is_member THEN RETURN NULL; END IF;
 
   v_seat := t.seat_of ->> auth.uid()::text;
@@ -1489,26 +1561,27 @@ BEGIN
 
   FOREACH s IN ARRAY v_visible LOOP
     IF t.hands ? s THEN
-      v_hands := v_hands || jsonb_build_object(s, t.hands -> s);
+      SELECT coalesce(jsonb_agg(c), '[]'::jsonb) INTO v_restanti
+      FROM jsonb_array_elements(t.hands -> s) c
+      WHERE NOT EXISTS (
+        SELECT 1 FROM jsonb_array_elements(t.played) g
+        WHERE g -> 'card' ->> 'suit' = c ->> 'suit'
+          AND g -> 'card' ->> 'rank' = c ->> 'rank'
+      );
+      v_hands := v_hands || jsonb_build_object(s, v_restanti);
     END IF;
   END LOOP;
 
   RETURN jsonb_build_object(
-    'id',            t.id,
-    'classId',       t.class_id,
-    'titolo',        t.titolo,
-    'hands',         v_hands,
-    'revealed',      to_jsonb(t.revealed),
-    'seat',          v_seat,
-    -- La mappa completa dei posti serve solo a chi assegna: un allievo non ha
-    -- motivo di sapere dove siedono i compagni.
-    'seatOf',        CASE WHEN v_is_owner THEN t.seat_of ELSE NULL END,
-    'isInstructor',  v_is_owner,
-    'contract',      CASE WHEN v_is_owner OR t.show_contract THEN t.contract END,
-    'declarer',      CASE WHEN v_is_owner OR t.show_contract THEN t.declarer END,
-    'showContract',  t.show_contract,
-    'closed',        t.closed_at IS NOT NULL,
-    'updatedAt',     t.updated_at
+    'id', t.id, 'classId', t.class_id, 'titolo', t.titolo,
+    'hands', v_hands, 'played', t.played,
+    'revealed', to_jsonb(t.revealed), 'seat', v_seat,
+    'seatOf', CASE WHEN v_is_owner THEN t.seat_of ELSE NULL END,
+    'isInstructor', v_is_owner,
+    'contract', CASE WHEN v_is_owner OR t.show_contract THEN t.contract END,
+    'declarer', CASE WHEN v_is_owner OR t.show_contract THEN t.declarer END,
+    'showContract', t.show_contract,
+    'closed', t.closed_at IS NOT NULL, 'updatedAt', t.updated_at
   );
 END
 $function$
@@ -1740,6 +1813,7 @@ ALTER TABLE public.live_tables ALTER COLUMN seat_of SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.live_tables ALTER COLUMN show_contract SET DEFAULT false;
 ALTER TABLE public.live_tables ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.live_tables ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.login_history ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.login_history ALTER COLUMN logged_in_at SET DEFAULT now();
 ALTER TABLE public.partner_profiles ALTER COLUMN looking SET DEFAULT true;
@@ -2974,6 +3048,12 @@ GRANT EXECUTE ON FUNCTION public.list_partner_candidates(p_level text, p_provinc
 REVOKE ALL ON FUNCTION public.live_table_open(p_class_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.live_table_open(p_class_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.live_table_open(p_class_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb) TO service_role;
+REVOKE ALL ON FUNCTION public.live_table_undo(p_table_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.live_table_undo(p_table_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.live_table_undo(p_table_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.live_table_view(p_table_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO service_role;
