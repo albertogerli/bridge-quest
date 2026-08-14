@@ -10,7 +10,8 @@ export type EmailKind =
   | "inactive_7"
   | "inactive_14"
   | "streak_risk"
-  | "friend_request";
+  | "friend_request"
+  | "turno_licita";
 
 export interface EmailContext {
   name?: string | null;
@@ -19,6 +20,8 @@ export interface EmailContext {
   daysInactive?: number | null;
   modulesDone?: number;
   senderName?: string | null; // friend_request: chi ha inviato la richiesta
+  /** turno_licita: quante licite aperte stanno aspettando una tua risposta. */
+  liciteFerme?: number;
 }
 
 export interface RenderedEmail {
@@ -235,6 +238,37 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
         text: textFallback(
           [`${hi.replace(/<[^>]+>/g, "")}! ${sender} ti ha inviato una richiesta di amicizia su Bridge LAB.`, "", "Accettala nella sezione Amici → Richieste per sfidarlo a bridge."],
           "Vedi la richiesta", amici
+        ),
+        transactional: true,
+      };
+    }
+
+    /**
+     * «Tocca a te»: una licita a due aperta aspetta una tua dichiarazione.
+     *
+     * È TRANSAZIONALE, non promozionale: riguarda una partita che hai
+     * cominciato tu e una persona che sta aspettando. Per questo non chiede il
+     * consenso al marketing e non porta il piè di pagina di disiscrizione — e
+     * per lo stesso motivo il testo non prova a vendere nient'altro: dice chi
+     * aspetta e dove si va a rispondere.
+     */
+    case "turno_licita": {
+      const quante = Math.max(1, ctx.liciteFerme ?? 1);
+      const licite = `${SITE}/gioca/licita-amico`;
+      const quali = quante === 1 ? "una licita" : `${quante} licite`;
+      const heading = quante === 1
+        ? "Tocca a te 🂡"
+        : `Tocca a te in ${quante} licite 🂡`;
+      const bodyHtml = `
+        <p style="margin:0 0 14px;">${hi}! ${quante === 1 ? "C'è" : "Ci sono"} <strong>${quali}</strong> in cui il tuo compagno ha già dichiarato e sta aspettando la tua risposta.</p>
+        <p style="margin:0 0 14px;">Ci vuole un minuto: vedi la tua mano, scegli la dichiarazione, e la parola torna a lui.</p>
+        <p style="margin:0;">Non serve essere collegati insieme — ma se nessuno dei due torna, la licita resta lì.</p>`;
+      return {
+        subject: quante === 1 ? "Tocca a te: una licita ti aspetta 🂡" : `Tocca a te: ${quante} licite ti aspettano 🂡`,
+        html: layout({ preheader: "Il tuo compagno ha dichiarato e aspetta la tua risposta.", emoji: "🂡", heading, bodyHtml, ctaLabel: "Rispondi ora", ctaUrl: licite }),
+        text: textFallback(
+          [`${hi.replace(/<[^>]+>/g, "")}! ${quante === 1 ? "C'è una licita" : `Ci sono ${quante} licite`} in cui il tuo compagno sta aspettando la tua dichiarazione.`, "", "Ci vuole un minuto: vedi la tua mano, dichiara, e la parola torna a lui."],
+          "Rispondi ora", licite
         ),
         transactional: true,
       };
