@@ -405,7 +405,8 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   platform text,
   asd_code text,
   asd_name text,
-  role text NOT NULL
+  role text NOT NULL,
+  friend_code text
 );
 
 CREATE TABLE IF NOT EXISTS public.push_subscriptions (
@@ -758,6 +759,25 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.amico_da_codice(p_codice text)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT CASE
+    WHEN auth.uid() IS NULL THEN NULL
+    ELSE (
+      SELECT jsonb_build_object('id', p.id, 'nome', p.display_name)
+      FROM public.profiles p
+      WHERE upper(btrim(p.friend_code)) = upper(btrim(p_codice))
+        AND p.id <> auth.uid()
+      LIMIT 1
+    )
+  END;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.bidding_session_bid(p_id uuid, p_bid text)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -1055,6 +1075,26 @@ BEGIN
   RETURN out;
 END;
 $function$
+;
+
+CREATE OR REPLACE FUNCTION public.genera_codice_amico()
+ RETURNS text
+ LANGUAGE plpgsql
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  alfabeto text := 'ABCDEFGHJKMNPQRTUVWXYZ2346789';
+  codice text; i int;
+BEGIN
+  LOOP
+    codice := '';
+    FOR i IN 1..6 LOOP
+      codice := codice || substr(alfabeto, 1 + floor(random() * length(alfabeto))::int, 1);
+    END LOOP;
+    EXIT WHEN NOT EXISTS (SELECT 1 FROM public.profiles WHERE friend_code = codice);
+  END LOOP;
+  RETURN codice;
+END $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.generate_invite_code()
@@ -1768,6 +1808,23 @@ END;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.mio_codice_amico()
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE v_codice text;
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN NULL; END IF;
+  SELECT friend_code INTO v_codice FROM public.profiles WHERE id = auth.uid();
+  IF v_codice IS NOT NULL THEN RETURN v_codice; END IF;
+  v_codice := public.genera_codice_amico();
+  UPDATE public.profiles SET friend_code = v_codice WHERE id = auth.uid();
+  RETURN v_codice;
+END $function$
+;
+
 CREATE OR REPLACE FUNCTION public.my_asd_code()
  RETURNS text
  LANGUAGE sql
@@ -2238,6 +2295,7 @@ CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
 CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, created_at DESC);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX profiles_asd_code_idx ON public.profiles USING btree (asd_code);
+CREATE UNIQUE INDEX profiles_friend_code_key ON public.profiles USING btree (friend_code) WHERE (friend_code IS NOT NULL);
 CREATE INDEX saved_hands_owner_idx ON public.saved_hands USING btree (owner_id, created_at DESC);
 CREATE INDEX smazzate_bidding_gin ON public.smazzate USING gin (bidding jsonb_path_ops);
 CREATE INDEX smazzate_lesson_id_idx ON public.smazzate USING btree (lesson_id);
@@ -3228,6 +3286,9 @@ GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
+REVOKE ALL ON FUNCTION public.amico_da_codice(p_codice text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.amico_da_codice(p_codice text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.amico_da_codice(p_codice text) TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO service_role;
@@ -3244,6 +3305,9 @@ GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO authentica
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
+REVOKE ALL ON FUNCTION public.genera_codice_amico() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.genera_codice_amico() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.genera_codice_amico() TO service_role;
 REVOKE ALL ON FUNCTION public.generate_invite_code() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.generate_invite_code() TO anon;
 GRANT EXECUTE ON FUNCTION public.generate_invite_code() TO authenticated;
@@ -3323,6 +3387,9 @@ GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO service_rol
 REVOKE ALL ON FUNCTION public.log_user_login() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
+REVOKE ALL ON FUNCTION public.mio_codice_amico() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.mio_codice_amico() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.mio_codice_amico() TO service_role;
 REVOKE ALL ON FUNCTION public.my_asd_code() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.my_asd_code() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.my_asd_code() TO service_role;
