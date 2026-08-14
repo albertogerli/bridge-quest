@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { Gavel, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -15,6 +15,7 @@ import { scoreContract } from "@/lib/scoring";
 import type { Strain } from "@/lib/minibridge";
 import { valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
 import { benBid } from "@/lib/ben-client";
+import { Asta } from "@/components/bridge/asta";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -247,16 +248,22 @@ export default function LicitaPage() {
             ))}
           </div>
 
-          {licita.length > 0 && (
-            <div className="rounded-2xl border border-border bg-card p-3 mb-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                Licita — Sud, Ovest, Nord, Est
+          {/* La griglia d'asta vera: quattro colonne, mazziere segnato, e
+              solo le dichiarazioni lecite premibili. Vedi components/bridge/asta. */}
+          <div className="mb-4">
+            <Asta
+              dealer="south"
+              bids={licita}
+              ioSono="south"
+              onDichiara={dichiara}
+              disabilitato={attesa || !!esito || annullata}
+            />
+            {attesa && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Gli altri stanno dichiarando…
               </p>
-              <p className="text-base font-mono">{licita.join("  ·  ")}</p>
-              {attesa && <p className="text-xs text-muted-foreground mt-1">Il compagno sta pensando…</p>}
-
-            </div>
-          )}
+            )}
+          </div>
 
           {annullata && (
             <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">
@@ -270,32 +277,6 @@ export default function LicitaPage() {
               </p>
               <Button onClick={prossima}>Prossima mano</Button>
             </div>
-          )}
-
-          {!esito && !annullata && (
-            <>
-              <p className="text-sm font-semibold mb-2 flex items-center gap-2">
-                <Gavel className="w-4 h-4 text-figb" aria-hidden="true" />
-                Cosa dichiari?
-              </p>
-              <div className="grid grid-cols-5 gap-1 mb-2">
-                {[1, 2, 3, 4, 5, 6, 7].map((lvl) =>
-                  DENOM.map((d) => (
-                    <button
-                      key={`${lvl}${d.label}`}
-                      disabled={attesa}
-                      onClick={() => dichiara(`${lvl}${d.label}`)}
-                      className="h-10 rounded-lg border border-border bg-card text-sm font-bold hover:bg-muted disabled:opacity-40"
-                    >
-                      {lvl}{d.label}
-                    </button>
-                  ))
-                )}
-              </div>
-              <Button variant="outline" disabled={attesa} onClick={() => dichiara("P")} className="w-full">
-                Passo
-              </Button>
-            </>
           )}
 
           <AnimatePresence>
