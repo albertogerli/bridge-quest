@@ -17,6 +17,8 @@ import { valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita"
 import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
 import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
+import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
+import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import {
   confrontoCampo, manoDaFare, registraRisultato, riferimento,
   type ConfrontoCampo,
@@ -102,6 +104,16 @@ export default function LicitaPage() {
   const [contrattoFinale, setContrattoFinale] = useState<string>("");
   const [stelleTotali, setStelleTotali] = useState(0);
   const [campo, setCampo] = useState<ConfrontoCampo | null>(null);
+  /**
+   * Il contratto raggiunto, in forma leggibile dal codice.
+   *
+   * `contrattoFinale` è una frase da mostrare; per segnare la riga giusta nel
+   * riepilogo serve il contratto vero, e ricavarlo di nuovo dalla frase
+   * sarebbe un secondo conto che può divergere dal primo.
+   */
+  const [giocato, setGiocato] = useState<
+    { level: number; strain: Strain; declarer: Position; lato: "ns" | "ew" } | null
+  >(null);
 
   const mano = preparata?.round === round ? preparata.dati : null;
 
@@ -119,6 +131,7 @@ export default function LicitaPage() {
       // Passo generale: zero, e il riferimento dice quanto si è lasciato sul tavolo.
       const e = valutaLicita(0, mano.riferimento, mano.metro);
       setContrattoFinale("Passo generale");
+      setGiocato(null);
       setEsito(e);
       setStelleTotali((s) => s + e.stelle);
       salva(null, null, 0, e.stelle);
@@ -160,6 +173,7 @@ export default function LicitaPage() {
       `${ultimo} di ${ETICHETTA[dichiarante]} — ${prese} prese` +
         (nostro ? "" : " (dichiarano gli avversari)")
     );
+    setGiocato({ level, strain: den.strain, declarer: dichiarante, lato: lineaVincente });
     setEsito(e);
     setStelleTotali((s) => s + e.stelle);
     salva(ultimo, dichiarante, punteggio, e.stelle);
@@ -324,6 +338,7 @@ export default function LicitaPage() {
     setContrattoFinale("");
     setAnnullata(false);
     setCampo(null);
+    setGiocato(null);
     setRound((r) => r + 1);
   };
 
@@ -433,6 +448,21 @@ export default function LicitaPage() {
                     : "il par della smazzata"}{" "}
                   {esito.punteggioPar}.
                 </p>
+                {/* A mano finita le carte si aprono tutte: durante la licita
+                    vedi solo le tue, dopo nascondere il resto non insegna più
+                    niente — anzi, toglie la spiegazione. */}
+                <RiepilogoMano
+                  deal={mano.deal}
+                  metro={mano.metro}
+                  contratti={contrattiDaRivedere({
+                    table: mano.table,
+                    lato: "ns",
+                    vulnerability: mano.vulnerability,
+                    riferimento: mano.riferimento,
+                    metro: mano.metro,
+                    giocato: giocato?.lato === "ns" ? giocato : null,
+                  })}
+                />
                 {campo && <ConfrontoCampoPannello campo={campo} manoId={mano.id} />}
                 <Button className="mt-4" onClick={prossima}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
