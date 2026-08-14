@@ -700,6 +700,53 @@ try {
   fail(`verifica tavolo giocabile non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+// 11. Archivio delle mani — saved_hands
+//     (vedi scripts/sql/archivio-mani-2026-08.sql)
+//
+//     L'archivio è personale: le mani di un insegnante non sono affari di
+//     nessun altro, nemmeno di un collega.
+// ---------------------------------------------------------------------------
+console.log("\n[11] Archivio delle mani — saved_hands");
+
+try {
+  {
+    const { data, error } = await anon.from("saved_hands").select("titolo").limit(1);
+    const rows = error ? 0 : data?.length ?? 0;
+    if (rows === 0) ok("(a) saved_hands: niente per l'anonimo");
+    else fail(`(a) un anonimo legge ${rows} mani salvate`);
+  }
+
+  {
+    const email = `sh-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Sh!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(b) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+
+      const { data: mie } = await u.from("saved_hands").select("id").limit(5);
+      if ((mie?.length ?? 0) === 0) ok("(b) un utente nuovo non vede le mani di altri");
+      else fail(`(b) un utente nuovo vede ${mie.length} mani altrui`);
+
+      const { error: insErr } = await u.from("saved_hands").insert({
+        owner_id: "00000000-0000-0000-0000-000000000000",
+        titolo: "prova", hands: {},
+      });
+      if (insErr) ok("(c) non si salva una mano a nome di un altro");
+      else fail("(c) è stato possibile salvare a nome di un altro utente");
+
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente archivio di test eliminato");
+    }
+  }
+} catch (e) {
+  fail(`verifica archivio non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"
