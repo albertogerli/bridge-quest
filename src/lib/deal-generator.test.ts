@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { Card, Position, Suit } from "./bridge-engine";
+import type { Card, Position, Rank, Suit } from "./bridge-engine";
 import {
   DEAL_TEMPLATES,
   generateDeals,
@@ -279,6 +279,97 @@ describe("DEAL_TEMPLATES", () => {
       for (const d of r.deals) {
         expect(satisfiesDeal(d, t.constraints), `modello "${t.id}" produce mani non conformi`).toBe(true);
       }
+    }
+  });
+});
+
+// ─── DSL dei vincoli (piano Cuebids, fase 1.1) ──────────────────────────────
+
+describe("vincoli avanzati: quello che serve per gli scenari veri", () => {
+  /** Mano da notazione compatta "AKQ32.J54.T98.76". */
+  function mano(s: string): Card[] {
+    const semi: Suit[] = ["spade", "heart", "diamond", "club"];
+    const out: Card[] = [];
+    s.split(".").forEach((g, i) => {
+      for (const ch of g) out.push({ suit: semi[i], rank: (ch === "T" ? "10" : ch) as Rank });
+    });
+    return out;
+  }
+
+  it("piuLungo distingue i bicolori: conta quale colore è il più lungo", () => {
+    // Cinque picche e quattro cuori: si apre 1♠. L'inverso si apre 1♥.
+    const cinqueQuattro = mano("AKJ82.KQ93.Q4.54");
+    expect(satisfiesSeat(cinqueQuattro, { piuLungo: [["spade", "heart"]] })).toBe(true);
+    expect(satisfiesSeat(cinqueQuattro, { piuLungo: [["heart", "spade"]] })).toBe(false);
+  });
+
+  it("piuLungo è stretto: pari lunghezza NON basta", () => {
+    const cinqueCinque = mano("AKJ82.KQ932.Q4.5");
+    expect(satisfiesSeat(cinqueCinque, { piuLungo: [["spade", "heart"]] })).toBe(false);
+  });
+
+  it("cortezze su un colore preciso", () => {
+    const singoloFiori = mano("AKJ82.K743.Q932.5");
+    expect(satisfiesSeat(singoloFiori, { cortezze: [{ suit: "club", max: 1 }] })).toBe(true);
+    expect(satisfiesSeat(singoloFiori, { cortezze: [{ suit: "spade", max: 1 }] })).toBe(false);
+  });
+
+  it("cortezze senza colore: basta che UNA ci sia — è il caso dello splinter", () => {
+    const conSingolo = mano("AKJ82.K743.Q932.5");
+    const senzaSingoli = mano("AKJ2.K743.Q93.J54");
+    expect(satisfiesSeat(conSingolo, { cortezze: [{ max: 1 }] })).toBe(true);
+    expect(satisfiesSeat(senzaSingoli, { cortezze: [{ max: 1 }] })).toBe(false);
+  });
+
+  it("qualità: un colore lungo e scarno non vale uno lungo e solido", () => {
+    const solido = mano("AKQJ9.432.543.32");
+    const scarno = mano("98765.A32.K43.A32");
+    expect(satisfiesSeat(solido, { qualita: [{ suit: "spade", minOnori: 4 }] })).toBe(true);
+    expect(satisfiesSeat(scarno, { qualita: [{ suit: "spade", minOnori: 4 }] })).toBe(false);
+  });
+
+  it("carte obbligate: l'esempio dell'insegnante deve mostrare quella carta", () => {
+    const conAssoPicche = mano("A9876.K43.Q32.54");
+    expect(satisfiesSeat(conAssoPicche, { carteObbligate: [{ suit: "spade", rank: "A" }] })).toBe(true);
+    expect(satisfiesSeat(conAssoPicche, { carteObbligate: [{ suit: "heart", rank: "A" }] })).toBe(false);
+  });
+
+  it("oppure: «apre 1♠ o 1♥» è un esercizio solo", () => {
+    const quintaPicche = mano("AKJ82.K74.Q93.54");
+    const quintaCuori = mano("K74.AKJ82.Q93.54");
+    const nessunaQuinta = mano("KQ4.A75.KJ83.942");
+    const alternative = {
+      oppure: [{ spade: { min: 5 } }, { heart: { min: 5 } }],
+    };
+    expect(satisfiesSeat(quintaPicche, alternative)).toBe(true);
+    expect(satisfiesSeat(quintaCuori, alternative)).toBe(true);
+    expect(satisfiesSeat(nessunaQuinta, alternative)).toBe(false);
+  });
+
+  it("i vincoli fuori da `oppure` valgono comunque per tutte le alternative", () => {
+    // Quinta maggiore SÌ, ma solo con 12+ punti: la mano debole non passa
+    // nemmeno se ha il colore.
+    const debole = mano("98765.432.5432.3");
+    expect(
+      satisfiesSeat(debole, {
+        hcp: { min: 12 },
+        oppure: [{ spade: { min: 5 } }, { heart: { min: 5 } }],
+      })
+    ).toBe(false);
+  });
+
+  it("il generatore rispetta i vincoli nuovi", () => {
+    // La prova che conta: non che il predicato sia giusto, ma che le mani
+    // prodotte lo soddisfino davvero.
+    const { deals } = generateDeals(
+      { south: { cortezze: [{ suit: "club", max: 1 }], spade: { min: 5 } } },
+      { count: 5, seed: 4242 }
+    );
+    expect(deals.length).toBeGreaterThan(0);
+    for (const d of deals) {
+      const l = suitLengths(d.south);
+      expect(l.club).toBeLessThanOrEqual(1);
+      expect(l.spade).toBeGreaterThanOrEqual(5);
     }
   });
 });

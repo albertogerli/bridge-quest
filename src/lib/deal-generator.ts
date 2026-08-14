@@ -66,6 +66,41 @@ export interface SeatConstraint {
    * e 4 cuori sia 5 fiori e 4 quadri.
    */
   shapes?: string[];
+
+  // ── Vincoli aggiunti per il DSL degli scenari (piano Cuebids, fase 1.1) ──
+
+  /**
+   * Lunghezze relative: `[["spade","heart"]]` chiede più picche che cuori.
+   * Serve per le mani bicolori, dove conta quale colore è il più lungo e non
+   * quanto sono lunghi in assoluto.
+   */
+  piuLungo?: [Suit, Suit][];
+
+  /**
+   * Cortezze richieste. `{ suit: "club", max: 1 }` chiede al massimo una
+   * fiori; senza `suit`, chiede che ESISTA un colore così corto — è la forma
+   * che serve per gli splinter, dove non importa quale sia.
+   */
+  cortezze?: { suit?: Suit; max: number }[];
+
+  /**
+   * Qualità del colore: quanti onori (A K Q J 10) deve contenere.
+   * Un colore lungo e scarno non si dichiara come uno lungo e solido, e un
+   * esercizio che non distingue insegna a dichiarare male.
+   */
+  qualita?: { suit: Suit; minOnori: number }[];
+
+  /**
+   * Carte obbligate, es. l'asso di picche in mano a Sud. Servono agli esempi
+   * costruiti dall'insegnante, dove la mano deve mostrare una cosa precisa.
+   */
+  carteObbligate?: { suit: Suit; rank: Rank }[];
+
+  /**
+   * Alternative: basta che UNA sia soddisfatta. È l'operatore OR del piano,
+   * e serve più di quanto sembri — «apre 1♠ oppure 1♥» è un esercizio solo.
+   */
+  oppure?: SeatConstraint[];
 }
 
 export interface DealConstraints {
@@ -178,6 +213,37 @@ export function satisfiesSeat(hand: readonly Card[], constraint: SeatConstraint 
   if (constraint.shapes && constraint.shapes.length > 0) {
     if (!constraint.shapes.includes(handShape(hand))) return false;
   }
+
+  for (const [piu, meno] of constraint.piuLungo ?? []) {
+    if (lengths[piu] <= lengths[meno]) return false;
+  }
+
+  for (const c of constraint.cortezze ?? []) {
+    if (c.suit) {
+      if (lengths[c.suit] > c.max) return false;
+    } else if (!SUITS.some((s) => lengths[s] <= c.max)) {
+      // Nessun colore abbastanza corto: la mano non ha la cortezza chiesta.
+      return false;
+    }
+  }
+
+  for (const q of constraint.qualita ?? []) {
+    const onori = hand.filter(
+      (c) => c.suit === q.suit && ["A", "K", "Q", "J", "10"].includes(c.rank)
+    ).length;
+    if (onori < q.minOnori) return false;
+  }
+
+  for (const c of constraint.carteObbligate ?? []) {
+    if (!hand.some((x) => x.suit === c.suit && x.rank === c.rank)) return false;
+  }
+
+  // Le alternative si valutano per ultime: se ce ne sono, almeno una deve
+  // reggere, e i vincoli qui sopra valgono comunque per tutte.
+  if (constraint.oppure && constraint.oppure.length > 0) {
+    if (!constraint.oppure.some((alt) => satisfiesSeat(hand, alt))) return false;
+  }
+
   return true;
 }
 
