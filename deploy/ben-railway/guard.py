@@ -47,7 +47,8 @@ UPSTREAM = f"http://127.0.0.1:{PORTA_BEN}"
 TIMEOUT = float(os.environ.get("BEN_TIMEOUT", "12"))
 
 # I soli percorsi usati da src/app/api/ben/*. `/` è la sonda di salute.
-CONSENTITI = {"/", "/play", "/lead", "/autoplay"}
+# `/bid` è il modello neurale di licita: stessa rete, altro endpoint.
+CONSENTITI = {"/", "/play", "/lead", "/autoplay", "/bid"}
 
 INTESTAZIONE = "X-BEN-Token"
 
