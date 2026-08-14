@@ -212,9 +212,15 @@ language sql
 stable
 set search_path to 'public'
 as $function$
-  SELECT to_jsonb(m) || jsonb_build_object('scenario', to_jsonb(s) - 'vincoli')
+  SELECT to_jsonb(m) || jsonb_build_object(
+    'scenario', CASE WHEN s.id IS NULL THEN NULL ELSE to_jsonb(s) - 'vincoli' END)
   FROM public.mani_generate m
-  JOIN public.scenari s ON s.id = m.scenario_id
+  -- LEFT, non INNER: la maggior parte della scorta non appartiene a nessuno
+  -- scenario — sono mani da partita, generate sui punti della linea e basta.
+  -- Con il JOIN interno non uscivano mai, e la pagina ripiegava in silenzio
+  -- sulla generazione locale: niente confronto col campo, e le stelle date col
+  -- par invece che sul valore atteso. Un difetto che non dava errori.
+  LEFT JOIN public.scenari s ON s.id = m.scenario_id
   WHERE (p_slug IS NULL OR s.slug = p_slug)
     AND auth.uid() IS NOT NULL
     AND NOT EXISTS (

@@ -51,6 +51,10 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
 
   // E la tabella di cosa valeva ogni contratto, col proprio segnato.
   await expect(page.getByText("Cosa valeva ogni contratto")).toBeVisible();
+  // La colonna del valore atteso: è da lì che vengono le stelle, e se sparisse
+  // vorrebbe dire che le mani della scorta non portano più le distribuzioni —
+  // cioè che il voto è tornato a confrontare due metri diversi.
+  await expect(page.getByRole("columnheader", { name: "In media" })).toBeVisible();
   await expect(page.getByText("← il vostro")).toBeVisible();
   await expect(page.getByRole("columnheader", { name: "Stelle" })).toBeVisible();
 

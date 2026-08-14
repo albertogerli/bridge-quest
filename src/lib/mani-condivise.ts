@@ -185,42 +185,68 @@ export async function confrontoCampo(manoId: string): Promise<ConfrontoCampo | n
 }
 
 /**
- * Il riferimento con cui si danno le stelle, dal punto di vista di `lato`.
+ * Il riferimento con cui si danno le stelle, e con che metro.
  *
- * QUANDO LA MANO NON È TUA. Il valore atteso dice qual era il contratto
- * migliore per ciascuna delle due linee, ma su una smazzata sola a giocare è
- * una linea sola. Se gli avversari hanno di più, il meglio che potevi fare non
- * è il tuo miglior contratto — è lasciarli giocare il loro: il riferimento
- * diventa il loro valore atteso col segno cambiato. Altrimenti si darebbero
- * zero stelle a chi ha passato correttamente su una mano che non era sua.
+ * DUE SITUAZIONI DIVERSE, DUE METRI.
  *
- * COSA QUESTA APPROSSIMAZIONE NON VEDE: il sacrificio. Il par vero tiene conto
- * anche di 5♥ contrato che perde meno di quanto avrebbero fatto loro; qui no,
- * e chi sacrifica bene prende meno stelle di quante ne meriti. È una
- * situazione rara e il rimedio costerebbe una ricerca di equilibrio: quando
- * varrà la pena si farà, e intanto è meglio saperlo che ignorarlo.
+ * Se la mano è tua — la tua linea in media rende più della loro — la domanda è
+ * «qual era il contratto giusto da scegliere?», e la risposta si misura in
+ * valore atteso: il tuo contratto contro il migliore, tutti e due in media.
+ * Così una buona dichiarazione resta buona anche quando le carte stanno male.
  *
- * Se la mano non porta il valore atteso — mani vecchie, o generate col conto
- * secco — si ripiega sul par, dicendolo, perché il commento cambia.
+ * Se la mano è LORO, quel confronto smette di funzionare, e vale la pena
+ * spiegare perché invece di lasciarlo passare. Il valore atteso di un tuo
+ * contratto presuppone che tu quel contratto lo giochi indisturbato: ma se la
+ * mano è loro non te lo lasciano giocare, dichiarano sopra. Prendendo «il
+ * meglio che potevi fare» come «lasciarli giocare», qualunque tua
+ * dichiarazione che perde meno della loro manche risulterebbe ottima, e
+ * pioverebbero tre stelle su tutto — compreso un 3♣ senza capo né coda.
+ * In competizione il metro giusto esiste già ed è il PAR: tiene conto anche
+ * del sacrificio, ed è l'equilibrio vero della smazzata. Lì si confronta il
+ * risultato reale col par reale, che è di nuovo un confronto onesto.
+ *
+ * In tutti e due i casi numeratore e denominatore sono della stessa specie: è
+ * l'unica regola che conta.
  */
 export function riferimento(
   mano: ManoCondivisa,
   lato: "ns" | "ew"
 ): { punteggio: number; metro: "atteso" | "esatto" } {
   const va = mano.valore_atteso;
+  const par = mano.par_score ?? 0;
+  const parPerNoi = lato === "ns" ? par : -par;
+
   // Il valore atteso serve da riferimento SOLO se la mano porta anche le
   // distribuzioni: senza, il contratto raggiunto si potrebbe valutare solo col
   // punteggio reale, e confrontare un punteggio reale con un valore atteso è
-  // il difetto che questo controllo esiste per impedire. Meglio il par per
-  // tutti e due che due metri diversi.
-  if (va && mano.distribuzioni) {
-    const nostro = va[lato].ev;
-    const loro = va[lato === "ns" ? "ew" : "ns"].ev;
-    return { punteggio: nostro >= loro ? nostro : -loro, metro: "atteso" };
-  }
-  // Il par è già dal punto di vista di Nord-Sud.
-  const par = mano.par_score ?? 0;
-  return { punteggio: lato === "ns" ? par : -par, metro: "esatto" };
+  // il difetto che questo controllo esiste per impedire.
+  if (!va || !mano.distribuzioni) return { punteggio: parPerNoi, metro: "esatto" };
+
+  const nostro = va[lato].ev;
+  const loro = va[lato === "ns" ? "ew" : "ns"].ev;
+  if (nostro < loro) return { punteggio: parPerNoi, metro: "esatto" };
+
+  /**
+   * Il riferimento si rimisura sull'istogramma completo, lo stesso da cui
+   * vengono i valori della tabella di fine mano.
+   *
+   * QUALE CONTRATTO: quello scelto alla generazione, che è stato scelto su
+   * metà delle rimescolate e misurato sull'altra metà — il modo di non farsi
+   * ingannare dal contratto che ha avuto fortuna. Ma quel numero viene da un
+   * campione diverso da quello della tabella, e usarlo così com'era produceva
+   * una stranezza visibile: nella tabella NESSUN contratto arrivava a tre
+   * stelle, nemmeno il migliore. Rimisurandolo sullo stesso istogramma degli
+   * altri, il migliore prende tre stelle per costruzione.
+   */
+  const dalPuntoDiVistaNs = evDelContratto(mano, {
+    level: va[lato].level,
+    strain: va[lato].strain,
+    declarer: va[lato].declarer,
+  });
+  if (dalPuntoDiVistaNs === null) return { punteggio: nostro, metro: "atteso" };
+  // `evDelContratto` risponde sempre come il par, cioè dal punto di vista di
+  // Nord-Sud: per Est-Ovest il riferimento va girato.
+  return { punteggio: lato === "ns" ? dalPuntoDiVistaNs : -dalPuntoDiVistaNs, metro: "atteso" };
 }
 
 /**

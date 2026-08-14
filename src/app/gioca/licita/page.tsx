@@ -184,13 +184,13 @@ export default function LicitaPage() {
      * quello che si mostra: è successo, e va detto.
      */
     const perStelle =
-      (mano.condivisa &&
-        evDelContratto(mano.condivisa, {
-          level,
-          strain: den.strain,
-          declarer: dichiarante,
-        })) ??
-      punteggio;
+      (mano.metro === "atteso" && mano.condivisa
+        ? evDelContratto(mano.condivisa, {
+            level,
+            strain: den.strain,
+            declarer: dichiarante,
+          })
+        : null) ?? punteggio;
 
     const e = valutaLicita(perStelle, mano.riferimento, mano.metro);
     setContrattoFinale(
@@ -345,6 +345,9 @@ export default function LicitaPage() {
           riferimento: rif.punteggio,
           metro: rif.metro,
           id: m.id,
+          // La riga intera, non solo l'id: da lì escono le distribuzioni delle
+          // prese, che sono il metro con cui si danno le stelle.
+          condivisa: m,
           scenario: m.scenario?.nome,
         });
       })
@@ -490,9 +493,13 @@ export default function LicitaPage() {
                     riferimento: mano.riferimento,
                     metro: mano.metro,
                     giocato: giocato?.lato === "ns" ? giocato : null,
-                    ev: mano.condivisa
-                      ? (c) => evDelContratto(mano.condivisa!, c)
-                      : undefined,
+                    // Il valore atteso entra in tabella solo quando è anche il
+                    // metro del riferimento: mostrarlo accanto a stelle
+                    // calcolate sul par confonderebbe due conti diversi.
+                    ev:
+                      mano.metro === "atteso" && mano.condivisa
+                        ? (c) => evDelContratto(mano.condivisa!, c)
+                        : undefined,
                   })}
                 />
                 {campo && <ConfrontoCampoPannello campo={campo} manoId={mano.id} />}
