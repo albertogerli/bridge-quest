@@ -73,9 +73,18 @@ try {
   const { data: b2 } = await sud.client.rpc("bidding_session_bid", { p_id: sess.id, p_bid: "1♠" });
   b2?.ok === true ? ok("Sud apre 1♠") : no(`apertura rifiutata: ${b2?.errore}`);
 
-  // Ora tocca a Ovest (avversario): la dichiarazione di BEN passa da chi ha appena giocato
-  const { data: b3 } = await sud.client.rpc("bidding_session_bid", { p_id: sess.id, p_bid: "P" });
-  b3?.ok === true ? ok("l'avversario passa (dichiarazione calcolata da BEN)") : no(`avversario rifiutato: ${b3?.errore}`);
+  // Ora tocca a Ovest (avversario). Un GIOCATORE non deve poterlo fare: le
+  // mani degli avversari le ha solo il server, ed è lui a farle dichiarare.
+  const { data: b3no } = await sud.client.rpc("bidding_session_bid", { p_id: sess.id, p_bid: "P" });
+  b3no?.ok !== true ? ok("un giocatore NON dichiara per gli avversari") : no("un giocatore ha dichiarato per un avversario");
+
+  // E l'allievo non deve nemmeno poter chiamare la funzione del server.
+  const { error: eServer } = await sud.client.rpc("bidding_session_bid_server", { p_id: sess.id, p_bid: "P" });
+  eServer ? ok("la funzione del server non è eseguibile da un giocatore") : no("un giocatore ha chiamato la funzione del server");
+
+  // Il server (service_role) fa dichiarare l'avversario, come fa la route.
+  const { data: b3 } = await admin.rpc("bidding_session_bid_server", { p_id: sess.id, p_bid: "P" });
+  b3?.ok === true ? ok("il server fa passare l'avversario") : no(`avversario rifiutato: ${b3?.errore}`);
 
   // Adesso tocca a Nord
   const { data: v2 } = await nord.client.rpc("bidding_session_view", { p_id: sess.id });
@@ -86,12 +95,21 @@ try {
   const { data: b5 } = await nord.client.rpc("bidding_session_bid", { p_id: sess.id, p_bid: "4♠" });
   b5?.ok === true ? ok("Nord alza a 4♠") : no(`rifiutato: ${b5?.errore}`);
 
-  // Tre passi chiudono. L'ordine dal mazziere è Sud, Ovest, Nord, Est: dopo il
-  // 4♠ di Nord tocca a Est (avversario), poi a Sud, poi a Ovest (avversario).
-  for (const chi of [sud, sud, sud]) {
-    const { data: r } = await chi.client.rpc("bidding_session_bid", { p_id: sess.id, p_bid: "P" });
+  // Tre passi chiudono. Dopo il 4♠ di Nord tocca a Est (avversario, lo fa il
+  // server), poi a Sud (giocatore), poi a Ovest (avversario).
+  const passi = [
+    () => admin.rpc("bidding_session_bid_server", { p_id: sess.id, p_bid: "P" }),
+    () => sud.client.rpc("bidding_session_bid", { p_id: sess.id, p_bid: "P" }),
+    () => admin.rpc("bidding_session_bid_server", { p_id: sess.id, p_bid: "P" }),
+  ];
+  for (const passo of passi) {
+    const { data: r } = await passo();
     if (r?.ok !== true) no(`passo rifiutato: ${r?.errore}`);
   }
+
+  // E il server non deve poter dichiarare al posto dei due amici.
+  const { data: abuso } = await admin.rpc("bidding_session_bid_server", { p_id: sess.id, p_bid: "P" });
+  abuso?.ok !== true ? ok("il server non dichiara al posto dei giocatori") : no("il server ha dichiarato per un giocatore");
   const { data: v3 } = await sud.client.rpc("bidding_session_view", { p_id: sess.id });
   v3.chiusa === true ? ok("tre passi chiudono la licita") : no("la licita non si è chiusa");
   Object.keys(v3.hands).length === 4 ? ok("a licita chiusa si vedono tutte le mani") : no("le mani non si aprono a fine licita");
