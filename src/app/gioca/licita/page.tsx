@@ -433,7 +433,7 @@ export default function LicitaPage() {
                     : "il par della smazzata"}{" "}
                   {esito.punteggioPar}.
                 </p>
-                {campo && <ConfrontoCampoPannello campo={campo} />}
+                {campo && <ConfrontoCampoPannello campo={campo} manoId={mano.id} />}
                 <Button className="mt-4" onClick={prossima}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
                 </Button>

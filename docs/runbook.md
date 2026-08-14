@@ -60,6 +60,37 @@ Si impostano in **`.env.local`** in locale (mai committato, permessi 600) e su *
   Risposta JSON: `{ candidates, sent, skipped, byKind, errors, errorCount }`.
 - Spegnere tutto: `EMAIL_ENABLED=false` su Vercel (il cron logga senza inviare).
 
+## Scorta di mani condivise
+
+Le mani degli esercizi di licita non si generano più nel browser: stanno in
+`mani_generate` e le usano tutti. È quello che rende possibile il confronto col
+campo («meglio del 74%») e la sfida 2 contro 2 sulle stesse smazzate.
+
+**Va riempita a mano, e va tenuta d'occhio.** Ogni mano costa una generazione
+con vincoli più una quarantina di risoluzioni double dummy: circa mezzo minuto
+a mano su un portatile. Troppo per una funzione serverless, che ha pochi
+secondi — per questo non c'è un cron.
+
+```bash
+npx --yes tsx scripts/scenari-ufficiali.ts          # gli scenari, dai DEAL_TEMPLATES
+npx --yes tsx scripts/genera-scorta.ts --scorta 40   # porta ogni scenario a 40 mani
+npx --yes tsx scripts/genera-scorta.ts --scorta 40 --secco   # senza valore atteso: 20× più veloce
+```
+
+Si riesegue senza danni: conta le mani già in scorta e genera solo quelle che
+mancano. Quante ce ne sono:
+
+```sql
+select s.nome, count(m.id), count(m.valore_atteso)
+from scenari s left join mani_generate m on m.scenario_id = s.id
+group by s.nome order by 2;
+```
+
+Quando la scorta finisce, `mano_da_fare` restituisce `null` e la pagina torna a
+generare in locale: l'esercizio continua a funzionare, ma senza confronto col
+campo. È un degrado silenzioso e voluto — però se resta così a lungo, la parte
+più utile del prodotto sparisce senza che nessun errore lo segnali.
+
 ## Test e qualità
 
 ```bash

@@ -108,7 +108,38 @@ try {
   JSON.stringify(conf).includes(a.id) || JSON.stringify(conf).includes("display_name")
     ? no("il confronto espone identità") : ok("il confronto NON espone chi ha dichiarato cosa");
 
+  // ── Il confronto ristretto a un gruppo ───────────────────────────────────
+  const { data: soloAmici } = await a.client.rpc("confronto_campo_filtrato", {
+    p_mano_id: manoId, p_filtro: "amici",
+  });
+  soloAmici?.totale === 1
+    ? ok("senza amici il confronto «amici» conta solo te")
+    : no(`filtro amici: ${soloAmici?.totale} risultati invece di 1`);
+
+  await admin.from("friendships").insert({ user_id: a.id, friend_id: b.id, status: "accepted" });
+  const { data: conAmico } = await a.client.rpc("confronto_campo_filtrato", {
+    p_mano_id: manoId, p_filtro: "amici",
+  });
+  conAmico?.totale === 2
+    ? ok("diventati amici, il confronto lo comprende") : no(`filtro amici: ${conAmico?.totale}`);
+  conAmico?.persone?.length === 1 && conAmico.persone[0].contratto === "2♠"
+    ? ok("fra amici i nomi si vedono, ed è il senso della cosa")
+    : no(`i nomi degli amici non arrivano: ${JSON.stringify(conAmico?.persone)}`);
+
+  const { data: tutti } = await a.client.rpc("confronto_campo_filtrato", {
+    p_mano_id: manoId, p_filtro: "tutti",
+  });
+  tutti?.totale === 2 && tutti?.persone === null
+    ? ok("col campo intero escono i numeri, mai i nomi")
+    : no(`filtro tutti: totale ${tutti?.totale}, persone ${JSON.stringify(tutti?.persone)}`);
+
   const anon = createClient(URL_, ANON, { auth: { persistSession: false } });
+  const { data: filtroAnon } = await anon.rpc("confronto_campo_filtrato", {
+    p_mano_id: manoId, p_filtro: "tutti",
+  });
+  filtroAnon === null ? ok("un anonimo non vede nemmeno il confronto filtrato")
+                      : no("un anonimo vede il confronto filtrato");
+
   const { data: cAnon } = await anon.rpc("confronto_campo", { p_mano_id: manoId });
   cAnon === null ? ok("un anonimo non vede il confronto") : no("un anonimo vede il confronto");
 } catch (e) {
