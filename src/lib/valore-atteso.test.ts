@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Card, Position, Rank, Suit } from "./bridge-engine";
-import { migliorContrattoAtteso, valoreAtteso } from "./valore-atteso";
+import {
+  distribuzioniAttese, evDaDistribuzione, migliorContrattoAtteso, valoreAtteso,
+} from "./valore-atteso";
 
 /**
  * Il valore atteso passa dal motore double dummy vero: qui non si finge nulla.
@@ -82,4 +84,55 @@ describe("migliorContrattoAtteso", () => {
     const dentro = await migliorContrattoAtteso(stritolo(), "ns", { prove: 3, vulnerable: true });
     expect(dentro.ev).toBeGreaterThan(fuori.ev);
   }, 60_000);
+});
+
+describe("distribuzioni delle prese", () => {
+  it("contano quante volte esce ogni numero di prese", async () => {
+    const { prove, distribuzioni } = await distribuzioniAttese(stritolo(), "ns", { prove: 4 });
+    expect(prove).toBe(4);
+    // A cuori Nord-Sud fanno tredici prese comunque si mescolino le altre carte.
+    expect(distribuzioni.heart.south[13]).toBe(4);
+    expect(distribuzioni.heart.south.reduce((a, b) => a + b, 0)).toBe(4);
+  }, 60_000);
+
+  it("dalla distribuzione esce lo stesso valore atteso del conto diretto", async () => {
+    // È la proprietà che rende lecito conservare l'istogramma invece dei
+    // punteggi: se i due conti divergessero, le stelle date a fine mano non
+    // sarebbero quelle calcolate alla generazione.
+    const mani = stritolo();
+    const contratto = { level: 6, strain: "heart", declarer: "south" } as const;
+    const diretto = await valoreAtteso(mani, contratto, { prove: 4, seed: 3 });
+    const { distribuzioni } = await distribuzioniAttese(mani, "ns", { prove: 4, seed: 3 });
+    const daIstogramma = evDaDistribuzione(distribuzioni.heart.south, {
+      level: contratto.level,
+      strain: contratto.strain,
+    });
+    expect(daIstogramma).toEqual(diretto);
+  }, 60_000);
+
+  it("la stessa distribuzione risponde per ogni livello e per la zona", () => {
+    // Tredici prese sicure: 4♥ vale 480 fuori zona, 7♥ 1510, e in zona di più.
+    const sempreTredici = new Array(14).fill(0);
+    sempreTredici[13] = 10;
+    expect(evDaDistribuzione(sempreTredici, { level: 4, strain: "heart" }).ev).toBe(510);
+    expect(evDaDistribuzione(sempreTredici, { level: 7, strain: "heart" }).ev).toBe(1510);
+    expect(
+      evDaDistribuzione(sempreTredici, { level: 7, strain: "heart", vulnerable: true }).ev
+    ).toBe(2210);
+  });
+
+  it("media davvero: metà volte passa e metà cade", () => {
+    const dist = new Array(14).fill(0);
+    dist[10] = 5; // 4♥ fatto: 420
+    dist[8] = 5;  // 4♥ giù di due: -100
+    const v = evDaDistribuzione(dist, { level: 4, strain: "heart" });
+    expect(v.ev).toBe(160);
+    expect(v.mantenuto).toBe(5);
+    expect(v.prove).toBe(10);
+    expect(v.preseMedie).toBe(9);
+  });
+
+  it("una distribuzione vuota non inventa un valore", () => {
+    expect(evDaDistribuzione(new Array(14).fill(0), { level: 4, strain: "heart" }).ev).toBe(0);
+  });
 });

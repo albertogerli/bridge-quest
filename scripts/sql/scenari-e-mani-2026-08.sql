@@ -113,11 +113,30 @@ create table if not exists public.mani_generate (
    * sola, invece che addosso al giocatore.
    */
   valore_atteso jsonb,
+  /**
+   * Le distribuzioni delle prese sulle rimescolate: per denominazione e
+   * dichiarante, quante volte sono uscite n prese.
+   *
+   * PERCHÉ SERVE, E PERCHÉ NON BASTAVA `valore_atteso`.
+   * La prima versione teneva solo il contratto migliore, e le stelle
+   * confrontavano il punteggio REALE del contratto raggiunto con il valore
+   * ATTESO del migliore: due metri diversi. Sulle smazzate dove le carte
+   * stanno bene pioveva tre stelle su tutto, su quelle storte puniva per il
+   * mescolamento. Con l'istogramma il valore atteso di QUALUNQUE contratto si
+   * ricava con una somma, e il confronto torna fra numeri della stessa specie.
+   */
+  distribuzioni jsonb,
+  /** Punti onori combinati di Nord-Sud: si filtra e si verifica la media. */
+  ns_hcp smallint,
   created_at timestamptz not null default now()
 );
 
 alter table public.mani_generate
-  add column if not exists valore_atteso jsonb;
+  add column if not exists valore_atteso jsonb,
+  add column if not exists distribuzioni jsonb,
+  add column if not exists ns_hcp smallint;
+
+create index if not exists mani_generate_ns_hcp_idx on public.mani_generate (ns_hcp);
 
 create index if not exists mani_generate_scenario_idx
   on public.mani_generate (scenario_id, created_at desc);

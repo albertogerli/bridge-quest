@@ -20,8 +20,8 @@ import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import {
-  confrontoCampo, manoDaFare, registraRisultato, riferimento,
-  type ConfrontoCampo,
+  confrontoCampo, evDelContratto, manoDaFare, registraRisultato, riferimento,
+  type ConfrontoCampo, type ManoCondivisa,
 } from "@/lib/mani-condivise";
 import type { Vulnerability } from "@/lib/catalog";
 
@@ -58,6 +58,11 @@ interface Mano {
   metro: Metro;
   /** L'id nella scorta condivisa, quando la mano viene da lì. */
   id?: string;
+  /**
+   * La riga della scorta, quando la mano viene da lì: serve per il valore
+   * atteso dei contratti, che è il metro con cui si danno le stelle.
+   */
+  condivisa?: ManoCondivisa;
   /** Il nome dello scenario, quando c'è. */
   scenario?: string;
 }
@@ -168,7 +173,26 @@ export default function LicitaPage() {
     // Se dichiarano loro, quel punteggio è contro di noi.
     const punteggio = nostro ? punti : -punti;
 
-    const e = valutaLicita(punteggio, mano.riferimento, mano.metro);
+    /**
+     * Le stelle si danno sul VALORE ATTESO del contratto raggiunto, non sul
+     * punteggio di questa smazzata.
+     *
+     * Il riferimento è un valore atteso: confrontarci un risultato reale
+     * significa premiare chi ha trovato le carte messe bene e punire chi le ha
+     * trovate messe male — cioè misurare la fortuna invece della scelta, che è
+     * l'opposto di quello che serve a chi impara. Il punteggio reale resta
+     * quello che si mostra: è successo, e va detto.
+     */
+    const perStelle =
+      (mano.condivisa &&
+        evDelContratto(mano.condivisa, {
+          level,
+          strain: den.strain,
+          declarer: dichiarante,
+        })) ??
+      punteggio;
+
+    const e = valutaLicita(perStelle, mano.riferimento, mano.metro);
     setContrattoFinale(
       `${ultimo} di ${ETICHETTA[dichiarante]} — ${prese} prese` +
         (nostro ? "" : " (dichiarano gli avversari)")
@@ -442,18 +466,23 @@ export default function LicitaPage() {
                 <p className="text-center font-semibold mb-1">{contrattoFinale}</p>
                 <p className="text-sm text-muted-foreground mb-2">{esito.commento}</p>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Il tuo contratto vale {esito.punteggio},{" "}
-                  {mano.metro === "atteso"
-                    ? "il contratto migliore in media"
-                    : "il par della smazzata"}{" "}
-                  {esito.punteggioPar}.
+                  {mano.metro === "atteso" ? (
+                    <>
+                      Il tuo contratto rende in media {esito.punteggio}, il
+                      migliore {esito.punteggioPar}.
+                    </>
+                  ) : (
+                    <>
+                      Il tuo contratto vale {esito.punteggio}, il par della
+                      smazzata {esito.punteggioPar}.
+                    </>
+                  )}
                 </p>
                 {/* A mano finita le carte si aprono tutte: durante la licita
                     vedi solo le tue, dopo nascondere il resto non insegna più
                     niente — anzi, toglie la spiegazione. */}
                 <RiepilogoMano
                   deal={mano.deal}
-                  metro={mano.metro}
                   contratti={contrattiDaRivedere({
                     table: mano.table,
                     lato: "ns",
@@ -461,6 +490,9 @@ export default function LicitaPage() {
                     riferimento: mano.riferimento,
                     metro: mano.metro,
                     giocato: giocato?.lato === "ns" ? giocato : null,
+                    ev: mano.condivisa
+                      ? (c) => evDelContratto(mano.condivisa!, c)
+                      : undefined,
                   })}
                 />
                 {campo && <ConfrontoCampoPannello campo={campo} manoId={mano.id} />}

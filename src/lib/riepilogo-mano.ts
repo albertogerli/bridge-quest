@@ -43,6 +43,8 @@ const DENOMINAZIONI: { chiave: TableStrain; strain: Strain; etichetta: string }[
 ];
 
 export interface ContrattoValutato {
+  /** Quanto rende in media, quando la mano porta le distribuzioni. */
+  ev: number | null;
   /** Come si scrive: "4♥", "3SA". */
   etichetta: string;
   level: number;
@@ -71,8 +73,18 @@ export function contrattiDaRivedere(opzioni: {
   riferimento: number;
   metro: Metro;
   giocato?: { level: number; strain: Strain; declarer?: Position } | null;
+  /**
+   * Il valore atteso di un contratto, quando la mano lo permette.
+   *
+   * SE C'È, LE STELLE VENGONO DA QUI e non dal punteggio di questa smazzata:
+   * il riferimento è anche lui un valore atteso, e confrontare un risultato
+   * reale con una media è il difetto che riempiva di stelle le mani fortunate.
+   * Il punteggio reale resta in tabella, perché «in media rende 175, qui ha
+   * fatto 420» è proprio la cosa da imparare.
+   */
+  ev?: (c: { level: number; strain: Strain; declarer: Position }) => number | null;
 }): ContrattoValutato[] {
-  const { table, lato, vulnerability, riferimento, metro, giocato } = opzioni;
+  const { table, lato, vulnerability, riferimento, metro, giocato, ev } = opzioni;
   const posti: Position[] = lato === "ns" ? ["north", "south"] : ["east", "west"];
   const inZona = vulnerability === "both" || vulnerability === lato;
 
@@ -100,6 +112,7 @@ export function contrattiDaRivedere(opzioni: {
       vulnerable: inZona,
     }).score;
     const etichetta = `${level}${DENOMINAZIONI.find((d) => d.strain === strain)!.etichetta}`;
+    const atteso = ev?.({ level, strain, declarer }) ?? null;
     return {
       etichetta,
       level,
@@ -107,7 +120,8 @@ export function contrattiDaRivedere(opzioni: {
       declarer,
       prese,
       punteggio,
-      stelle: valutaLicita(punteggio, riferimento, metro).stelle,
+      ev: atteso,
+      stelle: valutaLicita(atteso ?? punteggio, riferimento, metro).stelle,
       tuo: giocato?.level === level && giocato?.strain === strain,
     };
   };

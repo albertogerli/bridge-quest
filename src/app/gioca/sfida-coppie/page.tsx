@@ -301,18 +301,18 @@ function Dettaglio({ sfida, onIndietro }: { sfida: VistaSfida; onIndietro: () =>
 }
 
 /**
- * Il metro per le stelle di una board.
+ * Il metro per le stelle di una board: qui è il par, non il valore atteso.
  *
- * Il valore atteso quando c'è, il par altrimenti — le stesse regole del gioco
- * in solitaria, perché una stella deve valere lo stesso dappertutto.
+ * PERCHÉ DIVERSO DAL GIOCO IN SOLITARIA. Il punteggio di una board lo calcola
+ * il server dal contratto raggiunto, ed è il punteggio REALE di quella
+ * smazzata. Confrontarlo col miglior contratto «in media» sarebbe mettere
+ * insieme due metri diversi — il difetto che riempiva di stelle le mani
+ * fortunate. Finché la vista della sfida non porta anche le distribuzioni
+ * delle prese, il confronto onesto è reale contro reale: il par.
+ *
+ * Gli IMP, che sono il risultato vero della sfida, non dipendono da questa
+ * scelta: si confrontano i due punteggi fra loro.
  */
-function riferimentoDiBoard(b: {
-  parScore: number | null;
-  valoreAtteso: { ns?: { ev: number }; ew?: { ev: number } } | null;
-}): number {
-  const va = b.valoreAtteso;
-  if (va?.ns && va?.ew) {
-    return va.ns.ev >= va.ew.ev ? va.ns.ev : -va.ew.ev;
-  }
+function riferimentoDiBoard(b: { parScore: number | null }): number {
   return b.parScore ?? 0;
 }

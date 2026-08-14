@@ -18,6 +18,8 @@ import { createClient } from "@/lib/supabase/client";
 import type { Card, Position } from "./bridge-engine";
 import type { Strain } from "./minibridge";
 import type { Vulnerability } from "./catalog";
+import { strainOf, type TableStrain } from "./dds-table";
+import { evDaDistribuzione, type Distribuzione } from "./valore-atteso";
 import { reportError } from "./report-error";
 
 export interface ContrattoAttesoDb {
@@ -37,6 +39,15 @@ export interface ManoCondivisa {
   par_score: number | null;
   dd_table: Record<string, Record<Position, number>> | null;
   valore_atteso: { ns: ContrattoAttesoDb; ew: ContrattoAttesoDb; prove: number } | null;
+  /**
+   * Le distribuzioni delle prese sulle rimescolate, per linea. Da qui esce il
+   * valore atteso di qualunque contratto senza risolvere niente.
+   */
+  distribuzioni: {
+    ns: Record<TableStrain, Record<string, Distribuzione>>;
+    ew: Record<TableStrain, Record<string, Distribuzione>>;
+    prove: number;
+  } | null;
   scenario: { id: string; nome: string; descrizione: string | null; slug: string | null } | null;
 }
 
@@ -197,7 +208,12 @@ export function riferimento(
   lato: "ns" | "ew"
 ): { punteggio: number; metro: "atteso" | "esatto" } {
   const va = mano.valore_atteso;
-  if (va) {
+  // Il valore atteso serve da riferimento SOLO se la mano porta anche le
+  // distribuzioni: senza, il contratto raggiunto si potrebbe valutare solo col
+  // punteggio reale, e confrontare un punteggio reale con un valore atteso è
+  // il difetto che questo controllo esiste per impedire. Meglio il par per
+  // tutti e due che due metri diversi.
+  if (va && mano.distribuzioni) {
     const nostro = va[lato].ev;
     const loro = va[lato === "ns" ? "ew" : "ns"].ev;
     return { punteggio: nostro >= loro ? nostro : -loro, metro: "atteso" };
@@ -279,4 +295,43 @@ export async function pubblicaScenario(
     reportError("mani-condivise:pubblica", err);
     return { errore: "Non è stato possibile pubblicare." };
   }
+}
+
+/**
+ * Il valore atteso di un contratto su questa mano, visto da Nord-Sud.
+ *
+ * È il numero con cui si danno le stelle: va confrontato con `riferimento`,
+ * che è anche lui un valore atteso. Prima si confrontava il punteggio REALE
+ * del contratto raggiunto con il valore ATTESO del migliore — due metri
+ * diversi — e sulle smazzate dove le carte stavano bene pioveva tre stelle su
+ * tutto, mentre su quelle storte puniva per il mescolamento.
+ *
+ * Torna `null` per le mani generate prima delle distribuzioni: lì il metro
+ * resta il par, e `riferimento` lo sa.
+ */
+export function evDelContratto(
+  mano: ManoCondivisa,
+  contratto: { level: number; strain: Strain; declarer: Position; doppio?: 1 | 2 | 4 }
+): number | null {
+  const lato: "ns" | "ew" =
+    contratto.declarer === "north" || contratto.declarer === "south" ? "ns" : "ew";
+  const dist = mano.distribuzioni?.[lato]?.[chiaveDenominazione(contratto.strain)]?.[
+    contratto.declarer
+  ];
+  if (!dist) return null;
+
+  const inZona = mano.vulnerability === "both" || mano.vulnerability === lato;
+  const { ev } = evDaDistribuzione(dist, {
+    level: contratto.level,
+    strain: contratto.strain,
+    vulnerable: inZona,
+    doppio: contratto.doppio,
+  });
+  // Sempre dal punto di vista di Nord-Sud, come il par: un contratto
+  // avversario conta col segno meno.
+  return lato === "ns" ? ev : -ev;
+}
+
+function chiaveDenominazione(strain: Strain): TableStrain {
+  return strainOf(strain === "nt" ? null : strain);
 }
