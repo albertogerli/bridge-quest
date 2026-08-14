@@ -72,19 +72,38 @@ a mano su un portatile. Troppo per una funzione serverless, che ha pochi
 secondi — per questo non c'è un cron.
 
 ```bash
-npx --yes tsx scripts/scenari-ufficiali.ts          # gli scenari, dai DEAL_TEMPLATES
-npx --yes tsx scripts/genera-scorta.ts --scorta 40   # porta ogni scenario a 40 mani
-npx --yes tsx scripts/genera-scorta.ts --scorta 40 --secco   # senza valore atteso: 20× più veloce
+# Il grosso: mani da partita, centrate sui punti che contano.
+npx --yes tsx scripts/genera-scorta.ts --quante 1200 --media-ns 23 --min-ns 20
+
+# I modelli didattici (apertura di 1NT, invito a manche…), uno scenario per volta
+# così si possono lanciare in parallelo.
+npx --yes tsx scripts/scenari-ufficiali.ts
+npx --yes tsx scripts/genera-scorta.ts --scenari --quante 40 --slug apertura-1nt
 ```
 
-Si riesegue senza danni: conta le mani già in scorta e genera solo quelle che
-mancano. Quante ce ne sono:
+**I punti di Nord-Sud si decidono.** Una smazzata a caso dà venti punti per
+linea e finisce in un parziale senza storia: niente da decidere, niente da
+imparare. A ventitré si decide se andare a manche. L'intervallo dei bersagli è
+simmetrico attorno alla media (`src/lib/scorta-hcp.ts`), così il minimo si
+rispetta senza scartare mani — scartarle sposterebbe la media in su di
+nascosto — e alla fine il comando stampa la media VERA.
+
+Usa tutti i nuclei meno due (`--processi N` per cambiare): il double dummy è a
+un filo solo, l'unico modo di parallelizzarlo è a processi. Circa 2,5 secondi
+per mano su otto processi.
+
+Quante ce ne sono, e con che punti:
 
 ```sql
-select s.nome, count(m.id), count(m.valore_atteso)
-from scenari s left join mani_generate m on m.scenario_id = s.id
-group by s.nome order by 2;
+select count(*), round(avg(ns_hcp), 2) as media_ns, min(ns_hcp), max(ns_hcp),
+       count(*) filter (where distribuzioni is null) as senza_valore_atteso
+from mani_generate;
 ```
+
+**Le mani senza `distribuzioni` valgono meno**: le stelle su quelle si danno
+col par invece che col valore atteso (vedi `riferimento` in
+`src/lib/mani-condivise.ts`). Non è un guasto, è un ripiego — ma se sono tante
+conviene rigenerarle.
 
 Quando la scorta finisce, `mano_da_fare` restituisce `null` e la pagina torna a
 generare in locale: l'esercizio continua a funzionare, ma senza confronto col
