@@ -113,6 +113,50 @@ export async function registraRisultato(r: {
   }
 }
 
+/**
+ * Con chi ci si confronta.
+ *
+ * `tutti` è il campo; `amici` sono le persone che hai accettato — ed è l'unico
+ * filtro in cui escono i nomi, perché l'amicizia è già un consenso reciproco;
+ * `classe` sono i compagni di corso, `asd` i soci del tuo circolo.
+ */
+export type FiltroCampo = "tutti" | "amici" | "classe" | "asd";
+
+export interface PersonaConfronto {
+  nome: string | null;
+  contratto: string;
+  punteggio: number;
+  stelle: number;
+}
+
+/**
+ * Come è andata a un gruppo di persone sulla stessa mano.
+ *
+ * Il paragone col campo intero mette insieme chi gioca da vent'anni e chi ha
+ * cominciato a marzo: per un allievo il numero che significa qualcosa è
+ * rispetto ai suoi compagni di classe.
+ */
+export async function confrontoFiltrato(
+  manoId: string,
+  filtro: FiltroCampo
+): Promise<(ConfrontoCampo & { persone: PersonaConfronto[] | null }) | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("confronto_campo_filtrato", {
+      p_mano_id: manoId,
+      p_filtro: filtro,
+    });
+    if (error) {
+      reportError("mani-condivise:confronto-filtrato", error);
+      return null;
+    }
+    return (data as (ConfrontoCampo & { persone: PersonaConfronto[] | null }) | null) ?? null;
+  } catch (err) {
+    reportError("mani-condivise:confronto-filtrato", err);
+    return null;
+  }
+}
+
 /** Come è andata agli altri sulla stessa mano. Mai nomi: solo numeri. */
 export async function confrontoCampo(manoId: string): Promise<ConfrontoCampo | null> {
   try {
