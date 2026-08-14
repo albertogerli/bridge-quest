@@ -3,12 +3,13 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Users, Gavel } from "lucide-react";
+import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useFriends } from "@/hooks/use-friends";
+import { Asta } from "@/components/bridge/asta";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { generateDeals, handHcp } from "@/lib/deal-generator";
@@ -22,7 +23,6 @@ const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3",
 const ETICHETTA: Record<Position, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
 };
-const DENOM = ["♣", "♦", "♥", "♠", "SA"];
 
 /**
  * Licita con un amico, avversari BEN.
@@ -152,14 +152,15 @@ function LicitaAmico() {
           ))}
         </div>
 
-        {sessione.bids.length > 0 && (
-          <div className="rounded-2xl border border-border bg-card p-3 mb-4">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-              Licita — mazziere {ETICHETTA[sessione.dealer]}
-            </p>
-            <p className="text-base font-mono">{sessione.bids.join("  ·  ")}</p>
-          </div>
-        )}
+        <div className="mb-4">
+          <Asta
+            dealer={sessione.dealer}
+            bids={sessione.bids}
+            ioSono={sessione.seat}
+            onDichiara={tocca ? invia : undefined}
+            disabilitato={attesa}
+          />
+        </div>
 
         {errore && <p className="text-sm text-destructive mb-3">{errore}</p>}
 
@@ -189,29 +190,7 @@ function LicitaAmico() {
             </div>
           </div>
         ) : tocca ? (
-          <>
-            <p className="text-sm font-semibold mb-2 flex items-center gap-2">
-              <Gavel className="w-4 h-4 text-figb" aria-hidden="true" />
-              Tocca a te
-            </p>
-            <div className="grid grid-cols-5 gap-1 mb-2">
-              {[1, 2, 3, 4, 5, 6, 7].map((lvl) =>
-                DENOM.map((d) => (
-                  <button
-                    key={`${lvl}${d}`}
-                    disabled={attesa}
-                    onClick={() => invia(`${lvl}${d}`)}
-                    className="h-10 rounded-lg border border-border bg-card text-sm font-bold hover:bg-muted disabled:opacity-40"
-                  >
-                    {lvl}{d}
-                  </button>
-                ))
-              )}
-            </div>
-            <Button variant="outline" disabled={attesa} onClick={() => invia("P")} className="w-full">
-              Passo
-            </Button>
-          </>
+          <p className="text-sm font-semibold text-center py-2">Tocca a te</p>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-6">
             Tocca a {ETICHETTA[sessione.turno]}. Puoi chiudere la pagina: quando
