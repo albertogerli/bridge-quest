@@ -110,16 +110,42 @@ export function isServiceWorkerNoise(event: {
  */
 const FRAME_ESTERNO_APP = /^app:\/\/[^/]/;
 
+/**
+ * Il ponte Java delle WebView Android, che sparisce mentre la pagina si chiude.
+ *
+ * Secondo evento, 13/08 a mezzanotte, da un Samsung dentro Facebook:
+ *
+ *   Error invoking postMessage: Java object is gone
+ *     at sendDataToNative (app://navigation_performance_logger_android)
+ *     ...
+ *     at u (app:///_next/static/chunks/5306-…)
+ *
+ * Stavolta nello stack c'è anche un frame NOSTRO, quindi la regola «tutti i
+ * fotogrammi esterni» — giusta in generale — non basta. Ma quel frame è il
+ * involucro con cui Sentry avvolge `addEventListener` (lo dice il `mechanism`
+ * dell'evento): è nostro solo perché sta nel nostro pacchetto, non perché sia
+ * codice nostro a sbagliare.
+ *
+ * Il messaggio invece è inequivocabile: «Java object is gone» è l'oggetto
+ * ponte di una WebView Android che non c'è più. BridgeLab non parla con
+ * nessun ponte Java — verificato: la stringa non compare in una sola riga del
+ * sorgente — quindi questo errore non può in nessun caso essere nostro.
+ */
+const PONTE_JAVA_SPARITO = /Java object is gone/i;
+
 /** True se l'evento arriva dalla strumentazione di un browser dentro un'app. */
 export function isInAppBrowserNoise(event: {
   exception?: {
     values?: Array<{
+      value?: string;
       stacktrace?: { frames?: Array<{ filename?: string }> };
     }>;
   };
 }): boolean {
-  const frames =
-    event.exception?.values?.flatMap((v) => v.stacktrace?.frames ?? []) ?? [];
+  const values = event.exception?.values ?? [];
+  if (values.some((v) => PONTE_JAVA_SPARITO.test(v.value ?? ""))) return true;
+
+  const frames = values.flatMap((v) => v.stacktrace?.frames ?? []);
   if (frames.length === 0) return false;
   // TUTTI i fotogrammi devono essere esterni. Se anche uno solo è nostro,
   // l'errore ci riguarda: la libreria potrebbe averlo solo fatto emergere.
