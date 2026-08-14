@@ -130,3 +130,54 @@ export function valutaSfida(boards: readonly BoardSfida[]): EsitoSfida {
 export function strainDiSeme(s: Suit | null): Strain {
   return s ?? "nt";
 }
+
+export interface RigaConfronto {
+  /** Punteggio della coppia che guarda, dal punto di vista della sua linea. */
+  mio: number;
+  /** Punteggio dell'altra coppia. `null` finché non ha finito. */
+  altro: number | null;
+  /** Il metro per le stelle: par o miglior valore atteso. */
+  riferimento: number;
+}
+
+export interface Confronto {
+  board: { imp: number; aFavoreDi: "mia" | "altra" | "pari"; stelle: number }[];
+  impMiei: number;
+  impAltri: number;
+  stelle: number;
+  /** Quante board hanno un confronto vero: le altre non contano ancora. */
+  confrontate: number;
+}
+
+/**
+ * Il confronto quando i punteggi ci sono già.
+ *
+ * Serve perché nella sfida 2 contro 2 il punteggio lo calcola il server e
+ * arriva bell'e fatto: rifarlo dalle prese sarebbe un secondo conto che può
+ * divergere dal primo. Le board che l'altra coppia non ha ancora dichiarato
+ * danno le stelle — quelle dipendono solo da te — ma non gli IMP, perché non
+ * c'è ancora niente con cui confrontarsi.
+ */
+export function confrontaPunteggi(righe: readonly RigaConfronto[]): Confronto {
+  const board = righe.map((r) => {
+    const stelle = valutaLicita(r.mio, r.riferimento).stelle;
+    if (r.altro === null) return { imp: 0, aFavoreDi: "pari" as const, stelle };
+    const { challengerIMP, opponentIMP } = calculateBoardIMP({
+      challengerScore: r.mio,
+      opponentScore: r.altro,
+    });
+    return {
+      imp: challengerIMP || opponentIMP,
+      aFavoreDi: challengerIMP > 0 ? ("mia" as const) : opponentIMP > 0 ? ("altra" as const) : ("pari" as const),
+      stelle,
+    };
+  });
+
+  return {
+    board,
+    impMiei: board.reduce((s, b) => s + (b.aFavoreDi === "mia" ? b.imp : 0), 0),
+    impAltri: board.reduce((s, b) => s + (b.aFavoreDi === "altra" ? b.imp : 0), 0),
+    stelle: board.reduce((s, b) => s + b.stelle, 0),
+    confrontate: righe.filter((r) => r.altro !== null).length,
+  };
+}

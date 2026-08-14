@@ -13,9 +13,15 @@ import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, strainOf, type DdsTable } from "@/lib/dds-table";
 import { scoreContract } from "@/lib/scoring";
 import type { Strain } from "@/lib/minibridge";
-import { valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
+import { valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita";
 import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
+import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
+import {
+  confrontoCampo, manoDaFare, registraRisultato, riferimento,
+  type ConfrontoCampo,
+} from "@/lib/mani-condivise";
+import type { Vulnerability } from "@/lib/catalog";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -23,6 +29,13 @@ const ROUNDS = 6;
 
 const ETICHETTA: Record<Position, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
+};
+
+const ZONA: Record<Vulnerability, string> = {
+  none: "nessuno in zona",
+  ns: "siamo in zona",
+  ew: "loro in zona",
+  both: "tutti in zona",
 };
 
 const DENOM: { label: string; suit: Suit | null; strain: Strain }[] = [
@@ -36,7 +49,27 @@ const DENOM: { label: string; suit: Suit | null; strain: Strain }[] = [
 interface Mano {
   deal: Record<Position, Card[]>;
   table: DdsTable;
-  parScore: number;
+  dealer: Position;
+  vulnerability: Vulnerability;
+  /** Il punteggio con cui si confronta il risultato, visto da Nord-Sud. */
+  riferimento: number;
+  metro: Metro;
+  /** L'id nella scorta condivisa, quando la mano viene da lì. */
+  id?: string;
+  /** Il nome dello scenario, quando c'è. */
+  scenario?: string;
+}
+
+const GIRO: Position[] = ["north", "east", "south", "west"];
+
+/** L'ordine dei posti a partire dal mazziere. */
+function ordineDa(dealer: Position): Position[] {
+  const i = GIRO.indexOf(dealer);
+  return [0, 1, 2, 3].map((k) => GIRO[(i + k) % 4]);
+}
+
+function inZona(v: Vulnerability, lato: "ns" | "ew"): boolean {
+  return v === "both" || v === lato;
 }
 
 /**
@@ -68,20 +101,7 @@ export default function LicitaPage() {
   const [esito, setEsito] = useState<EsitoLicita | null>(null);
   const [contrattoFinale, setContrattoFinale] = useState<string>("");
   const [stelleTotali, setStelleTotali] = useState(0);
-
-  useEffect(() => {
-    if (round >= ROUNDS) return;
-    let vivo = true;
-    const modello = DEAL_TEMPLATES[round % DEAL_TEMPLATES.length];
-    const { deals } = generateDeals(modello.constraints, { count: 1, seed: seed + round * 191 });
-    if (!deals.length) return;
-    calcTableAndPar(deals[0], "south", "none")
-      .then(({ table, par }) => {
-        if (vivo) setPreparata({ round, dati: { deal: deals[0], table, parScore: par.score } });
-      })
-      .catch((err) => reportError("licita:genera", err));
-    return () => { vivo = false; };
-  }, [round, seed]);
+  const [campo, setCampo] = useState<ConfrontoCampo | null>(null);
 
   const mano = preparata?.round === round ? preparata.dati : null;
 
@@ -93,14 +113,15 @@ export default function LicitaPage() {
    */
   const chiudiLicita = (bids: string[]) => {
     if (!mano) return;
-    const ordine: Position[] = ["south", "west", "north", "east"];
+    const ordine = ordineDa(mano.dealer);
     const iUltimo = bids.map((b) => b !== "P").lastIndexOf(true);
     if (iUltimo < 0) {
-      // Passo generale: zero, e il par dice quanto si è lasciato sul tavolo.
-      const e = valutaLicita(0, mano.parScore);
+      // Passo generale: zero, e il riferimento dice quanto si è lasciato sul tavolo.
+      const e = valutaLicita(0, mano.riferimento, mano.metro);
       setContrattoFinale("Passo generale");
       setEsito(e);
       setStelleTotali((s) => s + e.stelle);
+      salva(null, null, 0, e.stelle);
       return;
     }
 
@@ -122,59 +143,98 @@ export default function LicitaPage() {
 
     const t = mano.table.tricks[strainOf(den.suit)];
     const nostro = lineaVincente === "ns";
-    const prese = nostro ? Math.max(t.north, t.south) : Math.max(t.east, t.west);
-    const punti = scoreContract({ level, strain: den.strain, tricksMade: prese }).score;
+    // Le prese le fa chi dichiara davvero, non il migliore della linea: con un
+    // dichiarante diverso il colpo di apertura arriva dall'altra parte.
+    const prese = t[dichiarante];
+    const punti = scoreContract({
+      level,
+      strain: den.strain,
+      tricksMade: prese,
+      vulnerable: inZona(mano.vulnerability, lineaVincente),
+    }).score;
     // Se dichiarano loro, quel punteggio è contro di noi.
     const punteggio = nostro ? punti : -punti;
 
-    const e = valutaLicita(punteggio, mano.parScore);
+    const e = valutaLicita(punteggio, mano.riferimento, mano.metro);
     setContrattoFinale(
       `${ultimo} di ${ETICHETTA[dichiarante]} — ${prese} prese` +
         (nostro ? "" : " (dichiarano gli avversari)")
     );
     setEsito(e);
     setStelleTotali((s) => s + e.stelle);
+    salva(ultimo, dichiarante, punteggio, e.stelle);
   };
 
   /**
-   * Il giro della licita: tu, poi Ovest, il compagno, Est, e di nuovo tu.
+   * Registra il risultato nella scorta condivisa e chiede il confronto.
+   *
+   * Solo per le mani della scorta: una mano generata nel browser non ha un
+   * campo con cui confrontarsi, e scriverne il risultato non servirebbe a
+   * nessuno. Se la scrittura fallisce — di solito perché quella mano l'hai già
+   * fatta — il confronto si chiede lo stesso: i numeri degli altri sono utili
+   * comunque.
+   */
+  const salva = (
+    contratto: string | null,
+    dichiarante: Position | null,
+    punteggio: number,
+    stelle: number
+  ) => {
+    const id = mano?.id;
+    if (!id) return;
+    void registraRisultato({
+      manoId: id,
+      contratto,
+      dichiarante,
+      punteggio,
+      stelle,
+    })
+      .then(() => confrontoCampo(id))
+      .then((c) => setCampo(c))
+      .catch((err) => reportError("licita:campo", err));
+  };
+
+  /**
+   * Fa dichiarare tutti gli altri finché non tocca di nuovo a te.
    *
    * TUTTI E TRE GLI ALTRI DICHIARANO, avversari compresi. Prima li facevo
    * passare sempre, «per isolare l'intesa col compagno»: era sbagliato. Senza
    * competizione l'esercizio insegna metà del bridge, e la metà più facile —
    * al tavolo l'interferenza c'è quasi sempre.
    *
+   * SERVE ANCHE PRIMA DELLA TUA PRIMA DICHIARAZIONE. Le mani della scorta hanno
+   * il mazziere che gli tocca, non sempre Sud: se apre Ovest, tu parli per
+   * quarto e i primi tre devono aver parlato prima che tu veda qualcosa. Senza
+   * questo passaggio la tua apertura finirebbe scritta nella colonna del
+   * mazziere, e tutta l'asta sarebbe girata di posto.
+   *
    * SE IL MOTORE NON RISPONDE LA MANO SI ANNULLA. Non si dà zero stelle e non
    * si conta: una mano persa per un guasto nostro punisce l'utente per una
    * cosa che non ha fatto lui, ed è peggio che non avere l'esercizio.
    */
-  const dichiara = async (bid: string) => {
-    if (!mano || attesa || esito) return;
-
+  const avanza = async (m: Mano, iniziali: string[]) => {
     const passiFinali = (b: string[]) => {
       const ultimo = b.map((x) => x !== "P").lastIndexOf(true);
       return ultimo < 0 ? b.length >= 4 : b.length - ultimo - 1 >= 3;
     };
-    // L'ordine dei posti a partire da Sud, che è il mazziere.
-    const ordine: Position[] = ["south", "west", "north", "east"];
+    const ordine = ordineDa(m.dealer);
 
-    let bids = [...licita, bid];
+    let bids = iniziali;
     setLicita(bids);
     if (passiFinali(bids)) { chiudiLicita(bids); return; }
 
     setAttesa(true);
-    // Si va avanti finché non torna il turno a Sud.
     while (!passiFinali(bids)) {
       const chi = ordine[bids.length % 4];
       if (chi === "south") break;
       let r;
       try {
         r = await benBid({
-          hand: mano.deal[chi],
+          hand: m.deal[chi],
           seat: chi,
-          dealer: "south",
-          vulnerability: "none",
-          bidding: { dealer: "south", bids },
+          dealer: m.dealer,
+          vulnerability: m.vulnerability,
+          bidding: { dealer: m.dealer, bids },
         });
       } catch (err) {
         reportError("licita:ben", err);
@@ -193,11 +253,77 @@ export default function LicitaPage() {
     if (passiFinali(bids)) chiudiLicita(bids);
   };
 
+  const dichiara = async (bid: string) => {
+    if (!mano || attesa || esito) return;
+    await avanza(mano, [...licita, bid]);
+  };
+
+  /**
+   * Prima si chiede una mano alla scorta condivisa, e solo se non ce n'è si
+   * genera qui.
+   *
+   * LA DIFFERENZA NON È IL COSTO, È IL CONFRONTO. Una mano generata nel browser
+   * non l'ha mai vista nessun altro: le stelle restano un numero senza scala.
+   * Una mano della scorta l'hanno dichiarata in cento, e accanto al voto si può
+   * scrivere «meglio del 74%», che è l'unica cosa che dice davvero come stai
+   * andando. La generazione locale resta per chi non ha fatto l'accesso e per
+   * quando la scorta è finita.
+   */
+  useEffect(() => {
+    if (round >= ROUNDS) return;
+    let vivo = true;
+
+    /** Mette in tavola la mano e, se non apri tu, fa parlare chi viene prima. */
+    const metti = (dati: Mano) => {
+      if (!vivo) return;
+      setPreparata({ round, dati });
+      if (dati.dealer !== "south") void avanza(dati, []);
+    };
+
+    const locale = () => {
+      const modello = DEAL_TEMPLATES[round % DEAL_TEMPLATES.length];
+      const { deals } = generateDeals(modello.constraints, { count: 1, seed: seed + round * 191 });
+      if (!deals.length) return;
+      calcTableAndPar(deals[0], "south", "none")
+        .then(({ table, par }) =>
+          metti({
+            deal: deals[0], table, dealer: "south", vulnerability: "none",
+            riferimento: par.score, metro: "esatto", scenario: modello.label,
+          })
+        )
+        .catch((err) => reportError("licita:genera", err));
+    };
+
+    manoDaFare()
+      .then((m) => {
+        if (!vivo) return;
+        if (!m || !m.dd_table) { locale(); return; }
+        const rif = riferimento(m, "ns");
+        metti({
+          deal: m.hands,
+          table: { tricks: m.dd_table } as DdsTable,
+          dealer: m.dealer,
+          vulnerability: m.vulnerability,
+          riferimento: rif.punteggio,
+          metro: rif.metro,
+          id: m.id,
+          scenario: m.scenario?.nome,
+        });
+      })
+      .catch(() => { if (vivo) locale(); });
+
+    return () => { vivo = false; };
+    // `avanza` cambia a ogni render ma non cambia comportamento: metterlo fra
+    // le dipendenze rigenererebbe la mano a ogni dichiarazione.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- rigenererebbe la mano a ogni render
+  }, [round, seed]);
+
   const prossima = () => {
     setLicita([]);
     setEsito(null);
     setContrattoFinale("");
     setAnnullata(false);
+    setCampo(null);
     setRound((r) => r + 1);
   };
 
@@ -237,9 +363,16 @@ export default function LicitaPage() {
         <>
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
-              <Badge variant="secondary">Sei Sud · apri tu</Badge>
-              <span className="text-xs text-muted-foreground">{handHcp(mano.deal.south)} PO</span>
+              <Badge variant="secondary">
+                Sei Sud · {mano.dealer === "south" ? "apri tu" : `apre ${ETICHETTA[mano.dealer]}`}
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                {handHcp(mano.deal.south)} PO · {ZONA[mano.vulnerability]}
+              </span>
             </div>
+            {mano.scenario && (
+              <p className="text-xs text-muted-foreground mb-2">{mano.scenario}</p>
+            )}
             {SUITS.map((suit) => (
               <p key={suit} className="text-lg font-mono flex items-center gap-2">
                 <SuitSymbol suit={suit} size="sm" />
@@ -294,10 +427,14 @@ export default function LicitaPage() {
                 <p className="text-center font-semibold mb-1">{contrattoFinale}</p>
                 <p className="text-sm text-muted-foreground mb-2">{esito.commento}</p>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Il tuo contratto vale {esito.punteggio}, il par della smazzata{" "}
+                  Il tuo contratto vale {esito.punteggio},{" "}
+                  {mano.metro === "atteso"
+                    ? "il contratto migliore in media"
+                    : "il par della smazzata"}{" "}
                   {esito.punteggioPar}.
                 </p>
-                <Button onClick={prossima}>
+                {campo && <ConfrontoCampoPannello campo={campo} />}
+                <Button className="mt-4" onClick={prossima}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
                 </Button>
               </motion.div>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  leggiContratto, punteggioDelContratto, valutaBoard, valutaSfida,
-  type TabellaPrese,
+  confrontaPunteggi, leggiContratto, punteggioDelContratto, valutaBoard,
+  valutaSfida, type TabellaPrese,
 } from "./sfida-coppie";
 
 /**
@@ -94,5 +94,34 @@ describe("valutaSfida", () => {
     const esito = valutaSfida([]);
     expect(esito.vincitore).toBe("pari");
     expect(esito.stelleA).toBe(0);
+  });
+});
+
+describe("confrontaPunteggi", () => {
+  it("conta gli IMP solo sulle board che hanno finito entrambe", () => {
+    const c = confrontaPunteggi([
+      { mio: 620, altro: 170, riferimento: 620 },
+      { mio: 140, altro: null, riferimento: 620 },
+    ]);
+    expect(c.confrontate).toBe(1);
+    // 450 di differenza: 10 IMP.
+    expect(c.impMiei).toBe(10);
+    expect(c.impAltri).toBe(0);
+  });
+
+  it("le stelle si danno anche senza avversario, perché non dipendono da lui", () => {
+    const c = confrontaPunteggi([{ mio: 620, altro: null, riferimento: 620 }]);
+    expect(c.stelle).toBe(3);
+    expect(c.confrontate).toBe(0);
+  });
+
+  it("si può perdere l'incontro dichiarando bene", () => {
+    // Tre stelle su tutte e due le board, ma l'altra coppia ha fatto meglio.
+    const c = confrontaPunteggi([
+      { mio: 620, altro: 650, riferimento: 620 },
+      { mio: 420, altro: 450, riferimento: 420 },
+    ]);
+    expect(c.stelle).toBe(6);
+    expect(c.impAltri).toBeGreaterThan(c.impMiei);
   });
 });
