@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff, FlaskConical, RotateCcw, Undo2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Archive, Eye, EyeOff, FlaskConical, RotateCcw, Save, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -13,6 +14,7 @@ import { createGame, getValidCards, parseContract, playCard, type GameState } fr
 import { DEAL_TEMPLATES, generateDeals } from "@/lib/deal-generator";
 import { calcTableAndPar, cardOptions, type OpzioneCarta } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
+import { getSavedHands, saveHand } from "@/lib/saved-hands";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -44,7 +46,17 @@ const chiave = (c: Card) => `${c.suit}-${c.rank}`;
  * numeri COPERTI.
  */
 export default function StudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <Studio />
+    </Suspense>
+  );
+}
+
+function Studio() {
   const { user, loading } = useSharedAuth();
+  const params = useSearchParams();
+  const manoSalvata = params.get("mano");
 
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
   const [seed, setSeed] = useState(2026);
@@ -57,16 +69,53 @@ export default function StudioPage() {
   // — e mostrare per un istante i numeri della posizione precedente sarebbe
   // peggio che non mostrarli affatto.
   const [valutazione, setValutazione] = useState<{ posizione: string; lista: OpzioneCarta[] } | null>(null);
+  const [titolo, setTitolo] = useState("");
+  const [salvata, setSalvata] = useState("");
+  const [daArchivio, setDaArchivio] = useState<{
+    hands: Record<Position, Card[]>;
+    contract: string;
+    declarer: Position;
+    played: { seat: Position; card: Card }[];
+  } | null>(null);
+
+  // Mano ripresa dall'archivio: si riapre esattamente dov'era, carte già
+  // giocate comprese. È il motivo per cui l'archivio serve.
+  useEffect(() => {
+    if (!manoSalvata) return;
+    let vivo = true;
+    getSavedHands()
+      .then((tutte) => {
+        const m = tutte.find((x) => x.id === manoSalvata);
+        if (!vivo || !m || !m.contract || !m.declarer) return;
+        setDaArchivio({
+          hands: m.hands, contract: m.contract, declarer: m.declarer, played: m.played ?? [],
+        });
+        // La posizione si ricostruisce qui, dentro la risposta: rifarlo in un
+        // secondo effetto significherebbe un `setState` sincrono in effetto,
+        // che il progetto vieta — e un render in più per nulla.
+        let ricostruito = createGame(m.hands, m.contract, m.declarer);
+        for (const g of m.played ?? []) ricostruito = playCard(ricostruito, g.seat, g.card);
+        setContratto({ contract: m.contract, declarer: m.declarer });
+        setStato(ricostruito);
+        setStoria([]);
+      })
+      .catch((err) => reportError("studio:archivio", err));
+    return () => { vivo = false; };
+  }, [manoSalvata]);
 
   const modello = DEAL_TEMPLATES.find((t) => t.id === modelloId) ?? DEAL_TEMPLATES[0];
-  const deal = useMemo(
+  const generata = useMemo(
     () => generateDeals(modello.constraints, { count: 1, seed }).deals[0],
     [modello, seed]
   );
+  const deal = daArchivio?.hands ?? generata;
 
   // Contratto: il par della mano, come nel resto della piattaforma — così lo
   // studio parte da una dichiarazione sensata invece che da una scelta a caso.
   useEffect(() => {
+    // Mano dall'archivio: contratto e posizione sono già stati ricostruiti
+    // quando è arrivata dall'archivio. Qui non c'è nulla da calcolare.
+    if (daArchivio || manoSalvata) return;
     let vivo = true;
     calcTableAndPar(deal, "north", "none")
       .then(({ table, par }) => {
@@ -79,7 +128,7 @@ export default function StudioPage() {
       })
       .catch((err) => reportError("studio:par", err));
     return () => { vivo = false; };
-  }, [deal]);
+  }, [deal, daArchivio, manoSalvata]);
 
   const trump = contratto ? parseContract(contratto.contract).trumpSuit : null;
 
@@ -177,6 +226,12 @@ export default function StudioPage() {
           <RotateCcw className="w-4 h-4 mr-1" aria-hidden="true" />
           Ricomincia
         </Button>
+        <Link href="/istruttori/archivio">
+          <Button variant="outline">
+            <Archive className="w-4 h-4 mr-1" aria-hidden="true" />
+            Archivio
+          </Button>
+        </Link>
         <Button onClick={() => setNumeri((n) => !n)}>
           {numeri ? <EyeOff className="w-4 h-4 mr-1" aria-hidden="true" /> : <Eye className="w-4 h-4 mr-1" aria-hidden="true" />}
           {numeri ? "Nascondi i numeri" : "Mostra i numeri"}
@@ -209,6 +264,48 @@ export default function StudioPage() {
         <Mano seat="south" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca }} />
         <div />
       </div>
+
+      {/* Salvare la POSIZIONE, non solo la mano: è il momento che si vuole
+          discutere alla lezione dopo. */}
+      {stato && contratto && (
+        <div className="rounded-2xl border border-border bg-card p-4 mt-5 flex flex-wrap items-end gap-2">
+          <div className="flex-1 min-w-[12rem]">
+            <label htmlFor="titolo-mano" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+              Salva questa posizione
+            </label>
+            <input
+              id="titolo-mano"
+              value={titolo}
+              maxLength={120}
+              onChange={(e) => setTitolo(e.target.value)}
+              placeholder="Taglio a scelta, quarta presa"
+              className="w-full h-11 px-3 rounded-xl border border-border bg-card text-sm"
+            />
+          </div>
+          <Button
+            disabled={!titolo.trim()}
+            onClick={async () => {
+              const played = [
+                ...stato.tricks.flatMap((t) => t.plays.map((p) => ({ seat: p.position, card: p.card }))),
+                ...stato.currentTrick.map((p) => ({ seat: p.position, card: p.card })),
+              ];
+              const esito = await saveHand({
+                titolo,
+                hands: deal,
+                contract: contratto.contract,
+                declarer: contratto.declarer,
+                played,
+              });
+              setSalvata(esito.ok ? "Salvata nell'archivio." : (esito.errore ?? "Non riuscito."));
+              if (esito.ok) setTitolo("");
+            }}
+          >
+            <Save className="w-4 h-4 mr-1" aria-hidden="true" />
+            Salva
+          </Button>
+          {salvata && <span className="text-sm text-muted-foreground">{salvata}</span>}
+        </div>
+      )}
 
       <p className="text-center text-xs text-muted-foreground mt-5">
         Il numero è quante prese fa ancora la linea di chi gioca, a carte

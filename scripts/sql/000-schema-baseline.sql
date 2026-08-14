@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-08-13
+-- Estratto il: 2026-08-14
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -414,6 +414,18 @@ CREATE TABLE IF NOT EXISTS public.review_items (
   wrong_count integer,
   last_review timestamp with time zone,
   next_review timestamp with time zone
+);
+
+CREATE TABLE IF NOT EXISTS public.saved_hands (
+  id uuid NOT NULL,
+  owner_id uuid NOT NULL,
+  titolo text NOT NULL,
+  nota text,
+  hands jsonb NOT NULL,
+  contract text,
+  declarer text,
+  played jsonb NOT NULL,
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.smazzate (
@@ -1834,6 +1846,9 @@ ALTER TABLE public.profiles ALTER COLUMN role SET DEFAULT 'user'::text;
 ALTER TABLE public.push_subscriptions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_items_id_seq'::regclass);
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
+ALTER TABLE public.saved_hands ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.saved_hands ALTER COLUMN played SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.saved_hands ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN commentary SET DEFAULT ''::text;
 ALTER TABLE public.smazzate ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN updated_at SET DEFAULT now();
@@ -1883,6 +1898,7 @@ ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_pkey PRIMARY KEY (id);
+ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_pkey PRIMARY KEY (id);
@@ -1937,6 +1953,8 @@ ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check 
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['giovane'::text, 'adulto'::text, 'senior'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
+ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((char_length(nota) <= 2000));
+ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_bidding_check CHECK (((bidding IS NULL) OR ((bidding ? 'dealer'::text) AND (bidding ? 'bids'::text) AND (jsonb_typeof((bidding -> 'bids'::text)) = 'array'::text))));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_declarer_check CHECK ((declarer = ANY (ARRAY['north'::text, 'south'::text, 'east'::text, 'west'::text])));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_hands_check CHECK (((hands ? 'north'::text) AND (hands ? 'south'::text) AND (hands ? 'east'::text) AND (hands ? 'west'::text) AND (jsonb_typeof((hands -> 'north'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'south'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'east'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'west'::text)) = 'array'::text)));
@@ -1986,6 +2004,7 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
@@ -2032,6 +2051,7 @@ CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
 CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, created_at DESC);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX profiles_asd_code_idx ON public.profiles USING btree (asd_code);
+CREATE INDEX saved_hands_owner_idx ON public.saved_hands USING btree (owner_id, created_at DESC);
 CREATE INDEX smazzate_bidding_gin ON public.smazzate USING gin (bidding jsonb_path_ops);
 CREATE INDEX smazzate_lesson_id_idx ON public.smazzate USING btree (lesson_id);
 CREATE INDEX trova_errore_category_idx ON public.trova_errore_scenarios USING btree (category);
@@ -2090,6 +2110,7 @@ ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.review_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trova_errore_scenarios ENABLE ROW LEVEL SECURITY;
@@ -2172,6 +2193,7 @@ CREATE POLICY "Users can insert own profile" ON public.profiles AS PERMISSIVE FO
 CREATE POLICY "Users update own profile" ON public.profiles AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = id));
 CREATE POLICY "Users manage own subscriptions" ON public.push_subscriptions AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id)) WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Own reviews" ON public.review_items AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
+CREATE POLICY "Own saved hands" ON public.saved_hands AS PERMISSIVE FOR ALL TO authenticated USING ((owner_id = auth.uid())) WITH CHECK ((owner_id = auth.uid()));
 CREATE POLICY smazzate_public_read ON public.smazzate AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Authenticated can read tournament results" ON public.tournament_results AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Users can insert own tournament result" ON public.tournament_results AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
@@ -2279,6 +2301,9 @@ GRANT DELETE ON public.push_subscriptions TO service_role;
 GRANT DELETE ON public.review_items TO anon;
 GRANT DELETE ON public.review_items TO authenticated;
 GRANT DELETE ON public.review_items TO service_role;
+GRANT DELETE ON public.saved_hands TO anon;
+GRANT DELETE ON public.saved_hands TO authenticated;
+GRANT DELETE ON public.saved_hands TO service_role;
 GRANT DELETE ON public.smazzate TO anon;
 GRANT DELETE ON public.smazzate TO authenticated;
 GRANT DELETE ON public.smazzate TO service_role;
@@ -2390,6 +2415,9 @@ GRANT INSERT ON public.push_subscriptions TO service_role;
 GRANT INSERT ON public.review_items TO anon;
 GRANT INSERT ON public.review_items TO authenticated;
 GRANT INSERT ON public.review_items TO service_role;
+GRANT INSERT ON public.saved_hands TO anon;
+GRANT INSERT ON public.saved_hands TO authenticated;
+GRANT INSERT ON public.saved_hands TO service_role;
 GRANT INSERT ON public.smazzate TO anon;
 GRANT INSERT ON public.smazzate TO authenticated;
 GRANT INSERT ON public.smazzate TO service_role;
@@ -2501,6 +2529,9 @@ GRANT REFERENCES ON public.push_subscriptions TO service_role;
 GRANT REFERENCES ON public.review_items TO anon;
 GRANT REFERENCES ON public.review_items TO authenticated;
 GRANT REFERENCES ON public.review_items TO service_role;
+GRANT REFERENCES ON public.saved_hands TO anon;
+GRANT REFERENCES ON public.saved_hands TO authenticated;
+GRANT REFERENCES ON public.saved_hands TO service_role;
 GRANT REFERENCES ON public.smazzate TO anon;
 GRANT REFERENCES ON public.smazzate TO authenticated;
 GRANT REFERENCES ON public.smazzate TO service_role;
@@ -2611,6 +2642,9 @@ GRANT SELECT ON public.push_subscriptions TO service_role;
 GRANT SELECT ON public.review_items TO anon;
 GRANT SELECT ON public.review_items TO authenticated;
 GRANT SELECT ON public.review_items TO service_role;
+GRANT SELECT ON public.saved_hands TO anon;
+GRANT SELECT ON public.saved_hands TO authenticated;
+GRANT SELECT ON public.saved_hands TO service_role;
 GRANT SELECT ON public.smazzate TO anon;
 GRANT SELECT ON public.smazzate TO authenticated;
 GRANT SELECT ON public.smazzate TO service_role;
@@ -2722,6 +2756,9 @@ GRANT TRIGGER ON public.push_subscriptions TO service_role;
 GRANT TRIGGER ON public.review_items TO anon;
 GRANT TRIGGER ON public.review_items TO authenticated;
 GRANT TRIGGER ON public.review_items TO service_role;
+GRANT TRIGGER ON public.saved_hands TO anon;
+GRANT TRIGGER ON public.saved_hands TO authenticated;
+GRANT TRIGGER ON public.saved_hands TO service_role;
 GRANT TRIGGER ON public.smazzate TO anon;
 GRANT TRIGGER ON public.smazzate TO authenticated;
 GRANT TRIGGER ON public.smazzate TO service_role;
@@ -2833,6 +2870,9 @@ GRANT TRUNCATE ON public.push_subscriptions TO service_role;
 GRANT TRUNCATE ON public.review_items TO anon;
 GRANT TRUNCATE ON public.review_items TO authenticated;
 GRANT TRUNCATE ON public.review_items TO service_role;
+GRANT TRUNCATE ON public.saved_hands TO anon;
+GRANT TRUNCATE ON public.saved_hands TO authenticated;
+GRANT TRUNCATE ON public.saved_hands TO service_role;
 GRANT TRUNCATE ON public.smazzate TO anon;
 GRANT TRUNCATE ON public.smazzate TO authenticated;
 GRANT TRUNCATE ON public.smazzate TO service_role;
@@ -2944,6 +2984,9 @@ GRANT UPDATE ON public.push_subscriptions TO service_role;
 GRANT UPDATE ON public.review_items TO anon;
 GRANT UPDATE ON public.review_items TO authenticated;
 GRANT UPDATE ON public.review_items TO service_role;
+GRANT UPDATE ON public.saved_hands TO anon;
+GRANT UPDATE ON public.saved_hands TO authenticated;
+GRANT UPDATE ON public.saved_hands TO service_role;
 GRANT UPDATE ON public.smazzate TO anon;
 GRANT UPDATE ON public.smazzate TO authenticated;
 GRANT UPDATE ON public.smazzate TO service_role;
