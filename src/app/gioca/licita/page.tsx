@@ -20,6 +20,10 @@ const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 const ROUNDS = 6;
 
+const ETICHETTA: Record<Position, string> = {
+  north: "Nord", east: "Est", south: "Sud", west: "Ovest",
+};
+
 const DENOM: { label: string; suit: Suit | null; strain: Strain }[] = [
   { label: "♣", suit: "club", strain: "club" },
   { label: "♦", suit: "diamond", strain: "diamond" },
@@ -59,7 +63,7 @@ export default function LicitaPage() {
   const [preparata, setPreparata] = useState<{ round: number; dati: Mano } | null>(null);
   const [licita, setLicita] = useState<string[]>([]);
   const [attesa, setAttesa] = useState(false);
-  const [benMuto, setBenMuto] = useState(false);
+  const [annullata, setAnnullata] = useState(false);
   const [esito, setEsito] = useState<EsitoLicita | null>(null);
   const [contrattoFinale, setContrattoFinale] = useState<string>("");
   const [stelleTotali, setStelleTotali] = useState(0);
@@ -80,82 +84,119 @@ export default function LicitaPage() {
 
   const mano = preparata?.round === round ? preparata.dati : null;
 
-  /** Prese che Nord-Sud fa in quel seme, col dichiarante migliore. */
-  const preseNs = (suit: Suit | null): number => {
-    if (!mano) return 0;
-    const t = mano.table.tricks[strainOf(suit)];
-    return Math.max(t.north, t.south);
-  };
-
+  /**
+   * Chi dichiara: il primo della linea vincente ad aver nominato quel seme.
+   * Serve perché ora anche gli avversari dichiarano, e un contratto loro va
+   * contato dalla parte giusta — altrimenti le stelle direbbero il contrario
+   * di quello che è successo.
+   */
   const chiudiLicita = (bids: string[]) => {
     if (!mano) return;
-    // L'ultimo contratto nominato, o passo generale.
-    const ultimo = [...bids].reverse().find((b) => b !== "P");
-    if (!ultimo) {
+    const ordine: Position[] = ["south", "west", "north", "east"];
+    const iUltimo = bids.map((b) => b !== "P").lastIndexOf(true);
+    if (iUltimo < 0) {
+      // Passo generale: zero, e il par dice quanto si è lasciato sul tavolo.
       const e = valutaLicita(0, mano.parScore);
       setContrattoFinale("Passo generale");
       setEsito(e);
       setStelleTotali((s) => s + e.stelle);
       return;
     }
-    const level = Number(ultimo[0]);
+
+    const ultimo = bids[iUltimo];
     const den = DENOM.find((d) => ultimo.slice(1) === d.label)!;
-    const prese = preseNs(den.suit);
-    const punteggio = scoreContract({ level, strain: den.strain, tricksMade: prese }).score;
+    const level = Number(ultimo[0]);
+
+    // Il primo della stessa linea che ha nominato quel seme.
+    const linea = (p: Position) => (p === "north" || p === "south" ? "ns" : "ew");
+    const lineaVincente = linea(ordine[iUltimo % 4]);
+    let dichiarante = ordine[iUltimo % 4];
+    for (let i = 0; i <= iUltimo; i++) {
+      const chi = ordine[i % 4];
+      if (linea(chi) === lineaVincente && bids[i].slice(1) === den.label) {
+        dichiarante = chi;
+        break;
+      }
+    }
+
+    const t = mano.table.tricks[strainOf(den.suit)];
+    const nostro = lineaVincente === "ns";
+    const prese = nostro ? Math.max(t.north, t.south) : Math.max(t.east, t.west);
+    const punti = scoreContract({ level, strain: den.strain, tricksMade: prese }).score;
+    // Se dichiarano loro, quel punteggio è contro di noi.
+    const punteggio = nostro ? punti : -punti;
+
     const e = valutaLicita(punteggio, mano.parScore);
-    setContrattoFinale(`${ultimo} — ${prese} prese`);
+    setContrattoFinale(
+      `${ultimo} di ${ETICHETTA[dichiarante]} — ${prese} prese` +
+        (nostro ? "" : " (dichiarano gli avversari)")
+    );
     setEsito(e);
     setStelleTotali((s) => s + e.stelle);
   };
 
   /**
-   * Tocca a te, poi Est passa, poi il compagno, poi Ovest passa.
-   * Tre passi dopo una dichiarazione chiudono la licita.
+   * Il giro della licita: tu, poi Ovest, il compagno, Est, e di nuovo tu.
+   *
+   * TUTTI E TRE GLI ALTRI DICHIARANO, avversari compresi. Prima li facevo
+   * passare sempre, «per isolare l'intesa col compagno»: era sbagliato. Senza
+   * competizione l'esercizio insegna metà del bridge, e la metà più facile —
+   * al tavolo l'interferenza c'è quasi sempre.
+   *
+   * SE IL MOTORE NON RISPONDE LA MANO SI ANNULLA. Non si dà zero stelle e non
+   * si conta: una mano persa per un guasto nostro punisce l'utente per una
+   * cosa che non ha fatto lui, ed è peggio che non avere l'esercizio.
    */
   const dichiara = async (bid: string) => {
     if (!mano || attesa || esito) return;
-    const dopoDiTe = [...licita, bid];
-    setLicita(dopoDiTe);
 
     const passiFinali = (b: string[]) => {
-      const ultimoContratto = b.map((x) => x !== "P").lastIndexOf(true);
-      return ultimoContratto >= 0 && b.length - ultimoContratto - 1 >= 3;
+      const ultimo = b.map((x) => x !== "P").lastIndexOf(true);
+      return ultimo < 0 ? b.length >= 4 : b.length - ultimo - 1 >= 3;
     };
-    if (passiFinali(dopoDiTe) || dopoDiTe.length >= 4 && dopoDiTe.every((b) => b === "P")) {
-      chiudiLicita(dopoDiTe);
-      return;
-    }
+    // L'ordine dei posti a partire da Sud, che è il mazziere.
+    const ordine: Position[] = ["south", "west", "north", "east"];
+
+    let bids = [...licita, bid];
+    setLicita(bids);
+    if (passiFinali(bids)) { chiudiLicita(bids); return; }
 
     setAttesa(true);
-    // Est passa, poi risponde il compagno.
-    const conEst = [...dopoDiTe, "P"];
-    let rispostaNord = "P";
-    try {
-      const r = await benBid({
-        hand: mano.deal.north,
-        seat: "north",
-        dealer: "south",
-        vulnerability: "none",
-        bidding: { dealer: "south", bids: conEst },
-      });
-      if (r.fallback) setBenMuto(true);
-      else rispostaNord = r.bid;
-    } catch (err) {
-      reportError("licita:ben", err);
-      setBenMuto(true);
+    // Si va avanti finché non torna il turno a Sud.
+    while (!passiFinali(bids)) {
+      const chi = ordine[bids.length % 4];
+      if (chi === "south") break;
+      let r;
+      try {
+        r = await benBid({
+          hand: mano.deal[chi],
+          seat: chi,
+          dealer: "south",
+          vulnerability: "none",
+          bidding: { dealer: "south", bids },
+        });
+      } catch (err) {
+        reportError("licita:ben", err);
+        r = { bid: "P", fallback: true };
+      }
+      if (r.fallback) {
+        // Mano annullata: niente stelle, niente conteggio.
+        setAnnullata(true);
+        setAttesa(false);
+        return;
+      }
+      bids = [...bids, r.bid];
+      setLicita(bids);
     }
-    const conNord = [...conEst, rispostaNord];
-    const conOvest = [...conNord, "P"];
-    setLicita(conOvest);
     setAttesa(false);
-    if (passiFinali(conOvest)) chiudiLicita(conOvest);
+    if (passiFinali(bids)) chiudiLicita(bids);
   };
 
   const prossima = () => {
     setLicita([]);
     setEsito(null);
     setContrattoFinale("");
-    setBenMuto(false);
+    setAnnullata(false);
     setRound((r) => r + 1);
   };
 
@@ -213,15 +254,25 @@ export default function LicitaPage() {
               </p>
               <p className="text-base font-mono">{licita.join("  ·  ")}</p>
               {attesa && <p className="text-xs text-muted-foreground mt-1">Il compagno sta pensando…</p>}
-              {benMuto && (
-                <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
-                  Il compagno non ha risposto (motore non raggiungibile): ha passato.
-                </p>
-              )}
+
             </div>
           )}
 
-          {!esito && (
+          {annullata && (
+            <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">
+              <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                Mano annullata
+              </p>
+              <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
+                Il motore che dichiara per gli altri non ha risposto. Questa mano
+                non viene contata: non sarebbe giusto darti un voto per un
+                problema nostro.
+              </p>
+              <Button onClick={prossima}>Prossima mano</Button>
+            </div>
+          )}
+
+          {!esito && !annullata && (
             <>
               <p className="text-sm font-semibold mb-2 flex items-center gap-2">
                 <Gavel className="w-4 h-4 text-figb" aria-hidden="true" />
@@ -273,8 +324,9 @@ export default function LicitaPage() {
           </AnimatePresence>
 
           <p className="text-xs text-muted-foreground mt-5">
-            Gli avversari passano: l&apos;esercizio è intendersi col compagno, non
-            reggere l&apos;interferenza.
+            Il compagno e gli avversari dichiarano tutti: al tavolo
+            l&apos;interferenza c&apos;è quasi sempre, e imparare a reggerla fa
+            parte del gioco.
           </p>
         </>
       )}
