@@ -32,15 +32,20 @@ function distribuzioniFinte() {
     d[n] = 20;
     return d;
   };
-  const posti = { north: sempre(10), south: sempre(10), east: sempre(3), west: sempre(3) };
-  const perLato = () => ({
-    spade: posti, heart: posti, diamond: posti, club: posti, notrump: posti,
+  // Nell'istogramma di una linea compaiono solo i suoi due posti, come li
+  // scrive il generatore: dieci prese per chi ha le carte, tre per gli altri.
+  const nostri = { north: sempre(10), south: sempre(10) };
+  const loro = { east: sempre(10), west: sempre(10) };
+  const perLato = (p: Record<string, number[]>) => ({
+    spade: p, heart: p, diamond: p, club: p, notrump: p,
   });
-  return { ns: perLato(), ew: perLato(), prove: 20 };
+  return { ns: perLato(nostri), ew: perLato(loro), prove: 20 };
 }
 
 describe("riferimento", () => {
-  it("usa il valore atteso quando c'è", () => {
+  it("usa il valore atteso quando c'è, rimisurato sull'istogramma", () => {
+    // Le distribuzioni finte dicono dieci prese sempre: 4♠ vale 420, ed è
+    // quello il riferimento anche se alla generazione era stato scritto 620.
     const r = riferimento(
       mano({
         par_score: 100,
@@ -49,29 +54,40 @@ describe("riferimento", () => {
       }),
       "ns"
     );
-    expect(r).toEqual({ punteggio: 620, metro: "atteso" });
+    expect(r).toEqual({ punteggio: 420, metro: "atteso" });
   });
 
-  it("quando la mano è degli avversari, il metro è il loro contratto", () => {
-    // Chi passa correttamente su una mano non sua non deve prendere zero
-    // stelle: il meglio che poteva fare era lasciarli giocare.
+  it("quando la mano è degli avversari il metro torna il par", () => {
+    // Col valore atteso qualunque tua dichiarazione «perde meno» della loro
+    // manche e prenderebbe tre stelle, perché quel conto presuppone che il tuo
+    // contratto lo giochi indisturbato — e se la mano è loro non è vero.
     const r = riferimento(
       mano({
+        par_score: -620,
         valore_atteso: { ns: contratto(80), ew: contratto(620), prove: 20 },
         distribuzioni: distribuzioniFinte(),
       }),
       "ns"
     );
-    expect(r.punteggio).toBe(-620);
+    expect(r).toEqual({ punteggio: -620, metro: "esatto" });
   });
 
   it("è simmetrico: lo stesso conto visto da Est-Ovest", () => {
     const m = mano({
-      valore_atteso: { ns: contratto(80), ew: contratto(620), prove: 20 },
+      par_score: -620,
+      valore_atteso: {
+        ns: contratto(80),
+        ew: { level: 4, strain: "spade", declarer: "west", ev: 620, mantenuto: 15 },
+        prove: 20,
+      },
       distribuzioni: distribuzioniFinte(),
     });
-    expect(riferimento(m, "ew").punteggio).toBe(620);
-    expect(riferimento(m, "ns").punteggio).toBe(-620);
+    // Per Est-Ovest la mano è loro: valore atteso, girato dal loro punto di
+    // vista. Le distribuzioni finte danno dieci prese a Ovest, quindi 4♠ di
+    // Ovest vale 420 per loro.
+    expect(riferimento(m, "ew")).toEqual({ punteggio: 420, metro: "atteso" });
+    // Per Nord-Sud non lo è: par, girato dal loro punto di vista.
+    expect(riferimento(m, "ns")).toEqual({ punteggio: -620, metro: "esatto" });
   });
 
   it("ripiega sul par, e lo dichiara", () => {
@@ -104,9 +120,9 @@ describe("evDelContratto", () => {
   });
 
   it("un contratto avversario conta col segno meno", () => {
-    // Est fa tre prese: 1♠ di Est va giù di quattro, -200 per loro, +200 per noi.
+    // Est fa dieci prese: 1♠ di Est vale 170 per loro, cioè -170 per noi.
     expect(evDelContratto(conDistribuzioni, { level: 1, strain: "spade", declarer: "east" }))
-      .toBe(200);
+      .toBe(-170);
   });
 
   it("la zona entra nel conto", () => {
@@ -121,5 +137,31 @@ describe("evDelContratto", () => {
   it("senza distribuzioni non inventa un numero", () => {
     expect(evDelContratto(mano({ par_score: 420 }), { level: 4, strain: "spade", declarer: "south" }))
       .toBeNull();
+  });
+});
+
+describe("il riferimento e la tabella parlano dello stesso campione", () => {
+  it("il contratto migliore prende tre stelle, non due", () => {
+    // Il numero memorizzato alla generazione viene da metà delle rimescolate;
+    // la tabella di fine mano dall'istogramma completo. Confrontarli così
+    // com'erano faceva sì che nella tabella NESSUN contratto arrivasse a tre
+    // stelle, nemmeno quello indicato come migliore.
+    const m = mano({
+      vulnerability: "none",
+      par_score: 420,
+      // Il valore memorizzato (500) è più alto di quello che l'istogramma dà
+      // per lo stesso contratto (420): è la differenza fra i due campioni.
+      valore_atteso: {
+        ns: { level: 4, strain: "spade", declarer: "south", ev: 500, mantenuto: 8 },
+        ew: contratto(-50),
+        prove: 20,
+      },
+      distribuzioni: distribuzioniFinte(),
+    });
+    const r = riferimento(m, "ns");
+    expect(r.metro).toBe("atteso");
+    expect(r.punteggio).toBe(420);
+    // E infatti coincide con quello che la tabella mostrerà per 4♠.
+    expect(evDelContratto(m, { level: 4, strain: "spade", declarer: "south" })).toBe(420);
   });
 });
