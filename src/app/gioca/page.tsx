@@ -394,6 +394,25 @@ export default function GiocaPage() {
               </div>
             </Link>
 
+            {/* Sfida 2 contro 2 — due coppie sulle stesse smazzate */}
+            <Link href="/gioca/sfida-coppie" className="block" aria-label="Sfida 2 contro 2 fra due coppie">
+              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
+                  <Swords className="w-6 h-6 text-figb" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-foreground text-[15px]">Sfida 2 contro 2</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">Voi due contro un&apos;altra coppia, sulle stesse smazzate</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
+                    Nuovo
+                  </span>
+                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                </div>
+              </div>
+            </Link>
+
             {/* Trova l'Errore */}
             <Link href="/gioca/trova-errore" className="block" aria-label="Trova l'Errore: trova l'errore nella dichiarazione o giocata">
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">

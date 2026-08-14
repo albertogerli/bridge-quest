@@ -371,6 +371,19 @@ CREATE TABLE IF NOT EXISTS public.login_history (
   platform text
 );
 
+CREATE TABLE IF NOT EXISTS public.mani_generate (
+  id uuid NOT NULL,
+  scenario_id uuid,
+  hands jsonb NOT NULL,
+  dealer text NOT NULL,
+  vulnerability text NOT NULL,
+  par_contracts jsonb,
+  par_score integer,
+  dd_table jsonb,
+  created_at timestamp with time zone NOT NULL,
+  valore_atteso jsonb
+);
+
 CREATE TABLE IF NOT EXISTS public.partner_profiles (
   user_id uuid NOT NULL,
   looking boolean NOT NULL,
@@ -429,6 +442,18 @@ CREATE TABLE IF NOT EXISTS public.review_items (
   next_review timestamp with time zone
 );
 
+CREATE TABLE IF NOT EXISTS public.risultati_mano (
+  id uuid NOT NULL,
+  mano_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  partner_id uuid,
+  contratto text,
+  dichiarante text,
+  punteggio integer NOT NULL,
+  stelle smallint NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.saved_hands (
   id uuid NOT NULL,
   owner_id uuid NOT NULL,
@@ -439,6 +464,42 @@ CREATE TABLE IF NOT EXISTS public.saved_hands (
   declarer text,
   played jsonb NOT NULL,
   created_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.scenari (
+  id uuid NOT NULL,
+  nome text NOT NULL,
+  descrizione text,
+  vincoli jsonb NOT NULL,
+  autore_id uuid,
+  ufficiale boolean NOT NULL,
+  pubblico boolean NOT NULL,
+  modulo text,
+  created_at timestamp with time zone NOT NULL,
+  slug text
+);
+
+CREATE TABLE IF NOT EXISTS public.sfida_board (
+  sfida_id uuid NOT NULL,
+  mano_id uuid NOT NULL,
+  coppia text NOT NULL,
+  numero integer NOT NULL,
+  sessione_id uuid NOT NULL,
+  contratto text,
+  dichiarante text,
+  prese integer,
+  punteggio integer
+);
+
+CREATE TABLE IF NOT EXISTS public.sfide_coppie (
+  id uuid NOT NULL,
+  creatore_id uuid NOT NULL,
+  a1 uuid NOT NULL,
+  a2 uuid NOT NULL,
+  b1 uuid NOT NULL,
+  b2 uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  closed_at timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS public.smazzate (
@@ -931,6 +992,43 @@ AS $function$
       AND role IN ('instructor', 'admin')
       AND (role = 'admin' OR asd_code = p_asd_code)
   );
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.confronto_campo(p_mano_id uuid)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT CASE WHEN auth.uid() IS NULL THEN NULL ELSE jsonb_build_object(
+    'totale', (SELECT count(*) FROM public.risultati_mano r WHERE r.mano_id = p_mano_id),
+    'mio', (
+      SELECT jsonb_build_object('contratto', r.contratto, 'punteggio', r.punteggio, 'stelle', r.stelle)
+      FROM public.risultati_mano r WHERE r.mano_id = p_mano_id AND r.user_id = auth.uid()
+    ),
+    'percentile', (
+      SELECT CASE WHEN count(*) = 0 THEN NULL ELSE
+        round(100.0 * count(*) FILTER (
+          WHERE r.punteggio < (SELECT m.punteggio FROM public.risultati_mano m
+                               WHERE m.mano_id = p_mano_id AND m.user_id = auth.uid())
+        ) / count(*)) END
+      FROM public.risultati_mano r WHERE r.mano_id = p_mano_id AND r.user_id <> auth.uid()
+    ),
+    'contratti', (
+      SELECT coalesce(jsonb_agg(x), '[]'::jsonb) FROM (
+        SELECT jsonb_build_object(
+          'contratto', coalesce(r.contratto, 'passo'),
+          'quanti', count(*),
+          'punteggioMedio', round(avg(r.punteggio)),
+          'stelleMedie', round(avg(r.stelle), 1)
+        ) AS x
+        FROM public.risultati_mano r WHERE r.mano_id = p_mano_id
+        GROUP BY coalesce(r.contratto, 'passo')
+        ORDER BY count(*) DESC
+      ) t
+    )
+  ) END;
 $function$
 ;
 
@@ -1479,6 +1577,28 @@ AS $function$
   $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.imp_da_differenza(p_diff integer)
+ RETURNS integer
+ LANGUAGE sql
+ IMMUTABLE
+AS $function$
+  SELECT CASE
+    WHEN abs(p_diff) <= 10 THEN 0    WHEN abs(p_diff) <= 40 THEN 1
+    WHEN abs(p_diff) <= 80 THEN 2    WHEN abs(p_diff) <= 120 THEN 3
+    WHEN abs(p_diff) <= 160 THEN 4   WHEN abs(p_diff) <= 210 THEN 5
+    WHEN abs(p_diff) <= 260 THEN 6   WHEN abs(p_diff) <= 310 THEN 7
+    WHEN abs(p_diff) <= 360 THEN 8   WHEN abs(p_diff) <= 420 THEN 9
+    WHEN abs(p_diff) <= 490 THEN 10  WHEN abs(p_diff) <= 590 THEN 11
+    WHEN abs(p_diff) <= 740 THEN 12  WHEN abs(p_diff) <= 890 THEN 13
+    WHEN abs(p_diff) <= 1090 THEN 14 WHEN abs(p_diff) <= 1290 THEN 15
+    WHEN abs(p_diff) <= 1490 THEN 16 WHEN abs(p_diff) <= 1740 THEN 17
+    WHEN abs(p_diff) <= 1990 THEN 18 WHEN abs(p_diff) <= 2240 THEN 19
+    WHEN abs(p_diff) <= 2490 THEN 20 WHEN abs(p_diff) <= 2990 THEN 21
+    WHEN abs(p_diff) <= 3490 THEN 22 WHEN abs(p_diff) <= 3990 THEN 23
+    ELSE 24 END;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.is_admin()
  RETURNS boolean
  LANGUAGE sql
@@ -1808,6 +1928,144 @@ END;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.mano_da_fare(p_slug text DEFAULT NULL::text)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE
+ SET search_path TO 'public'
+AS $function$
+  SELECT to_jsonb(m) || jsonb_build_object('scenario', to_jsonb(s) - 'vincoli')
+  FROM public.mani_generate m
+  JOIN public.scenari s ON s.id = m.scenario_id
+  WHERE (p_slug IS NULL OR s.slug = p_slug)
+    AND auth.uid() IS NOT NULL
+    AND NOT EXISTS (
+      SELECT 1 FROM public.risultati_mano r
+      WHERE r.mano_id = m.id AND r.user_id = auth.uid()
+    )
+  ORDER BY random()
+  LIMIT 1;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.mie_sfide_coppie()
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT coalesce(jsonb_agg(x ORDER BY x->>'creata' DESC), '[]'::jsonb)
+  FROM (
+    SELECT jsonb_build_object(
+      'id', s.id,
+      'creata', s.created_at,
+      'miaCoppia', CASE WHEN auth.uid() IN (s.a1, s.a2) THEN 'A' ELSE 'B' END,
+      'avversari', (
+        SELECT jsonb_agg(p.display_name) FROM public.profiles p
+        WHERE p.id IN (CASE WHEN auth.uid() IN (s.a1, s.a2) THEN s.b1 ELSE s.a1 END,
+                       CASE WHEN auth.uid() IN (s.a1, s.a2) THEN s.b2 ELSE s.a2 END)
+      ),
+      'daFare', (
+        SELECT count(*) FROM public.sfida_board b
+        WHERE b.sfida_id = s.id
+          AND b.coppia = CASE WHEN auth.uid() IN (s.a1, s.a2) THEN 'A' ELSE 'B' END
+          AND b.punteggio IS NULL
+      ),
+      'totale', (
+        SELECT count(*) FROM public.sfida_board b
+        WHERE b.sfida_id = s.id AND b.coppia = 'A'
+      )
+    ) AS x
+    FROM public.sfide_coppie s
+    WHERE auth.uid() IN (s.a1, s.a2, s.b1, s.b2)
+  ) t;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.mie_statistiche_sfide()
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  WITH mie AS (
+    SELECT s.id,
+           CASE WHEN auth.uid() IN (s.a1, s.a2) THEN 'A' ELSE 'B' END AS mia,
+           CASE WHEN auth.uid() = s.a1 THEN s.a2
+                WHEN auth.uid() = s.a2 THEN s.a1
+                WHEN auth.uid() = s.b1 THEN s.b2
+                ELSE s.b1 END AS compagno,
+           CASE WHEN auth.uid() IN (s.a1, s.a2) THEN s.b1 ELSE s.a1 END AS avv1,
+           CASE WHEN auth.uid() IN (s.a1, s.a2) THEN s.b2 ELSE s.a2 END AS avv2
+    FROM public.sfide_coppie s
+    WHERE auth.uid() IN (s.a1, s.a2, s.b1, s.b2)
+  ),
+  board AS (
+    SELECT m.id, m.mia, m.compagno, m.avv1, m.avv2,
+           public.imp_da_differenza(mio.punteggio - altro.punteggio) AS imp,
+           sign(mio.punteggio - altro.punteggio) AS verso
+    FROM mie m
+    JOIN public.sfida_board mio  ON mio.sfida_id = m.id AND mio.coppia = m.mia
+    JOIN public.sfida_board altro ON altro.sfida_id = m.id
+                                 AND altro.mano_id = mio.mano_id
+                                 AND altro.coppia <> m.mia
+    WHERE mio.punteggio IS NOT NULL AND altro.punteggio IS NOT NULL
+  ),
+  incontri AS (
+    SELECT b.id, b.mia, b.compagno, b.avv1, b.avv2,
+           sum(CASE WHEN b.verso > 0 THEN b.imp ELSE 0 END) AS miei,
+           sum(CASE WHEN b.verso < 0 THEN b.imp ELSE 0 END) AS loro,
+           count(*) AS confrontate,
+           (SELECT count(*) FROM public.sfida_board t
+             WHERE t.sfida_id = b.id AND t.coppia = b.mia) AS totale
+    FROM board b GROUP BY b.id, b.mia, b.compagno, b.avv1, b.avv2
+  ),
+  esiti AS (
+    SELECT *, CASE WHEN miei > loro THEN 1 WHEN miei < loro THEN -1 ELSE 0 END AS esito
+    FROM incontri
+    WHERE confrontate = totale
+  )
+  SELECT jsonb_build_object(
+    'incontri', (SELECT count(*) FROM esiti),
+    'vinti',    (SELECT count(*) FROM esiti WHERE esito = 1),
+    'persi',    (SELECT count(*) FROM esiti WHERE esito = -1),
+    'pari',     (SELECT count(*) FROM esiti WHERE esito = 0),
+    'impFatti', (SELECT coalesce(sum(miei), 0) FROM esiti),
+    'impSubiti',(SELECT coalesce(sum(loro), 0) FROM esiti),
+    'perCompagno', (
+      SELECT coalesce(jsonb_agg(y ORDER BY (y->>'incontri')::int DESC), '[]'::jsonb) FROM (
+        SELECT jsonb_build_object(
+          'id', e.compagno,
+          'nome', p.display_name,
+          'incontri', count(*),
+          'vinti', count(*) FILTER (WHERE e.esito = 1),
+          'persi', count(*) FILTER (WHERE e.esito = -1),
+          'impNetti', sum(e.miei - e.loro)
+        ) AS y
+        FROM esiti e LEFT JOIN public.profiles p ON p.id = e.compagno
+        GROUP BY e.compagno, p.display_name
+      ) t1
+    ),
+    'perAvversario', (
+      SELECT coalesce(jsonb_agg(z ORDER BY (z->>'incontri')::int DESC), '[]'::jsonb) FROM (
+        SELECT jsonb_build_object(
+          'id', avv.id,
+          'nome', p.display_name,
+          'incontri', count(*),
+          'vinti', count(*) FILTER (WHERE e.esito = 1),
+          'persi', count(*) FILTER (WHERE e.esito = -1),
+          'impNetti', sum(e.miei - e.loro)
+        ) AS z
+        FROM esiti e
+        CROSS JOIN LATERAL (VALUES (e.avv1), (e.avv2)) AS avv(id)
+        LEFT JOIN public.profiles p ON p.id = avv.id
+        GROUP BY avv.id, p.display_name
+      ) t2
+    )
+  );
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.mio_codice_amico()
  RETURNS text
  LANGUAGE plpgsql
@@ -1882,6 +2140,47 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer DEFAULT 1)
+ RETURNS integer
+ LANGUAGE sql
+ IMMUTABLE
+AS $function$
+  WITH v AS (
+    SELECT
+      coalesce(p_doppio, 1) AS d,
+      (CASE WHEN p_strain = 'nt' THEN 40 + 30 * (p_level - 1)
+            WHEN p_strain IN ('club','diamond') THEN 20 * p_level
+            ELSE 30 * p_level END) AS base_liscio,
+      p_level + 6 - p_prese AS sotto
+  )
+  SELECT CASE
+    WHEN v.sotto > 0 THEN
+      CASE WHEN v.d = 1 THEN -(v.sotto * CASE WHEN p_zona THEN 100 ELSE 50 END)
+      ELSE
+        -(CASE WHEN p_zona THEN 200 + (v.sotto - 1) * 300
+               WHEN v.sotto = 1 THEN 100
+               WHEN v.sotto <= 3 THEN 100 + (v.sotto - 1) * 200
+               ELSE 500 + (v.sotto - 3) * 300 END)
+        * CASE WHEN v.d = 4 THEN 2 ELSE 1 END
+      END
+    ELSE
+      v.base_liscio * v.d
+      + (CASE WHEN v.base_liscio * v.d >= 100
+              THEN CASE WHEN p_zona THEN 500 ELSE 300 END
+              ELSE 50 END)
+      + (CASE WHEN p_level = 7 THEN CASE WHEN p_zona THEN 1500 ELSE 1000 END
+              WHEN p_level = 6 THEN CASE WHEN p_zona THEN 750 ELSE 500 END
+              ELSE 0 END)
+      + (CASE WHEN v.d = 1
+              THEN (-v.sotto) * CASE WHEN p_strain IN ('club','diamond') THEN 20 ELSE 30 END
+              ELSE (-v.sotto) * (CASE WHEN p_zona THEN 200 ELSE 100 END)
+                   * CASE WHEN v.d = 4 THEN 2 ELSE 1 END END)
+      + (CASE WHEN v.d = 2 THEN 50 WHEN v.d = 4 THEN 100 ELSE 0 END)
+  END
+  FROM v;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text DEFAULT NULL::text)
  RETURNS void
  LANGUAGE plpgsql
@@ -1937,6 +2236,227 @@ AS $function$
   ORDER BY p.display_name
   LIMIT 20;
 $function$
+;
+
+CREATE OR REPLACE FUNCTION public.sfida_board_chiudi(p_sessione uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  b        public.sfida_board%ROWTYPE;
+  s        public.bidding_sessions%ROWTYPE;
+  m        public.mani_generate%ROWTYPE;
+  ordine   text[] := ARRAY['north','east','south','west'];
+  i_dealer int;
+  i_ult    int;
+  v_bid    text;
+  v_liv    int;
+  v_den    text;
+  v_chi    text;
+  v_linea  text;
+  v_j      int;
+  v_prese  int;
+  v_zona   boolean;
+  v_doppio int;
+  v_punti  int;
+  v_etichetta text;
+BEGIN
+  SELECT * INTO b FROM public.sfida_board WHERE sessione_id = p_sessione;
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'board inesistente');
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.sfide_coppie s2
+    WHERE s2.id = b.sfida_id AND auth.uid() IN (s2.a1, s2.a2, s2.b1, s2.b2)
+  ) THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'non fai parte di questa sfida');
+  END IF;
+
+  IF b.punteggio IS NOT NULL THEN
+    RETURN jsonb_build_object('ok', true, 'giaFatto', true);
+  END IF;
+
+  SELECT * INTO s FROM public.bidding_sessions WHERE id = p_sessione;
+  IF s.closed_at IS NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'licita non chiusa');
+  END IF;
+
+  SELECT * INTO m FROM public.mani_generate WHERE id = b.mano_id;
+  IF m.dd_table IS NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'mano senza tabella');
+  END IF;
+
+  i_dealer := array_position(ordine, s.dealer);
+
+  SELECT max(g.k) INTO i_ult
+  FROM generate_series(0, jsonb_array_length(s.bids) - 1) AS g(k)
+  WHERE s.bids ->> g.k ~ '^[1-7]';
+
+  SELECT CASE WHEN bool_or(s.bids ->> g.k = 'XX') THEN 4
+              WHEN bool_or(s.bids ->> g.k = 'X') THEN 2
+              ELSE 1 END
+  INTO v_doppio
+  FROM generate_series(coalesce(i_ult, 0), jsonb_array_length(s.bids) - 1) AS g(k);
+
+  IF i_ult IS NULL THEN
+    UPDATE public.sfida_board SET contratto = NULL, dichiarante = NULL,
+           prese = NULL, punteggio = 0
+    WHERE sfida_id = b.sfida_id AND mano_id = b.mano_id AND coppia = b.coppia;
+    RETURN jsonb_build_object('ok', true, 'contratto', NULL, 'punteggio', 0);
+  END IF;
+
+  v_bid := s.bids ->> i_ult;
+  v_liv := substr(v_bid, 1, 1)::int;
+  v_den := CASE substr(v_bid, 2)
+    WHEN '♣' THEN 'club' WHEN '♦' THEN 'diamond'
+    WHEN '♥' THEN 'heart' WHEN '♠' THEN 'spade'
+    ELSE 'notrump' END;
+
+  v_chi := ordine[((i_dealer - 1 + i_ult) % 4) + 1];
+  v_linea := CASE WHEN v_chi IN ('north','south') THEN 'ns' ELSE 'ew' END;
+
+  FOR v_j IN 0..i_ult LOOP
+    IF (s.bids ->> v_j) <> 'P'
+       AND substr(s.bids ->> v_j, 2) = substr(v_bid, 2)
+       AND (CASE WHEN ordine[((i_dealer - 1 + v_j) % 4) + 1] IN ('north','south')
+                 THEN 'ns' ELSE 'ew' END) = v_linea THEN
+      v_chi := ordine[((i_dealer - 1 + v_j) % 4) + 1];
+      EXIT;
+    END IF;
+  END LOOP;
+
+  v_prese := (m.dd_table -> v_den ->> v_chi)::int;
+  v_zona := m.vulnerability = 'both' OR m.vulnerability = v_linea;
+  v_punti := public.punteggio_contratto(
+    v_liv, CASE WHEN v_den = 'notrump' THEN 'nt' ELSE v_den END,
+    v_prese, v_zona, v_doppio);
+
+  IF v_linea = 'ew' THEN v_punti := -v_punti; END IF;
+
+  v_etichetta := v_bid || repeat('X', CASE v_doppio WHEN 2 THEN 1 WHEN 4 THEN 2 ELSE 0 END);
+
+  UPDATE public.sfida_board
+  SET contratto = v_etichetta, dichiarante = v_chi, prese = v_prese, punteggio = v_punti
+  WHERE sfida_id = b.sfida_id AND mano_id = b.mano_id AND coppia = b.coppia;
+
+  RETURN jsonb_build_object('ok', true, 'contratto', v_etichetta,
+                            'dichiarante', v_chi, 'prese', v_prese,
+                            'punteggio', v_punti);
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer DEFAULT 4)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_id    uuid;
+  v_mano  record;
+  v_n     int := 0;
+  v_ses_a uuid;
+  v_ses_b uuid;
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN NULL; END IF;
+  IF p_compagno IS NULL OR p_b1 IS NULL OR p_b2 IS NULL THEN RETURN NULL; END IF;
+  IF cardinality(ARRAY[auth.uid(), p_compagno, p_b1, p_b2]) <>
+     cardinality(ARRAY(SELECT DISTINCT unnest(ARRAY[auth.uid(), p_compagno, p_b1, p_b2]))) THEN
+    RETURN NULL;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.friendships f
+    WHERE f.status = 'accepted'
+      AND ((f.user_id = auth.uid() AND f.friend_id = p_compagno)
+        OR (f.friend_id = auth.uid() AND f.user_id = p_compagno))
+  ) THEN
+    RETURN NULL;
+  END IF;
+
+  INSERT INTO public.sfide_coppie (creatore_id, a1, a2, b1, b2)
+  VALUES (auth.uid(), auth.uid(), p_compagno, p_b1, p_b2)
+  RETURNING id INTO v_id;
+
+  FOR v_mano IN
+    SELECT id, hands, dealer FROM public.mani_generate
+    ORDER BY random() LIMIT greatest(1, least(coalesce(p_quante, 4), 12))
+  LOOP
+    v_n := v_n + 1;
+
+    INSERT INTO public.bidding_sessions (south_id, north_id, hands, dealer)
+    VALUES (auth.uid(), p_compagno, v_mano.hands, v_mano.dealer)
+    RETURNING id INTO v_ses_a;
+
+    INSERT INTO public.bidding_sessions (south_id, north_id, hands, dealer)
+    VALUES (p_b1, p_b2, v_mano.hands, v_mano.dealer)
+    RETURNING id INTO v_ses_b;
+
+    INSERT INTO public.sfida_board (sfida_id, mano_id, coppia, numero, sessione_id)
+    VALUES (v_id, v_mano.id, 'A', v_n, v_ses_a), (v_id, v_mano.id, 'B', v_n, v_ses_b);
+  END LOOP;
+
+  IF v_n = 0 THEN
+    DELETE FROM public.sfide_coppie WHERE id = v_id;
+    RETURN NULL;
+  END IF;
+
+  RETURN v_id;
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.sfida_coppie_vista(p_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  s       public.sfide_coppie%ROWTYPE;
+  v_mia   text;
+  v_board jsonb;
+BEGIN
+  SELECT * INTO s FROM public.sfide_coppie WHERE id = p_id;
+  IF NOT FOUND THEN RETURN NULL; END IF;
+
+  v_mia := CASE WHEN auth.uid() IN (s.a1, s.a2) THEN 'A'
+                WHEN auth.uid() IN (s.b1, s.b2) THEN 'B' END;
+  IF v_mia IS NULL THEN RETURN NULL; END IF;
+
+  SELECT coalesce(jsonb_agg(x ORDER BY (x->>'numero')::int), '[]'::jsonb) INTO v_board
+  FROM (
+    SELECT jsonb_build_object(
+      'numero', mia.numero,
+      'manoId', mia.mano_id,
+      'sessioneId', mia.sessione_id,
+      'contratto', mia.contratto,
+      'punteggio', mia.punteggio,
+      'chiusa', mia.punteggio IS NOT NULL,
+      'altroContratto', CASE WHEN mia.punteggio IS NOT NULL THEN altra.contratto END,
+      'altroPunteggio', CASE WHEN mia.punteggio IS NOT NULL THEN altra.punteggio END,
+      'altraChiusa', altra.punteggio IS NOT NULL,
+      'parScore', m.par_score,
+      'valoreAtteso', m.valore_atteso
+    ) AS x
+    FROM public.sfida_board mia
+    JOIN public.mani_generate m ON m.id = mia.mano_id
+    LEFT JOIN public.sfida_board altra
+      ON altra.sfida_id = mia.sfida_id AND altra.mano_id = mia.mano_id
+     AND altra.coppia <> mia.coppia
+    WHERE mia.sfida_id = p_id AND mia.coppia = v_mia
+  ) t;
+
+  RETURN jsonb_build_object(
+    'id', s.id,
+    'miaCoppia', v_mia,
+    'coppiaA', (SELECT jsonb_agg(p.display_name) FROM public.profiles p WHERE p.id IN (s.a1, s.a2)),
+    'coppiaB', (SELECT jsonb_agg(p.display_name) FROM public.profiles p WHERE p.id IN (s.b1, s.b2)),
+    'board', v_board
+  );
+END $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.sync_asd_name()
@@ -2065,6 +2585,10 @@ ALTER TABLE public.live_tables ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.login_history ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.login_history ALTER COLUMN logged_in_at SET DEFAULT now();
+ALTER TABLE public.mani_generate ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.mani_generate ALTER COLUMN dealer SET DEFAULT 'south'::text;
+ALTER TABLE public.mani_generate ALTER COLUMN vulnerability SET DEFAULT 'none'::text;
+ALTER TABLE public.mani_generate ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.partner_profiles ALTER COLUMN looking SET DEFAULT true;
 ALTER TABLE public.partner_profiles ALTER COLUMN availability SET DEFAULT '{}'::text[];
 ALTER TABLE public.partner_profiles ALTER COLUMN created_at SET DEFAULT now();
@@ -2083,9 +2607,17 @@ ALTER TABLE public.profiles ALTER COLUMN role SET DEFAULT 'user'::text;
 ALTER TABLE public.push_subscriptions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_items_id_seq'::regclass);
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
+ALTER TABLE public.risultati_mano ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.risultati_mano ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.saved_hands ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.saved_hands ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.saved_hands ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.scenari ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.scenari ALTER COLUMN ufficiale SET DEFAULT false;
+ALTER TABLE public.scenari ALTER COLUMN pubblico SET DEFAULT false;
+ALTER TABLE public.scenari ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN commentary SET DEFAULT ''::text;
 ALTER TABLE public.smazzate ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN updated_at SET DEFAULT now();
@@ -2132,11 +2664,16 @@ ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_pkey PRIMARY KEY
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
+ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_pkey PRIMARY KEY (id);
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_pkey PRIMARY KEY (id);
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
+ALTER TABLE public.scenari ADD CONSTRAINT scenari_pkey PRIMARY KEY (id);
+ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_pkey PRIMARY KEY (id);
@@ -2156,6 +2693,7 @@ ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_lesson_id_positi
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_world_id_position_key UNIQUE (world_id, "position");
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_username_key UNIQUE (username);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_endpoint_key UNIQUE (user_id, endpoint);
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_mano_id_user_id_key UNIQUE (mano_id, user_id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_board_key UNIQUE (lesson_id, board);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
@@ -2188,13 +2726,19 @@ ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_content_check CH
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_duration_minutes_check CHECK (((duration_minutes IS NULL) OR (duration_minutes >= 0)));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_module_type_check CHECK ((module_type = ANY (ARRAY['theory'::text, 'exercise'::text, 'quiz'::text, 'practice'::text])));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_xp_reward_check CHECK ((xp_reward >= 0));
+ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['giovane'::text, 'adulto'::text, 'senior'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_stelle_check CHECK (((stelle >= 0) AND (stelle <= 3)));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((char_length(nota) <= 2000));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
+ALTER TABLE public.scenari ADD CONSTRAINT scenari_descrizione_check CHECK ((char_length(descrizione) <= 1000));
+ALTER TABLE public.scenari ADD CONSTRAINT scenari_nome_check CHECK (((char_length(btrim(nome)) >= 1) AND (char_length(btrim(nome)) <= 120)));
+ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_coppia_check CHECK ((coppia = ANY (ARRAY['A'::text, 'B'::text])));
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_check CHECK (((a1 <> a2) AND (b1 <> b2) AND (a1 <> b1) AND (a1 <> b2) AND (a2 <> b1) AND (a2 <> b2)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_bidding_check CHECK (((bidding IS NULL) OR ((bidding ? 'dealer'::text) AND (bidding ? 'bids'::text) AND (jsonb_typeof((bidding -> 'bids'::text)) = 'array'::text))));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_declarer_check CHECK ((declarer = ANY (ARRAY['north'::text, 'south'::text, 'east'::text, 'west'::text])));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_hands_check CHECK (((hands ? 'north'::text) AND (hands ? 'south'::text) AND (hands ? 'east'::text) AND (hands ? 'west'::text) AND (jsonb_typeof((hands -> 'north'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'south'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'east'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'west'::text)) = 'array'::text)));
@@ -2241,12 +2785,25 @@ ALTER TABLE public.lessons ADD CONSTRAINT lessons_world_id_fkey FOREIGN KEY (wor
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenari(id) ON DELETE CASCADE;
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd_id) REFERENCES asd(id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_partner_id_fkey FOREIGN KEY (partner_id) REFERENCES profiles(id) ON DELETE SET NULL;
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.scenari ADD CONSTRAINT scenari_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES profiles(id) ON DELETE SET NULL;
+ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
+ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_sessione_id_fkey FOREIGN KEY (sessione_id) REFERENCES bidding_sessions(id) ON DELETE CASCADE;
+ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_sfida_id_fkey FOREIGN KEY (sfida_id) REFERENCES sfide_coppie(id) ON DELETE CASCADE;
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_a1_fkey FOREIGN KEY (a1) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_a2_fkey FOREIGN KEY (a2) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_b1_fkey FOREIGN KEY (b1) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_b2_fkey FOREIGN KEY (b2) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_creatore_id_fkey FOREIGN KEY (creatore_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
@@ -2293,10 +2850,17 @@ CREATE INDEX lesson_modules_content_gin ON public.lesson_modules USING gin (cont
 CREATE INDEX lesson_modules_lesson_id_idx ON public.lesson_modules USING btree (lesson_id);
 CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
 CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, created_at DESC);
+CREATE INDEX mani_generate_scenario_idx ON public.mani_generate USING btree (scenario_id, created_at DESC);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX profiles_asd_code_idx ON public.profiles USING btree (asd_code);
 CREATE UNIQUE INDEX profiles_friend_code_key ON public.profiles USING btree (friend_code) WHERE (friend_code IS NOT NULL);
+CREATE INDEX risultati_mano_idx ON public.risultati_mano USING btree (mano_id);
+CREATE INDEX risultati_utente_idx ON public.risultati_mano USING btree (user_id, created_at DESC);
 CREATE INDEX saved_hands_owner_idx ON public.saved_hands USING btree (owner_id, created_at DESC);
+CREATE INDEX scenari_pubblici_idx ON public.scenari USING btree (pubblico, ufficiale, created_at DESC);
+CREATE UNIQUE INDEX scenari_slug_key ON public.scenari USING btree (slug);
+CREATE INDEX sfida_board_sessione_idx ON public.sfida_board USING btree (sessione_id);
+CREATE INDEX sfide_coppie_partecipanti_idx ON public.sfide_coppie USING btree (a1, a2, b1, b2);
 CREATE INDEX smazzate_bidding_gin ON public.smazzate USING gin (bidding jsonb_path_ops);
 CREATE INDEX smazzate_lesson_id_idx ON public.smazzate USING btree (lesson_id);
 CREATE INDEX trova_errore_category_idx ON public.trova_errore_scenarios USING btree (category);
@@ -2352,11 +2916,16 @@ ALTER TABLE public.lesson_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.review_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.risultati_mano ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.scenari ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trova_errore_scenarios ENABLE ROW LEVEL SECURITY;
@@ -2430,6 +2999,10 @@ CREATE POLICY "Instructor manages own live tables" ON public.live_tables AS PERM
   WHERE ((c.id = live_tables.class_id) AND (c.instructor_id = auth.uid()))))));
 CREATE POLICY "Authenticated can insert own login history" ON public.login_history AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Users can read own login history" ON public.login_history AS PERMISSIVE FOR SELECT TO authenticated USING ((user_id = auth.uid()));
+CREATE POLICY "Istruttori generano mani" ON public.mani_generate AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text]))))));
+CREATE POLICY "Mani leggibili" ON public.mani_generate AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY partner_profiles_delete ON public.partner_profiles AS PERMISSIVE FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_insert ON public.partner_profiles AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_select ON public.partner_profiles AS PERMISSIVE FOR SELECT TO authenticated USING ((looking OR (user_id = auth.uid())));
@@ -2439,7 +3012,19 @@ CREATE POLICY "Users can insert own profile" ON public.profiles AS PERMISSIVE FO
 CREATE POLICY "Users update own profile" ON public.profiles AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = id));
 CREATE POLICY "Users manage own subscriptions" ON public.push_subscriptions AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id)) WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Own reviews" ON public.review_items AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
+CREATE POLICY "Ognuno scrive il proprio risultato" ON public.risultati_mano AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "Risultati leggibili" ON public.risultati_mano AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Own saved hands" ON public.saved_hands AS PERMISSIVE FOR ALL TO authenticated USING ((owner_id = auth.uid())) WITH CHECK ((owner_id = auth.uid()));
+CREATE POLICY "Autore cancella i propri scenari" ON public.scenari AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) OR is_admin()));
+CREATE POLICY "Autore modifica i propri scenari" ON public.scenari AS PERMISSIVE FOR UPDATE TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
+CREATE POLICY "Istruttori creano scenari" ON public.scenari AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
+CREATE POLICY "Scenari leggibili" ON public.scenari AS PERMISSIVE FOR SELECT TO authenticated USING ((pubblico OR ufficiale OR (autore_id = auth.uid())));
+CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR SELECT TO authenticated USING ((EXISTS ( SELECT 1
+   FROM sfide_coppie s
+  WHERE ((s.id = sfida_board.sfida_id) AND ((((auth.uid() = s.a1) OR (auth.uid() = s.a2)) OR (auth.uid() = s.b1)) OR (auth.uid() = s.b2))))));
+CREATE POLICY "Le mie sfide" ON public.sfide_coppie AS PERMISSIVE FOR SELECT TO authenticated USING (((((auth.uid() = a1) OR (auth.uid() = a2)) OR (auth.uid() = b1)) OR (auth.uid() = b2)));
 CREATE POLICY smazzate_public_read ON public.smazzate AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Authenticated can read tournament results" ON public.tournament_results AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Users can insert own tournament result" ON public.tournament_results AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
@@ -2538,6 +3123,9 @@ GRANT DELETE ON public.live_tables TO service_role;
 GRANT DELETE ON public.login_history TO anon;
 GRANT DELETE ON public.login_history TO authenticated;
 GRANT DELETE ON public.login_history TO service_role;
+GRANT DELETE ON public.mani_generate TO anon;
+GRANT DELETE ON public.mani_generate TO authenticated;
+GRANT DELETE ON public.mani_generate TO service_role;
 GRANT DELETE ON public.partner_profiles TO anon;
 GRANT DELETE ON public.partner_profiles TO authenticated;
 GRANT DELETE ON public.partner_profiles TO service_role;
@@ -2550,9 +3138,21 @@ GRANT DELETE ON public.push_subscriptions TO service_role;
 GRANT DELETE ON public.review_items TO anon;
 GRANT DELETE ON public.review_items TO authenticated;
 GRANT DELETE ON public.review_items TO service_role;
+GRANT DELETE ON public.risultati_mano TO anon;
+GRANT DELETE ON public.risultati_mano TO authenticated;
+GRANT DELETE ON public.risultati_mano TO service_role;
 GRANT DELETE ON public.saved_hands TO anon;
 GRANT DELETE ON public.saved_hands TO authenticated;
 GRANT DELETE ON public.saved_hands TO service_role;
+GRANT DELETE ON public.scenari TO anon;
+GRANT DELETE ON public.scenari TO authenticated;
+GRANT DELETE ON public.scenari TO service_role;
+GRANT DELETE ON public.sfida_board TO anon;
+GRANT DELETE ON public.sfida_board TO authenticated;
+GRANT DELETE ON public.sfida_board TO service_role;
+GRANT DELETE ON public.sfide_coppie TO anon;
+GRANT DELETE ON public.sfide_coppie TO authenticated;
+GRANT DELETE ON public.sfide_coppie TO service_role;
 GRANT DELETE ON public.smazzate TO anon;
 GRANT DELETE ON public.smazzate TO authenticated;
 GRANT DELETE ON public.smazzate TO service_role;
@@ -2655,6 +3255,9 @@ GRANT INSERT ON public.live_tables TO service_role;
 GRANT INSERT ON public.login_history TO anon;
 GRANT INSERT ON public.login_history TO authenticated;
 GRANT INSERT ON public.login_history TO service_role;
+GRANT INSERT ON public.mani_generate TO anon;
+GRANT INSERT ON public.mani_generate TO authenticated;
+GRANT INSERT ON public.mani_generate TO service_role;
 GRANT INSERT ON public.partner_profiles TO anon;
 GRANT INSERT ON public.partner_profiles TO authenticated;
 GRANT INSERT ON public.partner_profiles TO service_role;
@@ -2667,9 +3270,21 @@ GRANT INSERT ON public.push_subscriptions TO service_role;
 GRANT INSERT ON public.review_items TO anon;
 GRANT INSERT ON public.review_items TO authenticated;
 GRANT INSERT ON public.review_items TO service_role;
+GRANT INSERT ON public.risultati_mano TO anon;
+GRANT INSERT ON public.risultati_mano TO authenticated;
+GRANT INSERT ON public.risultati_mano TO service_role;
 GRANT INSERT ON public.saved_hands TO anon;
 GRANT INSERT ON public.saved_hands TO authenticated;
 GRANT INSERT ON public.saved_hands TO service_role;
+GRANT INSERT ON public.scenari TO anon;
+GRANT INSERT ON public.scenari TO authenticated;
+GRANT INSERT ON public.scenari TO service_role;
+GRANT INSERT ON public.sfida_board TO anon;
+GRANT INSERT ON public.sfida_board TO authenticated;
+GRANT INSERT ON public.sfida_board TO service_role;
+GRANT INSERT ON public.sfide_coppie TO anon;
+GRANT INSERT ON public.sfide_coppie TO authenticated;
+GRANT INSERT ON public.sfide_coppie TO service_role;
 GRANT INSERT ON public.smazzate TO anon;
 GRANT INSERT ON public.smazzate TO authenticated;
 GRANT INSERT ON public.smazzate TO service_role;
@@ -2772,6 +3387,9 @@ GRANT REFERENCES ON public.live_tables TO service_role;
 GRANT REFERENCES ON public.login_history TO anon;
 GRANT REFERENCES ON public.login_history TO authenticated;
 GRANT REFERENCES ON public.login_history TO service_role;
+GRANT REFERENCES ON public.mani_generate TO anon;
+GRANT REFERENCES ON public.mani_generate TO authenticated;
+GRANT REFERENCES ON public.mani_generate TO service_role;
 GRANT REFERENCES ON public.partner_profiles TO anon;
 GRANT REFERENCES ON public.partner_profiles TO authenticated;
 GRANT REFERENCES ON public.partner_profiles TO service_role;
@@ -2784,9 +3402,21 @@ GRANT REFERENCES ON public.push_subscriptions TO service_role;
 GRANT REFERENCES ON public.review_items TO anon;
 GRANT REFERENCES ON public.review_items TO authenticated;
 GRANT REFERENCES ON public.review_items TO service_role;
+GRANT REFERENCES ON public.risultati_mano TO anon;
+GRANT REFERENCES ON public.risultati_mano TO authenticated;
+GRANT REFERENCES ON public.risultati_mano TO service_role;
 GRANT REFERENCES ON public.saved_hands TO anon;
 GRANT REFERENCES ON public.saved_hands TO authenticated;
 GRANT REFERENCES ON public.saved_hands TO service_role;
+GRANT REFERENCES ON public.scenari TO anon;
+GRANT REFERENCES ON public.scenari TO authenticated;
+GRANT REFERENCES ON public.scenari TO service_role;
+GRANT REFERENCES ON public.sfida_board TO anon;
+GRANT REFERENCES ON public.sfida_board TO authenticated;
+GRANT REFERENCES ON public.sfida_board TO service_role;
+GRANT REFERENCES ON public.sfide_coppie TO anon;
+GRANT REFERENCES ON public.sfide_coppie TO authenticated;
+GRANT REFERENCES ON public.sfide_coppie TO service_role;
 GRANT REFERENCES ON public.smazzate TO anon;
 GRANT REFERENCES ON public.smazzate TO authenticated;
 GRANT REFERENCES ON public.smazzate TO service_role;
@@ -2889,6 +3519,9 @@ GRANT SELECT ON public.live_tables TO service_role;
 GRANT SELECT ON public.login_history TO anon;
 GRANT SELECT ON public.login_history TO authenticated;
 GRANT SELECT ON public.login_history TO service_role;
+GRANT SELECT ON public.mani_generate TO anon;
+GRANT SELECT ON public.mani_generate TO authenticated;
+GRANT SELECT ON public.mani_generate TO service_role;
 GRANT SELECT ON public.partner_profiles TO anon;
 GRANT SELECT ON public.partner_profiles TO authenticated;
 GRANT SELECT ON public.partner_profiles TO service_role;
@@ -2900,9 +3533,21 @@ GRANT SELECT ON public.push_subscriptions TO service_role;
 GRANT SELECT ON public.review_items TO anon;
 GRANT SELECT ON public.review_items TO authenticated;
 GRANT SELECT ON public.review_items TO service_role;
+GRANT SELECT ON public.risultati_mano TO anon;
+GRANT SELECT ON public.risultati_mano TO authenticated;
+GRANT SELECT ON public.risultati_mano TO service_role;
 GRANT SELECT ON public.saved_hands TO anon;
 GRANT SELECT ON public.saved_hands TO authenticated;
 GRANT SELECT ON public.saved_hands TO service_role;
+GRANT SELECT ON public.scenari TO anon;
+GRANT SELECT ON public.scenari TO authenticated;
+GRANT SELECT ON public.scenari TO service_role;
+GRANT SELECT ON public.sfida_board TO anon;
+GRANT SELECT ON public.sfida_board TO authenticated;
+GRANT SELECT ON public.sfida_board TO service_role;
+GRANT SELECT ON public.sfide_coppie TO anon;
+GRANT SELECT ON public.sfide_coppie TO authenticated;
+GRANT SELECT ON public.sfide_coppie TO service_role;
 GRANT SELECT ON public.smazzate TO anon;
 GRANT SELECT ON public.smazzate TO authenticated;
 GRANT SELECT ON public.smazzate TO service_role;
@@ -3005,6 +3650,9 @@ GRANT TRIGGER ON public.live_tables TO service_role;
 GRANT TRIGGER ON public.login_history TO anon;
 GRANT TRIGGER ON public.login_history TO authenticated;
 GRANT TRIGGER ON public.login_history TO service_role;
+GRANT TRIGGER ON public.mani_generate TO anon;
+GRANT TRIGGER ON public.mani_generate TO authenticated;
+GRANT TRIGGER ON public.mani_generate TO service_role;
 GRANT TRIGGER ON public.partner_profiles TO anon;
 GRANT TRIGGER ON public.partner_profiles TO authenticated;
 GRANT TRIGGER ON public.partner_profiles TO service_role;
@@ -3017,9 +3665,21 @@ GRANT TRIGGER ON public.push_subscriptions TO service_role;
 GRANT TRIGGER ON public.review_items TO anon;
 GRANT TRIGGER ON public.review_items TO authenticated;
 GRANT TRIGGER ON public.review_items TO service_role;
+GRANT TRIGGER ON public.risultati_mano TO anon;
+GRANT TRIGGER ON public.risultati_mano TO authenticated;
+GRANT TRIGGER ON public.risultati_mano TO service_role;
 GRANT TRIGGER ON public.saved_hands TO anon;
 GRANT TRIGGER ON public.saved_hands TO authenticated;
 GRANT TRIGGER ON public.saved_hands TO service_role;
+GRANT TRIGGER ON public.scenari TO anon;
+GRANT TRIGGER ON public.scenari TO authenticated;
+GRANT TRIGGER ON public.scenari TO service_role;
+GRANT TRIGGER ON public.sfida_board TO anon;
+GRANT TRIGGER ON public.sfida_board TO authenticated;
+GRANT TRIGGER ON public.sfida_board TO service_role;
+GRANT TRIGGER ON public.sfide_coppie TO anon;
+GRANT TRIGGER ON public.sfide_coppie TO authenticated;
+GRANT TRIGGER ON public.sfide_coppie TO service_role;
 GRANT TRIGGER ON public.smazzate TO anon;
 GRANT TRIGGER ON public.smazzate TO authenticated;
 GRANT TRIGGER ON public.smazzate TO service_role;
@@ -3122,6 +3782,9 @@ GRANT TRUNCATE ON public.live_tables TO service_role;
 GRANT TRUNCATE ON public.login_history TO anon;
 GRANT TRUNCATE ON public.login_history TO authenticated;
 GRANT TRUNCATE ON public.login_history TO service_role;
+GRANT TRUNCATE ON public.mani_generate TO anon;
+GRANT TRUNCATE ON public.mani_generate TO authenticated;
+GRANT TRUNCATE ON public.mani_generate TO service_role;
 GRANT TRUNCATE ON public.partner_profiles TO anon;
 GRANT TRUNCATE ON public.partner_profiles TO authenticated;
 GRANT TRUNCATE ON public.partner_profiles TO service_role;
@@ -3134,9 +3797,21 @@ GRANT TRUNCATE ON public.push_subscriptions TO service_role;
 GRANT TRUNCATE ON public.review_items TO anon;
 GRANT TRUNCATE ON public.review_items TO authenticated;
 GRANT TRUNCATE ON public.review_items TO service_role;
+GRANT TRUNCATE ON public.risultati_mano TO anon;
+GRANT TRUNCATE ON public.risultati_mano TO authenticated;
+GRANT TRUNCATE ON public.risultati_mano TO service_role;
 GRANT TRUNCATE ON public.saved_hands TO anon;
 GRANT TRUNCATE ON public.saved_hands TO authenticated;
 GRANT TRUNCATE ON public.saved_hands TO service_role;
+GRANT TRUNCATE ON public.scenari TO anon;
+GRANT TRUNCATE ON public.scenari TO authenticated;
+GRANT TRUNCATE ON public.scenari TO service_role;
+GRANT TRUNCATE ON public.sfida_board TO anon;
+GRANT TRUNCATE ON public.sfida_board TO authenticated;
+GRANT TRUNCATE ON public.sfida_board TO service_role;
+GRANT TRUNCATE ON public.sfide_coppie TO anon;
+GRANT TRUNCATE ON public.sfide_coppie TO authenticated;
+GRANT TRUNCATE ON public.sfide_coppie TO service_role;
 GRANT TRUNCATE ON public.smazzate TO anon;
 GRANT TRUNCATE ON public.smazzate TO authenticated;
 GRANT TRUNCATE ON public.smazzate TO service_role;
@@ -3239,6 +3914,9 @@ GRANT UPDATE ON public.live_tables TO service_role;
 GRANT UPDATE ON public.login_history TO anon;
 GRANT UPDATE ON public.login_history TO authenticated;
 GRANT UPDATE ON public.login_history TO service_role;
+GRANT UPDATE ON public.mani_generate TO anon;
+GRANT UPDATE ON public.mani_generate TO authenticated;
+GRANT UPDATE ON public.mani_generate TO service_role;
 GRANT UPDATE ON public.partner_profiles TO anon;
 GRANT UPDATE ON public.partner_profiles TO authenticated;
 GRANT UPDATE ON public.partner_profiles TO service_role;
@@ -3251,9 +3929,21 @@ GRANT UPDATE ON public.push_subscriptions TO service_role;
 GRANT UPDATE ON public.review_items TO anon;
 GRANT UPDATE ON public.review_items TO authenticated;
 GRANT UPDATE ON public.review_items TO service_role;
+GRANT UPDATE ON public.risultati_mano TO anon;
+GRANT UPDATE ON public.risultati_mano TO authenticated;
+GRANT UPDATE ON public.risultati_mano TO service_role;
 GRANT UPDATE ON public.saved_hands TO anon;
 GRANT UPDATE ON public.saved_hands TO authenticated;
 GRANT UPDATE ON public.saved_hands TO service_role;
+GRANT UPDATE ON public.scenari TO anon;
+GRANT UPDATE ON public.scenari TO authenticated;
+GRANT UPDATE ON public.scenari TO service_role;
+GRANT UPDATE ON public.sfida_board TO anon;
+GRANT UPDATE ON public.sfida_board TO authenticated;
+GRANT UPDATE ON public.sfida_board TO service_role;
+GRANT UPDATE ON public.sfide_coppie TO anon;
+GRANT UPDATE ON public.sfide_coppie TO authenticated;
+GRANT UPDATE ON public.sfide_coppie TO service_role;
 GRANT UPDATE ON public.smazzate TO anon;
 GRANT UPDATE ON public.smazzate TO authenticated;
 GRANT UPDATE ON public.smazzate TO service_role;
@@ -3303,6 +3993,9 @@ GRANT EXECUTE ON FUNCTION public.bidding_session_view(p_id uuid) TO service_role
 REVOKE ALL ON FUNCTION public.can_post_for_asd(p_asd_code text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_role;
+REVOKE ALL ON FUNCTION public.confronto_campo(p_mano_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
 REVOKE ALL ON FUNCTION public.genera_codice_amico() FROM PUBLIC;
@@ -3347,6 +4040,10 @@ GRANT EXECUTE ON FUNCTION public.get_pending_challenges(p_user_id uuid) TO servi
 REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.handle_new_user() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.handle_new_user() TO service_role;
+REVOKE ALL ON FUNCTION public.imp_da_differenza(p_diff integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO anon;
+GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO service_role;
 REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO service_role;
@@ -3387,6 +4084,15 @@ GRANT EXECUTE ON FUNCTION public.live_table_view(p_table_id uuid) TO service_rol
 REVOKE ALL ON FUNCTION public.log_user_login() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
+REVOKE ALL ON FUNCTION public.mano_da_fare(p_slug text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.mano_da_fare(p_slug text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.mano_da_fare(p_slug text) TO service_role;
+REVOKE ALL ON FUNCTION public.mie_sfide_coppie() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.mie_sfide_coppie() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.mie_sfide_coppie() TO service_role;
+REVOKE ALL ON FUNCTION public.mie_statistiche_sfide() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.mie_statistiche_sfide() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.mie_statistiche_sfide() TO service_role;
 REVOKE ALL ON FUNCTION public.mio_codice_amico() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.mio_codice_amico() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.mio_codice_amico() TO service_role;
@@ -3399,12 +4105,25 @@ GRANT EXECUTE ON FUNCTION public.my_bidding_sessions() TO service_role;
 REVOKE ALL ON FUNCTION public.my_tournament_history(limite integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO service_role;
+REVOKE ALL ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO anon;
+GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO service_role;
 REVOKE ALL ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO service_role;
 REVOKE ALL ON FUNCTION public.search_users(p_query text, p_user_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer) TO service_role;
+REVOKE ALL ON FUNCTION public.sfida_coppie_vista(p_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_vista(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_vista(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.sync_asd_name() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO anon;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO authenticated;

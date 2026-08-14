@@ -35,24 +35,45 @@ export interface ScoreResult {
   isSlam: boolean;
 }
 
+/**
+ * Contro e surcontro.
+ *
+ * Servono da quando gli avversari sono una rete neurale che dichiara davvero:
+ * BEN contra, e un 4♠ contrato caduto di due segnato come se fosse passato
+ * liscio (-100 invece di -300) falsa il voto proprio nelle mani dove la
+ * dichiarazione è andata peggio.
+ */
+export type Doppio = 1 | 2 | 4;
+
+/** Sottoprese contrate: prima, seconda e terza, poi 300 ciascuna. */
+function undertrickPoints(under: number, vulnerable: boolean, doppio: Doppio): number {
+  if (doppio === 1) return under * (vulnerable ? 100 : 50);
+  const scala = vulnerable
+    ? (n: number) => 200 + (n - 1) * 300
+    : (n: number) => (n === 1 ? 100 : n <= 3 ? 100 + (n - 1) * 200 : 500 + (n - 3) * 300);
+  return scala(under) * (doppio === 4 ? 2 : 1);
+}
+
 export function scoreContract(input: {
   level: number; // 1-7
   strain: Strain;
   tricksMade: number; // 0-13
   vulnerable?: boolean;
+  /** 1 nessun contro, 2 contrato, 4 surcontrato. */
+  doppio?: Doppio;
 }): ScoreResult {
-  const { level, strain, tricksMade, vulnerable = false } = input;
+  const { level, strain, tricksMade, vulnerable = false, doppio = 1 } = input;
   const tricksNeeded = level + 6;
   const made = tricksMade >= tricksNeeded;
 
-  const base = contractPoints(level, strain);
+  const base = contractPoints(level, strain) * doppio;
   const isGame = base >= 100;
   const isSlam = level >= 6;
 
   if (!made) {
     const under = tricksNeeded - tricksMade;
     return {
-      score: -(under * (vulnerable ? 100 : 50)),
+      score: -undertrickPoints(under, vulnerable, doppio),
       made: false,
       tricksNeeded,
       diff: under,
@@ -65,10 +86,16 @@ export function scoreContract(input: {
   const gameBonus = isGame ? (vulnerable ? 500 : 300) : 50;
   const slamBonus =
     level === 7 ? (vulnerable ? 1500 : 1000) : level === 6 ? (vulnerable ? 750 : 500) : 0;
-  const overtrickPoints = over * trickValue(strain);
+  // Contrato le prese in più valgono 100 (200 in zona) l'una, non il valore
+  // del seme; e il contro vale 50 di «insulto», 100 il surcontro.
+  const overtrickPoints =
+    doppio === 1
+      ? over * trickValue(strain)
+      : over * (vulnerable ? 200 : 100) * (doppio === 4 ? 2 : 1);
+  const insulto = doppio === 2 ? 50 : doppio === 4 ? 100 : 0;
 
   return {
-    score: base + gameBonus + slamBonus + overtrickPoints,
+    score: base + gameBonus + slamBonus + overtrickPoints + insulto,
     made: true,
     tricksNeeded,
     diff: over,

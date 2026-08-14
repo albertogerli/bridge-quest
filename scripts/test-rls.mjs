@@ -747,6 +747,133 @@ try {
   fail(`verifica archivio non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+// 12. Scenari, mani condivise e confronto col campo
+//     (vedi scripts/sql/scenari-e-mani-2026-08.sql)
+//
+//     Qui la regola è asimmetrica ed è voluta: le MANI sono di tutti — senza
+//     riuso non esiste la percentuale di campo — ma chi le mette in circolo
+//     deve insegnare, e il confronto non deve mai dire CHI ha sbagliato.
+// ---------------------------------------------------------------------------
+console.log("\n[12] Scenari e mani condivise");
+
+try {
+  for (const t of ["scenari", "mani_generate", "risultati_mano"]) {
+    const { data, error } = await anon.from(t).select("id").limit(1);
+    const rows = error ? 0 : data?.length ?? 0;
+    if (rows === 0) ok(`(a) ${t}: niente per l'anonimo`);
+    else fail(`(a) un anonimo legge ${rows} righe da ${t}`);
+  }
+
+  {
+    const email = `sce-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Sc!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(b) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+
+      const { error: scErr } = await u.from("scenari").insert({
+        nome: "abusivo", vincoli: {}, autore_id: created.user.id,
+      });
+      if (scErr) ok("(b) un allievo non crea scenari");
+      else fail("(b) un allievo ha creato uno scenario");
+
+      const { error: mnErr } = await u.from("mani_generate").insert({
+        hands: {}, dealer: "south",
+      });
+      if (mnErr) ok("(c) un allievo non mette mani in circolo");
+      else fail("(c) un allievo ha inserito una mano generata");
+
+      const { error: riErr } = await u.from("risultati_mano").insert({
+        mano_id: "00000000-0000-0000-0000-000000000000",
+        user_id: "00000000-0000-0000-0000-000000000000",
+        punteggio: 2220, stelle: 3,
+      });
+      if (riErr) ok("(d) non si registra il risultato di un altro");
+      else fail("(d) è stato registrato un risultato a nome altrui");
+
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente scenari di test eliminato");
+    }
+  }
+
+  {
+    const { data, error } = await anon.rpc("confronto_campo", {
+      p_mano_id: "00000000-0000-0000-0000-000000000000",
+    });
+    if (error || data === null) ok("(e) confronto_campo muto per l'anonimo");
+    else fail("(e) un anonimo ottiene il confronto col campo");
+  }
+} catch (e) {
+  fail(`verifica scenari non eseguita: ${e.message}`);
+}
+
+// ---------------------------------------------------------------------------
+// 13. Sfide 2 contro 2 — sfide_coppie, sfida_board e statistiche
+//     (vedi scripts/sql/sfida-coppie-2026-08.sql e statistiche-sfide-2026-08.sql)
+//
+//     Il punteggio di una sfida non deve poterlo scrivere il browser, e le
+//     statistiche di uno non sono affari di nessun altro.
+// ---------------------------------------------------------------------------
+console.log("\n[13] Sfide 2 contro 2");
+
+try {
+  for (const t of ["sfide_coppie", "sfida_board"]) {
+    const { data, error } = await anon.from(t).select("*").limit(1);
+    const rows = error ? 0 : data?.length ?? 0;
+    if (rows === 0) ok(`(a) ${t}: niente per l'anonimo`);
+    else fail(`(a) un anonimo legge ${rows} righe da ${t}`);
+  }
+
+  for (const fn of ["sfida_coppie_crea", "sfida_board_chiudi", "mie_statistiche_sfide"]) {
+    const { error } = await anon.rpc(fn, {});
+    if (error) ok(`(b) ${fn}(): non eseguibile da anonimo`);
+    else fail(`(b) un anonimo ha eseguito ${fn}()`);
+  }
+
+  {
+    const email = `sfc-test-${Date.now()}@bridgelab-test.invalid`;
+    const password = `Sc!${Math.random().toString(36).slice(2, 12)}`;
+    const { data: created, error: createErr } =
+      await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createErr) {
+      fail(`(c) utente di prova non creato: ${createErr.message}`);
+    } else {
+      const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+      await u.auth.signInWithPassword({ email, password });
+
+      // Un utente nuovo non vede sfide di altri...
+      const { data: sue } = await u.from("sfide_coppie").select("id").limit(5);
+      if ((sue?.length ?? 0) === 0) ok("(c) un utente nuovo non vede sfide altrui");
+      else fail(`(c) un utente nuovo vede ${sue.length} sfide altrui`);
+
+      // ...e non può scrivere un punteggio a mano: è il punto di tutto.
+      const { error: insErr } = await u.from("sfida_board").insert({
+        sfida_id: "00000000-0000-0000-0000-000000000000",
+        mano_id: "00000000-0000-0000-0000-000000000000",
+        coppia: "A", numero: 1,
+        sessione_id: "00000000-0000-0000-0000-000000000000",
+        punteggio: 99999,
+      });
+      if (insErr) ok("(d) il punteggio non si scrive dal client");
+      else fail("(d) è stato possibile scrivere un punteggio a mano");
+
+      const { data: stat } = await u.rpc("mie_statistiche_sfide");
+      if (stat?.incontri === 0) ok("(e) le statistiche di un utente nuovo sono vuote");
+      else fail(`(e) statistiche non vuote per un utente nuovo: ${JSON.stringify(stat)}`);
+
+      await admin.auth.admin.deleteUser(created.user.id);
+      info("utente sfide di test eliminato");
+    }
+  }
+} catch (e) {
+  fail(`verifica sfide non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"

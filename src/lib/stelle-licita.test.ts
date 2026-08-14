@@ -54,3 +54,24 @@ describe("valutaLicita", () => {
     expect(e.stelle).toBe(2);
   });
 });
+
+describe("il metro atteso", () => {
+  it("dà lo stesso voto: cambia il riferimento, non la scala", () => {
+    expect(valutaLicita(420, 620, "atteso").stelle).toBe(valutaLicita(420, 620).stelle);
+  });
+
+  it("non parla di par quando il riferimento è il valore atteso", () => {
+    // Dire «sotto il par» quando si sta confrontando col contratto migliore in
+    // media è una bugia piccola che confonde chi sta imparando i termini.
+    const atteso = valutaLicita(140, 620, "atteso");
+    expect(atteso.commento).toContain("contratto migliore");
+    expect(atteso.commento).not.toContain("par");
+
+    expect(valutaLicita(140, 620).commento).toContain("par");
+  });
+
+  it("riconosce la scelta migliore, non solo il par", () => {
+    expect(valutaLicita(620, 620, "atteso").commento).toContain("La scelta migliore");
+    expect(valutaLicita(620, 620).commento).toContain("Contratto par");
+  });
+});
