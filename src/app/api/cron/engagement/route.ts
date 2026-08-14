@@ -63,7 +63,12 @@ export async function GET(req: NextRequest) {
     display_name: string | null;
     profile_type: string | null;
     kind: EmailKind;
-    ctx: { streak?: number; modules_done?: number; days_inactive?: number | null } | null;
+    ctx: {
+      streak?: number;
+      modules_done?: number;
+      days_inactive?: number | null;
+      licite_ferme?: number;
+    } | null;
   }>;
 
   const byKind: Record<string, number> = {};
@@ -82,6 +87,7 @@ export async function GET(req: NextRequest) {
         streak: r.ctx?.streak ?? 0,
         modulesDone: r.ctx?.modules_done ?? 0,
         daysInactive: r.ctx?.days_inactive ?? null,
+        liciteFerme: r.ctx?.licite_ferme ?? 0,
       },
     });
 

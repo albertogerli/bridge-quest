@@ -68,14 +68,36 @@ function LicitaAmico() {
     else setElenco(await mieLicite());
   }, [idAperta]);
 
+  /**
+   * All'apertura, se la licita è ferma sul turno di un avversario la si
+   * sblocca.
+   *
+   * PERCHÉ PUÒ RESTARE FERMA. Gli avversari li fa dichiarare il server, ma
+   * qualcuno deve chiederglielo, e a chiederlo è il browser di chi ha appena
+   * parlato. Se quel browser si chiude nel mezzo — schermo bloccato, rete che
+   * cade, scheda chiusa — la licita resta lì per sempre, in attesa di un robot
+   * che nessuno ha svegliato. È il difetto peggiore possibile in una funzione
+   * asincrona: non dà errori, semplicemente non succede più niente.
+   */
   useEffect(() => {
     if (loading || !user) return;
     let vivo = true;
     (idAperta ? leggiLicita(idAperta) : mieLicite())
-      .then((r) => {
+      .then(async (r) => {
         if (!vivo) return;
-        if (idAperta) setSessione(r as SessioneLicita | null);
-        else setElenco(r as RigaElenco[]);
+        if (!idAperta) { setElenco(r as RigaElenco[]); return; }
+
+        const s = r as SessioneLicita | null;
+        setSessione(s);
+        if (!s || s.chiusa || s.turno === "north" || s.turno === "south") return;
+
+        await fetch("/api/licita/avversario", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId: s.id }),
+        }).catch((err) => reportError("licita-amico:sblocca", err));
+        const aggiornata = await leggiLicita(idAperta);
+        if (vivo) setSessione(aggiornata);
       })
       .catch((err) => reportError("licita-amico:carica", err));
     return () => { vivo = false; };

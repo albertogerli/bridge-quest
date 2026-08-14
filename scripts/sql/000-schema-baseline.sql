@@ -101,7 +101,8 @@ CREATE TABLE IF NOT EXISTS public.bidding_sessions (
   vulnerability text NOT NULL,
   bids jsonb NOT NULL,
   closed_at timestamp with time zone,
-  created_at timestamp with time zone NOT NULL
+  created_at timestamp with time zone NOT NULL,
+  last_bid_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.challenges (
@@ -1493,7 +1494,20 @@ CREATE OR REPLACE FUNCTION public.get_engagement_targets(p_limit integer DEFAULT
  SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  WITH base AS (
+  WITH ferme AS (
+    SELECT x.chi AS user_id, count(*) AS n
+    FROM (
+      SELECT CASE WHEN t.turno IN ('south','east') THEN s.south_id ELSE s.north_id END AS chi
+      FROM public.bidding_sessions s,
+           LATERAL (SELECT (ARRAY['north','east','south','west'])[
+                      ((array_position(ARRAY['north','east','south','west'], s.dealer) - 1
+                        + jsonb_array_length(s.bids)) % 4) + 1] AS turno) t
+      WHERE s.closed_at IS NULL
+        AND s.last_bid_at < now() - interval '12 hours'
+    ) x
+    GROUP BY x.chi
+  ),
+  base AS (
     SELECT
       p.id,
       u.email,
@@ -1503,9 +1517,11 @@ AS $function$
       p.last_login,
       COALESCE(p.streak, 0)                             AS streak,
       COALESCE(p.marketing_consent, false)              AS consent,
-      (SELECT count(*) FROM public.completed_modules cm WHERE cm.user_id = p.id) AS modules_done
+      (SELECT count(*) FROM public.completed_modules cm WHERE cm.user_id = p.id) AS modules_done,
+      COALESCE(f.n, 0)                                  AS licite_ferme
     FROM public.profiles p
     JOIN auth.users u ON u.id = p.id
+    LEFT JOIN ferme f ON f.user_id = p.id
     WHERE u.email IS NOT NULL
       AND u.email_confirmed_at IS NOT NULL
       AND COALESCE(u.banned_until, now() - interval '1 day') < now()
@@ -1513,7 +1529,11 @@ AS $function$
   scored AS (
     SELECT b.*,
       CASE
-        -- (1) Streak at risk: had a real streak, active YESTERDAY but not today.
+        WHEN b.licite_ferme > 0
+             AND NOT EXISTS (SELECT 1 FROM public.email_events e
+                             WHERE e.user_id = b.id AND e.email_type = 'turno_licita'
+                               AND e.sent_at > now() - interval '20 hours')
+          THEN 'turno_licita'
         WHEN b.consent
              AND b.streak >= 3
              AND b.last_login IS NOT NULL
@@ -1523,7 +1543,6 @@ AS $function$
                              WHERE e.user_id = b.id AND e.email_type = 'streak_risk'
                                AND e.sent_at > now() - interval '20 hours')
           THEN 'streak_risk'
-        -- (2) Onboarding: signed up 1-5 days ago, barely started, never nudged.
         WHEN b.consent
              AND b.created_at < now() - interval '20 hours'
              AND b.created_at > now() - interval '5 days'
@@ -1531,7 +1550,6 @@ AS $function$
              AND NOT EXISTS (SELECT 1 FROM public.email_events e
                              WHERE e.user_id = b.id AND e.email_type = 'onboarding_start')
           THEN 'onboarding_start'
-        -- (3) Inactive ~14 days.
         WHEN b.consent
              AND b.last_login IS NOT NULL
              AND b.last_login < now() - interval '14 days'
@@ -1540,7 +1558,6 @@ AS $function$
                              WHERE e.user_id = b.id AND e.email_type = 'inactive_14'
                                AND e.sent_at > now() - interval '30 days')
           THEN 'inactive_14'
-        -- (4) Inactive ~7 days.
         WHEN b.consent
              AND b.last_login IS NOT NULL
              AND b.last_login < now() - interval '7 days'
@@ -1554,14 +1571,11 @@ AS $function$
     FROM base b
   )
   SELECT
-    id AS user_id,
-    email,
-    display_name,
-    profile_type,
-    kind,
+    id AS user_id, email, display_name, profile_type, kind,
     jsonb_build_object(
       'streak', streak,
       'modules_done', modules_done,
+      'licite_ferme', licite_ferme,
       'days_inactive',
         CASE WHEN last_login IS NOT NULL
              THEN GREATEST(0, (EXTRACT(EPOCH FROM (now() - last_login)) / 86400)::int)
@@ -1571,12 +1585,9 @@ AS $function$
   WHERE kind IS NOT NULL
   ORDER BY
     CASE kind
-      WHEN 'streak_risk' THEN 1
-      WHEN 'onboarding_start' THEN 2
-      WHEN 'inactive_14' THEN 3
-      WHEN 'inactive_7' THEN 4
-      ELSE 5
-    END
+      WHEN 'turno_licita' THEN 0 WHEN 'streak_risk' THEN 1
+      WHEN 'onboarding_start' THEN 2 WHEN 'inactive_14' THEN 3
+      WHEN 'inactive_7' THEN 4 ELSE 5 END
   LIMIT p_limit;
 $function$
 ;
@@ -1777,6 +1788,24 @@ AS $function$
 
     return c;
   end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer DEFAULT 12)
+ RETURNS integer
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT count(*)::int
+  FROM public.bidding_sessions s,
+       LATERAL (SELECT (ARRAY['north','east','south','west'])[
+                  ((array_position(ARRAY['north','east','south','west'], s.dealer) - 1
+                    + jsonb_array_length(s.bids)) % 4) + 1] AS turno) t
+  WHERE s.closed_at IS NULL
+    AND p_user IN (s.south_id, s.north_id)
+    AND s.last_bid_at < now() - (p_ore || ' hours')::interval
+    AND (CASE WHEN t.turno IN ('south','east') THEN s.south_id ELSE s.north_id END) = p_user;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.list_instructor_requests(p_status text DEFAULT NULL::text)
@@ -2553,6 +2582,19 @@ END
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.tocca_bidding_session()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SET search_path TO 'public'
+AS $function$
+BEGIN
+  IF NEW.bids IS DISTINCT FROM OLD.bids THEN
+    NEW.last_bid_at := now();
+  END IF;
+  RETURN NEW;
+END $function$
+;
+
 CREATE OR REPLACE FUNCTION public.touch_updated_at()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -2593,6 +2635,7 @@ ALTER TABLE public.bidding_sessions ALTER COLUMN dealer SET DEFAULT 'south'::tex
 ALTER TABLE public.bidding_sessions ALTER COLUMN vulnerability SET DEFAULT 'none'::text;
 ALTER TABLE public.bidding_sessions ALTER COLUMN bids SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.bidding_sessions ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.bidding_sessions ALTER COLUMN last_bid_at SET DEFAULT now();
 ALTER TABLE public.challenges ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.challenges ALTER COLUMN status SET DEFAULT 'pending'::text;
 ALTER TABLE public.challenges ALTER COLUMN board_count SET DEFAULT 4;
@@ -2948,6 +2991,7 @@ CREATE UNIQUE INDEX uq_email_events_oneshot ON public.email_events USING btree (
 
 -- TRIGGER
 CREATE TRIGGER asd_clubs_touch BEFORE UPDATE ON public.asd_clubs FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
+CREATE TRIGGER bidding_sessions_last_bid BEFORE UPDATE ON public.bidding_sessions FOR EACH ROW EXECUTE FUNCTION tocca_bidding_session();
 CREATE TRIGGER collectible_cards_touch BEFORE UPDATE ON public.collectible_cards FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER course_worlds_touch BEFORE UPDATE ON public.course_worlds FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER courses_touch BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -4143,6 +4187,9 @@ GRANT EXECUTE ON FUNCTION public.is_member_of_class(p_class_id uuid) TO service_
 REVOKE ALL ON FUNCTION public.join_class_by_code(p_code text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.join_class_by_code(p_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.join_class_by_code(p_code text) TO service_role;
+REVOKE ALL ON FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer) TO service_role;
 REVOKE ALL ON FUNCTION public.list_instructor_requests(p_status text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.list_instructor_requests(p_status text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.list_instructor_requests(p_status text) TO service_role;
@@ -4208,6 +4255,10 @@ REVOKE ALL ON FUNCTION public.sync_asd_name() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO anon;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO service_role;
+REVOKE ALL ON FUNCTION public.tocca_bidding_session() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO anon;
+GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO service_role;
 REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO anon;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO authenticated;
