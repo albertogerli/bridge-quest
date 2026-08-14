@@ -138,3 +138,44 @@ describe("isInAppBrowserNoise", () => {
     expect(isInAppBrowserNoise(app("https://bridgelab.it/_next/static/chunks/main.js"))).toBe(false);
   });
 });
+
+describe("isInAppBrowserNoise — il ponte Java sparito", () => {
+  const conMessaggio = (value: string, filenames: string[] = []) => ({
+    exception: {
+      values: [{ value, stacktrace: { frames: filenames.map((filename) => ({ filename })) } }],
+    },
+  });
+
+  it("scarta l'evento del 2026-08-13 anche se uno stack frame è nostro", () => {
+    // Quel frame è l'involucro con cui Sentry avvolge addEventListener: è
+    // nostro solo perché sta nel nostro pacchetto.
+    expect(
+      isInAppBrowserNoise(
+        conMessaggio("Error invoking postMessage: Java object is gone", [
+          "app://navigation_performance_logger_android",
+          "app:///_next/static/chunks/5306-7c02d1f80c8e8e29.js",
+        ])
+      )
+    ).toBe(true);
+  });
+
+  it("scarta anche la prima forma vista, sulla tastiera", () => {
+    expect(
+      isInAppBrowserNoise(
+        conMessaggio("Error invoking enableDidUserTypeOnKeyboardLogging: Java object is gone")
+      )
+    ).toBe(true);
+  });
+
+  it("NON scarta un errore nostro che parla di oggetti mancanti", () => {
+    // Il confine: «object is gone» senza «Java» resta un errore da guardare.
+    expect(
+      isInAppBrowserNoise(
+        conMessaggio("Cannot read properties of undefined (reading 'hands')", [
+          "app:///_next/static/chunks/tavolo.js",
+        ])
+      )
+    ).toBe(false);
+    expect(isInAppBrowserNoise(conMessaggio("Object is gone", ["app:///_next/x.js"]))).toBe(false);
+  });
+});
