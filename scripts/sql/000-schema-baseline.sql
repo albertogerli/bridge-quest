@@ -92,6 +92,18 @@ CREATE TABLE IF NOT EXISTS public.bbo_username_cleanup_2026_08 (
   cleared_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.bidding_sessions (
+  id uuid NOT NULL,
+  south_id uuid NOT NULL,
+  north_id uuid NOT NULL,
+  hands jsonb NOT NULL,
+  dealer text NOT NULL,
+  vulnerability text NOT NULL,
+  bids jsonb NOT NULL,
+  closed_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.challenges (
   id uuid NOT NULL,
   challenger_id uuid NOT NULL,
@@ -743,6 +755,104 @@ BEGIN
     'bestStudent', best_student,
     'bestTeacher', best_teacher
   );
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.bidding_session_bid(p_id uuid, p_bid text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  s public.bidding_sessions%ROWTYPE;
+  v_seat text; v_turno text;
+  ordine text[] := ARRAY['north','east','south','west'];
+  i_dealer int; n int; nuove jsonb; ultimo_contratto int;
+BEGIN
+  SELECT * INTO s FROM public.bidding_sessions WHERE id = p_id FOR UPDATE;
+  IF NOT FOUND OR s.closed_at IS NOT NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'sessione non disponibile');
+  END IF;
+  v_seat := CASE WHEN s.south_id = auth.uid() THEN 'south'
+                 WHEN s.north_id = auth.uid() THEN 'north' ELSE NULL END;
+  IF v_seat IS NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'non fai parte di questa licita');
+  END IF;
+  n := jsonb_array_length(s.bids);
+  i_dealer := array_position(ordine, s.dealer);
+  v_turno := ordine[((i_dealer - 1 + n) % 4) + 1];
+  IF v_turno <> v_seat AND v_turno IN ('north','south') THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'non è il tuo turno');
+  END IF;
+  nuove := s.bids || to_jsonb(p_bid);
+  SELECT max(i) INTO ultimo_contratto
+  FROM generate_series(0, jsonb_array_length(nuove) - 1) i
+  WHERE nuove ->> i <> 'P';
+  UPDATE public.bidding_sessions
+  SET bids = nuove,
+      closed_at = CASE
+        WHEN ultimo_contratto IS NULL AND jsonb_array_length(nuove) >= 4 THEN now()
+        WHEN ultimo_contratto IS NOT NULL AND jsonb_array_length(nuove) - ultimo_contratto - 1 >= 3 THEN now()
+        ELSE NULL END
+  WHERE id = p_id;
+  RETURN jsonb_build_object('ok', true, 'turno', v_turno);
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text DEFAULT 'south'::text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE v_id uuid;
+BEGIN
+  IF auth.uid() IS NULL OR p_partner IS NULL OR p_partner = auth.uid() THEN
+    RETURN NULL;
+  END IF;
+  -- Si può invitare solo un amico: la licita a due è fra persone che si
+  -- conoscono, non un modo per mandare mani a sconosciuti.
+  IF NOT EXISTS (
+    SELECT 1 FROM public.friendships f
+    WHERE f.status = 'accepted'
+      AND ((f.user_id = auth.uid() AND f.friend_id = p_partner)
+        OR (f.friend_id = auth.uid() AND f.user_id = p_partner))
+  ) THEN
+    RETURN NULL;
+  END IF;
+
+  INSERT INTO public.bidding_sessions (south_id, north_id, hands, dealer)
+  VALUES (auth.uid(), p_partner, p_hands, coalesce(p_dealer, 'south'))
+  RETURNING id INTO v_id;
+  RETURN v_id;
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.bidding_session_view(p_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  s public.bidding_sessions%ROWTYPE;
+  v_seat text; v_chiusa boolean; v_turno text; v_hands jsonb;
+  ordine text[] := ARRAY['north','east','south','west']; i_dealer int;
+BEGIN
+  SELECT * INTO s FROM public.bidding_sessions WHERE id = p_id;
+  IF NOT FOUND THEN RETURN NULL; END IF;
+  v_seat := CASE WHEN s.south_id = auth.uid() THEN 'south'
+                 WHEN s.north_id = auth.uid() THEN 'north' ELSE NULL END;
+  IF v_seat IS NULL THEN RETURN NULL; END IF;
+  v_chiusa := s.closed_at IS NOT NULL;
+  i_dealer := array_position(ordine, s.dealer);
+  v_turno := ordine[((i_dealer - 1 + jsonb_array_length(s.bids)) % 4) + 1];
+  IF v_chiusa THEN v_hands := s.hands;
+  ELSE v_hands := jsonb_build_object(v_seat, s.hands -> v_seat); END IF;
+  RETURN jsonb_build_object('id', s.id, 'seat', v_seat, 'hands', v_hands,
+    'bids', s.bids, 'dealer', s.dealer, 'turno', v_turno,
+    'chiusa', v_chiusa, 'createdAt', s.created_at);
 END $function$
 ;
 
@@ -1623,6 +1733,28 @@ CREATE OR REPLACE FUNCTION public.my_asd_code()
 AS $function$ SELECT asd_code FROM public.profiles WHERE id = auth.uid(); $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.my_bidding_sessions()
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT coalesce(jsonb_agg(jsonb_build_object(
+    'id', x.id, 'seat', x.seat, 'bids', x.bids, 'dealer', x.dealer,
+    'chiusa', x.closed_at IS NOT NULL, 'compagno', x.compagno, 'createdAt', x.created_at
+  ) ORDER BY x.created_at DESC), '[]'::jsonb)
+  FROM (
+    SELECT s.id, s.bids, s.dealer, s.closed_at, s.created_at,
+           CASE WHEN s.south_id = auth.uid() THEN 'south' ELSE 'north' END AS seat,
+           (SELECT p.display_name FROM public.profiles p
+             WHERE p.id = CASE WHEN s.south_id = auth.uid() THEN s.north_id ELSE s.south_id END) AS compagno
+    FROM public.bidding_sessions s
+    WHERE s.south_id = auth.uid() OR s.north_id = auth.uid()
+    ORDER BY s.created_at DESC LIMIT 30
+  ) x;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.my_tournament_history(limite integer DEFAULT 12)
  RETURNS TABLE(week_num integer, total_tricks integer, total_needed integer, completed_at timestamp with time zone, posizione integer, partecipanti integer)
  LANGUAGE sql
@@ -1759,6 +1891,11 @@ ALTER TABLE public.assignments ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
 ALTER TABLE public.badges ALTER COLUMN earned_at SET DEFAULT now();
 ALTER TABLE public.bbo_username_cleanup_2026_08 ALTER COLUMN cleared_at SET DEFAULT now();
+ALTER TABLE public.bidding_sessions ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.bidding_sessions ALTER COLUMN dealer SET DEFAULT 'south'::text;
+ALTER TABLE public.bidding_sessions ALTER COLUMN vulnerability SET DEFAULT 'none'::text;
+ALTER TABLE public.bidding_sessions ALTER COLUMN bids SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.bidding_sessions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.challenges ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.challenges ALTER COLUMN status SET DEFAULT 'pending'::text;
 ALTER TABLE public.challenges ALTER COLUMN board_count SET DEFAULT 4;
@@ -1870,6 +2007,7 @@ ALTER TABLE public.asd_clubs ADD CONSTRAINT asd_clubs_pkey PRIMARY KEY (code);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
 ALTER TABLE public.badges ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
 ALTER TABLE public.bbo_username_cleanup_2026_08 ADD CONSTRAINT bbo_username_cleanup_2026_08_pkey PRIMARY KEY (profile_id);
+ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_pkey PRIMARY KEY (id);
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_pkey PRIMARY KEY (id);
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_pkey PRIMARY KEY (class_id, student_id);
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_pkey PRIMARY KEY (id);
@@ -1922,6 +2060,8 @@ ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_board_key UNIQUE (
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHECK ((unlock_mode = ANY (ARRAY['free'::text, 'sequential'::text])));
+ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_check CHECK ((south_id <> north_id));
+ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text])));
@@ -1967,6 +2107,8 @@ ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_xp_multipl
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.badges ADD CONSTRAINT badges_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.bbo_username_cleanup_2026_08 ADD CONSTRAINT bbo_username_cleanup_2026_08_profile_id_fkey FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_north_id_fkey FOREIGN KEY (north_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_south_id_fkey FOREIGN KEY (south_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_challenger_id_fkey FOREIGN KEY (challenger_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_opponent_id_fkey FOREIGN KEY (opponent_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
@@ -2013,6 +2155,8 @@ CREATE INDEX asd_clubs_active_idx ON public.asd_clubs USING btree (active);
 CREATE INDEX asd_clubs_name_idx ON public.asd_clubs USING btree (name);
 CREATE INDEX asd_clubs_province_idx ON public.asd_clubs USING btree (province) WHERE (province <> ''::text);
 CREATE INDEX asd_clubs_region_idx ON public.asd_clubs USING btree (region) WHERE (region <> ''::text);
+CREATE INDEX bidding_sessions_north_idx ON public.bidding_sessions USING btree (north_id, created_at DESC);
+CREATE INDEX bidding_sessions_players_idx ON public.bidding_sessions USING btree (south_id, created_at DESC);
 CREATE INDEX club_posts_asd_idx ON public.club_posts USING btree (asd_code, created_at DESC);
 CREATE INDEX collectible_cards_category_idx ON public.collectible_cards USING btree (category);
 CREATE INDEX collectible_cards_rarity_idx ON public.collectible_cards USING btree (rarity);
@@ -2082,6 +2226,7 @@ ALTER TABLE public.asd_clubs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.badges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bbo_username_cleanup_2026_08 ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.bidding_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_messages ENABLE ROW LEVEL SECURITY;
@@ -2217,6 +2362,9 @@ GRANT DELETE ON public.badges TO service_role;
 GRANT DELETE ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT DELETE ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT DELETE ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT DELETE ON public.bidding_sessions TO anon;
+GRANT DELETE ON public.bidding_sessions TO authenticated;
+GRANT DELETE ON public.bidding_sessions TO service_role;
 GRANT DELETE ON public.challenges TO anon;
 GRANT DELETE ON public.challenges TO authenticated;
 GRANT DELETE ON public.challenges TO service_role;
@@ -2331,6 +2479,9 @@ GRANT INSERT ON public.badges TO service_role;
 GRANT INSERT ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT INSERT ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT INSERT ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT INSERT ON public.bidding_sessions TO anon;
+GRANT INSERT ON public.bidding_sessions TO authenticated;
+GRANT INSERT ON public.bidding_sessions TO service_role;
 GRANT INSERT ON public.challenges TO anon;
 GRANT INSERT ON public.challenges TO authenticated;
 GRANT INSERT ON public.challenges TO service_role;
@@ -2445,6 +2596,9 @@ GRANT REFERENCES ON public.badges TO service_role;
 GRANT REFERENCES ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT REFERENCES ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT REFERENCES ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT REFERENCES ON public.bidding_sessions TO anon;
+GRANT REFERENCES ON public.bidding_sessions TO authenticated;
+GRANT REFERENCES ON public.bidding_sessions TO service_role;
 GRANT REFERENCES ON public.challenges TO anon;
 GRANT REFERENCES ON public.challenges TO authenticated;
 GRANT REFERENCES ON public.challenges TO service_role;
@@ -2559,6 +2713,9 @@ GRANT SELECT ON public.badges TO service_role;
 GRANT SELECT ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT SELECT ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT SELECT ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT SELECT ON public.bidding_sessions TO anon;
+GRANT SELECT ON public.bidding_sessions TO authenticated;
+GRANT SELECT ON public.bidding_sessions TO service_role;
 GRANT SELECT ON public.challenges TO anon;
 GRANT SELECT ON public.challenges TO authenticated;
 GRANT SELECT ON public.challenges TO service_role;
@@ -2672,6 +2829,9 @@ GRANT TRIGGER ON public.badges TO service_role;
 GRANT TRIGGER ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT TRIGGER ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT TRIGGER ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT TRIGGER ON public.bidding_sessions TO anon;
+GRANT TRIGGER ON public.bidding_sessions TO authenticated;
+GRANT TRIGGER ON public.bidding_sessions TO service_role;
 GRANT TRIGGER ON public.challenges TO anon;
 GRANT TRIGGER ON public.challenges TO authenticated;
 GRANT TRIGGER ON public.challenges TO service_role;
@@ -2786,6 +2946,9 @@ GRANT TRUNCATE ON public.badges TO service_role;
 GRANT TRUNCATE ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT TRUNCATE ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT TRUNCATE ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT TRUNCATE ON public.bidding_sessions TO anon;
+GRANT TRUNCATE ON public.bidding_sessions TO authenticated;
+GRANT TRUNCATE ON public.bidding_sessions TO service_role;
 GRANT TRUNCATE ON public.challenges TO anon;
 GRANT TRUNCATE ON public.challenges TO authenticated;
 GRANT TRUNCATE ON public.challenges TO service_role;
@@ -2900,6 +3063,9 @@ GRANT UPDATE ON public.badges TO service_role;
 GRANT UPDATE ON public.bbo_username_cleanup_2026_08 TO anon;
 GRANT UPDATE ON public.bbo_username_cleanup_2026_08 TO authenticated;
 GRANT UPDATE ON public.bbo_username_cleanup_2026_08 TO service_role;
+GRANT UPDATE ON public.bidding_sessions TO anon;
+GRANT UPDATE ON public.bidding_sessions TO authenticated;
+GRANT UPDATE ON public.bidding_sessions TO service_role;
 GRANT UPDATE ON public.challenges TO anon;
 GRANT UPDATE ON public.challenges TO authenticated;
 GRANT UPDATE ON public.challenges TO service_role;
@@ -3019,6 +3185,15 @@ GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
+REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO service_role;
+REVOKE ALL ON FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text) TO service_role;
+REVOKE ALL ON FUNCTION public.bidding_session_view(p_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.bidding_session_view(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.bidding_session_view(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.can_post_for_asd(p_asd_code text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_role;
@@ -3106,6 +3281,9 @@ GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
 REVOKE ALL ON FUNCTION public.my_asd_code() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.my_asd_code() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.my_asd_code() TO service_role;
+REVOKE ALL ON FUNCTION public.my_bidding_sessions() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.my_bidding_sessions() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.my_bidding_sessions() TO service_role;
 REVOKE ALL ON FUNCTION public.my_tournament_history(limite integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO service_role;
