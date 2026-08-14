@@ -782,7 +782,7 @@ BEGIN
   n := jsonb_array_length(s.bids);
   i_dealer := array_position(ordine, s.dealer);
   v_turno := ordine[((i_dealer - 1 + n) % 4) + 1];
-  IF v_turno <> v_seat AND v_turno IN ('north','south') THEN
+  IF v_turno <> v_seat THEN
     RETURN jsonb_build_object('ok', false, 'errore', 'non è il tuo turno');
   END IF;
   nuove := s.bids || to_jsonb(p_bid);
@@ -797,6 +797,49 @@ BEGIN
         ELSE NULL END
   WHERE id = p_id;
   RETURN jsonb_build_object('ok', true, 'turno', v_turno);
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.bidding_session_bid_server(p_id uuid, p_bid text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  s public.bidding_sessions%ROWTYPE;
+  v_turno text; ordine text[] := ARRAY['north','east','south','west'];
+  i_dealer int; n int; nuove jsonb; ultimo_contratto int;
+BEGIN
+  SELECT * INTO s FROM public.bidding_sessions WHERE id = p_id FOR UPDATE;
+  IF NOT FOUND OR s.closed_at IS NOT NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'sessione non disponibile');
+  END IF;
+
+  n := jsonb_array_length(s.bids);
+  i_dealer := array_position(ordine, s.dealer);
+  v_turno := ordine[((i_dealer - 1 + n) % 4) + 1];
+
+  -- Solo per gli avversari: il server non deve poter dichiarare al posto dei
+  -- due amici, nemmeno per sbaglio.
+  IF v_turno IN ('north','south') THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'non tocca a un avversario');
+  END IF;
+
+  nuove := s.bids || to_jsonb(p_bid);
+  SELECT max(i) INTO ultimo_contratto
+  FROM generate_series(0, jsonb_array_length(nuove) - 1) i
+  WHERE nuove ->> i <> 'P';
+
+  UPDATE public.bidding_sessions
+  SET bids = nuove,
+      closed_at = CASE
+        WHEN ultimo_contratto IS NULL AND jsonb_array_length(nuove) >= 4 THEN now()
+        WHEN ultimo_contratto IS NOT NULL AND jsonb_array_length(nuove) - ultimo_contratto - 1 >= 3 THEN now()
+        ELSE NULL END
+  WHERE id = p_id;
+
+  RETURN jsonb_build_object('ok', true, 'seat', v_turno);
 END $function$
 ;
 
@@ -3188,6 +3231,8 @@ GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO service_role;
+REVOKE ALL ON FUNCTION public.bidding_session_bid_server(p_id uuid, p_bid text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.bidding_session_bid_server(p_id uuid, p_bid text) TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.bidding_session_create(p_partner uuid, p_hands jsonb, p_dealer text) TO service_role;

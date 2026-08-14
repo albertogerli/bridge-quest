@@ -22,13 +22,16 @@
 -- proprio intendersi senza vederla. A licita chiusa si aprono tutte, perché
 -- serve a capire com'è andata.
 --
--- GLI AVVERSARI. Le dichiarazioni di Est e Ovest le calcola BEN nel browser di
--- chi ha appena dichiarato, e arrivano qui come dichiarazioni di quel posto.
--- Il database verifica che sia il turno di quel posto, non CHI le ha
--- calcolate: un partecipante potrebbe quindi far dire agli avversari qualcosa
--- di diverso. È un esercizio fra amici, non una gara, e l'alternativa —
--- chiamare BEN dal database — significherebbe far uscire il server dal
--- proprio recinto per parlare con Internet. Il prezzo non vale la protezione.
+-- GLI AVVERSARI LI FA DICHIARARE IL SERVER, e non è un dettaglio.
+-- Il primo disegno li faceva calcolare al browser di chi aveva appena
+-- parlato. Non poteva funzionare: il browser NON HA le mani di Est e Ovest,
+-- ed è esattamente il punto — se le avesse, i due amici potrebbero leggerle e
+-- la licita non varrebbe niente. Avrebbe chiesto a BEN di dichiarare con una
+-- mano vuota, ottenendo risposte a caso senza che nulla lo segnalasse.
+-- La dichiarazione dell'avversario passa quindi da `/api/licita/avversario`:
+-- il server legge la mano, la manda a BEN e scrive il risultato con
+-- `bidding_session_bid_server`, eseguibile SOLO da service_role. Al browser
+-- torna cosa hanno detto, mai cosa hanno in mano.
 --
 -- IDEMPOTENTE: si può rieseguire.
 -- ============================================================================
@@ -194,9 +197,9 @@ BEGIN
   i_dealer := array_position(ordine, s.dealer);
   v_turno := ordine[((i_dealer - 1 + n) % 4) + 1];
 
-  -- Si può dichiarare per il proprio posto, o per un avversario quando tocca
-  -- a lui (le sue dichiarazioni le calcola BEN nel browser).
-  IF v_turno <> v_seat AND v_turno IN ('north','south') THEN
+  -- Si dichiara SOLO per il proprio posto: gli avversari li scrive il server,
+  -- che è l'unico ad avere le loro mani.
+  IF v_turno <> v_seat THEN
     RETURN jsonb_build_object('ok', false, 'errore', 'non è il tuo turno');
   END IF;
 
@@ -256,3 +259,53 @@ $function$;
 revoke execute on function public.my_bidding_sessions() from public;
 revoke execute on function public.my_bidding_sessions() from anon;
 grant execute on function public.my_bidding_sessions() to authenticated;
+
+/**
+ * La dichiarazione di un avversario, scritta dal server.
+ *
+ * Eseguibile solo da `service_role`, cioè solo da `/api/licita/avversario`,
+ * che ha già verificato con la sessione del chiamante che faccia parte della
+ * licita. E non può dichiarare per i due amici: se il turno è loro, rifiuta.
+ */
+create or replace function public.bidding_session_bid_server(p_id uuid, p_bid text)
+returns jsonb
+language plpgsql security definer set search_path to 'public'
+as $function$
+DECLARE
+  s public.bidding_sessions%ROWTYPE;
+  v_turno text; ordine text[] := ARRAY['north','east','south','west'];
+  i_dealer int; n int; nuove jsonb; ultimo_contratto int;
+BEGIN
+  SELECT * INTO s FROM public.bidding_sessions WHERE id = p_id FOR UPDATE;
+  IF NOT FOUND OR s.closed_at IS NOT NULL THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'sessione non disponibile');
+  END IF;
+
+  n := jsonb_array_length(s.bids);
+  i_dealer := array_position(ordine, s.dealer);
+  v_turno := ordine[((i_dealer - 1 + n) % 4) + 1];
+
+  IF v_turno IN ('north','south') THEN
+    RETURN jsonb_build_object('ok', false, 'errore', 'non tocca a un avversario');
+  END IF;
+
+  nuove := s.bids || to_jsonb(p_bid);
+  SELECT max(i) INTO ultimo_contratto
+  FROM generate_series(0, jsonb_array_length(nuove) - 1) i
+  WHERE nuove ->> i <> 'P';
+
+  UPDATE public.bidding_sessions
+  SET bids = nuove,
+      closed_at = CASE
+        WHEN ultimo_contratto IS NULL AND jsonb_array_length(nuove) >= 4 THEN now()
+        WHEN ultimo_contratto IS NOT NULL AND jsonb_array_length(nuove) - ultimo_contratto - 1 >= 3 THEN now()
+        ELSE NULL END
+  WHERE id = p_id;
+
+  RETURN jsonb_build_object('ok', true, 'seat', v_turno);
+END $function$;
+
+revoke execute on function public.bidding_session_bid_server(uuid, text) from public;
+revoke execute on function public.bidding_session_bid_server(uuid, text) from anon;
+revoke execute on function public.bidding_session_bid_server(uuid, text) from authenticated;
+grant execute on function public.bidding_session_bid_server(uuid, text) to service_role;
