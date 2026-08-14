@@ -27,7 +27,7 @@
  */
 
 import type { Card, Position, Suit } from "./bridge-engine";
-import { calcDdsTable, strainOf } from "./dds-table";
+import { calcDdsTable, strainOf, TABLE_STRAINS, type TableStrain } from "./dds-table";
 import { scoreContract } from "./scoring";
 import type { Strain } from "./minibridge";
 
@@ -52,6 +52,23 @@ function mescola<T>(v: T[], rnd: () => number): T[] {
 }
 
 const STRAIN_TUTTI: Strain[] = ["club", "diamond", "heart", "spade", "nt"];
+
+/**
+ * Quante volte, sulle prove, il dichiarante ha fatto n prese: l'indice è il
+ * numero di prese, da 0 a 13.
+ *
+ * PERCHÉ SI CONSERVA QUESTA E NON SOLO IL RISULTATO
+ * Da un istogramma di prese si ricava il valore atteso di QUALUNQUE contratto
+ * in quella denominazione — livello, zona, contro — con una somma. Conservarlo
+ * costa 280 numeri per smazzata e fa sparire il problema che aveva la prima
+ * versione: il voto confrontava il punteggio REALE del tuo contratto con il
+ * valore ATTESO del migliore, due metri diversi. Con l'istogramma si confronta
+ * atteso con atteso, e le stelle tornano a misurare la scelta.
+ */
+export type Distribuzione = number[];
+
+/** Le distribuzioni di una linea: per denominazione e per dichiarante. */
+export type DistribuzioniLato = Record<TableStrain, Record<string, Distribuzione>>;
 
 export interface ValoreAtteso {
   /** Media dei punteggi sulle distribuzioni provate. */
@@ -186,41 +203,52 @@ export async function migliorContrattoAtteso(
   lato: "ns" | "ew",
   opzioni: { prove?: number; seed?: number; vulnerable?: boolean } = {}
 ): Promise<ContrattoAtteso> {
-  const dichiaranti: Position[] = lato === "ns" ? ["north", "south"] : ["east", "west"];
-  const tabelle = await simula(hands, dichiaranti[0], opzioni);
+  return (await analizzaLato(hands, lato, opzioni)).migliore;
+}
+
+/**
+ * Le distribuzioni delle prese di una linea e, da quelle, il contratto
+ * migliore. Una serie di rimescolate sola.
+ *
+ * PERCHÉ INSIEME: sono lo stesso conto. Chiederli con due chiamate voleva dire
+ * risolvere due volte le stesse smazzate — il doppio del tempo per lo stesso
+ * risultato, su una scorta di mille mani sono ore.
+ */
+export async function analizzaLato(
+  hands: Record<Position, Card[]>,
+  lato: "ns" | "ew",
+  opzioni: { prove?: number; seed?: number; vulnerable?: boolean } = {}
+): Promise<{ prove: number; distribuzioni: DistribuzioniLato; migliore: ContrattoAtteso }> {
+  const posti: Position[] = lato === "ns" ? ["north", "south"] : ["east", "west"];
+  const tabelle = await simula(hands, posti[0], opzioni);
 
   // Con una prova sola non c'è niente da dividere: si sceglie e si misura lì.
   const meta = tabelle.length > 1 ? Math.ceil(tabelle.length / 2) : 0;
-  const perScegliere = meta > 0 ? tabelle.slice(0, meta) : tabelle;
-  const perMisurare = meta > 0 ? tabelle.slice(meta) : tabelle;
-
-  const misura = (
-    campione: typeof tabelle,
-    level: number,
-    strain: Strain,
-    declarer: Position
-  ) => {
-    const chiave = strainOf(strain === "nt" ? null : strain);
-    let totale = 0;
-    let mantenuto = 0;
-    for (const table of campione) {
-      const punti = scoreContract({
-        level,
-        strain,
-        tricksMade: table.tricks[chiave][declarer],
-        vulnerable: opzioni.vulnerable,
-      });
-      totale += punti.score;
-      if (punti.made) mantenuto++;
+  const istogrammi = (fette: typeof tabelle): DistribuzioniLato => {
+    const out = {} as DistribuzioniLato;
+    for (const strain of TABLE_STRAINS) {
+      out[strain] = {};
+      for (const p of posti) {
+        const conteggi = new Array(14).fill(0);
+        for (const t of fette) conteggi[t.tricks[strain][p]]++;
+        out[strain][p] = conteggi;
+      }
     }
-    return { ev: Math.round(totale / campione.length), mantenuto };
+    return out;
   };
 
+  const tutte = istogrammi(tabelle);
+  const perScegliere = meta > 0 ? istogrammi(tabelle.slice(0, meta)) : tutte;
+  const perMisurare = meta > 0 ? istogrammi(tabelle.slice(meta)) : tutte;
+
   let scelto: { level: number; strain: Strain; declarer: Position; ev: number } | null = null;
-  for (const declarer of dichiaranti) {
+  for (const declarer of posti) {
     for (const strain of STRAIN_TUTTI) {
+      const chiave = strainOf(strain === "nt" ? null : strain);
       for (let level = 1; level <= 7; level++) {
-        const { ev } = misura(perScegliere, level, strain, declarer);
+        const { ev } = evDaDistribuzione(perScegliere[chiave][declarer], {
+          level, strain, vulnerable: opzioni.vulnerable,
+        });
         // Il confronto è stretto: a parità vince il contratto trovato prima,
         // cioè il più basso. È quello che al tavolo si raggiunge davvero, e
         // non premiamo chi tira a indovinare uno slam che rende quanto la
@@ -230,8 +258,69 @@ export async function migliorContrattoAtteso(
     }
   }
 
-  // `dichiaranti` non è vuoto, quindi il ciclo assegna sempre.
   const c = scelto as { level: number; strain: Strain; declarer: Position };
-  const finale = misura(perMisurare, c.level, c.strain, c.declarer);
-  return { level: c.level, strain: c.strain, declarer: c.declarer, ...finale };
+  const chiave = strainOf(c.strain === "nt" ? null : c.strain);
+  const finale = evDaDistribuzione(perMisurare[chiave][c.declarer], {
+    level: c.level, strain: c.strain, vulnerable: opzioni.vulnerable,
+  });
+
+  return {
+    prove: tabelle.length,
+    distribuzioni: tutte,
+    migliore: {
+      level: c.level,
+      strain: c.strain,
+      declarer: c.declarer,
+      ev: finale.ev,
+      mantenuto: finale.mantenuto,
+    },
+  };
+}
+
+export async function distribuzioniAttese(
+  hands: Record<Position, Card[]>,
+  lato: "ns" | "ew",
+  opzioni: { prove?: number; seed?: number } = {}
+): Promise<{ prove: number; distribuzioni: DistribuzioniLato }> {
+  const { prove, distribuzioni } = await analizzaLato(hands, lato, opzioni);
+  return { prove, distribuzioni };
+}
+
+/**
+ * Il valore atteso di un contratto, letto da una distribuzione di prese.
+ *
+ * Pura e istantanea: è una somma su quattordici numeri. Serve a dare le stelle
+ * al contratto che hai dichiarato con lo stesso metro con cui si sceglie il
+ * migliore — che è tutto il punto.
+ */
+export function evDaDistribuzione(
+  dist: Distribuzione,
+  contratto: { level: number; strain: Strain; vulnerable?: boolean; doppio?: 1 | 2 | 4 }
+): ValoreAtteso {
+  const prove = dist.reduce((a, b) => a + b, 0);
+  if (prove === 0) return { ev: 0, mantenuto: 0, prove: 0, preseMedie: 0 };
+
+  let totale = 0;
+  let mantenuto = 0;
+  let prese = 0;
+  for (let n = 0; n < dist.length; n++) {
+    const quante = dist[n];
+    if (!quante) continue;
+    const punti = scoreContract({
+      level: contratto.level,
+      strain: contratto.strain,
+      tricksMade: n,
+      vulnerable: contratto.vulnerable,
+      doppio: contratto.doppio,
+    });
+    totale += punti.score * quante;
+    prese += n * quante;
+    if (punti.made) mantenuto += quante;
+  }
+  return {
+    ev: Math.round(totale / prove),
+    mantenuto,
+    prove,
+    preseMedie: Math.round((prese / prove) * 10) / 10,
+  };
 }

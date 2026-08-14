@@ -38,12 +38,15 @@ function seme(hand: readonly Card[], suit: Suit): string {
 export function RiepilogoMano({
   deal,
   contratti,
-  metro,
 }: {
   deal: Record<Position, Card[]>;
   contratti: ContrattoValutato[];
-  metro: "atteso" | "esatto";
 }) {
+  // La colonna del valore atteso compare solo se la mano lo porta: le mani
+  // generate prima delle distribuzioni hanno solo il punteggio reale, e una
+  // colonna di trattini non spiega niente a nessuno.
+  const mostraAtteso = contratti.some((c) => c.ev !== null);
+
   return (
     <div className="mt-4 pt-4 border-t border-border">
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
@@ -80,7 +83,8 @@ export function RiepilogoMano({
               <tr className="text-left text-muted-foreground">
                 <th className="font-normal py-1">Contratto</th>
                 <th className="font-normal py-1 text-right">Prese</th>
-                <th className="font-normal py-1 text-right">Punti</th>
+                <th className="font-normal py-1 text-right">Qui</th>
+                {mostraAtteso && <th className="font-normal py-1 text-right">In media</th>}
                 <th className="font-normal py-1 text-right">Stelle</th>
               </tr>
             </thead>
@@ -96,6 +100,9 @@ export function RiepilogoMano({
                   </td>
                   <td className="py-2 text-right">{c.prese}</td>
                   <td className="py-2 text-right font-mono">{c.punteggio}</td>
+                  {mostraAtteso && (
+                    <td className="py-2 text-right font-mono">{c.ev ?? "—"}</td>
+                  )}
                   <td className="py-2 text-right whitespace-nowrap">
                     {"⭐".repeat(c.stelle) || "—"}
                   </td>
@@ -106,9 +113,17 @@ export function RiepilogoMano({
         </div>
       )}
       <p className="text-xs text-muted-foreground mt-2">
-        Le prese sono quelle a carte scoperte, con il gioco migliore di tutti e
-        quattro. Le stelle sono quelle che avreste preso arrivando lì
-        {metro === "atteso" ? ", misurate sul contratto migliore in media" : ""}.
+        <strong>Qui</strong> è quanto vale su questa smazzata, a carte scoperte.
+        {mostraAtteso ? (
+          <>
+            {" "}
+            <strong>In media</strong> è quanto rende rimescolando le carte
+            avversarie: è da lì che vengono le stelle, perché una buona
+            dichiarazione resta buona anche quando le carte stanno male.
+          </>
+        ) : (
+          " Le stelle sono quelle che avreste preso arrivando lì."
+        )}
       </p>
     </div>
   );
