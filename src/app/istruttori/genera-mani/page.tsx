@@ -68,6 +68,8 @@ export default function GeneraManiPage() {
   const [contract, setContract] = useState("3SA");
   const [declarer, setDeclarer] = useState<Position>("south");
   const [assigning, setAssigning] = useState(false);
+  // Compito di solo gioco della carta: la dichiarazione è già fatta.
+  const [conLicita, setConLicita] = useState(false);
   const [assigned, setAssigned] = useState("");
 
   // Analisi double dummy, una voce per mano nello stesso ordine dei risultati.
@@ -189,6 +191,7 @@ export default function GeneraManiPage() {
         // l'insegnante ha scelto al posto del par. Un contratto unico per
         // tutte è impossibile su alcune mani e troppo timido su altre.
         perHand: analisi?.map((a) => a.scelta) ?? undefined,
+        conLicita,
         // Il seme entra nell'id: due compiti generati con semi diversi non si
         // sovrappongono, e lo stesso seme resta riconoscibile.
         idPrefix: `gen-${template.id}-${seed}`,
@@ -424,6 +427,23 @@ export default function GeneraManiPage() {
               </select>
             </div>
           </div>
+
+          <label className="flex items-start gap-2 mb-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={conLicita}
+              onChange={(e) => setConLicita(e.target.checked)}
+              className="mt-1"
+            />
+            <span className="text-sm">
+              <strong>Solo gioco della carta</strong>
+              <span className="block text-xs text-muted-foreground">
+                Ogni mano arriva con la dichiarazione già fatta: l&apos;allievo
+                si concentra sul gioco. Senza, vedrebbe un contratto piovuto dal
+                nulla senza sapere cosa la sua linea ha promesso.
+              </span>
+            </span>
+          </label>
 
           <Button disabled={assigning || !classId} onClick={assign}>
             {assigning ? "Creo il compito…" : `Assegna ${result.deals.length} mani`}

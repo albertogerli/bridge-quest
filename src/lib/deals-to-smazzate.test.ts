@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { generateDeals } from "./deal-generator";
-import { dealsToSmazzate } from "./deals-to-smazzate";
+import { dealsToSmazzate, licitaVersoIlContratto } from "./deals-to-smazzate";
+import type { Card, Position, Rank, Suit } from "./bridge-engine";
 
 const { deals } = generateDeals({}, { count: 4, seed: 2026 });
 const base = { idPrefix: "gen-1", contract: "3NT", declarer: "south" as const, title: "Apertura di 1NT" };
@@ -107,5 +108,52 @@ describe("dealsToSmazzate — contratto per singola mano", () => {
     })[0];
     const haAltro = s.hands.west.some((c) => c.suit !== "spade");
     if (haAltro) expect(s.openingLead.suit).not.toBe("spade");
+  });
+});
+
+describe("licitaVersoIlContratto — compiti di solo gioco della carta", () => {
+  /** Mano da notazione compatta "AKQ32.J54.T98.76". */
+  function mano(s: string): Card[] {
+    const semi: Suit[] = ["spade", "heart", "diamond", "club"];
+    const out: Card[] = [];
+    s.split(".").forEach((gruppo, i) => {
+      for (const ch of gruppo) out.push({ suit: semi[i], rank: (ch === "T" ? "10" : ch) as Rank });
+    });
+    return out;
+  }
+  const quattro = (sud: string): Record<Position, Card[]> => ({
+    north: mano("432.432.432.4321"), east: mano("765.765.765.7652"),
+    south: mano(sud), west: mano("98.98.98.98765"),
+  });
+
+  it("usa l'apertura vera quando porta al contratto finale", () => {
+    // Sud ha il maggiore quinto: apre 1♠ e il compagno alza a 4♠.
+    const b = licitaVersoIlContratto(quattro("AKJ82.K74.Q93.54"), "4♠", "south");
+    expect(b.dealer).toBe("south");
+    expect(b.bids).toEqual(["1S", "P", "4S", "P", "P", "P"]);
+  });
+
+  it("ripiega sulla forma minima se l'apertura è di un altro colore", () => {
+    // Apre 1♠ ma il contratto è a senza atout: la sequenza non starebbe in
+    // piedi, meglio spoglia che inventata.
+    const b = licitaVersoIlContratto(quattro("AKJ82.K74.Q93.54"), "3SA", "south");
+    expect(b.bids).toEqual(["3NT", "P", "P", "P"]);
+  });
+
+  it("ripiega quando la regola d'apertura tace", () => {
+    const b = licitaVersoIlContratto(quattro("432.543.6542.765"), "2♠", "south");
+    expect(b.bids).toEqual(["2S", "P", "P", "P"]);
+  });
+
+  it("il mazziere è sempre il dichiarante", () => {
+    expect(licitaVersoIlContratto(quattro("AKJ82.K74.Q93.54"), "4♠", "south").dealer).toBe("south");
+  });
+
+  it("le smazzate ricevono la licita solo se richiesta", () => {
+    const deal = quattro("AKJ82.K74.Q93.54");
+    const senza = dealsToSmazzate([deal], { idPrefix: "x", contract: "4♠", declarer: "south", title: "T" });
+    const con = dealsToSmazzate([deal], { idPrefix: "x", contract: "4♠", declarer: "south", title: "T", conLicita: true });
+    expect(senza[0].bidding).toBeUndefined();
+    expect(con[0].bidding?.bids[0]).toBe("1S");
   });
 });

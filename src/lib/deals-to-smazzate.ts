@@ -21,7 +21,8 @@
 
 import type { Card, Position } from "./bridge-engine";
 import { nextPlayer } from "./bridge-engine";
-import type { Smazzata, Vulnerability } from "./catalog";
+import { aperturaConsigliata } from "./apertura";
+import type { BiddingData, Smazzata, Vulnerability } from "./catalog";
 import { defaultOpeningLead } from "./pbn";
 
 /** Rotazione standard della vulnerabilità sui board di torneo. */
@@ -62,6 +63,14 @@ export interface ToSmazzateOptions {
    * ricadono su `contract`/`declarer`.
    */
   perHand?: (({ contract: string; declarer: Position }) | null)[];
+  /**
+   * Aggiunge a ogni mano una licita che porta al contratto assegnato.
+   *
+   * Serve ai compiti di SOLO GIOCO DELLA CARTA: senza dichiarazione l'allievo
+   * vede un contratto piovuto dal nulla e non sa cosa la sua linea ha
+   * promesso.
+   */
+  conLicita?: boolean;
 }
 
 /**
@@ -96,7 +105,61 @@ export function dealsToSmazzate(
         east: hands.east,
         west: hands.west,
       },
+      ...(options.conLicita
+        ? { bidding: licitaVersoIlContratto(hands, contract, declarer) }
+        : {}),
       commentary: options.commentary ?? "",
     };
   });
+}
+
+/**
+ * Una licita che porta a quel contratto, per i compiti di solo gioco.
+ *
+ * PERCHÉ SERVE
+ * Un compito in cui l'allievo deve solo giocare la carta ha bisogno che la
+ * dichiarazione ci sia già: senza, l'allievo vede un contratto piovuto dal
+ * nulla e non sa cosa la sua linea ha promesso.
+ *
+ * QUANTO È ONESTA
+ * L'apertura è quella vera, calcolata dalla mano con la regola del sistema
+ * (`aperturaConsigliata`). Il resto è la forma più semplice possibile: il
+ * compagno alza direttamente al contratto finale e tutti passano. È una
+ * sequenza plausibile e comunissima, non una ricostruzione di come QUELLA
+ * mano andrebbe dichiarata davvero — e per un esercizio di gioco della carta
+ * è esattamente quello che serve.
+ *
+ * Quando l'apertura calcolata non porta da nessuna parte (mano fuori
+ * programma, o apertura in un colore diverso dal contratto finale) si ripiega
+ * sulla forma minima: il dichiarante nomina il contratto e gli altri passano.
+ * Meglio una licita spoglia che una inventata.
+ */
+export function licitaVersoIlContratto(
+  hands: Record<Position, Card[]>,
+  contract: string,
+  declarer: Position
+): BiddingData {
+  const finale = contract.replace("SA", "NT").replace("♠", "S").replace("♥", "H")
+    .replace("♦", "D").replace("♣", "C");
+  const apertura = aperturaConsigliata(hands[declarer]);
+  const semeFinale = finale.slice(1);
+  const semeApertura = apertura ? apertura.bid.replace("SA", "NT")
+    .replace("♠", "S").replace("♥", "H").replace("♦", "D").replace("♣", "C").slice(1) : null;
+
+  // L'apertura si usa solo se è nello stesso colore del contratto finale e
+  // più bassa: altrimenti la sequenza non sta in piedi.
+  const usabile =
+    apertura !== null &&
+    semeApertura === semeFinale &&
+    Number(apertura.bid[0]) < Number(finale[0]);
+
+  const bids = usabile
+    ? [
+        apertura!.bid.replace("SA", "NT").replace("♠", "S").replace("♥", "H")
+          .replace("♦", "D").replace("♣", "C"),
+        "P", finale, "P", "P", "P",
+      ]
+    : [finale, "P", "P", "P"];
+
+  return { dealer: declarer, bids };
 }
