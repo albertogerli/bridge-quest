@@ -121,3 +121,50 @@ export async function benLead(
     return { card: null as unknown as Card, fallback: true, error: "Network error" };
   }
 }
+
+/**
+ * La dichiarazione del compagno, dal modello neurale di BEN.
+ *
+ * Restituisce `fallback: true` quando BEN non risponde: chi chiama decide
+ * cosa fare, e nell'esercizio di licita il compagno passa — dicendolo. Fingere
+ * che abbia scelto di passare sarebbe peggio del silenzio.
+ */
+export async function benBid(req: {
+  hand: Card[];
+  seat: Position;
+  dealer: Position;
+  vulnerability: Vulnerability;
+  bidding?: BiddingData;
+}): Promise<{ bid: string; fallback: boolean }> {
+  try {
+    const res = await fetch("/api/ben/bid", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hand: handToPBN(req.hand),
+        seat: positionToBEN(req.seat),
+        dealer: positionToBEN(req.dealer),
+        vul: vulToBEN(req.vulnerability),
+        ctx: biddingToCTX(req.bidding),
+      }),
+    });
+    if (!res.ok) return { bid: "P", fallback: true };
+    const data = await res.json();
+    if (data.fallback || typeof data.bid !== "string") return { bid: "P", fallback: true };
+    return { bid: benBidToItaliano(data.bid), fallback: false };
+  } catch {
+    return { bid: "P", fallback: true };
+  }
+}
+
+/** Da "1S"/"PASS"/"X" alla forma usata nella schermata ("1♠", "P", "X"). */
+export function benBidToItaliano(bid: string): string {
+  const b = bid.trim().toUpperCase();
+  if (b === "PASS" || b === "P" || b === "--") return "P";
+  if (b === "X" || b === "DBL") return "X";
+  if (b === "XX" || b === "RDBL") return "XX";
+  const m = b.match(/^([1-7])(NT|N|S|H|D|C)$/);
+  if (!m) return "P";
+  const simbolo: Record<string, string> = { S: "♠", H: "♥", D: "♦", C: "♣", N: "SA", NT: "SA" };
+  return `${m[1]}${simbolo[m[2]]}`;
+}

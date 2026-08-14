@@ -47,6 +47,7 @@ casi = [
     ("/play?hand=x segreto giusto", chiama("/play?hand=x", buono), 200),
     ("/lead segreto giusto", chiama("/lead", buono), 200),
     ("/autoplay segreto giusto", chiama("/autoplay", buono), 200),
+    ("/bid segreto giusto", chiama("/bid", buono), 200),
     ("/ (sonda dell'app) segreto giusto", chiama("/", buono), 200),
     ("/explain NON ammesso, pur col segreto", chiama("/explain", buono), 404),
     ("/claim NON ammesso, pur col segreto", chiama("/claim", buono), 404),
