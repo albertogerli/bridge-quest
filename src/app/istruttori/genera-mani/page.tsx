@@ -17,9 +17,10 @@ import {
 } from "@/lib/deal-generator";
 import { dealsToPbn } from "@/lib/pbn";
 import { dealsToSmazzate } from "@/lib/deals-to-smazzate";
-import { calcTableAndPar, fitFor, FIT_MINIMO, type ParResult } from "@/lib/dds-table";
+import { calcTableAndPar, fitFor, FIT_MINIMO, type DdsTable, type ParResult } from "@/lib/dds-table";
 import { describePar, parAssignmentFromContracts, type ParContract } from "@/lib/par-contract";
 import { createAssignment, getMyClasses, type ClassRoom } from "@/lib/instructors";
+import { pubblicaScenario } from "@/lib/mani-condivise";
 import { reportError } from "@/lib/report-error";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -71,6 +72,10 @@ export default function GeneraManiPage() {
   // Compito di solo gioco della carta: la dichiarazione è già fatta.
   const [conLicita, setConLicita] = useState(false);
   const [assigned, setAssigned] = useState("");
+  // Pubblicazione nella scorta condivisa
+  const [nomeScenario, setNomeScenario] = useState("");
+  const [pubblicando, setPubblicando] = useState(false);
+  const [pubblicato, setPubblicato] = useState("");
 
   // Analisi double dummy, una voce per mano nello stesso ordine dei risultati.
   // Non parte da sola: e' un calcolo, e chi genera venti mani per scorrerle
@@ -78,6 +83,8 @@ export default function GeneraManiPage() {
   const [analisi, setAnalisi] = useState<
     {
       par: ParResult;
+      /** La tabella delle prese: serve a pubblicare la mano nella scorta. */
+      table: DdsTable;
       /** Il par letto in forma strutturata, quando è interpretabile. */
       letto: ParContract | null;
       /** Carte d'atout della linea, se sono meno del minimo dichiarabile. */
@@ -164,6 +171,7 @@ export default function GeneraManiPage() {
         const fit = scelta ? fitFor(deal, scelta.par.side, scelta.par.strain) : null;
         out.push({
           par,
+          table,
           letto: scelta?.par ?? null,
           fitCorto: fit !== null && fit < FIT_MINIMO ? fit : null,
           scelta: scelta ? { contract: scelta.contract, declarer: scelta.declarer } : null,
@@ -214,6 +222,49 @@ export default function GeneraManiPage() {
     } finally {
       setAssigning(false);
     }
+  };
+
+  /**
+   * Mette le mani generate nella scorta condivisa, come scenario.
+   *
+   * DIFFERENZA DAL COMPITO: il compito è per la tua classe e ha un contratto
+   * già scelto; lo scenario è un esercizio di dichiarazione che incontrano
+   * tutti, e proprio perché lo incontrano in molti accanto al voto compare «hai
+   * fatto meglio del 74%». Una mano che vede una persona sola non ha campo con
+   * cui confrontarsi.
+   *
+   * Richiede l'analisi: senza par e tabella delle prese la mano non si può né
+   * votare né confrontare, e salvarla monca vorrebbe dire ricalcolare tutto
+   * addosso al primo allievo che la trova.
+   */
+  const pubblica = async () => {
+    if (!result?.deals.length || !analisi || analisi.length !== result.deals.length) return;
+    setPubblicando(true);
+    setPubblicato("");
+    const esito = await pubblicaScenario(
+      {
+        nome: nomeScenario.trim() || template.label,
+        descrizione: template.description,
+        vincoli: template.constraints,
+        pubblico: true,
+      },
+      result.deals.map((deal, i) => ({
+        hands: deal,
+        // La stessa rotazione dell'analisi: il par mostrato è quello di
+        // questo mazziere e di questa zona, e deve restare quello.
+        dealer: SEATS[i % 4].key,
+        vulnerability: (["none", "ns", "ew", "both"] as const)[i % 4],
+        parScore: analisi[i].par.score,
+        parContracts: analisi[i].par.contracts,
+        ddTable: analisi[i].table.tricks,
+      }))
+    );
+    setPubblicando(false);
+    setPubblicato(
+      "errore" in esito
+        ? esito.errore
+        : `Scenario pubblicato con ${esito.quante} mani: da ora arrivano in «Licita e vediamo».`
+    );
   };
 
   if (authLoading) {
@@ -449,6 +500,42 @@ export default function GeneraManiPage() {
             {assigning ? "Creo il compito…" : `Assegna ${result.deals.length} mani`}
           </Button>
           {assigned && <p className="text-sm mt-3 font-medium">{assigned}</p>}
+        </div>
+      )}
+
+      {result && result.deals.length > 0 && (
+        <div className="rounded-2xl border border-border bg-card p-5 mb-6">
+          <h2 className="font-bold mb-1">Pubblica come esercizio di licita</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Le mani finiscono nella scorta condivisa: chiunque apra «Licita e
+            vediamo» può incontrarle, e accanto al voto vede come è andata agli
+            altri sulla stessa smazzata. Un compito invece resta alla tua classe
+            e ha già il contratto scelto.
+          </p>
+
+          <label className="block mb-3">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Nome dell&apos;esercizio
+            </span>
+            <input
+              value={nomeScenario}
+              onChange={(e) => setNomeScenario(e.target.value)}
+              placeholder={template.label}
+              className="mt-1 w-full h-12 px-3 rounded-xl border border-border bg-card"
+            />
+          </label>
+
+          {!analisi || analisi.length !== result.deals.length ? (
+            <p className="text-sm text-muted-foreground">
+              Prima serve l&apos;analisi double dummy: senza par e prese la mano
+              non si può né votare né confrontare.
+            </p>
+          ) : (
+            <Button disabled={pubblicando} onClick={pubblica}>
+              {pubblicando ? "Pubblico…" : `Pubblica ${result.deals.length} mani`}
+            </Button>
+          )}
+          {pubblicato && <p className="text-sm mt-3 font-medium">{pubblicato}</p>}
         </div>
       )}
 

@@ -206,3 +206,77 @@ export function riferimento(
   const par = mano.par_score ?? 0;
   return { punteggio: lato === "ns" ? par : -par, metro: "esatto" };
 }
+
+/**
+ * Pubblica uno scenario e le sue mani nella scorta condivisa.
+ *
+ * Serve agli insegnanti: le mani generate per una lezione diventano un
+ * esercizio che tutta la classe incontra, e su cui ci si può confrontare. Una
+ * mano che vede una persona sola non ha percentuale di campo.
+ *
+ * SENZA VALORE ATTESO. Il calcolo costa una quarantina di risoluzioni double
+ * dummy a mano: mezzo minuto per mano in un browser, cioè dieci minuti per
+ * venti mani con la pagina bloccata. Qui si salvano par e tabella double
+ * dummy, che sono già stati calcolati per l'anteprima; le stelle useranno il
+ * par, come prima delle mani condivise. `scripts/genera-scorta.ts` può
+ * completarle dopo, senza fretta e senza far aspettare nessuno.
+ *
+ * Chi non insegna non passa: il controllo è nelle policy, non qui.
+ */
+export async function pubblicaScenario(
+  scenario: { nome: string; descrizione?: string; vincoli: unknown; pubblico?: boolean },
+  mani: {
+    hands: Record<Position, Card[]>;
+    dealer: Position;
+    vulnerability: Vulnerability;
+    parScore: number;
+    parContracts: string[];
+    ddTable: Record<string, Record<Position, number>>;
+  }[]
+): Promise<{ id: string; quante: number } | { errore: string }> {
+  try {
+    const supabase = createClient();
+    const { data: sessione } = await supabase.auth.getUser();
+    const uid = sessione.user?.id;
+    if (!uid) return { errore: "Serve l'accesso." };
+
+    const { data: sc, error: eSc } = await supabase
+      .from("scenari")
+      .insert({
+        nome: scenario.nome,
+        descrizione: scenario.descrizione ?? null,
+        vincoli: scenario.vincoli,
+        autore_id: uid,
+        pubblico: scenario.pubblico ?? true,
+      })
+      .select("id")
+      .single();
+    if (eSc || !sc) {
+      reportError("mani-condivise:pubblica-scenario", eSc);
+      return { errore: "Solo chi insegna può pubblicare uno scenario." };
+    }
+
+    const { error: eM } = await supabase.from("mani_generate").insert(
+      mani.map((m) => ({
+        scenario_id: sc.id,
+        hands: m.hands,
+        dealer: m.dealer,
+        vulnerability: m.vulnerability,
+        par_contracts: m.parContracts,
+        par_score: m.parScore,
+        dd_table: m.ddTable,
+      }))
+    );
+    if (eM) {
+      // Uno scenario senza mani è peggio di nessuno scenario: si ritira.
+      await supabase.from("scenari").delete().eq("id", sc.id);
+      reportError("mani-condivise:pubblica-mani", eM);
+      return { errore: "Le mani non sono state salvate: scenario annullato." };
+    }
+
+    return { id: sc.id, quante: mani.length };
+  } catch (err) {
+    reportError("mani-condivise:pubblica", err);
+    return { errore: "Non è stato possibile pubblicare." };
+  }
+}
