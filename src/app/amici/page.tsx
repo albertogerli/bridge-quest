@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { useFriends } from "@/hooks/use-friends";
+import { InvitoAmico } from "@/components/amici/invito";
 import { useChallenges } from "@/hooks/use-challenges";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useRouter } from "next/navigation";
@@ -496,6 +497,10 @@ export default function AmiciPage() {
             animate={{ opacity: 1 }}
             className="space-y-4"
           >
+            {/* Il codice amico viene PRIMA della ricerca per nome: cercare fra
+                gli omonimi è l'ultima spiaggia, non la prima scelta. */}
+            <InvitoAmico onTrovato={(_, nome) => setSearchQuery(nome ?? "")} />
+
             {/* Search input */}
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
