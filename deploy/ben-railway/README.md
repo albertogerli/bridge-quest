@@ -121,6 +121,34 @@ Senza `--platform` la costruzione fallisce: `psutil==5.9.0` non ha pacchetti
 già compilati per ARM e `gevent` nemmeno, e nell'immagine non c'è un
 compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
 
+## BEN dichiara, non solo gioca
+
+Oltre alle carte, BEN ha un modello neurale per la LICITA: l'endpoint `/bid`,
+con la rete `GIB-BBO-8730`. Era già caricato in memoria dal primo giorno e non
+lo usava nessuno, perché la guardia non lo lasciava passare.
+
+Verificato in produzione il 14/08/2026, meno di mezzo secondo a dichiarazione:
+
+| mano | risposta |
+|---|---|
+| 16 bilanciati, in apertura | `1SA` |
+| quinta di picche, 12 punti | `1♠` |
+| fit di picche, 6 punti, dopo l'1♠ del compagno | `2♠` |
+| 19 punti dopo l'1♠ del compagno | `2♦` (cambio di colore) |
+| mano nulla dopo l'1♠ | `PASS` |
+
+ATTENZIONE AL SISTEMA. La rete è addestrata su GIB/BBO, cioè lo standard
+americano. Non è lontano dal Naturale dei corsi FIGB — anche lì quinta
+maggiore e 1SA 15-17 — ma le convenzioni divergono. BEN porta con sé altre
+configurazioni (SAYC, 21GF, UCBC): si cambiano con `BEN_CONFIG`, che la
+guardia passa già. È una scelta didattica, non tecnica: va fatta guardando
+cosa insegna la Commissione.
+
+UN PARAMETRO VUOTO NON È UN PARAMETRO ASSENTE. Il nostro proxy saltava i
+valori vuoti, quindi a licita appena iniziata non mandava `ctx` affatto e BEN
+rispondeva 400 — il compagno restava muto proprio alla prima dichiarazione,
+cioè sempre. `ctx` ora si manda anche vuoto.
+
 ## Ne vale la pena?
 
 Misurato il 13/08/2026 su 10 mani, con lo stesso metro per tutti e tre i
@@ -180,6 +208,34 @@ docker run --rm -p 8080:8080 -e BEN_API_TOKEN="$(openssl rand -hex 32)" ben
 Senza `--platform` la costruzione fallisce: `psutil==5.9.0` non ha pacchetti
 già compilati per ARM e `gevent` nemmeno, e nell'immagine non c'è un
 compilatore. Il primo avvio carica i modelli e sotto emulazione è lento.
+
+## BEN dichiara, non solo gioca
+
+Oltre alle carte, BEN ha un modello neurale per la LICITA: l'endpoint `/bid`,
+con la rete `GIB-BBO-8730`. Era già caricato in memoria dal primo giorno e non
+lo usava nessuno, perché la guardia non lo lasciava passare.
+
+Verificato in produzione il 14/08/2026, meno di mezzo secondo a dichiarazione:
+
+| mano | risposta |
+|---|---|
+| 16 bilanciati, in apertura | `1SA` |
+| quinta di picche, 12 punti | `1♠` |
+| fit di picche, 6 punti, dopo l'1♠ del compagno | `2♠` |
+| 19 punti dopo l'1♠ del compagno | `2♦` (cambio di colore) |
+| mano nulla dopo l'1♠ | `PASS` |
+
+ATTENZIONE AL SISTEMA. La rete è addestrata su GIB/BBO, cioè lo standard
+americano. Non è lontano dal Naturale dei corsi FIGB — anche lì quinta
+maggiore e 1SA 15-17 — ma le convenzioni divergono. BEN porta con sé altre
+configurazioni (SAYC, 21GF, UCBC): si cambiano con `BEN_CONFIG`, che la
+guardia passa già. È una scelta didattica, non tecnica: va fatta guardando
+cosa insegna la Commissione.
+
+UN PARAMETRO VUOTO NON È UN PARAMETRO ASSENTE. Il nostro proxy saltava i
+valori vuoti, quindi a licita appena iniziata non mandava `ctx` affatto e BEN
+rispondeva 400 — il compagno restava muto proprio alla prima dichiarazione,
+cioè sempre. `ctx` ora si manda anche vuoto.
 
 ## Ne vale la pena?
 

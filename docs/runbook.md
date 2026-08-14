@@ -27,7 +27,7 @@ Si impostano in **`.env.local`** in locale (mai committato, permessi 600) e su *
 | `SUPABASE_SERVICE_ROLE_KEY` | solo server (cron, unsubscribe, admin); bypassa RLS | locale + Vercel |
 | `RESEND_API_KEY` / `RESEND_FROM` | invio email | Vercel (locale solo per test) |
 | `CRON_SECRET` | autorizza `/api/cron/engagement` (header `Authorization: Bearer`) | Vercel |
-| `BEN_API_URL` | server AI neurale BEN. **In produzione dal 13/08/2026**: Railway, progetto `bridgelab-ben`, regione `europe-west4`. Fallback automatico se assente | Vercel (vedi `deploy/ben-railway/`) |
+| `BEN_API_URL` | server AI neurale BEN. **In produzione dal 13/08/2026**: Railway, progetto `bridgelab-ben`, regione `europe-west4`. Serve sia il gioco della carta sia la LICITA (`/bid`). Fallback automatico se assente | Vercel (vedi `deploy/ben-railway/`) |
 | `BEN_API_TOKEN` | segreto condiviso con la guardia davanti a BEN; senza, la guardia non parte | Vercel + Railway |
 | `NEXT_PUBLIC_GADS_SIGNUP_LABEL` | label conversione Google Ads (registrazione) | locale + Vercel |
 | `NEXT_PUBLIC_SENTRY_DSN` | error monitoring; **assente = Sentry interamente disattivo** | Vercel (locale solo per test) |

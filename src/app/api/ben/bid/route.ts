@@ -43,6 +43,11 @@ export async function POST(req: NextRequest) {
     for (const [key, value] of Object.entries(parsed.data)) {
       if (value) params.set(key, value);
     }
+    // `ctx` va mandato ANCHE vuoto. A licita appena iniziata non c'è nulla da
+    // dire, ma per BEN «parametro assente» e «parametro vuoto» sono due cose
+    // diverse: senza, risponde 400 e il compagno resta muto proprio alla
+    // prima dichiarazione, cioè sempre.
+    if (!params.has("ctx")) params.set("ctx", "");
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
