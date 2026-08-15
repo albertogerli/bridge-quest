@@ -78,6 +78,16 @@ function Studio() {
     played: { seat: Position; card: Card }[];
   } | null>(null);
 
+  /**
+   * Vero quando `?mano=` c'è ma quella mano non si è potuta caricare.
+   *
+   * Senza questa distinzione la pagina restava a metà: il primo effetto usciva
+   * in silenzio (mano cancellata, o senza contratto), il secondo non calcolava
+   * niente perché vedeva il parametro nell'indirizzo, e all'insegnante restava
+   * un tavolo vuoto con i comandi morti. Un link vecchio bastava.
+   */
+  const [archivioMancante, setArchivioMancante] = useState(false);
+
   // Mano ripresa dall'archivio: si riapre esattamente dov'era, carte già
   // giocate comprese. È il motivo per cui l'archivio serve.
   useEffect(() => {
@@ -86,7 +96,11 @@ function Studio() {
     getSavedHands()
       .then((tutte) => {
         const m = tutte.find((x) => x.id === manoSalvata);
-        if (!vivo || !m || !m.contract || !m.declarer) return;
+        if (!vivo) return;
+        if (!m || !m.contract || !m.declarer) {
+          setArchivioMancante(true);
+          return;
+        }
         setDaArchivio({
           hands: m.hands, contract: m.contract, declarer: m.declarer, played: m.played ?? [],
         });
@@ -99,7 +113,10 @@ function Studio() {
         setStato(ricostruito);
         setStoria([]);
       })
-      .catch((err) => reportError("studio:archivio", err));
+      .catch((err) => {
+        reportError("studio:archivio", err);
+        if (vivo) setArchivioMancante(true);
+      });
     return () => { vivo = false; };
   }, [manoSalvata]);
 
@@ -115,7 +132,9 @@ function Studio() {
   useEffect(() => {
     // Mano dall'archivio: contratto e posizione sono già stati ricostruiti
     // quando è arrivata dall'archivio. Qui non c'è nulla da calcolare.
-    if (daArchivio || manoSalvata) return;
+    // Se la mano dell'archivio non c'è più si prosegue con quella generata,
+    // invece di restare fermi su un tavolo vuoto.
+    if (daArchivio || (manoSalvata && !archivioMancante)) return;
     let vivo = true;
     calcTableAndPar(deal, "north", "none")
       .then(({ table, par }) => {
@@ -128,7 +147,7 @@ function Studio() {
       })
       .catch((err) => reportError("studio:par", err));
     return () => { vivo = false; };
-  }, [deal, daArchivio, manoSalvata]);
+  }, [deal, daArchivio, manoSalvata, archivioMancante]);
 
   const trump = contratto ? parseContract(contratto.contract).trumpSuit : null;
 
@@ -203,6 +222,13 @@ function Studio() {
           quante prese fa — quando decidi tu di mostrarlo.
         </p>
       </header>
+
+      {archivioMancante && (
+        <p className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4 text-sm text-amber-900 dark:text-amber-200">
+          La mano dell&apos;archivio non c&apos;è più — cancellata, o salvata
+          senza contratto. Qui sotto c&apos;è una mano nuova.
+        </p>
+      )}
 
       <div className="rounded-2xl border border-border bg-card p-4 mb-4 flex flex-wrap items-end gap-3">
         <div>

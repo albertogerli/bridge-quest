@@ -54,8 +54,24 @@ export const useSmazzateStore = create<SmazzateState>((set, get) => ({
       const playable = validated.filter(isPlausibleSmazzata);
       set({ smazzate, validated, playable, isLoading: false, isLoaded: true });
     } catch (err) {
+      /**
+       * ANCHE IL FALLIMENTO È UNO STATO FINALE.
+       *
+       * Senza `isLoaded: true` qui, l'effetto che chiama questa funzione
+       * riparte: la sua guardia è `!isLoaded && !isLoading`, e il passaggio di
+       * `isLoading` da true a false — che è proprio quello che fa il catch —
+       * la rende vera di nuovo. Il risultato è una richiesta dopo l'altra a
+       * ciclo continuo, con la rotella che gira per sempre: chi ha la rete
+       * lenta o è offline vede una pagina che non arriva mai e un telefono che
+       * si scalda.
+       *
+       * `error` resta impostato, quindi chi legge sa distinguere «caricato» da
+       * «tentato e non riuscito» e può offrire un «Riprova» — che ora ha senso,
+       * perché `fetchSmazzate` si può richiamare a mano.
+       */
       set({
         isLoading: false,
+        isLoaded: true,
         error:
           err instanceof Error ? err.message : "Failed to load smazzate",
       });

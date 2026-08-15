@@ -75,7 +75,21 @@ function loadModule(): Promise<{ Dds: new (m: unknown) => DdsApi; loadDds: () =>
 
 function getDds(): Promise<DdsApi> {
   if (!ddsPromise) {
-    ddsPromise = loadModule().then(async ({ Dds, loadDds }) => new Dds(await loadDds()));
+    /**
+     * Se il caricamento fallisce, la promessa NON resta in cache.
+     *
+     * Una promessa rifiutata tenuta lì dentro avvelena tutta la sessione: ogni
+     * chiamata successiva riceve lo stesso rifiuto senza nemmeno riprovare, e
+     * un pulsante «Riprova» non può funzionare per definizione. Capita per
+     * cose passeggere — la rete che cade mentre si scarica il WebAssembly —
+     * dove il secondo tentativo sarebbe andato bene.
+     */
+    ddsPromise = loadModule()
+      .then(async ({ Dds, loadDds }) => new Dds(await loadDds()))
+      .catch((err) => {
+        ddsPromise = null;
+        throw err;
+      });
   }
   return ddsPromise;
 }

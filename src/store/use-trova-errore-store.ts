@@ -34,8 +34,15 @@ export const useErrorScenariosStore = create<ErrorScenariosState>((set, get) => 
       const scenarios = await getErrorScenarios();
       set({ scenarios, isLoading: false, isLoaded: true });
     } catch (err) {
+        // Anche il fallimento è uno stato finale: senza `isLoaded`, l'effetto
+        // che chiama questa funzione riparte (la sua guardia è
+        // `!isLoaded && !isLoading`, e il passaggio di isLoading a false la
+        // rende vera) e le richieste si susseguono all'infinito con la rotella
+        // che gira. `error` resta impostato, così chi legge distingue
+        // «caricato» da «tentato e non riuscito».
       set({
         isLoading: false,
+        isLoaded: true,
         error:
           err instanceof Error ? err.message : "Failed to load error scenarios",
       });

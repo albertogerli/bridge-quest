@@ -60,3 +60,21 @@ describe("contrattoFinale", () => {
     expect(contrattoFinale([])).toBeNull();
   });
 });
+
+describe("contrattoFinale", () => {
+  it("il contro non è un contratto", () => {
+    // Mostrava «Contratto: X» invece di «1♠ contrato»: terza copia dello
+    // stesso conto trovata nel progetto.
+    expect(contrattoFinale(["1♠", "X", "P", "P", "P"])).toBe("1♠X");
+    expect(contrattoFinale(["4♥", "X", "XX", "P", "P", "P"])).toBe("4♥XX");
+  });
+
+  it("senza contratto risponde niente", () => {
+    expect(contrattoFinale(["P", "P", "P", "P"])).toBeNull();
+    expect(contrattoFinale([])).toBeNull();
+  });
+
+  it("il contratto normale resta quello", () => {
+    expect(contrattoFinale(["1♠", "P", "4♠", "P", "P", "P"])).toBe("4♠");
+  });
+});

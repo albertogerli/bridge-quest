@@ -442,7 +442,8 @@ CREATE TABLE IF NOT EXISTS public.review_items (
   question text,
   wrong_count integer,
   last_review timestamp with time zone,
-  next_review timestamp with time zone
+  next_review timestamp with time zone,
+  box smallint NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.risultati_mano (
@@ -2890,6 +2891,7 @@ ALTER TABLE public.profiles ALTER COLUMN role SET DEFAULT 'user'::text;
 ALTER TABLE public.push_subscriptions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_items_id_seq'::regclass);
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
+ALTER TABLE public.review_items ALTER COLUMN box SET DEFAULT 1;
 ALTER TABLE public.risultati_mano ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.risultati_mano ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.risultati_torneo ALTER COLUMN created_at SET DEFAULT now();
@@ -3003,7 +3005,7 @@ ALTER TABLE public.courses ADD CONSTRAINT courses_level_check CHECK ((level = AN
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
 ALTER TABLE public.forum_posts ADD CONSTRAINT forum_posts_category_check CHECK ((category = ANY (ARRAY['lezioni'::text, 'strategia'::text, 'tornei'::text, 'generale'::text, 'off-topic'::text])));
 ALTER TABLE public.friendships ADD CONSTRAINT friendships_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])));
-ALTER TABLE public.game_results ADD CONSTRAINT game_results_game_type_check CHECK ((game_type = ANY (ARRAY['compito'::text, 'conta-veloce'::text, 'dichiara'::text, 'impasse'::text, 'mano-del-giorno'::text, 'mano-guidata'::text, 'memory'::text, 'pratica-licita'::text, 'quiz-lampo'::text, 'sfida'::text, 'smazzata'::text, 'torneo'::text, 'trova-errore'::text])));
+ALTER TABLE public.game_results ADD CONSTRAINT game_results_game_type_check CHECK ((game_type = ANY (ARRAY['compito'::text, 'conta-veloce'::text, 'dichiara'::text, 'impasse'::text, 'mano-del-giorno'::text, 'mano-guidata'::text, 'memory'::text, 'pratica-licita'::text, 'quiz-lampo'::text, 'segnali'::text, 'sfida'::text, 'sfida-settimanale'::text, 'smazzata'::text, 'torneo'::text, 'trova-errore'::text])));
 ALTER TABLE public.glossary ADD CONSTRAINT glossary_category_check CHECK ((category = ANY (ARRAY['base'::text, 'licita'::text, 'gioco'::text, 'difesa'::text, 'punteggio'::text])));
 ALTER TABLE public.glossary ADD CONSTRAINT glossary_quiz_check CHECK (((quiz ? 'question'::text) AND (quiz ? 'options'::text) AND (quiz ? 'correctAnswer'::text) AND (quiz ? 'explanation'::text) AND (jsonb_typeof((quiz -> 'options'::text)) = 'array'::text)));
 ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_declarer_check CHECK ((declarer = ANY (ARRAY['north'::text, 'south'::text, 'east'::text, 'west'::text])));
@@ -3021,8 +3023,9 @@ ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
-ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['giovane'::text, 'adulto'::text, 'senior'::text])));
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['junior'::text, 'giovane'::text, 'adulto'::text, 'senior'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
+ALTER TABLE public.review_items ADD CONSTRAINT review_items_box_check CHECK (((box >= 1) AND (box <= 5)));
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((char_length(nota) <= 2000));

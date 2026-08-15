@@ -65,28 +65,6 @@ export default function TorneoLicitaPage() {
   /** Il compagno non ha risposto: l'asta è ferma e va detto. */
   const [compagnoMuto, setCompagnoMuto] = useState(false);
 
-  useEffect(() => {
-    if (loading || !user) return;
-    let vivo = true;
-    torneoCorrente(tipo)
-      .then(async (t) => {
-        if (!vivo) return;
-        setTorneo(t);
-        if (!t) return;
-        const [m, cl] = await Promise.all([torneoMano(t.id), classificaTorneo(t.id)]);
-        if (!vivo) return;
-        setMano(m);
-        setTabella(m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null);
-        setBids([]);
-        setEsito(null);
-        setGiocato(null);
-        setAvversarioMuto(false);
-        setClassifica(cl);
-      })
-      .catch((err) => reportError("torneo-licita:carica", err));
-    return () => { vivo = false; };
-  }, [tipo, user, loading]);
-
   /** Una dichiarazione dal motore, con l'errore già ridotto a «non risponde». */
   const chiediABen = async (m: ManoCondivisa, chi: Position, fatte: string[]) => {
     try {
@@ -176,14 +154,49 @@ export default function TorneoLicitaPage() {
   const prossima = async () => {
     if (!torneo) return;
     const m = await torneoMano(torneo.id);
+    const t = m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null;
     setMano(m);
-    setTabella(m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null);
+    setTabella(t);
     setBids([]);
     setEsito(null);
     setGiocato(null);
     setAvversarioMuto(false);
     setCompagnoMuto(false);
+    if (m && t && m.dealer !== "south") void avanza(m, t, []);
   };
+
+  useEffect(() => {
+    if (loading || !user) return;
+    let vivo = true;
+    torneoCorrente(tipo)
+      .then(async (t) => {
+        if (!vivo) return;
+        setTorneo(t);
+        if (!t) return;
+        const [m, cl] = await Promise.all([torneoMano(t.id), classificaTorneo(t.id)]);
+        if (!vivo) return;
+        const tav = m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null;
+        setMano(m);
+        setTabella(tav);
+        setBids([]);
+        setEsito(null);
+        setGiocato(null);
+        setAvversarioMuto(false);
+        setClassifica(cl);
+        // Se non apri tu, devono parlare gli altri: senza questa riga, con
+        // mazziere diverso da Sud — cioè tre mani su quattro — il cassetto
+        // delle dichiarazioni non compare (non è il tuo turno) e nessuno fa
+        // parlare i robot. Il torneo resta fermo alla prima mano, senza
+        // nemmeno un pulsante per uscirne.
+        if (m && tav && m.dealer !== "south") void avanza(m, tav, []);
+      })
+      .catch((err) => reportError("torneo-licita:carica", err));
+    return () => { vivo = false; };
+    // `avanza` cambia a ogni render ma non cambia comportamento: metterlo fra
+    // le dipendenze ricaricherebbe la mano a ogni dichiarazione.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ricaricherebbe la mano a ogni render
+  }, [tipo, user, loading]);
+
 
   if (loading) return null;
   if (!user) {
