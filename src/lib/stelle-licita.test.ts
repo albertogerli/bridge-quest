@@ -48,13 +48,21 @@ describe("valutaLicita", () => {
   it("i confini stanno dove dice la regola, e sono in IMP", () => {
     // 40 punti = 1 IMP (pieno), 50 = 2 IMP.
     expect(valutaLicita(160, 200).stelle).toBe(3);
-    expect(valutaLicita(150, 200).stelle).toBe(2);
+    expect(valutaLicita(150, 200).stelle).toBe(2.5);
     // 260 = 6 IMP, 270 = 7.
     expect(valutaLicita(40, 300).stelle).toBe(2);
-    expect(valutaLicita(30, 300).stelle).toBe(1);
+    expect(valutaLicita(30, 300).stelle).toBe(1.5);
     // 590 = 11 IMP, 600 = 12.
     expect(valutaLicita(10, 600).stelle).toBe(1);
-    expect(valutaLicita(0, 600).stelle).toBe(0);
+    expect(valutaLicita(0, 600).stelle).toBe(0.5);
+    // 4000 e oltre = 24 IMP: qui non c'è mezza stella che tenga.
+    expect(valutaLicita(-3500, 600).stelle).toBe(0);
+  });
+
+  it("le mezze stelle esistono, e sono sette gradini in tutto", () => {
+    const voti = new Set<number>();
+    for (let d = 0; d <= 4000; d += 10) voti.add(valutaLicita(-d, 0).stelle);
+    expect([...voti].sort((a, b) => a - b)).toEqual([0, 0.5, 1, 1.5, 2, 2.5, 3]);
   });
 
   it("il caso che ha fatto cambiare la scala", () => {
@@ -64,14 +72,14 @@ describe("valutaLicita", () => {
     expect(valutaLicita(668, 830).stelle).toBe(2);
     expect(valutaLicita(609, 830).stelle).toBe(2);
     // E chi ha mancato di più resta sotto.
-    expect(valutaLicita(482, 830).stelle).toBe(1);
+    expect(valutaLicita(482, 830).stelle).toBe(1.5);
   });
 
   it("regge i punteggi negativi da entrambe le parti", () => {
     // Par negativo: la mano è degli avversari e si tratta di limitare i danni.
     const e = valutaLicita(-100, -50);
     expect(e.differenza).toBe(50);
-    expect(e.stelle).toBe(2);
+    expect(e.stelle).toBe(2.5);
   });
 });
 

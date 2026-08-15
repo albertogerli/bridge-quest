@@ -4,6 +4,7 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import type { ContrattoValutato } from "@/lib/riepilogo-mano";
+import { Stelle } from "@/components/bridge/stelle";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -103,8 +104,10 @@ export function RiepilogoMano({
                   {mostraAtteso && (
                     <td className="py-2 text-right font-mono">{c.ev ?? "—"}</td>
                   )}
-                  <td className="py-2 text-right whitespace-nowrap">
-                    {"⭐".repeat(c.stelle) || "—"}
+                  <td className="py-2">
+                    <span className="flex justify-end">
+                      <Stelle quante={c.stelle} />
+                    </span>
                   </td>
                 </tr>
               ))}

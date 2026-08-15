@@ -18,6 +18,7 @@ import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
 import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
+import { Stelle } from "@/components/bridge/stelle";
 import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import {
   confrontoCampo, evDelContratto, manoDaFare, registraRisultato, riferimento,
@@ -401,7 +402,10 @@ export default function LicitaPage() {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
         <h1 className="text-2xl font-bold font-display mb-2">Finito</h1>
-        <p className="text-4xl font-bold text-figb my-6">{stelleTotali} ⭐</p>
+        <p className="text-4xl font-bold text-figb my-6 flex items-center justify-center gap-2">
+          {stelleTotali}
+          <Stelle quante={Math.min(3, stelleTotali)} className="[&_svg]:w-7 [&_svg]:h-7" />
+        </p>
         <p className="text-sm text-muted-foreground mb-8">su {ROUNDS * 3} possibili</p>
         <div className="flex flex-col gap-2">
           <Button onClick={() => { setRound(0); setStelleTotali(0); setLicita([]); setEsito(null); }}>
@@ -422,7 +426,10 @@ export default function LicitaPage() {
         <span className="text-sm font-bold text-muted-foreground">
           Mano {round + 1} di {ROUNDS}
         </span>
-        <span className="text-sm font-bold text-figb">{stelleTotali} ⭐</span>
+        <span className="text-sm font-bold text-figb flex items-center gap-1">
+          {stelleTotali}
+          <Stelle quante={1} su={1} />
+        </span>
       </header>
 
       <h1 className="sr-only">Licita e vediamo</h1>
@@ -501,10 +508,8 @@ export default function LicitaPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="rounded-2xl border border-border bg-card p-4 mt-4"
               >
-                <div className="flex justify-center gap-1 mb-2 text-2xl">
-                  {[1, 2, 3].map((s) => (
-                    <span key={s} className={s <= esito.stelle ? "" : "grayscale opacity-30"}>⭐</span>
-                  ))}
+                <div className="flex justify-center mb-2">
+                  <Stelle quante={esito.stelle} className="[&_svg]:w-8 [&_svg]:h-8" />
                 </div>
                 <p className="text-center font-semibold mb-1">{contrattoFinale}</p>
                 <p className="text-sm text-muted-foreground mb-2">{esito.commento}</p>

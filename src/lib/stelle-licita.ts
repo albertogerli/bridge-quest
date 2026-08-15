@@ -53,14 +53,26 @@ export interface EsitoLicita {
 }
 
 /**
- * Soglie, in IMP persi rispetto al riferimento.
+ * Le soglie, in IMP persi rispetto al riferimento, e il voto che danno.
  *
- * Un IMP di scarto è rumore — 20 punti su una manche — e vale il pieno. Sopra
- * gli undici si è persa una manche intera o peggio.
+ * MEZZE STELLE perché quattro gradini sono pochi per una scala che deve
+ * distinguere «hai sbagliato colore» da «hai mancato la manche»: con soli
+ * quattro livelli metà delle mani finiva sullo stesso voto, e il voto smetteva
+ * di dire qualcosa. Sette gradini bastano — di più diventerebbe un numero con
+ * la virgola travestito da stelle.
+ *
+ * Un IMP di scarto è rumore (venti punti su una manche) e vale il pieno.
+ * Oltre i tredici si è persa una manche intera o peggio, e lì non c'è mezza
+ * stella che tenga.
  */
-const TRE_STELLE = 1;
-const DUE_STELLE = 6;
-const UNA_STELLA = 11;
+const SCALA: { entro: number; stelle: number }[] = [
+  { entro: 1, stelle: 3 },
+  { entro: 3, stelle: 2.5 },
+  { entro: 6, stelle: 2 },
+  { entro: 8, stelle: 1.5 },
+  { entro: 11, stelle: 1 },
+  { entro: 13, stelle: 0.5 },
+];
 
 export function valutaLicita(
   punteggio: number,
@@ -69,12 +81,11 @@ export function valutaLicita(
 ): EsitoLicita {
   const differenza = Math.max(0, punteggioPar - punteggio);
   const imp = rawToIMP(differenza);
+  const stelle = SCALA.find((s) => imp <= s.entro)?.stelle ?? 0;
 
-  let stelle: number;
   let commento: string;
 
-  if (imp <= TRE_STELLE) {
-    stelle = 3;
+  if (stelle === 3) {
     if (metro === "atteso") {
       commento =
         punteggio > punteggioPar
@@ -88,14 +99,11 @@ export function valutaLicita(
     }
   } else {
     const rif = metro === "atteso" ? "sotto il contratto migliore" : "sotto il par";
-    if (imp <= DUE_STELLE) {
-      stelle = 2;
+    if (stelle >= 2) {
       commento = `Ci sei quasi: ${differenza} punti ${rif}. Di solito è un parziale al posto di un altro, o una presa in meno.`;
-    } else if (imp <= UNA_STELLA) {
-      stelle = 1;
+    } else if (stelle >= 1) {
       commento = `${differenza} punti ${rif}: spesso vuol dire una manche mancata, o una dichiarata che non stava in piedi.`;
     } else {
-      stelle = 0;
       commento = `${differenza} punti ${rif}. Vale la pena rivedere la mano: qualcosa si è perso per strada.`;
     }
   }
