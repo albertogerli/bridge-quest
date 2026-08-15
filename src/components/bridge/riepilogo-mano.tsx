@@ -48,9 +48,12 @@ export function RiepilogoMano({
    *
    * Senza, non si capisce se la mano era tua: un 2♥ che rende 110 sembra un
    * risultato mediocre finché non si vede che loro avrebbero fatto 620 a
-   * picche, e allora diventa un buon lavoro di difesa. Niente stelle su queste
-   * righe: non erano scelte tue, e un voto su una cosa che non hai scelto non
-   * vuol dire niente.
+   * picche, e allora diventa un buon lavoro di difesa.
+   *
+   * LE STELLE CI SONO, e sono le LORO: misurate sul loro contratto migliore,
+   * non sul tuo. Dicono quanto era buona la mano per loro — che è esattamente
+   * il metro per capire se il tuo parziale li ha tenuti fuori da qualcosa di
+   * grosso o se non avevano comunque niente.
    */
   avversari?: ContrattoValutato[];
 }) {
@@ -152,14 +155,20 @@ export function RiepilogoMano({
                     {mostraAtteso && (
                       <td className="py-2 text-right font-mono">{c.ev ?? "—"}</td>
                     )}
+                    <td className="py-2">
+                      <span className="flex justify-end">
+                        <Stelle quante={c.stelle} />
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            I loro punti, non i vostri. Serve a sapere se la mano era vostra:
-            tenerli fuori da una manche vale più di un vostro parziale in più.
+            I loro punti e le loro stelle, misurate sul loro contratto migliore.
+            Servono a sapere se la mano era vostra: tenerli fuori da una manche
+            vale più di un vostro parziale in più.
           </p>
         </div>
       )}

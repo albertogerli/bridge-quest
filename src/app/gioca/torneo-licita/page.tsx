@@ -327,8 +327,8 @@ export default function TorneoLicitaPage() {
                   lato: "ew",
                   ancheSenzaContratto: true,
                   vulnerability: mano.vulnerability,
-                  riferimento: 0,
-                  metro: "esatto",
+                  riferimento: riferimento(mano, "ew").punteggio,
+                  metro: riferimento(mano, "ew").metro,
                   giocato,
                   ev: (c) => evDelContratto(mano, c),
                 }).slice(0, 2)}
