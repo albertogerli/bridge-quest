@@ -2,8 +2,37 @@ import type { MetadataRoute } from "next";
 import { getCourses } from "@/lib/catalog";
 import { getAllClubSlugs } from "@/lib/asd-utils";
 
+/**
+ * La mappa del sito non deve poter far fallire un deploy.
+ *
+ * Corsi e circoli si leggono dal database durante il build: se il database non
+ * risponde — rete, chiave assente in un ambiente di prova, manutenzione di
+ * Supabase — l'errore non restava confinato alla mappa, faceva cadere l'intero
+ * `next build` e quindi il deploy. Succede raramente e nel momento peggiore.
+ *
+ * Ora un guasto costa le sole rotte dinamiche nella mappa: le pagine statiche
+ * ci sono comunque, il sito va in produzione, e Google se ne accorge alla
+ * prossima scansione. Il contrario — nessun sito perché manca un elenco di URL
+ * — non ha senso.
+ */
+async function elencoCorsi() {
+  try {
+    return await getCourses();
+  } catch {
+    return [];
+  }
+}
+
+async function elencoCircoli() {
+  try {
+    return await getAllClubSlugs();
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const courses = await getCourses();
+  const courses = await elencoCorsi();
   const baseUrl = "https://bridgelab.it";
   const lastModified = new Date();
 
@@ -111,7 +140,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   // Club pages
-  const clubSlugs = await getAllClubSlugs();
+  const clubSlugs = await elencoCircoli();
   const clubPages: MetadataRoute.Sitemap = clubSlugs.map(({ slug }) => ({
     url: `${baseUrl}/circolo/${slug}`,
     lastModified,
