@@ -86,7 +86,14 @@ export default function ProfiloPage() {
       // collegati. Dal client non era possibile: `game_results` e `challenges`
       // dipendono da auth.users e le RLS delle partite non prevedono DELETE,
       // quindi restavano in produzione dopo un'eliminazione dichiarata totale.
-      const res = await fetch("/api/account/delete", { method: "POST" });
+      // La conferma esplicita nel corpo: una cancellazione irreversibile non
+      // deve poter partire da una POST arrivata per caso (doppio invio,
+      // scorciatoia salvata, estensione che rigioca le richieste).
+      const res = await fetch("/api/account/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ conferma: "ELIMINA" }),
+      });
       if (!res.ok) {
         // Nessun logout: l'account esiste ancora, dirlo è più onesto che
         // far sparire l'utente lasciandogli i dati nel database.
