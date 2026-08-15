@@ -36,5 +36,10 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Valori finti se i segreti non ci sono: il build non parla col
+          # database — e da oggi non deve nemmeno poterlo fare, perché la mappa
+          # del sito ripiega sulle sole rotte statiche invece di far cadere
+          # tutto. Le chiavi vere restano preferibili (build più fedele), ma
+          # non sono un requisito per far girare la CI su un fork.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://esempio.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'chiave-finta-solo-per-il-build' }}
