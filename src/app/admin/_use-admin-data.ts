@@ -37,7 +37,28 @@ export function useAdminData(): AdminData {
   const { user, loading: authLoading } = useSharedAuth();
   const { clubs: asdClubs } = useAsdClubs();
   const [users, setUsers] = useState<UserRow[]>([]);
-  const [stats, setStats] = useState<Stats | null>(null);
+  /**
+   * I dati grezzi da cui si calcolano le statistiche.
+   *
+   * PERCHÉ NON SI SALVA DIRETTAMENTE `stats`. L'elenco dei circoli — che porta
+   * provincia e regione — arriva da uno store asincrono, e prima arrivava DOPO
+   * il calcolo: le statistiche venivano costruite con zero circoli, quindi
+   * nessuna ASD trovava la sua provincia e i due riquadri «Per Provincia» e
+   * «Per Regione» mostravano tutto sotto «N/D». Non si ricalcolavano più,
+   * perché la funzione di caricamento non dipendeva dai circoli — a posta, per
+   * non rifare tutte le query a ogni cambiamento.
+   *
+   * Tenendo i dati grezzi, le statistiche si ricalcolano quando i circoli
+   * arrivano, senza toccare le query.
+   */
+  const [grezzi, setGrezzi] = useState<{
+    profiles: ProfileRecord[];
+    users: UserRow[];
+    logins: LoginRecord[];
+    instructors: number;
+    classes: number;
+    students: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -176,18 +197,14 @@ export function useAdminData(): AdminData {
         const mappedUsers = mapProfilesToUsers(profiles);
         setUsers(mappedUsers);
 
-        setStats(
-          computeStats({
-            profiles,
-            users: mappedUsers,
-            logins,
-            asdClubs,
-            now: new Date(),
-            instructors: instructorsCount,
-            classes: schoolClasses,
-            students: schoolStudents,
-          }),
-        );
+        setGrezzi({
+          profiles,
+          users: mappedUsers,
+          logins,
+          instructors: instructorsCount,
+          classes: schoolClasses,
+          students: schoolStudents,
+        });
       }
     } catch (err) {
       console.error("Admin fetch error:", err);
@@ -196,8 +213,26 @@ export function useAdminData(): AdminData {
 
     setLoading(false);
     setLastUpdated(new Date());
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- asdClubs si popola async dallo store: includerlo rilancerebbe l'intero fetch admin a ogni load dei circoli
   }, [supabase]);
+
+  /**
+   * Le statistiche si derivano, non si salvano: così quando l'elenco dei
+   * circoli arriva — dopo, perché è asincrono — provincia e regione entrano
+   * nel conto senza rifare una sola query.
+   */
+  const stats = useMemo<Stats | null>(() => {
+    if (!grezzi) return null;
+    return computeStats({
+      profiles: grezzi.profiles,
+      users: grezzi.users,
+      logins: grezzi.logins,
+      asdClubs,
+      now: new Date(),
+      instructors: grezzi.instructors,
+      classes: grezzi.classes,
+      students: grezzi.students,
+    });
+  }, [grezzi, asdClubs]);
 
   useEffect(() => {
     if (!authLoading && user) {
