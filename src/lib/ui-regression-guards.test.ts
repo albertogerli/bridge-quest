@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -319,3 +319,41 @@ describe("l'ancora di rotazione è una sola", () => {
     expect(replay).not.toMatch(/runningScore\.(ns|ew)/);
   });
 });
+
+/**
+ * `reportError` deve essere importato dove viene usato.
+ *
+ * IL TRABOCCHETTO. Il DOM ha una sua `window.reportError(errore)` globale: se
+ * l'import manca, il nome si risolve LO STESSO e il codice compila. Con due
+ * argomenti TypeScript protesta — è così che l'ho scoperto due volte in un
+ * giorno — ma con uno solo passerebbe, e l'errore finirebbe nella console del
+ * browser invece che fra le segnalazioni, senza che nulla lo dica.
+ *
+ * Vale solo per il codice dell'applicazione: negli script di servizio non c'è
+ * un `window`.
+ */
+describe("reportError viene sempre importato", () => {
+  it("nessun file lo usa senza importarlo", () => {
+    const sorgenti = elencaFile(join(ROOT, "src"), /\.tsx?$/);
+    const colpevoli = sorgenti.filter((f) => {
+      if (f.endsWith(".test.ts") || f.endsWith("report-error.ts")) return false;
+      const src = readFileSync(f, "utf8");
+      // Vanno bene sia l'alias sia il percorso relativo: quello che conta è
+      // che il nome venga da lì e non da `window`.
+      const importato = /from ["'](@\/lib\/report-error|\.{1,2}\/[\w/-]*report-error)["']/.test(src);
+      return /\breportError\s*\(/.test(src) && !importato;
+    });
+    expect(colpevoli.map((f) => f.replace(ROOT, ""))).toEqual([]);
+  });
+});
+
+/** Tutti i file sotto `dir` che corrispondono a `filtro`, ricorsivamente. */
+function elencaFile(dir: string, filtro: RegExp): string[] {
+  const out: string[] = [];
+  for (const voce of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, voce.name);
+    if (voce.isDirectory()) out.push(...elencaFile(p, filtro));
+    else if (filtro.test(voce.name)) out.push(p);
+  }
+  return out;
+}
