@@ -78,7 +78,7 @@ try {
 
   // Ognuno scrive il proprio risultato...
   const { error: e1 } = await a.client.from("risultati_mano")
-    .insert({ mano_id: manoId, user_id: a.id, contratto: "4♠", punteggio: 420, stelle: 3 });
+    .insert({ mano_id: manoId, user_id: a.id, contratto: "4♠", punteggio: 420, stelle: 2.5 });
   const { error: e2 } = await b.client.from("risultati_mano")
     .insert({ mano_id: manoId, user_id: b.id, contratto: "2♠", punteggio: 170, stelle: 1 });
   !e1 && !e2 ? ok("ognuno registra il proprio risultato") : no(`registrazione fallita: ${e1?.message ?? e2?.message}`);
@@ -122,6 +122,13 @@ try {
   });
   conAmico?.totale === 2
     ? ok("diventati amici, il confronto lo comprende") : no(`filtro amici: ${conAmico?.totale}`);
+  // E le mezze stelle devono tornare indietro come mezze: se la colonna
+  // troncasse, il voto cambierebbe fra quando si scrive e quando si rilegge.
+  const { data: riletto } = await a.client.rpc("confronto_campo", { p_mano_id: manoId });
+  Number(riletto?.mio?.stelle) === 2.5
+    ? ok("le mezze stelle sopravvivono al giro nel database")
+    : no(`stelle rilette: ${riletto?.mio?.stelle}`);
+
   conAmico?.persone?.length === 1 && conAmico.persone[0].contratto === "2♠"
     ? ok("fra amici i nomi si vedono, ed è il senso della cosa")
     : no(`i nomi degli amici non arrivano: ${JSON.stringify(conAmico?.persone)}`);

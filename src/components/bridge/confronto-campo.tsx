@@ -5,6 +5,7 @@ import { reportError } from "@/lib/report-error";
 import {
   confrontoFiltrato, type ConfrontoCampo, type FiltroCampo, type PersonaConfronto,
 } from "@/lib/mani-condivise";
+import { Stelle } from "@/components/bridge/stelle";
 
 /**
  * Come è andata agli altri sulla stessa mano.
@@ -142,7 +143,8 @@ export function ConfrontoCampoPannello({
                 <li key={`${p.nome}-${i}`} className="flex justify-between gap-3">
                   <span>{p.nome ?? "Un amico"}</span>
                   <span className="text-muted-foreground">
-                    {p.contratto} · {p.punteggio} · {"⭐".repeat(p.stelle)}
+                    {p.contratto} · {p.punteggio} ·{" "}
+                    <Stelle quante={p.stelle} className="align-middle" />
                   </span>
                 </li>
               ))}

@@ -169,7 +169,13 @@ create table if not exists public.risultati_mano (
   contratto text,
   dichiarante text,
   punteggio integer not null,
-  stelle smallint not null check (stelle between 0 and 3),
+  /**
+   * Da 0 a 3 a mezze stelle. Quattro gradini erano pochi: metà delle mani
+   * finiva sullo stesso voto e il voto smetteva di dire qualcosa. Il vincolo
+   * impone i mezzi passi, così non ci finisce dentro un 2,3 arrivato da un
+   * conto sbagliato.
+   */
+  stelle numeric(2,1) not null check (stelle >= 0 and stelle <= 3 and (stelle * 2) = floor(stelle * 2)),
   created_at timestamptz not null default now(),
   -- Una mano si dichiara una volta sola: il secondo tentativo falserebbe il
   -- confronto col campo.
@@ -291,3 +297,14 @@ $function$;
 revoke execute on function public.confronto_campo(uuid) from public;
 revoke execute on function public.confronto_campo(uuid) from anon;
 grant execute on function public.confronto_campo(uuid) to authenticated;
+
+-- ── Mezze stelle (agosto 2026) ──────────────────────────────────────────────
+-- La colonna era `smallint`: con le mezze stelle un 2,5 sarebbe stato
+-- troncato a 2 in silenzio, cioè il voto sarebbe stato falsato dal tipo della
+-- colonna. Su una tabella già popolata si cambia così.
+alter table public.risultati_mano drop constraint if exists risultati_mano_stelle_check;
+alter table public.risultati_mano
+  alter column stelle type numeric(2,1) using stelle::numeric(2,1);
+alter table public.risultati_mano
+  add constraint risultati_mano_stelle_check
+  check (stelle >= 0 and stelle <= 3 and (stelle * 2) = floor(stelle * 2));

@@ -14,6 +14,7 @@ import {
 } from "@/lib/sfide-coppie-db";
 import { confrontaPunteggi } from "@/lib/sfida-coppie";
 import { StatisticheSfidePannello } from "@/components/bridge/statistiche-sfide";
+import { Stelle } from "@/components/bridge/stelle";
 
 /**
  * Sfida 2 contro 2: due coppie, le stesse smazzate.
@@ -248,7 +249,10 @@ function Dettaglio({ sfida, onIndietro }: { sfida: VistaSfida; onIndietro: () =>
         </div>
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-wider">Le tue stelle</p>
-          <p className="text-2xl font-bold text-figb">{confronto.stelle} ⭐</p>
+          <p className="text-2xl font-bold text-figb flex items-center gap-2">
+            {confronto.stelle}
+            <Stelle quante={1} su={1} className="[&_svg]:w-6 [&_svg]:h-6" />
+          </p>
         </div>
       </div>
       {confronto.confrontate < sfida.board.length && (
@@ -289,9 +293,9 @@ function Dettaglio({ sfida, onIndietro }: { sfida: VistaSfida; onIndietro: () =>
               </p>
             )}
             {b.chiusa && (
-              <p className="text-sm mt-1">
-                {"⭐".repeat(confronto.board[i].stelle) || "nessuna stella"}
-              </p>
+              <span className="flex mt-1">
+                <Stelle quante={confronto.board[i].stelle} />
+              </span>
             )}
           </li>
         ))}
