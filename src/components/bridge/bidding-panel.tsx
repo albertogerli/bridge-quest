@@ -99,11 +99,18 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
 }
 
 /**
- * Rotate bidding positions so the declarer's bids appear under "S" (South),
- * matching the table display where the declarer is always at the bottom.
+ * Gira le colonne perché chi sta in basso al tavolo finisca sotto la "S".
+ *
+ * IL PARAMETRO NON È IL DICHIARANTE, ed è il motivo per cui questo file aveva
+ * un difetto: si chiamava `declarer`, e chi scriveva la chiamata passava il
+ * dichiarante — giustamente, visto il nome. Ma in DIFESA in basso non c'è il
+ * dichiarante: c'è il difensore. La griglia restava girata di un posto rispetto
+ * al tavolo che le stava a fianco, e sulla stessa schermata la lettera "S"
+ * indicava due giocatori diversi. Chi rileggeva l'asta attribuiva ogni
+ * dichiarazione al posto sbagliato.
  */
-function rotateBidding(bidding: BiddingData, declarer?: string): { displayOrder: readonly string[]; dealer: string; bids: string[] } {
-  if (!declarer || declarer === "south") {
+function rotateBidding(bidding: BiddingData, inBasso?: string): { displayOrder: readonly string[]; dealer: string; bids: string[] } {
+  if (!inBasso || inBasso === "south") {
     return { displayOrder: POS_ORDER, dealer: bidding.dealer, bids: bidding.bids };
   }
 
@@ -113,7 +120,7 @@ function rotateBidding(bidding: BiddingData, declarer?: string): { displayOrder:
     east:  { north: "east",  south: "west",  east: "south", west: "north" },
     west:  { north: "west",  south: "east",  east: "north", west: "south" },
   };
-  const rot = ROTATIONS[declarer];
+  const rot = ROTATIONS[inBasso];
 
   // Rotate the dealer position
   const rotatedDealer = rot[bidding.dealer];
@@ -161,13 +168,14 @@ function rotateBidding(bidding: BiddingData, declarer?: string): { displayOrder:
 export function BiddingPanel({
   bidding,
   compact = false,
-  declarer,
+  inBasso,
 }: {
   bidding: BiddingData;
   compact?: boolean;
-  declarer?: string;
+  /** Il posto mostrato in basso al tavolo: il dichiarante se attacchi tu, il difensore se difendi. */
+  inBasso?: string;
 }) {
-  const { dealer, bids } = rotateBidding(bidding, declarer);
+  const { dealer, bids } = rotateBidding(bidding, inBasso);
 
   // Build the grid: figure out which column the dealer is in
   const dealerIdx = POS_ORDER.indexOf(dealer as typeof POS_ORDER[number]);

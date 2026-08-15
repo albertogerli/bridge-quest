@@ -506,7 +506,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
           {smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="w-full lg:w-48 shrink-0">
-              <BiddingPanel bidding={smazzata.bidding} declarer={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
             </motion.div>
           )}
         </div>

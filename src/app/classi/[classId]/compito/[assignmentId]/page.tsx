@@ -493,7 +493,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
 
           {smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-48">
-              <BiddingPanel bidding={smazzata.bidding} declarer={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
             </motion.div>
           )}
         </div>

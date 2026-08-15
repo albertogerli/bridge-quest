@@ -285,3 +285,37 @@ function lightOnlyTints(src: string): string[] {
   }
   return offenders;
 }
+
+/**
+ * L'ancora di rotazione: chi sta in basso al tavolo.
+ *
+ * IL DIFETTO. In `/gioca/smazzata` si può giocare in difesa, e allora in basso
+ * non c'è il dichiarante ma il difensore. Il tavolo ruotava su quello
+ * (`anchor`), mentre la griglia d'asta e il replay ricevevano il DICHIARANTE:
+ * sulla stessa schermata la lettera «S» indicava due giocatori diversi, e chi
+ * rileggeva l'asta attribuiva ogni dichiarazione al posto sbagliato.
+ *
+ * La causa vera era il NOME della proprietà: si chiamava `declarer`, quindi chi
+ * scriveva la chiamata passava il dichiarante — giustamente. Ora si chiama
+ * `inBasso` e dice cosa vuole.
+ */
+describe("l'ancora di rotazione è una sola", () => {
+  const smazzata = readFileSync(join(ROOT, "src/app/gioca/smazzata/page.tsx"), "utf8");
+
+  it("la griglia d'asta e il replay ricevono l'ancora, non il dichiarante", () => {
+    expect(smazzata).toContain("<BiddingPanel bidding={smazzata.bidding} inBasso={anchor} />");
+    expect(smazzata).toMatch(/<HandReplay[\s\S]{0,400}?inBasso=\{anchor\}/);
+  });
+
+  it("nessuno passa più `declarer` a quelle due proprietà", () => {
+    expect(smazzata).not.toMatch(/<BiddingPanel[^/]*declarer=/);
+  });
+
+  it("il punteggio del replay è dichiarante contro difesa, non N-S contro E-O", () => {
+    // Dentro una finestra coi nomi dei posti ruotati, «N-S» in coordinate
+    // assolute è un secondo sistema di riferimento nello stesso riquadro.
+    const replay = readFileSync(join(ROOT, "src/components/bridge/hand-replay.tsx"), "utf8");
+    expect(replay).toContain("score.dichiarante");
+    expect(replay).not.toMatch(/runningScore\.(ns|ew)/);
+  });
+});
