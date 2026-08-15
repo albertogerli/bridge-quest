@@ -134,3 +134,28 @@ describe("righeAsta", () => {
     expect(r[1].north).toBe("4♠");
   });
 });
+
+/**
+ * Chi può dichiarare, e quando.
+ *
+ * Il difetto che ha portato a questi test: i pulsanti guardavano solo se la
+ * dichiarazione fosse LECITA, non se toccasse a chi guarda. Con l'asta ferma
+ * sulla parola di un altro — il compagno che non risponde, una chiamata ancora
+ * in volo — restavano premibili, e la dichiarazione finiva scritta nella
+ * casella di quell'altro: si dichiarava con le carte di un posto e il conto lo
+ * faceva un altro posto.
+ */
+describe("il turno decide chi dichiara", () => {
+  it("a asta vuota parla il dealer, non chi guarda", () => {
+    expect(turno("west", [])).toBe("west");
+    expect(turno("west", [])).not.toBe("south");
+  });
+
+  it("dopo tre dichiarazioni tocca al quarto", () => {
+    expect(turno("west", ["1♣", "P", "1♥"])).toBe("south");
+  });
+
+  it("e dopo il giro si ricomincia dal dealer", () => {
+    expect(turno("west", ["1♣", "P", "1♥", "P"])).toBe("west");
+  });
+});
