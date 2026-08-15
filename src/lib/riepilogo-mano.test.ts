@@ -202,3 +202,136 @@ describe("il dichiarante del contratto giocato", () => {
     expect(righe[0].prese).toBe(10);
   });
 });
+
+describe("il segno del valore atteso", () => {
+  it("per gli avversari è dal LORO punto di vista, come il punteggio", () => {
+    // `evDelContratto` risponde sempre come il par, cioè da Nord-Sud: se il
+    // segno non venisse girato, il contratto migliore degli avversari
+    // comparirebbe come il loro disastro peggiore, accanto a un punteggio
+    // positivo. Due numeri sulla stessa riga con due segni diversi.
+    const tricks = tabella({}).tricks;
+    tricks.heart = { north: 2, south: 2, east: 11, west: 11 };
+    const righe = contrattiDaRivedere({
+      table: { tricks },
+      lato: "ew",
+      vulnerability: "none",
+      riferimento: 0,
+      metro: "esatto",
+      // Un 4♥ di Est che rende 620 per loro vale -620 per Nord-Sud.
+      ev: () => -620,
+    });
+    const cuori = righe.find((r) => r.etichetta.includes("♥"))!;
+    expect(cuori.punteggio).toBeGreaterThan(0);
+    expect(cuori.ev).toBe(620);
+  });
+
+  it("per la propria linea resta com'è", () => {
+    const righe = contrattiDaRivedere({
+      table: tabella({ heart: 10 }), lato: "ns", vulnerability: "none",
+      riferimento: 420, metro: "atteso", ev: () => 420,
+    });
+    expect(righe[0].ev).toBe(420);
+  });
+});
+
+describe("lo stesso contratto dai due lati del tavolo", () => {
+  it("compare due volte quando le prese cambiano", () => {
+    // A carte scoperte l'attacco arriva dalla sinistra del dichiarante: 4♠ di
+    // Nord fa dieci prese, di Sud otto. Mostrarne uno solo fa pensare che il
+    // conto sia ballerino; mostrarli tutti e due è metà della lezione.
+    const tricks = tabella({}).tricks;
+    tricks.spade = { north: 10, south: 8, east: 0, west: 0 };
+    const righe = contrattiDaRivedere({
+      table: { tricks },
+      lato: "ns",
+      vulnerability: "none",
+      riferimento: 420,
+      metro: "esatto",
+      giocato: { level: 4, strain: "spade", declarer: "south" },
+    });
+    const picche = righe.filter((r) => r.etichetta === "4♠");
+    expect(picche).toHaveLength(2);
+    expect(picche.find((r) => r.tuo)!.declarer).toBe("south");
+    expect(picche.find((r) => r.tuo)!.prese).toBe(8);
+    expect(picche.find((r) => !r.tuo)!.declarer).toBe("north");
+    expect(picche.find((r) => !r.tuo)!.prese).toBe(10);
+  });
+
+  it("una sola riga quando il dichiarante non cambia niente", () => {
+    const righe = contrattiDaRivedere({
+      table: tabella({ spade: 10 }),
+      lato: "ns", vulnerability: "none", riferimento: 420, metro: "esatto",
+      giocato: { level: 4, strain: "spade", declarer: "south" },
+    });
+    expect(righe.filter((r) => r.etichetta === "4♠")).toHaveLength(1);
+  });
+
+  it("«il vostro» segna una riga sola, quella col vostro dichiarante", () => {
+    const tricks = tabella({}).tricks;
+    tricks.spade = { north: 10, south: 8, east: 0, west: 0 };
+    const righe = contrattiDaRivedere({
+      table: { tricks }, lato: "ns", vulnerability: "none",
+      riferimento: 420, metro: "esatto",
+      giocato: { level: 4, strain: "spade", declarer: "south" },
+    });
+    expect(righe.filter((r) => r.tuo)).toHaveLength(1);
+  });
+});
+
+describe("un contratto degli avversari non è «il vostro»", () => {
+  it("non entra nella tabella della propria linea", () => {
+    // In produzione compariva «4♠ di Est ← il vostro», con −400 (i punti che
+    // perdono LORO) accanto a +195 (il valore atteso per NOI): due segni
+    // opposti sulla stessa riga, e un contratto attribuito a chi non l'aveva
+    // dichiarato.
+    const righe = contrattiDaRivedere({
+      table: tabella({ notrump: 8, club: 9 }),
+      lato: "ns",
+      vulnerability: "ew",
+      riferimento: 100,
+      metro: "esatto",
+      giocato: { level: 4, strain: "spade", declarer: "east" },
+    });
+    expect(righe.some((r) => r.tuo)).toBe(false);
+    expect(righe.some((r) => r.declarer === "east" || r.declarer === "west")).toBe(false);
+  });
+
+  it("ma nella tabella della LORO linea sì", () => {
+    const tricks = tabella({}).tricks;
+    tricks.spade = { north: 0, south: 0, east: 6, west: 6 };
+    const righe = contrattiDaRivedere({
+      table: { tricks }, lato: "ew", vulnerability: "ew",
+      riferimento: 0, metro: "esatto",
+      giocato: { level: 4, strain: "spade", declarer: "east" },
+    });
+    const mia = righe.find((r) => r.tuo)!;
+    expect(mia.declarer).toBe("east");
+    // Quattro sottoprese in zona: −400 per loro, ed è il loro punto di vista.
+    expect(mia.punteggio).toBe(-400);
+  });
+});
+
+describe("la sezione degli avversari", () => {
+  it("compare anche quando loro non hanno nessun contratto che regge", () => {
+    // È la mano in cui la risposta è più interessante: «al massimo facevano
+    // 1♥, giù di uno» dice che la mano era vostra. Senza questa opzione la
+    // sezione spariva proprio lì.
+    const tricks = tabella({}).tricks;
+    tricks.heart = { north: 0, south: 0, east: 6, west: 6 };
+    const righe = contrattiDaRivedere({
+      table: { tricks }, lato: "ew", vulnerability: "none",
+      riferimento: 0, metro: "esatto", ancheSenzaContratto: true,
+    });
+    const cuori = righe.find((r) => r.etichetta.includes("♥"))!;
+    expect(cuori.prese).toBe(6);
+    expect(cuori.punteggio).toBeLessThan(0);
+  });
+
+  it("per la propria linea un contratto che cade resta fuori", () => {
+    const righe = contrattiDaRivedere({
+      table: tabella({ heart: 10, club: 4 }),
+      lato: "ns", vulnerability: "none", riferimento: 420, metro: "atteso",
+    });
+    expect(righe.some((r) => r.etichetta.includes("♣"))).toBe(false);
+  });
+});

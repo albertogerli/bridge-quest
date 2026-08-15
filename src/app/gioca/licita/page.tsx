@@ -483,6 +483,19 @@ export default function LicitaPage() {
                     niente — anzi, toglie la spiegazione. */}
                 <RiepilogoMano
                   deal={mano.deal}
+                  // Le due migliori per loro: senza, non si capisce se la mano
+                  // era vostra, e un parziale che li tiene fuori da una manche
+                  // sembra un risultato mediocre.
+                  avversari={contrattiDaRivedere({
+                    table: mano.table,
+                    lato: "ew",
+                    ancheSenzaContratto: true,
+                    vulnerability: mano.vulnerability,
+                    riferimento: 0,
+                    metro: "esatto",
+                    giocato: giocato?.lato === "ew" ? giocato : null,
+                    ev: mano.condivisa ? (c) => evDelContratto(mano.condivisa!, c) : undefined,
+                  }).slice(0, 2)}
                   contratti={contrattiDaRivedere({
                     table: mano.table,
                     lato: "ns",

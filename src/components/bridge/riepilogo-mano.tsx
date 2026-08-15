@@ -39,9 +39,20 @@ function seme(hand: readonly Card[], suit: Suit): string {
 export function RiepilogoMano({
   deal,
   contratti,
+  avversari = [],
 }: {
   deal: Record<Position, Card[]>;
   contratti: ContrattoValutato[];
+  /**
+   * I contratti migliori degli AVVERSARI, dal loro punto di vista.
+   *
+   * Senza, non si capisce se la mano era tua: un 2♥ che rende 110 sembra un
+   * risultato mediocre finché non si vede che loro avrebbero fatto 620 a
+   * picche, e allora diventa un buon lavoro di difesa. Niente stelle su queste
+   * righe: non erano scelte tue, e un voto su una cosa che non hai scelto non
+   * vuol dire niente.
+   */
+  avversari?: ContrattoValutato[];
 }) {
   // La colonna del valore atteso compare solo se la mano lo porta: le mani
   // generate prima delle distribuzioni hanno solo il punteggio reale, e una
@@ -92,7 +103,7 @@ export function RiepilogoMano({
             <tbody>
               {contratti.map((c) => (
                 <tr
-                  key={c.etichetta}
+                  key={`${c.etichetta}-${c.declarer}`}
                   className={`border-t border-border ${c.tuo ? "font-bold text-figb" : ""}`}
                 >
                   <td className="py-2">
@@ -115,7 +126,45 @@ export function RiepilogoMano({
           </table>
         </div>
       )}
-      <p className="text-xs text-muted-foreground mt-2">
+      {contratti.some((c) => contratti.filter((x) => x.etichetta === c.etichetta).length > 1) && (
+        <p className="text-xs text-muted-foreground mt-2">
+          Lo stesso contratto compare due volte perché <strong>cambia chi
+          dichiara</strong>: l&apos;attacco arriva dalla sinistra del
+          dichiarante, e una carta in meno da girare può valere due prese.
+        </p>
+      )}
+
+      {avversari.length > 0 && (
+        <div className="mt-4">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+            Cosa potevano fare loro
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <tbody>
+                {avversari.map((c) => (
+                  <tr key={`avv-${c.etichetta}-${c.declarer}`} className="border-t border-border">
+                    <td className="py-2">
+                      {c.etichetta} di {ETICHETTA[c.declarer]}
+                    </td>
+                    <td className="py-2 text-right">{c.prese}</td>
+                    <td className="py-2 text-right font-mono">{c.punteggio}</td>
+                    {mostraAtteso && (
+                      <td className="py-2 text-right font-mono">{c.ev ?? "—"}</td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            I loro punti, non i vostri. Serve a sapere se la mano era vostra:
+            tenerli fuori da una manche vale più di un vostro parziale in più.
+          </p>
+        </div>
+      )}
+
+      <p className="text-xs text-muted-foreground mt-3">
         <strong>Qui</strong> è quanto vale su questa smazzata, a carte scoperte.
         {mostraAtteso ? (
           <>

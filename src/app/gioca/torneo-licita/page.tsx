@@ -309,6 +309,16 @@ export default function TorneoLicitaPage() {
               <p className="text-sm text-muted-foreground mb-3">{esito.commento}</p>
               <RiepilogoMano
                 deal={mano.hands}
+                avversari={contrattiDaRivedere({
+                  table: tabella,
+                  lato: "ew",
+                  ancheSenzaContratto: true,
+                  vulnerability: mano.vulnerability,
+                  riferimento: 0,
+                  metro: "esatto",
+                  giocato,
+                  ev: (c) => evDelContratto(mano, c),
+                }).slice(0, 2)}
                 contratti={contrattiDaRivedere({
                   table: tabella,
                   lato: "ns",
