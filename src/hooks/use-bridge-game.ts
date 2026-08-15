@@ -19,6 +19,7 @@ import { ddsSolve } from "@/lib/dds-select";
 import { useSounds } from "@/hooks/use-sounds";
 import type { Vulnerability, BiddingData } from "@/lib/catalog";
 import { checkBenHealth, benPlay } from "@/lib/ben-client";
+import { reportError } from "@/lib/report-error";
 import {
   getAILevel,
   aiSelectWithDifficulty,
@@ -93,6 +94,19 @@ const TRICK_CLEAR_DELAY = 1000; // ms to show completed trick
 
 export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const [gameState, setGameState] = useState<GameState | null>(null);
+  /**
+   * Lo stato corrente, leggibile dai timer.
+   *
+   * Serve perché le giocate dell'AI partono da uno stato CATTURATO quando il
+   * timer è stato armato: fra l'armamento e lo scatto quello stato può essere
+   * già superato — il cane da guardia e il timer dell'AI possono scattare
+   * insieme, e i due partono dalla stessa fotografia. Il secondo dei due
+   * riuscirebbe (dalla sua fotografia è ancora il suo turno) e sovrascriverebbe
+   * la giocata del primo, lasciando nella storia due carte per un solo turno.
+   * Da lì la storia non corrisponde più allo stato, e chi la rigioca —
+   * l'annulla — trova un turno che non torna.
+   */
+  const gameStateRef = useRef<GameState | null>(null);
   const [phase, setPhase] = useState<GamePhase>("ready");
   const [lastTrick, setLastTrick] = useState<TrickPlay[] | null>(null);
   const [message, setMessage] = useState("Preparazione della mano…");
@@ -152,8 +166,14 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const executePlay = useCallback(
     (state: GameState, position: Position, card: Card) => {
       try {
+        // Se lo stato di partenza non è più quello corrente, questa giocata
+        // arriva da un timer superato: applicarla riscriverebbe indietro la
+        // partita. Si lascia cadere, che è esattamente quello che si vuole.
+        if (gameStateRef.current && gameStateRef.current !== state) return;
+
         const newState = playCard(state, position, card);
         historyRef.current = [...historyRef.current, { position, card }];
+        gameStateRef.current = newState;
         setGameState(newState);
 
         // Sound: card played
@@ -368,6 +388,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     );
 
     historyRef.current = [];
+    gameStateRef.current = state;
     setClaimStatus(null);
     setGameState(state);
     setPhase("playing");
@@ -507,16 +528,35 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
 
     const newHist = hist.slice(0, idx);
 
-    // Rebuild the state by replaying from the start
-    let state = createGame(cfg.hands, cfg.contract, cfg.declarer, cfg.openingLead);
-    for (const play of newHist) {
-      state = playCard(state, play.position, play.card);
+    /**
+     * Si ricostruisce rigiocando dall'inizio — ed è l'unico posto in cui una
+     * storia incoerente diventa un'eccezione.
+     *
+     * Non deve MAI uscire da qui un errore: `playCard` lancia quando il turno
+     * non torna, e in produzione (15/08/2026, /gioca/smazzata) quell'eccezione
+     * è arrivata non gestita fino al browser, rompendo la pagina a chi voleva
+     * solo ritirare una carta. La causa era a monte ed è stata corretta, ma
+     * una ricostruzione che può fallire va comunque protetta: davanti a una
+     * storia che non torna si rinuncia all'annulla e si lascia la partita
+     * dov'è, che è il danno minore.
+     */
+    let state: GameState;
+    try {
+      state = createGame(cfg.hands, cfg.contract, cfg.declarer, cfg.openingLead);
+      for (const play of newHist) {
+        state = playCard(state, play.position, play.card);
+      }
+    } catch (err) {
+      reportError("bridge-game:annulla", err);
+      setMessage("Non è stato possibile ritirare la carta. La partita continua da qui.");
+      return;
     }
     historyRef.current = newHist;
 
     if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
     if (trickTimerRef.current) clearTimeout(trickTimerRef.current);
 
+    gameStateRef.current = state;
     setGameState(state);
     setLastTrick(null);
     setClaimStatus(null);
