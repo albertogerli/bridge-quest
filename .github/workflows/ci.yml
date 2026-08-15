@@ -27,3 +27,14 @@ jobs:
 
       - name: Unit tests
         run: npm test
+
+      # Il build cattura una classe di errori che typecheck e test non vedono:
+      # RSC, «server-only» importato dal client, e la configurazione — è così
+      # che era passata in produzione una CSP che bloccava il WebAssembly del
+      # double dummy, rompendo l'analisi delle mani senza che nessuna prova se
+      # ne accorgesse.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
