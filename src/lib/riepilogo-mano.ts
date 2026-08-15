@@ -8,10 +8,16 @@
  * prese reggono, quanto valgono e quante stelle avrebbero preso. Lì si vede in
  * un colpo che 4♥ erano tre stelle e 5♥ una, che è la lezione della mano.
  *
- * UN CONTRATTO PER DENOMINAZIONE, al livello che le prese consentono. Elencare
- * tutti e trentacinque i contratti sarebbe un muro di numeri in cui la cosa da
- * imparare si perde; e i livelli sotto quello massimo valgono sempre meno,
- * quindi non aggiungono niente.
+ * UN CONTRATTO PER DENOMINAZIONE, AL LIVELLO CHE RENDE DI PIÙ. Elencare tutti e
+ * trentacinque i contratti sarebbe un muro di numeri in cui la cosa da imparare
+ * si perde.
+ *
+ * «Quello che rende di più» e non «il più alto che le prese reggono»: con dieci
+ * prese a senza atout la seconda regola proponeva 4SA, che vale esattamente
+ * quanto 3SA e che al tavolo non dichiara nessuno. Il bridge si dichiara per
+ * traguardi — manche a 3SA, 4♥, 4♠, 5♣, 5♦ — e un elenco che li salta insegna
+ * a contare le prese invece che a scegliere il contratto. A parità vince il
+ * livello più basso, che è quello che si raggiunge davvero.
  *
  * SI GUARDA LA PROPRIA LINEA. Per i contratti PROPOSTI le prese sono quelle
  * del dichiarante migliore fra i due compagni: a carte scoperte la differenza
@@ -132,18 +138,27 @@ export function contrattiDaRivedere(opzioni: {
     // Sotto le sette prese non esiste nessun contratto mantenibile in quella
     // denominazione: si lascia fuori invece di mostrare un 1♣ che cade.
     if (prese < 7) continue;
-    righe.push(
-      valuta(
-        Math.min(7, prese - 6),
+
+    // Il livello migliore: quello col valore atteso più alto quando c'è —
+    // perché è il metro delle stelle — altrimenti quello che rende di più su
+    // questa smazzata. Il confronto è stretto, quindi a parità resta il primo
+    // trovato, cioè il livello più basso.
+    let migliore: ContrattoValutato | null = null;
+    for (let level = 1; level <= 7; level++) {
+      const riga = valuta(
+        level,
         d.strain,
         d.chiave,
-        // Se la denominazione è quella che avete dichiarato, la riga è la
-        // vostra: va col vostro dichiarante, altrimenti ne nascerebbero due.
-        giocato?.strain === d.strain && giocato.level === Math.min(7, prese - 6)
+        // Se è il contratto che avete dichiarato, la riga è la vostra: va col
+        // vostro dichiarante, altrimenti ne nascerebbero due.
+        giocato?.strain === d.strain && giocato.level === level
           ? giocato.declarer
           : undefined
-      )
-    );
+      );
+      const metrica = (r: ContrattoValutato) => r.ev ?? r.punteggio;
+      if (!migliore || metrica(riga) > metrica(migliore)) migliore = riga;
+    }
+    if (migliore) righe.push(migliore);
   }
 
   // Il contratto giocato compare sempre, anche quando è più alto di quello che

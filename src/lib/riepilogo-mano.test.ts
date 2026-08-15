@@ -15,7 +15,7 @@ function tabella(p: Partial<Record<TableStrain, number>>): DdsTable {
 }
 
 describe("contrattiDaRivedere", () => {
-  it("propone per ogni denominazione il livello che le prese reggono", () => {
+  it("propone per ogni denominazione il contratto che rende di più", () => {
     const righe = contrattiDaRivedere({
       table: tabella({ heart: 10, notrump: 9, spade: 8 }),
       lato: "ns",
@@ -23,7 +23,50 @@ describe("contrattiDaRivedere", () => {
       riferimento: 420,
       metro: "atteso",
     });
-    expect(righe.map((r) => r.etichetta)).toEqual(["4♥", "3SA", "2♠"]);
+    // A picche otto prese: 1♠ e 2♠ valgono lo stesso (110), e a parità vince
+    // il più basso — che è anche quello che cade meno spesso.
+    expect(righe.map((r) => r.etichetta)).toEqual(["4♥", "3SA", "1♠"]);
+  });
+
+  it("con dieci prese a senza propone 3SA, non 4SA", () => {
+    // 4SA vale esattamente quanto 3SA e al tavolo non lo dichiara nessuno: il
+    // bridge si dichiara per traguardi, e un elenco che li salta insegna a
+    // contare le prese invece che a scegliere il contratto.
+    const righe = contrattiDaRivedere({
+      table: tabella({ notrump: 10 }),
+      lato: "ns",
+      vulnerability: "none",
+      riferimento: 430,
+      metro: "esatto",
+    });
+    expect(righe.map((r) => r.etichetta)).toEqual(["3SA"]);
+    expect(righe[0].punteggio).toBe(430);
+  });
+
+  it("con dodici prese a senza propone lo slam, che vale di più", () => {
+    const righe = contrattiDaRivedere({
+      table: tabella({ notrump: 12 }),
+      lato: "ns", vulnerability: "none", riferimento: 990, metro: "esatto",
+    });
+    expect(righe[0].etichetta).toBe("6SA");
+    expect(righe[0].punteggio).toBe(990);
+  });
+
+  it("quando c'è il valore atteso, è quello a scegliere il livello", () => {
+    // A carte scoperte lo slam passa e vale 990; in media rende meno della
+    // manche, e allora la riga da mostrare è la manche — la stessa che dà le
+    // stelle.
+    const righe = contrattiDaRivedere({
+      table: tabella({ notrump: 12 }),
+      lato: "ns", vulnerability: "none", riferimento: 400, metro: "atteso",
+      ev: ({ level }) => (level === 3 ? 400 : level === 6 ? 120 : 0),
+    });
+    expect(righe[0].etichetta).toBe("3SA");
+    expect(righe[0].ev).toBe(400);
+    // Il punteggio reale resta quello dello slam mancato in tabella: 3SA con
+    // dodici prese fa 490.
+    expect(righe[0].punteggio).toBe(490);
+    expect(righe[0].stelle).toBe(3);
   });
 
   it("mette in cima quello che rende di più", () => {
@@ -47,7 +90,8 @@ describe("contrattiDaRivedere", () => {
       riferimento: 420,
       metro: "atteso",
     });
-    const spade = righe.find((r) => r.etichetta === "2♠")!;
+    const spade = righe.find((r) => r.etichetta === "1♠")!;
+    // 1♠ con otto prese: 30 di contratto, 50 di parziale, 30 di presa in più.
     expect(spade.punteggio).toBe(110);
     expect(spade.stelle).toBeLessThan(3);
   });
@@ -119,7 +163,9 @@ describe("contrattiDaRivedere", () => {
       table: { tricks }, lato: "ew", vulnerability: "none",
       riferimento: 0, metro: "esatto",
     });
-    expect(loro[0].etichetta).toBe("5♠");
+    // Undici prese a picche: si dichiara 4♠, non 5♠ — vale lo stesso e cade
+    // meno. È proprio la correzione che questa regola porta.
+    expect(loro[0].etichetta).toBe("4♠");
     expect(["east", "west"]).toContain(loro[0].declarer);
   });
 });
