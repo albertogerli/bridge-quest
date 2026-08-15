@@ -28,7 +28,12 @@ const SEME_DI: Record<string, Suit | null> = {
  *
  * Qui le dichiarazioni illecite non si possono premere — le decide
  * `dichiarazioniLecite`, che è testata — e l'asta si legge come su carta:
- * quattro colonne fisse, le caselle prima del mazziere vuote.
+ * quattro colonne fisse, le caselle prima del dealer vuote.
+ *
+ * «DEALER» e non «mazziere» né «apertore»: è la parola dei diagrammi, la stessa
+ * che si legge su qualunque bollettino di gara. «Apertore» direbbe un'altra
+ * cosa — chi fa l'APERTURA, cioè la prima dichiarazione diversa da passo — che
+ * quando il dealer passa è un altro giocatore.
  *
  * Il contro e il surcontro compaiono solo quando sono davvero possibili: sono
  * le due regole che si sbagliano più spesso, e mostrarle sempre insegnerebbe
@@ -68,7 +73,7 @@ export function Asta({
             >
               {ETICHETTA[p]}
               {p === dealer && (
-                <span className="block text-[12px] font-normal">mazziere</span>
+                <span className="block text-[12px] font-normal">dealer</span>
               )}
             </div>
           ))}

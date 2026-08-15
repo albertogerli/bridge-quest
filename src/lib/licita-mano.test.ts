@@ -126,6 +126,21 @@ describe("il contro non è un contratto", () => {
     expect(esitoAsta(["XX"], "north", t, "none")).toBeNull();
   });
 
+  it("l'asta che ha bloccato la pagina, presa dallo schermo", () => {
+    // 15/08/2026: dealer Sud, competitiva lunga che finisce su un contro di
+    // Sud a 5♣ di Est. La pagina prendeva il contro come contratto e si
+    // fermava lì, senza voto e senza riepilogo: l'asta era finita e non
+    // succedeva più niente.
+    const bids = ["2♠", "3♥", "4♥", "P", "P", "X", "4♠", "5♣", "X", "P", "P", "P"];
+    expect(astaChiusa(bids)).toBe(true);
+
+    const e = esitoAsta(bids, "south", t, "ew")!;
+    expect(e.contratto).toBe("5♣X");
+    expect(e.declarer).toBe("east");
+    expect(e.lato).toBe("ew");
+    expect(e.doppio).toBe(2);
+  });
+
   it("nemmeno una dichiarazione mai vista rompe il conto", () => {
     expect(esitoAsta(["8♠", "P", "P", "P"], "north", t, "none")).toBeNull();
     expect(esitoAsta(["1Z", "P", "P", "P"], "north", t, "none")).toBeNull();
