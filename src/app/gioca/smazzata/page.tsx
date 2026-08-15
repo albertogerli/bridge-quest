@@ -778,7 +778,10 @@ function PlayingView({
               transition={{ delay: 0.3 }}
               className="w-full lg:w-48 shrink-0"
             >
-              <BiddingPanel bidding={smazzata.bidding} declarer={declarer} />
+              {/* `anchor`, non `declarer`: in difesa in basso c'è il difensore, e
+                  passare il dichiarante girava la griglia di un posto rispetto
+                  al tavolo che le sta a fianco. */}
+              <BiddingPanel bidding={smazzata.bidding} inBasso={anchor} />
             </motion.div>
           )}
         </div>
@@ -1227,6 +1230,9 @@ function PlayingView({
           {showReplay && game.gameState && (
             <HandReplay
               gameState={game.gameState}
+              // In difesa in basso c'era il difensore: riaprire il replay
+              // dall'altro lato del tavolo costringe a ricostruire tutto a mente.
+              inBasso={anchor}
               onClose={() => setShowReplay(false)}
             />
           )}

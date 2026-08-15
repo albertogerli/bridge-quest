@@ -585,7 +585,7 @@ function ActiveChallenge({
               transition={{ delay: 0.3 }}
               className="w-full lg:w-48 shrink-0"
             >
-              <BiddingPanel bidding={smazzata.bidding} declarer={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
             </motion.div>
           )}
         </div>

@@ -11,7 +11,9 @@ import type {
   Suit,
   Card,
 } from "@/lib/bridge-engine";
-import { cardToString, suitSymbol, sortHand, toDisplayPosition } from "@/lib/bridge-engine";
+import {
+  cardToString, partnershipOf, suitSymbol, sortHand, toDisplayPosition,
+} from "@/lib/bridge-engine";
 import { cardAriaLabel, handAriaLabel, suitAriaLabel } from "@/lib/card-labels";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 
@@ -256,11 +258,20 @@ function trickCommentary(trick: Trick, declarer: Position): string {
 
 export function HandReplay({
   gameState,
+  inBasso,
   onClose,
 }: {
   gameState: GameState;
+  /**
+   * Il posto mostrato in basso. Assente = il dichiarante, che è giusto quasi
+   * sempre; ma quando si è appena giocato in DIFESA in basso c'era il
+   * difensore, e riaprire il replay dall'altro lato del tavolo costringe a
+   * ricostruire tutto a mente proprio nel momento del ripasso.
+   */
+  inBasso?: Position;
   onClose: () => void;
 }) {
+  const ancora = inBasso ?? gameState.declarer;
   const [currentTrickIdx, setCurrentTrickIdx] = useState(0);
   const dialogRef = useRef<HTMLDivElement>(null);
   useFocusTrap(dialogRef, true, { onEscape: onClose });
@@ -282,16 +293,31 @@ export function HandReplay({
     [tricks, currentTrickIdx]
   );
 
-  // Running score up to and including current trick
+  /**
+   * Le prese fin qui, contate come DICHIARANTE contro DIFESA.
+   *
+   * Prima erano «N-S» ed «E-O» in coordinate assolute, dentro una finestra in
+   * cui tutti i nomi dei posti sono ruotati: col dichiarante a Est, la
+   * finestra mostrava Est in basso chiamandolo «Sud» e accanto un punteggio
+   * «N-S» che parlava dei veri Nord-Sud, cioè di quelli che nella finestra si
+   * chiamano Est-Ovest. Due sistemi di riferimento nello stesso riquadro.
+   *
+   * Dichiarante e difesa non hanno questo problema: non dipendono da come è
+   * girato il tavolo, ed è anche come si ragiona giocando.
+   */
   const runningScore = useMemo(() => {
-    const score = { ns: 0, ew: 0 };
+    const score = { dichiarante: 0, difesa: 0 };
+    const latoDichiarante = partnershipOf(gameState.declarer);
     for (let t = 0; t <= currentTrickIdx && t < totalTricks; t++) {
-      const w = tricks[t].winner;
-      if (w === "north" || w === "south") score.ns++;
-      else if (w === "east" || w === "west") score.ew++;
+      // `winner` è opzionale nel tipo: una presa senza vincitore non esiste in
+      // una mano finita, ma contarla come difesa sarebbe una bugia comoda.
+      const v = tricks[t].winner;
+      if (!v) continue;
+      if (partnershipOf(v) === latoDichiarante) score.dichiarante++;
+      else score.difesa++;
     }
     return score;
-  }, [tricks, currentTrickIdx, totalTricks]);
+  }, [tricks, currentTrickIdx, totalTricks, gameState.declarer]);
 
   // Find the card each position played in the current trick
   const playedInTrick = useMemo(() => {
@@ -345,7 +371,7 @@ export function HandReplay({
             </h3>
             <p className="text-xs text-muted-foreground">
               {gameState.contract} &middot; Dich.{" "}
-              {displayLabel(gameState.declarer, gameState.declarer)}
+              {displayLabel(gameState.declarer, ancora)}
             </p>
           </div>
           <button
@@ -372,15 +398,15 @@ export function HandReplay({
             <span className="text-xs font-bold text-muted-foreground">Presa</span>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold">
-            <span className="text-muted-foreground">N-S</span>
+            <span className="text-muted-foreground">Dichiarante</span>
             <span className="text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-md px-1.5 py-0.5">
-              {runningScore.ns}
+              {runningScore.dichiarante}
             </span>
             <span className="text-muted-foreground/40">-</span>
             <span className="text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5">
-              {runningScore.ew}
+              {runningScore.difesa}
             </span>
-            <span className="text-muted-foreground">E-O</span>
+            <span className="text-muted-foreground">Difesa</span>
           </div>
         </div>
 
@@ -396,7 +422,7 @@ export function HandReplay({
             >
               <TrickTable
                 trick={trick}
-                declarer={gameState.declarer}
+                declarer={ancora}
                 trumpSuit={gameState.trumpSuit}
               />
             </motion.div>
@@ -414,10 +440,10 @@ export function HandReplay({
               className="rounded-xl bg-muted px-4 py-2.5 text-center"
             >
               <p className="text-sm font-semibold text-foreground/80">
-                {trickCommentary(trick, gameState.declarer)}
+                {trickCommentary(trick, ancora)}
               </p>
               <p className="text-[12px] text-muted-foreground mt-0.5">
-                Attacco: {displayLabel(trick.leader, gameState.declarer)}
+                Attacco: {displayLabel(trick.leader, ancora)}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -432,7 +458,7 @@ export function HandReplay({
           <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
             {(["north", "west", "east", "south"] as Position[]).map((slot) => {
               const pos = positions.find(
-                (p) => toDisplayPosition(p, gameState.declarer) === slot
+                (p) => toDisplayPosition(p, ancora) === slot
               )!;
               const hand = remainingHand(originalHands[pos], playedBefore);
               const cellClass =
