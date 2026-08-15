@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-08-14
+-- Estratto il: 2026-08-15
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -382,7 +382,9 @@ CREATE TABLE IF NOT EXISTS public.mani_generate (
   par_score integer,
   dd_table jsonb,
   created_at timestamp with time zone NOT NULL,
-  valore_atteso jsonb
+  valore_atteso jsonb,
+  distribuzioni jsonb,
+  ns_hcp smallint
 );
 
 CREATE TABLE IF NOT EXISTS public.partner_profiles (
@@ -451,7 +453,18 @@ CREATE TABLE IF NOT EXISTS public.risultati_mano (
   contratto text,
   dichiarante text,
   punteggio integer NOT NULL,
-  stelle smallint NOT NULL,
+  stelle numeric(2,1) NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.risultati_torneo (
+  torneo_id uuid NOT NULL,
+  mano_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  contratto text,
+  dichiarante text,
+  punteggio integer NOT NULL,
+  stelle numeric(2,1) NOT NULL,
   created_at timestamp with time zone NOT NULL
 );
 
@@ -518,6 +531,21 @@ CREATE TABLE IF NOT EXISTS public.smazzate (
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL,
   dd_tricks smallint
+);
+
+CREATE TABLE IF NOT EXISTS public.tornei (
+  id uuid NOT NULL,
+  tipo text NOT NULL,
+  periodo integer NOT NULL,
+  apre_at timestamp with time zone NOT NULL,
+  chiude_at timestamp with time zone NOT NULL,
+  creato_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.torneo_mani (
+  torneo_id uuid NOT NULL,
+  numero integer NOT NULL,
+  mano_id uuid NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.tournament_results (
@@ -993,6 +1021,46 @@ AS $function$
       AND role IN ('instructor', 'admin')
       AND (role = 'admin' OR asd_code = p_asd_code)
   );
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer DEFAULT 50)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT CASE WHEN auth.uid() IS NULL THEN NULL ELSE jsonb_build_object(
+    'totale', (SELECT count(DISTINCT user_id) FROM public.risultati_torneo WHERE torneo_id = p_torneo),
+    'mia', (
+      SELECT jsonb_build_object('posizione', x.posizione, 'stelle', x.stelle, 'mani', x.mani)
+      FROM (
+        SELECT r.user_id,
+               rank() OVER (ORDER BY sum(r.stelle) DESC, max(r.created_at)) AS posizione,
+               sum(r.stelle) AS stelle, count(*) AS mani
+        FROM public.risultati_torneo r WHERE r.torneo_id = p_torneo
+        GROUP BY r.user_id
+      ) x WHERE x.user_id = auth.uid()
+    ),
+    'righe', (
+      SELECT coalesce(jsonb_agg(y ORDER BY (y->>'posizione')::int), '[]'::jsonb) FROM (
+        SELECT jsonb_build_object(
+          'posizione', rank() OVER (ORDER BY sum(r.stelle) DESC, max(r.created_at)),
+          'nome', p.display_name,
+          'asd', p.asd_name,
+          'stelle', sum(r.stelle),
+          'mani', count(*),
+          'sonoIo', r.user_id = auth.uid()
+        ) AS y
+        FROM public.risultati_torneo r
+        JOIN public.profiles p ON p.id = r.user_id
+        WHERE r.torneo_id = p_torneo
+        GROUP BY r.user_id, p.display_name, p.asd_name
+        ORDER BY sum(r.stelle) DESC, max(r.created_at)
+        LIMIT greatest(1, least(coalesce(p_quanti, 50), 200))
+      ) t
+    )
+  ) END;
 $function$
 ;
 
@@ -2040,14 +2108,20 @@ CREATE OR REPLACE FUNCTION public.mano_da_fare(p_slug text DEFAULT NULL::text)
  STABLE
  SET search_path TO 'public'
 AS $function$
-  SELECT to_jsonb(m) || jsonb_build_object('scenario', to_jsonb(s) - 'vincoli')
+  SELECT to_jsonb(m) || jsonb_build_object(
+    'scenario', CASE WHEN s.id IS NULL THEN NULL ELSE to_jsonb(s) - 'vincoli' END)
   FROM public.mani_generate m
-  JOIN public.scenari s ON s.id = m.scenario_id
+  LEFT JOIN public.scenari s ON s.id = m.scenario_id
   WHERE (p_slug IS NULL OR s.slug = p_slug)
     AND auth.uid() IS NOT NULL
     AND NOT EXISTS (
       SELECT 1 FROM public.risultati_mano r
       WHERE r.mano_id = m.id AND r.user_id = auth.uid()
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM public.torneo_mani tm
+      JOIN public.tornei t ON t.id = tm.torneo_id
+      WHERE tm.mano_id = m.id AND now() < t.chiude_at
     )
   ORDER BY random()
   LIMIT 1;
@@ -2595,6 +2669,95 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.torneo_corrente(p_tipo text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_periodo int;
+  v_apre timestamptz;
+  v_chiude timestamptz;
+  v_quante int;
+  v_id uuid;
+  v_oggi date := (now() AT TIME ZONE 'Europe/Rome')::date;
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN NULL; END IF;
+
+  IF p_tipo = 'giornaliero' THEN
+    v_periodo := to_char(v_oggi, 'YYYYMMDD')::int;
+    v_apre := v_oggi::timestamp AT TIME ZONE 'Europe/Rome';
+    v_chiude := v_apre + interval '1 day';
+    v_quante := 8;
+  ELSIF p_tipo = 'settimanale' THEN
+    v_periodo := to_char(v_oggi, 'IYYYIW')::int;
+    v_apre := (date_trunc('week', v_oggi::timestamp)) AT TIME ZONE 'Europe/Rome';
+    v_chiude := v_apre + interval '7 days';
+    v_quante := 24;
+  ELSE
+    RETURN NULL;
+  END IF;
+
+  SELECT id INTO v_id FROM public.tornei WHERE tipo = p_tipo AND periodo = v_periodo;
+
+  IF v_id IS NULL THEN
+    INSERT INTO public.tornei (tipo, periodo, apre_at, chiude_at)
+    VALUES (p_tipo, v_periodo, v_apre, v_chiude)
+    ON CONFLICT (tipo, periodo) DO NOTHING
+    RETURNING id INTO v_id;
+
+    IF v_id IS NULL THEN
+      SELECT id INTO v_id FROM public.tornei WHERE tipo = p_tipo AND periodo = v_periodo;
+    ELSE
+      INSERT INTO public.torneo_mani (torneo_id, numero, mano_id)
+      SELECT v_id, row_number() OVER (), m.id
+      FROM (
+        SELECT id FROM public.mani_generate
+        WHERE distribuzioni IS NOT NULL
+          AND NOT EXISTS (SELECT 1 FROM public.torneo_mani tm WHERE tm.mano_id = mani_generate.id)
+        ORDER BY random()
+        LIMIT v_quante
+      ) m;
+    END IF;
+  END IF;
+
+  RETURN jsonb_build_object(
+    'id', v_id,
+    'tipo', p_tipo,
+    'periodo', v_periodo,
+    'chiudeAt', v_chiude,
+    'quante', (SELECT count(*) FROM public.torneo_mani WHERE torneo_id = v_id),
+    'fatte', (
+      SELECT count(*) FROM public.risultati_torneo r
+      WHERE r.torneo_id = v_id AND r.user_id = auth.uid()
+    )
+  );
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.torneo_mano(p_torneo uuid)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT CASE WHEN auth.uid() IS NULL THEN NULL ELSE (
+    SELECT to_jsonb(m) || jsonb_build_object('numero', tm.numero)
+    FROM public.torneo_mani tm
+    JOIN public.mani_generate m ON m.id = tm.mano_id
+    WHERE tm.torneo_id = p_torneo
+      AND NOT EXISTS (
+        SELECT 1 FROM public.risultati_torneo r
+        WHERE r.torneo_id = p_torneo AND r.mano_id = tm.mano_id AND r.user_id = auth.uid()
+      )
+      AND EXISTS (SELECT 1 FROM public.tornei t WHERE t.id = p_torneo AND now() < t.chiude_at)
+    ORDER BY tm.numero
+    LIMIT 1
+  ) END;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.touch_updated_at()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -2729,6 +2892,7 @@ ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_item
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
 ALTER TABLE public.risultati_mano ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.risultati_mano ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.risultati_torneo ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.saved_hands ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.saved_hands ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.saved_hands ALTER COLUMN created_at SET DEFAULT now();
@@ -2741,6 +2905,8 @@ ALTER TABLE public.sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN commentary SET DEFAULT ''::text;
 ALTER TABLE public.smazzate ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.tornei ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.tornei ALTER COLUMN creato_at SET DEFAULT now();
 ALTER TABLE public.tournament_results ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.tournament_results ALTER COLUMN total_tricks SET DEFAULT 0;
 ALTER TABLE public.tournament_results ALTER COLUMN total_needed SET DEFAULT 0;
@@ -2790,11 +2956,14 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_pkey PRIMARY KEY (id);
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_pkey PRIMARY KEY (id);
+ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_pkey PRIMARY KEY (torneo_id, mano_id, user_id);
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_pkey PRIMARY KEY (id);
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
+ALTER TABLE public.tornei ADD CONSTRAINT tornei_pkey PRIMARY KEY (id);
+ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_pkey PRIMARY KEY (torneo_id, numero);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_pkey PRIMARY KEY (id);
 ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_pkey PRIMARY KEY (id);
@@ -2815,6 +2984,8 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_username_key UNIQUE (usernam
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_endpoint_key UNIQUE (user_id, endpoint);
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_mano_id_user_id_key UNIQUE (mano_id, user_id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_board_key UNIQUE (lesson_id, board);
+ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_periodo_key UNIQUE (tipo, periodo);
+ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_mano_id_key UNIQUE (torneo_id, mano_id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHECK ((unlock_mode = ANY (ARRAY['free'::text, 'sequential'::text])));
@@ -2852,7 +3023,8 @@ ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check 
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['giovane'::text, 'adulto'::text, 'senior'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
-ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_stelle_check CHECK (((stelle >= 0) AND (stelle <= 3)));
+ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
+ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((char_length(nota) <= 2000));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_descrizione_check CHECK ((char_length(descrizione) <= 1000));
@@ -2864,6 +3036,7 @@ ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_declarer_check CHECK ((decla
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_hands_check CHECK (((hands ? 'north'::text) AND (hands ? 'south'::text) AND (hands ? 'east'::text) AND (hands ? 'west'::text) AND (jsonb_typeof((hands -> 'north'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'south'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'east'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'west'::text)) = 'array'::text)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_opening_lead_check CHECK (((opening_lead ? 'suit'::text) AND (opening_lead ? 'rank'::text)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_vulnerability_check CHECK ((vulnerability = ANY (ARRAY['none'::text, 'ns'::text, 'ew'::text, 'both'::text])));
+ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_check CHECK ((tipo = ANY (ARRAY['giornaliero'::text, 'settimanale'::text])));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_category_check CHECK ((category = ANY (ARRAY['licita'::text, 'gioco'::text, 'difesa'::text])));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_correct_answer_check CHECK ((correct_answer >= 0));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_difficulty_check CHECK ((difficulty = ANY (ARRAY['facile'::text, 'medio'::text, 'difficile'::text])));
@@ -2914,6 +3087,9 @@ ALTER TABLE public.review_items ADD CONSTRAINT review_items_user_id_fkey FOREIGN
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_partner_id_fkey FOREIGN KEY (partner_id) REFERENCES profiles(id) ON DELETE SET NULL;
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
+ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_torneo_id_fkey FOREIGN KEY (torneo_id) REFERENCES tornei(id) ON DELETE CASCADE;
+ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES profiles(id) ON DELETE SET NULL;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
@@ -2925,6 +3101,8 @@ ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_b1_fkey FOREIGN KEY 
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_b2_fkey FOREIGN KEY (b2) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_creatore_id_fkey FOREIGN KEY (creatore_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
+ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
+ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_fkey FOREIGN KEY (torneo_id) REFERENCES tornei(id) ON DELETE CASCADE;
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
 -- INDICI
@@ -2970,11 +3148,13 @@ CREATE INDEX lesson_modules_content_gin ON public.lesson_modules USING gin (cont
 CREATE INDEX lesson_modules_lesson_id_idx ON public.lesson_modules USING btree (lesson_id);
 CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
 CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, created_at DESC);
+CREATE INDEX mani_generate_ns_hcp_idx ON public.mani_generate USING btree (ns_hcp);
 CREATE INDEX mani_generate_scenario_idx ON public.mani_generate USING btree (scenario_id, created_at DESC);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX profiles_asd_code_idx ON public.profiles USING btree (asd_code);
 CREATE UNIQUE INDEX profiles_friend_code_key ON public.profiles USING btree (friend_code) WHERE (friend_code IS NOT NULL);
 CREATE INDEX risultati_mano_idx ON public.risultati_mano USING btree (mano_id);
+CREATE INDEX risultati_torneo_classifica_idx ON public.risultati_torneo USING btree (torneo_id, user_id);
 CREATE INDEX risultati_utente_idx ON public.risultati_mano USING btree (user_id, created_at DESC);
 CREATE INDEX saved_hands_owner_idx ON public.saved_hands USING btree (owner_id, created_at DESC);
 CREATE INDEX scenari_pubblici_idx ON public.scenari USING btree (pubblico, ufficiale, created_at DESC);
@@ -2983,6 +3163,8 @@ CREATE INDEX sfida_board_sessione_idx ON public.sfida_board USING btree (session
 CREATE INDEX sfide_coppie_partecipanti_idx ON public.sfide_coppie USING btree (a1, a2, b1, b2);
 CREATE INDEX smazzate_bidding_gin ON public.smazzate USING gin (bidding jsonb_path_ops);
 CREATE INDEX smazzate_lesson_id_idx ON public.smazzate USING btree (lesson_id);
+CREATE INDEX tornei_aperti_idx ON public.tornei USING btree (chiude_at DESC);
+CREATE INDEX torneo_mani_mano_idx ON public.torneo_mani USING btree (mano_id);
 CREATE INDEX trova_errore_category_idx ON public.trova_errore_scenarios USING btree (category);
 CREATE INDEX trova_errore_difficulty_idx ON public.trova_errore_scenarios USING btree (difficulty);
 CREATE UNIQUE INDEX unique_comment_like ON public.forum_likes USING btree (user_id, comment_id) WHERE (comment_id IS NOT NULL);
@@ -3043,11 +3225,14 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.review_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.risultati_mano ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.risultati_torneo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scenari ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tornei ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.torneo_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trova_errore_scenarios ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.weekly_challenges ENABLE ROW LEVEL SECURITY;
@@ -3135,6 +3320,8 @@ CREATE POLICY "Users manage own subscriptions" ON public.push_subscriptions AS P
 CREATE POLICY "Own reviews" ON public.review_items AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
 CREATE POLICY "Ognuno scrive il proprio risultato" ON public.risultati_mano AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Risultati leggibili" ON public.risultati_mano AS PERMISSIVE FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Ognuno scrive il proprio risultato di torneo" ON public.risultati_torneo AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "Risultati del torneo leggibili" ON public.risultati_torneo AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Own saved hands" ON public.saved_hands AS PERMISSIVE FOR ALL TO authenticated USING ((owner_id = auth.uid())) WITH CHECK ((owner_id = auth.uid()));
 CREATE POLICY "Autore cancella i propri scenari" ON public.scenari AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Autore modifica i propri scenari" ON public.scenari AS PERMISSIVE FOR UPDATE TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
@@ -3147,6 +3334,8 @@ CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR
   WHERE ((s.id = sfida_board.sfida_id) AND ((((auth.uid() = s.a1) OR (auth.uid() = s.a2)) OR (auth.uid() = s.b1)) OR (auth.uid() = s.b2))))));
 CREATE POLICY "Le mie sfide" ON public.sfide_coppie AS PERMISSIVE FOR SELECT TO authenticated USING (((((auth.uid() = a1) OR (auth.uid() = a2)) OR (auth.uid() = b1)) OR (auth.uid() = b2)));
 CREATE POLICY smazzate_public_read ON public.smazzate AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "Tornei leggibili" ON public.tornei AS PERMISSIVE FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Mani del torneo leggibili" ON public.torneo_mani AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Authenticated can read tournament results" ON public.tournament_results AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Users can insert own tournament result" ON public.tournament_results AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Users can update own tournament result" ON public.tournament_results AS PERMISSIVE FOR UPDATE TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
@@ -3262,6 +3451,9 @@ GRANT DELETE ON public.review_items TO service_role;
 GRANT DELETE ON public.risultati_mano TO anon;
 GRANT DELETE ON public.risultati_mano TO authenticated;
 GRANT DELETE ON public.risultati_mano TO service_role;
+GRANT DELETE ON public.risultati_torneo TO anon;
+GRANT DELETE ON public.risultati_torneo TO authenticated;
+GRANT DELETE ON public.risultati_torneo TO service_role;
 GRANT DELETE ON public.saved_hands TO anon;
 GRANT DELETE ON public.saved_hands TO authenticated;
 GRANT DELETE ON public.saved_hands TO service_role;
@@ -3277,6 +3469,12 @@ GRANT DELETE ON public.sfide_coppie TO service_role;
 GRANT DELETE ON public.smazzate TO anon;
 GRANT DELETE ON public.smazzate TO authenticated;
 GRANT DELETE ON public.smazzate TO service_role;
+GRANT DELETE ON public.tornei TO anon;
+GRANT DELETE ON public.tornei TO authenticated;
+GRANT DELETE ON public.tornei TO service_role;
+GRANT DELETE ON public.torneo_mani TO anon;
+GRANT DELETE ON public.torneo_mani TO authenticated;
+GRANT DELETE ON public.torneo_mani TO service_role;
 GRANT DELETE ON public.tournament_results TO anon;
 GRANT DELETE ON public.tournament_results TO authenticated;
 GRANT DELETE ON public.tournament_results TO service_role;
@@ -3394,6 +3592,9 @@ GRANT INSERT ON public.review_items TO service_role;
 GRANT INSERT ON public.risultati_mano TO anon;
 GRANT INSERT ON public.risultati_mano TO authenticated;
 GRANT INSERT ON public.risultati_mano TO service_role;
+GRANT INSERT ON public.risultati_torneo TO anon;
+GRANT INSERT ON public.risultati_torneo TO authenticated;
+GRANT INSERT ON public.risultati_torneo TO service_role;
 GRANT INSERT ON public.saved_hands TO anon;
 GRANT INSERT ON public.saved_hands TO authenticated;
 GRANT INSERT ON public.saved_hands TO service_role;
@@ -3409,6 +3610,12 @@ GRANT INSERT ON public.sfide_coppie TO service_role;
 GRANT INSERT ON public.smazzate TO anon;
 GRANT INSERT ON public.smazzate TO authenticated;
 GRANT INSERT ON public.smazzate TO service_role;
+GRANT INSERT ON public.tornei TO anon;
+GRANT INSERT ON public.tornei TO authenticated;
+GRANT INSERT ON public.tornei TO service_role;
+GRANT INSERT ON public.torneo_mani TO anon;
+GRANT INSERT ON public.torneo_mani TO authenticated;
+GRANT INSERT ON public.torneo_mani TO service_role;
 GRANT INSERT ON public.tournament_results TO anon;
 GRANT INSERT ON public.tournament_results TO authenticated;
 GRANT INSERT ON public.tournament_results TO service_role;
@@ -3526,6 +3733,9 @@ GRANT REFERENCES ON public.review_items TO service_role;
 GRANT REFERENCES ON public.risultati_mano TO anon;
 GRANT REFERENCES ON public.risultati_mano TO authenticated;
 GRANT REFERENCES ON public.risultati_mano TO service_role;
+GRANT REFERENCES ON public.risultati_torneo TO anon;
+GRANT REFERENCES ON public.risultati_torneo TO authenticated;
+GRANT REFERENCES ON public.risultati_torneo TO service_role;
 GRANT REFERENCES ON public.saved_hands TO anon;
 GRANT REFERENCES ON public.saved_hands TO authenticated;
 GRANT REFERENCES ON public.saved_hands TO service_role;
@@ -3541,6 +3751,12 @@ GRANT REFERENCES ON public.sfide_coppie TO service_role;
 GRANT REFERENCES ON public.smazzate TO anon;
 GRANT REFERENCES ON public.smazzate TO authenticated;
 GRANT REFERENCES ON public.smazzate TO service_role;
+GRANT REFERENCES ON public.tornei TO anon;
+GRANT REFERENCES ON public.tornei TO authenticated;
+GRANT REFERENCES ON public.tornei TO service_role;
+GRANT REFERENCES ON public.torneo_mani TO anon;
+GRANT REFERENCES ON public.torneo_mani TO authenticated;
+GRANT REFERENCES ON public.torneo_mani TO service_role;
 GRANT REFERENCES ON public.tournament_results TO anon;
 GRANT REFERENCES ON public.tournament_results TO authenticated;
 GRANT REFERENCES ON public.tournament_results TO service_role;
@@ -3657,6 +3873,9 @@ GRANT SELECT ON public.review_items TO service_role;
 GRANT SELECT ON public.risultati_mano TO anon;
 GRANT SELECT ON public.risultati_mano TO authenticated;
 GRANT SELECT ON public.risultati_mano TO service_role;
+GRANT SELECT ON public.risultati_torneo TO anon;
+GRANT SELECT ON public.risultati_torneo TO authenticated;
+GRANT SELECT ON public.risultati_torneo TO service_role;
 GRANT SELECT ON public.saved_hands TO anon;
 GRANT SELECT ON public.saved_hands TO authenticated;
 GRANT SELECT ON public.saved_hands TO service_role;
@@ -3672,6 +3891,12 @@ GRANT SELECT ON public.sfide_coppie TO service_role;
 GRANT SELECT ON public.smazzate TO anon;
 GRANT SELECT ON public.smazzate TO authenticated;
 GRANT SELECT ON public.smazzate TO service_role;
+GRANT SELECT ON public.tornei TO anon;
+GRANT SELECT ON public.tornei TO authenticated;
+GRANT SELECT ON public.tornei TO service_role;
+GRANT SELECT ON public.torneo_mani TO anon;
+GRANT SELECT ON public.torneo_mani TO authenticated;
+GRANT SELECT ON public.torneo_mani TO service_role;
 GRANT SELECT ON public.tournament_results TO anon;
 GRANT SELECT ON public.tournament_results TO authenticated;
 GRANT SELECT ON public.tournament_results TO service_role;
@@ -3789,6 +4014,9 @@ GRANT TRIGGER ON public.review_items TO service_role;
 GRANT TRIGGER ON public.risultati_mano TO anon;
 GRANT TRIGGER ON public.risultati_mano TO authenticated;
 GRANT TRIGGER ON public.risultati_mano TO service_role;
+GRANT TRIGGER ON public.risultati_torneo TO anon;
+GRANT TRIGGER ON public.risultati_torneo TO authenticated;
+GRANT TRIGGER ON public.risultati_torneo TO service_role;
 GRANT TRIGGER ON public.saved_hands TO anon;
 GRANT TRIGGER ON public.saved_hands TO authenticated;
 GRANT TRIGGER ON public.saved_hands TO service_role;
@@ -3804,6 +4032,12 @@ GRANT TRIGGER ON public.sfide_coppie TO service_role;
 GRANT TRIGGER ON public.smazzate TO anon;
 GRANT TRIGGER ON public.smazzate TO authenticated;
 GRANT TRIGGER ON public.smazzate TO service_role;
+GRANT TRIGGER ON public.tornei TO anon;
+GRANT TRIGGER ON public.tornei TO authenticated;
+GRANT TRIGGER ON public.tornei TO service_role;
+GRANT TRIGGER ON public.torneo_mani TO anon;
+GRANT TRIGGER ON public.torneo_mani TO authenticated;
+GRANT TRIGGER ON public.torneo_mani TO service_role;
 GRANT TRIGGER ON public.tournament_results TO anon;
 GRANT TRIGGER ON public.tournament_results TO authenticated;
 GRANT TRIGGER ON public.tournament_results TO service_role;
@@ -3921,6 +4155,9 @@ GRANT TRUNCATE ON public.review_items TO service_role;
 GRANT TRUNCATE ON public.risultati_mano TO anon;
 GRANT TRUNCATE ON public.risultati_mano TO authenticated;
 GRANT TRUNCATE ON public.risultati_mano TO service_role;
+GRANT TRUNCATE ON public.risultati_torneo TO anon;
+GRANT TRUNCATE ON public.risultati_torneo TO authenticated;
+GRANT TRUNCATE ON public.risultati_torneo TO service_role;
 GRANT TRUNCATE ON public.saved_hands TO anon;
 GRANT TRUNCATE ON public.saved_hands TO authenticated;
 GRANT TRUNCATE ON public.saved_hands TO service_role;
@@ -3936,6 +4173,12 @@ GRANT TRUNCATE ON public.sfide_coppie TO service_role;
 GRANT TRUNCATE ON public.smazzate TO anon;
 GRANT TRUNCATE ON public.smazzate TO authenticated;
 GRANT TRUNCATE ON public.smazzate TO service_role;
+GRANT TRUNCATE ON public.tornei TO anon;
+GRANT TRUNCATE ON public.tornei TO authenticated;
+GRANT TRUNCATE ON public.tornei TO service_role;
+GRANT TRUNCATE ON public.torneo_mani TO anon;
+GRANT TRUNCATE ON public.torneo_mani TO authenticated;
+GRANT TRUNCATE ON public.torneo_mani TO service_role;
 GRANT TRUNCATE ON public.tournament_results TO anon;
 GRANT TRUNCATE ON public.tournament_results TO authenticated;
 GRANT TRUNCATE ON public.tournament_results TO service_role;
@@ -4053,6 +4296,9 @@ GRANT UPDATE ON public.review_items TO service_role;
 GRANT UPDATE ON public.risultati_mano TO anon;
 GRANT UPDATE ON public.risultati_mano TO authenticated;
 GRANT UPDATE ON public.risultati_mano TO service_role;
+GRANT UPDATE ON public.risultati_torneo TO anon;
+GRANT UPDATE ON public.risultati_torneo TO authenticated;
+GRANT UPDATE ON public.risultati_torneo TO service_role;
 GRANT UPDATE ON public.saved_hands TO anon;
 GRANT UPDATE ON public.saved_hands TO authenticated;
 GRANT UPDATE ON public.saved_hands TO service_role;
@@ -4068,6 +4314,12 @@ GRANT UPDATE ON public.sfide_coppie TO service_role;
 GRANT UPDATE ON public.smazzate TO anon;
 GRANT UPDATE ON public.smazzate TO authenticated;
 GRANT UPDATE ON public.smazzate TO service_role;
+GRANT UPDATE ON public.tornei TO anon;
+GRANT UPDATE ON public.tornei TO authenticated;
+GRANT UPDATE ON public.tornei TO service_role;
+GRANT UPDATE ON public.torneo_mani TO anon;
+GRANT UPDATE ON public.torneo_mani TO authenticated;
+GRANT UPDATE ON public.torneo_mani TO service_role;
 GRANT UPDATE ON public.tournament_results TO anon;
 GRANT UPDATE ON public.tournament_results TO authenticated;
 GRANT UPDATE ON public.tournament_results TO service_role;
@@ -4114,6 +4366,9 @@ GRANT EXECUTE ON FUNCTION public.bidding_session_view(p_id uuid) TO service_role
 REVOKE ALL ON FUNCTION public.can_post_for_asd(p_asd_code text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_role;
+REVOKE ALL ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) TO service_role;
 REVOKE ALL ON FUNCTION public.confronto_campo(p_mano_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO service_role;
@@ -4259,6 +4514,12 @@ REVOKE ALL ON FUNCTION public.tocca_bidding_session() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO anon;
 GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO service_role;
+REVOKE ALL ON FUNCTION public.torneo_corrente(p_tipo text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.torneo_corrente(p_tipo text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.torneo_corrente(p_tipo text) TO service_role;
+REVOKE ALL ON FUNCTION public.torneo_mano(p_torneo uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.torneo_mano(p_torneo uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.torneo_mano(p_torneo uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO anon;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO authenticated;
