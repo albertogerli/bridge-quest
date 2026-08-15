@@ -1,0 +1,77 @@
+# Verifiche che parlano col database vero: e2e, RLS e deriva dello schema.
+#
+# PERCHÉ NON STANNO NELLA CI DELLE PR
+# Tutte e tre hanno bisogno di `SUPABASE_SERVICE_ROLE_KEY`, che bypassa ogni
+# regola di riga: è la chiave che legge e cancella qualunque cosa. In un
+# workflow che parte a ogni pull request quella chiave finisce a disposizione
+# di chiunque possa aprire una PR — basta un passo che la stampi codificata per
+# portarsela via. È un rischio che non vale il beneficio di anticipare di
+# qualche ora un fallimento.
+#
+# Qui invece il workflow parte solo di notte sul ramo principale, o a mano da
+# chi ha i permessi. L'ambiente `verifiche` va creato in
+# Impostazioni → Environments con i segreti dentro: gli ambienti si possono
+# limitare ai rami protetti, e quello è il muro vero.
+#
+# SEGRETI RICHIESTI (nell'ambiente `verifiche`):
+#   NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
+#   SUPABASE_SERVICE_ROLE_KEY
+#
+# NOTA: queste prove creano e cancellano utenti veri nel database di
+# produzione, con indirizzi @bridgelab-test.invalid, e li rimuovono alla fine.
+# Non è elegante, ma è l'unico database che c'è: un ambiente di prova separato
+# è la cosa giusta da fare, il giorno in cui si farà.
+
+name: Verifiche notturne
+
+on:
+  schedule:
+    # 03:30 UTC, cioè le 4:30 o 5:30 in Italia: nessuno sta usando la
+    # piattaforma, e un utente di prova in più non dà fastidio a nessuno.
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  verifiche:
+    runs-on: ubuntu-latest
+    environment: verifiche
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Regole di riga (RLS)
+        run: npm run test:rls
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Deriva dello schema
+        run: npm run schema:check
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Prove dal browser (Playwright)
+        run: npm run test:e2e
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Referto Playwright
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
