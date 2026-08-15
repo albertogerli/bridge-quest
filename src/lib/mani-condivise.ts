@@ -361,3 +361,118 @@ export function evDelContratto(
 function chiaveDenominazione(strain: Strain): TableStrain {
   return strainOf(strain === "nt" ? null : strain);
 }
+
+// ─── Tornei di licita ───────────────────────────────────────────────────────
+
+export interface TorneoCorrente {
+  id: string;
+  tipo: "giornaliero" | "settimanale";
+  periodo: number;
+  chiudeAt: string;
+  quante: number;
+  fatte: number;
+}
+
+export interface RigaClassifica {
+  posizione: number;
+  nome: string | null;
+  asd: string | null;
+  stelle: number;
+  mani: number;
+  sonoIo: boolean;
+}
+
+export interface ClassificaTorneo {
+  totale: number;
+  mia: { posizione: number; stelle: number; mani: number } | null;
+  righe: RigaClassifica[];
+}
+
+/** Il torneo del periodo, creandolo se è il primo ad arrivare. */
+export async function torneoCorrente(
+  tipo: "giornaliero" | "settimanale"
+): Promise<TorneoCorrente | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("torneo_corrente", { p_tipo: tipo });
+    if (error) {
+      reportError("tornei:corrente", error);
+      return null;
+    }
+    return (data as TorneoCorrente | null) ?? null;
+  } catch (err) {
+    reportError("tornei:corrente", err);
+    return null;
+  }
+}
+
+/**
+ * La prossima mano del torneo. `null` quando sono finite o il torneo è chiuso.
+ *
+ * Una per volta: consegnarle tutte insieme vorrebbe dire mandare al browser le
+ * carte degli avversari di tutto il torneo.
+ */
+export async function torneoMano(
+  torneoId: string
+): Promise<(ManoCondivisa & { numero: number }) | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("torneo_mano", { p_torneo: torneoId });
+    if (error) {
+      reportError("tornei:mano", error);
+      return null;
+    }
+    return (data as (ManoCondivisa & { numero: number }) | null) ?? null;
+  } catch (err) {
+    reportError("tornei:mano", err);
+    return null;
+  }
+}
+
+export async function registraRisultatoTorneo(r: {
+  torneoId: string;
+  manoId: string;
+  contratto: string | null;
+  dichiarante: string | null;
+  punteggio: number;
+  stelle: number;
+}): Promise<boolean> {
+  try {
+    const supabase = createClient();
+    const { data: sessione } = await supabase.auth.getUser();
+    const uid = sessione.user?.id;
+    if (!uid) return false;
+    const { error } = await supabase.from("risultati_torneo").insert({
+      torneo_id: r.torneoId,
+      mano_id: r.manoId,
+      user_id: uid,
+      contratto: r.contratto,
+      dichiarante: r.dichiarante,
+      punteggio: r.punteggio,
+      stelle: r.stelle,
+    });
+    if (error) {
+      reportError("tornei:registra", error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    reportError("tornei:registra", err);
+    return false;
+  }
+}
+
+export async function classificaTorneo(torneoId: string): Promise<ClassificaTorneo | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("classifica_torneo", { p_torneo: torneoId });
+    if (error) {
+      reportError("tornei:classifica", error);
+      return null;
+    }
+    return (data as ClassificaTorneo | null) ?? null;
+  } catch (err) {
+    reportError("tornei:classifica", err);
+    return null;
+  }
+}

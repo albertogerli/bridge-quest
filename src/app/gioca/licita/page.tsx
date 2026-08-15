@@ -10,12 +10,12 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
-import { calcTableAndPar, strainOf, type DdsTable } from "@/lib/dds-table";
-import { scoreContract } from "@/lib/scoring";
+import { calcTableAndPar, type DdsTable } from "@/lib/dds-table";
 import type { Strain } from "@/lib/minibridge";
 import { valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita";
 import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
+import { astaChiusa, esitoAsta, ordineDa } from "@/lib/licita-mano";
 import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { Stelle } from "@/components/bridge/stelle";
@@ -41,14 +41,6 @@ const ZONA: Record<Vulnerability, string> = {
   both: "tutti in zona",
 };
 
-const DENOM: { label: string; suit: Suit | null; strain: Strain }[] = [
-  { label: "♣", suit: "club", strain: "club" },
-  { label: "♦", suit: "diamond", strain: "diamond" },
-  { label: "♥", suit: "heart", strain: "heart" },
-  { label: "♠", suit: "spade", strain: "spade" },
-  { label: "SA", suit: null, strain: "nt" },
-];
-
 interface Mano {
   deal: Record<Position, Card[]>;
   table: DdsTable;
@@ -66,18 +58,6 @@ interface Mano {
   condivisa?: ManoCondivisa;
   /** Il nome dello scenario, quando c'è. */
   scenario?: string;
-}
-
-const GIRO: Position[] = ["north", "east", "south", "west"];
-
-/** L'ordine dei posti a partire dal mazziere. */
-function ordineDa(dealer: Position): Position[] {
-  const i = GIRO.indexOf(dealer);
-  return [0, 1, 2, 3].map((k) => GIRO[(i + k) % 4]);
-}
-
-function inZona(v: Vulnerability, lato: "ns" | "ew"): boolean {
-  return v === "both" || v === lato;
 }
 
 /**
@@ -126,55 +106,30 @@ export default function LicitaPage() {
   const mano = preparata?.round === round ? preparata.dati : null;
 
   /**
-   * Chi dichiara: il primo della linea vincente ad aver nominato quel seme.
-   * Serve perché ora anche gli avversari dichiarano, e un contratto loro va
-   * contato dalla parte giusta — altrimenti le stelle direbbero il contrario
-   * di quello che è successo.
+   * Come finisce l'asta. Il conto vero sta in `licita-mano.ts`, non qui.
+   *
+   * Ci stava, e conteneva un difetto arrivato in produzione: prendeva come
+   * contratto l'ultima dichiarazione diversa da «passo» — che però può essere
+   * un CONTRO, e un contro non è un contratto. Su iPad, il 15/08/2026, quella
+   * riga è esplosa con «undefined is not an object». Lo stesso conto serve
+   * all'allenamento e ai tornei: scriverlo due volte vuol dire sbagliarlo due
+   * volte, e infatti era già stato corretto nella funzione del database senza
+   * che questa se ne accorgesse.
    */
   const chiudiLicita = (bids: string[]) => {
     if (!mano) return;
-    const ordine = ordineDa(mano.dealer);
-    const iUltimo = bids.map((b) => b !== "P").lastIndexOf(true);
-    if (iUltimo < 0) {
+    const e = esitoAsta(bids, mano.dealer, mano.table, mano.vulnerability);
+
+    if (!e) {
       // Passo generale: zero, e il riferimento dice quanto si è lasciato sul tavolo.
-      const e = valutaLicita(0, mano.riferimento, mano.metro);
+      const voto = valutaLicita(0, mano.riferimento, mano.metro);
       setContrattoFinale("Passo generale");
       setGiocato(null);
-      setEsito(e);
-      setStelleTotali((s) => s + e.stelle);
-      salva(null, null, 0, e.stelle);
+      setEsito(voto);
+      setStelleTotali((s) => s + voto.stelle);
+      salva(null, null, 0, voto.stelle);
       return;
     }
-
-    const ultimo = bids[iUltimo];
-    const den = DENOM.find((d) => ultimo.slice(1) === d.label)!;
-    const level = Number(ultimo[0]);
-
-    // Il primo della stessa linea che ha nominato quel seme.
-    const linea = (p: Position) => (p === "north" || p === "south" ? "ns" : "ew");
-    const lineaVincente = linea(ordine[iUltimo % 4]);
-    let dichiarante = ordine[iUltimo % 4];
-    for (let i = 0; i <= iUltimo; i++) {
-      const chi = ordine[i % 4];
-      if (linea(chi) === lineaVincente && bids[i].slice(1) === den.label) {
-        dichiarante = chi;
-        break;
-      }
-    }
-
-    const t = mano.table.tricks[strainOf(den.suit)];
-    const nostro = lineaVincente === "ns";
-    // Le prese le fa chi dichiara davvero, non il migliore della linea: con un
-    // dichiarante diverso il colpo di apertura arriva dall'altra parte.
-    const prese = t[dichiarante];
-    const punti = scoreContract({
-      level,
-      strain: den.strain,
-      tricksMade: prese,
-      vulnerable: inZona(mano.vulnerability, lineaVincente),
-    }).score;
-    // Se dichiarano loro, quel punteggio è contro di noi.
-    const punteggio = nostro ? punti : -punti;
 
     /**
      * Le stelle si danno sul VALORE ATTESO del contratto raggiunto, non sul
@@ -189,21 +144,22 @@ export default function LicitaPage() {
     const perStelle =
       (mano.metro === "atteso" && mano.condivisa
         ? evDelContratto(mano.condivisa, {
-            level,
-            strain: den.strain,
-            declarer: dichiarante,
+            level: e.level,
+            strain: e.strain,
+            declarer: e.declarer,
+            doppio: e.doppio,
           })
-        : null) ?? punteggio;
+        : null) ?? e.punteggio;
 
-    const e = valutaLicita(perStelle, mano.riferimento, mano.metro);
+    const voto = valutaLicita(perStelle, mano.riferimento, mano.metro);
     setContrattoFinale(
-      `${ultimo} di ${ETICHETTA[dichiarante]} — ${prese} prese` +
-        (nostro ? "" : " (dichiarano gli avversari)")
+      `${e.contratto} di ${ETICHETTA[e.declarer]} — ${e.prese} prese` +
+        (e.lato === "ns" ? "" : " (dichiarano gli avversari)")
     );
-    setGiocato({ level, strain: den.strain, declarer: dichiarante, lato: lineaVincente });
-    setEsito(e);
-    setStelleTotali((s) => s + e.stelle);
-    salva(ultimo, dichiarante, punteggio, e.stelle);
+    setGiocato({ level: e.level, strain: e.strain, declarer: e.declarer, lato: e.lato });
+    setEsito(voto);
+    setStelleTotali((s) => s + voto.stelle);
+    salva(e.contratto, e.declarer, e.punteggio, voto.stelle);
   };
 
   /**
@@ -270,18 +226,14 @@ export default function LicitaPage() {
   };
 
   const avanza = async (m: Mano, iniziali: string[]) => {
-    const passiFinali = (b: string[]) => {
-      const ultimo = b.map((x) => x !== "P").lastIndexOf(true);
-      return ultimo < 0 ? b.length >= 4 : b.length - ultimo - 1 >= 3;
-    };
     const ordine = ordineDa(m.dealer);
 
     let bids = iniziali;
     setLicita(bids);
-    if (passiFinali(bids)) { chiudiLicita(bids); return; }
+    if (astaChiusa(bids)) { chiudiLicita(bids); return; }
 
     setAttesa(true);
-    while (!passiFinali(bids)) {
+    while (!astaChiusa(bids)) {
       const chi = ordine[bids.length % 4];
       if (chi === "south") break;
       /**
@@ -316,7 +268,7 @@ export default function LicitaPage() {
       setLicita(bids);
     }
     setAttesa(false);
-    if (passiFinali(bids)) chiudiLicita(bids);
+    if (astaChiusa(bids)) chiudiLicita(bids);
   };
 
   const dichiara = async (bid: string) => {
