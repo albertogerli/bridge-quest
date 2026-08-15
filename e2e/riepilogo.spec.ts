@@ -51,6 +51,11 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
   // L'etichetta accessibile del pulsante è «Dichiara 1♣», non «1♣».
   await page.getByRole("button", { name: "Dichiara 1♣" }).click();
 
+  // Appena dichiarato, il cassetto sparisce: tocca a qualcun altro, e
+  // lasciarlo premibile vorrebbe dire scrivere la propria dichiarazione nella
+  // casella di un altro posto.
+  await expect(page.getByRole("button", { name: "Dichiara 1♦" })).toHaveCount(0);
+
   // Restano i passi degli altri, poi la mano chiude.
   for (let i = 0; i < 8; i++) {
     if (await page.getByText("Tutta la smazzata").isVisible().catch(() => false)) break;

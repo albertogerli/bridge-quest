@@ -62,6 +62,8 @@ export default function TorneoLicitaPage() {
   >(null);
   const [classifica, setClassifica] = useState<ClassificaTorneo | null>(null);
   const [avversarioMuto, setAvversarioMuto] = useState(false);
+  /** Il compagno non ha risposto: l'asta è ferma e va detto. */
+  const [compagnoMuto, setCompagnoMuto] = useState(false);
 
   useEffect(() => {
     if (loading || !user) return;
@@ -140,6 +142,7 @@ export default function TorneoLicitaPage() {
   const avanza = async (m: ManoCondivisa, t: DdsTable, iniziali: string[]) => {
     let correnti = iniziali;
     setBids(correnti);
+    setCompagnoMuto(false);
     if (astaChiusa(correnti)) { await chiudi(m, t, correnti); return; }
 
     setAttesa(true);
@@ -151,7 +154,15 @@ export default function TorneoLicitaPage() {
       let r = await chiediABen(m, chi, correnti);
       if (r.fallback) r = await chiediABen(m, chi, correnti);
       if (r.fallback) {
-        if (chi === "north") { setAttesa(false); return; }
+        if (chi === "north") {
+          // Senza il compagno l'esercizio non esiste, e in torneo la mano non
+          // si può annullare: la classifica è la stessa per tutti e un buco
+          // resterebbe. Si dice cosa è successo e si lascia riprovare da dove
+          // l'asta si è fermata.
+          setCompagnoMuto(true);
+          setAttesa(false);
+          return;
+        }
         setAvversarioMuto(true);
         r = { bid: "P", fallback: false };
       }
@@ -171,6 +182,7 @@ export default function TorneoLicitaPage() {
     setEsito(null);
     setGiocato(null);
     setAvversarioMuto(false);
+    setCompagnoMuto(false);
   };
 
   if (loading) return null;
@@ -272,6 +284,21 @@ export default function TorneoLicitaPage() {
             <p className="text-xs text-muted-foreground mb-3">
               Un avversario non ha risposto in tempo e ha passato d&apos;ufficio.
             </p>
+          )}
+
+          {compagnoMuto && !esito && (
+            <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">
+              <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                Il compagno non ha risposto
+              </p>
+              <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
+                Il motore che dichiara per lui non ha risposto in tempo. La mano
+                non è persa: l&apos;asta riprende da dove si è fermata.
+              </p>
+              <Button onClick={() => { void avanza(mano, tabella, bids); }}>
+                Riprova
+              </Button>
+            </div>
           )}
 
           {esito && (
