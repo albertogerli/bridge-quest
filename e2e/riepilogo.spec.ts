@@ -31,7 +31,7 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
   await expect(page.getByText(/PO/).first()).toBeVisible({ timeout: 60_000 });
 
   /**
-   * Il mazziere scritto nell'intestazione dev'essere quello segnato nella
+   * Il dealer scritto nell'intestazione dev'essere quello segnato nella
    * griglia.
    *
    * Le mani della scorta ruotano il mazziere, e la griglia lo riceveva fisso
@@ -44,8 +44,8 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
   const mazziere = intestazione.includes("apri tu")
     ? "Sud"
     : intestazione.replace(/.*apre\s+/, "").trim();
-  const colonnaMazziere = page.getByText("mazziere", { exact: true }).locator("xpath=..");
-  await expect(colonnaMazziere).toContainText(mazziere);
+  const colonnaDealer = page.getByText("dealer", { exact: true }).locator("xpath=..");
+  await expect(colonnaDealer).toContainText(mazziere);
 
   // Un contratto qualunque: 1♣ è sempre lecito come prima dichiarazione.
   // L'etichetta accessibile del pulsante è «Dichiara 1♣», non «1♣».
