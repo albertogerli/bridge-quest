@@ -491,8 +491,14 @@ export default function LicitaPage() {
                     lato: "ew",
                     ancheSenzaContratto: true,
                     vulnerability: mano.vulnerability,
-                    riferimento: 0,
-                    metro: "esatto",
+                    // Le loro stelle si misurano sul LORO contratto migliore:
+                    // dicono quanto era buona la mano per loro, ed è la cosa
+                    // che fa capire se il tuo parziale li ha tenuti fuori da
+                    // qualcosa di grosso.
+                    riferimento: mano.condivisa
+                      ? riferimento(mano.condivisa, "ew").punteggio
+                      : -mano.riferimento,
+                    metro: mano.metro,
                     giocato: giocato?.lato === "ew" ? giocato : null,
                     ev: mano.condivisa ? (c) => evDelContratto(mano.condivisa!, c) : undefined,
                   }).slice(0, 2)}
