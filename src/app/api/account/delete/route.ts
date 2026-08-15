@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ben-guard";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
@@ -31,6 +32,18 @@ export async function POST() {
 
   if (!user) {
     return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
+  }
+
+  /**
+   * Tre all'ora, e non è per la sicurezza: l'id da cancellare viene solo dalla
+   * sessione, quindi nessuno può far cancellare l'account di un altro, e una
+   * POST da un altro sito non porterebbe i cookie (SameSite). È perché ogni
+   * chiamata apre un client di servizio e attraversa una decina di tabelle: un
+   * pulsante premuto venti volte da chi non vede risposta è un carico inutile
+   * su tutto il resto.
+   */
+  if (!rateLimit(`elimina-account:${user.id}`, 3, 3_600_000)) {
+    return NextResponse.json({ error: "Troppe richieste" }, { status: 429 });
   }
 
   let admin;

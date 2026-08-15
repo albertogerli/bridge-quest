@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ben-guard";
 import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
@@ -31,6 +32,19 @@ export async function POST(req: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Non autorizzato" }, { status: 401 });
+  }
+
+  /**
+   * Un tetto alle email che una persona può far partire.
+   *
+   * Questa rotta manda una email a un'altra persona: senza limite, chi vuole
+   * infastidire qualcuno gli riempie la casella con un ciclo di richieste di
+   * amicizia, e la fattura di Resend la paghiamo noi. Il limite è per utente e
+   * per istanza — non ferma un abuso distribuito su molte sessioni, per quello
+   * serve il WAF davanti a `/api/*` — ma è il primo muro e costa tre righe.
+   */
+  if (!rateLimit(`amici-notifica:${user.id}`, 10)) {
+    return NextResponse.json({ error: "Troppe richieste" }, { status: 429 });
   }
 
   let admin;

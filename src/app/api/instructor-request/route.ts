@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ben-guard";
 import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
@@ -19,6 +20,12 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
+    }
+
+    // Ogni richiesta manda una email all'amministratore: senza tetto, una
+    // persona sola può riempirgli la casella e far pagare a noi l'invio.
+    if (!rateLimit(`richiesta-istruttore:${user.id}`, 5)) {
+      return NextResponse.json({ error: "Troppe richieste" }, { status: 429 });
     }
 
     let rawBody: unknown;
