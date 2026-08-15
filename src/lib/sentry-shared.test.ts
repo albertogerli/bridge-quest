@@ -179,3 +179,28 @@ describe("isInAppBrowserNoise — il ponte Java sparito", () => {
     expect(isInAppBrowserNoise(conMessaggio("Object is gone", ["app:///_next/x.js"]))).toBe(false);
   });
 });
+
+describe("registrazione del service worker non scaricata", () => {
+  const conMessaggio = (value: string) => ({ exception: { values: [{ value }] } });
+
+  it("scarta il fallimento di download dello script", () => {
+    // Chrome per Android, 15/08/2026: rete caduta mentre scaricava /sw.js.
+    // Verificato che in produzione /sw.js risponda 200 col tipo giusto.
+    expect(
+      isServiceWorkerNoise(
+        conMessaggio(
+          "Failed to register a ServiceWorker for scope ('https://bridgelab.it/') with " +
+            "script ('https://bridgelab.it/sw.js'): An unknown error occurred when fetching the script."
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("ma un errore DENTRO il service worker arriva lo stesso", () => {
+    // Se il filtro guardasse la sola parola «ServiceWorker», si perderebbero
+    // i difetti veri del nostro codice offline.
+    expect(
+      isServiceWorkerNoise(conMessaggio("ServiceWorker: cache.put fallita su /api/lezioni"))
+    ).toBe(false);
+  });
+});

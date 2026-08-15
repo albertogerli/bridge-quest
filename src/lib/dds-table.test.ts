@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calcTableAndPar, fitFor, TABLE_STRAINS } from "./dds-table";
+import { calcTableAndPar, cardOptions, fitFor, TABLE_STRAINS } from "./dds-table";
 import type { Card, Position } from "./bridge-engine";
 import { generateDeals } from "./deal-generator";
 import { solveExact } from "./dds-exact";
@@ -105,4 +105,25 @@ describe("fitFor — quante carte ha davvero la linea", () => {
   it("al senza atout il fit non esiste", () => {
     expect(fitFor(maniConFitPicche(8), "ns", "notrump")).toBeNull();
   });
+});
+
+describe("cardOptions", () => {
+  it("dà una valutazione per ogni carta che si può giocare", async () => {
+    const lista = await cardOptions(deals[0], "spade", "north");
+    // Nord ha tredici carte e deve aprire: tutte sono giocabili.
+    expect(lista.length).toBe(13);
+    for (const o of lista) {
+      expect(o.tricks).toBeGreaterThanOrEqual(0);
+      expect(o.tricks).toBeLessThanOrEqual(13);
+    }
+  }, 60000);
+
+  it("a mano finita non chiama il solver e torna una lista vuota", async () => {
+    // Il solver, ricevuto una posizione senza carte, muore dentro il
+    // WebAssembly con «null function»: un errore che dallo stack non si
+    // capisce e che non si può intercettare a valle. Visto in produzione il
+    // 15/08/2026 sullo studio dell'insegnante, alla tredicesima presa.
+    const vuote = { north: [] as Card[], east: [], south: [], west: [] };
+    await expect(cardOptions(vuote, "spade", "north")).resolves.toEqual([]);
+  }, 60000);
 });

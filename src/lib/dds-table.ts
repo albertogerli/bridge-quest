@@ -223,6 +223,13 @@ export async function cardOptions(
   leader: Position,
   currentTrick: readonly Card[] = []
 ): Promise<OpzioneCarta[]> {
+  // A mano finita non c'è più niente da valutare, e chiederlo lo stesso non
+  // dà una lista vuota: il solver riceve una posizione senza carte e muore
+  // dentro il WebAssembly con «null function», un errore che dallo stack non
+  // si capisce e che non si può intercettare più a valle. Visto in produzione
+  // il 15/08/2026 su /istruttori/studio, giocando la tredicesima presa.
+  if (Object.values(hands).every((h) => h.length === 0)) return [];
+
   const dds = await getDds();
   const res = dds.SolveBoardPBN(
     {
