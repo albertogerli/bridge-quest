@@ -132,9 +132,24 @@ export function useSupabaseSync() {
               badge_id: badgeId,
             }));
             if (rows.length > 0) {
-              await supabase.from("badges").upsert(rows, {
-                onConflict: "user_id,badge_id",
-              });
+              /**
+               * `ignoreDuplicates`, cioè «inserisci se non c'è» e basta.
+               *
+               * Un upsert normale chiede al database anche il permesso di
+               * AGGIORNARE, e su `badges` quel permesso non c'è: esistono solo
+               * le regole di lettura e di inserimento. Il risultato era un 403
+               * a ogni sincronizzazione — quattro o cinque per sessione nei log
+               * di un utente — e i badge conquistati non arrivavano mai al
+               * database: chi cambiava dispositivo li ritrovava spariti.
+               *
+               * E la regola mancante non va aggiunta: un badge conquistato non
+               * cambia più. Poter aggiornare una riga vorrebbe dire poter
+               * riscrivere la data in cui è stato preso.
+               */
+              const { error: eBadge } = await supabase
+                .from("badges")
+                .upsert(rows, { onConflict: "user_id,badge_id", ignoreDuplicates: true });
+              if (eBadge) logError("sync:badges", eBadge);
             }
           } catch (e) {
             logError("sync:badges", e);

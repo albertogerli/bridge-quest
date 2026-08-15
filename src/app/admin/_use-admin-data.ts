@@ -73,65 +73,52 @@ export function useAdminData(): AdminData {
     setFetchError(null);
 
     try {
-      // I dati personali degli iscritti passano dalla RPC admin_list_users(),
-      // protetta da is_admin() lato DB: le stesse colonne non sono più
-      // leggibili dal client con la sessione dell'utente.
-      // Il fallback sulla lettura diretta copre l'intervallo fra il deploy di
-      // questo codice e l'esecuzione di scripts/sql/pii-columns-2026-08.sql.
+      /**
+       * I dati personali passano SOLO dalla RPC `admin_list_users()`, protetta
+       * da `is_admin()` lato database.
+       *
+       * NIENTE PIÙ RIPIEGO SULLA LETTURA DIRETTA. C'era, e serviva a coprire
+       * l'ora fra il deploy di questo codice e l'esecuzione dello script che
+       * ha tolto i permessi su `profiles` — cioè il 9 agosto 2026. Da allora
+       * quella lettura non può che essere negata, e il ripiego faceva una cosa
+       * sola: prendere un guasto qualunque della RPC (rete caduta, connessione
+       * chiusa, timeout) e trasformarlo nel messaggio «Errore DB: permission
+       * denied for table profiles», che manda a cercare un problema di
+       * permessi che non esiste. È successo il 15/08/2026.
+       *
+       * Si riprova una volta, perché la connessione chiusa è passeggera; se
+       * non va, si dice cosa non è andato davvero.
+       */
       let allProfiles: ProfileRecord[] = [];
       // ATTENZIONE: PostgREST tronca OGNI risposta a 1000 righe, RPC incluse.
       // Senza questo ciclo il pannello mostrava esattamente 1000 utenti su
       // 1083 — un numero tondo e verosimile, quindi un errore che passa
       // inosservato. Si pagina finché una pagina torna incompleta.
       const RPC_PAGE = 1000;
-      let rpcOk = true;
       for (let from = 0; ; from += RPC_PAGE) {
-        const { data, error } = await supabase
+        let { data, error } = await supabase
           .rpc("admin_list_users")
           .range(from, from + RPC_PAGE - 1);
 
         if (error) {
-          // RPC non ancora creata (o non autorizzata): si usa il fallback.
-          rpcOk = false;
-          allProfiles = [];
-          break;
+          ({ data, error } = await supabase
+            .rpc("admin_list_users")
+            .range(from, from + RPC_PAGE - 1));
+        }
+
+        if (error) {
+          reportError("admin:elenco-utenti", error);
+          setFetchError(
+            `L'elenco degli iscritti non è arrivato: ${error.message}. ` +
+              "Se il problema resta, controlla di avere ancora il ruolo di amministratore."
+          );
+          setLoading(false);
+          return;
         }
 
         const page = (data ?? []) as ProfileRecord[];
         allProfiles = allProfiles.concat(page);
         if (page.length < RPC_PAGE) break;
-      }
-
-      if (!rpcOk) {
-        let page = 0;
-        const pageSize = 1000;
-        let hasMore = true;
-
-        while (hasMore) {
-          const { data, error } = await supabase
-            .from("profiles")
-            .select("id, display_name, bbo_username, profile_type, xp, streak, hands_played, asd_code, asd_name, marketing_consent, total_minutes, created_at, last_login, platform, role")
-            .range(page * pageSize, (page + 1) * pageSize - 1)
-            .order("created_at", { ascending: false });
-
-          if (error) {
-            reportError("admin:fetch-profiles", error);
-            setFetchError(`Errore DB: ${error.message}`);
-            setLoading(false);
-            return;
-          }
-
-          if (data && data.length > 0) {
-            allProfiles = allProfiles.concat(data as ProfileRecord[]);
-            if (data.length < pageSize) {
-              hasMore = false;
-            } else {
-              page++;
-            }
-          } else {
-            hasMore = false;
-          }
-        }
       }
 
       const profiles = allProfiles;
