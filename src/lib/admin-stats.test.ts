@@ -845,3 +845,50 @@ describe("utenti attivi per giorno — «attivo» non è «ultima visita»", () 
     expect(s.dailyActive[0].activeUsers).toHaveLength(1);
   });
 });
+
+describe("provincia e regione nella distribuzione", () => {
+  const profili = [
+    { id: "1", asd_name: "Bridge Milano", xp: 100, total_minutes: 30, created_at: "2026-01-01" },
+    { id: "2", asd_name: "Bridge Torino", xp: 50, total_minutes: 10, created_at: "2026-01-02" },
+  ];
+
+  it("senza l'elenco dei circoli non si sa la provincia: tutto finisce in N/D", () => {
+    // È lo stato in cui la dashboard restava quando i circoli arrivavano dopo
+    // il calcolo: i riquadri «Per Provincia» e «Per Regione» mostravano una
+    // riga sola, «N/D», con dentro tutti gli iscritti.
+    const stats = computeStats({
+      profiles: profili as never,
+      users: mapProfilesToUsers(profili as never),
+      logins: [],
+      asdClubs: [],
+      now: new Date("2026-02-01"),
+      instructors: 0,
+      classes: 0,
+      students: 0,
+    });
+    const perProvincia = buildAsdRows(stats.asdDistribution, "province");
+    expect(perProvincia).toHaveLength(1);
+    expect(perProvincia[0].label).toBe("N/D");
+  });
+
+  it("con l'elenco dei circoli le province ci sono", () => {
+    const stats = computeStats({
+      profiles: profili as never,
+      users: mapProfilesToUsers(profili as never),
+      logins: [],
+      asdClubs: [
+        { name: "Bridge Milano", province: "MI" },
+        { name: "Bridge Torino", province: "TO" },
+      ] as never,
+      now: new Date("2026-02-01"),
+      instructors: 0,
+      classes: 0,
+      students: 0,
+    });
+    const perProvincia = buildAsdRows(stats.asdDistribution, "province");
+    expect(perProvincia.map((r) => r.label).sort()).toEqual(["MI", "TO"]);
+
+    const perRegione = buildAsdRows(stats.asdDistribution, "regione");
+    expect(perRegione.map((r) => r.label).sort()).toEqual(["Lombardia", "Piemonte"]);
+  });
+});
