@@ -89,10 +89,40 @@ export function contrattiDaRivedere(opzioni: {
    * fatto 420» è proprio la cosa da imparare.
    */
   ev?: (c: { level: number; strain: Strain; declarer: Position }) => number | null;
+  /**
+   * Mostra una denominazione anche quando nessun contratto ci regge.
+   *
+   * Per la propria linea non serve: un 1♣ che cade non è un contratto da
+   * proporre. Per gli AVVERSARI sì, ed è la cosa più utile della sezione:
+   * «al massimo facevano 2♥, giù di uno» dice che la mano era vostra, e senza
+   * quella riga la sezione sparirebbe proprio nelle mani in cui la risposta è
+   * più interessante.
+   */
+  ancheSenzaContratto?: boolean;
 }): ContrattoValutato[] {
-  const { table, lato, vulnerability, riferimento, metro, giocato, ev } = opzioni;
+  const { table, lato, vulnerability, riferimento, metro, ev } = opzioni;
   const posti: Position[] = lato === "ns" ? ["north", "south"] : ["east", "west"];
   const inZona = vulnerability === "both" || vulnerability === lato;
+
+  /**
+   * Il contratto giocato entra in questa tabella SOLO se è di questa linea.
+   *
+   * Quando il contratto finale è degli avversari, la riga finiva qui dentro
+   * lo stesso: marcata «il vostro», col punteggio dal punto di vista di chi
+   * dichiarava (−400 per loro) e il valore atteso dal punto di vista di
+   * Nord-Sud (+195) sulla stessa riga. Due numeri con due segni opposti, e un
+   * contratto che nessuno dei due aveva dichiarato attribuito a chi guarda.
+   * Visto in produzione il 15/08/2026 sul torneo.
+   *
+   * Il controllo sta qui e non nelle pagine: è la funzione a sapere di quale
+   * linea sta parlando.
+   */
+  const giocato =
+    opzioni.giocato &&
+    (opzioni.giocato.declarer === undefined ||
+      posti.includes(opzioni.giocato.declarer))
+      ? opzioni.giocato
+      : null;
 
   const valuta = (
     level: number,
@@ -118,7 +148,12 @@ export function contrattiDaRivedere(opzioni: {
       vulnerable: inZona,
     }).score;
     const etichetta = `${level}${DENOMINAZIONI.find((d) => d.strain === strain)!.etichetta}`;
-    const atteso = ev?.({ level, strain, declarer }) ?? null;
+    // `ev` risponde sempre dal punto di vista di Nord-Sud, come il par; qui
+    // dentro tutto è dal punto di vista di `lato`, punteggio compreso.
+    // Mescolare i due segni farebbe apparire i contratti avversari come
+    // disastri per chi li dichiara.
+    const grezzo = ev?.({ level, strain, declarer }) ?? null;
+    const atteso = grezzo === null ? null : lato === "ns" ? grezzo : -grezzo;
     return {
       etichetta,
       level,
@@ -128,7 +163,12 @@ export function contrattiDaRivedere(opzioni: {
       punteggio,
       ev: atteso,
       stelle: valutaLicita(atteso ?? punteggio, riferimento, metro).stelle,
-      tuo: giocato?.level === level && giocato?.strain === strain,
+      // Il dichiarante conta: con lo stesso contratto giocato dall'altra parte
+      // del tavolo le righe diventano due, e devono essere distinguibili.
+      tuo:
+        giocato?.level === level &&
+        giocato?.strain === strain &&
+        (giocato.declarer === undefined || giocato.declarer === declarer),
     };
   };
 
@@ -137,7 +177,7 @@ export function contrattiDaRivedere(opzioni: {
     const prese = Math.max(...posti.map((p) => table.tricks[d.chiave][p]));
     // Sotto le sette prese non esiste nessun contratto mantenibile in quella
     // denominazione: si lascia fuori invece di mostrare un 1♣ che cade.
-    if (prese < 7) continue;
+    if (prese < 7 && !opzioni.ancheSenzaContratto) continue;
 
     // Il livello migliore: quello col valore atteso più alto quando c'è —
     // perché è il metro delle stelle — altrimenti quello che rende di più su
@@ -150,7 +190,7 @@ export function contrattiDaRivedere(opzioni: {
         d.strain,
         d.chiave,
         // Se è il contratto che avete dichiarato, la riga è la vostra: va col
-        // vostro dichiarante, altrimenti ne nascerebbero due.
+        // vostro dichiarante, altrimenti ne nascerebbe una che non è la vostra.
         giocato?.strain === d.strain && giocato.level === level
           ? giocato.declarer
           : undefined
@@ -166,6 +206,28 @@ export function contrattiDaRivedere(opzioni: {
   if (giocato && !righe.some((r) => r.tuo)) {
     const d = DENOMINAZIONI.find((x) => x.strain === giocato.strain);
     if (d) righe.push(valuta(giocato.level, giocato.strain, d.chiave, giocato.declarer));
+  }
+
+  /**
+   * LO STESSO CONTRATTO DALL'ALTRA PARTE DEL TAVOLO, quando cambia il conto.
+   *
+   * A carte scoperte le prese dipendono da CHI dichiara: l'attacco arriva
+   * dalla sinistra del dichiarante, e una carta in meno da girare può valere
+   * due prese. Se avete dichiarato 4♠ da Sud e da Nord ne facevano due di più,
+   * vederlo scritto è metà della lezione — mentre vedere un numero solo fa
+   * pensare che il conto sia ballerino, ed è la domanda che si sono fatti tutti
+   * quelli a cui è capitato.
+   */
+  const mia = righe.find((r) => r.tuo);
+  if (mia) {
+    const altro = posti.find((p) => p !== mia.declarer);
+    const chiave = DENOMINAZIONI.find((d) => d.strain === mia.strain)?.chiave;
+    if (altro && chiave && table.tricks[chiave][altro] !== mia.prese) {
+      const gemella = valuta(mia.level, mia.strain, chiave, altro);
+      if (!righe.some((r) => r.etichetta === gemella.etichetta && r.declarer === altro)) {
+        righe.push(gemella);
+      }
+    }
   }
 
   return righe.sort((a, b) => b.punteggio - a.punteggio);
