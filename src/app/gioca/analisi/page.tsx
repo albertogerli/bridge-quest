@@ -8,6 +8,7 @@ import { HandReplay } from "@/components/hand-replay";
 import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { TurningPointPanel } from "@/components/turning-point-panel";
+import { reportError } from "@/lib/report-error";
 
 interface GameData {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
@@ -39,6 +40,8 @@ function AnalisiPage() {
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [currentTrick, setCurrentTrick] = useState(0);
   const [showShareSuccess, setShowShareSuccess] = useState(false);
+  /** Il browser ha negato la copia: va detto, invece di fingere che sia andata. */
+  const [copiaNegata, setCopiaNegata] = useState(false);
   const searchParams = useSearchParams();
   const gameIndex = searchParams.get("game");
 
@@ -108,23 +111,35 @@ Gioca su bridgelab.it`;
 
     if (navigator.share) {
       navigator
-        .share({
-          title: "Analisi Bridge LAB",
-          text,
-        })
-        .catch(() => {
-          // Fallback to clipboard
-          navigator.clipboard.writeText(text);
-          setShowShareSuccess(true);
-          setTimeout(() => setShowShareSuccess(false), 2000);
-        });
+        .share({ title: "Analisi Bridge LAB", text })
+        .catch(() => void copiaNegliAppunti(text));
     } else {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(text);
-      setShowShareSuccess(true);
-      setTimeout(() => setShowShareSuccess(false), 2000);
+      void copiaNegliAppunti(text);
     }
   };
+
+  /**
+   * Copia negli appunti, e dice «copiato» solo se ha copiato davvero.
+   *
+   * `writeText` può essere RIFIUTATA — Safari la concede solo in risposta
+   * diretta a un tocco, e certi browser dentro le app la negano sempre. Senza
+   * il `catch` quella promessa rifiutata finiva fra gli errori non gestiti
+   * (visto in produzione il 15/08/2026: «Write permission denied»), e nel
+   * frattempo la schermata mostrava lo stesso «copiato» a chi non aveva
+   * niente negli appunti — che è il difetto peggiore dei due, perché lo
+   * scopre solo quando prova a incollare.
+   */
+  async function copiaNegliAppunti(testo: string) {
+    try {
+      await navigator.clipboard.writeText(testo);
+      setShowShareSuccess(true);
+      setTimeout(() => setShowShareSuccess(false), 2000);
+    } catch (err) {
+      reportError("analisi:copia", err);
+      setCopiaNegata(true);
+      setTimeout(() => setCopiaNegata(false), 4000);
+    }
+  }
 
   if (!gameData) {
     return (
@@ -225,6 +240,12 @@ Gioca su bridgelab.it`;
         {showShareSuccess && (
           <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
             ✅ Copiato negli appunti!
+          </div>
+        )}
+
+        {copiaNegata && (
+          <div className="fixed top-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
+            Il browser non ha concesso la copia. Seleziona il testo a mano.
           </div>
         )}
 

@@ -43,7 +43,14 @@ export function InstructorCard() {
       .catch((err) => {
         // Un guasto vero qui non deve rovinare la home: si mostrano comunque
         // gli strumenti, senza il conteggio.
-        reportError("home:classi-istruttore", err);
+        //
+        // «Non autenticato» però non è un guasto: è la sessione scaduta fra il
+        // disegno della pagina e la chiamata. Succede a chi lascia la scheda
+        // aperta tutta la notte, non c'è niente da correggere, e segnalarlo
+        // riempie le segnalazioni della pagina più visitata del sito.
+        if (!(err instanceof Error) || err.message !== "Non autenticato") {
+          reportError("home:classi-istruttore", err);
+        }
         if (alive) setClassCount(0);
       });
     return () => {
