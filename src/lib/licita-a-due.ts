@@ -53,8 +53,22 @@ export function licitaFinita(bids: readonly string[]): boolean {
 }
 
 /** Il contratto raggiunto, o `null` se sono passati tutti. */
+/**
+ * Il contratto finale, contro compreso.
+ *
+ * IL CONTRO NON È UN CONTRATTO. Questa funzione prendeva l'ultima
+ * dichiarazione diversa da «passo», che dopo un contro è il contro stesso: la
+ * schermata mostrava «Contratto: X» invece di «1♠ contrato». È la terza copia
+ * dello stesso conto trovata nel progetto — le altre due, la pagina di
+ * allenamento e la funzione del database, sono già state corrette a distanza
+ * di mesi l'una dall'altra. Qui si delega a `licita-mano.ts`, dove il conto
+ * vive una volta sola.
+ */
 export function contrattoFinale(bids: readonly string[]): string | null {
-  return [...bids].reverse().find((b) => b !== "P") ?? null;
+  const i = bids.map((b) => /^[1-7]/.test(b)).lastIndexOf(true);
+  if (i < 0) return null;
+  const doppio = bids.slice(i).includes("XX") ? "XX" : bids.slice(i).includes("X") ? "X" : "";
+  return bids[i] + doppio;
 }
 
 export async function apriLicita(input: {

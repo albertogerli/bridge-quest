@@ -278,7 +278,11 @@ as $function$
       WHERE r.mano_id = p_mano_id AND r.user_id <> auth.uid()
     ),
     'contratti', (
-      SELECT coalesce(jsonb_agg(x ORDER BY x->>'quanti' DESC), '[]'::jsonb)
+      -- `->>` restituisce testo: ordinando così, «9» verrebbe prima di «10».
+      -- Il database in produzione ha già la versione giusta; questo file è la
+      -- fonte da cui si ricostruisce tutto, e una differenza qui è una bomba a
+      -- orologeria per il giorno in cui lo si rieseguirà.
+      SELECT coalesce(jsonb_agg(x ORDER BY (x->>'quanti')::int DESC), '[]'::jsonb)
       FROM (
         SELECT jsonb_build_object(
           'contratto', coalesce(r.contratto, 'passo'),

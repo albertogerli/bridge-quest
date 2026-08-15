@@ -150,6 +150,8 @@ export function useSupabaseSync() {
               moduleId: string;
               question?: string;
               wrongCount: number;
+              /** La scatola di Leitner: senza, il ripasso riparte da capo. */
+              box?: number;
               lastReview?: string;
               nextReview?: string;
             }> = JSON.parse(reviewRaw);
@@ -164,6 +166,11 @@ export function useSupabaseSync() {
                 module_id: item.moduleId,
                 question: item.question || null,
                 wrong_count: item.wrongCount,
+                // La scatola va salvata, altrimenti chi cambia dispositivo
+                // ritrova ogni carta nella prima e rifà da capo tutto il
+                // ripasso già fatto — proprio quello che il metodo serve a
+                // evitare.
+                box: item.box ?? 1,
                 last_review: item.lastReview || null,
                 next_review: item.nextReview || null,
               }));
@@ -208,6 +215,7 @@ export function useSupabaseSync() {
           moduleId: string;
           question?: string;
           wrongCount: number;
+          box?: number;
           lastReview?: string;
           nextReview?: string;
         }> = [];
@@ -262,6 +270,7 @@ export function useSupabaseSync() {
                 moduleId: r.module_id,
                 question: r.question,
                 wrongCount: r.wrong_count,
+                box: r.box ?? 1,
                 lastReview: r.last_review,
                 nextReview: r.next_review,
               };

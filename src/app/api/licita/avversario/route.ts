@@ -6,7 +6,15 @@ import { benEndpoint, rateLimit } from "@/lib/ben-guard";
 import { biddingToCTX, handToPBN, positionToBEN } from "@/lib/ben-format";
 import type { Card, Position } from "@/lib/bridge-engine";
 
-const TIMEOUT_MS = 15000;
+/**
+ * Più corto del tetto della funzione, altrimenti non serve a niente: quando
+ * BEN è lento la piattaforma abbatte la funzione prima che il timeout scatti,
+ * e al browser arriva una pagina di errore invece del ripiego. Qui la licita
+ * a due resterebbe ferma per sempre, perché nessuno la sblocca.
+ */
+export const maxDuration = 30;
+
+const TIMEOUT_MS = 8000;
 const ORDINE: Position[] = ["north", "east", "south", "west"];
 
 const bodySchema = z.object({ sessionId: z.string().uuid() });

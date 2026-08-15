@@ -44,6 +44,27 @@ function getWorker(): Worker | null {
 
     worker.onerror = (err) => {
       console.warn("[DDS-select] Worker error:", err.message);
+      /**
+       * PRIMA SI RISPONDE, POI SI SVUOTA.
+       *
+       * `pending.clear()` da solo lascia le promesse in volo senza risposta
+       * per sempre: chi aspettava resta appeso, e la rete di sicurezza col
+       * timeout non scatta perché cerca la richiesta nella mappa e non la
+       * trova più. In pratica la partita si ferma su «Verifica del
+       * reclamo…» e non si gioca più una carta.
+       *
+       * La risposta neutra dice «non disponibile», che è vero, e ogni
+       * chiamante sa già cosa farci: è lo stesso valore delle reti di
+       * sicurezza qui sotto.
+       */
+      for (const [, req] of pending) {
+        (req.resolve as (r: DDSResult | DDSSelectResult) => void)({
+          card: null,
+          tricks: 0,
+          available: false,
+          timeMs: 0,
+        } as DDSResult & DDSSelectResult);
+      }
       pending.clear();
       worker?.terminate();
       worker = null;
