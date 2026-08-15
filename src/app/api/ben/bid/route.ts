@@ -14,11 +14,26 @@ import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/
  * ripiego onesto sarebbe potuto continuare.
  *
  * `maxDuration` è dichiarato qui sotto proprio per non doverlo indovinare.
+ *
+ * DODICI SECONDI, E NON È UN NUMERO A CASO. Misurato sui log di produzione del
+ * 15/08/2026, 21 chiamate reali a `/bid`:
+ *   · mediana 0,51 s — la maggior parte è immediata;
+ *   · con asta VUOTA (l'apertura) sempre 0,16 s: il modello è già caldo, e un
+ *     ping periodico per tenerlo su non servirebbe a niente;
+ *   · con un'asta in corso oscilla fra 0,3 e 9,16 s, a seconda di quanto è
+ *     difficile campionare mani compatibili con quelle dichiarazioni;
+ *   · massimo osservato 9,16 s, nessuna oltre i 10.
+ * A 8 secondi ne tagliavamo 4 su 21 — quasi una dichiarazione su cinque
+ * diventava «l'avversario non ha risposto in tempo». A 12 non se ne taglia
+ * nessuna, e restiamo comunque ben sotto il tetto della funzione.
+ *
+ * NON È LA MEMORIA: l'istanza ne ha in abbondanza e non ha mai riavviato per
+ * esaurimento. È il costo dell'inferenza, e si paga aspettando.
  */
 /** Il tetto della funzione: il timeout qui sopra deve starci sotto. */
 export const maxDuration = 30;
 
-const TIMEOUT_MS = 8000;
+const TIMEOUT_MS = 12000;
 const RATE_MAX_PER_MIN = 60;
 
 const bodySchema = z.object({
