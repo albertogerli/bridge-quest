@@ -61,9 +61,12 @@ describe("valutaBoard", () => {
   it("SI PUÒ VINCERE DICHIARANDO MALE, e le stelle lo dicono", () => {
     // È il caso che giustifica i due punteggi insieme: A vince l'IMP ma
     // entrambe hanno mancato la manche a picche, e nessuna prende tre stelle.
-    // (Nota: fra parziali non vince sempre il contratto più alto — 1♠ con tre
-    // surlevée batte 3♠ con una. Per questo l'esempio usa 3SA, che è manche.)
-    const e = valutaBoard({ tricks, parScore: 420, contrattoA: "3SA", contrattoB: "2♠" });
+    //
+    // A sta in un parziale a picche (170), B è caduta a cuori (-50). Serviva
+    // cambiare l'esempio quando le soglie sono passate agli IMP: 3SA a 400
+    // contro un par di 420 è UN solo IMP, e prende tre stelle — giustamente,
+    // perché venti punti sotto il par non è dichiarare male.
+    const e = valutaBoard({ tricks, parScore: 420, contrattoA: "3♠", contrattoB: "2♥" });
     expect(e.aFavoreDi).toBe("A");
     expect(e.stelleA).toBeLessThan(3);
     expect(e.stelleB).toBeLessThan(3);

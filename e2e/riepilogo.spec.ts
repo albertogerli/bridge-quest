@@ -30,6 +30,23 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
   await page.goto("/gioca/licita");
   await expect(page.getByText(/PO/).first()).toBeVisible({ timeout: 60_000 });
 
+  /**
+   * Il mazziere scritto nell'intestazione dev'essere quello segnato nella
+   * griglia.
+   *
+   * Le mani della scorta ruotano il mazziere, e la griglia lo riceveva fisso
+   * su Sud: tre volte su quattro attribuiva ogni dichiarazione al posto
+   * sbagliato, e l'asta mostrata non era quella giocata. Segnalato da uno
+   * screenshot il 15/08/2026 — dal codice non si vedeva, perché entrambe le
+   * parti erano «giuste» da sole.
+   */
+  const intestazione = await page.getByText(/Sei Sud · (apre|apri)/).innerText();
+  const mazziere = intestazione.includes("apri tu")
+    ? "Sud"
+    : intestazione.replace(/.*apre\s+/, "").trim();
+  const colonnaMazziere = page.getByText("mazziere", { exact: true }).locator("xpath=..");
+  await expect(colonnaMazziere).toContainText(mazziere);
+
   // Un contratto qualunque: 1♣ è sempre lecito come prima dichiarazione.
   // L'etichetta accessibile del pulsante è «Dichiara 1♣», non «1♣».
   await page.getByRole("button", { name: "Dichiara 1♣" }).click();
@@ -51,10 +68,22 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
 
   // E la tabella di cosa valeva ogni contratto, col proprio segnato.
   await expect(page.getByText("Cosa valeva ogni contratto")).toBeVisible();
-  // La colonna del valore atteso: è da lì che vengono le stelle, e se sparisse
-  // vorrebbe dire che le mani della scorta non portano più le distribuzioni —
-  // cioè che il voto è tornato a confrontare due metri diversi.
-  await expect(page.getByRole("columnheader", { name: "In media" })).toBeVisible();
+  /**
+   * La colonna del valore atteso c'è quando il voto è dato col valore atteso,
+   * e non c'è quando è dato col par — e le due cose devono coincidere sempre.
+   *
+   * Quale dei due metri tocchi dipende dalla mano: se è degli avversari vale
+   * il par (vedi `riferimento`). Il controllo utile non è «la colonna c'è», è
+   * «i due pezzi dicono la stessa cosa»: se divergessero, il voto starebbe di
+   * nuovo confrontando due metri diversi.
+   */
+  const verdetto = await page.getByText(/rende in media|par della smazzata/).innerText();
+  const colonnaAttesa = page.getByRole("columnheader", { name: "In media" });
+  if (verdetto.includes("rende in media")) {
+    await expect(colonnaAttesa).toBeVisible();
+  } else {
+    await expect(colonnaAttesa).toHaveCount(0);
+  }
   await expect(page.getByText("← il vostro")).toBeVisible();
   await expect(page.getByRole("columnheader", { name: "Stelle" })).toBeVisible();
 

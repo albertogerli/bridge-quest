@@ -105,6 +105,8 @@ export default function LicitaPage() {
   const [licita, setLicita] = useState<string[]>([]);
   const [attesa, setAttesa] = useState(false);
   const [annullata, setAnnullata] = useState(false);
+  /** Un avversario non ha risposto e ha passato d'ufficio: va detto. */
+  const [avversarioMuto, setAvversarioMuto] = useState(false);
   const [esito, setEsito] = useState<EsitoLicita | null>(null);
   const [contrattoFinale, setContrattoFinale] = useState<string>("");
   const [stelleTotali, setStelleTotali] = useState(0);
@@ -250,6 +252,22 @@ export default function LicitaPage() {
    * si conta: una mano persa per un guasto nostro punisce l'utente per una
    * cosa che non ha fatto lui, ed è peggio che non avere l'esercizio.
    */
+  /** Una dichiarazione dal motore, con l'errore già ridotto a «non risponde». */
+  const chiediABen = async (m: Mano, chi: Position, bids: string[]) => {
+    try {
+      return await benBid({
+        hand: m.deal[chi],
+        seat: chi,
+        dealer: m.dealer,
+        vulnerability: m.vulnerability,
+        bidding: { dealer: m.dealer, bids },
+      });
+    } catch (err) {
+      reportError("licita:ben", err);
+      return { bid: "P", fallback: true };
+    }
+  };
+
   const avanza = async (m: Mano, iniziali: string[]) => {
     const passiFinali = (b: string[]) => {
       const ultimo = b.map((x) => x !== "P").lastIndexOf(true);
@@ -265,24 +283,33 @@ export default function LicitaPage() {
     while (!passiFinali(bids)) {
       const chi = ordine[bids.length % 4];
       if (chi === "south") break;
-      let r;
-      try {
-        r = await benBid({
-          hand: m.deal[chi],
-          seat: chi,
-          dealer: m.dealer,
-          vulnerability: m.vulnerability,
-          bidding: { dealer: m.dealer, bids },
-        });
-      } catch (err) {
-        reportError("licita:ben", err);
-        r = { bid: "P", fallback: true };
-      }
+      /**
+       * Una riprova, poi si decide in base a CHI è rimasto muto.
+       *
+       * Il motore neurale su certe aste impiega più di dieci secondi e non
+       * risponde in tempo: succedeva sull'asta «P 1♦ 1♠ contro P», sempre, e
+       * l'esercizio si interrompeva. Annullare la mano per il silenzio di un
+       * AVVERSARIO è sproporzionato: quello che si sta imparando è l'intesa
+       * col compagno, e il voto non dipende da cosa avrebbero detto loro. Si
+       * fa passare quel posto e LO SI DICE, che è diverso dal fingere che
+       * abbia scelto di passare.
+       *
+       * Se invece a tacere è il COMPAGNO, la mano si annulla: senza di lui
+       * l'esercizio non esiste, e dargli un passo inventato falserebbe proprio
+       * la cosa che si sta misurando.
+       */
+      let r = await chiediABen(m, chi, bids);
+      if (r.fallback) r = await chiediABen(m, chi, bids);
+
       if (r.fallback) {
-        // Mano annullata: niente stelle, niente conteggio.
-        setAnnullata(true);
-        setAttesa(false);
-        return;
+        if (chi === "north") {
+          // Mano annullata: niente stelle, niente conteggio.
+          setAnnullata(true);
+          setAttesa(false);
+          return;
+        }
+        setAvversarioMuto(true);
+        r = { bid: "P", fallback: false };
       }
       bids = [...bids, r.bid];
       setLicita(bids);
@@ -364,6 +391,7 @@ export default function LicitaPage() {
     setEsito(null);
     setContrattoFinale("");
     setAnnullata(false);
+    setAvversarioMuto(false);
     setCampo(null);
     setGiocato(null);
     setRound((r) => r + 1);
@@ -427,7 +455,11 @@ export default function LicitaPage() {
               solo le dichiarazioni lecite premibili. Vedi components/bridge/asta. */}
           <div className="mb-4">
             <Asta
-              dealer="south"
+              // Il mazziere è quello della mano, non sempre Sud: le mani della
+              // scorta lo ruotano. Con «south» fisso la griglia attribuiva
+              // ogni dichiarazione al posto sbagliato — tre volte su quattro —
+              // e l'asta mostrata non era quella giocata.
+              dealer={mano.dealer}
               bids={licita}
               ioSono="south"
               onDichiara={dichiara}
@@ -439,6 +471,14 @@ export default function LicitaPage() {
               </p>
             )}
           </div>
+
+          {avversarioMuto && !annullata && (
+            <p className="text-xs text-muted-foreground mb-3">
+              Un avversario non ha risposto in tempo e ha passato d&apos;ufficio:
+              la sua dichiarazione non c&apos;è, non è che abbia scelto di
+              passare. Il voto non ne risente — dipende dalla tua linea.
+            </p>
+          )}
 
           {annullata && (
             <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">

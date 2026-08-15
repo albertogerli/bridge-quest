@@ -22,9 +22,14 @@ describe("valutaLicita", () => {
   });
 
   it("due stelle per un parziale al posto di un altro", () => {
-    // 140 invece di 170: si è scelto il colore meno redditizio.
-    expect(valutaLicita(140, 170).stelle).toBe(2);
+    // 420 invece di 620: la manche giusta nel colore sbagliato, 5 IMP.
     expect(valutaLicita(420, 620).stelle).toBe(2);
+  });
+
+  it("trenta punti di scarto in un parziale non sono un errore", () => {
+    // 140 invece di 170 è un solo IMP: con le soglie in punti secchi prendeva
+    // due stelle come una manche mancata di 200, il che non aveva senso.
+    expect(valutaLicita(140, 170).stelle).toBe(3);
   });
 
   it("una stella quando si perde una manche", () => {
@@ -40,11 +45,26 @@ describe("valutaLicita", () => {
     expect(valutaLicita(90, 1430).stelle).toBe(0);
   });
 
-  it("i confini stanno dove dice la regola", () => {
-    expect(valutaLicita(100, 300).stelle).toBe(2);   // esattamente 200
-    expect(valutaLicita(99, 300).stelle).toBe(1);    // 201
-    expect(valutaLicita(100, 600).stelle).toBe(1);   // esattamente 500
-    expect(valutaLicita(99, 600).stelle).toBe(0);    // 501
+  it("i confini stanno dove dice la regola, e sono in IMP", () => {
+    // 40 punti = 1 IMP (pieno), 50 = 2 IMP.
+    expect(valutaLicita(160, 200).stelle).toBe(3);
+    expect(valutaLicita(150, 200).stelle).toBe(2);
+    // 260 = 6 IMP, 270 = 7.
+    expect(valutaLicita(40, 300).stelle).toBe(2);
+    expect(valutaLicita(30, 300).stelle).toBe(1);
+    // 590 = 11 IMP, 600 = 12.
+    expect(valutaLicita(10, 600).stelle).toBe(1);
+    expect(valutaLicita(0, 600).stelle).toBe(0);
+  });
+
+  it("il caso che ha fatto cambiare la scala", () => {
+    // Mano da slam: il migliore rende 830, 3SA 668 e 5♣ 609. Con le soglie in
+    // punti secchi erano due stelle e una, per cinquantanove punti di
+    // differenza — un salto che nessuno saprebbe spiegare al tavolo.
+    expect(valutaLicita(668, 830).stelle).toBe(2);
+    expect(valutaLicita(609, 830).stelle).toBe(2);
+    // E chi ha mancato di più resta sotto.
+    expect(valutaLicita(482, 830).stelle).toBe(1);
   });
 
   it("regge i punteggi negativi da entrambe le parti", () => {

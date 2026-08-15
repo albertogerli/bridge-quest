@@ -21,11 +21,20 @@
  * atteso è già stato calcolato in fase di generazione — le mani in
  * `mani_generate`.
  *
- * LE SOGLIE SONO NOSTRE. Cuebids non pubblica le proprie («dipende da molti
- * fattori»). Queste sono scelte guardando cosa conta a lezione: perdere una
- * manche è un errore grosso, un parziale storto molto meno. Sono le stesse per
- * i due metri: la distanza si misura in punti di score in entrambi i casi.
+ * LA DISTANZA SI MISURA IN IMP, NON IN PUNTI.
+ * Prima le soglie erano in punti secchi — 200 e 500 — e sono state cambiate
+ * guardando un caso reale: su una mano da slam, 5♣ rendeva 609 e 3SA 668, e
+ * prendevano una stella e due. Cinquantanove punti di differenza, una stella
+ * di salto, perché cadevano ai due lati di una soglia fissa. Su una mano da
+ * parziale, invece, quegli stessi 200 punti sono un abisso.
+ *
+ * Gli IMP sono la scala che il bridge usa da sempre proprio per questo: sono
+ * concavi, quindi cento punti in basso contano più di cento punti in alto, ed
+ * è esattamente il correttivo che serve. Le soglie qui sotto sono nostre
+ * (Cuebids non pubblica le proprie), ma la scala non è più arbitraria.
  */
+
+import { rawToIMP } from "./bridge-scoring";
 
 /** Con che cosa si confronta il contratto raggiunto. */
 export type Metro = "esatto" | "atteso";
@@ -43,10 +52,15 @@ export interface EsitoLicita {
   commento: string;
 }
 
-/** Soglie, in punti persi rispetto al par. */
-const TRE_STELLE = 0;
-const DUE_STELLE = 200;
-const UNA_STELLA = 500;
+/**
+ * Soglie, in IMP persi rispetto al riferimento.
+ *
+ * Un IMP di scarto è rumore — 20 punti su una manche — e vale il pieno. Sopra
+ * gli undici si è persa una manche intera o peggio.
+ */
+const TRE_STELLE = 1;
+const DUE_STELLE = 6;
+const UNA_STELLA = 11;
 
 export function valutaLicita(
   punteggio: number,
@@ -54,11 +68,12 @@ export function valutaLicita(
   metro: Metro = "esatto"
 ): EsitoLicita {
   const differenza = Math.max(0, punteggioPar - punteggio);
+  const imp = rawToIMP(differenza);
 
   let stelle: number;
   let commento: string;
 
-  if (differenza <= TRE_STELLE) {
+  if (imp <= TRE_STELLE) {
     stelle = 3;
     if (metro === "atteso") {
       commento =
@@ -73,10 +88,10 @@ export function valutaLicita(
     }
   } else {
     const rif = metro === "atteso" ? "sotto il contratto migliore" : "sotto il par";
-    if (differenza <= DUE_STELLE) {
+    if (imp <= DUE_STELLE) {
       stelle = 2;
       commento = `Ci sei quasi: ${differenza} punti ${rif}. Di solito è un parziale al posto di un altro, o una presa in meno.`;
-    } else if (differenza <= UNA_STELLA) {
+    } else if (imp <= UNA_STELLA) {
       stelle = 1;
       commento = `${differenza} punti ${rif}: spesso vuol dire una manche mancata, o una dichiarata che non stava in piedi.`;
     } else {

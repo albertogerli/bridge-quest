@@ -3,7 +3,23 @@ import { z } from "zod";
 import { pbnCardToCard } from "@/lib/ben-format";
 import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
 
-const TIMEOUT_MS = 15000;
+/**
+ * Quanto si aspetta BEN prima di rinunciare, e perché questo numero conta.
+ *
+ * DEV'ESSERE PIÙ CORTO DEL LIMITE DELLA FUNZIONE, altrimenti non serve a
+ * niente: quando BEN è lento la piattaforma abbatte la funzione prima che il
+ * nostro timeout scatti, e al browser arriva una pagina di errore invece del
+ * ripiego pulito. È successo in produzione il 15/08/2026: l'asta
+ * «P 1♦ 1♠ contro P» faceva impiegare a BEN più di dodici secondi, ogni volta,
+ * e l'esercizio di licita si interrompeva con «mano annullata» — mentre con un
+ * ripiego onesto sarebbe potuto continuare.
+ *
+ * `maxDuration` è dichiarato qui sotto proprio per non doverlo indovinare.
+ */
+/** Il tetto della funzione: il timeout qui sopra deve starci sotto. */
+export const maxDuration = 30;
+
+const TIMEOUT_MS = 8000;
 const RATE_MAX_PER_MIN = 30;
 
 const bodySchema = z.object({
