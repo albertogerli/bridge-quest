@@ -14,7 +14,11 @@ import type { Card, Position } from "@/lib/bridge-engine";
  */
 export const maxDuration = 30;
 
-const TIMEOUT_MS = 8000;
+// Dodici come `/api/ben/bid`: è lo stesso motore e la stessa richiesta, e sui
+// log di produzione le dichiarazioni con un'asta in corso arrivano a 9,16 s.
+// Con otto se ne perdeva una su cinque, e qui una dichiarazione persa lascia
+// la licita ferma finché qualcuno non riapre la pagina.
+const TIMEOUT_MS = 12000;
 const ORDINE: Position[] = ["north", "east", "south", "west"];
 
 const bodySchema = z.object({ sessionId: z.string().uuid() });
