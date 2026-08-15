@@ -139,7 +139,10 @@ function Studio() {
     : "";
 
   useEffect(() => {
-    if (!stato) return;
+    // A mano finita la valutazione non serve — e chiederla mandava il solver
+    // in errore. Il motore ora si difende da solo, ma la chiamata resta
+    // inutile: qui si evita anche quella.
+    if (!stato || stato.phase === "finished") return;
     let vivo = true;
     const leader = stato.currentTrick[0]?.position ?? stato.currentPlayer;
     cardOptions(stato.hands, trump, leader, stato.currentTrick.map((p) => p.card))

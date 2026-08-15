@@ -70,6 +70,27 @@ const SERVICE_WORKER_NOISE = /serviceWorker\.register|wrsParams|_registerScript/
 const WAITING_SU_UNDEFINED =
   /(undefined|null).*\bwaiting\b|\bwaiting\b.*\b(undefined|null)\b|_registration is (undefined|null)/i;
 
+/**
+ * Terza forma, vista in produzione il 15/08/2026 su Chrome per Android:
+ *
+ *   TypeError: Failed to register a ServiceWorker for scope ('https://…/')
+ *   with script ('https://…/sw.js'): An unknown error occurred when fetching
+ *   the script.
+ *
+ * Il browser non è riuscito a SCARICARE lo script. Prima di considerarlo
+ * rumore è stato verificato che in produzione `/sw.js` risponda 200 con il
+ * tipo giusto e senza cache: risponde. Resta quindi la rete del telefono —
+ * connessione persa a metà, portale captive, dati esauriti — e per quella non
+ * c'è niente da correggere: senza service worker la PWA degrada da sola e
+ * l'utente non se ne accorge.
+ *
+ * Il filtro è stretto sul messaggio del browser e non sulla parola
+ * «ServiceWorker» da sola: un errore DENTRO il nostro service worker deve
+ * continuare ad arrivare.
+ */
+const REGISTRAZIONE_NON_SCARICATA =
+  /Failed to register a ServiceWorker/i;
+
 /** True se l'evento è rumore di registrazione del service worker. */
 export function isServiceWorkerNoise(event: {
   exception?: {
@@ -84,7 +105,12 @@ export function isServiceWorkerNoise(event: {
   return (
     frames.some(
       (f) => SERVICE_WORKER_NOISE.test(f.function ?? "") || SERVICE_WORKER_NOISE.test(f.filename ?? "")
-    ) || values.some((v) => WAITING_SU_UNDEFINED.test(v.value ?? ""))
+    ) ||
+    values.some(
+      (v) =>
+        WAITING_SU_UNDEFINED.test(v.value ?? "") ||
+        REGISTRAZIONE_NON_SCARICATA.test(v.value ?? "")
+    )
   );
 }
 
