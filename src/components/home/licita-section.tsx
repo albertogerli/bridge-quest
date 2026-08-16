@@ -61,7 +61,7 @@ export function LicitaSection() {
                 </span>
                 <span className="text-sm font-bold">{p.titolo}</span>
                 {p.nuovo && (
-                  <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide">
+                  <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide">
                     Nuovo
                   </span>
                 )}

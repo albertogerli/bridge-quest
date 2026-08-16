@@ -23,7 +23,7 @@ import { Stelle } from "@/components/bridge/stelle";
 import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import {
   confrontoCampo, evDelContratto, manoDaFare, registraRisultato, riferimento,
-  type ConfrontoCampo, type ManoCondivisa, migliorContrattoDi } from "@/lib/mani-condivise";
+  type ConfrontoCampo, type ManoCondivisa, riferimentoUnico } from "@/lib/mani-condivise";
 import type { Vulnerability } from "@/lib/catalog";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -102,7 +102,16 @@ export default function LicitaPage() {
    * sarebbe un secondo conto che può divergere dal primo.
    */
   const [giocato, setGiocato] = useState<
-    { level: number; strain: Strain; declarer: Position; lato: "ns" | "ew" } | null
+    // `doppio` serve alla tabella di fine mano: senza, la riga «← il vostro»
+    // mostrava il punteggio del contratto liscio anche quando era contrato,
+    // cioè un numero diverso da quello del voto qui sopra.
+    {
+      level: number;
+      strain: Strain;
+      declarer: Position;
+      lato: "ns" | "ew";
+      doppio: 1 | 2 | 4;
+    } | null
   >(null);
 
   const mano = preparata?.round === round ? preparata.dati : null;
@@ -158,7 +167,7 @@ export default function LicitaPage() {
       `${e.contratto} di ${ETICHETTA[e.declarer]} — ${e.prese} prese` +
         (e.lato === "ns" ? "" : " (dichiarano gli avversari)")
     );
-    setGiocato({ level: e.level, strain: e.strain, declarer: e.declarer, lato: e.lato });
+    setGiocato({ level: e.level, strain: e.strain, declarer: e.declarer, lato: e.lato, doppio: e.doppio });
     setEsito(voto);
     setStelleTotali((s) => s + voto.stelle);
     salva(e.contratto, e.declarer, e.punteggio, voto.stelle);
@@ -492,21 +501,18 @@ export default function LicitaPage() {
                     lato: "ew",
                     ancheSenzaContratto: true,
                     vulnerability: mano.vulnerability,
-                    // Le loro stelle si misurano sul LORO contratto migliore:
-                    // dicono quanto era buona la mano per loro, ed è la cosa
-                    // che fa capire se il tuo parziale li ha tenuti fuori da
-                    // qualcosa di grosso. Serve `migliorContrattoDi` e NON
-                    // `riferimento`: quest'ultima, per il lato che non ha la
-                    // mano, passa al par — e il par girato regala tre stelle a
-                    // ogni loro contratto, anche a quelli che cadono.
-                    // Punteggio e metro vengono dalla stessa risposta: presi da
-                    // due parti si finiva per confrontare un valore atteso con
-                    // un punteggio reale.
+                    // UN METRO SOLO per tutta la tabella — il miglior
+                    // contratto della smazzata, chiunque lo dichiari — così le
+                    // stelle vogliono dire la stessa cosa sopra e sotto. Sul
+                    // meglio della LORO linea il loro contratto migliore
+                    // prendeva tre stelle anche cadendo di due, e chi legge
+                    // capiva «avevano una bella mano»: l'opposto della verità.
+                    // Vedi `riferimentoUnico`.
                     riferimento: mano.condivisa
-                      ? migliorContrattoDi(mano.condivisa, "ew").punteggio
-                      : -mano.riferimento,
+                      ? riferimentoUnico(mano.condivisa).punteggio
+                      : Math.max(mano.riferimento, -mano.riferimento),
                     metro: mano.condivisa
-                      ? migliorContrattoDi(mano.condivisa, "ew").metro
+                      ? riferimentoUnico(mano.condivisa).metro
                       : mano.metro,
                     giocato: giocato?.lato === "ew" ? giocato : null,
                     ev: mano.condivisa ? (c) => evDelContratto(mano.condivisa!, c) : undefined,
@@ -515,8 +521,15 @@ export default function LicitaPage() {
                     table: mano.table,
                     lato: "ns",
                     vulnerability: mano.vulnerability,
-                    riferimento: mano.riferimento,
-                    metro: mano.metro,
+                    // Lo stesso metro della sezione qui sotto: è una tabella
+                    // sola, e due riferimenti diversi renderebbero le stelle
+                    // incomparabili proprio dove servono per confrontare.
+                    riferimento: mano.condivisa
+                      ? riferimentoUnico(mano.condivisa).punteggio
+                      : mano.riferimento,
+                    metro: mano.condivisa
+                      ? riferimentoUnico(mano.condivisa).metro
+                      : mano.metro,
                     giocato: giocato?.lato === "ns" ? giocato : null,
                     // Il valore atteso entra in tabella solo quando è anche il
                     // metro del riferimento: mostrarlo accanto a stelle

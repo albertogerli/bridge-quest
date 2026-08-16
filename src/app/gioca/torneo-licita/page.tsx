@@ -23,7 +23,7 @@ import type { Strain } from "@/lib/minibridge";
 import {
   classificaTorneo, evDelContratto, registraRisultatoTorneo, riferimento,
   torneoCorrente, torneoMano,
-  type ClassificaTorneo, type ManoCondivisa, type TorneoCorrente, migliorContrattoDi } from "@/lib/mani-condivise";
+  type ClassificaTorneo, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -60,7 +60,10 @@ export default function TorneoLicitaPage() {
   const [attesaDi, setAttesaDi] = useState<Position | null>(null);
   const [esito, setEsito] = useState<EsitoLicita | null>(null);
   const [giocato, setGiocato] = useState<
-    { level: number; strain: Strain; declarer: Position } | null
+    // `doppio`: la tabella di fine mano deve poter contare il contro, altrimenti
+    // la riga «← il vostro» mostra la penalità liscia mentre il voto conta
+    // quella contrata.
+    { level: number; strain: Strain; declarer: Position; doppio: 1 | 2 | 4 } | null
   >(null);
   const [classifica, setClassifica] = useState<ClassificaTorneo | null>(null);
   const [avversarioMuto, setAvversarioMuto] = useState(false);
@@ -94,7 +97,7 @@ export default function TorneoLicitaPage() {
 
     const voto = valutaLicita(perStelle, rif.punteggio, rif.metro);
     setEsito(voto);
-    setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer } : null);
+    setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio } : null);
 
     if (torneo) {
       await registraRisultatoTorneo({
@@ -328,11 +331,12 @@ export default function TorneoLicitaPage() {
                   lato: "ew",
                   ancheSenzaContratto: true,
                   vulnerability: mano.vulnerability,
-                  // Il loro contratto migliore, non il par: vedi
-                  // `migliorContrattoDi`. Col par girato ogni loro riga
-                  // prendeva tre stelle, anche cadendo.
-                  riferimento: migliorContrattoDi(mano, "ew").punteggio,
-                  metro: migliorContrattoDi(mano, "ew").metro,
+                  // Un metro solo per tutta la tabella: il miglior contratto
+                  // della smazzata, chiunque lo dichiari. Vedi
+                  // `riferimentoUnico` — sul meglio della loro linea il loro
+                  // contratto migliore prendeva tre stelle anche cadendo.
+                  riferimento: riferimentoUnico(mano).punteggio,
+                  metro: riferimentoUnico(mano).metro,
                   giocato,
                   ev: (c) => evDelContratto(mano, c),
                 }).slice(0, 2)}
@@ -340,11 +344,14 @@ export default function TorneoLicitaPage() {
                   table: tabella,
                   lato: "ns",
                   vulnerability: mano.vulnerability,
-                  riferimento: riferimento(mano, "ns").punteggio,
-                  metro: riferimento(mano, "ns").metro,
+                  // Lo stesso metro della sezione avversari: è una tabella
+                  // sola, e due riferimenti diversi renderebbero le stelle
+                  // incomparabili proprio dove servono per confrontare.
+                  riferimento: riferimentoUnico(mano).punteggio,
+                  metro: riferimentoUnico(mano).metro,
                   giocato,
                   ev:
-                    riferimento(mano, "ns").metro === "atteso"
+                    riferimentoUnico(mano).metro === "atteso"
                       ? (c) => evDelContratto(mano, c)
                       : undefined,
                 })}
