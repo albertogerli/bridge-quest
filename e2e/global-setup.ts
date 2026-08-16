@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { leggiEnv } from "./env";
 
 /**
  * Crea un utente di test usa-e-getta via service role (email confermata,
@@ -10,18 +11,8 @@ import { join } from "node:path";
 
 export const CREDS_FILE = join(__dirname, ".test-user.json");
 
-function loadEnv(): Record<string, string> {
-  const raw = readFileSync(join(__dirname, "..", ".env.local"), "utf8");
-  return Object.fromEntries(
-    raw
-      .split("\n")
-      .filter((l) => l.includes("=") && !l.startsWith("#"))
-      .map((l) => [l.slice(0, l.indexOf("=")).trim(), l.slice(l.indexOf("=") + 1).trim()])
-  );
-}
-
 export default async function globalSetup() {
-  const env = loadEnv();
+  const env = leggiEnv(["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]);
   const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false },
   });
