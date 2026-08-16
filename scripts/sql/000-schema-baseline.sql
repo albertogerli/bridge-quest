@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-08-15
+-- Estratto il: 2026-08-16
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -152,6 +152,14 @@ CREATE TABLE IF NOT EXISTS public.club_posts (
   author_id uuid NOT NULL,
   titolo text NOT NULL,
   corpo text NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.coda_sfide_coppie (
+  id uuid NOT NULL,
+  a1 uuid NOT NULL,
+  a2 uuid NOT NULL,
+  quante integer NOT NULL,
   created_at timestamp with time zone NOT NULL
 );
 
@@ -2529,6 +2537,42 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.sfida_coppie_coda_stato()
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_mia record;
+  v_totale int;
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN jsonb_build_object('in_attesa', false, 'coppie_in_attesa', 0); END IF;
+
+  SELECT c.*, p.display_name AS nome_compagno INTO v_mia
+  FROM public.coda_sfide_coppie c
+  LEFT JOIN public.profiles p
+    ON p.id = CASE WHEN c.a1 = auth.uid() THEN c.a2 ELSE c.a1 END
+  WHERE auth.uid() IN (c.a1, c.a2)
+  LIMIT 1;
+
+  SELECT count(*) INTO v_totale FROM public.coda_sfide_coppie;
+
+  IF NOT FOUND OR v_mia IS NULL THEN
+    RETURN jsonb_build_object('in_attesa', false, 'coppie_in_attesa', coalesce(v_totale, 0));
+  END IF;
+
+  RETURN jsonb_build_object(
+    'in_attesa', true,
+    'compagno', v_mia.nome_compagno,
+    'sono_io_a_essermi_iscritto', v_mia.a1 = auth.uid(),
+    'dal', v_mia.created_at,
+    'quante', v_mia.quante,
+    'coppie_in_attesa', coalesce(v_totale, 0)
+  );
+END $function$
+;
+
 CREATE OR REPLACE FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer DEFAULT 4)
  RETURNS uuid
  LANGUAGE plpgsql
@@ -2586,6 +2630,98 @@ BEGIN
   END IF;
 
   RETURN v_id;
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.sfida_coppie_esci()
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_tolte int;
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN false; END IF;
+  DELETE FROM public.coda_sfide_coppie c
+  WHERE auth.uid() IN (c.a1, c.a2);
+  GET DIAGNOSTICS v_tolte = ROW_COUNT;
+  RETURN v_tolte > 0;
+END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.sfida_coppie_iscrivi(p_compagno uuid, p_quante integer DEFAULT 4)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_altra record;
+  v_sfida uuid;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RETURN jsonb_build_object('stato', 'errore', 'motivo', 'non autenticato');
+  END IF;
+  IF p_compagno IS NULL OR p_compagno = auth.uid() THEN
+    RETURN jsonb_build_object('stato', 'errore', 'motivo', 'compagno non valido');
+  END IF;
+
+  -- L'amicizia la ricontrolla anche `sfida_coppie_crea`, ma qui serve dirlo
+  -- SUBITO: senza, chi sceglie un non-amico resterebbe in coda per sempre e
+  -- scoprirebbe il rifiuto solo al momento dell'accoppiamento.
+  IF NOT EXISTS (
+    SELECT 1 FROM public.friendships f
+    WHERE f.status = 'accepted'
+      AND ((f.user_id = auth.uid() AND f.friend_id = p_compagno)
+        OR (f.friend_id = auth.uid() AND f.user_id = p_compagno))
+  ) THEN
+    RETURN jsonb_build_object('stato', 'errore', 'motivo', 'il compagno dev''essere un amico');
+  END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM public.coda_sfide_coppie c
+    WHERE auth.uid() IN (c.a1, c.a2) OR p_compagno IN (c.a1, c.a2)
+  ) THEN
+    RETURN jsonb_build_object('stato', 'errore', 'motivo', 'tu o il tuo compagno siete già in attesa');
+  END IF;
+
+  -- La coppia che aspetta da più tempo, senza nessuno in comune con la nostra.
+  -- `skip locked`: se due coppie si iscrivono nello stesso istante, una sola
+  -- prende questa riga e l'altra va in coda invece di accoppiarsi due volte.
+  SELECT * INTO v_altra
+  FROM public.coda_sfide_coppie c
+  WHERE c.a1 <> auth.uid() AND c.a2 <> auth.uid()
+    AND c.a1 <> p_compagno AND c.a2 <> p_compagno
+  ORDER BY c.created_at
+  FOR UPDATE SKIP LOCKED
+  LIMIT 1;
+
+  IF NOT FOUND THEN
+    INSERT INTO public.coda_sfide_coppie (a1, a2, quante)
+    VALUES (auth.uid(), p_compagno, greatest(1, least(coalesce(p_quante, 4), 12)));
+    RETURN jsonb_build_object('stato', 'in_attesa');
+  END IF;
+
+  -- Chi aspettava ha scelto per primo quante smazzate: si rispetta la sua
+  -- richiesta, perché è stata fatta prima ed è quella su cui ha aspettato.
+  v_sfida := public.sfida_coppie_crea(p_compagno, v_altra.a1, v_altra.a2, v_altra.quante);
+
+  IF v_sfida IS NULL THEN
+    -- Niente mani in scorta, o un controllo non passato: la coppia che
+    -- aspettava deve restare in coda. L'eccezione annulla anche la sua
+    -- rimozione, che senza questo `raise` avverrebbe al `delete` qui sotto.
+    RAISE EXCEPTION 'sfida non creata';
+  END IF;
+
+  DELETE FROM public.coda_sfide_coppie WHERE id = v_altra.id;
+  RETURN jsonb_build_object('stato', 'accoppiata', 'sfida', v_sfida);
+EXCEPTION
+  WHEN unique_violation THEN
+    -- Due iscrizioni della stessa persona arrivate insieme.
+    RETURN jsonb_build_object('stato', 'errore', 'motivo', 'tu o il tuo compagno siete già in attesa');
+  WHEN OTHERS THEN
+    RETURN jsonb_build_object('stato', 'errore', 'motivo', 'non è stato possibile aprire la sfida');
 END $function$
 ;
 
@@ -2815,6 +2951,9 @@ ALTER TABLE public.classes ALTER COLUMN invite_active SET DEFAULT true;
 ALTER TABLE public.classes ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.coda_sfide_coppie ALTER COLUMN quante SET DEFAULT 4;
+ALTER TABLE public.coda_sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.collectible_cards ALTER COLUMN gradient SET DEFAULT ''::text;
 ALTER TABLE public.collectible_cards ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.collectible_cards ALTER COLUMN updated_at SET DEFAULT now();
@@ -2933,6 +3072,7 @@ ALTER TABLE public.class_members ADD CONSTRAINT class_members_pkey PRIMARY KEY (
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_pkey PRIMARY KEY (id);
 ALTER TABLE public.classes ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_pkey PRIMARY KEY (id);
+ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_pkey PRIMARY KEY (id);
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_pkey PRIMARY KEY (id);
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_pkey PRIMARY KEY (id);
@@ -2998,6 +3138,8 @@ ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((sta
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text])));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_corpo_check CHECK (((char_length(btrim(corpo)) >= 1) AND (char_length(btrim(corpo)) <= 4000)));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
+ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_check CHECK ((a1 <> a2));
+ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_quante_check CHECK (((quante >= 1) AND (quante <= 12)));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_category_check CHECK ((category = ANY (ARRAY['tecnica'::text, 'convenzione'::text, 'strategia'::text, 'storia'::text, 'mossa'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_rarity_check CHECK ((rarity = ANY (ARRAY['comune'::text, 'rara'::text, 'epica'::text, 'leggendaria'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_unlock_check CHECK ((jsonb_typeof(unlock) = 'object'::text));
@@ -3057,6 +3199,8 @@ ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_class_id_fkey FO
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.classes ADD CONSTRAINT classes_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a1_fkey FOREIGN KEY (a1) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a2_fkey FOREIGN KEY (a2) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_course_id_fkey FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE;
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -3116,6 +3260,9 @@ CREATE INDEX asd_clubs_region_idx ON public.asd_clubs USING btree (region) WHERE
 CREATE INDEX bidding_sessions_north_idx ON public.bidding_sessions USING btree (north_id, created_at DESC);
 CREATE INDEX bidding_sessions_players_idx ON public.bidding_sessions USING btree (south_id, created_at DESC);
 CREATE INDEX club_posts_asd_idx ON public.club_posts USING btree (asd_code, created_at DESC);
+CREATE UNIQUE INDEX coda_sfide_coppie_a1_unico ON public.coda_sfide_coppie USING btree (a1);
+CREATE UNIQUE INDEX coda_sfide_coppie_a2_unico ON public.coda_sfide_coppie USING btree (a2);
+CREATE INDEX coda_sfide_coppie_attesa_idx ON public.coda_sfide_coppie USING btree (created_at);
 CREATE INDEX collectible_cards_category_idx ON public.collectible_cards USING btree (category);
 CREATE INDEX collectible_cards_rarity_idx ON public.collectible_cards USING btree (rarity);
 CREATE INDEX course_worlds_course_id_idx ON public.course_worlds USING btree (course_id);
@@ -3203,6 +3350,7 @@ ALTER TABLE public.class_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.club_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.coda_sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.collectible_cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.completed_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_worlds ENABLE ROW LEVEL SECURITY;
@@ -3269,6 +3417,7 @@ CREATE POLICY "Instructors can update own classes" ON public.classes AS PERMISSI
 CREATE POLICY "Author or admin deletes" ON public.club_posts AS PERMISSIVE FOR DELETE TO authenticated USING (((author_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Instructors write for own club" ON public.club_posts AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((author_id = auth.uid()) AND can_post_for_asd(asd_code)));
 CREATE POLICY "Members read own club posts" ON public.club_posts AS PERMISSIVE FOR SELECT TO authenticated USING (((asd_code = my_asd_code()) OR can_post_for_asd(asd_code)));
+CREATE POLICY "La mia attesa" ON public.coda_sfide_coppie AS PERMISSIVE FOR SELECT TO authenticated USING (((auth.uid() = a1) OR (auth.uid() = a2)));
 CREATE POLICY collectible_cards_public_read ON public.collectible_cards AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Own modules" ON public.completed_modules AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
 CREATE POLICY course_worlds_public_read ON public.course_worlds AS PERMISSIVE FOR SELECT TO public USING (true);
@@ -3379,6 +3528,9 @@ GRANT DELETE ON public.classes TO service_role;
 GRANT DELETE ON public.club_posts TO anon;
 GRANT DELETE ON public.club_posts TO authenticated;
 GRANT DELETE ON public.club_posts TO service_role;
+GRANT DELETE ON public.coda_sfide_coppie TO anon;
+GRANT DELETE ON public.coda_sfide_coppie TO authenticated;
+GRANT DELETE ON public.coda_sfide_coppie TO service_role;
 GRANT DELETE ON public.collectible_cards TO anon;
 GRANT DELETE ON public.collectible_cards TO authenticated;
 GRANT DELETE ON public.collectible_cards TO service_role;
@@ -3520,6 +3672,9 @@ GRANT INSERT ON public.classes TO service_role;
 GRANT INSERT ON public.club_posts TO anon;
 GRANT INSERT ON public.club_posts TO authenticated;
 GRANT INSERT ON public.club_posts TO service_role;
+GRANT INSERT ON public.coda_sfide_coppie TO anon;
+GRANT INSERT ON public.coda_sfide_coppie TO authenticated;
+GRANT INSERT ON public.coda_sfide_coppie TO service_role;
 GRANT INSERT ON public.collectible_cards TO anon;
 GRANT INSERT ON public.collectible_cards TO authenticated;
 GRANT INSERT ON public.collectible_cards TO service_role;
@@ -3661,6 +3816,9 @@ GRANT REFERENCES ON public.classes TO service_role;
 GRANT REFERENCES ON public.club_posts TO anon;
 GRANT REFERENCES ON public.club_posts TO authenticated;
 GRANT REFERENCES ON public.club_posts TO service_role;
+GRANT REFERENCES ON public.coda_sfide_coppie TO anon;
+GRANT REFERENCES ON public.coda_sfide_coppie TO authenticated;
+GRANT REFERENCES ON public.coda_sfide_coppie TO service_role;
 GRANT REFERENCES ON public.collectible_cards TO anon;
 GRANT REFERENCES ON public.collectible_cards TO authenticated;
 GRANT REFERENCES ON public.collectible_cards TO service_role;
@@ -3802,6 +3960,9 @@ GRANT SELECT ON public.classes TO service_role;
 GRANT SELECT ON public.club_posts TO anon;
 GRANT SELECT ON public.club_posts TO authenticated;
 GRANT SELECT ON public.club_posts TO service_role;
+GRANT SELECT ON public.coda_sfide_coppie TO anon;
+GRANT SELECT ON public.coda_sfide_coppie TO authenticated;
+GRANT SELECT ON public.coda_sfide_coppie TO service_role;
 GRANT SELECT ON public.collectible_cards TO anon;
 GRANT SELECT ON public.collectible_cards TO authenticated;
 GRANT SELECT ON public.collectible_cards TO service_role;
@@ -3942,6 +4103,9 @@ GRANT TRIGGER ON public.classes TO service_role;
 GRANT TRIGGER ON public.club_posts TO anon;
 GRANT TRIGGER ON public.club_posts TO authenticated;
 GRANT TRIGGER ON public.club_posts TO service_role;
+GRANT TRIGGER ON public.coda_sfide_coppie TO anon;
+GRANT TRIGGER ON public.coda_sfide_coppie TO authenticated;
+GRANT TRIGGER ON public.coda_sfide_coppie TO service_role;
 GRANT TRIGGER ON public.collectible_cards TO anon;
 GRANT TRIGGER ON public.collectible_cards TO authenticated;
 GRANT TRIGGER ON public.collectible_cards TO service_role;
@@ -4083,6 +4247,9 @@ GRANT TRUNCATE ON public.classes TO service_role;
 GRANT TRUNCATE ON public.club_posts TO anon;
 GRANT TRUNCATE ON public.club_posts TO authenticated;
 GRANT TRUNCATE ON public.club_posts TO service_role;
+GRANT TRUNCATE ON public.coda_sfide_coppie TO anon;
+GRANT TRUNCATE ON public.coda_sfide_coppie TO authenticated;
+GRANT TRUNCATE ON public.coda_sfide_coppie TO service_role;
 GRANT TRUNCATE ON public.collectible_cards TO anon;
 GRANT TRUNCATE ON public.collectible_cards TO authenticated;
 GRANT TRUNCATE ON public.collectible_cards TO service_role;
@@ -4224,6 +4391,9 @@ GRANT UPDATE ON public.classes TO service_role;
 GRANT UPDATE ON public.club_posts TO anon;
 GRANT UPDATE ON public.club_posts TO authenticated;
 GRANT UPDATE ON public.club_posts TO service_role;
+GRANT UPDATE ON public.coda_sfide_coppie TO anon;
+GRANT UPDATE ON public.coda_sfide_coppie TO authenticated;
+GRANT UPDATE ON public.coda_sfide_coppie TO service_role;
 GRANT UPDATE ON public.collectible_cards TO anon;
 GRANT UPDATE ON public.collectible_cards TO authenticated;
 GRANT UPDATE ON public.collectible_cards TO service_role;
@@ -4503,9 +4673,18 @@ GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO s
 REVOKE ALL ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.sfida_coppie_coda_stato() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_coda_stato() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_coda_stato() TO service_role;
 REVOKE ALL ON FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.sfida_coppie_crea(p_compagno uuid, p_b1 uuid, p_b2 uuid, p_quante integer) TO service_role;
+REVOKE ALL ON FUNCTION public.sfida_coppie_esci() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_esci() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_esci() TO service_role;
+REVOKE ALL ON FUNCTION public.sfida_coppie_iscrivi(p_compagno uuid, p_quante integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_iscrivi(p_compagno uuid, p_quante integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sfida_coppie_iscrivi(p_compagno uuid, p_quante integer) TO service_role;
 REVOKE ALL ON FUNCTION public.sfida_coppie_vista(p_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sfida_coppie_vista(p_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.sfida_coppie_vista(p_id uuid) TO service_role;
@@ -4531,5 +4710,7 @@ GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO service_role;
 -- PUBLICATION (Realtime)
 ALTER PUBLICATION supabase_realtime ADD TABLE public.challenges;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.class_messages;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.coda_sfide_coppie;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.friendships;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.live_tables;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.sfide_coppie;
