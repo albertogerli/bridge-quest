@@ -23,8 +23,7 @@ import type { Strain } from "@/lib/minibridge";
 import {
   classificaTorneo, evDelContratto, registraRisultatoTorneo, riferimento,
   torneoCorrente, torneoMano,
-  type ClassificaTorneo, type ManoCondivisa, type TorneoCorrente,
-} from "@/lib/mani-condivise";
+  type ClassificaTorneo, type ManoCondivisa, type TorneoCorrente, migliorContrattoDi } from "@/lib/mani-condivise";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -329,8 +328,11 @@ export default function TorneoLicitaPage() {
                   lato: "ew",
                   ancheSenzaContratto: true,
                   vulnerability: mano.vulnerability,
-                  riferimento: riferimento(mano, "ew").punteggio,
-                  metro: riferimento(mano, "ew").metro,
+                  // Il loro contratto migliore, non il par: vedi
+                  // `migliorContrattoDi`. Col par girato ogni loro riga
+                  // prendeva tre stelle, anche cadendo.
+                  riferimento: migliorContrattoDi(mano, "ew").punteggio,
+                  metro: migliorContrattoDi(mano, "ew").metro,
                   giocato,
                   ev: (c) => evDelContratto(mano, c),
                 }).slice(0, 2)}

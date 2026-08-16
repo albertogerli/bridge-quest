@@ -23,8 +23,7 @@ import { Stelle } from "@/components/bridge/stelle";
 import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import {
   confrontoCampo, evDelContratto, manoDaFare, registraRisultato, riferimento,
-  type ConfrontoCampo, type ManoCondivisa,
-} from "@/lib/mani-condivise";
+  type ConfrontoCampo, type ManoCondivisa, migliorContrattoDi } from "@/lib/mani-condivise";
 import type { Vulnerability } from "@/lib/catalog";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -496,11 +495,19 @@ export default function LicitaPage() {
                     // Le loro stelle si misurano sul LORO contratto migliore:
                     // dicono quanto era buona la mano per loro, ed è la cosa
                     // che fa capire se il tuo parziale li ha tenuti fuori da
-                    // qualcosa di grosso.
+                    // qualcosa di grosso. Serve `migliorContrattoDi` e NON
+                    // `riferimento`: quest'ultima, per il lato che non ha la
+                    // mano, passa al par — e il par girato regala tre stelle a
+                    // ogni loro contratto, anche a quelli che cadono.
+                    // Punteggio e metro vengono dalla stessa risposta: presi da
+                    // due parti si finiva per confrontare un valore atteso con
+                    // un punteggio reale.
                     riferimento: mano.condivisa
-                      ? riferimento(mano.condivisa, "ew").punteggio
+                      ? migliorContrattoDi(mano.condivisa, "ew").punteggio
                       : -mano.riferimento,
-                    metro: mano.metro,
+                    metro: mano.condivisa
+                      ? migliorContrattoDi(mano.condivisa, "ew").metro
+                      : mano.metro,
                     giocato: giocato?.lato === "ew" ? giocato : null,
                     ev: mano.condivisa ? (c) => evDelContratto(mano.condivisa!, c) : undefined,
                   }).slice(0, 2)}
