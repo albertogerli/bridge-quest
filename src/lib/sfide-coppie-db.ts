@@ -167,3 +167,95 @@ export async function statisticheSfide(): Promise<StatisticheSfide | null> {
     return null;
   }
 }
+
+/**
+ * La coda: ci si iscrive in due e si aspetta un'altra coppia.
+ *
+ * SI DEGRADA IN SILENZIO. Le funzioni SQL arrivano con
+ * `scripts/sql/coda-sfide-coppie-2026-08.sql`, che come tutti gli script di
+ * schema si esegue a mano: finché non è stato eseguito, `stato` risponde
+ * `null` e la pagina mostra soltanto la sfida diretta, senza errori rossi
+ * addosso a chi non c'entra niente. Il segnale è la funzione mancante
+ * (PGRST202), non un difetto: non va in Sentry.
+ */
+export interface StatoCoda {
+  inAttesa: boolean;
+  compagno: string | null;
+  dal: string | null;
+  coppieInAttesa: number;
+}
+
+/** `true` se l'errore dice solo «quella funzione non esiste ancora». */
+function funzioneAssente(error: { code?: string; message?: string } | null): boolean {
+  return error?.code === "PGRST202" || /Could not find the function/i.test(error?.message ?? "");
+}
+
+export async function statoCoda(): Promise<StatoCoda | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("sfida_coppie_coda_stato");
+    if (error) {
+      if (!funzioneAssente(error)) reportError("sfide-coppie:coda-stato", error);
+      return null;
+    }
+    const d = (data ?? {}) as Record<string, unknown>;
+    return {
+      inAttesa: d.in_attesa === true,
+      compagno: (d.compagno as string | null) ?? null,
+      dal: (d.dal as string | null) ?? null,
+      coppieInAttesa: Number(d.coppie_in_attesa ?? 0),
+    };
+  } catch (err) {
+    reportError("sfide-coppie:coda-stato", err);
+    return null;
+  }
+}
+
+export type EsitoIscrizione =
+  | { stato: "accoppiata"; sfida: string }
+  | { stato: "in_attesa" }
+  | { stato: "errore"; motivo: string };
+
+export async function iscrivitiInCoda(
+  compagno: string,
+  quante = 4
+): Promise<EsitoIscrizione> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("sfida_coppie_iscrivi", {
+      p_compagno: compagno,
+      p_quante: quante,
+    });
+    if (error) {
+      if (!funzioneAssente(error)) reportError("sfide-coppie:iscrivi", error);
+      return { stato: "errore", motivo: "L'iscrizione non è ancora disponibile." };
+    }
+    const d = (data ?? {}) as Record<string, unknown>;
+    if (d.stato === "accoppiata" && typeof d.sfida === "string") {
+      return { stato: "accoppiata", sfida: d.sfida };
+    }
+    if (d.stato === "in_attesa") return { stato: "in_attesa" };
+    return {
+      stato: "errore",
+      motivo: (d.motivo as string) ?? "Non è stato possibile iscriversi.",
+    };
+  } catch (err) {
+    reportError("sfide-coppie:iscrivi", err);
+    return { stato: "errore", motivo: "Non è stato possibile iscriversi." };
+  }
+}
+
+export async function esciDallaCoda(): Promise<boolean> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("sfida_coppie_esci");
+    if (error) {
+      if (!funzioneAssente(error)) reportError("sfide-coppie:esci", error);
+      return false;
+    }
+    return data === true;
+  } catch (err) {
+    reportError("sfide-coppie:esci", err);
+    return false;
+  }
+}
