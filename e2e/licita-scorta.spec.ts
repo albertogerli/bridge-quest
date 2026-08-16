@@ -56,10 +56,21 @@ test.describe("licita dalla scorta condivisa", () => {
     ).toBeEnabled({ timeout: 60_000 });
     await apri.click();
 
+    // Le due formule possibili, perché il metro cambia con la mano: quelle
+    // della scorta condivisa hanno le distribuzioni misurate e dicono «rende in
+    // media», quelle locali si confrontano col par e dicono «vale». Cercare
+    // solo la seconda faceva fallire il test davanti a un riepilogo completo e
+    // corretto — stelle, tabella e tutto (16/08/2026).
     await expect(
-      page.getByText(/Il tuo contratto vale/).first(),
+      page.getByText(/Il tuo contratto (vale|rende in media)/).first(),
       "l'asta è finita ma il voto non è comparso"
     ).toBeVisible({ timeout: 60_000 });
+
+    // E il riepilogo con cui si impara: cosa avrebbe reso ogni altro contratto.
+    await expect(
+      page.getByText("Cosa valeva ogni contratto").first(),
+      "manca la tabella dei contratti nel riepilogo di fine mano"
+    ).toBeVisible();
   });
 
   test("la sfida 2 contro 2 si apre e spiega cosa serve", async ({ page }) => {
