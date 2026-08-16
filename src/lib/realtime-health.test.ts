@@ -45,6 +45,44 @@ describe("evaluateChannel — un guasto persistente va segnalato una volta sola"
   });
 });
 
+describe("evaluateChannel — quello che la soglia da sola non distingue", () => {
+  const alSuperamento = { everConnected: false, online: true };
+
+  it("tace se il dispositivo è offline, per quanti fallimenti ci siano", () => {
+    // Un telefono senza rete non ha niente da riparare da questa parte.
+    for (const n of [FAILURES_BEFORE_REPORT - 1, 10, 99]) {
+      expect(
+        evaluateChannel("CHANNEL_ERROR", n, { ...alSuperamento, online: false }).shouldReport
+      ).toBe(false);
+    }
+  });
+
+  it("tace se il canale si era già stabilito: quella è la rete, non la configurazione", () => {
+    // È il caso arrivato da Chrome Mobile il 16/08/2026. Se la sottoscrizione
+    // è passata una volta, publication e policy sono a posto.
+    expect(
+      evaluateChannel("CHANNEL_ERROR", FAILURES_BEFORE_REPORT - 1, {
+        ...alSuperamento,
+        everConnected: true,
+      }).shouldReport
+    ).toBe(false);
+  });
+
+  it("segnala il canale che non si stabilisce MAI con il dispositivo connesso", () => {
+    // Questo è il guasto per cui la soglia era stata scritta, e resta coperto.
+    expect(
+      evaluateChannel("CHANNEL_ERROR", FAILURES_BEFORE_REPORT - 1, alSuperamento).shouldReport
+    ).toBe(true);
+  });
+
+  it("degrada comunque il ripiegamento anche quando tace", () => {
+    // Silenzio verso Sentry non vuol dire non far niente per l'utente.
+    const d = evaluateChannel("CHANNEL_ERROR", 5, { everConnected: true, online: false });
+    expect(d.pollMs).toBe(POLL_DEGRADED_MS);
+    expect(d.healthy).toBe(false);
+  });
+});
+
 describe("evaluateChannel — riconnessione", () => {
   it("azzera il conteggio e torna all'intervallo lungo", () => {
     const d = evaluateChannel("SUBSCRIBED", 7);

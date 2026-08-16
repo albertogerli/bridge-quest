@@ -74,6 +74,7 @@ const dds = new Dds(await loadDds());
 const problemi = [];
 const daScrivere = [];
 let esaminate = 0;
+let inDifesa = 0; // mani in cui l'allievo difende: lì il contratto che cade è l'esercizio
 // `--scrivi` salva le prese calcolate su smazzate.dd_tricks; senza, il
 // programma si limita a riferire.
 const scrivi = process.argv.includes("--scrivi");
@@ -131,7 +132,18 @@ for (const s of rows) {
 
   const prese = preseDopoAttacco ?? preseControDifesaPerfetta;
   daScrivere.push({ id: s.id, dd_tricks: prese });
-  if (prese < servono) {
+  if (s.declarer === "east" || s.declarer === "west") inDifesa++;
+
+  // DI CHI È IL CONTRATTO. Un contratto che cade è un difetto solo se a
+  // giocarlo è l'allievo. Delle 272 smazzate, 129 hanno il dichiarante in
+  // Est/Ovest: lì l'allievo difende, e farlo cadere È l'esercizio — «Il punto
+  // di vista dei difensori», «I colori da muovere in difesa». Segnalarle qui
+  // come guaste è un allarme falso, e uno dei peggiori: invita a «riparare»
+  // proprio le mani che funzionano. (Successo il 15/08/2026: 25 mani di
+  // controgioco abbassate di un livello per questo motivo, poi ripristinate.)
+  const difendeLAllievo = s.declarer === "east" || s.declarer === "west";
+
+  if (prese < servono && !difendeLAllievo) {
     problemi.push({
       id: s.id, lezione: s.lesson_id, tipo: preseDopoAttacco === null ? "irrealizzabile-senza-attacco" : "irrealizzabile",
       det: `${s.contract} ${s.declarer}: servono ${servono}, con l'attacco indicato ne fa ${prese} (cade di ${servono - prese}); contro difesa perfetta ${preseControDifesaPerfetta}`,
@@ -142,6 +154,7 @@ for (const s of rows) {
 }
 
 console.log(`Smazzate nel catalogo: ${rows.length} | analizzate con DDS: ${esaminate}`);
+console.log(`Di quelle, ${inDifesa} hanno il dichiarante avversario: l'allievo difende, e il contratto che cade è atteso.`);
 console.log(`Problemi: ${problemi.length}\n`);
 const perTipo = {};
 for (const p of problemi) perTipo[p.tipo] = (perTipo[p.tipo] || 0) + 1;
