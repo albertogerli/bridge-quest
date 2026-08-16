@@ -11,6 +11,7 @@ import { reportError } from "@/lib/report-error";
 import {
   chiudiBoard, creaSfida, mieSfide, vistaSfida,
   type RigaSfida, type VistaSfida,
+  statoCoda, iscrivitiInCoda, esciDallaCoda, type StatoCoda,
 } from "@/lib/sfide-coppie-db";
 import { confrontaPunteggi } from "@/lib/sfida-coppie";
 import { StatisticheSfidePannello } from "@/components/bridge/statistiche-sfide";
@@ -24,6 +25,12 @@ import { Stelle } from "@/components/bridge/stelle";
  * dichiarato. Servono entrambi perché si può vincere 12-0 con due licite
  * mediocri, se l'altra coppia ha fatto peggio: col solo punteggio si
  * porterebbe a casa la convinzione di aver dichiarato bene.
+ *
+ * DUE MODI DI COMINCIARE. Con la coda ci si iscrive in DUE e gli avversari li
+ * trova il sistema: la prima coppia che si iscrive dopo diventa la vostra.
+ * Serviva perché indicare tutte e quattro le persone vuol dire sapere già chi,
+ * in quel momento, ha voglia di giocare — al circolo funziona, a distanza no.
+ * La scelta diretta resta per chi i quattro ce li ha.
  *
  * NON È DUPLICATO VERO. A squadre le due coppie siedono in linee opposte sulla
  * stessa smazzata; qui giocano tutte e due la stessa linea contro BEN, perché
@@ -41,14 +48,42 @@ export default function SfidaCoppiePage() {
   const [avv2, setAvv2] = useState("");
   const [creando, setCreando] = useState(false);
   const [errore, setErrore] = useState("");
+  /** `null` finché non si sa, o se le funzioni della coda non ci sono ancora. */
+  const [coda, setCoda] = useState<StatoCoda | null>(null);
+  const [compagnoCoda, setCompagnoCoda] = useState("");
+  const [iscrivendo, setIscrivendo] = useState(false);
 
   const ricarica = useCallback(() => {
     mieSfide().then(setElenco).catch((err) => reportError("sfida-coppie:elenco", err));
   }, []);
 
+  const aggiornaCoda = useCallback(() => {
+    statoCoda().then(setCoda).catch((err) => reportError("sfida-coppie:coda", err));
+  }, []);
+
   useEffect(() => {
-    if (user) ricarica();
-  }, [user, ricarica]);
+    if (user) {
+      ricarica();
+      aggiornaCoda();
+    }
+  }, [user, ricarica, aggiornaCoda]);
+
+  /**
+   * Mentre si aspetta, si guarda ogni tanto se è arrivata una coppia.
+   *
+   * Il timer parte SOLO durante l'attesa, che è l'unico momento in cui lo
+   * stato può cambiare senza che tu tocchi niente — e dura quanto l'attesa,
+   * non quanto la pagina. Quindici secondi: l'accoppiamento è un evento raro,
+   * e chi aspetta non guarda il cronometro.
+   */
+  useEffect(() => {
+    if (!coda?.inAttesa) return;
+    const t = setInterval(() => {
+      aggiornaCoda();
+      ricarica();
+    }, 15_000);
+    return () => clearInterval(t);
+  }, [coda?.inAttesa, aggiornaCoda, ricarica]);
 
   /**
    * Apre una sfida e, per prima cosa, chiede al server di registrare le board
@@ -69,6 +104,25 @@ export default function SfidaCoppiePage() {
       setAperta(v);
     }
     ricarica();
+  };
+
+  const iscriviti = async () => {
+    setErrore("");
+    if (!compagnoCoda) return;
+    setIscrivendo(true);
+    const esito = await iscrivitiInCoda(compagnoCoda, 4);
+    setIscrivendo(false);
+    if (esito.stato === "errore") { setErrore(esito.motivo); return; }
+    aggiornaCoda();
+    ricarica();
+    // Accoppiati subito: si entra nella sfida senza passare da un elenco.
+    if (esito.stato === "accoppiata") void apri(esito.sfida);
+  };
+
+  const annullaAttesa = async () => {
+    setErrore("");
+    await esciDallaCoda();
+    aggiornaCoda();
   };
 
   const crea = async () => {
@@ -146,11 +200,77 @@ export default function SfidaCoppiePage() {
         </ul>
       )}
 
+      {/* Iscriversi in due e lasciare che sia la coda a trovare gli avversari.
+          Compare solo dove le funzioni SQL della coda esistono: `statoCoda`
+          risponde `null` finché lo script non è stato eseguito, e una sezione
+          che non può funzionare è meglio non mostrarla affatto. */}
+      {coda && (
+        <section className="rounded-2xl border border-figb/30 bg-figb/5 p-5 mb-4">
+          <h2 className="font-semibold mb-1 flex items-center gap-2">
+            <Users className="w-4 h-4 text-figb" aria-hidden="true" />
+            Iscrivetevi in due
+          </h2>
+
+          {coda.inAttesa ? (
+            <>
+              <p className="text-sm text-muted-foreground mb-3">
+                Siete in attesa{coda.compagno ? <> con <strong>{coda.compagno}</strong></> : null}.
+                Appena si iscrive un&apos;altra coppia la sfida parte da sola, e
+                la trovate qui sopra: non serve restare su questa pagina.
+              </p>
+              <Button variant="outline" onClick={annullaAttesa}>
+                Non aspettare più
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground mb-3">
+                Scegli il compagno e mettetevi in fila: gli avversari li trova la
+                coda. La prima coppia che si iscrive dopo di voi diventa la
+                vostra.
+                {coda.coppieInAttesa > 0 && (
+                  <>
+                    {" "}
+                    <strong>
+                      {coda.coppieInAttesa === 1
+                        ? "C'è già una coppia in attesa"
+                        : `Ci sono già ${coda.coppieInAttesa} coppie in attesa`}
+                    </strong>
+                    : iscrivendovi ora partite subito.
+                  </>
+                )}
+              </p>
+              {friends.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Prima serve almeno un amico da mettere in coppia:{" "}
+                  <Link href="/amici" className="text-figb hover:underline">
+                    aggiungine uno
+                  </Link>
+                  .
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  <Scelta
+                    etichetta="Il tuo compagno"
+                    valore={compagnoCoda}
+                    onCambia={setCompagnoCoda}
+                    amici={friends}
+                  />
+                  <Button onClick={iscriviti} disabled={!compagnoCoda || iscrivendo}>
+                    {iscrivendo ? "Vi metto in fila…" : "Iscriviti con il compagno"}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </section>
+      )}
+
       {/* Nuova sfida */}
       <section className="rounded-2xl border border-border bg-card p-5">
         <h2 className="font-semibold mb-1 flex items-center gap-2">
           <Users className="w-4 h-4 text-figb" aria-hidden="true" />
-          Nuova sfida
+          {coda ? "Oppure scegli tu tutti e quattro" : "Nuova sfida"}
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
           Il compagno dev&apos;essere un amico. Gli avversari no: al circolo si

@@ -80,7 +80,9 @@ test.describe("licita dalla scorta condivisa", () => {
       timeout: 20_000,
     });
     // L'utente di prova è nuovo: nessun amico, e la pagina deve dirlo invece
-    // di mostrare tendine vuote.
-    await expect(page.getByText(/almeno un amico|Il tuo compagno/)).toBeVisible();
+    // di mostrare tendine vuote. `.first()`: da quando c'è anche l'iscrizione
+    // in coda quel testo compare in due sezioni, e senza il `.first()` la
+    // regola dello strict mode farebbe fallire una pagina sana.
+    await expect(page.getByText(/almeno un amico|Il tuo compagno/).first()).toBeVisible();
   });
 });
