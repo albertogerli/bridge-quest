@@ -232,3 +232,29 @@ export function contrattiDaRivedere(opzioni: {
 
   return righe.sort((a, b) => b.punteggio - a.punteggio);
 }
+
+/**
+ * Un punteggio degli avversari, scritto come lo segnereste voi.
+ *
+ * Dentro `contrattiDaRivedere` con `lato: "ew"` tutto è nel sistema di
+ * riferimento LORO — punteggio positivo quando il contratto rende a loro —
+ * perché è così che le stelle misurano quanto era buona la mano per loro.
+ * Ma chi legge il riepilogo è l'allievo, che siede in Nord-Sud: «1SA di Est …
+ * 90» si legge come novanta punti guadagnati, quando sono novanta punti
+ * PRESI. Al tavolo quel numero si scrive −90, ed è l'unica scrittura che un
+ * giocatore non deve tradurre.
+ *
+ * Il segno è una questione di presentazione, non di calcolo: le stelle
+ * confrontano il contratto col migliore della loro linea, e negare entrambi i
+ * termini non cambia la distanza fra i due. Per questo qui si gira solo quello
+ * che si mostra.
+ *
+ * Vale anche il rovescio: se un loro contratto cade, per voi è un guadagno e
+ * il numero diventa positivo — con il «+» davanti, come sul tabellone.
+ */
+export function dalVostroLato(valore: number | null | undefined): string {
+  if (valore === null || valore === undefined) return "—";
+  const nostro = -valore;
+  if (nostro === 0) return "0";
+  return nostro > 0 ? `+${nostro}` : `${nostro}`;
+}

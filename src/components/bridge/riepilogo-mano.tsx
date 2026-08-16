@@ -4,6 +4,7 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import type { ContrattoValutato } from "@/lib/riepilogo-mano";
+import { dalVostroLato } from "@/lib/riepilogo-mano";
 import { Stelle } from "@/components/bridge/stelle";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -151,9 +152,15 @@ export function RiepilogoMano({
                       {c.etichetta} di {ETICHETTA[c.declarer]}
                     </td>
                     <td className="py-2 text-right">{c.prese}</td>
-                    <td className="py-2 text-right font-mono">{c.punteggio}</td>
+                    {/* Col segno di chi legge: l'allievo siede in Nord-Sud e
+                        quei punti li subisce. Vedi `dalVostroLato`. */}
+                    <td className="py-2 text-right font-mono">
+                      {dalVostroLato(c.punteggio)}
+                    </td>
                     {mostraAtteso && (
-                      <td className="py-2 text-right font-mono">{c.ev ?? "—"}</td>
+                      <td className="py-2 text-right font-mono">
+                        {dalVostroLato(c.ev)}
+                      </td>
                     )}
                     <td className="py-2">
                       <span className="flex justify-end">
@@ -166,9 +173,11 @@ export function RiepilogoMano({
             </table>
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            I loro punti e le loro stelle, misurate sul loro contratto migliore.
-            Servono a sapere se la mano era vostra: tenerli fuori da una manche
-            vale più di un vostro parziale in più.
+            I punti sono scritti dal vostro lato — col meno quando il
+            contratto lo mantengono loro, col più quando cade. Le stelle invece
+            sono le <strong>loro</strong>, misurate sul loro contratto
+            migliore: servono a sapere se la mano era vostra, perché tenerli
+            fuori da una manche vale più di un vostro parziale in più.
           </p>
         </div>
       )}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Position } from "./bridge-engine";
 import type { DdsTable, TableStrain } from "./dds-table";
-import { contrattiDaRivedere } from "./riepilogo-mano";
+import { contrattiDaRivedere, dalVostroLato } from "./riepilogo-mano";
 
 /** Tabella comoda da scrivere: prese per denominazione, uguali per i due compagni. */
 function tabella(p: Partial<Record<TableStrain, number>>): DdsTable {
@@ -333,5 +333,25 @@ describe("la sezione degli avversari", () => {
       lato: "ns", vulnerability: "none", riferimento: 420, metro: "atteso",
     });
     expect(righe.some((r) => r.etichetta.includes("♣"))).toBe(false);
+  });
+});
+
+describe("dalVostroLato — i punti degli avversari si scrivono col meno", () => {
+  it("un loro contratto mantenuto è una perdita per voi", () => {
+    // Lo screenshot del 16/08/2026: «1SA di Est … 90» si legge come novanta
+    // punti guadagnati, mentre sono novanta punti presi.
+    expect(dalVostroLato(90)).toBe("-90");
+    expect(dalVostroLato(114)).toBe("-114");
+  });
+
+  it("un loro contratto che cade è un guadagno, e porta il più", () => {
+    expect(dalVostroLato(-100)).toBe("+100");
+    expect(dalVostroLato(-50)).toBe("+50");
+  });
+
+  it("lo zero non prende segno, e il valore assente resta una lineetta", () => {
+    expect(dalVostroLato(0)).toBe("0");
+    expect(dalVostroLato(null)).toBe("—");
+    expect(dalVostroLato(undefined)).toBe("—");
   });
 });
