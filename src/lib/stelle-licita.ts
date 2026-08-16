@@ -99,12 +99,28 @@ export function valutaLicita(
     }
   } else {
     const rif = metro === "atteso" ? "sotto il contratto migliore" : "sotto il par";
-    if (stelle >= 2) {
-      commento = `Ci sei quasi: ${differenza} punti ${rif}. Di solito è un parziale al posto di un altro, o una presa in meno.`;
-    } else if (stelle >= 1) {
-      commento = `${differenza} punti ${rif}: spesso vuol dire una manche mancata, o una dichiarata che non stava in piedi.`;
+    /**
+     * IL COMMENTO SEGUE I PUNTI, NON LE STELLE.
+     *
+     * Prima dipendeva dal voto, e siccome due stelle coprono tutto ciò che sta
+     * entro sei IMP, lo stesso «Ci sei quasi: di solito è un parziale al posto
+     * di un altro» usciva sia per venti punti sia per duecentoventicinque —
+     * dove non è un parziale al posto di un altro, è una manche mancata. Un
+     * commento che dice una cosa falsa è peggio di nessun commento: l'allievo
+     * impara la spiegazione sbagliata e la porta al tavolo.
+     *
+     * Le soglie sono quelle che un giocatore riconosce: sotto il centinaio si
+     * cambia parziale, intorno ai trecento si perde la manche, oltre i
+     * cinquecento si è persa una manche in zona o uno slam.
+     */
+    if (differenza < 100) {
+      commento = `Ci sei quasi: ${differenza} punti ${rif} — un parziale al posto di un altro, o una presa in meno.`;
+    } else if (differenza < 300) {
+      commento = `${differenza} punti ${rif}: è la distanza fra un parziale e la manche. Con queste carte la manche si poteva cercare.`;
+    } else if (differenza < 600) {
+      commento = `${differenza} punti ${rif}: una manche intera. O non è stata dichiarata, o il contratto scelto non stava in piedi.`;
     } else {
-      commento = `${differenza} punti ${rif}. Vale la pena rivedere la mano: qualcosa si è perso per strada.`;
+      commento = `${differenza} punti ${rif}: qui è andato perso uno slam, oppure il contratto è caduto pesante. Vale la pena rivedere la mano.`;
     }
   }
 

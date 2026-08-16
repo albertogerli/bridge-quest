@@ -3,8 +3,10 @@ import {
   evDelContratto,
   migliorContrattoDi,
   riferimento,
+  riferimentoUnico,
   type ManoCondivisa,
 } from "./mani-condivise";
+import { valutaLicita } from "./stelle-licita";
 
 /** Solo la parte pura: il resto è database, e si prova con `prova-campo.mjs`. */
 function mano(parziale: Partial<ManoCondivisa>): ManoCondivisa {
@@ -211,5 +213,46 @@ describe("migliorContrattoDi — il metro dei contratti avversari", () => {
     const senza = mano({ par_score: 620 });
     expect(migliorContrattoDi(senza, "ew")).toEqual({ punteggio: -620, metro: "esatto" });
     expect(migliorContrattoDi(senza, "ns")).toEqual({ punteggio: 620, metro: "esatto" });
+  });
+});
+
+describe("riferimentoUnico — un metro solo per tutta la tabella", () => {
+  const manoNostra = () =>
+    mano({
+      par_score: 620,
+      distribuzioni: distribuzioniFinte(),
+      valore_atteso: {
+        ns: contratto(566),
+        ew: { level: 1, strain: "club", declarer: "east", ev: -104, mantenuto: 9 },
+      } as ManoCondivisa["valore_atteso"],
+    });
+
+  it("prende il migliore fra le due linee, non quello di ciascuna", () => {
+    const m = manoNostra();
+    const unico = riferimentoUnico(m);
+    expect(unico.punteggio).toBe(migliorContrattoDi(m, "ns").punteggio);
+    expect(unico.punteggio).toBeGreaterThan(migliorContrattoDi(m, "ew").punteggio);
+  });
+
+  it("con quel metro un contratto avversario che cade non prende il pieno", () => {
+    // È il difetto dello screenshot: `1♥ di Est` cadeva di due e mostrava tre
+    // stelle piene, perché era il migliore della sua linea.
+    const rif = riferimentoUnico(manoNostra()).punteggio;
+    const loroCheCade = -100; // dal punto di vista di chi lo dichiara
+    expect(valutaLicita(loroCheCade, rif, "atteso").stelle).toBeLessThan(2);
+  });
+
+  it("se la mano è LORO il metro si sposta, e le stelle si girano", () => {
+    const manoLoro = mano({
+      par_score: -620,
+      distribuzioni: distribuzioniFinte(),
+      valore_atteso: {
+        ns: { level: 1, strain: "club", declarer: "south", ev: -90, mantenuto: 8 },
+        ew: { level: 4, strain: "heart", declarer: "east", ev: -600, mantenuto: 10 },
+      } as ManoCondivisa["valore_atteso"],
+    });
+    // `ew.ev` è scritto dal punto di vista di Nord-Sud, come il par: -600 per
+    // noi vuol dire +600 per loro, ed è quello il migliore della smazzata.
+    expect(riferimentoUnico(manoLoro).punteggio).toBe(migliorContrattoDi(manoLoro, "ew").punteggio);
   });
 });

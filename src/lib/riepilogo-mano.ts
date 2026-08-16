@@ -37,7 +37,7 @@ import type { Position } from "./bridge-engine";
 import type { DdsTable, TableStrain } from "./dds-table";
 import type { Strain } from "./minibridge";
 import type { Vulnerability } from "./catalog";
-import { scoreContract } from "./scoring";
+import { scoreContract, type Doppio } from "./scoring";
 import { valutaLicita, type Metro } from "./stelle-licita";
 
 const DENOMINAZIONI: { chiave: TableStrain; strain: Strain; etichetta: string }[] = [
@@ -78,7 +78,16 @@ export function contrattiDaRivedere(opzioni: {
   /** Il punteggio di riferimento per le stelle, visto dalla propria linea. */
   riferimento: number;
   metro: Metro;
-  giocato?: { level: number; strain: Strain; declarer?: Position } | null;
+  /**
+   * Il contratto davvero dichiarato, con il contro se c'è.
+   *
+   * IL CONTRO CAMBIA IL PUNTEGGIO, e non di poco: un 4♠ contrato caduto di due
+   * in zona sono 500 punti invece di 100. Senza `doppio` la riga «← il vostro»
+   * mostrava il punteggio del contratto liscio — diverso da quello del voto qui
+   * sopra, che il contro lo conta (vedi `esitoAsta`). Due numeri diversi per la
+   * stessa mano nella stessa schermata.
+   */
+  giocato?: { level: number; strain: Strain; declarer?: Position; doppio?: Doppio } | null;
   /**
    * Il valore atteso di un contratto, quando la mano lo permette.
    *
@@ -141,11 +150,20 @@ export function contrattiDaRivedere(opzioni: {
       dichiaranteVero ??
       posti.reduce((a, b) => (table.tricks[chiave][a] >= table.tricks[chiave][b] ? a : b));
     const prese = table.tricks[chiave][declarer];
+    // È questa la riga che avete giocato? Va deciso PRIMA del punteggio,
+    // perché solo su quella si applica il contro.
+    const tuo =
+      giocato?.level === level &&
+      giocato?.strain === strain &&
+      (giocato.declarer === undefined || giocato.declarer === declarer);
     const punteggio = scoreContract({
       level,
       strain,
       tricksMade: prese,
       vulnerable: inZona,
+      // Gli altri contratti sono proposte: nessuno li ha contrati, e
+      // applicare il contro anche a loro sarebbe inventarsi un'asta.
+      doppio: tuo ? (giocato?.doppio ?? 1) : 1,
     }).score;
     const etichetta = `${level}${DENOMINAZIONI.find((d) => d.strain === strain)!.etichetta}`;
     // `ev` risponde sempre dal punto di vista di Nord-Sud, come il par; qui
@@ -165,10 +183,7 @@ export function contrattiDaRivedere(opzioni: {
       stelle: valutaLicita(atteso ?? punteggio, riferimento, metro).stelle,
       // Il dichiarante conta: con lo stesso contratto giocato dall'altra parte
       // del tavolo le righe diventano due, e devono essere distinguibili.
-      tuo:
-        giocato?.level === level &&
-        giocato?.strain === strain &&
-        (giocato.declarer === undefined || giocato.declarer === declarer),
+      tuo,
     };
   };
 

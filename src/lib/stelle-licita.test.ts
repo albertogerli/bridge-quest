@@ -103,3 +103,32 @@ describe("il metro atteso", () => {
     expect(valutaLicita(620, 620).commento).toContain("Contratto par");
   });
 });
+
+describe("il commento descrive la distanza vera, non il voto", () => {
+  it("225 punti sotto non sono «ci sei quasi»", () => {
+    // Il difetto segnalato il 16/08/2026: due stelle coprono tutto ciò che sta
+    // entro sei IMP, quindi lo stesso «di solito è un parziale al posto di un
+    // altro» usciva anche per una manche mancata.
+    const e = valutaLicita(108, 333, "atteso");
+    expect(e.differenza).toBe(225);
+    expect(e.commento).not.toMatch(/Ci sei quasi/);
+    expect(e.commento).toMatch(/manche/);
+  });
+
+  it("sessanta punti sono davvero «ci sei quasi»", () => {
+    // Venti punti no: quelli valgono ancora il pieno, e il commento diventa
+    // «la scelta migliore». Il ramo del quasi comincia dove il voto scende.
+    const e = valutaLicita(273, 333, "atteso");
+    expect(e.differenza).toBe(60);
+    expect(e.commento).toMatch(/Ci sei quasi/);
+    expect(e.commento).toMatch(/parziale/);
+  });
+
+  it("una manche intera si chiama con il suo nome", () => {
+    expect(valutaLicita(120, 620, "esatto").commento).toMatch(/manche intera/);
+  });
+
+  it("oltre i seicento si parla di slam o di caduta pesante", () => {
+    expect(valutaLicita(0, 1430, "esatto").commento).toMatch(/slam|caduta pesante/);
+  });
+});

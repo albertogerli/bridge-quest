@@ -355,3 +355,43 @@ describe("dalVostroLato — i punti degli avversari si scrivono col meno", () =>
     expect(dalVostroLato(undefined)).toBe("—");
   });
 });
+
+describe("il contro cambia il punteggio del contratto giocato", () => {
+  it("un contratto caduto contrato vale la penalità contrata, non quella liscia", () => {
+    // 4♠ di Sud caduto di due, in zona: 100 lisci, 500 contrati. Senza il
+    // `doppio` la riga «← il vostro» mostrava 100 mentre il voto qui sopra
+    // diceva 500 — due numeri per la stessa mano nella stessa schermata.
+    const comune = {
+      table: tabella({ spade: 8 }), // otto prese: 4♠ cade di due
+      lato: "ns" as const,
+      vulnerability: "ns" as const,
+      riferimento: 0,
+      metro: "esatto" as const,
+    };
+    const contratto = { level: 4, strain: "spade" as const, declarer: "south" as const };
+
+    const liscio = contrattiDaRivedere({ ...comune, giocato: { ...contratto, doppio: 1 } });
+    const contrato = contrattiDaRivedere({ ...comune, giocato: { ...contratto, doppio: 2 } });
+
+    const suo = (righe: ReturnType<typeof contrattiDaRivedere>) =>
+      righe.find((r) => r.tuo)?.punteggio;
+
+    expect(suo(liscio)).toBe(-200);
+    expect(suo(contrato)).toBe(-500);
+  });
+
+  it("gli altri contratti restano lisci: nessuno li ha contrati", () => {
+    const righe = contrattiDaRivedere({
+      table: tabella({ spade: 8 }),
+      lato: "ns",
+      vulnerability: "ns",
+      riferimento: 0,
+      metro: "esatto",
+      giocato: { level: 4, strain: "spade", declarer: "south", doppio: 2 },
+    });
+    for (const r of righe.filter((x) => !x.tuo)) {
+      // Nessuna riga non giocata può portare una penalità da contro.
+      expect(r.punteggio).not.toBe(-500);
+    }
+  });
+});

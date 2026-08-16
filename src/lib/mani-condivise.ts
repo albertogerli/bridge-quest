@@ -292,6 +292,41 @@ export function migliorContrattoDi(
 }
 
 /**
+ * UN METRO SOLO PER TUTTA LA TABELLA: il miglior contratto della smazzata,
+ * chiunque lo dichiari.
+ *
+ * PERCHÉ. Misurare i contratti di ogni linea sul meglio della PROPRIA linea
+ * sembra giusto e non lo è: il migliore di una linea prende tre stelle per
+ * costruzione, anche quando è un disastro. Nel riquadro «cosa potevano fare
+ * loro» si vedeva `1♥ di Est` — che cade di due — con tre stelle piene, e chi
+ * legge capisce «avevano una bella mano», che è l'opposto della verità
+ * (16/08/2026).
+ *
+ * Con un riferimento solo le stelle mantengono un significato unico in tutta
+ * la tabella: quanto vale questo contratto rispetto al meglio ottenibile su
+ * questa smazzata. Se la mano è vostra le loro righe scendono da sole; se è
+ * loro, salgono le loro e scendono le vostre — ed è esattamente la cosa che il
+ * riquadro deve far vedere.
+ *
+ * OGNI VALORE È VISTO DALLA LINEA CHE DICHIARA, riferimento compreso: si
+ * confronta «quanto rende a chi lo gioca» con «quanto rendeva il meglio a chi
+ * lo giocava», che sono grandezze della stessa specie.
+ *
+ * NON È IL METRO DEL VOTO. Il voto in cima giudica la TUA scelta fra quelle
+ * che avevi, e quando la mano è degli avversari il suo riferimento resta il
+ * par: non si può chiedere all'allievo di raggiungere una manche che non
+ * aveva le carte per fare. Qui invece la domanda è un'altra — quanto valeva
+ * ogni contratto — e la risposta non dipende da chi la fa.
+ */
+export function riferimentoUnico(
+  mano: ManoCondivisa
+): { punteggio: number; metro: "atteso" | "esatto" } {
+  const nostro = migliorContrattoDi(mano, "ns");
+  const loro = migliorContrattoDi(mano, "ew");
+  return nostro.punteggio >= loro.punteggio ? nostro : loro;
+}
+
+/**
  * Pubblica uno scenario e le sue mani nella scorta condivisa.
  *
  * Serve agli insegnanti: le mani generate per una lezione diventano un
