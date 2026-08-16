@@ -13,6 +13,31 @@ const withSerwist = withSerwistInit({
   cacheOnNavigation: true,
   reloadOnOnline: true,
   disable: process.env.NODE_ENV === "development",
+  /**
+   * I VIDEO FUORI DAL PRECACHE, che è la cosa che li scarica davvero.
+   *
+   * `sw.ts` ha una regola `NetworkOnly` con scritto «never cache video files»,
+   * e non bastava: quella governa il traffico a RUNTIME, mentre il manifest del
+   * precache è un'altra lista, costruita al build su tutto ciò che sta in
+   * `public/`. Ci finivano dentro 49 lezioni del maestro, 169 MB, che il
+   * service worker si scaricava durante l'INSTALLAZIONE — cioè mentre l'utente
+   * stava aspettando la prima pagina.
+   *
+   * L'effetto misurato in produzione il 17/08/2026: primo contenuto a schermo
+   * dopo 256 secondi con il worker attivo, 1,5 secondi con il worker bloccato.
+   * Non era lentezza del database (16 chiamate, 3 secondi in tutto) né del
+   * server (gli stessi file, chiesti fuori dal browser, arrivavano in 200
+   * millisecondi): erano le richieste della pagina affamate dal precache.
+   *
+   * `scripts/verifica-sw.mjs` controlla dopo ogni build che non tornino.
+   */
+  exclude: [
+    /\.mp4$/,
+    /^videos\//,
+    // Anche le immagini pesanti: nel precache ci vanno per intero, e nessuna
+    // di queste serve prima che l'utente abbia visto qualcosa.
+    /\.(?:mov|webm|mp3|wav)$/,
+  ],
 });
 
 // No-op unless ANALYZE=true. Generate a prod bundle report with:
