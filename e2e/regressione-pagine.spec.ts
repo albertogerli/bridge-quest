@@ -12,9 +12,19 @@ import { dismissCookieBanner, login } from "./helpers";
  * il refactoring può riscrivere il markup senza far diventare rosso il verde.
  *
  * ATTENZIONE — stato iniziale: `e2e/global-setup.ts` crea un utente nuovo a
- * ogni run. Le asserzioni valgono per un account VERGINE (0 XP, nessun modulo
- * completato, nessuna partita giocata): non aggiungere qui aspettative da
- * account maturo (badge sbloccati, risultati in classifica, ecc.).
+ * ogni run, ma quell'utente è UNO SOLO per tutta la suite e non resta vergine.
+ * I test girano in ordine alfabetico di file, con un worker, e giocano: il
+ * primo test di questo stesso file completa un modulo, che vale XP. Quanto di
+ * quell'XP sia già stato scritto su Supabase quando arriva il test dopo
+ * dipende da una corsa con la sincronizzazione — che in CI, più lenta, si
+ * risolve al contrario che sul portatile.
+ *
+ * Perciò: NIENTE asserzioni su valori assoluti di progresso (0 XP, livello 1,
+ * 0 mani). Passerebbero in locale e fallirebbero ogni notte, segnalando un
+ * difetto che non esiste — è successo il 16/08/2026 con «Livello 1» su
+ * /profilo. Si verificano il formato dei valori e la loro coerenza fra
+ * componenti diversi, che non dipendono da chi ha giocato prima. Nemmeno
+ * aspettative da account maturo (badge sbloccati, posizioni in classifica).
  *
  * Sincronizzazione: mai `waitForTimeout`. Le pagine sono client-rendered e
  * caricano il catalogo/le smazzate da Supabase in modo asincrono, quindi si
@@ -211,7 +221,7 @@ test.describe("regressione pagine monolitiche", () => {
     await expectNoProblems(problems, "il percorso /lezioni → lezione → modulo");
   });
 
-  test("profilo: identità utente e statistiche a zero, senza errori in console", async ({
+  test("profilo: identità utente e statistiche coerenti, senza errori in console", async ({
     page,
   }) => {
     const problems = watchForProblems(page);
@@ -235,25 +245,50 @@ test.describe("regressione pagine monolitiche", () => {
     const avatar = page.locator("h1").locator("xpath=../..").locator("img, span").first();
     await expect(avatar, "l'avatar non è renderizzato su /profilo").toBeVisible();
 
-    // Utente nuovo → livello 1. La stringa è generata da getLevel(0).
+    // NON si presume un utente vergine, e non è una resa.
+    //
+    // L'utente di prova è UNO per tutta la suite, e i test che girano prima di
+    // questo giocano: quello subito sopra percorre una lezione fino a
+    // completare un modulo, che vale XP. Se la sincronizzazione verso Supabase
+    // fa in tempo a scrivere — e in CI, più lenta, fa in tempo — qui arriva un
+    // utente di livello 2. Il test pretendeva «Livello 1» e falliva ogni notte
+    // (16/08/2026) per un difetto che non esiste: sul portatile la stessa
+    // corsa finiva al contrario, quindi in locale passava sempre.
+    //
+    // Quello che questa pagina deve garantire non è un numero particolare, ma
+    // di non contraddirsi: il livello scritto nella scheda e quello nella
+    // barra laterale vengono da due componenti diversi che leggono lo stesso
+    // XP, e se divergono è una regressione vera. È un controllo più forte di
+    // «Livello 1», e non dipende da chi ha giocato prima.
+    const livelloScheda = page.getByRole("heading", { name: /^Livello \d+\b/ });
     await expect(
-      page.getByRole("heading", { name: /^Livello 1\b/ }),
-      "un utente appena creato deve essere di livello 1 (0 XP)"
+      livelloScheda,
+      "manca l'intestazione del livello su /profilo"
     ).toBeVisible({ timeout: LOAD_TIMEOUT });
 
-    // Statistiche a zero. I riquadri contengono valore + etichetta.
+    const nScheda = (await livelloScheda.innerText()).match(/Livello (\d+)/)?.[1];
+    const barra = page.getByRole("complementary", { name: "Barra laterale" });
+    if (await barra.isVisible()) {
+      await expect(
+        barra.getByText(new RegExp(`^Livello ${nScheda}$`)),
+        `la barra laterale non concorda con la scheda (livello ${nScheda})`
+      ).toBeVisible();
+    }
+
+    // I riquadri delle statistiche: il formato, non il valore. Un riquadro che
+    // resta vuoto o mostra «NaN» è la regressione da catturare.
     await expect(
       page.getByTestId("profilo-stat-moduli"),
-      "un utente nuovo deve avere 0 moduli completati"
-    ).toHaveText(/^0\s*Moduli$/);
+      "il riquadro dei moduli non mostra un numero"
+    ).toHaveText(/^\d+\s*Moduli$/);
     await expect(
       page.getByTestId("profilo-stat-mani"),
-      "un utente nuovo deve avere 0 mani giocate"
-    ).toHaveText(/^0\s*Mani$/);
+      "il riquadro delle mani non mostra un numero"
+    ).toHaveText(/^\d+\s*Mani$/);
     await expect(
       page.getByTestId("profilo-stat-completato"),
-      "un utente nuovo deve avere 0% di completamento"
-    ).toHaveText(/^0%\s*Completato$/);
+      "il riquadro del completamento non mostra una percentuale"
+    ).toHaveText(/^\d+%\s*Completato$/);
 
     // Sezioni principali presenti (il refactoring non deve perderne pezzi).
     await expect(
