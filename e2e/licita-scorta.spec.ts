@@ -12,16 +12,32 @@ import { login } from "./helpers";
  * mazziere che gli tocca, non sempre Sud — e che alla fine compaia il voto.
  * È esattamente il punto in cui un difetto non si vede da nessun'altra parte.
  *
- * Il compagno e gli avversari sono la rete neurale: se il servizio è giù la
- * mano si annulla e la schermata lo dice. La prova accetta anche quel finale,
- * perché un servizio esterno spento non è un difetto della pagina — ma NON
- * accetta che non succeda niente.
+ * LA RETE NEURALE VIENE SOSTITUITA CON UN PASSO.
+ * Il compagno e gli avversari sono BEN, un servizio esterno che risponde in
+ * 4-9 secondi quando è in forma e ogni tanto non risponde affatto. Con BEN
+ * vero dentro, questa prova misurava la latenza di Railway invece del codice:
+ * il 16/08/2026 è morta sul tetto dei quattro minuti, e nelle notti prima
+ * passava o falliva a seconda del carico. Un test che cambia risposta senza
+ * che cambi una riga non dice più niente, e insegna a ignorare il rosso.
+ *
+ * Quello che qui ci appartiene — e resta verificato — è che la pagina chieda
+ * una mano alla scorta, la mostri, faccia partire l'asta dal mazziere giusto e
+ * arrivi al voto. Che BEN sia vivo è un'altra domanda, e va fatta a BEN.
  */
 test.describe("licita dalla scorta condivisa", () => {
   test("una mano arriva, si dichiara e si ottiene un esito", async ({ page }) => {
     // In sviluppo la prima apertura della rotta la compila: da sola può
-    // prendersi un minuto, e sopra ci vanno le chiamate alla rete neurale.
-    test.setTimeout(240_000);
+    // prendersi un minuto.
+    test.setTimeout(180_000);
+
+    await page.route("**/api/ben/bid", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ bid: "PASS" }),
+      })
+    );
+
     await login(page);
     await page.goto("/gioca/licita");
 
@@ -29,24 +45,21 @@ test.describe("licita dalla scorta condivisa", () => {
     await expect(page.getByText(/PO/).first()).toBeVisible({ timeout: 30_000 });
     await expect(page.getByText(/Sei Sud/)).toBeVisible();
 
-    // Si dichiara passo finché non esce un esito: il passo è sempre lecito, ed
-    // è la via più corta per arrivare in fondo a un'asta vera.
-    const passo = page.getByRole("button", { name: "Passo", exact: true });
-    for (let i = 0; i < 12; i++) {
-      const finita = await page
-        .getByText(/Il tuo contratto vale|Mano annullata/)
-        .isVisible()
-        .catch(() => false);
-      if (finita) break;
-      if (await passo.isEnabled().catch(() => false)) {
-        await passo.click();
-      }
-      await page.waitForTimeout(1500);
-    }
+    // Si dichiara 1♣ e gli altri passano: l'asta chiude su un contratto vero,
+    // quindi si arriva al voto e non a un passo generale. Il pulsante è attivo
+    // solo quando tocca davvero a te — le mani della scorta ruotano il
+    // mazziere, quindi prima possono parlare i robot.
+    const apri = page.getByRole("button", { name: "Dichiara 1♣" });
+    await expect(
+      apri,
+      "il turno non è mai arrivato a Sud: l'asta non è partita dal mazziere giusto"
+    ).toBeEnabled({ timeout: 60_000 });
+    await apri.click();
 
-    await expect(page.getByText(/Il tuo contratto vale|Mano annullata/)).toBeVisible({
-      timeout: 60_000,
-    });
+    await expect(
+      page.getByText(/Il tuo contratto vale/).first(),
+      "l'asta è finita ma il voto non è comparso"
+    ).toBeVisible({ timeout: 60_000 });
   });
 
   test("la sfida 2 contro 2 si apre e spiega cosa serve", async ({ page }) => {
