@@ -43,3 +43,12 @@ jobs:
           # non sono un requisito per far girare la CI su un fork.
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://esempio.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'chiave-finta-solo-per-il-build' }}
+
+      # Il precache del service worker si costruisce al build su `public/`, e lì
+      # dentro ci sono 169 MB di video: finivano dentro, e il worker se li
+      # scaricava durante l'installazione mentre l'utente aspettava la prima
+      # pagina (256 secondi misurati in produzione il 17/08/2026). L'esclusione
+      # sta in `next.config.ts`; questo controlla il file generato, perché è
+      # l'unico modo di accorgersi se un aggiornamento di Serwist la ignora.
+      - name: Il service worker non precarica i video
+        run: node scripts/verifica-sw.mjs
