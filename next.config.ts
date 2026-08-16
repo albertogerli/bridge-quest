@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
@@ -6,6 +8,78 @@ import withBundleAnalyzerInit from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Le voci di `public/` per il precache del service worker, SENZA i filmati.
+ *
+ * Serwist, se non gli si passa `additionalPrecacheEntries`, scansiona `public/`
+ * da solo e ci mette dentro tutto: comprese le 49 lezioni del maestro, 169 MB
+ * che il worker si scaricava durante l'installazione — cioè mentre l'utente
+ * aspettava la prima pagina dopo il login. Misurato in produzione il
+ * 17/08/2026: primo contenuto dopo 256 secondi col worker attivo, 1,5 secondi
+ * col worker bloccato.
+ *
+ * PERCHÉ LA SCANSIONE LA FACCIAMO NOI. Le altre tre strade non funzionano, e
+ * l'ho verificato una per una: `exclude` filtra gli asset del bundle e non
+ * tocca `public/` (provato in produzione, i 49 video restavano);
+ * `globPublicPatterns` li filtrerebbe, ma la libreria che li cerca è `glob`,
+ * che i pattern negativi non li interpreta; `manifestTransforms` gira sul
+ * manifest degli asset del compilation, e le voci di `public/` vengono
+ * aggiunte dopo (verificato: il transform vedeva 213 voci e nessun video).
+ * Passando noi l'elenco, Serwist salta la propria scansione e usa questo.
+ *
+ * I file esclusi non vengono nemmeno LETTI: calcolare l'impronta di quindici
+ * gigabyte di video a ogni build sarebbe il secondo modo di far aspettare
+ * qualcuno.
+ */
+/**
+ * NON SI PRECARICA IL CONTENUTO, SOLO LA SCORZA DELL'APP.
+ *
+ * `public/` contiene due cose diverse: quel poco che serve perché l'app si
+ * apra (icone, manifest, logo — meno di due megabyte) e il materiale delle
+ * lezioni, che pesa quindici gigabyte fra i filmati del maestro e le
+ * infografiche. Il precache si prendeva tutto, e il service worker se lo
+ * scaricava durante l'INSTALLAZIONE, mentre l'utente aspettava la prima
+ * pagina: 256 secondi misurati in produzione il 17/08/2026, contro 1,5 secondi
+ * col worker disattivato.
+ *
+ * Le due cartelle sono escluse per nome, ma la protezione vera è il limite di
+ * peso: qualunque cosa venga aggiunta in `public/` domani, se supera il
+ * megabyte non entra. Una lista di estensioni copre solo i formati a cui si è
+ * pensato — e questo difetto è nato proprio così, da una regola che parlava di
+ * video mentre il problema erano anche le immagini.
+ */
+const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche)\//;
+/** Il worker stesso e i suoi satelliti: precaricarsi da soli non ha senso. */
+const NON_E_UN_ASSET = /^(?:sw\.js(?:\.map)?|swe-worker-[^/]*\.js)$/;
+/** Oltre questo, non è roba che serve prima che l'utente veda qualcosa. */
+const PESO_MASSIMO = 1024 * 1024;
+
+function vociDiPublic(): { url: string; revision: string }[] {
+  const radice = path.join(projectRoot, "public");
+  const voci: { url: string; revision: string }[] = [];
+  const cammina = (cartella: string, prefisso: string) => {
+    for (const voce of fs.readdirSync(cartella, { withFileTypes: true })) {
+      const relativo = prefisso ? `${prefisso}/${voce.name}` : voce.name;
+      const completo = path.join(cartella, voce.name);
+      if (voce.isDirectory()) {
+        // Le cartelle di contenuto non si aprono nemmeno: leggerle per
+        // calcolare impronte che poi si buttano è il secondo modo di far
+        // aspettare qualcuno.
+        if (!CARTELLE_DI_CONTENUTO.test(`${relativo}/`)) cammina(completo, relativo);
+        continue;
+      }
+      if (NON_E_UN_ASSET.test(relativo)) continue;
+      if (fs.statSync(completo).size > PESO_MASSIMO) continue;
+      voci.push({
+        url: `/${relativo}`,
+        revision: crypto.createHash("md5").update(fs.readFileSync(completo)).digest("hex"),
+      });
+    }
+  };
+  if (fs.existsSync(radice)) cammina(radice, "");
+  return voci;
+}
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -29,15 +103,16 @@ const withSerwist = withSerwistInit({
    * server (gli stessi file, chiesti fuori dal browser, arrivavano in 200
    * millisecondi): erano le richieste della pagina affamate dal precache.
    *
+   * PERCHÉ NON `exclude` E NON `globPublicPatterns`. Il primo filtra gli asset
+   * del bundle, non i file di `public/` — provato in produzione, i 49 video
+   * restavano. Il secondo li filtrerebbe, ma la libreria che li cerca è `glob`,
+   * che i pattern negativi non li interpreta. `manifestTransforms` invece
+   * lavora sul manifest FINITO, qualunque strada abbiano preso le voci per
+   * arrivarci, ed è l'unico punto in cui la regola vale una volta sola.
+   *
    * `scripts/verifica-sw.mjs` controlla dopo ogni build che non tornino.
    */
-  exclude: [
-    /\.mp4$/,
-    /^videos\//,
-    // Anche le immagini pesanti: nel precache ci vanno per intero, e nessuna
-    // di queste serve prima che l'utente abbia visto qualcosa.
-    /\.(?:mov|webm|mp3|wav)$/,
-  ],
+  additionalPrecacheEntries: vociDiPublic(),
 });
 
 // No-op unless ANALYZE=true. Generate a prod bundle report with:

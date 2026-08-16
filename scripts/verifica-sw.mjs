@@ -21,7 +21,7 @@
  *
  * Esce con 1 se ne trova.
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, statSync } from "node:fs";
 
 const FILE = new URL("../public/sw.js", import.meta.url);
 
@@ -39,7 +39,40 @@ const VIETATI = [
   // controllo bocciava una build sana.
   { nome: "altri filmati", regola: /[\w/-]+\.(?:mov|webm)(?![\w])/g },
   { nome: "audio", regola: /[\w/-]+\.(?:mp3|wav)(?![\w])/g },
+  { nome: "infografiche delle lezioni", regola: /\/infografiche\/[\w.-]+/g },
 ];
+
+/**
+ * IL PESO È LA PROVA VERA, non l'elenco delle estensioni.
+ *
+ * Un elenco copre solo i formati a cui si è pensato, e questo difetto è nato
+ * proprio così: `sw.ts` aveva una regola che parlava di video mentre nel
+ * precache c'erano anche 340 MB di immagini. Qui invece si sommano i file
+ * citati dal manifest e si guarda quanto pesa l'installazione — che è la cosa
+ * che l'utente aspetta.
+ */
+const TETTO_MB = 8;
+
+function pesoDelPrecache() {
+  // Le voci di `public/` nel manifest sono percorsi che cominciano con «/».
+  // Le virgolette del manifest sono singole nel bundle minificato, doppie
+  // altrove: si accettano entrambe, altrimenti il conto torna sempre zero e la
+  // guardia sembra passare mentre non sta guardando niente.
+  const urls = new Set(
+    [...sw.matchAll(/['"]url['"]\s*:\s*['"](\/[^'"]+)['"]/g)].map((m) => m[1])
+  );
+  let byte = 0;
+  const grossi = [];
+  for (const u of urls) {
+    if (u.startsWith("/_next/")) continue; // serviti dal bundle, non da public
+    const f = new URL(`../public${decodeURIComponent(u)}`, import.meta.url);
+    if (!existsSync(f)) continue;
+    const n = statSync(f).size;
+    byte += n;
+    if (n > 512 * 1024) grossi.push({ u, mb: (n / 1024 / 1024).toFixed(1) });
+  }
+  return { mb: byte / 1024 / 1024, grossi };
+}
 
 let trovati = 0;
 for (const v of VIETATI) {
@@ -62,4 +95,18 @@ if (trovati) {
   process.exit(1);
 }
 
-console.log("service worker pulito: nessun video o audio nel precache.");
+const { mb, grossi } = pesoDelPrecache();
+if (mb > TETTO_MB) {
+  console.error(
+    `\nIl precache pesa ${mb.toFixed(1)} MB (tetto: ${TETTO_MB} MB).\n` +
+      "Sono byte che il service worker scarica durante l'installazione, mentre\n" +
+      "l'utente aspetta la prima pagina. I file più grossi:"
+  );
+  for (const g of grossi.slice(0, 8)) console.error(`  ${g.mb} MB  ${g.u}`);
+  console.error("\nSi escludono in `next.config.ts`, in `vociDiPublic`.");
+  process.exit(1);
+}
+
+console.log(
+  `service worker pulito: niente video, audio o infografiche; precache da public ${mb.toFixed(1)} MB.`
+);
