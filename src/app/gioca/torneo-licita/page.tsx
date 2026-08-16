@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Asta } from "@/components/bridge/asta";
+import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { Stelle } from "@/components/bridge/stelle";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { useSharedAuth } from "@/contexts/auth-provider";
@@ -56,6 +57,8 @@ export default function TorneoLicitaPage() {
   const [tabella, setTabella] = useState<DdsTable | null>(null);
   const [bids, setBids] = useState<string[]>([]);
   const [attesa, setAttesa] = useState(false);
+  /** Il posto da cui si aspetta una dichiarazione: serve a dirlo in schermata. */
+  const [attesaDi, setAttesaDi] = useState<Position | null>(null);
   const [esito, setEsito] = useState<EsitoLicita | null>(null);
   const [giocato, setGiocato] = useState<
     { level: number; strain: Strain; declarer: Position } | null
@@ -129,6 +132,7 @@ export default function TorneoLicitaPage() {
       const chi = ordine[correnti.length % 4];
       if (chi === "south") break;
 
+      setAttesaDi(chi);
       let r = await chiediABen(m, chi, correnti);
       if (r.fallback) r = await chiediABen(m, chi, correnti);
       if (r.fallback) {
@@ -139,6 +143,7 @@ export default function TorneoLicitaPage() {
           // l'asta si è fermata.
           setCompagnoMuto(true);
           setAttesa(false);
+          setAttesaDi(null);
           return;
         }
         setAvversarioMuto(true);
@@ -148,6 +153,7 @@ export default function TorneoLicitaPage() {
       setBids(correnti);
     }
     setAttesa(false);
+    setAttesaDi(null);
     if (astaChiusa(correnti)) await chiudi(m, t, correnti);
   };
 
@@ -286,11 +292,7 @@ export default function TorneoLicitaPage() {
               onDichiara={(b) => { void avanza(mano, tabella, [...bids, b]); }}
               disabilitato={attesa || !!esito}
             />
-            {attesa && (
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                Gli altri stanno dichiarando…
-              </p>
-            )}
+            <AttesaDichiarazione chi={attesaDi} />
           </div>
 
           {avversarioMuto && (

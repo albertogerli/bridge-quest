@@ -15,6 +15,7 @@ import type { Strain } from "@/lib/minibridge";
 import { valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita";
 import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
+import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { astaChiusa, esitoAsta, ordineDa } from "@/lib/licita-mano";
 import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
@@ -85,6 +86,8 @@ export default function LicitaPage() {
   const [preparata, setPreparata] = useState<{ round: number; dati: Mano } | null>(null);
   const [licita, setLicita] = useState<string[]>([]);
   const [attesa, setAttesa] = useState(false);
+  /** Il posto da cui si aspetta una dichiarazione: serve a dirlo in schermata. */
+  const [attesaDi, setAttesaDi] = useState<Position | null>(null);
   const [annullata, setAnnullata] = useState(false);
   /** Un avversario non ha risposto e ha passato d'ufficio: va detto. */
   const [avversarioMuto, setAvversarioMuto] = useState(false);
@@ -251,6 +254,7 @@ export default function LicitaPage() {
        * l'esercizio non esiste, e dargli un passo inventato falserebbe proprio
        * la cosa che si sta misurando.
        */
+      setAttesaDi(chi);
       let r = await chiediABen(m, chi, bids);
       if (r.fallback) r = await chiediABen(m, chi, bids);
 
@@ -259,6 +263,7 @@ export default function LicitaPage() {
           // Mano annullata: niente stelle, niente conteggio.
           setAnnullata(true);
           setAttesa(false);
+          setAttesaDi(null);
           return;
         }
         setAvversarioMuto(true);
@@ -268,6 +273,7 @@ export default function LicitaPage() {
       setLicita(bids);
     }
     setAttesa(false);
+    setAttesaDi(null);
     if (astaChiusa(bids)) chiudiLicita(bids);
   };
 
@@ -424,11 +430,7 @@ export default function LicitaPage() {
               onDichiara={dichiara}
               disabilitato={attesa || !!esito || annullata}
             />
-            {attesa && (
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                Gli altri stanno dichiarando…
-              </p>
-            )}
+            <AttesaDichiarazione chi={attesaDi} />
           </div>
 
           {avversarioMuto && !annullata && (
