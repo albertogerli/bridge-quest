@@ -15,6 +15,7 @@ import { NotificationsNudge } from "@/components/notifications-nudge";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { LostCard } from "@/components/beginner/lost-card";
 import { HeroSection } from "@/components/home/hero-section";
+import { LicitaSection } from "@/components/home/licita-section";
 import { HomeFooter } from "@/components/home/home-footer";
 import { ReferralHandler } from "@/components/home/referral-handler";
 import { TreasureChests } from "@/components/home/treasure-chests";
@@ -308,6 +309,9 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           ))}
         </div>
       </section>
+
+      {/* ===== LICITA — le tre porte al gioco con gli altri ===== */}
+      <LicitaSection />
 
       {/* ===== ATTIVA PROMEMORIA ===== (logged-in; activates the reminder loop) */}
       {user && <NotificationsNudge />}
