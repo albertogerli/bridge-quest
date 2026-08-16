@@ -250,6 +250,48 @@ export function riferimento(
 }
 
 /**
+ * Il metro con cui si giudicano i contratti di UN lato: il suo contratto
+ * migliore, misurato sullo stesso istogramma da cui vengono i valori mostrati.
+ *
+ * PERCHÉ NON BASTA `riferimento`. Quella funzione risponde alla domanda «come
+ * è andata a voi», e quando la mano è degli avversari cambia metro apposta:
+ * il vostro obiettivo non è più il vostro contratto migliore ma limitare i
+ * danni, quindi il riferimento diventa il par. Giusto per la vostra linea,
+ * disastroso per la loro: girato di segno, il par vale per loro qualcosa come
+ * −620 su una mano vostra, e `valutaLicita` dà tre stelle a tutto ciò che sta
+ * SOPRA il riferimento. Risultato visto in pagina il 16/08/2026: nel riquadro
+ * «Cosa potevano fare loro» ogni riga aveva tre stelle piene, compresa quella
+ * di un contratto che cadeva.
+ *
+ * Qui il metro è sempre lo stesso: quanto rendeva il loro contratto migliore.
+ * Così le stelle dicono la cosa per cui quel riquadro esiste — se la mano era
+ * loro, e quanto vicino al loro meglio era ciascun contratto.
+ *
+ * Senza valore atteso o senza distribuzioni si torna al par di quel lato, con
+ * metro «esatto»: punteggi reali confrontati con un punteggio reale.
+ */
+export function migliorContrattoDi(
+  mano: ManoCondivisa,
+  lato: "ns" | "ew"
+): { punteggio: number; metro: "atteso" | "esatto" } {
+  const va = mano.valore_atteso;
+  const par = mano.par_score ?? 0;
+  if (!va || !mano.distribuzioni) {
+    return { punteggio: lato === "ns" ? par : -par, metro: "esatto" };
+  }
+
+  const suNs = evDelContratto(mano, {
+    level: va[lato].level,
+    strain: va[lato].strain,
+    declarer: va[lato].declarer,
+  });
+  // `evDelContratto` risponde sempre dal punto di vista di Nord-Sud, come il
+  // par: per Est-Ovest il riferimento va girato.
+  if (suNs === null) return { punteggio: va[lato].ev, metro: "atteso" };
+  return { punteggio: lato === "ns" ? suNs : -suNs, metro: "atteso" };
+}
+
+/**
  * Pubblica uno scenario e le sue mani nella scorta condivisa.
  *
  * Serve agli insegnanti: le mani generate per una lezione diventano un

@@ -87,12 +87,21 @@ export function RiepilogoMano({
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
         Cosa valeva ogni contratto
       </p>
-      {contratti.length === 0 ? (
+      {contratti.length === 0 && (
         <p className="text-sm text-muted-foreground">
           Su questa smazzata la tua linea non aveva nessun contratto che
           reggesse: era mano loro, e passare era la scelta giusta.
         </p>
-      ) : (
+      )}
+
+      {/* UNA TABELLA SOLA, anche per i contratti avversari.
+          Erano due tabelle affiancate: ognuna calcolava le larghezze sui
+          propri contenuti, e siccome i numeri sotto sono più corti (o più
+          lunghi, da quando portano il segno) le colonne non cadevano mai sotto
+          le stesse intestazioni. Nessuna riga di CSS può allineare due griglie
+          indipendenti: o si fissano le larghezze a mano — e si sbagliano al
+          primo numero a quattro cifre — o la griglia diventa una. */}
+      {(contratti.length > 0 || avversari.length > 0) && (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -114,10 +123,10 @@ export function RiepilogoMano({
                     {c.etichetta} di {ETICHETTA[c.declarer]}
                     {c.tuo && <span className="ml-1 font-normal">← il vostro</span>}
                   </td>
-                  <td className="py-2 text-right">{c.prese}</td>
-                  <td className="py-2 text-right font-mono">{c.punteggio}</td>
+                  <td className="py-2 text-right tabular-nums">{c.prese}</td>
+                  <td className="py-2 text-right font-mono tabular-nums">{c.punteggio}</td>
                   {mostraAtteso && (
-                    <td className="py-2 text-right font-mono">{c.ev ?? "—"}</td>
+                    <td className="py-2 text-right font-mono tabular-nums">{c.ev ?? "—"}</td>
                   )}
                   <td className="py-2">
                     <span className="flex justify-end">
@@ -126,6 +135,45 @@ export function RiepilogoMano({
                   </td>
                 </tr>
               ))}
+
+              {avversari.length > 0 && (
+                <>
+                  <tr>
+                    <th
+                      colSpan={mostraAtteso ? 5 : 4}
+                      className="border-t border-border pt-4 pb-1 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                    >
+                      Cosa potevano fare loro
+                    </th>
+                  </tr>
+                  {avversari.map((c) => (
+                    <tr
+                      key={`avv-${c.etichetta}-${c.declarer}`}
+                      className="border-t border-border"
+                    >
+                      <td className="py-2">
+                        {c.etichetta} di {ETICHETTA[c.declarer]}
+                      </td>
+                      <td className="py-2 text-right tabular-nums">{c.prese}</td>
+                      {/* Col segno di chi legge: l'allievo siede in Nord-Sud e
+                          quei punti li subisce. Vedi `dalVostroLato`. */}
+                      <td className="py-2 text-right font-mono tabular-nums">
+                        {dalVostroLato(c.punteggio)}
+                      </td>
+                      {mostraAtteso && (
+                        <td className="py-2 text-right font-mono tabular-nums">
+                          {dalVostroLato(c.ev)}
+                        </td>
+                      )}
+                      <td className="py-2">
+                        <span className="flex justify-end">
+                          <Stelle quante={c.stelle} />
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )}
             </tbody>
           </table>
         </div>
@@ -139,47 +187,13 @@ export function RiepilogoMano({
       )}
 
       {avversari.length > 0 && (
-        <div className="mt-4">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Cosa potevano fare loro
-          </p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <tbody>
-                {avversari.map((c) => (
-                  <tr key={`avv-${c.etichetta}-${c.declarer}`} className="border-t border-border">
-                    <td className="py-2">
-                      {c.etichetta} di {ETICHETTA[c.declarer]}
-                    </td>
-                    <td className="py-2 text-right">{c.prese}</td>
-                    {/* Col segno di chi legge: l'allievo siede in Nord-Sud e
-                        quei punti li subisce. Vedi `dalVostroLato`. */}
-                    <td className="py-2 text-right font-mono">
-                      {dalVostroLato(c.punteggio)}
-                    </td>
-                    {mostraAtteso && (
-                      <td className="py-2 text-right font-mono">
-                        {dalVostroLato(c.ev)}
-                      </td>
-                    )}
-                    <td className="py-2">
-                      <span className="flex justify-end">
-                        <Stelle quante={c.stelle} />
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            I punti sono scritti dal vostro lato — col meno quando il
-            contratto lo mantengono loro, col più quando cade. Le stelle invece
-            sono le <strong>loro</strong>, misurate sul loro contratto
-            migliore: servono a sapere se la mano era vostra, perché tenerli
-            fuori da una manche vale più di un vostro parziale in più.
-          </p>
-        </div>
+        <p className="text-xs text-muted-foreground mt-2">
+          Nei contratti loro i punti sono scritti dal vostro lato — col meno
+          quando il contratto lo mantengono, col più quando cade. Le stelle
+          invece sono le <strong>loro</strong>, misurate sul loro contratto
+          migliore: servono a sapere se la mano era vostra, perché tenerli
+          fuori da una manche vale più di un vostro parziale in più.
+        </p>
       )}
 
       <p className="text-xs text-muted-foreground mt-3">

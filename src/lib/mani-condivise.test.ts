@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { evDelContratto, riferimento, type ManoCondivisa } from "./mani-condivise";
+import {
+  evDelContratto,
+  migliorContrattoDi,
+  riferimento,
+  type ManoCondivisa,
+} from "./mani-condivise";
 
 /** Solo la parte pura: il resto è database, e si prova con `prova-campo.mjs`. */
 function mano(parziale: Partial<ManoCondivisa>): ManoCondivisa {
@@ -163,5 +168,48 @@ describe("il riferimento e la tabella parlano dello stesso campione", () => {
     expect(r.punteggio).toBe(420);
     // E infatti coincide con quello che la tabella mostrerà per 4♠.
     expect(evDelContratto(m, { level: 4, strain: "spade", declarer: "south" })).toBe(420);
+  });
+});
+
+describe("migliorContrattoDi — il metro dei contratti avversari", () => {
+  /** Una mano chiaramente di Nord-Sud: loro non hanno niente. */
+  const manoNostra = () =>
+    mano({
+      par_score: 620,
+      distribuzioni: distribuzioniFinte(),
+      valore_atteso: {
+        ns: contratto(566),
+        ew: { level: 1, strain: "club", declarer: "east", ev: -104, mantenuto: 9 },
+      } as ManoCondivisa["valore_atteso"],
+    });
+
+  it("per gli avversari NON usa il par, che li premierebbe sempre", () => {
+    // `riferimento(mano, "ew")` passa al par appena la mano non è loro: girato
+    // vale -620, e `valutaLicita` dà tre stelle a tutto ciò che sta sopra. Ogni
+    // loro contratto ci sta sopra, anche uno che cade.
+    const perLoro = migliorContrattoDi(manoNostra(), "ew");
+    const vecchio = riferimento(manoNostra(), "ew");
+
+    expect(vecchio.punteggio).toBe(-620); // il par girato: il difetto
+    expect(perLoro.punteggio).toBeGreaterThan(vecchio.punteggio);
+    expect(perLoro.metro).toBe("atteso");
+  });
+
+  it("un loro contratto che cade resta sotto il loro meglio", () => {
+    // È la garanzia che serve: sotto il riferimento le stelle scendono.
+    const perLoro = migliorContrattoDi(manoNostra(), "ew").punteggio;
+    const contrattoCheCade = -100; // dal loro punto di vista
+    expect(contrattoCheCade).toBeLessThan(perLoro);
+  });
+
+  it("per la propria linea dà lo stesso metro di sempre", () => {
+    const m = manoNostra();
+    expect(migliorContrattoDi(m, "ns").punteggio).toBe(riferimento(m, "ns").punteggio);
+  });
+
+  it("senza distribuzioni torna al par di quel lato, con punteggi reali", () => {
+    const senza = mano({ par_score: 620 });
+    expect(migliorContrattoDi(senza, "ew")).toEqual({ punteggio: -620, metro: "esatto" });
+    expect(migliorContrattoDi(senza, "ns")).toEqual({ punteggio: 620, metro: "esatto" });
   });
 });
