@@ -36,6 +36,8 @@ export function PendingChallengesBanner() {
   const { user } = useSharedAuth();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const failuresRef = useRef(0);
+  /** Il canale c'è già riuscito una volta: da lì in poi le cadute sono rete. */
+  const connessoRef = useRef(false);
   const [loading, setLoading] = useState(true);
 
   const fetchChallenges = useCallback(async () => {
@@ -156,8 +158,11 @@ export function PendingChallengesBanner() {
         // ricaricamento della pagina. Un canale caduto lo lascia
         // semplicemente fermo, quindi qui non c'è ripiegamento da degradare —
         // resta solo la regola sul quando segnalare. Vedi realtime-health.ts.
-        const esito = evaluateChannel(status, failuresRef.current);
+        const esito = evaluateChannel(status, failuresRef.current, {
+          everConnected: connessoRef.current,
+        });
         failuresRef.current = esito.failures;
+        if (esito.healthy) connessoRef.current = true;
         if (esito.shouldReport) {
           reportError(
             "pending-challenges-banner:realtime",

@@ -72,6 +72,8 @@ export function useChallenges() {
   // minuti. Il contatore sta in un ref perché non deve far ridisegnare nulla.
   const [pollMs, setPollMs] = useState(POLL_HEALTHY_MS);
   const failuresRef = useRef(0);
+  /** Il canale c'è già riuscito una volta: da lì in poi le cadute sono rete. */
+  const connessoRef = useRef(false);
 
   const supabase = createClient();
 
@@ -196,8 +198,11 @@ export function useChallenges() {
         // Un canale che cade su rete mobile è ordinaria amministrazione: si
         // degrada il ripiegamento invece di segnalare. Solo un guasto
         // ripetuto viene riportato, e una volta sola. Vedi realtime-health.ts.
-        const esito = evaluateChannel(status, failuresRef.current);
+        const esito = evaluateChannel(status, failuresRef.current, {
+          everConnected: connessoRef.current,
+        });
         failuresRef.current = esito.failures;
+        if (esito.healthy) connessoRef.current = true;
         setPollMs(esito.pollMs);
         if (esito.shouldReport) {
           reportError(
