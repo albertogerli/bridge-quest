@@ -9,7 +9,13 @@ Piattaforma didattica bridge della FIGB, in produzione su bridgelab.it. Document
 - shadcn/ui stile **new-york** (`src/components/ui/`). Varianti button verificate: `default/outline/ghost`; badge: `default/secondary/destructive/outline/ghost/link`. Non inventare varianti.
 - **Non esiste** l'utility `shadow-warm-*`: usare le shadow standard Tailwind (`shadow-md`, `shadow-lg`).
 - Palette: primario FIGB `#003DA5` via token (`figb`/`figb-light`/`figb-dark`); niente `bg-white`/`text-gray-*`/hex hardcoded fuori dalle eccezioni documentate.
-- Solo italiano: niente i18n, per scelta di prodotto.
+- **Due lingue: italiano e inglese americano** (deciso il 18/08/2026; prima era
+  «solo italiano, per scelta di prodotto»). L'italiano resta la lingua
+  predefinita e la lingua in cui si scrive per primi: l'inglese vive sotto
+  `/en` e si allinea dopo. Piano, fasi e glossario dei termini di bridge —
+  vincolante, perché «presa» non può diventare a volte *trick* e a volte
+  *hand* — stanno in `docs/i18n-inglese.md`. Finché l'impianto non è in piedi
+  il codice resta in italiano: non aggiungere traduzioni sparse.
 
 ## Contenuti: il DB è la fonte di verità
 

@@ -1,7 +1,22 @@
 # BridgeLab in inglese — progetto
 
-Stato: **proposta**, nessuna riga scritta. Redatto il 18/08/2026 dopo una
-ricognizione sul codice e sul database di produzione.
+Stato: **decisioni prese il 18/08/2026**, nessuna riga di codice scritta.
+Redatto dopo una ricognizione sul codice e sul database di produzione.
+
+## Decisioni
+
+| domanda | scelta |
+|---|---|
+| Ambito | **tutto**, comprese le aree secondarie (forum, negozio, portale istruttori, pagine legali) |
+| Chi traduce | **automatico**, con revisione di Alberto |
+| Varietà | **inglese americano** (terminologia ACBL) |
+| Indirizzi | **`bridgelab.it/en/…`** |
+
+Le due scelte che aumentano il rischio sono ambito totale e traduzione
+automatica: insieme fanno 90.000 parole tradotte da una macchina su cui una
+persona sola deve passare. Il §4 e il §7 dicono come tenerlo sotto controllo —
+il glossario vincolante e un controllo di coerenza automatico sono la
+contromisura, non un di più.
 
 Il documento serve a decidere. Le stime sono ordini di grandezza dichiarati,
 non impegni: dove non ho misurato, lo dico.
@@ -45,14 +60,14 @@ scrivono i titoli dei corsi e la pagina di ingresso, non se farlo.
 
 ## 3. Le decisioni da prendere prima di cominciare
 
-### 3.1 Dove vive l'inglese — *proposta: sottocartella `/en`*
+### 3.1 Dove vive l'inglese — **deciso: sottocartella `/en`**
 
 | | pro | contro |
 |---|---|---|
 | **`bridgelab.it/en/...`** (proposta) | un solo deploy, un solo dominio da gestire, i link condivisi continuano a funzionare, SEO gestibile con `hreflang` | l'inglese sta sotto un dominio `.it` |
 | `en.bridgelab.it` | più credibile per un pubblico estero | secondo dominio, certificati, cookie di sessione da condividere: lavoro in più per un beneficio di immagine |
 
-### 3.2 Come si tengono le due lingue nel database — *proposta: colonne parallele*
+### 3.2 Come si tengono le due lingue nel database — **deciso: colonne parallele**
 
 | | pro | contro |
 |---|---|---|
@@ -62,9 +77,9 @@ scrivono i titoli dei corsi e la pagina di ingresso, non se farlo.
 Se un domani servissero francese e tedesco, si migra: con due lingue la tabella
 è complessità pagata in anticipo per un'ipotesi.
 
-### 3.3 Chi traduce
+### 3.3 Chi traduce — **deciso: automatico, revisione di Alberto**
 
-Serve deciderlo perché cambia tempi e costo:
+Le alternative valutate:
 
 - **Automatico + revisione tua**: veloce, ma su 90.000 parole la revisione è
   comunque lavoro vero, e il bridge ha una terminologia che non perdona.
@@ -75,13 +90,18 @@ Serve deciderlo perché cambia tempi e costo:
   di lingua inglese, per lezioni e commenti alle smazzate, che sono la parte
   che insegna.
 
-### 3.4 Ambito: tutto o il cuore
+### 3.4 Ambito — **deciso: tutto**
 
-Non tutto merita la stessa fatica. Proporrei di **escludere dalla prima
-versione**: forum, negozio, portale istruttori, pagine legali (privacy,
-termini), che restano in italiano con un avviso. Si traducono percorso
-lezioni, giochi, profilo e classifica: cioè quello per cui uno straniero
-arriverebbe.
+Compresi forum, negozio, portale istruttori e pagine legali. Due conseguenze da
+mettere in conto adesso:
+
+- le fasi 2 e 3 crescono di circa un terzo rispetto al solo percorso didattico;
+- **le pagine legali tradotte da una macchina sono un rischio diverso dagli
+  altri.** Privacy e termini hanno valore giuridico: un errore lì non è una
+  lezione sbagliata, è una dichiarazione sbagliata. Consiglio di tradurle per
+  ultime e di far rileggere quelle due da chi le ha scritte in italiano, oppure
+  di lasciarle in italiano con un rimando — è l'unica eccezione che chiederei
+  all'ambito totale.
 
 ---
 
@@ -119,9 +139,26 @@ Prima passata, da far validare a un giocatore di lingua inglese:
 | fit | fit | invariato |
 | Nord-Sud / Est-Ovest | North-South / East-West | |
 
-Da decidere anche: **inglese britannico o americano**. Cambia la terminologia
-di gara e l'ortografia. Con la FIGB dietro e un pubblico europeo, propendo per
-il britannico (EBU).
+**Deciso: inglese americano**, terminologia ACBL. Il che comporta scelte
+precise, non solo l'ortografia:
+
+| | americano (scelto) | britannico |
+|---|---|---|
+| parziale | *part score* | *partscore* |
+| fuori zona | *not vulnerable* | *non-vulnerable* |
+| ortografia | *practice*, *color*, *organize*, *center* | *practise*, *colour*, *organise*, *centre* |
+| numeri | *2♠ opening*, «two spades» | uguale |
+
+**Un avvertimento che vale più dell'ortografia.** La terminologia si può
+americanizzare, il *sistema dichiarativo* no: il corso FIGB insegna il sistema
+naturale italiano, non lo Standard American né il 2/1, e nemmeno l'Acol. Un
+lettore americano riconoscerà le parole ma non tutte le sequenze — per esempio
+le aperture e le risposte non coincidono con quelle su cui è stato addestrato.
+
+Non è un difetto da correggere traducendo: sarebbe riscrivere il corso. È una
+cosa da **dire** al lettore, in una riga sulla pagina d'ingresso inglese e in
+apertura del primo corso: «this course teaches the Italian natural system used
+by the FIGB». Meglio che scoprirlo alla terza lezione.
 
 ---
 
