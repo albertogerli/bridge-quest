@@ -134,7 +134,17 @@ const SUPPORTED_INFOGRAPHIC_PROFILES = new Set(["junior"]);
 /** Get infographic image path for a lesson + profile */
 export function getInfographicForLesson(
   lessonId: number,
-  profile: string
+  profile: string,
+  /**
+   * La lingua delle dispense.
+   *
+   * Il testo delle infografiche sta DENTRO l'immagine, quindi la versione
+   * inglese è un file diverso, non lo stesso file con un'etichetta tradotta:
+   * vive in `/infografiche/en/…` con lo stesso nome. Finché non è stata
+   * generata, `lingua` resta «it» e si serve l'italiana — meglio una dispensa
+   * nella lingua sbagliata che un riquadro vuoto.
+   */
+  lingua: "it" | "en" = "it"
 ): { image: string; pdf: string; coursePdf: string } | null {
   const courseFolder = getCourseIdFromLessonId(lessonId);
   if (!courseFolder) return null;
@@ -145,10 +155,12 @@ export function getInfographicForLesson(
     ? requestedProfile
     : "junior";
 
+  const radice = lingua === "en" ? "/infografiche/en" : "/infografiche";
+
   return {
-    image: `/infografiche/${courseFolder}/lezione-${formattedId}-${p}.jpg`,
-    pdf: `/infografiche/${courseFolder}/lezione-${formattedId}-${p}.pdf`,
-    coursePdf: `/infografiche/${courseFolder}/corso-${courseFolder}-${p}.pdf`,
+    image: `${radice}/${courseFolder}/lezione-${formattedId}-${p}.jpg`,
+    pdf: `${radice}/${courseFolder}/lezione-${formattedId}-${p}.pdf`,
+    coursePdf: `${radice}/${courseFolder}/corso-${courseFolder}-${p}.pdf`,
   };
 }
 
