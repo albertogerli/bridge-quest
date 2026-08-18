@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SelettoreLingua } from "@/components/selettore-lingua";
 import Image from "next/image";
 import { openConsentPreferences } from "@/lib/consent-client";
 
@@ -58,6 +59,12 @@ export function SiteFooter() {
           <Link href="/accessibilita" className="hover:text-foreground/70 transition-colors">
             Accessibilità
           </Link>
+        </div>
+
+        {/* La lingua sta qui perché questo footer è nel layout: da qualunque
+            pagina si può cambiare, e si resta sulla pagina in cui si era. */}
+        <div className="mt-3 flex justify-center">
+          <SelettoreLingua />
         </div>
 
         {/* Bottom line */}

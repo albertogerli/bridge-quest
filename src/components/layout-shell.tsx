@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
+import { usePercorso } from "@/hooks/use-lingua";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { DesktopNav } from "@/components/desktop-nav";
@@ -47,7 +48,10 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
 }
 
 function LayoutShellInner({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  // Il percorso SENZA prefisso di lingua: `/en/gioca` deve valere `/gioca` in
+  // ogni confronto, o sotto `/en` le rotte pubbliche non risultano pubbliche e
+  // il gate qui sotto spedisce al login chi apre la home inglese.
+  const pathname = usePercorso();
   const router = useRouter();
   const { user, loading: authLoading } = useSharedAuth();
   const isFullScreen = FULL_SCREEN_ROUTES.some((r) => pathname.startsWith(r));

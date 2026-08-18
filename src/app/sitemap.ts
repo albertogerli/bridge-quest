@@ -148,9 +148,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [
-    ...staticPages,
-    ...lessonPages,
-    ...clubPages,
-  ];
+  const italiano = [...staticPages, ...lessonPages, ...clubPages];
+
+  /**
+   * Ogni pagina compare due volte, una per lingua, e ciascuna dichiara
+   * l'altra.
+   *
+   * `alternates.languages` è il modo in cui si dice a un motore di ricerca
+   * «questa pagina esiste anche in inglese, ed è la stessa pagina»: senza,
+   * le due versioni si fanno concorrenza fra loro e chi cerca in inglese
+   * trova la pagina italiana. `x-default` indica dove mandare chi non ha una
+   * preferenza — l'italiano, che è la lingua di casa.
+   *
+   * Fase 1: gli indirizzi inglesi esistono e rispondono, il contenuto è ancora
+   * italiano. È voluto — si costruisce la strada prima di asfaltarla — ma
+   * finché la traduzione non c'è NON si sottomette questa mappa ai motori di
+   * ricerca, o si offre a Google un sito inglese scritto in italiano.
+   */
+  const conAlternative = (voci: MetadataRoute.Sitemap): MetadataRoute.Sitemap =>
+    voci.flatMap((v) => {
+      const percorso = v.url.replace(baseUrl, "");
+      const inglese = `${baseUrl}/en${percorso}`;
+      const languages = { it: v.url, en: inglese, "x-default": v.url };
+      return [
+        { ...v, alternates: { languages } },
+        { ...v, url: inglese, alternates: { languages } },
+      ];
+    });
+
+  return conAlternative(italiano);
 }

@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { ToasterLazy } from "@/components/toaster-lazy";
 import { LayoutShell } from "@/components/layout-shell";
+import { LinguaDelDocumento } from "@/components/lingua-del-documento";
 import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
 import { MetaPixelLoader } from "@/components/meta-pixel-loader";
@@ -206,6 +207,9 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${bricolage.variable} font-sans antialiased`} suppressHydrationWarning>
         <a href="#main-content" className="skip-link">Vai al contenuto</a>
+        {/* Allinea `lang` all'indirizzo: il layout è statico e da solo non
+            saprebbe se la pagina è italiana o inglese. Non disegna niente. */}
+        <LinguaDelDocumento />
         <LayoutShell>{children}</LayoutShell>
         <ToasterLazy />
         <Analytics />
