@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ToasterLazy } from "@/components/toaster-lazy";
 import { LayoutShell } from "@/components/layout-shell";
 import { LinguaDelDocumento } from "@/components/lingua-del-documento";
+import { TraduzioniProvider } from "@/contexts/traduzioni-provider";
 import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
 import { MetaPixelLoader } from "@/components/meta-pixel-loader";
@@ -210,7 +211,11 @@ export default function RootLayout({
         {/* Allinea `lang` all'indirizzo: il layout è statico e da solo non
             saprebbe se la pagina è italiana o inglese. Non disegna niente. */}
         <LinguaDelDocumento />
-        <LayoutShell>{children}</LayoutShell>
+        {/* Il dizionario avvolge tutto: `useT()` deve funzionare in qualunque
+            componente, e in italiano non carica niente. */}
+        <TraduzioniProvider>
+          <LayoutShell>{children}</LayoutShell>
+        </TraduzioniProvider>
         <ToasterLazy />
         <Analytics />
         {/* Google tag (gtag.js) — caricato una sola volta, serve sia GA4 che Google Ads */}

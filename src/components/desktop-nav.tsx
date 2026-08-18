@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePercorso } from "@/hooks/use-lingua";
+import { useT } from "@/contexts/traduzioni-provider";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 
 const primaryNav = [
@@ -107,6 +108,7 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
 export function DesktopNav() {
   // Senza prefisso di lingua, o sotto `/en` nessuna voce risulta attiva.
   const pathname = usePercorso();
+  const t = useT();
   const pendingFriends = usePendingFriendRequests();
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -115,18 +117,18 @@ export function DesktopNav() {
     const active = isActive(item.href);
     if (item.icon === "play") {
       return (
-        <Link key={item.href} href={item.href} aria-label={item.label}>
+        <Link key={item.href} href={item.href} aria-label={t(item.label)}>
           <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.97] mt-2 mb-2 bg-gradient-to-r from-figb to-figb-light text-white ${
             active ? "shadow-md shadow-figb/25" : "shadow-sm hover:shadow-md"
           }`}>
             {icons[item.icon](active)}
-            <span>{item.label}</span>
+            <span>{t(item.label)}</span>
           </div>
         </Link>
       );
     }
     return (
-      <Link key={item.href} href={item.href} aria-label={item.label}>
+      <Link key={item.href} href={item.href} aria-label={t(item.label)}>
         <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all active:scale-[0.97] ${
           active
             ? "bg-primary/10 text-primary font-semibold"
@@ -135,11 +137,11 @@ export function DesktopNav() {
           <span className={active ? "" : "text-muted-foreground"} aria-hidden="true">
             {icons[item.icon](active)}
           </span>
-          <span>{item.label}</span>
+          <span>{t(item.label)}</span>
           {item.href === "/amici" && pendingFriends > 0 && (
             <span
               className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[12px] font-bold text-white"
-              aria-label={`${pendingFriends} richieste di amicizia in attesa`}
+              aria-label={t("{n} richieste di amicizia in attesa", { n: pendingFriends })}
             >
               {pendingFriends > 9 ? "9+" : pendingFriends}
             </span>
@@ -150,7 +152,7 @@ export function DesktopNav() {
   };
 
   return (
-    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-card border-r border-border" aria-label="Navigazione principale">
+    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-card border-r border-border" aria-label={t("Navigazione principale")}>
       {/* Logo */}
       <div className="px-4 pt-4 pb-3">
         {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
@@ -175,7 +177,7 @@ export function DesktopNav() {
       {/* Settings at bottom */}
       <div className="px-3 pb-4">
         <div className="h-px bg-border mb-3" />
-        <Link href="/impostazioni" aria-label="Impostazioni">
+        <Link href="/impostazioni" aria-label={t("Impostazioni")}>
           <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
             pathname === "/impostazioni"
               ? "bg-muted text-foreground/80"
