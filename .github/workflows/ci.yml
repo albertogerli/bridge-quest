@@ -52,3 +52,10 @@ jobs:
       # l'unico modo di accorgersi se un aggiornamento di Serwist la ignora.
       - name: Il service worker non precarica i video
         run: node scripts/verifica-sw.mjs
+
+      # La traduzione inglese la fa una macchina, quindi sbaglia sempre allo
+      # stesso modo: un controllo sui termini di bridge trova per pattern ciò
+      # che una rilettura non troverebbe su 1.600 frasi. Una parola sbagliata
+      # in un testo didattico non è un refuso, è una regola sbagliata.
+      - name: La terminologia inglese di bridge
+        run: node scripts/verifica-terminologia.mjs
