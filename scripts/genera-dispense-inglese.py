@@ -79,7 +79,13 @@ REGOLE
 3. Non aggiungere, non togliere e non «migliorare» il contenuto didattico: una
    regola di bridge riscritta meglio è una regola diversa.
 4. Le sigle restano: FIGB, HCP, IMP.
-5. Rispondi con il solo prompt tradotto, senza commenti.
+5. LE ISTRUZIONI SULLA LINGUA VANNO ROVESCIATE, non tradotte. Il prompt
+   italiano contiene righe come «TUTTO il testo in italiano» e «NESSUNA
+   scritta in inglese»: tradotte alla lettera diventano «ALL text in Italian»,
+   e il generatore di immagini obbedisce — producendo un'infografica italiana
+   a partire da un prompt inglese. È successo davvero, alla prima prova.
+   Sostituiscile con «ALL text in AMERICAN ENGLISH» e «NO Italian text».
+6. Rispondi con il solo prompt tradotto, senza commenti.
 
 PROMPT DA TRADURRE:
 """
@@ -115,7 +121,9 @@ def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--only", help="un solo corso: fiori, quadri, cuori-gioco, cuori-licita")
     p.add_argument("--prova", action="store_true", help="traduce i prompt e si ferma lì")
-    p.add_argument("--modello-immagini", default="gpt-image-1")
+    p.add_argument("--modello-immagini", default="gpt-image-2")
+    p.add_argument("--quante", type=int, default=0,
+                   help="fermati dopo N immagini: si guarda il risultato prima di lanciarle tutte")
     args = p.parse_args()
 
     chiave = os.environ.get("OPENAI_API_KEY", "")
@@ -158,6 +166,16 @@ def main() -> int:
                 fatte += 1
                 continue
             prompt_en = traduci_prompt(client, prompt_it)
+            # Cintura oltre alle bretelle: qualunque cosa abbia deciso il
+            # traduttore, l'ultima parola sulla lingua è questa. Va in fondo
+            # perché in un prompt lungo l'ultima istruzione è quella che pesa.
+            prompt_en += (
+                "\n\nLANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word "
+                "rendered inside the image must be in AMERICAN ENGLISH. No Italian "
+                "text anywhere, including headings, labels, table seats and captions. "
+                "Use North / South / East / West for the seats and Spades / Hearts / "
+                "Diamonds / Clubs for the suits."
+            )
             # Il prompt tradotto si conserva: è l'unico modo di rileggere cosa
             # è stato chiesto senza riaprire l'immagine.
             (cartella / (nome.replace(".png", ".prompt.txt"))).write_text(prompt_en, encoding="utf-8")
@@ -181,6 +199,9 @@ def main() -> int:
             except Exception as errore:  # noqa: BLE001 — si continua col resto
                 fallite += 1
                 print(f"  ! {corso['seme']}/{nome}: {errore}")
+            if args.quante and fatte >= args.quante:
+                print(f"\nfermato dopo {fatte}: guarda il risultato prima di continuare.")
+                return 0
             time.sleep(1)
 
     print(f"\nfatte {fatte}, saltate {saltate} (già presenti), fallite {fallite}")

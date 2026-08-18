@@ -10,6 +10,20 @@ import { defineConfig } from "@playwright/test";
  *
  * Gira anche di notte su GitHub, nell'ambiente protetto `verifiche`.
  */
+/**
+ * La porta si può cambiare, e non è un vezzo.
+ *
+ * Con `reuseExistingServer` Playwright usa quello che trova sulla 3000: se lì
+ * c'è un ALTRO progetto — è successo il 19/08/2026, con un secondo Next in
+ * ascolto — le prove girano contro il sito sbagliato e falliscono raccontando
+ * cose che non c'entrano. Ci ho messo tre diagnosi a capirlo, perché
+ * l'infografica del fallimento sembrava un difetto nostro.
+ *
+ *   PORTA_E2E=3200 npm run test:e2e
+ */
+const PORTA = process.env.PORTA_E2E ?? "3000";
+const INDIRIZZO = `http://localhost:${PORTA}`;
+
 export default defineConfig({
   testDir: "./e2e",
   globalSetup: "./e2e/global-setup.ts",
@@ -27,13 +41,13 @@ export default defineConfig({
     ? [["html", { open: "never" }], ["list"]]
     : [["list"]],
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: INDIRIZZO,
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
+    command: `npm run dev -- --port ${PORTA}`,
+    url: INDIRIZZO,
     reuseExistingServer: true,
     timeout: 180_000,
   },

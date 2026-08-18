@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./helpers";
+import { dismissCookieBanner, login } from "./helpers";
 
 /**
  * Fase 1 dell'inglese: la strada esiste, l'asfalto no.
@@ -186,4 +186,40 @@ test("le aree principali sono in inglese", async ({ page }) => {
       `${percorso} non è tradotta`
     ).toBeVisible({ timeout: 45_000 });
   }
+});
+
+test("a chi ha il browser in inglese viene proposta la versione inglese", async ({ browser }) => {
+  // La home client-rendered ci mette il suo: il tempo qui non è la cosa
+  // misurata.
+  test.setTimeout(180_000);
+  // Proposta, non imposizione: l'indirizzo non deve cambiare da solo.
+  const contesto = await browser.newContext({ locale: "en-US" });
+  const page = await contesto.newPage();
+  await page.goto("/");
+
+  // Il banner dei cookie occupa il fondo dello schermo: si toglie di mezzo
+  // prima, come farebbe chiunque.
+  await dismissCookieBanner(page);
+  const invito = page.getByText("This site is also available in English");
+  await expect(invito).toBeVisible({ timeout: 45_000 });
+  expect(page.url(), "non deve reindirizzare da solo").not.toContain("/en");
+
+  // E la scelta si ricorda: chi dice no non se lo vede riproporre.
+  await page.getByRole("button", { name: "Dismiss" }).click();
+  await expect(invito).toBeHidden();
+  await page.reload();
+  await expect(invito).toBeHidden({ timeout: 20_000 });
+  await contesto.close();
+});
+
+test("a chi ha il browser in italiano non si propone niente", async ({ browser }) => {
+  test.setTimeout(120_000);
+  // Il browser delle prove parla inglese di suo: senza dirgli che è italiano,
+  // questo test verificherebbe il contrario di quello che dice il suo nome.
+  const contesto = await browser.newContext({ locale: "it-IT" });
+  const page = await contesto.newPage();
+  await page.goto("/");
+  await page.waitForTimeout(3000);
+  await expect(page.getByText("This site is also available in English")).toHaveCount(0);
+  await contesto.close();
 });
