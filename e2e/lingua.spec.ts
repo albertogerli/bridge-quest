@@ -130,3 +130,60 @@ test("l'hub dei giochi è tradotto, e in italiano resta italiano", async ({ page
   await expect(page.getByText("Inizia da qui").first()).toBeVisible({ timeout: 45_000 });
   await expect(page.getByText("Start here")).toHaveCount(0);
 });
+
+test("una partita di licita si gioca in inglese", async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.route("**/api/ben/bid", (r) =>
+    r.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ bid: "PASS" }) })
+  );
+  await login(page);
+  await page.goto("/en/gioca/licita");
+
+  // La mano arriva e la pagina parla inglese.
+  await expect(page.getByText("You're South", { exact: false }).first()).toBeVisible({
+    timeout: 90_000,
+  });
+  const apri = page.getByRole("button", { name: "Dichiara 1♣" });
+  await expect(apri).toBeEnabled({ timeout: 60_000 });
+  await apri.click();
+
+  // E anche il riepilogo di fine mano, che è la parte che insegna.
+  await expect(page.getByText("What each contract was worth").first()).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.getByText("The full deal").first()).toBeVisible();
+});
+
+test("la landing pubblica accoglie in inglese", async ({ page }) => {
+  // È il biglietto da visita: chi arriva da fuori vede questa, e se resta in
+  // italiano tutto il resto della traduzione non serve a niente.
+  // Il titolone della landing, non l'`alt` del logo: quello resta in italiano
+  // perché è il nome del prodotto, e cercarlo faceva fallire una pagina
+  // perfettamente tradotta.
+  await page.goto("/en");
+  await expect(
+    page.getByRole("heading", { name: /Learn bridge/ }).first()
+  ).toBeVisible({ timeout: 45_000 });
+
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: /Impara il bridge/ }).first()
+  ).toBeVisible({ timeout: 45_000 });
+});
+
+test("le aree principali sono in inglese", async ({ page }) => {
+  test.setTimeout(180_000);
+  await login(page);
+  for (const [percorso, atteso] of [
+    ["/en/lezioni", "The Path"],
+    ["/en/profilo", "Badges collected"],
+    ["/en/classifica", "Leaderboard"],
+    ["/en/impostazioni", "Notifications"],
+  ] as const) {
+    await page.goto(percorso);
+    await expect(
+      page.getByText(atteso).first(),
+      `${percorso} non è tradotta`
+    ).toBeVisible({ timeout: 45_000 });
+  }
+});

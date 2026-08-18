@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Category = "lezioni" | "strategia" | "tornei" | "generale" | "off-topic";
 type SortBy = "recenti" | "votati" | "commentati";
@@ -39,6 +40,7 @@ interface ForumPost {
 }
 
 export default function ForumPage() {
+  const t = useT();
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<Category | "tutti">("tutti");
@@ -116,15 +118,15 @@ export default function ForumPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground font-display">Forum</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">La community dei bridgisti</p>
+            <h1 className="text-2xl font-bold text-foreground font-display">{t("Forum")}</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">{t("La community dei bridgisti")}</p>
           </div>
           <Link href="/forum/nuovo">
             <Button className="h-10 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm shadow-lg shadow-emerald-500/20">
               <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <path d="M12 5v14M5 12h14" />
               </svg>
-              Nuovo post
+              {t("Nuovo post")}
             </Button>
           </Link>
         </div>
@@ -185,11 +187,11 @@ export default function ForumPage() {
             className="text-center py-16"
           >
             <span className="text-5xl block mb-4">💬</span>
-            <p className="text-lg font-bold text-foreground">Nessun post ancora</p>
-            <p className="text-sm text-muted-foreground mt-1">Sii il primo a scrivere!</p>
+            <p className="text-lg font-bold text-foreground">{t("Nessun post ancora")}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t("Sii il primo a scrivere!")}</p>
             <Link href="/forum/nuovo">
               <Button className="mt-4 h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm">
-                Scrivi il primo post
+                {t("Scrivi il primo post")}
               </Button>
             </Link>
           </motion.div>

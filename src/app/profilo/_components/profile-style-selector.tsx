@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { Coffee, Gamepad2, Spade, Zap } from "lucide-react";
 import type { UserProfile } from "@/hooks/use-profile";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Selettore "Stile di gioco" (fascia d'età): persiste su `bq_profile`. */
 export function ProfileStyleSelector({
@@ -12,6 +13,7 @@ export function ProfileStyleSelector({
   currentProfile: UserProfile;
   onSelect: (profile: UserProfile) => void;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -19,7 +21,7 @@ export function ProfileStyleSelector({
       transition={{ delay: 0.5 }}
     >
       <h2 className="text-lg font-semibold text-foreground mb-3">
-        Stile di gioco
+        {t("Stile di gioco")}
       </h2>
       <div className="grid grid-cols-2 gap-2">
         {([

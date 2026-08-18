@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Guida all'app — permanent, browsable tutorial ("come funziona BridgeLab").
@@ -227,6 +228,7 @@ const FAQ: { q: string; a: string }[] = [
 ];
 
 export default function GuidaPage() {
+  const t = useT();
   const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -243,16 +245,16 @@ export default function GuidaPage() {
         {/* Breadcrumb */}
         <motion.div {...fadeUp} className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
           <Link href="/" className="transition-colors hover:text-primary">
-            Home
+            {t("Home")}
           </Link>
           <span>/</span>
-          <span className="font-semibold text-primary">Guida</span>
+          <span className="font-semibold text-primary">{t("Guida")}</span>
         </motion.div>
 
         {/* Hero */}
         <motion.div {...fadeUp} className="mb-8">
           <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-            Come funziona BridgeLab
+            {t("Come funziona BridgeLab")}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             La mappa completa dell&apos;app: cosa c&apos;è, dove si trova e da dove
@@ -344,10 +346,10 @@ export default function GuidaPage() {
         >
           <div className="mb-1 flex items-center gap-2">
             <span className="text-2xl">❓</span>
-            <h2 className="font-display text-2xl font-bold text-foreground">Domande frequenti</h2>
+            <h2 className="font-display text-2xl font-bold text-foreground">{t("Domande frequenti")}</h2>
           </div>
           <p className="mb-4 text-sm text-muted-foreground">
-            Le risposte alle domande che riceviamo più spesso.
+            {t("Le risposte alle domande che riceviamo più spesso.")}
           </p>
 
           <div className="overflow-hidden rounded-2xl border border-border bg-card">
@@ -397,9 +399,9 @@ export default function GuidaPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="font-display text-xl font-bold">Pronto a giocare?</p>
+          <p className="font-display text-xl font-bold">{t("Pronto a giocare?")}</p>
           <p className="mx-auto mt-1 max-w-md text-sm text-white/80">
-            Il modo migliore per imparare il bridge è giocarlo. Ti aspettiamo al tavolo.
+            {t("Il modo migliore per imparare il bridge è giocarlo. Ti aspettiamo al tavolo.")}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link

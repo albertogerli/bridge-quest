@@ -15,6 +15,7 @@ import { DEAL_TEMPLATES, generateDeals } from "@/lib/deal-generator";
 import { calcTableAndPar, cardOptions, type OpzioneCarta } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import { getSavedHands, saveHand } from "@/lib/saved-hands";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -54,6 +55,7 @@ export default function StudioPage() {
 }
 
 function Studio() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const params = useSearchParams();
   const manoSalvata = params.get("mano");
@@ -196,7 +198,7 @@ function Studio() {
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
           Riservato agli insegnanti.{" "}
-          <Link href="/login?redirect=/istruttori/studio" className="underline">Accedi</Link>.
+          <Link href="/login?redirect=/istruttori/studio" className="underline">{t("Accedi")}</Link>.
         </p>
       </div>
     );
@@ -215,7 +217,7 @@ function Studio() {
       <header className="mb-4">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <FlaskConical className="w-6 h-6 text-figb" aria-hidden="true" />
-          Tavolo di studio
+          {t("Tavolo di studio")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           Gioca qualsiasi carta e torna indietro. Ogni carta porta scritto
@@ -233,7 +235,7 @@ function Studio() {
       <div className="rounded-2xl border border-border bg-card p-4 mb-4 flex flex-wrap items-end gap-3">
         <div>
           <label htmlFor="argomento" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-            Argomento
+            {t("Argomento")}
           </label>
           <select
             id="argomento"
@@ -246,19 +248,19 @@ function Studio() {
             ))}
           </select>
         </div>
-        <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>Altra mano</Button>
+        <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>{t("Altra mano")}</Button>
         <Button variant="outline" onClick={indietro} disabled={storia.length === 0}>
           <Undo2 className="w-4 h-4 mr-1" aria-hidden="true" />
-          Indietro
+          {t("Indietro")}
         </Button>
         <Button variant="outline" onClick={ricomincia} disabled={storia.length === 0}>
           <RotateCcw className="w-4 h-4 mr-1" aria-hidden="true" />
-          Ricomincia
+          {t("Ricomincia")}
         </Button>
         <Link href="/istruttori/archivio">
           <Button variant="outline">
             <Archive className="w-4 h-4 mr-1" aria-hidden="true" />
-            Archivio
+            {t("Archivio")}
           </Button>
         </Link>
         <Button onClick={() => setNumeri((n) => !n)}>
@@ -274,7 +276,7 @@ function Studio() {
           </Badge>
           {tocca && (
             <span className="text-sm font-semibold">
-              Gioca <strong>{SEATS.find((s) => s.key === tocca)?.label}</strong>
+              {t("Gioca")} <strong>{SEATS.find((s) => s.key === tocca)?.label}</strong>
             </span>
           )}
           {calcolo && <span className="text-xs text-muted-foreground">calcolo…</span>}
@@ -300,7 +302,7 @@ function Studio() {
         <div className="rounded-2xl border border-border bg-card p-4 mt-5 flex flex-wrap items-end gap-2">
           <div className="flex-1 min-w-[12rem]">
             <label htmlFor="titolo-mano" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-              Salva questa posizione
+              {t("Salva questa posizione")}
             </label>
             <input
               id="titolo-mano"
@@ -330,7 +332,7 @@ function Studio() {
             }}
           >
             <Save className="w-4 h-4 mr-1" aria-hidden="true" />
-            Salva
+            {t("Salva")}
           </Button>
           {salvata && <span className="text-sm text-muted-foreground">{salvata}</span>}
         </div>

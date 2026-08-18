@@ -12,6 +12,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { getLevel as getLevelFromXp } from "@/lib/xp-levels";
 import { ChevronRight, Users, Zap, TrendingUp, ArrowLeft } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const medals = ["\u{1F947}", "\u{1F948}", "\u{1F949}"];
 
@@ -56,6 +57,7 @@ interface ClubStats {
 }
 
 export default function CircoloPage() {
+  const t = useT();
   const params = useParams();
   const slug = params.slug as string;
   const club = useAsdClubBySlug(slug);
@@ -168,10 +170,10 @@ export default function CircoloPage() {
                 </div>
               </div>
               <h1 className="text-lg font-bold text-foreground mb-2">
-                Circolo non trovato
+                {t("Circolo non trovato")}
               </h1>
               <p className="text-sm text-muted-foreground mb-6">
-                Il circolo che cerchi non esiste o il link non è corretto.
+                {t("Il circolo che cerchi non esiste o il link non è corretto.")}
               </p>
               <Link href="/classifica">
                 <motion.div
@@ -179,7 +181,7 @@ export default function CircoloPage() {
                   className="inline-flex items-center gap-2 bg-figb hover:bg-figb-dark text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Torna alla classifica
+                  {t("Torna alla classifica")}
                 </motion.div>
               </Link>
             </div>
@@ -202,7 +204,7 @@ export default function CircoloPage() {
             href="/classifica"
             className="hover:text-figb dark:hover:text-primary transition-colors font-medium"
           >
-            Classifica
+            {t("Classifica")}
           </Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground/80 font-semibold truncate max-w-[200px]">
@@ -226,7 +228,7 @@ export default function CircoloPage() {
                 {asdName}
               </h1>
               <p className="text-xs text-white/60 mt-0.5">
-                Classifica interna del circolo
+                {t("Classifica interna del circolo")}
               </p>
             </div>
           </div>
@@ -253,7 +255,7 @@ export default function CircoloPage() {
                     {stats.member_count}
                   </p>
                 </div>
-                <p className="text-[12px] text-white/50 font-medium">Membri</p>
+                <p className="text-[12px] text-white/50 font-medium">{t("Membri")}</p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <div className="flex items-center gap-1.5 mb-0.5">
@@ -263,7 +265,7 @@ export default function CircoloPage() {
                   </p>
                 </div>
                 <p className="text-[12px] text-white/50 font-medium">
-                  XP totale
+                  {t("XP totale")}
                 </p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
@@ -274,7 +276,7 @@ export default function CircoloPage() {
                   </p>
                 </div>
                 <p className="text-[12px] text-white/50 font-medium">
-                  XP medio
+                  {t("XP medio")}
                 </p>
               </div>
             </div>
@@ -282,18 +284,18 @@ export default function CircoloPage() {
             <div className="mt-4 flex gap-3">
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <p className="text-lg font-black text-white">--</p>
-                <p className="text-[12px] text-white/50 font-medium">Membri</p>
+                <p className="text-[12px] text-white/50 font-medium">{t("Membri")}</p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <p className="text-lg font-black text-white">--</p>
                 <p className="text-[12px] text-white/50 font-medium">
-                  XP totale
+                  {t("XP totale")}
                 </p>
               </div>
               <div className="flex-1 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                 <p className="text-lg font-black text-white">--</p>
                 <p className="text-[12px] text-white/50 font-medium">
-                  XP medio
+                  {t("XP medio")}
                 </p>
               </div>
             </div>
@@ -317,7 +319,7 @@ export default function CircoloPage() {
                 </div>
               </div>
               <p className="text-base font-bold text-foreground">
-                Nessun membro ancora
+                {t("Nessun membro ancora")}
               </p>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                 I membri di questo circolo appariranno qui quando si
@@ -328,7 +330,7 @@ export default function CircoloPage() {
                   whileTap={{ scale: 0.97 }}
                   className="mt-5 inline-flex items-center gap-2 bg-figb hover:bg-figb-dark text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
                 >
-                  Registrati ora
+                  {t("Registrati ora")}
                 </motion.div>
               </Link>
             </div>
@@ -342,7 +344,7 @@ export default function CircoloPage() {
             {/* Member count header */}
             <div className="flex items-center justify-between mb-3 px-1">
               <p className="text-xs font-bold text-muted-foreground">
-                Classifica del circolo
+                {t("Classifica del circolo")}
               </p>
               <span className="text-[12px] font-bold text-muted-foreground/40">
                 {members.length}{" "}
@@ -449,7 +451,7 @@ export default function CircoloPage() {
               className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-figb dark:hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Torna alla classifica generale
+              {t("Torna alla classifica generale")}
             </motion.div>
           </Link>
         </motion.div>

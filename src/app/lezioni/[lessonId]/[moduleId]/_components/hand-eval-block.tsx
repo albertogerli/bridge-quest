@@ -4,9 +4,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { CardDisplay } from "@/components/bridge/card-display";
 import type { ContentBlockProps } from "../_types";
 import { EnrichedText } from "./enriched-text";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Quiz «Valuta la mano»: si sceglie il conteggio in punti, da 5 a 19. */
 export function HandEvalBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) {
+  const t = useT();
   const { glossaryTermMap, quizAnswers, showExplanation, handleHandEval } = ctx;
 
   const heAnswered = quizAnswers[blockIndex] !== undefined;
@@ -25,7 +27,7 @@ export function HandEvalBlock({ block, blockIndex, delay, ctx }: ContentBlockPro
             <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
           </svg>
         </div>
-        <p className="font-bold text-foreground text-[15px]">Valuta la mano</p>
+        <p className="font-bold text-foreground text-[15px]">{t("Valuta la mano")}</p>
       </div>
       <p className="text-[14px] text-foreground/80 mb-3 leading-relaxed">
         <EnrichedText text={block.content} termMap={glossaryTermMap} />

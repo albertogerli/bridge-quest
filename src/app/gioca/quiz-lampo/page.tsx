@@ -12,6 +12,7 @@ import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { useGameResults } from "@/hooks/use-game-results";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ===== Types =====
 
@@ -184,6 +185,7 @@ function getTypeBadge(type: QuizQuestion["type"]) {
 // ===== Component =====
 
 export default function QuizLampoPage() {
+  const t = useT();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const profileConfig = useProfile();
   const { play } = useSound();
@@ -503,10 +505,10 @@ export default function QuizLampoPage() {
               href="/gioca"
               className="hover:text-emerald transition-colors"
             >
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">Quiz Lampo</span>
+            <span className="text-emerald font-semibold">{t("Quiz Lampo")}</span>
           </div>
 
           <motion.div
@@ -532,7 +534,7 @@ export default function QuizLampoPage() {
             <h1
               className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
-              Quiz Lampo
+              {t("Quiz Lampo")}
             </h1>
             <p
               className={`text-muted-foreground mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : "text-sm"}`}
@@ -555,14 +557,14 @@ export default function QuizLampoPage() {
               <h3
                 className={`font-bold text-foreground mb-2 ${isSenior ? "text-base" : "text-sm"}`}
               >
-                Come si gioca?
+                {t("Come si gioca?")}
               </h3>
               <ul
                 className={`text-muted-foreground space-y-1.5 ${isSenior ? "text-sm" : "text-xs"}`}
               >
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">1.</span>
-                  Domande random da tutti i corsi Bridge
+                  {t("Domande random da tutti i corsi Bridge")}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">2.</span>
@@ -574,7 +576,7 @@ export default function QuizLampoPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">4.</span>
-                  Più rispondi veloce, più punti guadagni!
+                  {t("Più rispondi veloce, più punti guadagni!")}
                 </li>
               </ul>
             </div>
@@ -595,7 +597,7 @@ export default function QuizLampoPage() {
             {/* Difficulty selection */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-foreground text-left">
-                Scegli difficoltà
+                {t("Scegli difficoltà")}
               </h3>
               {(
                 Object.entries(difficultyConfig) as [
@@ -691,7 +693,7 @@ export default function QuizLampoPage() {
                 transition={{ delay: 0.7, type: "spring" }}
                 className="mt-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-semibold shadow-lg shadow-amber-300/40"
               >
-                <span>🏆</span> Nuovo record!
+                <span>🏆</span> {t("Nuovo record!")}
               </motion.div>
             )}
 
@@ -706,12 +708,12 @@ export default function QuizLampoPage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}/{cfg.rounds}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{pct}%</p>
                 <p className="text-[12px] text-muted-foreground font-bold">
-                  Precisione
+                  {t("Precisione")}
                 </p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
@@ -719,7 +721,7 @@ export default function QuizLampoPage() {
                   x{maxCombo}
                 </p>
                 <p className="text-[12px] text-muted-foreground font-bold">
-                  Max combo
+                  {t("Max combo")}
                 </p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
@@ -750,13 +752,13 @@ export default function QuizLampoPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Bonus combo</span>
+                  <span className="text-muted-foreground">{t("Bonus combo")}</span>
                   <span className="font-bold text-orange-500">
                     +{totalComboPoints}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Bonus velocità</span>
+                  <span className="text-muted-foreground">{t("Bonus velocità")}</span>
                   <span className="font-bold text-blue-500">
                     +{totalSpeedBonus}
                   </span>
@@ -770,7 +772,7 @@ export default function QuizLampoPage() {
                   </span>
                 </div>
                 <div className="border-t border-border pt-2 flex justify-between text-base">
-                  <span className="font-bold text-foreground">Totale</span>
+                  <span className="font-bold text-foreground">{t("Totale")}</span>
                   <span className="font-bold text-emerald-600 dark:text-emerald-400">
                     +{xpEarned} {profileConfig.xpLabel}
                   </span>
@@ -856,14 +858,14 @@ export default function QuizLampoPage() {
                   variant="outline"
                   className="w-full h-12 rounded-xl font-bold"
                 >
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => startGame()}
                 className="flex-1 h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-bold shadow-lg shadow-amber-300/30"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </motion.div>
           </motion.div>
@@ -1109,7 +1111,7 @@ export default function QuizLampoPage() {
                   onClick={() => advanceQuestion()}
                   className="mt-3 ml-7 rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-red-700"
                 >
-                  Continua →
+                  {t("Continua →")}
                 </button>
               )}
               {wasCorrect && (

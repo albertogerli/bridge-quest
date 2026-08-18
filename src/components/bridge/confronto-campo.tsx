@@ -6,6 +6,7 @@ import {
   confrontoFiltrato, type ConfrontoCampo, type FiltroCampo, type PersonaConfronto,
 } from "@/lib/mani-condivise";
 import { Stelle } from "@/components/bridge/stelle";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Come è andata agli altri sulla stessa mano.
@@ -37,6 +38,7 @@ export function ConfrontoCampoPannello({
   /** Se c'è, compaiono i filtri: senza id non si può richiedere altro. */
   manoId?: string;
 }) {
+  const t = useT();
   /**
    * La scelta di filtro si tiene insieme alla mano a cui appartiene, invece di
    * riazzerarla con un effetto quando arriva una mano nuova: uno stato che si
@@ -65,7 +67,7 @@ export function ConfrontoCampoPannello({
   return (
     <div className="mt-4 pt-4 border-t border-border">
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-        Come è andata agli altri
+        {t("Come è andata agli altri")}
       </p>
 
       {manoId && (
@@ -104,7 +106,7 @@ export function ConfrontoCampoPannello({
         <>
           {dati.percentile !== null && (
             <p className="text-sm mb-3">
-              Hai fatto meglio del <strong>{dati.percentile}%</strong>{" "}
+              {t("Hai fatto meglio del")} <strong>{dati.percentile}%</strong>{" "}
               <span className="text-muted-foreground">({altri} giocatori)</span>.
             </p>
           )}

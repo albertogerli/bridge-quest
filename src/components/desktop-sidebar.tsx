@@ -8,8 +8,10 @@ import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import { useCollectibleCards } from "@/store/use-collectible-cards-store";
 import { useProfile } from "@/hooks/use-profile";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export function DesktopSidebar() {
+  const t = useT();
   const stats = useStats();
   const profile = useProfile();
   const { user, signOut } = useSharedAuth();
@@ -87,7 +89,7 @@ export function DesktopSidebar() {
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{stats.nextModule.lessonIcon}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[12px] font-medium text-white/70 uppercase tracking-wider">Riprendi</p>
+                  <p className="text-[12px] font-medium text-white/70 uppercase tracking-wider">{t("Riprendi")}</p>
                   <p className="text-sm font-semibold truncate">{stats.nextModule.moduleTitle}</p>
                 </div>
                 <svg className="h-5 w-5 text-white/60 shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -117,7 +119,7 @@ export function DesktopSidebar() {
               </svg>
             </div>
             <div className="text-left">
-              <p className="text-xs font-semibold text-foreground/80 group-hover:text-rose-600">Esci</p>
+              <p className="text-xs font-semibold text-foreground/80 group-hover:text-rose-600">{t("Esci")}</p>
               <p className="text-[12px] text-muted-foreground">{user.email}</p>
             </div>
           </button>
@@ -135,7 +137,7 @@ export function DesktopSidebar() {
             </div>
             <div className="text-left flex-1">
               <p className="text-xs font-semibold text-foreground/80">Livello {stats.level} · {stats.xp} XP</p>
-              <p className="text-[12px] text-muted-foreground group-hover:text-indigo-500 transition-colors">Accedi per sincronizzare →</p>
+              <p className="text-[12px] text-muted-foreground group-hover:text-indigo-500 transition-colors">{t("Accedi per sincronizzare →")}</p>
             </div>
           </Link>
         ) : (
@@ -151,7 +153,7 @@ export function DesktopSidebar() {
                 <line x1="15" y1="12" x2="3" y2="12" />
               </svg>
             </div>
-            <p className="text-xs font-semibold text-white">Accedi o Registrati</p>
+            <p className="text-xs font-semibold text-white">{t("Accedi o Registrati")}</p>
           </Link>
         )}
 
@@ -163,13 +165,13 @@ export function DesktopSidebar() {
           </div>
           <div>
             <p className="text-[12px] font-medium text-figb dark:text-primary uppercase tracking-wider">
-              Un progetto della FIGB
+              {t("Un progetto della FIGB")}
             </p>
             <p className="text-[12px] text-figb dark:text-primary mt-0.5">
-              Commissione Insegnamento
+              {t("Commissione Insegnamento")}
             </p>
             <p className="text-[12px] text-figb dark:text-primary mt-1">
-              Sviluppo: A. G. Gerli / Tourbillon Tech
+              {t("Sviluppo: A. G. Gerli / Tourbillon Tech")}
             </p>
           </div>
         </div>

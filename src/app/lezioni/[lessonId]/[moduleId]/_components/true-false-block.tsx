@@ -3,9 +3,11 @@
 import { AnimatePresence, motion } from "motion/react";
 import type { ContentBlockProps } from "../_types";
 import { EnrichedText } from "./enriched-text";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Quiz «Vero o Falso?». */
 export function TrueFalseBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) {
+  const t = useT();
   const { glossaryTermMap, quizAnswers, showExplanation, handleQuizAnswer } = ctx;
 
   const tfAnswered = quizAnswers[blockIndex] !== undefined;
@@ -26,7 +28,7 @@ export function TrueFalseBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
             <circle cx="12" cy="17" r="0.5" fill="currentColor" />
           </svg>
         </div>
-        <p className="font-bold text-foreground text-[15px]">Vero o Falso?</p>
+        <p className="font-bold text-foreground text-[15px]">{t("Vero o Falso?")}</p>
       </div>
       <p className="text-[14px] text-foreground/80 mb-4 leading-relaxed">
         <EnrichedText text={block.content} termMap={glossaryTermMap} />

@@ -30,6 +30,7 @@ import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { Zap } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 import { InstructorCard } from "@/components/home/instructor-card";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Percorso "Prima Mano": ~16 kB gz di step interattivi che sostituiscono l'intera
 // home solo per chi non è ancora onboardato. Fuori dal first load di tutti gli altri.
@@ -51,6 +52,7 @@ const WeeklyRecapModal = dynamic(
 );
 
 export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
+  const t = useT();
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const stats = useLocalStats();
@@ -229,7 +231,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label="Caricamento in corso">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-        <span className="sr-only">Caricamento...</span>
+        <span className="sr-only">{t("Caricamento...")}</span>
       </div>
     );
   }
@@ -258,7 +260,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           >
             <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl shadow-emerald-500/30">
               <Zap className="w-5 h-5" aria-hidden="true" />
-              <span className="text-sm font-bold">Bonus +50 XP dal tuo amico!</span>
+              <span className="text-sm font-bold">{t("Bonus +50 XP dal tuo amico!")}</span>
             </div>
           </motion.div>
         )}
@@ -356,7 +358,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           <div className="mx-auto max-w-6xl">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-display text-base font-semibold text-foreground">
-                Prossimo premio
+                {t("Prossimo premio")}
               </h2>
               <span className="text-xs font-bold text-amber-600">
                 {totalModulesCompleted} moduli

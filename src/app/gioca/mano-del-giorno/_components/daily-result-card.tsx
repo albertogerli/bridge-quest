@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import type { DailyFieldStats } from "@/hooks/use-daily-field";
 import { resultHeadline } from "@/lib/daily-hand";
 import type { DailyResult } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Pannello di condivisione: esiste solo nella schermata di fine mano.
 const ShareResult = dynamic(
@@ -32,6 +33,7 @@ export function DailyResultCard({
   fieldStats: DailyFieldStats | null;
   xpLabel: string;
 }) {
+  const t = useT();
   return (
     <AnimatePresence>
       {alreadyPlayed && todayResult && (
@@ -126,7 +128,7 @@ export function DailyResultCard({
               transition={{ delay: 0.8 }}
               className="text-xs text-muted-foreground mt-4"
             >
-              Torna domani per una nuova mano!
+              {t("Torna domani per una nuova mano!")}
             </motion.p>
           </div>
 
@@ -141,7 +143,7 @@ export function DailyResultCard({
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">👥</span>
                 <h4 className="text-sm font-bold text-foreground">
-                  Il campo di oggi
+                  {t("Il campo di oggi")}
                 </h4>
                 <span className="ml-auto text-[12px] font-semibold text-muted-foreground">
                   {fieldStats.players} giocatori
@@ -213,7 +215,7 @@ export function DailyResultCard({
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
-                    <p className="text-[12px] text-muted-foreground">Scopri dove potevi migliorare</p>
+                    <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                   </div>
                   <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                     <polyline points="9,6 15,12 9,18" />

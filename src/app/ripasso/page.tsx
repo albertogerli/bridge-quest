@@ -15,6 +15,7 @@ import {
   CheckCircle2, Zap, BookOpen, ChevronRight,
   RotateCcw, Trophy,
 } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -131,6 +132,7 @@ function enrichItem(item: ReviewItem, courses: Course[]): EnrichedReviewItem {
 // ---------------------------------------------------------------------------
 
 export default function RipassoPage() {
+  const t = useT();
   const { items, getItemsDue, markReviewed } = useSpacedReview();
   const { courses } = useCatalog();
   const [enrichedItems, setEnrichedItems] = useState<EnrichedReviewItem[]>([]);
@@ -199,9 +201,9 @@ export default function RipassoPage() {
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-foreground font-display">Ripasso</h1>
+            <h1 className="text-lg font-bold text-foreground font-display">{t("Ripasso")}</h1>
             <p className="text-xs text-muted-foreground">
-              Sistema di ripasso spaziato
+              {t("Sistema di ripasso spaziato")}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -224,15 +226,15 @@ export default function RipassoPage() {
         >
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-red-500">{enrichedItems.filter(i => i.urgency === "overdue").length}</p>
-            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">In ritardo</p>
+            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">{t("In ritardo")}</p>
           </div>
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-amber-500">{enrichedItems.filter(i => i.urgency === "today").length}</p>
-            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">Oggi</p>
+            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">{t("Oggi")}</p>
           </div>
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
             <p className="text-2xl font-bold text-indigo-500">{totalCount}</p>
-            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">Totale</p>
+            <p className="text-[12px] font-medium text-muted-foreground mt-0.5">{t("Totale")}</p>
           </div>
         </motion.div>
 
@@ -272,7 +274,7 @@ export default function RipassoPage() {
               <Brain className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">Come funziona</p>
+              <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">{t("Come funziona")}</p>
               <p className="text-xs text-indigo-700 dark:text-indigo-300 mt-1 leading-relaxed">
                 Quando sbagli una domanda nei quiz, viene aggiunta qui per il ripasso.
                 La ripetizione spaziata ti aiuta a memorizzare meglio: rivedi dopo 1, 3 e 7 giorni.
@@ -310,7 +312,7 @@ export default function RipassoPage() {
             <Link href="/lezioni">
               <Button className="mt-5 rounded-xl bg-figb hover:bg-figb-dark text-white font-semibold shadow-md">
                 <BookOpen className="w-4 h-4 mr-2" />
-                Vai alle lezioni
+                {t("Vai alle lezioni")}
               </Button>
             </Link>
           </motion.div>
@@ -382,13 +384,13 @@ export default function RipassoPage() {
                             title="Segna come padroneggiato"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
-                            Fatto
+                            {t("Fatto")}
                           </button>
 
                           {/* Go to lesson */}
                           <Link href={`/lezioni/${item.lessonId}/${item.moduleId}`}>
                             <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-figb dark:text-primary bg-figb/5 dark:bg-primary/10 hover:bg-figb/10 dark:hover:bg-primary/15 transition-colors">
-                              Ripassa
+                              {t("Ripassa")}
                               <ChevronRight className="w-3.5 h-3.5" />
                             </button>
                           </Link>
@@ -411,7 +413,7 @@ export default function RipassoPage() {
             className="text-center py-4"
           >
             <p className="text-xs text-muted-foreground">
-              Ripassa regolarmente per consolidare la memoria a lungo termine
+              {t("Ripassa regolarmente per consolidare la memoria a lungo termine")}
             </p>
           </motion.div>
         )}

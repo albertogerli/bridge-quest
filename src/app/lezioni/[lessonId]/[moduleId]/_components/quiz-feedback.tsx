@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { ProfileConfig } from "@/hooks/use-profile";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Esito della risposta al quiz a scelta multipla: ogni profilo ha la sua
@@ -18,6 +19,7 @@ export function QuizFeedback({
   profile: ProfileConfig;
   isJunior: boolean;
 }) {
+  const t = useT();
   if (isCorrect) {
     return (
       <motion.div
@@ -89,7 +91,7 @@ export function QuizFeedback({
             <span className="text-2xl">👏</span>
             <div>
               <p className="text-base font-bold text-emerald-800 dark:text-emerald-300">
-                Ottimo lavoro!
+                {t("Ottimo lavoro!")}
               </p>
               <p className="text-sm text-emerald-600 dark:text-emerald-400">
                 Hai guadagnato 20 {profile.xpLabel}. Continua al tuo ritmo.
@@ -121,7 +123,7 @@ export function QuizFeedback({
               {profile.wrongMessage}
             </p>
             <p className="text-xs text-orange-600 dark:text-orange-400 mt-0.5">
-              Leggi la spiegazione — imparerai qualcosa di nuovo!
+              {t("Leggi la spiegazione — imparerai qualcosa di nuovo!")}
             </p>
           </div>
         </div>

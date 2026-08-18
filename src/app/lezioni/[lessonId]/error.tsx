@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function LessonError({
   error,
@@ -11,6 +12,7 @@ export default function LessonError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useT();
   useEffect(() => {
     console.error("[BridgeQuest] Errore lezione:", error);
   }, [error]);
@@ -28,7 +30,7 @@ export default function LessonError({
         </div>
 
         <h1 className="text-xl font-bold text-foreground font-display mb-2">
-          Errore nel caricamento della lezione
+          {t("Errore nel caricamento della lezione")}
         </h1>
         <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
           Non siamo riusciti a caricare questa lezione. Potrebbe trattarsi di un
@@ -46,19 +48,19 @@ export default function LessonError({
             onClick={reset}
             className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-shadow"
           >
-            Riprova
+            {t("Riprova")}
           </button>
           <Link
             href="/lezioni"
             className="w-full rounded-xl border border-border bg-card px-5 py-3 text-sm font-medium text-foreground/80 hover:bg-muted/50 transition-colors"
           >
-            Torna alle Lezioni
+            {t("Torna alle Lezioni")}
           </Link>
           <Link
             href="/"
             className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
           >
-            Torna alla Home
+            {t("Torna alla Home")}
           </Link>
         </div>
       </motion.div>

@@ -9,6 +9,7 @@ import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getInfographicForLesson } from "@/components/maestro-video";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
   fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
@@ -25,6 +26,7 @@ const courseGradients: Record<CourseId, string> = {
 };
 
 export default function DispensePage() {
+  const t = useT();
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
@@ -57,7 +59,7 @@ export default function DispensePage() {
   if (!catalogLoaded || !currentCourse) {
     return (
       <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
-        Caricamento corsi…
+        {t("Caricamento corsi…")}
       </div>
     );
   }
@@ -73,16 +75,16 @@ export default function DispensePage() {
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link href="/lezioni" className="hover:text-figb dark:hover:text-primary transition-colors">
-              Lezioni
+              {t("Lezioni")}
             </Link>
             <span>/</span>
-            <span className="text-figb dark:text-primary font-semibold">Dispense</span>
+            <span className="text-figb dark:text-primary font-semibold">{t("Dispense")}</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground font-display">
             Dispense & Infografiche
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Materiale didattico per ogni lezione
+            {t("Materiale didattico per ogni lezione")}
           </p>
         </motion.div>
 
@@ -154,7 +156,7 @@ export default function DispensePage() {
                       <polyline points="7,10 12,15 17,10" />
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
-                    Tutte
+                    {t("Tutte")}
                   </button>
                 ) : coursePdf ? (
                   <div
@@ -165,7 +167,7 @@ export default function DispensePage() {
                       <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
                     </svg>
                     <div className="flex flex-col items-start leading-tight">
-                      <span>Tutte</span>
+                      <span>{t("Tutte")}</span>
                       <span className="text-[12px] font-medium text-white/60">
                         {completedModulesCount}/{totalModules} moduli
                       </span>
@@ -225,6 +227,7 @@ function InfographicCard({
   courseId: CourseId;
   locked: boolean;
 }) {
+  const t = useT();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -265,7 +268,7 @@ function InfographicCard({
         ) : (
           <div className={`absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40 ${locked ? "grayscale opacity-50" : ""}`}>
             <span className="text-3xl mb-1">{icon}</span>
-            <span className="text-[12px] font-medium">Anteprima non disponibile</span>
+            <span className="text-[12px] font-medium">{t("Anteprima non disponibile")}</span>
           </div>
         )}
 
@@ -312,14 +315,14 @@ function InfographicCard({
         </h3>
         {locked ? (
           <p className="text-[12px] font-medium text-amber-600/80 dark:text-amber-400/80 mt-1 flex items-center gap-1">
-            <span>🔒</span> Completa la lezione per sbloccare
+            <span>🔒</span> {t("Completa la lezione per sbloccare")}
           </p>
         ) : (
           <Link
             href={`/lezioni/${lessonId}`}
             className="text-[12px] font-semibold text-figb dark:text-primary mt-1 inline-block hover:underline"
           >
-            Vai alla lezione →
+            {t("Vai alla lezione →")}
           </Link>
         )}
       </div>

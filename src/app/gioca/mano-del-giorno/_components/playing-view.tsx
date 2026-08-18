@@ -15,6 +15,7 @@ import { parseContract, partnershipOf, toGamePosition } from "@/lib/bridge-engin
 import type { Smazzata } from "@/lib/catalog";
 import { useDailyPlay } from "../_use-daily-play";
 import { DailyGameResult } from "./daily-game-result";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
@@ -43,6 +44,7 @@ export function PlayingView({
   profile: ProfileConfig;
   saveGameResult: (result: GameResult) => void;
 }) {
+  const t = useT();
   const {
     game,
     tricksNeeded,
@@ -107,7 +109,7 @@ export function PlayingView({
           >
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Contratto
+                {t("Contratto")}
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}
@@ -118,7 +120,7 @@ export function PlayingView({
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Obiettivo
+                {t("Obiettivo")}
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}
@@ -129,7 +131,7 @@ export function PlayingView({
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Dich. / Dif.
+                {t("Dich. / Dif.")}
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}
@@ -165,7 +167,7 @@ export function PlayingView({
               onClick={game.startGame}
               className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg shadow-emerald/25"
             >
-              Inizia a giocare
+              {t("Inizia a giocare")}
             </Button>
           </div>
         )}
@@ -294,7 +296,7 @@ export function PlayingView({
               onClick={game.startGame}
               className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
             >
-              Inizia a giocare
+              {t("Inizia a giocare")}
             </Button>
           )}
           {game.phase === "finished" && (
@@ -304,13 +306,13 @@ export function PlayingView({
                 onClick={onBack}
                 className="rounded-xl h-12 px-6 font-bold"
               >
-                Torna alla Mano del Giorno
+                {t("Torna alla Mano del Giorno")}
               </Button>
               <Button
                 onClick={replay}
                 className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           )}

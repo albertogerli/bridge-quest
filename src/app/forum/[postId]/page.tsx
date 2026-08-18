@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useGameStore } from "@/store/use-game-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface Post {
   id: number;
@@ -42,6 +43,7 @@ interface Comment {
 }
 
 export default function PostDetailPage() {
+  const t = useT();
   const params = useParams();
   const router = useRouter();
   const { user } = useSharedAuth();
@@ -443,7 +445,7 @@ export default function PostDetailPage() {
                 >
                   <path d="M3 10l7-7v4c8 0 12 4 12 11-2-5-6-7-12-7v4l-7-7z" />
                 </svg>
-                Rispondi
+                {t("Rispondi")}
               </button>
             )}
 
@@ -472,7 +474,7 @@ export default function PostDetailPage() {
                 onClick={() => handleDeleteComment(comment)}
                 className="ml-auto text-[12px] text-muted-foreground hover:text-red-500 transition-colors"
               >
-                Elimina
+                {t("Elimina")}
               </button>
             )}
           </div>
@@ -519,7 +521,7 @@ export default function PostDetailPage() {
                   }}
                   className="h-7 px-3 rounded-lg text-xs font-bold text-muted-foreground"
                 >
-                  Annulla
+                  {t("Annulla")}
                 </Button>
                 <Button
                   onClick={() => handleReply(comment.id)}
@@ -569,9 +571,9 @@ export default function PostDetailPage() {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24 text-center">
         <span className="text-5xl block mb-4">🔍</span>
-        <p className="text-lg font-bold text-foreground">Post non trovato</p>
+        <p className="text-lg font-bold text-foreground">{t("Post non trovato")}</p>
         <Link href="/forum">
-          <Button variant="outline" className="mt-4">Torna al forum</Button>
+          <Button variant="outline" className="mt-4">{t("Torna al forum")}</Button>
         </Link>
       </div>
     );
@@ -588,7 +590,7 @@ export default function PostDetailPage() {
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <polyline points="15,18 9,12 15,6" />
           </svg>
-          Forum
+          {t("Forum")}
         </Link>
 
         {/* Post */}
@@ -637,7 +639,7 @@ export default function PostDetailPage() {
                 <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M18 20V10M12 20V4M6 20v-6" />
                 </svg>
-                <span className="text-sm font-bold text-purple-700 dark:text-purple-300">Sondaggio</span>
+                <span className="text-sm font-bold text-purple-700 dark:text-purple-300">{t("Sondaggio")}</span>
                 <span className="text-[12px] text-muted-foreground">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
               </div>
               {post.poll_options.map((option, idx) => {
@@ -694,7 +696,7 @@ export default function PostDetailPage() {
               })}
               {!user && (
                 <p className="text-[12px] text-muted-foreground text-center mt-1">
-                  <Link href="/login" className="text-purple-600 dark:text-purple-400 font-bold hover:underline">Accedi</Link> per votare
+                  <Link href="/login" className="text-purple-600 dark:text-purple-400 font-bold hover:underline">{t("Accedi")}</Link> per votare
                 </p>
               )}
             </div>
@@ -725,7 +727,7 @@ export default function PostDetailPage() {
                 onClick={handleDelete}
                 className="ml-auto text-xs text-muted-foreground hover:text-red-500 transition-colors"
               >
-                Elimina
+                {t("Elimina")}
               </button>
             )}
           </div>
@@ -740,7 +742,7 @@ export default function PostDetailPage() {
           {comments.length === 0 ? (
             <div className="text-center py-8">
               <span className="text-3xl block mb-2">💬</span>
-              <p className="text-sm text-muted-foreground">Nessun commento ancora. Sii il primo!</p>
+              <p className="text-sm text-muted-foreground">{t("Nessun commento ancora. Sii il primo!")}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -781,7 +783,7 @@ export default function PostDetailPage() {
           ) : (
             <div className="mt-4 text-center bg-muted/50 rounded-2xl p-4">
               <p className="text-sm text-muted-foreground">
-                <Link href="/login" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">Accedi</Link>
+                <Link href="/login" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">{t("Accedi")}</Link>
                 {" "}per commentare
               </p>
             </div>

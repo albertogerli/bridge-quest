@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface SecretAchievement {
   id: string;
@@ -32,6 +33,7 @@ export default function SecretAchievementPopup({
   achievement,
   onClose,
 }: SecretAchievementPopupProps) {
+  const t = useT();
   const [particles, setParticles] = useState<Particle[]>([]);
   const dialogRef = useRef<HTMLDivElement>(null);
   useFocusTrap(dialogRef, achievement !== null, { onEscape: onClose });
@@ -178,7 +180,7 @@ export default function SecretAchievementPopup({
                     backgroundClip: "text",
                   }}
                 >
-                  Achievement Segreto!
+                  {t("Achievement Segreto!")}
                 </motion.div>
 
                 {/* Icon with glow */}
@@ -254,7 +256,7 @@ export default function SecretAchievementPopup({
                   transition={{ delay: 1 }}
                   className="text-white/50 text-sm"
                 >
-                  Clicca ovunque per chiudere
+                  {t("Clicca ovunque per chiudere")}
                 </motion.p>
               </div>
             </motion.div>

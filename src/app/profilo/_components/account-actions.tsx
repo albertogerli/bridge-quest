@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import type { User } from "@supabase/supabase-js";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Uscita dall'account (con o senza dati locali), eliminazione account o CTA di accesso. */
 export function AccountActions({
@@ -26,6 +27,7 @@ export function AccountActions({
   deleting: boolean;
   onDeleteAccount: () => void;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -52,8 +54,8 @@ export function AccountActions({
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-foreground">Vuoi anche cancellare i dati locali?</p>
-                  <p className="text-[12px] text-muted-foreground">I progressi locali possono essere mantenuti o rimossi</p>
+                  <p className="text-sm font-bold text-foreground">{t("Vuoi anche cancellare i dati locali?")}</p>
+                  <p className="text-[12px] text-muted-foreground">{t("I progressi locali possono essere mantenuti o rimossi")}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
@@ -77,7 +79,7 @@ export function AccountActions({
                   variant="outline"
                   className="w-full rounded-xl text-sm font-semibold h-10 border-border text-muted-foreground"
                 >
-                  Annulla
+                  {t("Annulla")}
                 </Button>
               </div>
             </motion.div>
@@ -103,8 +105,8 @@ export function AccountActions({
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 p-4"
                   >
-                    <p className="text-sm font-bold text-rose-800 dark:text-rose-300 mb-1">Sei sicuro?</p>
-                    <p className="text-xs text-rose-600 dark:text-rose-400 mb-3">Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.</p>
+                    <p className="text-sm font-bold text-rose-800 dark:text-rose-300 mb-1">{t("Sei sicuro?")}</p>
+                    <p className="text-xs text-rose-600 dark:text-rose-400 mb-3">{t("Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.")}</p>
                     <div className="flex gap-2">
                       <Button
                         onClick={onDeleteAccount}
@@ -118,7 +120,7 @@ export function AccountActions({
                         variant="outline"
                         className="flex-1 rounded-xl text-xs font-semibold h-9 border-rose-200 dark:border-rose-900"
                       >
-                        Annulla
+                        {t("Annulla")}
                       </Button>
                     </div>
                   </motion.div>
@@ -133,7 +135,7 @@ export function AccountActions({
                       <polyline points="3 6 5 6 21 6" />
                       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                     </svg>
-                    Elimina account e tutti i dati
+                    {t("Elimina account e tutti i dati")}
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -150,7 +152,7 @@ export function AccountActions({
             <polyline points="10 17 15 12 10 7" />
             <line x1="15" y1="12" x2="3" y2="12" />
           </svg>
-          Accedi o Registrati
+          {t("Accedi o Registrati")}
         </a>
       )}
     </motion.div>

@@ -10,9 +10,11 @@ import {
   resolveNames,
   type ClassMessage,
 } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Live class chat for instructor + students. Used in both /istruttori/[id] and /classi/[id]. */
 export function ClassChat({ classId }: { classId: string }) {
+  const t = useT();
   const { user } = useSharedAuth();
   const myId = user?.id;
 
@@ -98,7 +100,7 @@ export function ClassChat({ classId }: { classId: string }) {
           </div>
         ) : messages.length === 0 ? (
           <p className="flex h-full items-center justify-center text-center text-sm text-muted-foreground">
-            Nessun messaggio. Scrivi il primo!
+            {t("Nessun messaggio. Scrivi il primo!")}
           </p>
         ) : (
           messages.map((m) => {
@@ -145,7 +147,7 @@ export function ClassChat({ classId }: { classId: string }) {
           className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         />
         <Button onClick={handleSend} disabled={sending || !input.trim()}>
-          Invia
+          {t("Invia")}
         </Button>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Globe } from "lucide-react";
 import { LINGUE, NOME_LINGUA } from "@/lib/lingua";
 import { useLingua } from "@/hooks/use-lingua";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il cambio lingua, che porta allo STESSO indirizzo nell'altra lingua.
@@ -18,12 +19,13 @@ import { useLingua } from "@/hooks/use-lingua";
  * nell'indirizzo.
  */
 export function SelettoreLingua({ className = "" }: { className?: string }) {
+  const t = useT();
   const { lingua, versoLingua } = useLingua();
 
   return (
     <div className={`flex items-center gap-1 ${className}`}>
       <Globe className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-      <span className="sr-only">Lingua</span>
+      <span className="sr-only">{t("Lingua")}</span>
       {LINGUE.map((l) => {
         const attiva = l === lingua;
         return (

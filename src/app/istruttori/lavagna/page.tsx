@@ -12,6 +12,7 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -58,6 +59,7 @@ export default function LavagnaPage() {
 }
 
 function Lavagna() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const params = useSearchParams();
   const compitoId = params.get("compito");
@@ -135,7 +137,7 @@ function Lavagna() {
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
           Riservato agli insegnanti.{" "}
-          <Link href="/login?redirect=/istruttori/lavagna" className="underline">Accedi</Link>.
+          <Link href="/login?redirect=/istruttori/lavagna" className="underline">{t("Accedi")}</Link>.
         </p>
       </div>
     );
@@ -146,7 +148,7 @@ function Lavagna() {
       <header className="flex flex-wrap items-center gap-2 mb-4">
         <h1 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mr-auto">
           <Presentation className="w-4 h-4" aria-hidden="true" />
-          Lavagna
+          {t("Lavagna")}
         </h1>
 
         {!compitoId && (
@@ -162,7 +164,7 @@ function Lavagna() {
               ))}
             </select>
             <Button variant="outline" onClick={() => { setSeed((s) => s + 1); setIndice(0); setScoperti(new Set()); }}>
-              Altre mani
+              {t("Altre mani")}
             </Button>
           </>
         )}
@@ -201,11 +203,11 @@ function Lavagna() {
       <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
         <Button onClick={() => setScoperti(new Set(SEATS.map((s) => s.key)))}>
           <Eye className="w-4 h-4 mr-1" aria-hidden="true" />
-          Scopri tutte
+          {t("Scopri tutte")}
         </Button>
         <Button variant="outline" onClick={() => { setScoperti(new Set()); setSoluzioneVisibile(false); }}>
           <EyeOff className="w-4 h-4 mr-1" aria-hidden="true" />
-          Copri tutto
+          {t("Copri tutto")}
         </Button>
         {mano?.soluzione && (
           <Button variant="outline" onClick={() => setSoluzioneVisibile((v) => !v)}>
@@ -219,7 +221,7 @@ function Lavagna() {
       )}
 
       <p className="text-center text-xs text-muted-foreground mt-6">
-        Tastiera: <strong>N</strong> <strong>E</strong> <strong>S</strong> <strong>O</strong> scoprono un posto ·{" "}
+        {t("Tastiera:")} <strong>N</strong> <strong>E</strong> <strong>S</strong> <strong>O</strong> scoprono un posto ·{" "}
         <strong>T</strong> tutte · <strong>X</strong> copri · <strong>C</strong> contratto · frecce per cambiare mano
       </p>
     </div>

@@ -16,6 +16,7 @@ import {
 } from "@/lib/bridge-engine";
 import { cardAriaLabel, handAriaLabel, suitAriaLabel } from "@/lib/card-labels";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ── helpers ──────────────────────────────────────────────────────
 
@@ -168,6 +169,7 @@ function TrickTable({
   declarer: Position;
   trumpSuit: Suit | null;
 }) {
+  const t = useT();
   // Map each play to a display position
   const playByDisplay: Partial<Record<Position, TrickPlay>> = {};
   for (const play of trick.plays) {
@@ -199,7 +201,7 @@ function TrickTable({
       <div className="flex flex-col items-center gap-0.5">
         <span className="text-[12px] font-bold text-muted-foreground uppercase">
           <span aria-hidden="true">N</span>
-          <span className="sr-only">Nord</span>
+          <span className="sr-only">{t("Nord")}</span>
         </span>
         {renderCell("north")}
       </div>
@@ -209,7 +211,7 @@ function TrickTable({
       <div className="flex flex-col items-center gap-0.5 justify-center">
         <span className="text-[12px] font-bold text-muted-foreground uppercase">
           <span aria-hidden="true">O</span>
-          <span className="sr-only">Ovest</span>
+          <span className="sr-only">{t("Ovest")}</span>
         </span>
         {renderCell("west")}
       </div>
@@ -271,6 +273,7 @@ export function HandReplay({
   inBasso?: Position;
   onClose: () => void;
 }) {
+  const t = useT();
   const ancora = inBasso ?? gameState.declarer;
   const [currentTrickIdx, setCurrentTrickIdx] = useState(0);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -367,7 +370,7 @@ export function HandReplay({
         <div className="shrink-0 flex items-center justify-between px-5 pt-5 pb-3">
           <div>
             <h3 id="hand-replay-title" className="text-lg font-semibold text-foreground">
-              Rivedi la mano
+              {t("Rivedi la mano")}
             </h3>
             <p className="text-xs text-muted-foreground">
               {gameState.contract} &middot; Dich.{" "}
@@ -395,10 +398,10 @@ export function HandReplay({
             <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
               {currentTrickIdx + 1}/{totalTricks}
             </span>
-            <span className="text-xs font-bold text-muted-foreground">Presa</span>
+            <span className="text-xs font-bold text-muted-foreground">{t("Presa")}</span>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold">
-            <span className="text-muted-foreground">Dichiarante</span>
+            <span className="text-muted-foreground">{t("Dichiarante")}</span>
             <span className="text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-md px-1.5 py-0.5">
               {runningScore.dichiarante}
             </span>
@@ -406,7 +409,7 @@ export function HandReplay({
             <span className="text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5">
               {runningScore.difesa}
             </span>
-            <span className="text-muted-foreground">Difesa</span>
+            <span className="text-muted-foreground">{t("Difesa")}</span>
           </div>
         </div>
 
@@ -452,7 +455,7 @@ export function HandReplay({
         {/* Hands at this point */}
         <div className="px-5 pb-4">
           <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-            Carte in mano (prima della presa)
+            {t("Carte in mano (prima della presa)")}
           </p>
           {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
           <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
@@ -493,7 +496,7 @@ export function HandReplay({
             <svg className="h-3.5 w-3.5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <polyline points="15,18 9,12 15,6" />
             </svg>
-            Precedente
+            {t("Precedente")}
           </Button>
 
           <Button
@@ -502,7 +505,7 @@ export function HandReplay({
             onClick={onClose}
             className="rounded-xl text-xs font-bold h-9 px-4 text-muted-foreground"
           >
-            Chiudi
+            {t("Chiudi")}
           </Button>
 
           <Button
@@ -514,7 +517,7 @@ export function HandReplay({
             }
             className="rounded-xl text-xs font-bold h-9 px-4"
           >
-            Successiva
+            {t("Successiva")}
             <svg className="h-3.5 w-3.5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <polyline points="9,6 15,12 9,18" />
             </svg>

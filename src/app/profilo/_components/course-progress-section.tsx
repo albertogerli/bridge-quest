@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { levelInfo, type Course, type World } from "@/lib/catalog";
 import { worldProgress, type CompletedModules } from "@/lib/profile-stats";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** "Progresso per Corso": barra di avanzamento di ogni mondo, raggruppata per corso. */
 export function CourseProgressSection({
@@ -14,6 +15,7 @@ export function CourseProgressSection({
   allWorlds: World[];
   completedModules: CompletedModules;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -21,7 +23,7 @@ export function CourseProgressSection({
       transition={{ delay: 0.45 }}
     >
       <h2 className="text-lg font-semibold text-foreground mb-3">
-        Progresso per Corso
+        {t("Progresso per Corso")}
       </h2>
       <div className="space-y-4">
         {courses.map((course) => {

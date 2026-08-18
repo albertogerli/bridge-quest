@@ -11,6 +11,7 @@ import { StepShell } from "../step-shell";
 import { GlossaryText } from "@/components/beginner/glossary-text";
 import type { StepProps } from "../types";
 import type { MiniCardData } from "../mini-card";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface HandCard extends MiniCardData {
   id: string;
@@ -34,6 +35,7 @@ const scenario2Hand: HandCard[] = [
 ];
 
 export function StepObbligo({ onComplete, playSound }: StepProps) {
+  const t = useT();
   const [scenario, setScenario] = useState<1 | 2>(1);
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [shakeCard, setShakeCard] = useState<string | null>(null);
@@ -110,7 +112,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
             {/* Lead card */}
             <div className="rounded-[28px] border border-gray-200 bg-white p-5">
               <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
-                Ovest gioca:
+                {t("Ovest gioca:")}
               </p>
               <div className="flex justify-center">
                 <div className="rounded-[22px] border-2 border-[#c8a44e] bg-[#fffdf5] px-5 py-4 text-center shadow-md">
@@ -118,7 +120,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
                   <div className="mt-1.5 flex justify-center">
                     <SuitSymbol suit="heart" size="md" />
                   </div>
-                  <p className="mt-1 text-[12px] font-bold text-[#8a94a8]">Ovest</p>
+                  <p className="mt-1 text-[12px] font-bold text-[#8a94a8]">{t("Ovest")}</p>
                 </div>
               </div>
             </div>
@@ -202,7 +204,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
               size="lg"
               className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
             >
-              E se non ho cuori?
+              {t("E se non ho cuori?")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
@@ -215,7 +217,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
               size="lg"
               className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
             >
-              Continua
+              {t("Continua")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>

@@ -14,6 +14,7 @@ import {
   type PlayerStats,
 } from "@/lib/catalog";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /* ────────────────────────────────────────────── */
 /*  Types                                         */
@@ -80,6 +81,7 @@ const RARITY_EMOJI: Record<CollectibleCard["rarity"], string> = {
 /* ────────────────────────────────────────────── */
 
 export default function CollezionePage() {
+  const t = useT();
   /* state */
   const { cards: collectibleCards, isLoaded: cardsLoaded } = useCollectibleCards();
   const [stats, setStats] = useState<PlayerStats | null>(null);
@@ -203,10 +205,10 @@ export default function CollezionePage() {
         >
           <div>
             <h1 className="text-2xl font-bold text-foreground font-display">
-              Collezione
+              {t("Collezione")}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Sblocca tutte le carte leggendarie
+              {t("Sblocca tutte le carte leggendarie")}
             </p>
           </div>
           <div className="flex items-center gap-1.5 bg-card card-clean rounded-xl px-3 py-2">
@@ -229,7 +231,7 @@ export default function CollezionePage() {
         >
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-foreground/80">
-              Progresso collezione
+              {t("Progresso collezione")}
             </p>
             <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
               {Math.round((unlockedCount / totalCards) * 100)}%
@@ -266,7 +268,7 @@ export default function CollezionePage() {
           className="mt-4"
         >
           <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-            Rarità
+            {t("Rarità")}
           </p>
           <div className="flex flex-wrap gap-1.5">
             {(
@@ -303,7 +305,7 @@ export default function CollezionePage() {
           className="mt-3"
         >
           <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-            Categoria
+            {t("Categoria")}
           </p>
           <div className="flex flex-wrap gap-1.5">
             <Button
@@ -316,7 +318,7 @@ export default function CollezionePage() {
                   : "bg-card text-muted-foreground border-border"
               }`}
             >
-              Tutte
+              {t("Tutte")}
             </Button>
             {categories.map((cat) => (
               <Button
@@ -468,7 +470,7 @@ export default function CollezionePage() {
           >
             <span className="text-4xl block mb-3">🔍</span>
             <p className="text-sm text-muted-foreground font-medium">
-              Nessuna carta con questi filtri
+              {t("Nessuna carta con questi filtri")}
             </p>
           </motion.div>
         )}
@@ -483,14 +485,14 @@ export default function CollezionePage() {
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">📊</span>
             <h3 className="text-sm font-semibold text-foreground">
-              Riepilogo collezione
+              {t("Riepilogo collezione")}
             </h3>
           </div>
 
           {/* Total */}
           <div className="flex items-center justify-between py-2 border-b border-border/60">
             <span className="text-xs text-muted-foreground font-medium">
-              Totale sbloccate
+              {t("Totale sbloccate")}
             </span>
             <span className="text-sm font-bold text-foreground">
               {unlockedCount}/{totalCards}
@@ -542,7 +544,7 @@ export default function CollezionePage() {
             <div className="mt-3 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl p-3">
               <span className="text-base">🏆</span>
               <p className="text-[12px] text-amber-700 dark:text-amber-300 font-semibold leading-tight">
-                Completa tutte le carte di una categoria per +100 XP bonus!
+                {t("Completa tutte le carte di una categoria per +100 XP bonus!")}
               </p>
             </div>
           )}
@@ -744,7 +746,7 @@ export default function CollezionePage() {
                       ) : (
                         <>
                           <p className="text-sm text-muted-foreground leading-relaxed">
-                            Questa carta non è ancora stata sbloccata.
+                            {t("Questa carta non è ancora stata sbloccata.")}
                           </p>
 
                           <div className="mt-4 bg-amber-50 dark:bg-amber-950/40 rounded-xl p-3 flex items-center gap-2">
@@ -760,7 +762,7 @@ export default function CollezionePage() {
                         onClick={() => setSelectedCard(null)}
                         className="w-full mt-4 h-11 rounded-xl bg-foreground text-background font-bold text-sm shadow-md"
                       >
-                        Chiudi
+                        {t("Chiudi")}
                       </Button>
                     </div>
                   </div>

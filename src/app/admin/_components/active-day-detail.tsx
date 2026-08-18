@@ -2,6 +2,7 @@
 
 import { formatMinutes, isFullTimestamp, resolveDayUsers } from "@/lib/admin-stats";
 import { PROFILE_EMOJI, type DailyActivity, type UserRow } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Tabella di dettaglio degli utenti attivi in un singolo giorno. */
 export function ActiveDayDetail({
@@ -17,6 +18,7 @@ export function ActiveDayDetail({
   onClose: () => void;
   onSelectUser: (id: string) => void;
 }) {
+  const t = useT();
   const dayLabel = new Date(expandedDay + "T12:00:00").toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
   // Resolve full user data for active users that day
   const dayUsers = resolveDayUsers(day.activeUsers, users);
@@ -37,15 +39,15 @@ export function ActiveDayDetail({
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-gray-50 text-left text-[12px] font-bold text-gray-500 uppercase tracking-wider">
-                <th className="px-3 py-2">Utente</th>
-                <th className="px-3 py-2">Tipo</th>
+                <th className="px-3 py-2">{t("Utente")}</th>
+                <th className="px-3 py-2">{t("Tipo")}</th>
                 <th className="px-3 py-2">BBO</th>
                 <th className="px-3 py-2 text-right">XP</th>
-                <th className="px-3 py-2 text-right">Streak</th>
-                <th className="px-3 py-2 text-right">Mani</th>
+                <th className="px-3 py-2 text-right">{t("Streak")}</th>
+                <th className="px-3 py-2 text-right">{t("Mani")}</th>
                 <th className="px-3 py-2">ASD</th>
-                <th className="px-3 py-2 text-right">Tempo</th>
-                <th className="px-3 py-2">Accesso</th>
+                <th className="px-3 py-2 text-right">{t("Tempo")}</th>
+                <th className="px-3 py-2">{t("Accesso")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -70,7 +72,7 @@ export function ActiveDayDetail({
           </table>
         </div>
       ) : (
-        <p className="text-xs text-gray-400">Nessun utente attivo questo giorno</p>
+        <p className="text-xs text-gray-400">{t("Nessun utente attivo questo giorno")}</p>
       )}
     </div>
   );

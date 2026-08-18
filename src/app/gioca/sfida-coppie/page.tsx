@@ -16,6 +16,7 @@ import {
 import { confrontaPunteggi } from "@/lib/sfida-coppie";
 import { StatisticheSfidePannello } from "@/components/bridge/statistiche-sfide";
 import { Stelle } from "@/components/bridge/stelle";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Sfida 2 contro 2: due coppie, le stesse smazzate.
@@ -39,6 +40,7 @@ import { Stelle } from "@/components/bridge/stelle";
  * il bridge a squadre non deve credere che sia la stessa cosa.
  */
 export default function SfidaCoppiePage() {
+  const t = useT();
   const { user } = useSharedAuth();
   const { friends } = useFriends();
   const [elenco, setElenco] = useState<RigaSfida[] | null>(null);
@@ -144,12 +146,12 @@ export default function SfidaCoppiePage() {
   if (!user) {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
-        <h1 className="text-2xl font-bold font-display mb-3">Sfida 2 contro 2</h1>
+        <h1 className="text-2xl font-bold font-display mb-3">{t("Sfida 2 contro 2")}</h1>
         <p className="text-sm text-muted-foreground mb-6">
           Serve l&apos;accesso: una sfida è fra quattro persone, e devono
           potersi ritrovare.
         </p>
-        <Link href="/login"><Button>Entra</Button></Link>
+        <Link href="/login"><Button>{t("Entra")}</Button></Link>
       </div>
     );
   }
@@ -160,7 +162,7 @@ export default function SfidaCoppiePage() {
     <div className="min-h-screen px-4 py-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold font-display mb-1 flex items-center gap-2">
         <Swords className="w-6 h-6 text-figb" aria-hidden="true" />
-        Sfida 2 contro 2
+        {t("Sfida 2 contro 2")}
       </h1>
       <p className="text-sm text-muted-foreground mb-6">
         Tu e il tuo compagno contro un&apos;altra coppia, sulle stesse
@@ -169,10 +171,10 @@ export default function SfidaCoppiePage() {
       </p>
 
       {/* Le sfide in corso */}
-      {elenco === null && <p className="text-sm text-muted-foreground">Carico…</p>}
+      {elenco === null && <p className="text-sm text-muted-foreground">{t("Carico…")}</p>}
       {elenco?.length === 0 && (
         <p className="text-sm text-muted-foreground mb-6">
-          Nessuna sfida ancora. Lanciane una qui sotto.
+          {t("Nessuna sfida ancora. Lanciane una qui sotto.")}
         </p>
       )}
       {elenco && elenco.length > 0 && (
@@ -208,7 +210,7 @@ export default function SfidaCoppiePage() {
         <section className="rounded-2xl border border-figb/30 bg-figb/5 p-5 mb-4">
           <h2 className="font-semibold mb-1 flex items-center gap-2">
             <Users className="w-4 h-4 text-figb" aria-hidden="true" />
-            Iscrivetevi in due
+            {t("Iscrivetevi in due")}
           </h2>
 
           {coda.inAttesa ? (
@@ -219,7 +221,7 @@ export default function SfidaCoppiePage() {
                 la trovate qui sopra: non serve restare su questa pagina.
               </p>
               <Button variant="outline" onClick={annullaAttesa}>
-                Non aspettare più
+                {t("Non aspettare più")}
               </Button>
             </>
           ) : (
@@ -296,7 +298,7 @@ export default function SfidaCoppiePage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="font-semibold mb-3">Come vai</h2>
+        <h2 className="font-semibold mb-3">{t("Come vai")}</h2>
         <StatisticheSfidePannello />
       </section>
 
@@ -317,6 +319,7 @@ function Scelta({
   onCambia: (v: string) => void;
   amici: { friend_id: string; user_id: string; profile: { id: string; display_name: string | null } }[];
 }) {
+  const t = useT();
   return (
     <label className="block">
       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -327,7 +330,7 @@ function Scelta({
         onChange={(e) => onCambia(e.target.value)}
         className="mt-1 w-full h-12 px-3 rounded-xl border border-border bg-card"
       >
-        <option value="">Scegli…</option>
+        <option value="">{t("Scegli…")}</option>
         {amici.map((a) => (
           <option key={a.profile.id} value={a.profile.id}>
             {a.profile.display_name ?? "Un giocatore"}
@@ -339,6 +342,7 @@ function Scelta({
 }
 
 function Dettaglio({ sfida, onIndietro }: { sfida: VistaSfida; onIndietro: () => void }) {
+  const t = useT();
   const miei = sfida.miaCoppia === "A" ? sfida.coppiaA : sfida.coppiaB;
   const loro = sfida.miaCoppia === "A" ? sfida.coppiaB : sfida.coppiaA;
 
@@ -368,7 +372,7 @@ function Dettaglio({ sfida, onIndietro }: { sfida: VistaSfida; onIndietro: () =>
           </p>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground uppercase tracking-wider">Le tue stelle</p>
+          <p className="text-xs text-muted-foreground uppercase tracking-wider">{t("Le tue stelle")}</p>
           <p className="text-2xl font-bold text-figb flex items-center gap-2">
             {confronto.stelle}
             <Stelle quante={1} su={1} className="[&_svg]:w-6 [&_svg]:h-6" />
@@ -393,7 +397,7 @@ function Dettaglio({ sfida, onIndietro }: { sfida: VistaSfida; onIndietro: () =>
                 </span>
               ) : (
                 <Link href={`/gioca/licita-amico?s=${b.sessioneId}`}>
-                  <Button>Dichiara</Button>
+                  <Button>{t("Dichiara")}</Button>
                 </Link>
               )}
             </div>

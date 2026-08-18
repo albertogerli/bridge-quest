@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { Flame, Star, Zap } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Card scura con anello di progresso del livello, streak e XP totali. */
 export function LevelProgressCard({
@@ -23,6 +24,7 @@ export function LevelProgressCard({
   xpForNext: number;
   xp: number;
 }) {
+  const t = useT();
   return (
     <motion.section
       initial={{ opacity: 0, y: 8 }}
@@ -39,7 +41,7 @@ export function LevelProgressCard({
         {/* Streak */}
         <div className="flex flex-col items-center w-1/4">
           <Flame className="w-7 h-7 text-orange-500 mb-1.5" style={{ filter: "drop-shadow(0 0 8px rgba(249,115,22,0.7))" }} />
-          <p className="text-[12px] text-gray-400 font-medium">Streak</p>
+          <p className="text-[12px] text-gray-400 font-medium">{t("Streak")}</p>
           <p className="font-bold text-white">{streak} gg</p>
         </div>
         {/* Progress Ring */}
@@ -67,7 +69,7 @@ export function LevelProgressCard({
         {/* Total XP */}
         <div className="flex flex-col items-center w-1/4">
           <Star className="w-7 h-7 text-yellow-400 mb-1.5" style={{ filter: "drop-shadow(0 0 8px rgba(250,204,21,0.7))" }} />
-          <p className="text-[12px] text-gray-400 font-medium">Totale XP</p>
+          <p className="text-[12px] text-gray-400 font-medium">{t("Totale XP")}</p>
           <p className="font-bold text-white">{xp.toLocaleString("it-IT")}</p>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { pickParticleSpin } from "@/lib/lesson-module";
 import type { FloatingXp, Particle } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Effetti a schermo intero: XP che vola via, popup di passaggio di livello e
@@ -27,6 +28,7 @@ export function ModuleEffects({
   levelUpLevel: number;
   particles: Particle[];
 }) {
+  const t = useT();
   return (
     <>
       {/* === FLOATING XP ANIMATIONS === */}
@@ -89,7 +91,7 @@ export function ModuleEffects({
                   </motion.span>
                 ))}
               </div>
-              <p className="text-sm text-amber-700 mt-3">Tocca per continuare</p>
+              <p className="text-sm text-amber-700 mt-3">{t("Tocca per continuare")}</p>
             </motion.div>
           </motion.div>
         )}
@@ -129,6 +131,7 @@ export function ModuleToasts({
   saveToast: boolean;
   achievement: string | null;
 }) {
+  const t = useT();
   return (
     <>
       {/* XP popup */}
@@ -157,7 +160,7 @@ export function ModuleToasts({
             <svg className="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <polyline points="20,6 9,17 4,12" />
             </svg>
-            Progressi salvati
+            {t("Progressi salvati")}
           </motion.div>
         )}
       </AnimatePresence>

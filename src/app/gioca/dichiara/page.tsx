@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type HandScenario = {
   hand: string; // Formatted: "♠ AK32 ♥ Q87 ♦ KJ5 ♣ 943"
@@ -186,6 +187,7 @@ const dichiaraDiffConfig = {
 };
 
 export default function DichiaraPage() {
+  const t = useT();
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
   const [profile, setProfile] = useState<UserProfile>("adulto");
@@ -315,16 +317,16 @@ export default function DichiaraPage() {
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-            <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
+            <Link href="/gioca" className="hover:text-emerald transition-colors">{t("Gioca")}</Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">Dichiara!</span>
+            <span className="text-emerald font-semibold">{t("Dichiara!")}</span>
           </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mt-8">
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl shadow-figb/20 mb-6">
               🗣️
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Dichiara!</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Dichiara!")}</h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Vedi una mano e scegli l&apos;apertura corretta. Velocità e precisione!
             </p>
@@ -334,18 +336,18 @@ export default function DichiaraPage() {
             </div>
 
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-foreground mb-2">Regole di apertura FIGB</h3>
+              <h3 className="font-bold text-sm text-foreground mb-2">{t("Regole di apertura FIGB")}</h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>12+ HCP: puoi aprire</li>
                 <li>15-17 HCP bilanciata: apri 1NT</li>
                 <li>20-21 HCP bilanciata: apri 2NT</li>
                 <li>22+ HCP: apri 2♣ (forte convenzionale)</li>
-                <li>Con 5+ carte in un seme: apri a quel colore</li>
+                <li>{t("Con 5+ carte in un seme: apri a quel colore")}</li>
               </ul>
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-foreground text-left">Scegli difficoltà</h3>
+              <h3 className="font-bold text-sm text-foreground text-left">{t("Scegli difficoltà")}</h3>
               {(Object.entries(dichiaraDiffConfig) as [DichiaraDifficulty, typeof dichiaraDiffConfig.facile][]).map(([key, cfg]) => (
                 <button
                   key={key}
@@ -396,11 +398,11 @@ export default function DichiaraPage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{correct}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">Streak max</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Streak max")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-figb dark:text-primary">+{xpEarned}</p>
@@ -446,7 +448,7 @@ export default function DichiaraPage() {
                             <div className="flex-1 min-w-0">
                               <p className="text-[12px] text-muted-foreground mb-0.5">{s.hand}</p>
                               <p className="text-xs text-muted-foreground">
-                                Hai dichiarato: <span className="font-bold">{answer.selected}</span>
+                                {t("Hai dichiarato:")} <span className="font-bold">{answer.selected}</span>
                               </p>
                               {!answer.correct && (
                                 <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
@@ -465,13 +467,13 @@ export default function DichiaraPage() {
 
             <div className="flex gap-3 mt-6">
               <Link href="/gioca" className="flex-1">
-                <Button variant="outline" className="w-full h-12 rounded-xl font-bold">Torna a Gioca</Button>
+                <Button variant="outline" className="w-full h-12 rounded-xl font-bold">{t("Torna a Gioca")}</Button>
               </Link>
               <Button
                 onClick={() => startGame()}
                 className="flex-1 h-12 rounded-xl bg-figb hover:bg-figb-dark font-bold shadow-lg"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           </motion.div>
@@ -529,7 +531,7 @@ export default function DichiaraPage() {
               className="card-clean rounded-2xl bg-card p-5 mb-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-bold text-muted-foreground">Che apertura fai?</p>
+                <p className="text-xs font-bold text-muted-foreground">{t("Che apertura fai?")}</p>
                 {(dCfg.showHCP || dCfg.showDist) && (
                   <Badge variant="outline" className="text-[12px] font-bold text-muted-foreground">
                     {dCfg.showHCP ? `${scenario.hcp} HCP` : ""}
@@ -616,18 +618,18 @@ export default function DichiaraPage() {
                 className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-semibold text-foreground">Pausa</h2>
+                <h2 className="text-2xl font-semibold text-foreground">{t("Pausa")}</h2>
                 <p className="text-sm text-muted-foreground mt-2">Domanda {roundIdx + 1}/{TOTAL_ROUNDS} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
                     onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-figb hover:bg-figb-dark font-semibold shadow-lg"
                   >
-                    Riprendi
+                    {t("Riprendi")}
                   </Button>
                   <Link href="/gioca" className="block">
                     <Button variant="outline" className="w-full h-12 rounded-xl font-bold">
-                      Esci dal gioco
+                      {t("Esci dal gioco")}
                     </Button>
                   </Link>
                 </div>

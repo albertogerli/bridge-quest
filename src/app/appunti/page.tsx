@@ -6,8 +6,10 @@ import { useAppunti } from "@/hooks/use-appunti";
 import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function AppuntiPage() {
+  const t = useT();
   const { appunti, clearAll } = useAppunti();
   const profile = useProfile();
   const isSenior = profile.profile === "senior";
@@ -36,7 +38,7 @@ export default function AppuntiPage() {
             <span className="text-4xl">📝</span>
             <div>
               <h1 className={`font-bold text-white font-display ${isSenior ? "text-2xl" : "text-xl"}`}>
-                I Miei Appunti
+                {t("I Miei Appunti")}
               </h1>
               <p className={`text-white/70 ${isSenior ? "text-base" : "text-sm"}`}>
                 {totalRules > 0
@@ -57,14 +59,14 @@ export default function AppuntiPage() {
           >
             <span className="text-5xl block mb-4">📖</span>
             <h3 className={`font-bold text-foreground ${isSenior ? "text-lg" : "text-base"}`}>
-              Nessun appunto ancora
+              {t("Nessun appunto ancora")}
             </h3>
             <p className={`text-muted-foreground mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
-              Completa i moduli delle lezioni e le regole importanti verranno salvate automaticamente qui.
+              {t("Completa i moduli delle lezioni e le regole importanti verranno salvate automaticamente qui.")}
             </p>
             <Link href="/lezioni">
               <Button className="mt-4 rounded-xl bg-figb hover:bg-figb-dark font-bold">
-                Vai alle lezioni
+                {t("Vai alle lezioni")}
               </Button>
             </Link>
           </motion.div>
@@ -163,12 +165,12 @@ export default function AppuntiPage() {
                   onClick={() => setShowConfirmClear(true)}
                   className="text-sm text-muted-foreground hover:text-red-500 transition-colors"
                 >
-                  Cancella tutti gli appunti
+                  {t("Cancella tutti gli appunti")}
                 </button>
               ) : (
                 <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-4">
                   <p className={`text-red-700 dark:text-red-300 font-medium ${isSenior ? "text-base" : "text-sm"}`}>
-                    Sei sicuro? Questa azione non si può annullare.
+                    {t("Sei sicuro? Questa azione non si può annullare.")}
                   </p>
                   <div className="flex gap-3 justify-center mt-3">
                     <Button
@@ -176,7 +178,7 @@ export default function AppuntiPage() {
                       className="rounded-xl"
                       onClick={() => setShowConfirmClear(false)}
                     >
-                      Annulla
+                      {t("Annulla")}
                     </Button>
                     <Button
                       className="rounded-xl bg-red-600 hover:bg-red-700"
@@ -185,7 +187,7 @@ export default function AppuntiPage() {
                         setShowConfirmClear(false);
                       }}
                     >
-                      Cancella tutto
+                      {t("Cancella tutto")}
                     </Button>
                   </div>
                 </div>

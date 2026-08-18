@@ -11,12 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { DECISION_TABLE } from "@/lib/minibridge";
 import { SCORE_TABLE_MADE, DEFEATED_NON_VUL } from "@/lib/scoring";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * The two WBF reference cards (Decision Table + Score Table) that beginners
  * consult during MiniBridge. Rendered as a button that opens a dialog.
  */
 export function ReferenceCardsButton({ className }: { className?: string }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -26,9 +28,9 @@ export function ReferenceCardsButton({ className }: { className?: string }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-display text-2xl">Tabelle di riferimento</DialogTitle>
+            <DialogTitle className="font-display text-2xl">{t("Tabelle di riferimento")}</DialogTitle>
             <DialogDescription>
-              Gli strumenti del MiniBridge: quante prese puntare e quanto vale il contratto.
+              {t("Gli strumenti del MiniBridge: quante prese puntare e quanto vale il contratto.")}
             </DialogDescription>
           </DialogHeader>
           <ReferenceCardsContent />
@@ -39,19 +41,20 @@ export function ReferenceCardsButton({ className }: { className?: string }) {
 }
 
 export function ReferenceCardsContent() {
+  const t = useT();
   return (
     <div className="space-y-6">
       {/* Decision table */}
       <section>
-        <h3 className="mb-1 font-display text-lg font-semibold">Decision Table</h3>
+        <h3 className="mb-1 font-display text-lg font-semibold">{t("Decision Table")}</h3>
         <p className="mb-3 text-xs text-muted-foreground">
-          Somma i punti onori della coppia (A=4, K=3, Q=2, J=1) → prese che puoi puntare.
+          {t("Somma i punti onori della coppia (A=4, K=3, Q=2, J=1) → prese che puoi puntare.")}
         </p>
         <table className="w-full overflow-hidden rounded-lg border border-border text-sm">
           <thead>
             <tr className="bg-muted/50 text-left">
-              <th className="px-3 py-2 font-semibold">Punti della coppia</th>
-              <th className="px-3 py-2 text-right font-semibold">Prese possibili</th>
+              <th className="px-3 py-2 font-semibold">{t("Punti della coppia")}</th>
+              <th className="px-3 py-2 text-right font-semibold">{t("Prese possibili")}</th>
             </tr>
           </thead>
           <tbody>
@@ -67,14 +70,14 @@ export function ReferenceCardsContent() {
 
       {/* Score table */}
       <section>
-        <h3 className="mb-1 font-display text-lg font-semibold">Score Table</h3>
+        <h3 className="mb-1 font-display text-lg font-semibold">{t("Score Table")}</h3>
         <p className="mb-3 text-xs text-muted-foreground">
-          Punti per contratto mantenuto esatto (non in zona). In verde i contratti di manche/slam.
+          {t("Punti per contratto mantenuto esatto (non in zona). In verde i contratti di manche/slam.")}
         </p>
         <table className="w-full overflow-hidden rounded-lg border border-border text-sm">
           <thead>
             <tr className="bg-muted/50">
-              <th className="px-3 py-2 text-left font-semibold">Livello</th>
+              <th className="px-3 py-2 text-left font-semibold">{t("Livello")}</th>
               <th className="px-3 py-2 text-right font-semibold">♣ / ♦</th>
               <th className="px-3 py-2 text-right font-semibold">♥ / ♠</th>
               <th className="px-3 py-2 text-right font-semibold">SA</th>

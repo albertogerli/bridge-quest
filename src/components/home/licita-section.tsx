@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La licita in prima pagina.
@@ -44,10 +45,11 @@ const PORTE = [
 ];
 
 export function LicitaSection() {
+  const t = useT();
   return (
     <section className="mx-auto max-w-6xl px-4 sm:px-5 pt-4">
       <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        Dichiara
+        {t("Dichiara")}
       </h2>
       <div className="grid gap-3 sm:grid-cols-3">
         {PORTE.map((p) => (
@@ -62,7 +64,7 @@ export function LicitaSection() {
                 <span className="text-sm font-bold">{p.titolo}</span>
                 {p.nuovo && (
                   <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide">
-                    Nuovo
+                    {t("Nuovo")}
                   </span>
                 )}
               </div>

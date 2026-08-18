@@ -40,7 +40,7 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
    * screenshot il 15/08/2026 — dal codice non si vedeva, perché entrambe le
    * parti erano «giuste» da sole.
    */
-  const intestazione = await page.getByText(/Sei Sud · (apre|apri)/).innerText();
+  const intestazione = await page.getByText(/Sei Sud, (apre|apri)/).innerText();
   const mazziere = intestazione.includes("apri tu")
     ? "Sud"
     : intestazione.replace(/.*apre\s+/, "").trim();

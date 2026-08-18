@@ -2,9 +2,11 @@
 
 import { MiniCard } from "./cards";
 import { GAME_LABELS, type GameStats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Statistiche giochi (RPC admin_game_stats). */
 export function GameStatsPanel({ gameStats }: { gameStats: GameStats }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
@@ -22,7 +24,7 @@ export function GameStatsPanel({ gameStats }: { gameStats: GameStats }) {
 
       {/* 30-day plays trend */}
       <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-2">
-        Partite ultimi 30 giorni
+        {t("Partite ultimi 30 giorni")}
       </h3>
       <div className="flex items-end gap-[2px] mb-1" style={{ height: 90 }}>
         {(() => {
@@ -56,19 +58,19 @@ export function GameStatsPanel({ gameStats }: { gameStats: GameStats }) {
 
       {/* Per-game breakdown */}
       <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-2">
-        Per gioco
+        {t("Per gioco")}
       </h3>
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
           <thead>
             <tr className="bg-gray-50 text-left text-[12px] font-bold text-gray-500 uppercase tracking-wider">
-              <th className="px-3 py-2">Gioco</th>
-              <th className="px-3 py-2 text-right">Partite</th>
-              <th className="px-3 py-2 text-right">Ultimi 7 gg</th>
-              <th className="px-3 py-2 text-right">Giocatori</th>
-              <th className="px-3 py-2 text-right">Punteggio medio</th>
-              <th className="px-3 py-2">Ultima partita</th>
-              <th className="px-3 py-2 w-1/4">Quota</th>
+              <th className="px-3 py-2">{t("Gioco")}</th>
+              <th className="px-3 py-2 text-right">{t("Partite")}</th>
+              <th className="px-3 py-2 text-right">{t("Ultimi 7 gg")}</th>
+              <th className="px-3 py-2 text-right">{t("Giocatori")}</th>
+              <th className="px-3 py-2 text-right">{t("Punteggio medio")}</th>
+              <th className="px-3 py-2">{t("Ultima partita")}</th>
+              <th className="px-3 py-2 w-1/4">{t("Quota")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">

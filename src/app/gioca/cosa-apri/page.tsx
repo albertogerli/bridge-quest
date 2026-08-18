@@ -11,6 +11,7 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { aperturaConsigliata, type Apertura } from "@/lib/apertura";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -36,6 +37,7 @@ interface Domanda {
  * delle due è sbagliata.
  */
 export default function CosaApriPage() {
+  const t = useT();
   const [seed] = useState(() => Math.floor(Date.now() % 1_000_000));
   const [round, setRound] = useState(0);
   const [risposta, setRisposta] = useState<string | null>(null);
@@ -80,15 +82,15 @@ export default function CosaApriPage() {
   if (round >= ROUNDS) {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
-        <h1 className="text-2xl font-bold font-display mb-2">Finito</h1>
+        <h1 className="text-2xl font-bold font-display mb-2">{t("Finito")}</h1>
         <p className="text-4xl font-bold text-figb my-6">{punti} / {ROUNDS}</p>
         <div className="flex flex-col gap-2">
           <Button onClick={() => { setRound(0); setPunti(0); setRisposta(null); }}>
             <RotateCcw className="w-4 h-4 mr-1" aria-hidden="true" />
-            Ancora
+            {t("Ancora")}
           </Button>
           <Link href="/gioca" className="text-sm text-muted-foreground hover:underline">
-            Torna ai giochi
+            {t("Torna ai giochi")}
           </Link>
         </div>
       </div>
@@ -106,11 +108,11 @@ export default function CosaApriPage() {
         <span className="text-sm font-bold text-figb">{punti} giuste</span>
       </header>
 
-      <h1 className="sr-only">Cosa apri?</h1>
+      <h1 className="sr-only">{t("Cosa apri?")}</h1>
 
       {!domanda && (
         <p className="py-16 text-center text-sm text-muted-foreground">
-          Preparo la mano…
+          {t("Preparo la mano…")}
         </p>
       )}
 
@@ -118,7 +120,7 @@ export default function CosaApriPage() {
         <>
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
-              <Badge variant="secondary">Sei Sud, apri tu</Badge>
+              <Badge variant="secondary">{t("Sei Sud, apri tu")}</Badge>
               <span className="text-xs text-muted-foreground">
                 {handHcp(domanda.hand)} punti onori
               </span>
@@ -133,7 +135,7 @@ export default function CosaApriPage() {
 
           <p className="text-sm font-semibold mb-3 flex items-center gap-2">
             <Gavel className="w-4 h-4 text-figb" aria-hidden="true" />
-            Cosa dichiari?
+            {t("Cosa dichiari?")}
           </p>
 
           <div className="grid grid-cols-3 gap-2 mb-4">
@@ -180,7 +182,7 @@ export default function CosaApriPage() {
           </AnimatePresence>
 
           <p className="text-xs text-muted-foreground mt-5">
-            Sistema Naturale, quinta maggiore — quello dei corsi FIGB.
+            {t("Sistema Naturale, quinta maggiore — quello dei corsi FIGB.")}
           </p>
         </>
       )}

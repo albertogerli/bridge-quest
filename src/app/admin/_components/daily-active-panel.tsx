@@ -2,6 +2,7 @@
 
 import { ActiveDayDetail } from "./active-day-detail";
 import type { Stats, UserRow } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Utenti attivi per giorno (ultimi 14) con dettaglio del giorno selezionato. */
 export function DailyActivePanel({
@@ -19,6 +20,7 @@ export function DailyActivePanel({
   onSelectUser: (id: string) => void;
   accessiAttendibili?: boolean;
 }) {
+  const t = useT();
   // Senza gli accessi il grafico verrebbe disegnato dal ripiego su
   // `last_login`, che colloca ogni utente nel SOLO giorno della sua ultima
   // visita: una curva sempre crescente verso oggi, che sembra un andamento.
@@ -28,7 +30,7 @@ export function DailyActivePanel({
     return (
       <div className="bg-white rounded-2xl border border-amber-300 p-5 mb-8">
         <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">
-          Utenti attivi per giorno (ultimi 14 giorni)
+          {t("Utenti attivi per giorno (ultimi 14 giorni)")}
         </h2>
         <p className="text-sm text-amber-800">
           Dato non disponibile: la lettura degli accessi non è riuscita. Il
@@ -37,7 +39,7 @@ export function DailyActivePanel({
           e risponderebbe a una domanda diversa.
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          Serve la funzione <code>admin_login_history</code>: vedi
+          {t("Serve la funzione")} <code>admin_login_history</code>: vedi
           {" "}
           <code>scripts/sql/admin-login-history-2026-08.sql</code>.
         </p>
@@ -48,7 +50,7 @@ export function DailyActivePanel({
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-        Utenti attivi per giorno (ultimi 14 giorni)
+        {t("Utenti attivi per giorno (ultimi 14 giorni)")}
       </h2>
       {/* Bar chart */}
       <div className="flex items-end gap-1 mb-4" style={{ height: 80 }}>

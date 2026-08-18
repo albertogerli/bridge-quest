@@ -7,6 +7,7 @@ import {
   computeTotalModuleXp,
   confettiFallDistance,
 } from "@/lib/lesson-module";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Emoji dei coriandoli, assegnate a giro sui 30 pezzi. */
 const CONFETTI_EMOJI = ["🎉", "🎊", "⭐", "✨", "🏆", "💫", "🎯", "♠", "♥", "♦", "♣", "🃏", "👑", "🔥"];
@@ -36,6 +37,7 @@ export function CompletionCard({
   xpReward: number;
   xpLabel: string;
 }) {
+  const t = useT();
   const stars = computeStars(correctAnswers, totalQuizzes);
   const fallDistance = confettiFallDistance();
 
@@ -128,7 +130,7 @@ export function CompletionCard({
             className="inline-flex items-center gap-1 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-full px-3 py-1 mt-2"
           >
             <span>❤️❤️❤️</span>
-            <span className="text-xs font-bold text-red-700 dark:text-red-300">Vite intatte!</span>
+            <span className="text-xs font-bold text-red-700 dark:text-red-300">{t("Vite intatte!")}</span>
           </motion.div>
         )}
 
@@ -141,13 +143,13 @@ export function CompletionCard({
           {totalQuizzes > 0 && (
             <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 p-3">
               <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{correctAnswers}/{totalQuizzes}</p>
-              <p className="text-[12px] font-bold text-emerald-500 dark:text-emerald-400/80 uppercase tracking-wider">Quiz</p>
+              <p className="text-[12px] font-bold text-emerald-500 dark:text-emerald-400/80 uppercase tracking-wider">{t("Quiz")}</p>
             </div>
           )}
           {bestStreak >= 2 && (
             <div className="rounded-xl bg-orange-50 dark:bg-orange-950/40 p-3">
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{bestStreak}</p>
-              <p className="text-[12px] font-bold text-orange-500 dark:text-orange-400/80 uppercase tracking-wider">Best Streak</p>
+              <p className="text-[12px] font-bold text-orange-500 dark:text-orange-400/80 uppercase tracking-wider">{t("Best Streak")}</p>
             </div>
           )}
         </div>
@@ -162,7 +164,7 @@ export function CompletionCard({
               className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 rounded-full px-3 py-1"
             >
               <span>🎯</span>
-              <span className="text-xs font-bold text-violet-700 dark:text-violet-300">Punteggio Perfetto</span>
+              <span className="text-xs font-bold text-violet-700 dark:text-violet-300">{t("Punteggio Perfetto")}</span>
             </motion.div>
           )}
           {bestStreak >= 3 && (
@@ -184,7 +186,7 @@ export function CompletionCard({
               className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1"
             >
               <span>⚡</span>
-              <span className="text-xs font-bold text-amber-700 dark:text-amber-300">XP Master</span>
+              <span className="text-xs font-bold text-amber-700 dark:text-amber-300">{t("XP Master")}</span>
             </motion.div>
           )}
         </div>

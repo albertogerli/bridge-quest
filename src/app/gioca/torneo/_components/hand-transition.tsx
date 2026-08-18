@@ -6,6 +6,7 @@ import { parseContract } from "@/lib/bridge-engine";
 import type { Smazzata } from "@/lib/catalog";
 import { computeHandTotals } from "@/lib/tournament-stats";
 import { type HandResult } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Schermata fra una mano e la successiva: esito appena ottenuto e totale parziale.
@@ -24,6 +25,7 @@ export function HandTransition({
   onNextHand: () => void;
   onBack: () => void;
 }) {
+  const t = useT();
   const lastResult = handResults[handResults.length - 1];
   const completedCount = handResults.length;
   const totalHands = hands.length;
@@ -100,21 +102,21 @@ export function HandTransition({
           {/* Running total */}
           <div className="rounded-2xl bg-card p-4 border border-border mb-6">
             <p className="text-xs font-bold text-muted-foreground mb-1">
-              Totale parziale
+              {t("Totale parziale")}
             </p>
             <div className="flex items-center justify-center gap-4">
               <div className="text-center">
                 <p className="text-lg font-bold text-foreground">
                   {totalTricks}
                 </p>
-                <p className="text-[12px] text-muted-foreground">Prese fatte</p>
+                <p className="text-[12px] text-muted-foreground">{t("Prese fatte")}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
                 <p className="text-lg font-bold text-foreground">
                   {totalNeeded}
                 </p>
-                <p className="text-[12px] text-muted-foreground">Necessarie</p>
+                <p className="text-[12px] text-muted-foreground">{t("Necessarie")}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
@@ -127,7 +129,7 @@ export function HandTransition({
                 >
                   {delta >= 0 ? `+${delta}` : delta}
                 </p>
-                <p className="text-[12px] text-muted-foreground">Bilancio</p>
+                <p className="text-[12px] text-muted-foreground">{t("Bilancio")}</p>
               </div>
             </div>
           </div>
@@ -159,7 +161,7 @@ export function HandTransition({
             onClick={onBack}
             className="mt-3 text-sm font-semibold text-muted-foreground hover:text-muted-foreground transition-colors"
           >
-            Abbandona torneo
+            {t("Abbandona torneo")}
           </button>
         </motion.div>
       </div>

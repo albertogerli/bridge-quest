@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { Powerups } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Vite, moltiplicatore XP e power-up disponibili. Compare solo nei moduli con
@@ -22,6 +23,7 @@ export function GamificationBar({
   powerups: Powerups;
   showTimer: boolean;
 }) {
+  const t = useT();
   return (
     <>
       {/* === GAMIFICATION BAR: Hearts + Multiplier + Power-ups === */}
@@ -99,8 +101,8 @@ export function GamificationBar({
           className="mb-5 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/40 dark:to-orange-950/30 border-2 border-red-200 dark:border-red-900 p-5 text-center"
         >
           <span className="text-3xl">💔</span>
-          <p className="text-base font-bold text-red-800 dark:text-red-300 mt-2">Vite esaurite!</p>
-          <p className="text-sm text-red-600 dark:text-red-400 mt-1">Puoi continuare, ma non guadagnerai XP bonus.</p>
+          <p className="text-base font-bold text-red-800 dark:text-red-300 mt-2">{t("Vite esaurite!")}</p>
+          <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t("Puoi continuare, ma non guadagnerai XP bonus.")}</p>
         </motion.div>
       )}
     </>

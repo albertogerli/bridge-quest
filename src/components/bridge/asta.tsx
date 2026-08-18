@@ -7,6 +7,7 @@ import {
   dichiarazioniLecite, righeAsta, turno,
   type Posto,
 } from "@/lib/asta";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const ETICHETTA: Record<Posto, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
@@ -56,6 +57,7 @@ export function Asta({
   disabilitato?: boolean;
   vulnerabilita?: string;
 }) {
+  const t = useT();
   const righe = righeAsta(dealer, bids);
   const chiParla = turno(dealer, bids);
   const lecite = dichiarazioniLecite(dealer, bids);
@@ -182,7 +184,7 @@ export function Asta({
                   : "border-transparent bg-muted/30 text-muted-foreground/30"
               }`}
             >
-              Passo
+              {t("Passo")}
             </button>
             <button
               disabled={!lecite.contro || !posso}
@@ -194,7 +196,7 @@ export function Asta({
                   : "border-transparent bg-muted/30 text-muted-foreground/30"
               }`}
             >
-              Contro
+              {t("Contro")}
             </button>
             <button
               disabled={!lecite.surcontro || !posso}
@@ -206,7 +208,7 @@ export function Asta({
                   : "border-transparent bg-muted/30 text-muted-foreground/30"
               }`}
             >
-              Surcontro
+              {t("Surcontro")}
             </button>
           </div>
         </div>
@@ -217,7 +219,8 @@ export function Asta({
 
 /** Una dichiarazione con il simbolo del seme al posto della lettera. */
 function Dichiarazione({ bid }: { bid: string }) {
-  if (bid === PASSO) return <span className="text-muted-foreground">Passo</span>;
+  const t = useT();
+  if (bid === PASSO) return <span className="text-muted-foreground">{t("Passo")}</span>;
   if (bid === CONTRO) return <span className="text-red-600 font-bold">X</span>;
   if (bid === SURCONTRO) return <span className="text-blue-600 font-bold">XX</span>;
   const d = bid.slice(1);

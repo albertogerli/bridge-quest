@@ -13,6 +13,7 @@ import {
   biddingScenarios,
   type BiddingScenario,
 } from "@/data/bidding-practice-data";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Suit styling for bid buttons
 const bidSuitColor = (bid: string): string => {
@@ -67,6 +68,7 @@ const diffConfig = {
 const TOTAL_ROUNDS = 10;
 
 export default function PraticaLicitaPage() {
+  const t = useT();
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
   const [profile, setProfile] = useState<UserProfile>("adulto");
@@ -227,11 +229,11 @@ export default function PraticaLicitaPage() {
               href="/gioca"
               className="hover:text-emerald transition-colors"
             >
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
             <span className="text-figb dark:text-primary font-semibold">
-              Pratica Licita
+              {t("Pratica Licita")}
             </span>
           </div>
 
@@ -244,7 +246,7 @@ export default function PraticaLicitaPage() {
               🗣️
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
-              Pratica Licita
+              {t("Pratica Licita")}
             </h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Esercitati nella dichiarazione: il compagno ha aperto, quale bid
@@ -262,22 +264,22 @@ export default function PraticaLicitaPage() {
             {/* Rules card */}
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">
-                Come funziona
+                {t("Come funziona")}
               </h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li>Vedi la tua mano e la storia della dichiarazione</li>
-                <li>Scegli la risposta corretta tra 4 opzioni</li>
+                <li>{t("Vedi la tua mano e la storia della dichiarazione")}</li>
+                <li>{t("Scegli la risposta corretta tra 4 opzioni")}</li>
                 <li>
-                  Temi: Texas, Stayman, cue bid, interventi, aperture deboli
+                  {t("Temi: Texas, Stayman, cue bid, interventi, aperture deboli")}
                 </li>
-                <li>Più sei veloce, più punti guadagni!</li>
+                <li>{t("Più sei veloce, più punti guadagni!")}</li>
               </ul>
             </div>
 
             {/* Topic preview */}
             <div className="mt-4 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">
-                Argomenti
+                {t("Argomenti")}
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {[
@@ -303,7 +305,7 @@ export default function PraticaLicitaPage() {
             {/* Difficulty selector */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-foreground text-left">
-                Scegli difficoltà
+                {t("Scegli difficoltà")}
               </h3>
               {(
                 Object.entries(diffConfig) as [
@@ -382,14 +384,14 @@ export default function PraticaLicitaPage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{correct}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
                 <p className="text-[12px] text-muted-foreground font-bold">
-                  Streak max
+                  {t("Streak max")}
                 </p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
@@ -408,14 +410,14 @@ export default function PraticaLicitaPage() {
                   variant="outline"
                   className="w-full h-12 rounded-xl font-bold"
                 >
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => startGame()}
                 className="flex-1 h-12 rounded-xl bg-figb hover:bg-figb-dark font-bold shadow-lg"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           </motion.div>
@@ -506,7 +508,7 @@ export default function PraticaLicitaPage() {
                 className="card-clean rounded-2xl bg-card p-4 mb-3"
               >
                 <p className="text-xs font-bold text-muted-foreground mb-2">
-                  Dichiarazione finora:
+                  {t("Dichiarazione finora:")}
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   {scenario.biddingHistory.map((entry, i) => (
@@ -661,7 +663,7 @@ export default function PraticaLicitaPage() {
                         : "bg-figb hover:bg-figb-dark"
                     }`}
                   >
-                    Continua
+                    {t("Continua")}
                   </button>
                 </motion.div>
               )}
@@ -690,7 +692,7 @@ export default function PraticaLicitaPage() {
               >
                 <div className="text-5xl mb-4">⏸️</div>
                 <h2 className="text-2xl font-semibold text-foreground">
-                  Pausa
+                  {t("Pausa")}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-2">
                   Scenario {roundIdx + 1}/{TOTAL_ROUNDS} · {score} pts
@@ -700,14 +702,14 @@ export default function PraticaLicitaPage() {
                     onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-figb hover:bg-figb-dark font-semibold shadow-lg"
                   >
-                    Riprendi
+                    {t("Riprendi")}
                   </Button>
                   <Link href="/gioca" className="block">
                     <Button
                       variant="outline"
                       className="w-full h-12 rounded-xl font-bold"
                     >
-                      Esci dal gioco
+                      {t("Esci dal gioco")}
                     </Button>
                   </Link>
                 </div>

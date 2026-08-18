@@ -6,9 +6,11 @@ import type { ContentBlockProps } from "../_types";
 import { BrainIcon } from "./block-icons";
 import { EnrichedText } from "./enriched-text";
 import { QuizFeedback } from "./quiz-feedback";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Quiz a scelta multipla: timer, power-up, suggerimenti e spiegazione. */
 export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) {
+  const t = useT();
   const {
     isJunior,
     profile,
@@ -103,7 +105,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
               onClick={() => consumeSkip(blockIndex)}
               className="flex items-center gap-1.5 rounded-xl bg-blue-100 border border-blue-200 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/60 transition-all"
             >
-              <span className="text-sm">⏭️</span> Salta
+              <span className="text-sm">⏭️</span> {t("Salta")}
             </motion.button>
           )}
           {profile.showTimer && powerups.extraTime > 0 && quizTimer > 0 && quizTimer <= 5 && (
@@ -127,7 +129,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
               className="flex items-center gap-2 text-sm font-semibold text-blue-500 hover:text-blue-700 transition-colors"
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/40">💡</span>
-              Mostra suggerimento
+              {t("Mostra suggerimento")}
             </button>
           ) : (
             <motion.div

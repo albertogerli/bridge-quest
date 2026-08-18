@@ -34,6 +34,7 @@ import { useGameResults } from "@/hooks/use-game-results";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { ArrowLeft, Target, CheckCircle2, ChevronRight } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 function isHandCompleted(handId: number): boolean {
   try {
@@ -59,6 +60,7 @@ function HandSelector({
   onSelect: (hand: GuidedHand) => void;
   hands: GuidedHand[];
 }) {
+  const t = useT();
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -70,8 +72,8 @@ function HandSelector({
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-foreground">Mano Guidata</h1>
-            <p className="text-xs text-muted-foreground">Pratica passo-passo</p>
+            <h1 className="text-lg font-bold text-foreground">{t("Mano Guidata")}</h1>
+            <p className="text-xs text-muted-foreground">{t("Pratica passo-passo")}</p>
           </div>
           <Target className="w-5 h-5 text-figb dark:text-primary" />
         </div>
@@ -90,7 +92,7 @@ function HandSelector({
             </div>
             <div>
               <p className="text-sm font-semibold text-foreground">
-                Impara giocando
+                {t("Impara giocando")}
               </p>
               <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                 Due mani progettate per consolidare le basi. La prima è facile con suggerimenti,
@@ -134,7 +136,7 @@ function HandSelector({
                       {completed && (
                         <Badge className="bg-emerald-400/30 text-white text-[12px] font-bold border-0 backdrop-blur-sm">
                           <CheckCircle2 className="w-3 h-3 mr-1" />
-                          Completata
+                          {t("Completata")}
                         </Badge>
                       )}
                     </div>
@@ -151,7 +153,7 @@ function HandSelector({
                   </p>
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>Contratto: <span className="font-bold text-foreground/80">{hand.contract}</span></span>
+                      <span>{t("Contratto:")} <span className="font-bold text-foreground/80">{hand.contract}</span></span>
                       <span>{hand.tricksNeeded} prese</span>
                       {hand.hints.length > 0 && (
                         <span className="text-cyan-500 font-semibold">💡 Con suggerimenti</span>
@@ -187,6 +189,7 @@ function HandSelector({
 // ─── Hint Overlay ────────────────────────────────────────────────────────────
 
 function HintOverlay({ text, onDismiss }: { text: string; onDismiss: () => void }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -198,7 +201,7 @@ function HintOverlay({ text, onDismiss }: { text: string; onDismiss: () => void 
         <div className="flex items-start gap-3">
           <span className="text-lg shrink-0">💡</span>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-cyan-900">Suggerimento</p>
+            <p className="text-sm font-semibold text-cyan-900">{t("Suggerimento")}</p>
             <p className="text-xs text-cyan-700 mt-1 leading-relaxed">{text}</p>
           </div>
           <button
@@ -224,6 +227,7 @@ function GuidedGameplay({
   allHands: GuidedHand[];
   onBack: () => void;
 }) {
+  const t = useT();
   const declarer = hand.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const xpSaved = useRef(false);
@@ -376,17 +380,17 @@ function GuidedGameplay({
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
               <p className="text-lg font-bold text-emerald-dark">{hand.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
               <p className="text-lg font-bold text-foreground">{hand.tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -501,7 +505,7 @@ function GuidedGameplay({
                 variant="outline"
                 className="rounded-xl h-12 px-6 font-bold"
               >
-                Scegli mano
+                {t("Scegli mano")}
               </Button>
               {otherHand && !isHandCompleted(otherHand.id) && (
                 <Button
@@ -518,7 +522,7 @@ function GuidedGameplay({
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
                 className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           )}
@@ -591,13 +595,14 @@ function GuidedGameplay({
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function ManoGuidataPage() {
+  const t = useT();
   const { hands, isLoaded } = useGuidedHands();
   const [selectedHand, setSelectedHand] = useState<GuidedHand | null>(null);
 
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-background grid place-items-center">
-        <div className="text-sm text-muted-foreground">Caricamento mani...</div>
+        <div className="text-sm text-muted-foreground">{t("Caricamento mani...")}</div>
       </div>
     );
   }

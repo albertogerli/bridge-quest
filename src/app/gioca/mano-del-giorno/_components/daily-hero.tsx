@@ -11,6 +11,7 @@ import {
   positionLabelIt,
 } from "@/lib/daily-hand";
 import { HandFanPreview } from "./hand-fan-preview";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Scheda principale: data, contratto della mano di oggi, anteprima della mano
@@ -33,6 +34,7 @@ export function DailyHero({
   xpLabel: string;
   onPlay: () => void;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -63,7 +65,7 @@ export function DailyHero({
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground font-display">
-                  Mano del Giorno
+                  {t("Mano del Giorno")}
                 </h1>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {mounted ? formatDate(today) : ""}
@@ -72,7 +74,7 @@ export function DailyHero({
             </div>
             {alreadyPlayed && (
               <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[12px] font-bold border-0 shrink-0">
-                Completata
+                {t("Completata")}
               </Badge>
             )}
           </div>
@@ -85,7 +87,7 @@ export function DailyHero({
               <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-amber-100 dark:border-amber-900">
                 <div>
                   <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                    Contratto
+                    {t("Contratto")}
                   </p>
                   <p className="text-lg font-bold text-emerald-dark leading-tight">
                     {todayHand.contract}
@@ -94,7 +96,7 @@ export function DailyHero({
                 <div className="h-8 w-px bg-amber-200/60" />
                 <div>
                   <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                    Dichiarante
+                    {t("Dichiarante")}
                   </p>
                   <p className="text-lg font-bold text-foreground leading-tight">
                     {positionLabelIt(todayHand.declarer)}
@@ -119,7 +121,7 @@ export function DailyHero({
             {/* South hand preview */}
             <div className="shrink-0 bg-card/70 backdrop-blur-sm rounded-2xl px-3.5 py-3 border border-amber-100 dark:border-amber-900 shadow-sm">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 text-center">
-                La tua mano (Sud)
+                {t("La tua mano (Sud)")}
               </p>
               <HandFanPreview
                 cards={
@@ -142,7 +144,7 @@ export function DailyHero({
               <div className="inline-flex items-center gap-1.5 bg-amber-100/80 rounded-full px-3 py-1">
                 <span className="text-xs">+50 {xpLabel}</span>
                 <span className="text-[12px] font-bold text-amber-700">
-                  Bonus Giornaliero
+                  {t("Bonus Giornaliero")}
                 </span>
               </div>
             </motion.div>
@@ -155,7 +157,7 @@ export function DailyHero({
                 onClick={onPlay}
                 className="w-full rounded-2xl bg-emerald hover:bg-emerald-dark text-base font-bold h-14 shadow-lg shadow-emerald/25 transition-all hover:shadow-xl hover:shadow-emerald/30"
               >
-                Gioca la Mano del Giorno
+                {t("Gioca la Mano del Giorno")}
               </Button>
             ) : (
               <Button
@@ -163,7 +165,7 @@ export function DailyHero({
                 variant="outline"
                 className="w-full rounded-2xl text-sm font-bold h-12 border-emerald/30 text-emerald hover:bg-emerald-50"
               >
-                Rigioca la mano di oggi
+                {t("Rigioca la mano di oggi")}
               </Button>
             )}
           </div>

@@ -12,12 +12,14 @@ import { ChevronDown, ChevronUp, Clock, Trophy, Zap } from "lucide-react";
 import { useCurrentWeeklyChallenge } from "@/store/use-weekly-challenges-store";
 import { getTimeRemainingInWeek } from "@/lib/catalog";
 import { getWeeklyChallengeProgress } from "@/lib/weekly-challenge-progress";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface WeeklyChallengeBannerProps {
   compact?: boolean;
 }
 
 export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBannerProps) {
+  const t = useT();
   const challenge = useCurrentWeeklyChallenge();
   const [mounted, setMounted] = useState(false);
   const [showTips, setShowTips] = useState(false);
@@ -119,7 +121,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Trophy className="h-5 w-5" />
-            <span className="font-semibold">Progresso settimanale</span>
+            <span className="font-semibold">{t("Progresso settimanale")}</span>
           </div>
           <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
             {progress.played}/{progress.target} mani completate
@@ -200,7 +202,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
       {/* XP Earned Display */}
       {progress.xpEarned > 0 && (
         <div className="mt-4 text-center text-sm bg-white/10 backdrop-blur-sm rounded-lg py-2">
-          <span className="opacity-90">XP guadagnati questa settimana: </span>
+          <span className="opacity-90">{t("XP guadagnati questa settimana:")} </span>
           <span className="font-bold text-lg">{progress.xpEarned} XP</span>
         </div>
       )}

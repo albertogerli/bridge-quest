@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * One-time "what's new" guide for existing users landing on the reorganised
@@ -57,6 +58,7 @@ const SLIDES: Slide[] = [
 ];
 
 export function NewVersionGuide() {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -149,7 +151,7 @@ export function NewVersionGuide() {
               {/* actions */}
               <div className="mt-5 flex items-center justify-between gap-3">
                 <button onClick={close} className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                  Salta
+                  {t("Salta")}
                 </button>
                 <button
                   onClick={() => (isLast ? close() : setStep((s) => s + 1))}

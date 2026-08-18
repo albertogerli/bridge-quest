@@ -15,6 +15,7 @@ import {
   type LiveTable,
 } from "@/lib/live-table";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -38,6 +39,7 @@ export default function TavoloAllievoPage({
 }: {
   params: Promise<{ classId: string }>;
 }) {
+  const t = useT();
   const { classId } = use(params);
   const { user, loading } = useSharedAuth();
   const [tableId, setTableId] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export default function TavoloAllievoPage({
     return (
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
-          <Link href={`/login?redirect=/classe/${classId}/tavolo`} className="underline">Accedi</Link>{" "}
+          <Link href={`/login?redirect=/classe/${classId}/tavolo`} className="underline">{t("Accedi")}</Link>{" "}
           per vedere il tavolo della tua classe.
         </p>
       </div>
@@ -72,7 +74,7 @@ export default function TavoloAllievoPage({
     return (
       <div className="min-h-screen px-4 py-16 max-w-md mx-auto text-center">
         <Users className="w-10 h-10 text-muted-foreground mx-auto mb-3" aria-hidden="true" />
-        <h1 className="text-xl font-bold font-display mb-2">Nessun tavolo aperto</h1>
+        <h1 className="text-xl font-bold font-display mb-2">{t("Nessun tavolo aperto")}</h1>
         <p className="text-sm text-muted-foreground">
           Quando l&apos;insegnante apre il tavolo, la mano comparirà qui da sola:
           puoi lasciare la pagina aperta.
@@ -110,7 +112,7 @@ export default function TavoloAllievoPage({
         <h1 className="text-xl font-bold font-display">{stato?.titolo ?? "Tavolo della classe"}</h1>
         {stato?.seat ? (
           <p className="text-sm text-muted-foreground mt-1">
-            Sei <strong>{ETICHETTA[stato.seat]}</strong>
+            {t("Sei")}<strong>{ETICHETTA[stato.seat]}</strong>
           </p>
         ) : (
           <p className="text-sm text-muted-foreground mt-1">

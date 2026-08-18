@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Tempo mancante alla mano di domani. */
 export function DailyCountdownCard({
@@ -10,6 +11,7 @@ export function DailyCountdownCard({
   mounted: boolean;
   countdown: string;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -21,7 +23,7 @@ export function DailyCountdownCard({
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              Nuova mano tra
+              {t("Nuova mano tra")}
             </p>
             <p className="text-2xl font-bold text-foreground tabular-nums mt-0.5">
               {mounted ? countdown : "--:--:--"}

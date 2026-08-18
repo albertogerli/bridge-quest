@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Banner "Accedi per salvare i progressi" mostrato agli utenti non autenticati. */
 export function LoginCta() {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -17,11 +19,11 @@ export function LoginCta() {
           </svg>
         </div>
         <div className="flex-1">
-          <p className="text-sm font-bold text-foreground">Accedi per salvare i progressi</p>
-          <p className="text-[12px] text-muted-foreground">Sincronizza su tutti i dispositivi</p>
+          <p className="text-sm font-bold text-foreground">{t("Accedi per salvare i progressi")}</p>
+          <p className="text-[12px] text-muted-foreground">{t("Sincronizza su tutti i dispositivi")}</p>
         </div>
         <a href="/login" className="inline-flex h-9 px-4 items-center rounded-xl bg-figb text-white font-semibold text-xs shadow-md hover:bg-figb/90 transition-colors">
-          Accedi
+          {t("Accedi")}
         </a>
       </div>
     </motion.div>

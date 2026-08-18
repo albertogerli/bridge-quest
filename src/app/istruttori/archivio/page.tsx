@@ -9,6 +9,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import { deleteSavedHand, getSavedHands, type SavedHand } from "@/lib/saved-hands";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -25,6 +26,7 @@ const ETICHETTA: Record<Position, string> = {
  * tutto, si vuole ripartire dalla scelta da discutere.
  */
 export default function ArchivioPage() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const [mani, setMani] = useState<SavedHand[] | null>(null);
 
@@ -41,7 +43,7 @@ export default function ArchivioPage() {
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
           Riservato agli insegnanti.{" "}
-          <Link href="/login?redirect=/istruttori/archivio" className="underline">Accedi</Link>.
+          <Link href="/login?redirect=/istruttori/archivio" className="underline">{t("Accedi")}</Link>.
         </p>
       </div>
     );
@@ -56,7 +58,7 @@ export default function ArchivioPage() {
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Archive className="w-6 h-6 text-figb" aria-hidden="true" />
-          Le tue mani
+          {t("Le tue mani")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           Ogni voce si riapre nel tavolo di studio esattamente dov&apos;era,
@@ -64,17 +66,17 @@ export default function ArchivioPage() {
         </p>
       </header>
 
-      {mani === null && <p className="text-sm text-muted-foreground">Carico…</p>}
+      {mani === null && <p className="text-sm text-muted-foreground">{t("Carico…")}</p>}
 
       {mani && mani.length === 0 && (
         <div className="rounded-2xl border border-dashed border-border p-8 text-center">
-          <p className="font-semibold mb-1">Nessuna mano salvata</p>
+          <p className="font-semibold mb-1">{t("Nessuna mano salvata")}</p>
           <p className="text-sm text-muted-foreground mb-4">
             Dal tavolo di studio, quando arrivi al momento che vuoi discutere,
             dagli un nome e salvalo.
           </p>
           <Link href="/istruttori/studio">
-            <Button>Vai al tavolo di studio</Button>
+            <Button>{t("Vai al tavolo di studio")}</Button>
           </Link>
         </div>
       )}
@@ -100,7 +102,7 @@ export default function ArchivioPage() {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Link href={`/istruttori/studio?mano=${m.id}`}>
-                  <Button variant="outline">Riapri</Button>
+                  <Button variant="outline">{t("Riapri")}</Button>
                 </Link>
                 <button
                   onClick={() => elimina(m.id)}

@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { StepShell } from "../step-shell";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export function StepBenvenuto({ onComplete, playSound }: StepProps) {
+  const t = useT();
   return (
     <StepShell
       kicker="Arrivo al Club"
@@ -20,9 +22,9 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
           transition={{ delay: 0.2 }}
           className="rounded-[24px] border border-gray-200 bg-white p-4"
         >
-          <p className="text-sm font-bold text-[#12305f]">Cosa NON facciamo</p>
+          <p className="text-sm font-bold text-[#12305f]">{t("Cosa NON facciamo")}</p>
           <p className="mt-2 text-sm leading-6 text-[#5c677d]">
-            Niente teoria pesante. Zero gergo.
+            {t("Niente teoria pesante. Zero gergo.")}
           </p>
         </motion.div>
         <motion.div
@@ -33,10 +35,10 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
         >
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="h-4 w-4 text-[#c8a44e]" />
-            <p className="text-sm font-bold text-[#12305f]">Cosa facciamo</p>
+            <p className="text-sm font-bold text-[#12305f]">{t("Cosa facciamo")}</p>
           </div>
           <p className="mt-1 text-sm leading-6 text-[#5c677d]">
-            Quiz, mini-prese e poi una mano vera.
+            {t("Quiz, mini-prese e poi una mano vera.")}
           </p>
         </motion.div>
       </div>
@@ -54,7 +56,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
           size="lg"
           className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
         >
-          Sono pronto
+          {t("Sono pronto")}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </motion.div>

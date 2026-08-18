@@ -42,12 +42,14 @@ import {
   type HandResult,
 } from "@/lib/instructors";
 import { ArrowLeft, Play, CheckCircle2, XCircle } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function CompitoPage({
   params,
 }: {
   params: Promise<{ classId: string; assignmentId: string }>;
 }) {
+  const t = useT();
   const { classId, assignmentId } = use(params);
 
   const { isLoaded: smazzateLoaded } = useSmazzate();
@@ -158,7 +160,7 @@ export default function CompitoPage({
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
       <Link href={`/classi/${classId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:underline">
         <ArrowLeft className="h-4 w-4" />
-        Torna alla classe
+        {t("Torna alla classe")}
       </Link>
 
       <div className="mt-3 mb-2">
@@ -193,7 +195,7 @@ export default function CompitoPage({
 
       {hands.length === 0 && (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Le smazzate di questo compito non sono al momento disponibili nel catalogo.
+          {t("Le smazzate di questo compito non sono al momento disponibili nel catalogo.")}
         </p>
       )}
 
@@ -251,7 +253,7 @@ export default function CompitoPage({
                     </p>
                   )}
                   {isMade && (
-                    <p className="mt-0.5 text-xs font-semibold text-emerald-600">Mantenuto ✓</p>
+                    <p className="mt-0.5 text-xs font-semibold text-emerald-600">{t("Mantenuto ✓")}</p>
                   )}
                 </div>
                 {(isNext || isPlayed) && (
@@ -285,6 +287,7 @@ interface CompitoHandGameProps {
 }
 
 function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }: CompitoHandGameProps) {
+  const t = useT();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
@@ -407,7 +410,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div className="mb-2 flex items-center justify-center gap-2">
-            <Badge variant="outline">Compito</Badge>
+            <Badge variant="outline">{t("Compito")}</Badge>
             <Badge variant="outline">Mano {handNumber}/{totalHands}</Badge>
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
           </div>
@@ -424,17 +427,17 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
         <div className="mb-4 flex items-center justify-center">
           <div className="flex items-center gap-5 rounded-xl border border-border bg-card px-4 py-2 text-sm">
             <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">Contratto</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
               <p className="text-lg font-bold text-primary">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">Obiettivo</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
               <p className="text-lg font-bold">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -537,12 +540,12 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
           {game.phase === "ready" && (
             <Button onClick={game.startGame} className="h-12 px-8 text-sm font-bold">
               <Play className="mr-2 h-4 w-4" />
-              Gioca la mano
+              {t("Gioca la mano")}
             </Button>
           )}
           {game.phase === "finished" && (
             <Button onClick={onBack} className="h-12 px-6 text-sm font-bold">
-              Continua →
+              {t("Continua →")}
             </Button>
           )}
         </div>

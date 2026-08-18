@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getClassLeaderboard, type LeaderboardRow } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 function fmtTime(ms: number): string {
   if (!ms) return "—";
@@ -21,6 +22,7 @@ export function ClassLeaderboard({
   classId: string;
   highlightUserId?: string;
 }) {
+  const t = useT();
   const [rows, setRows] = useState<LeaderboardRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +56,7 @@ export function ClassLeaderboard({
   if (rows.length === 0) {
     return (
       <p className="py-6 text-center text-sm text-muted-foreground">
-        Nessun risultato ancora — giocate qualche compito per entrare in classifica! 🏆
+        {t("Nessun risultato ancora — giocate qualche compito per entrare in classifica! 🏆")}
       </p>
     );
   }
@@ -65,10 +67,10 @@ export function ClassLeaderboard({
         <thead>
           <tr className="border-b border-border bg-muted/40 text-xs text-muted-foreground">
             <th className="px-3 py-2 text-left font-semibold">#</th>
-            <th className="px-3 py-2 text-left font-semibold">Allievo</th>
-            <th className="px-2 py-2 text-center font-semibold">Mantenute</th>
-            <th className="px-2 py-2 text-center font-semibold">Prese</th>
-            <th className="px-2 py-2 text-center font-semibold">Tempo</th>
+            <th className="px-3 py-2 text-left font-semibold">{t("Allievo")}</th>
+            <th className="px-2 py-2 text-center font-semibold">{t("Mantenute")}</th>
+            <th className="px-2 py-2 text-center font-semibold">{t("Prese")}</th>
+            <th className="px-2 py-2 text-center font-semibold">{t("Tempo")}</th>
           </tr>
         </thead>
         <tbody>
@@ -96,7 +98,7 @@ export function ClassLeaderboard({
         </tbody>
       </table>
       <p className="border-t border-border px-3 py-2 text-[12px] text-muted-foreground">
-        Ordine: mani mantenute al 1° tentativo → prese totali → velocità.
+        {t("Ordine: mani mantenute al 1° tentativo → prese totali → velocità.")}
       </p>
     </div>
   );

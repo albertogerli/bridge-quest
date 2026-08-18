@@ -4,9 +4,11 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Coins } from "lucide-react";
 import { computeFiches } from "@/lib/profile-stats";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Saldo fiches (derivato dagli XP) e accesso al negozio. */
 export function FichesCard({ xp }: { xp: number }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -20,9 +22,9 @@ export function FichesCard({ xp }: { xp: number }) {
             <Coins className="w-6 h-6 text-amber-600" />
           </div>
           <div>
-            <p className="font-semibold text-foreground">Fiches</p>
+            <p className="font-semibold text-foreground">{t("Fiches")}</p>
             <p className="text-xs text-muted-foreground">
-              Per cosmetici e bonus
+              {t("Per cosmetici e bonus")}
             </p>
           </div>
         </div>
@@ -37,7 +39,7 @@ export function FichesCard({ xp }: { xp: number }) {
           <line x1="3" y1="6" x2="21" y2="6" />
           <path d="M16 10a4 4 0 0 1-8 0" />
         </svg>
-        Vai al Negozio
+        {t("Vai al Negozio")}
       </Link>
     </motion.div>
   );

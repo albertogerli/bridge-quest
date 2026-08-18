@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import type { Card } from "@/lib/bridge-engine";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface HandAnalysisPanelProps {
   tricks: { cards: { player: string; card: Card }[]; winner: string }[];
@@ -245,6 +246,7 @@ export function HandAnalysisPanel({
   contract,
   currentTrick,
 }: HandAnalysisPanelProps) {
+  const t = useT();
   const trumpSuit = getTrumpSuit(contract.suit);
   const declarer = contract.declarer;
 
@@ -333,7 +335,7 @@ export function HandAnalysisPanel({
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold">Analisi AI</h2>
+            <h2 className="text-xl font-bold">{t("Analisi AI")}</h2>
             <p className="text-sm text-blue-100">
               {contract.level}
               {contract.suit} - {analyses.length} giocate analizzate
@@ -341,14 +343,14 @@ export function HandAnalysisPanel({
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3">
             <div className="text-3xl font-bold">{overallGrade}</div>
-            <div className="text-xs text-blue-100">Voto</div>
+            <div className="text-xs text-blue-100">{t("Voto")}</div>
           </div>
         </div>
       </div>
 
       {/* Key takeaways */}
       <div className="bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900 p-4">
-        <h3 className="text-sm font-semibold text-foreground/80 mb-2">Punti chiave</h3>
+        <h3 className="text-sm font-semibold text-foreground/80 mb-2">{t("Punti chiave")}</h3>
         <ul className="space-y-1">
           {keyTakeaways.map((takeaway, idx) => (
             <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -410,19 +412,19 @@ export function HandAnalysisPanel({
             <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {analyses.filter((a) => a.grade === "good").length}
             </div>
-            <div className="text-xs text-muted-foreground">Ottime</div>
+            <div className="text-xs text-muted-foreground">{t("Ottime")}</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
               {analyses.filter((a) => a.grade === "questionable").length}
             </div>
-            <div className="text-xs text-muted-foreground">Da migliorare</div>
+            <div className="text-xs text-muted-foreground">{t("Da migliorare")}</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-red-600 dark:text-red-400">
               {analyses.filter((a) => a.grade === "mistake").length}
             </div>
-            <div className="text-xs text-muted-foreground">Errori</div>
+            <div className="text-xs text-muted-foreground">{t("Errori")}</div>
           </div>
         </div>
       </div>

@@ -13,8 +13,10 @@ import {
   type AdminClassDetail,
   type AdminSchoolStats,
 } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function AdminClassesPage() {
+  const t = useT();
   const { profile, loading: authLoading } = useSharedAuth();
   const isAdmin = profile?.role === "admin";
 
@@ -63,7 +65,7 @@ export default function AdminClassesPage() {
   if (!authLoading && !isAdmin) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <p className="text-sm text-muted-foreground">Accesso riservato all’amministratore.</p>
+        <p className="text-sm text-muted-foreground">{t("Accesso riservato all’amministratore.")}</p>
         <Link href="/" className="mt-4 inline-block text-sm text-primary hover:underline">← Home</Link>
       </div>
     );
@@ -75,11 +77,11 @@ export default function AdminClassesPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
       <div className="mb-1 flex items-center gap-3">
-        <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">Classi</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">{t("Classi")}</h1>
         <Link href="/admin/istruttori" className="text-sm text-primary hover:underline">→ Richieste istruttori</Link>
       </div>
       <p className="mb-6 text-sm text-muted-foreground">
-        Tutte le classi create sulla piattaforma.
+        {t("Tutte le classi create sulla piattaforma.")}
       </p>
 
       {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
@@ -127,7 +129,7 @@ export default function AdminClassesPage() {
           </div>
 
           {rows.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">Nessuna classe creata.</p>
+            <p className="py-8 text-center text-sm text-muted-foreground">{t("Nessuna classe creata.")}</p>
           ) : (
             <div className="space-y-3">
               {rows.map((c) => {
@@ -140,7 +142,7 @@ export default function AdminClassesPage() {
                         <div>
                           <CardTitle className="text-lg">{c.name}</CardTitle>
                           <p className="text-sm text-muted-foreground">
-                            Istruttore: <span className="font-medium text-foreground">{c.instructor_name ?? "—"}</span>{" "}
+                            {t("Istruttore:")} <span className="font-medium text-foreground">{c.instructor_name ?? "—"}</span>{" "}
                             ({c.instructor_email}) {c.asd_code && `· ASD ${c.asd_code}`}
                           </p>
                         </div>
@@ -175,10 +177,10 @@ export default function AdminClassesPage() {
                                 ))}
                               </ul>
                             ) : (
-                              <p className="text-sm text-muted-foreground">Nessun iscritto.</p>
+                              <p className="text-sm text-muted-foreground">{t("Nessun iscritto.")}</p>
                             )
                           ) : (
-                            <p className="text-sm text-muted-foreground">Caricamento…</p>
+                            <p className="text-sm text-muted-foreground">{t("Caricamento…")}</p>
                           )}
                         </div>
                         <div>
@@ -196,10 +198,10 @@ export default function AdminClassesPage() {
                                 ))}
                               </ul>
                             ) : (
-                              <p className="text-sm text-muted-foreground">Nessun compito.</p>
+                              <p className="text-sm text-muted-foreground">{t("Nessun compito.")}</p>
                             )
                           ) : (
-                            <p className="text-sm text-muted-foreground">Caricamento…</p>
+                            <p className="text-sm text-muted-foreground">{t("Caricamento…")}</p>
                           )}
                         </div>
                       </CardContent>

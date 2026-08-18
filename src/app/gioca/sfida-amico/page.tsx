@@ -27,6 +27,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ──────────────────────────────────────────────
 // Challenge encoding/decoding
@@ -90,6 +91,7 @@ function saveChallenge(challenge: SavedChallenge) {
 // ──────────────────────────────────────────────
 
 function SfidaAmicoContent() {
+  const t = useT();
   const searchParams = useSearchParams();
   const challengeId = searchParams.get("id");
   const isMobile = useMobile();
@@ -151,10 +153,10 @@ function SfidaAmicoContent() {
           >
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
               <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
-                Gioca
+                {t("Gioca")}
               </Link>
               <span>/</span>
-              <span className="text-figb dark:text-primary font-semibold">Sfida un Amico</span>
+              <span className="text-figb dark:text-primary font-semibold">{t("Sfida un Amico")}</span>
             </div>
             <div className="flex items-center gap-3 mb-2">
               <Link
@@ -166,8 +168,8 @@ function SfidaAmicoContent() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-foreground font-display">Sfida un Amico</h1>
-                <p className="text-sm text-muted-foreground mt-0.5">Gioca la stessa mano e confronta i risultati</p>
+                <h1 className="text-2xl font-bold text-foreground font-display">{t("Sfida un Amico")}</h1>
+                <p className="text-sm text-muted-foreground mt-0.5">{t("Gioca la stessa mano e confronta i risultati")}</p>
               </div>
             </div>
           </motion.div>
@@ -187,9 +189,9 @@ function SfidaAmicoContent() {
                     {"\u2694\uFE0F"}
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-white mb-1">Crea una Sfida</h2>
+                    <h2 className="text-xl font-bold text-white mb-1">{t("Crea una Sfida")}</h2>
                     <p className="text-sm text-white/70">
-                      Gioca una mano casuale, poi condividi il link con un amico per sfidarlo!
+                      {t("Gioca una mano casuale, poi condividi il link con un amico per sfidarlo!")}
                     </p>
                   </div>
                   <svg
@@ -213,15 +215,15 @@ function SfidaAmicoContent() {
             transition={{ delay: 0.2 }}
           >
             <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
-              <h3 className="font-bold text-foreground mb-4">Come funziona</h3>
+              <h3 className="font-bold text-foreground mb-4">{t("Come funziona")}</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 text-sm font-bold text-figb dark:text-primary">
                     1
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-foreground">Gioca una mano</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Ti viene assegnata una mano casuale. Giocala al meglio!</p>
+                    <p className="text-sm font-bold text-foreground">{t("Gioca una mano")}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("Ti viene assegnata una mano casuale. Giocala al meglio!")}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -229,8 +231,8 @@ function SfidaAmicoContent() {
                     2
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-foreground">Condividi il link</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Ricevi un link unico con il tuo risultato codificato.</p>
+                    <p className="text-sm font-bold text-foreground">{t("Condividi il link")}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("Ricevi un link unico con il tuo risultato codificato.")}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -238,8 +240,8 @@ function SfidaAmicoContent() {
                     3
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-foreground">Confronta i risultati</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Il tuo amico gioca la stessa mano e confronta le prese!</p>
+                    <p className="text-sm font-bold text-foreground">{t("Confronta i risultati")}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("Il tuo amico gioca la stessa mano e confronta le prese!")}</p>
                   </div>
                 </div>
               </div>
@@ -315,6 +317,7 @@ function ActiveChallenge({
   xpSaved,
   onNewChallenge,
 }: ActiveChallengeProps) {
+  const t = useT();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
@@ -506,17 +509,17 @@ function ActiveChallenge({
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
               <p className="text-lg font-bold text-emerald-dark dark:text-emerald-300">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -627,7 +630,7 @@ function ActiveChallenge({
             <div className="flex gap-3">
               <Link href="/gioca/sfida-amico">
                 <Button variant="outline" className="rounded-xl h-12 px-6 font-bold">
-                  Nuova sfida
+                  {t("Nuova sfida")}
                 </Button>
               </Link>
               <Button
@@ -638,7 +641,7 @@ function ActiveChallenge({
                 }}
                 className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/20"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           )}
@@ -695,9 +698,9 @@ function ActiveChallenge({
                 >
                   <div className="rounded-2xl bg-gradient-to-br from-figb to-figb-dark p-6 text-center text-white">
                     <div className="text-3xl mb-2">{"\u2694\uFE0F"}</div>
-                    <h3 className="text-lg font-bold mb-1">Sfida Pronta!</h3>
+                    <h3 className="text-lg font-bold mb-1">{t("Sfida Pronta!")}</h3>
                     <p className="text-sm text-white/70 mb-5">
-                      Condividi il link e vedi se il tuo amico riesce a fare meglio!
+                      {t("Condividi il link e vedi se il tuo amico riesce a fare meglio!")}
                     </p>
 
                     {/* Buttons */}
@@ -711,7 +714,7 @@ function ActiveChallenge({
                           <polyline points="16 6 12 2 8 6" />
                           <line x1="12" y1="2" x2="12" y2="15" />
                         </svg>
-                        Condividi
+                        {t("Condividi")}
                       </button>
                       <button
                         onClick={handleCopyLink}
@@ -722,7 +725,7 @@ function ActiveChallenge({
                             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                               <polyline points="20 6 9 17 4 12" />
                             </svg>
-                            Copiato!
+                            {t("Copiato!")}
                           </>
                         ) : (
                           <>
@@ -730,7 +733,7 @@ function ActiveChallenge({
                               <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                             </svg>
-                            Copia Link
+                            {t("Copia Link")}
                           </>
                         )}
                       </button>
@@ -763,7 +766,7 @@ function ActiveChallenge({
                 {/* Header */}
                 <div className="bg-gradient-to-r from-figb to-figb-dark px-5 py-4 text-center">
                   <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
-                  <h3 className="text-lg font-bold text-white">Risultato Sfida</h3>
+                  <h3 className="text-lg font-bold text-white">{t("Risultato Sfida")}</h3>
                   <p className="text-xs text-white/60 mt-1">
                     Contratto: {smazzata.contract} {"\u00B7"} Obiettivo: {tricksNeeded} prese
                   </p>
@@ -792,7 +795,7 @@ function ActiveChallenge({
 
                     {/* Challenger result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Sfidante</p>
+                      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("Sfidante")}</p>
                       <p className="text-4xl font-bold text-foreground">{challengerTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
@@ -878,9 +881,9 @@ function ActiveChallenge({
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
+                    <p className="font-bold text-sm text-foreground">{t("Maestro Fiori")}</p>
                     <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
-                      Suggerimento
+                      {t("Suggerimento")}
                     </Badge>
                   </div>
                   <p className="text-[13px] text-muted-foreground leading-relaxed">
@@ -901,6 +904,7 @@ function ActiveChallenge({
 // ──────────────────────────────────────────────
 
 function PastChallenges() {
+  const t = useT();
   const [challenges, setChallenges] = useState<SavedChallenge[]>([]);
   const allSmazzate = useSmazzateStore((s) => s.smazzate);
 
@@ -920,7 +924,7 @@ function PastChallenges() {
     >
       <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-bold text-foreground">Sfide Create</h3>
+          <h3 className="font-bold text-foreground">{t("Sfide Create")}</h3>
           <Badge variant="outline" className="text-[12px] font-bold text-muted-foreground border-border">
             {challenges.length} sfide
           </Badge>

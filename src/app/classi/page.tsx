@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/card";
 import { useEnrolledClasses } from "@/store/use-classes-store";
 import { joinClass } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ClassiPage() {
+  const t = useT();
   const { classes, isLoading, isLoaded, error, refresh } = useEnrolledClasses();
 
   const [code, setCode] = useState("");
@@ -45,25 +47,25 @@ export default function ClassiPage() {
       <div className="mb-6">
         <div className="flex items-center gap-2">
           <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">
-            Le mie classi
+            {t("Le mie classi")}
           </p>
           <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
-            Beta
+            {t("Beta")}
           </span>
         </div>
         <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-          Corsi e compiti
+          {t("Corsi e compiti")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Iscriviti con il codice del tuo istruttore e gioca le smazzate assegnate.
+          {t("Iscriviti con il codice del tuo istruttore e gioca le smazzate assegnate.")}
         </p>
       </div>
 
       {/* Join box */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-lg">Iscriviti a una classe</CardTitle>
-          <CardDescription>Inserisci il codice invito a 6 caratteri.</CardDescription>
+          <CardTitle className="text-lg">{t("Iscriviti a una classe")}</CardTitle>
+          <CardDescription>{t("Inserisci il codice invito a 6 caratteri.")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -101,7 +103,7 @@ export default function ClassiPage() {
 
       {isLoaded && classes.length === 0 && (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Non sei ancora iscritto a nessuna classe.
+          {t("Non sei ancora iscritto a nessuna classe.")}
         </p>
       )}
 

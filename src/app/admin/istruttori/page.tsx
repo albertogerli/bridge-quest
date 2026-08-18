@@ -17,6 +17,7 @@ import {
   type InstructorRequestAdminRow,
   type InstructorRequestStatus,
 } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const FILTERS: { value: InstructorRequestStatus | "all"; label: string }[] = [
   { value: "pending", label: "In attesa" },
@@ -26,6 +27,7 @@ const FILTERS: { value: InstructorRequestStatus | "all"; label: string }[] = [
 ];
 
 export default function AdminInstructorRequestsPage() {
+  const t = useT();
   const { profile, loading: authLoading } = useSharedAuth();
   const isAdmin = profile?.role === "admin";
 
@@ -73,7 +75,7 @@ export default function AdminInstructorRequestsPage() {
   if (!authLoading && !isAdmin) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-16 text-center">
-        <p className="text-sm text-muted-foreground">Accesso riservato all’amministratore.</p>
+        <p className="text-sm text-muted-foreground">{t("Accesso riservato all’amministratore.")}</p>
         <Link href="/" className="mt-4 inline-block text-sm text-primary hover:underline">
           ← Home
         </Link>
@@ -84,10 +86,10 @@ export default function AdminInstructorRequestsPage() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <h1 className="mb-1 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        Richieste istruttori
+        {t("Richieste istruttori")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Approva o rifiuta le candidature al Portale Istruttori.
+        {t("Approva o rifiuta le candidature al Portale Istruttori.")}
       </p>
 
       {/* Filter tabs */}
@@ -115,7 +117,7 @@ export default function AdminInstructorRequestsPage() {
         </div>
       ) : rows.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Nessuna richiesta in questa categoria.
+          {t("Nessuna richiesta in questa categoria.")}
         </p>
       ) : (
         <div className="space-y-3">
@@ -144,7 +146,7 @@ export default function AdminInstructorRequestsPage() {
                 {/* Message sent to the applicant (already reviewed) */}
                 {r.status !== "pending" && r.review_message && (
                   <p className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
-                    <span className="font-semibold">Tuo messaggio:</span> {r.review_message}
+                    <span className="font-semibold">{t("Tuo messaggio:")}</span> {r.review_message}
                   </p>
                 )}
 
@@ -171,7 +173,7 @@ export default function AdminInstructorRequestsPage() {
                         onClick={() => act(r.id, false)}
                         disabled={actingId === r.id}
                       >
-                        Rifiuta
+                        {t("Rifiuta")}
                       </Button>
                     </div>
                   </>
@@ -186,7 +188,8 @@ export default function AdminInstructorRequestsPage() {
 }
 
 function StatusBadge({ status }: { status: InstructorRequestStatus }) {
-  if (status === "approved") return <Badge>Approvata</Badge>;
-  if (status === "rejected") return <Badge variant="outline">Rifiutata</Badge>;
-  return <Badge variant="secondary">In attesa</Badge>;
+  const t = useT();
+  if (status === "approved") return <Badge>{t("Approvata")}</Badge>;
+  if (status === "rejected") return <Badge variant="outline">{t("Rifiutata")}</Badge>;
+  return <Badge variant="secondary">{t("In attesa")}</Badge>;
 }

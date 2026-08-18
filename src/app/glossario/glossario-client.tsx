@@ -19,6 +19,7 @@ import {
   ArrowLeft,
   Shuffle,
 } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ── Types ───────────────────────────────────────────────
 type Phase = "browse" | "quiz-globale";
@@ -105,6 +106,7 @@ function getStars(percentage: number): number {
 
 // ── Component ───────────────────────────────────────────
 export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEntry[] }) {
+  const t = useT();
   const profile = useProfile();
   const { play } = useSound();
 
@@ -490,7 +492,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
               >
                 <Trophy className="w-16 h-16 mx-auto text-amber-500 mb-4" />
                 <h1 className="text-3xl font-bold text-foreground font-display mb-2">
-                  Risultati
+                  {t("Risultati")}
                 </h1>
                 <p className="text-muted-foreground">
                   {quizResults.correctCount}/{quizResults.total} risposte corrette
@@ -530,7 +532,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium text-muted-foreground">
-                    Punteggio
+                    {t("Punteggio")}
                   </span>
                   <span className="text-sm font-bold text-figb dark:text-primary">
                     {Math.round(quizResults.percentage)}%
@@ -569,7 +571,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                   {quizResults.bonusXp > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-emerald-600">
-                        Bonus 80%+ di precisione
+                        {t("Bonus 80%+ di precisione")}
                       </span>
                       <span className="font-semibold text-emerald-600">
                         +{quizResults.bonusXp}
@@ -579,7 +581,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                   {quizResults.perfectXp > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-amber-600">
-                        Bonus punteggio perfetto!
+                        {t("Bonus punteggio perfetto!")}
                       </span>
                       <span className="font-semibold text-amber-600">
                         +{quizResults.perfectXp}
@@ -587,7 +589,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                     </div>
                   )}
                   <div className="border-t pt-2 flex justify-between text-sm font-bold">
-                    <span className="text-foreground">Totale</span>
+                    <span className="text-foreground">{t("Totale")}</span>
                     <span className="text-figb dark:text-primary">
                       +{quizResults.totalXp} {profile.xpLabel}
                     </span>
@@ -607,7 +609,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                   className="w-full flex items-center justify-between px-6 py-4 text-left"
                 >
                   <span className="text-sm font-bold text-foreground">
-                    Riepilogo risposte
+                    {t("Riepilogo risposte")}
                   </span>
                   <ChevronRight
                     className={`w-5 h-5 text-muted-foreground transition-transform ${
@@ -675,13 +677,13 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                   }}
                   className="flex-1 py-3.5 rounded-2xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors"
                 >
-                  Gioca ancora
+                  {t("Gioca ancora")}
                 </button>
                 <button
                   onClick={returnToBrowse}
                   className="flex-1 py-3.5 rounded-2xl border-2 border-figb dark:border-primary text-figb dark:text-primary font-semibold text-sm hover:bg-figb/5 dark:hover:bg-primary/10 transition-colors"
                 >
-                  Torna al glossario
+                  {t("Torna al glossario")}
                 </button>
               </div>
             </div>
@@ -705,7 +707,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                 className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground/80 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Esci
+                {t("Esci")}
               </button>
               <div className="flex items-center gap-3">
                 <span className="text-sm font-bold text-figb dark:text-primary">
@@ -828,12 +830,12 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                       >
                         {quizIndex < quizTerms.length - 1 ? (
                           <>
-                            Prossima domanda
+                            {t("Prossima domanda")}
                             <ChevronRight className="w-4 h-4" />
                           </>
                         ) : (
                           <>
-                            Vedi risultati
+                            {t("Vedi risultati")}
                             <Trophy className="w-4 h-4" />
                           </>
                         )}
@@ -861,7 +863,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground/80 transition-colors mb-3"
             >
               <ArrowLeft className="w-4 h-4" />
-              Home
+              {t("Home")}
             </Link>
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-figb/10 dark:bg-primary/15">
@@ -869,10 +871,10 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground font-display tracking-tight">
-                  Glossario del Bridge
+                  {t("Glossario del Bridge")}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Impara i termini fondamentali
+                  {t("Impara i termini fondamentali")}
                 </p>
               </div>
             </div>
@@ -882,7 +884,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
           <div className="rounded-2xl border border-border bg-card p-4 mb-5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Termini completati
+                {t("Termini completati")}
               </span>
               <span className="text-sm font-bold text-figb dark:text-primary">
                 {completedCount}/{totalCount}
@@ -917,7 +919,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-figb text-white text-sm font-semibold hover:bg-figb-dark transition-colors whitespace-nowrap"
             >
               <Shuffle className="w-4 h-4" />
-              <span className="hidden sm:inline">Quiz Globale</span>
+              <span className="hidden sm:inline">{t("Quiz Globale")}</span>
             </button>
           </div>
 
@@ -954,7 +956,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
             <div className="text-center py-16">
               <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
               <p className="text-muted-foreground text-sm">
-                Nessun termine trovato
+                {t("Nessun termine trovato")}
               </p>
               <button
                 onClick={() => {
@@ -963,7 +965,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                 }}
                 className="mt-3 text-sm text-figb dark:text-primary font-medium hover:underline"
               >
-                Mostra tutti
+                {t("Mostra tutti")}
               </button>
             </div>
           )}
@@ -1060,7 +1062,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                             {entry.example && (
                               <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 px-4 py-3">
                                 <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wide mb-1">
-                                  Esempio
+                                  {t("Esempio")}
                                 </p>
                                 <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
                                   {entry.example}
@@ -1080,7 +1082,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                               entry.relatedTerms.length > 0 && (
                                 <div>
                                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                                    Termini correlati
+                                    {t("Termini correlati")}
                                   </p>
                                   <div className="flex flex-wrap gap-2">
                                     {entry.relatedTerms.map((rk) => {
@@ -1116,7 +1118,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                                 className="w-full py-3 rounded-xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors flex items-center justify-center gap-2"
                               >
                                 <Zap className="w-4 h-4" />
-                                Mettiti alla prova
+                                {t("Mettiti alla prova")}
                               </button>
                             ) : (
                               /* Inline quiz */
@@ -1227,7 +1229,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                                           "Riprova"
                                         ) : (
                                           <>
-                                            Prossimo termine
+                                            {t("Prossimo termine")}
                                             <ChevronRight className="w-4 h-4" />
                                           </>
                                         )}

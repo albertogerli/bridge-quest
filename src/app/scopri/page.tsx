@@ -7,6 +7,7 @@ import {
   Globe, ExternalLink, BookOpen, Trophy, Users, Brain,
   Landmark, Heart, Lightbulb, ArrowLeft, Award
 } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const fadeUp = {
   initial: { opacity: 0, y: 16 },
@@ -14,6 +15,7 @@ const fadeUp = {
 };
 
 export default function ScopriPage() {
+  const t = useT();
   return (
     <div className="pt-6 px-4 sm:px-5 pb-24">
       <div className="mx-auto max-w-6xl">
@@ -21,10 +23,10 @@ export default function ScopriPage() {
         <motion.div {...fadeUp} className="mb-2">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link href="/" className="hover:text-figb dark:hover:text-primary transition-colors">
-              Home
+              {t("Home")}
             </Link>
             <span>/</span>
-            <span className="text-figb dark:text-primary font-semibold">Scopri il Bridge</span>
+            <span className="text-figb dark:text-primary font-semibold">{t("Scopri il Bridge")}</span>
           </div>
         </motion.div>
 
@@ -40,10 +42,10 @@ export default function ScopriPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground font-display">
-                Scopri il Bridge
+                {t("Scopri il Bridge")}
               </h1>
               <p className="text-sm text-muted-foreground">
-                Storia, curiosità e link utili
+                {t("Storia, curiosità e link utili")}
               </p>
             </div>
           </div>
@@ -60,7 +62,7 @@ export default function ScopriPage() {
             <div className="bg-gradient-to-r from-figb to-figb-light px-5 py-4">
               <div className="flex items-center gap-3">
                 <Landmark className="w-5 h-5 text-white/80" />
-                <h2 className="text-lg font-bold text-white">La FIGB</h2>
+                <h2 className="text-lg font-bold text-white">{t("La FIGB")}</h2>
               </div>
             </div>
 
@@ -84,7 +86,7 @@ export default function ScopriPage() {
               </div>
 
               <p className="text-sm text-foreground/80 leading-relaxed mb-4">
-                La <strong>Federazione Italiana Gioco Bridge</strong> (FIGB) è l&apos;organismo
+                La <strong>{t("Federazione Italiana Gioco Bridge")}</strong> (FIGB) è l&apos;organismo
                 ufficiale che governa il bridge sportivo in Italia. Fondata nel <strong>1936</strong>,
                 è membro del <strong>CONI</strong> (Comitato Olimpico Nazionale Italiano) e conta
                 circa <strong>35.000 tesserati</strong> e oltre <strong>300 circoli</strong> su tutto
@@ -110,7 +112,7 @@ export default function ScopriPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-foreground">federbridge.it</p>
-                    <p className="text-xs text-muted-foreground">Sito ufficiale della Federazione</p>
+                    <p className="text-xs text-muted-foreground">{t("Sito ufficiale della Federazione")}</p>
                   </div>
                   <ExternalLink className="w-4 h-4 text-figb/50 dark:text-primary/50 group-hover:text-figb dark:group-hover:text-primary transition-colors shrink-0" />
                 </a>
@@ -146,7 +148,7 @@ export default function ScopriPage() {
             <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-4">
               <div className="flex items-center gap-3">
                 <BookOpen className="w-5 h-5 text-white/80" />
-                <h2 className="text-lg font-bold text-white">Storia del Bridge</h2>
+                <h2 className="text-lg font-bold text-white">{t("Storia del Bridge")}</h2>
               </div>
             </div>
 
@@ -188,7 +190,7 @@ export default function ScopriPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Trophy className="w-5 h-5 text-amber-500" />
                   <h3 className="text-sm font-bold text-foreground">
-                    I campioni della Squadra Azzurra
+                    {t("I campioni della Squadra Azzurra")}
                   </h3>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -219,7 +221,7 @@ export default function ScopriPage() {
               <div className="mt-4 flex items-start gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
                 <Brain className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-sm text-amber-800 dark:text-amber-200">
-                  Il bridge è riconosciuto come <strong>&quot;sport della mente&quot;</strong> dal
+                  {t("Il bridge è riconosciuto come")} <strong>&quot;sport della mente&quot;</strong> dal
                   Comitato Olimpico Internazionale (CIO) dal 1999.
                 </p>
               </div>
@@ -235,7 +237,7 @@ export default function ScopriPage() {
         >
           <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="w-5 h-5 text-amber-500" />
-            <h2 className="text-lg font-bold text-foreground">Lo sapevi?</h2>
+            <h2 className="text-lg font-bold text-foreground">{t("Lo sapevi?")}</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -276,7 +278,7 @@ export default function ScopriPage() {
             <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 px-5 py-4">
               <div className="flex items-center gap-3">
                 <ExternalLink className="w-5 h-5 text-white/80" />
-                <h2 className="text-lg font-bold text-white">Link utili</h2>
+                <h2 className="text-lg font-bold text-white">{t("Link utili")}</h2>
               </div>
             </div>
 
@@ -334,7 +336,7 @@ export default function ScopriPage() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-figb dark:text-primary hover:text-figb-dark dark:hover:text-primary/80 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Torna alla Home
+            {t("Torna alla Home")}
           </Link>
         </motion.div>
       </div>

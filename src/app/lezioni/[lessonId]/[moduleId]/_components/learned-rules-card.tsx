@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { collectRuleTexts } from "@/lib/lesson-module";
 import type { ContentBlock } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * «Cosa hai imparato»: le regole del modulo, le stesse finite negli appunti.
@@ -16,6 +17,7 @@ export function LearnedRulesCard({
   content: ContentBlock[];
   isSenior: boolean;
 }) {
+  const t = useT();
   const rules = collectRuleTexts(content);
   if (rules.length === 0) return null;
 
@@ -28,7 +30,7 @@ export function LearnedRulesCard({
     >
       <div className="flex items-center gap-2 mb-3">
         <span className="text-2xl">📝</span>
-        <h4 className="text-base font-semibold text-blue-900 dark:text-blue-200">Cosa hai imparato</h4>
+        <h4 className="text-base font-semibold text-blue-900 dark:text-blue-200">{t("Cosa hai imparato")}</h4>
       </div>
       <ul className="space-y-2">
         {rules.map((rule, i) => (
@@ -46,7 +48,7 @@ export function LearnedRulesCard({
       </ul>
       <div className="mt-3 pt-3 border-t border-blue-100 dark:border-blue-900">
         <Link href="/appunti" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-          Vedi tutti i tuoi appunti →
+          {t("Vedi tutti i tuoi appunti →")}
         </Link>
       </div>
     </motion.div>

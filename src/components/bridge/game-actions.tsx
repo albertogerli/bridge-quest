@@ -9,6 +9,7 @@
 import { Button } from "@/components/ui/button";
 import { Flag, Undo2, Loader2 } from "lucide-react";
 import type { ClaimStatus } from "@/hooks/use-bridge-game";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export interface GameActionsProps {
   canClaim: boolean;
@@ -25,6 +26,7 @@ export function GameActions({
   canUndo,
   onUndo,
 }: GameActionsProps) {
+  const t = useT();
   if (!canClaim && !canUndo && claimStatus !== "checking") return null;
 
   return (
@@ -37,7 +39,7 @@ export function GameActions({
           className="rounded-xl h-9 px-4 text-xs font-bold gap-1.5"
         >
           <Undo2 className="h-3.5 w-3.5" />
-          Ritira la carta
+          {t("Ritira la carta")}
         </Button>
       )}
       {(canClaim || claimStatus === "checking") && (

@@ -26,6 +26,7 @@ import {
   type AvailabilitySlot,
   type PartnerLevel,
 } from "@/lib/partner-matching";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * "Trova un compagno".
@@ -39,6 +40,7 @@ import {
  * risultati di nessuno.
  */
 export default function TrovaCompagnoPage() {
+  const t = useT();
   const { user, loading: authLoading } = useSharedAuth();
   const router = useRouter();
   const { myProfile, candidates, loading, saving, refresh, saveProfile, stopLooking } =
@@ -91,13 +93,13 @@ export default function TrovaCompagnoPage() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-sm">
           <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" aria-hidden="true" />
-          <h1 className="text-xl font-bold font-display mb-2">Trova un compagno</h1>
+          <h1 className="text-xl font-bold font-display mb-2">{t("Trova un compagno")}</h1>
           <p className="text-sm text-muted-foreground mb-5">
             Per cercare un compagno di gioco serve un account: è gratuito e ci
             vuole un minuto.
           </p>
           <Button onClick={() => router.push("/login?mode=signup&redirect=/trova-compagno")}>
-            Registrati
+            {t("Registrati")}
           </Button>
         </div>
       </div>
@@ -109,7 +111,7 @@ export default function TrovaCompagnoPage() {
   return (
     <div className="min-h-screen px-4 py-6 max-w-3xl mx-auto">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold font-display">Trova un compagno</h1>
+        <h1 className="text-2xl font-bold font-display">{t("Trova un compagno")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Il bridge si gioca in due. Qui trovi altri iscritti che stanno
           cercando qualcuno con cui giocare.
@@ -119,13 +121,13 @@ export default function TrovaCompagnoPage() {
       {/* ─── Scheda personale ─────────────────────────────────────────────── */}
       {!inDirectory && !editing && (
         <div className="rounded-2xl border border-border bg-card p-5 mb-6">
-          <h2 className="font-bold mb-1">Mettiti in cerca</h2>
+          <h2 className="font-bold mb-1">{t("Mettiti in cerca")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
             Comparirai nell&apos;elenco con il tuo nome, il livello, la provincia e
             le fasce in cui sei disponibile. Niente altro: né la tua email, né
             un recapito. Puoi toglierti quando vuoi.
           </p>
-          <Button onClick={() => setEditing(true)}>Compila la scheda</Button>
+          <Button onClick={() => setEditing(true)}>{t("Compila la scheda")}</Button>
         </div>
       )}
 
@@ -155,7 +157,7 @@ export default function TrovaCompagnoPage() {
           </span>
           <div className="ml-auto flex gap-2">
             <Button variant="outline" onClick={() => setEditing(true)}>
-              Modifica
+              {t("Modifica")}
             </Button>
             <Button
               variant="ghost"
@@ -182,7 +184,7 @@ export default function TrovaCompagnoPage() {
               }
               className="h-10 px-3 rounded-xl border border-border bg-card text-sm"
             >
-              <option value="">Tutti i livelli</option>
+              <option value="">{t("Tutti i livelli")}</option>
               {PARTNER_LEVELS.map((l) => (
                 <option key={l} value={l}>
                   {LEVEL_LABELS[l]}
@@ -196,7 +198,7 @@ export default function TrovaCompagnoPage() {
               onChange={(e) => applyFilters({ ...filters, province: e.target.value })}
               className="h-10 px-3 rounded-xl border border-border bg-card text-sm"
             >
-              <option value="">Tutte le province</option>
+              <option value="">{t("Tutte le province")}</option>
               {provinces.map((p) => (
                 <option key={p} value={p}>
                   {p}
@@ -305,11 +307,11 @@ export default function TrovaCompagnoPage() {
                       >
                         {done ? (
                           <>
-                            <Check className="w-4 h-4 mr-1" aria-hidden="true" /> Inviata
+                            <Check className="w-4 h-4 mr-1" aria-hidden="true" /> {t("Inviata")}
                           </>
                         ) : (
                           <>
-                            <UserPlus className="w-4 h-4 mr-1" aria-hidden="true" /> Contatta
+                            <UserPlus className="w-4 h-4 mr-1" aria-hidden="true" /> {t("Contatta")}
                           </>
                         )}
                       </Button>
@@ -324,7 +326,7 @@ export default function TrovaCompagnoPage() {
             Contattare qualcuno gli invia una richiesta di amicizia. Se accetta,
             potrete sfidarvi. Le richieste si gestiscono da{" "}
             <Link href="/amici" className="underline">
-              Amici
+              {t("Amici")}
             </Link>
             .
           </p>
@@ -348,6 +350,7 @@ function PartnerForm({
   onSave: (profile: MyPartnerProfile) => void;
   onCancel: () => void;
 }) {
+  const t = useT();
   const [level, setLevel] = useState<PartnerLevel>(initial?.level ?? "principiante");
   const [province, setProvince] = useState(initial?.province ?? "");
   const [availability, setAvailability] = useState<AvailabilitySlot[]>(
@@ -356,10 +359,10 @@ function PartnerForm({
 
   return (
     <div className="rounded-2xl border border-border bg-card p-5 mb-6">
-      <h2 className="font-bold mb-4">La tua scheda</h2>
+      <h2 className="font-bold mb-4">{t("La tua scheda")}</h2>
 
       <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-        Livello
+        {t("Livello")}
       </label>
       <div className="flex flex-wrap gap-2 mb-4">
         {PARTNER_LEVELS.map((l) => (
@@ -380,7 +383,7 @@ function PartnerForm({
         htmlFor="partner-province"
         className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider"
       >
-        Provincia
+        {t("Provincia")}
       </label>
       <select
         id="partner-province"
@@ -388,7 +391,7 @@ function PartnerForm({
         onChange={(e) => setProvince(e.target.value)}
         className="w-full h-12 px-4 rounded-xl border border-border bg-card text-sm mb-1"
       >
-        <option value="">Non indicare</option>
+        <option value="">{t("Non indicare")}</option>
         {provinces.map((p) => (
           <option key={p} value={p}>
             {p}
@@ -401,7 +404,7 @@ function PartnerForm({
       </p>
 
       <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-        Quando puoi giocare
+        {t("Quando puoi giocare")}
       </label>
       <div className="flex flex-wrap gap-2 mb-5">
         {AVAILABILITY_SLOTS.map((slot) => {
@@ -433,7 +436,7 @@ function PartnerForm({
           {saving ? "Salvataggio…" : "Entra nell'elenco"}
         </Button>
         <Button variant="ghost" onClick={onCancel} disabled={saving}>
-          Annulla
+          {t("Annulla")}
         </Button>
       </div>
     </div>

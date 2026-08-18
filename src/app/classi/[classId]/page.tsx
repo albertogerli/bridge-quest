@@ -18,12 +18,14 @@ import { useEnrolledClasses } from "@/store/use-classes-store";
 import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function StudentClassPage({
   params,
 }: {
   params: Promise<{ classId: string }>;
 }) {
+  const t = useT();
   const { classId } = use(params);
   const { classes } = useEnrolledClasses();
   const classRoom = classes.find((c) => c.id === classId);
@@ -82,7 +84,7 @@ export default function StudentClassPage({
         </div>
       ) : assignments.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Il tuo istruttore non ha ancora assegnato compiti.
+          {t("Il tuo istruttore non ha ancora assegnato compiti.")}
         </p>
       ) : (
         <div className="space-y-8">
@@ -116,7 +118,7 @@ export default function StudentClassPage({
       {/* Class chat */}
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Chat della classe
+          {t("Chat della classe")}
         </h2>
         <ClassChat classId={classId} />
       </section>
@@ -139,6 +141,7 @@ function AssignmentSection({
   done?: boolean;
   emptyText?: string;
 }) {
+  const t = useT();
   return (
     <section>
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
@@ -161,7 +164,7 @@ function AssignmentSection({
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-lg">{a.title}</CardTitle>
                       {done ? (
-                        <Badge>Completato ✓</Badge>
+                        <Badge>{t("Completato ✓")}</Badge>
                       ) : (
                         <Badge variant="outline">
                           {doneCount}/{a.smazzata_ids.length}

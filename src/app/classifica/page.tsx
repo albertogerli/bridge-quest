@@ -13,6 +13,7 @@ import type { CourseId } from "@/lib/catalog";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2, Search, X } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const medals = ["🥇", "🥈", "🥉"];
 
@@ -137,6 +138,7 @@ interface AsdRanking {
 }
 
 export default function ClassificaPage() {
+  const t = useT();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [allPlayers, setAllPlayers] = useState<PlayerEntry[]>([]);
   const [playersLoading, setPlayersLoading] = useState(true);
@@ -331,8 +333,8 @@ export default function ClassificaPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-2xl font-bold text-foreground font-display">Classifica</h1>
-          <p className="text-sm text-muted-foreground mt-1">Scala le leghe e diventa Campione Azzurro</p>
+          <h1 className="text-2xl font-bold text-foreground font-display">{t("Classifica")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("Scala le leghe e diventa Campione Azzurro")}</p>
         </motion.div>
 
         {/* User's own rank - Sticky highlight card */}
@@ -347,7 +349,7 @@ export default function ClassificaPage() {
               <div className="flex items-center gap-3">
                 {/* Rank badge */}
                 <div className="flex flex-col items-center justify-center min-w-[48px]">
-                  <span className="text-[12px] font-bold text-amber-600 uppercase tracking-wider">Pos.</span>
+                  <span className="text-[12px] font-bold text-amber-600 uppercase tracking-wider">{t("Pos.")}</span>
                   <span className="text-2xl font-black text-amber-600">
                     {userFullRank ? `#${userFullRank}` : (
                       (() => {
@@ -442,8 +444,8 @@ export default function ClassificaPage() {
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-muted-foreground" />
             <div>
-              <p className="text-xs font-bold text-foreground">Fine settimana</p>
-              <p className="text-[12px] text-muted-foreground">Top 3 promossi!</p>
+              <p className="text-xs font-bold text-foreground">{t("Fine settimana")}</p>
+              <p className="text-[12px] text-muted-foreground">{t("Top 3 promossi!")}</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -663,7 +665,7 @@ export default function ClassificaPage() {
                       className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/30 card-clean rounded-xl p-3"
                     >
                       <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
-                        Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di più sale in cima!
+                        {t("Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di più sale in cima!")}
                       </p>
                     </motion.div>
                     <LeaderboardSearch value={search} onChange={setSearch} />
@@ -711,7 +713,7 @@ export default function ClassificaPage() {
                   >
                     <span className="flex justify-center mb-3"><Landmark className="w-10 h-10 text-muted-foreground" /></span>
                     <p className="text-sm text-muted-foreground">
-                      Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione
+                      {t("Le classifiche ASD appariranno quando i giocatori si registreranno con la propria associazione")}
                     </p>
                   </motion.div>
                 ) : (
@@ -746,7 +748,7 @@ export default function ClassificaPage() {
                             <p className="font-bold text-sm text-foreground">
                               {formatNumber(asd.total_xp)}
                             </p>
-                            <p className="text-[12px] text-muted-foreground">XP totali</p>
+                            <p className="text-[12px] text-muted-foreground">{t("XP totali")}</p>
                           </div>
                         </div>
                       </motion.div>
@@ -1108,6 +1110,7 @@ function LeaderboardList({
   currentUserId: string | null;
   league: (typeof leagues)[0];
 }) {
+  const t = useT();
   // Dedupe by id (defensive: the source may contain a player twice) then sort.
   const unique = Array.from(new Map(players.map((p) => [p.id, p])).values());
   const sorted = unique.sort((a, b) => b.xp - a.xp);
@@ -1149,11 +1152,11 @@ function LeaderboardList({
       >
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          <span className="text-[12px] font-bold text-muted-foreground">Promozione</span>
+          <span className="text-[12px] font-bold text-muted-foreground">{t("Promozione")}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-          <span className="text-[12px] font-bold text-muted-foreground">Retrocessione</span>
+          <span className="text-[12px] font-bold text-muted-foreground">{t("Retrocessione")}</span>
         </div>
         <div className="flex-1" />
         <span className="text-[12px] font-bold text-muted-foreground/40">{totalPlayers} giocatori</span>
@@ -1226,7 +1229,7 @@ function LeaderboardList({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-[12px] text-muted-foreground">
-                              Prossimo traguardo: <span className="font-bold text-purple-600 dark:text-purple-400">{formatNumber(milestone)} XP</span>
+                              {t("Prossimo traguardo:")} <span className="font-bold text-purple-600 dark:text-purple-400">{formatNumber(milestone)} XP</span>
                             </p>
                             <p className="text-[12px] font-medium text-muted-foreground">-{formatNumber(remaining)}</p>
                           </div>
@@ -1303,6 +1306,7 @@ function EmptyState({ message, showCta = false }: { message: string; showCta?: b
 }
 
 function LocalXpCard() {
+  const t = useT();
   const localXp = useGameStore((s) => s.xp);
 
   const league = getLeague(localXp);
@@ -1320,7 +1324,7 @@ function LocalXpCard() {
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <p className="font-bold text-sm text-foreground">I tuoi XP</p>
+            <p className="font-bold text-sm text-foreground">{t("I tuoi XP")}</p>
             <span className={`text-[12px] font-bold px-2 py-0.5 rounded-full ${league.textColor} bg-card border ${league.border}`}>
               {league.name}
             </span>
@@ -1361,7 +1365,7 @@ function LocalXpCard() {
             whileTap={{ scale: 0.97 }}
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-200/40 hover:shadow-lg transition-shadow w-full"
           >
-            Accedi per entrare in classifica
+            {t("Accedi per entrare in classifica")}
           </motion.div>
         </Link>
       </div>

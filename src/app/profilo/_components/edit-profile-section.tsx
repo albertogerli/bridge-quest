@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Profile } from "@/hooks/use-auth";
 import type { ProfileEdit } from "../_use-profile-edit";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Sezione "Modifica profilo": pulsante di apertura e form (foto, nome, BBO, ASD). */
 export function EditProfileSection({
@@ -15,6 +16,7 @@ export function EditProfileSection({
   edit: ProfileEdit;
   authProfile: Profile | null;
 }) {
+  const t = useT();
   return (
     <>
       <Separator className="my-6 bg-border" />
@@ -36,8 +38,8 @@ export function EditProfileSection({
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-foreground">Modifica profilo</p>
-                <p className="text-[12px] text-muted-foreground">Foto, nome, BBO, associazione</p>
+                <p className="text-sm font-bold text-foreground">{t("Modifica profilo")}</p>
+                <p className="text-[12px] text-muted-foreground">{t("Foto, nome, BBO, associazione")}</p>
               </div>
               <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <polyline points="9,6 15,12 9,18" />
@@ -50,7 +52,7 @@ export function EditProfileSection({
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl bg-card p-5 border-2 border-border shadow-sm"
           >
-            <h3 className="text-sm font-bold text-foreground mb-4">Modifica profilo</h3>
+            <h3 className="text-sm font-bold text-foreground mb-4">{t("Modifica profilo")}</h3>
 
             {/* Avatar upload */}
             <div className="flex items-center gap-4 mb-4">
@@ -66,7 +68,7 @@ export function EditProfileSection({
               </div>
               <label className="cursor-pointer">
                 <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300">
-                  Cambia foto
+                  {t("Cambia foto")}
                 </span>
                 <input
                   type="file"
@@ -84,7 +86,7 @@ export function EditProfileSection({
 
             {/* Name */}
             <div className="mb-3">
-              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Nome</label>
+              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">{t("Nome")}</label>
               <input
                 type="text"
                 value={edit.editName}
@@ -95,7 +97,7 @@ export function EditProfileSection({
 
             {/* BBO */}
             <div className="mb-3">
-              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Username BBO</label>
+              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">{t("Username BBO")}</label>
               <input
                 type="text"
                 value={edit.editBbo}
@@ -118,7 +120,7 @@ export function EditProfileSection({
 
             {/* ASD */}
             <div className="mb-4 relative">
-              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Associazione (ASD)</label>
+              <label className="block text-[12px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">{t("Associazione (ASD)")}</label>
               <input
                 type="text"
                 value={edit.editAsdSelectedName || edit.editAsdSearch}
@@ -165,7 +167,7 @@ export function EditProfileSection({
                 onClick={() => edit.setEditing(false)}
                 className="flex-1 h-10 rounded-xl font-semibold text-xs"
               >
-                Annulla
+                {t("Annulla")}
               </Button>
               <Button
                 onClick={edit.save}

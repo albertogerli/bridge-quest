@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Check, Copy, MessageCircle, Send, Share2, UserPlus, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Blocco "Invita un Amico": codice referral, condivisione e toast di feedback. */
 export function InviteFriendSection({
@@ -24,6 +25,7 @@ export function InviteFriendSection({
   onWhatsApp: () => void;
   onInvite: () => void;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -37,9 +39,9 @@ export function InviteFriendSection({
             <UserPlus className="w-5 h-5" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-foreground">Invita un Amico</p>
+            <p className="font-semibold text-foreground">{t("Invita un Amico")}</p>
             <p className="text-xs text-muted-foreground">
-              Condividi Bridge LAB e guadagna +25 XP
+              {t("Condividi Bridge LAB e guadagna +25 XP")}
             </p>
           </div>
           {invitesSent > 0 && (
@@ -56,7 +58,7 @@ export function InviteFriendSection({
         {referralCode && (
           <div className="mb-4 rounded-xl bg-card/80 border border-figb/10 dark:border-primary/20 p-3.5">
             <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
-              Il tuo codice referral
+              {t("Il tuo codice referral")}
             </p>
             <div className="flex items-center gap-2">
               <span className="flex-1 font-mono text-lg font-bold text-figb dark:text-primary tracking-widest">
@@ -69,12 +71,12 @@ export function InviteFriendSection({
                 {linkCopied ? (
                   <>
                     <Check className="w-3.5 h-3.5" />
-                    Copiato!
+                    {t("Copiato!")}
                   </>
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    Copia link
+                    {t("Copia link")}
                   </>
                 )}
               </button>
@@ -90,7 +92,7 @@ export function InviteFriendSection({
             className="rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold h-11 text-sm shadow-md shadow-[#25D366]/20 transition-colors"
           >
             <MessageCircle className="w-4 h-4 mr-2" />
-            WhatsApp
+            {t("WhatsApp")}
           </Button>
           {/* Generic share button */}
           <Button
@@ -98,7 +100,7 @@ export function InviteFriendSection({
             className="rounded-xl bg-figb hover:bg-figb-dark text-white font-semibold h-11 text-sm shadow-md shadow-figb/20 transition-colors"
           >
             <Share2 className="w-4 h-4 mr-2" />
-            Condividi
+            {t("Condividi")}
           </Button>
         </div>
 

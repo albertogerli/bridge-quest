@@ -8,6 +8,7 @@ import {
   cercaPerCodice, linkInvito, mioCodice, messaggioInvito, normalizzaCodice,
 } from "@/lib/codice-amico";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Invitare un amico senza cercarlo per nome.
@@ -25,6 +26,7 @@ import { reportError } from "@/lib/report-error";
  * e non mantiene. Si aggiunge quando si aggiunge la dipendenza.
  */
 export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: string | null) => void }) {
+  const t = useT();
   const { user, profile } = useSharedAuth();
   const [codice, setCodice] = useState<string | null>(null);
   const [copiato, setCopiato] = useState(false);
@@ -75,15 +77,15 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
     <section className="rounded-2xl border border-border bg-card p-5" aria-labelledby="invito-amico">
       <h2 id="invito-amico" className="font-semibold mb-1 flex items-center gap-2">
         <UserPlus className="w-4 h-4 text-figb" aria-hidden="true" />
-        Aggiungi un amico
+        {t("Aggiungi un amico")}
       </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Serve per licitare in due, sfidarsi e allenarsi insieme.
+        {t("Serve per licitare in due, sfidarsi e allenarsi insieme.")}
       </p>
 
       {/* Il mio codice */}
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-        Il tuo codice
+        {t("Il tuo codice")}
       </p>
       <div className="flex flex-wrap items-center gap-2 mb-2">
         <span className="font-mono text-2xl font-bold tracking-[0.2em] bg-muted rounded-xl px-4 py-2">
@@ -100,7 +102,7 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
         >
           <Button variant="outline" disabled={!codice}>
             <Share2 className="w-4 h-4 mr-1" aria-hidden="true" />
-            WhatsApp
+            {t("WhatsApp")}
           </Button>
         </a>
       </div>
@@ -110,7 +112,7 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
 
       {/* Ho un codice */}
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 mt-5">
-        Hai il codice di un amico?
+        {t("Hai il codice di un amico?")}
       </p>
       <div className="flex flex-wrap gap-2">
         <input
@@ -136,7 +138,7 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
 
       {trovato && (
         <p className="text-sm mt-2">
-          Trovato: <strong>{trovato.nome ?? "un giocatore"}</strong>. Mandagli
+          {t("Trovato:")} <strong>{trovato.nome ?? "un giocatore"}</strong>. Mandagli
           la richiesta dall&apos;elenco qui sotto.
         </p>
       )}

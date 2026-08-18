@@ -9,6 +9,7 @@ import { ConfettiBurst } from "@/components/celebration-effects";
 import { StepShell } from "../step-shell";
 import { GlossaryText } from "@/components/beginner/glossary-text";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 function ChoiceCard({
   label,
@@ -61,6 +62,7 @@ const trickCards = [
 ];
 
 export function StepPresa({ onComplete, playSound }: StepProps) {
+  const t = useT();
   const [choice, setChoice] = useState<"ace" | "queen" | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const firstTry = useRef(true);
@@ -88,7 +90,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
       <div className="mt-6 space-y-4">
         <div className="rounded-[28px] border border-gray-200 bg-white p-5">
           <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
-            Chi vince questa presa?
+            {t("Chi vince questa presa?")}
           </p>
           <div className="mt-4 grid grid-cols-4 gap-3">
             {trickCards.map((card) => (
@@ -160,7 +162,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
               size="lg"
               className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
             >
-              Continua
+              {t("Continua")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>

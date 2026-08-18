@@ -57,7 +57,7 @@ export function BottomNav() {
               className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-card p-5 pb-8 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] safe-area-bottom"
             >
               <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted-foreground/30" aria-hidden="true" />
-              <p id="bottomnav-more-title" className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">Altro</p>
+              <p id="bottomnav-more-title" className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Altro")}</p>
               <div className="grid grid-cols-4 gap-3">
                 {MORE_LINKS.map((l) => (
                   <Link
@@ -125,6 +125,7 @@ export function BottomNav() {
 }
 
 function PlayButton({ active }: { active: boolean }) {
+  const t = useT();
   return (
     <Link
       href="/gioca"
@@ -141,7 +142,7 @@ function PlayButton({ active }: { active: boolean }) {
           <path d="M8 5v14l11-7z" />
         </svg>
       </div>
-      <span className="mt-1 text-[12px] font-bold text-primary">Gioca</span>
+      <span className="mt-1 text-[12px] font-bold text-primary">{t("Gioca")}</span>
     </Link>
   );
 }
@@ -157,6 +158,7 @@ function MoreButton({
   expanded?: boolean;
   onClick: () => void;
 }) {
+  const t = useT();
   return (
     <button
       onClick={() => {
@@ -192,7 +194,7 @@ function MoreButton({
           />
         )}
       </span>
-      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>Altro</span>
+      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>{t("Altro")}</span>
     </button>
   );
 }

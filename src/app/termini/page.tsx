@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function TerminiPage() {
+  const t = useT();
   return (
     <div className="min-h-screen bg-background pt-8 pb-24 px-5">
       <div className="mx-auto max-w-6xl">
@@ -20,7 +22,7 @@ export default function TerminiPage() {
         {/* Premessa */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Premessa
+            {t("Premessa")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             BridgeLab è una piattaforma educativa digitale sviluppata dalla
@@ -42,14 +44,14 @@ export default function TerminiPage() {
         {/* Titolare */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Titolare del Servizio
+            {t("Titolare del Servizio")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Il titolare della piattaforma BridgeLab è la{" "}
-            <strong>Federazione Italiana Gioco Bridge (FIGB)</strong>, con sede
+            <strong>{t("Federazione Italiana Gioco Bridge (FIGB)")}</strong>, con sede
             legale in Via Tuscolana 65, 00182 Roma (RM), Italia. Lo sviluppo
             tecnico della piattaforma è curato da{" "}
-            <strong>Tourbillon Tech S.r.l.</strong> su incarico della FIGB. Ogni
+            <strong>{t("Tourbillon Tech S.r.l.")}</strong> su incarico della FIGB. Ogni
             riferimento alla &quot;FIGB&quot; nei presenti termini si intende
             comprensivo dei soggetti da essa incaricati per lo sviluppo e la
             gestione tecnica della piattaforma.
@@ -59,7 +61,7 @@ export default function TerminiPage() {
         {/* Accettazione */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Accettazione dei Termini
+            {t("Accettazione dei Termini")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             L&apos;accesso e l&apos;utilizzo della piattaforma BridgeLab
@@ -76,7 +78,7 @@ export default function TerminiPage() {
         {/* Account */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Account e Registrazione
+            {t("Account e Registrazione")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Per accedere a determinate funzionalità della piattaforma potrebbe
@@ -97,7 +99,7 @@ export default function TerminiPage() {
         {/* Contenuti */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Proprietà Intellettuale e Contenuti
+            {t("Proprietà Intellettuale e Contenuti")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Tutti i contenuti presenti sulla piattaforma BridgeLab — inclusi, a
@@ -118,7 +120,7 @@ export default function TerminiPage() {
         {/* Uso consentito */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Uso Consentito della Piattaforma
+            {t("Uso Consentito della Piattaforma")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             La piattaforma BridgeLab è destinata esclusivamente
@@ -132,7 +134,7 @@ export default function TerminiPage() {
               dalla FIGB;
             </li>
             <li>
-              Copiare, rivendere o ridistribuire i contenuti della piattaforma;
+              {t("Copiare, rivendere o ridistribuire i contenuti della piattaforma;")}
             </li>
             <li>
               Tentare di accedere in modo non autorizzato ai sistemi, ai server
@@ -156,7 +158,7 @@ export default function TerminiPage() {
         {/* Dati e privacy */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Trattamento dei Dati Personali
+            {t("Trattamento dei Dati Personali")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Il trattamento dei dati personali degli utenti è disciplinato dalla
@@ -165,7 +167,7 @@ export default function TerminiPage() {
               href="/privacy"
               className="text-figb dark:text-primary hover:underline font-medium"
             >
-              Informativa sulla Privacy
+              {t("Informativa sulla Privacy")}
             </Link>
             , alla quale si rimanda per ogni dettaglio in merito alle modalità di
             raccolta, utilizzo, conservazione e protezione dei dati. Utilizzando
@@ -178,7 +180,7 @@ export default function TerminiPage() {
         {/* Comunicazioni */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Comunicazioni e Newsletter
+            {t("Comunicazioni e Newsletter")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Con il consenso esplicito dell&apos;utente, la FIGB potrà inviare
@@ -198,7 +200,7 @@ export default function TerminiPage() {
         {/* Limitazione responsabilità */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Limitazione di Responsabilità
+            {t("Limitazione di Responsabilità")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             La piattaforma BridgeLab è fornita &quot;così com&apos;è&quot; (as
@@ -220,7 +222,7 @@ export default function TerminiPage() {
         {/* Modifiche */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Modifiche ai Termini
+            {t("Modifiche ai Termini")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             La FIGB si riserva il diritto di modificare, integrare o aggiornare
@@ -237,7 +239,7 @@ export default function TerminiPage() {
         {/* Legge applicabile */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Legge Applicabile e Foro Competente
+            {t("Legge Applicabile e Foro Competente")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             I presenti Termini e Condizioni sono regolati dalla legge italiana.
@@ -253,7 +255,7 @@ export default function TerminiPage() {
         {/* Contatti */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-2">
-            Contatti
+            {t("Contatti")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Per qualsiasi domanda, segnalazione o richiesta relativa ai presenti
@@ -271,7 +273,7 @@ export default function TerminiPage() {
 
         {/* Data aggiornamento */}
         <p className="text-sm text-muted-foreground mt-12 border-t border-border pt-6">
-          Ultimo aggiornamento: Marzo 2026
+          {t("Ultimo aggiornamento: Marzo 2026")}
         </p>
       </div>
     </div>

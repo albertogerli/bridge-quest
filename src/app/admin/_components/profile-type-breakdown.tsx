@@ -1,13 +1,15 @@
 "use client";
 
 import { PROFILE_EMOJI, type Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Ripartizione degli iscritti per tipo di profilo. */
 export function ProfileTypeBreakdown({ stats }: { stats: Stats | null }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-        Per tipo profilo
+        {t("Per tipo profilo")}
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {["junior", "giovane", "adulto", "senior"].map((type) => {

@@ -101,7 +101,7 @@ export default function GiocaPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-bold text-foreground">{t("MiniBridge")}</p>
-                    <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">Beta</span>
+                    <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">{t("Beta")}</span>
                   </div>
                   <p className="text-[12px] text-muted-foreground">{t("Gioca senza licita: conta i punti e scegli il contratto")}</p>
                 </div>

@@ -2,9 +2,11 @@
 
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Consiglio del Maestro Fiori in fondo alla pagina. */
 export function MaestroTip() {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -20,10 +22,10 @@ export function MaestroTip() {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1.5">
               <p className="font-bold text-sm text-foreground">
-                Maestro Fiori
+                {t("Maestro Fiori")}
               </p>
               <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
-                Consiglio
+                {t("Consiglio")}
               </Badge>
             </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed">

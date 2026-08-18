@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { useCollectibleCards } from "@/store/use-collectible-cards-store";
 import { evaluateUnlock } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface CollectionTeaserProps {
   xp: number;
@@ -13,6 +14,7 @@ interface CollectionTeaserProps {
 }
 
 export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: CollectionTeaserProps) {
+  const t = useT();
   const { cards } = useCollectibleCards();
   const playerStats = {
     xp,
@@ -37,7 +39,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <h2 className="text-base font-semibold text-foreground">
-              Collezione Carte
+              {t("Collezione Carte")}
             </h2>
             <Badge className="bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 text-[12px] font-bold border-0">
               {unlocked.length}/{total}
@@ -48,7 +50,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
               variant="outline"
               className="text-[12px] font-semibold text-amber-700 border-amber-200 dark:text-amber-400 dark:border-amber-900 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors"
             >
-              Vedi tutte →
+              {t("Vedi tutte →")}
             </Badge>
           </Link>
         </div>
@@ -88,7 +90,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
 
             {nextCard && (
               <p className="text-[12px] text-muted-foreground mt-2">
-                Prossima: <span className="font-bold text-foreground/80">{nextCard.emoji} {nextCard.name}</span>
+                {t("Prossima:")} <span className="font-bold text-foreground/80">{nextCard.emoji} {nextCard.name}</span>
                 <span className="text-muted-foreground"> — {nextCard.unlockCondition}</span>
               </p>
             )}

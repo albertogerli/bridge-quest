@@ -6,6 +6,7 @@ import { handHcp } from "@/lib/deal-generator";
 import type { ContrattoValutato } from "@/lib/riepilogo-mano";
 import { dalVostroLato } from "@/lib/riepilogo-mano";
 import { Stelle } from "@/components/bridge/stelle";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -58,6 +59,7 @@ export function RiepilogoMano({
    */
   avversari?: ContrattoValutato[];
 }) {
+  const t = useT();
   // La colonna del valore atteso compare solo se la mano lo porta: le mani
   // generate prima delle distribuzioni hanno solo il punteggio reale, e una
   // colonna di trattini non spiega niente a nessuno.
@@ -66,7 +68,7 @@ export function RiepilogoMano({
   return (
     <div className="mt-4 pt-4 border-t border-border">
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-        Tutta la smazzata
+        {t("Tutta la smazzata")}
       </p>
 
       {/* Le quattro mani, a forma di tavolo. */}
@@ -85,7 +87,7 @@ export function RiepilogoMano({
       </div>
 
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-        Cosa valeva ogni contratto
+        {t("Cosa valeva ogni contratto")}
       </p>
       {contratti.length === 0 && (
         <p className="text-sm text-muted-foreground">
@@ -106,11 +108,11 @@ export function RiepilogoMano({
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-muted-foreground">
-                <th className="font-normal py-1">Contratto</th>
-                <th className="font-normal py-1 text-right">Prese</th>
+                <th className="font-normal py-1">{t("Contratto")}</th>
+                <th className="font-normal py-1 text-right">{t("Prese")}</th>
                 <th className="font-normal py-1 text-right">Qui</th>
-                {mostraAtteso && <th className="font-normal py-1 text-right">In media</th>}
-                <th className="font-normal py-1 text-right">Stelle</th>
+                {mostraAtteso && <th className="font-normal py-1 text-right">{t("In media")}</th>}
+                <th className="font-normal py-1 text-right">{t("Stelle")}</th>
               </tr>
             </thead>
             <tbody>
@@ -143,7 +145,7 @@ export function RiepilogoMano({
                       colSpan={mostraAtteso ? 5 : 4}
                       className="border-t border-border pt-4 pb-1 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                     >
-                      Cosa potevano fare loro
+                      {t("Cosa potevano fare loro")}
                     </th>
                   </tr>
                   {avversari.map((c) => (
@@ -180,7 +182,7 @@ export function RiepilogoMano({
       )}
       {contratti.some((c) => contratti.filter((x) => x.etichetta === c.etichetta).length > 1) && (
         <p className="text-xs text-muted-foreground mt-2">
-          Lo stesso contratto compare due volte perché <strong>cambia chi
+          {t("Lo stesso contratto compare due volte perché")} <strong>cambia chi
           dichiara</strong>: l&apos;attacco arriva dalla sinistra del
           dichiarante, e una carta in meno da girare può valere due prese.
         </p>
@@ -201,7 +203,7 @@ export function RiepilogoMano({
         {mostraAtteso ? (
           <>
             {" "}
-            <strong>In media</strong> è quanto rende rimescolando le carte
+            <strong>{t("In media")}</strong> è quanto rende rimescolando le carte
             avversarie: è da lì che vengono le stelle, perché una buona
             dichiarazione resta buona anche quando le carte stanno male.
           </>

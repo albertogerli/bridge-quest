@@ -11,6 +11,7 @@ import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
 import { useErrorScenarios } from "@/store/use-trova-errore-store";
 import type { ErrorScenario } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Difficulty = "facile" | "medio" | "difficile";
 type Phase = "menu" | "playing" | "gameover";
@@ -61,6 +62,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 export default function TrovaErrorePage() {
+  const t = useT();
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
   const { scenarios: errorScenarios } = useErrorScenarios();
@@ -277,7 +279,7 @@ export default function TrovaErrorePage() {
               href="/gioca"
               className="hover:text-emerald transition-colors"
             >
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
             <span className="text-rose-600 font-semibold">Trova l&apos;Errore</span>
@@ -299,7 +301,7 @@ export default function TrovaErrorePage() {
             <p
               className={`text-muted-foreground mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : ""}`}
             >
-              Ogni scenario ha un errore. Riesci a trovarlo?
+              {t("Ogni scenario ha un errore. Riesci a trovarlo?")}
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <Badge className="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold border-0">
@@ -313,14 +315,14 @@ export default function TrovaErrorePage() {
             {/* How to play */}
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">
-                Come si gioca?
+                {t("Come si gioca?")}
               </h3>
               <ul
                 className={`text-muted-foreground space-y-1.5 ${isSenior ? "text-sm" : "text-xs"}`}
               >
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">1.</span>
-                  Leggi lo scenario di bridge presentato
+                  {t("Leggi lo scenario di bridge presentato")}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">2.</span>
@@ -328,11 +330,11 @@ export default function TrovaErrorePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">3.</span>
-                  Più veloce rispondi, più punti guadagni
+                  {t("Più veloce rispondi, più punti guadagni")}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">4.</span>
-                  Leggi la spiegazione per imparare!
+                  {t("Leggi la spiegazione per imparare!")}
                 </li>
               </ul>
             </div>
@@ -340,7 +342,7 @@ export default function TrovaErrorePage() {
             {/* Difficulty selection */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-foreground text-left">
-                Scegli difficoltà
+                {t("Scegli difficoltà")}
               </h3>
               {(
                 Object.entries(difficultyConfig) as [
@@ -457,14 +459,14 @@ export default function TrovaErrorePage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
                 <p className="text-[12px] text-muted-foreground font-bold">
-                  Streak max
+                  {t("Streak max")}
                 </p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
@@ -550,14 +552,14 @@ export default function TrovaErrorePage() {
                   variant="outline"
                   className="w-full h-12 rounded-xl font-bold"
                 >
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => startGame()}
                 className="flex-1 h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-bold shadow-lg shadow-rose-400/30"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </motion.div>
           </motion.div>
@@ -650,7 +652,7 @@ export default function TrovaErrorePage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-xs font-bold text-red-500"
               >
-                Sbrigati!
+                {t("Sbrigati!")}
               </motion.span>
             )}
           </div>
@@ -716,7 +718,7 @@ export default function TrovaErrorePage() {
               {scenario.cards && (
                 <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
                   <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
-                    Carte
+                    {t("Carte")}
                   </p>
                   <p
                     className={`font-mono font-bold tracking-wide ${
@@ -746,7 +748,7 @@ export default function TrovaErrorePage() {
               {scenario.sequence && scenario.sequence.length > 0 && (
                 <div className="mt-3 p-3 rounded-xl bg-muted/50 border border-border">
                   <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                    Sequenza di licita
+                    {t("Sequenza di licita")}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {scenario.sequence.map((bid, i) => (
@@ -906,7 +908,7 @@ export default function TrovaErrorePage() {
               >
                 <div className="text-5xl mb-4">⏸️</div>
                 <h2 className="text-2xl font-semibold text-foreground">
-                  Pausa
+                  {t("Pausa")}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-2">
                   Domanda {round + 1}/{TOTAL_ROUNDS} · {score} pts
@@ -916,14 +918,14 @@ export default function TrovaErrorePage() {
                     onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-semibold shadow-lg"
                   >
-                    Riprendi
+                    {t("Riprendi")}
                   </Button>
                   <Link href="/gioca" className="block">
                     <Button
                       variant="outline"
                       className="w-full h-12 rounded-xl font-bold"
                     >
-                      Esci dal gioco
+                      {t("Esci dal gioco")}
                     </Button>
                   </Link>
                 </div>

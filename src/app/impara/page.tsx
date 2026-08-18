@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface Step {
   key: string;
@@ -26,6 +27,7 @@ const STUDY_TOOLS: { href: string; emoji: string; title: string; desc: string }[
 ];
 
 export default function ImparaPage() {
+  const t = useT();
   const hydrated = useHasHydrated();
   const completedModules = useGameStore((s) => s.completedModules);
   const { courses } = useCatalog();
@@ -100,15 +102,15 @@ export default function ImparaPage() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <div className="mb-6">
-        <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">Impara</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">{t("Impara")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Il tuo percorso dal primo tutorial fino a giocare una mano completa.
+          {t("Il tuo percorso dal primo tutorial fino a giocare una mano completa.")}
         </p>
       </div>
 
       {/* Percorso */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Il tuo percorso</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Il tuo percorso")}</h2>
         <div className="space-y-3">
           {steps.map((step, i) => {
             const isNext = hydrated && i === nextIndex;
@@ -145,7 +147,7 @@ export default function ImparaPage() {
                         <p className="font-display text-lg font-semibold">{step.title}</p>
                         {isNext && (
                           <span className="rounded-full bg-primary px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-primary-foreground">
-                            Prossimo passo
+                            {t("Prossimo passo")}
                           </span>
                         )}
                       </div>
@@ -167,7 +169,7 @@ export default function ImparaPage() {
 
       {/* Strumenti di studio */}
       <section>
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Strumenti di studio</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Strumenti di studio")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {STUDY_TOOLS.map((t, i) => (
             <motion.div key={t.href} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>

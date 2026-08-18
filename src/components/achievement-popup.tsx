@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export interface BadgeDef {
   id: string;
@@ -107,6 +108,7 @@ export function AchievementPopup({
   badge: BadgeDef | null;
   onDismiss: () => void;
 }) {
+  const t = useT();
   const { play } = useSound();
 
   useEffect(() => {
@@ -142,7 +144,7 @@ export function AchievementPopup({
             </div>
             <div>
               <p className="text-[12px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
-                Nuovo Achievement!
+                {t("Nuovo Achievement!")}
               </p>
               <p className="text-sm font-bold text-foreground">{badge.name}</p>
               <p className="text-[12px] text-muted-foreground">{badge.desc}</p>

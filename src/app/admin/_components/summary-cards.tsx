@@ -2,9 +2,11 @@
 
 import { StatCard } from "./cards";
 import type { Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Card di riepilogo: iscrizioni, attività, portale istruttori. */
 export function SummaryCards({ stats }: { stats: Stats | null }) {
+  const t = useT();
   return (
     <>
       {/* Stats cards - row 1 */}
@@ -24,7 +26,7 @@ export function SummaryCards({ stats }: { stats: Stats | null }) {
       </div>
 
       {/* Scuola · Portale Istruttori */}
-      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Scuola · Portale Istruttori</h2>
+      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">{t("Scuola · Portale Istruttori")}</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <StatCard label="Istruttori" value={stats?.instructors ?? 0} icon="👨‍🏫" color="bg-rose-500" />
         <StatCard label="Classi" value={stats?.classes ?? 0} icon="🏫" color="bg-fuchsia-500" />

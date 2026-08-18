@@ -1,6 +1,9 @@
 "use client";
 
+import { useT } from "@/contexts/traduzioni-provider";
+
 export default function OfflinePage() {
+  const t = useT();
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-figb/5 dark:from-primary/10 to-background px-6 text-center">
       <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-figb to-figb-dark text-white text-4xl font-bold shadow-lg shadow-figb/20 mb-6">
@@ -13,16 +16,16 @@ export default function OfflinePage() {
         <span className="text-emerald-600">&#9827;</span>
       </div>
       <h1 className="text-2xl font-bold text-foreground font-display mb-2">
-        Sei offline
+        {t("Sei offline")}
       </h1>
       <p className="text-muted-foreground max-w-xs mb-8">
-        Connettiti a Internet per continuare a giocare a Bridge LAB.
+        {t("Connettiti a Internet per continuare a giocare a Bridge LAB.")}
       </p>
       <button
         onClick={() => window.location.reload()}
         className="px-8 py-3 rounded-2xl bg-figb hover:bg-figb-dark text-white font-semibold shadow-lg shadow-figb/20 hover:shadow-xl transition-all active:scale-95"
       >
-        Riprova
+        {t("Riprova")}
       </button>
     </div>
   );

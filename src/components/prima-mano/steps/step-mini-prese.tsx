@@ -9,6 +9,7 @@ import { StepShell } from "../step-shell";
 import { GlossaryText } from "@/components/beginner/glossary-text";
 import { MiniCard, type MiniCardData } from "../mini-card";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface MiniTrick {
   lead: string;
@@ -82,6 +83,7 @@ const MINI_TRICKS: MiniTrick[] = [
 ];
 
 export function StepMiniPrese({ onComplete, playSound }: StepProps) {
+  const t = useT();
   const [trickIndex, setTrickIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [miniWins, setMiniWins] = useState(0);
@@ -154,7 +156,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
               transition={{ delay: 0.3 }}
               className="mt-3 text-sm font-bold text-[#c8a44e]"
             >
-              Perfetto! Nessun errore.
+              {t("Perfetto! Nessun errore.")}
             </motion.p>
           )}
           <p className="mt-4 text-lg font-bold text-[#c8a44e]">+{finalWins * 5} XP</p>
@@ -171,7 +173,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
             size="lg"
             className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
           >
-            Vai alla partita vera
+            {t("Vai alla partita vera")}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </motion.div>
@@ -230,17 +232,17 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
       {/* Table cards */}
       <div className="mt-4 rounded-[28px] border border-gray-200 bg-white p-5">
         <p className="mb-3 text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8]">
-          Carte sul tavolo
+          {t("Carte sul tavolo")}
         </p>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center">
-            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">Ovest</p>
+            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">{t("Ovest")}</p>
             <div className="flex justify-center">
               <MiniCard card={trick.west} disabled locked={false} delay={0.1} size="small" />
             </div>
           </div>
           <div className="text-center">
-            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">Nord</p>
+            <p className="mb-1 text-[12px] font-bold text-[#8a94a8]">{t("Nord")}</p>
             <div className="flex justify-center">
               <MiniCard card={trick.north} disabled locked={false} delay={0.25} size="small" />
             </div>

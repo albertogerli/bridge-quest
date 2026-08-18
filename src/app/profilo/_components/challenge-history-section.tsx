@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Swords } from "lucide-react";
 import type { ChallengeData, ChallengeStats } from "@/hooks/use-challenges";
 import { challengeWinRate, describeChallenge } from "@/lib/profile-stats";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Accordion "Sfide IMP": riepilogo e ultime sfide completate. */
 export function ChallengeHistorySection({
@@ -20,6 +21,7 @@ export function ChallengeHistorySection({
   challengeStats: ChallengeStats | null;
   challengeHistory: ChallengeData[];
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -36,7 +38,7 @@ export function ChallengeHistorySection({
             <Swords className="w-5 h-5 text-violet-600 dark:text-violet-400" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-foreground">Sfide IMP</p>
+            <p className="text-sm font-bold text-foreground">{t("Sfide IMP")}</p>
             <p className="text-[12px] text-muted-foreground">
               {challengeStats
                 ? `${challengeStats.played} sfide · ${challengeStats.won} vinte · ${challengeWinRate(challengeStats)}%`
@@ -69,19 +71,19 @@ export function ChallengeHistorySection({
                 <div className="grid grid-cols-4 gap-2 rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 p-3">
                   <div className="text-center">
                     <p className="text-lg font-bold text-foreground">{challengeStats.played}</p>
-                    <p className="text-[12px] text-muted-foreground">Giocate</p>
+                    <p className="text-[12px] text-muted-foreground">{t("Giocate")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{challengeStats.won}</p>
-                    <p className="text-[12px] text-muted-foreground">Vinte</p>
+                    <p className="text-[12px] text-muted-foreground">{t("Vinte")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-red-500 dark:text-red-400">{challengeStats.lost}</p>
-                    <p className="text-[12px] text-muted-foreground">Perse</p>
+                    <p className="text-[12px] text-muted-foreground">{t("Perse")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-figb dark:text-primary">{challengeStats.avg_imp_margin > 0 ? "+" : ""}{Math.round(challengeStats.avg_imp_margin)}</p>
-                    <p className="text-[12px] text-muted-foreground">IMP medio</p>
+                    <p className="text-[12px] text-muted-foreground">{t("IMP medio")}</p>
                   </div>
                 </div>
               )}
@@ -112,7 +114,7 @@ export function ChallengeHistorySection({
                             </p>
                           ) : (
                             <p className="text-xs font-semibold text-muted-foreground">
-                              Da completare
+                              {t("Da completare")}
                             </p>
                           )}
                         </div>
@@ -123,9 +125,9 @@ export function ChallengeHistorySection({
               ) : (
                 <div className="text-center py-6">
                   <Swords className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-                  <p className="text-xs text-muted-foreground">Nessuna sfida completata</p>
+                  <p className="text-xs text-muted-foreground">{t("Nessuna sfida completata")}</p>
                   <Link href="/amici" className="text-xs text-figb dark:text-primary font-semibold hover:underline mt-1 inline-block">
-                    Sfida un amico →
+                    {t("Sfida un amico →")}
                   </Link>
                 </div>
               )}

@@ -10,6 +10,7 @@ import {
   Trophy, Gift, Sparkles, FileText, Spade, Star, BookOpen,
   Flame, Gamepad2, CalendarDays, Target as TargetIcon
 } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Map weekly objective IDs to Lucide icons
 const objectiveIcons: Record<string, React.ReactNode> = {
@@ -82,6 +83,7 @@ function getTimeRemaining(): { days: number; hours: number; minutes: number } {
 }
 
 export default function ObiettiviPage() {
+  const t = useT();
   const { objectives, allCompleted, bonusClaimed, claimBonus, refreshProgress } = useWeeklyObjectives();
   const [showConfetti, setShowConfetti] = useState(false);
   const [bonusXp, setBonusXp] = useState<number | null>(null);
@@ -155,7 +157,7 @@ export default function ObiettiviPage() {
             >
               <path d="M15 18l-6-6 6-6" />
             </svg>
-            <span className="text-sm font-medium">Indietro</span>
+            <span className="text-sm font-medium">{t("Indietro")}</span>
           </Link>
 
           <div className="flex items-center justify-between">
@@ -166,7 +168,7 @@ export default function ObiettiviPage() {
                 transition={{ duration: 0.4 }}
                 className="text-3xl font-bold text-white tracking-tight font-display"
               >
-                Obiettivi Settimanali
+                {t("Obiettivi Settimanali")}
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
@@ -174,7 +176,7 @@ export default function ObiettiviPage() {
                 transition={{ duration: 0.4, delay: 0.1 }}
                 className="text-emerald-100 mt-1 text-sm"
               >
-                Completa tutti e 3 per il bonus
+                {t("Completa tutti e 3 per il bonus")}
               </motion.p>
             </div>
             <motion.div
@@ -196,7 +198,7 @@ export default function ObiettiviPage() {
             className="mt-4 flex items-center gap-3"
           >
             <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/10">
-              <span className="text-white/70 text-xs font-medium">Tempo rimasto:</span>
+              <span className="text-white/70 text-xs font-medium">{t("Tempo rimasto:")}</span>
               <div className="flex items-center gap-1">
                 <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
                   {timeRemaining.days}g
@@ -228,7 +230,7 @@ export default function ObiettiviPage() {
           className="card-clean bg-card rounded-2xl p-4 shadow-sm border border-border"
         >
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-semibold text-foreground">Progresso Globale</p>
+            <p className="text-sm font-semibold text-foreground">{t("Progresso Globale")}</p>
             <p className="text-xs font-bold text-muted-foreground">
               {completedCount} di 3 completati
             </p>
@@ -482,7 +484,7 @@ export default function ObiettiviPage() {
                       className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-semibold text-base shadow-lg shadow-amber-300/40 transition-all duration-200 active:scale-[0.98]"
                     >
                       <Sparkles className="w-5 h-5 mr-2" />
-                      Riscuoti +100 XP Bonus
+                      {t("Riscuoti +100 XP Bonus")}
                     </Button>
                   </motion.div>
                 ) : (

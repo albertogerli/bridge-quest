@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Coins, ShoppingBag, Sparkles, Crown, Diamond, Frame, Palette, Image as ImageIcon, Check, Star, Flame, Rainbow, Award, Heart, Trophy, Gem, Type } from "lucide-react";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /* ────────────────────────────────────────────── */
 /*  Types & Data                                   */
@@ -398,6 +399,7 @@ function ConfettiParticle({ index }: { index: number }) {
 /* ────────────────────────────────────────────── */
 
 export default function NegozioPage() {
+  const t = useT();
   const [fiches, setFichesState] = useState(0);
   const [owned, setOwned] = useState<string[]>([]);
   const [activeItems, setActiveItems] = useState<Record<CategoryId, string>>({ ...defaultActives });
@@ -495,8 +497,8 @@ export default function NegozioPage() {
               <ShoppingBag className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-foreground font-display">Negozio</h1>
-              <p className="text-xs text-muted-foreground">Personalizza il tuo stile</p>
+              <h1 className="text-2xl font-bold text-foreground font-display">{t("Negozio")}</h1>
+              <p className="text-xs text-muted-foreground">{t("Personalizza il tuo stile")}</p>
             </div>
           </div>
           <Link href="/profilo">
@@ -666,7 +668,7 @@ export default function NegozioPage() {
                         <div className="flex items-center gap-1">
                           {item.isFree ? (
                             <Badge className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[12px] font-bold border-emerald-200 dark:border-emerald-900 border px-2 py-0.5">
-                              Gratuito
+                              {t("Gratuito")}
                             </Badge>
                           ) : (
                             <div className="flex items-center gap-1">
@@ -680,14 +682,14 @@ export default function NegozioPage() {
                           {!item.isFree && item.price >= 200 && (
                             <Badge className="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-300 text-[12px] font-bold border-purple-200 dark:border-purple-900 border px-1.5 py-0 ml-auto">
                               <Star className="w-2.5 h-2.5 mr-0.5" />
-                              Premium
+                              {t("Premium")}
                             </Badge>
                           )}
                         </div>
                         {/* Not enough fiches warning */}
                         {!isOwned && !item.isFree && fiches < item.price && (
                           <p className="text-[12px] font-semibold text-rose-500 leading-tight">
-                            Non abbastanza fiches
+                            {t("Non abbastanza fiches")}
                           </p>
                         )}
                       </div>
@@ -696,7 +698,7 @@ export default function NegozioPage() {
                       {isActive ? (
                         <div className="w-full h-9 rounded-xl bg-figb/10 dark:bg-primary/15 text-figb dark:text-primary flex items-center justify-center text-xs font-bold">
                           <Check className="w-3.5 h-3.5 mr-1.5" />
-                          Equipaggiato
+                          {t("Equipaggiato")}
                         </div>
                       ) : isOwned ? (
                         <Button
@@ -704,7 +706,7 @@ export default function NegozioPage() {
                           variant="outline"
                           className="w-full h-9 rounded-xl text-xs font-bold border-figb dark:border-primary text-figb dark:text-primary hover:bg-figb/5 dark:hover:bg-primary/10"
                         >
-                          Equipaggia
+                          {t("Equipaggia")}
                         </Button>
                       ) : (
                         <Button
@@ -727,7 +729,7 @@ export default function NegozioPage() {
                           ) : (
                             <>
                               <Coins className="w-3.5 h-3.5 mr-1" />
-                              Acquista
+                              {t("Acquista")}
                             </>
                           )}
                         </Button>
@@ -749,7 +751,7 @@ export default function NegozioPage() {
         >
           <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-figb dark:text-primary" />
-            Oggetti equipaggiati
+            {t("Oggetti equipaggiati")}
           </h3>
           <div className="space-y-2.5">
             {categories.map((cat) => {
@@ -791,9 +793,9 @@ export default function NegozioPage() {
               <Coins className="w-4.5 h-4.5 text-amber-600" />
             </div>
             <div>
-              <p className="text-xs font-bold text-foreground">Come guadagnare fiches?</p>
+              <p className="text-xs font-bold text-foreground">{t("Come guadagnare fiches?")}</p>
               <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">
-                Guadagni fiches completando lezioni, giocando mani e mantenendo la tua streak giornaliera. Ogni 10 XP = 1 fiche.
+                {t("Guadagni fiches completando lezioni, giocando mani e mantenendo la tua streak giornaliera. Ogni 10 XP = 1 fiche.")}
               </p>
             </div>
           </div>

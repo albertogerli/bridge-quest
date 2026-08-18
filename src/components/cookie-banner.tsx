@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { consentPending, exposeConsentApi, setMarketingConsent } from "@/lib/consent-client";
 import { CONSENT_REOPEN_EVENT } from "@/lib/consent";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Richiesta di consenso ai cookie.
@@ -15,6 +16,7 @@ import { CONSENT_REOPEN_EVENT } from "@/lib/consent";
  * senza un rifiuto possibile, il consenso non è un consenso.
  */
 export function CookieBanner() {
+  const t = useT();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export function CookieBanner() {
                 onClick={() => decide(true)}
                 className="flex-1 py-2.5 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors active:scale-[0.98]"
               >
-                Accetta tutti
+                {t("Accetta tutti")}
               </button>
 
               {/* Stessa evidenza del bottone di accettazione: un rifiuto
@@ -84,7 +86,7 @@ export function CookieBanner() {
                 onClick={() => decide(false)}
                 className="flex-1 py-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-sm font-bold transition-colors active:scale-[0.98]"
               >
-                Solo necessari
+                {t("Solo necessari")}
               </button>
             </div>
 
@@ -93,7 +95,7 @@ export function CookieBanner() {
                 href="/privacy"
                 className="text-xs font-semibold text-figb dark:text-primary transition-colors hover:underline"
               >
-                Informativa privacy
+                {t("Informativa privacy")}
               </Link>
             </div>
           </div>

@@ -17,6 +17,7 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { awardGameXp } from "@/lib/xp-utils";
 import { generateSeed, dealFromSeed, encodeChallengeUrl } from "@/lib/hand-encoder";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ──────────────────────────────────────────────
 // localStorage challenge results
@@ -56,6 +57,7 @@ function saveChallengeResult(seed: string, tricks: number, score: number) {
 // ──────────────────────────────────────────────
 
 function SfidaLinkContent() {
+  const t = useT();
   const searchParams = useSearchParams();
   const router = useRouter();
   const seedParam = searchParams.get("s");
@@ -329,9 +331,9 @@ function SfidaLinkContent() {
                   {mode === "create" ? "La tua mano" : "Sfida"}
                 </h2>
                 <p className="text-sm text-white/70">
-                  Contratto: <span className="font-bold text-white">{contract}</span>
+                  {t("Contratto:")} <span className="font-bold text-white">{contract}</span>
                   <span className="mx-2">{"\u00B7"}</span>
-                  Obiettivo: <span className="font-bold text-white">9 prese</span>
+                  {t("Obiettivo:")} <span className="font-bold text-white">9 prese</span>
                 </p>
                 <div className="mt-4 inline-flex items-center gap-2 bg-white/20 rounded-xl px-4 py-2">
                   <span className="text-xs text-white/80 font-mono">Seed: {seed}</span>
@@ -348,7 +350,7 @@ function SfidaLinkContent() {
             className="mb-6"
           >
             <div className="rounded-2xl bg-card p-6 border-2 border-border shadow-[0_4px_0_var(--border)]">
-              <h3 className="font-bold text-foreground mb-4 text-center">La tua mano (Sud)</h3>
+              <h3 className="font-bold text-foreground mb-4 text-center">{t("La tua mano (Sud)")}</h3>
               <div className="flex flex-wrap justify-center gap-2">
                 {southHand.map((card, idx) => (
                   <PlayingCard
@@ -378,7 +380,7 @@ function SfidaLinkContent() {
 
             {mode === "create" && (
               <div className="text-center">
-                <p className="text-xs text-muted-foreground">Gioca prima la mano, poi potrai condividere il link con il tuo risultato</p>
+                <p className="text-xs text-muted-foreground">{t("Gioca prima la mano, poi potrai condividere il link con il tuo risultato")}</p>
               </div>
             )}
 
@@ -387,9 +389,9 @@ function SfidaLinkContent() {
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">{"\uD83C\uDFAF"}</div>
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-amber-900 dark:text-amber-200">Obiettivo da battere</p>
+                    <p className="text-sm font-bold text-amber-900 dark:text-amber-200">{t("Obiettivo da battere")}</p>
                     <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
-                      Lo sfidante ha fatto <span className="font-bold">{creatorResult.myTricks} prese</span>
+                      {t("Lo sfidante ha fatto")} <span className="font-bold">{creatorResult.myTricks} prese</span>
                     </p>
                   </div>
                 </div>
@@ -427,7 +429,7 @@ function SfidaLinkContent() {
             </Badge>
             <BenStatus available={game.benAvailable} />
           </div>
-          <h1 className="text-lg font-bold text-foreground font-display">Sfida via Link</h1>
+          <h1 className="text-lg font-bold text-foreground font-display">{t("Sfida via Link")}</h1>
           <p className="text-xs text-muted-foreground mt-1">Seed: {seed}</p>
         </motion.div>
 
@@ -440,17 +442,17 @@ function SfidaLinkContent() {
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
               <p className="text-lg font-bold text-emerald-dark">{contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -568,7 +570,7 @@ function SfidaLinkContent() {
                     {/* Header */}
                     <div className="bg-gradient-to-r from-figb to-figb-dark px-5 py-4 text-center">
                       <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
-                      <h3 className="text-lg font-bold text-white">Confronto Risultati</h3>
+                      <h3 className="text-lg font-bold text-white">{t("Confronto Risultati")}</h3>
                     </div>
 
                     {/* Two columns */}
@@ -583,7 +585,7 @@ function SfidaLinkContent() {
 
                         {/* Creator result */}
                         <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Sfidante</p>
+                          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("Sfidante")}</p>
                           <p className="text-4xl font-bold text-foreground">{creatorResult.myTricks}</p>
                           <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>
@@ -625,9 +627,9 @@ function SfidaLinkContent() {
                 >
                   <div className="rounded-2xl bg-gradient-to-br from-figb to-figb-dark p-6 text-center text-white">
                     <div className="text-3xl mb-2">{"\u2694\uFE0F"}</div>
-                    <h3 className="text-lg font-bold mb-1">Sfida Pronta!</h3>
+                    <h3 className="text-lg font-bold mb-1">{t("Sfida Pronta!")}</h3>
                     <p className="text-sm text-white/70 mb-5">
-                      Condividi il link e vedi se i tuoi amici riescono a fare meglio!
+                      {t("Condividi il link e vedi se i tuoi amici riescono a fare meglio!")}
                     </p>
 
                     {/* Buttons */}
@@ -641,14 +643,14 @@ function SfidaLinkContent() {
                           <polyline points="16 6 12 2 8 6" />
                           <line x1="12" y1="2" x2="12" y2="15" />
                         </svg>
-                        Condividi
+                        {t("Condividi")}
                       </button>
                       <button
                         onClick={handleWhatsApp}
                         className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-white/20 hover:bg-white/30 text-white text-sm font-bold transition-colors backdrop-blur-sm"
                       >
                         <span className="text-lg">📱</span>
-                        WhatsApp
+                        {t("WhatsApp")}
                       </button>
                     </div>
 
@@ -661,7 +663,7 @@ function SfidaLinkContent() {
                           <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
-                          Link Copiato!
+                          {t("Link Copiato!")}
                         </>
                       ) : (
                         <>
@@ -669,7 +671,7 @@ function SfidaLinkContent() {
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                           </svg>
-                          Copia Link
+                          {t("Copia Link")}
                         </>
                       )}
                     </button>
@@ -695,13 +697,13 @@ function SfidaLinkContent() {
                   variant="outline"
                   className="flex-1 rounded-xl h-12 px-6 font-bold"
                 >
-                  Rigioca
+                  {t("Rigioca")}
                 </Button>
                 <Button
                   onClick={() => router.push("/gioca/sfida-link")}
                   className="flex-1 rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/20"
                 >
-                  Nuova Sfida
+                  {t("Nuova Sfida")}
                 </Button>
               </div>
             </motion.div>

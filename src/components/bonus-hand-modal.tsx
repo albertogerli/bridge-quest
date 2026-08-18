@@ -9,6 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface BonusHandModalProps {
   open: boolean;
@@ -21,6 +22,7 @@ export function BonusHandModal({
   onOpenChange,
   onPlay,
 }: BonusHandModalProps) {
+  const t = useT();
   const handlePlay = () => {
     const today = new Date().toISOString().slice(0, 10);
     localStorage.setItem("bq_bonus_mode", "1");
@@ -84,10 +86,10 @@ export function BonusHandModal({
 
               <DialogHeader className="items-center mt-2">
                 <DialogTitle className="text-xl font-extrabold text-amber-800 dark:text-amber-300">
-                  Mano Bonus disponibile!
+                  {t("Mano Bonus disponibile!")}
                 </DialogTitle>
                 <DialogDescription className="text-amber-700/80 dark:text-amber-400/80 text-sm font-medium mt-1">
-                  XP raddoppiati solo per questa mano!
+                  {t("XP raddoppiati solo per questa mano!")}
                 </DialogDescription>
               </DialogHeader>
 
@@ -100,13 +102,13 @@ export function BonusHandModal({
                       "linear-gradient(135deg, #D97706, #B45309)",
                   }}
                 >
-                  Gioca la Mano Bonus
+                  {t("Gioca la Mano Bonus")}
                 </button>
                 <button
                   onClick={() => onOpenChange(false)}
                   className="w-full py-2.5 rounded-xl text-amber-600 dark:text-amber-400 text-sm font-medium transition-colors hover:bg-amber-100/50 dark:hover:bg-amber-900/30 cursor-pointer"
                 >
-                  Forse dopo
+                  {t("Forse dopo")}
                 </button>
               </DialogFooter>
             </motion.div>

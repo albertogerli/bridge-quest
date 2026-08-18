@@ -11,12 +11,14 @@ import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/c
 import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function LessonDetailPage({
   params,
 }: {
   params: Promise<{ lessonId: string }>;
 }) {
+  const t = useT();
   const { lessonId } = use(params);
   const lessonIdNum = parseInt(lessonId);
 
@@ -50,7 +52,7 @@ export default function LessonDetailPage({
   if (!catalogLoaded) {
     return (
       <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento lezione">
-        Caricamento lezione…
+        {t("Caricamento lezione…")}
       </div>
     );
   }
@@ -58,9 +60,9 @@ export default function LessonDetailPage({
   if (!lesson) {
     return (
       <div className="pt-10 px-5 text-center">
-        <p className="text-muted-foreground">Lezione non trovata</p>
+        <p className="text-muted-foreground">{t("Lezione non trovata")}</p>
         <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
-          Torna alle lezioni
+          {t("Torna alle lezioni")}
         </Link>
       </div>
     );
@@ -90,7 +92,7 @@ export default function LessonDetailPage({
           className="flex items-center gap-2 text-xs text-muted-foreground mb-4"
         >
           <Link href="/lezioni" className="hover:text-emerald transition-colors">
-            Lezioni
+            {t("Lezioni")}
           </Link>
           <span>/</span>
           <span className="text-emerald font-semibold">Lezione {lessonNumber}</span>
@@ -150,7 +152,7 @@ export default function LessonDetailPage({
             <div className="p-3 flex items-center gap-2">
               <span className="text-lg">🎓</span>
               <p className="text-sm font-bold text-foreground/80">
-                Maestro Franci introduce la lezione
+                {t("Maestro Franci introduce la lezione")}
               </p>
             </div>
           </motion.div>
@@ -211,7 +213,7 @@ export default function LessonDetailPage({
                 {totalXp} XP disponibili
               </p>
               <p className="text-xs text-amber-600/70 dark:text-amber-400/80">
-                Completa tutti i moduli per guadagnare XP
+                {t("Completa tutti i moduli per guadagnare XP")}
               </p>
             </div>
           </div>
@@ -265,7 +267,7 @@ export default function LessonDetailPage({
                       </Badge>
                       {hasDraft && !isLocked && (
                         <Badge className="text-[12px] font-bold border-0 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
-                          Riprendi
+                          {t("Riprendi")}
                         </Badge>
                       )}
                       <span className="text-[12px] text-muted-foreground">
@@ -277,7 +279,7 @@ export default function LessonDetailPage({
                     </h3>
                     {isLocked ? (
                       <p className="text-[12px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 flex items-center gap-1">
-                        <span>🔒</span> Completa il modulo precedente per sbloccare
+                        <span>🔒</span> {t("Completa il modulo precedente per sbloccare")}
                       </p>
                     ) : (
                       <p className="text-[12px] text-muted-foreground mt-0.5">
@@ -359,7 +361,7 @@ export default function LessonDetailPage({
                       </Badge>
                     </div>
                     <h3 className="font-bold text-foreground text-[15px]">
-                      Esercitati con questa lezione
+                      {t("Esercitati con questa lezione")}
                     </h3>
                     <p className="text-[12px] text-muted-foreground mt-0.5">
                       {lessonSmazzateCount}{" "}

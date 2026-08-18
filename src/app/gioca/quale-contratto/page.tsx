@@ -11,6 +11,7 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, strainOf, type DdsTable } from "@/lib/dds-table";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -52,6 +53,7 @@ interface Domanda {
  * valutazione della propria forza, non l'interferenza.
  */
 export default function QualeContrattoPage() {
+  const t = useT();
   const [seed] = useState(() => Math.floor(Date.now() % 1_000_000));
   const [round, setRound] = useState(0);
   // La domanda si conserva INSIEME alla mano per cui vale: così «sto
@@ -114,15 +116,15 @@ export default function QualeContrattoPage() {
   if (round >= ROUNDS) {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
-        <h1 className="text-2xl font-bold font-display mb-2">Finito</h1>
+        <h1 className="text-2xl font-bold font-display mb-2">{t("Finito")}</h1>
         <p className="text-4xl font-bold text-figb my-6">{punti} / {ROUNDS}</p>
         <div className="flex flex-col gap-2">
           <Button onClick={() => { setRound(0); setPunti(0); setRisposta(null); }}>
             <RotateCcw className="w-4 h-4 mr-1" aria-hidden="true" />
-            Ancora
+            {t("Ancora")}
           </Button>
           <Link href="/gioca" className="text-sm text-muted-foreground hover:underline">
-            Torna ai giochi
+            {t("Torna ai giochi")}
           </Link>
         </div>
       </div>
@@ -140,15 +142,15 @@ export default function QualeContrattoPage() {
         <span className="text-sm font-bold text-figb">{punti} giuste</span>
       </header>
 
-      <h1 className="sr-only">Che contratto giocate?</h1>
+      <h1 className="sr-only">{t("Che contratto giocate?")}</h1>
 
-      {!domanda && <p className="py-16 text-center text-sm text-muted-foreground">Preparo la mano…</p>}
+      {!domanda && <p className="py-16 text-center text-sm text-muted-foreground">{t("Preparo la mano…")}</p>}
 
       {domanda && (
         <>
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
-              <Badge variant="secondary">Gli avversari passano</Badge>
+              <Badge variant="secondary">{t("Gli avversari passano")}</Badge>
               <span className="text-xs text-muted-foreground">
                 {handHcp(domanda.deal.north) + handHcp(domanda.deal.south)} punti in due
               </span>
@@ -173,7 +175,7 @@ export default function QualeContrattoPage() {
 
           <p className="text-sm font-semibold mb-3 flex items-center gap-2">
             <Target className="w-4 h-4 text-figb" aria-hidden="true" />
-            Fin dove potete arrivare?
+            {t("Fin dove potete arrivare?")}
           </p>
 
           <div className="grid grid-cols-2 gap-2 mb-4">

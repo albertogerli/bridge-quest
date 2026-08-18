@@ -13,8 +13,10 @@ import { DailyStatsCard } from "./_components/daily-stats-card";
 import { MaestroTip } from "./_components/maestro-tip";
 import { PlayingView } from "./_components/playing-view";
 import { YesterdayHandCard } from "./_components/yesterday-hand-card";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ManoDelGiornoPage() {
+  const t = useT();
   const isMobile = useMobile();
   const profile = useProfile();
   const daily = useDailyHand();
@@ -23,7 +25,7 @@ export default function ManoDelGiornoPage() {
   if (!daily.todayHand || !daily.yesterdayHand) {
     return (
       <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento mano del giorno">
-        Caricamento mano del giorno…
+        {t("Caricamento mano del giorno…")}
       </div>
     );
   }
@@ -76,11 +78,11 @@ export default function ManoDelGiornoPage() {
               href="/gioca"
               className="hover:text-emerald transition-colors"
             >
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
             <span className="text-emerald font-semibold">
-              Mano del Giorno
+              {t("Mano del Giorno")}
             </span>
           </div>
         </motion.div>

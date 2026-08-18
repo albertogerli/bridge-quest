@@ -7,6 +7,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Category = "lezioni" | "strategia" | "tornei" | "generale" | "off-topic";
 
@@ -19,6 +20,7 @@ const CATEGORIES: { key: Category; label: string; emoji: string }[] = [
 ];
 
 export default function NuovoPostPage() {
+  const t = useT();
   const router = useRouter();
   const { user, loading: authLoading } = useSharedAuth();
   const [title, setTitle] = useState("");
@@ -101,10 +103,10 @@ export default function NuovoPostPage() {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24 text-center">
         <span className="text-5xl block mb-4 mt-12">🔒</span>
-        <p className="text-lg font-bold text-foreground">Devi accedere per scrivere</p>
+        <p className="text-lg font-bold text-foreground">{t("Devi accedere per scrivere")}</p>
         <Link href="/login">
           <Button className="mt-4 h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm">
-            Accedi
+            {t("Accedi")}
           </Button>
         </Link>
       </div>
@@ -122,20 +124,20 @@ export default function NuovoPostPage() {
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <polyline points="15,18 9,12 15,6" />
           </svg>
-          Forum
+          {t("Forum")}
         </Link>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-2xl font-bold text-foreground font-display mb-6">Nuovo post</h1>
+          <h1 className="text-2xl font-bold text-foreground font-display mb-6">{t("Nuovo post")}</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category */}
             <div>
               <label className="block text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wider">
-                Categoria
+                {t("Categoria")}
               </label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map(({ key, label, emoji }) => (
@@ -170,7 +172,7 @@ export default function NuovoPostPage() {
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M18 20V10M12 20V4M6 20v-6" />
                 </svg>
-                Sondaggio
+                {t("Sondaggio")}
               </button>
             </div>
 
@@ -182,7 +184,7 @@ export default function NuovoPostPage() {
                 className="space-y-2"
               >
                 <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                  Opzioni sondaggio
+                  {t("Opzioni sondaggio")}
                 </label>
                 {pollOptions.map((opt, idx) => (
                   <div key={idx} className="flex gap-2">
@@ -216,7 +218,7 @@ export default function NuovoPostPage() {
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                       <path d="M12 5v14M5 12h14" />
                     </svg>
-                    Aggiungi opzione
+                    {t("Aggiungi opzione")}
                   </button>
                 )}
               </motion.div>
@@ -225,7 +227,7 @@ export default function NuovoPostPage() {
             {/* Title */}
             <div>
               <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Titolo
+                {t("Titolo")}
               </label>
               <input
                 type="text"
@@ -240,7 +242,7 @@ export default function NuovoPostPage() {
             {/* Body */}
             <div>
               <label className="block text-xs font-bold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Contenuto
+                {t("Contenuto")}
               </label>
               <textarea
                 value={body}
@@ -266,7 +268,7 @@ export default function NuovoPostPage() {
             <div className="flex gap-3 pt-2">
               <Link href="/forum" className="flex-1">
                 <Button type="button" variant="outline" className="w-full h-12 rounded-xl font-bold">
-                  Annulla
+                  {t("Annulla")}
                 </Button>
               </Link>
               <Button

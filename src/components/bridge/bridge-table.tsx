@@ -11,6 +11,7 @@ import {
   suitAriaLabel,
   trickCardAriaLabel,
 } from "@/lib/card-labels";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export interface TrickPlayDisplay {
   position: string;
@@ -144,6 +145,7 @@ export function BridgeTable({
   compact = false,
   trumpSuit,
 }: BridgeTableProps) {
+  const t = useT();
   const cosmetics = useShopCosmetics();
 
   // ── Self-measuring: adapt to actual rendered width ──
@@ -388,7 +390,7 @@ export function BridgeTable({
       <div className="absolute left-2 top-1/2 -translate-y-1/2 z-[5]">
         <div className="flex items-center gap-1">
           <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
-            Ovest
+            {t("Ovest")}
           </span>
           {isDummy("west") && !westFaceDown ? (
             <SideDummy cards={west} trumpSuit={trumpSuit} />

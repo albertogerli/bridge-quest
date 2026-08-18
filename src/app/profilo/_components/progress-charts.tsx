@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { Clock, Flame, Gamepad2, Target } from "lucide-react";
 import type { CourseCompetence, GamePerformanceStats, GamesPerDay } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * I tre grafici dentro l'accordion "Statistiche Avanzate".
@@ -20,13 +21,14 @@ export function ProgressCharts({
   courseCompetence: CourseCompetence[];
   gamePerformanceStats: GamePerformanceStats;
 }) {
+  const t = useT();
   return (
     <div className="mt-4 space-y-4">
 
       {/* Chart 1: partite giocate negli ultimi 7 giorni */}
       <div className="card-clean rounded-2xl bg-card p-4">
         <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-          Partite ultimi 7 giorni
+          {t("Partite ultimi 7 giorni")}
         </p>
         {gamesPerDay.hasData ? (
           <div className="flex items-end gap-1 h-24">
@@ -48,7 +50,7 @@ export function ProgressCharts({
         ) : (
           <div className="flex items-center justify-center h-24 rounded-xl bg-muted">
             <p className="text-xs text-muted-foreground font-medium">
-              Gioca di piu per vedere le statistiche
+              {t("Gioca di piu per vedere le statistiche")}
             </p>
           </div>
         )}
@@ -57,7 +59,7 @@ export function ProgressCharts({
       {/* Chart 2: Competenze (Course progress horizontal bars) */}
       <div className="card-clean rounded-2xl bg-card p-4">
         <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-          Competenze per corso
+          {t("Competenze per corso")}
         </p>
         <div className="space-y-3">
           {courseCompetence.map((course) => (
@@ -85,31 +87,31 @@ export function ProgressCharts({
       {/* Chart 3: Game Performance (2x2 stat cards) */}
       <div className="card-clean rounded-2xl bg-card p-4">
         <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-          Rendimento di gioco
+          {t("Rendimento di gioco")}
         </p>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl bg-muted p-3 text-center">
             <Gamepad2 className="w-5 h-5 text-figb dark:text-primary mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.totalGames}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">Partite totali</p>
+            <p className="text-[12px] text-muted-foreground font-medium">{t("Partite totali")}</p>
           </div>
           {/* Streak ATTUALE: il progetto non salva il record storico */}
           <div className="rounded-xl bg-muted p-3 text-center">
             <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.currentStreak}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">Streak attuale</p>
+            <p className="text-[12px] text-muted-foreground font-medium">{t("Streak attuale")}</p>
           </div>
           <div className="rounded-xl bg-muted p-3 text-center">
             <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.timeDisplay}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">Tempo di gioco</p>
+            <p className="text-[12px] text-muted-foreground font-medium">{t("Tempo di gioco")}</p>
           </div>
           {/* Gli XP della singola partita non sono nello storico: si mostra
               la media prese, che quella fonte conosce davvero. */}
           <div className="rounded-xl bg-muted p-3 text-center">
             <Target className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.avgTricks}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">Media prese/mano</p>
+            <p className="text-[12px] text-muted-foreground font-medium">{t("Media prese/mano")}</p>
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { SecretAchievement } from "@/hooks/use-secret-achievements";
 import type { BadgeIconKey, ProfileBadge } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Icona di ciascun badge: i dati (nome/descrizione/sblocco) stanno in `@/lib/profile-stats`. */
 const BADGE_ICONS: Record<BadgeIconKey, ReactNode> = {
@@ -41,6 +42,7 @@ export function BadgesSection({
   earnedSecretAchievements: SecretAchievement[];
   totalSecretAchievements: number;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -49,7 +51,7 @@ export function BadgesSection({
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-foreground">
-          Badge Collezionati
+          {t("Badge Collezionati")}
         </h2>
         <Badge
           variant="outline"
@@ -105,7 +107,7 @@ export function BadgesSection({
           >
             <span className="inline-flex items-center gap-1.5 bg-figb/10 dark:bg-primary/15 text-figb dark:text-primary text-xs font-bold rounded-full px-3 py-1.5">
               <Check className="h-3.5 w-3.5" />
-              Badge condiviso!
+              {t("Badge condiviso!")}
             </span>
           </motion.div>
         )}
@@ -116,7 +118,7 @@ export function BadgesSection({
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-foreground/80 flex items-center gap-1.5">
             <Star className="w-4 h-4 text-amber-500" />
-            Achievement Segreti
+            {t("Achievement Segreti")}
           </h3>
           <Badge variant="outline" className="text-[12px] text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900">
             {earnedSecretAchievements.length} / {totalSecretAchievements}
@@ -137,7 +139,7 @@ export function BadgesSection({
           <div className="flex items-center gap-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 px-4 py-3">
             <span className="text-lg">🔒</span>
             <p className="text-xs text-amber-700 dark:text-amber-300">
-              Ci sono <span className="font-bold">{totalSecretAchievements} achievement nascosti</span> da scoprire. Gioca, esplora e completa sfide per sbloccarli!
+              {t("Ci sono")} <span className="font-bold">{totalSecretAchievements} achievement nascosti</span> da scoprire. Gioca, esplora e completa sfide per sbloccarli!
             </p>
           </div>
         )}

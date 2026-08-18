@@ -19,6 +19,7 @@ import {
 import { reportError } from "@/lib/report-error";
 import { toast } from "sonner";
 import { applyTextSize, parseTextSize, TEXT_SIZE_KEY } from "@/lib/text-size";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const AI_LEVELS: AILevel[] = ["base", "intermedio", "esperto"];
 
@@ -78,6 +79,7 @@ const BQ_KEYS_PREFIX = "bq_";
 const APP_VERSION = "1.0.0";
 
 export default function ImpostazioniPage() {
+  const t = useT();
   const { user, loading: authLoading, signOut } = useSharedAuth();
   const notifications = useNotifications();
   const { theme, setTheme } = useTheme();
@@ -188,7 +190,7 @@ export default function ImpostazioniPage() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 18l-6-6 6-6" />
             </svg>
-            <span className="text-sm font-medium">Indietro</span>
+            <span className="text-sm font-medium">{t("Indietro")}</span>
           </Link>
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
@@ -196,7 +198,7 @@ export default function ImpostazioniPage() {
             transition={{ duration: 0.4 }}
             className="text-3xl font-bold text-white tracking-tight font-display"
           >
-            Impostazioni
+            {t("Impostazioni")}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 12 }}
@@ -204,7 +206,7 @@ export default function ImpostazioniPage() {
             transition={{ duration: 0.4, delay: 0.1 }}
             className="text-white/80 mt-1 text-sm"
           >
-            Personalizza la tua esperienza Bridge LAB
+            {t("Personalizza la tua esperienza Bridge LAB")}
           </motion.p>
         </div>
       </div>
@@ -222,8 +224,8 @@ export default function ImpostazioniPage() {
               <span className="text-figb dark:text-primary font-bold text-lg">Aa</span>
             </div>
             <div>
-              <h2 className="font-semibold text-foreground text-base">Dimensione Testo</h2>
-              <p className="text-xs text-muted-foreground">Regola la grandezza dei caratteri</p>
+              <h2 className="font-semibold text-foreground text-base">{t("Dimensione Testo")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Regola la grandezza dei caratteri")}</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -266,8 +268,8 @@ export default function ImpostazioniPage() {
               <span className="text-purple-600 text-xl">✦</span>
             </div>
             <div>
-              <h2 className="font-semibold text-foreground text-base">Velocità Animazioni</h2>
-              <p className="text-xs text-muted-foreground">Controlla la rapidità delle transizioni</p>
+              <h2 className="font-semibold text-foreground text-base">{t("Velocità Animazioni")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Controlla la rapidità delle transizioni")}</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -311,8 +313,8 @@ export default function ImpostazioniPage() {
                 <span className="text-amber-600 text-xl">{sound ? "🔊" : "🔇"}</span>
               </div>
               <div>
-                <h2 className="font-semibold text-foreground text-base">Suoni</h2>
-                <p className="text-xs text-muted-foreground">Effetti sonori e feedback audio</p>
+                <h2 className="font-semibold text-foreground text-base">{t("Suoni")}</h2>
+                <p className="text-xs text-muted-foreground">{t("Effetti sonori e feedback audio")}</p>
               </div>
             </div>
             <button
@@ -354,7 +356,7 @@ export default function ImpostazioniPage() {
               <span className="text-figb dark:text-primary text-xl">🎨</span>
             </div>
             <div>
-              <h2 className="font-semibold text-foreground text-base">Tema</h2>
+              <h2 className="font-semibold text-foreground text-base">{t("Tema")}</h2>
               <p className="text-xs text-muted-foreground">Scegli l&apos;aspetto dell&apos;app</p>
             </div>
           </div>
@@ -403,8 +405,8 @@ export default function ImpostazioniPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="font-semibold text-foreground text-base">Notifiche</h2>
-                  <p className="text-xs text-muted-foreground">Promemoria streak e lezioni</p>
+                  <h2 className="font-semibold text-foreground text-base">{t("Notifiche")}</h2>
+                  <p className="text-xs text-muted-foreground">{t("Promemoria streak e lezioni")}</p>
                 </div>
               </div>
               <button
@@ -434,7 +436,7 @@ export default function ImpostazioniPage() {
             </div>
             {notifications.permission === "denied" && (
               <p className="mt-2 text-[12px] text-red-500/80">
-                Le notifiche sono bloccate dal browser. Per riattivarle, modifica le impostazioni del sito nel browser.
+                {t("Le notifiche sono bloccate dal browser. Per riattivarle, modifica le impostazioni del sito nel browser.")}
               </p>
             )}
           </motion.div>
@@ -454,8 +456,8 @@ export default function ImpostazioniPage() {
               </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-foreground text-base">Livello AI Avversari</h2>
-              <p className="text-xs text-muted-foreground">Scegli la difficoltà degli avversari AI</p>
+              <h2 className="font-semibold text-foreground text-base">{t("Livello AI Avversari")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Scegli la difficoltà degli avversari AI")}</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -476,7 +478,7 @@ export default function ImpostazioniPage() {
                   </span>
                   {aiLevel === level && (
                     <Badge className="ml-auto bg-figb text-white text-[12px] hover:bg-figb">
-                      Attivo
+                      {t("Attivo")}
                     </Badge>
                   )}
                 </div>
@@ -507,8 +509,8 @@ export default function ImpostazioniPage() {
               </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-foreground text-base">Profilo Giocatore</h2>
-              <p className="text-xs text-muted-foreground">Scegli lo stile di gioco che preferisci</p>
+              <h2 className="font-semibold text-foreground text-base">{t("Profilo Giocatore")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Scegli lo stile di gioco che preferisci")}</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -529,7 +531,7 @@ export default function ImpostazioniPage() {
                   </span>
                   {profile === p.key && (
                     <Badge className="ml-auto bg-figb text-white text-[12px] hover:bg-figb">
-                      Attivo
+                      {t("Attivo")}
                     </Badge>
                   )}
                 </div>
@@ -563,8 +565,8 @@ export default function ImpostazioniPage() {
               </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-foreground text-base">Reset Progressi</h2>
-              <p className="text-xs text-muted-foreground">Cancella tutti i dati e ricomincia da zero</p>
+              <h2 className="font-semibold text-foreground text-base">{t("Reset Progressi")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Cancella tutti i dati e ricomincia da zero")}</p>
             </div>
           </div>
 
@@ -578,7 +580,7 @@ export default function ImpostazioniPage() {
                 className="bg-figb/8 dark:bg-primary/10 border border-figb/25 dark:border-primary/30 rounded-xl p-4 text-center"
               >
                 <span className="text-figb dark:text-primary font-semibold text-sm">
-                  Progressi resettati con successo
+                  {t("Progressi resettati con successo")}
                 </span>
               </motion.div>
             ) : showResetConfirm ? (
@@ -589,23 +591,23 @@ export default function ImpostazioniPage() {
                 exit={{ opacity: 0, y: -8 }}
                 className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4"
               >
-                <p className="text-red-700 dark:text-red-400 text-sm font-semibold mb-1">Sei sicuro?</p>
+                <p className="text-red-700 dark:text-red-400 text-sm font-semibold mb-1">{t("Sei sicuro?")}</p>
                 <p className="text-red-600/80 dark:text-red-400/80 text-xs mb-4">
-                  Questa azione cancellerà tutti i tuoi progressi, XP, badge e impostazioni. Non potrai annullarla.
+                  {t("Questa azione cancellerà tutti i tuoi progressi, XP, badge e impostazioni. Non potrai annullarla.")}
                 </p>
                 <div className="flex gap-2">
                   <Button
                     onClick={resetProgress}
                     className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold h-10"
                   >
-                    Conferma Reset
+                    {t("Conferma Reset")}
                   </Button>
                   <Button
                     onClick={() => setShowResetConfirm(false)}
                     variant="outline"
                     className="flex-1 rounded-xl text-sm font-bold h-10 border-border"
                   >
-                    Annulla
+                    {t("Annulla")}
                   </Button>
                 </div>
               </motion.div>
@@ -616,7 +618,7 @@ export default function ImpostazioniPage() {
                   variant="outline"
                   className="w-full rounded-xl border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-700 dark:hover:text-red-300 font-bold h-11 text-sm"
                 >
-                  Resetta tutti i progressi
+                  {t("Resetta tutti i progressi")}
                 </Button>
               </motion.div>
             )}
@@ -646,7 +648,7 @@ export default function ImpostazioniPage() {
                 </div>
                 <div>
                   <h2 className="font-semibold text-foreground text-base">Esci dall&apos;account</h2>
-                  <p className="text-xs text-muted-foreground">Disconnettiti da Bridge LAB</p>
+                  <p className="text-xs text-muted-foreground">{t("Disconnettiti da Bridge LAB")}</p>
                 </div>
               </div>
 
@@ -659,9 +661,9 @@ export default function ImpostazioniPage() {
                     exit={{ opacity: 0, y: -8 }}
                     className="bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 rounded-xl p-4"
                   >
-                    <p className="text-rose-700 dark:text-rose-400 text-sm font-semibold mb-1">Vuoi anche cancellare i dati locali?</p>
+                    <p className="text-rose-700 dark:text-rose-400 text-sm font-semibold mb-1">{t("Vuoi anche cancellare i dati locali?")}</p>
                     <p className="text-rose-600/80 dark:text-rose-400/80 text-xs mb-4">
-                      Puoi scegliere se mantenere i progressi salvati localmente o cancellarli insieme al logout.
+                      {t("Puoi scegliere se mantenere i progressi salvati localmente o cancellarli insieme al logout.")}
                     </p>
                     <div className="flex flex-col gap-2">
                       <Button
@@ -684,7 +686,7 @@ export default function ImpostazioniPage() {
                         variant="outline"
                         className="w-full rounded-xl text-sm font-bold h-10 border-border text-muted-foreground"
                       >
-                        Annulla
+                        {t("Annulla")}
                       </Button>
                     </div>
                   </motion.div>
@@ -712,15 +714,15 @@ export default function ImpostazioniPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="font-semibold text-foreground text-base">Account</h2>
-                  <p className="text-xs text-muted-foreground">Accedi per salvare i progressi su tutti i dispositivi</p>
+                  <h2 className="font-semibold text-foreground text-base">{t("Account")}</h2>
+                  <p className="text-xs text-muted-foreground">{t("Accedi per salvare i progressi su tutti i dispositivi")}</p>
                 </div>
               </div>
               <a
                 href="/login"
                 className="flex items-center justify-center w-full rounded-xl bg-figb text-white font-bold h-11 text-sm shadow-sm hover:bg-figb-dark transition-colors"
               >
-                Accedi o Registrati
+                {t("Accedi o Registrati")}
               </a>
             </>
           )}
@@ -734,13 +736,13 @@ export default function ImpostazioniPage() {
           className="text-center pt-4 pb-8"
         >
           <div className="inline-flex items-center gap-2 bg-card/80 border border-border rounded-full px-4 py-2 shadow-sm">
-            <span className="text-figb dark:text-primary font-bold text-sm">Bridge LAB</span>
+            <span className="text-figb dark:text-primary font-bold text-sm">{t("Bridge LAB")}</span>
             <Badge variant="secondary" className="bg-muted text-muted-foreground text-[12px] hover:bg-muted">
               v{APP_VERSION}
             </Badge>
           </div>
-          <p className="text-muted-foreground text-xs mt-2">FIGB - Federazione Italiana Gioco Bridge</p>
-          <p className="text-muted-foreground/40 text-[12px] mt-1">Sviluppo: A. G. Gerli / Tourbillon Tech</p>
+          <p className="text-muted-foreground text-xs mt-2">{t("FIGB - Federazione Italiana Gioco Bridge")}</p>
+          <p className="text-muted-foreground/40 text-[12px] mt-1">{t("Sviluppo: A. G. Gerli / Tourbillon Tech")}</p>
         </motion.div>
       </div>
     </div>

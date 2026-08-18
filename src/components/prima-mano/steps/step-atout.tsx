@@ -9,6 +9,7 @@ import { ConfettiBurst } from "@/components/celebration-effects";
 import { StepShell } from "../step-shell";
 import { GlossaryText } from "@/components/beginner/glossary-text";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 function ChoiceCard({
   label,
@@ -54,6 +55,7 @@ function ChoiceCard({
 }
 
 export function StepAtout({ onComplete, playSound }: StepProps) {
+  const t = useT();
   const [animPhase, setAnimPhase] = useState<"idle" | "played" | "captured">("idle");
   const [choice, setChoice] = useState<"yes" | "no" | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -99,7 +101,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
             className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2"
           >
             <SuitSymbol suit="heart" size="md" />
-            <span className="text-sm font-bold text-rose-700">Giocato</span>
+            <span className="text-sm font-bold text-rose-700">{t("Giocato")}</span>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -108,14 +110,14 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
             className="inline-flex items-center gap-2 rounded-full border border-[#c8a44e]/40 bg-[#fffdf5] px-4 py-2"
           >
             <SuitSymbol suit="spade" size="md" />
-            <span className="text-sm font-bold text-[#8f6b16]">Atout</span>
+            <span className="text-sm font-bold text-[#8f6b16]">{t("Atout")}</span>
           </motion.div>
         </div>
 
         {/* Animation area */}
         <div className="rounded-[28px] border border-gray-200 bg-white p-6">
           <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-4 text-center">
-            Il taglio in azione
+            {t("Il taglio in azione")}
           </p>
 
           <div className="relative flex items-center justify-center h-32">
@@ -166,7 +168,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
               transition={{ delay: 0.4 }}
               className="mt-3 text-center text-sm text-[#5c677d]"
             >
-              Anche un 2 di atout batte il Re di cuori!
+              {t("Anche un 2 di atout batte il Re di cuori!")}
             </motion.p>
           )}
         </div>
@@ -179,7 +181,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
           className="rounded-[28px] border border-gray-200 bg-white p-5"
         >
           <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
-            Il taglio è obbligatorio?
+            {t("Il taglio è obbligatorio?")}
           </p>
           <div className="grid gap-3">
             <ChoiceCard
@@ -226,7 +228,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
               size="lg"
               className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
             >
-              Continua
+              {t("Continua")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>

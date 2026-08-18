@@ -2,6 +2,7 @@
 
 import { asdMediansAreApproximate, buildAsdRows, filterAsdRows, formatMinutes } from "@/lib/admin-stats";
 import type { AsdTab, Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Distribuzione ASD con tab per ASD / provincia / regione. */
 export function AsdDistributionPanel({
@@ -17,10 +18,11 @@ export function AsdDistributionPanel({
   onTabChange: (tab: AsdTab) => void;
   onSearchChange: (value: string) => void;
 }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
-        Distribuzione ASD
+        {t("Distribuzione ASD")}
       </h2>
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-3">
@@ -130,7 +132,7 @@ export function AsdDistributionPanel({
           );
         })()
       ) : (
-        <p className="text-sm text-gray-400">Nessun utente con ASD associato</p>
+        <p className="text-sm text-gray-400">{t("Nessun utente con ASD associato")}</p>
       )}
     </div>
   );

@@ -8,6 +8,7 @@ import { ConfettiBurst, StarBurst } from "@/components/celebration-effects";
 import { GuidedPath } from "@/components/beginner/guided-path";
 import { StepShell } from "../step-shell";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface StepVittoriaProps extends StepProps {
   totalXp: number;
@@ -66,6 +67,7 @@ export function StepVittoria({
   quizScore,
   miniPreseScore,
 }: StepVittoriaProps) {
+  const t = useT();
   const [showConfetti, setShowConfetti] = useState(false);
   const animatedXp = useAnimatedCounter(totalXp, 1500);
   const stars = quizStars(quizScore.correct, quizScore.total);
@@ -130,7 +132,7 @@ export function StepVittoria({
         className="mt-6 rounded-[28px] border border-[#c8a44e]/30 bg-gradient-to-br from-[#fffdf5] to-[#fff8e1] p-6 text-center shadow-[0_10px_40px_rgba(200,164,78,0.15)]"
       >
         <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
-          XP Totali Guadagnati
+          {t("XP Totali Guadagnati")}
         </p>
         <p className="mt-3 text-5xl font-black text-[#c8a44e]" style={{ textShadow: "0 0 20px rgba(200,164,78,0.3)" }}>
           +{animatedXp}
@@ -167,7 +169,7 @@ export function StepVittoria({
         className="mt-6"
       >
         <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
-          Il prossimo passo
+          {t("Il prossimo passo")}
         </p>
         <Link href="/gioca/minibridge" className="block">
           <div className="relative overflow-hidden rounded-[24px] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-5 transition-all hover:shadow-lg">
@@ -177,13 +179,13 @@ export function StepVittoria({
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="font-bold text-[#12305f]">Prova il MiniBridge</p>
+                  <p className="font-bold text-[#12305f]">{t("Prova il MiniBridge")}</p>
                   <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-white">
-                    Consigliato
+                    {t("Consigliato")}
                   </span>
                 </div>
                 <p className="mt-0.5 text-sm leading-6 text-[#5c677d]">
-                  Gioca una mano intera senza licita: conti i punti e scegli il contratto. Il modo migliore per continuare a imparare giocando.
+                  {t("Gioca una mano intera senza licita: conti i punti e scegli il contratto. Il modo migliore per continuare a imparare giocando.")}
                 </p>
               </div>
               <Play className="h-5 w-5 shrink-0 text-emerald-600" />
