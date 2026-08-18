@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import type { LeaderboardEntry, TournamentResult } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Classifica settimanale (o messaggio di attesa quando non c'è ancora). */
 export function TournamentLeaderboard({
@@ -16,6 +17,7 @@ export function TournamentLeaderboard({
   alreadyPlayed: boolean;
   existingResult: TournamentResult | null;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -25,7 +27,7 @@ export function TournamentLeaderboard({
     >
       <div className="card-elevated rounded-2xl bg-card p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-foreground">Classifica</h3>
+          <h3 className="font-bold text-foreground">{t("Classifica")}</h3>
           <Badge
             variant="outline"
             className="text-[12px] font-bold text-muted-foreground border-border"
@@ -102,7 +104,7 @@ export function TournamentLeaderboard({
         ) : (
           <div className="text-center py-6">
             <p className="text-sm text-muted-foreground">
-              Nessun partecipante ancora questa settimana
+              {t("Nessun partecipante ancora questa settimana")}
             </p>
           </div>
         )}

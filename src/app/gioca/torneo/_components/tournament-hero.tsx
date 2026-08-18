@@ -7,6 +7,7 @@ import { parseContract } from "@/lib/bridge-engine";
 import type { Smazzata } from "@/lib/catalog";
 import { formatDateShort, handResultFor, tournamentCtaLabel } from "@/lib/tournament-stats";
 import { TOURNAMENT_HAND_COUNT, type TournamentResult } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Card principale del torneo: stato della settimana, anteprima delle mani e
@@ -45,6 +46,7 @@ export function TournamentHero({
   xpLabel: string;
   onPlay: () => void;
 }) {
+  const t = useT();
   // Mani realmente in programma questa settimana; finché la pool non è
   // arrivata (0 mani, CTA disabilitata) si mostra il numero nominale.
   const handCount = tournamentHands.length;
@@ -69,7 +71,7 @@ export function TournamentHero({
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground font-display">
-                  Torneo Settimanale
+                  {t("Torneo Settimanale")}
                 </h1>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {mounted
@@ -80,7 +82,7 @@ export function TournamentHero({
             </div>
             {alreadyPlayed && (
               <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[12px] font-bold border-0 shrink-0">
-                Completato
+                {t("Completato")}
               </Badge>
             )}
           </div>
@@ -90,7 +92,7 @@ export function TournamentHero({
             <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-indigo-100 dark:border-indigo-900 w-full">
               <div className="text-center flex-1">
                 <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Mani
+                  {t("Mani")}
                 </p>
                 <p className="text-lg font-bold text-indigo-600 leading-tight">
                   {displayCount}
@@ -99,7 +101,7 @@ export function TournamentHero({
               <div className="h-8 w-px bg-indigo-200/60" />
               <div className="text-center flex-1">
                 <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Prese necessarie
+                  {t("Prese necessarie")}
                 </p>
                 <p className="text-lg font-bold text-foreground leading-tight">
                   {totalNeeded}
@@ -108,7 +110,7 @@ export function TournamentHero({
               <div className="h-8 w-px bg-indigo-200/60" />
               <div className="text-center flex-1">
                 <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Tempo rimasto
+                  {t("Tempo rimasto")}
                 </p>
                 <p className="text-sm font-bold text-purple-600 leading-tight tabular-nums">
                   {mounted ? countdown : "--"}
@@ -185,7 +187,7 @@ export function TournamentHero({
               <div className="inline-flex items-center gap-1.5 bg-indigo-100/80 rounded-full px-3 py-1">
                 <span className="text-xs">+150 {xpLabel}</span>
                 <span className="text-[12px] font-bold text-indigo-700">
-                  Bonus Torneo
+                  {t("Bonus Torneo")}
                 </span>
               </div>
             </motion.div>
@@ -207,7 +209,7 @@ export function TournamentHero({
                 variant="outline"
                 className="w-full rounded-2xl text-sm font-bold h-12 border-indigo-300 text-indigo-600 hover:bg-indigo-50"
               >
-                Rigioca il torneo (senza punti)
+                {t("Rigioca il torneo (senza punti)")}
               </Button>
             )}
           </div>

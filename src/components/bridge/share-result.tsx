@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface ShareResultProps {
   contract: string;
@@ -50,6 +51,7 @@ function buildShareText({
 }
 
 export function ShareResult(props: ShareResultProps) {
+  const t = useT();
   const { contract, tricksMade, tricksNeeded, result, stars, defended } = props;
   const [copied, setCopied] = useState(false);
 
@@ -110,9 +112,9 @@ export function ShareResult(props: ShareResultProps) {
         <div className="bg-gradient-to-r from-[#003DA5] to-[#002E7A] px-5 py-4 text-white">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-lg">{"\uD83C\uDCCF"}</span>
-            <span className="text-sm font-bold tracking-wide">FIGB Bridge LAB</span>
+            <span className="text-sm font-bold tracking-wide">{t("FIGB Bridge LAB")}</span>
           </div>
-          <p className="text-[12px] text-white/70 font-medium">Sfida del Bridge</p>
+          <p className="text-[12px] text-white/70 font-medium">{t("Sfida del Bridge")}</p>
         </div>
 
         {/* Result body */}
@@ -120,11 +122,11 @@ export function ShareResult(props: ShareResultProps) {
           {/* Contract + Tricks */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">{t("Contratto")}</p>
               <p className="text-xl font-black text-gray-900">{contract}</p>
             </div>
             <div className="text-right">
-              <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">Prese</p>
+              <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">{t("Prese")}</p>
               <p className={`text-xl font-black ${made ? "text-emerald-600" : "text-red-500"}`}>
                 {tricksMade}/{tricksNeeded}
               </p>
@@ -174,7 +176,7 @@ export function ShareResult(props: ShareResultProps) {
             <polyline points="16 6 12 2 8 6" />
             <line x1="12" y1="2" x2="12" y2="15" />
           </svg>
-          Condividi
+          {t("Condividi")}
         </button>
         <button
           onClick={handleCopy}
@@ -185,7 +187,7 @@ export function ShareResult(props: ShareResultProps) {
               <svg className="h-4 w-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span className="text-emerald-600">Copiato!</span>
+              <span className="text-emerald-600">{t("Copiato!")}</span>
             </>
           ) : (
             <>
@@ -193,7 +195,7 @@ export function ShareResult(props: ShareResultProps) {
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
               </svg>
-              Copia
+              {t("Copia")}
             </>
           )}
         </button>
@@ -212,7 +214,7 @@ export function ShareResult(props: ShareResultProps) {
               <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              Testo copiato negli appunti!
+              {t("Testo copiato negli appunti!")}
             </span>
           </motion.div>
         )}

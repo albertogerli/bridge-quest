@@ -11,8 +11,10 @@ import { TournamentHistory } from "./_components/tournament-history";
 import { TournamentLeaderboard } from "./_components/tournament-leaderboard";
 import { TournamentPlayView } from "./_components/tournament-play-view";
 import { TournamentResultCard } from "./_components/tournament-result-card";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function TorneoSettimanale() {
+  const t = useT();
   const isMobile = useMobile();
   const profile = useProfile();
   const week = useTournamentWeek();
@@ -46,11 +48,11 @@ export default function TorneoSettimanale() {
               href="/gioca"
               className="hover:text-emerald transition-colors"
             >
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
             <span className="text-emerald font-semibold">
-              Torneo Settimanale
+              {t("Torneo Settimanale")}
             </span>
           </div>
         </motion.div>

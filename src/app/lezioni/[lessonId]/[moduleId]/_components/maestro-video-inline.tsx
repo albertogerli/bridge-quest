@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { getYouTubeEmbedUrl } from "@/components/maestro-video";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Maestro video inline: shows on the first module of each lesson, at step 0 */
 export function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile, onDismiss }: {
   lessonId: number; moduleIndex: number; currentStep: number; profile?: string;
   onDismiss?: () => void;
 }) {
+  const t = useT();
   const [dismissed, setDismissed] = useState(false);
 
   const youtubeEmbed = getYouTubeEmbedUrl(lessonId, profile);
@@ -49,7 +51,7 @@ export function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile
       <div className="p-3 flex items-center gap-2">
         <span className="text-lg">🎓</span>
         <p className="text-sm font-bold text-foreground/80">
-          Maestro Franci introduce la lezione
+          {t("Maestro Franci introduce la lezione")}
         </p>
       </div>
     </motion.div>

@@ -4,6 +4,7 @@ import type { RefObject } from "react";
 import { UserStatBox } from "./cards";
 import { buildUserActivity, daysSince, isFullTimestamp, last30Days, rankBy } from "@/lib/admin-stats";
 import { PROFILE_EMOJI, type LoginRecord, type UserRow } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Scheda di dettaglio di un singolo utente (modale). */
 export function UserDetailModal({
@@ -21,6 +22,7 @@ export function UserDetailModal({
   onClose: () => void;
   formatLastLogin: (val: string | null) => string;
 }) {
+  const t = useT();
   // Calculate days since registration
   const daysSinceReg = daysSince(u.created_at);
 
@@ -84,14 +86,14 @@ export function UserDetailModal({
 
           {/* Info table */}
           <div className="bg-gray-50 rounded-xl p-4 mb-6">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Dettagli profilo</h3>
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">{t("Dettagli profilo")}</h3>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Registrato</span>
+                <span className="text-gray-500">{t("Registrato")}</span>
                 <span className="font-semibold text-gray-900">{new Date(u.created_at).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Ultimo accesso</span>
+                <span className="text-gray-500">{t("Ultimo accesso")}</span>
                 <span className="font-semibold text-gray-900">{formatLastLogin(u.last_login)}</span>
               </div>
               <div className="flex justify-between">
@@ -99,7 +101,7 @@ export function UserDetailModal({
                 <span className="font-semibold text-gray-900">{u.asd_name || "Nessuno"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Marketing</span>
+                <span className="text-gray-500">{t("Marketing")}</span>
                 <span className={`font-semibold ${u.marketing_consent === true ? "text-emerald-600" : u.marketing_consent === false ? "text-red-500" : "text-gray-400"}`}>
                   {u.marketing_consent === true ? "✅ Accettato" : u.marketing_consent === false ? "❌ Rifiutato" : "Non chiesto"}
                 </span>
@@ -117,7 +119,7 @@ export function UserDetailModal({
 
           {/* Activity heatmap - last 30 days */}
           <div className="mb-6">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Attività ultimi 30 giorni</h3>
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">{t("Attività ultimi 30 giorni")}</h3>
             <div className="flex gap-1 flex-wrap">
               {last30Days().map((d, i) => {
                 const key = d.toISOString().split("T")[0];
@@ -143,8 +145,8 @@ export function UserDetailModal({
               })}
             </div>
             <div className="mt-2 flex items-center gap-3 text-[12px] text-gray-400">
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-500" /> Attivo</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-100" /> Inattivo</span>
+              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-500" /> {t("Attivo")}</span>
+              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-100" /> {t("Inattivo")}</span>
               <span className="ml-auto font-semibold">{activeDaySet.size} giorni attivi su 30</span>
             </div>
           </div>

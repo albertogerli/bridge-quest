@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Error boundary del root layout: cattura i crash che avvengono nel layout
 // stesso (prima solo pagina bianca). Come da doc Next.js deve renderizzare
@@ -14,6 +15,7 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useT();
   useEffect(() => {
     reportError("global-error", error);
   }, [error]);
@@ -42,7 +44,7 @@ export default function GlobalError({
         >
           <p style={{ fontSize: "2.5rem", margin: "0 0 0.5rem" }}>♠</p>
           <h1 style={{ fontSize: "1.5rem", margin: "0 0 0.5rem" }}>
-            Ops, qualcosa è andato storto
+            {t("Ops, qualcosa è andato storto")}
           </h1>
           <p
             style={{
@@ -68,7 +70,7 @@ export default function GlobalError({
               cursor: "pointer",
             }}
           >
-            Riprova
+            {t("Riprova")}
           </button>
         </div>
       </body>

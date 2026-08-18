@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { StepShell } from "../step-shell";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const positions = [
   { id: "north", label: "Nord", sub: "Compagno", x: "50%", y: "5%", delay: 0.2, suit: "spade" as const },
@@ -16,6 +17,7 @@ const positions = [
 ];
 
 export function StepTavolo({ onComplete, playSound }: StepProps) {
+  const t = useT();
   const [revealed, setRevealed] = useState(0);
 
   return (
@@ -81,7 +83,7 @@ export function StepTavolo({ onComplete, playSound }: StepProps) {
             size="lg"
             className="h-14 w-full rounded-[22px] bg-[#003DA5] text-base font-semibold hover:bg-[#002d7a]"
           >
-            Ho capito, avanti
+            {t("Ho capito, avanti")}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </motion.div>

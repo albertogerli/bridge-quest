@@ -50,16 +50,19 @@ import { addGameRecordDirect } from "@/hooks/use-game-history";
 import { classifyPlayErrors, type PlayError } from "@/lib/play-error-classifier";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function SmazzataBrowserPage() {
+  const t = useT();
   return (
-    <Suspense fallback={<div className="pt-10 text-center text-muted-foreground text-sm">Caricamento...</div>}>
+    <Suspense fallback={<div className="pt-10 text-center text-muted-foreground text-sm">{t("Caricamento...")}</div>}>
       <SmazzataBrowserContent />
     </Suspense>
   );
 }
 
 function SmazzataBrowserContent() {
+  const t = useT();
   const { courses } = useCatalog();
   const { smazzate: allSmazzate } = useSmazzate();
   const searchParams = useSearchParams();
@@ -153,13 +156,13 @@ function SmazzataBrowserContent() {
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link href="/gioca" className="hover:text-emerald transition-colors">
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">Smazzate</span>
+            <span className="text-emerald font-semibold">{t("Smazzate")}</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground font-display">
-            Smazzate del Corso
+            {t("Smazzate del Corso")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {allSmazzate.filter((s) => courseLessonIds.includes(s.lesson)).length} mani pratiche dalle lezioni FIGB
@@ -317,7 +320,7 @@ function SmazzataBrowserContent() {
                 onClick={() => setIsPlaying(true)}
                 className="w-full rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 shadow-lg shadow-emerald/25"
               >
-                Gioca questa mano
+                {t("Gioca questa mano")}
               </Button>
             </motion.div>
           )}
@@ -335,6 +338,7 @@ function PlayingView({
   smazzata: Smazzata;
   onBack: () => void;
 }) {
+  const t = useT();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const { courses } = useCatalog();
@@ -653,7 +657,7 @@ function PlayingView({
           <div className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}>
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Contratto
+                {t("Contratto")}
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}>
                 {smazzata.contract}
@@ -662,7 +666,7 @@ function PlayingView({
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Obiettivo
+                {t("Obiettivo")}
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
                 {tricksNeeded} prese
@@ -671,7 +675,7 @@ function PlayingView({
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Dich. / Dif.
+                {t("Dich. / Dif.")}
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}>
                 {partnershipOf(declarer) === "ew"
@@ -685,19 +689,19 @@ function PlayingView({
         {/* Mode selector: declare or defend (before the hand starts) */}
         {game.phase === "ready" && (
           <div className="mb-3 flex items-center justify-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground">Gioca come</span>
+            <span className="text-xs font-semibold text-muted-foreground">{t("Gioca come")}</span>
             <div className="inline-flex rounded-xl border border-border bg-card p-0.5 shadow-sm">
               <button
                 onClick={() => setMode("declare")}
                 className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
               >
-                Dichiarante
+                {t("Dichiarante")}
               </button>
               <button
                 onClick={() => setMode("defend")}
                 className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
               >
-                Difesa
+                {t("Difesa")}
               </button>
             </div>
           </div>
@@ -710,7 +714,7 @@ function PlayingView({
               onClick={game.startGame}
               className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg shadow-emerald/25"
             >
-              Inizia a giocare
+              {t("Inizia a giocare")}
             </Button>
           </div>
         )}
@@ -850,7 +854,7 @@ function PlayingView({
               onClick={game.startGame}
               className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
             >
-              Inizia a giocare
+              {t("Inizia a giocare")}
             </Button>
           )}
           {game.phase === "finished" && (
@@ -860,13 +864,13 @@ function PlayingView({
                 onClick={onBack}
                 className="rounded-xl h-12 px-6 font-bold"
               >
-                Altra mano
+                {t("Altra mano")}
               </Button>
               <Button
                 onClick={game.startGame}
                 className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           )}
@@ -941,7 +945,7 @@ function PlayingView({
                 {/* Tricks breakdown bar */}
                 <div className="mt-4 mx-auto max-w-xs">
                   <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-1.5">
-                    <span>Prese fatte</span>
+                    <span>{t("Prese fatte")}</span>
                     <span>{game.result.tricksMade} / {game.result.tricksNeeded} necessarie</span>
                   </div>
                   <div className="h-3 rounded-full bg-muted overflow-hidden">
@@ -987,9 +991,9 @@ function PlayingView({
                         <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">Analisi Double-Dummy</span>
+                    <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">{t("Analisi Double-Dummy")}</span>
                     {ddsLoading && (
-                      <span className="text-[12px] text-indigo-400 animate-pulse">Calcolo...</span>
+                      <span className="text-[12px] text-indigo-400 animate-pulse">{t("Calcolo...")}</span>
                     )}
                     {ddsResult && !ddsResult.isExact && (
                       <span className="text-[12px] text-indigo-400">(stima)</span>
@@ -1021,7 +1025,7 @@ function PlayingView({
                       </p>
                     </div>
                   ) : (
-                    <p className="text-xs text-indigo-400">Analisi in corso...</p>
+                    <p className="text-xs text-indigo-400">{t("Analisi in corso...")}</p>
                   )}
                 </motion.div>
 
@@ -1029,13 +1033,13 @@ function PlayingView({
                 <div className="grid grid-cols-3 gap-2 mt-6">
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-foreground">{game.result.tricksMade}</p>
-                    <p className="text-[12px] font-bold text-muted-foreground uppercase">Prese</p>
+                    <p className="text-[12px] font-bold text-muted-foreground uppercase">{t("Prese")}</p>
                   </div>
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className={`text-lg font-bold ${success ? "text-emerald-600" : "text-red-600"}`}>
                       {game.result.result >= 0 ? `+${game.result.result}` : game.result.result}
                     </p>
-                    <p className="text-[12px] font-bold text-muted-foreground uppercase">Risultato</p>
+                    <p className="text-[12px] font-bold text-muted-foreground uppercase">{t("Risultato")}</p>
                   </div>
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-amber-600">
@@ -1090,7 +1094,7 @@ function PlayingView({
                         <polyline points="1,4 1,10 7,10" />
                         <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
                       </svg>
-                      Rivedi la mano
+                      {t("Rivedi la mano")}
                     </Button>
                   </motion.div>
                 )}
@@ -1108,7 +1112,7 @@ function PlayingView({
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 font-bold text-xs">
                       !
                     </div>
-                    <h4 className="text-sm font-bold text-foreground">Su cosa lavorare</h4>
+                    <h4 className="text-sm font-bold text-foreground">{t("Su cosa lavorare")}</h4>
                   </div>
                   <ul className="space-y-2">
                     {playErrors.map((err, i) => (
@@ -1124,7 +1128,7 @@ function PlayingView({
                       size="sm"
                       className="mt-3 h-8 rounded-xl px-4 text-xs font-bold border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-950/40"
                     >
-                      Aggiunto al tuo ripasso →
+                      {t("Aggiunto al tuo ripasso →")}
                     </Button>
                   </Link>
                 </motion.div>
@@ -1142,7 +1146,7 @@ function PlayingView({
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-xs">
                       M
                     </div>
-                    <h4 className="text-sm font-bold text-foreground">Analisi del Maestro</h4>
+                    <h4 className="text-sm font-bold text-foreground">{t("Analisi del Maestro")}</h4>
                   </div>
                   <p className="text-sm text-foreground/80 leading-relaxed">
                     {smazzata.commentary}
@@ -1157,29 +1161,29 @@ function PlayingView({
                 transition={{ delay: 0.8 }}
                 className="card-elevated rounded-2xl bg-card p-5 border border-border"
               >
-                <h4 className="text-sm font-bold text-foreground mb-3">Riepilogo mano</h4>
+                <h4 className="text-sm font-bold text-foreground mb-3">{t("Riepilogo mano")}</h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Contratto</span>
+                    <span className="text-muted-foreground">{t("Contratto")}</span>
                     <span className="font-bold text-foreground">{smazzata.contract}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Lezione</span>
+                    <span className="text-muted-foreground">{t("Lezione")}</span>
                     <span className="font-bold text-foreground">Lez. {getLessonDisplayNumber(smazzata.lesson)} - {lessonTitle}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Vulnerabilità</span>
+                    <span className="text-muted-foreground">{t("Vulnerabilità")}</span>
                     <span className="font-bold text-foreground">
                       {smazzata.vulnerability === "none" ? "Nessuna" : smazzata.vulnerability === "ns" ? "N-S" : smazzata.vulnerability === "ew" ? "E-O" : "Tutti"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Attacco</span>
+                    <span className="text-muted-foreground">{t("Attacco")}</span>
                     <span className="font-bold text-foreground">{cardToString(smazzata.openingLead)}</span>
                   </div>
                   {ddTricks !== null && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">DD Ottimale</span>
+                      <span className="text-muted-foreground">{t("DD Ottimale")}</span>
                       <span className="font-bold text-indigo-600">
                         {ddTricks} prese{ddsResult && !ddsResult.isExact ? " (stima)" : ""}
                       </span>
@@ -1212,7 +1216,7 @@ function PlayingView({
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
-                        <p className="text-[12px] text-muted-foreground">Scopri dove potevi migliorare</p>
+                        <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                       </div>
                       <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />

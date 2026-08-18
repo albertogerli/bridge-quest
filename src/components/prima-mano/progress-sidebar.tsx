@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Check, Star } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { StepConfig } from "./types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export function ProgressSidebar({
   steps,
@@ -16,6 +17,7 @@ export function ProgressSidebar({
   xpEarned: number;
   collapsed?: boolean;
 }) {
+  const t = useT();
   if (collapsed) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-[20px] border border-[#d7d0bf] bg-[#0f2f5f] px-2 py-4 shadow-lg">
@@ -46,10 +48,10 @@ export function ProgressSidebar({
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/55">
-            FIGB Bridge LAB
+            {t("FIGB Bridge LAB")}
           </p>
           <p className="mt-2 text-sm text-white/70">
-            Il Tuo Primo Torneo
+            {t("Il Tuo Primo Torneo")}
           </p>
         </div>
         <div className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-semibold text-white/80">
@@ -105,7 +107,7 @@ export function ProgressSidebar({
       {/* XP counter */}
       <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-5">
         <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-white/45">
-          XP Guadagnati
+          {t("XP Guadagnati")}
         </p>
         <div className="mt-3 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#c8a44e]/20">

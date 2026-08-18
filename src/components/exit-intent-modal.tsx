@@ -10,6 +10,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface ExitIntentModalProps {
   open: boolean;
@@ -22,6 +23,7 @@ export function ExitIntentModal({
   onOpenChange,
   onPlay,
 }: ExitIntentModalProps) {
+  const t = useT();
   const [handsToday, setHandsToday] = useState(0);
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export function ExitIntentModal({
                   {handsToday === 1 ? "mano" : "mani"} oggi.
                 </DialogTitle>
                 <DialogDescription className="text-muted-foreground text-sm mt-1">
-                  Una mano veloce prima di andare?
+                  {t("Una mano veloce prima di andare?")}
                 </DialogDescription>
               </DialogHeader>
 
@@ -77,13 +79,13 @@ export function ExitIntentModal({
                   onClick={onPlay}
                   className="w-full py-3 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors active:scale-[0.98] cursor-pointer"
                 >
-                  Una mano veloce!
+                  {t("Una mano veloce!")}
                 </button>
                 <button
                   onClick={handleDismiss}
                   className="w-full py-2.5 rounded-xl text-muted-foreground text-sm font-medium transition-colors hover:bg-muted cursor-pointer"
                 >
-                  Basta per oggi
+                  {t("Basta per oggi")}
                 </button>
               </DialogFooter>
             </motion.div>

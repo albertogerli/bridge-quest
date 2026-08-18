@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { BookOpen, Target, Brain, ChevronRight, CheckCircle2 } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface GuidedPathProps {
   variant?: "full" | "compact";
@@ -37,6 +38,7 @@ const STEPS = [
 ];
 
 export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
+  const t = useT();
   const { guidedSteps, markStepDone } = useBeginnerStatus();
   const isFull = variant === "full";
 
@@ -58,12 +60,12 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
         <div className="flex items-center gap-2">
           <span className="text-base">🧭</span>
           <h3 className={`font-bold text-foreground ${isFull ? "text-lg" : "text-sm"}`}>
-            Percorso Consigliato
+            {t("Percorso Consigliato")}
           </h3>
         </div>
         {isFull && (
           <p className="mt-1 text-sm text-muted-foreground">
-            Tre passi per partire col piede giusto.
+            {t("Tre passi per partire col piede giusto.")}
           </p>
         )}
       </div>

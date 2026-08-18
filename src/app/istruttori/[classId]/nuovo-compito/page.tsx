@@ -16,6 +16,7 @@ import {
   DIFFICULTY_LABELS,
   type SmazzataDifficulty,
 } from "@/lib/smazzata-meta";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type DiffFilter = "tutte" | SmazzataDifficulty;
 
@@ -24,6 +25,7 @@ export default function NuovoCompitoPage({
 }: {
   params: Promise<{ classId: string }>;
 }) {
+  const t = useT();
   const { classId } = use(params);
   const router = useRouter();
 
@@ -151,14 +153,14 @@ export default function NuovoCompitoPage({
         ← Dettaglio classe
       </Link>
       <h1 className="mt-3 mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        Nuovo compito
+        {t("Nuovo compito")}
       </h1>
 
       {/* Assignment meta */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5 sm:col-span-2">
           <label htmlFor="title" className="text-sm font-medium">
-            Titolo del compito
+            {t("Titolo del compito")}
           </label>
           <input
             id="title"
@@ -170,7 +172,7 @@ export default function NuovoCompitoPage({
         </div>
         <div className="space-y-1.5">
           <label htmlFor="due" className="text-sm font-medium">
-            Scadenza <span className="text-muted-foreground">(facoltativa)</span>
+            {t("Scadenza")} <span className="text-muted-foreground">(facoltativa)</span>
           </label>
           <input
             id="due"
@@ -182,7 +184,7 @@ export default function NuovoCompitoPage({
         </div>
         <div className="space-y-1.5">
           <label htmlFor="note" className="text-sm font-medium">
-            Nota per gli allievi <span className="text-muted-foreground">(facoltativa)</span>
+            {t("Nota per gli allievi")} <span className="text-muted-foreground">(facoltativa)</span>
           </label>
           <input
             id="note"
@@ -198,9 +200,9 @@ export default function NuovoCompitoPage({
       <div className="mb-6 rounded-lg border border-dashed border-border bg-muted/30 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold">Importa mani da file PBN</p>
+            <p className="text-sm font-semibold">{t("Importa mani da file PBN")}</p>
             <p className="text-xs text-muted-foreground">
-              Carica smazzate dal tuo programma di smazzatura (Dealer4, BridgeComposer, BBO…).
+              {t("Carica smazzate dal tuo programma di smazzatura (Dealer4, BridgeComposer, BBO…).")}
             </p>
           </div>
           <Button
@@ -209,7 +211,7 @@ export default function NuovoCompitoPage({
             size="sm"
             onClick={() => fileInputRef.current?.click()}
           >
-            Scegli file .pbn
+            {t("Scegli file .pbn")}
           </Button>
           <input
             ref={fileInputRef}
@@ -287,7 +289,7 @@ export default function NuovoCompitoPage({
           }
           className={selectClass}
         >
-          <option value="tutte">Tutte le lezioni</option>
+          <option value="tutte">{t("Tutte le lezioni")}</option>
           {lessonOptions.map((l) => (
             <option key={l.id} value={l.id}>
               {l.label}
@@ -300,10 +302,10 @@ export default function NuovoCompitoPage({
           onChange={(e) => setDiffFilter(e.target.value as DiffFilter)}
           className={selectClass}
         >
-          <option value="tutte">Tutte le difficoltà</option>
-          <option value="facile">Facile</option>
-          <option value="medio">Medio</option>
-          <option value="difficile">Difficile</option>
+          <option value="tutte">{t("Tutte le difficoltà")}</option>
+          <option value="facile">{t("Facile")}</option>
+          <option value="medio">{t("Medio")}</option>
+          <option value="difficile">{t("Difficile")}</option>
         </select>
 
         <input
@@ -360,7 +362,7 @@ export default function NuovoCompitoPage({
         })}
         {filtered.length === 0 && (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Nessuna smazzata con questi filtri.
+            {t("Nessuna smazzata con questi filtri.")}
           </p>
         )}
       </div>
@@ -371,7 +373,7 @@ export default function NuovoCompitoPage({
           <div className="text-sm">
             <span className="font-semibold">{selected.size}</span> mani selezionate
             {!title.trim() && selected.size > 0 && (
-              <span className="ml-3 text-amber-600">Inserisci un titolo per assegnare</span>
+              <span className="ml-3 text-amber-600">{t("Inserisci un titolo per assegnare")}</span>
             )}
             {saveError && <span className="ml-3 text-destructive">{saveError}</span>}
           </div>

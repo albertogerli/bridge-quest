@@ -25,8 +25,10 @@ import { useMyClasses } from "@/store/use-classes-store";
 import { createClass } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function IstruttoriPage() {
+  const t = useT();
   const { profile } = useSharedAuth();
   const { classes, isLoading, isLoaded, error, refresh } = useMyClasses();
 
@@ -64,17 +66,17 @@ export default function IstruttoriPage() {
         <div>
           <div className="flex items-center gap-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">
-              Portale Istruttori
+              {t("Portale Istruttori")}
             </p>
             <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
-              Beta
+              {t("Beta")}
             </span>
           </div>
           <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-            Le tue classi
+            {t("Le tue classi")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Crea classi virtuali, assegna smazzate e segui i progressi dei tuoi allievi.
+            {t("Crea classi virtuali, assegna smazzate e segui i progressi dei tuoi allievi.")}
           </p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="shrink-0">
@@ -90,7 +92,7 @@ export default function IstruttoriPage() {
           id="strumenti-lezione"
           className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground"
         >
-          Strumenti per la lezione
+          {t("Strumenti per la lezione")}
         </h2>
         <StrumentiLezione />
       </section>
@@ -112,9 +114,9 @@ export default function IstruttoriPage() {
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
             <span className="text-4xl">🎓</span>
-            <p className="font-display text-lg font-semibold">Nessuna classe ancora</p>
+            <p className="font-display text-lg font-semibold">{t("Nessuna classe ancora")}</p>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Crea la tua prima classe: otterrai un codice invito da condividere con gli allievi.
+              {t("Crea la tua prima classe: otterrai un codice invito da condividere con gli allievi.")}
             </p>
             <Button onClick={() => setDialogOpen(true)} className="mt-2">
               + Crea la prima classe
@@ -139,7 +141,7 @@ export default function IstruttoriPage() {
                     <CardTitle className="font-display text-xl">{c.name}</CardTitle>
                     {!c.invite_active && (
                       <Badge variant="outline" className="shrink-0">
-                        Iscrizioni chiuse
+                        {t("Iscrizioni chiuse")}
                       </Badge>
                     )}
                   </div>
@@ -148,7 +150,7 @@ export default function IstruttoriPage() {
                   )}
                 </CardHeader>
                 <CardFooter className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">Codice invito</span>
+                  <span className="text-xs text-muted-foreground">{t("Codice invito")}</span>
                   <span className="rounded-md bg-muted px-2 py-1 font-mono text-sm font-semibold tracking-widest">
                     {c.invite_code}
                   </span>
@@ -163,16 +165,16 @@ export default function IstruttoriPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-display text-2xl">Nuova classe</DialogTitle>
+            <DialogTitle className="font-display text-2xl">{t("Nuova classe")}</DialogTitle>
             <DialogDescription>
-              Dai un nome alla classe. Genereremo un codice invito da condividere con gli allievi.
+              {t("Dai un nome alla classe. Genereremo un codice invito da condividere con gli allievi.")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
               <label htmlFor="class-name" className="text-sm font-medium">
-                Nome classe
+                {t("Nome classe")}
               </label>
               <input
                 id="class-name"
@@ -185,7 +187,7 @@ export default function IstruttoriPage() {
             </div>
             <div className="space-y-1.5">
               <label htmlFor="class-desc" className="text-sm font-medium">
-                Descrizione <span className="text-muted-foreground">(facoltativa)</span>
+                {t("Descrizione")} <span className="text-muted-foreground">(facoltativa)</span>
               </label>
               <textarea
                 id="class-desc"
@@ -201,7 +203,7 @@ export default function IstruttoriPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={saving}>
-              Annulla
+              {t("Annulla")}
             </Button>
             <Button onClick={handleCreate} disabled={saving || !name.trim()}>
               {saving ? "Creazione…" : "Crea classe"}

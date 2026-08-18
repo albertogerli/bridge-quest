@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { comprehensionData } from "@/data/comprensione-data";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface ComprehensionQuizProps {
   lessonId: number;
@@ -12,6 +13,7 @@ interface ComprehensionQuizProps {
 }
 
 export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: ComprehensionQuizProps) {
+  const t = useT();
   const data = comprehensionData.find((d) => d.lessonId === lessonId);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -99,7 +101,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
           onClick={() => onComplete(score, total)}
           className="mt-5 w-full h-11 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm"
         >
-          Continua
+          {t("Continua")}
         </Button>
       </motion.div>
     );
@@ -116,14 +118,14 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
         <div className="flex items-center gap-2">
           <span className="text-lg">🧠</span>
           <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">
-            Verifica comprensione
+            {t("Verifica comprensione")}
           </span>
         </div>
         <button
           onClick={onSkip}
           className="text-xs text-muted-foreground hover:text-muted-foreground font-medium"
         >
-          Salta
+          {t("Salta")}
         </button>
       </div>
 

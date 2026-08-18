@@ -17,6 +17,7 @@ import { BBO_USERNAME_TAKEN_MESSAGE, isBboUsernameTaken } from "@/lib/bbo-userna
 import { suggestEmailCorrection } from "@/lib/email-domain-hint";
 import { authErrorMessage, isAlreadyRegistered } from "@/lib/auth-errors";
 import { type ReactNode } from "react";
+import { useT } from "@/contexts/traduzioni-provider";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
@@ -29,6 +30,7 @@ export default function LoginPage() {
 }
 
 function LoginContent() {
+  const t = useT();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const initialMode = searchParams.get("mode") === "signup" ? "signup" : "login";
@@ -190,8 +192,8 @@ function LoginContent() {
               ))}
             </div>
           </Link>
-          <h1 className="font-display text-2xl font-bold text-foreground">Bridge LAB</h1>
-          <p className="text-sm text-muted-foreground mt-1">Impara il bridge giocando</p>
+          <h1 className="font-display text-2xl font-bold text-foreground">{t("Bridge LAB")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("Impara il bridge giocando")}</p>
         </div>
 
         {/* Tabs */}
@@ -204,7 +206,7 @@ function LoginContent() {
                 : "text-muted-foreground"
             }`}
           >
-            Accedi
+            {t("Accedi")}
           </button>
           <button
             onClick={() => { setMode("signup"); setError(""); setSuccess(""); }}
@@ -214,7 +216,7 @@ function LoginContent() {
                 : "text-muted-foreground"
             }`}
           >
-            Registrati
+            {t("Registrati")}
           </button>
         </div>
 
@@ -223,7 +225,7 @@ function LoginContent() {
           {/* Email */}
           <div>
             <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-              Email
+              {t("Email")}
             </label>
             <input
               type="email"
@@ -258,7 +260,7 @@ function LoginContent() {
                     onClick={() => setEmailHintDismissed(email.trim())}
                     className="underline underline-offset-2 hover:no-underline"
                   >
-                    No, è corretto
+                    {t("No, è corretto")}
                   </button>
                 </motion.p>
               )}
@@ -268,7 +270,7 @@ function LoginContent() {
           {/* Password */}
           <div>
             <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-              Password
+              {t("Password")}
             </label>
             <input
               type="password"
@@ -302,7 +304,7 @@ function LoginContent() {
                 }}
                 className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
               >
-                Password dimenticata?
+                {t("Password dimenticata?")}
               </button>
             </div>
           )}
@@ -319,7 +321,7 @@ function LoginContent() {
                 {/* Display Name */}
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                    Nome visualizzato *
+                    {t("Nome visualizzato *")}
                   </label>
                   <input
                     type="text"
@@ -333,7 +335,7 @@ function LoginContent() {
                 {/* BBO Username */}
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                    Username BBO <span className="text-muted-foreground/50 normal-case">(opzionale)</span>
+                    {t("Username BBO")} <span className="text-muted-foreground/50 normal-case">(opzionale)</span>
                   </label>
                   <input
                     type="text"
@@ -347,7 +349,7 @@ function LoginContent() {
                 {/* Profile Type */}
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                    Profilo
+                    {t("Profilo")}
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {([
@@ -377,7 +379,7 @@ function LoginContent() {
                 {/* ASD Selection */}
                 <div className="relative">
                   <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                    Associazione (ASD) <span className="text-muted-foreground/50 normal-case">(opzionale)</span>
+                    {t("Associazione (ASD)")} <span className="text-muted-foreground/50 normal-case">(opzionale)</span>
                   </label>
                   <input
                     type="text"
@@ -412,7 +414,7 @@ function LoginContent() {
                         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                       >
                         {filteredAsd.length === 0 ? (
-                          <div className="px-4 py-3 text-sm text-muted-foreground">Nessuna ASD trovata</div>
+                          <div className="px-4 py-3 text-sm text-muted-foreground">{t("Nessuna ASD trovata")}</div>
                         ) : (
                           filteredAsd.map((club) => (
                             <button
@@ -442,7 +444,7 @@ function LoginContent() {
                 {/* Avatar Upload */}
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                    Foto profilo <span className="text-muted-foreground/50 normal-case">(opzionale)</span>
+                    {t("Foto profilo")} <span className="text-muted-foreground/50 normal-case">(opzionale)</span>
                   </label>
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -481,14 +483,14 @@ function LoginContent() {
             >
               {error === "already_registered" ? (
                 <div className="space-y-2">
-                  <p>Questa email è già registrata. Prova ad accedere.</p>
+                  <p>{t("Questa email è già registrata. Prova ad accedere.")}</p>
                   <div className="flex gap-3">
                     <button
                       type="button"
                       onClick={() => { setMode("login"); setError(""); }}
                       className="text-xs font-bold text-primary hover:underline"
                     >
-                      Vai al login
+                      {t("Vai al login")}
                     </button>
                     <button
                       type="button"
@@ -506,7 +508,7 @@ function LoginContent() {
                       }}
                       className="text-xs font-bold text-primary hover:underline"
                     >
-                      Password dimenticata?
+                      {t("Password dimenticata?")}
                     </button>
                   </div>
                 </div>
@@ -534,7 +536,7 @@ function LoginContent() {
             {loading ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Attendere...</span>
+                <span>{t("Attendere...")}</span>
               </div>
             ) : mode === "login" ? (
               "Accedi"
@@ -554,7 +556,7 @@ function LoginContent() {
             }}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            Continua senza account
+            {t("Continua senza account")}
           </button>
         </div>
 

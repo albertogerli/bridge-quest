@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { motion } from "motion/react";
 import type { GameStats, ContractType } from "@/hooks/use-game-history";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ===== Color helpers =====
 
@@ -181,6 +182,7 @@ interface StatsDashboardProps {
 }
 
 export function StatsDashboard({ stats }: StatsDashboardProps) {
+  const t = useT();
   const trendDisplay = useMemo(() => {
     switch (stats.recentTrend) {
       case "improving":
@@ -197,10 +199,10 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
       <div className="rounded-2xl bg-card border-2 border-border shadow-sm p-6 text-center">
         <span className="text-4xl mb-3 block">🃏</span>
         <p className="text-sm font-bold text-foreground mb-1">
-          Nessuna partita registrata
+          {t("Nessuna partita registrata")}
         </p>
         <p className="text-xs text-muted-foreground">
-          Gioca delle smazzate per vedere le tue statistiche avanzate!
+          {t("Gioca delle smazzate per vedere le tue statistiche avanzate!")}
         </p>
       </div>
     );
@@ -219,7 +221,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
         >
           <WinRateRing rate={stats.winRate} />
           <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mt-1">
-            Percentuale vittorie
+            {t("Percentuale vittorie")}
           </p>
         </motion.div>
 
@@ -234,7 +236,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           >
             <p className="text-2xl font-bold text-figb dark:text-primary">{stats.avgTricks}</p>
             <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-              Prese medie
+              {t("Prese medie")}
             </p>
           </motion.div>
 
@@ -254,7 +256,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
               )}
             </div>
             <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-              Miglior serie
+              {t("Miglior serie")}
             </p>
           </motion.div>
         </div>
@@ -268,7 +270,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
         className="rounded-2xl bg-card border-2 border-border shadow-sm p-4"
       >
         <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">
-          Per tipo di contratto
+          {t("Per tipo di contratto")}
         </h4>
         <ContractBars stats={stats} />
       </motion.div>
@@ -288,11 +290,11 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             <div className="flex items-center gap-2 text-[12px] font-bold text-muted-foreground">
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-sm bg-emerald-500" />
-                Vinto
+                {t("Vinto")}
               </span>
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-sm bg-red-400" />
-                Perso
+                {t("Perso")}
               </span>
             </div>
           </div>
@@ -314,7 +316,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             {trendDisplay.label}
           </p>
           <p className="text-[12px] text-muted-foreground font-semibold mt-0.5">
-            Tendenza recente
+            {t("Tendenza recente")}
           </p>
         </motion.div>
 
@@ -329,7 +331,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             <>
               <span className="text-xl block mb-1">⚠️</span>
               <p className="text-[12px] font-semibold text-foreground uppercase tracking-wider mb-1.5">
-                Punti deboli
+                {t("Punti deboli")}
               </p>
               <div className="space-y-1">
                 {stats.weakSuits.map((suit) => (
@@ -343,10 +345,10 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             <>
               <span className="text-3xl block mb-1">💪</span>
               <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                Ottimo lavoro!
+                {t("Ottimo lavoro!")}
               </p>
               <p className="text-[12px] text-muted-foreground font-semibold mt-0.5">
-                Nessun punto debole
+                {t("Nessun punto debole")}
               </p>
             </>
           )}

@@ -16,8 +16,10 @@ import {
   submitInstructorRequest,
   type InstructorRequest,
 } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function DiventaIstruttorePage() {
+  const t = useT();
   const { profile, loading: authLoading } = useSharedAuth();
   const isInstructor = profile?.role === "instructor" || profile?.role === "admin";
 
@@ -70,14 +72,14 @@ export default function DiventaIstruttorePage() {
     <div className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6">
       <div className="flex items-center gap-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">
-          Portale Istruttori
+          {t("Portale Istruttori")}
         </p>
         <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
-          Beta
+          {t("Beta")}
         </span>
       </div>
       <h1 className="mb-2 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        Diventa istruttore
+        {t("Diventa istruttore")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
         Il Portale Istruttori ti permette di creare classi virtuali, assegnare compiti
@@ -97,14 +99,14 @@ export default function DiventaIstruttorePage() {
             <Card>
               <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                 <span className="text-4xl">✅</span>
-                <p className="font-display text-lg font-semibold">Sei già istruttore</p>
+                <p className="font-display text-lg font-semibold">{t("Sei già istruttore")}</p>
                 {request?.review_message && (
                   <p className="max-w-sm rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm text-foreground">
                     💬 {request.review_message}
                   </p>
                 )}
                 <Link href="/istruttori">
-                  <Button>Vai al Portale Istruttori</Button>
+                  <Button>{t("Vai al Portale Istruttori")}</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -112,18 +114,18 @@ export default function DiventaIstruttorePage() {
             <Card>
               <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                 <span className="text-4xl">⏳</span>
-                <p className="font-display text-lg font-semibold">Richiesta in attesa di approvazione</p>
+                <p className="font-display text-lg font-semibold">{t("Richiesta in attesa di approvazione")}</p>
                 <p className="max-w-sm text-sm text-muted-foreground">
-                  Abbiamo ricevuto la tua richiesta. Riceverai accesso al portale non appena verrà approvata.
+                  {t("Abbiamo ricevuto la tua richiesta. Riceverai accesso al portale non appena verrà approvata.")}
                 </p>
               </CardContent>
             </Card>
           ) : request?.status === "rejected" ? (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Richiesta non approvata</CardTitle>
+                <CardTitle className="text-lg">{t("Richiesta non approvata")}</CardTitle>
                 <CardDescription>
-                  La tua richiesta precedente non è stata approvata. Puoi inviarne una nuova.
+                  {t("La tua richiesta precedente non è stata approvata. Puoi inviarne una nuova.")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -144,9 +146,9 @@ export default function DiventaIstruttorePage() {
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Invia la tua richiesta</CardTitle>
+                <CardTitle className="text-lg">{t("Invia la tua richiesta")}</CardTitle>
                 <CardDescription>
-                  Raccontaci brevemente chi sei e in quale ASD insegni (facoltativo).
+                  {t("Raccontaci brevemente chi sei e in quale ASD insegni (facoltativo).")}
                 </CardDescription>
               </CardHeader>
               <CardContent>

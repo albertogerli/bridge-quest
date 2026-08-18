@@ -31,6 +31,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { ArrowLeft, Trophy, Clock, Swords, ChevronRight, CheckCircle2, XCircle, Minus } from "lucide-react";
 import Link from "next/link";
 import { useMobile } from "@/hooks/use-mobile";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -99,6 +100,7 @@ type MatchPhase =
 // ---------------------------------------------------------------------------
 
 function SfidaIMPContent() {
+  const t = useT();
   const searchParams = useSearchParams();
   const challengeIdParam = searchParams.get("challengeId");
   const isMobile = useMobile();
@@ -421,7 +423,7 @@ function SfidaIMPContent() {
             transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
             className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full mb-4"
           />
-          <p className="text-sm text-muted-foreground font-medium">Caricamento sfida...</p>
+          <p className="text-sm text-muted-foreground font-medium">{t("Caricamento sfida...")}</p>
         </div>
       </div>
     );
@@ -456,7 +458,7 @@ function SfidaIMPContent() {
                 <Link href="/amici">
                   <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 text-sm font-bold h-11 px-6">
                     <Swords className="w-4 h-4 mr-2" />
-                    Sfida un amico
+                    {t("Sfida un amico")}
                   </Button>
                 </Link>
               )}
@@ -465,7 +467,7 @@ function SfidaIMPContent() {
                   isNoChallengeId ? "" : "bg-figb hover:bg-figb-dark"
                 }`}>
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
             </div>
@@ -488,10 +490,10 @@ function SfidaIMPContent() {
           >
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
               <Link href="/gioca" className="hover:text-figb dark:hover:text-primary transition-colors font-bold">
-                Gioca
+                {t("Gioca")}
               </Link>
               <span>/</span>
-              <span className="text-figb dark:text-primary font-semibold">Sfida IMP</span>
+              <span className="text-figb dark:text-primary font-semibold">{t("Sfida IMP")}</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
@@ -500,7 +502,7 @@ function SfidaIMPContent() {
               >
                 <ArrowLeft className="h-4 w-4" />
               </Link>
-              <h1 className="text-2xl font-bold text-foreground font-display">Sfida IMP</h1>
+              <h1 className="text-2xl font-bold text-foreground font-display">{t("Sfida IMP")}</h1>
             </div>
           </motion.div>
 
@@ -529,7 +531,7 @@ function SfidaIMPContent() {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm text-white/60 font-medium">Avversario</p>
+                    <p className="text-sm text-white/60 font-medium">{t("Avversario")}</p>
                     <p className="text-lg font-bold text-white">{opponentName}</p>
                   </div>
                   <Badge className="ml-auto bg-amber-400/20 text-amber-200 text-xs font-bold border-0">
@@ -540,7 +542,7 @@ function SfidaIMPContent() {
                 {/* Description */}
                 <div className="bg-white/10 rounded-2xl p-4 mb-6">
                   <p className="text-sm text-white/80 leading-relaxed">
-                    Giocherai <span className="font-bold text-white">{challenge.board_count} {challenge.board_count === 1 ? "mano" : "mani"}</span> con
+                    {t("Giocherai")} <span className="font-bold text-white">{challenge.board_count} {challenge.board_count === 1 ? "mano" : "mani"}</span> con
                     lo stesso smazzamento del tuo avversario.
                     I risultati verranno confrontati in <span className="font-bold text-amber-300">IMP</span>.
                   </p>
@@ -558,7 +560,7 @@ function SfidaIMPContent() {
                   }}
                   className="w-full py-4 rounded-2xl bg-white text-figb font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
                 >
-                  Inizia la Sfida
+                  {t("Inizia la Sfida")}
                 </button>
               </div>
             </div>
@@ -572,14 +574,14 @@ function SfidaIMPContent() {
             className="mt-4"
           >
             <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
-              <h3 className="font-bold text-foreground mb-3">Come funziona il punteggio IMP</h3>
+              <h3 className="font-bold text-foreground mb-3">{t("Come funziona il punteggio IMP")}</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 text-xs font-bold text-figb dark:text-primary">
                     1
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Entrambi i giocatori giocano le stesse mani con lo stesso contratto.
+                    {t("Entrambi i giocatori giocano le stesse mani con lo stesso contratto.")}
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
@@ -587,7 +589,7 @@ function SfidaIMPContent() {
                     2
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    La differenza di punteggio viene convertita in IMP usando la tabella WBF.
+                    {t("La differenza di punteggio viene convertita in IMP usando la tabella WBF.")}
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
@@ -627,7 +629,7 @@ function SfidaIMPContent() {
                 <ArrowLeft className="h-4 w-4" />
               </Link>
               <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
-                Sfida IMP
+                {t("Sfida IMP")}
               </Badge>
             </div>
             <h1 className="text-lg font-bold text-foreground">
@@ -659,17 +661,17 @@ function SfidaIMPContent() {
           >
             <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
               <div className="text-center">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
                 <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{contractDisplay(boardContract.contract)}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
                 <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
                 <p className="text-lg font-bold text-foreground">
                   {partnershipOf(declarer) === "ew"
                     ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -681,7 +683,7 @@ function SfidaIMPContent() {
                   <div className="h-8 w-px bg-border" />
                   <div className="text-center">
                     <Badge className="bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300 text-[12px] font-bold border-0">
-                      Vuln.
+                      {t("Vuln.")}
                     </Badge>
                   </div>
                 </>
@@ -719,7 +721,7 @@ function SfidaIMPContent() {
               />
             ) : (
               <div className="flex items-center justify-center h-64 text-muted-foreground">
-                <p className="text-sm">Preparazione della mano...</p>
+                <p className="text-sm">{t("Preparazione della mano...")}</p>
               </div>
             )}
           </motion.div>
@@ -754,7 +756,7 @@ function SfidaIMPContent() {
                 onClick={game.startGame}
                 className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-8 shadow-lg shadow-figb/20"
               >
-                Gioca questa mano
+                {t("Gioca questa mano")}
               </Button>
             </div>
           )}
@@ -801,22 +803,22 @@ function SfidaIMPContent() {
             <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Contratto</p>
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Contratto")}</p>
                   <p className="text-xl font-bold text-foreground">{contractDisplay(boardContract.contract)}</p>
                 </div>
                 <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Prese</p>
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Prese")}</p>
                   <p className="text-xl font-bold text-foreground">{currentBoardResult.tricksMade}/{tricksNeeded}</p>
                 </div>
                 <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Risultato</p>
+                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Risultato")}</p>
                   <p className={`text-xl font-bold ${trickDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                     {formatResult(trickDiff)}
                   </p>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-border text-center">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Punteggio grezzo</p>
+                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Punteggio grezzo")}</p>
                 <p className={`text-lg font-bold ${currentBoardResult.rawScore >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                   {currentBoardResult.rawScore > 0 ? "+" : ""}{currentBoardResult.rawScore}
                 </p>
@@ -843,11 +845,11 @@ function SfidaIMPContent() {
               {isLastBoard ? (
                 <>
                   <Trophy className="w-5 h-5" />
-                  Vedi risultato finale
+                  {t("Vedi risultato finale")}
                 </>
               ) : (
                 <>
-                  Prossima mano
+                  {t("Prossima mano")}
                   <ChevronRight className="w-5 h-5" />
                 </>
               )}
@@ -876,7 +878,7 @@ function SfidaIMPContent() {
               transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
               className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full mb-4"
             />
-            <p className="text-sm text-muted-foreground font-medium">Invio risultati...</p>
+            <p className="text-sm text-muted-foreground font-medium">{t("Invio risultati...")}</p>
           </div>
         </div>
       );
@@ -927,10 +929,10 @@ function SfidaIMPContent() {
               <div className="mt-6 rounded-2xl bg-card border-2 border-border shadow-[0_4px_0_var(--border)] overflow-hidden">
                 {/* Table Header */}
                 <div className="grid grid-cols-5 text-[12px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
-                  <div className="text-left">Mano</div>
-                  <div className="text-center">Contr.</div>
+                  <div className="text-left">{t("Mano")}</div>
+                  <div className="text-center">{t("Contr.")}</div>
                   <div className="text-center">Tu</div>
-                  <div className="text-center">Avv.</div>
+                  <div className="text-center">{t("Avv.")}</div>
                   <div className="text-right">IMP</div>
                 </div>
 
@@ -966,7 +968,7 @@ function SfidaIMPContent() {
 
                 {/* Total row */}
                 <div className="grid grid-cols-5 text-sm px-4 py-3 border-t-2 border-figb/20 bg-figb/5 dark:border-primary/30 dark:bg-primary/10 items-center">
-                  <div className="col-span-4 text-left font-bold text-figb dark:text-primary">Totale</div>
+                  <div className="col-span-4 text-left font-bold text-figb dark:text-primary">{t("Totale")}</div>
                   <div className={`text-right font-bold text-lg ${
                     myNet > 0 ? "text-emerald-600 dark:text-emerald-400" : myNet < 0 ? "text-red-500 dark:text-red-400" : "text-amber-600 dark:text-amber-400"
                   }`}>
@@ -979,12 +981,12 @@ function SfidaIMPContent() {
               <div className="mt-6 space-y-3">
                 <Link href="/amici" className="block">
                   <button className="w-full py-3.5 rounded-2xl bg-figb text-white font-bold text-sm shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98]">
-                    Torna agli amici
+                    {t("Torna agli amici")}
                   </button>
                 </Link>
                 <Link href="/gioca" className="block">
                   <button className="w-full py-3 rounded-2xl bg-muted text-foreground/80 font-bold text-sm hover:bg-muted/70 transition-all">
-                    Vai a Gioca
+                    {t("Vai a Gioca")}
                   </button>
                 </Link>
               </div>
@@ -1006,7 +1008,7 @@ function SfidaIMPContent() {
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-figb/10 dark:bg-primary/15 mx-auto mb-4">
               <Clock className="w-10 h-10 text-figb dark:text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-foreground mb-2">Risultati inviati!</h2>
+            <h2 className="text-xl font-bold text-foreground mb-2">{t("Risultati inviati!")}</h2>
             <p className="text-sm text-muted-foreground mb-2 max-w-xs mx-auto">
               I tuoi risultati sono stati registrati.
               Ti notificheremo quando il tuo avversario avr&agrave; completato la sfida.
@@ -1015,7 +1017,7 @@ function SfidaIMPContent() {
             {/* My results summary */}
             {myResults && myResults.length > 0 && (
               <div className="mt-6 rounded-2xl bg-card p-4 border-2 border-border shadow-[0_4px_0_var(--border)]">
-                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">I tuoi risultati</h3>
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">{t("I tuoi risultati")}</h3>
                 {myResults.map((r, i) => {
                   const needed = parseContract(r.contract).tricksNeeded;
                   const diff = r.tricksMade - needed;
@@ -1035,12 +1037,12 @@ function SfidaIMPContent() {
             <div className="mt-6 space-y-3">
               <Link href="/amici" className="block">
                 <button className="w-full py-3.5 rounded-2xl bg-figb text-white font-bold text-sm shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98]">
-                  Torna agli amici
+                  {t("Torna agli amici")}
                 </button>
               </Link>
               <Link href="/gioca" className="block">
                 <button className="w-full py-3 rounded-2xl bg-muted text-foreground/80 font-bold text-sm hover:bg-muted/70 transition-all">
-                  Vai a Gioca
+                  {t("Vai a Gioca")}
                 </button>
               </Link>
             </div>
@@ -1067,7 +1069,7 @@ function SfidaIMPContent() {
             >
               <Clock className="w-10 h-10 text-amber-500" />
             </motion.div>
-            <h2 className="text-xl font-bold text-foreground mb-2">In attesa del risultato</h2>
+            <h2 className="text-xl font-bold text-foreground mb-2">{t("In attesa del risultato")}</h2>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
               Hai gi&agrave; giocato questa sfida. Stiamo aspettando che <strong>{opponentName}</strong> completi le sue mani.
             </p>
@@ -1090,18 +1092,18 @@ function SfidaIMPContent() {
               }}
               className="mb-4 py-2.5 px-6 rounded-xl border-2 border-figb/20 text-figb hover:bg-figb/5 dark:border-primary/30 dark:text-primary dark:hover:bg-primary/10 font-bold text-sm transition-all"
             >
-              Controlla aggiornamenti
+              {t("Controlla aggiornamenti")}
             </button>
 
             <div className="space-y-3">
               <Link href="/amici" className="block">
                 <button className="w-full py-3.5 rounded-2xl bg-figb text-white font-bold text-sm shadow-lg hover:bg-figb-dark transition-all active:scale-[0.98]">
-                  Torna agli amici
+                  {t("Torna agli amici")}
                 </button>
               </Link>
               <Link href="/gioca" className="block">
                 <button className="w-full py-3 rounded-2xl bg-muted text-foreground/80 font-bold text-sm hover:bg-muted/70 transition-all">
-                  Vai a Gioca
+                  {t("Vai a Gioca")}
                 </button>
               </Link>
             </div>
@@ -1120,7 +1122,7 @@ function SfidaIMPContent() {
           transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
           className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full mb-4"
         />
-        <p className="text-sm text-muted-foreground font-medium">Caricamento...</p>
+        <p className="text-sm text-muted-foreground font-medium">{t("Caricamento...")}</p>
       </div>
     </div>
   );
@@ -1131,13 +1133,14 @@ function SfidaIMPContent() {
 // ---------------------------------------------------------------------------
 
 export default function SfidaIMPPage() {
+  const t = useT();
   return (
     <Suspense
       fallback={
         <div className="pt-6 px-5 pb-24">
           <div className="mx-auto max-w-6xl flex flex-col items-center justify-center min-h-[60vh]">
             <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-            <p className="text-sm text-muted-foreground font-medium">Caricamento sfida...</p>
+            <p className="text-sm text-muted-foreground font-medium">{t("Caricamento sfida...")}</p>
           </div>
         </div>
       }

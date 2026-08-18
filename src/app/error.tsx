@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function GlobalError({
   error,
@@ -11,6 +12,7 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useT();
   useEffect(() => {
     console.error("[BridgeQuest] Errore globale:", error);
   }, [error]);
@@ -28,7 +30,7 @@ export default function GlobalError({
         </div>
 
         <h1 className="text-xl font-bold text-foreground font-display mb-2">
-          Qualcosa non ha funzionato
+          {t("Qualcosa non ha funzionato")}
         </h1>
         <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
           Si è verificato un errore imprevisto. Riprova oppure torna alla pagina
@@ -46,13 +48,13 @@ export default function GlobalError({
             onClick={reset}
             className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-shadow"
           >
-            Riprova
+            {t("Riprova")}
           </button>
           <Link
             href="/"
             className="w-full rounded-xl border border-border bg-card px-5 py-3 text-sm font-medium text-foreground/80 hover:bg-muted/50 transition-colors"
           >
-            Torna alla Home
+            {t("Torna alla Home")}
           </Link>
         </div>
       </motion.div>

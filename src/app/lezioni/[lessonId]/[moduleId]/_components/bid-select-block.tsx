@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { CardDisplay } from "@/components/bridge/card-display";
 import type { ContentBlockProps } from "../_types";
 import { EnrichedText } from "./enriched-text";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Simboli e colore di ogni seme nella bidding box. */
 const suitSymbols: Record<string, { sym: string; color: string }> = {
@@ -17,6 +18,7 @@ const suitSymbols: Record<string, { sym: string; color: string }> = {
 
 /** Quiz «Bidding Box»: si sceglie la dichiarazione corretta. */
 export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) {
+  const t = useT();
   const {
     glossaryTermMap,
     quizAnswers,
@@ -43,7 +45,7 @@ export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
             <path d="M9 8h6M9 12h6M9 16h4" />
           </svg>
         </div>
-        <p className="font-bold text-foreground text-[15px]">Bidding Box</p>
+        <p className="font-bold text-foreground text-[15px]">{t("Bidding Box")}</p>
       </div>
       <p className="text-[14px] text-foreground/80 mb-3 leading-relaxed">
         <EnrichedText text={block.content} termMap={glossaryTermMap} />
@@ -80,7 +82,7 @@ export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
               className={`rounded-xl border-2 p-3 text-center font-bold transition-all cursor-pointer ${bidCls}`}
             >
               {isPasso ? (
-                <span className="text-muted-foreground text-sm">Passo</span>
+                <span className="text-muted-foreground text-sm">{t("Passo")}</span>
               ) : suitInfo ? (
                 <span className="flex items-center justify-center gap-1">
                   <span className="text-foreground text-lg">{bidLevel}</span>
@@ -104,13 +106,13 @@ export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
             {bsCorrect ? (
               <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-3 flex items-center gap-2">
                 <span className="text-lg">🎯</span>
-                <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">Licita corretta! +20 XP</p>
+                <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">{t("Licita corretta! +20 XP")}</p>
               </div>
             ) : (
               <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-2">
                 <span className="text-lg">💪</span>
                 <p className="text-sm font-semibold text-red-800 dark:text-red-300">
-                  La risposta corretta era <span className="font-bold">{bidOptions[block.correctAnswer ?? 0]}</span>
+                  {t("La risposta corretta era")} <span className="font-bold">{bidOptions[block.correctAnswer ?? 0]}</span>
                 </p>
               </div>
             )}

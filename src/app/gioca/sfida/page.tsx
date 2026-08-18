@@ -42,6 +42,7 @@ import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(pool: Smazzata[]): Smazzata | null {
@@ -72,12 +73,13 @@ function markDailyCompleted() {
 }
 
 export default function SfidaDelGiornoPage() {
+  const t = useT();
   const playable = usePlayableSmazzate();
   const smazzata = getDailySmazzata(playable);
   if (!smazzata) {
     return (
       <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento sfida del giorno">
-        Caricamento sfida del giorno…
+        {t("Caricamento sfida del giorno…")}
       </div>
     );
   }
@@ -85,6 +87,7 @@ export default function SfidaDelGiornoPage() {
 }
 
 function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
+  const t = useT();
   const router = useRouter();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
@@ -216,12 +219,12 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               </svg>
             </Link>
             <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
-              Sfida del Giorno
+              {t("Sfida del Giorno")}
             </Badge>
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
             {alreadyCompleted && (
               <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[12px] font-bold border-0">
-                Completata
+                {t("Completata")}
               </Badge>
             )}
           </div>
@@ -242,17 +245,17 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
         >
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
               <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -371,21 +374,21 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               onClick={game.startGame}
               className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
             >
-              Gioca la sfida
+              {t("Gioca la sfida")}
             </Button>
           )}
           {game.phase === "finished" && (
             <div className="flex gap-3">
               <Link href="/gioca">
                 <Button variant="outline" className="rounded-xl h-12 px-6 font-bold">
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
                 className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
               {(() => {
                 const td = new Date().toISOString().slice(0, 10);
@@ -397,7 +400,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                   onClick={() => { setBonusArmed(true); setShowBonus(true); }}
                   className="rounded-xl bg-amber-600 hover:bg-amber-700 text-sm font-bold h-12 px-6 shadow-lg shadow-amber-500/25"
                 >
-                  Mano Bonus 2x
+                  {t("Mano Bonus 2x")}
                 </Button>
               )}
             </div>
@@ -480,7 +483,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
-                        <p className="text-[12px] text-muted-foreground">Scopri dove potevi migliorare</p>
+                        <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                       </div>
                       <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
@@ -536,9 +539,9 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1.5">
-                          <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
+                          <p className="font-bold text-sm text-foreground">{t("Maestro Fiori")}</p>
                           <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
-                            Suggerimento
+                            {t("Suggerimento")}
                           </Badge>
                         </div>
                         <p className="text-[13px] text-muted-foreground leading-relaxed">

@@ -26,6 +26,7 @@ import {
   watchLiveTable,
   type LiveTable,
 } from "@/lib/live-table";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -55,6 +56,7 @@ export default function TavoloPage() {
 }
 
 function Tavolo() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const params = useSearchParams();
 
@@ -146,7 +148,7 @@ function Tavolo() {
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
           Riservato agli insegnanti.{" "}
-          <Link href="/login?redirect=/istruttori/tavolo" className="underline">Accedi</Link>.
+          <Link href="/login?redirect=/istruttori/tavolo" className="underline">{t("Accedi")}</Link>.
         </p>
       </div>
     );
@@ -177,7 +179,7 @@ function Tavolo() {
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Users className="w-6 h-6 text-figb" aria-hidden="true" />
-          Tavolo condiviso
+          {t("Tavolo condiviso")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           Tu vedi tutte e quattro le mani. Gli allievi vedono solo la propria,
@@ -188,7 +190,7 @@ function Tavolo() {
       <div className="rounded-2xl border border-border bg-card p-5 mb-5 flex flex-wrap items-end gap-3">
         <div>
           <label htmlFor="classe" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-            Classe
+            {t("Classe")}
           </label>
           <select
             id="classe"
@@ -196,7 +198,7 @@ function Tavolo() {
             onChange={(e) => { setClassId(e.target.value); setTableId(null); }}
             className="h-11 px-3 rounded-xl border border-border bg-card text-sm min-w-[12rem]"
           >
-            {classi.length === 0 && <option value="">Nessuna classe</option>}
+            {classi.length === 0 && <option value="">{t("Nessuna classe")}</option>}
             {classi.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -205,7 +207,7 @@ function Tavolo() {
 
         <div>
           <label htmlFor="argomento" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-            Argomento
+            {t("Argomento")}
           </label>
           <select
             id="argomento"
@@ -219,7 +221,7 @@ function Tavolo() {
           </select>
         </div>
 
-        <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>Altre mani</Button>
+        <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>{t("Altre mani")}</Button>
 
         {!tableId ? (
           <Button disabled={!classId || occupato} onClick={apri}>
@@ -232,7 +234,7 @@ function Tavolo() {
             onClick={async () => { await closeLiveTable(tableId); setTableId(null); }}
           >
             <Square className="w-4 h-4 mr-1" aria-hidden="true" />
-            Chiudi
+            {t("Chiudi")}
           </Button>
         )}
       </div>
@@ -240,7 +242,7 @@ function Tavolo() {
       {tableId && (
         <div className="rounded-2xl border border-figb/30 bg-figb/5 p-4 mb-5">
           <p className="text-sm font-medium mb-2">
-            Il tavolo è aperto. Gli allievi lo trovano nella loro classe.
+            {t("Il tavolo è aperto. Gli allievi lo trovano nella loro classe.")}
           </p>
           <div className="flex flex-wrap gap-2">
             {mani.map((_, i) => (
@@ -259,7 +261,7 @@ function Tavolo() {
       {tableId && stato && allievi.length > 0 && (
         <div className="rounded-2xl border border-border bg-card p-4 mb-5">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-1">
-            Chi siede dove
+            {t("Chi siede dove")}
           </h2>
           <p className="text-xs text-muted-foreground mb-3">
             Ogni allievo vede la mano del posto che gli assegni. Senza posto vede
@@ -336,11 +338,11 @@ function Tavolo() {
         <div className="flex flex-wrap justify-center gap-2 mt-5">
           <Button onClick={() => setRevealed(tableId, SEATS.map((s) => s.key))}>
             <Eye className="w-4 h-4 mr-1" aria-hidden="true" />
-            Scopri tutte alla classe
+            {t("Scopri tutte alla classe")}
           </Button>
           <Button variant="outline" onClick={() => setRevealed(tableId, [])}>
             <EyeOff className="w-4 h-4 mr-1" aria-hidden="true" />
-            Ricopri
+            {t("Ricopri")}
           </Button>
           <Button variant="outline" onClick={() => setShowContract(tableId, !stato.showContract)}>
             {stato.showContract ? "Nascondi il contratto" : "Mostra il contratto"}

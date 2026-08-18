@@ -2,13 +2,15 @@
 
 import { emptyPlatformBreakdown } from "@/lib/admin-stats";
 import { PLATFORM_COLOR, PLATFORM_LABEL, type Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Distribuzione per piattaforma: iscrizioni e accessi degli ultimi 30 giorni. */
 export function PlatformBreakdown({ stats }: { stats: Stats | null }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-        Piattaforme
+        {t("Piattaforme")}
       </h2>
       <div className="grid md:grid-cols-2 gap-6">
         {([

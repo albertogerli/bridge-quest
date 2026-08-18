@@ -14,6 +14,7 @@ import {
   resultHeadline,
   resultVerdict,
 } from "@/lib/daily-hand";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Pannello di condivisione: esiste solo nella schermata di fine mano.
 const ShareResult = dynamic(
@@ -39,6 +40,7 @@ export function DailyGameResult({
   showCelebration: boolean;
   xpLabel: string;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -90,7 +92,7 @@ export function DailyGameResult({
         {/* Tricks bar */}
         <div className="mt-4 mx-auto max-w-xs">
           <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-1.5">
-            <span>Prese fatte</span>
+            <span>{t("Prese fatte")}</span>
             <span>
               {result.tricksMade} / {result.tricksNeeded}{" "}
               necessarie
@@ -127,7 +129,7 @@ export function DailyGameResult({
               {result.tricksMade}
             </p>
             <p className="text-[12px] font-bold text-muted-foreground uppercase">
-              Prese
+              {t("Prese")}
             </p>
           </div>
           <div className="bg-card/60 rounded-xl p-2.5">
@@ -139,7 +141,7 @@ export function DailyGameResult({
                 : result.result}
             </p>
             <p className="text-[12px] font-bold text-muted-foreground uppercase">
-              Risultato
+              {t("Risultato")}
             </p>
           </div>
           <div className="bg-card/60 rounded-xl p-2.5">
@@ -198,7 +200,7 @@ export function DailyGameResult({
               M
             </div>
             <h4 className="text-sm font-bold text-foreground">
-              Analisi del Maestro
+              {t("Analisi del Maestro")}
             </h4>
           </div>
           <p className="text-sm text-foreground/80 leading-relaxed">
@@ -215,17 +217,17 @@ export function DailyGameResult({
         className="card-elevated rounded-2xl bg-card p-5 border border-border"
       >
         <h4 className="text-sm font-bold text-foreground mb-3">
-          Riepilogo mano
+          {t("Riepilogo mano")}
         </h4>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Contratto</span>
+            <span className="text-muted-foreground">{t("Contratto")}</span>
             <span className="font-bold text-foreground">
               {smazzata.contract}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Dichiarante</span>
+            <span className="text-muted-foreground">{t("Dichiarante")}</span>
             <span className="font-bold text-foreground">
               {formatContractItalian(
                 smazzata.contract,
@@ -234,13 +236,13 @@ export function DailyGameResult({
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Vulnerabilità</span>
+            <span className="text-muted-foreground">{t("Vulnerabilità")}</span>
             <span className="font-bold text-foreground">
               {formatVulnerability(smazzata.vulnerability)}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Attacco</span>
+            <span className="text-muted-foreground">{t("Attacco")}</span>
             <span className="font-bold text-foreground">
               {cardToString(smazzata.openingLead)}
             </span>

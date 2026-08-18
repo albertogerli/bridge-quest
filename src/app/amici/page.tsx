@@ -12,6 +12,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, UserPlus, Users, Bell, Swords, X, Check } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Tab = "amici" | "richieste" | "cerca";
 type BoardCount = 1 | 4 | 8;
@@ -22,6 +23,7 @@ interface SelectedFriend {
 }
 
 export default function AmiciPage() {
+  const t = useT();
   const { user, loading: authLoading } = useSharedAuth();
   const router = useRouter();
   const {
@@ -135,16 +137,16 @@ export default function AmiciPage() {
               <Users className="h-8 w-8 text-figb dark:text-primary" />
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2">
-              Accedi per vedere i tuoi amici
+              {t("Accedi per vedere i tuoi amici")}
             </h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Registrati o accedi per cercare altri giocatori, aggiungere amici e sfidarli a bridge!
+              {t("Registrati o accedi per cercare altri giocatori, aggiungere amici e sfidarli a bridge!")}
             </p>
             <Link
               href="/login"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-figb text-white font-semibold text-sm hover:bg-figb-dark transition-colors"
             >
-              Accedi o Registrati
+              {t("Accedi o Registrati")}
             </Link>
           </motion.div>
         </div>
@@ -172,9 +174,9 @@ export default function AmiciPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-bold text-foreground font-display">Amici</h1>
+          <h1 className="text-2xl font-bold text-foreground font-display">{t("Amici")}</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Cerca giocatori e sfidali a bridge
+            {t("Cerca giocatori e sfidali a bridge")}
           </p>
         </motion.div>
 
@@ -188,9 +190,9 @@ export default function AmiciPage() {
             <Users className="w-5 h-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-sm">Non conosci nessuno con cui giocare?</p>
+            <p className="font-semibold text-sm">{t("Non conosci nessuno con cui giocare?")}</p>
             <p className="text-xs text-muted-foreground">
-              Trova un compagno vicino a te, per livello e disponibilità
+              {t("Trova un compagno vicino a te, per livello e disponibilità")}
             </p>
           </div>
         </Link>
@@ -241,17 +243,17 @@ export default function AmiciPage() {
                   <Users className="h-7 w-7 text-muted-foreground" />
                 </div>
                 <p className="text-sm font-semibold text-foreground/80 mb-1">
-                  Non hai ancora amici
+                  {t("Non hai ancora amici")}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Cerca giocatori nella tab Cerca!
+                  {t("Cerca giocatori nella tab Cerca!")}
                 </p>
                 <button
                   onClick={() => setActiveTab("cerca")}
                   className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-figb text-white text-sm font-semibold hover:bg-figb-dark transition-colors"
                 >
                   <Search className="h-4 w-4" />
-                  Cerca giocatori
+                  {t("Cerca giocatori")}
                 </button>
               </div>
             ) : (
@@ -318,7 +320,7 @@ export default function AmiciPage() {
                       className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white text-xs font-semibold hover:from-violet-700 hover:to-violet-600 transition-all shadow-sm shrink-0"
                     >
                       <Swords className="h-3.5 w-3.5" />
-                      Sfida
+                      {t("Sfida")}
                     </button>
                   </div>
 
@@ -328,7 +330,7 @@ export default function AmiciPage() {
                       onClick={() => removeFriend(friendship.id)}
                       className="text-[12px] text-red-400 hover:text-red-600 dark:hover:text-red-300 font-medium transition-colors"
                     >
-                      Rimuovi
+                      {t("Rimuovi")}
                     </button>
                   </div>
                 </motion.div>
@@ -347,12 +349,12 @@ export default function AmiciPage() {
             {/* Ricevute */}
             <div>
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Ricevute
+                {t("Ricevute")}
               </h3>
               {pendingReceived.length === 0 ? (
                 <div className="card-clean rounded-2xl bg-card p-6 text-center">
                   <p className="text-sm text-muted-foreground">
-                    Nessuna richiesta ricevuta
+                    {t("Nessuna richiesta ricevuta")}
                   </p>
                 </div>
               ) : (
@@ -401,14 +403,14 @@ export default function AmiciPage() {
                             className="flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-500 text-white text-xs font-semibold hover:bg-emerald-600 transition-colors"
                           >
                             <Check className="h-3.5 w-3.5" />
-                            Accetta
+                            {t("Accetta")}
                           </button>
                           <button
                             onClick={() => declineFriend(request.id)}
                             className="flex items-center gap-1 px-3 py-2 rounded-xl bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-200 dark:hover:bg-red-950/60 transition-colors"
                           >
                             <X className="h-3.5 w-3.5" />
-                            Rifiuta
+                            {t("Rifiuta")}
                           </button>
                         </div>
                       </div>
@@ -421,12 +423,12 @@ export default function AmiciPage() {
             {/* Inviate */}
             <div>
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Inviate
+                {t("Inviate")}
               </h3>
               {pendingSent.length === 0 ? (
                 <div className="card-clean rounded-2xl bg-card p-6 text-center">
                   <p className="text-sm text-muted-foreground">
-                    Nessuna richiesta inviata
+                    {t("Nessuna richiesta inviata")}
                   </p>
                 </div>
               ) : (
@@ -471,14 +473,14 @@ export default function AmiciPage() {
                         {/* Status + Annulla */}
                         <div className="flex items-center gap-2 shrink-0">
                           <span className="text-[12px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-full px-3 py-1 font-medium">
-                            In attesa...
+                            {t("In attesa...")}
                           </span>
                           <button
                             onClick={() => removeFriend(request.id)}
                             className="flex items-center gap-1 px-3 py-2 rounded-xl bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-200 dark:hover:bg-red-950/60 transition-colors"
                           >
                             <X className="h-3.5 w-3.5" />
-                            Annulla
+                            {t("Annulla")}
                           </button>
                         </div>
                       </div>
@@ -523,10 +525,10 @@ export default function AmiciPage() {
               <div className="card-clean rounded-2xl bg-card p-8 text-center">
                 <Search className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                 <p className="text-sm font-semibold text-muted-foreground">
-                  Nessun giocatore trovato
+                  {t("Nessun giocatore trovato")}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Prova con un altro nome o username
+                  {t("Prova con un altro nome o username")}
                 </p>
               </div>
             )}
@@ -535,7 +537,7 @@ export default function AmiciPage() {
               <div className="card-clean rounded-2xl bg-card p-8 text-center">
                 <UserPlus className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                 <p className="text-sm font-semibold text-muted-foreground">
-                  Cerca un giocatore
+                  {t("Cerca un giocatore")}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   Inserisci il nome, lo username BBO o il nome dell&apos;associazione
@@ -600,11 +602,11 @@ export default function AmiciPage() {
                       {/* Action button */}
                       {isAlreadyFriend ? (
                         <span className="text-[12px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
-                          Amico
+                          {t("Amico")}
                         </span>
                       ) : isPending || alreadySent ? (
                         <span className="text-[12px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-full px-3 py-1.5 font-medium shrink-0">
-                          Richiesta inviata!
+                          {t("Richiesta inviata!")}
                         </span>
                       ) : (
                         <button
@@ -612,7 +614,7 @@ export default function AmiciPage() {
                           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-figb text-white text-xs font-semibold hover:bg-figb-dark transition-colors shrink-0"
                         >
                           <UserPlus className="h-3.5 w-3.5" />
-                          Aggiungi
+                          {t("Aggiungi")}
                         </button>
                       )}
                     </div>
@@ -656,7 +658,7 @@ export default function AmiciPage() {
                         Sfida {selectedFriend.name}
                       </p>
                       <p className="text-[12px] text-muted-foreground">
-                        Scegli il numero di mani
+                        {t("Scegli il numero di mani")}
                       </p>
                     </div>
                   </div>
@@ -696,7 +698,7 @@ export default function AmiciPage() {
                 {/* IMP scoring info */}
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <span className="text-[12px] text-muted-foreground font-medium uppercase tracking-wider">
-                    Punteggio IMP
+                    {t("Punteggio IMP")}
                   </span>
                 </div>
 
@@ -705,7 +707,7 @@ export default function AmiciPage() {
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-violet-600" />
                     <span className="text-xs text-muted-foreground">
-                      Creazione sfida...
+                      {t("Creazione sfida...")}
                     </span>
                   </div>
                 )}
@@ -716,7 +718,7 @@ export default function AmiciPage() {
                   disabled={challengeLoading}
                   className="w-full py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
                 >
-                  Annulla
+                  {t("Annulla")}
                 </button>
               </motion.div>
             </motion.div>

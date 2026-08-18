@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { Compass, BookOpen, Target, Brain, X } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface LostCardProps {
   /** Next incomplete module info (from home page) */
@@ -15,6 +16,7 @@ interface LostCardProps {
 }
 
 export function LostCard({ nextModule }: LostCardProps) {
+  const t = useT();
   const [dismissed, setDismissed] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -61,8 +63,8 @@ export function LostCard({ nextModule }: LostCardProps) {
           <Compass className="h-5 w-5 text-[#8f6b16]" />
         </div>
         <div>
-          <p className="text-sm font-bold text-[#12305f]">Non sai da dove ricominciare?</p>
-          <p className="text-[12px] text-[#5c677d]">Ecco qualche idea per riprendere</p>
+          <p className="text-sm font-bold text-[#12305f]">{t("Non sai da dove ricominciare?")}</p>
+          <p className="text-[12px] text-[#5c677d]">{t("Ecco qualche idea per riprendere")}</p>
         </div>
       </div>
 
@@ -71,7 +73,7 @@ export function LostCard({ nextModule }: LostCardProps) {
         <Link href="/prima-mano">
           <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
             <BookOpen className="h-4 w-4 shrink-0 text-blue-500" />
-            <span className="text-sm font-medium text-[#12305f]">Rivedi Prima Mano</span>
+            <span className="text-sm font-medium text-[#12305f]">{t("Rivedi Prima Mano")}</span>
           </div>
         </Link>
         <Link href={nextLessonHref}>
@@ -85,7 +87,7 @@ export function LostCard({ nextModule }: LostCardProps) {
         <Link href="/ripasso">
           <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
             <Brain className="h-4 w-4 shrink-0 text-amber-500" />
-            <span className="text-sm font-medium text-[#12305f]">Fai un ripasso</span>
+            <span className="text-sm font-medium text-[#12305f]">{t("Fai un ripasso")}</span>
           </div>
         </Link>
       </div>

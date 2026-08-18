@@ -21,6 +21,7 @@ import {
   type QuizLevel,
   type QuizStrain,
 } from "@/lib/trick-quiz";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -46,6 +47,7 @@ interface Question {
  * indovinello anche per un campione.
  */
 export default function QuizPresePage() {
+  const t = useT();
   const [level, setLevel] = useState<QuizLevel | null>(null);
   const [seed] = useState(() => Math.floor(Date.now() % 1_000_000));
   const [round, setRound] = useState(0);
@@ -105,7 +107,7 @@ export default function QuizPresePage() {
       <div className="min-h-screen px-4 py-8 max-w-lg mx-auto">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2 mb-1">
           <Calculator className="w-6 h-6 text-figb" aria-hidden="true" />
-          Quante prese?
+          {t("Quante prese?")}
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
           Vedi tutte e quattro le mani. Conta quante prese fa Nord-Sud con
@@ -138,7 +140,7 @@ export default function QuizPresePage() {
   if (round >= ROUNDS) {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
-        <h1 className="text-2xl font-bold font-display mb-2">Finito</h1>
+        <h1 className="text-2xl font-bold font-display mb-2">{t("Finito")}</h1>
         <p className="text-4xl font-bold text-figb my-6">{score}</p>
         <p className="text-sm text-muted-foreground mb-8">
           punti su {ROUNDS} mani
@@ -152,10 +154,10 @@ export default function QuizPresePage() {
             }}
           >
             <RotateCcw className="w-4 h-4 mr-1" aria-hidden="true" />
-            Gioca ancora
+            {t("Gioca ancora")}
           </Button>
           <Link href="/gioca" className="text-sm text-muted-foreground hover:underline">
-            Torna ai giochi
+            {t("Torna ai giochi")}
           </Link>
         </div>
       </div>
@@ -174,17 +176,17 @@ export default function QuizPresePage() {
       {loading && (
         <div className="py-20 text-center">
           <div className="w-8 h-8 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-muted-foreground mt-3">Preparo la mano…</p>
+          <p className="text-xs text-muted-foreground mt-3">{t("Preparo la mano…")}</p>
         </div>
       )}
 
       {failed && (
         <div className="py-16 text-center">
           <p className="text-sm text-muted-foreground mb-4">
-            Non è stato possibile preparare la mano.
+            {t("Non è stato possibile preparare la mano.")}
           </p>
           <Button variant="outline" onClick={() => void prepare(level, round)}>
-            Riprova
+            {t("Riprova")}
           </Button>
         </div>
       )}

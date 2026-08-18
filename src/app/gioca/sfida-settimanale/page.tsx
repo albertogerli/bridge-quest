@@ -47,6 +47,7 @@ import { updateLastActivity } from "@/hooks/use-notifications";
 import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import { ArrowLeft, Trophy, Zap, Clock, Play, CheckCircle2 } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const HANDS_PER_WEEK = 5;
 
@@ -63,6 +64,7 @@ function getWeeklySmazzate(pool: Smazzata[]): Smazzata[] {
 }
 
 export default function SfidaSettimanale() {
+  const t = useT();
   const challenge = useCurrentWeeklyChallenge();
   const [mounted, setMounted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0 });
@@ -95,7 +97,7 @@ export default function SfidaSettimanale() {
       <div className="min-h-screen bg-background flex items-center justify-center pb-24">
         <div className="text-center">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground font-medium">Caricamento sfida in corso...</p>
+          <p className="text-muted-foreground font-medium">{t("Caricamento sfida in corso...")}</p>
         </div>
       </div>
     );
@@ -133,7 +135,7 @@ export default function SfidaSettimanale() {
         <div className="mx-auto max-w-6xl">
           <Link href="/gioca" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Torna a Gioca
+            {t("Torna a Gioca")}
           </Link>
 
           <div className="flex items-start gap-4 mb-6">
@@ -233,13 +235,13 @@ export default function SfidaSettimanale() {
                       className="rounded-xl bg-figb hover:bg-figb-dark font-bold text-xs h-9 px-4 shrink-0"
                     >
                       <Play className="w-3.5 h-3.5 mr-1" />
-                      Gioca
+                      {t("Gioca")}
                     </Button>
                   )}
                   {isPlayed && (
                     <div className="flex items-center gap-1.5 shrink-0">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Giocata</span>
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{t("Giocata")}</span>
                     </div>
                   )}
                 </div>
@@ -278,7 +280,7 @@ export default function SfidaSettimanale() {
               className={`rounded-2xl p-6 text-center bg-gradient-to-br ${challenge.gradient} text-white`}
             >
               <Trophy className="h-12 w-12 mx-auto mb-3 text-yellow-300" />
-              <h2 className="text-xl font-bold mb-1">Sfida Completata!</h2>
+              <h2 className="text-xl font-bold mb-1">{t("Sfida Completata!")}</h2>
               <p className="text-white/80 text-base mb-2">Badge &quot;{challenge.badgeName}&quot; sbloccato</p>
               <p className="text-sm text-white/60">
                 XP totali: {progress.xpEarned} XP
@@ -302,6 +304,7 @@ interface WeeklyHandGameProps {
 }
 
 function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: WeeklyHandGameProps) {
+  const t = useT();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
@@ -432,17 +435,17 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4 flex items-center justify-center">
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Contratto</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
               <p className="text-lg font-bold text-figb dark:text-primary">{smazzata.contract}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Obiettivo</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
               <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">Dich. / Dif.</p>
+              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold text-foreground">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -548,13 +551,13 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
           {game.phase === "finished" && (
             <div className="flex gap-3">
               <Button onClick={onBack} variant="outline" className="rounded-xl h-12 px-6 font-bold">
-                Torna alla Sfida
+                {t("Torna alla Sfida")}
               </Button>
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
                 className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           )}

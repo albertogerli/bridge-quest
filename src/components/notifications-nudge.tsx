@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Bell, X } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const LS_DISMISSED = "bq_notif_nudge_dismissed";
 
@@ -14,6 +15,7 @@ const LS_DISMISSED = "bq_notif_nudge_dismissed";
  * Shown only for logged-in users who haven't decided and haven't dismissed it.
  */
 export function NotificationsNudge({ show = true }: { show?: boolean }) {
+  const t = useT();
   const { supported, permission, enabled, requestPermission } = useNotifications();
   const [dismissed, setDismissed] = useState(true); // default hidden until we read LS
   const [justEnabled, setJustEnabled] = useState(false);
@@ -66,7 +68,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
             >
               <Bell className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
               <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
-                Promemoria attivi! Ti avviseremo per non perdere la striscia. 🔥
+                {t("Promemoria attivi! Ti avviseremo per non perdere la striscia. 🔥")}
               </p>
             </motion.div>
           ) : (
@@ -82,7 +84,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
               </div>
               <div className="min-w-0 flex-1 pr-6">
                 <h3 className="font-display text-sm font-bold text-foreground">
-                  Non perdere la striscia 🔥
+                  {t("Non perdere la striscia 🔥")}
                 </h3>
                 <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
                   Attiva i promemoria: ti avvisiamo per la Sfida del Giorno e prima
@@ -93,13 +95,13 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
                     onClick={enable}
                     className="rounded-xl bg-figb px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-figb-dark active:scale-[0.98]"
                   >
-                    Attiva i promemoria
+                    {t("Attiva i promemoria")}
                   </button>
                   <button
                     onClick={dismiss}
                     className="px-2 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-muted-foreground"
                   >
-                    Non ora
+                    {t("Non ora")}
                   </button>
                 </div>
               </div>

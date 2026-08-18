@@ -7,6 +7,7 @@ import Link from "next/link";
 import { shareContent } from "@/lib/share";
 import { useGameStore } from "@/store/use-game-store";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface GameRecord {
   date: string;
@@ -155,6 +156,7 @@ function calculateMonthStats(records: GameRecord[]): MonthStats | null {
 }
 
 export default function WrappedPage() {
+  const t = useT();
   const [stats, setStats] = useState<MonthStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentCard, setCurrentCard] = useState(0);
@@ -203,7 +205,7 @@ export default function WrappedPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800">
-        <div className="text-white text-xl">Caricamento...</div>
+        <div className="text-white text-xl">{t("Caricamento...")}</div>
       </div>
     );
   }
@@ -213,15 +215,15 @@ export default function WrappedPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800 p-6 text-white">
         <div className="card-clean max-w-md rounded-2xl bg-white/10 p-8 text-center backdrop-blur">
           <div className="mb-4 text-6xl">🃏</div>
-          <h1 className="mb-4 text-3xl font-bold">Nessuna Statistica</h1>
+          <h1 className="mb-4 text-3xl font-bold">{t("Nessuna Statistica")}</h1>
           <p className="mb-6 text-lg text-white/80">
-            Gioca qualche mano per sbloccare il tuo Wrapped!
+            {t("Gioca qualche mano per sbloccare il tuo Wrapped!")}
           </p>
           <Link
             href="/gioca"
             className="inline-block rounded-xl bg-white px-6 py-3 font-semibold text-indigo-600 transition hover:bg-white/90"
           >
-            Inizia a Giocare
+            {t("Inizia a Giocare")}
           </Link>
         </div>
         <Link
@@ -229,7 +231,7 @@ export default function WrappedPage() {
           className="mt-8 flex items-center gap-2 text-white/80 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
-          Torna al Profilo
+          {t("Torna al Profilo")}
         </Link>
       </div>
     );
@@ -248,13 +250,13 @@ export default function WrappedPage() {
           className="text-center"
         >
           <div className="mb-6 text-7xl">🃏</div>
-          <h1 className="mb-4 text-5xl font-bold">Il Tuo Mese di Bridge</h1>
+          <h1 className="mb-4 text-5xl font-bold">{t("Il Tuo Mese di Bridge")}</h1>
           <p className="mb-8 text-2xl text-white/80">{monthName} {now.getFullYear()}</p>
           <button
             onClick={() => setHasStarted(true)}
             className="rounded-xl bg-white px-8 py-4 text-xl font-semibold text-indigo-600 transition hover:bg-white/90"
           >
-            Scopri le Statistiche
+            {t("Scopri le Statistiche")}
           </button>
         </motion.div>
         <Link
@@ -262,7 +264,7 @@ export default function WrappedPage() {
           className="mt-12 flex items-center gap-2 text-white/80 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
-          Torna al Profilo
+          {t("Torna al Profilo")}
         </Link>
       </div>
     );
@@ -337,7 +339,7 @@ export default function WrappedPage() {
           className="flex items-center gap-2 text-white/80 hover:text-white"
         >
           <ArrowLeft className="h-5 w-5" />
-          <span className="hidden sm:inline">Profilo</span>
+          <span className="hidden sm:inline">{t("Profilo")}</span>
         </Link>
       </div>
 
@@ -434,7 +436,7 @@ export default function WrappedPage() {
                   transition={{ delay: 2, duration: 0.5 }}
                   className="absolute bottom-6 right-6 text-sm text-white/60"
                 >
-                  Tocca per continuare
+                  {t("Tocca per continuare")}
                 </motion.div>
               </div>
             </motion.div>
@@ -456,37 +458,37 @@ export default function WrappedPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-3">
-                    <span className="text-muted-foreground">Mani giocate</span>
+                    <span className="text-muted-foreground">{t("Mani giocate")}</span>
                     <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                       {stats.handsPlayed}
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border pb-3">
-                    <span className="text-muted-foreground">Percentuale vittoria</span>
+                    <span className="text-muted-foreground">{t("Percentuale vittoria")}</span>
                     <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                       {stats.winRate}%
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border pb-3">
-                    <span className="text-muted-foreground">Contratto preferito</span>
+                    <span className="text-muted-foreground">{t("Contratto preferito")}</span>
                     <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {stats.favoriteContract}
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border pb-3">
-                    <span className="text-muted-foreground">XP guadagnati</span>
+                    <span className="text-muted-foreground">{t("XP guadagnati")}</span>
                     <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                       {stats.xpGained}
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border pb-3">
-                    <span className="text-muted-foreground">Streak record</span>
+                    <span className="text-muted-foreground">{t("Streak record")}</span>
                     <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                       {stats.streakBest}
                     </span>
                   </div>
                   <div className="flex items-center justify-between pb-3">
-                    <span className="text-muted-foreground">Giorno preferito</span>
+                    <span className="text-muted-foreground">{t("Giorno preferito")}</span>
                     <span className="text-xl font-bold text-rose-600 dark:text-rose-400">
                       {stats.favoriteDay}
                     </span>
@@ -498,7 +500,7 @@ export default function WrappedPage() {
                   className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-4 text-lg font-semibold text-white transition hover:bg-indigo-700"
                 >
                   <Share2 className="h-5 w-5" />
-                  Condividi
+                  {t("Condividi")}
                 </button>
 
                 <div className="mt-4 text-center">
@@ -509,7 +511,7 @@ export default function WrappedPage() {
                     }}
                     className="text-sm text-muted-foreground hover:text-foreground"
                   >
-                    Guarda di nuovo
+                    {t("Guarda di nuovo")}
                   </button>
                 </div>
               </div>

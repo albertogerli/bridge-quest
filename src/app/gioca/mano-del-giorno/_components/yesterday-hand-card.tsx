@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { Smazzata } from "@/lib/catalog";
 import { formatDate } from "@/lib/daily-hand";
 import { getDailyResult } from "../_storage";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Mano di ieri: esito già registrato (con rigioco) oppure invito a giocarla. */
 export function YesterdayHandCard({
@@ -19,6 +20,7 @@ export function YesterdayHandCard({
   yesterdayHand: Smazzata;
   onPlay: () => void;
 }) {
+  const t = useT();
   const yResult = mounted ? getDailyResult(yesterday) : null;
 
   return (
@@ -44,7 +46,7 @@ export function YesterdayHandCard({
             </div>
             <div>
               <h3 className="text-sm font-bold text-foreground">
-                Mano di Ieri
+                {t("Mano di Ieri")}
               </h3>
               <p className="text-[12px] text-muted-foreground">
                 {mounted ? formatDate(yesterday) : ""}
@@ -88,7 +90,7 @@ export function YesterdayHandCard({
               onClick={onPlay}
               className="text-xs font-bold text-emerald hover:text-emerald-dark"
             >
-              Rigioca
+              {t("Rigioca")}
             </Button>
           </div>
         ) : (
@@ -98,7 +100,7 @@ export function YesterdayHandCard({
             onClick={onPlay}
             className="w-full rounded-xl h-10 text-xs font-bold border-border text-muted-foreground hover:text-emerald hover:border-emerald/30"
           >
-            Gioca la mano di ieri
+            {t("Gioca la mano di ieri")}
           </Button>
         )}
       </div>

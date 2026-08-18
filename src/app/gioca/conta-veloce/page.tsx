@@ -10,6 +10,7 @@ import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { useGameStore } from "@/store/use-game-store";
 import { useGameResults } from "@/hooks/use-game-results";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Card generation
 const suits = ["spade", "heart", "diamond", "club"] as const;
@@ -58,6 +59,7 @@ const difficultyConfig = {
 };
 
 export default function ContaVelocePage() {
+  const t = useT();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const profileConfig = useProfile();
   const { play } = useSound();
@@ -228,9 +230,9 @@ export default function ContaVelocePage() {
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-            <Link href="/gioca" className="hover:text-emerald transition-colors">Gioca</Link>
+            <Link href="/gioca" className="hover:text-emerald transition-colors">{t("Gioca")}</Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">Conta Veloce</span>
+            <span className="text-emerald font-semibold">{t("Conta Veloce")}</span>
           </div>
 
           <motion.div
@@ -241,22 +243,22 @@ export default function ContaVelocePage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-5xl shadow-xl shadow-amber-400/30 mb-6">
               🧮
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Conta Veloce</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Conta Veloce")}</h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              Vedi una mano, conta i punti onori il più veloce possibile!
+              {t("Vedi una mano, conta i punti onori il più veloce possibile!")}
             </p>
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-foreground mb-2">Come si gioca?</h3>
+              <h3 className="font-bold text-sm text-foreground mb-2">{t("Come si gioca?")}</h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li>A = 4, K = 3, Q = 2, J = 1 punto</li>
-                <li>Conta i punti onori (HCP) della mano</li>
-                <li>Più sei veloce, più punti guadagni</li>
-                <li>Mantieni la streak per bonus extra!</li>
+                <li>{t("A = 4, K = 3, Q = 2, J = 1 punto")}</li>
+                <li>{t("Conta i punti onori (HCP) della mano")}</li>
+                <li>{t("Più sei veloce, più punti guadagni")}</li>
+                <li>{t("Mantieni la streak per bonus extra!")}</li>
               </ul>
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-foreground text-left">Scegli difficoltà</h3>
+              <h3 className="font-bold text-sm text-foreground text-left">{t("Scegli difficoltà")}</h3>
               {(Object.entries(difficultyConfig) as [Difficulty, typeof difficultyConfig.facile][]).map(([key, cfg]) => (
                 <button
                   key={key}
@@ -312,11 +314,11 @@ export default function ContaVelocePage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{avgTime}s</p>
-                <p className="text-[12px] text-muted-foreground font-bold">Media</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Media")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">Streak max</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Streak max")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-amber-500">+{xpEarned}</p>
@@ -359,7 +361,7 @@ export default function ContaVelocePage() {
                           <div className="flex-1 min-w-0">
                             <p className="text-[12px] text-muted-foreground font-mono">{r.handStr}</p>
                             <p className="text-xs text-foreground/80 mt-0.5">
-                              Hai risposto: <span className="font-bold">{r.selectedHCP} HCP</span>
+                              {t("Hai risposto:")} <span className="font-bold">{r.selectedHCP} HCP</span>
                             </p>
                             {!r.correct && (
                               <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
@@ -378,14 +380,14 @@ export default function ContaVelocePage() {
             <div className="flex gap-3 mt-6">
               <Link href="/gioca" className="flex-1">
                 <Button variant="outline" className="w-full h-12 rounded-xl font-bold">
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => startGame()}
                 className="flex-1 h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-bold shadow-lg"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           </motion.div>
@@ -450,7 +452,7 @@ export default function ContaVelocePage() {
           className="card-clean rounded-2xl bg-card p-4 mb-6"
         >
           <p className="text-center text-xs font-bold text-muted-foreground mb-3">
-            Quanti punti onori?
+            {t("Quanti punti onori?")}
           </p>
 
           {/* Cards grouped by suit */}
@@ -549,18 +551,18 @@ export default function ContaVelocePage() {
                 className="bg-card rounded-3xl p-8 text-center mx-6 max-w-sm w-full shadow-2xl"
               >
                 <div className="text-5xl mb-4">⏸️</div>
-                <h2 className="text-2xl font-semibold text-foreground">Pausa</h2>
+                <h2 className="text-2xl font-semibold text-foreground">{t("Pausa")}</h2>
                 <p className="text-sm text-muted-foreground mt-2">Round {round}/{config.rounds} · {score} pts</p>
                 <div className="mt-6 space-y-2">
                   <Button
                     onClick={resumeFromPause}
                     className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg"
                   >
-                    Riprendi
+                    {t("Riprendi")}
                   </Button>
                   <Link href="/gioca" className="block">
                     <Button variant="outline" className="w-full h-12 rounded-xl font-bold">
-                      Esci dal gioco
+                      {t("Esci dal gioco")}
                     </Button>
                   </Link>
                 </div>

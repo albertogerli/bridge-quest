@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { ProfileConfig } from "@/hooks/use-profile";
 import type { LessonModule } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Barra di navigazione fissa in fondo: «Indietro», «Avanti» (sbloccato solo
@@ -30,6 +31,7 @@ export function ModuleNav({
   onStepAdvance: (nextStep: number) => void;
   onSaveAndExit: () => void;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -44,7 +46,7 @@ export function ModuleNav({
               onClick={onSaveAndExit}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              Salva e esci
+              {t("Salva e esci")}
             </button>
           </div>
         )}
@@ -55,7 +57,7 @@ export function ModuleNav({
               onClick={() => onStepAdvance(currentStep - 1)}
               className={`flex-1 rounded-xl font-bold ${profile.profile === "senior" ? "h-14 text-base" : "h-12"}`}
             >
-              Indietro
+              {t("Indietro")}
             </Button>
           )}
           {!isLastStep ? (

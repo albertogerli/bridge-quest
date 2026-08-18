@@ -1,13 +1,15 @@
 "use client";
 
 import type { Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Classifica dei primi 10 utenti per XP. */
 export function TopUsersPanel({ stats }: { stats: Stats | null }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-        Top 10 utenti per XP
+        {t("Top 10 utenti per XP")}
       </h2>
       <div className="space-y-2">
         {stats?.topUsers.map((u, i) => (

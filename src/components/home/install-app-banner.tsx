@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "motion/react";
 import { Smartphone } from "lucide-react";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export function InstallAppBanner() {
+  const t = useT();
   const { canInstall, isInstalled, isIOS, install } = usePwaInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(false);
@@ -32,10 +34,10 @@ export function InstallAppBanner() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-foreground">
-                      Installa Bridge LAB
+                      {t("Installa Bridge LAB")}
                     </p>
                     <p className="text-[12px] text-muted-foreground">
-                      Aggiungilo alla schermata Home
+                      {t("Aggiungilo alla schermata Home")}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -44,14 +46,14 @@ export function InstallAppBanner() {
                         onClick={() => install()}
                         className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
                       >
-                        Installa
+                        {t("Installa")}
                       </button>
                     ) : isIOS ? (
                       <button
                         onClick={() => setShowIOSGuide(true)}
                         className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
                       >
-                        Come fare
+                        {t("Come fare")}
                       </button>
                     ) : null}
                     <button
@@ -95,7 +97,7 @@ export function InstallAppBanner() {
             >
               <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" aria-hidden="true" />
               <h3 className="text-lg font-bold text-foreground text-center mb-4">
-                Installa su iPhone/iPad
+                {t("Installa su iPhone/iPad")}
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -103,7 +105,7 @@ export function InstallAppBanner() {
                     1
                   </div>
                   <p className="text-sm text-foreground/80">
-                    Tocca il pulsante <strong>Condividi</strong>{" "}
+                    {t("Tocca il pulsante")} <strong>{t("Condividi")}</strong>{" "}
                     <span className="inline-block align-middle">
                       <svg className="w-5 h-5 inline text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                         <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
@@ -119,7 +121,7 @@ export function InstallAppBanner() {
                     2
                   </div>
                   <p className="text-sm text-foreground/80">
-                    Scorri e tocca <strong>&quot;Aggiungi a schermata Home&quot;</strong>
+                    {t("Scorri e tocca")} <strong>&quot;Aggiungi a schermata Home&quot;</strong>
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -127,7 +129,7 @@ export function InstallAppBanner() {
                     3
                   </div>
                   <p className="text-sm text-foreground/80">
-                    Tocca <strong>&quot;Aggiungi&quot;</strong> in alto a destra
+                    {t("Tocca")} <strong>&quot;Aggiungi&quot;</strong> in alto a destra
                   </p>
                 </div>
               </div>
@@ -135,7 +137,7 @@ export function InstallAppBanner() {
                 onClick={() => setShowIOSGuide(false)}
                 className="mt-6 w-full py-3 rounded-2xl bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition-transform"
               >
-                Ho capito
+                {t("Ho capito")}
               </button>
             </motion.div>
           </motion.div>

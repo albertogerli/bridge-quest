@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/use-profile";
 import { useGameStore } from "@/store/use-game-store";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const chestMilestoneIcons = {
   3: (size: string) => <Gift className={`${size} text-amber-700`} />,
@@ -23,6 +24,7 @@ const chestMilestones = [
 ];
 
 export function TreasureChests({ modulesCompleted }: { modulesCompleted: number }) {
+  const t = useT();
   const profile = useProfile();
   const [showChestPopup, setShowChestPopup] = useState<typeof chestMilestones[0] | null>(null);
   const chestDialogRef = useRef<HTMLDivElement>(null);
@@ -104,7 +106,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
               onClick={() => setShowChestPopup(null)}
               className="mt-6 w-full h-12 rounded-xl bg-[#c8a44e] font-semibold shadow-lg"
             >
-              Fantastico!
+              {t("Fantastico!")}
             </Button>
           </motion.div>
         </motion.div>
@@ -169,8 +171,8 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
 
       {!nextChest && (
         <div className="text-center py-2">
-          <p className="text-sm font-bold text-amber-700 dark:text-amber-400 flex items-center justify-center gap-1">Tutti i bauli aperti! <Crown className="w-4 h-4" /></p>
-          <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">Sei un vero campione</p>
+          <p className="text-sm font-bold text-amber-700 dark:text-amber-400 flex items-center justify-center gap-1">{t("Tutti i bauli aperti!")} <Crown className="w-4 h-4" /></p>
+          <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">{t("Sei un vero campione")}</p>
         </div>
       )}
     </div>

@@ -9,12 +9,14 @@ import { levelInfo } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
 import type { Course, World } from "@/lib/catalog";
 import { WorldCard, type WorldSummary } from "./world-card";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface WorldsGridProps {
   completedModules: Record<string, boolean>;
 }
 
 export function WorldsGrid({ completedModules }: WorldsGridProps) {
+  const t = useT();
   const { courses } = useCatalog();
 
   // Live-derived world summaries — recompute only when the catalog changes.
@@ -90,7 +92,7 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
               <BookOpen className="w-4 h-4 text-[#1B5E3B] dark:text-emerald-400" />
             </div>
             <h2 className="text-lg sm:text-xl font-semibold text-foreground font-display">
-              Il tuo percorso
+              {t("Il tuo percorso")}
             </h2>
           </div>
           <Link href="/lezioni">
@@ -98,7 +100,7 @@ export function WorldsGrid({ completedModules }: WorldsGridProps) {
               variant="outline"
               className="text-[12px] font-semibold text-[#1B5E3B] dark:text-emerald-400 border-[#1B5E3B]/20 dark:border-emerald-800 cursor-pointer hover:bg-[#1B5E3B]/5 dark:hover:bg-emerald-950/40 transition-colors"
             >
-              Vedi tutto →
+              {t("Vedi tutto →")}
             </Badge>
           </Link>
         </div>

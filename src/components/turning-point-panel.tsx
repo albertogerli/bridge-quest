@@ -12,6 +12,7 @@ import {
   type PlayedTrick,
   type ReplayAnalysis,
 } from "@/lib/dds-replay";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * «Dove è cambiata la mano».
@@ -38,6 +39,7 @@ export function TurningPointPanel({
   strain: Suit | null;
   declarer: Position;
 }) {
+  const t = useT();
   const [analysis, setAnalysis] = useState<ReplayAnalysis | null>(null);
   const [working, setWorking] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -60,7 +62,7 @@ export function TurningPointPanel({
       <div className="rounded-2xl border border-border bg-card p-5">
         <h3 className="font-bold mb-1 flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-figb" aria-hidden="true" />
-          Dove è cambiata la mano
+          {t("Dove è cambiata la mano")}
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
           Rigioca la smazzata presa per presa e indica i momenti in cui il
@@ -68,7 +70,7 @@ export function TurningPointPanel({
         </p>
         {failed && (
           <p className="text-sm text-red-600 dark:text-red-400 mb-3">
-            Il calcolo non è riuscito. Riprova.
+            {t("Il calcolo non è riuscito. Riprova.")}
           </p>
         )}
         <Button disabled={working} onClick={run}>
@@ -86,7 +88,7 @@ export function TurningPointPanel({
     <div className="rounded-2xl border border-border bg-card p-5">
       <h3 className="font-bold mb-3 flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-figb" aria-hidden="true" />
-        Dove è cambiata la mano
+        {t("Dove è cambiata la mano")}
       </h3>
 
       <p className="text-sm text-muted-foreground mb-4">

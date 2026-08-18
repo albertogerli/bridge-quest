@@ -6,12 +6,14 @@ import { GraduationCap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { levelInfo } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface CoursesSectionProps {
   completedModules: Record<string, boolean>;
 }
 
 export function CoursesSection({ completedModules }: CoursesSectionProps) {
+  const t = useT();
   const { courses } = useCatalog();
   const availableCourses = courses.filter((c) => c.lessons.length > 0);
 
@@ -26,7 +28,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
               <GraduationCap className="w-4 h-4 text-primary" />
             </div>
             <h2 className="text-base font-semibold text-foreground">
-              I Corsi FIGB
+              {t("I Corsi FIGB")}
             </h2>
           </div>
           <Badge variant="outline" className="text-[12px] font-bold text-primary/60 border-primary/20">

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { cardAriaLabel } from "@/lib/card-labels";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface HandReplayProps {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
@@ -37,6 +38,7 @@ const POSITION_LABELS: Record<string, string> = {
 type PlaySpeed = 1 | 2 | 4;
 
 export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
+  const t = useT();
   const [currentPlay, setCurrentPlay] = useState(0); // 0-51 (13 tricks x 4 cards)
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState<PlaySpeed>(1);
@@ -208,7 +210,7 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
 
         {/* Trick counter */}
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
-          <div className="text-xs text-gray-600 font-medium">Presa</div>
+          <div className="text-xs text-gray-600 font-medium">{t("Presa")}</div>
           <div className="text-xl font-bold text-gray-900">
             {completedTricks}/{tricks.length}
           </div>
@@ -217,7 +219,7 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
         {/* Completed tricks stack */}
         {completedTricks > 0 && (
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
-            <div className="text-xs text-gray-600 font-medium mb-1">Prese fatte</div>
+            <div className="text-xs text-gray-600 font-medium mb-1">{t("Prese fatte")}</div>
             {tricks.slice(0, completedTricks).map((trick, idx) => (
               <div key={idx} className="text-xs flex items-center gap-1">
                 <span className="font-mono">{idx + 1}.</span>

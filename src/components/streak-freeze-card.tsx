@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Flame, Snowflake, Shield, Coins } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface StreakFreezeCardProps {
   streak: number;
@@ -53,6 +54,7 @@ function decrementFreezes(): void {
 }
 
 export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps) {
+  const t = useT();
   const [isFrozen, setIsFrozen] = useState(false);
   const [availableFiches, setAvailableFiches] = useState(0);
   const [freezesRemaining, setFreezesRemaining] = useState(MAX_FREEZES_PER_WEEK);
@@ -158,7 +160,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
             </AnimatePresence>
 
             <div>
-              <h3 className="font-bold text-lg text-foreground">Streak Attuale</h3>
+              <h3 className="font-bold text-lg text-foreground">{t("Streak Attuale")}</h3>
               <p className="text-2xl font-bold text-figb dark:text-primary">
                 {streak} {streak === 1 ? "giorno" : "giorni"} 🔥
               </p>
@@ -166,7 +168,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
           </div>
 
           <div className="text-right">
-            <p className="text-sm text-muted-foreground">Congeli rimasti</p>
+            <p className="text-sm text-muted-foreground">{t("Congeli rimasti")}</p>
             <p className="text-lg font-bold text-figb dark:text-primary">
               {freezesRemaining}/{MAX_FREEZES_PER_WEEK}
             </p>
@@ -186,10 +188,10 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               <div className="flex-1">
                 <p className="font-semibold text-blue-900 dark:text-blue-200">
-                  Streak protetto per oggi ❄️
+                  {t("Streak protetto per oggi ❄️")}
                 </p>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Puoi saltare oggi senza perdere la tua serie
+                  {t("Puoi saltare oggi senza perdere la tua serie")}
                 </p>
               </div>
             </motion.div>
@@ -204,7 +206,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               {!hasFreezesLeft && (
                 <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900">
                   <p className="text-sm text-amber-800 dark:text-amber-300">
-                    Hai esaurito i congeli settimanali. Riprova lunedì!
+                    {t("Hai esaurito i congeli settimanali. Riprova lunedì!")}
                   </p>
                 </div>
               )}
@@ -219,14 +221,14 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
                 }`}
               >
                 <Snowflake className="w-5 h-5" />
-                <span>Congela Streak</span>
+                <span>{t("Congela Streak")}</span>
                 <span className="flex items-center gap-1">
                   {FREEZE_COST} <Coins className="w-4 h-4" />
                 </span>
               </button>
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Le tue fiches:</span>
+                <span className="text-muted-foreground">{t("Le tue fiches:")}</span>
                 <span
                   className={`font-bold ${
                     canAfford ? "text-figb dark:text-primary" : "text-red-500 dark:text-red-400"
@@ -263,7 +265,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
               >
                 <Snowflake className="w-16 h-16 text-blue-500 mx-auto mb-2" />
                 <p className="text-xl font-bold text-blue-900 dark:text-blue-200">
-                  Streak Congelato! ❄️
+                  {t("Streak Congelato! ❄️")}
                 </p>
               </motion.div>
             </motion.div>

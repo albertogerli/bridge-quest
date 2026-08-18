@@ -7,6 +7,7 @@ import { MapPin, Navigation, School, Filter, ChevronDown, ExternalLink } from "l
 import { useAsdClubs } from "@/store/use-asd-store";
 import type { AsdClub } from "@/lib/catalog";
 import { asdNameToSlug } from "@/lib/asd-utils";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type FilterMode = "tutti" | "scuola";
 
@@ -26,6 +27,7 @@ function getMapsUrl(club: AsdClub): string {
 }
 
 export default function TrovaCircoloPage() {
+  const t = useT();
   const { clubs: allClubs } = useAsdClubs();
   const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -105,11 +107,11 @@ export default function TrovaCircoloPage() {
         <div className="mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 text-xs text-white/60 mb-3">
-              <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
+              <Link href="/" className="hover:text-white/80 transition-colors">{t("Home")}</Link>
               <span>/</span>
-              <span className="text-white/90 font-semibold">Trova la tua ASD</span>
+              <span className="text-white/90 font-semibold">{t("Trova la tua ASD")}</span>
             </div>
-            <h1 className="text-3xl font-bold font-display mb-2">Trova la tua ASD</h1>
+            <h1 className="text-3xl font-bold font-display mb-2">{t("Trova la tua ASD")}</h1>
             <p className="text-white/80 text-base">
               {filteredClubs.length} associazioni FIGB in tutta Italia{filter === "scuola" ? " con scuola bridge" : ""}
             </p>
@@ -125,12 +127,12 @@ export default function TrovaCircoloPage() {
             {geoLoading ? (
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
                 <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                <span className="text-sm">Ricerca posizione...</span>
+                <span className="text-sm">{t("Ricerca posizione...")}</span>
               </div>
             ) : userPos ? (
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
                 <Navigation className="w-4 h-4 text-emerald-300 flex-shrink-0" />
-                <span className="text-sm text-white/90">Posizione trovata! Associazioni ordinate per distanza.</span>
+                <span className="text-sm text-white/90">{t("Posizione trovata! Associazioni ordinate per distanza.")}</span>
               </div>
             ) : geoError ? (
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
@@ -139,7 +141,7 @@ export default function TrovaCircoloPage() {
                   onClick={requestLocation}
                   className="text-sm font-bold text-white bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"
                 >
-                  Riprova
+                  {t("Riprova")}
                 </button>
               </div>
             ) : (
@@ -148,7 +150,7 @@ export default function TrovaCircoloPage() {
                 className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 text-sm font-bold hover:bg-white/30 transition-colors w-full"
               >
                 <MapPin className="w-4 h-4" />
-                Condividi posizione per trovare le ASD vicine
+                {t("Condividi posizione per trovare le ASD vicine")}
               </button>
             )}
           </motion.div>
@@ -212,7 +214,7 @@ export default function TrovaCircoloPage() {
               className="flex items-center gap-1 mt-2 text-[12px] text-muted-foreground font-bold hover:text-muted-foreground transition-colors"
             >
               <Filter className="w-3 h-3" />
-              Filtri avanzati
+              {t("Filtri avanzati")}
               <ChevronDown className={`w-3 h-3 transition-transform ${showFilters ? "rotate-180" : ""}`} />
             </button>
 
@@ -231,7 +233,7 @@ export default function TrovaCircoloPage() {
                       onChange={(e) => setShowOnlyActive(e.target.checked)}
                       className="rounded border-border text-figb dark:text-primary focus:ring-figb dark:focus:ring-primary"
                     />
-                    Solo ASD attive (iscritte 2025/2026)
+                    {t("Solo ASD attive (iscritte 2025/2026)")}
                   </label>
                 </motion.div>
               )}
@@ -243,8 +245,8 @@ export default function TrovaCircoloPage() {
             {displayedClubs.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
                 <MapPin className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
-                <p className="text-lg font-bold text-foreground">Nessuna ASD trovata</p>
-                <p className="text-sm text-muted-foreground mt-1">Prova a modificare i filtri o la ricerca</p>
+                <p className="text-lg font-bold text-foreground">{t("Nessuna ASD trovata")}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t("Prova a modificare i filtri o la ricerca")}</p>
               </motion.div>
             ) : (
               displayedClubs.map((club, i) => {
@@ -307,14 +309,14 @@ export default function TrovaCircoloPage() {
                         className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-figb dark:text-primary bg-figb/5 dark:bg-primary/15 rounded-lg py-2 hover:bg-figb/10 dark:hover:bg-primary/20 transition-colors"
                       >
                         <Navigation className="w-3.5 h-3.5" />
-                        Indicazioni
+                        {t("Indicazioni")}
                       </a>
                       <Link
                         href={`/circolo/${asdNameToSlug(club.name)}`}
                         className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-muted-foreground bg-muted/50 rounded-lg py-2 hover:bg-muted transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        Classifica
+                        {t("Classifica")}
                       </Link>
                     </div>
                   </motion.div>

@@ -22,6 +22,7 @@ import { describePar, parAssignmentFromContracts, type ParContract } from "@/lib
 import { createAssignment, getMyClasses, type ClassRoom } from "@/lib/instructors";
 import { pubblicaScenario } from "@/lib/mani-condivise";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const SEATS: { key: Position; label: string }[] = [
@@ -52,6 +53,7 @@ const CONTRATTI = [1, 2, 3, 4, 5, 6, 7].flatMap((l) =>
  * finché non si decide di scaricarla.
  */
 export default function GeneraManiPage() {
+  const t = useT();
   const { user, loading: authLoading } = useSharedAuth();
 
   const [templateId, setTemplateId] = useState(DEAL_TEMPLATES[0].id);
@@ -281,7 +283,7 @@ export default function GeneraManiPage() {
         <p className="text-sm text-muted-foreground">
           Questa pagina è riservata agli insegnanti.{" "}
           <Link href="/login?redirect=/istruttori/genera-mani" className="underline">
-            Accedi
+            {t("Accedi")}
           </Link>
           .
         </p>
@@ -294,7 +296,7 @@ export default function GeneraManiPage() {
       <header className="mb-6">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Wand2 className="w-6 h-6 text-figb" aria-hidden="true" />
-          Genera mani
+          {t("Genera mani")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           Scegli cosa deve avere la mano e ottieni tutte le distribuzioni che
@@ -307,7 +309,7 @@ export default function GeneraManiPage() {
           htmlFor="modello"
           className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider"
         >
-          Argomento
+          {t("Argomento")}
         </label>
         <select
           id="modello"
@@ -329,7 +331,7 @@ export default function GeneraManiPage() {
               htmlFor="quante"
               className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider"
             >
-              Quante mani
+              {t("Quante mani")}
             </label>
             <input
               id="quante"
@@ -348,7 +350,7 @@ export default function GeneraManiPage() {
               htmlFor="seme"
               className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider"
             >
-              Seme
+              {t("Seme")}
             </label>
             <input
               id="seme"
@@ -379,7 +381,7 @@ export default function GeneraManiPage() {
             }}
           >
             <RefreshCw className="w-4 h-4 mr-1" aria-hidden="true" />
-            Altre mani
+            {t("Altre mani")}
           </Button>
           {result?.deals.length ? (
             <Button variant="outline" disabled={analizzando} onClick={analizza}>
@@ -391,7 +393,7 @@ export default function GeneraManiPage() {
           {result?.deals.length ? (
             <Button variant="outline" onClick={download}>
               <Download className="w-4 h-4 mr-1" aria-hidden="true" />
-              Scarica PBN
+              {t("Scarica PBN")}
             </Button>
           ) : null}
         </div>
@@ -410,7 +412,7 @@ export default function GeneraManiPage() {
 
       {result && result.deals.length > 0 && classes.length > 0 && (
         <div className="rounded-2xl border border-figb/30 bg-figb/5 p-5 mb-6">
-          <h2 className="font-bold mb-1">Assegna alla classe</h2>
+          <h2 className="font-bold mb-1">{t("Assegna alla classe")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
             Le mani diventano un compito che gli allievi trovano nella loro
             classe.
@@ -425,7 +427,7 @@ export default function GeneraManiPage() {
             <p className="text-sm text-muted-foreground mb-4">
               Senza il par, tutte le mani prenderebbero lo stesso contratto — un
               contratto unico è impossibile su alcune e troppo timido su altre.
-              Premi <strong>Calcola par</strong> e ognuna riceverà il suo,
+              Premi <strong>{t("Calcola par")}</strong> e ognuna riceverà il suo,
               modificabile.
             </p>
           )}
@@ -433,7 +435,7 @@ export default function GeneraManiPage() {
           <div className="flex flex-wrap gap-3 mb-4">
             <div>
               <label htmlFor="classe" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Classe
+                {t("Classe")}
               </label>
               <select
                 id="classe"
@@ -441,7 +443,7 @@ export default function GeneraManiPage() {
                 onChange={(e) => setClassId(e.target.value)}
                 className="h-12 px-4 rounded-xl border border-border bg-card text-sm min-w-[12rem]"
               >
-                <option value="">Scegli…</option>
+                <option value="">{t("Scegli…")}</option>
                 {classes.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -449,7 +451,7 @@ export default function GeneraManiPage() {
             </div>
             <div>
               <label htmlFor="contratto" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Contratto di riserva
+                {t("Contratto di riserva")}
               </label>
               <select
                 id="contratto"
@@ -464,7 +466,7 @@ export default function GeneraManiPage() {
             </div>
             <div>
               <label htmlFor="dichiarante" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                Dichiarante di riserva
+                {t("Dichiarante di riserva")}
               </label>
               <select
                 id="dichiarante"
@@ -487,7 +489,7 @@ export default function GeneraManiPage() {
               className="mt-1"
             />
             <span className="text-sm">
-              <strong>Solo gioco della carta</strong>
+              <strong>{t("Solo gioco della carta")}</strong>
               <span className="block text-xs text-muted-foreground">
                 Ogni mano arriva con la dichiarazione già fatta: l&apos;allievo
                 si concentra sul gioco. Senza, vedrebbe un contratto piovuto dal
@@ -505,7 +507,7 @@ export default function GeneraManiPage() {
 
       {result && result.deals.length > 0 && (
         <div className="rounded-2xl border border-border bg-card p-5 mb-6">
-          <h2 className="font-bold mb-1">Pubblica come esercizio di licita</h2>
+          <h2 className="font-bold mb-1">{t("Pubblica come esercizio di licita")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
             Le mani finiscono nella scorta condivisa: chiunque apra «Licita e
             vediamo» può incontrarle, e accanto al voto vede come è andata agli
@@ -557,7 +559,7 @@ export default function GeneraManiPage() {
                 {analisi?.[i] && (
                   <div className="mb-3 rounded-xl bg-figb/5 border border-figb/20 px-3 py-2">
                     <p className="text-xs">
-                      <span className="font-bold text-figb">Par:</span>{" "}
+                      <span className="font-bold text-figb">{t("Par:")}</span>{" "}
                       {analisi[i].letto
                         ? describePar(analisi[i].letto, analisi[i].par.score)
                         : analisi[i].par.contracts.join(", ")}
@@ -572,7 +574,7 @@ export default function GeneraManiPage() {
                             htmlFor={`contratto-${i}`}
                             className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                           >
-                            Contratto
+                            {t("Contratto")}
                           </label>
                           <select
                             id={`contratto-${i}`}
@@ -590,7 +592,7 @@ export default function GeneraManiPage() {
                             htmlFor={`dichiarante-${i}`}
                             className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                           >
-                            Dichiarante
+                            {t("Dichiarante")}
                           </label>
                           <select
                             id={`dichiarante-${i}`}

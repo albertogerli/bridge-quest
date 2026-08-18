@@ -7,6 +7,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { getMyClasses } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il riquadro degli insegnanti in home.
@@ -22,6 +23,7 @@ import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
  * elenchi separati divergono al primo strumento nuovo.
  */
 export function InstructorCard() {
+  const t = useT();
   const { user, profile, loading } = useSharedAuth();
   const [classCount, setClassCount] = useState<number | null>(null);
 
@@ -66,7 +68,7 @@ export function InstructorCard() {
         id="riquadro-istruttori"
         className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3"
       >
-        Per insegnare
+        {t("Per insegnare")}
       </h2>
 
       <div className="space-y-3">
@@ -78,7 +80,7 @@ export function InstructorCard() {
             <GraduationCap className="w-5 h-5" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">Le tue classi</p>
+            <p className="font-semibold text-sm">{t("Le tue classi")}</p>
             <p className="text-xs text-muted-foreground">
               {classCount === null
                 ? "compiti e andamento"

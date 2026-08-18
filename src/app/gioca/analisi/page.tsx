@@ -9,6 +9,7 @@ import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { TurningPointPanel } from "@/components/turning-point-panel";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface GameData {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
@@ -37,6 +38,7 @@ export default function AnalisiPageWrapper() {
 }
 
 function AnalisiPage() {
+  const t = useT();
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [currentTrick, setCurrentTrick] = useState(0);
   const [showShareSuccess, setShowShareSuccess] = useState(false);
@@ -147,7 +149,7 @@ Gioca su bridgelab.it`;
         <div className="card-clean max-w-md w-full p-8 text-center">
           <div className="text-6xl mb-4">🃏</div>
           <h1 className="text-2xl font-bold text-foreground font-display mb-2">
-            Nessuna mano da analizzare
+            {t("Nessuna mano da analizzare")}
           </h1>
           <p className="text-muted-foreground mb-6">
             Completa una mano nel gioco per vedere l&apos;analisi dettagliata.
@@ -157,7 +159,7 @@ Gioca su bridgelab.it`;
             className="inline-flex items-center gap-2 px-6 py-3 bg-figb text-white rounded-xl hover:bg-figb-dark transition-colors font-medium"
           >
             <ArrowLeft className="w-5 h-5" />
-            Vai ai Giochi
+            {t("Vai ai Giochi")}
           </Link>
         </div>
       </div>
@@ -175,7 +177,7 @@ Gioca su bridgelab.it`;
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground font-display mb-1">
-              Analisi della Mano
+              {t("Analisi della Mano")}
             </h1>
             <div className="flex items-center gap-3 text-muted-foreground">
               <span className="text-lg font-semibold">{contractStr}</span>
@@ -189,7 +191,7 @@ Gioca su bridgelab.it`;
             className="flex items-center gap-2 px-4 py-2 text-foreground/80 hover:bg-card rounded-xl transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            Torna ai Giochi
+            {t("Torna ai Giochi")}
           </Link>
         </div>
 
@@ -198,7 +200,7 @@ Gioca su bridgelab.it`;
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-foreground/80 mb-1">
-                Risultato
+                {t("Risultato")}
               </h2>
               <p className="text-muted-foreground">
                 {gameData.result >= 0 ? (
@@ -221,7 +223,7 @@ Gioca su bridgelab.it`;
                 <div className="text-5xl font-bold text-foreground">
                   {overallGrade}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">Voto</div>
+                <div className="text-sm text-muted-foreground mt-1">{t("Voto")}</div>
               </div>
               <button
                 onClick={handleShare}
@@ -230,7 +232,7 @@ Gioca su bridgelab.it`;
               >
                 <Share2 className="w-5 h-5 text-foreground/80" />
                 <span className="text-sm font-medium text-foreground/80">
-                  Condividi
+                  {t("Condividi")}
                 </span>
               </button>
             </div>
@@ -245,7 +247,7 @@ Gioca su bridgelab.it`;
 
         {copiaNegata && (
           <div className="fixed top-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
-            Il browser non ha concesso la copia. Seleziona il testo a mano.
+            {t("Il browser non ha concesso la copia. Seleziona il testo a mano.")}
           </div>
         )}
 
@@ -290,22 +292,22 @@ Gioca su bridgelab.it`;
 
         {/* Bottom CTA */}
         <div className="card-clean p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center">
-          <h3 className="text-xl font-bold mb-2">Vuoi migliorare ancora?</h3>
+          <h3 className="text-xl font-bold mb-2">{t("Vuoi migliorare ancora?")}</h3>
           <p className="text-blue-100 mb-4">
-            Rivedi le lezioni e pratica con le smazzate didattiche
+            {t("Rivedi le lezioni e pratica con le smazzate didattiche")}
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link
               href="/lezioni"
               className="px-6 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-colors font-medium"
             >
-              Vai alle Lezioni
+              {t("Vai alle Lezioni")}
             </Link>
             <Link
               href="/gioca"
               className="px-6 py-3 bg-blue-500 hover:bg-blue-400 rounded-xl transition-colors font-medium"
             >
-              Gioca Ancora
+              {t("Gioca Ancora")}
             </Link>
           </div>
         </div>

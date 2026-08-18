@@ -1,13 +1,15 @@
 "use client";
 
 import type { Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Segmentazione utenti per presenza di username BBO e associazione ASD. */
 export function BboAsdSegmentation({ stats }: { stats: Stats | null }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-8">
       <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-        Segmentazione BBO / Associazione
+        {t("Segmentazione BBO / Associazione")}
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
@@ -20,7 +22,7 @@ export function BboAsdSegmentation({ stats }: { stats: Stats | null }) {
           </div>
         </div>
         <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-          <div className="text-[12px] font-bold text-amber-600 uppercase tracking-wider">BBO senza ASD</div>
+          <div className="text-[12px] font-bold text-amber-600 uppercase tracking-wider">{t("BBO senza ASD")}</div>
           <div className="text-2xl font-bold text-amber-700 mt-1">
             {stats?.bboWithoutAsd ?? 0}
           </div>
@@ -29,7 +31,7 @@ export function BboAsdSegmentation({ stats }: { stats: Stats | null }) {
           </div>
         </div>
         <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-          <div className="text-[12px] font-bold text-blue-600 uppercase tracking-wider">ASD senza BBO</div>
+          <div className="text-[12px] font-bold text-blue-600 uppercase tracking-wider">{t("ASD senza BBO")}</div>
           <div className="text-2xl font-bold text-blue-700 mt-1">
             {stats?.asdWithoutBbo ?? 0}
           </div>
@@ -38,7 +40,7 @@ export function BboAsdSegmentation({ stats }: { stats: Stats | null }) {
           </div>
         </div>
         <div className="bg-red-50 rounded-xl p-4 border border-red-200">
-          <div className="text-[12px] font-bold text-red-600 uppercase tracking-wider">No BBO, no ASD</div>
+          <div className="text-[12px] font-bold text-red-600 uppercase tracking-wider">{t("No BBO, no ASD")}</div>
           <div className="text-2xl font-bold text-red-600 mt-1">
             {stats?.noBboNoAsd ?? 0}
           </div>

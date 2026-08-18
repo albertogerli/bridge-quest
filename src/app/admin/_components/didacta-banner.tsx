@@ -2,9 +2,11 @@
 
 import { MiniCard } from "./cards";
 import type { Stats, UserRow } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Contatore live mostrato solo durante DIDACTA 2026. */
 export function DidactaBanner({ stats, users }: { stats: Stats | null; users: UserRow[] }) {
+  const t = useT();
   return (
     <div className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border-2 border-amber-400/60 rounded-2xl p-5 mb-6">
       <div className="flex items-center gap-3">
@@ -14,7 +16,7 @@ export function DidactaBanner({ stats, users }: { stats: Stats | null; users: Us
         </div>
         <h2 className="text-lg font-black text-amber-900">DIDACTA 2026 LIVE</h2>
         <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/30 text-amber-700">
-          Firenze
+          {t("Firenze")}
         </span>
       </div>
       <div className="mt-3 grid grid-cols-3 gap-4">

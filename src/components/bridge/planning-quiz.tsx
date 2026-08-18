@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Target } from "lucide-react";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { useDDS } from "@/hooks/use-dds";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export interface PlanningQuizProps {
   hands: Record<Position, Card[]>;
@@ -32,6 +33,7 @@ export function PlanningQuiz({
   onAnswer,
   onDismiss,
 }: PlanningQuizProps) {
+  const t = useT();
   const dds = useDDS();
   const [ddTricks, setDdTricks] = useState<number | null>(null);
   const [isExact, setIsExact] = useState(false);
@@ -79,7 +81,7 @@ export function PlanningQuiz({
           <Target className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
           <div className="flex-1">
             <p className="text-sm font-bold text-amber-800 dark:text-amber-300">
-              Fai il piano prima di giocare
+              {t("Fai il piano prima di giocare")}
             </p>
             <p className="mt-1 text-xs font-medium text-amber-700 dark:text-amber-300">
               Guarda il morto e conta: quante prese puoi realizzare con il gioco
@@ -89,7 +91,7 @@ export function PlanningQuiz({
             {!answered && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {ddTricks === null ? (
-                  <span className="text-xs text-amber-600 dark:text-amber-400">Calcolo in corso…</span>
+                  <span className="text-xs text-amber-600 dark:text-amber-400">{t("Calcolo in corso…")}</span>
                 ) : (
                   options.map((n) => (
                     <Button
@@ -123,7 +125,7 @@ export function PlanningQuiz({
                   className="mt-2 h-8 rounded-xl px-4 text-xs font-bold"
                   onClick={onDismiss}
                 >
-                  Capito, gioco!
+                  {t("Capito, gioco!")}
                 </Button>
               </div>
             )}
@@ -133,7 +135,7 @@ export function PlanningQuiz({
                 onClick={onDismiss}
                 className="mt-2 text-[12px] font-semibold text-amber-600 dark:text-amber-400 underline-offset-2 hover:underline"
               >
-                Salta
+                {t("Salta")}
               </button>
             )}
           </div>

@@ -11,6 +11,7 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const SIMBOLO: Record<Suit, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
@@ -54,6 +55,7 @@ export default function DispensaPage() {
 }
 
 function Dispensa() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const params = useSearchParams();
   const compitoId = params.get("compito");
@@ -98,7 +100,7 @@ function Dispensa() {
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
           Riservato agli insegnanti.{" "}
-          <Link href="/login?redirect=/istruttori/dispensa" className="underline">Accedi</Link>.
+          <Link href="/login?redirect=/istruttori/dispensa" className="underline">{t("Accedi")}</Link>.
         </p>
       </div>
     );
@@ -108,7 +110,7 @@ function Dispensa() {
     <div className="min-h-screen px-4 py-6 max-w-4xl mx-auto">
       {/* Comandi: spariscono in stampa */}
       <div className="print:hidden mb-6">
-        <h1 className="text-2xl font-bold font-display mb-1">Dispensa</h1>
+        <h1 className="text-2xl font-bold font-display mb-1">{t("Dispensa")}</h1>
         <p className="text-sm text-muted-foreground mb-4">
           Il foglio da consegnare a fine lezione. Le soluzioni stanno in fondo,
           così la stessa dispensa serve prima come esercizio.
@@ -119,7 +121,7 @@ function Dispensa() {
             <>
               <div>
                 <label htmlFor="argomento" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                  Argomento
+                  {t("Argomento")}
                 </label>
                 <select
                   id="argomento"
@@ -134,7 +136,7 @@ function Dispensa() {
               </div>
               <div>
                 <label htmlFor="quante" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                  Quante mani
+                  {t("Quante mani")}
                 </label>
                 <input
                   id="quante"
@@ -147,13 +149,13 @@ function Dispensa() {
                 />
               </div>
               <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>
-                Altre mani
+                {t("Altre mani")}
               </Button>
             </>
           )}
           <Button onClick={() => window.print()}>
             <Printer className="w-4 h-4 mr-1" aria-hidden="true" />
-            Stampa o salva in PDF
+            {t("Stampa o salva in PDF")}
           </Button>
         </div>
       </div>
@@ -187,7 +189,7 @@ function Dispensa() {
 
         {conSoluzioni && (
           <section className="mt-8 break-before-page">
-            <h2 className="text-lg font-bold mb-3">Soluzioni</h2>
+            <h2 className="text-lg font-bold mb-3">{t("Soluzioni")}</h2>
             <ol className="text-sm space-y-1">
               {fogli.map((f, i) => (
                 <li key={i}>

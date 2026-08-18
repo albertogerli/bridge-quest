@@ -33,8 +33,10 @@ import { TopUsersPanel } from "./_components/top-users-panel";
 import { AsdDistributionPanel } from "./_components/asd-distribution-panel";
 import { UsersTable } from "./_components/users-table";
 import { UserDetailModal } from "./_components/user-detail-modal";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function AdminPage() {
+  const t = useT();
   const { user, profile, loading: authLoading } = useSharedAuth();
   const { users, stats, gameStats, loginHistory, accessiAttendibili, loading, fetchError, lastUpdated, fetchData } = useAdminData();
   const [search, setSearch] = useState("");
@@ -133,7 +135,7 @@ export default function AdminPage() {
               onClick={() => fetchData(false)}
               className="mt-2 text-xs bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
             >
-              Riprova
+              {t("Riprova")}
             </button>
           </div>
         )}

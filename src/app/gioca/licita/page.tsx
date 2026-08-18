@@ -25,6 +25,7 @@ import {
   confrontoCampo, evDelContratto, manoDaFare, registraRisultato, riferimento,
   type ConfrontoCampo, type ManoCondivisa, riferimentoUnico } from "@/lib/mani-condivise";
 import type { Vulnerability } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -80,6 +81,7 @@ interface Mano {
  * peggio ancora.
  */
 export default function LicitaPage() {
+  const t = useT();
   const [seed] = useState(() => Math.floor(Date.now() % 1_000_000));
   const [round, setRound] = useState(0);
   const [preparata, setPreparata] = useState<{ round: number; dati: Mano } | null>(null);
@@ -367,7 +369,7 @@ export default function LicitaPage() {
   if (round >= ROUNDS) {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
-        <h1 className="text-2xl font-bold font-display mb-2">Finito</h1>
+        <h1 className="text-2xl font-bold font-display mb-2">{t("Finito")}</h1>
         <p className="text-4xl font-bold text-figb my-6 flex items-center justify-center gap-2">
           {stelleTotali}
           <Stelle quante={Math.min(3, stelleTotali)} className="[&_svg]:w-7 [&_svg]:h-7" />
@@ -376,10 +378,10 @@ export default function LicitaPage() {
         <div className="flex flex-col gap-2">
           <Button onClick={() => { setRound(0); setStelleTotali(0); setLicita([]); setEsito(null); }}>
             <RotateCcw className="w-4 h-4 mr-1" aria-hidden="true" />
-            Ancora
+            {t("Ancora")}
           </Button>
           <Link href="/gioca" className="text-sm text-muted-foreground hover:underline">
-            Torna ai giochi
+            {t("Torna ai giochi")}
           </Link>
         </div>
       </div>
@@ -398,16 +400,21 @@ export default function LicitaPage() {
         </span>
       </header>
 
-      <h1 className="sr-only">Licita e vediamo</h1>
+      <h1 className="sr-only">{t("Licita e vediamo")}</h1>
 
-      {!mano && <p className="py-16 text-center text-sm text-muted-foreground">Preparo la mano…</p>}
+      {!mano && <p className="py-16 text-center text-sm text-muted-foreground">{t("Preparo la mano…")}</p>}
 
       {mano && (
         <>
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
               <Badge variant="secondary">
-                Sei Sud · {mano.dealer === "south" ? "apri tu" : `apre ${ETICHETTA[mano.dealer]}`}
+                {/* Due frasi INTERE, non un pezzo più un altro: chi traduce
+                    deve poter cambiare l'ordine delle parole, e «Sei Sud ·» +
+                    «apre Nord» in inglese non si monta allo stesso modo. */}
+                {mano.dealer === "south"
+                  ? t("Sei Sud, apri tu")
+                  : t("Sei Sud, apre {posto}", { posto: t(ETICHETTA[mano.dealer]) })}
               </Badge>
               <span className="text-xs text-muted-foreground">
                 {handHcp(mano.deal.south)} PO · {ZONA[mano.vulnerability]}
@@ -452,14 +459,14 @@ export default function LicitaPage() {
           {annullata && (
             <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">
               <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
-                Mano annullata
+                {t("Mano annullata")}
               </p>
               <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
                 Il motore che dichiara per gli altri non ha risposto. Questa mano
                 non viene contata: non sarebbe giusto darti un voto per un
                 problema nostro.
               </p>
-              <Button onClick={prossima}>Prossima mano</Button>
+              <Button onClick={prossima}>{t("Prossima mano")}</Button>
             </div>
           )}
 

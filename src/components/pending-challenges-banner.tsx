@@ -9,6 +9,7 @@ import { reportError } from "@/lib/report-error";
 import { evaluateChannel, persistentFailureMessage } from "@/lib/realtime-health";
 import { Swords, Check, X, ChevronRight, Clock } from "lucide-react";
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface Challenge {
   id: string;
@@ -33,6 +34,7 @@ interface Challenge {
 const SAFETY_POLL_INTERVAL = 300_000; // 5 minuti
 
 export function PendingChallengesBanner() {
+  const t = useT();
   const { user } = useSharedAuth();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const failuresRef = useRef(0);
@@ -221,7 +223,7 @@ export function PendingChallengesBanner() {
       <div className="flex items-center gap-2 mb-1">
         <Swords className="w-4 h-4 text-violet-600 dark:text-violet-400" />
         <h3 className="text-sm font-bold text-foreground">
-          Sfide in corso
+          {t("Sfide in corso")}
         </h3>
         <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 text-[12px] font-bold border-0">
           {challenges.length}
@@ -297,41 +299,41 @@ export function PendingChallengesBanner() {
                           className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1"
                         >
                           <Check className="w-3 h-3" />
-                          Accetta
+                          {t("Accetta")}
                         </button>
                         <button
                           onClick={() => handleDecline(challenge.id)}
                           className="rounded-xl bg-muted hover:bg-muted/70 text-muted-foreground px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1"
                         >
                           <X className="w-3 h-3" />
-                          Rifiuta
+                          {t("Rifiuta")}
                         </button>
                       </>
                     ) : isWaitingForOpponent ? (
                       <div className="rounded-xl bg-muted text-muted-foreground px-3 py-1.5 text-xs font-bold flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        Attesa
+                        {t("Attesa")}
                       </div>
                     ) : isActive && !userCompleted ? (
                       <Link
                         href={`/gioca/sfida-imp?challengeId=${challenge.id}`}
                       >
                         <button className="rounded-xl bg-figb hover:bg-figb-dark text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1">
-                          Gioca
+                          {t("Gioca")}
                           <ChevronRight className="w-3 h-3" />
                         </button>
                       </Link>
                     ) : isActive && userCompleted ? (
                       <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 text-xs font-bold flex items-center gap-1">
                         <Check className="w-3 h-3" />
-                        Fatto
+                        {t("Fatto")}
                       </div>
                     ) : (
                       <Link
                         href={`/gioca/sfida-imp?challengeId=${challenge.id}`}
                       >
                         <button className="rounded-xl bg-violet-500 hover:bg-violet-600 text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1">
-                          Continua
+                          {t("Continua")}
                           <ChevronRight className="w-3 h-3" />
                         </button>
                       </Link>

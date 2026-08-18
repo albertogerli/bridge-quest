@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { History } from "lucide-react";
 import { calcStars, formatDateShort, getWeekDates } from "@/lib/tournament-stats";
 import type { TournamentHistoryEntry } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Le settimane già giocate.
@@ -27,6 +28,7 @@ export function TournamentHistory({
   weekNumCorrente: number;
   loading: boolean;
 }) {
+  const t = useT();
   const passate = entries.filter((e) => e.weekNum !== weekNumCorrente);
 
   // Chi non ha mai giocato non ha bisogno di un riquadro vuoto che glielo
@@ -46,7 +48,7 @@ export function TournamentHistory({
         className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4"
       >
         <History className="w-4 h-4" aria-hidden="true" />
-        Le tue settimane
+        {t("Le tue settimane")}
       </h2>
 
       <ul className="divide-y divide-border">

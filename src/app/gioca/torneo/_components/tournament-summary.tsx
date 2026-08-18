@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { Smazzata } from "@/lib/catalog";
 import { calcStars, computeHandTotals, computeTournamentXp } from "@/lib/tournament-stats";
 import { type HandResult } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Massimo di prese ottenibili in una mano di bridge. */
 const TRICKS_PER_HAND = 13;
@@ -30,6 +31,7 @@ export function TournamentSummary({
   xpLabel: string;
   onBack: () => void;
 }) {
+  const t = useT();
   const { totalTricks, totalNeeded } = computeHandTotals(handResults);
   const totalDelta = totalTricks - totalNeeded;
   const stars = calcStars(totalDelta);
@@ -133,7 +135,7 @@ export function TournamentSummary({
             {/* Total tricks */}
             <div className="mt-5 mx-auto max-w-xs">
               <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-1.5">
-                <span>Prese totali</span>
+                <span>{t("Prese totali")}</span>
                 <span>
                   {totalTricks} / {totalNeeded}
                 </span>
@@ -240,7 +242,7 @@ export function TournamentSummary({
             onClick={onBack}
             className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-sm font-bold h-12 px-8 shadow-lg shadow-indigo-600/25"
           >
-            Torna al Torneo
+            {t("Torna al Torneo")}
           </Button>
         </motion.div>
       </div>

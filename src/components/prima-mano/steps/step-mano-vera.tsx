@@ -11,6 +11,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { StepProps } from "../types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface StepManoVeraProps extends StepProps {
   onHandResult: (result: { tricksMade: number; tricksNeeded: number; made: boolean }) => void;
@@ -23,6 +24,7 @@ const TUTORIAL_TIPS = [
 ];
 
 export function StepManoVera({ onComplete, playSound, onHandResult }: StepManoVeraProps) {
+  const t = useT();
   const declarer = ONBOARDING_HAND.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const xpSaved = useRef(false);
@@ -120,7 +122,7 @@ export function StepManoVera({ onComplete, playSound, onHandResult }: StepManoVe
       {/* Contract info bar */}
       <div className="flex items-center justify-between rounded-[20px] border border-gray-200 bg-[#fffaf0] px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-[#12305f]">Contratto:</span>
+          <span className="text-sm font-bold text-[#12305f]">{t("Contratto:")}</span>
           <span className="flex items-center gap-1 text-sm font-bold text-[#003DA5]">
             4 <SuitSymbol suit="spade" size="sm" />
           </span>

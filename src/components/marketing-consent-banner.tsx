@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Bell } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface MarketingConsentBannerProps {
   user: { id: string } | null;
@@ -14,6 +15,7 @@ export function MarketingConsentBanner({
   user,
   marketingConsent,
 }: MarketingConsentBannerProps) {
+  const t = useT();
   const [show, setShow] = useState(false);
   const [exiting, setExiting] = useState(false);
 
@@ -66,7 +68,7 @@ export function MarketingConsentBanner({
 
             {/* Title */}
             <h3 className="text-center text-base font-bold text-foreground mb-2">
-              Resta aggiornato sul mondo del Bridge
+              {t("Resta aggiornato sul mondo del Bridge")}
             </h3>
 
             {/* Description */}
@@ -81,7 +83,7 @@ export function MarketingConsentBanner({
               onClick={() => handleChoice(true)}
               className="w-full py-3 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors active:scale-[0.98]"
             >
-              Sì, tienimi aggiornato
+              {t("Sì, tienimi aggiornato")}
             </button>
 
             {/* Decline button */}
@@ -89,7 +91,7 @@ export function MarketingConsentBanner({
               onClick={() => handleChoice(false)}
               className="w-full py-2.5 mt-2 text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
             >
-              No grazie
+              {t("No grazie")}
             </button>
           </div>
         </motion.div>

@@ -17,12 +17,14 @@ import { ModuleContent } from "./_components/module-content";
 import { ModuleHeader } from "./_components/module-header";
 import { ModuleNav } from "./_components/module-nav";
 import { ModuleEffects, ModuleToasts } from "./_components/module-overlays";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ModulePage({
   params,
 }: {
   params: Promise<{ lessonId: string; moduleId: string }>;
 }) {
+  const t = useT();
   const { lessonId, moduleId } = use(params);
   const session = useModuleSession(lessonId, moduleId);
   const { lesson, mod, profile } = session;
@@ -30,7 +32,7 @@ export default function ModulePage({
   if (!session.catalogLoaded) {
     return (
       <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento modulo">
-        Caricamento modulo…
+        {t("Caricamento modulo…")}
       </div>
     );
   }
@@ -38,9 +40,9 @@ export default function ModulePage({
   if (!lesson || !mod) {
     return (
       <div className="pt-10 px-5 text-center">
-        <p className="text-muted-foreground">Modulo non trovato</p>
+        <p className="text-muted-foreground">{t("Modulo non trovato")}</p>
         <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
-          Torna alle lezioni
+          {t("Torna alle lezioni")}
         </Link>
       </div>
     );

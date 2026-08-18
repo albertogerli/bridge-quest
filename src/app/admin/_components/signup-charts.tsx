@@ -1,9 +1,11 @@
 "use client";
 
 import type { Stats } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Grafici delle iscrizioni: per ora (oggi) e per giorno (ultimi 30). */
 export function SignupCharts({ stats }: { stats: Stats | null }) {
+  const t = useT();
   const maxDaily = stats ? Math.max(...stats.dailySignups.map((d) => d.count), 1) : 1;
   const maxHourly = stats ? Math.max(...stats.hourlySignups, 1) : 1;
 
@@ -12,7 +14,7 @@ export function SignupCharts({ stats }: { stats: Stats | null }) {
       {/* Hourly signups today */}
       <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-          Iscrizioni per ora (oggi)
+          {t("Iscrizioni per ora (oggi)")}
         </h2>
         <div className="flex items-end gap-[3px]" style={{ height: 120 }}>
           {stats?.hourlySignups.map((count, hour) => {
@@ -44,7 +46,7 @@ export function SignupCharts({ stats }: { stats: Stats | null }) {
       {/* 30-day trend */}
       <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-          Iscrizioni ultimi 30 giorni
+          {t("Iscrizioni ultimi 30 giorni")}
         </h2>
         <div className="flex items-end gap-[2px]" style={{ height: 120 }}>
           {stats?.dailySignups.map((d) => {

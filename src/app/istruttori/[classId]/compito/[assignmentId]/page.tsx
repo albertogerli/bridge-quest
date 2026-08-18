@@ -23,6 +23,7 @@ import {
   type ClassMember,
   type AssignmentResultRow,
 } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Cell state for the heatmap. */
 type Cell =
@@ -35,6 +36,7 @@ export default function AssignmentResultsPage({
 }: {
   params: Promise<{ classId: string; assignmentId: string }>;
 }) {
+  const t = useT();
   const { classId, assignmentId } = use(params);
   const validated = useValidatedSmazzate();
 
@@ -199,20 +201,20 @@ export default function AssignmentResultsPage({
       {/* Legend */}
       <div className="mb-4 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-emerald-500" /> Contratto mantenuto
+          <span className="h-3 w-3 rounded bg-emerald-500" /> {t("Contratto mantenuto")}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-red-500" /> Caduto
+          <span className="h-3 w-3 rounded bg-red-500" /> {t("Caduto")}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded border border-border bg-muted" /> Non giocata
+          <span className="h-3 w-3 rounded border border-border bg-muted" /> {t("Non giocata")}
         </span>
         <span className="text-muted-foreground">▶ Clicca una cella giocata per rivedere la mano</span>
       </div>
 
       {members.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Nessun allievo iscritto a questa classe.
+          {t("Nessun allievo iscritto a questa classe.")}
         </p>
       ) : (
         <div className="overflow-x-auto rounded-lg border border-border">
@@ -220,7 +222,7 @@ export default function AssignmentResultsPage({
             <thead>
               <tr className="border-b border-border bg-muted/40">
                 <th className="sticky left-0 z-10 bg-muted/40 px-3 py-2 text-left font-semibold">
-                  Allievo
+                  {t("Allievo")}
                 </th>
                 {smazzataIds.map((id, i) => (
                   <th key={id} className="px-2 py-2 text-center font-semibold">
@@ -258,7 +260,7 @@ export default function AssignmentResultsPage({
               {/* Footer: down count per hand (class difficulty signal) */}
               <tr className="bg-muted/30 text-xs text-muted-foreground">
                 <td className="sticky left-0 z-10 bg-muted/30 px-3 py-2 font-semibold">
-                  Cadute / classe
+                  {t("Cadute / classe")}
                 </td>
                 {downPerHand.map((n, i) => (
                   <td key={i} className="px-2 py-2 text-center font-semibold">
@@ -275,15 +277,15 @@ export default function AssignmentResultsPage({
       {errorTaxonomy.length > 0 && (
         <div className="mt-8">
           <h2 className="mb-1 font-display text-xl font-bold text-foreground">
-            Su cosa lavorare
+            {t("Su cosa lavorare")}
           </h2>
           <p className="mb-4 text-sm text-muted-foreground">
-            Errori di gioco rilevati automaticamente nelle mani del compito.
+            {t("Errori di gioco rilevati automaticamente nelle mani del compito.")}
           </p>
 
           {classTheme && (
             <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
-              <span className="font-bold">Tema della classe:</span>{" "}
+              <span className="font-bold">{t("Tema della classe:")}</span>{" "}
               {PLAY_ERROR_LABELS[classTheme[0]].toLowerCase()} ({classTheme[1]}{" "}
               {classTheme[1] === 1 ? "caso" : "casi"}) — vale un ripasso alla
               prossima lezione.
@@ -294,8 +296,8 @@ export default function AssignmentResultsPage({
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/40">
-                  <th className="px-3 py-2 text-left font-semibold">Allievo</th>
-                  <th className="px-3 py-2 text-left font-semibold">Errori ricorrenti</th>
+                  <th className="px-3 py-2 text-left font-semibold">{t("Allievo")}</th>
+                  <th className="px-3 py-2 text-left font-semibold">{t("Errori ricorrenti")}</th>
                 </tr>
               </thead>
               <tbody>

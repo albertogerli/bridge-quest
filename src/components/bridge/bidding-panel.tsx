@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { bidAriaLabel, positionAriaLabel } from "@/lib/card-labels";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export interface BiddingData {
   dealer: "north" | "south" | "east" | "west";
@@ -175,6 +176,7 @@ export function BiddingPanel({
   /** Il posto mostrato in basso al tavolo: il dichiarante se attacchi tu, il difensore se difendi. */
   inBasso?: string;
 }) {
+  const t = useT();
   const { dealer, bids } = rotateBidding(bidding, inBasso);
 
   // Build the grid: figure out which column the dealer is in
@@ -208,11 +210,11 @@ export function BiddingPanel({
       }`}
     >
       <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 text-center" aria-hidden="true">
-        Licita
+        {t("Licita")}
       </p>
       <table className="w-full">
         <caption className="sr-only">
-          Sequenza di licita, una colonna per posizione (Ovest, Nord, Est, Sud)
+          {t("Sequenza di licita, una colonna per posizione (Ovest, Nord, Est, Sud)")}
         </caption>
         <thead>
           <tr>

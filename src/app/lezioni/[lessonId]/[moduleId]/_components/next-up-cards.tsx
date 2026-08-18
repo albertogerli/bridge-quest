@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Lesson, LessonModule } from "@/lib/catalog";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Cosa viene dopo il modulo appena finito: il modulo successivo, la lezione
@@ -23,6 +24,7 @@ export function NextUpCards({
   nextLesson: Lesson | null;
   isLessonComplete: boolean;
 }) {
+  const t = useT();
   return (
     <>
       {/* Next module / lesson preview card */}
@@ -35,7 +37,7 @@ export function NextUpCards({
           <Link href={`/lezioni/${lessonId}/${nextModule.id}`}>
             <div className="group card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer">
               <p className="text-[12px] font-bold text-emerald uppercase tracking-wider mb-2">
-                Prossimo modulo
+                {t("Prossimo modulo")}
               </p>
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald text-white text-lg">
@@ -69,7 +71,7 @@ export function NextUpCards({
           <Link href={`/lezioni/${nextLesson.id}`}>
             <div className="group card-clean card-interactive rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900 p-4 cursor-pointer">
               <p className="text-[12px] font-bold text-emerald-dark dark:text-emerald-300 uppercase tracking-wider mb-2">
-                Prossima lezione
+                {t("Prossima lezione")}
               </p>
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald to-emerald-dark text-white text-xl font-bold shadow-md shadow-emerald/30">
@@ -101,8 +103,8 @@ export function NextUpCards({
           className="rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200 dark:border-amber-900 p-5 text-center"
         >
           <span className="text-3xl">🎓</span>
-          <h4 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mt-2">Corso Fiori Completato!</h4>
-          <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">Sei pronto per il circolo FIGB!</p>
+          <h4 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mt-2">{t("Corso Fiori Completato!")}</h4>
+          <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">{t("Sei pronto per il circolo FIGB!")}</p>
         </motion.div>
       )}
     </>

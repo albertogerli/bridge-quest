@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { CheckCircle2, Flame, CalendarDays } from "lucide-react";
 import { DailyCountdown } from "@/components/daily-countdown";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface DailyChallengeStreakMobileProps {
   dailyDone: boolean;
@@ -18,6 +19,7 @@ export function DailyChallengeStreakMobile({
   streakAtRisk,
   dailyChallengeLabel,
 }: DailyChallengeStreakMobileProps) {
+  const t = useT();
   return (
     <section className="px-4 sm:px-5 mt-4 relative z-10 lg:hidden">
       <div className="mx-auto max-w-lg">
@@ -83,7 +85,7 @@ export function DailyChallengeStreakMobile({
               </p>
               {streakAtRisk && (
                 <p className="mt-1 text-[12px] font-semibold text-red-600 dark:text-red-400">
-                  Streak a rischio!
+                  {t("Streak a rischio!")}
                 </p>
               )}
               <div className="mt-2 flex gap-1">

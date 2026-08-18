@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { reportError } from "@/lib/report-error";
 import { statisticheSfide, type RigaAvversario, type StatisticheSfide } from "@/lib/sfide-coppie-db";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Con chi si vince e contro chi si perde.
@@ -15,6 +16,7 @@ import { statisticheSfide, type RigaAvversario, type StatisticheSfide } from "@/
  * vittorie direbbe di sì.
  */
 export function StatisticheSfidePannello() {
+  const t = useT();
   const [dati, setDati] = useState<StatisticheSfide | null | "carico">("carico");
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export function StatisticheSfidePannello() {
       .catch((err) => { reportError("statistiche-sfide", err); setDati(null); });
   }, []);
 
-  if (dati === "carico") return <p className="text-sm text-muted-foreground">Carico…</p>;
+  if (dati === "carico") return <p className="text-sm text-muted-foreground">{t("Carico…")}</p>;
   if (!dati || dati.incontri === 0) {
     return (
       <p className="text-sm text-muted-foreground">
@@ -62,6 +64,7 @@ function Numero({ titolo, valore }: { titolo: string; valore: number | string })
 }
 
 function Tabella({ titolo, righe }: { titolo: string; righe: RigaAvversario[] }) {
+  const t = useT();
   if (!righe?.length) return null;
   return (
     <section>
@@ -73,7 +76,7 @@ function Tabella({ titolo, righe }: { titolo: string; righe: RigaAvversario[] })
           <thead>
             <tr className="text-left text-muted-foreground">
               <th className="font-normal py-1">Chi</th>
-              <th className="font-normal py-1 text-right">Incontri</th>
+              <th className="font-normal py-1 text-right">{t("Incontri")}</th>
               <th className="font-normal py-1 text-right">V–P</th>
               <th className="font-normal py-1 text-right">IMP</th>
             </tr>

@@ -19,6 +19,7 @@ import { StepAtout } from "./steps/step-atout";
 import { StepMiniPrese } from "./steps/step-mini-prese";
 import { StepManoVera } from "./steps/step-mano-vera";
 import { StepVittoria } from "./steps/step-vittoria";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const STORAGE_KEY = "bq_onboarded";
 const STEP_KEY = "bq_onboarding_step";
@@ -52,6 +53,7 @@ export function PrimaManoV2({
   onDismiss?: () => void;
   returnHref?: string;
 }) {
+  const t = useT();
   const router = useRouter();
   const { playSound } = useSounds();
 
@@ -297,7 +299,7 @@ export function PrimaManoV2({
                     onClick={handleSkip}
                     className="rounded-[22px] border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-[#5c677d] transition-colors hover:text-[#12305f]"
                   >
-                    Salta
+                    {t("Salta")}
                   </button>
                 </div>
               )}

@@ -4,8 +4,10 @@ import Link from "next/link";
 import { SelettoreLingua } from "@/components/selettore-lingua";
 import Image from "next/image";
 import { openConsentPreferences } from "@/lib/consent-client";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export function SiteFooter() {
+  const t = useT();
   return (
     <footer className="border-t border-border/60 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto max-w-5xl px-5 py-6">
@@ -21,15 +23,15 @@ export function SiteFooter() {
         {/* Links row */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
           <Link href="/guida" className="hover:text-foreground/70 transition-colors">
-            Guida
+            {t("Guida")}
           </Link>
           <span className="select-none">·</span>
           <Link href="/privacy" className="hover:text-foreground/70 transition-colors">
-            Privacy Policy
+            {t("Privacy Policy")}
           </Link>
           <span className="select-none">·</span>
           <Link href="/privacy#cookie" className="hover:text-foreground/70 transition-colors">
-            Cookie Policy
+            {t("Cookie Policy")}
           </Link>
           <span className="select-none">·</span>
           {/* Riapre il banner. Senza, chi ha scelto «Solo necessari» non
@@ -41,23 +43,23 @@ export function SiteFooter() {
             onClick={openConsentPreferences}
             className="hover:text-foreground/70 transition-colors underline-offset-2 hover:underline"
           >
-            Preferenze cookie
+            {t("Preferenze cookie")}
           </button>
           <span className="select-none">·</span>
           <Link href="/termini" className="hover:text-foreground/70 transition-colors">
-            Termini di Servizio
+            {t("Termini di Servizio")}
           </Link>
           <span className="select-none">·</span>
           <a href="https://www.federbridge.it" target="_blank" rel="noopener noreferrer" className="hover:text-foreground/70 transition-colors">
-            FIGB.it
+            {t("FIGB.it")}
           </a>
           <span className="select-none">·</span>
           <a href="mailto:info@bridgelab.it" className="hover:text-foreground/70 transition-colors">
-            Contatti
+            {t("Contatti")}
           </a>
           <span className="select-none">·</span>
           <Link href="/accessibilita" className="hover:text-foreground/70 transition-colors">
-            Accessibilità
+            {t("Accessibilità")}
           </Link>
         </div>
 

@@ -8,6 +8,7 @@ import { useSound } from "@/hooks/use-sound";
 import { useGameStore } from "@/store/use-game-store";
 import { useGameResults } from "@/hooks/use-game-results";
 import Link from "next/link";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Card pairs for bridge memory - match card with its bridge concept
 interface MemoryCard {
@@ -53,6 +54,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 export default function MemoryPage() {
+  const t = useT();
   const prof = useProfile();
   const isSenior = prof.profile === "senior";
   const { play } = useSound();
@@ -215,10 +217,10 @@ export default function MemoryPage() {
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">Memory Bridge</span>
+            <span className="text-emerald font-semibold">{t("Memory Bridge")}</span>
           </div>
 
           <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
@@ -227,25 +229,25 @@ export default function MemoryPage() {
                 🧠
               </div>
               <h1 className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl"}`}>
-                Memory Bridge
+                {t("Memory Bridge")}
               </h1>
               <p className={`text-muted-foreground mt-2 ${isSenior ? "text-base" : "text-sm"}`}>
-                Abbina le carte ai concetti del bridge!
+                {t("Abbina le carte ai concetti del bridge!")}
               </p>
             </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             <div className="card-clean rounded-2xl bg-card p-5 mb-4">
-              <h3 className="font-semibold text-foreground mb-3">Come si gioca</h3>
+              <h3 className="font-semibold text-foreground mb-3">{t("Come si gioca")}</h3>
               <ul className={`space-y-2 text-muted-foreground ${isSenior ? "text-base" : "text-sm"}`}>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 font-bold">1.</span>
-                  Tocca una carta per girarla
+                  {t("Tocca una carta per girarla")}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 font-bold">2.</span>
-                  Trova le coppie: carta ↔ concetto
+                  {t("Trova le coppie: carta ↔ concetto")}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-500 font-bold">3.</span>
@@ -257,7 +259,7 @@ export default function MemoryPage() {
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <div className="card-clean rounded-2xl bg-card p-5 mb-6">
-              <h3 className="font-semibold text-foreground mb-3">Scegli difficoltà</h3>
+              <h3 className="font-semibold text-foreground mb-3">{t("Scegli difficoltà")}</h3>
               <div className="space-y-2">
                 {([
                   { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "from-green-500 to-emerald-500", shadow: "shadow-green-400/30" },
@@ -305,7 +307,7 @@ export default function MemoryPage() {
           <div className="flex items-center justify-between mb-4">
             <Link href="/gioca" className="inline-flex items-center gap-1 text-sm text-muted-foreground font-bold">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="15,18 9,12 15,6"/></svg>
-              Esci
+              {t("Esci")}
             </Link>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5 text-sm font-bold text-muted-foreground">
@@ -486,23 +488,23 @@ export default function MemoryPage() {
                 <div>
                   <p className="text-2xl font-bold text-purple-600">⏱️</p>
                   <p className="text-lg font-bold text-foreground mt-1">{formatTime(timer)}</p>
-                  <p className="text-[12px] text-muted-foreground font-medium">Tempo</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">{t("Tempo")}</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-amber-500">👆</p>
                   <p className="text-lg font-bold text-foreground mt-1">{moves}</p>
-                  <p className="text-[12px] text-muted-foreground font-medium">Mosse</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">{t("Mosse")}</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-orange-500">🔥</p>
                   <p className="text-lg font-bold text-foreground mt-1">{maxStreak}</p>
-                  <p className="text-[12px] text-muted-foreground font-medium">Max streak</p>
+                  <p className="text-[12px] text-muted-foreground font-medium">{t("Max streak")}</p>
                 </div>
               </div>
               {/* Efficiency */}
               <div className="mt-4 pt-4 border-t border-border">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground font-medium">Efficienza</span>
+                  <span className="text-muted-foreground font-medium">{t("Efficienza")}</span>
                   <span className="font-bold text-foreground">
                     {Math.round((pairs / moves) * 100)}%
                   </span>
@@ -536,11 +538,11 @@ export default function MemoryPage() {
               onClick={() => startGame(difficulty)}
               className={`w-full py-4 rounded-2xl bg-figb text-white font-semibold shadow-lg shadow-figb/20 active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
             >
-              Gioca ancora
+              {t("Gioca ancora")}
             </button>
             <Link href="/gioca" className="block">
               <button className={`w-full py-4 rounded-2xl bg-muted text-foreground/80 font-semibold active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}>
-                Torna al menu
+                {t("Torna al menu")}
               </button>
             </Link>
           </motion.div>

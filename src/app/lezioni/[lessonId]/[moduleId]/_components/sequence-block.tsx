@@ -2,9 +2,11 @@
 
 import { motion } from "motion/react";
 import type { ContentBlockProps } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** «Metti in ordine»: non ancora interattivo, mostra la sequenza corretta. */
 export function SequenceBlock({ block, delay }: ContentBlockProps) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -18,7 +20,7 @@ export function SequenceBlock({ block, delay }: ContentBlockProps) {
             <path d="M4 6h16M4 12h16M4 18h10" />
           </svg>
         </div>
-        <p className="font-bold text-foreground text-[15px]">Metti in ordine</p>
+        <p className="font-bold text-foreground text-[15px]">{t("Metti in ordine")}</p>
       </div>
       <p className="text-[14px] text-foreground/80 mb-4 leading-relaxed">{block.content}</p>
       <div className="space-y-2">

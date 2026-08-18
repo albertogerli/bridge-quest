@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Lock, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { authErrorMessage } from "@/lib/auth-errors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ResetPasswordPage() {
+  const t = useT();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -58,9 +60,9 @@ export default function ResetPasswordPage() {
             <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="font-display text-2xl font-bold text-foreground">Nuova Password</h1>
+            <h1 className="font-display text-2xl font-bold text-foreground">{t("Nuova Password")}</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              Inserisci la tua nuova password
+              {t("Inserisci la tua nuova password")}
             </p>
           </div>
 
@@ -68,17 +70,17 @@ export default function ResetPasswordPage() {
             <div className="text-center space-y-4">
               <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
               <p className="text-green-700 font-semibold">
-                Password aggiornata con successo!
+                {t("Password aggiornata con successo!")}
               </p>
               <p className="text-sm text-muted-foreground">
-                Reindirizzamento in corso...
+                {t("Reindirizzamento in corso...")}
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                  Nuova password
+                  {t("Nuova password")}
                 </label>
                 <div className="relative">
                   <input
@@ -102,7 +104,7 @@ export default function ResetPasswordPage() {
 
               <div>
                 <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                  Conferma password
+                  {t("Conferma password")}
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -133,7 +135,7 @@ export default function ResetPasswordPage() {
                   href="/login"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Torna al login
+                  {t("Torna al login")}
                 </Link>
               </div>
             </form>

@@ -15,6 +15,7 @@ import { isWorldLocked } from "@/lib/progression";
 import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // Colors for the path nodes per world
 const worldColors = [
@@ -48,6 +49,7 @@ const courseColors: Record<CourseId, { active: string; inactive: string; border:
 };
 
 export default function LezioniPage() {
+  const t = useT();
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const { smazzate: allSmazzate } = useSmazzate();
@@ -83,9 +85,9 @@ export default function LezioniPage() {
             nessun h1 (violazione `page-has-heading-one` colta dall'audit axe
             quando l'attesa si allunga). Il titolo della pagina esiste da
             subito, solo per gli screen reader in questa fase. */}
-        <h1 className="sr-only">Il Percorso</h1>
+        <h1 className="sr-only">{t("Il Percorso")}</h1>
         <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
-          Caricamento corsi…
+          {t("Caricamento corsi…")}
         </div>
       </>
     );
@@ -112,7 +114,7 @@ export default function LezioniPage() {
           className="mb-2"
         >
           <h1 className="font-display text-3xl font-bold text-foreground">
-            Il Percorso
+            {t("Il Percorso")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {totalCompleted}/{totalModules} moduli completati
@@ -143,7 +145,7 @@ export default function LezioniPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <p className="text-sm font-bold text-[#12305f] dark:text-gray-100">Prima Mano</p>
+                    <p className="text-sm font-bold text-[#12305f] dark:text-gray-100">{t("Prima Mano")}</p>
                     <Badge className={`text-[12px] font-bold border-0 ${
                       onboarded
                         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
@@ -246,7 +248,7 @@ export default function LezioniPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-foreground">Dispense & Infografiche</p>
-                <p className="text-[12px] text-muted-foreground">Scarica il materiale didattico</p>
+                <p className="text-[12px] text-muted-foreground">{t("Scarica il materiale didattico")}</p>
               </div>
               <svg className="h-5 w-5 text-muted-foreground/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <polyline points="9,6 15,12 9,18" />
@@ -286,7 +288,7 @@ export default function LezioniPage() {
             {/* h2: sezione di primo livello sotto l'h1 della pagina
                 (con h3 il salto violerebbe `heading-order`). */}
             <h2 className="text-lg font-semibold text-foreground/80 mb-2">
-              In arrivo!
+              {t("In arrivo!")}
             </h2>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
               Il {currentCourse.name} sarà disponibile presto. Intanto continua con il Corso Fiori!
@@ -537,7 +539,7 @@ export default function LezioniPage() {
                       className="ml-10 rounded-2xl bg-muted border-2 border-dashed border-border p-4 text-center"
                     >
                       <p className="text-sm text-muted-foreground font-medium flex items-center justify-center gap-1.5">
-                        <Lock className="w-4 h-4" /> Completa il mondo precedente al 50% per sbloccare
+                        <Lock className="w-4 h-4" /> {t("Completa il mondo precedente al 50% per sbloccare")}
                       </p>
                     </motion.div>
                   )}
@@ -551,7 +553,7 @@ export default function LezioniPage() {
                     >
                       <Trophy className="w-6 h-6 text-amber-700 dark:text-amber-400" />
                       <div>
-                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Mondo completato!</p>
+                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400">{t("Mondo completato!")}</p>
                         <p className="text-[12px] text-amber-600/60 dark:text-amber-500/60">+200 XP bonus</p>
                       </div>
                     </motion.div>

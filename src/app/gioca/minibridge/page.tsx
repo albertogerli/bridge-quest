@@ -35,6 +35,7 @@ import { useSound } from "@/hooks/use-sound";
 import { awardPracticeXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import { ArrowLeft, Play, Trophy } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Role = "declare" | "defend";
 type Step = "reveal" | "decide" | "play";
@@ -68,6 +69,7 @@ function prepare(deal: WbfDeal): Prepared {
 }
 
 export default function MiniBridgePage() {
+  const t = useT();
   const [prepared, setPrepared] = useState<Prepared | null>(null);
   const [step, setStep] = useState<Step>("reveal");
   const [chosenContract, setChosenContract] = useState<string | null>(null);
@@ -115,10 +117,10 @@ export default function MiniBridgePage() {
     <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
       <div className="mb-4 flex items-center justify-between">
         <Link href="/gioca" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:underline">
-          <ArrowLeft className="h-4 w-4" /> Gioca
+          <ArrowLeft className="h-4 w-4" /> {t("Gioca")}
         </Link>
         <div className="flex items-center gap-2">
-          <Badge variant="outline">MiniBridge</Badge>
+          <Badge variant="outline">{t("MiniBridge")}</Badge>
           <ReferenceCardsButton />
         </div>
       </div>
@@ -169,15 +171,16 @@ function HandBySuit({ hand }: { hand: Card[] }) {
 // ─── Step 1: reveal the points (and show your hand) ─────────────────────────
 
 function RevealStep({ analysis, southHand, onNext }: { analysis: DealAnalysis; southHand: Card[]; onNext: () => void }) {
+  const t = useT();
   const seats: Position[] = ["north", "east", "south", "west"];
   return (
     <div className="mx-auto max-w-6xl text-center">
-      <h1 className="font-display text-2xl font-bold">Conta i punti</h1>
+      <h1 className="font-display text-2xl font-bold">{t("Conta i punti")}</h1>
       <p className="mt-1 mb-4 text-sm text-muted-foreground">
-        Ogni giocatore annuncia i suoi punti onori (A=4, K=3, Q=2, J=1).
+        {t("Ogni giocatore annuncia i suoi punti onori (A=4, K=3, Q=2, J=1).")}
       </p>
 
-      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">La tua mano</p>
+      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("La tua mano")}</p>
       <HandBySuit hand={southHand} />
 
       <div className="mt-5 grid grid-cols-2 gap-3">
@@ -193,7 +196,7 @@ function RevealStep({ analysis, southHand, onNext }: { analysis: DealAnalysis; s
         ))}
       </div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-        <Button className="mt-6" onClick={onNext}>Continua →</Button>
+        <Button className="mt-6" onClick={onNext}>{t("Continua →")}</Button>
       </motion.div>
     </div>
   );
@@ -207,6 +210,7 @@ function DecideStep({
   analysis: DealAnalysis; role: Role; southHand: Card[];
   onDeclare: (s: Strain) => void; onDefend: () => void;
 }) {
+  const t = useT();
   const youDeclare = role === "declare";
   const yourHcp = analysis.partnershipHcp.ns; // human is always South (N/S)
   const oppHcp = analysis.partnershipHcp.ew;
@@ -216,7 +220,7 @@ function DecideStep({
   return (
     <div className="mx-auto max-w-6xl">
       <div className="rounded-xl border border-border bg-card p-5 text-center">
-        <p className="text-sm text-muted-foreground">La tua coppia (Nord-Sud) ha</p>
+        <p className="text-sm text-muted-foreground">{t("La tua coppia (Nord-Sud) ha")}</p>
         <p className="font-display text-4xl font-bold text-primary">{yourHcp} punti</p>
         <p className="mt-1 text-sm text-muted-foreground">avversari (Est-Ovest): {oppHcp}</p>
         <p className="mt-3 font-semibold">
@@ -229,7 +233,7 @@ function DecideStep({
       {youDeclare ? (
         <div className="mt-5">
           <div className="rounded-xl border border-border bg-muted/30 p-4 text-center">
-            <p className="text-sm text-muted-foreground">La Decision Table dice che potete puntare a</p>
+            <p className="text-sm text-muted-foreground">{t("La Decision Table dice che potete puntare a")}</p>
             <p className="font-display text-3xl font-bold">{analysis.expectedTricks} prese</p>
           </div>
           {analysis.fits.length > 0 && (
@@ -237,7 +241,7 @@ function DecideStep({
               Fit (8+ carte): {analysis.fits.map((f) => `${STRAIN_LABEL[f.suit]} (${f.count})`).join(", ")}
             </p>
           )}
-          <p className="mt-4 mb-2 text-sm font-medium">Scegli il contratto:</p>
+          <p className="mt-4 mb-2 text-sm font-medium">{t("Scegli il contratto:")}</p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {choices.map((strain) => {
               const contract = buildContract(analysis.expectedTricks, strain);
@@ -266,10 +270,10 @@ function DecideStep({
             Il tuo obiettivo: farli cadere!
           </p>
           <div className="mb-4">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">La tua mano</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("La tua mano")}</p>
             <HandBySuit hand={southHand} />
           </div>
-          <Button onClick={onDefend}><Play className="mr-2 h-4 w-4" /> Inizia a difendere</Button>
+          <Button onClick={onDefend}><Play className="mr-2 h-4 w-4" /> {t("Inizia a difendere")}</Button>
         </div>
       )}
     </div>
@@ -283,6 +287,7 @@ function PlayStep({
 }: {
   prepared: Prepared; contract: string; strain: Strain; review: string; onNext: () => void;
 }) {
+  const t = useT();
   const { deal, declarer } = prepared;
   const anchor: Position = "south"; // human is always South -> bottom of the table
   const dummy = getDummy(declarer);
@@ -376,17 +381,17 @@ function PlayStep({
     <div>
       <div className="mb-3 flex items-center justify-center gap-5 rounded-xl border border-border bg-card px-4 py-2 text-sm">
         <div className="text-center">
-          <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">Contratto</p>
+          <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
           <p className="text-lg font-bold text-primary">{contract}</p>
         </div>
         <div className="h-8 w-px bg-border" />
         <div className="text-center">
-          <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">Ruolo</p>
+          <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Ruolo")}</p>
           <p className="text-lg font-bold">{isDeclarer ? "Dichiarante" : "Difesa"}</p>
         </div>
         <div className="h-8 w-px bg-border" />
         <div className="text-center">
-          <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">Prese D/Dif</p>
+          <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Prese D/Dif")}</p>
           <p className="text-lg font-bold">{declTricks} / {defTricks}</p>
         </div>
       </div>
@@ -447,7 +452,7 @@ function PlayStep({
             )}
           </div>
           <div className="mt-4 flex justify-center">
-            <Button onClick={onNext} className="h-12 px-8 font-bold">Nuova mano →</Button>
+            <Button onClick={onNext} className="h-12 px-8 font-bold">{t("Nuova mano →")}</Button>
           </div>
         </motion.div>
       )}

@@ -4,12 +4,14 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { GraduationCap, Spade, Brain, Trophy, BarChart3, Flame } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface LandingPageProps {
   onContinueAsGuest: () => void;
 }
 
 export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
+  const t = useT();
   const features = [
     // Titoli e descrizioni in parole di chi legge, non nostre. Prima c'erano
     // «Analisi DDS» e «Gamification»: la prima non dice nulla a chi non
@@ -26,19 +28,19 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
     <div className="fixed inset-0 z-50 flex flex-col bg-background overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {/* Sticky top bar: keeps "Accedi" reachable at any scroll position */}
       <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-foreground/5 bg-background/90 px-4 py-2.5 backdrop-blur-sm">
-        <span className="font-display text-lg font-bold tracking-tight text-figb dark:text-primary">BridgeLab</span>
+        <span className="font-display text-lg font-bold tracking-tight text-figb dark:text-primary">{t("BridgeLab")}</span>
         <div className="flex items-center gap-2">
           <a
             href="/login?mode=login"
             className="rounded-xl px-3 py-2 text-sm font-bold text-primary transition-colors hover:bg-foreground/5"
           >
-            Accedi
+            {t("Accedi")}
           </a>
           <a
             href="/login?mode=signup"
             className="rounded-xl bg-figb px-3.5 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-figb-light"
           >
-            Inizia gratis
+            {t("Inizia gratis")}
           </a>
         </div>
       </header>
@@ -78,9 +80,9 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             transition={{ delay: 0.4 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight font-display"
           >
-            Impara il bridge.
+            {t("Impara il bridge.")}
             <br />
-            E poi giocalo.
+            {t("E poi giocalo.")}
           </motion.h1>
           <motion.p
             initial={false}
@@ -103,9 +105,9 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               href="/login?mode=signup"
               className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-figb font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
             >
-              Inizia gratis
+              {t("Inizia gratis")}
             </a>
-            <p className="text-center text-xs text-white/60 -mt-1">Nessuna carta di credito richiesta</p>
+            <p className="text-center text-xs text-white/60 -mt-1">{t("Nessuna carta di credito richiesta")}</p>
             <a
               href="/login?mode=login"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-white/15 backdrop-blur-sm text-white font-bold text-sm hover:bg-white/25 border border-white/20 active:scale-[0.98] transition-all"
@@ -115,13 +117,13 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
                 <polyline points="10 17 15 12 10 7" />
                 <line x1="15" y1="12" x2="3" y2="12" />
               </svg>
-              Accedi
+              {t("Accedi")}
             </a>
             <button
               onClick={onContinueAsGuest}
               className="w-full text-center text-sm font-semibold text-white/60 hover:text-white/80 transition-colors py-2"
             >
-              Prova senza account
+              {t("Prova senza account")}
             </button>
           </motion.div>
         </div>
@@ -139,7 +141,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             transition={{ delay: 0.7 }}
             className="font-display text-lg font-bold text-foreground mb-4 text-center"
           >
-            Tutto quello che serve per imparare il bridge
+            {t("Tutto quello che serve per imparare il bridge")}
           </motion.h2>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
@@ -182,15 +184,15 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">49</p>
-                <p className="text-[12px] font-bold text-figb/80 dark:text-primary/80 uppercase">Lezioni</p>
+                <p className="text-[12px] font-bold text-figb/80 dark:text-primary/80 uppercase">{t("Lezioni")}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">4</p>
-                <p className="text-[12px] font-bold text-figb dark:text-primary uppercase">Corsi</p>
+                <p className="text-[12px] font-bold text-figb dark:text-primary uppercase">{t("Corsi")}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">200+</p>
-                <p className="text-[12px] font-bold text-figb dark:text-primary uppercase">Mani</p>
+                <p className="text-[12px] font-bold text-figb dark:text-primary uppercase">{t("Mani")}</p>
               </div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
@@ -200,13 +202,13 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               <Image src="/icons/logo-coni.png" alt="Logo CONI - Comitato Olimpico Nazionale Italiano" width={400} height={146} className="h-9 w-auto" />
             </div>
             <p className="text-xs font-bold text-figb/80 dark:text-primary/80 uppercase tracking-wider mb-1">
-              Un progetto della
+              {t("Un progetto della")}
             </p>
             <p className="text-lg font-bold text-figb dark:text-primary">
-              Federazione Italiana Gioco Bridge
+              {t("Federazione Italiana Gioco Bridge")}
             </p>
             <p className="mt-1 text-xs text-figb/60 dark:text-primary/60">
-              Commissione Insegnamento
+              {t("Commissione Insegnamento")}
             </p>
           </motion.div>
         </div>
@@ -225,20 +227,20 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               href="/login?mode=signup"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-gradient-to-r from-figb to-figb-light text-white font-semibold text-sm shadow-lg shadow-figb/20 hover:opacity-90 transition-opacity"
             >
-              Inizia gratis
+              {t("Inizia gratis")}
             </a>
-            <p className="text-center text-[12px] text-muted-foreground -mt-1">Nessuna carta di credito richiesta</p>
+            <p className="text-center text-[12px] text-muted-foreground -mt-1">{t("Nessuna carta di credito richiesta")}</p>
             <a
               href="/login?mode=login"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-card text-primary font-semibold text-sm border-2 border-primary/20 hover:border-primary/40 transition-all"
             >
-              Accedi
+              {t("Accedi")}
             </a>
             <button
               onClick={onContinueAsGuest}
               className="w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors py-2"
             >
-              Continua senza account
+              {t("Continua senza account")}
             </button>
           </motion.div>
         </div>
@@ -247,10 +249,10 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
       {/* Footer */}
       <footer className="px-5 pb-8 text-center space-y-1">
         <p className="text-[12px] text-muted-foreground">
-          Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.
+          {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}
         </p>
         <p className="text-[12px] text-muted-foreground">
-          <a href="/privacy" className="underline hover:text-foreground transition-colors">Privacy e Cookie Policy</a>
+          <a href="/privacy" className="underline hover:text-foreground transition-colors">{t("Privacy e Cookie Policy")}</a>
         </p>
       </footer>
     </div>

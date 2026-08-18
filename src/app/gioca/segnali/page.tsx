@@ -19,6 +19,7 @@ import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { useGameStore } from "@/store/use-game-store";
 import { useGameResults } from "@/hooks/use-game-results";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ─── Card helpers (suit display identical to the other mini-games) ────────
 
@@ -235,6 +236,7 @@ function genRound(kinds: SignalKind[]): DrillRound {
 // ─── Page ──────────────────────────────────────────────────────────────────
 
 export default function SegnaliPage() {
+  const t = useT();
   const profileConfig = useProfile();
   const { play } = useSound();
   const { saveGameResult } = useGameResults();
@@ -346,10 +348,10 @@ export default function SegnaliPage() {
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link href="/gioca" className="hover:text-emerald transition-colors">
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">Segnali in Difesa</span>
+            <span className="text-emerald font-semibold">{t("Segnali in Difesa")}</span>
           </div>
 
           <motion.div
@@ -360,18 +362,18 @@ export default function SegnaliPage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white text-5xl shadow-xl shadow-violet-400/30 mb-6">
               📡
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">Segnali in Difesa</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Segnali in Difesa")}</h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              In difesa si parla con le carte: impara a dare (e leggere) i segnali del compagno.
+              {t("In difesa si parla con le carte: impara a dare (e leggere) i segnali del compagno.")}
             </p>
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">Le regole d&apos;oro</h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
-                  <span className="font-bold text-foreground/80">Gradimento:</span> carta alta = «continua», carta bassa = «cambia colore»
+                  <span className="font-bold text-foreground/80">{t("Gradimento:")}</span> carta alta = «continua», carta bassa = «cambia colore»
                 </li>
                 <li>
-                  <span className="font-bold text-foreground/80">Conto:</span> alto-basso = numero pari, basso-alto = dispari
+                  <span className="font-bold text-foreground/80">{t("Conto:")}</span> alto-basso = numero pari, basso-alto = dispari
                 </li>
                 <li>
                   <span className="font-bold text-foreground/80">Mai</span> sprecare un onore per segnalare
@@ -380,7 +382,7 @@ export default function SegnaliPage() {
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="font-bold text-sm text-foreground text-left">Scegli difficoltà</h3>
+              <h3 className="font-bold text-sm text-foreground text-left">{t("Scegli difficoltà")}</h3>
               {(Object.entries(difficultyConfig) as [Difficulty, (typeof difficultyConfig)["facile"]][]).map(
                 ([key, cfg]) => (
                   <button
@@ -440,11 +442,11 @@ export default function SegnaliPage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}/{config.rounds}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">Streak max</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Streak max")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-violet-500">+{xpEarned}</p>
@@ -455,14 +457,14 @@ export default function SegnaliPage() {
             <div className="flex gap-3 mt-6">
               <Link href="/gioca" className="flex-1">
                 <Button variant="outline" className="w-full h-12 rounded-xl font-bold">
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => startGame(difficulty)}
                 className="flex-1 h-12 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-600 font-bold shadow-lg"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           </motion.div>

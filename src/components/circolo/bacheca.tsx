@@ -11,6 +11,7 @@ import {
   puoScrivere,
   type ClubPost,
 } from "@/lib/club-posts";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La bacheca di un circolo.
@@ -25,6 +26,7 @@ import {
  * circolo abbandonato, ed è peggio del non averla.
  */
 export function BachecaCircolo({ asdCode }: { asdCode: string }) {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const [avvisi, setAvvisi] = useState<ClubPost[] | null>(null);
   const [scrivo, setScrivo] = useState(false);
@@ -73,11 +75,11 @@ export function BachecaCircolo({ asdCode }: { asdCode: string }) {
           className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground"
         >
           <Megaphone className="w-4 h-4" aria-hidden="true" />
-          Bacheca del circolo
+          {t("Bacheca del circolo")}
         </h2>
         {abilitato && !scrivo && (
           <Button variant="outline" onClick={() => setScrivo(true)}>
-            Scrivi un avviso
+            {t("Scrivi un avviso")}
           </Button>
         )}
       </div>
@@ -85,7 +87,7 @@ export function BachecaCircolo({ asdCode }: { asdCode: string }) {
       {abilitato && scrivo && (
         <div className="rounded-2xl border border-border bg-card p-4 mb-4">
           <label htmlFor="avviso-titolo" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-            Titolo
+            {t("Titolo")}
           </label>
           <input
             id="avviso-titolo"
@@ -96,7 +98,7 @@ export function BachecaCircolo({ asdCode }: { asdCode: string }) {
             placeholder="Torneo sociale di giovedì"
           />
           <label htmlFor="avviso-corpo" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-            Testo
+            {t("Testo")}
           </label>
           <textarea
             id="avviso-corpo"
@@ -113,17 +115,17 @@ export function BachecaCircolo({ asdCode }: { asdCode: string }) {
               {inCorso ? "Pubblico…" : "Pubblica"}
             </Button>
             <Button variant="outline" onClick={() => { setScrivo(false); setErrore(""); }}>
-              Annulla
+              {t("Annulla")}
             </Button>
           </div>
         </div>
       )}
 
-      {avvisi === null && <p className="text-sm text-muted-foreground">Carico…</p>}
+      {avvisi === null && <p className="text-sm text-muted-foreground">{t("Carico…")}</p>}
 
       {avvisi && avvisi.length === 0 && abilitato && (
         <p className="text-sm text-muted-foreground">
-          Nessun avviso. Il primo che scrivi lo vedranno i soci del circolo.
+          {t("Nessun avviso. Il primo che scrivi lo vedranno i soci del circolo.")}
         </p>
       )}
 

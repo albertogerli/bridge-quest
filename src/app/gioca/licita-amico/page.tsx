@@ -17,6 +17,7 @@ import {
   apriLicita, contrattoFinale, dichiara, leggiLicita, mieLicite,
   turnoDi, type RigaElenco, type SessioneLicita,
 } from "@/lib/licita-a-due";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -48,6 +49,7 @@ export default function LicitaAmicoPage() {
 }
 
 function LicitaAmico() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const params = useSearchParams();
   const router = useRouter();
@@ -108,7 +110,7 @@ function LicitaAmico() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4 text-center">
         <p className="text-sm text-muted-foreground">
-          <Link href="/login?redirect=/gioca/licita-amico" className="underline">Accedi</Link>{" "}
+          <Link href="/login?redirect=/gioca/licita-amico" className="underline">{t("Accedi")}</Link>{" "}
           per licitare con un amico.
         </p>
       </div>
@@ -120,7 +122,7 @@ function LicitaAmico() {
     if (!sessione) {
       return (
         <div className="min-h-screen px-4 py-16 max-w-md mx-auto text-center">
-          <p className="text-sm text-muted-foreground">Licita non trovata.</p>
+          <p className="text-sm text-muted-foreground">{t("Licita non trovata.")}</p>
           <Link href="/gioca/licita-amico" className="text-sm underline">Torna all&apos;elenco</Link>
         </div>
       );
@@ -212,7 +214,7 @@ function LicitaAmico() {
             </div>
           </div>
         ) : tocca ? (
-          <p className="text-sm font-semibold text-center py-2">Tocca a te</p>
+          <p className="text-sm font-semibold text-center py-2">{t("Tocca a te")}</p>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-6">
             Tocca a {ETICHETTA[sessione.turno]}. Puoi chiudere la pagina: quando
@@ -241,7 +243,7 @@ function LicitaAmico() {
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Users className="w-6 h-6 text-figb" aria-hidden="true" />
-          Licita con un amico
+          {t("Licita con un amico")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           Ognuno vede solo la propria mano e dichiara quando può. Agli avversari
@@ -252,12 +254,12 @@ function LicitaAmico() {
       {errore && <p className="text-sm text-destructive mb-3">{errore}</p>}
 
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-2">
-        Invita un amico
+        {t("Invita un amico")}
       </h2>
       {friends.length === 0 ? (
         <p className="text-sm text-muted-foreground mb-6">
           Non hai ancora amici sulla piattaforma.{" "}
-          <Link href="/amici" className="underline">Trovane uno</Link> e potrete
+          <Link href="/amici" className="underline">{t("Trovane uno")}</Link> e potrete
           licitare insieme.
         </p>
       ) : (
@@ -282,11 +284,11 @@ function LicitaAmico() {
       )}
 
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-2">
-        Le tue licite
+        {t("Le tue licite")}
       </h2>
-      {elenco === null && <p className="text-sm text-muted-foreground">Carico…</p>}
+      {elenco === null && <p className="text-sm text-muted-foreground">{t("Carico…")}</p>}
       {elenco?.length === 0 && (
-        <p className="text-sm text-muted-foreground">Nessuna licita aperta.</p>
+        <p className="text-sm text-muted-foreground">{t("Nessuna licita aperta.")}</p>
       )}
       <ul className="space-y-2">
         {(elenco ?? []).map((r) => {
@@ -309,7 +311,7 @@ function LicitaAmico() {
                 </div>
                 {tuo && (
                   <span className="text-xs font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5 shrink-0">
-                    Tocca a te
+                    {t("Tocca a te")}
                   </span>
                 )}
               </Link>

@@ -12,6 +12,7 @@ import { parseContract, partnershipOf, toGamePosition } from "@/lib/bridge-engin
 import type { Smazzata } from "@/lib/catalog";
 import { useTournamentHand } from "../_use-tournament-hand";
 import type { HandResult } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
 const GameTutorial = dynamic(
@@ -37,6 +38,7 @@ export function SingleHandView({
   onBack: () => void;
   isMobile: boolean;
 }) {
+  const t = useT();
   const {
     game,
     tricksNeeded,
@@ -117,7 +119,7 @@ export function SingleHandView({
           >
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Contratto
+                {t("Contratto")}
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}
@@ -128,7 +130,7 @@ export function SingleHandView({
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Obiettivo
+                {t("Obiettivo")}
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}
@@ -139,7 +141,7 @@ export function SingleHandView({
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                Dich. / Dif.
+                {t("Dich. / Dif.")}
               </p>
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-foreground`}

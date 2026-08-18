@@ -21,12 +21,14 @@ import {
   setInviteActive,
   type ClassDetail,
 } from "@/lib/instructors";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ClassDetailPage({
   params,
 }: {
   params: Promise<{ classId: string }>;
 }) {
+  const t = useT();
   const { classId } = use(params);
 
   const [detail, setDetail] = useState<ClassDetail | null>(null);
@@ -121,9 +123,9 @@ export default function ClassDetailPage({
       {/* Invite code panel */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg">Codice invito</CardTitle>
+          <CardTitle className="text-lg">{t("Codice invito")}</CardTitle>
           <CardDescription>
-            Condividilo con gli allievi: lo inseriscono nella sezione “Le mie classi”.
+            {t("Condividilo con gli allievi: lo inseriscono nella sezione “Le mie classi”.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-3">
@@ -136,12 +138,12 @@ export default function ClassDetailPage({
           </button>
           <span className="text-xs text-muted-foreground">{copied ? "Copiato ✓" : "Tocca per copiare"}</span>
           {!classRoom.invite_active && (
-            <Badge variant="outline">Iscrizioni chiuse</Badge>
+            <Badge variant="outline">{t("Iscrizioni chiuse")}</Badge>
           )}
         </CardContent>
         <CardFooter className="gap-2">
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={busy}>
-            Rigenera codice
+            {t("Rigenera codice")}
           </Button>
           <Button variant="outline" size="sm" onClick={handleToggleActive} disabled={busy}>
             {classRoom.invite_active ? "Chiudi iscrizioni" : "Riapri iscrizioni"}
@@ -154,8 +156,8 @@ export default function ClassDetailPage({
         <TabsList>
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
           <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
-          <TabsTrigger value="classifica">Classifica</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="classifica">{t("Classifica")}</TabsTrigger>
+          <TabsTrigger value="chat">{t("Chat")}</TabsTrigger>
         </TabsList>
 
         {/* Compiti */}
@@ -168,7 +170,7 @@ export default function ClassDetailPage({
 
           {assignments.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              Nessun compito assegnato. Crea il primo selezionando le smazzate dal catalogo.
+              {t("Nessun compito assegnato. Crea il primo selezionando le smazzate dal catalogo.")}
             </p>
           ) : (
             <div className="space-y-3">
@@ -178,7 +180,7 @@ export default function ClassDetailPage({
                     <CardHeader>
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-lg">{a.title}</CardTitle>
-                        {a.mode === "live" && <Badge>Live</Badge>}
+                        {a.mode === "live" && <Badge>{t("Live")}</Badge>}
                       </div>
                       <CardDescription>
                         {a.smazzata_ids.length} {a.smazzata_ids.length === 1 ? "mano" : "mani"}
@@ -196,7 +198,7 @@ export default function ClassDetailPage({
         <TabsContent value="allievi" className="mt-4">
           {members.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              Nessun allievo iscritto. Condividi il codice invito per farli entrare.
+              {t("Nessun allievo iscritto. Condividi il codice invito per farli entrare.")}
             </p>
           ) : (
             <div className="divide-y divide-border rounded-lg border border-border">

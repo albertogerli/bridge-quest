@@ -4,9 +4,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { parseCardSelectHand } from "@/lib/lesson-module";
 import type { ContentBlockProps } from "../_types";
 import { EnrichedText } from "./enriched-text";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Quiz «Scegli la carta»: si tocca una carta della mano mostrata. */
 export function CardSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) {
+  const t = useT();
   const { glossaryTermMap, quizAnswers, showExplanation, handleCardSelect } = ctx;
 
   const csAnswered = quizAnswers[blockIndex] !== undefined;
@@ -27,7 +29,7 @@ export function CardSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockP
             <path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h10V4H7zm3 3h4v2h-4V7z" />
           </svg>
         </div>
-        <p className="font-bold text-foreground text-[15px]">Scegli la carta</p>
+        <p className="font-bold text-foreground text-[15px]">{t("Scegli la carta")}</p>
       </div>
       <p className="text-[14px] text-foreground/80 mb-4 leading-relaxed">
         <EnrichedText text={block.content} termMap={glossaryTermMap} />
@@ -74,13 +76,13 @@ export function CardSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockP
             {csCorrect ? (
               <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-3 flex items-center gap-2">
                 <span className="text-lg">🎯</span>
-                <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">Carta giusta! +25 XP</p>
+                <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">{t("Carta giusta! +25 XP")}</p>
               </div>
             ) : (
               <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-2">
                 <span className="text-lg">💪</span>
                 <p className="text-sm font-semibold text-red-800 dark:text-red-300">
-                  La carta corretta era <span className="font-bold">{block.correctCard}</span>
+                  {t("La carta corretta era")} <span className="font-bold">{block.correctCard}</span>
                 </p>
               </div>
             )}

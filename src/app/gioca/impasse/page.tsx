@@ -8,6 +8,7 @@ import { impasseScenarios, type ImpasseScenario } from "@/data/impasse-data";
 import { useGameStore } from "@/store/use-game-store";
 import { useProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
+import { useT } from "@/contexts/traduzioni-provider";
 
 // ── Types ──────────────────────────────────────────────────────
 type Phase = "menu" | "playing" | "gameover";
@@ -101,6 +102,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 // ── Main component ─────────────────────────────────────────────
 export default function ImpassePage() {
+  const t = useT();
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
   const [phase, setPhase] = useState<Phase>("menu");
@@ -303,11 +305,11 @@ export default function ImpassePage() {
               href="/gioca"
               className="hover:text-emerald-600 transition-colors"
             >
-              Gioca
+              {t("Gioca")}
             </Link>
             <span>/</span>
             <span className="text-blue-600 dark:text-blue-400 font-semibold">
-              Impasse o Drop?
+              {t("Impasse o Drop?")}
             </span>
           </div>
 
@@ -336,7 +338,7 @@ export default function ImpassePage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
-              Impasse o Drop?
+              {t("Impasse o Drop?")}
             </h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Vedi la combinazione di carte: decidi in fretta se fare l&apos;impasse o
@@ -346,14 +348,14 @@ export default function ImpassePage() {
             {/* Rules */}
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">
-                Come si gioca?
+                {t("Come si gioca?")}
               </h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
-                  Vedi la tua mano e il morto in un seme specifico
+                  {t("Vedi la tua mano e il morto in un seme specifico")}
                 </li>
                 <li>
-                  Ti manca un onore (K o Q): devi decidere la manovra
+                  {t("Ti manca un onore (K o Q): devi decidere la manovra")}
                 </li>
                 <li>
                   <span className="font-bold text-blue-600 dark:text-blue-400">IMPASSE</span>{" "}
@@ -364,7 +366,7 @@ export default function ImpassePage() {
                   = gioca dall&apos;alto sperando che cada
                 </li>
                 <li>
-                  Hai pochi secondi per decidere! 15 mani per partita
+                  {t("Hai pochi secondi per decidere! 15 mani per partita")}
                 </li>
               </ul>
             </div>
@@ -397,7 +399,7 @@ export default function ImpassePage() {
             {/* Difficulty buttons */}
             <div className="mt-6 space-y-2">
               <h3 className="font-bold text-sm text-foreground text-left">
-                Scegli difficoltà
+                {t("Scegli difficoltà")}
               </h3>
               {(
                 Object.entries(diffConfig) as [
@@ -491,14 +493,14 @@ export default function ImpassePage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">Corrette</p>
+                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
                 <p className="text-[12px] text-muted-foreground font-bold">
-                  Streak max
+                  {t("Streak max")}
                 </p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
@@ -523,14 +525,14 @@ export default function ImpassePage() {
                   variant="outline"
                   className="w-full h-12 rounded-xl font-bold"
                 >
-                  Torna a Gioca
+                  {t("Torna a Gioca")}
                 </Button>
               </Link>
               <Button
                 onClick={() => startGame()}
                 className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 font-bold shadow-lg"
               >
-                Rigioca
+                {t("Rigioca")}
               </Button>
             </div>
           </motion.div>
@@ -636,7 +638,7 @@ export default function ImpassePage() {
           {/* Missing honor badge */}
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              Manca:
+              {t("Manca:")}
             </span>
             <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 font-bold text-sm">
               {colorizeCards(scenario.missingHonor)}
@@ -648,7 +650,7 @@ export default function ImpassePage() {
             {/* Your hand */}
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                La tua mano
+                {t("La tua mano")}
               </p>
               <div className="bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/40 dark:to-card rounded-xl p-3 border border-blue-100 dark:border-blue-900">
                 <p className="text-2xl sm:text-3xl tracking-wider leading-relaxed">
@@ -660,7 +662,7 @@ export default function ImpassePage() {
             {/* Dummy */}
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                Il morto
+                {t("Il morto")}
               </p>
               <div className="bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-card rounded-xl p-3 border border-amber-100 dark:border-amber-900">
                 <p className="text-2xl sm:text-3xl tracking-wider leading-relaxed">
@@ -708,7 +710,7 @@ export default function ImpassePage() {
               </svg>
               <p className="text-xl font-bold">IMPASSE</p>
               <p className="text-[12px] text-white/70 font-bold mt-1">
-                Finesse
+                {t("Finesse")}
               </p>
             </button>
 

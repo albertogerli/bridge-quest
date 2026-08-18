@@ -24,6 +24,7 @@ import {
   classificaTorneo, evDelContratto, registraRisultatoTorneo, riferimento,
   torneoCorrente, torneoMano,
   type ClassificaTorneo, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -49,6 +50,7 @@ type Tipo = "giornaliero" | "settimanale";
  * farle fare a nessuno.
  */
 export default function TorneoLicitaPage() {
+  const t = useT();
   const { user, loading } = useSharedAuth();
   const [tipo, setTipo] = useState<Tipo>("giornaliero");
   const [torneo, setTorneo] = useState<TorneoCorrente | null>(null);
@@ -210,12 +212,12 @@ export default function TorneoLicitaPage() {
   if (!user) {
     return (
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
-        <h1 className="text-2xl font-bold font-display mb-3">Tornei di licita</h1>
+        <h1 className="text-2xl font-bold font-display mb-3">{t("Tornei di licita")}</h1>
         <p className="text-sm text-muted-foreground mb-6">
           Serve l&apos;accesso: un torneo ha una classifica, e una classifica ha
           bisogno di sapere chi sei.
         </p>
-        <Link href="/login?redirect=/gioca/torneo-licita"><Button>Entra</Button></Link>
+        <Link href="/login?redirect=/gioca/torneo-licita"><Button>{t("Entra")}</Button></Link>
       </div>
     );
   }
@@ -224,7 +226,7 @@ export default function TorneoLicitaPage() {
     <div className="min-h-screen px-4 py-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold font-display mb-1 flex items-center gap-2">
         <Trophy className="w-6 h-6 text-gold" aria-hidden="true" />
-        Tornei di licita
+        {t("Tornei di licita")}
       </h1>
       <p className="text-sm text-muted-foreground mb-4">
         Le stesse smazzate per tutti. Si dichiara, si prendono le stelle, si
@@ -306,14 +308,14 @@ export default function TorneoLicitaPage() {
           {compagnoMuto && !esito && (
             <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">
               <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
-                Il compagno non ha risposto
+                {t("Il compagno non ha risposto")}
               </p>
               <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
                 Il motore che dichiara per lui non ha risposto in tempo. La mano
                 non è persa: l&apos;asta riprende da dove si è fermata.
               </p>
               <Button onClick={() => { void avanza(mano, tabella, bids); }}>
-                Riprova
+                {t("Riprova")}
               </Button>
             </div>
           )}
@@ -366,10 +368,10 @@ export default function TorneoLicitaPage() {
 
       {/* ── La classifica ───────────────────────────────────────────────── */}
       <section>
-        <h2 className="font-semibold mb-3">Classifica</h2>
+        <h2 className="font-semibold mb-3">{t("Classifica")}</h2>
         {!classifica || classifica.totale === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Ancora nessuno ha dichiarato. Il primo che finisce una mano compare qui.
+            {t("Ancora nessuno ha dichiarato. Il primo che finisce una mano compare qui.")}
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -377,9 +379,9 @@ export default function TorneoLicitaPage() {
               <thead>
                 <tr className="text-left text-muted-foreground">
                   <th className="font-normal py-1 w-8">#</th>
-                  <th className="font-normal py-1">Giocatore</th>
-                  <th className="font-normal py-1 text-right">Mani</th>
-                  <th className="font-normal py-1 text-right">Stelle</th>
+                  <th className="font-normal py-1">{t("Giocatore")}</th>
+                  <th className="font-normal py-1 text-right">{t("Mani")}</th>
+                  <th className="font-normal py-1 text-right">{t("Stelle")}</th>
                 </tr>
               </thead>
               <tbody>
