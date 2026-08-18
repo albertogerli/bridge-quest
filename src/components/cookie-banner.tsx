@@ -62,7 +62,7 @@ export function CookieBanner() {
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           className="fixed bottom-0 left-0 right-0 z-[60] flex justify-center pb-safe-area"
           role="dialog"
-          aria-label="Preferenze cookie"
+          aria-label={t("Preferenze cookie")}
         >
           <div className="w-full max-w-lg mx-4 mb-4 bg-card border border-border rounded-2xl shadow-xl p-5">
             <p className="text-sm text-foreground/80 leading-relaxed">

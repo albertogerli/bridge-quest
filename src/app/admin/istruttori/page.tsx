@@ -156,7 +156,7 @@ export default function AdminInstructorRequestsPage() {
                       value={messages[r.id] ?? ""}
                       onChange={(e) => setMessages((prev) => ({ ...prev, [r.id]: e.target.value }))}
                       rows={2}
-                      placeholder="Messaggio per l'utente (facoltativo) — es. “Benvenuto! Per qualsiasi dubbio scrivici.”"
+                      placeholder={t("Messaggio per l'utente (facoltativo) — es. “Benvenuto! Per qualsiasi dubbio scrivici.”")}
                       className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
                     />
                     <div className="flex gap-2 pt-1">

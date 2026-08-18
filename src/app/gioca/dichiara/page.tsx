@@ -611,7 +611,7 @@ export default function DichiaraPage() {
                 ref={pauseDialogRef}
                 role="dialog"
                 aria-modal="true"
-                aria-label="Gioco in pausa"
+                aria-label={t("Gioco in pausa")}
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}

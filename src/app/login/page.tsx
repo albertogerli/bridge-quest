@@ -328,7 +328,7 @@ function LoginContent() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    placeholder="Come vuoi essere chiamato"
+                    placeholder={t("Come vuoi essere chiamato")}
                   />
                 </div>
 
@@ -342,7 +342,7 @@ function LoginContent() {
                     value={bboUsername}
                     onChange={(e) => setBboUsername(e.target.value)}
                     className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    placeholder="Il tuo username su BridgeBase Online"
+                    placeholder={t("Il tuo username su BridgeBase Online")}
                   />
                 </div>
 
@@ -391,7 +391,7 @@ function LoginContent() {
                     }}
                     onFocus={() => setShowAsdDropdown(true)}
                     className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    placeholder="Cerca la tua associazione..."
+                    placeholder={t("Cerca la tua associazione...")}
                   />
                   {selectedAsdCode && (
                     <button
@@ -450,7 +450,7 @@ function LoginContent() {
                     <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                       {avatarPreview ? (
                         // eslint-disable-next-line @next/next/no-img-element -- anteprima locale (data URL) dal file input: next/image non la ottimizza
-                        <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
+                        <img src={avatarPreview} alt={t("Avatar")} className="h-full w-full object-cover" />
                       ) : (
                         <svg className="w-6 h-6 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
                           <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />

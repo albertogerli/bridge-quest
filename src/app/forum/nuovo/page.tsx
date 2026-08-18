@@ -235,7 +235,7 @@ export default function NuovoPostPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={200}
                 className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                placeholder="Di cosa vuoi parlare?"
+                placeholder={t("Di cosa vuoi parlare?")}
               />
             </div>
 
@@ -249,7 +249,7 @@ export default function NuovoPostPage() {
                 onChange={(e) => setBody(e.target.value)}
                 rows={8}
                 className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
-                placeholder="Scrivi il tuo messaggio..."
+                placeholder={t("Scrivi il tuo messaggio...")}
               />
             </div>
 

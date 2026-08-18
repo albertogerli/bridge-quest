@@ -156,7 +156,7 @@ export function DesktopNav() {
       {/* Logo */}
       <div className="px-4 pt-4 pb-3">
         {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
-        <img src="/logo-bridgelab.svg" alt="BridgeLab - Impara il Bridge giocando" className="w-full h-10 object-contain object-left" />
+        <img src="/logo-bridgelab.svg" alt={t("BridgeLab - Impara il Bridge giocando")} className="w-full h-10 object-contain object-left" />
       </div>
 
       <div className="h-px bg-border mx-4" />

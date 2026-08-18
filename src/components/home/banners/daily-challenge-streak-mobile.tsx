@@ -37,7 +37,7 @@ export function DailyChallengeStreakMobile({
                   : "bg-card border border-border"
               }`}>
                 <div className="flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 border border-amber-200 dark:bg-amber-900/40 dark:border-amber-800" role="img" aria-label="Sfida del giorno">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 border border-amber-200 dark:bg-amber-900/40 dark:border-amber-800" role="img" aria-label={t("Sfida del giorno")}>
                     {dailyDone ? <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden="true" /> : <Flame className="w-5 h-5 text-amber-600" aria-hidden="true" />}
                   </div>
                   {!dailyDone && (
@@ -71,7 +71,7 @@ export function DailyChallengeStreakMobile({
                 : "border border-border"
             }`}>
               <div className="flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10 dark:bg-emerald-900/40 border border-[#1B5E3B]/15 dark:border-emerald-800" role="img" aria-label="Streak giornaliero">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B5E3B]/10 dark:bg-emerald-900/40 border border-[#1B5E3B]/15 dark:border-emerald-800" role="img" aria-label={t("Streak giornaliero")}>
                   {streak >= 7 ? <Flame className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" aria-hidden="true" /> : <CalendarDays className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" aria-hidden="true" />}
                 </div>
                 {streak > 0 && (

@@ -23,7 +23,7 @@ export function StepTavolo({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="Prendi Posto"
-      title="Quattro giocatori, due squadre."
+      title={t("Quattro giocatori, due squadre.")}
       body="Tu sei Sud. Il tuo compagno è di fronte."
     >
       <div className="relative mt-6 aspect-square max-w-[320px] mx-auto">

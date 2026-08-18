@@ -177,7 +177,7 @@ export default function TrovaCompagnoPage() {
         <>
           <div className="flex flex-wrap gap-2 mb-5">
             <select
-              aria-label="Filtra per livello"
+              aria-label={t("Filtra per livello")}
               value={filters.level}
               onChange={(e) =>
                 applyFilters({ ...filters, level: e.target.value as PartnerLevel | "" })
@@ -193,7 +193,7 @@ export default function TrovaCompagnoPage() {
             </select>
 
             <select
-              aria-label="Filtra per provincia"
+              aria-label={t("Filtra per provincia")}
               value={filters.province}
               onChange={(e) => applyFilters({ ...filters, province: e.target.value })}
               className="h-10 px-3 rounded-xl border border-border bg-card text-sm"

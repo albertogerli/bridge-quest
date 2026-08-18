@@ -229,7 +229,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   // returned above with the landing page, so we never spin for them.
   if (!catalogLoaded) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label="Caricamento in corso">
+      <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label={t("Caricamento in corso")}>
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
         <span className="sr-only">{t("Caricamento...")}</span>
       </div>

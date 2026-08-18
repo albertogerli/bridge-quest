@@ -510,7 +510,7 @@ export default function AmiciPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder="Cerca per nome, username BBO o associazione..."
+                placeholder={t("Cerca per nome, username BBO o associazione...")}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all card-clean"
               />
               {searchLoading && (
@@ -664,7 +664,7 @@ export default function AmiciPage() {
                   </div>
                   <button
                     onClick={closeChallengeModal}
-                    aria-label="Chiudi"
+                    aria-label={t("Chiudi")}
                     className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-muted transition-colors"
                   >
                     <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />

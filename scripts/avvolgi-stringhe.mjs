@@ -43,6 +43,18 @@ if (!BERSAGLI.length) {
 /** Testo fra tag, su una riga, che vale la pena tradurre. */
 const TESTO = />(\s*)([A-ZÀ-Ù][^<>{}\n&]{3,160}?)(\s*)</g;
 
+/**
+ * Gli attributi che l'utente legge o SENTE.
+ *
+ * `aria-label` e `alt` non si vedono a schermo, e per questo si dimenticano:
+ * ma sono esattamente ciò che arriva a chi naviga con un lettore di schermo.
+ * Un sito tradotto che li lascia in italiano dice «Learn» a chi guarda e
+ * «Impara» a chi ascolta — la traduzione peggiore, perché sembra completa.
+ *
+ * `title` e `placeholder` invece si vedono eccome.
+ */
+const ATTRIBUTI = /\b(placeholder|title|aria-label|alt)="([A-ZÀ-Ù][^"{}]{3,160}?)"/g;
+
 function elencaFile(percorso) {
   // Un percorso che non c'è si salta con un avviso: passare più cartelle in
   // una volta è il modo normale di usarlo, e una sola sbagliata non deve far
@@ -56,8 +68,14 @@ function elencaFile(percorso) {
   const cammina = (d) => {
     for (const v of readdirSync(d, { withFileTypes: true })) {
       const p = join(d, v.name);
-      if (v.isDirectory()) cammina(p);
-      else if (/\.tsx$/.test(v.name) && !/\.test\.tsx$/.test(v.name)) trovati.push(p);
+      // `components/ui` è la libreria shadcn, non roba nostra: il suo «Close»
+      // non è testo di BridgeLab, e tradurlo lì dentro significa mettere le
+      // mani in casa d'altri — si perde al primo aggiornamento del pacchetto.
+      if (v.isDirectory()) {
+        if (!/\/components\/ui$/.test(p)) cammina(p);
+        continue;
+      }
+      if (/\.tsx$/.test(v.name) && !/\.test\.tsx$/.test(v.name)) trovati.push(p);
     }
   };
   cammina(percorso);
@@ -135,7 +153,16 @@ for (const bersaglio of BERSAGLI) {
     }
 
     let frasi = 0;
-    let convertito = originale.replace(TESTO, (intero, pre, frase, post) => {
+    let convertito = originale.replace(ATTRIBUTI, (intero, attributo, frase) => {
+      const pulita = frase.trim();
+      if (!/[a-zà-ù]/.test(pulita)) return intero;
+      // Il nome del prodotto resta il nome del prodotto, in ogni lingua.
+      if (/^(BridgeLab|Bridge LAB|FIGB|CONI)$/.test(pulita)) return intero;
+      frasi++;
+      return `${attributo}={t("${pulita.replace(/"/g, '\\"')}")}`;
+    });
+
+    convertito = convertito.replace(TESTO, (intero, pre, frase, post) => {
       const pulita = frase.trim();
       // Un testo di sole cifre, simboli o una parola sola maiuscola (sigle
       // come «IMP», «FIGB») non è una frase da tradurre.

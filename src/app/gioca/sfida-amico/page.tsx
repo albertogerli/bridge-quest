@@ -967,6 +967,7 @@ function PastChallenges() {
 }
 
 function CopyMiniButton({ challengeId }: { challengeId: string }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -993,7 +994,7 @@ function CopyMiniButton({ challengeId }: { challengeId: string }) {
     <button
       onClick={handleCopy}
       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card border border-border hover:bg-muted transition-colors"
-      title="Copia link sfida"
+      title={t("Copia link sfida")}
     >
       {copied ? (
         <svg className="h-3.5 w-3.5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>

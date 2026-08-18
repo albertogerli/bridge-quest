@@ -78,7 +78,7 @@ export default function SfidaDelGiornoPage() {
   const smazzata = getDailySmazzata(playable);
   if (!smazzata) {
     return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento sfida del giorno">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento sfida del giorno")}>
         {t("Caricamento sfida del giorno…")}
       </div>
     );

@@ -20,7 +20,7 @@ export function DesktopSidebar() {
   useCollectibleCards();
 
   return (
-    <aside className="hidden lg:block w-[320px] shrink-0" aria-label="Barra laterale">
+    <aside className="hidden lg:block w-[320px] shrink-0" aria-label={t("Barra laterale")}>
       <div className="sticky top-6 space-y-4 pb-6">
 
         {/* Level & XP */}
@@ -108,7 +108,7 @@ export function DesktopSidebar() {
               try { localStorage.removeItem("bq_guest"); } catch {}
               window.location.href = "/";
             }}
-            aria-label="Esci dal tuo account"
+            aria-label={t("Esci dal tuo account")}
             className="w-full flex items-center gap-2.5 rounded-xl bg-card card-clean p-3 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors group"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 group-hover:bg-rose-100">
@@ -126,7 +126,7 @@ export function DesktopSidebar() {
         ) : stats.xp > 0 ? (
           <Link
             href="/login"
-            aria-label="Accedi per sincronizzare"
+            aria-label={t("Accedi per sincronizzare")}
             className="w-full flex items-center gap-2.5 rounded-xl bg-card card-clean p-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors group"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500">
@@ -143,7 +143,7 @@ export function DesktopSidebar() {
         ) : (
           <Link
             href="/login"
-            aria-label="Accedi o Registrati"
+            aria-label={t("Accedi o Registrati")}
             className="w-full flex items-center gap-2.5 rounded-xl bg-figb p-3 hover:bg-figb-dark transition-colors"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white">
@@ -161,7 +161,7 @@ export function DesktopSidebar() {
         <div className="rounded-xl bg-figb/5 dark:bg-primary/10 border border-figb/15 dark:border-primary/20 p-4 text-center space-y-3">
           <div className="flex items-center justify-center gap-4">
             <Image src="/icons/logo-figb.png" alt="FIGB" width={400} height={355} className="h-10 w-auto" />
-            <Image src="/icons/logo-coni.png" alt="CONI - Disciplina Sportiva Associata" width={400} height={146} className="h-8 w-auto" />
+            <Image src="/icons/logo-coni.png" alt={t("CONI - Disciplina Sportiva Associata")} width={400} height={146} className="h-8 w-auto" />
           </div>
           <div>
             <p className="text-[12px] font-medium text-figb dark:text-primary uppercase tracking-wider">

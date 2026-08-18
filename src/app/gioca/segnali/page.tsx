@@ -485,7 +485,7 @@ export default function SegnaliPage() {
           <Link
             href="/gioca"
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
-            aria-label="Esci dal gioco"
+            aria-label={t("Esci dal gioco")}
           >
             ✕
           </Link>

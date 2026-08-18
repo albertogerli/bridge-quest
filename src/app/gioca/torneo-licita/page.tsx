@@ -233,7 +233,7 @@ export default function TorneoLicitaPage() {
         finisce in classifica.
       </p>
 
-      <div className="flex gap-2 mb-5" role="group" aria-label="Quale torneo">
+      <div className="flex gap-2 mb-5" role="group" aria-label={t("Quale torneo")}>
         {([["giornaliero", "Oggi · 8 mani"], ["settimanale", "Settimana · 24 mani"]] as [Tipo, string][])
           .map(([t, etichetta]) => (
             <button

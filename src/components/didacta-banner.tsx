@@ -70,7 +70,7 @@ export function DidactaBanner() {
 
         <button
           onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
-          aria-label="Chiudi il banner DIDACTA"
+          aria-label={t("Chiudi il banner DIDACTA")}
           className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/10 transition-colors z-10"
         >
           <X className="w-4 h-4 text-muted-foreground" aria-hidden="true" />

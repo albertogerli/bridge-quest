@@ -24,7 +24,7 @@ export default function ManoDelGiornoPage() {
   // Need a loaded smazzate pool for everything below.
   if (!daily.todayHand || !daily.yesterdayHand) {
     return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento mano del giorno">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento mano del giorno")}>
         {t("Caricamento mano del giorno…")}
       </div>
     );

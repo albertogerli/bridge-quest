@@ -68,7 +68,7 @@ export function AsdDistributionPanel({
               <div className="flex items-center gap-2 text-[12px] text-gray-400 mb-2">
                 <span>{filtered.length} {asdTab === "asd" ? "ASD" : asdTab === "province" ? "province" : "regioni"} · {totalUsers} utenti</span>
                 {approx && (
-                  <span className="text-gray-400" title="Le mediane di gruppo sono ricostruite dalle mediane per ASD, non dai dati dei singoli utenti">
+                  <span className="text-gray-400" title={t("Le mediane di gruppo sono ricostruite dalle mediane per ASD, non dai dati dei singoli utenti")}>
                     mediane stimate
                   </span>
                 )}

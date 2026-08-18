@@ -86,7 +86,7 @@ export default function LezioniPage() {
             quando l'attesa si allunga). Il titolo della pagina esiste da
             subito, solo per gli screen reader in questa fase. */}
         <h1 className="sr-only">{t("Il Percorso")}</h1>
-        <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
+        <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento corsi")}>
           {t("Caricamento corsi…")}
         </div>
       </>
@@ -128,7 +128,7 @@ export default function LezioniPage() {
           transition={{ delay: 0.04 }}
           className="mb-4"
         >
-          <Link href="/prima-mano" aria-label="Prima Mano: lezione introduttiva">
+          <Link href="/prima-mano" aria-label={t("Prima Mano: lezione introduttiva")}>
             <div className={`relative overflow-hidden rounded-2xl border p-4 transition-all hover:shadow-lg active:scale-[0.99] ${
               onboarded
                 ? "border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-card dark:from-emerald-950/30 dark:to-card"
@@ -176,7 +176,7 @@ export default function LezioniPage() {
             transition={{ delay: 0.05 }}
             className="mb-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
             role="tablist"
-            aria-label="Seleziona corso"
+            aria-label={t("Seleziona corso")}
           >
             {availableCourses.map((course) => {
               const isActive = course.id === selectedCourse;
@@ -236,7 +236,7 @@ export default function LezioniPage() {
           transition={{ delay: 0.09 }}
           className="mb-4"
         >
-          <Link href="/dispense" aria-label="Dispense e Infografiche: scarica il materiale didattico">
+          <Link href="/dispense" aria-label={t("Dispense e Infografiche: scarica il materiale didattico")}>
             <div className="card-clean card-interactive rounded-2xl bg-gradient-to-r from-figb/5 to-figb/10 dark:from-primary/10 dark:to-primary/15 border border-figb/15 dark:border-primary/20 p-3.5 flex items-center gap-3 cursor-pointer">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15">
                 <svg className="h-5 w-5 text-figb dark:text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -350,7 +350,7 @@ export default function LezioniPage() {
                           {world.name}
                         </h2>
                         {worldProgress === 100 && (
-                          <span className="text-emerald-700 text-lg" aria-label="Completato">✓</span>
+                          <span className="text-emerald-700 text-lg" aria-label={t("Completato")}>✓</span>
                         )}
                       </div>
                       <p className={`text-xs ${isLocked ? "text-muted-foreground" : "text-muted-foreground"}`}>

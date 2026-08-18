@@ -82,7 +82,7 @@ export function StepPresa({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="La Prima Regola"
-      title="Qui conta una sola cosa."
+      title={t("Qui conta una sola cosa.")}
       body="Ogni giro si giocano 4 carte, una per giocatore. Chi gioca la carta più alta del seme comandato vince la presa."
     >
       <ConfettiBurst trigger={showConfetti} count={25} />

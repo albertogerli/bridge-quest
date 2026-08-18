@@ -381,7 +381,7 @@ export default function RipassoPage() {
                           <button
                             onClick={() => handleMarkMastered(item.lessonId, item.moduleId)}
                             className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-950/50 transition-colors"
-                            title="Segna come padroneggiato"
+                            title={t("Segna come padroneggiato")}
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             {t("Fatto")}

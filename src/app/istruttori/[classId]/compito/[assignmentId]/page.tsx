@@ -343,8 +343,9 @@ function HeatCell({
   playable?: boolean;
   onClick?: () => void;
 }) {
+  const t = useT();
   if (cell.state === "empty") {
-    return <span className="inline-block h-7 w-12 rounded border border-border bg-muted" aria-label="Non giocata" />;
+    return <span className="inline-block h-7 w-12 rounded border border-border bg-muted" aria-label={t("Non giocata")} />;
   }
   const made = cell.state === "made";
   const label =

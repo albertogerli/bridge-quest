@@ -309,7 +309,7 @@ function Studio() {
               value={titolo}
               maxLength={120}
               onChange={(e) => setTitolo(e.target.value)}
-              placeholder="Taglio a scelta, quarta presa"
+              placeholder={t("Taglio a scelta, quarta presa")}
               className="w-full h-11 px-3 rounded-xl border border-border bg-card text-sm"
             />
           </div>

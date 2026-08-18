@@ -32,7 +32,7 @@ export function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile
           className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          title="Maestro Franci introduce la lezione"
+          title={t("Maestro Franci introduce la lezione")}
         />
         <button
           onClick={() => {
@@ -41,7 +41,7 @@ export function MaestroVideoInline({ lessonId, moduleIndex, currentStep, profile
             onDismiss?.();
           }}
           className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-90"
-          aria-label="Chiudi video"
+          aria-label={t("Chiudi video")}
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <path d="M18 6L6 18M6 6l12 12" />

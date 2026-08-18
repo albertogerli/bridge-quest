@@ -380,7 +380,7 @@ export function HandReplay({
           <button
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70 transition-colors"
-            aria-label="Chiudi"
+            aria-label={t("Chiudi")}
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18" />

@@ -504,7 +504,7 @@ export default function ClassificaPage() {
             className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             role="tablist"
-            aria-label="Tipo di classifica"
+            aria-label={t("Tipo di classifica")}
           >
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -547,7 +547,7 @@ export default function ClassificaPage() {
               transition={{ duration: 0.25 }}
               className="overflow-hidden"
             >
-              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label="Filtra per corso" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label={t("Filtra per corso")} style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 <div className="flex items-center gap-1 mr-1 flex-shrink-0" aria-hidden="true">
                   <Filter className="w-3.5 h-3.5 text-muted-foreground" />
                 </div>
@@ -586,7 +586,7 @@ export default function ClassificaPage() {
               transition={{ duration: 0.25 }}
               className="overflow-hidden"
             >
-              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label="Filtra per gioco" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1" role="tablist" aria-label={t("Filtra per gioco")} style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 <div className="flex items-center gap-1 mr-1 flex-shrink-0" aria-hidden="true">
                   <Gamepad2 className="w-3.5 h-3.5 text-muted-foreground" />
                 </div>
@@ -1079,19 +1079,20 @@ function PerGiocoView({
    LeaderboardList component
    ============================================================================ */
 function LeaderboardSearch({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useT();
   return (
     <div className="relative mb-3">
       <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Cerca un giocatore…"
+        placeholder={t("Cerca un giocatore…")}
         className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-9 text-sm outline-none focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/15"
       />
       {value && (
         <button
           onClick={() => onChange("")}
-          aria-label="Cancella ricerca"
+          aria-label={t("Cancella ricerca")}
           className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:bg-muted"
         >
           <X className="h-4 w-4" />

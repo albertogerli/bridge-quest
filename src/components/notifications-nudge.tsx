@@ -107,7 +107,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
               </div>
               <button
                 onClick={dismiss}
-                aria-label="Chiudi"
+                aria-label={t("Chiudi")}
                 className="absolute right-2 top-2 rounded-lg p-1 text-muted-foreground/50 transition-colors hover:text-muted-foreground"
               >
                 <X className="h-4 w-4" aria-hidden="true" />

@@ -81,7 +81,7 @@ export function BadgesSection({
               <button
                 onClick={(e) => { e.stopPropagation(); onShareBadge(badge.name); }}
                 className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-figb text-white shadow-sm hover:bg-figb-dark transition-colors"
-                title="Condividi badge"
+                title={t("Condividi badge")}
               >
                 {sharedBadge === badge.name ? (
                   <Check className="w-2.5 h-2.5" />

@@ -95,7 +95,7 @@ export function BachecaCircolo({ asdCode }: { asdCode: string }) {
             maxLength={120}
             onChange={(e) => setTitolo(e.target.value)}
             className="w-full h-11 px-3 rounded-xl border border-border bg-card text-sm mb-3"
-            placeholder="Torneo sociale di giovedì"
+            placeholder={t("Torneo sociale di giovedì")}
           />
           <label htmlFor="avviso-corpo" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
             {t("Testo")}
@@ -107,7 +107,7 @@ export function BachecaCircolo({ asdCode }: { asdCode: string }) {
             rows={4}
             onChange={(e) => setCorpo(e.target.value)}
             className="w-full px-3 py-2 rounded-xl border border-border bg-card text-sm mb-3"
-            placeholder="Ritrovo alle 20.30, iscrizioni entro mercoledì."
+            placeholder={t("Ritrovo alle 20.30, iscrizioni entro mercoledì.")}
           />
           {errore && <p className="text-sm text-destructive mb-2">{errore}</p>}
           <div className="flex gap-2">

@@ -9,6 +9,7 @@ import { asdNameToSlug } from "@/lib/asd-utils";
 import type { Profile } from "@/hooks/use-auth";
 import type { ShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import type { User } from "@supabase/supabase-js";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Avatar, nome, titolo cosmetico, circolo e livello dell'utente. */
 export function ProfileHeader({
@@ -24,6 +25,7 @@ export function ProfileHeader({
   level: number;
   levelName: string;
 }) {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -32,7 +34,7 @@ export function ProfileHeader({
     >
       <Avatar className={`h-18 w-18 shadow-lg shadow-figb/20 ${cosmetics.avatarFrame || ""}`}>
         {user && authProfile?.avatar_url ? (
-          <Image src={authProfile.avatar_url} alt="Foto profilo" width={72} height={72} className="h-18 w-18 rounded-full object-cover" />
+          <Image src={authProfile.avatar_url} alt={t("Foto profilo")} width={72} height={72} className="h-18 w-18 rounded-full object-cover" />
         ) : (
           <AvatarFallback className="h-18 w-18 bg-figb text-white text-2xl font-bold">
             {user && authProfile?.display_name ? authProfile.display_name[0].toUpperCase() : "?"}
