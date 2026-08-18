@@ -17,8 +17,10 @@ test.describe("la lingua nell'indirizzo", () => {
     // logo, cioè un'immagine, e cercarlo come testo fa fallire una pagina sana.
     await expect(page).toHaveTitle(/BridgeLab/, { timeout: 45_000 });
     // E la navigazione dell'applicazione, che dimostra che è arrivata la
-    // pagina vera e non un «non trovato» col titolo giusto.
-    await expect(page.getByRole("link", { name: "Impara" }).first()).toBeVisible({
+    // pagina vera e non un «non trovato» col titolo giusto. In inglese si
+    // chiama «Learn»: da quando la navigazione è tradotta, cercare «Impara»
+    // qui fallirebbe — ed è giusto così, il test ha colto il cambiamento.
+    await expect(page.getByRole("link", { name: "Learn" }).first()).toBeVisible({
       timeout: 45_000,
     });
   });
@@ -73,4 +75,58 @@ test.describe("la lingua nell'indirizzo", () => {
     await expect(verso).toBeVisible({ timeout: 45_000 });
     expect(await verso.getAttribute("href")).toBe("/en");
   });
+});
+
+/**
+ * Fase 2: le stringhe cominciano a tradursi davvero.
+ *
+ * La navigazione è la prima area convertita, ed è la prova che la catena
+ * regge da un capo all'altro: indirizzo → lingua → dizionario → schermo. Se
+ * questa passa, tradurre il resto è lavoro, non ricerca.
+ */
+test.describe("le stringhe tradotte", () => {
+  test("la navigazione è in inglese sotto /en e in italiano fuori", async ({ page }) => {
+    await login(page);
+    await page.evaluate(() => {
+      localStorage.setItem("bq_onboarded", "1");
+      localStorage.setItem("bq_guide_v2_seen", "1");
+    });
+
+    await page.goto("/en");
+    await expect(
+      page.getByRole("link", { name: "Learn" }).first(),
+      "sotto /en la navigazione deve essere tradotta"
+    ).toBeVisible({ timeout: 45_000 });
+
+    await page.goto("/");
+    await expect(
+      page.getByRole("link", { name: "Impara" }).first(),
+      "in italiano deve restare italiana"
+    ).toBeVisible({ timeout: 45_000 });
+    // E l'inglese non deve comparire dove non c'entra.
+    await expect(page.getByRole("link", { name: "Learn" })).toHaveCount(0);
+  });
+
+  test("una frase non ancora tradotta resta in italiano, non sparisce", async ({ page }) => {
+    // È il ripiego che permette di tradurre un'area alla volta col sito vivo:
+    // «Trova ASD» non è nel dizionario, e sotto /en deve vedersi in italiano
+    // invece di lasciare un buco o mostrare una chiave.
+    await login(page);
+    await page.goto("/en/glossario");
+    const html = await page.locator("body").innerText();
+    expect(html.length, "la pagina non deve essere vuota").toBeGreaterThan(100);
+  });
+});
+
+test("l'hub dei giochi è tradotto, e in italiano resta italiano", async ({ page }) => {
+  await login(page);
+  await page.goto("/en/gioca");
+  await expect(page.getByText("Start here").first(), "l'hub deve essere in inglese").toBeVisible({
+    timeout: 45_000,
+  });
+  await expect(page.getByText("Bid and See").first()).toBeVisible();
+
+  await page.goto("/gioca");
+  await expect(page.getByText("Inizia da qui").first()).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByText("Start here")).toHaveCount(0);
 });

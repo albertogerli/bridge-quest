@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/contexts/traduzioni-provider";
 import Link from "next/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
@@ -13,6 +14,7 @@ import {
   Spade, BookOpen, Link2, BarChart3, Radio, Calculator, Gavel, Users } from "lucide-react";
 
 export default function GiocaPage() {
+  const t = useT();
   const profile = useProfile();
   const [dailyDone, setDailyDone] = useState(false);
   const [tournamentDone, setTournamentDone] = useState(false);
@@ -50,13 +52,11 @@ export default function GiocaPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-3xl font-bold text-foreground font-display">Gioca</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Metti in pratica quello che hai imparato
-          </p>
+          <h1 className="text-3xl font-bold text-foreground font-display">{t("Gioca")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("Metti in pratica quello che hai imparato")}</p>
         </motion.div>
 
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Inizia da qui</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Inizia da qui")}</h2>
 
         {/* Mano Guidata card (after Prima Mano is done) */}
         {onboarded && (
@@ -73,8 +73,8 @@ export default function GiocaPage() {
                     <Target className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-foreground">Mano Guidata</p>
-                    <p className="text-[12px] text-muted-foreground">Pratica passo-passo con suggerimenti</p>
+                    <p className="text-sm font-bold text-foreground">{t("Mano Guidata")}</p>
+                    <p className="text-[12px] text-muted-foreground">{t("Pratica passo-passo con suggerimenti")}</p>
                   </div>
                   <Badge className="bg-muted text-muted-foreground text-[12px] font-bold border-0">
                     +35 XP
@@ -100,17 +100,17 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-foreground">MiniBridge</p>
+                    <p className="text-sm font-bold text-foreground">{t("MiniBridge")}</p>
                     <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">Beta</span>
                   </div>
-                  <p className="text-[12px] text-muted-foreground">Gioca senza licita: conta i punti e scegli il contratto</p>
+                  <p className="text-[12px] text-muted-foreground">{t("Gioca senza licita: conta i punti e scegli il contratto")}</p>
                 </div>
               </div>
             </div>
           </Link>
         </motion.div>
 
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">Sfide</h2>
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Sfide")}</h2>
 
         {/* Hero card: Sfida del Giorno */}
         <motion.div
@@ -135,9 +135,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className={`text-xl font-semibold ${dailyDone ? "text-emerald-dark dark:text-emerald-300" : "text-white"}`}>
-                      Sfida del Giorno
-                    </h2>
+                    <h2 className={`text-xl font-semibold ${dailyDone ? "text-emerald-dark dark:text-emerald-300" : "text-white"}`}>{t("Sfida del Giorno")}</h2>
                     {!dailyDone && (
                       <Badge className="bg-amber/20 text-amber-light text-[12px] font-bold border-0">
                         +40 {profile.xpLabel}
@@ -188,9 +186,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className={`text-lg font-semibold ${tournamentDone ? "text-primary" : "text-white"}`}>
-                      Torneo Settimanale
-                    </h2>
+                    <h2 className={`text-lg font-semibold ${tournamentDone ? "text-primary" : "text-white"}`}>{t("Torneo Settimanale")}</h2>
                     {!tournamentDone && (
                       <Badge className="bg-white/15 text-white/90 text-[12px] font-bold border-0">
                         +150 {profile.xpLabel}
@@ -233,11 +229,9 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className="text-lg font-semibold text-white">Sfida IMP</h2>
+                    <h2 className="text-lg font-semibold text-white">{t("Sfida IMP")}</h2>
                   </div>
-                  <p className="text-sm text-white/70">
-                    Sfida un amico a 1, 4 o 8 mani con punteggio IMP
-                  </p>
+                  <p className="text-sm text-white/70">{t("Sfida un amico a 1, 4 o 8 mani con punteggio IMP")}</p>
                 </div>
                 <svg
                   className="h-6 w-6 shrink-0 text-white/60"
@@ -261,7 +255,7 @@ export default function GiocaPage() {
           className="mt-6"
         >
           <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-lg font-semibold text-foreground font-display">Pratica</h2>
+            <h2 className="text-lg font-semibold text-foreground font-display">{t("Pratica")}</h2>
             <Badge className="bg-primary/10 text-primary text-[12px] font-bold border-0">
               allenati su una mossa
             </Badge>
@@ -274,8 +268,8 @@ export default function GiocaPage() {
                   <CalendarDays className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Mano del Giorno</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Una mano al giorno, uguale per tutti. Classifica!</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Mano del Giorno")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Una mano al giorno, uguale per tutti. Classifica!")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -290,8 +284,8 @@ export default function GiocaPage() {
                   <Zap className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Quiz Lampo</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Raffica di domande, 30 secondi! Combo multiplier</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Quiz Lampo")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Raffica di domande, 30 secondi! Combo multiplier")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -306,13 +300,11 @@ export default function GiocaPage() {
                   <Calculator className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Quante prese?</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Vedi tutte le mani e conta le prese di Nord-Sud</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Quante prese?")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Vedi tutte le mani e conta le prese di Nord-Sud")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -325,13 +317,11 @@ export default function GiocaPage() {
                   <Gavel className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Cosa apri?</h3>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Cosa apri?")}</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Mani sempre nuove: scegli l&apos;apertura giusta</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -344,13 +334,11 @@ export default function GiocaPage() {
                   <Target className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Che contratto giocate?</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Vedi le due mani: fin dove potete arrivare?</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Che contratto giocate?")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Vedi le due mani: fin dove potete arrivare?")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -363,13 +351,11 @@ export default function GiocaPage() {
                   <Gavel className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Licita e vediamo</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Vedi solo la tua mano: dichiara col compagno e prendi le stelle</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Licita e vediamo")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Vedi solo la tua mano: dichiara col compagno e prendi le stelle")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -382,13 +368,11 @@ export default function GiocaPage() {
                   <Users className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Licita con un amico</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Ognuno vede la sua mano e dichiara quando può</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Licita con un amico")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Ognuno vede la sua mano e dichiara quando può")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -401,13 +385,11 @@ export default function GiocaPage() {
                   <Trophy className="w-6 h-6" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Tornei di licita</h3>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Tornei di licita")}</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">8 mani al giorno, 24 a settimana: stesse smazzate per tutti</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -420,13 +402,11 @@ export default function GiocaPage() {
                   <Swords className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Sfida 2 contro 2</h3>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida 2 contro 2")}</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Voi due contro un&apos;altra coppia, sulle stesse smazzate</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">
-                    Nuovo
-                  </span>
+                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </div>
               </div>
@@ -455,8 +435,8 @@ export default function GiocaPage() {
                   <Target className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Impasse o Drop?</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Decidi in 5 secondi: impasse o caduta?</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Impasse o Drop?")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Decidi in 5 secondi: impasse o caduta?")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -471,8 +451,8 @@ export default function GiocaPage() {
                   <Hash className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Conta Veloce</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Conta i Punti Onore a tempo! Quanto sei veloce?</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Conta Veloce")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Conta i Punti Onore a tempo! Quanto sei veloce?")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -487,8 +467,8 @@ export default function GiocaPage() {
                   <Radio className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Segnali in Difesa</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">In difesa si parla con le carte: dai e leggi i segnali</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Segnali in Difesa")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("In difesa si parla con le carte: dai e leggi i segnali")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -503,7 +483,7 @@ export default function GiocaPage() {
                   <Megaphone className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Dichiara!</h3>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Dichiara!")}</h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">Scegli l&apos;apertura giusta per ogni mano</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
@@ -519,8 +499,8 @@ export default function GiocaPage() {
                   <MessageCircle className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Pratica Licita</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Esercitati nella dichiarazione: Texas, Stayman e altro</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Pratica Licita")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Esercitati nella dichiarazione: Texas, Stayman e altro")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -535,8 +515,8 @@ export default function GiocaPage() {
                   <Brain className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Memory Bridge</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Abbina carte e concetti. Allena la memoria!</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Memory Bridge")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Abbina carte e concetti. Allena la memoria!")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -551,8 +531,8 @@ export default function GiocaPage() {
                   <Swords className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Sfida un Amico</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Gioca la stessa mano e confronta i risultati</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida un Amico")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Gioca la stessa mano e confronta i risultati")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -563,7 +543,7 @@ export default function GiocaPage() {
           </div>
         </motion.div>
 
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">Gioco libero</h2>
+        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Gioco libero")}</h2>
 
         {/* Two-column cards */}
         <div className="grid grid-cols-2 gap-3 mt-6">
@@ -578,9 +558,7 @@ export default function GiocaPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <Spade className="w-6 h-6 text-figb" />
                 </div>
-                <h3 className="font-semibold text-foreground text-[15px]">
-                  Pratica Libera
-                </h3>
+                <h3 className="font-semibold text-foreground text-[15px]">{t("Pratica Libera")}</h3>
                 <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Gioca una mano casuale dalle {allSmazzate.length} disponibili
                 </p>
@@ -601,9 +579,7 @@ export default function GiocaPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 mb-3">
                   <BookOpen className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                 </div>
-                <h3 className="font-semibold text-foreground text-[15px]">
-                  Tutte le Smazzate
-                </h3>
+                <h3 className="font-semibold text-foreground text-[15px]">{t("Tutte le Smazzate")}</h3>
                 <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Sfoglia e gioca le {allSmazzate.length} mani per lezione
                 </p>
@@ -627,12 +603,8 @@ export default function GiocaPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <Link2 className="w-6 h-6 text-figb" />
                 </div>
-                <h3 className="font-semibold text-foreground text-[15px]">
-                  Sfida via Link
-                </h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  Condividi un link, giocate la stessa mano e confrontate!
-                </p>
+                <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida via Link")}</h3>
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">{t("Condividi un link, giocate la stessa mano e confrontate!")}</p>
                 <div className="mt-3 flex items-center gap-1.5">
                 </div>
               </div>
@@ -650,16 +622,12 @@ export default function GiocaPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 mb-3">
                   <BarChart3 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h3 className="font-semibold text-foreground text-[15px]">
-                  Analisi AI
-                </h3>
+                <h3 className="font-semibold text-foreground text-[15px]">{t("Analisi AI")}</h3>
                 <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
                   Rivedi le tue mani con commenti dell&apos;AI carta per carta
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">
-                    Post-partita
-                  </span>
+                  <span className="text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">{t("Post-partita")}</span>
                 </div>
               </div>
             </Link>
@@ -676,12 +644,8 @@ export default function GiocaPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <span className="text-xl">📖</span>
                 </div>
-                <h3 className="font-semibold text-foreground text-[15px]">
-                  Glossario
-                </h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  Impara tutti i termini del bridge
-                </p>
+                <h3 className="font-semibold text-foreground text-[15px]">{t("Glossario")}</h3>
+                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">{t("Impara tutti i termini del bridge")}</p>
                 <div className="mt-3 flex items-center gap-1.5">
                   <span className="text-[12px] font-bold text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     A-Z
@@ -706,10 +670,8 @@ export default function GiocaPage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <p className="font-bold text-sm text-foreground">Maestro Fiori</p>
-                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[12px] font-bold border-0">
-                    Consiglio
-                  </Badge>
+                  <p className="font-bold text-sm text-foreground">{t("Maestro Fiori")}</p>
+                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[12px] font-bold border-0">{t("Consiglio")}</Badge>
                 </div>
                 <p className="text-[13px] text-muted-foreground leading-relaxed">
                   La pratica rende perfetti! Gioca le mani delle lezioni che hai completato per consolidare i concetti.

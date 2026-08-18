@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePercorso } from "@/hooks/use-lingua";
+import { useT } from "@/contexts/traduzioni-provider";
 import { motion, AnimatePresence } from "motion/react";
 import { hapticTap } from "@/lib/native-bridge";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
@@ -22,6 +23,7 @@ const MORE_LINKS = [
 export function BottomNav() {
   // Senza prefisso di lingua, o sotto `/en` nessuna voce risulta attiva.
   const pathname = usePercorso();
+  const t = useT();
   const [moreOpen, setMoreOpen] = useState(false);
   const pendingFriends = usePendingFriendRequests();
   const moreSheetRef = useRef<HTMLDivElement>(null);
@@ -67,8 +69,8 @@ export function BottomNav() {
                     }}
                     aria-label={
                       l.href === "/amici" && pendingFriends > 0
-                        ? `${l.label} — ${pendingFriends} richieste in attesa`
-                        : l.label
+                        ? `${t(l.label)} — ${t("{n} richieste in attesa", { n: pendingFriends })}`
+                        : t(l.label)
                     }
                     className={`flex flex-col items-center gap-1.5 rounded-2xl border p-3 text-center transition-colors ${
                       isActive(l.href)
@@ -84,7 +86,7 @@ export function BottomNav() {
                         </span>
                       )}
                     </span>
-                    <span className="text-[12px] font-semibold text-foreground/80">{l.label}</span>
+                    <span className="text-[12px] font-semibold text-foreground/80">{t(l.label)}</span>
                   </Link>
                 ))}
               </div>
@@ -227,6 +229,11 @@ function NavItem({
     ),
   };
 
+  // Tradotta qui dentro e non a ogni chiamata: chi aggiunge una voce nuova non
+  // deve ricordarsi di avvolgerla.
+  const t = useT();
+  const etichetta = t(label);
+
   return (
     <Link
       href={href}
@@ -234,7 +241,7 @@ function NavItem({
       className={`relative flex flex-col items-center gap-0.5 px-2.5 py-2 rounded-xl transition-all ${
         active ? "text-primary" : "text-muted-foreground hover:text-foreground active:scale-95"
       }`}
-      aria-label={label}
+      aria-label={etichetta}
     >
       {active && (
         <motion.div
@@ -244,7 +251,7 @@ function NavItem({
         />
       )}
       <span className="relative">{icons[icon]}</span>
-      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>{label}</span>
+      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>{etichetta}</span>
     </Link>
   );
 }
