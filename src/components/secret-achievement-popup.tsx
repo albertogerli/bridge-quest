@@ -158,7 +158,7 @@ export default function SecretAchievementPopup({
               {/* Close button */}
               <button
                 onClick={onClose}
-                aria-label="Chiudi"
+                aria-label={t("Chiudi")}
                 className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
               >
                 <X className="w-5 h-5 text-white" aria-hidden="true" />

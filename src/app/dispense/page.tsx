@@ -58,7 +58,7 @@ export default function DispensePage() {
 
   if (!catalogLoaded || !currentCourse) {
     return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento corsi">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento corsi")}>
         {t("Caricamento corsi…")}
       </div>
     );
@@ -149,7 +149,7 @@ export default function DispensePage() {
                   <button
                     onClick={() => downloadPdf(coursePdf)}
                     className="flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white hover:bg-white/30 transition-colors active:scale-95"
-                    title="Scarica il corso intero in PDF"
+                    title={t("Scarica il corso intero in PDF")}
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                       <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -161,7 +161,7 @@ export default function DispensePage() {
                 ) : coursePdf ? (
                   <div
                     className="flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white/70 cursor-not-allowed select-none"
-                    title="Completa tutte le lezioni per scaricare il corso intero"
+                    title={t("Completa tutte le lezioni per scaricare il corso intero")}
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
@@ -297,7 +297,7 @@ function InfographicCard({
           <button
             onClick={() => downloadPdf(pdfSrc)}
             className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-figb text-white shadow-lg transition-all hover:bg-figb-dark active:scale-90 opacity-0 group-hover:opacity-100 lg:opacity-100"
-            title="Scarica PDF"
+            title={t("Scarica PDF")}
           >
             <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />

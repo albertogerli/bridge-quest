@@ -189,7 +189,7 @@ export function Asta({
             <button
               disabled={!lecite.contro || !posso}
               onClick={() => onDichiara?.(CONTRO)}
-              aria-label="Contro"
+              aria-label={t("Contro")}
               className={`w-20 h-11 rounded-lg border text-sm font-bold ${
                 lecite.contro && posso
                   ? "border-red-400 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
@@ -201,7 +201,7 @@ export function Asta({
             <button
               disabled={!lecite.surcontro || !posso}
               onClick={() => onDichiara?.(SURCONTRO)}
-              aria-label="Surcontro"
+              aria-label={t("Surcontro")}
               className={`w-20 h-11 rounded-lg border text-sm font-bold ${
                 lecite.surcontro && posso
                   ? "border-blue-400 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40"

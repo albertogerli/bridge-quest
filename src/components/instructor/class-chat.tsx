@@ -142,7 +142,7 @@ export function ClassChat({ classId }: { classId: string }) {
               void handleSend();
             }
           }}
-          placeholder="Scrivi un messaggio…"
+          placeholder={t("Scrivi un messaggio…")}
           maxLength={2000}
           className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         />

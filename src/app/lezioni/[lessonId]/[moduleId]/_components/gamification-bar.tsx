@@ -80,7 +80,7 @@ export function GamificationBar({
               </div>
             )}
             {powerups.skip > 0 && (
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-sm cursor-pointer" title="Salta">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-sm cursor-pointer" title={t("Salta")}>
                 ⏭️
               </div>
             )}

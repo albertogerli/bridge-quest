@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import { hapticTap } from "@/lib/native-bridge";
 import { cardAriaLabel } from "@/lib/card-labels";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export type Suit = "spade" | "heart" | "diamond" | "club";
 export type Rank = "A" | "K" | "Q" | "J" | "10" | "9" | "8" | "7" | "6" | "5" | "4" | "3" | "2";
@@ -49,6 +50,7 @@ export function PlayingCard({
   /** When set, overrides size prop with exact pixel width (height auto-calculated) */
   cardWidth?: number;
 }) {
+  const t = useT();
   const dimensions = {
     xs: "w-8 h-[44px]",
     sm: "w-11 h-[60px]",
@@ -88,7 +90,7 @@ export function PlayingCard({
     return (
       <motion.div
         role="img"
-        aria-label="Carta coperta"
+        aria-label={t("Carta coperta")}
         className={`${dimClass} rounded bg-gradient-to-br ${cosmetics.cardBackGradient} border border-white/20 shadow-sm cursor-default`}
         style={{
           ...dynamicStyle,

@@ -86,7 +86,7 @@ export function StepAtout({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="L'Arma Segreta"
-      title="Il taglio non è magia."
+      title={t("Il taglio non è magia.")}
       body="Se non hai il seme giocato, puoi tagliare con l'atout. Ma non sei obbligato: puoi anche scartare."
     >
       <ConfettiBurst trigger={showConfetti} count={25} />

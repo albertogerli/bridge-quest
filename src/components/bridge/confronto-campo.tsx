@@ -71,7 +71,7 @@ export function ConfrontoCampoPannello({
       </p>
 
       {manoId && (
-        <div className="flex flex-wrap gap-2 mb-3" role="group" aria-label="Con chi confrontarsi">
+        <div className="flex flex-wrap gap-2 mb-3" role="group" aria-label={t("Con chi confrontarsi")}>
           {(
             [
               ["tutti", "Tutti"],

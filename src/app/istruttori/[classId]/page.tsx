@@ -132,7 +132,7 @@ export default function ClassDetailPage({
           <button
             onClick={copyCode}
             className="rounded-lg bg-muted px-4 py-2 font-mono text-2xl font-bold tracking-[0.3em] transition-colors hover:bg-muted/70"
-            title="Copia"
+            title={t("Copia")}
           >
             {classRoom.invite_code}
           </button>

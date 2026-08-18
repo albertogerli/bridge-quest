@@ -177,7 +177,7 @@ export default function TrovaCircoloPage() {
                 type="text"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                placeholder="Cerca per nome, città o CAP..."
+                placeholder={t("Cerca per nome, città o CAP...")}
                 className="w-full h-11 pl-10 pr-4 rounded-xl border border-border bg-muted/50 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-figb dark:focus:ring-primary focus:border-transparent"
               />
             </div>

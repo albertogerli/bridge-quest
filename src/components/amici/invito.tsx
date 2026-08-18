@@ -121,7 +121,7 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
           placeholder="ABC234"
           inputMode="text"
           autoCapitalize="characters"
-          aria-label="Codice dell'amico"
+          aria-label={t("Codice dell'amico")}
           className="h-12 w-40 px-3 rounded-xl border border-border bg-card font-mono text-lg tracking-widest uppercase"
         />
         <Button onClick={cerca} disabled={normalizzaCodice(inserito).length < 6 || cercando}>

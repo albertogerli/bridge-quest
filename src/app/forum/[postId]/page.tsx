@@ -383,7 +383,7 @@ export default function PostDetailPage() {
               {comment.profiles?.avatar_url ? (
                 <Image
                   src={comment.profiles.avatar_url}
-                  alt="Avatar utente"
+                  alt={t("Avatar utente")}
                   width={40}
                   height={40}
                   className="h-full w-full object-cover"
@@ -506,7 +506,7 @@ export default function PostDetailPage() {
               <textarea
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Scrivi la tua risposta..."
+                placeholder={t("Scrivi la tua risposta...")}
                 rows={2}
                 autoFocus
                 className="w-full text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none bg-card rounded-lg p-2.5 border border-border"
@@ -603,7 +603,7 @@ export default function PostDetailPage() {
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden">
               {post.profiles?.avatar_url ? (
-                <Image src={post.profiles.avatar_url} alt="Avatar utente" width={40} height={40} className="h-full w-full object-cover" />
+                <Image src={post.profiles.avatar_url} alt={t("Avatar utente")} width={40} height={40} className="h-full w-full object-cover" />
               ) : (
                 (post.profiles?.display_name || "?")[0].toUpperCase()
               )}
@@ -765,7 +765,7 @@ export default function PostDetailPage() {
               <textarea
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Scrivi un commento..."
+                placeholder={t("Scrivi un commento...")}
                 rows={3}
                 className="w-full text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none"
               />

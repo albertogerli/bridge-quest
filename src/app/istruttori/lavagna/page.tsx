@@ -154,7 +154,7 @@ function Lavagna() {
         {!compitoId && (
           <>
             <select
-              aria-label="Argomento"
+              aria-label={t("Argomento")}
               value={modelloId}
               onChange={(e) => { setModelloId(e.target.value); setIndice(0); setScoperti(new Set()); }}
               className="h-10 px-3 rounded-lg border border-border bg-card text-sm"
@@ -169,13 +169,13 @@ function Lavagna() {
           </>
         )}
 
-        <Button variant="outline" onClick={() => cambiaMano(-1)} aria-label="Mano precedente">
+        <Button variant="outline" onClick={() => cambiaMano(-1)} aria-label={t("Mano precedente")}>
           <ChevronLeft className="w-4 h-4" aria-hidden="true" />
         </Button>
         <span className="text-sm font-semibold tabular-nums px-1">
           {Math.min(indice + 1, mani.length)} / {mani.length}
         </span>
-        <Button variant="outline" onClick={() => cambiaMano(1)} aria-label="Mano successiva">
+        <Button variant="outline" onClick={() => cambiaMano(1)} aria-label={t("Mano successiva")}>
           <ChevronRight className="w-4 h-4" aria-hidden="true" />
         </Button>
       </header>

@@ -181,13 +181,14 @@ function RequestForm({
   submitting: boolean;
   error: string | null;
 }) {
+  const t = useT();
   return (
     <div className="space-y-4">
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         rows={4}
-        placeholder="Es. Sono maestro FIGB presso l'ASD Bridge Milano, insegno al corso base del martedì…"
+        placeholder={t("Es. Sono maestro FIGB presso l'ASD Bridge Milano, insegno al corso base del martedì…")}
         className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
       />
       {error && <p className="text-sm text-destructive">{error}</p>}

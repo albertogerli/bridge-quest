@@ -31,7 +31,7 @@ export default function ModulePage({
 
   if (!session.catalogLoaded) {
     return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento modulo">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento modulo")}>
         {t("Caricamento modulo…")}
       </div>
     );

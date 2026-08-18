@@ -59,9 +59,9 @@ export function EditProfileSection({
               <div className="relative h-16 w-16 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                 {edit.editAvatarPreview ? (
                   // eslint-disable-next-line @next/next/no-img-element -- anteprima locale (data URL) dal file input: next/image non la ottimizza
-                  <img src={edit.editAvatarPreview} alt="Foto profilo" className="h-full w-full object-cover" />
+                  <img src={edit.editAvatarPreview} alt={t("Foto profilo")} className="h-full w-full object-cover" />
                 ) : authProfile?.avatar_url ? (
-                  <Image src={authProfile.avatar_url} alt="Foto profilo" width={64} height={64} className="h-full w-full object-cover" />
+                  <Image src={authProfile.avatar_url} alt={t("Foto profilo")} width={64} height={64} className="h-full w-full object-cover" />
                 ) : (
                   <span className="text-2xl">{(authProfile?.display_name || "B")[0].toUpperCase()}</span>
                 )}
@@ -102,7 +102,7 @@ export function EditProfileSection({
                 type="text"
                 value={edit.editBbo}
                 onChange={(e) => edit.setEditBbo(e.target.value)}
-                placeholder="Il tuo username su BridgeBase Online"
+                placeholder={t("Il tuo username su BridgeBase Online")}
                 aria-invalid={edit.editBboError ? true : undefined}
                 aria-describedby={edit.editBboError ? "bbo-error" : undefined}
                 className={`w-full h-10 px-3 rounded-xl border bg-card text-foreground text-sm focus:outline-none focus:ring-2 ${
@@ -130,7 +130,7 @@ export function EditProfileSection({
                   edit.setShowAsdDropdown(true);
                 }}
                 onFocus={() => edit.setShowAsdDropdown(true)}
-                placeholder="Cerca la tua associazione..."
+                placeholder={t("Cerca la tua associazione...")}
                 className="w-full h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {edit.showAsdDropdown && !edit.editAsdCode && (

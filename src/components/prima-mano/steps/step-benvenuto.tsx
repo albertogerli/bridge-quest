@@ -12,7 +12,7 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="Arrivo al Club"
-      title="Il tuo primo torneo."
+      title={t("Il tuo primo torneo.")}
       body="Tra 5 minuti giocherai la tua prima mano vera di bridge."
     >
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

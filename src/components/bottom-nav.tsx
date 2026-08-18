@@ -95,7 +95,7 @@ export function BottomNav() {
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Navigazione principale">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label={t("Navigazione principale")}>
         <div className="bg-card/85 backdrop-blur-xl border-t border-border/50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.35)]">
           <div className="mx-auto flex max-w-2xl items-end px-0.5 py-1 safe-area-bottom">
             {/* Left group */}
@@ -130,7 +130,7 @@ function PlayButton({ active }: { active: boolean }) {
     <Link
       href="/gioca"
       className="relative -mt-6 flex flex-col items-center"
-      aria-label="Gioca"
+      aria-label={t("Gioca")}
       onClick={() => hapticTap()}
     >
       <div

@@ -269,7 +269,7 @@ export default function NuovoCompitoPage({
                     type="button"
                     onClick={() => removeImported(s.id)}
                     className="shrink-0 text-xs text-muted-foreground hover:text-destructive"
-                    aria-label="Rimuovi mano importata"
+                    aria-label={t("Rimuovi mano importata")}
                   >
                     ✕
                   </button>
@@ -311,7 +311,7 @@ export default function NuovoCompitoPage({
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cerca per titolo o contratto…"
+          placeholder={t("Cerca per titolo o contratto…")}
           className={`${selectClass} min-w-[180px] flex-1`}
         />
       </div>

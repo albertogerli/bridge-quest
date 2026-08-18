@@ -84,7 +84,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="L'Obbligo"
-      title="Devi rispondere al seme."
+      title={t("Devi rispondere al seme.")}
       body="Se hai carte del seme giocato, DEVI giocare una di quelle. Solo se non ne hai, puoi giocare qualsiasi altra carta."
     >
       <ConfettiBurst trigger={showConfetti} count={25} />

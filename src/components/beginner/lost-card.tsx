@@ -52,7 +52,7 @@ export function LostCard({ nextModule }: LostCardProps) {
       <button
         onClick={handleDismiss}
         className="absolute right-3 top-3 rounded-lg p-1.5 text-[#8f6b16]/40 hover:bg-[#c8a44e]/10 hover:text-[#8f6b16] transition-colors"
-        aria-label="Chiudi"
+        aria-label={t("Chiudi")}
       >
         <X className="h-4 w-4" />
       </button>

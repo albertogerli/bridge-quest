@@ -228,7 +228,7 @@ Gioca su bridgelab.it`;
               <button
                 onClick={handleShare}
                 className="px-4 py-3 bg-card hover:bg-muted/50 rounded-xl transition-colors shadow-sm flex items-center gap-2"
-                title="Condividi Analisi"
+                title={t("Condividi Analisi")}
               >
                 <Share2 className="w-5 h-5 text-foreground/80" />
                 <span className="text-sm font-medium text-foreground/80">

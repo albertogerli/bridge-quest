@@ -104,7 +104,7 @@ export function StepRuoli({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="I Protagonisti"
-      title="Al tavolo siete in quattro, ma giocano in tre."
+      title={t("Al tavolo siete in quattro, ma giocano in tre.")}
       body="Il dichiarante decide la strategia e controlla anche le carte del morto. I due difensori cercano di battere il contratto."
     >
       <ConfettiBurst trigger={showConfetti} count={25} />

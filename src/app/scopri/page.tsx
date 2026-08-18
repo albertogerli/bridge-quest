@@ -71,14 +71,14 @@ export default function ScopriPage() {
               <div className="flex items-center justify-center gap-6 mb-5">
                 <Image
                   src="/icons/logo-figb.png"
-                  alt="FIGB - Federazione Italiana Gioco Bridge"
+                  alt={t("FIGB - Federazione Italiana Gioco Bridge")}
                   width={400}
                   height={355}
                   className="h-16 w-auto"
                 />
                 <Image
                   src="/icons/logo-coni.png"
-                  alt="CONI - Comitato Olimpico Nazionale Italiano"
+                  alt={t("CONI - Comitato Olimpico Nazionale Italiano")}
                   width={400}
                   height={146}
                   className="h-12 w-auto"
@@ -157,28 +157,28 @@ export default function ScopriPage() {
                 {/* Timeline items */}
                 <TimelineItem
                   year="XVII sec."
-                  title="Le origini: il Whist"
+                  title={t("Le origini: il Whist")}
                   description="Il bridge affonda le sue radici nel Whist, un gioco di carte nato in Inghilterra nel XVII secolo. Dall'evoluzione del Whist nacquero varianti sempre più sofisticate."
                   color="bg-gray-500"
                 />
 
                 <TimelineItem
                   year="1925"
-                  title="Nasce il Contract Bridge"
+                  title={t("Nasce il Contract Bridge")}
                   description="Harold Stirling Vanderbilt, miliardario americano e appassionato giocatore di carte, inventa il Contract Bridge durante una crociera nel Canale di Panama. Le regole che codifica diventeranno lo standard mondiale."
                   color="bg-blue-500"
                 />
 
                 <TimelineItem
                   year="1935"
-                  title="Primo Campionato del Mondo"
+                  title={t("Primo Campionato del Mondo")}
                   description="Si disputa il primo Campionato del Mondo di bridge, sancendo la nascita del bridge come disciplina sportiva a livello internazionale."
                   color="bg-emerald-500"
                 />
 
                 <TimelineItem
                   year="1957-1975"
-                  title="L'era della Squadra Azzurra"
+                  title={t("L'era della Squadra Azzurra")}
                   description="L'Italia domina il bridge mondiale con la leggendaria Squadra Azzurra (Blue Team), vincendo 16 titoli mondiali in meno di vent'anni - un record senza precedenti nella storia dello sport della mente."
                   color="bg-figb dark:bg-primary"
                   highlight
@@ -250,7 +250,7 @@ export default function ScopriPage() {
             <FunFactCard
               icon={<Users className="w-5 h-5 text-emerald-500" />}
               iconBg="bg-emerald-100 dark:bg-emerald-900/30"
-              title="Giocatori illustri"
+              title={t("Giocatori illustri")}
               description="Bill Gates e Warren Buffett sono appassionati giocatori di bridge e spesso giocano insieme."
             />
             <FunFactCard
@@ -262,7 +262,7 @@ export default function ScopriPage() {
             <FunFactCard
               icon={<Brain className="w-5 h-5 text-purple-500" />}
               iconBg="bg-purple-100 dark:bg-purple-900/30"
-              title="Benefici cognitivi"
+              title={t("Benefici cognitivi")}
               description="Studi scientifici hanno dimostrato che giocare a bridge aiuta a prevenire il declino cognitivo."
             />
           </div>
@@ -286,7 +286,7 @@ export default function ScopriPage() {
               {/* Federazione Italiana */}
               <ExternalLinkCard
                 href="https://www.federbridge.it"
-                title="Federazione Italiana Gioco Bridge"
+                title={t("Federazione Italiana Gioco Bridge")}
                 subtitle="Sito ufficiale FIGB"
                 icon={<Landmark className="w-4 h-4 text-figb dark:text-primary" />}
               />
@@ -294,7 +294,7 @@ export default function ScopriPage() {
               {/* Bridge d'Italia */}
               <ExternalLinkCard
                 href="https://www.bridgeditalia.it"
-                title="Bridge d'Italia Magazine"
+                title={t("Bridge d'Italia Magazine")}
                 subtitle="Notizie, tornei e approfondimenti"
                 icon={<BookOpen className="w-4 h-4 text-figb dark:text-primary" />}
               />
@@ -302,7 +302,7 @@ export default function ScopriPage() {
               {/* World Bridge Federation */}
               <ExternalLinkCard
                 href="https://www.worldbridge.org"
-                title="World Bridge Federation"
+                title={t("World Bridge Federation")}
                 subtitle="Federazione mondiale di bridge"
                 icon={<Globe className="w-4 h-4 text-figb dark:text-primary" />}
               />
@@ -313,7 +313,7 @@ export default function ScopriPage() {
               {/* YouTube */}
               <ExternalLinkCard
                 href="https://www.youtube.com/user/VideoFIGB"
-                title="YouTube FIGB"
+                title={t("YouTube FIGB")}
                 subtitle="Video, tornei e lezioni"
                 icon={
                   <svg className="w-4 h-4 text-[#FF0000]" viewBox="0 0 24 24" fill="currentColor">

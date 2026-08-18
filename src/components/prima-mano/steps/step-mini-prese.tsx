@@ -135,7 +135,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
     return (
       <StepShell
         kicker="Riscaldamento"
-        title="Quattro prese di pratica."
+        title={t("Quattro prese di pratica.")}
         body="Ecco come è andata."
       >
         <ConfettiBurst trigger={showConfetti} count={perfect ? 40 : 20} />
@@ -184,7 +184,7 @@ export function StepMiniPrese({ onComplete, playSound }: StepProps) {
   return (
     <StepShell
       kicker="Riscaldamento"
-      title="Quattro prese di pratica."
+      title={t("Quattro prese di pratica.")}
       body={trick.lead}
     >
       {/* XP toast */}

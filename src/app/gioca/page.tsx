@@ -66,7 +66,7 @@ export default function GiocaPage() {
             transition={{ delay: 0.08 }}
             className="mb-3"
           >
-            <Link href="/gioca/mano-guidata" className="block" aria-label="Mano Guidata: pratica passo-passo">
+            <Link href="/gioca/mano-guidata" className="block" aria-label={t("Mano Guidata: pratica passo-passo")}>
               <div className="relative overflow-hidden rounded-2xl border border-figb/20 bg-figb/5 px-4 py-3.5 hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-figb shadow-md">
@@ -92,7 +92,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.09 }}
           className="mb-3"
         >
-          <Link href="/gioca/minibridge" className="block" aria-label="MiniBridge: gioca senza licita, decidi col conteggio dei punti">
+          <Link href="/gioca/minibridge" className="block" aria-label={t("MiniBridge: gioca senza licita, decidi col conteggio dei punti")}>
             <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 px-4 py-3.5 hover:shadow-md transition-all dark:border-emerald-900 dark:from-emerald-950/40 dark:to-green-950/30">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-md">
@@ -118,7 +118,7 @@ export default function GiocaPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Link href="/gioca/sfida" className="block" aria-label="Sfida del Giorno: una nuova mano ogni giorno">
+          <Link href="/gioca/sfida" className="block" aria-label={t("Sfida del Giorno: una nuova mano ogni giorno")}>
             <div className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl ${
               dailyDone
                 ? "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/40 dark:to-green-950/30 border border-green-200 dark:border-emerald-900"
@@ -169,7 +169,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.12 }}
           className="mt-4"
         >
-          <Link href="/gioca/torneo" className="block" aria-label="Torneo Settimanale: 5 mani, stessa sfida per tutti">
+          <Link href="/gioca/torneo" className="block" aria-label={t("Torneo Settimanale: 5 mani, stessa sfida per tutti")}>
             <div className={`relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl ${
               tournamentDone
                 ? "bg-primary/5 border border-primary/15"
@@ -220,7 +220,7 @@ export default function GiocaPage() {
           transition={{ delay: 0.13 }}
           className="mt-4"
         >
-          <Link href="/amici" className="block" aria-label="Sfida IMP: sfida un amico a 1, 4 o 8 mani con punteggio IMP">
+          <Link href="/amici" className="block" aria-label={t("Sfida IMP: sfida un amico a 1, 4 o 8 mani con punteggio IMP")}>
             <div className="relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-figb-dark to-figb">
               <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
               <div className="relative flex items-center gap-4">
@@ -262,7 +262,7 @@ export default function GiocaPage() {
           </div>
           <div className="space-y-2.5">
             {/* Mano del Giorno */}
-            <Link href="/gioca/mano-del-giorno" className="block" aria-label="Mano del Giorno: una mano al giorno, uguale per tutti">
+            <Link href="/gioca/mano-del-giorno" className="block" aria-label={t("Mano del Giorno: una mano al giorno, uguale per tutti")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <CalendarDays className="w-6 h-6 text-figb" />
@@ -278,7 +278,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Quiz Lampo */}
-            <Link href="/gioca/quiz-lampo" className="block" aria-label="Quiz Lampo: raffica di domande, 30 secondi">
+            <Link href="/gioca/quiz-lampo" className="block" aria-label={t("Quiz Lampo: raffica di domande, 30 secondi")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Zap className="w-6 h-6 text-figb" />
@@ -294,7 +294,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Quante prese — mani generate, risposta dal double dummy */}
-            <Link href="/gioca/quiz-prese" className="block" aria-label="Quante prese: conta le prese di Nord-Sud">
+            <Link href="/gioca/quiz-prese" className="block" aria-label={t("Quante prese: conta le prese di Nord-Sud")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Calculator className="w-6 h-6 text-figb" />
@@ -311,7 +311,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Cosa apri — licita su mani generate, risposta dedotta dalla mano */}
-            <Link href="/gioca/cosa-apri" className="block" aria-label="Cosa apri: scegli l'apertura giusta">
+            <Link href="/gioca/cosa-apri" className="block" aria-label={t("Cosa apri: scegli l'apertura giusta")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Gavel className="w-6 h-6 text-figb" />
@@ -328,7 +328,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Che contratto giocate — valutazione della mano, metro = double dummy */}
-            <Link href="/gioca/quale-contratto" className="block" aria-label="Che contratto giocate: scegli fin dove arrivare">
+            <Link href="/gioca/quale-contratto" className="block" aria-label={t("Che contratto giocate: scegli fin dove arrivare")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Target className="w-6 h-6 text-figb" />
@@ -345,7 +345,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Licita e vediamo — dichiari vedendo solo la tua mano, voto sul par */}
-            <Link href="/gioca/licita" className="block" aria-label="Licita e vediamo: dichiara e ricevi le stelle">
+            <Link href="/gioca/licita" className="block" aria-label={t("Licita e vediamo: dichiara e ricevi le stelle")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Gavel className="w-6 h-6 text-figb" />
@@ -362,7 +362,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Licita con un amico — asincrona, avversari BEN */}
-            <Link href="/gioca/licita-amico" className="block" aria-label="Licita con un amico">
+            <Link href="/gioca/licita-amico" className="block" aria-label={t("Licita con un amico")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Users className="w-6 h-6 text-figb" />
@@ -379,7 +379,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Tornei di licita — stesse smazzate per tutti, con classifica */}
-            <Link href="/gioca/torneo-licita" className="block" aria-label="Tornei di licita con classifica">
+            <Link href="/gioca/torneo-licita" className="block" aria-label={t("Tornei di licita con classifica")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gold/15 text-gold">
                   <Trophy className="w-6 h-6" />
@@ -396,7 +396,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Sfida 2 contro 2 — due coppie sulle stesse smazzate */}
-            <Link href="/gioca/sfida-coppie" className="block" aria-label="Sfida 2 contro 2 fra due coppie">
+            <Link href="/gioca/sfida-coppie" className="block" aria-label={t("Sfida 2 contro 2 fra due coppie")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Swords className="w-6 h-6 text-figb" />
@@ -413,7 +413,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Trova l'Errore */}
-            <Link href="/gioca/trova-errore" className="block" aria-label="Trova l'Errore: trova l'errore nella dichiarazione o giocata">
+            <Link href="/gioca/trova-errore" className="block" aria-label={t("Trova l'Errore: trova l'errore nella dichiarazione o giocata")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Search className="w-6 h-6 text-figb" />
@@ -429,7 +429,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Impasse o Drop */}
-            <Link href="/gioca/impasse" className="block" aria-label="Impasse o Drop: decidi in 5 secondi">
+            <Link href="/gioca/impasse" className="block" aria-label={t("Impasse o Drop: decidi in 5 secondi")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Target className="w-6 h-6 text-figb" />
@@ -445,7 +445,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Conta Veloce */}
-            <Link href="/gioca/conta-veloce" className="block" aria-label="Conta Veloce: conta i punti onore a tempo">
+            <Link href="/gioca/conta-veloce" className="block" aria-label={t("Conta Veloce: conta i punti onore a tempo")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Hash className="w-6 h-6 text-figb" />
@@ -461,7 +461,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Segnali in Difesa */}
-            <Link href="/gioca/segnali" className="block" aria-label="Segnali in Difesa: dai e leggi i segnali del compagno">
+            <Link href="/gioca/segnali" className="block" aria-label={t("Segnali in Difesa: dai e leggi i segnali del compagno")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Radio className="w-6 h-6 text-figb" />
@@ -477,7 +477,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Dichiara! */}
-            <Link href="/gioca/dichiara" className="block" aria-label="Dichiara: scegli l'apertura giusta per ogni mano">
+            <Link href="/gioca/dichiara" className="block" aria-label={t("Dichiara: scegli l'apertura giusta per ogni mano")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Megaphone className="w-6 h-6 text-figb" />
@@ -493,7 +493,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Pratica Licita */}
-            <Link href="/gioca/pratica-licita" className="block" aria-label="Pratica Licita: esercitati nella dichiarazione">
+            <Link href="/gioca/pratica-licita" className="block" aria-label={t("Pratica Licita: esercitati nella dichiarazione")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <MessageCircle className="w-6 h-6 text-figb" />
@@ -509,7 +509,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Memory Bridge */}
-            <Link href="/gioca/memory" className="block" aria-label="Memory Bridge: abbina carte e concetti">
+            <Link href="/gioca/memory" className="block" aria-label={t("Memory Bridge: abbina carte e concetti")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Brain className="w-6 h-6 text-figb" />
@@ -525,7 +525,7 @@ export default function GiocaPage() {
             </Link>
 
             {/* Sfida un Amico */}
-            <Link href="/gioca/sfida-amico" className="block" aria-label="Sfida un Amico: gioca la stessa mano e confronta i risultati">
+            <Link href="/gioca/sfida-amico" className="block" aria-label={t("Sfida un Amico: gioca la stessa mano e confronta i risultati")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
                   <Swords className="w-6 h-6 text-figb" />
@@ -553,7 +553,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 }}
           >
-            <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block" aria-label="Pratica Libera: gioca una mano casuale">
+            <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block" aria-label={t("Pratica Libera: gioca una mano casuale")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <Spade className="w-6 h-6 text-figb" />
@@ -574,7 +574,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <Link href="/gioca/smazzata" className="block" aria-label="Tutte le Smazzate: sfoglia e gioca le mani per lezione">
+            <Link href="/gioca/smazzata" className="block" aria-label={t("Tutte le Smazzate: sfoglia e gioca le mani per lezione")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 mb-3">
                   <BookOpen className="w-6 h-6 text-amber-600 dark:text-amber-400" />
@@ -598,7 +598,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.32 }}
           >
-            <Link href="/gioca/sfida-link" className="block" aria-label="Sfida via Link: condividi una mano e sfida un amico">
+            <Link href="/gioca/sfida-link" className="block" aria-label={t("Sfida via Link: condividi una mano e sfida un amico")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <Link2 className="w-6 h-6 text-figb" />
@@ -617,7 +617,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.34 }}
           >
-            <Link href="/gioca/analisi" className="block" aria-label="Analisi AI: rivedi le tue mani con commenti dell'intelligenza artificiale">
+            <Link href="/gioca/analisi" className="block" aria-label={t("Analisi AI: rivedi le tue mani con commenti dell'intelligenza artificiale")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 mb-3">
                   <BarChart3 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -639,7 +639,7 @@ export default function GiocaPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.36 }}
           >
-            <Link href="/glossario" className="block" aria-label="Glossario: impara tutti i termini del bridge">
+            <Link href="/glossario" className="block" aria-label={t("Glossario: impara tutti i termini del bridge")}>
               <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
                   <span className="text-xl">📖</span>

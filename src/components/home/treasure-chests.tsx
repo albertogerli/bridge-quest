@@ -76,7 +76,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Baule sbloccato"
+            aria-label={t("Baule sbloccato")}
           >
             <motion.div
               animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}

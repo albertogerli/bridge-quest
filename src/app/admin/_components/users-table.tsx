@@ -2,6 +2,7 @@
 
 import { formatMinutes } from "@/lib/admin-stats";
 import { PROFILE_EMOJI, type SortDir, type SortKey, type UserRow } from "../_types";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /** Tabella utenti con ricerca e ordinamento per colonna. */
 export function UsersTable({
@@ -23,6 +24,7 @@ export function UsersTable({
   onSelectUser: (id: string) => void;
   formatLastLogin: (val: string | null) => string;
 }) {
+  const t = useT();
   return (
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
       <div className="p-5 border-b border-gray-100 flex items-center justify-between">
@@ -33,7 +35,7 @@ export function UsersTable({
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Cerca per nome, BBO o email..."
+          placeholder={t("Cerca per nome, BBO o email...")}
           className="w-60 h-10 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]"
         />
       </div>

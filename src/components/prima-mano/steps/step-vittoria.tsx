@@ -100,7 +100,7 @@ export function StepVittoria({
   return (
     <StepShell
       kicker="Applauso"
-      title="Hai giocato la tua prima mano."
+      title={t("Hai giocato la tua prima mano.")}
       body="Non hai studiato tutto il bridge. Hai studiato abbastanza per iniziare."
     >
       <ConfettiBurst trigger={showConfetti} count={50} />

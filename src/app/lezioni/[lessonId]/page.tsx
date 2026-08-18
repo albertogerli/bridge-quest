@@ -51,7 +51,7 @@ export default function LessonDetailPage({
 
   if (!catalogLoaded) {
     return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label="Caricamento lezione">
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento lezione")}>
         {t("Caricamento lezione…")}
       </div>
     );

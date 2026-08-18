@@ -71,7 +71,7 @@ export function UserDetailModal({
                 )}
               </div>
             </div>
-            <button onClick={onClose} aria-label="Chiudi" className="text-white/70 hover:text-white text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10"><span aria-hidden="true">✕</span></button>
+            <button onClick={onClose} aria-label={t("Chiudi")} className="text-white/70 hover:text-white text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10"><span aria-hidden="true">✕</span></button>
           </div>
         </div>
 

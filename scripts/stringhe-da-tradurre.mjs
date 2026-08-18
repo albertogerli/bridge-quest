@@ -64,8 +64,16 @@ const dizionario = JSON.parse(
   readFileSync(join(SRC, "traduzioni/en.json"), "utf8")
 );
 
-/** Frasi già passate da `t("…")`. */
-const GIA = /\bt\(\s*["'`]([^"'`]{2,200})["'`]/g;
+/**
+ * Frasi già passate da `t("…")`.
+ *
+ * Il delimitatore di chiusura dev'essere lo STESSO di apertura: con una classe
+ * che accetta indifferentemente `"`, `'` e backtick, una frase come
+ * `t("Cosa apri: scegli l'apertura giusta")` si fermava all'apostrofo e
+ * risultava «Cosa apri: scegli l» — una chiave che non esiste, contata come
+ * non tradotta. Il codice era giusto: sbagliava il metro.
+ */
+const GIA = /\bt\(\s*(["'`])((?:(?!\1)[^\\])*?)\1/g;
 /** Testo fra tag JSX, come stima di quel che resta. */
 const DA_FARE = />\s*([A-ZÀ-Ù][^<>{}\n]{5,120})\s*</g;
 
@@ -90,8 +98,10 @@ for (const area of AREE) {
       visti.add(f);
       const testo = readFileSync(f, "utf8");
       for (const m of testo.matchAll(GIA)) {
+        const frase = m[2];
+        if (frase.length < 2) continue;
         fatte++;
-        if (!dizionario[m[1]]) senzaInglese.add(m[1]);
+        if (!dizionario[frase]) senzaInglese.add(frase);
       }
       daFare += [...testo.matchAll(DA_FARE)].length;
     }

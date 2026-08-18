@@ -237,7 +237,7 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
             onClick={stepBack}
             disabled={currentPlay === 0}
             className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-            title="Indietro"
+            title={t("Indietro")}
           >
             <SkipBack className="w-5 h-5" />
           </button>
@@ -252,7 +252,7 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
             onClick={stepForward}
             disabled={currentPlay >= totalPlays}
             className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-            title="Avanti"
+            title={t("Avanti")}
           >
             <SkipForward className="w-5 h-5" />
           </button>
@@ -273,7 +273,7 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
         <button
           onClick={cycleSpeed}
           className="px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
-          title="Cambia velocità"
+          title={t("Cambia velocità")}
         >
           {speed}x
         </button>

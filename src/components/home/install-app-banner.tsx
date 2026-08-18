@@ -58,7 +58,7 @@ export function InstallAppBanner() {
                     ) : null}
                     <button
                       onClick={() => setInstallDismissed(true)}
-                      aria-label="Chiudi banner installazione"
+                      aria-label={t("Chiudi banner installazione")}
                       className="p-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -93,7 +93,7 @@ export function InstallAppBanner() {
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
-              aria-label="Guida installazione su iPhone e iPad"
+              aria-label={t("Guida installazione su iPhone e iPad")}
             >
               <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" aria-hidden="true" />
               <h3 className="text-lg font-bold text-foreground text-center mb-4">
