@@ -146,6 +146,25 @@ const nextConfig: NextConfig = {
     // Allow next/image optimization of user avatars served from Supabase storage.
     remotePatterns: [{ protocol: "https", hostname: "**.supabase.co" }],
   },
+  /**
+   * `/en/qualsiasi-cosa` serve la pagina italiana corrispondente.
+   *
+   * PERCHÉ QUI E NON NEL PROXY. Il proxy ci riusciva in sviluppo e anche con un
+   * build di produzione in locale, ma in produzione no: `/en` rispondeva 404
+   * con `x-matched-path: /404`. Su Vercel una richiesta che non corrisponde a
+   * nessuna rotta viene chiusa come «non trovato» prima che il proxy possa
+   * riscriverla — e `/en` non è una rotta, visto che nessuna cartella si chiama
+   * così. Una riscrittura dichiarata qui invece entra nella tabella di routing
+   * del deploy, quindi la rotta ESISTE e la riscrittura avviene prima di
+   * qualunque 404.
+   *
+   * Il proxy continua a servire: normalizza il percorso per il controllo delle
+   * rotte protette, così `/en/admin` è protetta quanto `/admin`.
+   */
+  async rewrites() {
+    return [{ source: "/en/:percorso*", destination: "/:percorso*" }];
+  },
+
   async headers() {
     // 'unsafe-eval' serve solo in dev (React Fast Refresh); in produzione la
     // CSP lo esclude (rilievo perizia sicurezza 2026-08). googletagmanager.com

@@ -1,7 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import {
-  fuoriDallaTraduzione,
   linguaDaPercorso,
   senzaLingua,
   LINGUA_PREDEFINITA,
@@ -71,33 +70,12 @@ export async function proxy(request: NextRequest) {
   }
 
   /**
-   * La riscrittura: l'indirizzo che si vede resta `/en/lezioni`, la pagina che
-   * risponde è quella di sempre. Così non si duplica nessuna rotta e le 40
-   * cartelle sotto `src/app` restano dove sono — spostarle tutte dentro un
-   * segmento `[locale]` è il modo canonico, ma è anche il modo di rompere
-   * quaranta rotte in una volta sola per una fase che non traduce niente.
-   *
-   * Le API e i file dell'applicazione non passano di qui: vedi
-   * `fuoriDallaTraduzione`.
+   * La riscrittura di `/en/...` verso la pagina italiana NON sta qui: è
+   * dichiarata in `next.config.ts`, perché su Vercel una richiesta che non
+   * corrisponde a nessuna rotta diventa 404 prima che il proxy possa
+   * riscriverla. Qui resta la parte che al routing non compete: riconoscere
+   * che `/en/admin` è la stessa area protetta di `/admin`.
    */
-  if (lingua !== LINGUA_PREDEFINITA && !fuoriDallaTraduzione(pathname)) {
-    const destinazione = request.nextUrl.clone();
-    destinazione.pathname = pathname;
-    const riscritta = NextResponse.rewrite(destinazione, { request });
-    /**
-     * Si riportano SOLO i cookie, non tutti gli header della risposta di
-     * Supabase.
-     *
-     * Quella risposta è una `NextResponse.next()`, e porta con sé gli header
-     * con cui Next si dice «prosegui»: copiarli dentro una riscrittura le
-     * mescola due istruzioni diverse, e il risultato osservato era una pagina
-     * che finiva sul login senza che nessuno l'avesse chiesto. I cookie invece
-     * servono davvero — sono la sessione rinfrescata — e vanno passati.
-     */
-    supabaseResponse.cookies.getAll().forEach((c) => riscritta.cookies.set(c));
-    return riscritta;
-  }
-
   return supabaseResponse;
 }
 
