@@ -6,6 +6,7 @@ import { ToasterLazy } from "@/components/toaster-lazy";
 import { LayoutShell } from "@/components/layout-shell";
 import { LinguaDelDocumento } from "@/components/lingua-del-documento";
 import { TraduzioniProvider } from "@/contexts/traduzioni-provider";
+import { PropostaLingua } from "@/components/proposta-lingua";
 import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
 import { MetaPixelLoader } from "@/components/meta-pixel-loader";
@@ -215,6 +216,9 @@ export default function RootLayout({
             componente, e in italiano non carica niente. */}
         <TraduzioniProvider>
           <LayoutShell>{children}</LayoutShell>
+          {/* Propone l'altra lingua a chi ha il browser configurato così. Non
+              reindirizza: decide chi legge, e la scelta viene ricordata. */}
+          <PropostaLingua />
         </TraduzioniProvider>
         <ToasterLazy />
         <Analytics />
