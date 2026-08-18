@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePercorso } from "@/hooks/use-lingua";
 import { motion, AnimatePresence } from "motion/react";
 import { hapticTap } from "@/lib/native-bridge";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
@@ -20,7 +20,8 @@ const MORE_LINKS = [
 ];
 
 export function BottomNav() {
-  const pathname = usePathname();
+  // Senza prefisso di lingua, o sotto `/en` nessuna voce risulta attiva.
+  const pathname = usePercorso();
   const [moreOpen, setMoreOpen] = useState(false);
   const pendingFriends = usePendingFriendRequests();
   const moreSheetRef = useRef<HTMLDivElement>(null);

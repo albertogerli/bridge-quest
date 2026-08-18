@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePercorso } from "@/hooks/use-lingua";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 
 const primaryNav = [
@@ -105,7 +105,8 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
 };
 
 export function DesktopNav() {
-  const pathname = usePathname();
+  // Senza prefisso di lingua, o sotto `/en` nessuna voce risulta attiva.
+  const pathname = usePercorso();
   const pendingFriends = usePendingFriendRequests();
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { usePercorso } from "./use-lingua";
 
 export function useExitIntent() {
-  const pathname = usePathname();
+  // Senza prefisso: uscire da `/en/gioca/...` è uscire da una partita
+  // esattamente come uscire da `/gioca/...`.
+  const pathname = usePercorso();
   const prevPathname = useRef(pathname);
   const [showExitModal, setShowExitModal] = useState(false);
   const [handsToday, setHandsToday] = useState(0);
