@@ -1,7 +1,7 @@
 "use client";
 
-import { use, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, use, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -29,9 +29,23 @@ export default function IngressoAulaPage({
 }: {
   params: Promise<{ token: string }>;
 }) {
+  return (
+    <Suspense fallback={null}>
+      <Ingresso params={params} />
+    </Suspense>
+  );
+}
+
+function Ingresso({ params }: { params: Promise<{ token: string }> }) {
   const { token } = use(params);
   const router = useRouter();
-  const [nome, setNome] = useState("");
+  /**
+   * `?nome=` arriva dal tagliando stampato: il campo è già riempito e resta
+   * modificabile. Sono i dieci secondi che separano una classe che comincia da
+   * una classe che scrive.
+   */
+  const cerca = useSearchParams();
+  const [nome, setNome] = useState(cerca.get("nome")?.slice(0, 60) ?? "");
   const [inCorso, setInCorso] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
 

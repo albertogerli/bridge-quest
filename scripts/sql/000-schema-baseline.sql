@@ -228,6 +228,16 @@ CREATE TABLE IF NOT EXISTS public.courses (
   subtitle_en text
 );
 
+CREATE TABLE IF NOT EXISTS public.elenco_allievi (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  nome text NOT NULL,
+  presente boolean NOT NULL,
+  tavolo integer,
+  posto text,
+  created_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.email_events (
   id bigint NOT NULL,
   user_id uuid NOT NULL,
@@ -3489,6 +3499,9 @@ ALTER TABLE public.course_worlds ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.course_worlds ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.courses ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.courses ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.elenco_allievi ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.elenco_allievi ALTER COLUMN presente SET DEFAULT true;
+ALTER TABLE public.elenco_allievi ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.email_events ALTER COLUMN sent_at SET DEFAULT now();
 ALTER TABLE public.esercizi_posizione ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.esercizi_posizione ALTER COLUMN dealer SET DEFAULT 'south'::text;
@@ -3641,6 +3654,7 @@ ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_pkey PRIMA
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_pkey PRIMARY KEY (id);
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_pkey PRIMARY KEY (id);
 ALTER TABLE public.courses ADD CONSTRAINT courses_pkey PRIMARY KEY (id);
+ALTER TABLE public.elenco_allievi ADD CONSTRAINT elenco_allievi_pkey PRIMARY KEY (id);
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_pkey PRIMARY KEY (id);
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_pkey PRIMARY KEY (id);
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_pkey PRIMARY KEY (id);
@@ -3783,6 +3797,7 @@ ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a1_fkey FO
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a2_fkey FOREIGN KEY (a2) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_course_id_fkey FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE;
+ALTER TABLE public.elenco_allievi ADD CONSTRAINT elenco_allievi_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE SET NULL;
@@ -3872,6 +3887,7 @@ CREATE INDEX idx_class_members_student ON public.class_members USING btree (stud
 CREATE INDEX idx_class_messages_class ON public.class_messages USING btree (class_id, created_at);
 CREATE INDEX idx_classes_instructor ON public.classes USING btree (instructor_id);
 CREATE INDEX idx_classes_invite_code ON public.classes USING btree (invite_code);
+CREATE INDEX idx_elenco_classe ON public.elenco_allievi USING btree (class_id, tavolo, posto);
 CREATE INDEX idx_email_events_user_type ON public.email_events USING btree (user_id, email_type, sent_at DESC);
 CREATE INDEX idx_esercizi_autore ON public.esercizi_posizione USING btree (autore_id, created_at DESC);
 CREATE INDEX idx_esercizi_classe ON public.esercizi_posizione USING btree (class_id) WHERE (class_id IS NOT NULL);
@@ -3961,6 +3977,7 @@ ALTER TABLE public.collectible_cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.completed_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_worlds ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.elenco_allievi ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.email_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.esercizi_posizione ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.eserciziario_exercises ENABLE ROW LEVEL SECURITY;
@@ -4037,6 +4054,8 @@ CREATE POLICY collectible_cards_public_read ON public.collectible_cards AS PERMI
 CREATE POLICY "Own modules" ON public.completed_modules AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
 CREATE POLICY course_worlds_public_read ON public.course_worlds AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY courses_public_read ON public.courses AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "L'elenco è della classe" ON public.elenco_allievi AS PERMISSIVE FOR SELECT TO authenticated USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
+CREATE POLICY "Solo l'insegnante compone l'elenco" ON public.elenco_allievi AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
 CREATE POLICY "Users read own email events" ON public.email_events AS PERMISSIVE FOR SELECT TO authenticated USING ((user_id = auth.uid()));
 CREATE POLICY "Autore e classe leggono l'esercizio" ON public.esercizi_posizione AS PERMISSIVE FOR SELECT TO authenticated USING (((autore_id = auth.uid()) OR ((class_id IS NOT NULL) AND (is_member_of_class(class_id) OR is_instructor_of_class(class_id))) OR (EXISTS ( SELECT 1
    FROM assignments a
@@ -4189,6 +4208,9 @@ GRANT DELETE ON public.course_worlds TO service_role;
 GRANT DELETE ON public.courses TO anon;
 GRANT DELETE ON public.courses TO authenticated;
 GRANT DELETE ON public.courses TO service_role;
+GRANT DELETE ON public.elenco_allievi TO anon;
+GRANT DELETE ON public.elenco_allievi TO authenticated;
+GRANT DELETE ON public.elenco_allievi TO service_role;
 GRANT DELETE ON public.email_events TO anon;
 GRANT DELETE ON public.email_events TO authenticated;
 GRANT DELETE ON public.email_events TO service_role;
@@ -4360,6 +4382,9 @@ GRANT INSERT ON public.course_worlds TO service_role;
 GRANT INSERT ON public.courses TO anon;
 GRANT INSERT ON public.courses TO authenticated;
 GRANT INSERT ON public.courses TO service_role;
+GRANT INSERT ON public.elenco_allievi TO anon;
+GRANT INSERT ON public.elenco_allievi TO authenticated;
+GRANT INSERT ON public.elenco_allievi TO service_role;
 GRANT INSERT ON public.email_events TO anon;
 GRANT INSERT ON public.email_events TO authenticated;
 GRANT INSERT ON public.email_events TO service_role;
@@ -4531,6 +4556,9 @@ GRANT REFERENCES ON public.course_worlds TO service_role;
 GRANT REFERENCES ON public.courses TO anon;
 GRANT REFERENCES ON public.courses TO authenticated;
 GRANT REFERENCES ON public.courses TO service_role;
+GRANT REFERENCES ON public.elenco_allievi TO anon;
+GRANT REFERENCES ON public.elenco_allievi TO authenticated;
+GRANT REFERENCES ON public.elenco_allievi TO service_role;
 GRANT REFERENCES ON public.email_events TO anon;
 GRANT REFERENCES ON public.email_events TO authenticated;
 GRANT REFERENCES ON public.email_events TO service_role;
@@ -4702,6 +4730,9 @@ GRANT SELECT ON public.course_worlds TO service_role;
 GRANT SELECT ON public.courses TO anon;
 GRANT SELECT ON public.courses TO authenticated;
 GRANT SELECT ON public.courses TO service_role;
+GRANT SELECT ON public.elenco_allievi TO anon;
+GRANT SELECT ON public.elenco_allievi TO authenticated;
+GRANT SELECT ON public.elenco_allievi TO service_role;
 GRANT SELECT ON public.email_events TO anon;
 GRANT SELECT ON public.email_events TO authenticated;
 GRANT SELECT ON public.email_events TO service_role;
@@ -4870,6 +4901,9 @@ GRANT TRIGGER ON public.course_worlds TO service_role;
 GRANT TRIGGER ON public.courses TO anon;
 GRANT TRIGGER ON public.courses TO authenticated;
 GRANT TRIGGER ON public.courses TO service_role;
+GRANT TRIGGER ON public.elenco_allievi TO anon;
+GRANT TRIGGER ON public.elenco_allievi TO authenticated;
+GRANT TRIGGER ON public.elenco_allievi TO service_role;
 GRANT TRIGGER ON public.email_events TO anon;
 GRANT TRIGGER ON public.email_events TO authenticated;
 GRANT TRIGGER ON public.email_events TO service_role;
@@ -5041,6 +5075,9 @@ GRANT TRUNCATE ON public.course_worlds TO service_role;
 GRANT TRUNCATE ON public.courses TO anon;
 GRANT TRUNCATE ON public.courses TO authenticated;
 GRANT TRUNCATE ON public.courses TO service_role;
+GRANT TRUNCATE ON public.elenco_allievi TO anon;
+GRANT TRUNCATE ON public.elenco_allievi TO authenticated;
+GRANT TRUNCATE ON public.elenco_allievi TO service_role;
 GRANT TRUNCATE ON public.email_events TO anon;
 GRANT TRUNCATE ON public.email_events TO authenticated;
 GRANT TRUNCATE ON public.email_events TO service_role;
@@ -5212,6 +5249,9 @@ GRANT UPDATE ON public.course_worlds TO service_role;
 GRANT UPDATE ON public.courses TO anon;
 GRANT UPDATE ON public.courses TO authenticated;
 GRANT UPDATE ON public.courses TO service_role;
+GRANT UPDATE ON public.elenco_allievi TO anon;
+GRANT UPDATE ON public.elenco_allievi TO authenticated;
+GRANT UPDATE ON public.elenco_allievi TO service_role;
 GRANT UPDATE ON public.email_events TO anon;
 GRANT UPDATE ON public.email_events TO authenticated;
 GRANT UPDATE ON public.email_events TO service_role;
