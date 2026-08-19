@@ -25,6 +25,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
+import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { BenStatus } from "@/components/bridge/ben-status";
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
@@ -162,6 +163,11 @@ export default function CompitoPage({
   // Overview
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
+      <PulsanteSegnalazione
+        zona="compito"
+        contestoExtra={{ classId, assignmentId }}
+      />
+
       <Briciole
         percorso={[
           { etichetta: "Le mie classi", href: "/classi" },

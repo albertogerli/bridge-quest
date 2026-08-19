@@ -32,6 +32,7 @@ import {
 } from "@/lib/live-table";
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
+import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -418,6 +419,16 @@ function Tavolo() {
           />
         </div>
       )}
+
+      <PulsanteSegnalazione
+        zona="tavolo"
+        contestoExtra={{
+          classId,
+          contratto: stato?.contract ?? null,
+          dichiarante: stato?.declarer ?? null,
+          carteGiocate: stato?.played?.length ?? 0,
+        }}
+      />
 
       {divisioniVisibili && stato && (
         <div className="mx-auto mt-4 max-w-2xl">

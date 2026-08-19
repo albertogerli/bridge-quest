@@ -524,6 +524,18 @@ CREATE TABLE IF NOT EXISTS public.scenari (
   slug text
 );
 
+CREATE TABLE IF NOT EXISTS public.segnalazioni (
+  id uuid NOT NULL,
+  user_id uuid,
+  testo text NOT NULL,
+  contesto jsonb NOT NULL,
+  screenshot_path text,
+  stato text NOT NULL,
+  nota_admin text,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.sfida_board (
   sfida_id uuid NOT NULL,
   mano_id uuid NOT NULL,
@@ -3361,6 +3373,11 @@ ALTER TABLE public.scenari ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.scenari ALTER COLUMN ufficiale SET DEFAULT false;
 ALTER TABLE public.scenari ALTER COLUMN pubblico SET DEFAULT false;
 ALTER TABLE public.scenari ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.segnalazioni ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.segnalazioni ALTER COLUMN contesto SET DEFAULT '{}'::jsonb;
+ALTER TABLE public.segnalazioni ALTER COLUMN stato SET DEFAULT 'nuova'::text;
+ALTER TABLE public.segnalazioni ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.segnalazioni ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN commentary SET DEFAULT ''::text;
@@ -3422,6 +3439,7 @@ ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_pkey PRIMARY KEY
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_pkey PRIMARY KEY (torneo_id, mano_id, user_id);
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_pkey PRIMARY KEY (id);
+ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_pkey PRIMARY KEY (id);
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
@@ -3499,6 +3517,7 @@ ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((cha
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_descrizione_check CHECK ((char_length(descrizione) <= 1000));
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_nome_check CHECK (((char_length(btrim(nome)) >= 1) AND (char_length(btrim(nome)) <= 120)));
+ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_stato_check CHECK ((stato = ANY (ARRAY['nuova'::text, 'presa-in-carico'::text, 'risolta'::text, 'archiviata'::text])));
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_coppia_check CHECK ((coppia = ANY (ARRAY['A'::text, 'B'::text])));
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_check CHECK (((a1 <> a2) AND (b1 <> b2) AND (a1 <> b1) AND (a1 <> b2) AND (a2 <> b1) AND (a2 <> b2)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_bidding_check CHECK (((bidding IS NULL) OR ((bidding ? 'dealer'::text) AND (bidding ? 'bids'::text) AND (jsonb_typeof((bidding -> 'bids'::text)) = 'array'::text))));
@@ -3565,6 +3584,7 @@ ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_torneo_id_fk
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES profiles(id) ON DELETE SET NULL;
+ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_sessione_id_fkey FOREIGN KEY (sessione_id) REFERENCES bidding_sessions(id) ON DELETE CASCADE;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_sfida_id_fkey FOREIGN KEY (sfida_id) REFERENCES sfide_coppie(id) ON DELETE CASCADE;
@@ -3620,6 +3640,7 @@ CREATE INDEX idx_login_history_platform ON public.login_history USING btree (pla
 CREATE INDEX idx_login_history_user_date ON public.login_history USING btree (user_id, logged_in_at DESC);
 CREATE INDEX idx_poll_votes_post ON public.forum_poll_votes USING btree (post_id, option_index);
 CREATE INDEX idx_profiles_role ON public.profiles USING btree (role) WHERE (role <> 'user'::text);
+CREATE INDEX idx_segnalazioni_stato ON public.segnalazioni USING btree (stato, created_at DESC);
 CREATE INDEX idx_tournament_results_week ON public.tournament_results USING btree (week_num, total_tricks DESC);
 CREATE INDEX lesson_modules_content_gin ON public.lesson_modules USING gin (content jsonb_path_ops);
 CREATE INDEX lesson_modules_lesson_id_idx ON public.lesson_modules USING btree (lesson_id);
@@ -3707,6 +3728,7 @@ ALTER TABLE public.risultati_mano ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.risultati_torneo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scenari ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.segnalazioni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
@@ -3810,6 +3832,9 @@ CREATE POLICY "Istruttori creano scenari" ON public.scenari AS PERMISSIVE FOR IN
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
 CREATE POLICY "Scenari leggibili" ON public.scenari AS PERMISSIVE FOR SELECT TO authenticated USING ((pubblico OR ufficiale OR (autore_id = auth.uid())));
+CREATE POLICY "Amministratori e autore leggono" ON public.segnalazioni AS PERMISSIVE FOR SELECT TO authenticated USING ((is_admin() OR (user_id = auth.uid())));
+CREATE POLICY "Chiunque può segnalare" ON public.segnalazioni AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "Solo gli amministratori aggiornano" ON public.segnalazioni AS PERMISSIVE FOR UPDATE TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR SELECT TO authenticated USING ((EXISTS ( SELECT 1
    FROM sfide_coppie s
   WHERE ((s.id = sfida_board.sfida_id) AND ((((auth.uid() = s.a1) OR (auth.uid() = s.a2)) OR (auth.uid() = s.b1)) OR (auth.uid() = s.b2))))));
@@ -3945,6 +3970,9 @@ GRANT DELETE ON public.saved_hands TO service_role;
 GRANT DELETE ON public.scenari TO anon;
 GRANT DELETE ON public.scenari TO authenticated;
 GRANT DELETE ON public.scenari TO service_role;
+GRANT DELETE ON public.segnalazioni TO anon;
+GRANT DELETE ON public.segnalazioni TO authenticated;
+GRANT DELETE ON public.segnalazioni TO service_role;
 GRANT DELETE ON public.sfida_board TO anon;
 GRANT DELETE ON public.sfida_board TO authenticated;
 GRANT DELETE ON public.sfida_board TO service_role;
@@ -4092,6 +4120,9 @@ GRANT INSERT ON public.saved_hands TO service_role;
 GRANT INSERT ON public.scenari TO anon;
 GRANT INSERT ON public.scenari TO authenticated;
 GRANT INSERT ON public.scenari TO service_role;
+GRANT INSERT ON public.segnalazioni TO anon;
+GRANT INSERT ON public.segnalazioni TO authenticated;
+GRANT INSERT ON public.segnalazioni TO service_role;
 GRANT INSERT ON public.sfida_board TO anon;
 GRANT INSERT ON public.sfida_board TO authenticated;
 GRANT INSERT ON public.sfida_board TO service_role;
@@ -4239,6 +4270,9 @@ GRANT REFERENCES ON public.saved_hands TO service_role;
 GRANT REFERENCES ON public.scenari TO anon;
 GRANT REFERENCES ON public.scenari TO authenticated;
 GRANT REFERENCES ON public.scenari TO service_role;
+GRANT REFERENCES ON public.segnalazioni TO anon;
+GRANT REFERENCES ON public.segnalazioni TO authenticated;
+GRANT REFERENCES ON public.segnalazioni TO service_role;
 GRANT REFERENCES ON public.sfida_board TO anon;
 GRANT REFERENCES ON public.sfida_board TO authenticated;
 GRANT REFERENCES ON public.sfida_board TO service_role;
@@ -4385,6 +4419,9 @@ GRANT SELECT ON public.saved_hands TO service_role;
 GRANT SELECT ON public.scenari TO anon;
 GRANT SELECT ON public.scenari TO authenticated;
 GRANT SELECT ON public.scenari TO service_role;
+GRANT SELECT ON public.segnalazioni TO anon;
+GRANT SELECT ON public.segnalazioni TO authenticated;
+GRANT SELECT ON public.segnalazioni TO service_role;
 GRANT SELECT ON public.sfida_board TO anon;
 GRANT SELECT ON public.sfida_board TO authenticated;
 GRANT SELECT ON public.sfida_board TO service_role;
@@ -4530,6 +4567,9 @@ GRANT TRIGGER ON public.saved_hands TO service_role;
 GRANT TRIGGER ON public.scenari TO anon;
 GRANT TRIGGER ON public.scenari TO authenticated;
 GRANT TRIGGER ON public.scenari TO service_role;
+GRANT TRIGGER ON public.segnalazioni TO anon;
+GRANT TRIGGER ON public.segnalazioni TO authenticated;
+GRANT TRIGGER ON public.segnalazioni TO service_role;
 GRANT TRIGGER ON public.sfida_board TO anon;
 GRANT TRIGGER ON public.sfida_board TO authenticated;
 GRANT TRIGGER ON public.sfida_board TO service_role;
@@ -4677,6 +4717,9 @@ GRANT TRUNCATE ON public.saved_hands TO service_role;
 GRANT TRUNCATE ON public.scenari TO anon;
 GRANT TRUNCATE ON public.scenari TO authenticated;
 GRANT TRUNCATE ON public.scenari TO service_role;
+GRANT TRUNCATE ON public.segnalazioni TO anon;
+GRANT TRUNCATE ON public.segnalazioni TO authenticated;
+GRANT TRUNCATE ON public.segnalazioni TO service_role;
 GRANT TRUNCATE ON public.sfida_board TO anon;
 GRANT TRUNCATE ON public.sfida_board TO authenticated;
 GRANT TRUNCATE ON public.sfida_board TO service_role;
@@ -4824,6 +4867,9 @@ GRANT UPDATE ON public.saved_hands TO service_role;
 GRANT UPDATE ON public.scenari TO anon;
 GRANT UPDATE ON public.scenari TO authenticated;
 GRANT UPDATE ON public.scenari TO service_role;
+GRANT UPDATE ON public.segnalazioni TO anon;
+GRANT UPDATE ON public.segnalazioni TO authenticated;
+GRANT UPDATE ON public.segnalazioni TO service_role;
 GRANT UPDATE ON public.sfida_board TO anon;
 GRANT UPDATE ON public.sfida_board TO authenticated;
 GRANT UPDATE ON public.sfida_board TO service_role;
