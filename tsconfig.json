@@ -41,6 +41,9 @@
   ],
   "exclude": [
     "node_modules",
+    "**/* 2.ts",
+    "**/* 2.tsx",
+    "**/* 2.mts",
     "public/sw.js",
     "capacitor.config.ts",
     "scripts/audit-lesson-content.ts",
