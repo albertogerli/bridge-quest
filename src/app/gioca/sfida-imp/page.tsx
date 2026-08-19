@@ -10,6 +10,9 @@ import { BridgeTable } from "@/components/bridge/bridge-table";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { useChallenges, type ChallengeData, type BoardResult } from "@/hooks/use-challenges";
 import { dealFromSeed } from "@/lib/hand-encoder";
+import { calcTableAndPar } from "@/lib/dds-table";
+import { contrattoDallaMano } from "@/lib/contratto-sfida";
+import { reportError } from "@/lib/report-error";
 import {
   calculateRawScore,
   calculateBoardIMP,
@@ -37,23 +40,15 @@ import { useT } from "@/contexts/traduzioni-provider";
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Determina un contratto deterministico dal seed della mano. */
-function contractFromSeed(seed: string): {
-  contract: string;
-  declarer: Position;
-  vulnerable: boolean;
-} {
-  const contracts = [
-    "1NT", "2NT", "3NT",
-    "1S", "2S", "3S", "4S",
-    "1H", "2H", "3H", "4H",
-    "2C", "3C", "5C",
-    "2D", "3D", "5D",
-  ];
-  const idx = seed.charCodeAt(0) % contracts.length;
-  const declarer: Position = "south";
-  const vulnerable = seed.charCodeAt(1) % 2 === 0;
-  return { contract: contracts[idx], declarer, vulnerable };
+/**
+ * La vulnerabilità, presa dal seme della mano.
+ *
+ * Questa sì può venire dal seme: è una convenzione della smazzata, non dipende
+ * dalle carte, e dev'essere identica per i due sfidanti. Il CONTRATTO invece
+ * si calcola dalle carte — vedi `contrattoDallaMano`.
+ */
+function vulnerabilitaDalSeed(seed: string): boolean {
+  return seed.charCodeAt(1) % 2 === 0;
 }
 
 /** Converte un contratto con lettera seme (S/H/D/C/NT) nella SuitChar per lo scoring. */
@@ -214,11 +209,6 @@ function SfidaIMPContent() {
     return dealFromSeed(currentSeed);
   }, [currentSeed]);
 
-  const boardContract = useMemo(() => {
-    if (!currentSeed) return null;
-    return contractFromSeed(currentSeed);
-  }, [currentSeed]);
-
   // Hands formatted for the game engine
   const gameHands = useMemo(() => {
     if (!dealData) return null;
@@ -229,6 +219,43 @@ function SfidaIMPContent() {
       west: dealData.west,
     } as Record<Position, Card[]>;
   }, [dealData]);
+
+  /**
+   * Il contratto arriva dal solver, quindi non può stare in un `useMemo`.
+   *
+   * Finché non c'è, la mano non si monta: meglio un istante di attesa che una
+   * partita iniziata su un contratto sbagliato e poi cambiata sotto le mani di
+   * chi gioca.
+   */
+  const [boardContract, setBoardContract] = useState<{
+    contract: string;
+    declarer: Position;
+    vulnerable: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!gameHands || !currentSeed) return;
+    let vivo = true;
+    void calcTableAndPar(gameHands, "north", "none")
+      .then(({ table }: { table: Awaited<ReturnType<typeof calcTableAndPar>>["table"] }) => {
+        if (!vivo) return;
+        const scelto = contrattoDallaMano(table);
+        setBoardContract({
+          contract: scelto.contract,
+          declarer: scelto.declarer,
+          vulnerable: vulnerabilitaDalSeed(currentSeed),
+        });
+      })
+      .catch((err: unknown) => {
+        reportError("sfida-imp:contratto", err);
+        // Senza solver non si inventa un contratto a caso — è esattamente il
+        // difetto da cui veniamo. Si resta in attesa e la mano non parte.
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [gameHands, currentSeed]);
+
 
   // ---------------------------------------------------------------------------
   // Bridge game hook
@@ -251,8 +278,10 @@ function SfidaIMPContent() {
       declarer: boardContract.declarer,
       playerPositions: [boardContract.declarer, dummyGamePos] as Position[],
     };
+    // `boardContract` è in elenco perché arriva DOPO il primo render: senza,
+    // la partita resterebbe montata sul contratto di ripiego.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameKey, currentBoard]);
+  }, [gameKey, currentBoard, boardContract]);
 
   const game = useBridgeGame(gameConfig);
 
