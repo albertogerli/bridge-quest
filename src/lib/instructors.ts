@@ -40,6 +40,9 @@ export interface ClassMember {
   avatar_url?: string | null;
 }
 
+/** Vedi `assignments.soluzioni`. */
+export type VisibilitaSoluzioni = "subito" | "dopo-il-gioco" | "dopo-la-scadenza";
+
 export interface Assignment {
   id: string;
   class_id: string;
@@ -49,6 +52,12 @@ export interface Assignment {
   due_date: string | null;
   mode: AssignmentMode;
   unlock_mode: UnlockMode;
+  /**
+   * Quando l'allievo può leggere il commento delle mani di questo compito.
+   * La regola è applicata dal database, non da qui: vedi
+   * `scripts/sql/soluzioni-dopo-il-gioco-2026-08.sql`.
+   */
+  soluzioni: VisibilitaSoluzioni;
   live_active_index: number | null;
   created_at: string;
   /** Hands imported from PBN, referenced by ids in smazzata_ids (pbn_import.sql) */
@@ -285,6 +294,7 @@ export async function createAssignment(input: {
   instructorNote?: string | null;
   mode?: AssignmentMode;
   unlockMode?: UnlockMode;
+  soluzioni?: VisibilitaSoluzioni;
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
 }): Promise<Assignment> {
@@ -297,6 +307,10 @@ export async function createAssignment(input: {
     instructor_note: input.instructorNote ?? null,
     mode: input.mode ?? "homework",
     unlock_mode: input.unlockMode ?? "free",
+    // Il default del database è lo stesso: qui è esplicito perché è la scelta
+    // che gli insegnanti hanno chiesto, e vederla scritta nel form di
+    // creazione vale più di un default nascosto in una colonna.
+    soluzioni: input.soluzioni ?? "dopo-il-gioco",
   };
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {
@@ -312,13 +326,24 @@ export async function createAssignment(input: {
   return data as Assignment;
 }
 
+/**
+ * Il compito come deve vederlo chi lo apre.
+ *
+ * NON È PIÙ UN `select *`, e il motivo sta tutto in `custom_hands`: le mani
+ * importate da PBN o generate dall'insegnante si portano dentro il proprio
+ * commento, e con la lettura diretta arrivavano intere al browser dell'allievo
+ * prima che giocasse. Chiudere il catalogo e lasciare aperte quelle avrebbe
+ * scoperto proprio i compiti costruiti a mano.
+ *
+ * `compito_per_allievo` toglie il commento dalle mani che non spettano ancora,
+ * e all'insegnante restituisce tutto. Il controllo di appartenenza alla classe
+ * è rifatto dentro la funzione, perché una SECURITY DEFINER scavalca le RLS.
+ */
 export async function getAssignment(assignmentId: string): Promise<Assignment> {
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from("assignments")
-    .select("*")
-    .eq("id", assignmentId)
-    .single();
+  const { data, error } = await supabase.rpc("compito_per_allievo", {
+    p_assignment_id: assignmentId,
+  });
   if (error) throw error;
   return data as Assignment;
 }

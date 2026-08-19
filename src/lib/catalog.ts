@@ -110,7 +110,18 @@ export interface Smazzata {
     west: Card[];
   };
   bidding?: BiddingData;
-  commentary: string;
+  /**
+   * Il commento didattico — presente SOLO sulle mani che se lo portano dietro:
+   * quelle importate da PBN o generate dall'insegnante, che stanno dentro il
+   * compito e non nel catalogo.
+   *
+   * Per le mani del catalogo è sempre assente, e non per una dimenticanza: il
+   * caricamento di massa non lo chiede più, perché finché lo chiedeva i
+   * commenti delle mani assegnate come compito erano nel browser dell'allievo
+   * prima ancora che giocasse. Si passa da `useCommento()`, che lo domanda al
+   * database una mano alla volta e riceve risposta solo se spetta.
+   */
+  commentary?: string;
   /**
    * Prese del dichiarante a carte scoperte, dopo l'attacco indicato.
    * Se è minore di livello+6 il contratto è imbattibile e la mano ha senso
@@ -438,7 +449,6 @@ interface RawSmazzata {
   opening_lead: Card;
   hands: { north: Card[]; south: Card[]; east: Card[]; west: Card[] };
   bidding: { dealer: Position; bids: string[] } | null;
-  commentary: string;
   dd_tricks: number | null;
 }
 
@@ -449,7 +459,12 @@ async function loadSmazzate(): Promise<Smazzata[]> {
   const { data, error } = await supabase
     .from("smazzate")
     .select(
-      "id, lesson_id, board, title, contract, declarer, vulnerability, opening_lead, hands, bidding, commentary, dd_tricks",
+      // `commentary` NON è in elenco, ed è il punto di tutta la faccenda: da
+      // qui uscirebbe per tutte e 272 le mani verso chiunque. Il privilegio di
+      // lettura su quella colonna è stato tolto ad `anon` e `authenticated`
+      // (vedi `scripts/sql/soluzioni-dopo-il-gioco-2026-08.sql`), quindi
+      // riaggiungerla qui non è una svista silenziosa: fa fallire la query.
+      "id, lesson_id, board, title, contract, declarer, vulnerability, opening_lead, hands, bidding, dd_tricks",
     )
     .order("lesson_id", { ascending: true })
     .order("board", { ascending: true });
@@ -470,7 +485,6 @@ async function loadSmazzate(): Promise<Smazzata[]> {
     vulnerability: r.vulnerability,
     hands: r.hands,
     bidding: r.bidding ?? undefined,
-    commentary: r.commentary ?? "",
     ddTricks: r.dd_tricks ?? null,
   }));
 }

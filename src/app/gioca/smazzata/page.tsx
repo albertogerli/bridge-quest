@@ -11,6 +11,7 @@ import { GameActions } from "@/components/bridge/game-actions";
 import { HintPanel } from "@/components/bridge/hint-panel";
 import { PlanningQuiz } from "@/components/bridge/planning-quiz";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
+import { useCommento } from "@/hooks/use-commento";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata, CourseId } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
@@ -86,6 +87,11 @@ function SmazzataBrowserContent() {
   const [selectedSmazzata, setSelectedSmazzata] = useState<Smazzata | null>(
     null
   );
+  /**
+   * Il commento della mano non viaggia più con il catalogo: lo si chiede, e
+   * arriva solo se spetta. Vedi `src/lib/commenti-smazzate.ts`.
+   */
+  const commentoSelezionata = useCommento(selectedSmazzata);
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Update when URL param changes
@@ -303,14 +309,14 @@ function SmazzataBrowserContent() {
                 </Badge>
               </div>
 
-              {selectedSmazzata.commentary && (
+              {commentoSelezionata && (
                 <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 p-3 mb-4">
                   <div className="flex items-start gap-2">
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-[12px]">
                       M
                     </div>
                     <p className="text-[12px] text-amber-800 dark:text-amber-300 leading-relaxed">
-                      {selectedSmazzata.commentary}
+                      {commentoSelezionata}
                     </p>
                   </div>
                 </div>
@@ -339,6 +345,11 @@ function PlayingView({
   onBack: () => void;
 }) {
   const t = useT();
+  /**
+   * Il commento della mano non viaggia più con il catalogo: lo si chiede, e
+   * arriva solo se spetta. Vedi `src/lib/commenti-smazzate.ts`.
+   */
+  const commento = useCommento(smazzata);
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const { courses } = useCatalog();
@@ -1135,7 +1146,7 @@ function PlayingView({
               )}
 
               {/* Commentary / Maestro tip */}
-              {smazzata.commentary && (
+              {commento && (
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1149,7 +1160,7 @@ function PlayingView({
                     <h4 className="text-sm font-bold text-foreground">{t("Analisi del Maestro")}</h4>
                   </div>
                   <p className="text-sm text-foreground/80 leading-relaxed">
-                    {smazzata.commentary}
+                    {commento}
                   </p>
                 </motion.div>
               )}

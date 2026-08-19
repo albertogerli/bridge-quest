@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { GameActions } from "@/components/bridge/game-actions";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
+import { useCommento } from "@/hooks/use-commento";
 import { useSmazzate, useValidatedSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
@@ -41,7 +42,7 @@ import {
   type Assignment,
   type HandResult,
 } from "@/lib/instructors";
-import { ArrowLeft, Play, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function CompitoPage({
@@ -268,10 +269,54 @@ export default function CompitoPage({
                   </Button>
                 )}
               </div>
+              {isPlayed && <SoluzioneMano smazzata={hand} ricarica={doneIds.size} />}
             </motion.div>
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/**
+ * La soluzione di una mano già giocata.
+ *
+ * PRIMA STAVA SOLO PRIMA DELLA MANO, e con le soluzioni protette non si sarebbe
+ * più vista mai: il suggerimento compariva alla schermata di partenza — proprio
+ * il momento in cui ora il commento non arriva — e alla fine della mano si
+ * torna qui all'elenco senza passare da nessuna schermata che lo mostri. Il
+ * posto giusto per il commento, quando è una soluzione e non un aiuto, è
+ * accanto alla mano finita.
+ *
+ * Se il commento non arriva non si mostra niente: può non esserci, o può non
+ * spettare ancora (compito «dopo la scadenza»), e all'allievo le due cose
+ * devono somigliare.
+ */
+function SoluzioneMano({ smazzata, ricarica }: { smazzata: Smazzata; ricarica: unknown }) {
+  const [aperta, setAperta] = useState(false);
+  const commento = useCommento(smazzata, ricarica);
+  if (!commento) return null;
+  return (
+    <div className="mt-3 border-t border-border pt-3">
+      <button
+        onClick={() => setAperta(!aperta)}
+        className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
+      >
+        <Lightbulb className="h-3.5 w-3.5" />
+        {aperta ? "Nascondi la soluzione" : "Vedi la soluzione"}
+      </button>
+      <AnimatePresence>
+        {aperta && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{commento}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -298,6 +343,13 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
   const { play } = useSound();
   const [showCelebration, setShowCelebration] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  /**
+   * Con `soluzioni = 'subito'` il commento arriva e il suggerimento c'è, come
+   * prima. Negli altri casi il database non lo manda, `commento` resta vuoto e
+   * il pulsante non compare: la mano si gioca e la soluzione si legge dopo,
+   * nell'elenco.
+   */
+  const commento = useCommento(smazzata);
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -584,7 +636,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
         </AnimatePresence>
 
         {/* Hint */}
-        {game.phase === "ready" && smazzata.commentary && (
+        {game.phase === "ready" && commento && (
           <div className="mx-auto mt-6 max-w-lg">
             <button
               onClick={() => setShowHint(!showHint)}
@@ -596,7 +648,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
               {showHint && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
                   <div className="rounded-2xl border border-border bg-card p-5">
-                    <p className="text-sm leading-relaxed text-muted-foreground">{smazzata.commentary}</p>
+                    <p className="text-sm leading-relaxed text-muted-foreground">{commento}</p>
                   </div>
                 </motion.div>
               )}

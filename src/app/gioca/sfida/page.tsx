@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { useCommento } from "@/hooks/use-commento";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { usePlayableSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
@@ -88,6 +89,11 @@ export default function SfidaDelGiornoPage() {
 
 function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
   const t = useT();
+  /**
+   * Il commento della mano non viaggia più con il catalogo: lo si chiede, e
+   * arriva solo se spetta. Vedi `src/lib/commenti-smazzate.ts`.
+   */
+  const commento = useCommento(smazzata);
   const router = useRouter();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
@@ -497,7 +503,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
         </AnimatePresence>
 
         {/* Maestro Fiori tip - hidden behind toggle */}
-        {game.phase === "ready" && smazzata.commentary && (
+        {game.phase === "ready" && commento && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -545,7 +551,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                           </Badge>
                         </div>
                         <p className="text-[13px] text-muted-foreground leading-relaxed">
-                          {smazzata.commentary}
+                          {commento}
                         </p>
                       </div>
                     </div>
