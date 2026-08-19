@@ -65,7 +65,8 @@ test.describe("la lingua nell'indirizzo", () => {
       localStorage.setItem("bq_onboarded_date", new Date().toISOString());
       localStorage.setItem("bq_guide_v2_seen", "1");
     });
-    // Il selettore vive in fondo alla home: in questa fase è l'unico posto in
+    // Il selettore vive in fondo alla home, e da oggi anche nelle
+    // impostazioni e nella barra laterale: in questa fase è l'unico posto in
     // cui c'è. Quando in fase 2 arriverà anche nelle impostazioni, questa prova
     // andrà estesa lì — non spostata, perché il footer deve continuare ad
     // averlo.
@@ -238,4 +239,21 @@ test("i contenuti delle lezioni sono in inglese", async ({ page }) => {
   await page.goto("/lezioni");
   await expect(page.getByText("Corso Fiori").first()).toBeVisible({ timeout: 45_000 });
   await expect(page.getByText("Clubs Course")).toHaveCount(0);
+});
+
+test("il selettore di lingua si trova senza cercarlo", async ({ page }) => {
+  test.setTimeout(120_000);
+  await login(page);
+
+  // Nelle impostazioni, che è dove uno lo cerca — e in cima, perché chi arriva
+  // lì perché non capisce la pagina non deve scorrerne sei sezioni.
+  await page.goto("/impostazioni");
+  const nelleImpostazioni = page.getByRole("link", { name: "English" }).first();
+  await expect(nelleImpostazioni).toBeVisible({ timeout: 45_000 });
+  expect(await nelleImpostazioni.getAttribute("href")).toBe("/en/impostazioni");
+
+  // E porta davvero dall'altra parte, sulla stessa pagina.
+  await nelleImpostazioni.click();
+  await expect(page).toHaveURL(/\/en\/impostazioni/, { timeout: 30_000 });
+  await expect(page.getByRole("link", { name: "Italiano" }).first()).toBeVisible();
 });

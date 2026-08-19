@@ -10,6 +10,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
 import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider, useSharedAuth } from "@/contexts/auth-provider";
+import { RicordaLingua } from "@/components/ricorda-lingua";
 import { CookieBanner } from "@/components/cookie-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { useExitIntent } from "@/hooks/use-exit-intent";
@@ -42,6 +43,12 @@ const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/term
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
+      {/* DENTRO l'AuthProvider, non nel layout: legge l'utente, e fuori da qui
+          `useSharedAuth` lancia — il che in sviluppo rendeva ogni pagina un
+          errore 500. In produzione non si vedeva, perché le pagine
+          prerenderizzate venivano servite lo stesso: un difetto che il build
+          nasconde è peggio di uno che rompe subito. */}
+      <RicordaLingua />
       <LayoutShellInner>{children}</LayoutShellInner>
     </AuthProvider>
   );
