@@ -416,6 +416,20 @@ CREATE TABLE IF NOT EXISTS public.mani_generate (
   ns_hcp smallint
 );
 
+CREATE TABLE IF NOT EXISTS public.modelli_mani (
+  id uuid NOT NULL,
+  nome text NOT NULL,
+  descrizione text,
+  vincoli jsonb NOT NULL,
+  autore_id uuid,
+  ufficiale boolean NOT NULL,
+  condiviso boolean NOT NULL,
+  lesson_id integer,
+  usi integer NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.partner_profiles (
   user_id uuid NOT NULL,
   looking boolean NOT NULL,
@@ -3343,6 +3357,12 @@ ALTER TABLE public.mani_generate ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.mani_generate ALTER COLUMN dealer SET DEFAULT 'south'::text;
 ALTER TABLE public.mani_generate ALTER COLUMN vulnerability SET DEFAULT 'none'::text;
 ALTER TABLE public.mani_generate ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.modelli_mani ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.modelli_mani ALTER COLUMN ufficiale SET DEFAULT false;
+ALTER TABLE public.modelli_mani ALTER COLUMN condiviso SET DEFAULT false;
+ALTER TABLE public.modelli_mani ALTER COLUMN usi SET DEFAULT 0;
+ALTER TABLE public.modelli_mani ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.modelli_mani ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.partner_profiles ALTER COLUMN looking SET DEFAULT true;
 ALTER TABLE public.partner_profiles ALTER COLUMN availability SET DEFAULT '{}'::text[];
 ALTER TABLE public.partner_profiles ALTER COLUMN created_at SET DEFAULT now();
@@ -3431,6 +3451,7 @@ ALTER TABLE public.lessons ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
+ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_pkey PRIMARY KEY (id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
@@ -3571,6 +3592,8 @@ ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_class_id_fkey FOREIGN 
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenari(id) ON DELETE CASCADE;
+ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd_id) REFERENCES asd(id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE;
@@ -3638,6 +3661,8 @@ CREATE INDEX idx_instructor_requests_status ON public.instructor_requests USING 
 CREATE INDEX idx_login_history_date ON public.login_history USING btree (logged_in_at DESC);
 CREATE INDEX idx_login_history_platform ON public.login_history USING btree (platform, logged_in_at DESC);
 CREATE INDEX idx_login_history_user_date ON public.login_history USING btree (user_id, logged_in_at DESC);
+CREATE INDEX idx_modelli_mani_autore ON public.modelli_mani USING btree (autore_id, created_at DESC);
+CREATE INDEX idx_modelli_mani_lezione ON public.modelli_mani USING btree (lesson_id) WHERE (lesson_id IS NOT NULL);
 CREATE INDEX idx_poll_votes_post ON public.forum_poll_votes USING btree (post_id, option_index);
 CREATE INDEX idx_profiles_role ON public.profiles USING btree (role) WHERE (role <> 'user'::text);
 CREATE INDEX idx_segnalazioni_stato ON public.segnalazioni USING btree (stato, created_at DESC);
@@ -3669,6 +3694,7 @@ CREATE UNIQUE INDEX unique_comment_like ON public.forum_likes USING btree (user_
 CREATE UNIQUE INDEX unique_post_like ON public.forum_likes USING btree (user_id, post_id) WHERE (post_id IS NOT NULL);
 CREATE UNIQUE INDEX uq_email_events_compito ON public.email_events USING btree (user_id, email_type, ((meta ->> 'assignment_id'::text))) WHERE (email_type = ANY (ARRAY['compito_assegnato'::text, 'compito_in_scadenza'::text]));
 CREATE UNIQUE INDEX uq_email_events_oneshot ON public.email_events USING btree (user_id, email_type) WHERE (email_type = ANY (ARRAY['welcome'::text, 'onboarding_start'::text]));
+CREATE UNIQUE INDEX uq_modelli_ufficiali_lezione ON public.modelli_mani USING btree (lesson_id) WHERE ufficiale;
 
 -- TRIGGER
 CREATE TRIGGER asd_clubs_touch BEFORE UPDATE ON public.asd_clubs FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -3720,6 +3746,7 @@ ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.modelli_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
@@ -3812,6 +3839,12 @@ CREATE POLICY "Istruttori generano mani" ON public.mani_generate AS PERMISSIVE F
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text]))))));
 CREATE POLICY "Mani leggibili" ON public.mani_generate AS PERMISSIVE FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Chi insegna crea i propri modelli" ON public.modelli_mani AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (NOT ufficiale) AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
+CREATE POLICY "I modelli si leggono se tuoi, ufficiali o condivisi" ON public.modelli_mani AS PERMISSIVE FOR SELECT TO authenticated USING ((ufficiale OR condiviso OR (autore_id = auth.uid())));
+CREATE POLICY "Ognuno cancella i propri" ON public.modelli_mani AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) AND (NOT ufficiale)));
+CREATE POLICY "Ognuno modifica i propri" ON public.modelli_mani AS PERMISSIVE FOR UPDATE TO authenticated USING (((autore_id = auth.uid()) AND (NOT ufficiale))) WITH CHECK (((autore_id = auth.uid()) AND (NOT ufficiale)));
 CREATE POLICY partner_profiles_delete ON public.partner_profiles AS PERMISSIVE FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_insert ON public.partner_profiles AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_select ON public.partner_profiles AS PERMISSIVE FOR SELECT TO authenticated USING ((looking OR (user_id = auth.uid())));
@@ -3946,6 +3979,9 @@ GRANT DELETE ON public.login_history TO service_role;
 GRANT DELETE ON public.mani_generate TO anon;
 GRANT DELETE ON public.mani_generate TO authenticated;
 GRANT DELETE ON public.mani_generate TO service_role;
+GRANT DELETE ON public.modelli_mani TO anon;
+GRANT DELETE ON public.modelli_mani TO authenticated;
+GRANT DELETE ON public.modelli_mani TO service_role;
 GRANT DELETE ON public.partner_profiles TO anon;
 GRANT DELETE ON public.partner_profiles TO authenticated;
 GRANT DELETE ON public.partner_profiles TO service_role;
@@ -4096,6 +4132,9 @@ GRANT INSERT ON public.login_history TO service_role;
 GRANT INSERT ON public.mani_generate TO anon;
 GRANT INSERT ON public.mani_generate TO authenticated;
 GRANT INSERT ON public.mani_generate TO service_role;
+GRANT INSERT ON public.modelli_mani TO anon;
+GRANT INSERT ON public.modelli_mani TO authenticated;
+GRANT INSERT ON public.modelli_mani TO service_role;
 GRANT INSERT ON public.partner_profiles TO anon;
 GRANT INSERT ON public.partner_profiles TO authenticated;
 GRANT INSERT ON public.partner_profiles TO service_role;
@@ -4246,6 +4285,9 @@ GRANT REFERENCES ON public.login_history TO service_role;
 GRANT REFERENCES ON public.mani_generate TO anon;
 GRANT REFERENCES ON public.mani_generate TO authenticated;
 GRANT REFERENCES ON public.mani_generate TO service_role;
+GRANT REFERENCES ON public.modelli_mani TO anon;
+GRANT REFERENCES ON public.modelli_mani TO authenticated;
+GRANT REFERENCES ON public.modelli_mani TO service_role;
 GRANT REFERENCES ON public.partner_profiles TO anon;
 GRANT REFERENCES ON public.partner_profiles TO authenticated;
 GRANT REFERENCES ON public.partner_profiles TO service_role;
@@ -4396,6 +4438,9 @@ GRANT SELECT ON public.login_history TO service_role;
 GRANT SELECT ON public.mani_generate TO anon;
 GRANT SELECT ON public.mani_generate TO authenticated;
 GRANT SELECT ON public.mani_generate TO service_role;
+GRANT SELECT ON public.modelli_mani TO anon;
+GRANT SELECT ON public.modelli_mani TO authenticated;
+GRANT SELECT ON public.modelli_mani TO service_role;
 GRANT SELECT ON public.partner_profiles TO anon;
 GRANT SELECT ON public.partner_profiles TO authenticated;
 GRANT SELECT ON public.partner_profiles TO service_role;
@@ -4543,6 +4588,9 @@ GRANT TRIGGER ON public.login_history TO service_role;
 GRANT TRIGGER ON public.mani_generate TO anon;
 GRANT TRIGGER ON public.mani_generate TO authenticated;
 GRANT TRIGGER ON public.mani_generate TO service_role;
+GRANT TRIGGER ON public.modelli_mani TO anon;
+GRANT TRIGGER ON public.modelli_mani TO authenticated;
+GRANT TRIGGER ON public.modelli_mani TO service_role;
 GRANT TRIGGER ON public.partner_profiles TO anon;
 GRANT TRIGGER ON public.partner_profiles TO authenticated;
 GRANT TRIGGER ON public.partner_profiles TO service_role;
@@ -4693,6 +4741,9 @@ GRANT TRUNCATE ON public.login_history TO service_role;
 GRANT TRUNCATE ON public.mani_generate TO anon;
 GRANT TRUNCATE ON public.mani_generate TO authenticated;
 GRANT TRUNCATE ON public.mani_generate TO service_role;
+GRANT TRUNCATE ON public.modelli_mani TO anon;
+GRANT TRUNCATE ON public.modelli_mani TO authenticated;
+GRANT TRUNCATE ON public.modelli_mani TO service_role;
 GRANT TRUNCATE ON public.partner_profiles TO anon;
 GRANT TRUNCATE ON public.partner_profiles TO authenticated;
 GRANT TRUNCATE ON public.partner_profiles TO service_role;
@@ -4843,6 +4894,9 @@ GRANT UPDATE ON public.login_history TO service_role;
 GRANT UPDATE ON public.mani_generate TO anon;
 GRANT UPDATE ON public.mani_generate TO authenticated;
 GRANT UPDATE ON public.mani_generate TO service_role;
+GRANT UPDATE ON public.modelli_mani TO anon;
+GRANT UPDATE ON public.modelli_mani TO authenticated;
+GRANT UPDATE ON public.modelli_mani TO service_role;
 GRANT UPDATE ON public.partner_profiles TO anon;
 GRANT UPDATE ON public.partner_profiles TO authenticated;
 GRANT UPDATE ON public.partner_profiles TO service_role;

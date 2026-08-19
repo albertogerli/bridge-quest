@@ -22,6 +22,14 @@ import { describePar, parAssignmentFromContracts, type ParContract } from "@/lib
 import { createAssignment, getMyClasses, type ClassRoom } from "@/lib/instructors";
 import { pubblicaScenario } from "@/lib/mani-condivise";
 import { reportError } from "@/lib/report-error";
+import { CompositoreVincoli } from "@/components/istruttori/compositore-vincoli";
+import {
+  condividiModello,
+  duplicaModello,
+  elencaModelli,
+  salvaModello,
+  type ModelloMani,
+} from "@/lib/modelli-mani";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -57,6 +65,20 @@ export default function GeneraManiPage() {
   const { user, loading: authLoading } = useSharedAuth();
 
   const [templateId, setTemplateId] = useState(DEAL_TEMPLATES[0].id);
+  /**
+   * I modelli salvati: ufficiali (uno per lezione del Corso Fiori), i propri,
+   * e quelli che altri insegnanti hanno condiviso.
+   *
+   * Gli ufficiali sono il motivo per cui questa pagina è utile al PRIMO
+   * accesso, prima che l'insegnante impari a comporre un vincolo: apre, trova
+   * «la lezione di stasera», genera.
+   */
+  const [modelli, setModelli] = useState<ModelloMani[]>([]);
+  const [modelloId, setModelloId] = useState<string>("");
+  /** I vincoli in modifica: partono dal modello scelto e si possono ritoccare. */
+  const [vincoli, setVincoli] = useState<DealConstraints | null>(null);
+  const [nomeModello, setNomeModello] = useState("");
+  const [messaggioModello, setMessaggioModello] = useState("");
   const [count, setCount] = useState(8);
   // Il seme è esplicito e modificabile: è ciò che rende una serie
   // riproducibile. Stesso seme e stesso modello = stesse mani, anche fra un
@@ -113,10 +135,33 @@ export default function GeneraManiPage() {
       .catch((err) => reportError("genera-mani:classi", err));
   }, []);
 
-  const template = useMemo(
-    () => DEAL_TEMPLATES.find((t) => t.id === templateId) ?? DEAL_TEMPLATES[0],
-    [templateId]
-  );
+  useEffect(() => {
+    void elencaModelli().then(setModelli);
+  }, []);
+
+  const modelloScelto = modelli.find((m) => m.id === modelloId) ?? null;
+
+  /**
+   * Il modello in uso: uno salvato, oppure quelli fissi nel codice.
+   *
+   * I sette `DEAL_TEMPLATES` restano perché sono il ripiego quando il database
+   * non risponde — e perché due o tre non hanno un corrispondente fra gli
+   * ufficiali. Il vincolo effettivo è `vincoli` se l'insegnante l'ha toccato,
+   * altrimenti quello del modello.
+   */
+  const template = useMemo(() => {
+    if (modelloScelto) {
+      return {
+        id: modelloScelto.id,
+        label: modelloScelto.nome,
+        description: modelloScelto.descrizione ?? "",
+        constraints: modelloScelto.vincoli,
+      };
+    }
+    return DEAL_TEMPLATES.find((t) => t.id === templateId) ?? DEAL_TEMPLATES[0];
+  }, [modelloScelto, templateId]);
+
+  const vincoliInUso = vincoli ?? template.constraints;
 
   const run = useCallback(
     (constraints: DealConstraints, useSeed: number) => {
@@ -313,17 +358,120 @@ export default function GeneraManiPage() {
         </label>
         <select
           id="modello"
-          value={templateId}
-          onChange={(e) => setTemplateId(e.target.value)}
+          value={modelloId || `fisso:${templateId}`}
+          onChange={(e) => {
+            const v = e.target.value;
+            setVincoli(null);
+            if (v.startsWith("fisso:")) {
+              setModelloId("");
+              setTemplateId(v.slice(6));
+            } else {
+              setModelloId(v);
+            }
+          }}
           className="w-full h-12 px-4 rounded-xl border border-border bg-card text-sm mb-1"
         >
-          {DEAL_TEMPLATES.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.label}
-            </option>
-          ))}
+          {modelli.some((m) => m.ufficiale) && (
+            <optgroup label="Corso Fiori — modelli ufficiali">
+              {modelli
+                .filter((m) => m.ufficiale)
+                .map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.lesson_id !== null ? `Lezione ${m.lesson_id} — ` : ""}
+                    {m.nome}
+                  </option>
+                ))}
+            </optgroup>
+          )}
+          {modelli.some((m) => !m.ufficiale) && (
+            <optgroup label="I tuoi modelli e quelli condivisi">
+              {modelli
+                .filter((m) => !m.ufficiale)
+                .map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.nome}
+                  </option>
+                ))}
+            </optgroup>
+          )}
+          <optgroup label="Modelli di base">
+            {DEAL_TEMPLATES.map((t) => (
+              <option key={t.id} value={`fisso:${t.id}`}>
+                {t.label}
+              </option>
+            ))}
+          </optgroup>
         </select>
         <p className="text-xs text-muted-foreground mb-4">{template.description}</p>
+
+        {/* Il vincolo si compone qui, e si salva come modello nuovo. */}
+        <details className="mb-4 rounded-xl border border-border p-3">
+          <summary className="cursor-pointer text-sm font-semibold">
+            {t("Cambia i vincoli")}
+          </summary>
+          <div className="mt-3">
+            <CompositoreVincoli vincoli={vincoliInUso} onCambia={setVincoli} />
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+              <input
+                value={nomeModello}
+                onChange={(e) => setNomeModello(e.target.value)}
+                placeholder="Nome del modello"
+                className="h-10 flex-1 min-w-[12rem] rounded-lg border border-border bg-background px-3 text-sm"
+              />
+              <Button
+                variant="outline"
+                disabled={!nomeModello.trim()}
+                onClick={async () => {
+                  const salvato = await salvaModello({
+                    nome: nomeModello,
+                    descrizione: template.description,
+                    vincoli: vincoliInUso,
+                  });
+                  if (salvato) {
+                    setModelli(await elencaModelli());
+                    setModelloId(salvato.id);
+                    setVincoli(null);
+                    setNomeModello("");
+                    setMessaggioModello("Modello salvato: lo ritrovi nell'elenco.");
+                  } else {
+                    setMessaggioModello("Non sono riuscito a salvarlo.");
+                  }
+                }}
+              >
+                {t("Salva come modello")}
+              </Button>
+              {modelloScelto && !modelloScelto.ufficiale && modelloScelto.autore_id && (
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    await condividiModello(modelloScelto.id, !modelloScelto.condiviso);
+                    setModelli(await elencaModelli());
+                  }}
+                >
+                  {modelloScelto.condiviso ? "Non condividere" : "Condividi con gli insegnanti"}
+                </Button>
+              )}
+              {modelloScelto && (
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    const copia = await duplicaModello(modelloScelto);
+                    if (copia) {
+                      setModelli(await elencaModelli());
+                      setModelloId(copia.id);
+                      setMessaggioModello("Copiato nella tua libreria: modificalo pure.");
+                    }
+                  }}
+                >
+                  {t("Duplica")}
+                </Button>
+              )}
+            </div>
+            {messaggioModello && (
+              <p className="mt-2 text-sm text-muted-foreground">{messaggioModello}</p>
+            )}
+          </div>
+        </details>
 
         <div className="flex flex-wrap gap-4 mb-5">
           <div>
@@ -368,7 +516,7 @@ export default function GeneraManiPage() {
         </p>
 
         <div className="flex flex-wrap gap-2">
-          <Button disabled={working} onClick={() => run(template.constraints, seed)}>
+          <Button disabled={working} onClick={() => run(vincoliInUso, seed)}>
             {working ? "Genero…" : "Genera"}
           </Button>
           <Button
@@ -377,7 +525,7 @@ export default function GeneraManiPage() {
             onClick={() => {
               const next = seed + 1;
               setSeed(next);
-              run(template.constraints, next);
+              run(vincoliInUso, next);
             }}
           >
             <RefreshCw className="w-4 h-4 mr-1" aria-hidden="true" />
