@@ -17,7 +17,16 @@ import type { Smazzata } from "@/lib/catalog";
 
 export type AssignmentMode = "homework" | "live";
 export type UnlockMode = "free" | "sequential";
-export type MemberStatus = "active" | "removed";
+/**
+ * Lo stato di un'iscrizione. Vedi `class_members.status`.
+ *
+ * `rejected` e `removed` sembrano la stessa cosa e non lo sono: il primo è
+ * l'insegnante che ha detto di no, il secondo è l'allievo che se n'è andato.
+ * La differenza serve a `join_class_by_code`, che lascia rientrare il secondo
+ * e non il primo — altrimenti «respinto» durerebbe finché l'allievo non
+ * ridigita il codice.
+ */
+export type MemberStatus = "active" | "removed" | "pending" | "rejected";
 
 export interface ClassRoom {
   id: string;
@@ -27,8 +36,31 @@ export interface ClassRoom {
   description: string | null;
   invite_code: string;
   invite_active: boolean;
+  /** Vedi `classes.stato`: bozza | aperta | chiusa | archiviata. */
+  stato: StatoClasse;
+  /** Falso = ogni iscrizione resta in attesa finché l'insegnante non decide. */
+  approvazione_automatica: boolean;
+  /** Quando il codice smette di funzionare. `null` = non scade. */
+  invite_expires_at: string | null;
   created_at: string;
 }
+
+/**
+ * La vita di una classe.
+ *
+ * `chiusa` e `archiviata` non cancellano niente: sono transizioni di stato, e
+ * iscrizioni e compiti restano tutti dove sono. La differenza fra le due è
+ * solo dove compare la classe — `chiusa` sta ancora nell'elenco di lavoro,
+ * `archiviata` no.
+ */
+export type StatoClasse = "bozza" | "aperta" | "chiusa" | "archiviata";
+
+export const ETICHETTE_STATO: Record<StatoClasse, string> = {
+  bozza: "Bozza",
+  aperta: "Aperta",
+  chiusa: "Chiusa",
+  archiviata: "Archiviata",
+};
 
 export interface ClassMember {
   class_id: string;
@@ -75,6 +107,8 @@ export interface AssignmentResultRow {
 }
 
 export interface ClassDetail {
+  /** Chi ha chiesto di entrare e aspetta una risposta. Vuoto se l'approvazione è automatica. */
+  inAttesa: ClassMember[];
   classRoom: ClassRoom;
   members: ClassMember[];
   assignments: Assignment[];
@@ -145,7 +179,10 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
       .from("class_members")
       .select("class_id, student_id, status, joined_at")
       .eq("class_id", classId)
-      .eq("status", "active")
+      // `active` e `pending` insieme, in una query sola: chi è in attesa va
+      // mostrato all'insegnante, e sono le stesse righe con lo stesso profilo
+      // da risolvere: separarle vorrebbe dire due query e due giri di nomi.
+      .in("status", ["active", "pending"])
       .order("joined_at", { ascending: true }),
     supabase
       .from("assignments")
@@ -180,7 +217,7 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
     }
   }
 
-  const members: ClassMember[] = rawMembers.map((m) => ({
+  const tutti: ClassMember[] = rawMembers.map((m) => ({
     class_id: m.class_id,
     student_id: m.student_id,
     status: m.status,
@@ -191,9 +228,81 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
 
   return {
     classRoom: classRes.data as ClassRoom,
-    members,
+    members: tutti.filter((m) => m.status === "active"),
+    inAttesa: tutti.filter((m) => m.status === "pending"),
     assignments: (assignmentsRes.data ?? []) as Assignment[],
   };
+}
+
+// ----------------------------------------------------------------------------
+// Iscrizioni: approvare, respingere, e le impostazioni che le governano
+// ----------------------------------------------------------------------------
+
+/**
+ * Approva o respinge una richiesta di iscrizione.
+ *
+ * Passa dalle RLS, non da una RPC: la policy di `class_members` lascia già
+ * scrivere all'insegnante della classe, e il `with check` aggiunto in
+ * `iscrizioni-e-ciclo-classe-2026-08.sql` impedisce all'allievo di fare la
+ * stessa cosa su di sé. Una funzione in più qui non aggiungerebbe controlli,
+ * aggiungerebbe solo un posto in cui sbagliarli.
+ *
+ * `rejected` è diverso da `removed`: chi è stato respinto non rientra
+ * ridigitando il codice, chi se n'è andato da solo sì.
+ */
+export async function decidiIscrizione(
+  classId: string,
+  studentId: string,
+  decisione: "approva" | "respingi",
+): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("class_members")
+    .update({ status: decisione === "approva" ? "active" : "rejected" })
+    .eq("class_id", classId)
+    .eq("student_id", studentId);
+  if (error) throw error;
+}
+
+/** Le impostazioni della classe che riguardano chi entra e quando. */
+export async function aggiornaImpostazioniClasse(
+  classId: string,
+  campi: {
+    stato?: StatoClasse;
+    approvazione_automatica?: boolean;
+    /** ISO, oppure `null` per «non scade». */
+    invite_expires_at?: string | null;
+    invite_active?: boolean;
+  },
+): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from("classes").update(campi).eq("id", classId);
+  if (error) throw error;
+}
+
+/**
+ * Lo stato dell'iscrizione di chi guarda, per una classe.
+ *
+ * Serve subito dopo aver digitato il codice: `join_class_by_code` restituisce
+ * la classe ma non dice se si è entrati o si sta aspettando, e cambiarle il
+ * tipo di ritorno avrebbe rotto il sito nella finestra fra l'esecuzione dello
+ * script SQL e il deploy.
+ */
+export async function statoMiaIscrizione(classId: string): Promise<MemberStatus | null> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from("class_members")
+    .select("status")
+    .eq("class_id", classId)
+    .eq("student_id", user.id)
+    .maybeSingle();
+  if (error) throw error;
+  return (data?.status as MemberStatus | undefined) ?? null;
 }
 
 /** Generate a fresh invite code for a class (e.g. the old one leaked). */

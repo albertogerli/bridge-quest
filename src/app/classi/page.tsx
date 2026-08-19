@@ -12,7 +12,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useEnrolledClasses } from "@/store/use-classes-store";
-import { joinClass } from "@/lib/instructors";
+import { joinClass, statoMiaIscrizione } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ClassiPage() {
@@ -22,17 +22,25 @@ export default function ClassiPage() {
   const [code, setCode] = useState("");
   const [joining, setJoining] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
-  const [joinedName, setJoinedName] = useState<string | null>(null);
+  /**
+   * Il nome della classe e come è andata: entrato, oppure in attesa.
+   *
+   * `join_class_by_code` restituisce la classe ma non dice quale dei due —
+   * cambiarle il tipo di ritorno avrebbe rotto il sito nella finestra fra
+   * l'esecuzione dello script SQL e il deploy. Lo stato si legge subito dopo
+   * dalla propria riga, che le RLS lasciano vedere in entrambi i casi.
+   */
+  const [esito, setEsito] = useState<{ nome: string; inAttesa: boolean } | null>(null);
 
   async function handleJoin() {
     const trimmed = code.trim();
     if (trimmed.length < 6) return;
     setJoining(true);
     setJoinError(null);
-    setJoinedName(null);
+    setEsito(null);
     try {
       const c = await joinClass(trimmed);
-      setJoinedName(c.name);
+      setEsito({ nome: c.name, inAttesa: (await statoMiaIscrizione(c.id)) === "pending" });
       setCode("");
       await refresh();
     } catch (err) {
@@ -82,8 +90,12 @@ export default function ClassiPage() {
             </Button>
           </div>
           {joinError && <p className="mt-2 text-sm text-destructive">{joinError}</p>}
-          {joinedName && (
-            <p className="mt-2 text-sm text-primary">Iscritto a “{joinedName}” ✓</p>
+          {esito && (
+            <p className={`mt-2 text-sm ${esito.inAttesa ? "text-muted-foreground" : "text-primary"}`}>
+              {esito.inAttesa
+                ? `Richiesta inviata a “${esito.nome}”. L'insegnante deve approvarla: la classe comparirà qui sotto quando lo fa.`
+                : `Iscritto a “${esito.nome}” ✓`}
+            </p>
           )}
         </CardContent>
       </Card>

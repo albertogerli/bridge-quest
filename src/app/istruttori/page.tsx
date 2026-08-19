@@ -22,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMyClasses } from "@/store/use-classes-store";
+import { ETICHETTE_STATO } from "@/lib/instructors";
 import { createClass } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
@@ -31,6 +32,16 @@ export default function IstruttoriPage() {
   const t = useT();
   const { profile } = useSharedAuth();
   const { classes, isLoading, isLoaded, error, refresh } = useMyClasses();
+  /**
+   * Le archiviate scendono in fondo, in una sezione a parte.
+   *
+   * Non spariscono: archiviare è una transizione di stato, non una
+   * cancellazione, e i corsi finiti sono la memoria dell'insegnante. Ma
+   * nemmeno restano mescolate a quelle di quest'anno, o dopo tre stagioni
+   * l'elenco non si legge più.
+   */
+  const attive = classes.filter((c) => c.stato !== "archiviata");
+  const archiviate = classes.filter((c) => c.stato === "archiviata");
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState("");
@@ -127,7 +138,7 @@ export default function IstruttoriPage() {
 
       {/* Class grid */}
       <div className="grid gap-4 sm:grid-cols-2">
-        {classes.map((c, i) => (
+        {attive.map((c, i) => (
           <motion.div
             key={c.id}
             initial={{ opacity: 0, y: 8 }}
@@ -139,10 +150,16 @@ export default function IstruttoriPage() {
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="font-display text-xl">{c.name}</CardTitle>
-                    {!c.invite_active && (
-                      <Badge variant="outline" className="shrink-0">
-                        {t("Iscrizioni chiuse")}
+                    {c.stato !== "aperta" ? (
+                      <Badge variant="secondary" className="shrink-0">
+                        {ETICHETTE_STATO[c.stato]}
                       </Badge>
+                    ) : (
+                      !c.invite_active && (
+                        <Badge variant="outline" className="shrink-0">
+                          {t("Iscrizioni chiuse")}
+                        </Badge>
+                      )
                     )}
                   </div>
                   {c.description && (
@@ -160,6 +177,28 @@ export default function IstruttoriPage() {
           </motion.div>
         ))}
       </div>
+
+      {archiviate.length > 0 && (
+        <div className="mt-10">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            {t("Archiviate")} ({archiviate.length})
+          </h2>
+          <div className="divide-y divide-border rounded-lg border border-border">
+            {archiviate.map((c) => (
+              <Link
+                key={c.id}
+                href={`/istruttori/${c.id}`}
+                className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-muted/50"
+              >
+                <span className="font-medium">{c.name}</span>
+                <span className="ml-auto font-mono text-xs tracking-widest text-muted-foreground">
+                  {c.invite_code}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Create dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
