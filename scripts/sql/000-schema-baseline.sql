@@ -76,7 +76,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   live_active_index integer,
   created_at timestamp with time zone NOT NULL,
   custom_hands jsonb,
-  soluzioni text NOT NULL
+  soluzioni text NOT NULL,
+  lesson_id integer
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -908,6 +909,51 @@ AS $function$
     )
   END;
 $function$
+;
+
+CREATE OR REPLACE FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text DEFAULT 'dopo-il-gioco'::text, p_due_date timestamp with time zone DEFAULT NULL::timestamp with time zone)
+ RETURNS assignments
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  esito assignments;
+  mani text[];
+  titolo text;
+begin
+  if not is_instructor_of_class(p_class_id) then
+    raise exception 'not authorized for class %', p_class_id using errcode = '42501';
+  end if;
+
+  select array_agg(s.id order by s.board) into mani
+  from smazzate s where s.lesson_id = p_lesson_id;
+
+  if mani is null or array_length(mani, 1) = 0 then
+    raise exception 'lesson % has no hands', p_lesson_id using errcode = 'P0002';
+  end if;
+
+  select l.title into titolo from lessons l where l.id = p_lesson_id;
+
+  insert into assignments (class_id, title, smazzata_ids, lesson_id, soluzioni, due_date)
+  values (
+    p_class_id,
+    coalesce(titolo, 'Lezione ' || p_lesson_id),
+    mani,
+    p_lesson_id,
+    p_soluzioni,
+    p_due_date
+  )
+  on conflict (class_id, lesson_id) where lesson_id is not null do nothing
+  returning * into esito;
+
+  if esito.id is null then
+    select * into esito from assignments
+    where class_id = p_class_id and lesson_id = p_lesson_id;
+  end if;
+
+  return esito;
+end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.bidding_session_bid(p_id uuid, p_bid text)
@@ -2919,6 +2965,46 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.stato_compiti_classe(p_class_id uuid)
+ RETURNS TABLE(assignment_id uuid, lesson_id integer, title text, n_mani integer, n_allievi integer, n_completi integer)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  with allievi as (
+    select m.student_id
+    from class_members m
+    where m.class_id = p_class_id and m.status = 'active'
+  ),
+  per_allievo as (
+    select a.id as aid,
+           al.student_id,
+           count(distinct gr.details->>'smazzata_id')
+             filter (where gr.details->>'smazzata_id' = any (a.smazzata_ids)) as fatte
+    from assignments a
+    cross join allievi al
+    left join game_results gr
+      on gr.assignment_id = a.id and gr.user_id = al.student_id
+    where a.class_id = p_class_id
+    group by a.id, al.student_id
+  )
+  select a.id,
+         a.lesson_id,
+         a.title,
+         coalesce(array_length(a.smazzata_ids, 1), 0)::integer,
+         (select count(*) from allievi)::integer,
+         count(*) filter (
+           where pa.fatte >= coalesce(array_length(a.smazzata_ids, 1), 0)
+         )::integer
+  from assignments a
+  left join per_allievo pa on pa.aid = a.id
+  where a.class_id = p_class_id
+    and is_instructor_of_class(p_class_id)
+  group by a.id, a.lesson_id, a.title, a.smazzata_ids
+  order by a.created_at desc;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.sync_asd_name()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -3339,6 +3425,7 @@ ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_difficulty_check CHECK ((difficulty = ANY (ARRAY['facile'::text, 'medio'::text, 'difficile'::text])));
 ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_xp_multiplier_check CHECK ((xp_multiplier > (0)::double precision));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.assignments ADD CONSTRAINT assignments_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.badges ADD CONSTRAINT badges_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.bbo_username_cleanup_2026_08 ADD CONSTRAINT bbo_username_cleanup_2026_08_profile_id_fkey FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_north_id_fkey FOREIGN KEY (north_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -3409,6 +3496,7 @@ CREATE INDEX asd_clubs_active_idx ON public.asd_clubs USING btree (active);
 CREATE INDEX asd_clubs_name_idx ON public.asd_clubs USING btree (name);
 CREATE INDEX asd_clubs_province_idx ON public.asd_clubs USING btree (province) WHERE (province <> ''::text);
 CREATE INDEX asd_clubs_region_idx ON public.asd_clubs USING btree (region) WHERE (region <> ''::text);
+CREATE UNIQUE INDEX assignments_una_lezione_per_classe ON public.assignments USING btree (class_id, lesson_id) WHERE (lesson_id IS NOT NULL);
 CREATE INDEX bidding_sessions_north_idx ON public.bidding_sessions USING btree (north_id, created_at DESC);
 CREATE INDEX bidding_sessions_players_idx ON public.bidding_sessions USING btree (south_id, created_at DESC);
 CREATE INDEX club_posts_asd_idx ON public.club_posts USING btree (asd_code, created_at DESC);
@@ -4698,6 +4786,10 @@ GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
 REVOKE ALL ON FUNCTION public.amico_da_codice(p_codice text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.amico_da_codice(p_codice text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.amico_da_codice(p_codice text) TO service_role;
+REVOKE ALL ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO anon;
+GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO service_role;
@@ -4877,6 +4969,10 @@ REVOKE ALL ON FUNCTION public.smazzate_commenti(p_ids text[]) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.smazzate_commenti(p_ids text[]) TO anon;
 GRANT EXECUTE ON FUNCTION public.smazzate_commenti(p_ids text[]) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.smazzate_commenti(p_ids text[]) TO service_role;
+REVOKE ALL ON FUNCTION public.stato_compiti_classe(p_class_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.stato_compiti_classe(p_class_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.stato_compiti_classe(p_class_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.stato_compiti_classe(p_class_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.sync_asd_name() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO anon;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO authenticated;
