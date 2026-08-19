@@ -15,6 +15,7 @@ import {
   type LiveTable,
 } from "@/lib/live-table";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
+import { SondaggioAllievo } from "@/components/sondaggio-allievo";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -147,6 +148,13 @@ export default function TavoloAllievoPage({
           </p>
         )}
       </header>
+
+      {/*
+        Il sondaggio sta QUI e non solo nella pagina della classe: durante la
+        lezione l'allievo è al tavolo, e una domanda che compare da un'altra
+        parte è una domanda a cui non risponde nessuno.
+      */}
+      <SondaggioAllievo classId={classId} />
 
       {stato?.contract && (
         <p className="text-center text-lg font-bold text-figb mb-4">
