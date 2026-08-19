@@ -214,6 +214,30 @@ export default function CompitoPage({
       )}
 
       {/* Hands list */}
+      {assignment.esercizio_ids.length > 0 && (
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-semibold">{t("Posizioni da risolvere")}</p>
+          <div className="space-y-2">
+            {assignment.esercizio_ids.map((id, i) => (
+              <Link
+                key={id}
+                href={`/classi/${classId}/esercizio/${id}?compito=${assignmentId}`}
+                className={`flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/50 ${
+                  doneIds.has(id) ? "border-emerald-200 dark:border-emerald-900" : "border-border"
+                }`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-sm font-bold">
+                  {doneIds.has(id) ? "✓" : i + 1}
+                </span>
+                <span className="text-sm font-medium">
+                  {doneIds.has(id) ? "Risolta — rivedila" : "Cosa faresti qui?"}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3">
         {hands.map((hand, i) => {
           const r = results.get(hand.id);

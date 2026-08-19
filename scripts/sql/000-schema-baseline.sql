@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   custom_hands jsonb,
   soluzioni text NOT NULL,
   lesson_id integer,
-  minibridge boolean NOT NULL
+  minibridge boolean NOT NULL,
+  esercizio_ids uuid[] NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -230,6 +231,27 @@ CREATE TABLE IF NOT EXISTS public.email_events (
   email_type text NOT NULL,
   sent_at timestamp with time zone NOT NULL,
   meta jsonb
+);
+
+CREATE TABLE IF NOT EXISTS public.esercizi_posizione (
+  id uuid NOT NULL,
+  autore_id uuid,
+  titolo text NOT NULL,
+  consegna text NOT NULL,
+  domanda text,
+  hands jsonb NOT NULL,
+  dealer text NOT NULL,
+  vulnerability text NOT NULL,
+  bids text[] NOT NULL,
+  played jsonb NOT NULL,
+  posizione text NOT NULL,
+  contract text,
+  declarer text,
+  risposte text[] NOT NULL,
+  soluzione text,
+  gruppo text,
+  class_id uuid,
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.eserciziario_exercises (
@@ -3270,6 +3292,7 @@ ALTER TABLE public.assignments ALTER COLUMN unlock_mode SET DEFAULT 'free'::text
 ALTER TABLE public.assignments ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.assignments ALTER COLUMN soluzioni SET DEFAULT 'dopo-il-gioco'::text;
 ALTER TABLE public.assignments ALTER COLUMN minibridge SET DEFAULT false;
+ALTER TABLE public.assignments ALTER COLUMN esercizio_ids SET DEFAULT '{}'::uuid[];
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
 ALTER TABLE public.badges ALTER COLUMN earned_at SET DEFAULT now();
 ALTER TABLE public.bbo_username_cleanup_2026_08 ALTER COLUMN cleared_at SET DEFAULT now();
@@ -3309,6 +3332,14 @@ ALTER TABLE public.course_worlds ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.courses ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.courses ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.email_events ALTER COLUMN sent_at SET DEFAULT now();
+ALTER TABLE public.esercizi_posizione ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.esercizi_posizione ALTER COLUMN dealer SET DEFAULT 'south'::text;
+ALTER TABLE public.esercizi_posizione ALTER COLUMN vulnerability SET DEFAULT 'none'::text;
+ALTER TABLE public.esercizi_posizione ALTER COLUMN bids SET DEFAULT '{}'::text[];
+ALTER TABLE public.esercizi_posizione ALTER COLUMN played SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.esercizi_posizione ALTER COLUMN posizione SET DEFAULT 'south'::text;
+ALTER TABLE public.esercizi_posizione ALTER COLUMN risposte SET DEFAULT '{}'::text[];
+ALTER TABLE public.esercizi_posizione ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN content SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN updated_at SET DEFAULT now();
@@ -3436,6 +3467,7 @@ ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_pkey PRIMA
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_pkey PRIMARY KEY (id);
 ALTER TABLE public.courses ADD CONSTRAINT courses_pkey PRIMARY KEY (id);
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_pkey PRIMARY KEY (id);
+ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_pkey PRIMARY KEY (id);
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_pkey PRIMARY KEY (id);
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_pkey PRIMARY KEY (id);
 ALTER TABLE public.forum_likes ADD CONSTRAINT forum_likes_pkey PRIMARY KEY (id);
@@ -3507,6 +3539,7 @@ ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_category_c
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_rarity_check CHECK ((rarity = ANY (ARRAY['comune'::text, 'rara'::text, 'epica'::text, 'leggendaria'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_unlock_check CHECK ((jsonb_typeof(unlock) = 'object'::text));
 ALTER TABLE public.courses ADD CONSTRAINT courses_level_check CHECK ((level = ANY (ARRAY['base'::text, 'intermedio'::text, 'avanzato'::text])));
+ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna_check CHECK ((consegna = ANY (ARRAY['dichiara'::text, 'carta'::text, 'piano'::text])));
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
 ALTER TABLE public.forum_posts ADD CONSTRAINT forum_posts_category_check CHECK ((category = ANY (ARRAY['lezioni'::text, 'strategia'::text, 'tornei'::text, 'generale'::text, 'off-topic'::text])));
 ALTER TABLE public.friendships ADD CONSTRAINT friendships_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])));
@@ -3570,6 +3603,8 @@ ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a2_fkey FO
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_course_id_fkey FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE;
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE SET NULL;
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES forum_comments(id) ON DELETE CASCADE;
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE;
@@ -3649,6 +3684,9 @@ CREATE INDEX idx_class_messages_class ON public.class_messages USING btree (clas
 CREATE INDEX idx_classes_instructor ON public.classes USING btree (instructor_id);
 CREATE INDEX idx_classes_invite_code ON public.classes USING btree (invite_code);
 CREATE INDEX idx_email_events_user_type ON public.email_events USING btree (user_id, email_type, sent_at DESC);
+CREATE INDEX idx_esercizi_autore ON public.esercizi_posizione USING btree (autore_id, created_at DESC);
+CREATE INDEX idx_esercizi_classe ON public.esercizi_posizione USING btree (class_id) WHERE (class_id IS NOT NULL);
+CREATE INDEX idx_esercizi_gruppo ON public.esercizi_posizione USING btree (autore_id, gruppo) WHERE (gruppo IS NOT NULL);
 CREATE INDEX idx_forum_comments_parent_id ON public.forum_comments USING btree (parent_id);
 CREATE INDEX idx_friendships_friend_id ON public.friendships USING btree (friend_id);
 CREATE INDEX idx_friendships_status ON public.friendships USING btree (status);
@@ -3731,6 +3769,7 @@ ALTER TABLE public.completed_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_worlds ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.email_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.esercizi_posizione ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.eserciziario_exercises ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.forum_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.forum_likes ENABLE ROW LEVEL SECURITY;
@@ -3801,6 +3840,14 @@ CREATE POLICY "Own modules" ON public.completed_modules AS PERMISSIVE FOR ALL TO
 CREATE POLICY course_worlds_public_read ON public.course_worlds AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY courses_public_read ON public.courses AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Users read own email events" ON public.email_events AS PERMISSIVE FOR SELECT TO authenticated USING ((user_id = auth.uid()));
+CREATE POLICY "Autore e classe leggono l'esercizio" ON public.esercizi_posizione AS PERMISSIVE FOR SELECT TO authenticated USING (((autore_id = auth.uid()) OR ((class_id IS NOT NULL) AND (is_member_of_class(class_id) OR is_instructor_of_class(class_id))) OR (EXISTS ( SELECT 1
+   FROM assignments a
+  WHERE ((esercizi_posizione.id = ANY (a.esercizio_ids)) AND (is_member_of_class(a.class_id) OR is_instructor_of_class(a.class_id)))))));
+CREATE POLICY "Chi insegna crea esercizi" ON public.esercizi_posizione AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
+CREATE POLICY "L'autore cancella i suoi esercizi" ON public.esercizi_posizione AS PERMISSIVE FOR DELETE TO authenticated USING ((autore_id = auth.uid()));
+CREATE POLICY "L'autore modifica i suoi esercizi" ON public.esercizi_posizione AS PERMISSIVE FOR UPDATE TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
 CREATE POLICY eserciziario_public_read ON public.eserciziario_exercises AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Comments delete own" ON public.forum_comments AS PERMISSIVE FOR DELETE TO public USING ((auth.uid() = user_id));
 CREATE POLICY "Comments insert" ON public.forum_comments AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = user_id));
@@ -3934,6 +3981,9 @@ GRANT DELETE ON public.courses TO service_role;
 GRANT DELETE ON public.email_events TO anon;
 GRANT DELETE ON public.email_events TO authenticated;
 GRANT DELETE ON public.email_events TO service_role;
+GRANT DELETE ON public.esercizi_posizione TO anon;
+GRANT DELETE ON public.esercizi_posizione TO authenticated;
+GRANT DELETE ON public.esercizi_posizione TO service_role;
 GRANT DELETE ON public.eserciziario_exercises TO anon;
 GRANT DELETE ON public.eserciziario_exercises TO authenticated;
 GRANT DELETE ON public.eserciziario_exercises TO service_role;
@@ -4087,6 +4137,9 @@ GRANT INSERT ON public.courses TO service_role;
 GRANT INSERT ON public.email_events TO anon;
 GRANT INSERT ON public.email_events TO authenticated;
 GRANT INSERT ON public.email_events TO service_role;
+GRANT INSERT ON public.esercizi_posizione TO anon;
+GRANT INSERT ON public.esercizi_posizione TO authenticated;
+GRANT INSERT ON public.esercizi_posizione TO service_role;
 GRANT INSERT ON public.eserciziario_exercises TO anon;
 GRANT INSERT ON public.eserciziario_exercises TO authenticated;
 GRANT INSERT ON public.eserciziario_exercises TO service_role;
@@ -4240,6 +4293,9 @@ GRANT REFERENCES ON public.courses TO service_role;
 GRANT REFERENCES ON public.email_events TO anon;
 GRANT REFERENCES ON public.email_events TO authenticated;
 GRANT REFERENCES ON public.email_events TO service_role;
+GRANT REFERENCES ON public.esercizi_posizione TO anon;
+GRANT REFERENCES ON public.esercizi_posizione TO authenticated;
+GRANT REFERENCES ON public.esercizi_posizione TO service_role;
 GRANT REFERENCES ON public.eserciziario_exercises TO anon;
 GRANT REFERENCES ON public.eserciziario_exercises TO authenticated;
 GRANT REFERENCES ON public.eserciziario_exercises TO service_role;
@@ -4393,6 +4449,9 @@ GRANT SELECT ON public.courses TO service_role;
 GRANT SELECT ON public.email_events TO anon;
 GRANT SELECT ON public.email_events TO authenticated;
 GRANT SELECT ON public.email_events TO service_role;
+GRANT SELECT ON public.esercizi_posizione TO anon;
+GRANT SELECT ON public.esercizi_posizione TO authenticated;
+GRANT SELECT ON public.esercizi_posizione TO service_role;
 GRANT SELECT ON public.eserciziario_exercises TO anon;
 GRANT SELECT ON public.eserciziario_exercises TO authenticated;
 GRANT SELECT ON public.eserciziario_exercises TO service_role;
@@ -4543,6 +4602,9 @@ GRANT TRIGGER ON public.courses TO service_role;
 GRANT TRIGGER ON public.email_events TO anon;
 GRANT TRIGGER ON public.email_events TO authenticated;
 GRANT TRIGGER ON public.email_events TO service_role;
+GRANT TRIGGER ON public.esercizi_posizione TO anon;
+GRANT TRIGGER ON public.esercizi_posizione TO authenticated;
+GRANT TRIGGER ON public.esercizi_posizione TO service_role;
 GRANT TRIGGER ON public.eserciziario_exercises TO anon;
 GRANT TRIGGER ON public.eserciziario_exercises TO authenticated;
 GRANT TRIGGER ON public.eserciziario_exercises TO service_role;
@@ -4696,6 +4758,9 @@ GRANT TRUNCATE ON public.courses TO service_role;
 GRANT TRUNCATE ON public.email_events TO anon;
 GRANT TRUNCATE ON public.email_events TO authenticated;
 GRANT TRUNCATE ON public.email_events TO service_role;
+GRANT TRUNCATE ON public.esercizi_posizione TO anon;
+GRANT TRUNCATE ON public.esercizi_posizione TO authenticated;
+GRANT TRUNCATE ON public.esercizi_posizione TO service_role;
 GRANT TRUNCATE ON public.eserciziario_exercises TO anon;
 GRANT TRUNCATE ON public.eserciziario_exercises TO authenticated;
 GRANT TRUNCATE ON public.eserciziario_exercises TO service_role;
@@ -4849,6 +4914,9 @@ GRANT UPDATE ON public.courses TO service_role;
 GRANT UPDATE ON public.email_events TO anon;
 GRANT UPDATE ON public.email_events TO authenticated;
 GRANT UPDATE ON public.email_events TO service_role;
+GRANT UPDATE ON public.esercizi_posizione TO anon;
+GRANT UPDATE ON public.esercizi_posizione TO authenticated;
+GRANT UPDATE ON public.esercizi_posizione TO service_role;
 GRANT UPDATE ON public.eserciziario_exercises TO anon;
 GRANT UPDATE ON public.eserciziario_exercises TO authenticated;
 GRANT UPDATE ON public.eserciziario_exercises TO service_role;

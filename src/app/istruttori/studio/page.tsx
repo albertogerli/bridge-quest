@@ -12,6 +12,8 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { createGame, getValidCards, parseContract, playCard, type GameState } from "@/lib/bridge-engine";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
+import { SalvaEsercizio } from "@/components/istruttori/salva-esercizio";
+import { giocateInOrdine } from "@/lib/esercizi-posizione";
 import { DEAL_TEMPLATES, generateDeals } from "@/lib/deal-generator";
 import { calcTableAndPar, cardOptions, type OpzioneCarta } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
@@ -285,6 +287,17 @@ function Studio() {
         <Button variant={minibridge ? "default" : "outline"} onClick={() => setMinibridge((v) => !v)}>
           {t("Minibridge")}
         </Button>
+        {/*
+          Qui la posizione conta più che altrove: il tavolo di studio serve a
+          fermarsi su una carta e ragionarci, e quel momento è già l'esercizio.
+          Si salva com'è, carte giocate comprese.
+        */}
+        <SalvaEsercizio
+          hands={deal}
+          played={stato ? giocateInOrdine(stato) : []}
+          contract={contratto?.contract ?? null}
+          declarer={contratto?.declarer ?? null}
+        />
         <Button variant="outline" onClick={indietro} disabled={storia.length === 0}>
           <Undo2 className="w-4 h-4 mr-1" aria-hidden="true" />
           {t("Indietro")}

@@ -96,6 +96,8 @@ export interface Assignment {
    * mettere davanti all'allievo una cassetta che non gli è stata spiegata.
    */
   minibridge: boolean;
+  /** Esercizi di posizione assegnati insieme alle smazzate. */
+  esercizio_ids: string[];
   live_active_index: number | null;
   created_at: string;
   /** Hands imported from PBN, referenced by ids in smazzata_ids (pbn_import.sql) */
@@ -411,6 +413,7 @@ export async function createAssignment(input: {
   unlockMode?: UnlockMode;
   soluzioni?: VisibilitaSoluzioni;
   minibridge?: boolean;
+  esercizioIds?: string[];
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
 }): Promise<Assignment> {
@@ -428,6 +431,7 @@ export async function createAssignment(input: {
     // creazione vale più di un default nascosto in una colonna.
     soluzioni: input.soluzioni ?? "dopo-il-gioco",
     minibridge: input.minibridge ?? false,
+    esercizio_ids: input.esercizioIds ?? [],
   };
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {
