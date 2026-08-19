@@ -94,8 +94,22 @@ export default function ProiezionePage() {
   const ordine: Position[] = ["north", "west", "east", "south"];
   const presenti = ordine.filter((p) => stato.posizioni.includes(p));
 
+  /**
+   * In condivisione schermo cambia la MISURA, non il contenuto.
+   *
+   * La compressione video butta via per prime le differenze sottili: bordi
+   * tenui, grigi vicini fra loro, spaziature strette. Su un proiettore quella
+   * roba si legge, dentro un flusso Zoom diventa una macchia. Qui il fondo va
+   * nero pieno, i bordi spariscono e le carte crescono ancora.
+   */
+  const condivisa = stato.finestraCondivisa;
+
   return (
-    <div className="relative min-h-screen bg-[#0f1219] px-8 py-6 text-white">
+    <div
+      className={`relative min-h-screen text-white ${
+        condivisa ? "bg-black px-12 py-8" : "bg-[#0f1219] px-8 py-6"
+      }`}
+    >
       {!vivo && (
         <span
           className="absolute right-4 top-4 flex items-center gap-2 text-sm text-amber-300/70"
@@ -110,11 +124,11 @@ export default function ProiezionePage() {
         <h1 className="mb-6 text-center text-3xl font-bold tracking-tight">{stato.titolo}</h1>
       )}
 
-      <div className="mx-auto grid max-w-6xl grid-cols-3 gap-6">
+      <div className={`mx-auto grid grid-cols-3 ${condivisa ? "max-w-5xl gap-10" : "max-w-6xl gap-6"}`}>
         <div />
-        <ManoProiettata posizione="north" carte={stato.mani.north} presente={presenti.includes("north")} />
+        <ManoProiettata posizione="north" carte={stato.mani.north} presente={presenti.includes("north")} condivisa={condivisa} />
         <div />
-        <ManoProiettata posizione="west" carte={stato.mani.west} presente={presenti.includes("west")} />
+        <ManoProiettata posizione="west" carte={stato.mani.west} presente={presenti.includes("west")} condivisa={condivisa} />
         <div className="flex flex-col items-center justify-center gap-4">
           {stato.contratto && (
             <p className="text-center text-4xl font-bold">
@@ -137,9 +151,9 @@ export default function ProiezionePage() {
             </p>
           )}
         </div>
-        <ManoProiettata posizione="east" carte={stato.mani.east} presente={presenti.includes("east")} />
+        <ManoProiettata posizione="east" carte={stato.mani.east} presente={presenti.includes("east")} condivisa={condivisa} />
         <div />
-        <ManoProiettata posizione="south" carte={stato.mani.south} presente={presenti.includes("south")} />
+        <ManoProiettata posizione="south" carte={stato.mani.south} presente={presenti.includes("south")} condivisa={condivisa} />
         <div />
       </div>
 
@@ -174,15 +188,23 @@ function ManoProiettata({
   posizione,
   carte,
   presente,
+  condivisa = false,
 }: {
   posizione: Position;
   carte: Card[] | undefined;
   presente: boolean;
+  condivisa?: boolean;
 }) {
   if (!presente) return <div />;
 
   return (
-    <div className="rounded-2xl border border-white/15 bg-white/5 p-5">
+    <div
+      className={
+        condivisa
+          ? "rounded-2xl bg-neutral-900 p-6"
+          : "rounded-2xl border border-white/15 bg-white/5 p-5"
+      }
+    >
       <p className="mb-3 text-center text-lg font-bold uppercase tracking-[0.2em] text-white/50">
         {NOME[posizione]}
       </p>
@@ -198,7 +220,7 @@ function ManoProiettata({
             return (
               <p key={seme} className="flex items-center gap-3">
                 <SuitSymbol suit={seme} size="xl" />
-                <span className="font-mono text-5xl font-bold tracking-wider">
+                <span className={`font-mono font-bold tracking-wider ${condivisa ? "text-6xl" : "text-5xl"}`}>
                   {ranghi.length > 0 ? ranghi.join(" ") : "—"}
                 </span>
               </p>

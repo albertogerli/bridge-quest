@@ -45,3 +45,22 @@ describe("i messaggi WhatsApp", () => {
     expect(promemoriaScadenzaWhatsApp("T", "c", "a", 4)).toContain("fra 4 giorni");
   });
 });
+
+describe("il link della videoconferenza nel messaggio", () => {
+  /**
+   * Va nello stesso messaggio del compito e non in uno separato: chi lo incolla
+   * a mano in chat prima di ogni lezione lo fa perché non c'è, e due messaggi
+   * nel gruppo diventano due cose da cercare.
+   */
+  it("c'è quando la classe ne ha una", () => {
+    const m = compitoAssegnatoWhatsApp("T", "c1", "a1", 4, "https://meet.example/abc");
+    expect(m).toContain("https://meet.example/abc");
+    expect(m).toContain("/classi/c1/compito/a1");
+  });
+
+  it("non lascia una riga vuota quando non c'è", () => {
+    const m = compitoAssegnatoWhatsApp("T", "c1", "a1", 4);
+    expect(m).not.toContain("Ci vediamo qui");
+    expect(m).not.toMatch(/\n\n\n/);
+  });
+});

@@ -44,6 +44,16 @@ export interface ImpostazioniProiezione {
   mostraGiocate: boolean;
   mostraDoppioMorto: boolean;
   mostraDivisioni: boolean;
+  /**
+   * Layout per la condivisione schermo di Zoom o Meet.
+   *
+   * NON È «UGUALE MA PIÙ PICCOLO». La compressione video mangia i dettagli
+   * sottili e i contrasti bassi: quello che su un proiettore si legge, dentro
+   * un flusso a 1 Mbit diventa una macchia. Qui si allarga la spaziatura, si
+   * alza il contrasto e si tolgono i bordi tenui, che sono la prima cosa che
+   * il codificatore butta via.
+   */
+  finestraCondivisa: boolean;
 }
 
 export const IMPOSTAZIONI_INIZIALI: ImpostazioniProiezione = {
@@ -52,6 +62,7 @@ export const IMPOSTAZIONI_INIZIALI: ImpostazioniProiezione = {
   mostraGiocate: true,
   mostraDoppioMorto: false,
   mostraDivisioni: false,
+  finestraCondivisa: false,
 };
 
 /** Lo stato che viaggia verso la finestra proiettata. Solo il visibile. */
@@ -68,6 +79,7 @@ export interface StatoProiezione {
   /** Prese a carte scoperte, se l'insegnante ha acceso l'analisi. */
   doppioMorto: string | null;
   mostraDivisioni: boolean;
+  finestraCondivisa: boolean;
   /** Per far capire alla finestra proiettata se il comando è ancora vivo. */
   battito: number;
 }
@@ -114,6 +126,7 @@ export function costruisciStato(params: {
     dichiarante: imp.mostraDichiarazione ? (params.dichiarante ?? null) : null,
     doppioMorto: imp.mostraDoppioMorto ? (params.doppioMorto ?? null) : null,
     mostraDivisioni: imp.mostraDivisioni,
+    finestraCondivisa: imp.finestraCondivisa,
     battito: params.battito ?? 0,
   };
 }

@@ -20,6 +20,7 @@ import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getOpenLiveTable } from "@/lib/live-table";
+import { Video } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function StudentClassPage({
@@ -105,6 +106,26 @@ export default function StudentClassPage({
       <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {classRoom?.name ?? "Classe"}
       </h1>
+
+      {classRoom?.link_video && (
+        <a
+          href={classRoom.link_video}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-4 flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50"
+        >
+          <Video className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <span className="min-w-0">
+            <span className="block text-sm font-bold text-foreground">
+              {t("Entra in videoconferenza")}
+            </span>
+            <span className="block text-xs text-muted-foreground">
+              {t("La stanza del corso, quella di sempre.")}
+            </span>
+          </span>
+          <span className="ml-auto shrink-0 text-sm font-semibold text-primary">→</span>
+        </a>
+      )}
 
       {tavoloAperto && (
         <Link

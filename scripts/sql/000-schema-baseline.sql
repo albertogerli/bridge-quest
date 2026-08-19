@@ -79,7 +79,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   soluzioni text NOT NULL,
   lesson_id integer,
   minibridge boolean NOT NULL,
-  esercizio_ids uuid[] NOT NULL
+  esercizio_ids uuid[] NOT NULL,
+  link_video text
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -151,7 +152,8 @@ CREATE TABLE IF NOT EXISTS public.classes (
   approvazione_automatica boolean NOT NULL,
   invite_expires_at timestamp with time zone,
   stato text NOT NULL,
-  risultati_nominativi boolean NOT NULL
+  risultati_nominativi boolean NOT NULL,
+  link_video text
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
