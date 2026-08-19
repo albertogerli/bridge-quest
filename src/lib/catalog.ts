@@ -299,8 +299,8 @@ async function loadCatalog(lingua: Lingua = "it"): Promise<Course[]> {
     const lessons = worlds.flatMap((w) => w.lessons);
     return {
       id: c.id as CourseId,
-      name: c.name,
-      subtitle: c.subtitle ?? "",
+      name: inLingua(c.name, c.name_en, lingua),
+      subtitle: inLingua(c.subtitle, c.subtitle_en, lingua) ?? "",
       icon: c.icon ?? "",
       color: c.color ?? "",
       gradient: c.gradient ?? "",
