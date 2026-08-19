@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -16,10 +17,26 @@ import { joinClass, statoMiaIscrizione } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ClassiPage() {
+  return (
+    <Suspense fallback={null}>
+      <ClassiContent />
+    </Suspense>
+  );
+}
+
+function ClassiContent() {
   const t = useT();
+  /**
+   * `?codice=` arriva dal QR della locandina appesa in bacheca. Riempie il
+   * campo, NON iscrive: inquadrare un cartello non è un consenso a entrare da
+   * qualche parte, e chi legge deve vedere in quale classe sta entrando prima
+   * di premere.
+   */
+  const searchParams = useSearchParams();
+  const codiceDalQr = searchParams.get("codice");
   const { classes, isLoading, isLoaded, error, refresh } = useEnrolledClasses();
 
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(codiceDalQr?.trim().toUpperCase().slice(0, 6) ?? "");
   const [joining, setJoining] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
   /**
