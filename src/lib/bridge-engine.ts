@@ -293,8 +293,16 @@ export function playCard(state: GameState, position: Position, card: Card): Game
 
     const newTricks = [...state.tricks, completedTrick];
 
-    // Check if game is over (13 tricks)
-    if (newTricks.length === 13) {
+    /**
+     * La mano finisce quando le carte finiscono, non alla tredicesima presa.
+     *
+     * Per una smazzata intera è la stessa cosa — dopo tredici prese le mani
+     * sono vuote — ma non per una POSIZIONE PARZIALE, dove si danno tre o
+     * quattro carte a testa per far vedere una combinazione. Con il conto fisso
+     * a tredici quelle posizioni non finivano mai: si giocava l'ultima carta e
+     * il tavolo restava lì, in attesa di una presa che non poteva arrivare.
+     */
+    if (Object.values(newHands).every((h) => h.length === 0)) {
       return {
         ...state,
         hands: newHands,
