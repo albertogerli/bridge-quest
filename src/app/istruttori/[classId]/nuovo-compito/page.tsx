@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, use } from "react";
+import { useMemo, useRef, useState, use, useEffect } from "react";
 import { Briciole } from "@/components/briciole";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
 import { useCatalog } from "@/store/use-catalog-store";
 import { type VisibilitaSoluzioni, createAssignment } from "@/lib/instructors";
+import {
+  ETICHETTE_CONSEGNA,
+  elencaMieiEsercizi,
+  type EsercizioPosizione,
+} from "@/lib/esercizi-posizione";
 import { parsePbn } from "@/lib/pbn";
 import type { Smazzata } from "@/lib/catalog";
 import {
@@ -65,6 +70,15 @@ export default function NuovoCompitoPage({
   const [dueDate, setDueDate] = useState("");
   const [soluzioni, setSoluzioni] = useState<VisibilitaSoluzioni>("dopo-il-gioco");
   const [minibridge, setMinibridge] = useState(false);
+  /**
+   * Gli esercizi di posizione salvati a lezione.
+   *
+   * Compaiono qui e non in una pagina a parte: l'insegnante che compone il
+   * compito di stasera ha in mente «le mani più quella posizione che abbiamo
+   * discusso», ed è un gesto solo.
+   */
+  const [esercizi, setEsercizi] = useState<EsercizioPosizione[]>([]);
+  const [eserciziScelti, setEserciziScelti] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -125,8 +139,12 @@ export default function NuovoCompitoPage({
     });
   }
 
+  useEffect(() => {
+    void elencaMieiEsercizi().then(setEsercizi);
+  }, []);
+
   async function handleCreate() {
-    if (!title.trim() || selected.size === 0) return;
+    if (!title.trim() || (selected.size === 0 && eserciziScelti.size === 0)) return;
     setSaving(true);
     setSaveError(null);
     try {
@@ -139,6 +157,7 @@ export default function NuovoCompitoPage({
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
         soluzioni,
         minibridge,
+        esercizioIds: Array.from(eserciziScelti),
         customHands,
       });
       router.push(`/istruttori/${classId}`);
@@ -239,6 +258,48 @@ export default function NuovoCompitoPage({
           />
         </div>
       </div>
+
+      {/* Gli esercizi di posizione salvati a lezione */}
+      {esercizi.length > 0 && (
+        <div className="mb-6 rounded-lg border border-border p-4">
+          <p className="mb-1 text-sm font-semibold">{t("Le posizioni che hai salvato")}</p>
+          <p className="mb-3 text-xs text-muted-foreground">
+            {t("Vanno nel compito insieme alle mani: l'allievo le trova in fondo all'elenco.")}
+          </p>
+          <div className="max-h-56 space-y-1.5 overflow-y-auto">
+            {esercizi.map((e) => {
+              const scelto = eserciziScelti.has(e.id);
+              return (
+                <label
+                  key={e.id}
+                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-border p-2 text-sm hover:bg-muted/50"
+                >
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 h-4 w-4"
+                    checked={scelto}
+                    onChange={() =>
+                      setEserciziScelti((prev) => {
+                        const n = new Set(prev);
+                        if (scelto) n.delete(e.id);
+                        else n.add(e.id);
+                        return n;
+                      })
+                    }
+                  />
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">{e.titolo}</span>
+                    <span className="block text-xs text-muted-foreground">
+                      {ETICHETTE_CONSEGNA[e.consegna]}
+                      {e.gruppo && ` · ${e.gruppo}`}
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* PBN import */}
       <div className="mb-6 rounded-lg border border-dashed border-border bg-muted/30 p-4">
