@@ -453,6 +453,13 @@ CREATE TABLE IF NOT EXISTS public.modelli_mani (
   updated_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.note_smazzate (
+  autore_id uuid NOT NULL,
+  smazzata_id text NOT NULL,
+  testo text NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.partner_profiles (
   user_id uuid NOT NULL,
   looking boolean NOT NULL,
@@ -3450,6 +3457,7 @@ ALTER TABLE public.modelli_mani ALTER COLUMN condiviso SET DEFAULT false;
 ALTER TABLE public.modelli_mani ALTER COLUMN usi SET DEFAULT 0;
 ALTER TABLE public.modelli_mani ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.modelli_mani ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.note_smazzate ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.partner_profiles ALTER COLUMN looking SET DEFAULT true;
 ALTER TABLE public.partner_profiles ALTER COLUMN availability SET DEFAULT '{}'::text[];
 ALTER TABLE public.partner_profiles ALTER COLUMN created_at SET DEFAULT now();
@@ -3543,6 +3551,7 @@ ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_pkey PRIMARY KEY (id);
+ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_pkey PRIMARY KEY (autore_id, smazzata_id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
 ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_pkey PRIMARY KEY (id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
@@ -3689,6 +3698,7 @@ ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREI
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenari(id) ON DELETE CASCADE;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
+ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd_id) REFERENCES asd(id);
@@ -3848,6 +3858,7 @@ ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.modelli_mani ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.note_smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.posizioni_preferite ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -3955,6 +3966,7 @@ CREATE POLICY "Chi insegna crea i propri modelli" ON public.modelli_mani AS PERM
 CREATE POLICY "I modelli si leggono se tuoi, ufficiali o condivisi" ON public.modelli_mani AS PERMISSIVE FOR SELECT TO authenticated USING ((ufficiale OR condiviso OR (autore_id = auth.uid())));
 CREATE POLICY "Ognuno cancella i propri" ON public.modelli_mani AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) AND (NOT ufficiale)));
 CREATE POLICY "Ognuno modifica i propri" ON public.modelli_mani AS PERMISSIVE FOR UPDATE TO authenticated USING (((autore_id = auth.uid()) AND (NOT ufficiale))) WITH CHECK (((autore_id = auth.uid()) AND (NOT ufficiale)));
+CREATE POLICY "Le note sono di chi le scrive" ON public.note_smazzate AS PERMISSIVE FOR ALL TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
 CREATE POLICY partner_profiles_delete ON public.partner_profiles AS PERMISSIVE FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_insert ON public.partner_profiles AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_select ON public.partner_profiles AS PERMISSIVE FOR SELECT TO authenticated USING ((looking OR (user_id = auth.uid())));
@@ -4096,6 +4108,9 @@ GRANT DELETE ON public.mani_generate TO service_role;
 GRANT DELETE ON public.modelli_mani TO anon;
 GRANT DELETE ON public.modelli_mani TO authenticated;
 GRANT DELETE ON public.modelli_mani TO service_role;
+GRANT DELETE ON public.note_smazzate TO anon;
+GRANT DELETE ON public.note_smazzate TO authenticated;
+GRANT DELETE ON public.note_smazzate TO service_role;
 GRANT DELETE ON public.partner_profiles TO anon;
 GRANT DELETE ON public.partner_profiles TO authenticated;
 GRANT DELETE ON public.partner_profiles TO service_role;
@@ -4255,6 +4270,9 @@ GRANT INSERT ON public.mani_generate TO service_role;
 GRANT INSERT ON public.modelli_mani TO anon;
 GRANT INSERT ON public.modelli_mani TO authenticated;
 GRANT INSERT ON public.modelli_mani TO service_role;
+GRANT INSERT ON public.note_smazzate TO anon;
+GRANT INSERT ON public.note_smazzate TO authenticated;
+GRANT INSERT ON public.note_smazzate TO service_role;
 GRANT INSERT ON public.partner_profiles TO anon;
 GRANT INSERT ON public.partner_profiles TO authenticated;
 GRANT INSERT ON public.partner_profiles TO service_role;
@@ -4414,6 +4432,9 @@ GRANT REFERENCES ON public.mani_generate TO service_role;
 GRANT REFERENCES ON public.modelli_mani TO anon;
 GRANT REFERENCES ON public.modelli_mani TO authenticated;
 GRANT REFERENCES ON public.modelli_mani TO service_role;
+GRANT REFERENCES ON public.note_smazzate TO anon;
+GRANT REFERENCES ON public.note_smazzate TO authenticated;
+GRANT REFERENCES ON public.note_smazzate TO service_role;
 GRANT REFERENCES ON public.partner_profiles TO anon;
 GRANT REFERENCES ON public.partner_profiles TO authenticated;
 GRANT REFERENCES ON public.partner_profiles TO service_role;
@@ -4573,6 +4594,9 @@ GRANT SELECT ON public.mani_generate TO service_role;
 GRANT SELECT ON public.modelli_mani TO anon;
 GRANT SELECT ON public.modelli_mani TO authenticated;
 GRANT SELECT ON public.modelli_mani TO service_role;
+GRANT SELECT ON public.note_smazzate TO anon;
+GRANT SELECT ON public.note_smazzate TO authenticated;
+GRANT SELECT ON public.note_smazzate TO service_role;
 GRANT SELECT ON public.partner_profiles TO anon;
 GRANT SELECT ON public.partner_profiles TO authenticated;
 GRANT SELECT ON public.partner_profiles TO service_role;
@@ -4729,6 +4753,9 @@ GRANT TRIGGER ON public.mani_generate TO service_role;
 GRANT TRIGGER ON public.modelli_mani TO anon;
 GRANT TRIGGER ON public.modelli_mani TO authenticated;
 GRANT TRIGGER ON public.modelli_mani TO service_role;
+GRANT TRIGGER ON public.note_smazzate TO anon;
+GRANT TRIGGER ON public.note_smazzate TO authenticated;
+GRANT TRIGGER ON public.note_smazzate TO service_role;
 GRANT TRIGGER ON public.partner_profiles TO anon;
 GRANT TRIGGER ON public.partner_profiles TO authenticated;
 GRANT TRIGGER ON public.partner_profiles TO service_role;
@@ -4888,6 +4915,9 @@ GRANT TRUNCATE ON public.mani_generate TO service_role;
 GRANT TRUNCATE ON public.modelli_mani TO anon;
 GRANT TRUNCATE ON public.modelli_mani TO authenticated;
 GRANT TRUNCATE ON public.modelli_mani TO service_role;
+GRANT TRUNCATE ON public.note_smazzate TO anon;
+GRANT TRUNCATE ON public.note_smazzate TO authenticated;
+GRANT TRUNCATE ON public.note_smazzate TO service_role;
 GRANT TRUNCATE ON public.partner_profiles TO anon;
 GRANT TRUNCATE ON public.partner_profiles TO authenticated;
 GRANT TRUNCATE ON public.partner_profiles TO service_role;
@@ -5047,6 +5077,9 @@ GRANT UPDATE ON public.mani_generate TO service_role;
 GRANT UPDATE ON public.modelli_mani TO anon;
 GRANT UPDATE ON public.modelli_mani TO authenticated;
 GRANT UPDATE ON public.modelli_mani TO service_role;
+GRANT UPDATE ON public.note_smazzate TO anon;
+GRANT UPDATE ON public.note_smazzate TO authenticated;
+GRANT UPDATE ON public.note_smazzate TO service_role;
 GRANT UPDATE ON public.partner_profiles TO anon;
 GRANT UPDATE ON public.partner_profiles TO authenticated;
 GRANT UPDATE ON public.partner_profiles TO service_role;

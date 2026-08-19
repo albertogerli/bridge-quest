@@ -173,6 +173,11 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                               {t("Avvisa")}
                             </Button>
                           </a>
+                          <Link href={`/istruttori/dispensa?compito=${compito.assignment_id}`}>
+                            <Button size="sm" variant="ghost">
+                              {t("Dispensa")}
+                            </Button>
+                          </Link>
                           <Link href={`/istruttori/${classId}/compito/${compito.assignment_id}`}>
                             <Button size="sm" variant="ghost">
                               {t("Risultati")}

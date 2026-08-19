@@ -31,6 +31,7 @@ import {
   type Difficolta,
   type TempiMano,
 } from "@/lib/tempi";
+import { NotaSmazzata } from "@/components/istruttori/nota-smazzata";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /** Cell state for the heatmap. */
@@ -334,6 +335,27 @@ export default function AssignmentResultsPage({
               </tr>
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── Le tue note sulle mani ── */}
+      {smazzataIds.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-1 font-display text-xl font-bold text-foreground">
+            {t("Le tue note")}
+          </h2>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Restano attaccate alla mano, non al compito: le ritrovi l&rsquo;anno prossimo su
+            un&rsquo;altra classe, e finiscono nella dispensa da stampare.
+          </p>
+          <div className="divide-y divide-border rounded-lg border border-border">
+            {smazzataIds.map((id) => (
+              <div key={id} className="px-4 py-3">
+                <p className="mb-1 font-mono text-xs text-muted-foreground">{colLabel(id)}</p>
+                <NotaSmazzata smazzataId={id} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
