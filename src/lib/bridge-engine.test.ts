@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { Suit } from "./bridge-engine";
 import {
   createGame,
   determineTrickWinner,
@@ -152,5 +153,54 @@ describe("rigiocare la storia", () => {
     expect(() => {
       for (const p of rotta) stato = playCard(stato, p.position, p.card);
     }).toThrow(/turn/i);
+  });
+});
+
+describe("le posizioni parziali", () => {
+  /**
+   * Metà della didattica del gioco della carta si fa su quattro carte, non su
+   * tredici: «come giochi questa combinazione per fare due prese». Il motore
+   * chiudeva la mano contando fino a tredici prese, quindi quelle posizioni non
+   * finivano mai — si giocava l'ultima carta e il tavolo restava in attesa.
+   */
+  it("una posizione da due carte a testa finisce dopo due prese", () => {
+    const mani: Record<Position, Card[]> = {
+      north: [{ suit: "spade", rank: "A" }, { suit: "spade", rank: "2" }],
+      east: [{ suit: "spade", rank: "K" }, { suit: "spade", rank: "3" }],
+      south: [{ suit: "spade", rank: "Q" }, { suit: "spade", rank: "4" }],
+      west: [{ suit: "spade", rank: "J" }, { suit: "spade", rank: "5" }],
+    };
+    let s = createGame(mani, "1SA", "south");
+    // L'attacco è a sinistra del dichiarante: Ovest.
+    const ordine: Position[] = ["west", "north", "east", "south"];
+    // Otto carte in tutto: due prese da quattro. Si gioca sempre l'ultima
+    // della mano di turno, che il motore ha già ordinato.
+    for (let mossa = 0; mossa < ordine.length * 2; mossa++) {
+      const carte = s.hands[s.currentPlayer];
+      s = playCard(s, s.currentPlayer, carte[carte.length - 1]);
+    }
+    expect(s.phase).toBe("finished");
+    expect(s.tricks).toHaveLength(2);
+    expect(s.trickCount.ns + s.trickCount.ew).toBe(2);
+  });
+
+  it("una smazzata intera finisce ancora dopo tredici prese", () => {
+    // La contro-verifica: il cambio non deve toccare il caso normale.
+    const semi: Suit[] = ["spade", "heart", "diamond", "club"];
+    const ranghi = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+    const mani: Record<Position, Card[]> = { north: [], east: [], south: [], west: [] };
+    const posti: Position[] = ["north", "east", "south", "west"];
+    semi.forEach((suit, i) => {
+      ranghi.forEach((rank) => mani[posti[i]].push({ suit, rank } as Card));
+    });
+    let s = createGame(mani, "1SA", "south");
+    let giri = 0;
+    while (s.phase !== "finished" && giri < 60) {
+      const carte = s.hands[s.currentPlayer];
+      s = playCard(s, s.currentPlayer, carte[carte.length - 1]);
+      giri++;
+    }
+    expect(s.phase).toBe("finished");
+    expect(s.tricks).toHaveLength(13);
   });
 });
