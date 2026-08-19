@@ -21,6 +21,7 @@ import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getOpenLiveTable } from "@/lib/live-table";
 import { Video } from "lucide-react";
+import { SondaggioAllievo } from "@/components/sondaggio-allievo";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function StudentClassPage({
@@ -106,6 +107,8 @@ export default function StudentClassPage({
       <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {classRoom?.name ?? "Classe"}
       </h1>
+
+      <SondaggioAllievo classId={classId} />
 
       {classRoom?.link_video && (
         <a
