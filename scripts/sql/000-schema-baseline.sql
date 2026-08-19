@@ -455,7 +455,9 @@ CREATE TABLE IF NOT EXISTS public.live_tables (
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL,
   played jsonb NOT NULL,
-  mani_viste jsonb NOT NULL
+  mani_viste jsonb NOT NULL,
+  sessione_id uuid,
+  numero integer
 );
 
 CREATE TABLE IF NOT EXISTS public.login_history (
@@ -640,6 +642,16 @@ CREATE TABLE IF NOT EXISTS public.segnalazioni (
   nota_admin text,
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.sessioni_aula (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  instructor_id uuid NOT NULL,
+  titolo text,
+  stato text NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  closed_at timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS public.sfida_board (
@@ -1088,6 +1100,105 @@ begin
 
   return esito;
 end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text DEFAULT NULL::text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  sid uuid;
+  n integer;
+begin
+  if not is_instructor_of_class(p_class_id) then
+    raise exception 'not authorized for class %', p_class_id using errcode = '42501';
+  end if;
+  if p_tavoli < 1 or p_tavoli > 40 then
+    raise exception 'numero di tavoli fuori scala: %', p_tavoli using errcode = '22023';
+  end if;
+
+  insert into sessioni_aula (class_id, instructor_id, titolo)
+  values (p_class_id, auth.uid(), p_titolo)
+  returning id into sid;
+
+  for n in 1..p_tavoli loop
+    insert into live_tables (class_id, instructor_id, hands, titolo, sessione_id, numero)
+    values (p_class_id, auth.uid(), '{}'::jsonb, 'Tavolo ' || n, sid, n);
+  end loop;
+
+  return sid;
+end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_chiudi(p_sessione_id uuid)
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare cid uuid;
+begin
+  select class_id into cid from sessioni_aula where id = p_sessione_id;
+  if cid is null or not is_instructor_of_class(cid) then
+    raise exception 'not authorized' using errcode = '42501';
+  end if;
+  update live_tables set closed_at = now() where sessione_id = p_sessione_id and closed_at is null;
+  update sessioni_aula set stato = 'chiusa', closed_at = now() where id = p_sessione_id;
+end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text DEFAULT NULL::text, p_contract text DEFAULT NULL::text, p_declarer text DEFAULT NULL::text)
+ RETURNS integer
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  quanti integer;
+  cid uuid;
+begin
+  select class_id into cid from sessioni_aula where id = p_sessione_id;
+  if cid is null or not is_instructor_of_class(cid) then
+    raise exception 'not authorized for session %' , p_sessione_id using errcode = '42501';
+  end if;
+
+  -- UNA SOLA UPDATE per tutti i tavoli. Farne una per tavolo dal client
+  -- vorrebbe dire quaranta andate e ritorni: e la differenza fra «la classe
+  -- vede la mano insieme» e «la vede a scaglioni».
+  update live_tables
+  set hands = p_hands,
+      titolo = coalesce(p_titolo, titolo),
+      contract = p_contract,
+      declarer = p_declarer,
+      played = '[]'::jsonb,
+      revealed = '{}',
+      show_contract = false,
+      updated_at = now()
+  where sessione_id = p_sessione_id and closed_at is null;
+
+  get diagnostics quanti = row_count;
+  return quanti;
+end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_stato(p_sessione_id uuid)
+ RETURNS TABLE(tavolo_id uuid, numero integer, titolo text, carte_giocate integer, posti_assegnati integer, aggiornato timestamp with time zone)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select t.id, t.numero, t.titolo,
+         jsonb_array_length(coalesce(t.played, '[]'::jsonb))::integer,
+         (select count(*) from jsonb_object_keys(coalesce(t.seat_of, '{}'::jsonb)))::integer,
+         t.updated_at
+  from live_tables t
+  join sessioni_aula s on s.id = t.sessione_id
+  where t.sessione_id = p_sessione_id
+    and (is_instructor_of_class(s.class_id) or is_member_of_class(s.class_id))
+  order by t.numero;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.bersagli_email_compiti(p_limit integer DEFAULT 300)
@@ -3656,6 +3767,9 @@ ALTER TABLE public.segnalazioni ALTER COLUMN contesto SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.segnalazioni ALTER COLUMN stato SET DEFAULT 'nuova'::text;
 ALTER TABLE public.segnalazioni ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.segnalazioni ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.sessioni_aula ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.sessioni_aula ALTER COLUMN stato SET DEFAULT 'aperta'::text;
+ALTER TABLE public.sessioni_aula ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN commentary SET DEFAULT ''::text;
@@ -3732,6 +3846,7 @@ ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_pkey PRIMARY
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_pkey PRIMARY KEY (id);
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_pkey PRIMARY KEY (id);
+ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_pkey PRIMARY KEY (id);
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
@@ -3815,6 +3930,7 @@ ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_descrizione_check CHECK ((char_length(descrizione) <= 1000));
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_nome_check CHECK (((char_length(btrim(nome)) >= 1) AND (char_length(btrim(nome)) <= 120)));
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_stato_check CHECK ((stato = ANY (ARRAY['nuova'::text, 'presa-in-carico'::text, 'risolta'::text, 'archiviata'::text])));
+ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_stato_check CHECK ((stato = ANY (ARRAY['aperta'::text, 'chiusa'::text])));
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_coppia_check CHECK ((coppia = ANY (ARRAY['A'::text, 'B'::text])));
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_check CHECK (((a1 <> a2) AND (b1 <> b2) AND (a1 <> b1) AND (a1 <> b2) AND (a2 <> b1) AND (a2 <> b2)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_bidding_check CHECK (((bidding IS NULL) OR ((bidding ? 'dealer'::text) AND (bidding ? 'bids'::text) AND (jsonb_typeof((bidding -> 'bids'::text)) = 'array'::text))));
@@ -3873,6 +3989,7 @@ ALTER TABLE public.libreria ADD CONSTRAINT libreria_autore_id_fkey FOREIGN KEY (
 ALTER TABLE public.libreria ADD CONSTRAINT libreria_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_sessione_id_fkey FOREIGN KEY (sessione_id) REFERENCES sessioni_aula(id) ON DELETE SET NULL;
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenari(id) ON DELETE CASCADE;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
@@ -3895,6 +4012,8 @@ ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_user_id_fkey
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES profiles(id) ON DELETE SET NULL;
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_sessione_id_fkey FOREIGN KEY (sessione_id) REFERENCES bidding_sessions(id) ON DELETE CASCADE;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_sfida_id_fkey FOREIGN KEY (sfida_id) REFERENCES sfide_coppie(id) ON DELETE CASCADE;
@@ -3954,6 +4073,7 @@ CREATE INDEX idx_instructor_requests_status ON public.instructor_requests USING 
 CREATE INDEX idx_inviti_classe ON public.inviti_aula USING btree (class_id, created_at DESC);
 CREATE INDEX idx_libreria_approvati ON public.libreria USING btree (stato, lesson_id, created_at DESC);
 CREATE INDEX idx_libreria_autore ON public.libreria USING btree (autore_id, created_at DESC);
+CREATE INDEX idx_live_tables_sessione ON public.live_tables USING btree (sessione_id, numero);
 CREATE INDEX idx_login_history_date ON public.login_history USING btree (logged_in_at DESC);
 CREATE INDEX idx_login_history_platform ON public.login_history USING btree (platform, logged_in_at DESC);
 CREATE INDEX idx_login_history_user_date ON public.login_history USING btree (user_id, logged_in_at DESC);
@@ -3963,6 +4083,7 @@ CREATE INDEX idx_poll_votes_post ON public.forum_poll_votes USING btree (post_id
 CREATE INDEX idx_preferite_utente ON public.posizioni_preferite USING btree (user_id, created_at DESC);
 CREATE INDEX idx_profiles_role ON public.profiles USING btree (role) WHERE (role <> 'user'::text);
 CREATE INDEX idx_segnalazioni_stato ON public.segnalazioni USING btree (stato, created_at DESC);
+CREATE INDEX idx_sessioni_classe ON public.sessioni_aula USING btree (class_id, created_at DESC);
 CREATE INDEX idx_sondaggi_classe ON public.sondaggi USING btree (class_id, created_at DESC);
 CREATE INDEX idx_sondaggi_riusabili ON public.sondaggi USING btree (autore_id) WHERE riusabile;
 CREATE INDEX idx_tournament_results_week ON public.tournament_results USING btree (week_num, total_tricks DESC);
@@ -4062,6 +4183,7 @@ ALTER TABLE public.risultati_torneo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scenari ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.segnalazioni ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.sessioni_aula ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
@@ -4203,6 +4325,8 @@ CREATE POLICY "Scenari leggibili" ON public.scenari AS PERMISSIVE FOR SELECT TO 
 CREATE POLICY "Amministratori e autore leggono" ON public.segnalazioni AS PERMISSIVE FOR SELECT TO authenticated USING ((is_admin() OR (user_id = auth.uid())));
 CREATE POLICY "Chiunque può segnalare" ON public.segnalazioni AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Solo gli amministratori aggiornano" ON public.segnalazioni AS PERMISSIVE FOR UPDATE TO authenticated USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "L'insegnante gestisce la sessione" ON public.sessioni_aula AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK ((is_instructor_of_class(class_id) AND (instructor_id = auth.uid())));
+CREATE POLICY "La sessione la vede la classe" ON public.sessioni_aula AS PERMISSIVE FOR SELECT TO authenticated USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
 CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR SELECT TO authenticated USING ((EXISTS ( SELECT 1
    FROM sfide_coppie s
   WHERE ((s.id = sfida_board.sfida_id) AND ((((auth.uid() = s.a1) OR (auth.uid() = s.a2)) OR (auth.uid() = s.b1)) OR (auth.uid() = s.b2))))));
@@ -4369,6 +4493,9 @@ GRANT DELETE ON public.scenari TO service_role;
 GRANT DELETE ON public.segnalazioni TO anon;
 GRANT DELETE ON public.segnalazioni TO authenticated;
 GRANT DELETE ON public.segnalazioni TO service_role;
+GRANT DELETE ON public.sessioni_aula TO anon;
+GRANT DELETE ON public.sessioni_aula TO authenticated;
+GRANT DELETE ON public.sessioni_aula TO service_role;
 GRANT DELETE ON public.sfida_board TO anon;
 GRANT DELETE ON public.sfida_board TO authenticated;
 GRANT DELETE ON public.sfida_board TO service_role;
@@ -4546,6 +4673,9 @@ GRANT INSERT ON public.scenari TO service_role;
 GRANT INSERT ON public.segnalazioni TO anon;
 GRANT INSERT ON public.segnalazioni TO authenticated;
 GRANT INSERT ON public.segnalazioni TO service_role;
+GRANT INSERT ON public.sessioni_aula TO anon;
+GRANT INSERT ON public.sessioni_aula TO authenticated;
+GRANT INSERT ON public.sessioni_aula TO service_role;
 GRANT INSERT ON public.sfida_board TO anon;
 GRANT INSERT ON public.sfida_board TO authenticated;
 GRANT INSERT ON public.sfida_board TO service_role;
@@ -4723,6 +4853,9 @@ GRANT REFERENCES ON public.scenari TO service_role;
 GRANT REFERENCES ON public.segnalazioni TO anon;
 GRANT REFERENCES ON public.segnalazioni TO authenticated;
 GRANT REFERENCES ON public.segnalazioni TO service_role;
+GRANT REFERENCES ON public.sessioni_aula TO anon;
+GRANT REFERENCES ON public.sessioni_aula TO authenticated;
+GRANT REFERENCES ON public.sessioni_aula TO service_role;
 GRANT REFERENCES ON public.sfida_board TO anon;
 GRANT REFERENCES ON public.sfida_board TO authenticated;
 GRANT REFERENCES ON public.sfida_board TO service_role;
@@ -4899,6 +5032,9 @@ GRANT SELECT ON public.scenari TO service_role;
 GRANT SELECT ON public.segnalazioni TO anon;
 GRANT SELECT ON public.segnalazioni TO authenticated;
 GRANT SELECT ON public.segnalazioni TO service_role;
+GRANT SELECT ON public.sessioni_aula TO anon;
+GRANT SELECT ON public.sessioni_aula TO authenticated;
+GRANT SELECT ON public.sessioni_aula TO service_role;
 GRANT SELECT ON public.sfida_board TO anon;
 GRANT SELECT ON public.sfida_board TO authenticated;
 GRANT SELECT ON public.sfida_board TO service_role;
@@ -5074,6 +5210,9 @@ GRANT TRIGGER ON public.scenari TO service_role;
 GRANT TRIGGER ON public.segnalazioni TO anon;
 GRANT TRIGGER ON public.segnalazioni TO authenticated;
 GRANT TRIGGER ON public.segnalazioni TO service_role;
+GRANT TRIGGER ON public.sessioni_aula TO anon;
+GRANT TRIGGER ON public.sessioni_aula TO authenticated;
+GRANT TRIGGER ON public.sessioni_aula TO service_role;
 GRANT TRIGGER ON public.sfida_board TO anon;
 GRANT TRIGGER ON public.sfida_board TO authenticated;
 GRANT TRIGGER ON public.sfida_board TO service_role;
@@ -5251,6 +5390,9 @@ GRANT TRUNCATE ON public.scenari TO service_role;
 GRANT TRUNCATE ON public.segnalazioni TO anon;
 GRANT TRUNCATE ON public.segnalazioni TO authenticated;
 GRANT TRUNCATE ON public.segnalazioni TO service_role;
+GRANT TRUNCATE ON public.sessioni_aula TO anon;
+GRANT TRUNCATE ON public.sessioni_aula TO authenticated;
+GRANT TRUNCATE ON public.sessioni_aula TO service_role;
 GRANT TRUNCATE ON public.sfida_board TO anon;
 GRANT TRUNCATE ON public.sfida_board TO authenticated;
 GRANT TRUNCATE ON public.sfida_board TO service_role;
@@ -5428,6 +5570,9 @@ GRANT UPDATE ON public.scenari TO service_role;
 GRANT UPDATE ON public.segnalazioni TO anon;
 GRANT UPDATE ON public.segnalazioni TO authenticated;
 GRANT UPDATE ON public.segnalazioni TO service_role;
+GRANT UPDATE ON public.sessioni_aula TO anon;
+GRANT UPDATE ON public.sessioni_aula TO authenticated;
+GRANT UPDATE ON public.sessioni_aula TO service_role;
 GRANT UPDATE ON public.sfida_board TO anon;
 GRANT UPDATE ON public.sfida_board TO authenticated;
 GRANT UPDATE ON public.sfida_board TO service_role;
@@ -5485,6 +5630,22 @@ REVOKE ALL ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integ
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO anon;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_chiudi(p_sessione_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_chiudi(p_sessione_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_chiudi(p_sessione_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_chiudi(p_sessione_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_stato(p_sessione_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_stato(p_sessione_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_stato(p_sessione_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_stato(p_sessione_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.bersagli_email_compiti(p_limit integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.bersagli_email_compiti(p_limit integer) TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC;
