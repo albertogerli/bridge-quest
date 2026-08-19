@@ -41,6 +41,26 @@ riempita da `scripts/valida-smazzate-dds.mjs`. Se in futuro servisse la tabella
 completa e non solo le prese del dichiarante, il posto giusto è lì — una colonna
 `dd_table jsonb` sulla smazzata — non un servizio.
 
+**La trappola dell'imballaggio, e perché il DDS «non c'era».** Il pacchetto è
+pubblicato con dentro `import DdsLoader from "./lib/dds"` — senza estensione —
+e senza `"type": "module"`. Node dalla 22 riconosce la sintassi ESM e da lì in
+poi applica la risoluzione ESM, che l'estensione la pretende: da `node` puro il
+risultato è `Cannot find module .../dist/lib/dds`. Sotto Next e sotto vitest non
+si vede niente, perché a risolvere è il bundler.
+
+Questo ha prodotto una diagnosi sbagliata che vale la pena ricordare: gli script
+di manutenzione riferivano «il modulo DDS manca in questo ambiente», e da lì
+cinquantasei mani risultavano *non determinabili*. Non mancava e non erano
+cinquantasei — non partiva l'import, quindi il controllo contava come ignoto
+tutto quello che non riusciva a leggere. Un controllo che non gira non dice
+«non lo so»: dice quello che gli capita.
+
+La risoluzione è aggiustata una volta sola, in `scripts/dds-risoluzione.mjs`, e
+si usa importando da `scripts/dds.mjs`. **Chi scrive un nuovo script `.mjs` che
+ha bisogno del DDS importa da lì**, non da `bridge-dds`. L'aggiustamento vale
+solo per i file dentro il pacchetto: un'estensione dimenticata nel nostro codice
+continua a fallire, come deve.
+
 ## 2. Il canale realtime
 
 **C'è**, su Supabase Realtime, ed è già usato per due cose: il tavolo condiviso

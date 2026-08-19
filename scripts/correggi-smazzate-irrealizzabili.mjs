@@ -20,25 +20,28 @@
  * Quindi qui si guardano solo le mani con dichiarante Nord o Sud.
  *
  * IL CRITERIO, scelto per cambiare il MENO possibile.
- * Quasi tutte cadono di UNA presa, e cadono anche contro la difesa perfetta:
- * non è l'attacco indicato a essere sbagliato, è il contratto di un gradino
- * troppo alto. Quindi:
  *
  *   1. si resta nella STESSA denominazione e con lo stesso dichiarante, e si
- *      scende al livello che le prese consentono. Una lezione sulle picche
- *      resta una lezione sulle picche: 4♠ diventa 3♠, e tutto quello che
- *      insegnava continua a valere;
- *   2. solo se non regge nemmeno il primo livello — il dichiarante fa meno di
- *      sette prese in quel colore — si cambia denominazione, prendendo il
- *      contratto migliore per la sua linea. Lì la mano cambia lezione, e va
- *      RIVISTA A MANO: lo script la segnala e non la tocca.
+ *      scende al livello che le prese consentono. L'atout non cambia, quindi
+ *      non cambia il problema di gioco: 7♠ che diventa 4♠ è la stessa mano da
+ *      giocare, con l'asticella dove le carte la mettono davvero;
+ *   2. finché si resta al SECONDO livello o sopra. Sotto, il contratto smette
+ *      di essere una cosa che qualcuno dichiarerebbe — «1SA» con ventisei
+ *      punti in linea insegnerebbe una cosa falsa — e allora si prende la
+ *      denominazione migliore per lo STESSO dichiarante;
+ *   3. il livello non sale mai sopra quello di partenza. Un 3SA che non si
+ *      mantiene può diventare 3♠, non 4♠: l'allievo deve dover fare MENO
+ *      prese di prima, non una di più.
+ *
+ * Il dichiarante non si sposta mai, nemmeno al compagno: l'attacco scritto
+ * nella lezione è la carta di chi siede alla sua sinistra, e cambiare posto lo
+ * trasformerebbe nella carta di un altro giocatore.
  *
  * Non si tocca `dd_tricks`: lo ricalcola `valida-smazzate-dds.mjs`.
  */
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
-import bridgeDds from "bridge-dds";
-const { loadDds, Dds } = bridgeDds;
+import { loadDds, Dds } from "./dds.mjs";
 
 const env = Object.fromEntries(
   readFileSync(new URL("../.env.local", import.meta.url), "utf8")
@@ -78,7 +81,18 @@ function leggiContratto(testo) {
   return { livello: Number(m[1]), denominazione: m[2] === "N" ? "NT" : m[2] };
 }
 
-const scrivi = (l, d) => `${l}${SIMBOLO[d]}`;
+/**
+ * Il contratto nuovo si scrive con la NOTAZIONE DI QUELLO VECCHIO.
+ * Nel catalogo convivono due stili — "4S" e "4♠", "3NT" e "3SA" — perché le
+ * lezioni sono state caricate in momenti diversi. Chi legge li accetta
+ * entrambi, ma cambiare stile a una riga sola la fa sembrare toccata da
+ * un'altra mano: qui si resta nello stile che quella riga aveva.
+ */
+function scrivi(livello, denominazione, originale) {
+  const simboli = /[♠♥♦♣]/.test(originale) || /SA/i.test(originale);
+  if (!simboli) return `${livello}${denominazione}`;
+  return `${livello}${SIMBOLO[denominazione]}`;
+}
 
 async function main() {
   const dds = new Dds(await loadDds());
@@ -109,48 +123,68 @@ async function main() {
     const servono = c.livello + 6;
     if (prese >= servono) continue; // il contratto regge: non si tocca
 
-    const nuovoLivello = prese - 6;
-    if (prese >= 7 && c.livello - nuovoLivello === 1) {
-      // UN SOLO GRADINO, stessa denominazione: la lezione resta quella che era.
-      // 4♠ che diventa 3♠ insegna ancora il fit a picche e il gioco d'atout.
+    // (a) STESSA DENOMINAZIONE, al livello che le carte consentono. È la
+    //     correzione che costa meno: l'atout non cambia, quindi il problema di
+    //     gioco della lezione resta identico — cambia solo l'asticella. Vale
+    //     però finché si resta al secondo livello o sopra: un 3SA che diventa
+    //     1SA non è più un contratto che qualcuno dichiarerebbe, e all'allievo
+    //     leggere «1SA» con ventisei punti in linea insegna una cosa falsa.
+    if (prese >= 8) {
       daCorreggere.push({
         ...s,
-        nuovo: scrivi(nuovoLivello, c.denominazione),
-        perche: `${s.contract} chiede ${servono} prese, il dichiarante ne fa ${prese}`,
+        nuovo: scrivi(prese - 6, c.denominazione, s.contract),
+        perche: `chiedeva ${servono} prese, il dichiarante ne fa ${prese}`,
       });
-    } else if (prese >= 7) {
-      // Più di un gradino: qui la mano cambia lezione anche restando nello
-      // stesso colore — 7♠ che diventa 4♠ non insegna più lo slam, e un 3SA
-      // che diventa 1SA non è più una manche. Decide una persona.
-      daRivedere.push({
-        ...s,
-        prese,
-        alternativa: `${scrivi(nuovoLivello, c.denominazione)} (${prese} prese): sono ${c.livello - nuovoLivello} gradini`,
-      });
-    } else {
-      // Nemmeno al primo livello: qui cambia la lezione, e decide una persona.
-      let migliore = null;
-      for (const [den, idx] of Object.entries(STRAIN_INDEX)) {
-        // Solo la linea del dichiarante, e il suo posto migliore.
-        const compagno = (posto + 2) % 4;
-        const p = Math.max(tabella[idx][posto], tabella[idx][compagno]);
-        if (p >= 7 && (!migliore || p > migliore.prese)) migliore = { den, prese: p };
-      }
-      daRivedere.push({
-        ...s,
-        prese,
-        alternativa: migliore ? `${scrivi(migliore.prese - 6, migliore.den)} (${migliore.prese} prese)` : "nessun contratto regge",
-      });
+      continue;
     }
+
+    // (b) La denominazione non regge nemmeno al secondo livello: si cerca il
+    //     colore migliore PER LO STESSO DICHIARANTE. Deve restare lui:
+    //     l'attacco memorizzato nella lezione è la carta di chi siede alla sua
+    //     sinistra, e spostare la dichiarazione al compagno lo renderebbe la
+    //     carta di un altro giocatore — cioè un attacco impossibile.
+    let migliore = null;
+    for (const [den, idx] of Object.entries(STRAIN_INDEX)) {
+      const p = tabella[idx][posto];
+      if (p >= 7 && (!migliore || p > migliore.prese)) migliore = { den, prese: p };
+    }
+    if (!migliore) {
+      daRivedere.push({ ...s, prese, alternativa: "nessun contratto regge, in nessun colore" });
+      continue;
+    }
+
+    // Il livello non sale MAI sopra quello di partenza. Senza questo paletto
+    // un 3SA che non si mantiene diventerebbe 4♠ — un contratto realizzabile,
+    // ma che chiede all'allievo una presa IN PIÙ di prima. La richiesta era
+    // l'opposto: abbassare l'asticella, non spostarla.
+    const livello = Math.min(migliore.prese - 6, c.livello);
+    daCorreggere.push({
+      ...s,
+      nuovo: scrivi(livello, migliore.den, s.contract),
+      perche:
+        `chiedeva ${servono} prese e in ${SIMBOLO[c.denominazione]} ne fa ${prese}; ` +
+        `in ${SIMBOLO[migliore.den]} ne fa ${migliore.prese}`,
+      cambiaColore: true,
+    });
   }
 
-  console.log(`── ${daCorreggere.length} da abbassare, stessa denominazione ──\n`);
-  for (const r of daCorreggere) {
+  const stesse = daCorreggere.filter((r) => !r.cambiaColore);
+  const cambi = daCorreggere.filter((r) => r.cambiaColore);
+
+  console.log(`── ${stesse.length} da abbassare, stessa denominazione: nemmeno una carta si sposta ──\n`);
+  for (const r of stesse) {
     console.log(`  lez.${r.lesson_id} board ${r.board} [${r.id}]  ${r.contract} → ${r.nuovo}   (${r.perche})`);
   }
 
+  if (cambi.length) {
+    console.log(`\n── ${cambi.length} che cambiano anche denominazione: qui cambia l'atout, non solo il livello ──\n`);
+    for (const r of cambi) {
+      console.log(`  lez.${r.lesson_id} board ${r.board} [${r.id}]  ${r.contract} di ${r.declarer} → ${r.nuovo}   (${r.perche})`);
+    }
+  }
+
   if (daRivedere.length) {
-    console.log(`\n── ${daRivedere.length} DA RIVEDERE A MANO: cambia la denominazione, cioè la lezione ──\n`);
+    console.log(`\n── ${daRivedere.length} DA RIVEDERE A MANO ──\n`);
     for (const r of daRivedere) {
       console.log(`  lez.${r.lesson_id} board ${r.board} [${r.id}]  ${r.contract} di ${r.declarer}: solo ${r.prese} prese → ${r.alternativa}`);
     }
