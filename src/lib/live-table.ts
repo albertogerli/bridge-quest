@@ -41,6 +41,22 @@ export interface LiveTable {
   updatedAt: string;
 }
 
+/**
+ * I contratti che si possono scegliere al tavolo.
+ *
+ * `SA` e non `NT`: è la notazione italiana, ed è quella che `parseContract`
+ * legge e che gli allievi hanno davanti sulle dispense. Niente contri: al
+ * tavolo di studio si gioca la mano, non si fa il punteggio.
+ */
+export const CONTRATTI: readonly string[] = (() => {
+  const semi = ["♣", "♦", "♥", "♠", "SA"];
+  const elenco: string[] = [];
+  for (let livello = 1; livello <= 7; livello++) {
+    for (const seme of semi) elenco.push(`${livello}${seme}`);
+  }
+  return elenco;
+})();
+
 /** Lo stato del tavolo come lo può vedere chi chiama. */
 export async function getLiveTable(id: string): Promise<LiveTable | null> {
   try {
@@ -149,6 +165,28 @@ export async function setShowContract(id: string, mostra: boolean): Promise<void
     .update({ show_contract: mostra, updated_at: new Date().toISOString() })
     .eq("id", id);
   if (error) reportError("live-table:contratto", error);
+}
+
+/**
+ * Cambia il contratto del tavolo, senza toccare le carte.
+ *
+ * Serve perché il contratto non è un dato della smazzata: è la decisione
+ * dell'insegnante su cosa far giocare, e al tavolo didattico cambia in corsa —
+ * «riproviamola a 4 cuori e vediamo». Le carte giocate NON si azzerano: chi
+ * cambia contratto a metà mano sta facendo apposta, e ripulire il tavolo sotto
+ * le mani della classe sarebbe peggio del disallineamento.
+ */
+export async function setContract(
+  id: string,
+  contract: string,
+  declarer: Position,
+): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("live_tables")
+    .update({ contract, declarer, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) reportError("live-table:imposta-contratto", error);
 }
 
 /** Assegna i posti agli allievi: `{ "<id allievo>": "north", ... }`. */

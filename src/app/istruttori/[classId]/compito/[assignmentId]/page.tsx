@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, use } from "react";
+import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
 import Link from "next/link";
@@ -187,10 +188,14 @@ export default function AssignmentResultsPage({
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
-      <Link href={`/istruttori/${classId}`} className="text-sm text-muted-foreground hover:underline">
-        ← Dettaglio classe
-      </Link>
-      <h1 className="mt-3 mb-1 font-display text-3xl font-bold text-foreground sm:text-4xl">
+      <Briciole
+        percorso={[
+          { etichetta: "Le tue classi", href: "/istruttori" },
+          { etichetta: "La classe", href: `/istruttori/${classId}` },
+          { etichetta: assignment.title },
+        ]}
+      />
+      <h1 className="mb-1 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {assignment.title}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">

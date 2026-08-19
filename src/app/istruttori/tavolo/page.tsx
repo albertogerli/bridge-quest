@@ -11,6 +11,8 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
+import { calcTableAndPar } from "@/lib/dds-table";
+import { parAssignmentFromContracts } from "@/lib/par-contract";
 import { getClassDetail, getMyClasses, type ClassMember, type ClassRoom } from "@/lib/instructors";
 import {
   closeLiveTable,
@@ -19,6 +21,8 @@ import {
   setLiveHands,
   setRevealed,
   playLiveCard,
+  setContract,
+  CONTRATTI,
   setSeats,
   setShowContract,
   statoDelGioco,
@@ -103,23 +107,68 @@ function Tavolo() {
     [modello, seed]
   );
 
+  /**
+   * IL CONTRATTO DEL TAVOLO, che prima non veniva mai impostato.
+   *
+   * `openLiveTable` e `setLiveHands` accettano contratto e dichiarante da
+   * sempre, e nessuno dei due call site li passava: restavano `NULL`. Da lì in
+   * poi `statoDelGioco` non partiva, `gioco` era sempre `null`, tutte le carte
+   * erano disabilitate e il pannello del turno non compariva mai. Il gioco
+   * carta per carta era tutto scritto — database, funzioni, interfaccia — e
+   * irraggiungibile per un parametro mai passato.
+   *
+   * Si propone il PAR della mano, cioè il contratto in cui la smazzata va
+   * giocata: è la risposta giusta alla domanda «cosa si dichiara qui», ed è già
+   * quello che fa il tavolo di studio. L'insegnante lo cambia se vuole far
+   * giocare altro — al tavolo didattico capita spesso, «proviamo a giocarla a
+   * 4 cuori e vediamo cosa succede».
+   *
+   * Se il solver non risponde si va su 3SA da Sud: un contratto qualunque ma
+   * giocabile è meglio di un tavolo su cui non si può muovere una carta.
+   */
+  const contrattoDellaMano = useCallback(async (deal: Record<Position, Card[]>) => {
+    try {
+      const { table, par } = await calcTableAndPar(deal, "north", "none");
+      const a = parAssignmentFromContracts(par.contracts, table, deal);
+      if (a) return a;
+    } catch (err) {
+      reportError("tavolo:par", err);
+    }
+    return { contract: "3SA", declarer: "south" as Position };
+  }, []);
+
   const apri = useCallback(async () => {
     if (!classId || !mani.length) return;
     setOccupato(true);
+    const scelto = await contrattoDellaMano(mani[0]);
     const id = await openLiveTable({
       classId,
       hands: mani[0],
       titolo: `${modello.label} — mano 1`,
+      contract: scelto.contract,
+      declarer: scelto.declarer,
     });
     setIndice(0);
     setTableId(id);
     setOccupato(false);
-  }, [classId, mani, modello.label]);
+  }, [classId, mani, modello.label, contrattoDellaMano]);
 
   const mandaMano = async (i: number) => {
     if (!tableId || !mani[i]) return;
     setIndice(i);
-    await setLiveHands(tableId, mani[i], { titolo: `${modello.label} — mano ${i + 1}` });
+    setOccupato(true);
+    const scelto = await contrattoDellaMano(mani[i]);
+    await setLiveHands(tableId, mani[i], {
+      titolo: `${modello.label} — mano ${i + 1}`,
+      contract: scelto.contract,
+      declarer: scelto.declarer,
+    });
+    setOccupato(false);
+  };
+
+  const cambiaContratto = async (contract: string, declarer: Position) => {
+    if (!tableId) return;
+    await setContract(tableId, contract, declarer);
   };
 
   // I posti già assegnati arrivano dal tavolo stesso, così due insegnanti sullo
@@ -347,6 +396,43 @@ function Tavolo() {
           <Button variant="outline" onClick={() => setShowContract(tableId, !stato.showContract)}>
             {stato.showContract ? "Nascondi il contratto" : "Mostra il contratto"}
           </Button>
+        </div>
+      )}
+
+      {/*
+        Il contratto si può cambiare in corsa: al tavolo didattico succede di
+        continuo — «riproviamola a 4 cuori e vediamo cosa cambia». Il valore
+        proposto è il par della mano, calcolato quando la mano è partita.
+      */}
+      {tableId && stato && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border bg-card p-3">
+          <span className="text-sm font-medium text-muted-foreground">{t("Si gioca")}</span>
+          <select
+            aria-label="Contratto"
+            value={stato.contract ?? ""}
+            onChange={(e) => void cambiaContratto(e.target.value, stato.declarer ?? "south")}
+            className="rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+          >
+            {CONTRATTI.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+          <span className="text-sm text-muted-foreground">{t("giocato da")}</span>
+          <select
+            aria-label="Dichiarante"
+            value={stato.declarer ?? "south"}
+            onChange={(e) => void cambiaContratto(stato.contract ?? "3SA", e.target.value as Position)}
+            className="rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+          >
+            {SEATS.map((s) => (
+              <option key={s.key} value={s.key}>{s.label}</option>
+            ))}
+          </select>
+          {gioco && (
+            <span className="text-xs text-muted-foreground">
+              {t("Tocca a")} {SEATS.find((s) => s.key === gioco.turno)?.label}
+            </span>
+          )}
         </div>
       )}
     </div>
