@@ -30,6 +30,7 @@ import {
   salvaModello,
   type ModelloMani,
 } from "@/lib/modelli-mani";
+import { proponi } from "@/lib/libreria";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -449,6 +450,27 @@ export default function GeneraManiPage() {
                   }}
                 >
                   {modelloScelto.condiviso ? "Non condividere" : "Condividi con gli insegnanti"}
+                </Button>
+              )}
+              {modelloScelto && !modelloScelto.ufficiale && (
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    const v = await proponi({
+                      tipo: "modello",
+                      titolo: modelloScelto.nome,
+                      descrizione: modelloScelto.descrizione,
+                      lessonId: modelloScelto.lesson_id,
+                      contenuto: modelloScelto.vincoli,
+                    });
+                    setMessaggioModello(
+                      v
+                        ? "Proposto alla libreria: lo vedrà un curatore prima che compaia."
+                        : "Non sono riuscito a proporlo.",
+                    );
+                  }}
+                >
+                  {t("Proponi alla libreria")}
                 </Button>
               )}
               {modelloScelto && (

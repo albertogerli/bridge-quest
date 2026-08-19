@@ -423,6 +423,23 @@ CREATE TABLE IF NOT EXISTS public.lessons (
   subtitle_en text
 );
 
+CREATE TABLE IF NOT EXISTS public.libreria (
+  id uuid NOT NULL,
+  autore_id uuid,
+  tipo text NOT NULL,
+  titolo text NOT NULL,
+  descrizione text,
+  livello text,
+  argomento text,
+  lesson_id integer,
+  contenuto jsonb NOT NULL,
+  stato text NOT NULL,
+  nota_curatore text,
+  usi integer NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.live_tables (
   id uuid NOT NULL,
   class_id uuid NOT NULL,
@@ -2214,6 +2231,19 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.is_curatore()
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select exists (
+    select 1 from profiles
+    where id = auth.uid() and role in ('curatore', 'admin')
+  );
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.is_instructor_of_assignment(p_assignment_id uuid)
  RETURNS boolean
  LANGUAGE sql
@@ -2314,6 +2344,16 @@ begin
 
   return c;
 end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.libreria_segna_uso(p_id uuid)
+ RETURNS void
+ LANGUAGE sql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  update libreria set usi = usi + 1 where id = p_id and stato = 'approvato';
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer DEFAULT 12)
@@ -3550,6 +3590,11 @@ ALTER TABLE public.lesson_modules ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.lesson_modules ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.lessons ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.lessons ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.libreria ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.libreria ALTER COLUMN stato SET DEFAULT 'in-attesa'::text;
+ALTER TABLE public.libreria ALTER COLUMN usi SET DEFAULT 0;
+ALTER TABLE public.libreria ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.libreria ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.live_tables ALTER COLUMN revealed SET DEFAULT '{}'::text[];
 ALTER TABLE public.live_tables ALTER COLUMN seat_of SET DEFAULT '{}'::jsonb;
@@ -3670,6 +3715,7 @@ ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_pkey P
 ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_pkey PRIMARY KEY (id);
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_pkey PRIMARY KEY (lesson_id, module_id);
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
+ALTER TABLE public.libreria ADD CONSTRAINT libreria_pkey PRIMARY KEY (id);
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
@@ -3752,6 +3798,8 @@ ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_content_check CH
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_duration_minutes_check CHECK (((duration_minutes IS NULL) OR (duration_minutes >= 0)));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_module_type_check CHECK ((module_type = ANY (ARRAY['theory'::text, 'exercise'::text, 'quiz'::text, 'practice'::text])));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_xp_reward_check CHECK ((xp_reward >= 0));
+ALTER TABLE public.libreria ADD CONSTRAINT libreria_stato_check CHECK ((stato = ANY (ARRAY['in-attesa'::text, 'approvato'::text, 'rifiutato'::text])));
+ALTER TABLE public.libreria ADD CONSTRAINT libreria_tipo_check CHECK ((tipo = ANY (ARRAY['modello'::text, 'smazzate'::text, 'esercizi'::text])));
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
@@ -3821,6 +3869,8 @@ ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_class_id_fkey FOREIGN 
 ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_creato_da_fkey FOREIGN KEY (creato_da) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_world_id_fkey FOREIGN KEY (world_id) REFERENCES course_worlds(id) ON DELETE CASCADE;
+ALTER TABLE public.libreria ADD CONSTRAINT libreria_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.libreria ADD CONSTRAINT libreria_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -3902,6 +3952,8 @@ CREATE INDEX idx_game_results_type ON public.game_results USING btree (game_type
 CREATE INDEX idx_game_results_user ON public.game_results USING btree (user_id, created_at DESC);
 CREATE INDEX idx_instructor_requests_status ON public.instructor_requests USING btree (status, created_at DESC);
 CREATE INDEX idx_inviti_classe ON public.inviti_aula USING btree (class_id, created_at DESC);
+CREATE INDEX idx_libreria_approvati ON public.libreria USING btree (stato, lesson_id, created_at DESC);
+CREATE INDEX idx_libreria_autore ON public.libreria USING btree (autore_id, created_at DESC);
 CREATE INDEX idx_login_history_date ON public.login_history USING btree (logged_in_at DESC);
 CREATE INDEX idx_login_history_platform ON public.login_history USING btree (platform, logged_in_at DESC);
 CREATE INDEX idx_login_history_user_date ON public.login_history USING btree (user_id, logged_in_at DESC);
@@ -3993,6 +4045,7 @@ ALTER TABLE public.instructor_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inviti_aula ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lesson_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.libreria ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
@@ -4093,6 +4146,15 @@ CREATE POLICY "Users can file own request" ON public.instructor_requests AS PERM
 CREATE POLICY "L'insegnante gestisce gli inviti della sua classe" ON public.inviti_aula AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
 CREATE POLICY lesson_modules_public_read ON public.lesson_modules AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY lessons_public_read ON public.lessons AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "Chi insegna propone" ON public.libreria AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (stato = 'in-attesa'::text) AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text, 'curatore'::text])))))));
+CREATE POLICY "Il curatore decide" ON public.libreria AS PERMISSIVE FOR UPDATE TO authenticated USING (is_curatore()) WITH CHECK (is_curatore());
+CREATE POLICY "L'autore corregge la propria proposta" ON public.libreria AS PERMISSIVE FOR UPDATE TO authenticated USING (((autore_id = auth.uid()) AND (stato <> 'approvato'::text))) WITH CHECK (((autore_id = auth.uid()) AND (stato = 'in-attesa'::text)));
+CREATE POLICY "L'autore ritira la propria proposta" ON public.libreria AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) OR is_curatore()));
+CREATE POLICY "La libreria approvata la vede chi insegna" ON public.libreria AS PERMISSIVE FOR SELECT TO authenticated USING (((autore_id = auth.uid()) OR is_curatore() OR ((stato = 'approvato'::text) AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text, 'curatore'::text]))))))));
 CREATE POLICY "Instructor manages own live tables" ON public.live_tables AS PERMISSIVE FOR ALL TO authenticated USING (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
    FROM classes c
   WHERE ((c.id = live_tables.class_id) AND (c.instructor_id = auth.uid())))))) WITH CHECK (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
@@ -4256,6 +4318,9 @@ GRANT DELETE ON public.lesson_modules TO service_role;
 GRANT DELETE ON public.lessons TO anon;
 GRANT DELETE ON public.lessons TO authenticated;
 GRANT DELETE ON public.lessons TO service_role;
+GRANT DELETE ON public.libreria TO anon;
+GRANT DELETE ON public.libreria TO authenticated;
+GRANT DELETE ON public.libreria TO service_role;
 GRANT DELETE ON public.live_tables TO anon;
 GRANT DELETE ON public.live_tables TO authenticated;
 GRANT DELETE ON public.live_tables TO service_role;
@@ -4430,6 +4495,9 @@ GRANT INSERT ON public.lesson_modules TO service_role;
 GRANT INSERT ON public.lessons TO anon;
 GRANT INSERT ON public.lessons TO authenticated;
 GRANT INSERT ON public.lessons TO service_role;
+GRANT INSERT ON public.libreria TO anon;
+GRANT INSERT ON public.libreria TO authenticated;
+GRANT INSERT ON public.libreria TO service_role;
 GRANT INSERT ON public.live_tables TO anon;
 GRANT INSERT ON public.live_tables TO authenticated;
 GRANT INSERT ON public.live_tables TO service_role;
@@ -4604,6 +4672,9 @@ GRANT REFERENCES ON public.lesson_modules TO service_role;
 GRANT REFERENCES ON public.lessons TO anon;
 GRANT REFERENCES ON public.lessons TO authenticated;
 GRANT REFERENCES ON public.lessons TO service_role;
+GRANT REFERENCES ON public.libreria TO anon;
+GRANT REFERENCES ON public.libreria TO authenticated;
+GRANT REFERENCES ON public.libreria TO service_role;
 GRANT REFERENCES ON public.live_tables TO anon;
 GRANT REFERENCES ON public.live_tables TO authenticated;
 GRANT REFERENCES ON public.live_tables TO service_role;
@@ -4778,6 +4849,9 @@ GRANT SELECT ON public.lesson_modules TO service_role;
 GRANT SELECT ON public.lessons TO anon;
 GRANT SELECT ON public.lessons TO authenticated;
 GRANT SELECT ON public.lessons TO service_role;
+GRANT SELECT ON public.libreria TO anon;
+GRANT SELECT ON public.libreria TO authenticated;
+GRANT SELECT ON public.libreria TO service_role;
 GRANT SELECT ON public.live_tables TO anon;
 GRANT SELECT ON public.live_tables TO authenticated;
 GRANT SELECT ON public.live_tables TO service_role;
@@ -4949,6 +5023,9 @@ GRANT TRIGGER ON public.lesson_modules TO service_role;
 GRANT TRIGGER ON public.lessons TO anon;
 GRANT TRIGGER ON public.lessons TO authenticated;
 GRANT TRIGGER ON public.lessons TO service_role;
+GRANT TRIGGER ON public.libreria TO anon;
+GRANT TRIGGER ON public.libreria TO authenticated;
+GRANT TRIGGER ON public.libreria TO service_role;
 GRANT TRIGGER ON public.live_tables TO anon;
 GRANT TRIGGER ON public.live_tables TO authenticated;
 GRANT TRIGGER ON public.live_tables TO service_role;
@@ -5123,6 +5200,9 @@ GRANT TRUNCATE ON public.lesson_modules TO service_role;
 GRANT TRUNCATE ON public.lessons TO anon;
 GRANT TRUNCATE ON public.lessons TO authenticated;
 GRANT TRUNCATE ON public.lessons TO service_role;
+GRANT TRUNCATE ON public.libreria TO anon;
+GRANT TRUNCATE ON public.libreria TO authenticated;
+GRANT TRUNCATE ON public.libreria TO service_role;
 GRANT TRUNCATE ON public.live_tables TO anon;
 GRANT TRUNCATE ON public.live_tables TO authenticated;
 GRANT TRUNCATE ON public.live_tables TO service_role;
@@ -5297,6 +5377,9 @@ GRANT UPDATE ON public.lesson_modules TO service_role;
 GRANT UPDATE ON public.lessons TO anon;
 GRANT UPDATE ON public.lessons TO authenticated;
 GRANT UPDATE ON public.lessons TO service_role;
+GRANT UPDATE ON public.libreria TO anon;
+GRANT UPDATE ON public.libreria TO authenticated;
+GRANT UPDATE ON public.libreria TO service_role;
 GRANT UPDATE ON public.live_tables TO anon;
 GRANT UPDATE ON public.live_tables TO authenticated;
 GRANT UPDATE ON public.live_tables TO service_role;
@@ -5498,6 +5581,10 @@ REVOKE ALL ON FUNCTION public.is_bbo_username_taken(p_bbo_username text) FROM PU
 GRANT EXECUTE ON FUNCTION public.is_bbo_username_taken(p_bbo_username text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_bbo_username_taken(p_bbo_username text) TO service_role;
 GRANT EXECUTE ON FUNCTION public.is_bbo_username_taken(p_bbo_username text) TO anon;
+REVOKE ALL ON FUNCTION public.is_curatore() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_curatore() TO anon;
+GRANT EXECUTE ON FUNCTION public.is_curatore() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_curatore() TO service_role;
 REVOKE ALL ON FUNCTION public.is_instructor_of_assignment(p_assignment_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.is_instructor_of_assignment(p_assignment_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_instructor_of_assignment(p_assignment_id uuid) TO service_role;
@@ -5514,6 +5601,10 @@ GRANT EXECUTE ON FUNCTION public.is_pending_of_class(p_class_id uuid) TO service
 REVOKE ALL ON FUNCTION public.join_class_by_code(p_code text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.join_class_by_code(p_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.join_class_by_code(p_code text) TO service_role;
+REVOKE ALL ON FUNCTION public.libreria_segna_uso(p_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.libreria_segna_uso(p_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.libreria_segna_uso(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.libreria_segna_uso(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer) TO service_role;
