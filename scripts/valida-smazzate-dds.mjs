@@ -15,10 +15,10 @@
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync, writeFileSync } from "fs";
 // Il pacchetto e' pubblicato in un formato che Node in ESM puro non risolve
-// (import interni senza estensione .js). Si importa il modulo per intero e si
-// estraggono le funzioni: funziona sia con tsx sia con vite-node.
-import bridgeDds from "bridge-dds";
-const { loadDds, Dds } = bridgeDds;
+// (import interni senza estensione .js): `scripts/dds.mjs` mette a posto la
+// risoluzione. Prima si diceva «serve tsx o vite-node», che qui non ci sono:
+// era il motivo per cui questo controllo risultava non eseguibile.
+import { loadDds, Dds } from "./dds.mjs";
 
 const env = Object.fromEntries(
   readFileSync(new URL("../.env.local", import.meta.url), "utf8")
