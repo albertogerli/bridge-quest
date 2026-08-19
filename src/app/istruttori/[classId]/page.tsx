@@ -198,6 +198,9 @@ export default function ClassDetailPage({
               {t("Invita su WhatsApp")}
             </Button>
           </a>
+          <Link href={`/istruttori/${classId}/aula`}>
+            <Button size="sm">{t("Apri l'aula")}</Button>
+          </Link>
           <Link href={`/istruttori/${classId}/allievi`}>
             <Button size="sm" variant="outline">
               {t("Allievi e tavoli")}
