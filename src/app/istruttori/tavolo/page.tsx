@@ -13,7 +13,13 @@ import { getValidCards, parseContract } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
-import { getClassDetail, getMyClasses, type ClassMember, type ClassRoom } from "@/lib/instructors";
+import {
+  createAssignment,
+  getClassDetail,
+  getMyClasses,
+  type ClassMember,
+  type ClassRoom,
+} from "@/lib/instructors";
 import {
   closeLiveTable,
   getOpenLiveTable,
@@ -22,6 +28,8 @@ import {
   setRevealed,
   playLiveCard,
   setContract,
+  registraManoVista,
+  maniViste,
   CONTRATTI,
   setSeats,
   setShowContract,
@@ -76,6 +84,8 @@ function Tavolo() {
   const [indice, setIndice] = useState(0);
   const [occupato, setOccupato] = useState(false);
   const [divisioniVisibili, setDivisioniVisibili] = useState(false);
+  const [assegnando, setAssegnando] = useState(false);
+  const [assegnato, setAssegnato] = useState("");
   const [allievi, setAllievi] = useState<ClassMember[]>([]);
 
   useEffect(() => {
@@ -154,6 +164,14 @@ function Tavolo() {
     });
     setIndice(0);
     setTableId(id);
+    if (id) {
+      await registraManoVista(id, {
+        hands: mani[0],
+        titolo: `${modello.label} — mano 1`,
+        contract: scelto.contract,
+        declarer: scelto.declarer,
+      });
+    }
     setOccupato(false);
   }, [classId, mani, modello.label, contrattoDellaMano]);
 
@@ -163,6 +181,12 @@ function Tavolo() {
     setOccupato(true);
     const scelto = await contrattoDellaMano(mani[i]);
     await setLiveHands(tableId, mani[i], {
+      titolo: `${modello.label} — mano ${i + 1}`,
+      contract: scelto.contract,
+      declarer: scelto.declarer,
+    });
+    await registraManoVista(tableId, {
+      hands: mani[i],
       titolo: `${modello.label} — mano ${i + 1}`,
       contract: scelto.contract,
       declarer: scelto.declarer,
@@ -221,6 +245,56 @@ function Tavolo() {
     ? getValidCards(stato.hands[gioco.turno] ?? [], gioco.presaCorrente)
     : [];
   const giocabiliSet = new Set(giocabiliOra.map((c) => `${c.suit}-${c.rank}`));
+
+  /**
+   * Le mani di oggi diventano il compito.
+   *
+   * IL CERCHIO SI CHIUDE QUI. Chi era in aula le rigioca a casa, e chi era
+   * assente le riceve comunque — è il caso più frequente e oggi il meno
+   * gestito: l'assente non perde la lezione, perde solo la spiegazione a voce.
+   * Il compito va a TUTTA la classe, non ai presenti, e proprio per questo.
+   *
+   * Le mani vanno in `custom_hands` con un id proprio: non stanno nel catalogo,
+   * sono quelle generate stasera per questa classe. Il commento è la nota che
+   * l'insegnante ha già scritto sul titolo della mano.
+   */
+  const assegnaManiDiOggi = async () => {
+    if (!tableId || !classId) return;
+    setAssegnando(true);
+    setAssegnato("");
+    try {
+      const viste = await maniViste(tableId);
+      if (viste.length === 0) {
+        setAssegnato("Non hai ancora mostrato nessuna mano.");
+        return;
+      }
+      const oggi = new Date().toLocaleDateString("it-IT", { day: "numeric", month: "long" });
+      const smazzate = viste.map((m, i) => ({
+        id: `lezione-${tableId.slice(0, 8)}-${i}`,
+        lesson: 0,
+        board: i + 1,
+        title: m.titolo ?? `Mano ${i + 1}`,
+        contract: m.contract ?? "3SA",
+        declarer: (m.declarer ?? "south") as Position,
+        openingLead: m.hands.west?.[0] ?? m.hands.north[0],
+        vulnerability: "none" as const,
+        hands: m.hands,
+      }));
+      await createAssignment({
+        classId,
+        title: `Le mani della lezione del ${oggi}`,
+        smazzataIds: smazzate.map((s) => s.id),
+        customHands: smazzate,
+        instructorNote: "Le mani che abbiamo visto insieme. Rigiocale quante volte vuoi.",
+      });
+      setAssegnato(`Assegnate ${smazzate.length} mani a tutta la classe.`);
+    } catch (err) {
+      reportError("tavolo:assegna-oggi", err);
+      setAssegnato("Non sono riuscito ad assegnarle.");
+    } finally {
+      setAssegnando(false);
+    }
+  };
 
   const giocaPer = async (seat: Position, carta: Card) => {
     if (!tableId) return;
@@ -400,6 +474,9 @@ function Tavolo() {
           <Button variant="outline" onClick={() => setShowContract(tableId, !stato.showContract)}>
             {stato.showContract ? "Nascondi il contratto" : "Mostra il contratto"}
           </Button>
+          <Button variant="outline" disabled={assegnando} onClick={() => void assegnaManiDiOggi()}>
+            {assegnando ? "Assegno…" : "Assegna le mani di oggi"}
+          </Button>
           <Button variant="outline" onClick={() => setDivisioniVisibili((v) => !v)}>
             {divisioniVisibili ? "Nascondi le divisioni" : "Divisioni dei semi"}
           </Button>
@@ -418,6 +495,12 @@ function Tavolo() {
             scopertiEsterni={stato.revealed}
           />
         </div>
+      )}
+
+      {assegnato && (
+        <p className="mx-auto mt-3 max-w-2xl rounded-lg border border-border bg-card p-3 text-center text-sm">
+          {assegnato}
+        </p>
       )}
 
       <PulsanteSegnalazione
