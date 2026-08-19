@@ -427,7 +427,8 @@ CREATE TABLE IF NOT EXISTS public.live_tables (
   closed_at timestamp with time zone,
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL,
-  played jsonb NOT NULL
+  played jsonb NOT NULL,
+  mani_viste jsonb NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.login_history (
@@ -2402,6 +2403,34 @@ END
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.live_table_registra_mano(p_id uuid, p_mano jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  proprietario uuid;
+begin
+  select instructor_id into proprietario from live_tables where id = p_id;
+  if proprietario is null or proprietario <> auth.uid() then
+    raise exception 'not authorized for table %', p_id using errcode = '42501';
+  end if;
+
+  -- Si aggiunge in coda solo se non c'e gia la stessa mano in ultima
+  -- posizione: mandare due volte la stessa non deve raddoppiarla nel compito.
+  update live_tables
+  set mani_viste = case
+        when jsonb_array_length(mani_viste) > 0
+             and mani_viste -> (jsonb_array_length(mani_viste) - 1) -> 'hands' = p_mano -> 'hands'
+        then mani_viste
+        else mani_viste || jsonb_build_array(p_mano)
+      end,
+      updated_at = now()
+  where id = p_id;
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.live_table_undo(p_table_id uuid)
  RETURNS boolean
  LANGUAGE plpgsql
@@ -3464,6 +3493,7 @@ ALTER TABLE public.live_tables ALTER COLUMN show_contract SET DEFAULT false;
 ALTER TABLE public.live_tables ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN played SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.live_tables ALTER COLUMN mani_viste SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.login_history ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.login_history ALTER COLUMN logged_in_at SET DEFAULT now();
 ALTER TABLE public.mani_generate ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -5335,6 +5365,10 @@ GRANT EXECUTE ON FUNCTION public.live_table_open(p_class_id uuid) TO service_rol
 REVOKE ALL ON FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.live_table_play(p_table_id uuid, p_seat text, p_card jsonb) TO service_role;
+REVOKE ALL ON FUNCTION public.live_table_registra_mano(p_id uuid, p_mano jsonb) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.live_table_registra_mano(p_id uuid, p_mano jsonb) TO anon;
+GRANT EXECUTE ON FUNCTION public.live_table_registra_mano(p_id uuid, p_mano jsonb) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.live_table_registra_mano(p_id uuid, p_mano jsonb) TO service_role;
 REVOKE ALL ON FUNCTION public.live_table_undo(p_table_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.live_table_undo(p_table_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.live_table_undo(p_table_id uuid) TO service_role;

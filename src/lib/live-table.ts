@@ -189,6 +189,47 @@ export async function setContract(
   if (error) reportError("live-table:imposta-contratto", error);
 }
 
+/**
+ * Segna che questa mano è stata mostrata alla classe.
+ *
+ * SERVE A CHIUDERE IL CERCHIO fra la lezione in presenza e il lavoro a casa. A
+ * fine sessione l'insegnante preme un tasto e le mani viste diventano il
+ * compito: senza questo elenco bisognerebbe ricordarsele e ricomporle a mano,
+ * che è esattamente il lavoro aggiuntivo che il portale dovrebbe togliere.
+ *
+ * L'aggiunta la fa il database e non il client: due schede aperte, o un doppio
+ * invio, aggiungerebbero due volte la stessa mano. E chi rimanda la stessa mano
+ * per riguardarla non deve ritrovarsela doppia nel compito.
+ */
+export async function registraManoVista(
+  id: string,
+  mano: { hands: Record<Position, Card[]>; titolo?: string | null; contract?: string | null; declarer?: Position | null },
+): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.rpc("live_table_registra_mano", {
+    p_id: id,
+    p_mano: mano,
+  });
+  if (error) reportError("live-table:registra-mano", error);
+}
+
+/** Le mani mostrate finora in questa sessione. */
+export async function maniViste(id: string): Promise<
+  { hands: Record<Position, Card[]>; titolo?: string | null; contract?: string | null; declarer?: Position | null }[]
+> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("live_tables")
+    .select("mani_viste")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) {
+    reportError("live-table:mani-viste", error);
+    return [];
+  }
+  return ((data?.mani_viste ?? []) as { hands: Record<Position, Card[]> }[]) as never;
+}
+
 /** Assegna i posti agli allievi: `{ "<id allievo>": "north", ... }`. */
 export async function setSeats(id: string, seatOf: Record<string, Position>): Promise<void> {
   const supabase = createClient();
