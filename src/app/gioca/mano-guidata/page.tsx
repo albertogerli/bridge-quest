@@ -95,8 +95,7 @@ function HandSelector({
                 {t("Impara giocando")}
               </p>
               <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                Due mani progettate per consolidare le basi. La prima è facile con suggerimenti,
-                la seconda più impegnativa senza aiuti.
+                {t("Due mani progettate per consolidare le basi. La prima è facile con suggerimenti, la seconda più impegnativa senza aiuti.")}
               </p>
             </div>
           </div>

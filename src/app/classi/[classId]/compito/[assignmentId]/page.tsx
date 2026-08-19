@@ -342,6 +342,7 @@ function SoluzioneMano({
   ricarica: unknown;
   assignmentId?: string;
 }) {
+  const t = useT();
   const [aperta, setAperta] = useState(false);
   const [prova, setProva] = useState(false);
   const commento = useCommento(smazzata, ricarica);
@@ -371,7 +372,7 @@ function SoluzioneMano({
             className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Riprova questa mano — non conta
+            {t("Riprova questa mano — non conta")}
           </button>
         )
       )}

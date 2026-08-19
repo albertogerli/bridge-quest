@@ -1,0 +1,119 @@
+
+> figb-bridge-lab@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.1.6 (webpack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ (serwist) Bundling the service worker script with the URL '/sw.js' and the scope '/'...
+✓ Compiled successfully in 21.6s
+  Running TypeScript ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/72) ...
+(node:97862) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97861) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97863) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+  Generating static pages using 9 workers (18/72) 
+  Generating static pages using 9 workers (36/72) 
+  Generating static pages using 9 workers (54/72) 
+✓ Generating static pages using 9 workers (72/72) in 1514.9ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)                                       Revalidate  Expire
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /~offline
+├ ○ /accessibilita
+├ ƒ /admin
+├ ƒ /admin/classi
+├ ƒ /admin/istruttori
+├ ○ /amici
+├ ƒ /api/account/delete
+├ ƒ /api/ben/autoplay
+├ ƒ /api/ben/health
+├ ƒ /api/ben/lead
+├ ƒ /api/ben/play
+├ ƒ /api/cron/engagement
+├ ƒ /api/email/unsubscribe
+├ ƒ /api/friends/notify
+├ ƒ /api/instructor-request
+├ ƒ /api/meta/conversion
+├ ○ /appunti
+├ ○ /auth
+├ ƒ /auth/callback
+├ ƒ /circolo/[slug]
+├ ○ /classi
+├ ƒ /classi/[classId]
+├ ƒ /classi/[classId]/compito/[assignmentId]
+├ ○ /classifica
+├ ○ /collezione
+├ ○ /dispense
+├ ○ /diventa-istruttore
+├ ○ /forum
+├ ƒ /forum/[postId]
+├ ○ /forum/nuovo
+├ ○ /gioca
+├ ○ /gioca/analisi
+├ ○ /gioca/conta-veloce
+├ ○ /gioca/dichiara
+├ ○ /gioca/impasse
+├ ○ /gioca/mano-del-giorno
+├ ○ /gioca/mano-guidata
+├ ○ /gioca/memory
+├ ○ /gioca/minibridge
+├ ○ /gioca/pratica
+├ ○ /gioca/pratica-licita
+├ ○ /gioca/quiz-lampo
+├ ○ /gioca/quiz-prese
+├ ○ /gioca/segnali
+├ ○ /gioca/sfida
+├ ○ /gioca/sfida-amico
+├ ○ /gioca/sfida-imp
+├ ○ /gioca/sfida-link
+├ ○ /gioca/sfida-settimanale
+├ ○ /gioca/smazzata
+├ ○ /gioca/torneo
+├ ○ /gioca/trova-errore
+├ ○ /glossario                                            1h      1y
+├ ○ /guida
+├ ○ /impara
+├ ○ /impostazioni
+├ ƒ /istruttori
+├ ƒ /istruttori/[classId]
+├ ƒ /istruttori/[classId]/compito/[assignmentId]
+├ ƒ /istruttori/[classId]/nuovo-compito
+├ ƒ /istruttori/genera-mani
+├ ○ /lezioni
+├ ƒ /lezioni/[lessonId]
+├ ƒ /lezioni/[lessonId]/[moduleId]
+├ ○ /login
+├ ○ /manifest.webmanifest
+├ ○ /negozio
+├ ○ /obiettivi
+├ ○ /prima-mano
+├ ○ /privacy
+├ ○ /profilo
+├ ○ /profilo/wrapped
+├ ○ /registrati
+├ ○ /reset-password
+├ ○ /ripasso
+├ ○ /robots.txt
+├ ○ /scopri
+├ ○ /scuola
+├ ○ /sitemap.xml
+├ ○ /termini
+├ ○ /trova-circolo
+└ ○ /trova-compagno
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+EXIT:0

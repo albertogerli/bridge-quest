@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FraseConElementi } from "@/components/frase-con-elementi";
+import { tServer } from "@/lib/traduzioni-server";
 
 export const metadata: Metadata = {
   title: "Dichiarazione di Accessibilita - BridgeLab",
@@ -10,7 +12,58 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AccessibilitaPage() {
+const CLASSE_LINK = "text-figb dark:text-primary hover:underline font-medium";
+
+/** Un collegamento esterno: si aprono tutti allo stesso modo. */
+function Esterno({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={CLASSE_LINK}>
+      {children}
+    </a>
+  );
+}
+
+function Codice({ children }: { children: React.ReactNode }) {
+  return <code className="bg-muted px-1 rounded text-sm">{children}</code>;
+}
+
+/**
+ * La dichiarazione di accessibilità.
+ *
+ * ----------------------------------------------------------------------------
+ * PERCHÉ QUESTA PAGINA ERA RIMASTA IN ITALIANO
+ * ----------------------------------------------------------------------------
+ *
+ * È un componente SERVER, e `useT()` è un hook: lì non gira. Le altre pagine
+ * legali — privacy, termini — erano state rese client apposta per poter
+ * tradurre; questa no, e quarantatré frasi restavano italiane anche sotto
+ * `/en` senza che niente lo segnalasse.
+ *
+ * Renderla client sarebbe stato il gesto più corto e il peggiore: è un
+ * documento lungo e statico che deve essere indicizzabile, e chi arriva da una
+ * ricerca vedrebbe uno scheletro vuoto. Traduce sul server con `tServer()`, che
+ * legge la lingua da un'intestazione messa dal proxy — il server l'indirizzo
+ * con `/en` non lo vede, perché è una riscrittura.
+ *
+ * ----------------------------------------------------------------------------
+ * LE FRASI SONO INTERE, I COLLEGAMENTI SONO SEGNAPOSTO
+ * ----------------------------------------------------------------------------
+ *
+ * Il testo era spezzato dai link e dai `<strong>` in frammenti come «e con le»,
+ * «accessibile al maggior numero possibile di utenti». Frammenti così non si
+ * traducono: l'ordine delle parole cambia da una lingua all'altra, e senza la
+ * frase intorno non c'è contesto nemmeno per un umano.
+ *
+ * Qui ogni frase sta nel dizionario per intero, con `{sito}` e `{eaa}` dove
+ * vanno i collegamenti, e `FraseConElementi` li rimette al loro posto — che in
+ * inglese può essere un altro.
+ *
+ * Le entità HTML (`&egrave;`, `&apos;`) sono diventate lettere vere: una chiave
+ * di dizionario con dentro `&egrave;` è una chiave che nessuno riesce a cercare.
+ */
+export default async function AccessibilitaPage() {
+  const t = await tServer();
+
   return (
     <div className="min-h-screen bg-background pt-8 pb-24 px-5">
       <div className="mx-auto max-w-6xl">
@@ -18,411 +71,359 @@ export default function AccessibilitaPage() {
           href="/"
           className="inline-block mb-8 text-figb dark:text-primary hover:underline text-sm font-medium"
         >
-          &larr; Torna alla Home
+          &larr; {t("Torna alla Home")}
         </Link>
 
         <h1 className="text-3xl font-extrabold text-foreground font-display mb-8">
-          Dichiarazione di Accessibilit&agrave;
+          {t("Dichiarazione di Accessibilità")}
         </h1>
 
         <div className="prose prose-sm dark:prose-invert max-w-none space-y-8">
-          {/* Introduzione */}
           <section>
             <p className="text-muted-foreground leading-relaxed">
-              La{" "}
-              <strong>
-                Federazione Italiana Gioco Bridge (FIGB)
-              </strong>{" "}
-              si impegna a rendere la piattaforma{" "}
-              <strong>BridgeLab</strong> (
-              <a
-                href="https://bridgelab.it"
-                className="text-figb dark:text-primary hover:underline font-medium"
-              >
-                bridgelab.it
-              </a>
-              ) accessibile al maggior numero possibile di utenti, indipendentemente
-              dalle loro capacit&agrave; o dai dispositivi utilizzati, in conformit&agrave;
-              con il{" "}
-              <a
-                href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32019L0882"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-figb dark:text-primary hover:underline font-medium"
-              >
-                European Accessibility Act (Direttiva UE 2019/882)
-              </a>{" "}
-              e con le{" "}
-              <a
-                href="https://www.agid.gov.it/it/design-servizi/accessibilita"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-figb dark:text-primary hover:underline font-medium"
-              >
-                Linee Guida AGID sull&apos;accessibilit&agrave; dei contenuti web
-              </a>
-              .
+              <FraseConElementi
+                testo={t(
+                  "La Federazione Italiana Gioco Bridge (FIGB) si impegna a rendere la piattaforma BridgeLab ({sito}) accessibile al maggior numero possibile di utenti, indipendentemente dalle loro capacità o dai dispositivi utilizzati, in conformità con l'{eaa} e con le {agid}.",
+                )}
+                elementi={{
+                  sito: <Esterno href="https://bridgelab.it">bridgelab.it</Esterno>,
+                  eaa: (
+                    <Esterno href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32019L0882">
+                      {t("European Accessibility Act (Direttiva UE 2019/882)")}
+                    </Esterno>
+                  ),
+                  agid: (
+                    <Esterno href="https://www.agid.gov.it/it/design-servizi/accessibilita">
+                      {t("Linee Guida AGID sull'accessibilità dei contenuti web")}
+                    </Esterno>
+                  ),
+                }}
+              />
             </p>
           </section>
 
-          {/* Standard di riferimento */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Standard di riferimento
+              {t("Standard di riferimento")}
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              La piattaforma BridgeLab &egrave; progettata con l&apos;obiettivo di
-              raggiungere la conformit&agrave; al livello{" "}
-              <strong>AA</strong> delle{" "}
-              <a
-                href="https://www.w3.org/TR/WCAG22/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-figb dark:text-primary hover:underline font-medium"
-              >
-                Web Content Accessibility Guidelines (WCAG) 2.2
-              </a>
-              , pubblicate dal World Wide Web Consortium (W3C). Le WCAG 2.2
-              definiscono i requisiti tecnici per rendere i contenuti web percepibili,
-              utilizzabili, comprensibili e robusti per tutti gli utenti, compresi
-              coloro che utilizzano tecnologie assistive.
+              <FraseConElementi
+                testo={t(
+                  "La piattaforma BridgeLab è progettata con l'obiettivo di raggiungere la conformità al livello AA delle {wcag}, pubblicate dal World Wide Web Consortium (W3C). Le WCAG 2.2 definiscono i requisiti tecnici per rendere i contenuti web percepibili, utilizzabili, comprensibili e robusti per tutti gli utenti, compresi coloro che utilizzano tecnologie assistive.",
+                )}
+                elementi={{
+                  wcag: (
+                    <Esterno href="https://www.w3.org/TR/WCAG22/">
+                      Web Content Accessibility Guidelines (WCAG) 2.2
+                    </Esterno>
+                  ),
+                }}
+              />
             </p>
           </section>
 
-          {/* Tecnologie utilizzate */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Tecnologie utilizzate
+              {t("Tecnologie utilizzate")}
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-3">
-              L&apos;accessibilit&agrave; di BridgeLab si basa sulle seguenti
-              tecnologie:
+              {t("L'accessibilità di BridgeLab si basa sulle seguenti tecnologie:")}
             </p>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
-                <strong>HTML5</strong> semantico, con uso appropriato di landmark,
-                intestazioni e struttura del documento
+                <strong>HTML5</strong>{" "}
+                {t(
+                  "semantico, con uso appropriato di landmark, intestazioni e struttura del documento",
+                )}
               </li>
               <li>
-                <strong>CSS3</strong> con layout responsivo e supporto per la
-                modalit&agrave; scura (dark mode)
+                <strong>CSS3</strong>{" "}
+                {t("con layout responsivo e supporto per la modalità scura (dark mode)")}
               </li>
               <li>
-                <strong>JavaScript</strong> (React / Next.js) con gestione
-                progressiva delle interazioni
+                <strong>JavaScript</strong>{" "}
+                {t("(React / Next.js) con gestione progressiva delle interazioni")}
               </li>
               <li>
-                <strong>WAI-ARIA</strong> (Accessible Rich Internet Applications)
-                per comunicare ruoli, stati e propriet&agrave; dei componenti
-                interattivi alle tecnologie assistive
-              </li>
-            </ul>
-          </section>
-
-          {/* Misure adottate */}
-          <section>
-            <h2 className="text-lg font-bold text-foreground mb-2">
-              Misure di accessibilit&agrave; adottate
-            </h2>
-            <p className="text-muted-foreground leading-relaxed mb-3">
-              BridgeLab adotta le seguenti misure per garantire
-              l&apos;accessibilit&agrave; della piattaforma:
-            </p>
-
-            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
-              Navigazione e struttura
-            </h3>
-            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-              <li>
-                <strong>Skip link</strong>: un collegamento &ldquo;Vai al
-                contenuto&rdquo; &egrave; disponibile all&apos;inizio di ogni pagina
-                per consentire agli utenti di saltare direttamente al contenuto
-                principale
-              </li>
-              <li>
-                <strong>HTML semantico</strong>: utilizzo coerente di elementi come{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  &lt;main&gt;
-                </code>
-                ,{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  &lt;nav&gt;
-                </code>
-                ,{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  &lt;section&gt;
-                </code>
-                ,{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  &lt;article&gt;
-                </code>{" "}
-                e intestazioni gerarchiche (
-                <code className="bg-muted px-1 rounded text-sm">
-                  h1
-                </code>
-                &ndash;
-                <code className="bg-muted px-1 rounded text-sm">
-                  h6
-                </code>
-                )
-              </li>
-              <li>
-                <strong>Navigazione da tastiera</strong>: tutti i collegamenti,
-                pulsanti e controlli interattivi sono raggiungibili e attivabili
-                tramite tastiera
-              </li>
-              <li>
-                <strong>Focus visibile</strong>: gli indicatori di focus sono
-                chiaramente visibili per facilitare la navigazione da tastiera
-              </li>
-            </ul>
-
-            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
-              Contenuti e presentazione
-            </h3>
-            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-              <li>
-                <strong>Attributi ARIA</strong>: etichette{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  aria-label
-                </code>
-                ,{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  aria-describedby
-                </code>{" "}
-                e ruoli ARIA per i componenti interattivi (quiz, minigiochi, menu)
-              </li>
-              <li>
-                <strong>Testo alternativo</strong>: le immagini significative
-                dispongono di attributi{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  alt
-                </code>{" "}
-                descrittivi; le immagini decorative sono contrassegnate con{" "}
-                <code className="bg-muted px-1 rounded text-sm">
-                  alt=&quot;&quot;
-                </code>
-              </li>
-              <li>
-                <strong>Contrasto cromatico</strong>: i rapporti di contrasto tra
-                testo e sfondo rispettano i requisiti WCAG AA (almeno 4,5:1 per il
-                testo normale, 3:1 per il testo grande)
-              </li>
-              <li>
-                <strong>Design responsivo</strong>: la piattaforma si adatta a
-                schermi di ogni dimensione, da smartphone a monitor desktop
-              </li>
-              <li>
-                <strong>Modalit&agrave; scura</strong>: &egrave; disponibile una
-                modalit&agrave; scura (dark mode) per ridurre l&apos;affaticamento
-                visivo
-              </li>
-            </ul>
-
-            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
-              Inclusivit&agrave; e adattamento
-            </h3>
-            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-              <li>
-                <strong>Profili utente per fasce d&apos;et&agrave;</strong>: la
-                piattaforma offre quattro profili (Junior, Giovane, Adulto, Senior)
-                che adattano l&apos;esperienza didattica, incluse le dimensioni del
-                testo e lo stile comunicativo, per rispondere alle esigenze di utenti
-                di ogni et&agrave;
-              </li>
-              <li>
-                <strong>Video didattici</strong>: i video sono ospitati su YouTube,
-                che fornisce sottotitoli automatici e controlli di riproduzione
-                accessibili
-              </li>
-              <li>
-                <strong>Linguaggio chiaro</strong>: i contenuti didattici utilizzano
-                un linguaggio semplice, diretto e accompagnato da spiegazioni per i
-                termini tecnici del bridge
+                <strong>WAI-ARIA</strong>{" "}
+                {t(
+                  "(Accessible Rich Internet Applications) per comunicare ruoli, stati e proprietà dei componenti interattivi alle tecnologie assistive",
+                )}
               </li>
             </ul>
           </section>
 
-          {/* Limitazioni note */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Limitazioni note
+              {t("Misure di accessibilità adottate")}
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-3">
-              Nonostante gli sforzi per garantire la piena accessibilit&agrave;,
-              alcune aree della piattaforma presentano limitazioni note:
+              {t(
+                "BridgeLab adotta le seguenti misure per garantire l'accessibilità della piattaforma:",
+              )}
+            </p>
+
+            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
+              {t("Navigazione e struttura")}
+            </h3>
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
+              <li>
+                <strong>{t("Skip link")}</strong>:{" "}
+                {t(
+                  "un collegamento «Vai al contenuto» è disponibile all'inizio di ogni pagina per consentire agli utenti di saltare direttamente al contenuto principale",
+                )}
+              </li>
+              <li>
+                <strong>{t("HTML semantico")}</strong>:{" "}
+                <FraseConElementi
+                  testo={t(
+                    "utilizzo coerente di elementi come {main}, {nav}, {section}, {article} e intestazioni gerarchiche ({h1}–{h6})",
+                  )}
+                  elementi={{
+                    main: <Codice>&lt;main&gt;</Codice>,
+                    nav: <Codice>&lt;nav&gt;</Codice>,
+                    section: <Codice>&lt;section&gt;</Codice>,
+                    article: <Codice>&lt;article&gt;</Codice>,
+                    h1: <Codice>h1</Codice>,
+                    h6: <Codice>h6</Codice>,
+                  }}
+                />
+              </li>
+              <li>
+                <strong>{t("Navigazione da tastiera")}</strong>:{" "}
+                {t(
+                  "tutti i collegamenti, pulsanti e controlli interattivi sono raggiungibili e attivabili tramite tastiera",
+                )}
+              </li>
+              <li>
+                <strong>{t("Focus visibile")}</strong>:{" "}
+                {t(
+                  "gli indicatori di focus sono chiaramente visibili per facilitare la navigazione da tastiera",
+                )}
+              </li>
+            </ul>
+
+            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
+              {t("Contenuti e presentazione")}
+            </h3>
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
+              <li>
+                <strong>{t("Attributi ARIA")}</strong>:{" "}
+                <FraseConElementi
+                  testo={t(
+                    "etichette {ariaLabel}, {ariaDescribedby} e ruoli ARIA per i componenti interattivi (quiz, minigiochi, menu)",
+                  )}
+                  elementi={{
+                    ariaLabel: <Codice>aria-label</Codice>,
+                    ariaDescribedby: <Codice>aria-describedby</Codice>,
+                  }}
+                />
+              </li>
+              <li>
+                <strong>{t("Testo alternativo")}</strong>:{" "}
+                <FraseConElementi
+                  testo={t(
+                    "le immagini significative dispongono di attributi {alt} descrittivi; le immagini decorative sono contrassegnate con {altVuoto}",
+                  )}
+                  elementi={{
+                    alt: <Codice>alt</Codice>,
+                    altVuoto: <Codice>alt=&quot;&quot;</Codice>,
+                  }}
+                />
+              </li>
+              <li>
+                <strong>{t("Contrasto cromatico")}</strong>:{" "}
+                {t(
+                  "i rapporti di contrasto tra testo e sfondo rispettano i requisiti WCAG AA (almeno 4,5:1 per il testo normale, 3:1 per il testo grande)",
+                )}
+              </li>
+              <li>
+                <strong>{t("Design responsivo")}</strong>:{" "}
+                {t(
+                  "la piattaforma si adatta a schermi di ogni dimensione, da smartphone a monitor desktop",
+                )}
+              </li>
+              <li>
+                <strong>{t("Modalità scura")}</strong>:{" "}
+                {t(
+                  "è disponibile una modalità scura (dark mode) per ridurre l'affaticamento visivo",
+                )}
+              </li>
+            </ul>
+
+            <h3 className="text-base font-semibold text-foreground/80 mt-4 mb-2">
+              {t("Inclusività e adattamento")}
+            </h3>
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
+              <li>
+                <strong>{t("Profili utente per fasce d'età")}</strong>:{" "}
+                {t(
+                  "la piattaforma offre quattro profili (Junior, Giovane, Adulto, Senior) che adattano l'esperienza didattica, incluse le dimensioni del testo e lo stile comunicativo, per rispondere alle esigenze di utenti di ogni età",
+                )}
+              </li>
+              <li>
+                <strong>{t("Video didattici")}</strong>:{" "}
+                {t(
+                  "i video sono ospitati su YouTube, che fornisce sottotitoli automatici e controlli di riproduzione accessibili",
+                )}
+              </li>
+              <li>
+                <strong>{t("Linguaggio chiaro")}</strong>:{" "}
+                {t(
+                  "i contenuti didattici utilizzano un linguaggio semplice, diretto e accompagnato da spiegazioni per i termini tecnici del bridge",
+                )}
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-foreground mb-2">
+              {t("Limitazioni note")}
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-3">
+              {t(
+                "Nonostante gli sforzi per garantire la piena accessibilità, alcune aree della piattaforma presentano limitazioni note:",
+              )}
             </p>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
-                <strong>Minigiochi interattivi</strong>: alcuni moduli di pratica al
-                tavolo (gioco della carta, dichiarazione interattiva) utilizzano
-                interfacce drag-and-drop e visualizzazioni di carte che potrebbero
-                avere un&apos;accessibilit&agrave; da tastiera limitata. Stiamo
-                lavorando per aggiungere modalit&agrave; di interazione alternative
+                <strong>{t("Minigiochi interattivi")}</strong>:{" "}
+                {t(
+                  "alcuni moduli di pratica al tavolo (gioco della carta, dichiarazione interattiva) utilizzano interfacce drag-and-drop e visualizzazioni di carte che potrebbero avere un'accessibilità da tastiera limitata. Stiamo lavorando per aggiungere modalità di interazione alternative",
+                )}
               </li>
               <li>
-                <strong>Infografiche</strong>: alcune infografiche didattiche sono
-                fornite come immagini e potrebbero non essere completamente fruibili
-                tramite screen reader. I contenuti equivalenti sono disponibili nel
-                testo della lezione
+                <strong>{t("Infografiche")}</strong>:{" "}
+                {t(
+                  "alcune infografiche didattiche sono fornite come immagini e potrebbero non essere completamente fruibili tramite screen reader. I contenuti equivalenti sono disponibili nel testo della lezione",
+                )}
               </li>
               <li>
-                <strong>Contenuti video di terze parti</strong>: i video incorporati
-                da YouTube dipendono dall&apos;accessibilit&agrave; del player di
-                YouTube e dalla qualit&agrave; dei sottotitoli automatici
+                <strong>{t("Contenuti video di terze parti")}</strong>:{" "}
+                {t(
+                  "i video incorporati da YouTube dipendono dall'accessibilità del player di YouTube e dalla qualità dei sottotitoli automatici",
+                )}
               </li>
             </ul>
             <p className="text-muted-foreground leading-relaxed mt-3">
-              Ci impegniamo a risolvere progressivamente queste limitazioni e a
-              migliorare continuamente l&apos;accessibilit&agrave; della piattaforma.
+              {t(
+                "Ci impegniamo a risolvere progressivamente queste limitazioni e a migliorare continuamente l'accessibilità della piattaforma.",
+              )}
             </p>
           </section>
 
-          {/* Compatibilita */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Compatibilit&agrave; con browser e tecnologie assistive
+              {t("Compatibilità con browser e tecnologie assistive")}
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              BridgeLab &egrave; progettata per essere compatibile con i principali
-              browser moderni (Chrome, Firefox, Safari, Edge) e con le pi&ugrave;
-              diffuse tecnologie assistive, tra cui screen reader (VoiceOver, NVDA,
-              JAWS), navigazione da tastiera e strumenti di ingrandimento.
+              {t(
+                "BridgeLab è progettata per essere compatibile con i principali browser moderni (Chrome, Firefox, Safari, Edge) e con le più diffuse tecnologie assistive, tra cui screen reader (VoiceOver, NVDA, JAWS), navigazione da tastiera e strumenti di ingrandimento.",
+              )}
             </p>
           </section>
 
-          {/* Feedback e contatti */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Feedback e segnalazioni
+              {t("Feedback e segnalazioni")}
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Accogliamo con favore segnalazioni e suggerimenti relativi
-              all&apos;accessibilit&agrave; della piattaforma. Se riscontrate
-              barriere di accessibilit&agrave; o difficolt&agrave;
-              nell&apos;utilizzo di BridgeLab, vi invitiamo a contattarci:
+              {t(
+                "Accogliamo con favore segnalazioni e suggerimenti relativi all'accessibilità della piattaforma. Se riscontrate barriere di accessibilità o difficoltà nell'utilizzo di BridgeLab, vi invitiamo a contattarci:",
+              )}
             </p>
             <ul className="list-none pl-0 text-muted-foreground space-y-1 mt-3">
               <li>
-                <strong>Email:</strong>{" "}
-                <a
-                  href="mailto:info@bridgelab.it"
-                  className="text-figb dark:text-primary hover:underline font-medium"
-                >
+                <strong>{t("Email:")}</strong>{" "}
+                <a href="mailto:info@bridgelab.it" className={CLASSE_LINK}>
                   info@bridgelab.it
                 </a>
               </li>
               <li>
-                <strong>Ente di riferimento:</strong>{" "}
-                <a
-                  href="https://www.federbridge.it"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-figb dark:text-primary hover:underline font-medium"
-                >
-                  Federazione Italiana Gioco Bridge (FIGB)
-                </a>
+                <strong>{t("Ente di riferimento:")}</strong>{" "}
+                <Esterno href="https://www.federbridge.it">
+                  {t("Federazione Italiana Gioco Bridge (FIGB)")}
+                </Esterno>
               </li>
             </ul>
             <p className="text-muted-foreground leading-relaxed mt-3">
-              Ci impegniamo a rispondere alle segnalazioni entro 10 giorni lavorativi
-              e a proporre soluzioni adeguate nel pi&ugrave; breve tempo possibile.
+              {t(
+                "Ci impegniamo a rispondere alle segnalazioni entro 10 giorni lavorativi e a proporre soluzioni adeguate nel più breve tempo possibile.",
+              )}
             </p>
           </section>
 
-          {/* Procedura di attuazione */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Procedura di attuazione
+              {t("Procedura di attuazione")}
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Qualora la risposta alla segnalazione non fosse soddisfacente, &egrave;
-              possibile rivolgersi al{" "}
-              <a
-                href="https://www.agid.gov.it/it/design-servizi/accessibilita"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-figb dark:text-primary hover:underline font-medium"
-              >
-                Difensore civico per il digitale presso AGID
-              </a>{" "}
-              (Agenzia per l&apos;Italia Digitale), ai sensi dell&apos;art. 3-quinquies
-              della Legge 9 gennaio 2004, n. 4.
+              <FraseConElementi
+                testo={t(
+                  "Qualora la risposta alla segnalazione non fosse soddisfacente, è possibile rivolgersi al {difensore} (Agenzia per l'Italia Digitale), ai sensi dell'art. 3-quinquies della Legge 9 gennaio 2004, n. 4.",
+                )}
+                elementi={{
+                  difensore: (
+                    <Esterno href="https://www.agid.gov.it/it/design-servizi/accessibilita">
+                      {t("Difensore civico per il digitale presso AGID")}
+                    </Esterno>
+                  ),
+                }}
+              />
             </p>
           </section>
 
-          {/* Riferimenti normativi */}
           <section>
             <h2 className="text-lg font-bold text-foreground mb-2">
-              Riferimenti normativi
+              {t("Riferimenti normativi")}
             </h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>
-                <a
-                  href="https://www.w3.org/TR/WCAG22/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-figb dark:text-primary hover:underline"
-                >
-                  WCAG 2.2
-                </a>{" "}
+                <Esterno href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</Esterno>{" "}
                 &mdash; Web Content Accessibility Guidelines (W3C)
               </li>
               <li>
-                <a
-                  href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32019L0882"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-figb dark:text-primary hover:underline"
-                >
-                  Direttiva UE 2019/882
-                </a>{" "}
+                <Esterno href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32019L0882">
+                  {t("Direttiva UE 2019/882")}
+                </Esterno>{" "}
                 &mdash; European Accessibility Act
               </li>
               <li>
-                <a
-                  href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32016L2102"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-figb dark:text-primary hover:underline"
-                >
-                  Direttiva UE 2016/2102
-                </a>{" "}
-                &mdash; Accessibilit&agrave; dei siti web e delle applicazioni
-                mobili degli enti pubblici
+                <Esterno href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32016L2102">
+                  {t("Direttiva UE 2016/2102")}
+                </Esterno>{" "}
+                &mdash;{" "}
+                {t(
+                  "Accessibilità dei siti web e delle applicazioni mobili degli enti pubblici",
+                )}
               </li>
               <li>
-                Legge 9 gennaio 2004, n. 4 (Legge Stanca) &mdash; Disposizioni per
-                favorire l&apos;accesso dei soggetti disabili agli strumenti
-                informatici
+                {t(
+                  "Legge 9 gennaio 2004, n. 4 (Legge Stanca) — Disposizioni per favorire l'accesso dei soggetti disabili agli strumenti informatici",
+                )}
               </li>
               <li>
-                <a
-                  href="https://www.agid.gov.it/it/design-servizi/accessibilita"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-figb dark:text-primary hover:underline"
-                >
-                  Linee Guida AGID sull&apos;accessibilit&agrave;
-                </a>
+                <Esterno href="https://www.agid.gov.it/it/design-servizi/accessibilita">
+                  {t("Linee Guida AGID sull'accessibilità")}
+                </Esterno>
               </li>
             </ul>
           </section>
 
-          {/* Data dichiarazione */}
           <section className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              La presente dichiarazione &egrave; stata redatta in data{" "}
-              <strong>marzo 2026</strong> e viene aggiornata periodicamente in
-              funzione delle evoluzioni della piattaforma e della normativa di
-              riferimento.
+              <FraseConElementi
+                testo={t(
+                  "La presente dichiarazione è stata redatta in data {data} e viene aggiornata periodicamente in funzione delle evoluzioni della piattaforma e della normativa di riferimento.",
+                )}
+                elementi={{ data: <strong>{t("marzo 2026")}</strong> }}
+              />
             </p>
           </section>
 
-          {/* Credits */}
           <section className="pt-2">
             <p className="text-[12px] text-muted-foreground leading-relaxed">
-              Sviluppo: Tourbillon Tech S.r.l. per FIGB
+              {t("Sviluppo: Tourbillon Tech S.r.l. per FIGB")}
             </p>
           </section>
         </div>

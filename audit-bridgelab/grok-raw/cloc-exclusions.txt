@@ -1,0 +1,5 @@
+node_modules excluded by not scanning it
+package-lock.json excluded (lockfile, not passed to cloc)
+.next / dist not present or not scanned
+public binary assets (png/jpg/mp4/pdf) not passed to application cloc
+android/ ios/ www/ untracked wrappers not scanned as application

@@ -29,10 +29,7 @@ export function MaestroTip() {
               </Badge>
             </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed">
-              La Mano del Giorno è uguale per tutti i giocatori! Gioca
-              ogni giorno per mantenere la tua serie e guadagnare bonus
-              XP. Presto potrai confrontare il tuo risultato con gli
-              altri.
+              {t("La Mano del Giorno è uguale per tutti i giocatori! Gioca ogni giorno per mantenere la tua serie e guadagnare bonus XP. Presto potrai confrontare il tuo risultato con gli altri.")}
             </p>
           </div>
         </div>

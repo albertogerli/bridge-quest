@@ -282,7 +282,7 @@ export default function TrovaErrorePage() {
               {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-rose-600 font-semibold">Trova l&apos;Errore</span>
+            <span className="text-rose-600 font-semibold">{t("Trova l'Errore")}</span>
           </div>
 
           <motion.div
@@ -296,7 +296,7 @@ export default function TrovaErrorePage() {
             <h1
               className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl sm:text-3xl"}`}
             >
-              Trova l&apos;Errore
+              {t("Trova l'Errore")}
             </h1>
             <p
               className={`text-muted-foreground mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : ""}`}
@@ -326,7 +326,7 @@ export default function TrovaErrorePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">2.</span>
-                  Identifica l&apos;errore tra le 4 opzioni
+                  {t("Identifica l'errore tra le 4 opzioni")}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold shrink-0">3.</span>

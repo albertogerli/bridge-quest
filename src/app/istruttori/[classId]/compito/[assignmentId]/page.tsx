@@ -345,8 +345,7 @@ export default function AssignmentResultsPage({
             {t("Le tue note")}
           </h2>
           <p className="mb-3 text-sm text-muted-foreground">
-            Restano attaccate alla mano, non al compito: le ritrovi l&rsquo;anno prossimo su
-            un&rsquo;altra classe, e finiscono nella dispensa da stampare.
+            {t("Restano attaccate alla mano, non al compito: le ritrovi l’anno prossimo su un’altra classe, e finiscono nella dispensa da stampare.")}
           </p>
           <div className="divide-y divide-border rounded-lg border border-border">
             {smazzataIds.map((id) => (
@@ -366,9 +365,7 @@ export default function AssignmentResultsPage({
             {t("Quanto ci hanno pensato")}
           </h2>
           <p className="mb-3 text-sm text-muted-foreground">
-            Il tempo non è un voto: serve a distinguere chi non sapeva come fare da chi non si
-            è accorto che c&rsquo;era una scelta. Agli allievi non compare nessuna classifica di
-            velocità.
+            {t("Il tempo non è un voto: serve a distinguere chi non sapeva come fare da chi non si è accorto che c’era una scelta. Agli allievi non compare nessuna classifica di velocità.")}
           </p>
 
           {tempoPerMano.length > 1 && (

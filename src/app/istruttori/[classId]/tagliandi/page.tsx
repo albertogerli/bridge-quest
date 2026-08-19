@@ -113,13 +113,12 @@ export default function TagliandiPage({
         </div>
         {!token && (
           <p className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-            Non c&rsquo;è un link d&rsquo;ingresso attivo: generalo dalla pagina della classe, o i
-            tagliandi non portano da nessuna parte.
+            {t("Non c’è un link d’ingresso attivo: generalo dalla pagina della classe, o i tagliandi non portano da nessuna parte.")}
           </p>
         )}
         {righe.length === 0 && (
           <p className="text-sm text-muted-foreground">
-            Nessun allievo presente nell&rsquo;elenco.
+            {t("Nessun allievo presente nell’elenco.")}
           </p>
         )}
       </div>

@@ -114,8 +114,7 @@ export default function CombinazionePage() {
         {t("Combinazioni di carte")}
       </h1>
       <p className="mb-5 text-sm text-muted-foreground">
-        Componi una posizione con poche carte per posto. Serve a mostrare una combinazione senza
-        nasconderla dentro una smazzata intera.
+        {t("Componi una posizione con poche carte per posto. Serve a mostrare una combinazione senza nasconderla dentro una smazzata intera.")}
       </p>
 
       <div className="mb-5">

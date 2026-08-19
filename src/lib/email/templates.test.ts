@@ -145,3 +145,43 @@ describe("le email dei compiti", () => {
     expect(e.html).toContain("Go to the homework");
   });
 });
+
+describe("l'involucro dell'email, non solo il corpo", () => {
+  /**
+   * Ogni email era bilingue nel corpo grazie al suo `T(it, en)`, ma
+   * intestazione, piè di pagina e disiscrizione stavano nell'involucro comune,
+   * in italiano fisso. Chi legge in inglese riceveva un messaggio inglese che
+   * si chiudeva in italiano — e quel collegamento è proprio quello che deve
+   * capire, perché l'alternativa a capirlo è segnare il messaggio come
+   * indesiderato.
+   */
+  it("in inglese il piè di pagina è inglese", () => {
+    const e = renderEmail("inactive_7", { name: "Anna", lingua: "en" }, "https://x/unsub");
+    expect(e.html).toContain("I don't want these reminders");
+    expect(e.html).not.toContain("Non voglio più questi promemoria");
+    expect(e.html).toContain("the bridge school of the Italian Bridge Federation");
+  });
+
+  it("in italiano resta italiano", () => {
+    const e = renderEmail("inactive_7", { name: "Anna", lingua: "it" }, "https://x/unsub");
+    expect(e.html).toContain("Non voglio più questi promemoria");
+    expect(e.html).not.toContain("I don't want these reminders");
+  });
+
+  /**
+   * `lang` non è decorazione: i lettori di schermo lo usano per scegliere la
+   * pronuncia, e leggere l'inglese con la fonetica italiana è peggio che non
+   * leggerlo.
+   */
+  it("l'attributo lang segue la lingua", () => {
+    expect(renderEmail("welcome", { lingua: "en" }).html).toContain('<html lang="en">');
+    expect(renderEmail("welcome", { lingua: "it" }).html).toContain('<html lang="it">');
+  });
+
+  it("anche la versione testuale si disiscrive nella lingua giusta", () => {
+    const en = renderEmail("inactive_7", { lingua: "en" }, "https://x/unsub");
+    expect(en.text).toContain("Unsubscribe from reminders");
+    const it = renderEmail("inactive_7", { lingua: "it" }, "https://x/unsub");
+    expect(it.text).toContain("Disiscriviti dai promemoria");
+  });
+});

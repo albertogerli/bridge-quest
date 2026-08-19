@@ -81,7 +81,7 @@ export default function DispensePage() {
             <span className="text-figb dark:text-primary font-semibold">{t("Dispense")}</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground font-display">
-            Dispense & Infografiche
+            {t("Dispense & Infografiche")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {t("Materiale didattico per ogni lezione")}

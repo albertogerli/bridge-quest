@@ -91,8 +91,7 @@ export default function LibreriaPage() {
         {t("Libreria")}
       </h1>
       <p className="mb-5 text-sm text-muted-foreground">
-        Materiale preparato da altri insegnanti. Quello che importi diventa tuo: puoi cambiarlo
-        senza toccare l&rsquo;originale, e l&rsquo;originale non cambia sotto le tue mani.
+        {t("Materiale preparato da altri insegnanti. Quello che importi diventa tuo: puoi cambiarlo senza toccare l’originale, e l’originale non cambia sotto le tue mani.")}
       </p>
 
       <div className="mb-4 flex flex-wrap gap-2">

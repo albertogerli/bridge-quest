@@ -257,8 +257,7 @@ export default function GuidaPage() {
             {t("Come funziona BridgeLab")}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            La mappa completa dell&apos;app: cosa c&apos;è, dove si trova e da dove
-            conviene iniziare. Cinque minuti di lettura, poi al tavolo!
+            {t("La mappa completa dell'app: cosa c'è, dove si trova e da dove conviene iniziare. Cinque minuti di lettura, poi al tavolo!")}
           </p>
 
           {/* Section chips + tour */}

@@ -230,8 +230,7 @@ function Studio() {
           {t("Tavolo di studio")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Gioca qualsiasi carta e torna indietro. Ogni carta porta scritto
-          quante prese fa — quando decidi tu di mostrarlo.
+          {t("Gioca qualsiasi carta e torna indietro. Ogni carta porta scritto quante prese fa — quando decidi tu di mostrarlo.")}
         </p>
       </header>
 
@@ -262,8 +261,7 @@ function Studio() {
 
       {archivioMancante && (
         <p className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4 text-sm text-amber-900 dark:text-amber-200">
-          La mano dell&apos;archivio non c&apos;è più — cancellata, o salvata
-          senza contratto. Qui sotto c&apos;è una mano nuova.
+          {t("La mano dell'archivio non c'è più — cancellata, o salvata senza contratto. Qui sotto c'è una mano nuova.")}
         </p>
       )}
 
@@ -388,10 +386,7 @@ function Studio() {
       )}
 
       <p className="text-center text-xs text-muted-foreground mt-5">
-        Il numero è quante prese fa ancora la linea di chi gioca, a carte
-        scoperte. Al tavolo, senza vedere le mani avversarie, alcune di quelle
-        prese non sarebbero trovabili: serve a capire dov&apos;era il bivio, non
-        a dire che qualcuno ha sbagliato.
+        {t("Il numero è quante prese fa ancora la linea di chi gioca, a carte scoperte. Al tavolo, senza vedere le mani avversarie, alcune di quelle prese non sarebbero trovabili: serve a capire dov'era il bivio, non a dire che qualcuno ha sbagliato.")}
       </p>
     </div>
   );

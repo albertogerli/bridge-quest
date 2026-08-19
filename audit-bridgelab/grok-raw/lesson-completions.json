@@ -1,0 +1,58 @@
+{
+  "completed_module_rows": 18362,
+  "lesson_module_rows": 199,
+  "reconstructed_keys_matching_catalog": 18362,
+  "unmatched": 0,
+  "sample_reconstructed_completed_keys": [
+    "0-0-3",
+    "0-0-2",
+    "7-7-1",
+    "11-11-4",
+    "59-Q9-1",
+    "2-2-1",
+    "4-eserciziario-4-2",
+    "9-eserciziario-9-1"
+  ],
+  "sample_catalog_keys": [
+    "0-0-1",
+    "0-0-2",
+    "0-0-3",
+    "0-0-4",
+    "0-0-5",
+    "0-0-6",
+    "1-1-1",
+    "1-1-2"
+  ],
+  "completed_lesson_user_pairs": 3079,
+  "users_completing_at_least_one_lesson": 342,
+  "completed_lessons_by_month": [
+    {
+      "month": "2026-02",
+      "completed_lessons": 16
+    },
+    {
+      "month": "2026-03",
+      "completed_lessons": 1065
+    },
+    {
+      "month": "2026-04",
+      "completed_lessons": 547
+    },
+    {
+      "month": "2026-05",
+      "completed_lessons": 566
+    },
+    {
+      "month": "2026-06",
+      "completed_lessons": 389
+    },
+    {
+      "month": "2026-07",
+      "completed_lessons": 384
+    },
+    {
+      "month": "2026-08",
+      "completed_lessons": 112
+    }
+  ]
+}

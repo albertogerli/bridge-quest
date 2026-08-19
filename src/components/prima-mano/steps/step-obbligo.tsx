@@ -128,7 +128,7 @@ export function StepObbligo({ onComplete, playSound }: StepProps) {
             {/* Player hand */}
             <div className="rounded-[28px] border border-gray-200 bg-[#fffaf0] p-5">
               <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8a94a8] mb-3">
-                La tua mano &mdash; scegli una carta:
+                {t("La tua mano — scegli una carta:")}
               </p>
               <div className="grid grid-cols-5 gap-2">
                 {hand.map((card, i) => {

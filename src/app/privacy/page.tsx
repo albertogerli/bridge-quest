@@ -37,7 +37,7 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-foreground">{t("Dati raccolti")}</h2>
             <p className="text-muted-foreground">{t("Bridge LAB raccoglie i seguenti dati:")}</p>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-              <li><strong>{t("Dati di registrazione:")}</strong> email, nome visualizzato, tipo di profilo (fascia d&apos;età), associazione sportiva (ASD) di appartenenza (opzionale), username BBO (opzionale).</li>
+              <li><strong>{t("Dati di registrazione:")}</strong>{t("email, nome visualizzato, tipo di profilo (fascia d'età), associazione sportiva (ASD) di appartenenza (opzionale), username BBO (opzionale).")}</li>
               <li><strong>{t("Dati di utilizzo:")}</strong> progressi nelle lezioni (moduli completati), punti esperienza (XP), risultati di gioco, badge ottenuti, streak giornaliero.</li>
               <li><strong>{t("Dati tecnici:")}</strong> indirizzo IP, tipo di browser, sistema operativo, tramite cookie tecnici e analitici.</li>
             </ul>
@@ -56,16 +56,14 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-foreground">{t("Base giuridica")}</h2>
             <p className="text-muted-foreground">
-              Il trattamento si basa sul consenso dell&apos;utente (art. 6.1.a GDPR) espresso al momento della registrazione,
-              e sull&apos;esecuzione del contratto di servizio (art. 6.1.b GDPR).
+              {t("Il trattamento si basa sul consenso dell'utente (art. 6.1.a GDPR) espresso al momento della registrazione, e sull'esecuzione del contratto di servizio (art. 6.1.b GDPR).")}
             </p>
           </section>
 
           <section>
             <h2 className="text-lg font-bold text-foreground">{t("Conservazione dei dati")}</h2>
             <p className="text-muted-foreground">
-              I dati personali sono conservati per la durata dell&apos;account. L&apos;utente può richiedere la cancellazione
-              in qualsiasi momento contattando il Titolare. I dati vengono eliminati entro 30 giorni dalla richiesta.
+              {t("I dati personali sono conservati per la durata dell'account. L'utente può richiedere la cancellazione in qualsiasi momento contattando il Titolare. I dati vengono eliminati entro 30 giorni dalla richiesta.")}
             </p>
           </section>
 
@@ -84,7 +82,7 @@ export default function PrivacyPage() {
             <p className="text-muted-foreground">{t("Bridge LAB utilizza:")}</p>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li><strong>{t("Cookie tecnici:")}</strong> necessari per il funzionamento (autenticazione, preferenze tema). Non richiedono consenso.</li>
-              <li><strong>{t("Cookie analitici:")}</strong> Vercel Analytics per statistiche aggregate e anonime sull&apos;utilizzo.</li>
+              <li><strong>{t("Cookie analitici:")}</strong>{t("Vercel Analytics per statistiche aggregate e anonime sull'utilizzo.")}</li>
               <li><strong>{t("Cookie di terze parti:")}</strong> {t("YouTube può impostare cookie quando si visualizzano i video embedded.")}</li>
               <li>
                 <strong>{t("Cookie statistici e pubblicitari:")}</strong> Google Analytics,
@@ -96,27 +94,19 @@ export default function PrivacyPage() {
               </li>
             </ul>
             <p className="text-muted-foreground mt-2">
-              I cookie statistici e pubblicitari comportano un trasferimento di
-              dati verso Google LLC e Meta Platforms Ireland Ltd. Puoi cambiare
-              idea in qualsiasi momento cancellando i dati del sito dal tuo
-              browser: la scelta ti verrà richiesta di nuovo alla visita
-              successiva.
+              {t("I cookie statistici e pubblicitari comportano un trasferimento di dati verso Google LLC e Meta Platforms Ireland Ltd. Puoi cambiare idea in qualsiasi momento cancellando i dati del sito dal tuo browser: la scelta ti verrà richiesta di nuovo alla visita successiva.")}
             </p>
           </section>
 
           <section>
             <h2 className="text-lg font-bold text-foreground">{t("Consenso alle Comunicazioni Marketing")}</h2>
             <p className="text-muted-foreground">
-              Con il consenso esplicito dell&apos;utente, la FIGB potrà inviare comunicazioni relative a eventi,
-              corsi, tornei e iniziative legate al mondo del bridge. Il consenso viene richiesto tramite un banner
-              dedicato all&apos;interno dell&apos;applicazione e può essere revocato in qualsiasi momento dalle
-              impostazioni del profilo o contattando il Titolare. La mancata prestazione del consenso non pregiudica
-              in alcun modo l&apos;accesso e l&apos;utilizzo della piattaforma.
+              {t("Con il consenso esplicito dell'utente, la FIGB potrà inviare comunicazioni relative a eventi, corsi, tornei e iniziative legate al mondo del bridge. Il consenso viene richiesto tramite un banner dedicato all'interno dell'applicazione e può essere revocato in qualsiasi momento dalle impostazioni del profilo o contattando il Titolare. La mancata prestazione del consenso non pregiudica in alcun modo l'accesso e l'utilizzo della piattaforma.")}
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-foreground">Diritti dell&apos;utente</h2>
+            <h2 className="text-lg font-bold text-foreground">{t("Diritti dell'utente")}</h2>
             <p className="text-muted-foreground">
               Ai sensi del GDPR (artt. 15-22), l&apos;utente ha diritto di: accesso, rettifica, cancellazione,
               limitazione del trattamento, portabilità dei dati, opposizione. Per esercitare tali diritti,
@@ -129,7 +119,7 @@ export default function PrivacyPage() {
             <p className="text-muted-foreground">
               Per le condizioni complete di utilizzo della piattaforma, consulta i nostri{" "}
               <Link href="/termini" className="text-figb dark:text-primary underline font-medium">
-                Termini e Condizioni d&apos;Uso
+                {t("Termini e Condizioni d'Uso")}
               </Link>.
             </p>
           </section>
@@ -137,15 +127,14 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-foreground">{t("Aggiornamenti")}</h2>
             <p className="text-muted-foreground">
-              Questa policy può essere aggiornata periodicamente. L&apos;ultima revisione risale a marzo 2026.
+              {t("Questa policy può essere aggiornata periodicamente. L'ultima revisione risale a marzo 2026.")}
             </p>
           </section>
 
           {/* Credits */}
           <section className="pt-4 border-t border-border">
             <p className="text-[12px] text-muted-foreground leading-relaxed">
-              Bridge LAB è un progetto della Federazione Italiana Gioco Bridge (FIGB) - Commissione Insegnamento.
-              Sviluppo e hosting a cura di Alberto Giovanni Gerli / Tourbillon Tech S.r.l., a titolo gratuito.
+              {t("Bridge LAB è un progetto della Federazione Italiana Gioco Bridge (FIGB) - Commissione Insegnamento. Sviluppo e hosting a cura di Alberto Giovanni Gerli / Tourbillon Tech S.r.l., a titolo gratuito.")}
             </p>
           </section>
         </div>

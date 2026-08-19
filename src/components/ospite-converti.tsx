@@ -103,8 +103,7 @@ export function OspiteConverti() {
       ) : (
         <>
           <p className="mb-3 text-xs text-muted-foreground">
-            Sei entrato come ospite. Scegli email e password e diventa il tuo account: mani
-            giocate, compiti e classe restano tutti.
+            {t("Sei entrato come ospite. Scegli email e password e diventa il tuo account: mani giocate, compiti e classe restano tutti.")}
           </p>
           <input
             type="email"

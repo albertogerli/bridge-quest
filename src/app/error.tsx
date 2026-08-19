@@ -33,8 +33,7 @@ export default function GlobalError({
           {t("Qualcosa non ha funzionato")}
         </h1>
         <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-          Si è verificato un errore imprevisto. Riprova oppure torna alla pagina
-          principale.
+          {t("Si è verificato un errore imprevisto. Riprova oppure torna alla pagina principale.")}
         </p>
 
         {error.digest && (

@@ -214,7 +214,7 @@ export function DailyResultCard({
                     <span className="text-lg">🤖</span>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-foreground">Analizza con l&apos;AI</p>
+                    <p className="text-sm font-bold text-foreground">{t("Analizza con l'AI")}</p>
                     <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                   </div>
                   <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>

@@ -82,9 +82,7 @@ export default function DiventaIstruttorePage() {
         {t("Diventa istruttore")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Il Portale Istruttori ti permette di creare classi virtuali, assegnare compiti
-        (mani da giocare e materiale da studiare) e seguire i progressi dei tuoi allievi.
-        Le richieste vengono approvate manualmente dallo staff FIGB.
+        {t("Il Portale Istruttori ti permette di creare classi virtuali, assegnare compiti (mani da giocare e materiale da studiare) e seguire i progressi dei tuoi allievi. Le richieste vengono approvate manualmente dallo staff FIGB.")}
       </p>
 
       {(loading || authLoading) && (

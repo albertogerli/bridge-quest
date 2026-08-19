@@ -80,8 +80,7 @@ export function IngressoAula({ classId }: { classId: string }) {
       {!invito ? (
         <>
           <p className="mb-3 text-sm text-muted-foreground">
-            Genera un link valido fino a stasera: chi lo inquadra entra scrivendo solo il proprio
-            nome, senza email e senza password.
+            {t("Genera un link valido fino a stasera: chi lo inquadra entra scrivendo solo il proprio nome, senza email e senza password.")}
           </p>
           <Button
             disabled={occupato}
@@ -92,7 +91,7 @@ export function IngressoAula({ classId }: { classId: string }) {
               setOccupato(false);
             }}
           >
-            Genera il link d&rsquo;ingresso
+            {t("Genera il link d’ingresso")}
           </Button>
         </>
       ) : (
@@ -146,7 +145,7 @@ export function IngressoAula({ classId }: { classId: string }) {
                     setOccupato(false);
                   }}
                 >
-                  Chiudi l&rsquo;ingresso
+                  {t("Chiudi l’ingresso")}
                 </Button>
               </div>
             </div>

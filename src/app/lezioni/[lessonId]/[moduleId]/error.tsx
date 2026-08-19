@@ -33,8 +33,7 @@ export default function ModuleError({
           {t("Errore nel modulo")}
         </h1>
         <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-          Il modulo non si è caricato correttamente. Riprova oppure torna alla
-          lezione per scegliere un altro modulo.
+          {t("Il modulo non si è caricato correttamente. Riprova oppure torna alla lezione per scegliere un altro modulo.")}
         </p>
 
         {error.digest && (

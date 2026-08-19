@@ -1,0 +1,605 @@
+{
+  "working_tree": {
+    "component_tsx_files_under_src_components": 94,
+    "routable_page_files": 69,
+    "routes": [
+      "/",
+      "/accessibilita",
+      "/admin",
+      "/admin/classi",
+      "/admin/istruttori",
+      "/amici",
+      "/appunti",
+      "/auth",
+      "/circolo/[slug]",
+      "/classi",
+      "/classi/[classId]",
+      "/classi/[classId]/compito/[assignmentId]",
+      "/classifica",
+      "/collezione",
+      "/dispense",
+      "/diventa-istruttore",
+      "/forum",
+      "/forum/[postId]",
+      "/forum/nuovo",
+      "/gioca",
+      "/gioca/analisi",
+      "/gioca/conta-veloce",
+      "/gioca/dichiara",
+      "/gioca/impasse",
+      "/gioca/mano-del-giorno",
+      "/gioca/mano-guidata",
+      "/gioca/memory",
+      "/gioca/minibridge",
+      "/gioca/pratica",
+      "/gioca/pratica-licita",
+      "/gioca/quiz-lampo",
+      "/gioca/quiz-prese",
+      "/gioca/segnali",
+      "/gioca/sfida",
+      "/gioca/sfida-amico",
+      "/gioca/sfida-imp",
+      "/gioca/sfida-link",
+      "/gioca/sfida-settimanale",
+      "/gioca/smazzata",
+      "/gioca/torneo",
+      "/gioca/trova-errore",
+      "/glossario",
+      "/guida",
+      "/impara",
+      "/impostazioni",
+      "/istruttori",
+      "/istruttori/[classId]",
+      "/istruttori/[classId]/compito/[assignmentId]",
+      "/istruttori/[classId]/nuovo-compito",
+      "/istruttori/genera-mani",
+      "/lezioni",
+      "/lezioni/[lessonId]",
+      "/lezioni/[lessonId]/[moduleId]",
+      "/login",
+      "/negozio",
+      "/obiettivi",
+      "/prima-mano",
+      "/privacy",
+      "/profilo",
+      "/profilo/wrapped",
+      "/registrati",
+      "/reset-password",
+      "/ripasso",
+      "/scopri",
+      "/scuola",
+      "/termini",
+      "/trova-circolo",
+      "/trova-compagno",
+      "/~offline"
+    ],
+    "api_and_auth_route_files": [
+      "src/app/api/account/delete/route.ts",
+      "src/app/api/ben/autoplay/route.ts",
+      "src/app/api/ben/health/route.ts",
+      "src/app/api/ben/lead/route.ts",
+      "src/app/api/ben/play/route.ts",
+      "src/app/api/cron/engagement/route.ts",
+      "src/app/api/email/unsubscribe/route.ts",
+      "src/app/api/friends/notify/route.ts",
+      "src/app/api/instructor-request/route.ts",
+      "src/app/api/meta/conversion/route.ts",
+      "src/app/auth/callback/route.ts"
+    ],
+    "api_route_files": 10,
+    "exported_http_handlers": 12,
+    "handlers": [
+      {
+        "file": "src/app/api/account/delete/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/ben/autoplay/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/ben/health/route.ts",
+        "method": "GET"
+      },
+      {
+        "file": "src/app/api/ben/lead/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/ben/play/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/cron/engagement/route.ts",
+        "method": "GET"
+      },
+      {
+        "file": "src/app/api/email/unsubscribe/route.ts",
+        "method": "GET"
+      },
+      {
+        "file": "src/app/api/email/unsubscribe/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/friends/notify/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/instructor-request/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/api/meta/conversion/route.ts",
+        "method": "POST"
+      },
+      {
+        "file": "src/app/auth/callback/route.ts",
+        "method": "GET"
+      }
+    ],
+    "sql_scripts": 33,
+    "sql_script_files": [
+      "scripts/sql/account-deletion-gap-2026-08.sql",
+      "scripts/sql/add-platform-tracking.sql",
+      "scripts/sql/admin-email-2026-08.sql",
+      "scripts/sql/admin_classes.sql",
+      "scripts/sql/admin_game_stats.sql",
+      "scripts/sql/admin_school_stats.sql",
+      "scripts/sql/asd-code-migration.sql",
+      "scripts/sql/bbo-username-cleanup-group-a-2026-08.sql",
+      "scripts/sql/bbo-username-unique-2026-08.sql",
+      "scripts/sql/class_chat.sql",
+      "scripts/sql/class_leaderboard.sql",
+      "scripts/sql/daily_field_stats.sql",
+      "scripts/sql/definer-hardening-2026-08.sql",
+      "scripts/sql/email-automation.sql",
+      "scripts/sql/engagement-targets-leak-2026-08.sql",
+      "scripts/sql/first_attempt_results.sql",
+      "scripts/sql/forum-polls.sql",
+      "scripts/sql/forum_comments_threading.sql",
+      "scripts/sql/friends-challenges.sql",
+      "scripts/sql/game-leaderboard-rpc.sql",
+      "scripts/sql/game_results.sql",
+      "scripts/sql/instructor_portal.sql",
+      "scripts/sql/instructor_request_message.sql",
+      "scripts/sql/instructor_requests.sql",
+      "scripts/sql/login-history.sql",
+      "scripts/sql/partner-matching-2026-08.sql",
+      "scripts/sql/pbn_import.sql",
+      "scripts/sql/pii-columns-2026-08.sql",
+      "scripts/sql/product-features.sql",
+      "scripts/sql/realtime-publication-2026-08.sql",
+      "scripts/sql/replica-identity-2026-08.sql",
+      "scripts/sql/security-fixes-2026-08.sql",
+      "scripts/sql/upgrade-session-18.sql"
+    ],
+    "create_table_statements_in_sql": 16,
+    "unique_tables_named_in_create_table": [
+      "bbo_username_cleanup_2026_08",
+      "email_events",
+      "login_history",
+      "partner_profiles",
+      "tournament_results"
+    ],
+    "create_policy_statements_in_sql": 44,
+    "policy_names_in_sql": [
+      {
+        "file": "scripts/sql/account-deletion-gap-2026-08.sql",
+        "name": "Users can delete own game results"
+      },
+      {
+        "file": "scripts/sql/class_chat.sql",
+        "name": "Members can read class messages"
+      },
+      {
+        "file": "scripts/sql/class_chat.sql",
+        "name": "Members can send class messages"
+      },
+      {
+        "file": "scripts/sql/class_chat.sql",
+        "name": "Authors can delete own class messages"
+      },
+      {
+        "file": "scripts/sql/email-automation.sql",
+        "name": "Users read own email events"
+      },
+      {
+        "file": "scripts/sql/forum-polls.sql",
+        "name": "Anyone can read poll votes"
+      },
+      {
+        "file": "scripts/sql/forum-polls.sql",
+        "name": "Authenticated users can vote"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Users can view own friendships"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Users can send friend requests"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Recipients can accept or decline"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Either party can delete friendship"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Players can view own challenges"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Users can create challenges"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Players can update own challenges"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "Challenger can delete pending challenges"
+      },
+      {
+        "file": "scripts/sql/game_results.sql",
+        "name": "Users can read own game results"
+      },
+      {
+        "file": "scripts/sql/game_results.sql",
+        "name": "Users can insert own game results"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructors and members can view classes"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructors can create classes"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructors can update own classes"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructors can delete own classes"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Members and owning instructor can view membership"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Students can join themselves"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructor or self can update membership"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructor or self can delete membership"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructor and members can view assignments"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructor can create assignments"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructor can update assignments"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructor can delete assignments"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "Instructors can read class assignment results"
+      },
+      {
+        "file": "scripts/sql/instructor_requests.sql",
+        "name": "Self or admin can read requests"
+      },
+      {
+        "file": "scripts/sql/instructor_requests.sql",
+        "name": "Users can file own request"
+      },
+      {
+        "file": "scripts/sql/instructor_requests.sql",
+        "name": "Self or admin can update request"
+      },
+      {
+        "file": "scripts/sql/login-history.sql",
+        "name": "Users can read own login history"
+      },
+      {
+        "file": "scripts/sql/login-history.sql",
+        "name": "Authenticated can insert own login history"
+      },
+      {
+        "file": "scripts/sql/product-features.sql",
+        "name": "Users manage own subscriptions"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "Authenticated users can read profiles"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "Users can insert own profile"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "Users can read own login history"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "Authenticated can read tournament results"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "Users can insert own tournament result"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "Users can update own tournament result"
+      },
+      {
+        "file": "scripts/sql/upgrade-session-18.sql",
+        "name": "Users can read own results"
+      },
+      {
+        "file": "scripts/sql/upgrade-session-18.sql",
+        "name": "Users can insert own results"
+      }
+    ],
+    "create_index_statements_in_sql": 35,
+    "index_names_in_sql": [
+      {
+        "file": "scripts/sql/add-platform-tracking.sql",
+        "name": "idx_login_history_platform"
+      },
+      {
+        "file": "scripts/sql/add-platform-tracking.sql",
+        "name": "idx_game_results_platform"
+      },
+      {
+        "file": "scripts/sql/asd-code-migration.sql",
+        "name": "profiles_asd_code_idx"
+      },
+      {
+        "file": "scripts/sql/bbo-username-unique-2026-08.sql",
+        "name": "CONCURRENTLY"
+      },
+      {
+        "file": "scripts/sql/class_chat.sql",
+        "name": "idx_class_messages_class"
+      },
+      {
+        "file": "scripts/sql/email-automation.sql",
+        "name": "idx_email_events_user_type"
+      },
+      {
+        "file": "scripts/sql/email-automation.sql",
+        "name": "uq_email_events_oneshot"
+      },
+      {
+        "file": "scripts/sql/forum-polls.sql",
+        "name": "idx_poll_votes_post"
+      },
+      {
+        "file": "scripts/sql/forum_comments_threading.sql",
+        "name": "idx_forum_comments_parent_id"
+      },
+      {
+        "file": "scripts/sql/forum_comments_threading.sql",
+        "name": "idx_forum_comments_post_id"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_friendships_user_id"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_friendships_friend_id"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_friendships_status"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_challenges_challenger_id"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_challenges_opponent_id"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_challenges_status"
+      },
+      {
+        "file": "scripts/sql/friends-challenges.sql",
+        "name": "idx_challenges_created_at"
+      },
+      {
+        "file": "scripts/sql/game_results.sql",
+        "name": "idx_game_results_user_id"
+      },
+      {
+        "file": "scripts/sql/game_results.sql",
+        "name": "idx_game_results_game_type"
+      },
+      {
+        "file": "scripts/sql/game_results.sql",
+        "name": "idx_game_results_lesson"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "idx_profiles_role"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "idx_classes_instructor"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "idx_classes_invite_code"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "idx_class_members_student"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "idx_assignments_class"
+      },
+      {
+        "file": "scripts/sql/instructor_portal.sql",
+        "name": "idx_game_results_assignment"
+      },
+      {
+        "file": "scripts/sql/instructor_requests.sql",
+        "name": "idx_instructor_requests_status"
+      },
+      {
+        "file": "scripts/sql/login-history.sql",
+        "name": "idx_login_history_user_date"
+      },
+      {
+        "file": "scripts/sql/login-history.sql",
+        "name": "idx_login_history_date"
+      },
+      {
+        "file": "scripts/sql/partner-matching-2026-08.sql",
+        "name": "partner_profiles_looking_idx"
+      },
+      {
+        "file": "scripts/sql/security-fixes-2026-08.sql",
+        "name": "idx_tournament_results_week"
+      },
+      {
+        "file": "scripts/sql/upgrade-session-18.sql",
+        "name": "idx_forum_comments_parent_id"
+      },
+      {
+        "file": "scripts/sql/upgrade-session-18.sql",
+        "name": "idx_game_results_user"
+      },
+      {
+        "file": "scripts/sql/upgrade-session-18.sql",
+        "name": "idx_game_results_type"
+      },
+      {
+        "file": "scripts/sql/upgrade-session-18.sql",
+        "name": "idx_game_results_lesson"
+      }
+    ],
+    "security_definer_mentions_in_sql": 50,
+    "functions_in_files_containing_security_definer": [
+      {
+        "file": "scripts/sql/add-platform-tracking.sql",
+        "name": "log_user_login"
+      },
+      {
+        "file": "scripts/sql/bbo-username-unique-2026-08.sql",
+        "name": "is_bbo_username_taken"
+      },
+      {
+        "file": "scripts/sql/email-automation.sql",
+        "name": "get_engagement_targets"
+      },
+      {
+        "file": "scripts/sql/login-history.sql",
+        "name": "log_user_login"
+      },
+      {
+        "file": "scripts/sql/partner-matching-2026-08.sql",
+        "name": "list_partner_candidates"
+      },
+      {
+        "file": "scripts/sql/pii-columns-2026-08.sql",
+        "name": "get_own_profile"
+      },
+      {
+        "file": "scripts/sql/pii-columns-2026-08.sql",
+        "name": "admin_list_users"
+      }
+    ],
+    "enable_rls_statements_in_sql": 19,
+    "typed_tables_in_supabase_types": [
+      "asd",
+      "profiles",
+      "completed_modules",
+      "badges",
+      "review_items",
+      "forum_posts",
+      "forum_comments",
+      "forum_likes",
+      "email_events"
+    ],
+    "unit_test_files": [
+      "src/lib/admin-stats.test.ts",
+      "src/lib/auth-errors.test.ts",
+      "src/lib/bbo-username.test.ts",
+      "src/lib/bridge-engine.test.ts",
+      "src/lib/bridge-scoring.test.ts",
+      "src/lib/card-labels.test.ts",
+      "src/lib/consent.test.ts",
+      "src/lib/daily-hand-storage.test.ts",
+      "src/lib/daily-hand.test.ts",
+      "src/lib/dds-exact.test.ts",
+      "src/lib/dds-replay.test.ts",
+      "src/lib/dds-table.test.ts",
+      "src/lib/deal-generator.test.ts",
+      "src/lib/deals-to-smazzate.test.ts",
+      "src/lib/describe-error.test.ts",
+      "src/lib/email-domain-hint.test.ts",
+      "src/lib/hand-encoder.test.ts",
+      "src/lib/lesson-module.test.ts",
+      "src/lib/meta-capi.test.ts",
+      "src/lib/minibridge.test.ts",
+      "src/lib/next-config.test.ts",
+      "src/lib/palette.test.ts",
+      "src/lib/partner-matching.test.ts",
+      "src/lib/pbn-export.test.ts",
+      "src/lib/pbn.test.ts",
+      "src/lib/profile-stats.test.ts",
+      "src/lib/progression.test.ts",
+      "src/lib/realtime-health.test.ts",
+      "src/lib/sentry-shared.test.ts",
+      "src/lib/spaced-review.test.ts",
+      "src/lib/text-size.test.ts",
+      "src/lib/tipografia.test.ts",
+      "src/lib/tournament-stats.test.ts",
+      "src/lib/trick-quiz.test.ts",
+      "src/lib/ui-regression-guards.test.ts",
+      "src/lib/xp-levels.test.ts"
+    ],
+    "unit_test_file_count": 36,
+    "e2e_spec_files": [
+      "e2e/a11y.spec.ts",
+      "e2e/consenso.spec.ts",
+      "e2e/csp.spec.ts",
+      "e2e/regressione-pagine.spec.ts",
+      "e2e/smoke-anon.spec.ts",
+      "e2e/smoke-auth.spec.ts"
+    ],
+    "e2e_spec_file_count": 6,
+    "ci_workflows": [
+      ".github/workflows/ci.yml"
+    ],
+    "tracked_src_files": 454,
+    "untracked_file_count": 447,
+    "nota": "Conteggi sulla working tree corrente. Le tabelle/policy/indici SQL sono dichiarazioni nel repository, non lo schema live. Lo schema live è nella raccolta database."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "effort_breakdown_hours": {
+    "domain": 880,
+    "pages": 1248,
+    "components": 282,
+    "hooks": 208,
+    "stores": 120,
+    "api": 96,
+    "auth_email_cron": 80,
+    "db_rls_rpc": 220,
+    "pwa_capacitor": 140,
+    "tests": 250,
+    "ci_docs_security": 100,
+    "integration_buffer": 200
+  },
+  "effort_base_hours": 3824,
+  "effort_minus_30": 2676.7999999999997,
+  "effort_plus_30": 4971.2,
+  "capacity_hours_per_dev_month": {
+    "base": 120,
+    "minus_30": 84,
+    "plus_30": 156
+  },
+  "calendar_months_2_seniors": {
+    "effort_base_capacity_base": 15.933333333333334,
+    "effort_lo_capacity_base": 11.153333333333332,
+    "effort_hi_capacity_base": 20.71333333333333,
+    "effort_base_capacity_lo": 22.761904761904763,
+    "effort_base_capacity_hi": 12.256410256410257
+  },
+  "A_riproduzione_eur": {
+    "bassa": {
+      "lo": 173991.99999999997,
+      "base": 248560,
+      "hi": 323128
+    },
+    "media": {
+      "lo": 227527.99999999997,
+      "base": 325040,
+      "hi": 422552,
+      "tariff_lo": 227527.99999999997,
+      "tariff_hi": 422552
+    },
+    "alta": {
+      "lo": 294447.99999999994,
+      "base": 420640,
+      "hi": 546832
+    }
+  },
+  "B_sostituzione": {
+    "overhead_pct": {
+      "analisi": 0.12,
+      "ux": 0.1,
+      "test_sicurezza": 0.15,
+      "pm": 0.18
+    },
+    "overhead_sum": 0.55,
+    "sviluppo_eur": {
+      "bassa": 305920,
+      "media": 420640,
+      "alta": 535360
+    },
+    "totale_eur": {
+      "bassa": 474176,
+      "media": 651992,
+      "alta": 829808,
+      "media_oh_lo": 582586.4,
+      "media_oh_hi": 721397.6
+    }
+  },
+  "C_uso_36m": {
+    "ecb_usd_per_eur": 1.1545,
+    "eur_per_usd": 0.8661758336942399,
+    "thinkific_grow_monthly_usd": 219,
+    "thinkific_36m_usd": 7884,
+    "thinkific_36m_eur": 6828.930272845388,
+    "hosting_monthly_usd": 65,
+    "hosting_36m_eur": 2026.8514508445214,
+    "maintenance_hours_month": 16,
+    "maintenance_tariff": 85,
+    "maintenance_36m_eur": 48960,
+    "maintenance_h_lo": 34271.99999999999,
+    "maintenance_h_hi": 63648,
+    "maintenance_t_lo": 34271.99999999999,
+    "maintenance_t_hi": 63648,
+    "thinkific_lo": 4780.25119099177,
+    "thinkific_hi": 8877.609354699003,
+    "hosting_lo": 1418.7960155911649,
+    "hosting_hi": 2634.9068860978778,
+    "totale_base_eur": 57815.78172368991
+  }
+}

@@ -149,8 +149,7 @@ function Dispensa() {
       <div className="print:hidden mb-6">
         <h1 className="text-2xl font-bold font-display mb-1">{t("Dispensa")}</h1>
         <p className="text-sm text-muted-foreground mb-4">
-          Il foglio da consegnare a fine lezione. Le soluzioni stanno in fondo,
-          così la stessa dispensa serve prima come esercizio.
+          {t("Il foglio da consegnare a fine lezione. Le soluzioni stanno in fondo, così la stessa dispensa serve prima come esercizio.")}
         </p>
 
         <div className="flex flex-wrap items-end gap-3 mb-4">

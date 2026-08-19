@@ -1,8 +1,12 @@
+"use client";
+
 import { motion } from "motion/react";
+import { useT } from "@/contexts/traduzioni-provider";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 export function FindAsdBanner() {
+  const t = useT();
   return (
     <section className="px-4 sm:px-5 pt-4">
       <div className="mx-auto max-w-lg">
@@ -18,8 +22,8 @@ export function FindAsdBanner() {
                   <MapPin className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-white">Non hai ancora un&apos;associazione?</p>
-                  <p className="text-xs text-white/70">Trova la tua ASD tra le 146 affiliate FIGB</p>
+                  <p className="text-sm font-bold text-white">{t("Non hai ancora un'associazione?")}</p>
+                  <p className="text-xs text-white/70">{t("Trova la tua ASD tra le 146 affiliate FIGB")}</p>
                 </div>
                 <svg className="w-5 h-5 text-white/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path d="M9 18l6-6-6-6" />

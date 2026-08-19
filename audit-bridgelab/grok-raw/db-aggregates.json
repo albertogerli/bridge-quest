@@ -1,0 +1,462 @@
+{
+  "measured_at_utc": "2026-08-13T11:10:01.637Z",
+  "measured_at_europe_rome": "2026-08-13 13:10:01",
+  "connector": "Supabase JS service role + PostgREST OpenAPI + GoTrue admin count. Nessuna riga individuale persistita.",
+  "schema_live_pg_catalog": "non determinabile: assente DATABASE_URL / connessione SQL diretta; pg_catalog non esposto via PostgREST",
+  "openapi": {
+    "status": 200,
+    "table_or_schema_names": [
+      "asd",
+      "asd_clubs",
+      "assignments",
+      "badges",
+      "bbo_username_cleanup_2026_08",
+      "challenges",
+      "class_members",
+      "class_messages",
+      "classes",
+      "collectible_cards",
+      "completed_modules",
+      "course_worlds",
+      "courses",
+      "email_events",
+      "eserciziario_exercises",
+      "forum_comments",
+      "forum_likes",
+      "forum_poll_votes",
+      "forum_posts",
+      "friendships",
+      "game_results",
+      "glossary",
+      "guided_hands",
+      "instructor_requests",
+      "lesson_modules",
+      "lessons",
+      "login_history",
+      "partner_profiles",
+      "profiles",
+      "push_subscriptions",
+      "review_items",
+      "smazzate",
+      "tournament_results",
+      "trova_errore_scenarios",
+      "weekly_challenges"
+    ],
+    "path_count": 63,
+    "rpc_paths": [
+      "/rpc/admin_class_detail",
+      "/rpc/admin_game_stats",
+      "/rpc/admin_list_classes",
+      "/rpc/admin_list_users",
+      "/rpc/admin_school_stats",
+      "/rpc/generate_invite_code",
+      "/rpc/get_challenge_history",
+      "/rpc/get_challenge_stats",
+      "/rpc/get_class_leaderboard",
+      "/rpc/get_class_results",
+      "/rpc/get_club_leaderboard",
+      "/rpc/get_club_stats",
+      "/rpc/get_daily_field_stats",
+      "/rpc/get_engagement_targets",
+      "/rpc/get_game_leaderboard",
+      "/rpc/get_own_profile",
+      "/rpc/get_pending_challenges",
+      "/rpc/is_admin",
+      "/rpc/is_bbo_username_taken",
+      "/rpc/is_instructor_of_assignment",
+      "/rpc/is_instructor_of_class",
+      "/rpc/is_member_of_class",
+      "/rpc/join_class_by_code",
+      "/rpc/list_instructor_requests",
+      "/rpc/list_partner_candidates",
+      "/rpc/review_instructor_request",
+      "/rpc/search_users"
+    ]
+  },
+  "table_row_counts": [
+    {
+      "table": "asd",
+      "rows": 241
+    },
+    {
+      "table": "profiles",
+      "rows": 1091
+    },
+    {
+      "table": "completed_modules",
+      "rows": 18362
+    },
+    {
+      "table": "badges",
+      "rows": 1434
+    },
+    {
+      "table": "review_items",
+      "rows": 131
+    },
+    {
+      "table": "forum_posts",
+      "rows": 17
+    },
+    {
+      "table": "forum_comments",
+      "rows": 27
+    },
+    {
+      "table": "forum_likes",
+      "rows": 6
+    },
+    {
+      "table": "game_results",
+      "rows": 59553
+    },
+    {
+      "table": "push_subscriptions",
+      "rows": 0
+    },
+    {
+      "table": "friendships",
+      "rows": 145
+    },
+    {
+      "table": "challenges",
+      "rows": 512
+    },
+    {
+      "table": "login_history",
+      "rows": 10479
+    },
+    {
+      "table": "forum_poll_votes",
+      "rows": 65
+    },
+    {
+      "table": "courses",
+      "rows": 4
+    },
+    {
+      "table": "course_worlds",
+      "rows": 16
+    },
+    {
+      "table": "lessons",
+      "rows": 49
+    },
+    {
+      "table": "lesson_modules",
+      "rows": 199
+    },
+    {
+      "table": "smazzate",
+      "rows": 272
+    },
+    {
+      "table": "glossary",
+      "rows": 49
+    },
+    {
+      "table": "asd_clubs",
+      "rows": 260
+    },
+    {
+      "table": "collectible_cards",
+      "rows": 22
+    },
+    {
+      "table": "weekly_challenges",
+      "rows": 12
+    },
+    {
+      "table": "guided_hands",
+      "rows": 2
+    },
+    {
+      "table": "eserciziario_exercises",
+      "rows": 31
+    },
+    {
+      "table": "trova_errore_scenarios",
+      "rows": 32
+    },
+    {
+      "table": "classes",
+      "rows": 15
+    },
+    {
+      "table": "class_members",
+      "rows": 52
+    },
+    {
+      "table": "assignments",
+      "rows": 14
+    },
+    {
+      "table": "instructor_requests",
+      "rows": 15
+    },
+    {
+      "table": "class_messages",
+      "rows": 7
+    },
+    {
+      "table": "email_events",
+      "rows": 639
+    },
+    {
+      "table": "tournament_results",
+      "rows": 51
+    },
+    {
+      "table": "bbo_username_cleanup_2026_08",
+      "rows": 9
+    },
+    {
+      "table": "partner_profiles",
+      "rows": 0
+    }
+  ],
+  "usage": {
+    "auth_registered_users": 1091,
+    "auth_registrations_by_month_utc": [
+      {
+        "month": "2026-02",
+        "registrations": 19,
+        "monthly_growth_pct": null
+      },
+      {
+        "month": "2026-03",
+        "registrations": 668,
+        "monthly_growth_pct": 3415.79
+      },
+      {
+        "month": "2026-04",
+        "registrations": 165,
+        "monthly_growth_pct": -75.3
+      },
+      {
+        "month": "2026-05",
+        "registrations": 108,
+        "monthly_growth_pct": -34.55
+      },
+      {
+        "month": "2026-06",
+        "registrations": 66,
+        "monthly_growth_pct": -38.89
+      },
+      {
+        "month": "2026-07",
+        "registrations": 47,
+        "monthly_growth_pct": -28.79
+      },
+      {
+        "month": "2026-08",
+        "registrations": 18,
+        "monthly_growth_pct": -61.7
+      }
+    ],
+    "profiles": 1091,
+    "profile_registrations_by_month_europe_rome": [
+      {
+        "month": "2026-02",
+        "profile_registrations": 19,
+        "monthly_growth_pct": null
+      },
+      {
+        "month": "2026-03",
+        "profile_registrations": 668,
+        "monthly_growth_pct": 3415.79
+      },
+      {
+        "month": "2026-04",
+        "profile_registrations": 165,
+        "monthly_growth_pct": -75.3
+      },
+      {
+        "month": "2026-05",
+        "profile_registrations": 108,
+        "monthly_growth_pct": -34.55
+      },
+      {
+        "month": "2026-06",
+        "profile_registrations": 66,
+        "monthly_growth_pct": -38.89
+      },
+      {
+        "month": "2026-07",
+        "profile_registrations": 47,
+        "monthly_growth_pct": -28.79
+      },
+      {
+        "month": "2026-08",
+        "profile_registrations": 18,
+        "monthly_growth_pct": -61.7
+      }
+    ],
+    "profiles_with_total_minutes": 1091,
+    "cumulative_visible_minutes": 482994,
+    "login_events": 10479,
+    "monthly_active_users": [
+      {
+        "month": "2026-02",
+        "monthly_active_users": 9,
+        "login_events": 9
+      },
+      {
+        "month": "2026-03",
+        "monthly_active_users": 678,
+        "login_events": 1781
+      },
+      {
+        "month": "2026-04",
+        "monthly_active_users": 373,
+        "login_events": 2001
+      },
+      {
+        "month": "2026-05",
+        "monthly_active_users": 312,
+        "login_events": 2021
+      },
+      {
+        "month": "2026-06",
+        "monthly_active_users": 298,
+        "login_events": 1895
+      },
+      {
+        "month": "2026-07",
+        "monthly_active_users": 236,
+        "login_events": 1957
+      },
+      {
+        "month": "2026-08",
+        "monthly_active_users": 149,
+        "login_events": 815
+      }
+    ],
+    "session_inference": [
+      {
+        "gap_threshold_minutes": 21,
+        "inferred_sessions": 10467,
+        "inferred_mean_minutes": 0,
+        "inferred_median_minutes": 0,
+        "single_event_sessions": 10457,
+        "single_event_share": 0.999
+      },
+      {
+        "gap_threshold_minutes": 30,
+        "inferred_sessions": 10467,
+        "inferred_mean_minutes": 0,
+        "inferred_median_minutes": 0,
+        "single_event_sessions": 10457,
+        "single_event_share": 0.999
+      },
+      {
+        "gap_threshold_minutes": 39,
+        "inferred_sessions": 10467,
+        "inferred_mean_minutes": 0,
+        "inferred_median_minutes": 0,
+        "single_event_sessions": 10457,
+        "single_event_share": 0.999
+      }
+    ],
+    "session_note": "login_history contiene solo user_id e logged_in_at; nessun heartbeat, start/end o timeout. Le sessioni inferite da gap temporale sono un proxy.",
+    "retention_rolling": [
+      {
+        "days": 5,
+        "eligible_users": 1083,
+        "retained_users": 493,
+        "rolling_retention_pct": 45.52,
+        "formula": "rolling: utenti con created_at <= now - N giorni; retained se esiste almeno un login_history.logged_in_at >= created_at + N giorni"
+      },
+      {
+        "days": 7,
+        "eligible_users": 1077,
+        "retained_users": 474,
+        "rolling_retention_pct": 44.01,
+        "formula": "rolling: utenti con created_at <= now - N giorni; retained se esiste almeno un login_history.logged_in_at >= created_at + N giorni"
+      },
+      {
+        "days": 9,
+        "eligible_users": 1076,
+        "retained_users": 465,
+        "rolling_retention_pct": 43.22,
+        "formula": "rolling: utenti con created_at <= now - N giorni; retained se esiste almeno un login_history.logged_in_at >= created_at + N giorni"
+      },
+      {
+        "days": 21,
+        "eligible_users": 1057,
+        "retained_users": 383,
+        "rolling_retention_pct": 36.23,
+        "formula": "rolling: utenti con created_at <= now - N giorni; retained se esiste almeno un login_history.logged_in_at >= created_at + N giorni"
+      },
+      {
+        "days": 30,
+        "eligible_users": 1044,
+        "retained_users": 334,
+        "rolling_retention_pct": 31.99,
+        "formula": "rolling: utenti con created_at <= now - N giorni; retained se esiste almeno un login_history.logged_in_at >= created_at + N giorni"
+      },
+      {
+        "days": 39,
+        "eligible_users": 1031,
+        "retained_users": 308,
+        "rolling_retention_pct": 29.87,
+        "formula": "rolling: utenti con created_at <= now - N giorni; retained se esiste almeno un login_history.logged_in_at >= created_at + N giorni"
+      }
+    ],
+    "completed_module_rows": 18362,
+    "matched_module_rows": 0,
+    "unmatched_module_rows": 18362,
+    "completed_lesson_user_pairs": 0,
+    "users_completing_at_least_one_lesson": 0,
+    "completed_lessons_by_month": []
+  },
+  "product_live": {
+    "courses": 4,
+    "course_worlds": 16,
+    "lessons": 49,
+    "lesson_modules": 199,
+    "smazzate": 272,
+    "glossary": 49,
+    "collectible_cards": 22,
+    "weekly_challenges": 12,
+    "guided_hands": 2,
+    "eserciziario_exercises": 31,
+    "trova_errore_scenarios": 32,
+    "module_type_distribution": {
+      "exercise": 40,
+      "theory": 100,
+      "practice": 10,
+      "quiz": 49
+    },
+    "lesson_content_block_types": {
+      "text": 323,
+      "quiz": 230,
+      "heading": 120,
+      "example": 123,
+      "rule": 159,
+      "true-false": 43,
+      "tip": 33,
+      "bid-select": 41,
+      "card-select": 11,
+      "hand-eval": 10
+    },
+    "inline_quiz_blocks": 335,
+    "smazzate_dd": {
+      "catalog_hands": 272,
+      "hands_with_dd_tricks": 272,
+      "hands_without_dd_tricks": 0
+    },
+    "eserciziario_block_types": {
+      "text": 29,
+      "quiz": 104,
+      "true-false": 2,
+      "bid-select": 7,
+      "card-select": 6,
+      "hand-eval": 2
+    },
+    "courses_count": 4,
+    "worlds_count": 16,
+    "lessons_count": 49,
+    "modules_count": 199
+  }
+}

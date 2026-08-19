@@ -47,3 +47,28 @@ test("le pagine dell'insegnante parlano inglese sotto /en", async ({ page }) => 
     }
   }
 });
+
+/**
+ * Le pagine rese sul SERVER.
+ *
+ * Sono il caso che nessun controllo vedeva: `useT()` è un hook e lì non gira,
+ * e il server l'indirizzo con `/en` non lo vede nemmeno, perché è una
+ * riscrittura. Restavano italiane senza che niente lo segnalasse — la
+ * dichiarazione di accessibilità sono quarantatré frasi.
+ *
+ * Ora la lingua arriva da un'intestazione messa dal proxy. Questo test la prova
+ * dove conta: nell'HTML che esce dal server, non dopo che il client si è
+ * montato.
+ */
+test("le pagine rese sul server cambiano lingua", async ({ request }) => {
+  const italiano = await (await request.get("/accessibilita")).text();
+  expect(italiano).toContain("Dichiarazione di Accessibilit\u00e0");
+  expect(italiano).toContain("Standard di riferimento");
+
+  const inglese = await (await request.get("/en/accessibilita")).text();
+  expect(inglese).toContain("Accessibility Statement");
+  expect(inglese).toContain("Standards we follow");
+  // E non deve restare italiano: è il modo in cui il difetto si ripresenterebbe.
+  expect(inglese).not.toContain("Standard di riferimento");
+  expect(inglese).not.toContain("Misure di accessibilit\u00e0 adottate");
+});

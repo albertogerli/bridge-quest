@@ -276,9 +276,7 @@ export default function RipassoPage() {
             <div>
               <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">{t("Come funziona")}</p>
               <p className="text-xs text-indigo-700 dark:text-indigo-300 mt-1 leading-relaxed">
-                Quando sbagli una domanda nei quiz, viene aggiunta qui per il ripasso.
-                La ripetizione spaziata ti aiuta a memorizzare meglio: rivedi dopo 1, 3 e 7 giorni.
-                Segna come padroneggiato quando sei sicuro!
+                {t("Quando sbagli una domanda nei quiz, viene aggiunta qui per il ripasso. La ripetizione spaziata ti aiuta a memorizzare meglio: rivedi dopo 1, 3 e 7 giorni. Segna come padroneggiato quando sei sicuro!")}
               </p>
             </div>
           </div>

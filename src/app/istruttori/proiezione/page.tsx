@@ -87,7 +87,7 @@ export default function ProiezionePage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0f1219] px-8 text-center">
         <p className="text-2xl text-white/60">
-          In attesa del tavolo dell&rsquo;insegnante&hellip;
+          {t("In attesa del tavolo dell’insegnante…")}
         </p>
       </div>
     );

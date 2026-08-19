@@ -61,8 +61,7 @@ export default function ArchivioPage() {
           {t("Le tue mani")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Ogni voce si riapre nel tavolo di studio esattamente dov&apos;era,
-          carte già giocate comprese.
+          {t("Ogni voce si riapre nel tavolo di studio esattamente dov'era, carte già giocate comprese.")}
         </p>
       </header>
 
@@ -72,8 +71,7 @@ export default function ArchivioPage() {
         <div className="rounded-2xl border border-dashed border-border p-8 text-center">
           <p className="font-semibold mb-1">{t("Nessuna mano salvata")}</p>
           <p className="text-sm text-muted-foreground mb-4">
-            Dal tavolo di studio, quando arrivi al momento che vuoi discutere,
-            dagli un nome e salvalo.
+            {t("Dal tavolo di studio, quando arrivi al momento che vuoi discutere, dagli un nome e salvalo.")}
           </p>
           <Link href="/istruttori/studio">
             <Button>{t("Vai al tavolo di studio")}</Button>

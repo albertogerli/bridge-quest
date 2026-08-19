@@ -1,0 +1,366 @@
+{
+  "rilevazione": {
+    "timezone": "Europe/Rome",
+    "ramo_corrente": "main",
+    "head": "6630a5e0a34ce37b3dc914dda3b1771e6ceb82ae",
+    "working_tree_pulita": false,
+    "working_tree_voci": 78,
+    "working_tree_per_stato": {
+      "D": 49,
+      "M": 1,
+      "??": 28
+    },
+    "riferimenti_branch_validi": [
+      "refs/heads/main",
+      "refs/heads/perf/tier0-quickwins",
+      "refs/heads/redesign/ui-v2",
+      "refs/remotes/origin/main",
+      "refs/remotes/origin/perf/tier0-quickwins",
+      "refs/remotes/origin/redesign/ui-v2",
+      "refs/remotes/origin/vercel/vercel-web-analytics-to-nextjs-wy0msr"
+    ],
+    "riferimenti_non_validi": [],
+    "branch_locali_validi": 3,
+    "branch_remoti_validi": 4,
+    "branch_validi_totali": 7,
+    "nota": "Le metriche Git sono calcolate due volte: (A) solo HEAD/branch corrente; (B) unione dei commit raggiungibili dai riferimenti branch validi, con deduplica per hash. I ref non validi sono esclusi."
+  },
+  "branch_corrente_HEAD": {
+    "ambito": "solo HEAD / branch corrente",
+    "riferimenti": [
+      "HEAD"
+    ],
+    "commit_totali": 260,
+    "commit_per_autore_pseudonimizzato": {
+      "Autore-10620de2": 259,
+      "Autore-6a19acae": 1
+    },
+    "primo_commit": {
+      "hash": "6471b4830500b3c64004696a9258145486a998ce",
+      "timestamp_Europe_Rome": "2026-02-08 00:15:02"
+    },
+    "ultimo_commit": {
+      "hash": "6630a5e0a34ce37b3dc914dda3b1771e6ceb82ae",
+      "timestamp_Europe_Rome": "2026-08-13 11:49:23"
+    },
+    "giorni_calendario_attivi": 55,
+    "commit_per_mese": {
+      "2026-02": 53,
+      "2026-03": 95,
+      "2026-04": 7,
+      "2026-05": 21,
+      "2026-06": 20,
+      "2026-07": 14,
+      "2026-08": 50
+    },
+    "commit_per_fascia_oraria_Europe_Rome": {
+      "00-05": 55,
+      "06-11": 56,
+      "12-17": 88,
+      "18-23": 61
+    },
+    "dimensione_commit_mediana_righe_aggiunte_piu_rimosse": 160.5,
+    "righe_aggiunte_totali": 201482,
+    "righe_rimosse_totali": 34681,
+    "occorrenze_file_binari_ignorate_nel_conteggio_righe": 524,
+    "file_piu_modificati_per_numero_commit": [
+      {
+        "path": "src/app/page.tsx",
+        "commits": 57,
+        "added": 3808,
+        "removed": 3795,
+        "churn": 7603
+      },
+      {
+        "path": "src/app/profilo/page.tsx",
+        "commits": 46,
+        "added": 2558,
+        "removed": 2246,
+        "churn": 4804
+      },
+      {
+        "path": "src/app/admin/page.tsx",
+        "commits": 38,
+        "added": 2822,
+        "removed": 2608,
+        "churn": 5430
+      },
+      {
+        "path": "src/app/lezioni/[lessonId]/[moduleId]/page.tsx",
+        "commits": 31,
+        "added": 2844,
+        "removed": 2675,
+        "churn": 5519
+      },
+      {
+        "path": "src/app/gioca/smazzata/page.tsx",
+        "commits": 31,
+        "added": 1546,
+        "removed": 309,
+        "churn": 1855
+      },
+      {
+        "path": "src/app/gioca/page.tsx",
+        "commits": 31,
+        "added": 1192,
+        "removed": 581,
+        "churn": 1773
+      },
+      {
+        "path": "src/components/desktop-sidebar.tsx",
+        "commits": 29,
+        "added": 723,
+        "removed": 543,
+        "churn": 1266
+      },
+      {
+        "path": "src/app/layout.tsx",
+        "commits": 29,
+        "added": 376,
+        "removed": 106,
+        "churn": 482
+      },
+      {
+        "path": "src/app/login/page.tsx",
+        "commits": 25,
+        "added": 736,
+        "removed": 165,
+        "churn": 901
+      },
+      {
+        "path": "src/app/classifica/page.tsx",
+        "commits": 24,
+        "added": 2073,
+        "removed": 683,
+        "churn": 2756
+      },
+      {
+        "path": "src/app/gioca/sfida/page.tsx",
+        "commits": 24,
+        "added": 683,
+        "removed": 113,
+        "churn": 796
+      },
+      {
+        "path": "src/components/bridge/bridge-table.tsx",
+        "commits": 22,
+        "added": 557,
+        "removed": 147,
+        "churn": 704
+      },
+      {
+        "path": "src/app/gioca/mano-del-giorno/page.tsx",
+        "commits": 21,
+        "added": 1837,
+        "removed": 1703,
+        "churn": 3540
+      },
+      {
+        "path": "src/app/impostazioni/page.tsx",
+        "commits": 21,
+        "added": 1031,
+        "removed": 284,
+        "churn": 1315
+      },
+      {
+        "path": "src/app/lezioni/page.tsx",
+        "commits": 20,
+        "added": 774,
+        "removed": 182,
+        "churn": 956
+      }
+    ],
+    "merge_commit": 2,
+    "effort_timestamp": {
+      "regola": "Per autore: nuova sessione se gap > 90 minuti; durata = ultimo-primo commit + 30 minuti; sessione singola = 30 minuti.",
+      "sessioni": 94,
+      "minuti_totali": 6321,
+      "ore_totali": 105.35,
+      "per_autore": {
+        "Autore-10620de2": {
+          "sessioni": 93,
+          "minuti": 6291,
+          "ore": 104.85
+        },
+        "Autore-6a19acae": {
+          "sessioni": 1,
+          "minuti": 30,
+          "ore": 0.5
+        }
+      },
+      "qualificazione": "Limite inferiore: non cattura progettazione, ricerca, debug, riunioni, produzione dei contenuti e lavoro non committato. Non usabile automaticamente come effort di replica."
+    }
+  },
+  "unione_riferimenti_validi": {
+    "ambito": "unione riferimenti branch validi, commit unici per hash",
+    "riferimenti": [
+      "refs/heads/main",
+      "refs/heads/perf/tier0-quickwins",
+      "refs/heads/redesign/ui-v2",
+      "refs/remotes/origin/main",
+      "refs/remotes/origin/perf/tier0-quickwins",
+      "refs/remotes/origin/redesign/ui-v2",
+      "refs/remotes/origin/vercel/vercel-web-analytics-to-nextjs-wy0msr"
+    ],
+    "commit_totali": 261,
+    "commit_per_autore_pseudonimizzato": {
+      "Autore-10620de2": 260,
+      "Autore-6a19acae": 1
+    },
+    "primo_commit": {
+      "hash": "6471b4830500b3c64004696a9258145486a998ce",
+      "timestamp_Europe_Rome": "2026-02-08 00:15:02"
+    },
+    "ultimo_commit": {
+      "hash": "6630a5e0a34ce37b3dc914dda3b1771e6ceb82ae",
+      "timestamp_Europe_Rome": "2026-08-13 11:49:23"
+    },
+    "giorni_calendario_attivi": 55,
+    "commit_per_mese": {
+      "2026-02": 53,
+      "2026-03": 96,
+      "2026-04": 7,
+      "2026-05": 21,
+      "2026-06": 20,
+      "2026-07": 14,
+      "2026-08": 50
+    },
+    "commit_per_fascia_oraria_Europe_Rome": {
+      "00-05": 55,
+      "06-11": 57,
+      "12-17": 88,
+      "18-23": 61
+    },
+    "dimensione_commit_mediana_righe_aggiunte_piu_rimosse": 161,
+    "righe_aggiunte_totali": 201819,
+    "righe_rimosse_totali": 34733,
+    "occorrenze_file_binari_ignorate_nel_conteggio_righe": 524,
+    "file_piu_modificati_per_numero_commit": [
+      {
+        "path": "src/app/page.tsx",
+        "commits": 58,
+        "added": 3901,
+        "removed": 3845,
+        "churn": 7746
+      },
+      {
+        "path": "src/app/profilo/page.tsx",
+        "commits": 46,
+        "added": 2558,
+        "removed": 2246,
+        "churn": 4804
+      },
+      {
+        "path": "src/app/admin/page.tsx",
+        "commits": 38,
+        "added": 2822,
+        "removed": 2608,
+        "churn": 5430
+      },
+      {
+        "path": "src/app/lezioni/[lessonId]/[moduleId]/page.tsx",
+        "commits": 31,
+        "added": 2844,
+        "removed": 2675,
+        "churn": 5519
+      },
+      {
+        "path": "src/app/gioca/smazzata/page.tsx",
+        "commits": 31,
+        "added": 1546,
+        "removed": 309,
+        "churn": 1855
+      },
+      {
+        "path": "src/app/gioca/page.tsx",
+        "commits": 31,
+        "added": 1192,
+        "removed": 581,
+        "churn": 1773
+      },
+      {
+        "path": "src/components/desktop-sidebar.tsx",
+        "commits": 29,
+        "added": 723,
+        "removed": 543,
+        "churn": 1266
+      },
+      {
+        "path": "src/app/layout.tsx",
+        "commits": 29,
+        "added": 376,
+        "removed": 106,
+        "churn": 482
+      },
+      {
+        "path": "src/app/login/page.tsx",
+        "commits": 25,
+        "added": 736,
+        "removed": 165,
+        "churn": 901
+      },
+      {
+        "path": "src/app/classifica/page.tsx",
+        "commits": 24,
+        "added": 2073,
+        "removed": 683,
+        "churn": 2756
+      },
+      {
+        "path": "src/app/gioca/sfida/page.tsx",
+        "commits": 24,
+        "added": 683,
+        "removed": 113,
+        "churn": 796
+      },
+      {
+        "path": "src/components/bridge/bridge-table.tsx",
+        "commits": 22,
+        "added": 557,
+        "removed": 147,
+        "churn": 704
+      },
+      {
+        "path": "src/app/gioca/mano-del-giorno/page.tsx",
+        "commits": 21,
+        "added": 1837,
+        "removed": 1703,
+        "churn": 3540
+      },
+      {
+        "path": "src/app/impostazioni/page.tsx",
+        "commits": 21,
+        "added": 1031,
+        "removed": 284,
+        "churn": 1315
+      },
+      {
+        "path": "src/app/lezioni/page.tsx",
+        "commits": 20,
+        "added": 774,
+        "removed": 182,
+        "churn": 956
+      }
+    ],
+    "merge_commit": 2,
+    "effort_timestamp": {
+      "regola": "Per autore: nuova sessione se gap > 90 minuti; durata = ultimo-primo commit + 30 minuti; sessione singola = 30 minuti.",
+      "sessioni": 94,
+      "minuti_totali": 6321,
+      "ore_totali": 105.35,
+      "per_autore": {
+        "Autore-10620de2": {
+          "sessioni": 93,
+          "minuti": 6291,
+          "ore": 104.85
+        },
+        "Autore-6a19acae": {
+          "sessioni": 1,
+          "minuti": 30,
+          "ore": 0.5
+        }
+      },
+      "qualificazione": "Limite inferiore: non cattura progettazione, ricerca, debug, riunioni, produzione dei contenuti e lavoro non committato. Non usabile automaticamente come effort di replica."
+    }
+  }
+}

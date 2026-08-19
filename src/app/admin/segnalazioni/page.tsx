@@ -101,8 +101,7 @@ export default function SegnalazioniPage() {
         {t("Segnalazioni")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Ognuna porta con sé pagina, mano, browser ed errori: non serve richiamare chi l&rsquo;ha
-        mandata.
+        {t("Ognuna porta con sé pagina, mano, browser ed errori: non serve richiamare chi l’ha mandata.")}
       </p>
 
       <div className="mb-4 flex flex-wrap gap-2">

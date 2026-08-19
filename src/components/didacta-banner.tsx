@@ -83,7 +83,7 @@ export function DidactaBanner() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <p className="text-sm font-black text-amber-900 dark:text-amber-200">
-                DIDACTA 2026
+                {t("DIDACTA 2026")}
               </p>
               <span className="text-[12px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-300 animate-pulse">
                 LIVE
@@ -143,7 +143,7 @@ export function DidactaBanner() {
                   <div className="flex items-start gap-3">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-black">1</span>
                     <p className="text-sm text-foreground/80 pt-0.5">
-                      Scatta una foto allo stand BridgeLab o mentre giochi sull&apos;app
+                      {t("Scatta una foto allo stand BridgeLab o mentre giochi sull'app")}
                     </p>
                   </div>
                   <div className="flex items-start gap-3">

@@ -374,8 +374,7 @@ export default function GeneraManiPage() {
           {t("Genera mani")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Scegli cosa deve avere la mano e ottieni tutte le distribuzioni che
-          servono, senza aspettare che esca quella giusta per caso.
+          {t("Scegli cosa deve avere la mano e ottieni tutte le distribuzioni che servono, senza aspettare che esca quella giusta per caso.")}
         </p>
       </header>
 
@@ -445,7 +444,7 @@ export default function GeneraManiPage() {
               <input
                 value={nomeModello}
                 onChange={(e) => setNomeModello(e.target.value)}
-                placeholder="Nome del modello"
+                placeholder={t("Nome del modello")}
                 className="h-10 flex-1 min-w-[12rem] rounded-lg border border-border bg-background px-3 text-sm"
               />
               <Button
@@ -561,9 +560,7 @@ export default function GeneraManiPage() {
           </div>
         </div>
         <p className="text-xs text-muted-foreground mb-5">
-          Lo stesso seme, con lo stesso argomento, produce sempre le stesse
-          mani: annotalo e potrai ridistribuire alla classe esattamente la
-          stessa serie, anche fra un anno.
+          {t("Lo stesso seme, con lo stesso argomento, produce sempre le stesse mani: annotalo e potrai ridistribuire alla classe esattamente la stessa serie, anche fra un anno.")}
         </p>
 
         <div className="flex flex-wrap gap-2">
@@ -618,14 +615,11 @@ export default function GeneraManiPage() {
         <div className="rounded-2xl border border-figb/30 bg-figb/5 p-5 mb-6">
           <h2 className="font-bold mb-1">{t("Assegna alla classe")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Le mani diventano un compito che gli allievi trovano nella loro
-            classe.
+            {t("Le mani diventano un compito che gli allievi trovano nella loro classe.")}
           </p>
           {analisi?.length === result.deals.length ? (
             <p className="text-sm text-figb font-medium mb-4">
-              Ogni mano porta il proprio contratto: lo trovi sotto le carte, qui
-              sotto, e puoi cambiarlo mano per mano. Contratto e dichiarante di
-              riserva servono solo alle mani il cui par non è interpretabile.
+              {t("Ogni mano porta il proprio contratto: lo trovi sotto le carte, qui sotto, e puoi cambiarlo mano per mano. Contratto e dichiarante di riserva servono solo alle mani il cui par non è interpretabile.")}
             </p>
           ) : (
             <p className="text-sm text-muted-foreground mb-4">
@@ -695,9 +689,7 @@ export default function GeneraManiPage() {
             <span className="text-sm">
               <strong>{t("Solo gioco della carta")}</strong>
               <span className="block text-xs text-muted-foreground">
-                Ogni mano arriva con la dichiarazione già fatta: l&apos;allievo
-                si concentra sul gioco. Senza, vedrebbe un contratto piovuto dal
-                nulla senza sapere cosa la sua linea ha promesso.
+                {t("Ogni mano arriva con la dichiarazione già fatta: l'allievo si concentra sul gioco. Senza, vedrebbe un contratto piovuto dal nulla senza sapere cosa la sua linea ha promesso.")}
               </span>
             </span>
           </label>
@@ -713,15 +705,12 @@ export default function GeneraManiPage() {
         <div className="rounded-2xl border border-border bg-card p-5 mb-6">
           <h2 className="font-bold mb-1">{t("Pubblica come esercizio di licita")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Le mani finiscono nella scorta condivisa: chiunque apra «Licita e
-            vediamo» può incontrarle, e accanto al voto vede come è andata agli
-            altri sulla stessa smazzata. Un compito invece resta alla tua classe
-            e ha già il contratto scelto.
+            {t("Le mani finiscono nella scorta condivisa: chiunque apra «Licita e vediamo» può incontrarle, e accanto al voto vede come è andata agli altri sulla stessa smazzata. Un compito invece resta alla tua classe e ha già il contratto scelto.")}
           </p>
 
           <label className="block mb-3">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Nome dell&apos;esercizio
+              {t("Nome dell'esercizio")}
             </span>
             <input
               value={nomeScenario}
@@ -733,8 +722,7 @@ export default function GeneraManiPage() {
 
           {!analisi || analisi.length !== result.deals.length ? (
             <p className="text-sm text-muted-foreground">
-              Prima serve l&apos;analisi double dummy: senza par e prese la mano
-              non si può né votare né confrontare.
+              {t("Prima serve l'analisi double dummy: senza par e prese la mano non si può né votare né confrontare.")}
             </p>
           ) : (
             <Button disabled={pubblicando} onClick={pubblica}>
@@ -814,8 +802,7 @@ export default function GeneraManiPage() {
                       </div>
                     ) : (
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Par non interpretabile: questa mano userà il contratto di
-                        riserva.
+                        {t("Par non interpretabile: questa mano userà il contratto di riserva.")}
                       </p>
                     )}
                     {analisi[i].fitCorto !== null && (

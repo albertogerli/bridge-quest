@@ -318,7 +318,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">{t("Cosa apri?")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Mani sempre nuove: scegli l&apos;apertura giusta</p>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Mani sempre nuove: scegli l'apertura giusta")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
@@ -403,7 +403,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida 2 contro 2")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Voi due contro un&apos;altra coppia, sulle stesse smazzate</p>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Voi due contro un'altra coppia, sulle stesse smazzate")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
@@ -419,8 +419,8 @@ export default function GiocaPage() {
                   <Search className="w-6 h-6 text-figb" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">Trova l&apos;Errore</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Trova l&apos;errore nella dichiarazione o giocata</p>
+                  <h3 className="font-semibold text-foreground text-[15px]">{t("Trova l'Errore")}</h3>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Trova l'errore nella dichiarazione o giocata")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -484,7 +484,7 @@ export default function GiocaPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-[15px]">{t("Dichiara!")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">Scegli l&apos;apertura giusta per ogni mano</p>
+                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Scegli l'apertura giusta per ogni mano")}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
@@ -624,7 +624,7 @@ export default function GiocaPage() {
                 </div>
                 <h3 className="font-semibold text-foreground text-[15px]">{t("Analisi AI")}</h3>
                 <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  Rivedi le tue mani con commenti dell&apos;AI carta per carta
+                  {t("Rivedi le tue mani con commenti dell'AI carta per carta")}
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
                   <span className="text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">{t("Post-partita")}</span>
@@ -674,8 +674,7 @@ export default function GiocaPage() {
                   <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[12px] font-bold border-0">{t("Consiglio")}</Badge>
                 </div>
                 <p className="text-[13px] text-muted-foreground leading-relaxed">
-                  La pratica rende perfetti! Gioca le mani delle lezioni che hai completato per consolidare i concetti.
-                  Prova i mini-giochi per allenare velocità e memoria!
+                  {t("La pratica rende perfetti! Gioca le mani delle lezioni che hai completato per consolidare i concetti. Prova i mini-giochi per allenare velocità e memoria!")}
                 </p>
               </div>
             </div>

@@ -214,8 +214,7 @@ export default function TorneoLicitaPage() {
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
         <h1 className="text-2xl font-bold font-display mb-3">{t("Tornei di licita")}</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Serve l&apos;accesso: un torneo ha una classifica, e una classifica ha
-          bisogno di sapere chi sei.
+          {t("Serve l'accesso: un torneo ha una classifica, e una classifica ha bisogno di sapere chi sei.")}
         </p>
         <Link href="/login?redirect=/gioca/torneo-licita"><Button>{t("Entra")}</Button></Link>
       </div>
@@ -229,8 +228,7 @@ export default function TorneoLicitaPage() {
         {t("Tornei di licita")}
       </h1>
       <p className="text-sm text-muted-foreground mb-4">
-        Le stesse smazzate per tutti. Si dichiara, si prendono le stelle, si
-        finisce in classifica.
+        {t("Le stesse smazzate per tutti. Si dichiara, si prendono le stelle, si finisce in classifica.")}
       </p>
 
       <div className="flex gap-2 mb-5" role="group" aria-label={t("Quale torneo")}>
@@ -301,7 +299,7 @@ export default function TorneoLicitaPage() {
 
           {avversarioMuto && (
             <p className="text-xs text-muted-foreground mb-3">
-              Un avversario non ha risposto in tempo e ha passato d&apos;ufficio.
+              {t("Un avversario non ha risposto in tempo e ha passato d'ufficio.")}
             </p>
           )}
 
@@ -311,8 +309,7 @@ export default function TorneoLicitaPage() {
                 {t("Il compagno non ha risposto")}
               </p>
               <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
-                Il motore che dichiara per lui non ha risposto in tempo. La mano
-                non è persa: l&apos;asta riprende da dove si è fermata.
+                {t("Il motore che dichiara per lui non ha risposto in tempo. La mano non è persa: l'asta riprende da dove si è fermata.")}
               </p>
               <Button onClick={() => { void avanza(mano, tabella, bids); }}>
                 {t("Riprova")}
@@ -411,9 +408,7 @@ export default function TorneoLicitaPage() {
       </section>
 
       <p className="text-xs text-muted-foreground mt-6">
-        Le mani del torneo non compaiono in allenamento finché è aperto: chi si
-        allena molto le incontrerebbe prima, e la classifica non direbbe più
-        niente.
+        {t("Le mani del torneo non compaiono in allenamento finché è aperto: chi si allena molto le incontrerebbe prima, e la classifica non direbbe più niente.")}
       </p>
     </div>
   );

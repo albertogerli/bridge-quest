@@ -123,7 +123,7 @@ function LicitaAmico() {
       return (
         <div className="min-h-screen px-4 py-16 max-w-md mx-auto text-center">
           <p className="text-sm text-muted-foreground">{t("Licita non trovata.")}</p>
-          <Link href="/gioca/licita-amico" className="text-sm underline">Torna all&apos;elenco</Link>
+          <Link href="/gioca/licita-amico" className="text-sm underline">{t("Torna all'elenco")}</Link>
         </div>
       );
     }
@@ -194,8 +194,7 @@ function LicitaAmico() {
               {contratto ? `Contratto: ${contratto}` : "Passo generale"}
             </p>
             <p className="text-xs text-muted-foreground">
-              Ora si vedono tutte le mani: guardate insieme se il contratto era
-              quello giusto.
+              {t("Ora si vedono tutte le mani: guardate insieme se il contratto era quello giusto.")}
             </p>
             <div className="grid grid-cols-2 gap-3 mt-3">
               {(["north", "east", "south", "west"] as Position[]).map((p) => (
@@ -246,8 +245,7 @@ function LicitaAmico() {
           {t("Licita con un amico")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Ognuno vede solo la propria mano e dichiara quando può. Agli avversari
-          pensa il computer.
+          {t("Ognuno vede solo la propria mano e dichiara quando può. Agli avversari pensa il computer.")}
         </p>
       </header>
 

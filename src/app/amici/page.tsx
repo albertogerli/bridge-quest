@@ -540,7 +540,7 @@ export default function AmiciPage() {
                   {t("Cerca un giocatore")}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Inserisci il nome, lo username BBO o il nome dell&apos;associazione
+                  {t("Inserisci il nome, lo username BBO o il nome dell'associazione")}
                 </p>
               </div>
             )}

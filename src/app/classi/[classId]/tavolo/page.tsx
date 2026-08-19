@@ -104,8 +104,7 @@ export default function TavoloAllievoPage({
         <Users className="w-10 h-10 text-muted-foreground mx-auto mb-3" aria-hidden="true" />
         <h1 className="text-xl font-bold font-display mb-2">{t("Nessun tavolo aperto")}</h1>
         <p className="text-sm text-muted-foreground">
-          Quando l&apos;insegnante apre il tavolo, la mano comparirà qui da sola:
-          puoi lasciare la pagina aperta.
+          {t("Quando l'insegnante apre il tavolo, la mano comparirà qui da sola: puoi lasciare la pagina aperta.")}
         </p>
       </div>
     );
@@ -144,7 +143,7 @@ export default function TavoloAllievoPage({
           </p>
         ) : (
           <p className="text-sm text-muted-foreground mt-1">
-            Non hai ancora un posto: vedi le mani che l&apos;insegnante scopre.
+            {t("Non hai ancora un posto: vedi le mani che l'insegnante scopre.")}
           </p>
         )}
       </header>
@@ -189,7 +188,7 @@ export default function TavoloAllievoPage({
 
       {visibili.length === 0 ? (
         <p className="py-16 text-center text-sm text-muted-foreground">
-          L&apos;insegnante non ha ancora scoperto nessuna mano.
+          {t("L'insegnante non ha ancora scoperto nessuna mano.")}
         </p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
@@ -252,7 +251,7 @@ export default function TavoloAllievoPage({
       )}
 
       <p className="text-center text-xs text-muted-foreground mt-6">
-        La pagina si aggiorna da sola quando l&apos;insegnante cambia mano.
+        {t("La pagina si aggiorna da sola quando l'insegnante cambia mano.")}
       </p>
     </div>
   );

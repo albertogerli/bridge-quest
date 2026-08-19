@@ -539,8 +539,7 @@ export default function QuizLampoPage() {
             <p
               className={`text-muted-foreground mt-2 max-w-xs mx-auto ${isSenior ? "text-base" : "text-sm"}`}
             >
-              Domande a raffica da tutti i corsi. Velocità e precisione per
-              scalare la classifica!
+              {t("Domande a raffica da tutti i corsi. Velocità e precisione per scalare la classifica!")}
             </p>
 
             <div className="flex items-center justify-center gap-3 mt-4">

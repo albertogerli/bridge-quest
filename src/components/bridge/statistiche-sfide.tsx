@@ -29,8 +29,7 @@ export function StatisticheSfidePannello() {
   if (!dati || dati.incontri === 0) {
     return (
       <p className="text-sm text-muted-foreground">
-        Nessun incontro finito. Le statistiche compaiono quando entrambe le
-        coppie hanno dichiarato tutte le smazzate.
+        {t("Nessun incontro finito. Le statistiche compaiono quando entrambe le coppie hanno dichiarato tutte le smazzate.")}
       </p>
     );
   }

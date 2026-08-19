@@ -328,7 +328,7 @@ export default function DichiaraPage() {
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Dichiara!")}</h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              Vedi una mano e scegli l&apos;apertura corretta. Velocità e precisione!
+              {t("Vedi una mano e scegli l'apertura corretta. Velocità e precisione!")}
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-xs font-bold border-0">{TOTAL_ROUNDS} mani</Badge>

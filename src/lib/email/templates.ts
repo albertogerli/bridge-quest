@@ -78,6 +78,21 @@ function greeting(name?: string | null): string {
 }
 
 /** Shared responsive shell. `unsubUrl` present -> renders marketing footer. */
+/**
+ * L'involucro comune a tutte le email.
+ *
+ * LA LINGUA ARRIVA FIN QUI, e prima non ci arrivava: ogni singola email era
+ * bilingue grazie al suo `T(it, en)`, ma l'intestazione, il piè di pagina e il
+ * collegamento di disiscrizione stavano in questa funzione, scritti in
+ * italiano fisso. Chi legge in inglese riceveva un messaggio inglese che si
+ * chiudeva con «Non voglio più questi promemoria» — e quel collegamento è
+ * proprio quello che deve capire, perché l'alternativa a capirlo è segnare il
+ * messaggio come indesiderato.
+ *
+ * Anche `lang="it"` era fisso: i lettori di schermo lo usano per scegliere la
+ * pronuncia, e leggere l'inglese con la fonetica italiana è peggio che non
+ * leggerlo.
+ */
 function layout(opts: {
   preheader: string;
   emoji: string;
@@ -86,10 +101,13 @@ function layout(opts: {
   ctaLabel: string;
   ctaUrl: string;
   unsubUrl?: string;
+  lingua?: "it" | "en" | null;
 }): string {
   const { preheader, emoji, heading, bodyHtml, ctaLabel, ctaUrl, unsubUrl } = opts;
+  const inglese = opts.lingua === "en";
+  const L = <V,>(it: V, en: V): V => (inglese ? en : it);
   return `<!doctype html>
-<html lang="it">
+<html lang="${inglese ? "en" : "it"}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -125,13 +143,16 @@ function layout(opts: {
       <!-- Footer -->
       <tr><td style="padding:22px 32px;background:${C.ivory};border-top:1px solid ${C.border};">
         <p style="margin:0 0 6px;font-size:12px;line-height:1.5;color:${C.muted};">
-          Bridge LAB · la scuola di bridge della Federazione Italiana Gioco Bridge (FIGB), Disciplina Sportiva Associata al CONI.
+          ${L(
+            "Bridge LAB · la scuola di bridge della Federazione Italiana Gioco Bridge (FIGB), Disciplina Sportiva Associata al CONI.",
+            "Bridge LAB · the bridge school of the Italian Bridge Federation (FIGB), a sports discipline associated with the Italian Olympic Committee.",
+          )}
         </p>
         <p style="margin:0;font-size:12px;line-height:1.5;color:${C.muted};">
           <a href="${SITE}" style="color:${C.blue};text-decoration:none;">bridgelab.it</a>
           ${
             unsubUrl
-              ? ` &nbsp;·&nbsp; <a href="${unsubUrl}" style="color:${C.muted};text-decoration:underline;">Non voglio più questi promemoria</a>`
+              ? ` &nbsp;·&nbsp; <a href="${unsubUrl}" style="color:${C.muted};text-decoration:underline;">${L("Non voglio più questi promemoria", "I don't want these reminders")}</a>`
               : ""
           }
         </p>
@@ -144,9 +165,22 @@ function layout(opts: {
 </html>`;
 }
 
-function textFallback(lines: string[], ctaLabel: string, ctaUrl: string, unsubUrl?: string): string {
+function textFallback(
+  lines: string[],
+  ctaLabel: string,
+  ctaUrl: string,
+  unsubUrl?: string,
+  lingua?: "it" | "en" | null,
+): string {
   const out = [...lines, "", `${ctaLabel}: ${ctaUrl}`, "", "— Bridge LAB · bridgelab.it"];
-  if (unsubUrl) out.push("", `Disiscriviti dai promemoria: ${unsubUrl}`);
+  // Anche la versione testuale: è quella che vedono i client che non caricano
+  // l'HTML, e ha lo stesso collegamento di disiscrizione.
+  if (unsubUrl) {
+    out.push(
+      "",
+      `${lingua === "en" ? "Unsubscribe from reminders" : "Disiscriviti dai promemoria"}: ${unsubUrl}`,
+    );
+  }
   return out.join("\n");
 }
 
@@ -204,6 +238,7 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           ),
           emoji: "🃏", heading, bodyHtml,
           ctaLabel: T("Inizia la Lezione 1", "Start Lesson 1"), ctaUrl: learn,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
@@ -239,13 +274,14 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           preheader: T("5 minuti per la Lezione 1 e la tua prima mano guidata.", "5 minutes for Lesson 1 and your first guided hand."),
           emoji: "🎴", heading, bodyHtml,
           ctaLabel: T("Fai la Lezione 1", "Do Lesson 1"), ctaUrl: learn, unsubUrl,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
             [`${hi.replace(/<[^>]+>/g, "")}! Ti sei iscritto a Bridge LAB ma non hai ancora iniziato.`, "", "Bastano 5 minuti per la Lezione 1 e la tua prima mano guidata."],
             [`${hi.replace(/<[^>]+>/g, "")}! You signed up for Bridge LAB but haven't started yet.`, "", "Lesson 1 takes 5 minutes, and your first guided hand comes with it."]
           ),
-          T("Fai la Lezione 1", "Do Lesson 1"), learn, unsubUrl
+          T("Fai la Lezione 1", "Do Lesson 1"), learn, unsubUrl, ctx.lingua
         ),
         transactional: false,
       };
@@ -279,13 +315,14 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           preheader: T("La Sfida del Giorno è nuova e dura pochi minuti.", "The Daily Challenge is new and takes a few minutes."),
           emoji: "🃏", heading, bodyHtml,
           ctaLabel: T("Riprendi ora", "Pick it back up"), ctaUrl: daily, unsubUrl,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
             [`${hi.replace(/<[^>]+>/g, "")}, sono passati ${days} giorni.`, "", "Ti basta una partita per rientrare in ritmo: la Sfida del Giorno è nuova."],
             [`${hi.replace(/<[^>]+>/g, "")}, it's been ${days} days.`, "", "One game is enough to get back into it: the Daily Challenge is new."]
           ),
-          T("Riprendi ora", "Pick it back up"), daily, unsubUrl
+          T("Riprendi ora", "Pick it back up"), daily, unsubUrl, ctx.lingua
         ),
         transactional: false,
       };
@@ -309,13 +346,14 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           preheader: T("Nuove sfide e mini-giochi ti aspettano. Bastano 5 minuti.", "New challenges and mini-games are waiting. Five minutes is enough."),
           emoji: "♠️", heading, bodyHtml,
           ctaLabel: T("Torna a giocare", "Come back and play"), ctaUrl: play, unsubUrl,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
             [`${hi.replace(/<[^>]+>/g, "")}, è passato un po' di tempo.`, "", "Nuove sfide e mini-giochi ti aspettano. Riparti anche solo con 5 minuti."],
             [`${hi.replace(/<[^>]+>/g, "")}, it's been a while.`, "", "New challenges and mini-games are waiting. Five minutes is enough to start again."]
           ),
-          T("Torna a giocare", "Come back and play"), play, unsubUrl
+          T("Torna a giocare", "Come back and play"), play, unsubUrl, ctx.lingua
         ),
         transactional: false,
       };
@@ -350,6 +388,7 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           ),
           emoji: "🤝", heading, bodyHtml,
           ctaLabel: T("Vedi la richiesta", "See the request"), ctaUrl: amici,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
@@ -401,6 +440,7 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           ),
           emoji: "🂡", heading, bodyHtml,
           ctaLabel: T("Rispondi ora", "Bid now"), ctaUrl: licite,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
@@ -453,6 +493,7 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           bodyHtml,
           ctaLabel: T("Vai al compito", "Go to the homework"),
           ctaUrl: dove,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
@@ -500,6 +541,7 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           bodyHtml,
           ctaLabel: T("Finiscilo", "Finish it"),
           ctaUrl: dove,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
@@ -537,13 +579,14 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           ),
           emoji: "🔥", heading, bodyHtml,
           ctaLabel: T("Gioca ora e salva la striscia", "Play now and save your streak"), ctaUrl: daily, unsubUrl,
+          lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
             [`${hi.replace(/<[^>]+>/g, "")}! La tua striscia di ${s} giorni rischia di azzerarsi a mezzanotte.`, "", "Ti basta la Sfida del Giorno: pochi minuti e la striscia è salva."],
             [`${hi.replace(/<[^>]+>/g, "")}! Your ${s}-day streak resets at midnight.`, "", "The Daily Challenge is all it takes: a few minutes and the streak is safe."]
           ),
-          T("Gioca ora", "Play now"), daily, unsubUrl
+          T("Gioca ora", "Play now"), daily, unsubUrl, ctx.lingua
         ),
         transactional: false,
       };

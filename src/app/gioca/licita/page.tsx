@@ -468,9 +468,7 @@ export default function LicitaPage() {
 
           {avversarioMuto && !annullata && (
             <p className="text-xs text-muted-foreground mb-3">
-              Un avversario non ha risposto in tempo e ha passato d&apos;ufficio:
-              la sua dichiarazione non c&apos;è, non è che abbia scelto di
-              passare. Il voto non ne risente — dipende dalla tua linea.
+              {t("Un avversario non ha risposto in tempo e ha passato d'ufficio: la sua dichiarazione non c'è, non è che abbia scelto di passare. Il voto non ne risente — dipende dalla tua linea.")}
             </p>
           )}
 
@@ -480,9 +478,7 @@ export default function LicitaPage() {
                 {t("Mano annullata")}
               </p>
               <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
-                Il motore che dichiara per gli altri non ha risposto. Questa mano
-                non viene contata: non sarebbe giusto darti un voto per un
-                problema nostro.
+                {t("Il motore che dichiara per gli altri non ha risposto. Questa mano non viene contata: non sarebbe giusto darti un voto per un problema nostro.")}
               </p>
               <Button onClick={prossima}>{t("Prossima mano")}</Button>
             </div>
@@ -575,9 +571,7 @@ export default function LicitaPage() {
           </AnimatePresence>
 
           <p className="text-xs text-muted-foreground mt-5">
-            Il compagno e gli avversari dichiarano tutti: al tavolo
-            l&apos;interferenza c&apos;è quasi sempre, e imparare a reggerla fa
-            parte del gioco.
+            {t("Il compagno e gli avversari dichiarano tutti: al tavolo l'interferenza c'è quasi sempre, e imparare a reggerla fa parte del gioco.")}
           </p>
         </>
       )}

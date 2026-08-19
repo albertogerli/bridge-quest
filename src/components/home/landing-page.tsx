@@ -90,8 +90,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             transition={{ delay: 0.5 }}
             className="mt-4 text-base sm:text-lg lg:text-xl text-white/85 max-w-xl mx-auto"
           >
-            Il corso ufficiale della Federazione Italiana Gioco Bridge, con un
-            tavolo sempre pronto per fare pratica. Gratis.
+            {t("Il corso ufficiale della Federazione Italiana Gioco Bridge, con un tavolo sempre pronto per fare pratica. Gratis.")}
           </motion.p>
 
           {/* CTA buttons */}

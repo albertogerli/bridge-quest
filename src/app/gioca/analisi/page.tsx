@@ -152,7 +152,7 @@ Gioca su bridgelab.it`;
             {t("Nessuna mano da analizzare")}
           </h1>
           <p className="text-muted-foreground mb-6">
-            Completa una mano nel gioco per vedere l&apos;analisi dettagliata.
+            {t("Completa una mano nel gioco per vedere l'analisi dettagliata.")}
           </p>
           <Link
             href="/gioca"

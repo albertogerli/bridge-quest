@@ -341,8 +341,7 @@ export default function ImpassePage() {
               {t("Impasse o Drop?")}
             </h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              Vedi la combinazione di carte: decidi in fretta se fare l&apos;impasse o
-              giocare per il drop!
+              {t("Vedi la combinazione di carte: decidi in fretta se fare l'impasse o giocare per il drop!")}
             </p>
 
             {/* Rules */}
@@ -374,7 +373,7 @@ export default function ImpassePage() {
             {/* Quick reference */}
             <div className="mt-4 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">
-                Regole d&apos;oro
+                {t("Regole d'oro")}
               </h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
@@ -514,7 +513,7 @@ export default function ImpassePage() {
             {/* Recap hint */}
             <div className="mt-4 card-clean rounded-xl bg-blue-50 dark:bg-blue-950/40 p-3">
               <p className="text-xs text-blue-700 dark:text-blue-300 font-bold">
-                Ricorda: &quot;con 8, impasse il Re&quot; e &quot;con 9, drop la Donna&quot;
+                {t("Ricorda: «con 8, impasse il Re» e «con 9, drop la Donna»")}
               </p>
             </div>
 
@@ -734,7 +733,7 @@ export default function ImpassePage() {
               </svg>
               <p className="text-xl font-bold">DROP</p>
               <p className="text-[12px] text-white/70 font-bold mt-1">
-                Gioca dall&apos;alto
+                {t("Gioca dall'alto")}
               </p>
             </button>
           </motion.div>

@@ -148,8 +148,7 @@ export default function SfidaCoppiePage() {
       <div className="min-h-screen px-4 py-12 max-w-sm mx-auto text-center">
         <h1 className="text-2xl font-bold font-display mb-3">{t("Sfida 2 contro 2")}</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Serve l&apos;accesso: una sfida è fra quattro persone, e devono
-          potersi ritrovare.
+          {t("Serve l'accesso: una sfida è fra quattro persone, e devono potersi ritrovare.")}
         </p>
         <Link href="/login"><Button>{t("Entra")}</Button></Link>
       </div>
@@ -165,9 +164,7 @@ export default function SfidaCoppiePage() {
         {t("Sfida 2 contro 2")}
       </h1>
       <p className="text-sm text-muted-foreground mb-6">
-        Tu e il tuo compagno contro un&apos;altra coppia, sulle stesse
-        smazzate. Si dichiara quando si può: non serve essere collegati
-        insieme.
+        {t("Tu e il tuo compagno contro un'altra coppia, sulle stesse smazzate. Si dichiara quando si può: non serve essere collegati insieme.")}
       </p>
 
       {/* Le sfide in corso */}
@@ -275,8 +272,7 @@ export default function SfidaCoppiePage() {
           {coda ? "Oppure scegli tu tutti e quattro" : "Nuova sfida"}
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Il compagno dev&apos;essere un amico. Gli avversari no: al circolo si
-          sfida anche chi si conosce appena.
+          {t("Il compagno dev'essere un amico. Gli avversari no: al circolo si sfida anche chi si conosce appena.")}
         </p>
 
         {friends.length === 0 ? (
@@ -303,9 +299,7 @@ export default function SfidaCoppiePage() {
       </section>
 
       <p className="text-xs text-muted-foreground mt-6">
-        Non è un duplicato vero: a squadre le due coppie siedono in linee
-        opposte, qui giocano entrambe la stessa linea contro il computer. Serve
-        a poter giocare in momenti diversi.
+        {t("Non è un duplicato vero: a squadre le due coppie siedono in linee opposte, qui giocano entrambe la stessa linea contro il computer. Serve a poter giocare in momenti diversi.")}
       </p>
     </div>
   );

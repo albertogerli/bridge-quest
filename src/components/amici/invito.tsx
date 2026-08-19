@@ -107,7 +107,7 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
         </a>
       </div>
       <p className="text-xs text-muted-foreground mb-4">
-        Dettalo al telefono o mandalo: chi ce l&apos;ha può aggiungerti.
+        {t("Dettalo al telefono o mandalo: chi ce l'ha può aggiungerti.")}
       </p>
 
       {/* Ho un codice */}
@@ -131,8 +131,7 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
 
       {nonTrovato && (
         <p className="text-sm text-muted-foreground mt-2">
-          Nessuno con questo codice. Controlla che sia scritto giusto — le
-          lettere che si confondono (O, I, L, S) non ci sono mai.
+          {t("Nessuno con questo codice. Controlla che sia scritto giusto — le lettere che si confondono (O, I, L, S) non ci sono mai.")}
         </p>
       )}
 

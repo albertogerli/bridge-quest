@@ -285,7 +285,7 @@ export default function TrovaCircoloPage() {
                           {club.hasSchool && (
                             <span className="inline-flex items-center gap-0.5 text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 px-1.5 py-0.5 rounded">
                               <School className="w-2.5 h-2.5" />
-                              SCUOLA BRIDGE
+                              {t("SCUOLA BRIDGE")}
                             </span>
                           )}
                           {club.active && (
