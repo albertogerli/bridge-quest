@@ -20,6 +20,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import type { Card, Position } from "@/lib/bridge-engine";
+import type { Lingua } from "@/lib/lingua";
 
 // ─── Types (mirror legacy @/data/courses; small fields tweaked) ──────────
 
@@ -135,7 +136,10 @@ export const levelInfo: Record<
 interface RawCourse {
   id: string;
   name: string;
+  /** `null` finché non è tradotto: si ripiega sull'italiano. */
+  name_en: string | null;
   subtitle: string | null;
+  subtitle_en: string | null;
   icon: string | null;
   color: string | null;
   gradient: string | null;
@@ -147,7 +151,9 @@ interface RawWorld {
   id: number;
   course_id: string;
   name: string;
+  name_en: string | null;
   subtitle: string | null;
+  subtitle_en: string | null;
   icon: string | null;
   gradient: string | null;
   icon_bg: string | null;
@@ -158,7 +164,9 @@ interface RawLesson {
   id: number;
   world_id: number;
   title: string;
+  title_en: string | null;
   subtitle: string | null;
+  subtitle_en: string | null;
   icon: string | null;
   position: number;
 }
@@ -167,38 +175,58 @@ interface RawModule {
   lesson_id: number;
   module_id: string;
   title: string;
+  title_en: string | null;
   icon: string | null;
   duration_minutes: number | null;
   module_type: LessonModule["type"];
   xp_reward: number;
   content: ContentBlock[] | null;
+  /** Stessa struttura di `content`, con i soli testi tradotti. */
+  content_en: ContentBlock[] | null;
   position: number;
 }
 
 // ─── Internal fetch + assembly ───────────────────────────────────────────
 
 let catalogPromise: Promise<Course[]> | null = null;
+/** La lingua del catalogo in cache: cambiandola, la cache si butta. */
+let linguaInCache: Lingua = "it";
 
-async function loadCatalog(): Promise<Course[]> {
+/**
+ * Il testo nella lingua richiesta, con ripiego sull'italiano.
+ *
+ * Una traduzione assente è `null` in colonna, e vuol dire «non ancora fatta»:
+ * si mostra l'italiano. È ciò che permette di tradurre un corso alla volta col
+ * sito vivo — e vale anche per una traduzione lasciata vuota per sbaglio, che
+ * altrimenti cancellerebbe un titolo dallo schermo.
+ */
+function inLingua<T>(italiano: T, inglese: T | null | undefined, lingua: Lingua): T {
+  if (lingua === "it") return italiano;
+  if (inglese === null || inglese === undefined) return italiano;
+  if (typeof inglese === "string" && !inglese.trim()) return italiano;
+  return inglese;
+}
+
+async function loadCatalog(lingua: Lingua = "it"): Promise<Course[]> {
   const supabase = createClient();
 
   const [coursesRes, worldsRes, lessonsRes, modulesRes] = await Promise.all([
     supabase
       .from("courses")
-      .select("id, name, subtitle, icon, color, gradient, level, position")
+      .select("id, name, name_en, subtitle, subtitle_en, icon, color, gradient, level, position")
       .order("position", { ascending: true }),
     supabase
       .from("course_worlds")
-      .select("id, course_id, name, subtitle, icon, gradient, icon_bg, position")
+      .select("id, course_id, name, name_en, subtitle, subtitle_en, icon, gradient, icon_bg, position")
       .order("position", { ascending: true }),
     supabase
       .from("lessons")
-      .select("id, world_id, title, subtitle, icon, position")
+      .select("id, world_id, title, title_en, subtitle, subtitle_en, icon, position")
       .order("position", { ascending: true }),
     supabase
       .from("lesson_modules")
       .select(
-        "lesson_id, module_id, title, icon, duration_minutes, module_type, xp_reward, content, position",
+        "lesson_id, module_id, title, title_en, icon, duration_minutes, module_type, xp_reward, content, content_en, position",
       )
       .order("position", { ascending: true }),
   ]);
@@ -225,12 +253,12 @@ async function loadCatalog(): Promise<Course[]> {
     const list = modulesByLesson.get(m.lesson_id) ?? [];
     list.push({
       id: m.module_id,
-      title: m.title,
+      title: inLingua(m.title, m.title_en, lingua),
       icon: m.icon,
       duration: m.duration_minutes != null ? String(m.duration_minutes) : "",
       type: m.module_type,
       xpReward: m.xp_reward,
-      content: m.content ?? [],
+      content: inLingua(m.content, m.content_en, lingua) ?? [],
     });
     modulesByLesson.set(m.lesson_id, list);
   }
@@ -242,8 +270,8 @@ async function loadCatalog(): Promise<Course[]> {
     list.push({
       id: l.id,
       worldId: l.world_id,
-      title: l.title,
-      subtitle: l.subtitle ?? "",
+      title: inLingua(l.title, l.title_en, lingua),
+      subtitle: inLingua(l.subtitle, l.subtitle_en, lingua) ?? "",
       icon: l.icon ?? "",
       modules: modulesByLesson.get(l.id) ?? [],
     });
@@ -256,8 +284,8 @@ async function loadCatalog(): Promise<Course[]> {
     const list = worldsByCourse.get(w.course_id) ?? [];
     list.push({
       id: w.id,
-      name: w.name,
-      subtitle: w.subtitle ?? "",
+      name: inLingua(w.name, w.name_en, lingua),
+      subtitle: inLingua(w.subtitle, w.subtitle_en, lingua) ?? "",
       icon: w.icon ?? "",
       gradient: w.gradient ?? "",
       iconBg: w.icon_bg ?? "",
@@ -291,9 +319,16 @@ async function loadCatalog(): Promise<Course[]> {
  * session/process. Subsequent calls await the same in-flight promise.
  * If the fetch fails, the cache is cleared so the next call retries.
  */
-export function getCourses(): Promise<Course[]> {
+export function getCourses(lingua: Lingua = "it"): Promise<Course[]> {
+  // La cache è per lingua: senza, chi passa all'inglese continuerebbe a
+  // ricevere il catalogo italiano già in memoria, e il cambio lingua
+  // funzionerebbe ovunque tranne che sui contenuti — cioè proprio dove serve.
+  if (linguaInCache !== lingua) {
+    catalogPromise = null;
+    linguaInCache = lingua;
+  }
   if (!catalogPromise) {
-    catalogPromise = loadCatalog().catch((err) => {
+    catalogPromise = loadCatalog(lingua).catch((err) => {
       catalogPromise = null;
       throw err;
     });
