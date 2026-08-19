@@ -227,11 +227,27 @@ function SfidaIMPContent() {
    * partita iniziata su un contratto sbagliato e poi cambiata sotto le mani di
    * chi gioca.
    */
-  const [boardContract, setBoardContract] = useState<{
+  const [contrattoRisolto, setContrattoRisolto] = useState<{
+    /**
+     * Il seme della mano per cui questo contratto è stato calcolato.
+     *
+     * SENZA, DALLA SECONDA MANO IN POI SI GIOCA IL CONTRATTO DI QUELLA PRIMA.
+     * Cambiando board le carte sono immediate — escono da un `useMemo` sul
+     * seme — mentre il contratto deve fare un giro dal solver. In quella
+     * finestra il contratto vecchio è ancora lì, non è più nullo, e la partita
+     * si monta sopra le carte nuove: 4♠ su una mano che di picche non ne ha.
+     * Confrontare il seme rende quel contratto «non ancora arrivato» invece
+     * che «sbagliato», e rimette in piedi l'attesa che il resto del codice
+     * già prevede. Protegge anche dalle risposte fuori ordine, se la mano 1
+     * atterra dopo la 2.
+     */
+    seme: string;
     contract: string;
     declarer: Position;
     vulnerable: boolean;
   } | null>(null);
+
+  const boardContract = contrattoRisolto?.seme === currentSeed ? contrattoRisolto : null;
 
   useEffect(() => {
     if (!gameHands || !currentSeed) return;
@@ -240,7 +256,8 @@ function SfidaIMPContent() {
       .then(({ table }: { table: Awaited<ReturnType<typeof calcTableAndPar>>["table"] }) => {
         if (!vivo) return;
         const scelto = contrattoDallaMano(table);
-        setBoardContract({
+        setContrattoRisolto({
+          seme: currentSeed,
           contract: scelto.contract,
           declarer: scelto.declarer,
           vulnerable: vulnerabilitaDalSeed(currentSeed),
