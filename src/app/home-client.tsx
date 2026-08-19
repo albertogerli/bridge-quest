@@ -21,13 +21,18 @@ import { ReferralHandler } from "@/components/home/referral-handler";
 import { TreasureChests } from "@/components/home/treasure-chests";
 import { CollectionTeaser } from "@/components/home/collection-teaser";
 import { LandingPage } from "@/components/home/landing-page";
+import {
+  HomeInsegnante,
+  preferisceLaBacheca,
+  ricordaPreferenzaBacheca,
+} from "@/components/home/home-insegnante";
 import { GuestLoginReminder } from "@/components/home/banners/guest-login-reminder";
 import { PrimaManoBanner } from "@/components/home/banners/prima-mano-banner";
 import { SuggestedNextStep } from "@/components/home/banners/suggested-next-step";
 import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
-import { Zap } from "lucide-react";
+import { GraduationCap, Zap } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 import { InstructorCard } from "@/components/home/instructor-card";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -70,12 +75,22 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const handsPlayed = useGameStore((s) => s.handsPlayed);
   const [isGuest, setIsGuest] = useState(false);
   const [referralToast, setReferralToast] = useState(false);
+  /**
+   * Chi insegna ha chiesto di vedere la bacheca dell'allievo.
+   *
+   * Sta in `localStorage` e si legge dopo il mount come gli altri: durante il
+   * primo render vale `false`, quindi l'insegnante vede per un istante la
+   * propria home anche se aveva scelto la bacheca. È il compromesso già in
+   * uso nel resto del file per non avere disallineamenti fra server e client.
+   */
+  const [vuoleLaBacheca, setVuoleLaBacheca] = useState(false);
   const hydrated = useHasHydrated();
 
   useEffect(() => {
     try {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setIsGuest(localStorage.getItem("bq_guest") === "1");
+      setVuoleLaBacheca(preferisceLaBacheca());
       if (!localStorage.getItem("bq_onboarded")) {
         setShowOnboarding(true);
         setNotOnboarded(true);
@@ -224,6 +239,34 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     return <PrimaManoOnboarding onDismiss={handleOnboardingComplete} />;
   }
 
+  /**
+   * IL BIVIO PER RUOLO, che prima non esisteva.
+   *
+   * `profiles.role` c'è da sempre e nessuno lo guardava per decidere cosa
+   * mostrare: chi insegna atterrava sulla bacheca dell'allievo e il portale
+   * delle classi era da cercare nel menù.
+   *
+   * Il ramo sta QUI e non prima: la pagina di ingresso e l'avvio guidato
+   * valgono per tutti, ruolo compreso — un insegnante alla prima apertura è
+   * comunque uno che deve capire dov'è.
+   *
+   * Non c'è un ramo per l'amministratore: chi amministra è quasi sempre anche
+   * insegnante, `/admin` ha già la sua sezione nel menù, e una terza home
+   * sarebbe una pagina in più da tenere allineata per due persone.
+   */
+  const insegna = authProfile?.role === "instructor" || authProfile?.role === "admin";
+  if (insegna && !vuoleLaBacheca) {
+    return (
+      <HomeInsegnante
+        nome={authProfile?.display_name ?? null}
+        onVaiAllaBacheca={() => {
+          ricordaPreferenzaBacheca(true);
+          setVuoleLaBacheca(true);
+        }}
+      />
+    );
+  }
+
   // Dashboard needs the lesson catalog. Show spinner until the first
   // successful Supabase fetch lands — non-authenticated visitors already
   // returned above with the landing page, so we never spin for them.
@@ -242,6 +285,26 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       <Suspense fallback={null}>
         <ReferralHandler onReferralBonus={handleReferralBonus} />
       </Suspense>
+
+      {/*
+        La strada di ritorno. Senza, «vai alla bacheca» sarebbe una porta a
+        senso unico: la preferenza resta salvata, e l'insegnante si ritroverebbe
+        la bacheca dell'allievo per sempre senza sapere perché.
+      */}
+      {insegna && (
+        <div className="mx-auto max-w-5xl px-4 pt-4 sm:px-6">
+          <button
+            onClick={() => {
+              ricordaPreferenzaBacheca(false);
+              setVuoleLaBacheca(false);
+            }}
+            className="flex w-full items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted"
+          >
+            <GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />
+            {t("Torna all'area insegnanti")}
+          </button>
+        </div>
+      )}
 
       {/* Marketing consent banner (logged-in users, shown once) */}
       <MarketingConsentBanner
