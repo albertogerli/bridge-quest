@@ -26,6 +26,7 @@ import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
+import { Cronometro, ripulisci } from "@/lib/tempi";
 import { BenStatus } from "@/components/bridge/ben-status";
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
@@ -353,6 +354,17 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
   const saved = useRef(false);
   // eslint-disable-next-line react-hooks/purity -- timestamp di inizio catturato una sola volta (init del ref) per il tiebreak di velocità
   const startRef = useRef<number>(Date.now()); // for the speed tiebreak in the class leaderboard
+  /**
+   * Il tempo di ogni singola decisione, non solo della mano intera.
+   *
+   * `durationMs` diceva già quanto è durata la mano, ma non distingue «ci ha
+   * pensato molto su una carta» da «ha giocato con calma tutte e tredici», che
+   * per un insegnante sono due cose diverse. Il cronometro parte da quando la
+   * mano compare a schermo: è quando si comincia a pensare, non quando si tocca
+   * la prima carta.
+   */
+  // eslint-disable-next-line react-hooks/purity -- stesso motivo del ref qui sopra: istante di partenza catturato una volta sola
+  const cronometro = useRef<Cronometro>(new Cronometro(Date.now()));
   const isMobile = useMobile();
   const { play } = useSound();
   const [showCelebration, setShowCelebration] = useState(false);
@@ -378,6 +390,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
 
   const handlePlayCard = (displayPosition: string, cardIndex: number) => {
     if (!game.gameState) return;
+    cronometro.current.segna(Date.now());
     const gamePos = toGamePosition(displayPosition as Position, declarer);
     const hand = game.gameState.hands[gamePos];
     if (!hand || cardIndex >= hand.length) return;
@@ -447,6 +460,10 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             made: res.result >= 0,
             contract: smazzata.contract,
             durationMs: Date.now() - startRef.current,
+            // I tempi già ripuliti: il difetto da evitare è che un intervallo
+            // di quaranta minuti — scheda in secondo piano, telefono in tasca —
+            // entri nelle medie di classe come se fosse riflessione.
+            tempi: ripulisci(cronometro.current.grezzi()),
             errors,
             // Full card-by-card play so the instructor can replay the hand.
             play: game.gameState
