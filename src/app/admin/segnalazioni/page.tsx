@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Stato = "nuova" | "presa-in-carico" | "risolta" | "archiviata";
 
@@ -40,6 +41,7 @@ const ETICHETTE: Record<Stato, string> = {
  * gira, e non c'è motivo di crearla.
  */
 export default function SegnalazioniPage() {
+  const t = useT();
   const [righe, setRighe] = useState<Segnalazione[]>([]);
   const [filtro, setFiltro] = useState<Stato | "tutte">("nuova");
   const [caricando, setCaricando] = useState(true);
@@ -96,7 +98,7 @@ export default function SegnalazioniPage() {
       </Link>
       <h1 className="mt-3 mb-1 flex items-center gap-2 font-display text-3xl font-bold">
         <Bug className="h-6 w-6 text-primary" aria-hidden="true" />
-        Segnalazioni
+        {t("Segnalazioni")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
         Ognuna porta con sé pagina, mano, browser ed errori: non serve richiamare chi l&rsquo;ha
@@ -138,12 +140,12 @@ export default function SegnalazioniPage() {
                 <span className="ml-auto flex gap-1.5">
                   {s.stato !== "presa-in-carico" && (
                     <Button size="sm" variant="outline" onClick={() => void cambiaStato(s.id, "presa-in-carico")}>
-                      Prendo in carico
+                      {t("Prendo in carico")}
                     </Button>
                   )}
                   {s.stato !== "risolta" && (
                     <Button size="sm" variant="outline" onClick={() => void cambiaStato(s.id, "risolta")}>
-                      Risolta
+                      {t("Risolta")}
                     </Button>
                   )}
                 </span>
@@ -153,7 +155,7 @@ export default function SegnalazioniPage() {
 
               <details className="mt-3">
                 <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">
-                  Contesto
+                  {t("Contesto")}
                 </summary>
                 <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-muted p-3 text-[12px] leading-relaxed">
                   {JSON.stringify(s.contesto, null, 2)}
@@ -167,14 +169,14 @@ export default function SegnalazioniPage() {
                       {/* eslint-disable-next-line @next/next/no-img-element -- indirizzo firmato che scade: l'ottimizzatore di Next lo metterebbe in cache oltre la sua validità */}
                       <img
                         src={immagini[s.id]}
-                        alt="Schermo al momento della segnalazione"
+                        alt={t("Schermo al momento della segnalazione")}
                         className="max-h-96 rounded-lg border border-border"
                       />
                     </a>
                   ) : (
                     <Button size="sm" variant="ghost" onClick={() => void mostraFoto(s)}>
                       <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                      Vedi la foto dello schermo
+                      {t("Vedi la foto dello schermo")}
                     </Button>
                   )}
                 </div>

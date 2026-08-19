@@ -9,13 +9,35 @@ Piattaforma didattica bridge della FIGB, in produzione su bridgelab.it. Document
 - shadcn/ui stile **new-york** (`src/components/ui/`). Varianti button verificate: `default/outline/ghost`; badge: `default/secondary/destructive/outline/ghost/link`. Non inventare varianti.
 - **Non esiste** l'utility `shadow-warm-*`: usare le shadow standard Tailwind (`shadow-md`, `shadow-lg`).
 - Palette: primario FIGB `#003DA5` via token (`figb`/`figb-light`/`figb-dark`); niente `bg-white`/`text-gray-*`/hex hardcoded fuori dalle eccezioni documentate.
-- **Due lingue: italiano e inglese americano** (deciso il 18/08/2026; prima era
-  «solo italiano, per scelta di prodotto»). L'italiano resta la lingua
-  predefinita e la lingua in cui si scrive per primi: l'inglese vive sotto
-  `/en` e si allinea dopo. Piano, fasi e glossario dei termini di bridge —
-  vincolante, perché «presa» non può diventare a volte *trick* e a volte
-  *hand* — stanno in `docs/i18n-inglese.md`. Finché l'impianto non è in piedi
-  il codice resta in italiano: non aggiungere traduzioni sparse.
+- **Due lingue: italiano e inglese americano** (deciso il 18/08/2026). L'italiano
+  resta la lingua predefinita e quella in cui si scrive per primi; l'inglese vive
+  sotto `/en`. Piano, fasi e glossario dei termini di bridge — vincolante, perché
+  «presa» non può diventare a volte *trick* e a volte *hand* — stanno in
+  `docs/i18n-inglese.md`.
+
+  **L'INGLESE SI AGGIORNA NELLO STESSO COMMIT CHE INTRODUCE LA FRASE.** Non
+  «dopo»: dopo vuol dire mai. Ogni testo nuovo visibile all'utente va avvolto in
+  `t("…")` e la sua traduzione va aggiunta a `src/traduzioni/en.json` prima di
+  spingere.
+
+  Il motivo per cui è scritto in maiuscolo: il 19/08/2026 sono stati aggiunti
+  venticinque file di interfaccia in una sessione sola e il dizionario è rimasto
+  indietro di centotrentadue frasi. Non per distrazione di un momento — perché
+  niente lo impediva. Una frase senza inglese non rompe niente in italiano: si
+  vede solo sotto `/en`, dove non guarda nessuno finché non ci arriva un
+  utente vero.
+
+  ```bash
+  node scripts/stringhe-da-tradurre.mjs --controlla   # gate CI: esce 1 se manca l'inglese
+  node scripts/stringhe-da-tradurre.mjs --mancanti    # l'elenco da tradurre
+  node scripts/avvolgi-stringhe.mjs --scrivi <file>   # avvolge i testi in t()
+  node scripts/verifica-terminologia.mjs              # glossario ACBL
+  ```
+
+  Il conto delle frasi non ancora avvolte in `t()` resta un rapporto e non un
+  errore: quelle si vedono in italiano sotto `/en` ma non rompono niente, e
+  bloccare la CI su un allineamento in corso insegnerebbe a disattivare il
+  controllo.
 
 ## Contenuti: il DB è la fonte di verità
 
@@ -32,8 +54,9 @@ Piattaforma didattica bridge della FIGB, in produzione su bridgelab.it. Document
 ## Verifiche obbligatorie prima del push
 
 ```bash
-npx tsc --noEmit   # deve passare
-npm test           # vitest, deve passare
+npx tsc --noEmit                                   # deve passare
+npm test                                           # vitest, deve passare
+node scripts/stringhe-da-tradurre.mjs --controlla  # nessuna frase senza inglese
 ```
 
 - `npx eslint src` deve restare a **zero errori e zero warning** (gate CI). Ogni nuovo `eslint-disable` richiede un motivo dopo ` -- `.

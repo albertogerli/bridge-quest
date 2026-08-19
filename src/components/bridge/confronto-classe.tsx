@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Users } from "lucide-react";
 import { confrontoMano, riassunto, type RigaConfronto } from "@/lib/confronto-classe";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il confronto con la classe, sotto il risultato di una mano.
@@ -22,6 +23,7 @@ export function ConfrontoClasse({
   assignmentId: string;
   smazzataId: string;
 }) {
+  const t = useT();
   const [righe, setRighe] = useState<RigaConfronto[] | null>(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function ConfrontoClasse({
     <div className="mt-4 rounded-xl border border-border bg-card p-4">
       <p className="mb-2 flex items-center gap-2 text-sm font-semibold">
         <Users className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-        Come è andata agli altri
+        {t("Come è andata agli altri")}
       </p>
 
       <p className="mb-3 text-sm text-muted-foreground">

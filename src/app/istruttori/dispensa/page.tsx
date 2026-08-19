@@ -191,10 +191,10 @@ function Dispensa() {
             </>
           )}
           <Button variant={compatto ? "default" : "outline"} onClick={() => setCompatto((v) => !v)}>
-            {compatto ? "Una per pagina" : "Formato compatto"}
+            {compatto ? t("Una per pagina") : t("Formato compatto")}
           </Button>
           <Button variant={conPunti ? "default" : "outline"} onClick={() => setConPunti((v) => !v)}>
-            {conPunti ? "Nascondi i punti" : "Mostra i punti"}
+            {conPunti ? t("Nascondi i punti") : t("Mostra i punti")}
           </Button>
           <Button onClick={() => window.print()}>
             <Printer className="w-4 h-4 mr-1" aria-hidden="true" />

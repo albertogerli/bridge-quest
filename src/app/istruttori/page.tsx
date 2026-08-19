@@ -245,7 +245,7 @@ export default function IstruttoriPage() {
               {t("Annulla")}
             </Button>
             <Button onClick={handleCreate} disabled={saving || !name.trim()}>
-              {saving ? "Creazione…" : "Crea classe"}
+              {saving ? t("Creazione…") : t("Crea classe")}
             </Button>
           </DialogFooter>
         </DialogContent>

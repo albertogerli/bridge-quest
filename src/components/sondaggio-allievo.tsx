@@ -8,6 +8,7 @@ import {
   type Sondaggio,
   type VoceDistribuzione,
 } from "@/lib/sondaggi";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La domanda dell'insegnante, sul dispositivo dell'allievo.
@@ -26,6 +27,7 @@ import {
  * esattamente l'opposto della domanda.
  */
 export function SondaggioAllievo({ classId }: { classId: string }) {
+  const t = useT();
   const [sondaggio, setSondaggio] = useState<Sondaggio | null>(null);
   const [scelta, setScelta] = useState<string | null>(null);
   const [dati, setDati] = useState<VoceDistribuzione[]>([]);
@@ -77,14 +79,14 @@ export function SondaggioAllievo({ classId }: { classId: string }) {
 
       {scelta && (
         <p className="mt-2 text-xs text-muted-foreground">
-          Risposta registrata. Puoi ancora cambiarla.
+          {t("Risposta registrata. Puoi ancora cambiarla.")}
         </p>
       )}
 
       {sondaggio.mostra_risultati && totale > 0 && (
         <div className="mt-3 border-t border-border pt-3">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Come ha risposto la classe
+            {t("Come ha risposto la classe")}
           </p>
           <ul className="space-y-1">
             {dati.map((d) => (

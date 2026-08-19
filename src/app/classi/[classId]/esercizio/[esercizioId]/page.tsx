@@ -16,6 +16,7 @@ import {
   rispostaGiusta,
   type EsercizioPosizione,
 } from "@/lib/esercizi-posizione";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -39,6 +40,7 @@ export default function EsercizioPage({
 }: {
   params: Promise<{ classId: string; esercizioId: string }>;
 }) {
+  const t = useT();
   const { classId, esercizioId } = use(params);
   const cerca = useSearchParams();
   const assignmentId = cerca.get("compito");
@@ -151,7 +153,7 @@ export default function EsercizioPage({
       {esercizio.bids.length > 0 && (
         <div className="mb-5">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            La dichiarazione fin qui
+            {t("La dichiarazione fin qui")}
           </p>
           <BiddingPanel
             bidding={{ dealer: esercizio.dealer, bids: esercizio.bids }}
@@ -164,7 +166,7 @@ export default function EsercizioPage({
         <p className="mb-4 text-sm text-muted-foreground">
           {esercizio.contract && (
             <>
-              Contratto <strong>{esercizio.contract}</strong>
+              {t("Contratto")} <strong>{esercizio.contract}</strong>
               {esercizio.declarer && ` di ${NOME[esercizio.declarer]}`} ·{" "}
             </>
           )}
@@ -191,7 +193,7 @@ export default function EsercizioPage({
             className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"
           />
           <Button onClick={() => void rispondi()} disabled={!risposta.trim()} className="w-full">
-            Rispondi
+            {t("Rispondi")}
           </Button>
         </div>
       ) : (
@@ -232,7 +234,7 @@ export default function EsercizioPage({
               </p>
             ) : (
               <Button variant="outline" onClick={() => setSpiegazione(true)} className="w-full">
-                Perché?
+                {t("Perché?")}
               </Button>
             ))}
         </div>

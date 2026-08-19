@@ -354,7 +354,7 @@ function Tavolo() {
         {!tableId ? (
           <Button disabled={!classId || occupato} onClick={apri}>
             <Play className="w-4 h-4 mr-1" aria-hidden="true" />
-            {occupato ? "Apro…" : "Apri il tavolo"}
+            {occupato ? t("Apro…") : t("Apri il tavolo")}
           </Button>
         ) : (
           <Button
@@ -473,7 +473,7 @@ function Tavolo() {
             {t("Ricopri")}
           </Button>
           <Button variant="outline" onClick={() => setShowContract(tableId, !stato.showContract)}>
-            {stato.showContract ? "Nascondi il contratto" : "Mostra il contratto"}
+            {stato.showContract ? t("Nascondi il contratto") : t("Mostra il contratto")}
           </Button>
           {classId && (
             <SondaggioAula
@@ -483,10 +483,10 @@ function Tavolo() {
             />
           )}
           <Button variant="outline" disabled={assegnando} onClick={() => void assegnaManiDiOggi()}>
-            {assegnando ? "Assegno…" : "Assegna le mani di oggi"}
+            {assegnando ? t("Assegno…") : t("Assegna le mani di oggi")}
           </Button>
           <Button variant="outline" onClick={() => setDivisioniVisibili((v) => !v)}>
-            {divisioniVisibili ? "Nascondi le divisioni" : "Divisioni dei semi"}
+            {divisioniVisibili ? t("Nascondi le divisioni") : t("Divisioni dei semi")}
           </Button>
           {/*
             Alla proiezione va lo stato del tavolo, non quello del database: le
@@ -594,6 +594,7 @@ function Posto({
   giocabiliSet: Set<string>;
   onGioca: (seat: Position, c: Card) => void;
 }) {
+  const t = useT();
   const etichetta = SEATS.find((s) => s.key === seat)!.label;
   const cards = hands?.[seat] ?? [];
   const vistaDaTutti = stato?.revealed.includes(seat) ?? false;
@@ -651,7 +652,7 @@ function Posto({
           className="mt-2 w-full text-xs font-semibold rounded-lg border border-border py-1.5 hover:bg-muted"
           aria-pressed={vistaDaTutti}
         >
-          {vistaDaTutti ? "La classe la vede" : "Mostra alla classe"}
+          {vistaDaTutti ? t("La classe la vede") : t("Mostra alla classe")}
         </button>
       )}
     </div>

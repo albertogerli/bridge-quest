@@ -478,7 +478,7 @@ export default function GeneraManiPage() {
                     setModelli(await elencaModelli());
                   }}
                 >
-                  {modelloScelto.condiviso ? "Non condividere" : "Condividi con gli insegnanti"}
+                  {modelloScelto.condiviso ? t("Non condividere") : t("Condividi con gli insegnanti")}
                 </Button>
               )}
               {modelloScelto && !modelloScelto.ufficiale && (
@@ -568,7 +568,7 @@ export default function GeneraManiPage() {
 
         <div className="flex flex-wrap gap-2">
           <Button disabled={working} onClick={() => run(vincoliInUso, seed)}>
-            {working ? "Genero…" : "Genera"}
+            {working ? t("Genero…") : t("Genera")}
           </Button>
           <Button
             variant="outline"

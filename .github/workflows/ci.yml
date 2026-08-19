@@ -59,3 +59,11 @@ jobs:
       # in un testo didattico non è un refuso, è una regola sbagliata.
       - name: La terminologia inglese di bridge
         run: node scripts/verifica-terminologia.mjs
+
+      # Una frase passata da `t()` senza traduzione non rompe niente in
+      # italiano: si vede solo sotto `/en`, dove non guarda nessuno finché non
+      # ci arriva un utente vero. È per questo che il dizionario resta indietro
+      # senza che nessuno se ne accorga, ed è per questo che serve un gate e non
+      # una regola scritta.
+      - name: Ogni frase ha il suo inglese
+        run: node scripts/stringhe-da-tradurre.mjs --controlla

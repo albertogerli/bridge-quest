@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * L'ingresso in aula: un nome, e si è dentro.
@@ -37,6 +38,7 @@ export default function IngressoAulaPage({
 }
 
 function Ingresso({ params }: { params: Promise<{ token: string }> }) {
+  const t = useT();
   const { token } = use(params);
   const router = useRouter();
   /**
@@ -91,18 +93,18 @@ function Ingresso({ params }: { params: Promise<{ token: string }> }) {
     <div className="flex min-h-screen items-center justify-center px-5">
       <div className="w-full max-w-sm text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c8a44e]">
-          Bridge LAB
+          {t("Bridge LAB")}
         </p>
-        <h1 className="mb-1 font-display text-3xl font-bold">Benvenuto in aula</h1>
+        <h1 className="mb-1 font-display text-3xl font-bold">{t("Benvenuto in aula")}</h1>
         <p className="mb-6 text-sm text-muted-foreground">
-          Scrivi il tuo nome: serve al tuo insegnante per darti il posto.
+          {t("Scrivi il tuo nome: serve al tuo insegnante per darti il posto.")}
         </p>
 
         <input
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && nome.trim().length >= 2 && void entra()}
-          placeholder="Il tuo nome"
+          placeholder={t("Il tuo nome")}
           autoFocus
           autoComplete="given-name"
           className="mb-3 w-full rounded-xl border border-border bg-background px-4 py-3 text-center text-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"

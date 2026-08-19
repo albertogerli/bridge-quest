@@ -14,6 +14,7 @@ import {
   type VoceDistribuzione,
 } from "@/lib/sondaggi";
 import type { Card } from "@/lib/bridge-engine";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il pannello dei sondaggi, lato insegnante.
@@ -40,6 +41,7 @@ export function SondaggioAula({
   giocabili?: Card[];
   smazzataId?: string | null;
 }) {
+  const t = useT();
   const [aperto, setAperto] = useState(false);
   const [sondaggio, setSondaggio] = useState<Sondaggio | null>(null);
   const [dati, setDati] = useState<VoceDistribuzione[]>([]);
@@ -81,7 +83,7 @@ export function SondaggioAula({
     return (
       <Button variant="outline" size="sm" onClick={() => setAperto(true)}>
         <BarChart3 className="mr-2 h-4 w-4" aria-hidden="true" />
-        Chiedi alla classe
+        {t("Chiedi alla classe")}
       </Button>
     );
   }
@@ -92,10 +94,10 @@ export function SondaggioAula({
     <div className="fixed bottom-4 left-4 z-40 w-80 rounded-xl border border-border bg-card/95 p-3 shadow-lg backdrop-blur print:hidden">
       <div className="mb-2 flex items-center gap-2">
         <BarChart3 className="h-4 w-4 text-primary" aria-hidden="true" />
-        <span className="text-sm font-bold">Chiedi alla classe</span>
+        <span className="text-sm font-bold">{t("Chiedi alla classe")}</span>
         <button
           onClick={() => setAperto(false)}
-          aria-label="Chiudi"
+          aria-label={t("Chiudi")}
           className="ml-auto text-muted-foreground hover:text-foreground"
         >
           <X className="h-4 w-4" />
@@ -122,7 +124,7 @@ export function SondaggioAula({
           <input
             value={domanda}
             onChange={(e) => setDomanda(e.target.value)}
-            placeholder="Oppure scrivi una domanda"
+            placeholder={t("Oppure scrivi una domanda")}
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
           <Button
@@ -132,7 +134,7 @@ export function SondaggioAula({
             disabled={occupato || domanda.trim().length < 3}
             onClick={() => void lancia(["Sì", "No", "Non so"], domanda)}
           >
-            Chiedi (sì / no / non so)
+            {t("Chiedi (sì / no / non so)")}
           </Button>
         </div>
       ) : (
@@ -168,7 +170,7 @@ export function SondaggioAula({
                 await ricarica();
               }}
             >
-              {sondaggio.mostra_risultati ? "Nascondi alla classe" : "Mostra alla classe"}
+              {sondaggio.mostra_risultati ? t("Nascondi alla classe") : t("Mostra alla classe")}
             </Button>
             <Button
               size="sm"
@@ -178,7 +180,7 @@ export function SondaggioAula({
                 await ricarica();
               }}
             >
-              Chiudi il sondaggio
+              {t("Chiudi il sondaggio")}
             </Button>
           </div>
         </div>

@@ -314,7 +314,7 @@ function Studio() {
         </Link>
         <Button onClick={() => setNumeri((n) => !n)}>
           {numeri ? <EyeOff className="w-4 h-4 mr-1" aria-hidden="true" /> : <Eye className="w-4 h-4 mr-1" aria-hidden="true" />}
-          {numeri ? "Nascondi i numeri" : "Mostra i numeri"}
+          {numeri ? t("Nascondi i numeri") : t("Mostra i numeri")}
         </Button>
       </div>
 

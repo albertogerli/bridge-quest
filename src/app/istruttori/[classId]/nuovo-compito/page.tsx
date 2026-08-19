@@ -357,7 +357,7 @@ export default function NuovoCompitoPage({
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border"
                     }`}
-                    aria-label={isSel ? "Deseleziona" : "Seleziona"}
+                    aria-label={isSel ? t("Deseleziona") : t("Seleziona")}
                   >
                     {isSel && "✓"}
                   </button>
@@ -486,7 +486,7 @@ export default function NuovoCompitoPage({
             onClick={handleCreate}
             disabled={saving || !title.trim() || selected.size === 0}
           >
-            {saving ? "Creazione…" : "Crea compito"}
+            {saving ? t("Creazione…") : t("Crea compito")}
           </Button>
         </div>
       </div>

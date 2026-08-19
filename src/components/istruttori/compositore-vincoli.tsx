@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { Suit } from "@/lib/bridge-engine";
 import type { DealConstraints, Range, SeatConstraint } from "@/lib/deal-generator";
+import { useT } from "@/contexts/traduzioni-provider";
 
 type Posto = "north" | "east" | "south" | "west";
 
@@ -43,6 +44,7 @@ export function CompositoreVincoli({
   vincoli: DealConstraints;
   onCambia: (v: DealConstraints) => void;
 }) {
+  const t = useT();
   const [espanso, setEspanso] = useState<Posto | null>("south");
   const [testoAperto, setTestoAperto] = useState(false);
   const [testo, setTesto] = useState("");
@@ -179,7 +181,7 @@ export function CompositoreVincoli({
                     checked={c.balanced === true}
                     onChange={(e) => cambiaPosto(p.key, { balanced: e.target.checked || undefined })}
                   />
-                  Mano bilanciata (4333, 4432, 5332)
+                  {t("Mano bilanciata (4333, 4432, 5332)")}
                 </label>
               </div>
             )}
@@ -188,7 +190,7 @@ export function CompositoreVincoli({
       })}
 
       <div className="rounded-lg border border-border p-3">
-        <p className="mb-2 text-sm font-semibold">Punti della linea</p>
+        <p className="mb-2 text-sm font-semibold">{t("Punti della linea")}</p>
         {campoRange("Nord-Sud", vincoli.nsHcp, 40, (r) => onCambia({ ...vincoli, nsHcp: r }))}
         <div className="h-2" />
         {campoRange("Est-Ovest", vincoli.ewHcp, 40, (r) => onCambia({ ...vincoli, ewHcp: r }))}
@@ -204,7 +206,7 @@ export function CompositoreVincoli({
           }}
           className="text-sm text-primary hover:underline"
         >
-          {testoAperto ? "Nascondi il vincolo scritto" : "Vedi e modifica il vincolo scritto"}
+          {testoAperto ? t("Nascondi il vincolo scritto") : t("Vedi e modifica il vincolo scritto")}
         </button>
         {testoAperto && (
           <div className="mt-2">
@@ -227,7 +229,7 @@ export function CompositoreVincoli({
               }}
               className="mt-2 rounded-lg bg-muted px-3 py-1.5 text-sm font-semibold hover:bg-muted/70"
             >
-              Applica
+              {t("Applica")}
             </button>
           </div>
         )}

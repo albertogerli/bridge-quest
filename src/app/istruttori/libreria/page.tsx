@@ -18,6 +18,7 @@ import {
 } from "@/lib/libreria";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La libreria federale.
@@ -32,6 +33,7 @@ import { reportError } from "@/lib/report-error";
  * lezione: non è un giudizio nostro, è cosa ha funzionato.
  */
 export default function LibreriaPage() {
+  const t = useT();
   const { courses } = useCatalog();
   const [scheda, setScheda] = useState<"cerca" | "mie" | "modera">("cerca");
   const [voci, setVoci] = useState<VoceLibreria[]>([]);
@@ -86,7 +88,7 @@ export default function LibreriaPage() {
       />
       <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-bold">
         <Library className="h-6 w-6 text-primary" aria-hidden="true" />
-        Libreria
+        {t("Libreria")}
       </h1>
       <p className="mb-5 text-sm text-muted-foreground">
         Materiale preparato da altri insegnanti. Quello che importi diventa tuo: puoi cambiarlo
@@ -120,17 +122,17 @@ export default function LibreriaPage() {
             <input
               value={testo}
               onChange={(e) => setTesto(e.target.value)}
-              placeholder="Cerca per titolo"
+              placeholder={t("Cerca per titolo")}
               className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-3 text-sm"
             />
           </div>
           <select
             value={lezione}
             onChange={(e) => setLezione(e.target.value === "" ? "" : Number(e.target.value))}
-            aria-label="Lezione"
+            aria-label={t("Lezione")}
             className="h-10 rounded-lg border border-border bg-background px-2 text-sm"
           >
-            <option value="">Tutte le lezioni</option>
+            <option value="">{t("Tutte le lezioni")}</option>
             {lezioni.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.titolo}
@@ -140,10 +142,10 @@ export default function LibreriaPage() {
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value as TipoVoce | "")}
-            aria-label="Tipo"
+            aria-label={t("Tipo")}
             className="h-10 rounded-lg border border-border bg-background px-2 text-sm"
           >
-            <option value="">Tutti i tipi</option>
+            <option value="">{t("Tutti i tipi")}</option>
             {(Object.keys(ETICHETTE_TIPO) as TipoVoce[]).map((t) => (
               <option key={t} value={t}>
                 {ETICHETTE_TIPO[t]}
@@ -172,7 +174,7 @@ export default function LibreriaPage() {
                 <Badge variant="secondary">{ETICHETTE_TIPO[v.tipo]}</Badge>
                 {v.stato !== "approvato" && (
                   <Badge variant={v.stato === "rifiutato" ? "destructive" : "outline"}>
-                    {v.stato === "in-attesa" ? "In attesa" : "Non approvato"}
+                    {v.stato === "in-attesa" ? t("In attesa") : t("Non approvato")}
                   </Badge>
                 )}
               </div>
@@ -202,11 +204,11 @@ export default function LibreriaPage() {
                   >
                     {importati.has(v.id) ? (
                       <>
-                        <Check className="mr-1.5 h-3.5 w-3.5" /> Nella tua area
+                        <Check className="mr-1.5 h-3.5 w-3.5" /> {t("Nella tua area")}
                       </>
                     ) : (
                       <>
-                        <Download className="mr-1.5 h-3.5 w-3.5" /> Importa
+                        <Download className="mr-1.5 h-3.5 w-3.5" /> {t("Importa")}
                       </>
                     )}
                   </Button>
@@ -220,7 +222,7 @@ export default function LibreriaPage() {
                         await ricarica();
                       }}
                     >
-                      Approva
+                      {t("Approva")}
                     </Button>
                     <Button
                       size="sm"
@@ -230,7 +232,7 @@ export default function LibreriaPage() {
                         await ricarica();
                       }}
                     >
-                      Non approvare
+                      {t("Non approvare")}
                     </Button>
                   </>
                 )}

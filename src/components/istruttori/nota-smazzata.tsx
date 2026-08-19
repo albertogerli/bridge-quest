@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { NotebookPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { espandiSemi, mieNote, salvaNota } from "@/lib/note-smazzate";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La nota dell'insegnante su una mano.
@@ -18,6 +19,7 @@ import { espandiSemi, mieNote, salvaNota } from "@/lib/note-smazzate";
  * imparano alla prima nota.
  */
 export function NotaSmazzata({ smazzataId }: { smazzataId: string }) {
+  const t = useT();
   const [aperta, setAperta] = useState(false);
   const [testo, setTesto] = useState("");
   const [caricata, setCaricata] = useState(false);
@@ -50,7 +52,7 @@ export function NotaSmazzata({ smazzataId }: { smazzataId: string }) {
         className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground hover:underline"
       >
         <NotebookPen className="h-3.5 w-3.5" aria-hidden="true" />
-        {testo ? "La tua nota" : "Aggiungi una nota"}
+        {testo ? t("La tua nota") : t("Aggiungi una nota")}
       </button>
     );
   }
@@ -63,15 +65,15 @@ export function NotaSmazzata({ smazzataId }: { smazzataId: string }) {
         // simbolo comparire è quello che insegna la scorciatoia.
         onChange={(e) => setTesto(espandiSemi(e.target.value))}
         rows={3}
-        placeholder="Come la spieghi tu. Scrivi !s per ♠, !h per ♥, !d per ♦, !c per ♣."
+        placeholder={t("Come la spieghi tu. Scrivi !s per ♠, !h per ♥, !d per ♦, !c per ♣.")}
         className="w-full rounded-md border border-border bg-background p-2 text-sm"
       />
       <div className="mt-1.5 flex items-center gap-2">
         <Button size="sm" onClick={() => void salva()}>
-          Salva
+          {t("Salva")}
         </Button>
         <Button size="sm" variant="ghost" onClick={() => setAperta(false)}>
-          Chiudi
+          {t("Chiudi")}
         </Button>
         {salvata && <span className="text-xs text-primary">salvata ✓</span>}
       </div>

@@ -10,6 +10,7 @@ import {
   type ContestoSegnalazione,
 } from "@/lib/segnalazioni";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il pulsante «qualcosa non va», con tutto il contesto già dentro.
@@ -37,6 +38,7 @@ export function PulsanteSegnalazione({
   zona: string;
   contestoExtra?: Partial<ContestoSegnalazione>;
 }) {
+  const t = useT();
   const [aperto, setAperto] = useState(false);
   const [testo, setTesto] = useState("");
   const [conScreenshot, setConScreenshot] = useState(true);
@@ -93,7 +95,7 @@ export function PulsanteSegnalazione({
       <button
         data-senza-foto="1"
         onClick={() => setAperto(true)}
-        aria-label="Segnala un problema"
+        aria-label={t("Segnala un problema")}
         className="fixed bottom-20 right-4 z-30 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-muted-foreground shadow-md backdrop-blur transition-colors hover:text-foreground lg:bottom-4 print:hidden"
       >
         <Bug className="h-5 w-5" aria-hidden="true" />
@@ -108,10 +110,10 @@ export function PulsanteSegnalazione({
     >
       <div className="mb-2 flex items-center gap-2">
         <Bug className="h-4 w-4 text-primary" aria-hidden="true" />
-        <span className="text-sm font-bold">Qualcosa non va</span>
+        <span className="text-sm font-bold">{t("Qualcosa non va")}</span>
         <button
           onClick={() => setAperto(false)}
-          aria-label="Chiudi"
+          aria-label={t("Chiudi")}
           className="ml-auto text-muted-foreground hover:text-foreground"
         >
           <X className="h-4 w-4" />
@@ -120,7 +122,7 @@ export function PulsanteSegnalazione({
 
       {mandata ? (
         <p className="py-4 text-center text-sm font-medium text-primary">
-          Ricevuta, grazie. Ci guardiamo.
+          {t("Ricevuta, grazie. Ci guardiamo.")}
         </p>
       ) : (
         <>
@@ -129,7 +131,7 @@ export function PulsanteSegnalazione({
             onChange={(e) => setTesto(e.target.value)}
             rows={4}
             autoFocus
-            placeholder="Cosa è successo? Anche solo una riga."
+            placeholder={t("Cosa è successo? Anche solo una riga.")}
             className="w-full rounded-lg border border-border bg-background p-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
 
@@ -141,7 +143,7 @@ export function PulsanteSegnalazione({
               onChange={(e) => setConScreenshot(e.target.checked)}
             />
             <span>
-              Manda anche una foto dello schermo
+              {t("Manda anche una foto dello schermo")}
               <span className="block opacity-80">
                 Fotografa quello che c&rsquo;è adesso sulla pagina. La vediamo solo noi.
               </span>

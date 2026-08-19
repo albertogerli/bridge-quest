@@ -224,11 +224,11 @@ function Lavagna() {
         </Button>
         {mano?.soluzione && (
           <Button variant="outline" onClick={() => setSoluzioneVisibile((v) => !v)}>
-            {soluzioneVisibile ? "Nascondi il contratto" : "Mostra il contratto"}
+            {soluzioneVisibile ? t("Nascondi il contratto") : t("Mostra il contratto")}
           </Button>
         )}
         <Button variant="outline" onClick={() => setDivisioniVisibili((v) => !v)}>
-          {divisioniVisibili ? "Nascondi le divisioni" : "Divisioni dei semi"}
+          {divisioniVisibili ? t("Nascondi le divisioni") : t("Divisioni dei semi")}
         </Button>
         <Button variant={minibridge ? "default" : "outline"} onClick={() => setMinibridge((v) => !v)}>
           {t("Minibridge")}

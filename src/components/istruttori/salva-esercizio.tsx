@@ -11,6 +11,7 @@ import {
   type Consegna,
   type NuovoEsercizio,
 } from "@/lib/esercizi-posizione";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const POSTI: { key: Position; nome: string }[] = [
   { key: "south", nome: "Sud" },
@@ -56,6 +57,7 @@ export function SalvaEsercizio({
   classId?: string | null;
   titoloProposto?: string;
 }) {
+  const t = useT();
   const [aperto, setAperto] = useState(false);
   const [titolo, setTitolo] = useState(titoloProposto ?? "");
   const [consegna, setConsegna] = useState<Consegna>(played.length > 0 ? "carta" : "dichiara");
@@ -110,7 +112,7 @@ export function SalvaEsercizio({
     return (
       <Button variant="outline" size="sm" onClick={() => setAperto(true)}>
         <BookmarkPlus className="mr-2 h-4 w-4" aria-hidden="true" />
-        Salva come esercizio
+        {t("Salva come esercizio")}
       </Button>
     );
   }
@@ -122,10 +124,10 @@ export function SalvaEsercizio({
     >
       <div className="mb-3 flex items-center gap-2">
         <BookmarkPlus className="h-4 w-4 text-primary" aria-hidden="true" />
-        <span className="text-sm font-bold">Salva questa posizione</span>
+        <span className="text-sm font-bold">{t("Salva questa posizione")}</span>
         <button
           onClick={() => setAperto(false)}
-          aria-label="Chiudi"
+          aria-label={t("Chiudi")}
           className="ml-auto text-muted-foreground hover:text-foreground"
         >
           <X className="h-4 w-4" />
@@ -160,7 +162,7 @@ export function SalvaEsercizio({
 
           <div className="flex items-center gap-2">
             <label htmlFor="posto-esercizio" className="text-sm text-muted-foreground">
-              Guarda da
+              {t("Guarda da")}
             </label>
             <select
               id="posto-esercizio"
@@ -179,7 +181,7 @@ export function SalvaEsercizio({
           <input
             value={domanda}
             onChange={(e) => setDomanda(e.target.value)}
-            placeholder="Domanda (facoltativa)"
+            placeholder={t("Domanda (facoltativa)")}
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
 
@@ -187,7 +189,7 @@ export function SalvaEsercizio({
             <input
               value={risposte}
               onChange={(e) => setRisposte(e.target.value)}
-              placeholder={consegna === "dichiara" ? "Risposte giuste: 3SA, 4♠" : "Carte giuste: ♠A, ♠K"}
+              placeholder={consegna === "dichiara" ? t("Risposte giuste: 3SA, 4♠") : t("Carte giuste: ♠A, ♠K")}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
             />
           )}
@@ -196,19 +198,19 @@ export function SalvaEsercizio({
             value={soluzione}
             onChange={(e) => setSoluzione(e.target.value)}
             rows={2}
-            placeholder="Perché — si apre dopo, con le stesse regole delle soluzioni"
+            placeholder={t("Perché — si apre dopo, con le stesse regole delle soluzioni")}
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
 
           <input
             value={gruppo}
             onChange={(e) => setGruppo(e.target.value)}
-            placeholder="Gruppo (es. «Impasse»)"
+            placeholder={t("Gruppo (es. «Impasse»)")}
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
 
           <Button onClick={() => void salva()} disabled={inCorso} className="w-full" size="sm">
-            {inCorso ? "Salvo…" : "Salva"}
+            {inCorso ? t("Salvo…") : t("Salva")}
           </Button>
         </div>
       )}
