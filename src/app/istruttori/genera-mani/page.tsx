@@ -16,6 +16,7 @@ import {
   type DealConstraints,
 } from "@/lib/deal-generator";
 import { dealsToPbn } from "@/lib/pbn";
+import { fileLin } from "@/lib/lin";
 import { dealsToSmazzate } from "@/lib/deals-to-smazzate";
 import { calcTableAndPar, fitFor, FIT_MINIMO, type DdsTable, type ParResult } from "@/lib/dds-table";
 import { describePar, parAssignmentFromContracts, type ParContract } from "@/lib/par-contract";
@@ -189,6 +190,34 @@ export default function GeneraManiPage() {
     const a = document.createElement("a");
     a.href = url;
     a.download = `bridgelab-${template.id}-${seed}.pbn`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [result, template, seed]);
+
+  /**
+   * Lo stesso set in LIN, per aprirlo su BBO.
+   *
+   * Il PBN è lo standard fra programmi; il LIN è quello che capisce Bridge Base
+   * Online, dove gli allievi giocano quando escono da qui. Una mano preparata a
+   * lezione che si apre su BBO è una mano che si rigioca la sera con il proprio
+   * compagno.
+   */
+  const scaricaLin = useCallback(() => {
+    if (!result?.deals.length) return;
+    const testo = fileLin(
+      result.deals.map((hands, i) => ({
+        hands,
+        // La stessa rotazione dell'analisi e della pubblicazione: il mazziere e
+        // la zona devono essere gli stessi ovunque esca questa mano.
+        dealer: (["north", "east", "south", "west"] as const)[i % 4],
+        vulnerability: (["none", "ns", "ew", "both"] as const)[i % 4],
+      })),
+    );
+    const blob = new Blob([testo], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `bridgelab-${template.id}-${seed}.lin`;
     a.click();
     URL.revokeObjectURL(url);
   }, [result, template, seed]);
@@ -558,6 +587,11 @@ export default function GeneraManiPage() {
               {analizzando
               ? `Calcolo il par… ${analisi?.length ?? 0}/${result?.deals.length ?? 0}`
               : "Calcola par"}
+            </Button>
+          ) : null}
+          {result?.deals.length ? (
+            <Button variant="outline" onClick={scaricaLin}>
+              {t("Scarica LIN (per BBO)")}
             </Button>
           ) : null}
           {result?.deals.length ? (
