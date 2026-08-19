@@ -58,6 +58,12 @@ export default function ScuolaPage() {
       title: "Richieste istruttori",
       desc: "Approva o rifiuta le candidature a istruttore.",
     });
+    cards.push({
+      href: "/admin/segnalazioni",
+      emoji: "🐞",
+      title: "Segnalazioni",
+      desc: "Cosa non ha funzionato, con pagina, mano, browser e foto dello schermo.",
+    });
   }
 
   return (

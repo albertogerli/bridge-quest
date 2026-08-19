@@ -15,6 +15,7 @@ import type { Smazzata } from "@/lib/catalog";
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
+import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -266,6 +267,8 @@ function Lavagna() {
       {soluzioneVisibile && mano?.soluzione && (
         <p className="text-center text-2xl font-bold text-figb mt-4">{mano.soluzione}</p>
       )}
+
+      <PulsanteSegnalazione zona="lavagna" contestoExtra={{ smazzataId: mano?.titolo ?? null }} />
 
       <p className="text-center text-xs text-muted-foreground mt-6">
         {t("Tastiera:")} <strong>N</strong> <strong>E</strong> <strong>S</strong> <strong>O</strong> scoprono un posto ·{" "}
