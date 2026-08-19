@@ -24,6 +24,13 @@ import {
   type ClassMember,
   type AssignmentResultRow,
 } from "@/lib/instructors";
+import {
+  difficolta,
+  formattaDurata,
+  ripulisci,
+  type Difficolta,
+  type TempiMano,
+} from "@/lib/tempi";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /** Cell state for the heatmap. */
@@ -146,6 +153,58 @@ export default function AssignmentResultsPage({
       assignment.custom_hands?.find((sm) => sm.id === id);
     return s ? s.contract : id;
   };
+
+  /**
+   * I tempi di riflessione, per allievo e per mano.
+   *
+   * Due segnali, e sono opposti: chi ci ha messo molto su una carta e ha
+   * sbagliato non sapeva come fare — la spiegazione non è arrivata — e chi ha
+   * risposto subito e ha sbagliato non si è accorto che c'era una scelta. Con
+   * il solo esito si confondono, e sono due lezioni diverse da rifare.
+   *
+   * I tempi arrivano già ripuliti dal client, ma si ripassano da `ripulisci`:
+   * `details` è un jsonb scritto dal browser, e fidarsi di un numero che arriva
+   * da lì per calcolare una media di classe vuol dire che basta una scheda
+   * lasciata aperta per spostarla.
+   */
+  const tempiPerAllievo = members
+    .map((m) => {
+      const voci: { smazzataId: string; t: TempiMano; mantenuto: boolean; segnale: Difficolta }[] = [];
+      for (const id of smazzataIds) {
+        const r = resultMap.get(`${m.student_id}|${id}`);
+        const grezzi = (r?.details as { tempi?: { decisioni?: number[] } } | undefined)?.tempi
+          ?.decisioni;
+        if (!Array.isArray(grezzi) || grezzi.length === 0) continue;
+        const t = ripulisci(grezzi);
+        const mantenuto = (r?.score ?? -1) >= 0;
+        voci.push({ smazzataId: id, t, mantenuto, segnale: difficolta(t, mantenuto) });
+      }
+      return {
+        studentId: m.student_id,
+        name: m.display_name ?? "Allievo",
+        voci,
+        totaleMs: voci.reduce((a, v) => a + v.t.totaleMs, 0),
+        daGuardare: voci.filter((v) => v.segnale !== "normale"),
+      };
+    })
+    .filter((r) => r.voci.length > 0);
+
+  /** Quale mano ha richiesto più tempo alla classe: è quella da rispiegare. */
+  const tempoPerMano = smazzataIds
+    .map((id) => {
+      const durate = tempiPerAllievo
+        .flatMap((r) => r.voci.filter((v) => v.smazzataId === id))
+        .map((v) => v.t.totaleMs);
+      return {
+        id,
+        mediana: durate.length
+          ? [...durate].sort((a, b) => a - b)[Math.floor(durate.length / 2)]
+          : 0,
+        quanti: durate.length,
+      };
+    })
+    .filter((x) => x.quanti > 0)
+    .sort((a, b) => b.mediana - a.mediana);
 
   // Per-hand difficulty signal: how many students went down on each hand.
   const downPerHand = smazzataIds.map(
@@ -275,6 +334,63 @@ export default function AssignmentResultsPage({
               </tr>
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── Tempi di riflessione ── */}
+      {tempiPerAllievo.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-1 font-display text-xl font-bold text-foreground">
+            {t("Quanto ci hanno pensato")}
+          </h2>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Il tempo non è un voto: serve a distinguere chi non sapeva come fare da chi non si
+            è accorto che c&rsquo;era una scelta. Agli allievi non compare nessuna classifica di
+            velocità.
+          </p>
+
+          {tempoPerMano.length > 1 && (
+            <p className="mb-3 rounded-lg border border-border bg-muted/40 p-3 text-sm">
+              La mano che ha richiesto più tempo alla classe è la{" "}
+              <strong>{colLabel(tempoPerMano[0].id)}</strong> ({formattaDurata(tempoPerMano[0].mediana)}{" "}
+              di mediana): è quella da rivedere per prima.
+            </p>
+          )}
+
+          <div className="divide-y divide-border rounded-lg border border-border">
+            {tempiPerAllievo
+              .slice()
+              .sort((a, b) => b.daGuardare.length - a.daGuardare.length)
+              .map((r) => (
+                <div key={r.studentId} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2.5">
+                  <span className="text-sm font-medium">{r.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {formattaDurata(r.totaleMs)} in tutto · {r.voci.length}{" "}
+                    {r.voci.length === 1 ? "mano" : "mani"}
+                  </span>
+                  <span className="ml-auto flex flex-wrap gap-1.5">
+                    {r.daGuardare.map((v) => (
+                      <span
+                        key={v.smazzataId}
+                        className={`rounded-full px-2 py-0.5 text-[12px] font-medium ${
+                          v.segnale === "lento-e-sbagliato"
+                            ? "bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
+                            : "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                        }`}
+                        title={
+                          v.segnale === "lento-e-sbagliato"
+                            ? `${formattaDurata(v.t.massimoMs)} sulla decisione più lunga, e la mano è caduta: non sapeva come fare.`
+                            : "Ha giocato di getto e la mano è caduta: non si è accorto che c'era una scelta."
+                        }
+                      >
+                        {colLabel(v.smazzataId)}:{" "}
+                        {v.segnale === "lento-e-sbagliato" ? "ci ha pensato" : "di getto"}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              ))}
+          </div>
         </div>
       )}
 
