@@ -873,6 +873,125 @@ try {
   fail(`verifica sfide non eseguita: ${e.message}`);
 }
 
+// ---------------------------------------------------------------------------
+console.log("\n[14] Le soluzioni delle smazzate");
+
+try {
+  // (a) Il commento non deve uscire dalla tabella. Le RLS filtrano le righe,
+  // non le colonne: qui la riga DEVE arrivare — servono le carte per giocare —
+  // ed è solo `commentary` a non dover uscire. Se ne occupa un privilegio di
+  // colonna, e questa è la verifica che c'è ancora.
+  {
+    const { data, error } = await anon.from("smazzate").select("id, commentary").limit(1);
+    if (error) ok("(a) commentary: non leggibile dalla tabella");
+    else fail(`(a) un anonimo ha letto commentary da smazzate (${data?.length ?? 0} righe)`);
+  }
+
+  // (b) …ma la mano sì, o il sito resta senza smazzate. È la contro-verifica
+  // del punto sopra: chiudere troppo qui si vede subito.
+  {
+    const { data, error } = await anon
+      .from("smazzate")
+      .select("id, hands, contract, dd_tricks")
+      .limit(1);
+    if (!error && (data?.length ?? 0) === 1) ok("(b) le carte restano leggibili");
+    else fail(`(b) le smazzate non si leggono più: ${error?.message ?? "0 righe"}`);
+  }
+
+  // (c) `select *` deve fallire, ed è voluto: è la rete che fa accorgere di
+  // una lettura di massa riaggiunta per distrazione, invece di lasciarla
+  // riaprire il buco in silenzio.
+  {
+    const { error } = await anon.from("smazzate").select("*").limit(1);
+    if (error) ok("(c) select * su smazzate fallisce, come deve");
+    else fail("(c) select * su smazzate funziona ancora: commentary è di nuovo esposto");
+  }
+
+  // (d) La via legittima resta aperta a chi non ha compiti: il catalogo è
+  // materiale di studio, e chi studia da solo non ha nessuno da cui copiare.
+  {
+    const { data, error } = await anon.rpc("smazzate_commenti", { p_ids: ["1-1"] });
+    if (!error && (data?.length ?? 0) === 1) ok("(d) smazzate_commenti risponde a chi non ha compiti");
+    else fail(`(d) smazzate_commenti non risponde: ${error?.message ?? "0 righe"}`);
+  }
+
+  // (e) Il compito passa da una funzione che ripulisce le mani importate:
+  // letto a mano non deve dare niente a un anonimo.
+  {
+    const { data, error } = await anon.from("assignments").select("custom_hands").limit(1);
+    const rows = error ? 0 : data?.length ?? 0;
+    if (rows === 0) ok("(e) assignments: niente per l'anonimo");
+    else fail(`(e) un anonimo legge ${rows} compiti`);
+  }
+} catch (e) {
+  fail(`verifica soluzioni non eseguita: ${e.message}`);
+}
+
+// ---------------------------------------------------------------------------
+console.log("\n[15] Iscrizioni in attesa");
+
+try {
+  // Chi è `pending` non deve vedere i contenuti della classe. Il cancello è
+  // `is_member_of_class`, che chiede `status = 'active'`: la verifica sta qui
+  // perché quella funzione è invisibile dal codice dell'app, e il giorno che
+  // qualcuno la allentasse non se ne accorgerebbe nessuno.
+  const email = `pend-test-${Date.now()}@bridgelab-test.invalid`;
+  const password = `Pn!${Math.random().toString(36).slice(2, 12)}`;
+  const { data: created, error: createErr } =
+    await admin.auth.admin.createUser({ email, password, email_confirm: true });
+
+  const { data: classe } = await admin
+    .from("classes")
+    .select("id")
+    .limit(1)
+    .single();
+
+  if (createErr || !classe) {
+    info(`verifica iscrizioni saltata: ${createErr?.message ?? "nessuna classe"}`);
+  } else {
+    await admin
+      .from("class_members")
+      .insert({ class_id: classe.id, student_id: created.user.id, status: "pending" });
+
+    const u = createClient(URL_, ANON, { auth: { persistSession: false } });
+    await u.auth.signInWithPassword({ email, password });
+
+    const { data: compiti } = await u.from("assignments").select("id").eq("class_id", classe.id);
+    if ((compiti?.length ?? 0) === 0) ok("(a) chi è in attesa non vede i compiti");
+    else fail(`(a) chi è in attesa vede ${compiti.length} compiti`);
+
+    const { data: messaggi } = await u.from("class_messages").select("id").eq("class_id", classe.id);
+    if ((messaggi?.length ?? 0) === 0) ok("(b) chi è in attesa non vede la chat");
+    else fail(`(b) chi è in attesa vede ${messaggi.length} messaggi`);
+
+    // …ma il NOME della classe sì, o non saprebbe per cosa sta aspettando.
+    const { data: vista } = await u.from("classes").select("id, name").eq("id", classe.id);
+    if ((vista?.length ?? 0) === 1) ok("(c) chi è in attesa vede il nome della classe");
+    else fail("(c) chi è in attesa non vede nemmeno il nome della classe");
+
+    // E soprattutto: non può approvarsi da solo.
+    const { error: promoErr } = await u
+      .from("class_members")
+      .update({ status: "active" })
+      .eq("class_id", classe.id)
+      .eq("student_id", created.user.id);
+    const { data: dopo } = await admin
+      .from("class_members")
+      .select("status")
+      .eq("class_id", classe.id)
+      .eq("student_id", created.user.id)
+      .single();
+    if (dopo?.status === "pending") ok("(d) chi è in attesa non può approvarsi da solo");
+    else fail(`(d) un utente in attesa si è promosso da solo (${dopo?.status}, errore: ${promoErr?.message ?? "nessuno"})`);
+
+    await admin.from("class_members").delete().eq("student_id", created.user.id);
+    await admin.auth.admin.deleteUser(created.user.id);
+    info("utente in attesa di test eliminato");
+  }
+} catch (e) {
+  fail(`verifica iscrizioni non eseguita: ${e.message}`);
+}
+
 console.log(
   failures === 0
     ? "\nTutte le verifiche RLS sono passate.\n"

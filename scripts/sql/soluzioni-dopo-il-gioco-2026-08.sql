@@ -209,11 +209,14 @@ grant execute on function public.compito_per_allievo(uuid) to authenticated;
 -- Va tolto prima il privilegio sull'intera tabella: finché c'è quello, un
 -- `revoke` sulla singola colonna non ha effetto.
 --
---   revoke select on public.smazzate from anon, authenticated;
---   grant select (
---     id, lesson_id, board, title, contract, declarer, vulnerability,
---     opening_lead, hands, bidding, created_at, updated_at, dd_tricks, title_en
---   ) on public.smazzate to anon, authenticated;
+-- ESEGUITO il 19/08/2026, dopo il deploy. Resta qui, decommentato, perché lo
+-- script deve poter ricostruire il database da zero — ma su un database vivo va
+-- eseguito in questo ordine, non prima.
+revoke select on public.smazzate from anon, authenticated;
+grant select (
+  id, lesson_id, board, title, contract, declarer, vulnerability,
+  opening_lead, hands, bidding, created_at, updated_at, dd_tricks, title_en
+) on public.smazzate to anon, authenticated;
 --
 -- Da quel momento `select *` su `smazzate` fallisce, ed è voluto: se qualcuno
 -- riaggiunge una lettura di massa se ne accorge subito invece di riaprire il
