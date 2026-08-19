@@ -22,19 +22,12 @@ test.beforeAll(async () => {
     auth: { persistSession: false },
   });
   const { email } = testCreds();
-  const { data } = await admin.from("profiles").select("id").eq("email", email).maybeSingle();
-  const id = data?.id ?? (await trovaIdPerEmail(admin, email));
+  // L'id si prende da `auth.users`: `profiles` non ha la colonna email, e
+  // cercarlo lì fallirebbe in silenzio lasciando il test senza ruolo.
+  const { data } = await admin.auth.admin.listUsers({ perPage: 200 });
+  const id = data?.users.find((u) => u.email === email)?.id;
   if (id) await admin.from("profiles").update({ role: "instructor" }).eq("id", id);
 });
-
-async function trovaIdPerEmail(
-  admin: ReturnType<typeof createClient>,
-  email: string,
-): Promise<string | null> {
-  // `profiles` può non avere la colonna email: in quel caso l'id sta in auth.
-  const { data } = await admin.auth.admin.listUsers({ perPage: 200 });
-  return data?.users.find((u) => u.email === email)?.id ?? null;
-}
 
 test("alla finestra proiettata arrivano solo le mani scoperte", async ({ page, context }) => {
   await login(page);
