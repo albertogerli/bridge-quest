@@ -42,6 +42,16 @@ export interface ClassRoom {
   approvazione_automatica: boolean;
   /** Quando il codice smette di funzionare. `null` = non scade. */
   invite_expires_at: string | null;
+  /**
+   * Falso = nel confronto fra allievi i nomi non compaiono.
+   *
+   * Default falso, ed è una scelta didattica: il confronto serve a capire se
+   * la mano era difficile o l'ho sbagliata io, e quella risposta non ha bisogno
+   * dei nomi. Con i nomi diventa una classifica, e una classifica in una classe
+   * di principianti fa smettere di provare proprio quelli che avrebbero più da
+   * guadagnare.
+   */
+  risultati_nominativi: boolean;
   created_at: string;
 }
 
@@ -281,6 +291,7 @@ export async function aggiornaImpostazioniClasse(
     /** ISO, oppure `null` per «non scade». */
     invite_expires_at?: string | null;
     invite_active?: boolean;
+    risultati_nominativi?: boolean;
   },
 ): Promise<void> {
   const supabase = createClient();

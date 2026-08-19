@@ -270,6 +270,26 @@ export default function ClassDetailPage({
             </div>
           </div>
 
+          <label className="flex items-start gap-3 text-sm">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4"
+              checked={classRoom.risultati_nominativi}
+              disabled={busy}
+              onChange={(e) =>
+                void cambiaImpostazione({ risultati_nominativi: e.target.checked })
+              }
+            />
+            <span>
+              <span className="font-medium">{t("Nel confronto si vedono i nomi")}</span>
+              <span className="block text-xs text-muted-foreground">
+                {classRoom.risultati_nominativi
+                  ? "Ogni allievo vede chi ha mantenuto e chi no."
+                  : "Ognuno vede come è andata agli altri, ma senza nomi. È il modo in cui il confronto resta un aiuto invece che una classifica."}
+              </span>
+            </span>
+          </label>
+
           <div className="space-y-1.5">
             <label htmlFor="stato-classe" className="text-sm font-medium">
               {t("Stato della classe")}
