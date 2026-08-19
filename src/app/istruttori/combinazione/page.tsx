@@ -10,6 +10,7 @@ import { SalvaEsercizio } from "@/components/istruttori/salva-esercizio";
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { COMBINAZIONI, problemiDi, type Combinazione } from "@/lib/combinazioni";
 import type { Card, Position, Rank, Suit } from "@/lib/bridge-engine";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANGHI: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"] as Rank[];
@@ -43,6 +44,7 @@ const VUOTE: Record<Position, Card[]> = { north: [], east: [], south: [], west: 
  * proiettarlo.
  */
 export default function CombinazionePage() {
+  const t = useT();
   const [hands, setHands] = useState<Record<Position, Card[]>>(VUOTE);
   const [atout, setAtout] = useState<Suit | null>(null);
   const [postoAttivo, setPostoAttivo] = useState<Position>("south");
@@ -109,7 +111,7 @@ export default function CombinazionePage() {
       />
       <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-bold">
         <Layers className="h-6 w-6 text-primary" aria-hidden="true" />
-        Combinazioni di carte
+        {t("Combinazioni di carte")}
       </h1>
       <p className="mb-5 text-sm text-muted-foreground">
         Componi una posizione con poche carte per posto. Serve a mostrare una combinazione senza
@@ -118,7 +120,7 @@ export default function CombinazionePage() {
 
       <div className="mb-5">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Le classiche, già pronte
+          {t("Le classiche, già pronte")}
         </p>
         <div className="flex flex-wrap gap-2">
           {COMBINAZIONI.map((c) => (
@@ -137,7 +139,7 @@ export default function CombinazionePage() {
       {!gioca && (
         <>
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="text-sm text-muted-foreground">Sto riempiendo:</span>
+            <span className="text-sm text-muted-foreground">{t("Sto riempiendo:")}</span>
             {POSTI.map((p) => (
               <button
                 key={p.key}
@@ -153,7 +155,7 @@ export default function CombinazionePage() {
               </button>
             ))}
             <span className="ml-auto flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Atout:</span>
+              <span className="text-muted-foreground">{t("Atout:")}</span>
               <select
                 value={atout ?? ""}
                 onChange={(e) => setAtout((e.target.value || null) as Suit | null)}
@@ -207,10 +209,10 @@ export default function CombinazionePage() {
 
           <div className="mb-4 flex flex-wrap gap-2">
             <Button disabled={!pronta} onClick={() => setGioca(true)}>
-              Prova la posizione
+              {t("Prova la posizione")}
             </Button>
             <Button variant="outline" onClick={() => setHands(VUOTE)}>
-              Svuota
+              {t("Svuota")}
             </Button>
             {pronta && (
               <SalvaEsercizio

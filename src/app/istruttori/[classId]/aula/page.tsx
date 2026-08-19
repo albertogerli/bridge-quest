@@ -23,6 +23,7 @@ import { calcTableAndPar } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import { reportError } from "@/lib/report-error";
 import type { Position } from "@/lib/bridge-engine";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La console dell'aula.
@@ -41,6 +42,7 @@ import type { Position } from "@/lib/bridge-engine";
  * giocando per quella posizione dal tavolo, come già si può.
  */
 export default function AulaPage({ params }: { params: Promise<{ classId: string }> }) {
+  const t = useT();
   const { classId } = use(params);
   const [sessione, setSessione] = useState<SessioneAula | null>(null);
   const [tavoli, setTavoli] = useState<StatoTavolo[]>([]);
@@ -128,18 +130,18 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
       />
       <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-bold">
         <LayoutGrid className="h-6 w-6 text-primary" aria-hidden="true" />
-        Aula
+        {t("Aula")}
       </h1>
 
       {!sessione ? (
         <>
           <p className="mb-4 text-sm text-muted-foreground">
-            Apri i tavoli della lezione. Gli allievi li trovano dalla loro classe.
+            {t("Apri i tavoli della lezione. Gli allievi li trovano dalla loro classe.")}
           </p>
           <div className="flex flex-wrap items-end gap-3">
             <div>
               <label htmlFor="quanti" className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Quanti tavoli
+                {t("Quanti tavoli")}
               </label>
               <input
                 id="quanti"
@@ -173,7 +175,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
           <div className="mb-5 flex flex-wrap items-end gap-3 rounded-xl border border-border bg-card p-4">
             <div>
               <label htmlFor="argomento" className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Argomento
+                {t("Argomento")}
               </label>
               <select
                 id="argomento"
@@ -190,7 +192,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
             </div>
             <Button disabled={occupato} onClick={() => void distribuisci()}>
               <Send className="mr-2 h-4 w-4" aria-hidden="true" />
-              {occupato ? "Mando…" : "Manda a tutti i tavoli"}
+              {occupato ? t("Mando…") : t("Manda a tutti i tavoli")}
             </Button>
             <SondaggioAula classId={classId} />
             <Button

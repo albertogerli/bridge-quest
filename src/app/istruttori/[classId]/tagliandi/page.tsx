@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
 import { invitoAttivo, indirizzoAula } from "@/lib/inviti-aula";
 import { qrSvg } from "@/lib/qr";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface Riga {
   id: string;
@@ -39,6 +40,7 @@ export default function TagliandiPage({
 }: {
   params: Promise<{ classId: string }>;
 }) {
+  const t = useT();
   const { classId } = use(params);
   const [righe, setRighe] = useState<Riga[]>([]);
   const [token, setToken] = useState<string | null>(null);
@@ -103,10 +105,10 @@ export default function TagliandiPage({
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <Button onClick={() => window.print()}>
             <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
-            Stampa
+            {t("Stampa")}
           </Button>
           <p className="text-sm text-muted-foreground">
-            Uno per allievo, da posare sul tavolo.
+            {t("Uno per allievo, da posare sul tavolo.")}
           </p>
         </div>
         {!token && (
@@ -143,7 +145,7 @@ export default function TagliandiPage({
                 </p>
               )}
               <p className="mt-1 text-xs text-muted-foreground print:text-black">
-                Inquadra il codice: il tuo nome è già scritto.
+                {t("Inquadra il codice: il tuo nome è già scritto.")}
               </p>
             </div>
           </div>

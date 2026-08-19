@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { divisioniAlTavolo, etichettaDivisione } from "@/lib/divisioni";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 
@@ -33,6 +34,7 @@ export function PannelloDivisioni({
   /** Formato proiezione: caratteri più grandi, più contrasto. */
   grande?: boolean;
 }) {
+  const t = useT();
   const [colore, setColore] = useState<Suit>(coloreIniziale ?? "spade");
 
   const esito = useMemo(
@@ -66,7 +68,7 @@ export function PannelloDivisioni({
       </div>
 
       {esito.divisioni.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Niente da dividere in questo colore.</p>
+        <p className="text-sm text-muted-foreground">{t("Niente da dividere in questo colore.")}</p>
       ) : (
         <ul className="space-y-1.5">
           {esito.divisioni.map((d) => {

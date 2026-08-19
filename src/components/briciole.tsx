@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * La scia di navigazione delle pagine annidate.
@@ -24,11 +25,12 @@ export interface Briciola {
 }
 
 export function Briciole({ percorso }: { percorso: Briciola[] }) {
+  const t = useT();
   const navigabili = percorso.filter((b) => b.href);
   const ultimoLink = navigabili[navigabili.length - 1];
 
   return (
-    <nav aria-label="Percorso" className="mb-3 text-sm text-muted-foreground">
+    <nav aria-label={t("Percorso")} className="mb-3 text-sm text-muted-foreground">
       {/* Telefono: solo il passo indietro. */}
       {ultimoLink && (
         <Link

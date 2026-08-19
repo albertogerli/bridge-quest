@@ -178,7 +178,7 @@ export default function ClassDetailPage({
           >
             {classRoom.invite_code}
           </button>
-          <span className="text-xs text-muted-foreground">{copied ? "Copiato ✓" : "Tocca per copiare"}</span>
+          <span className="text-xs text-muted-foreground">{copied ? t("Copiato ✓") : t("Tocca per copiare")}</span>
           {!classRoom.invite_active && (
             <Badge variant="outline">{t("Iscrizioni chiuse")}</Badge>
           )}
@@ -215,7 +215,7 @@ export default function ClassDetailPage({
             {t("Rigenera codice")}
           </Button>
           <Button variant="outline" size="sm" onClick={handleToggleActive} disabled={busy}>
-            {classRoom.invite_active ? "Chiudi iscrizioni" : "Riapri iscrizioni"}
+            {classRoom.invite_active ? t("Chiudi iscrizioni") : t("Riapri iscrizioni")}
           </Button>
         </CardFooter>
       </Card>

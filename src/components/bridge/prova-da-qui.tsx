@@ -13,6 +13,7 @@ import {
   type GameState,
   type Position,
 } from "@/lib/bridge-engine";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const NOME: Record<Position, string> = { north: "Nord", east: "Est", south: "Sud", west: "Ovest" };
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -45,6 +46,7 @@ export function ProvaDaQui({
   finoA?: { seat: Position; card: Card }[];
   onChiudi?: () => void;
 }) {
+  const t = useT();
   /** La posizione di partenza, ricostruita giocando le carte fino al punto scelto. */
   const partenza = useMemo(() => {
     let s = createGame(hands, contract, declarer);
@@ -98,7 +100,7 @@ export function ProvaDaQui({
         <span className="ml-auto flex gap-1.5">
           <Button size="sm" variant="outline" onClick={indietro} disabled={storia.length === 0}>
             <Undo2 className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
-            Indietro
+            {t("Indietro")}
           </Button>
           <Button
             size="sm"
@@ -109,11 +111,11 @@ export function ProvaDaQui({
             }}
           >
             <RotateCcw className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
-            Da capo
+            {t("Da capo")}
           </Button>
           {onChiudi && (
             <Button size="sm" variant="ghost" onClick={onChiudi}>
-              Chiudi
+              {t("Chiudi")}
             </Button>
           )}
         </span>
@@ -125,7 +127,7 @@ export function ProvaDaQui({
       </p>
 
       <p className="mb-2 text-sm">
-        Tocca a <strong>{NOME[stato.currentPlayer]}</strong> ·{" "}
+        {t("Tocca a")} <strong>{NOME[stato.currentPlayer]}</strong> ·{" "}
         <span className="text-muted-foreground">
           NS {stato.trickCount.ns} — EO {stato.trickCount.ew}
         </span>

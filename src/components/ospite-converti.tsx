@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * «Tieni quello che hai fatto»: l'ospite diventa un account vero.
@@ -25,6 +26,7 @@ import { reportError } from "@/lib/report-error";
  * esattamente la barriera che l'ingresso ospite serve a togliere.
  */
 export function OspiteConverti() {
+  const t = useT();
   const { user, profile } = useSharedAuth();
   const [aperto, setAperto] = useState(false);
   const [chiuso, setChiuso] = useState(false);
@@ -72,7 +74,7 @@ export function OspiteConverti() {
         onClick={() => setAperto(true)}
         className="fixed bottom-24 left-4 z-30 rounded-full border border-border bg-card/90 px-3 py-2 text-xs font-semibold shadow-md backdrop-blur lg:bottom-4"
       >
-        Tieni quello che hai fatto
+        {t("Tieni quello che hai fatto")}
       </button>
     );
   }
@@ -81,13 +83,13 @@ export function OspiteConverti() {
     <div className="fixed inset-x-4 bottom-4 z-40 mx-auto max-w-sm rounded-xl border border-border bg-card p-4 shadow-xl sm:inset-x-auto sm:left-4 sm:w-80">
       <div className="mb-2 flex items-center gap-2">
         <Sparkles className="h-4 w-4 text-[#c8a44e]" aria-hidden="true" />
-        <span className="text-sm font-bold">Tieni quello che hai fatto</span>
+        <span className="text-sm font-bold">{t("Tieni quello che hai fatto")}</span>
         <button
           onClick={() => {
             setAperto(false);
             setChiuso(true);
           }}
-          aria-label="Chiudi"
+          aria-label={t("Chiudi")}
           className="ml-auto text-muted-foreground hover:text-foreground"
         >
           <X className="h-4 w-4" />
@@ -96,7 +98,7 @@ export function OspiteConverti() {
 
       {fatto ? (
         <p className="py-3 text-sm text-primary">
-          Fatto. Da adesso entri con la tua email, e ritrovi tutto: le mani, i compiti, la classe.
+          {t("Fatto. Da adesso entri con la tua email, e ritrovi tutto: le mani, i compiti, la classe.")}
         </p>
       ) : (
         <>
@@ -115,7 +117,7 @@ export function OspiteConverti() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Una password"
+            placeholder={t("Una password")}
             className="mb-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
           {errore && <p className="mb-2 text-xs text-destructive">{errore}</p>}
@@ -128,7 +130,7 @@ export function OspiteConverti() {
             {inCorso ? "Salvo…" : "Tieni tutto"}
           </Button>
           <p className="mt-2 text-[12px] text-muted-foreground">
-            Puoi anche non farlo: continui a giocare fino a fine lezione.
+            {t("Puoi anche non farlo: continui a giocare fino a fine lezione.")}
           </p>
         </>
       )}

@@ -17,6 +17,7 @@ import {
   type Campo,
   type FoglioLetto,
 } from "@/lib/import-allievi";
+import { useT } from "@/contexts/traduzioni-provider";
 
 interface Riga {
   id: string;
@@ -59,6 +60,7 @@ export default function AllieviPage({
 }: {
   params: Promise<{ classId: string }>;
 }) {
+  const t = useT();
   const { classId } = use(params);
   const [righe, setRighe] = useState<Riga[]>([]);
   const [caricando, setCaricando] = useState(true);
@@ -167,7 +169,7 @@ export default function AllieviPage({
             { etichetta: "Allievi e tavoli" },
           ]}
         />
-        <h1 className="mb-1 font-display text-3xl font-bold">Allievi e tavoli</h1>
+        <h1 className="mb-1 font-display text-3xl font-bold">{t("Allievi e tavoli")}</h1>
         <p className="mb-6 text-sm text-muted-foreground">
           Carica il tuo elenco da Excel — salvato come CSV — e componi i tavoli. Di ogni allievo
           conserviamo <strong>solo il nome</strong>: email e telefono restano nel tuo file.
@@ -177,9 +179,9 @@ export default function AllieviPage({
           <label className="mb-6 flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-border p-4 hover:bg-muted/40">
             <Upload className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
             <span className="text-sm">
-              <span className="font-medium">Scegli un file CSV</span>
+              <span className="font-medium">{t("Scegli un file CSV")}</span>
               <span className="block text-xs text-muted-foreground">
-                In Excel: File → Salva con nome → CSV. Il separatore lo riconosciamo da soli.
+                {t("In Excel: File → Salva con nome → CSV. Il separatore lo riconosciamo da soli.")}
               </span>
             </span>
             <input
@@ -237,7 +239,7 @@ export default function AllieviPage({
                 Importa {anteprima.length} allievi
               </Button>
               <Button variant="outline" onClick={() => setFoglio(null)}>
-                Annulla
+                {t("Annulla")}
               </Button>
             </div>
           </div>
@@ -253,7 +255,7 @@ export default function AllieviPage({
             <Link href={`/istruttori/${classId}/tagliandi`}>
               <Button variant="outline">
                 <Printer className="mr-1.5 h-4 w-4" aria-hidden="true" />
-                Stampa i tagliandi
+                {t("Stampa i tagliandi")}
               </Button>
             </Link>
           </div>
@@ -292,7 +294,7 @@ export default function AllieviPage({
           ))}
           {righe.some((r) => !r.presente) && (
             <div className="rounded-xl border border-dashed border-border p-3">
-              <p className="mb-2 text-sm font-semibold text-muted-foreground">Assenti</p>
+              <p className="mb-2 text-sm font-semibold text-muted-foreground">{t("Assenti")}</p>
               <div className="flex flex-wrap gap-1.5">
                 {righe
                   .filter((r) => !r.presente)

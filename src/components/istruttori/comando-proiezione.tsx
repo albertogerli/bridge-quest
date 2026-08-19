@@ -13,6 +13,7 @@ import {
   type ImpostazioniProiezione,
   type MessaggioProiezione,
 } from "@/lib/proiezione";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il pannello che decide cosa vede la classe.
@@ -49,6 +50,7 @@ export function ComandoProiezione({
   doppioMorto?: string | null;
   scopertiEsterni?: Position[];
 }) {
+  const t = useT();
   const [aperta, setAperta] = useState(false);
   const [ripiegato, setRipiegato] = useState(false);
   const [interruttori, setInterruttori] = useState<Omit<ImpostazioniProiezione, "scoperti">>(
@@ -161,7 +163,7 @@ export function ComandoProiezione({
         }}
       >
         <Monitor className="mr-2 h-4 w-4" aria-hidden="true" />
-        Apri vista proiezione
+        {t("Apri vista proiezione")}
       </Button>
     );
   }
@@ -170,7 +172,7 @@ export function ComandoProiezione({
     <div className="fixed bottom-4 right-4 z-40 w-72 rounded-xl border border-border bg-card/95 p-3 shadow-lg backdrop-blur print:hidden">
       <div className="mb-2 flex items-center gap-2">
         <Monitor className="h-4 w-4 text-primary" aria-hidden="true" />
-        <span className="text-sm font-bold">Proiezione</span>
+        <span className="text-sm font-bold">{t("Proiezione")}</span>
         <button
           onClick={() => setRipiegato((v) => !v)}
           className="ml-auto text-xs text-muted-foreground hover:underline"
@@ -182,7 +184,7 @@ export function ComandoProiezione({
             spedisci(canale.current, { tipo: "chiudi" });
             setAperta(false);
           }}
-          aria-label="Chiudi la proiezione"
+          aria-label={t("Chiudi la proiezione")}
           className="text-muted-foreground hover:text-foreground"
         >
           <X className="h-4 w-4" />
@@ -193,7 +195,7 @@ export function ComandoProiezione({
         <div className="space-y-3">
           <div>
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Mani visibili
+              {t("Mani visibili")}
             </p>
             <div className="flex flex-wrap gap-1.5">
               {POSTI.map((p) => {
@@ -205,7 +207,7 @@ export function ComandoProiezione({
                     // Il nome accessibile dice cosa fa il tasto, non che
                     // lettera c'è sopra: «N» da solo non si legge, né con uno
                     // screen reader né in un test.
-                    aria-label={`${acceso ? "Nascondi" : "Mostra"} ${p.nome} alla classe`}
+                    aria-label={`${acceso ? t("Nascondi") : t("Mostra")} ${p.nome} alla classe`}
                     onClick={() =>
                       setScopertiScelti(
                         acceso ? scoperti.filter((s) => s !== p.key) : [...scoperti, p.key],
@@ -221,14 +223,14 @@ export function ComandoProiezione({
               })}
               <button
                 onClick={() => setScopertiScelti(["north", "east", "south", "west"])}
-                aria-label="Mostra tutte le mani alla classe"
+                aria-label={t("Mostra tutte le mani alla classe")}
                 className="rounded-lg bg-muted px-2 text-xs font-semibold hover:bg-muted/70"
               >
                 tutte
               </button>
               <button
                 onClick={() => setScopertiScelti([])}
-                aria-label="Copri tutte le mani"
+                aria-label={t("Copri tutte le mani")}
                 className="rounded-lg bg-muted px-2 text-xs font-semibold hover:bg-muted/70"
               >
                 nessuna

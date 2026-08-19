@@ -118,9 +118,36 @@ const voci = Object.keys(dizionario).filter((k) => !k.startsWith("_")).length;
 console.log(`\ndizionario inglese: ${voci} frasi`);
 if (senzaInglese.size) {
   console.log(`frasi passate da t() ma senza inglese: ${senzaInglese.size}`);
-  if (process.argv.includes("--mancanti")) {
+  if (process.argv.includes("--mancanti") || process.argv.includes("--controlla")) {
     for (const f of [...senzaInglese].sort()) console.log(`  ${f}`);
   } else {
     console.log("  (--mancanti per l'elenco)");
   }
+}
+
+/**
+ * `--controlla`: esce con errore se una frase passa da `t()` e non ha inglese.
+ *
+ * PERCHÉ SERVE UN GUARDIANO E NON UNA REGOLA SCRITTA. La regola in CLAUDE.md
+ * dice di aggiornare il dizionario nello stesso commit, e vale finché qualcuno
+ * se la ricorda. Il 19/08/2026 sono stati aggiunti venticinque file di
+ * interfaccia in una sessione sola e il dizionario è rimasto indietro di
+ * sessanta frasi: non per distrazione di un momento, ma perché niente lo
+ * impediva. Una frase senza inglese non rompe niente in italiano — è per
+ * questo che passa.
+ *
+ * Il conto delle frasi NON ANCORA avvolte in `t()` resta un rapporto e non un
+ * errore: quelle non fanno danno, si vedono solo in italiano sotto `/en`, e
+ * bloccare la CI su un lavoro di allineamento in corso vorrebbe dire insegnare
+ * a disattivare il controllo.
+ */
+if (process.argv.includes("--controlla")) {
+  if (senzaInglese.size > 0) {
+    console.error(
+      `\nCI: ${senzaInglese.size} frasi passano da t() senza traduzione inglese.\n` +
+        "Aggiungile a src/traduzioni/en.json nello stesso commit che le introduce."
+    );
+    process.exit(1);
+  }
+  console.log("\nOgni frase passata da t() ha la sua traduzione inglese.");
 }

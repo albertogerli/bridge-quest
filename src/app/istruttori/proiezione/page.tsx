@@ -10,6 +10,7 @@ import {
   type MessaggioProiezione,
   type StatoProiezione,
 } from "@/lib/proiezione";
+import { useT } from "@/contexts/traduzioni-provider";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE_RANGHI = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -44,6 +45,7 @@ const NOME: Record<Position, string> = {
  * guardare la mano.
  */
 export default function ProiezionePage() {
+  const t = useT();
   const [stato, setStato] = useState<StatoProiezione | null>(null);
   const [vivo, setVivo] = useState(true);
   const ultimoBattito = useRef<number>(0);
@@ -159,7 +161,7 @@ export default function ProiezionePage() {
 
       {stato.dichiarazione && stato.dichiarazione.bids.length > 0 && (
         <div className="mx-auto mt-8 max-w-3xl text-center">
-          <p className="mb-2 text-sm uppercase tracking-[0.2em] text-white/50">Dichiarazione</p>
+          <p className="mb-2 text-sm uppercase tracking-[0.2em] text-white/50">{t("Dichiarazione")}</p>
           <p className="text-2xl font-mono tracking-wide">{stato.dichiarazione.bids.join("  ")}</p>
         </div>
       )}

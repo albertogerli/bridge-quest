@@ -15,6 +15,7 @@ import { qrSvg } from "@/lib/qr";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import { getClassDetail, type ClassMember } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il pannello dell'ingresso senza registrazione.
@@ -29,6 +30,7 @@ import { reportError } from "@/lib/report-error";
  * chiedendolo alla sala.
  */
 export function IngressoAula({ classId }: { classId: string }) {
+  const t = useT();
   const [invito, setInvito] = useState<InvitoAula | null>(null);
   const [ospiti, setOspiti] = useState<ClassMember[]>([]);
   const [caricando, setCaricando] = useState(true);
@@ -63,7 +65,7 @@ export function IngressoAula({ classId }: { classId: string }) {
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <DoorOpen className="h-4 w-4 text-primary" aria-hidden="true" />
-        <span className="text-sm font-bold">Ingresso senza registrazione</span>
+        <span className="text-sm font-bold">{t("Ingresso senza registrazione")}</span>
         {invito && (
           <Badge variant="secondary">
             scade alle{" "}
@@ -103,7 +105,7 @@ export function IngressoAula({ classId }: { classId: string }) {
             />
             <div className="min-w-0 flex-1">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Da proiettare o da mostrare
+                {t("Da proiettare o da mostrare")}
               </p>
               <p className="mb-3 break-all font-mono text-xs text-muted-foreground">{indirizzo}</p>
               <div className="flex flex-wrap gap-2">
@@ -115,7 +117,7 @@ export function IngressoAula({ classId }: { classId: string }) {
                   rel="noopener noreferrer"
                 >
                   <Button size="sm" variant="outline">
-                    Manda su WhatsApp
+                    {t("Manda su WhatsApp")}
                   </Button>
                 </a>
                 <Button
@@ -131,7 +133,7 @@ export function IngressoAula({ classId }: { classId: string }) {
                   }}
                 >
                   <RefreshCw className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-                  Nuovo link
+                  {t("Nuovo link")}
                 </Button>
                 <Button
                   size="sm"
@@ -155,7 +157,7 @@ export function IngressoAula({ classId }: { classId: string }) {
               In aula adesso ({ospiti.length})
             </p>
             {ospiti.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nessuno ancora. Il codice è lì.</p>
+              <p className="text-sm text-muted-foreground">{t("Nessuno ancora. Il codice è lì.")}</p>
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {ospiti.map((o) => (
