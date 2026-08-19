@@ -19,7 +19,11 @@ import {
   getClassDetail,
   regenerateInviteCode,
   setInviteActive,
+  decidiIscrizione,
+  aggiornaImpostazioniClasse,
+  ETICHETTE_STATO,
   type ClassDetail,
+  type StatoClasse,
 } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -76,6 +80,26 @@ export default function ClassDetailPage({
     }
   }
 
+  async function decidi(studentId: string, decisione: "approva" | "respingi") {
+    setBusy(true);
+    try {
+      await decidiIscrizione(classId, studentId, decisione);
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function cambiaImpostazione(campi: Parameters<typeof aggiornaImpostazioniClasse>[1]) {
+    setBusy(true);
+    try {
+      await aggiornaImpostazioniClasse(classId, campi);
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   function copyCode() {
     if (!detail) return;
     void navigator.clipboard.writeText(detail.classRoom.invite_code);
@@ -102,7 +126,11 @@ export default function ClassDetailPage({
     );
   }
 
-  const { classRoom, members, assignments } = detail;
+  const { classRoom, members, inAttesa, assignments } = detail;
+  const scadenza = classRoom.invite_expires_at
+    ? new Date(classRoom.invite_expires_at)
+    : null;
+  const scaduto = scadenza !== null && scadenza <= new Date();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
@@ -112,9 +140,16 @@ export default function ClassDetailPage({
 
       {/* Header */}
       <div className="mt-3 mb-6">
-        <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-          {classRoom.name}
-        </h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+            {classRoom.name}
+          </h1>
+          {classRoom.stato !== "aperta" && (
+            <Badge variant={classRoom.stato === "archiviata" ? "outline" : "secondary"}>
+              {ETICHETTE_STATO[classRoom.stato]}
+            </Badge>
+          )}
+        </div>
         {classRoom.description && (
           <p className="mt-1 text-sm text-muted-foreground">{classRoom.description}</p>
         )}
@@ -141,7 +176,7 @@ export default function ClassDetailPage({
             <Badge variant="outline">{t("Iscrizioni chiuse")}</Badge>
           )}
         </CardContent>
-        <CardFooter className="gap-2">
+        <CardFooter className="flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={busy}>
             {t("Rigenera codice")}
           </Button>
@@ -150,6 +185,130 @@ export default function ClassDetailPage({
           </Button>
         </CardFooter>
       </Card>
+
+      {/* Chi entra, e quando */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-lg">{t("Chi può entrare")}</CardTitle>
+          <CardDescription>
+            {t("Il codice da solo non basta se chiedi di approvare le iscrizioni.")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <label className="flex items-start gap-3 text-sm">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4"
+              checked={!classRoom.approvazione_automatica}
+              disabled={busy}
+              onChange={(e) =>
+                void cambiaImpostazione({ approvazione_automatica: !e.target.checked })
+              }
+            />
+            <span>
+              <span className="font-medium">{t("Approvo io ogni iscrizione")}</span>
+              <span className="block text-xs text-muted-foreground">
+                {classRoom.approvazione_automatica
+                  ? "Adesso chiunque abbia il codice entra subito."
+                  : "Le richieste ti arrivano qui sotto e la classe non si vede finché non approvi."}
+              </span>
+            </span>
+          </label>
+
+          <div className="space-y-1.5">
+            <label htmlFor="scadenza-codice" className="text-sm font-medium">
+              {t("Il codice scade il")}
+            </label>
+            <div className="flex flex-wrap items-center gap-2">
+              <input
+                id="scadenza-codice"
+                type="date"
+                disabled={busy}
+                value={scadenza ? scadenza.toISOString().slice(0, 10) : ""}
+                onChange={(e) =>
+                  void cambiaImpostazione({
+                    invite_expires_at: e.target.value
+                      ? new Date(`${e.target.value}T23:59:59`).toISOString()
+                      : null,
+                  })
+                }
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+              {scadenza && (
+                <Badge variant={scaduto ? "destructive" : "secondary"}>
+                  {scaduto ? "Scaduto" : `Valido fino al ${scadenza.toLocaleDateString("it-IT")}`}
+                </Badge>
+              )}
+              <span className="text-xs text-muted-foreground">
+                {t("Vuoto = non scade.")}
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="stato-classe" className="text-sm font-medium">
+              {t("Stato della classe")}
+            </label>
+            <select
+              id="stato-classe"
+              value={classRoom.stato}
+              disabled={busy}
+              onChange={(e) => void cambiaImpostazione({ stato: e.target.value as StatoClasse })}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm sm:w-auto"
+            >
+              <option value="bozza">Bozza — la sto preparando, non si entra</option>
+              <option value="aperta">Aperta — si entra e si lavora</option>
+              <option value="chiusa">Chiusa — niente nuovi iscritti, chi c&rsquo;è continua</option>
+              <option value="archiviata">Archiviata — corso finito</option>
+            </select>
+            <p className="text-xs text-muted-foreground">
+              {t("Chiudere e archiviare non cancella niente: allievi, compiti e risultati restano tutti.")}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Richieste in attesa */}
+      {inAttesa.length > 0 && (
+        <Card className="mb-6 border-primary/40">
+          <CardHeader>
+            <CardTitle className="text-lg">
+              {t("In attesa di una risposta")} ({inAttesa.length})
+            </CardTitle>
+            <CardDescription>
+              {t("Finché non decidi non vedono compiti né chat.")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="divide-y divide-border p-0">
+            {inAttesa.map((m) => (
+              <div key={m.student_id} className="flex flex-wrap items-center gap-3 px-6 py-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
+                  {(m.display_name ?? "?").charAt(0)}
+                </div>
+                <span className="text-sm font-medium">
+                  {m.display_name ?? "Allievo senza nome"}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  ha chiesto il {new Date(m.joined_at).toLocaleDateString("it-IT")}
+                </span>
+                <div className="ml-auto flex gap-2">
+                  <Button size="sm" disabled={busy} onClick={() => void decidi(m.student_id, "approva")}>
+                    {t("Fallo entrare")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={busy}
+                    onClick={() => void decidi(m.student_id, "respingi")}
+                  >
+                    {t("No")}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Tabs */}
       <Tabs defaultValue="compiti">
