@@ -33,12 +33,25 @@ const ExitIntentModal = dynamic(
 /** Routes that should be full-screen (no nav, no sidebar) */
 // La lavagna va proiettata in aula: barra di navigazione, punteggi e inviti a
 // giocare sullo schermo grande sono rumore che distrae la classe.
-const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna"];
+/**
+ * `/istruttori/proiezione` è qui perché è la finestra sul proiettore: una barra
+ * di menù è spazio rubato alla classe e, se qualcuno la sfiora, un modo di
+ * uscire dalla lezione.
+ *
+ * È anche fra le rotte «pubbliche», ma solo per QUESTO cancello, quello lato
+ * client: il controllo di ruolo vero resta, ed è in `app/istruttori/layout.tsx`,
+ * che gira sul server. Il motivo è che questo cancello scatta anche su un
+ * tentennamento della sessione, e mandare al login la finestra proiettata a
+ * metà lezione è il modo peggiore di scoprire che il token si stava
+ * rinfrescando. La pagina, per conto suo, non legge niente dal database: riceve
+ * solo quello che la finestra accanto le manda.
+ */
+const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione"];
 
 /** Routes accessible without authentication */
 // /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi
 // arriva da Google veniva rimbalzato al login e il lavoro SEO era vanificato.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario"];
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (

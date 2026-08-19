@@ -12,6 +12,8 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
+import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
+import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -70,6 +72,7 @@ function Lavagna() {
   const [daCompito, setDaCompito] = useState<Mano[] | null>(null);
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
   const [seed, setSeed] = useState(2026);
+  const [divisioniVisibili, setDivisioniVisibili] = useState(false);
 
   useEffect(() => {
     if (!compitoId) return;
@@ -214,7 +217,34 @@ function Lavagna() {
             {soluzioneVisibile ? "Nascondi il contratto" : "Mostra il contratto"}
           </Button>
         )}
+        <Button variant="outline" onClick={() => setDivisioniVisibili((v) => !v)}>
+          {divisioniVisibili ? "Nascondi le divisioni" : "Divisioni dei semi"}
+        </Button>
+        <ComandoProiezione
+          mani={mano?.hands ?? {}}
+          titolo={mano?.titolo}
+          doppioMorto={soluzioneVisibile ? mano?.soluzione : null}
+          scopertiEsterni={[...scoperti]}
+        />
       </div>
+
+      {/*
+        Il pannello guarda solo le mani SCOPERTE, non tutte e quattro: è il conto
+        che farebbe un giocatore seduto al tavolo, ed è quello che si vuole far
+        vedere. Con tutte scoperte non ci sarebbe niente da stimare.
+      */}
+      {divisioniVisibili && mano && (
+        <div className="mx-auto mt-6 max-w-2xl">
+          <PannelloDivisioni
+            noti={Object.fromEntries(
+              (Object.keys(mano.hands) as Position[])
+                .filter((p) => scoperti.has(p))
+                .map((p) => [p, mano.hands[p]]),
+            )}
+            avversari={["west", "east"]}
+          />
+        </div>
+      )}
 
       {soluzioneVisibile && mano?.soluzione && (
         <p className="text-center text-2xl font-bold text-figb mt-4">{mano.soluzione}</p>

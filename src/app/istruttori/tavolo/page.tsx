@@ -30,6 +30,8 @@ import {
   watchLiveTable,
   type LiveTable,
 } from "@/lib/live-table";
+import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
+import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -72,6 +74,7 @@ function Tavolo() {
   const [seed, setSeed] = useState(2026);
   const [indice, setIndice] = useState(0);
   const [occupato, setOccupato] = useState(false);
+  const [divisioniVisibili, setDivisioniVisibili] = useState(false);
   const [allievi, setAllievi] = useState<ClassMember[]>([]);
 
   useEffect(() => {
@@ -396,6 +399,37 @@ function Tavolo() {
           <Button variant="outline" onClick={() => setShowContract(tableId, !stato.showContract)}>
             {stato.showContract ? "Nascondi il contratto" : "Mostra il contratto"}
           </Button>
+          <Button variant="outline" onClick={() => setDivisioniVisibili((v) => !v)}>
+            {divisioniVisibili ? "Nascondi le divisioni" : "Divisioni dei semi"}
+          </Button>
+          {/*
+            Alla proiezione va lo stato del tavolo, non quello del database: le
+            mani che l'insegnante ha in mano sono le stesse, ma cosa la classe
+            vede lo decide questo pannello e non `revealed`, che riguarda gli
+            allievi collegati con il telefono.
+          */}
+          <ComandoProiezione
+            mani={stato.hands}
+            titolo={stato.titolo}
+            giocate={stato.played}
+            contratto={stato.contract}
+            dichiarante={stato.declarer}
+            scopertiEsterni={stato.revealed}
+          />
+        </div>
+      )}
+
+      {divisioniVisibili && stato && (
+        <div className="mx-auto mt-4 max-w-2xl">
+          <PannelloDivisioni
+            noti={stato.hands}
+            giocate={stato.played}
+            avversari={
+              stato.declarer === "east" || stato.declarer === "west"
+                ? ["north", "south"]
+                : ["west", "east"]
+            }
+          />
         </div>
       )}
 
