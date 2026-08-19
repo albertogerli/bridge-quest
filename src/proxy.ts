@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { destinazioneSicura } from "@/lib/destinazione-login";
 import { NextResponse, type NextRequest } from "next/server";
 import {
   linguaDaPercorso,
@@ -64,7 +65,12 @@ export async function proxy(request: NextRequest) {
   }
 
   if (user && pathname === "/login") {
-    const redirect = request.nextUrl.searchParams.get("redirect") || `${prefisso}/`;
+    // `?redirect=` arriva dall'indirizzo, quindi lo sceglie chi manda il
+    // collegamento: `new URL("https://altrove", base)` è un indirizzo esterno,
+    // e questo rimbalzo partirebbe dal nostro dominio. Stessa guardia della
+    // pagina di login, che ha lo stesso problema dal lato client.
+    const chiesta = destinazioneSicura(request.nextUrl.searchParams.get("redirect"));
+    const redirect = chiesta === "/" ? `${prefisso}/` : chiesta;
     const destUrl = new URL(redirect, request.url);
     return NextResponse.redirect(destUrl);
   }

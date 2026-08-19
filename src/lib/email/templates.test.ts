@@ -9,6 +9,8 @@ const TUTTE: EmailKind[] = [
   "streak_risk",
   "friend_request",
   "turno_licita",
+  "compito_assegnato",
+  "compito_in_scadenza",
 ];
 
 describe("le email di ciclo di vita", () => {
@@ -88,5 +90,58 @@ describe("le email nella lingua della persona", () => {
       expect(en.subject, `${kind}: l'oggetto non è tradotto`).not.toBe(it.subject);
       expect(en.html, `${kind}: il corpo non è tradotto`).not.toBe(it.html);
     }
+  });
+});
+
+describe("le email dei compiti", () => {
+  const ctx = {
+    name: "Anna",
+    compitoTitolo: "Vincenti e affrancabili",
+    compitoUrl: "https://bridgelab.it/classi/x/compito/y",
+    classeNome: "Corso base martedì",
+    compitoMani: 8,
+  };
+
+  it("sono transazionali: nascono da un'iscrizione a una classe", () => {
+    // La persona si è iscritta con un codice che le ha dato il suo insegnante,
+    // e questo messaggio è la conseguenza diretta di quel gesto. Chi non li
+    // vuole più esce dalla classe.
+    for (const kind of ["compito_assegnato", "compito_in_scadenza"] as const) {
+      const e = renderEmail(kind, ctx, "https://x/unsub");
+      expect(e.transactional, kind).toBe(true);
+      expect(e.html, kind).not.toContain("https://x/unsub");
+    }
+  });
+
+  it("portano al compito, non alla home", () => {
+    const e = renderEmail("compito_assegnato", ctx);
+    expect(e.html).toContain(ctx.compitoUrl);
+    expect(e.text).toContain(ctx.compitoUrl);
+  });
+
+  /**
+   * Il titolo lo scrive l'insegnante ed è testo libero: arriva nell'html di
+   * un'email che leggono i suoi allievi. Se non passasse da esc(), un titolo
+   * con dentro del markup diventerebbe markup.
+   */
+  it("il titolo scritto dall'insegnante viene ripulito", () => {
+    const e = renderEmail("compito_assegnato", {
+      ...ctx,
+      compitoTitolo: "<img src=x onerror=alert(1)>",
+    });
+    expect(e.html).not.toContain("<img src=x");
+    expect(e.html).toContain("&lt;img");
+  });
+
+  it("la scadenza si legge in italiano, non in numero di giorni", () => {
+    expect(renderEmail("compito_in_scadenza", { ...ctx, giorniAllaScadenza: 0 }).html).toContain("scade oggi");
+    expect(renderEmail("compito_in_scadenza", { ...ctx, giorniAllaScadenza: 1 }).html).toContain("scade domani");
+    expect(renderEmail("compito_in_scadenza", { ...ctx, giorniAllaScadenza: 3 }).html).toContain("fra 3 giorni");
+  });
+
+  it("in inglese cambia tutto, oggetto compreso", () => {
+    const e = renderEmail("compito_assegnato", { ...ctx, lingua: "en" });
+    expect(e.subject).toContain("New homework");
+    expect(e.html).toContain("Go to the homework");
   });
 });

@@ -956,6 +956,91 @@ begin
 end $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.bersagli_email_compiti(p_limit integer DEFAULT 300)
+ RETURNS TABLE(user_id uuid, email text, display_name text, profile_type text, kind text, assignment_id uuid, class_id uuid, titolo text, classe_nome text, n_mani integer, giorni_alla_scadenza integer)
+ LANGUAGE sql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  with iscritti as (
+    select m.class_id, m.student_id, c.name as classe_nome
+    from class_members m
+    join classes c on c.id = m.class_id
+    where m.status = 'active'
+      and c.stato <> 'archiviata'
+  ),
+  candidati as (
+    select
+      i.student_id,
+      a.id as assignment_id,
+      a.class_id,
+      a.title,
+      i.classe_nome,
+      coalesce(array_length(a.smazzata_ids, 1), 0) as n_mani,
+      a.due_date,
+      a.created_at,
+      (
+        select count(distinct gr.details->>'smazzata_id')
+        from game_results gr
+        where gr.assignment_id = a.id
+          and gr.user_id = i.student_id
+          and gr.details->>'smazzata_id' = any (a.smazzata_ids)
+      ) as fatte
+    from assignments a
+    join iscritti i on i.class_id = a.class_id
+  ),
+  scelta as (
+    select c.*,
+      case
+        when c.created_at > now() - interval '3 days'
+          and not exists (
+            select 1 from email_events e
+            where e.user_id = c.student_id
+              and e.email_type = 'compito_assegnato'
+              and e.meta->>'assignment_id' = c.assignment_id::text
+          )
+        then 'compito_assegnato'
+        when c.due_date is not null
+          and c.due_date > now()
+          and c.due_date < now() + interval '2 days'
+          and c.fatte < c.n_mani
+          and not exists (
+            select 1 from email_events e
+            where e.user_id = c.student_id
+              and e.email_type = 'compito_in_scadenza'
+              and e.meta->>'assignment_id' = c.assignment_id::text
+          )
+        then 'compito_in_scadenza'
+        else null
+      end as kind
+    from candidati c
+  )
+  select
+    s.student_id,
+    u.email,
+    p.display_name,
+    p.profile_type::text,
+    s.kind,
+    s.assignment_id,
+    s.class_id,
+    s.title,
+    s.classe_nome,
+    s.n_mani::integer,
+    case when s.due_date is null then null
+         else greatest(0, ceil(extract(epoch from (s.due_date - now())) / 86400))::integer
+    end
+  from scelta s
+  join profiles p on p.id = s.student_id
+  join auth.users u on u.id = s.student_id
+  where s.kind is not null
+    and u.email is not null
+    and u.email_confirmed_at is not null
+    and coalesce(u.banned_until, now() - interval '1 day') < now()
+  order by case s.kind when 'compito_in_scadenza' then 0 else 1 end, s.due_date nulls last
+  limit p_limit;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.bidding_session_bid(p_id uuid, p_bid text)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -3559,6 +3644,7 @@ CREATE INDEX trova_errore_category_idx ON public.trova_errore_scenarios USING bt
 CREATE INDEX trova_errore_difficulty_idx ON public.trova_errore_scenarios USING btree (difficulty);
 CREATE UNIQUE INDEX unique_comment_like ON public.forum_likes USING btree (user_id, comment_id) WHERE (comment_id IS NOT NULL);
 CREATE UNIQUE INDEX unique_post_like ON public.forum_likes USING btree (user_id, post_id) WHERE (post_id IS NOT NULL);
+CREATE UNIQUE INDEX uq_email_events_compito ON public.email_events USING btree (user_id, email_type, ((meta ->> 'assignment_id'::text))) WHERE (email_type = ANY (ARRAY['compito_assegnato'::text, 'compito_in_scadenza'::text]));
 CREATE UNIQUE INDEX uq_email_events_oneshot ON public.email_events USING btree (user_id, email_type) WHERE (email_type = ANY (ARRAY['welcome'::text, 'onboarding_start'::text]));
 
 -- TRIGGER
@@ -4790,6 +4876,8 @@ REVOKE ALL ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integ
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO anon;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO service_role;
+REVOKE ALL ON FUNCTION public.bersagli_email_compiti(p_limit integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.bersagli_email_compiti(p_limit integer) TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO service_role;

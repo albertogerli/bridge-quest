@@ -16,6 +16,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { AssegnaLezioni } from "@/components/instructors/assegna-lezioni";
+import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
 import {
   getClassDetail,
   regenerateInviteCode,
@@ -178,6 +179,20 @@ export default function ClassDetailPage({
           )}
         </CardContent>
         <CardFooter className="flex-wrap gap-2">
+          {/*
+            Il gruppo della classe su WhatsApp esiste già e gli allievi lo
+            leggono: un indirizzo `wa.me` con il testo pronto è tutto quello
+            che serve per usarlo, senza servizi esterni né permessi.
+          */}
+          <a
+            href={linkWhatsApp(invitoClasse(classRoom.name, classRoom.invite_code))}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button size="sm" variant="outline">
+              {t("Invita su WhatsApp")}
+            </Button>
+          </a>
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={busy}>
             {t("Rigenera codice")}
           </Button>

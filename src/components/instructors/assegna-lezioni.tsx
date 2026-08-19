@@ -9,6 +9,7 @@ import { useCatalog } from "@/store/use-catalog-store";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { assegnaLezione, getStatoCompiti, type StatoCompito } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
+import { compitoAssegnatoWhatsApp, linkWhatsApp } from "@/lib/whatsapp";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -156,6 +157,22 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                             <Check className="h-3 w-3" />
                             {t("Assegnata")}
                           </Badge>
+                          <a
+                            href={linkWhatsApp(
+                              compitoAssegnatoWhatsApp(
+                                compito.title,
+                                classId,
+                                compito.assignment_id,
+                                compito.n_mani,
+                              ),
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button size="sm" variant="ghost">
+                              {t("Avvisa")}
+                            </Button>
+                          </a>
                           <Link href={`/istruttori/${classId}/compito/${compito.assignment_id}`}>
                             <Button size="sm" variant="ghost">
                               {t("Risultati")}
