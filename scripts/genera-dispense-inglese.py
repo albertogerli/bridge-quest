@@ -161,7 +161,21 @@ def main() -> int:
                 saltate += 1
                 continue
 
-            prompt_it = f"{stile}\n\n{lezione.get('prompt', '')}"
+            # La stessa forma dello script italiano: titolo, contenuto, stile.
+            # ATTENZIONE — il campo si chiama `contenuto`, non `prompt`: con la
+            # chiave sbagliata `get` restituisce una stringa vuota senza
+            # protestare, e resta solo lo stile. Sono uscite 49 infografiche
+            # tutte uguali, introduzioni generiche al bridge senza la lezione
+            # dentro (19/08/2026). Se un domani cambia il nome del campo, meglio
+            # che esploda qui che stampare 49 dispense mute.
+            titolo = lezione["titolo"]
+            contenuto = lezione["contenuto"]
+            prompt_it = (
+                f"Genera un'infografica educativa per la FIGB "
+                f"(Federazione Italiana Gioco Bridge).\n\n"
+                f'Titolo: "Lezione {lezione["id"]}: {titolo}"\n\n'
+                f"{contenuto}\n\n{stile}"
+            )
             if client is None:
                 fatte += 1
                 continue

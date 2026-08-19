@@ -1,0 +1,32 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 6: Openings Beyond Level 1"
+
+Display these key concepts:
+1. LEVEL 2 OPENINGS (table with colors):
+   → 2♦/2♥/2♠: forcing to 3 in the opened suit
+   → Meaning: 6+ good cards, approximately 16-20 points
+2. 2♣ OPENING (the strongest!):
+   → Ambiguous container: can be balanced 23+ points OR very strong Clubs base
+   → 2♦ WAITING RESPONSE: "I have nothing special, you describe"
+3. ROMAN KEY CARD BLACKWOOD (4NT):
+   → Asks for the 5 KEY CARDS: 4 Aces + trump King
+   → Responses: 5♣=0/3, 5♦=1/4, 5♥=2/5 without Queen, 5♠=2/5 with Queen
+4. GAMBLING 3NT BARRAGE:
+   → Solid minor suit (AKQxxxx), no side tricks
+5. Diagram: levels of opening from weakest to strongest
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black Spades, red Hearts, red Diamonds, green Clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

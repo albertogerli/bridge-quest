@@ -1,0 +1,29 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 106: To Cover or Not to Cover"
+
+Display these key concepts:
+1. SMALL ON SMALL: general rule when a low card is led from the dummy
+2. HONOR ON HONOR: cover only if you hope to ESTABLISH a lower card
+3. WITH A SOLID SEQUENCE: play the highest (e.g., QJ10 → play Q)
+4. TWO HONORS IN THE DUMMY: DO NOT cover the FIRST, cover the SECOND!
+   → Example: QJ in the dummy, you have Kxx in East. North plays Q -> PASS (keep K on J). If North plays J next -> COVER with K.
+   (Note: if East has AKxxx, never cover: Ace captures the suit anyway)
+5. LENGTH FACTOR: with long cards under the honor, more reason to cover
+6. Diagram: dummy plays Queen, defender with King must decide - speech bubble "Do I cover or not?"
+7. Summary chart with 3 cases: Always cover / Never cover / It depends
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

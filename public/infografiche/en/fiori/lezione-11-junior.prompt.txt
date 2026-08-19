@@ -1,0 +1,30 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 11: The Overcall"
+
+Display these key concepts:
+1. Three types of OVERCALL (3 boxes):
+   → TAKEOUT DOUBLE: 12-16 HCP, SHORT (0-2 cards) in the opponent's suit, at least 3 cards in every other suit. WARNING: the takeout double does NOT promise a balanced hand! Balanced hands with a stopper bid 1NT.
+   → 1NT: 15-17 balanced + STOPPER in the opponent's suit
+   → SUIT BID: 8-16 HCP, 5+ cards with 1+ Honor
+2. DOUBLE over 1♣/1♦: guarantees 4♥ and 4♠
+   DOUBLE over 1♥: guarantees 4♠
+   DOUBLE over 1♠: guarantees 4♥
+3. Partner of the doubler: MUST bid (even with 0 points!)
+4. Partner of the overcaller: with 9+ points NEVER pass
+5. Golden rule: "If partner will lead in your suit and it makes your hair stand on end → wrong overcall!"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black ♠), Hearts (red ♥), Diamonds (red ♦), Clubs (black/green ♣)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

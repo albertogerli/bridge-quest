@@ -1,0 +1,34 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 107: Elimination Plays"
+
+Display these key concepts:
+1. PRINCIPLE: remove all safe exits for the opponent, then give them the trick
+2. RUFF AND DISCARD: defender forced to play a suit that is void → declarer ruffs and discards
+3. DELICATE HOLDINGS (3 diagrams):
+   → A103 + J63: eliminate then give, opponent must play the suit
+   → AJ3 + K102: elimination creates automatic finesse
+   → K103 + Q92: opponent must lead the suit
+4. PREPARATION (numbered list):
+   → 1. Eliminate side suits
+   → 2. Draw opponents' trumps
+   → 3. Ruff the remains of eliminated suits
+   → 4. Give up the trick!
+5. AT 3NT WITHOUT A RUFF: force a lead in a favorable suit
+6. Table diagram: opponent "trapped" with arrows showing each losing exit
+7. Visual sequence of elimination steps
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt viewed from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

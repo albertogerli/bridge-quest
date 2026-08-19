@@ -1,0 +1,30 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 09: Opening 1 of a Suit - The Responses"
+
+Display these key concepts:
+1. PASS: 0-4 points → game impossible
+2. SUPPORT (with fit):
+   Level 2 (5-9 pts) = limit
+   Level 3 (10-11 pts) = invitational
+   Level 4 (fit 4+, max 11 pts) = game
+3. NEW SUITS at level 1: 5+ points, 4+ cards, FORCING
+4. NEW SUITS at level 2: 12+ points, GAME FORCING
+5. Responses to NT: 1NT (5-10) non-forcing | 2NT (11) invitational | 3NT (12-15) game
+6. REEVALUATION LAW: with fit 4+, add (trump cards - shortest suit)
+7. With 5+ points: YOU MUST ALWAYS RESPOND!
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

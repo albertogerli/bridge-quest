@@ -1,0 +1,29 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 103: Defense - Suits to Move with Urgency"
+
+Display these key concepts:
+1. ANTICIPATE suits where you can ESTABLISH TRICKS before the declarer discards - clock icon with urgency
+2. IMAGINE THE HONORS: a challenging but essential operation for defense
+3. "NO PARKING" SUIT: must be removed urgently before the declarer discards losers
+4. COUNT THE DECLARER'S CARDS to understand if they have available discards
+5. AGGRESSIVE vs NEUTRAL opening lead:
+   → Aggressive: when time is running out, take risks to establish
+   → Neutral: when the contract is not in danger, play passively
+6. Diagram: dummy with a long suit that can be established = URGENCY for defenders
+7. Example: defender must immediately lead the weak suit before the dummy discards
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as an A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

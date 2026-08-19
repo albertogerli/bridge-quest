@@ -1,0 +1,32 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 109: Declarer's Deductions"
+
+Display these key concepts:
+1. DEDUCTIONS FROM THE OPENING LEAD:
+   → No Trump: fourth longest suit, high lead=sequence, low=honor above
+   → Trump: sequence, short for ruff, partner's suit
+2. PASSER DOES NOT HAVE THE OPENING: if opponent has passed, they have less than 12 points → distribute the points!
+3. COUNT THE SHOWN POINTS: every time an opponent plays an honor, note it mentally
+4. DEDUCTION ON DISTRIBUTION:
+   → From the type of opening (1♥ = 5+ Hearts, 1NT = balanced 15-17)
+   → From the type of response
+   → From defensive signals
+5. DO NOT TAKE LOSING FINESSES: if you know the King is on the right, do not finesse to the left!
+6. Diagram: declarer with "mental map" of deduced opponent points
+7. Example concrete hand of the SOUTH defender with 11 HCP: ♠ AJ85 ♥ Q743 ♦ K62 ♣ 94 (A=4+J=1+Q=2+K=3+J=1 = 11). If West opens 1NT, deduce where the missing honors are.
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- Top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black Spades, red Hearts, red Diamonds, green Clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

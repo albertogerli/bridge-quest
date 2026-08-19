@@ -1,0 +1,35 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 201: Evaluations - Longs and Shorts"
+
+Display these key concepts:
+1. LARGE TITLE: "FIT is not enough! You need SIDE SHORTS or LONGS"
+2. TWO COLUMNS with icons:
+   - SHORTS (scissors icon): Singletons and voids = possibility of a RUFF
+     "Singletons are communicated to the partner, who evaluates!"
+   - SIDE LONGS (long arrow icon): 5+ cards = ESTABLISHMENT
+     "Long suits produce extra winners after drawing trumps"
+3. SINGLE-SUITERS (purple box with 7+ stylized cards):
+   "With 7+ cards in a suit: that suit MUST be trump, ignore the points!"
+   "With the eighth card: points no longer matter!"
+4. NEGATIVE DOUBLE (yellow caution box):
+   "Don't hide a long suit behind the Negative Double!"
+   "If you have 5+ cards in the suit, BID it directly"
+5. Visual example: hand with a singleton in Diamonds and a 4-4 fit in Spades, arrow "The singleton adds value!"
+6. Motto box: "Fit + Short = Ruff. Fit + Long = Extra tricks. Fit alone = not enough!"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spade, red heart, red diamond, green club, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for caution, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

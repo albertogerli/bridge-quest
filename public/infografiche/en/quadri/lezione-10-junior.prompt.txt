@@ -1,0 +1,35 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 10: The Double and the Rebid"
+
+Display these key concepts:
+1. DOUBLE vs REBID (2 comparison boxes):
+   → DOUBLE: seeks the best suit fit
+   → REBID: promises already found fit + strength
+2. OPENER'S PARTNER:
+   → Double = seeks fit with the responder
+   → Rebid = found fit + strength for game
+3. OVERCALLER'S PARTNER:
+   → Rebid with 11+ points and fit
+   → With 14+ points even without fit
+4. DOUBLER'S PARTNER:
+   → Mandatory Rebid with 11+ points
+   → Below 11 points: bid at the minimum level
+5. OPENER'S DOUBLE AND REBID:
+   → The opener can double or rebid after the overcall
+6. Diagram: summary table "Who does what and when"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

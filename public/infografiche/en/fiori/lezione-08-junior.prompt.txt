@@ -1,0 +1,29 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 08: The Opening and the Response 1NT/2NT"
+
+Display these key concepts:
+1. OPENING 1NT: 15-17 high card points, balanced (4333, 4432, 5332)
+2. THE CAPTAIN: the responder decides the contract (knows the opener's points!)
+3. RESPONSE TABLE on 1NT:
+   Pass (0-7) | 2♦/♥/♠ (0-7, part score) | 2NT (8-9, invitational)
+   3♥/♠ (8-9, invitational) | 3NT (10+, game) | 4♥/♠ (10+, game)
+4. STAYMAN 2♣: "Do you have a four-card major?" (requires 8+ points + 4-card major)
+   Responses: 2♦ = no four-card major | 2♥ = 4 Hearts (possibly also 4 Spades) | 2♠ = 4 Spades (denies 4 Hearts). There is NO 2NT response to Stayman!
+5. OPENING 2NT: 21-23 high card points, balanced
+6. Stayman over 2NT = 3♣ (same responses shifted up 1 level)
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt viewed from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: youth aged 8-17, colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

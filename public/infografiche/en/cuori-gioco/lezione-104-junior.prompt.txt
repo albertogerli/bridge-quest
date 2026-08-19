@@ -1,0 +1,33 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 104: Safety Plays"
+
+Display these key concepts:
+1. VOLUNTARY LOSS of a trick to secure the contract - icon balance 1 vs 2
+2. Golden rule: "If you need N tricks, play for N, not for N+1"
+3. EXAMPLE 1 - A10xx opposite Kxx (8 cards, goal 3 tricks):
+   SAFETY PLAY: small towards the 10; if West plays J or Q, win with K; if not covered, insert 10.
+   Lose max 1 trick against QJxxx in West.
+4. EXAMPLE 2 - AQJ9 opposite xxxx (8 cards, goal 3 tricks, 4 possible):
+   Simple finesse = 50% for 4 tricks.
+   SAFETY PLAY for 3 sure: cash Ace, then small towards Q; lose max 1.
+5. EXAMPLE 3 - Kxxxx opposite Axxx (9 cards, goal 4 tricks):
+   Natural: Ace, King, small; works if 3-1. Risk if 4-0.
+   SAFETY PLAY: small from dummy, delay inserting honor. Works against 4-0.
+6. Decision diagram: "Do you need X tricks? YES -> safety play | NO -> maximum line"
+7. Motto box: "The SAFETY PLAY pays a small premium to avoid disaster!"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- Top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, under the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

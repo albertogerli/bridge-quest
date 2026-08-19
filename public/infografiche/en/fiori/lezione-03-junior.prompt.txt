@@ -1,0 +1,27 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 03: Establishing Tricks by Length and Position"
+
+Display these key concepts:
+1. Three types of establishing tricks: BY STRENGTH, BY LENGTH, BY POSITION
+2. ESTABLISHING BY LENGTH: with many cards, after a few rounds the small ones become winners
+3. Example: AKQ43 + 762 → after 3 rounds, the last 2 cards are established
+4. COMMUNICATIONS: entries are needed to cash the established cards
+5. FINESSE: play TOWARDS a protected honor (e.g., AQ towards the Queen, hoping for the King on the left) = 50%
+6. EXPASSE: play TOWARDS an unprotected honor (e.g., K85, play towards the King hoping for the Ace on the left)
+7. HOLDING (defense): a figure that prevents the opponents from establishing tricks
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,30 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 1: Timing and Communication in No Trump Play"
+
+Display these key concepts:
+1. RACE TO ESTABLISH: establish your tricks BEFORE the opponents
+2. CHOOSE THE SOURCE OF TRICKS: one-round suit vs two-round suit
+3. IMPORTANT PERCENTAGES (visual diagram):
+   → 3-3 Split = 36% (less than 1 in 3)
+   → 3-2 Split = 68% (2 in 3)
+   → Finesse = 50% (1 in 2)
+4. DANGEROUS OPPONENT: the defender who must NOT gain the lead
+5. DUCKING THE OPENING LEAD: cut the defenders' communication
+6. Example: if West has the long suit, do NOT let West gain the lead!
+7. Decision tree: "Who is dangerous? How do I avoid them?"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- Top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt viewed from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

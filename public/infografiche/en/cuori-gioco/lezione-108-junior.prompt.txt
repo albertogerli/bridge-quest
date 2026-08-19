@@ -1,0 +1,33 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 108: Play As If"
+
+
+Display these key concepts:
+1. ASSUME the necessary conditions for success - lightbulb icon
+2. DON'T DELAY: if the finesse MUST work, do it NOW (not later)
+3. ORDER: start with the most RISKY suit (the one that can go wrong)
+4. DISCARD LOSING HYPOTHESES: if a distribution will make you go down anyway, don't worry about it
+5. ANALYSIS OF NECESSARY HYPOTHESES: "What MUST be true for the contract to succeed?"
+   → List of conditions
+   → Eliminate the impossible ones
+   → Play AS IF the remaining ones were true
+6. Diagram: fork with "Hypothesis A: contract made" and "Hypothesis B: contract down anyway" → choose A!
+7. Practical example: player assuming King on the left and playing accordingly
+
+
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

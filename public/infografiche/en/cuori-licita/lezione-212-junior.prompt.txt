@@ -1,0 +1,47 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 212: Special Interventions and Defenses"
+
+Display these key concepts:
+1. TITLE: "Intervention Conventions: Two-Suited and Defenses"
+2. MICHAEL'S CUE BID (blue box with 2 arrows):
+   "Cue bid after opponent's 1C or 1S = OTHER MAJOR + a MINOR"
+   "Example: (1H) - 2H = Spades + a minor (at least 5-5!)"
+   "At least 5-5 cards in the two suits!"
+3. GHESTEM (purple box with precise scheme):
+   "STRONG 5-5 Two-Suited after opponent's suit opening"
+   MANDATORY SCHEME (show this EXACT table, do not invent):
+   - 2NT = the TWO LOWER SUITS (lowest among the unbid)
+   - 3C (or lowest level 3 cue-bid) = the TWO EXTREME SUITS (highest + lowest)
+   - Cue-bid in opponent's suit = the TWO INTERMEDIATE SUITS
+   Example on (1S) opponent's opening:
+   - 2NT = C+D (the two minors, lower)
+   - 3C = H+C (extremes: highest H + lowest C)
+   - 2S (cue-bid) = H+D (intermediates)
+4. DEFENSE AGAINST OPPONENT'S 1NT (green box):
+   - 2C Landy = 5/4+ in the MAJORS (hearts + spades)
+   - 2D / 2H = TRANSFER (as after partner's 1NT)
+   - 2NT = the two MINORS (clubs + diamonds)
+5. DEFENSE AGAINST 2D MULTICOLOR (red box):
+   "Double = I have HEARTS (direct)"
+   "Pass then Double = I have SPADES (delayed)"
+6. FUNDAMENTAL RULE (yellow box with X):
+   "NEVER pass off 5-4 as two-suited!"
+   "Two-suited requires AT LEAST 5-5 cards!"
+7. Motto box: "Conventions are powerful tools but require agreement with partner!"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- Top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spade, red heart, red diamond, green club, under the "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

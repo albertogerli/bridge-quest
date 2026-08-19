@@ -1,0 +1,37 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 12: Overcalls and Reopening Bids"
+
+Display these key concepts:
+1. TAKEOUT DOUBLE + REBID (diagram):
+   → With 18+ points: Double then rebid (removal)
+   → Shows a hand too strong for a simple overcall
+2. JUMP OVERCALL AT THE 2 LEVEL:
+   → 6 good cards (at least 2 honors)
+   → 11-15 points
+   → Example: 1♣ - 2♥ = 6 good Hearts, medium strength
+3. 2NT MINOR TWO-SUITER 5-5:
+   → Shows at least 5♦ and 5♣
+   → Variable strength, depends on vulnerability
+4. STRONG PASS + PARTNER'S REOPENING:
+   → Pass with a strong hand = trap!
+   → Partner MUST reopen with a Double
+5. REOPENING WITH A SUIT vs DOUBLE:
+   → With a suit: 5+ cards, few points
+   → Double: suitable distribution, 10+ points
+6. Summary chart: "Types of Overcalls and When to Use Them"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black Spades, red Hearts, red Diamonds, green Clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as an A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

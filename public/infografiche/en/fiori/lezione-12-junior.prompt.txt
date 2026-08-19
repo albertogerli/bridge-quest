@@ -1,0 +1,31 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 12: Developments After Opponent's Intervention"
+
+Display these key concepts:
+1. FORCED vs FREE: with opponent's intervention, you are no longer forced to bid
+2. On OPPONENT'S DOUBLE:
+   → REDOUBLE = 11+ points (only strong bid)
+   → New suit = NON-forcing, good 5-6 card suit, < 11 pts
+   → Raises = as before, but < 11 pts
+3. On OPPONENT'S SUIT:
+   → New suit = FORCING and at least FIVE (5+ cards)
+   → DOUBLE = looking for 4-4 fit, promises 8+ points
+   → No-trump = promises a STOPPER in opponent's suit
+4. FOURTH HAND: the opener can pass if partner has responded
+5. Table: 1NT (7-10) | 2NT (11-12) | 3NT (13-14) - all with stopper
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

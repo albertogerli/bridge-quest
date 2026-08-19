@@ -1,0 +1,38 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 207: The Strong Undetermined 2C Opening"
+
+Display these key concepts:
+1. TITLE with golden star: "2 CLUBS: the only STRONG opening! No upper limit!"
+2. CONCEPT (golden box):
+   "2C = very strong hand, at least 22-23+ points or self-sufficient play"
+   "It is the ONLY strong opening in the system"
+3. RESPONSES (tree diagram with 3 branches):
+   - 2 DIAMONDS = "WAITING" (the most common response, says nothing about the hand)
+   - 2 HEARTS / 2 SPADES = "5+ cards with at least 1 honor + 5 points" (GAME FORCING!)
+   - With a strong hand: do not bid 2D, show your suit immediately!
+4. OPENER'S REBIDS (table):
+   - 2NT = balanced 23+ points
+   - 2H / 2S = NOT game forcing up to 3 in the suit
+   - 3H / 3S = CLOSED ONE-SUITER, sets the trump!
+5. BOARD CONTROL (red box with hammer):
+   "On opponent's intervention: EITHER WE PLAY, OR WE DOUBLE!"
+   "The 2C is so strong that opponents cannot play comfortably"
+6. Example: AKQJxx AKx Ax Kx -> "2C then 2 Spades: huge hand!"
+7. Motto box: "2 Clubs = the atomic bomb of bidding. Use it with respect!"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- At the bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spades), Hearts (red hearts), Diamonds (red diamonds), Clubs (black/green clubs)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

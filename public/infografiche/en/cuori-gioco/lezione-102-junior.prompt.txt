@@ -1,0 +1,34 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 102: Defense - Count and Suit Preference"
+
+
+Display these key concepts:
+1. COUNTING THE CARDS (large table):
+   → HIGH-LOW (8 then 3) = EVEN number of cards
+   → LOW-HIGH (3 then 8) = ODD number of cards
+2. SEQUENCES TAKE PRECEDENCE OVER COUNT: QJ5→play Q, 1096→play 10
+3. SUIT PREFERENCE SIGNAL (2 colored arrows):
+   → HIGH card = prefer the HIGHER ranking suit
+   → LOW card = prefer the LOWER ranking suit
+4. WHEN to give COUNT: when partner has already decided what to do in the suit
+5. WHEN to give SUIT PREFERENCE: when partner needs to choose which suit to play
+6. CAUTION: Do not give count when it only helps the declarer!
+7. Practical diagram: defender choosing which card to play with a speech bubble explaining the signal
+
+
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as an A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,30 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 105: Probabilities and Percentages"
+
+Display these key concepts:
+1. DISTRIBUTION TABLE (large, colorful):
+   → 6 missing: 3-3 = 36%, 4-2 = 48%, 5-1 = 15%, 6-0 = 1%
+   → 5 missing: 3-2 = 68%, 4-1 = 28%, 5-0 = 4%
+   → 4 missing: 3-1 = 50%, 2-2 = 40%, 4-0 = 10%
+2. FINESSE = 50%, DOUBLE FINESSE (AJ10) = 75%
+3. SUCCESSIVE CHANCES add up: 68% + 16% = 84% - colorful percentage bar
+4. TWO FINESSES, only need ONE: 75% (not 50+50!)
+5. PLAY ORDER: first the chance that DOES NOT BURN the other
+6. Colorful pie chart with distribution percentages
+7. Diagram: "First try the long one (costs nothing), then the finesse (burns!)"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- Top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

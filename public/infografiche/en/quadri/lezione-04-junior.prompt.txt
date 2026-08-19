@@ -1,0 +1,33 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 4: The Captaincy and the Opener's Rebid"
+
+Display these key concepts:
+1. CAPTAIN vs SUBORDINATE (diagram with 2 figures):
+   → Captain: the one who knows the partnership's combined strength → DECIDES
+   → Subordinate: the one who does NOT know yet → DESCRIBES
+2. GOLDEN RULE:
+   → If the Captain INQUIRES → the Subordinate describes
+   → If the Captain DECIDES → the Subordinate passes!
+3. OPENER'S REBID (FIGB Standard range):
+   → Suit rebid (beyond the LDG) = 17-19 points
+   → Jump in a new suit (strong rebid) = 20-21 points
+   → Jump to 2NT = 18-19 balanced points with a stopper
+4. FLEXIBLE RESPONSES: the opener adapts to the partner's response
+5. Diagram: arrows Opener ↔ Responder with decision flow
+6. Example: "1♠ - 2♣ - ?" → the opener rebids based on their strength
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as an A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

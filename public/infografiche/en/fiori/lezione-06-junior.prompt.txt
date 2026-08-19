@@ -1,0 +1,31 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 06: Trump Play Plan"
+
+Display these key concepts:
+1. Two scenarios (branching diagram):
+   → DO YOU HAVE LONG SUITS to cash? → DRAW TRUMPS first!
+   → DO YOU HAVE RUFFS to make? → DON'T draw trumps immediately!
+2. HOW TO BUILD RUFFS: give up tricks to create ruffing opportunities
+3. URGENCY: sometimes even one round of trumps would be fatal
+4. Rule: "Deciding to draw trumps ≠ doing it immediately" (urgent matters first!)
+5. DEFENSE against trump contracts:
+   → Look for QUICK TRICKS
+   → Opening lead from SEQUENCE (only need 2 honors: KQ, QJ, J10)
+   → Opening lead from SHORTNESS (singleton or doubleton → hope for a ruff)
+   → NEVER lead under an Ace in a trump contract!
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as an A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.
