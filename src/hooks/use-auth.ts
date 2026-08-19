@@ -26,6 +26,9 @@ export interface Profile {
   sound_on: boolean;
   memory_best: number | null;
   marketing_consent: boolean | null;
+  /** Entrato con un link d'aula, senza registrarsi. */
+  ospite?: boolean;
+  ospite_scade_il?: string | null;
   marketing_consent_date: string | null;
   total_minutes: number;
   created_at: string;

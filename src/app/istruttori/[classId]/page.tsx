@@ -17,6 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { AssegnaLezioni } from "@/components/instructors/assegna-lezioni";
+import { IngressoAula } from "@/components/istruttori/ingresso-aula";
 import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
 import {
   getClassDetail,
@@ -312,6 +313,11 @@ export default function ClassDetailPage({
           </div>
         </CardContent>
       </Card>
+
+      {/* L'ingresso in aula, senza registrazione */}
+      <div className="mb-6">
+        <IngressoAula classId={classId} />
+      </div>
 
       {/* Richieste in attesa */}
       {inAttesa.length > 0 && (
