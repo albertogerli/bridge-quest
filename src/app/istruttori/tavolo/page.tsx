@@ -41,6 +41,7 @@ import {
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
+import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -474,6 +475,13 @@ function Tavolo() {
           <Button variant="outline" onClick={() => setShowContract(tableId, !stato.showContract)}>
             {stato.showContract ? "Nascondi il contratto" : "Mostra il contratto"}
           </Button>
+          {classId && (
+            <SondaggioAula
+              classId={classId}
+              giocabili={giocabiliOra}
+              smazzataId={stato?.titolo ?? null}
+            />
+          )}
           <Button variant="outline" disabled={assegnando} onClick={() => void assegnaManiDiOggi()}>
             {assegnando ? "Assegno…" : "Assegna le mani di oggi"}
           </Button>

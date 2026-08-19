@@ -548,6 +548,13 @@ CREATE TABLE IF NOT EXISTS public.review_items (
   box smallint NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.risposte_sondaggio (
+  sondaggio_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  risposta text NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.risultati_mano (
   id uuid NOT NULL,
   mano_id uuid NOT NULL,
@@ -648,6 +655,21 @@ CREATE TABLE IF NOT EXISTS public.smazzate (
   dd_tricks smallint,
   title_en text,
   commentary_en text
+);
+
+CREATE TABLE IF NOT EXISTS public.sondaggi (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  autore_id uuid,
+  domanda text NOT NULL,
+  opzioni text[] NOT NULL,
+  risposta_giusta text,
+  smazzata_id text,
+  aperto boolean NOT NULL,
+  mostra_risultati boolean NOT NULL,
+  mostra_risposta boolean NOT NULL,
+  riusabile boolean NOT NULL,
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.tornei (
@@ -1542,6 +1564,35 @@ AS $function$
   cross join permesso p
   left join profiles pr on pr.id = primi.user_id
   order by primi.prese desc nulls last;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.distribuzione_sondaggio(p_id uuid)
+ RETURNS TABLE(opzione text, quante integer, nomi text[])
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  with s as (select * from sondaggi where id = p_id),
+  permesso as (
+    select s.class_id, is_instructor_of_class(s.class_id) as sono_insegnante
+    from s
+    where is_member_of_class(s.class_id) or is_instructor_of_class(s.class_id)
+  )
+  select
+    o.opzione,
+    count(r.user_id)::integer,
+    case when p.sono_insegnante
+      then coalesce(array_agg(pr.display_name) filter (where r.user_id is not null), '{}')
+      else '{}'::text[]
+    end
+  from s
+  cross join permesso p
+  cross join lateral unnest(s.opzioni) as o(opzione)
+  left join risposte_sondaggio r on r.sondaggio_id = s.id and r.risposta = o.opzione
+  left join profiles pr on pr.id = r.user_id
+  group by o.opzione, p.sono_insegnante, array_position(s.opzioni, o.opzione)
+  order by array_position(s.opzioni, o.opzione);
 $function$
 ;
 
@@ -3531,6 +3582,7 @@ ALTER TABLE public.push_subscriptions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_items_id_seq'::regclass);
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
 ALTER TABLE public.review_items ALTER COLUMN box SET DEFAULT 1;
+ALTER TABLE public.risposte_sondaggio ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.risultati_mano ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.risultati_mano ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.risultati_torneo ALTER COLUMN created_at SET DEFAULT now();
@@ -3551,6 +3603,12 @@ ALTER TABLE public.sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN commentary SET DEFAULT ''::text;
 ALTER TABLE public.smazzate ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.smazzate ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.sondaggi ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.sondaggi ALTER COLUMN aperto SET DEFAULT true;
+ALTER TABLE public.sondaggi ALTER COLUMN mostra_risultati SET DEFAULT false;
+ALTER TABLE public.sondaggi ALTER COLUMN mostra_risposta SET DEFAULT false;
+ALTER TABLE public.sondaggi ALTER COLUMN riusabile SET DEFAULT false;
+ALTER TABLE public.sondaggi ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.tornei ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.tornei ALTER COLUMN creato_at SET DEFAULT now();
 ALTER TABLE public.tournament_results ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -3608,6 +3666,7 @@ ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_pkey P
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_pkey PRIMARY KEY (id);
+ALTER TABLE public.risposte_sondaggio ADD CONSTRAINT risposte_sondaggio_pkey PRIMARY KEY (sondaggio_id, user_id);
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_pkey PRIMARY KEY (id);
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_pkey PRIMARY KEY (torneo_id, mano_id, user_id);
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
@@ -3616,6 +3675,7 @@ ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_pkey PRIMARY KEY (id
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
+ALTER TABLE public.sondaggi ADD CONSTRAINT sondaggi_pkey PRIMARY KEY (id);
 ALTER TABLE public.tornei ADD CONSTRAINT tornei_pkey PRIMARY KEY (id);
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_pkey PRIMARY KEY (torneo_id, numero);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
@@ -3759,6 +3819,8 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.risposte_sondaggio ADD CONSTRAINT risposte_sondaggio_sondaggio_id_fkey FOREIGN KEY (sondaggio_id) REFERENCES sondaggi(id) ON DELETE CASCADE;
+ALTER TABLE public.risposte_sondaggio ADD CONSTRAINT risposte_sondaggio_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_partner_id_fkey FOREIGN KEY (partner_id) REFERENCES profiles(id) ON DELETE SET NULL;
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -3777,6 +3839,8 @@ ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_b1_fkey FOREIGN KEY 
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_b2_fkey FOREIGN KEY (b2) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_creatore_id_fkey FOREIGN KEY (creatore_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
+ALTER TABLE public.sondaggi ADD CONSTRAINT sondaggi_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.sondaggi ADD CONSTRAINT sondaggi_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_fkey FOREIGN KEY (torneo_id) REFERENCES tornei(id) ON DELETE CASCADE;
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -3831,6 +3895,8 @@ CREATE INDEX idx_poll_votes_post ON public.forum_poll_votes USING btree (post_id
 CREATE INDEX idx_preferite_utente ON public.posizioni_preferite USING btree (user_id, created_at DESC);
 CREATE INDEX idx_profiles_role ON public.profiles USING btree (role) WHERE (role <> 'user'::text);
 CREATE INDEX idx_segnalazioni_stato ON public.segnalazioni USING btree (stato, created_at DESC);
+CREATE INDEX idx_sondaggi_classe ON public.sondaggi USING btree (class_id, created_at DESC);
+CREATE INDEX idx_sondaggi_riusabili ON public.sondaggi USING btree (autore_id) WHERE riusabile;
 CREATE INDEX idx_tournament_results_week ON public.tournament_results USING btree (week_num, total_tricks DESC);
 CREATE INDEX lesson_modules_content_gin ON public.lesson_modules USING gin (content jsonb_path_ops);
 CREATE INDEX lesson_modules_lesson_id_idx ON public.lesson_modules USING btree (lesson_id);
@@ -3920,6 +3986,7 @@ ALTER TABLE public.posizioni_preferite ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.review_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.risposte_sondaggio ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.risultati_mano ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.risultati_torneo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
@@ -3928,6 +3995,7 @@ ALTER TABLE public.segnalazioni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.sondaggi ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tornei ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.torneo_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
@@ -4034,6 +4102,12 @@ CREATE POLICY "Users can insert own profile" ON public.profiles AS PERMISSIVE FO
 CREATE POLICY "Users update own profile" ON public.profiles AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = id));
 CREATE POLICY "Users manage own subscriptions" ON public.push_subscriptions AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id)) WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Own reviews" ON public.review_items AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
+CREATE POLICY "Si risponde per se stessi" ON public.risposte_sondaggio AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((user_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM sondaggi s
+  WHERE ((s.id = risposte_sondaggio.sondaggio_id) AND s.aperto AND is_member_of_class(s.class_id))))));
+CREATE POLICY "Si vede la propria risposta, e l'insegnante tutte" ON public.risposte_sondaggio AS PERMISSIVE FOR SELECT TO authenticated USING (((user_id = auth.uid()) OR (EXISTS ( SELECT 1
+   FROM sondaggi s
+  WHERE ((s.id = risposte_sondaggio.sondaggio_id) AND is_instructor_of_class(s.class_id))))));
 CREATE POLICY "Ognuno scrive il proprio risultato" ON public.risultati_mano AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Risultati leggibili" ON public.risultati_mano AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Ognuno scrive il proprio risultato di torneo" ON public.risultati_torneo AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
@@ -4053,6 +4127,10 @@ CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR
   WHERE ((s.id = sfida_board.sfida_id) AND ((((auth.uid() = s.a1) OR (auth.uid() = s.a2)) OR (auth.uid() = s.b1)) OR (auth.uid() = s.b2))))));
 CREATE POLICY "Le mie sfide" ON public.sfide_coppie AS PERMISSIVE FOR SELECT TO authenticated USING (((((auth.uid() = a1) OR (auth.uid() = a2)) OR (auth.uid() = b1)) OR (auth.uid() = b2)));
 CREATE POLICY smazzate_public_read ON public.smazzate AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "L'insegnante aggiorna i sondaggi" ON public.sondaggi AS PERMISSIVE FOR UPDATE TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
+CREATE POLICY "L'insegnante cancella i sondaggi" ON public.sondaggi AS PERMISSIVE FOR DELETE TO authenticated USING (is_instructor_of_class(class_id));
+CREATE POLICY "L'insegnante gestisce i sondaggi" ON public.sondaggi AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((is_instructor_of_class(class_id) AND (autore_id = auth.uid())));
+CREATE POLICY "La classe vede i sondaggi della classe" ON public.sondaggi AS PERMISSIVE FOR SELECT TO authenticated USING ((is_member_of_class(class_id) OR is_instructor_of_class(class_id) OR (autore_id = auth.uid())));
 CREATE POLICY "Tornei leggibili" ON public.tornei AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Mani del torneo leggibili" ON public.torneo_mani AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Authenticated can read tournament results" ON public.tournament_results AS PERMISSIVE FOR SELECT TO authenticated USING (true);
@@ -4186,6 +4264,9 @@ GRANT DELETE ON public.push_subscriptions TO service_role;
 GRANT DELETE ON public.review_items TO anon;
 GRANT DELETE ON public.review_items TO authenticated;
 GRANT DELETE ON public.review_items TO service_role;
+GRANT DELETE ON public.risposte_sondaggio TO anon;
+GRANT DELETE ON public.risposte_sondaggio TO authenticated;
+GRANT DELETE ON public.risposte_sondaggio TO service_role;
 GRANT DELETE ON public.risultati_mano TO anon;
 GRANT DELETE ON public.risultati_mano TO authenticated;
 GRANT DELETE ON public.risultati_mano TO service_role;
@@ -4210,6 +4291,9 @@ GRANT DELETE ON public.sfide_coppie TO service_role;
 GRANT DELETE ON public.smazzate TO anon;
 GRANT DELETE ON public.smazzate TO authenticated;
 GRANT DELETE ON public.smazzate TO service_role;
+GRANT DELETE ON public.sondaggi TO anon;
+GRANT DELETE ON public.sondaggi TO authenticated;
+GRANT DELETE ON public.sondaggi TO service_role;
 GRANT DELETE ON public.tornei TO anon;
 GRANT DELETE ON public.tornei TO authenticated;
 GRANT DELETE ON public.tornei TO service_role;
@@ -4351,6 +4435,9 @@ GRANT INSERT ON public.push_subscriptions TO service_role;
 GRANT INSERT ON public.review_items TO anon;
 GRANT INSERT ON public.review_items TO authenticated;
 GRANT INSERT ON public.review_items TO service_role;
+GRANT INSERT ON public.risposte_sondaggio TO anon;
+GRANT INSERT ON public.risposte_sondaggio TO authenticated;
+GRANT INSERT ON public.risposte_sondaggio TO service_role;
 GRANT INSERT ON public.risultati_mano TO anon;
 GRANT INSERT ON public.risultati_mano TO authenticated;
 GRANT INSERT ON public.risultati_mano TO service_role;
@@ -4375,6 +4462,9 @@ GRANT INSERT ON public.sfide_coppie TO service_role;
 GRANT INSERT ON public.smazzate TO anon;
 GRANT INSERT ON public.smazzate TO authenticated;
 GRANT INSERT ON public.smazzate TO service_role;
+GRANT INSERT ON public.sondaggi TO anon;
+GRANT INSERT ON public.sondaggi TO authenticated;
+GRANT INSERT ON public.sondaggi TO service_role;
 GRANT INSERT ON public.tornei TO anon;
 GRANT INSERT ON public.tornei TO authenticated;
 GRANT INSERT ON public.tornei TO service_role;
@@ -4516,6 +4606,9 @@ GRANT REFERENCES ON public.push_subscriptions TO service_role;
 GRANT REFERENCES ON public.review_items TO anon;
 GRANT REFERENCES ON public.review_items TO authenticated;
 GRANT REFERENCES ON public.review_items TO service_role;
+GRANT REFERENCES ON public.risposte_sondaggio TO anon;
+GRANT REFERENCES ON public.risposte_sondaggio TO authenticated;
+GRANT REFERENCES ON public.risposte_sondaggio TO service_role;
 GRANT REFERENCES ON public.risultati_mano TO anon;
 GRANT REFERENCES ON public.risultati_mano TO authenticated;
 GRANT REFERENCES ON public.risultati_mano TO service_role;
@@ -4540,6 +4633,9 @@ GRANT REFERENCES ON public.sfide_coppie TO service_role;
 GRANT REFERENCES ON public.smazzate TO anon;
 GRANT REFERENCES ON public.smazzate TO authenticated;
 GRANT REFERENCES ON public.smazzate TO service_role;
+GRANT REFERENCES ON public.sondaggi TO anon;
+GRANT REFERENCES ON public.sondaggi TO authenticated;
+GRANT REFERENCES ON public.sondaggi TO service_role;
 GRANT REFERENCES ON public.tornei TO anon;
 GRANT REFERENCES ON public.tornei TO authenticated;
 GRANT REFERENCES ON public.tornei TO service_role;
@@ -4680,6 +4776,9 @@ GRANT SELECT ON public.push_subscriptions TO service_role;
 GRANT SELECT ON public.review_items TO anon;
 GRANT SELECT ON public.review_items TO authenticated;
 GRANT SELECT ON public.review_items TO service_role;
+GRANT SELECT ON public.risposte_sondaggio TO anon;
+GRANT SELECT ON public.risposte_sondaggio TO authenticated;
+GRANT SELECT ON public.risposte_sondaggio TO service_role;
 GRANT SELECT ON public.risultati_mano TO anon;
 GRANT SELECT ON public.risultati_mano TO authenticated;
 GRANT SELECT ON public.risultati_mano TO service_role;
@@ -4702,6 +4801,9 @@ GRANT SELECT ON public.sfide_coppie TO anon;
 GRANT SELECT ON public.sfide_coppie TO authenticated;
 GRANT SELECT ON public.sfide_coppie TO service_role;
 GRANT SELECT ON public.smazzate TO service_role;
+GRANT SELECT ON public.sondaggi TO anon;
+GRANT SELECT ON public.sondaggi TO authenticated;
+GRANT SELECT ON public.sondaggi TO service_role;
 GRANT SELECT ON public.tornei TO anon;
 GRANT SELECT ON public.tornei TO authenticated;
 GRANT SELECT ON public.tornei TO service_role;
@@ -4843,6 +4945,9 @@ GRANT TRIGGER ON public.push_subscriptions TO service_role;
 GRANT TRIGGER ON public.review_items TO anon;
 GRANT TRIGGER ON public.review_items TO authenticated;
 GRANT TRIGGER ON public.review_items TO service_role;
+GRANT TRIGGER ON public.risposte_sondaggio TO anon;
+GRANT TRIGGER ON public.risposte_sondaggio TO authenticated;
+GRANT TRIGGER ON public.risposte_sondaggio TO service_role;
 GRANT TRIGGER ON public.risultati_mano TO anon;
 GRANT TRIGGER ON public.risultati_mano TO authenticated;
 GRANT TRIGGER ON public.risultati_mano TO service_role;
@@ -4867,6 +4972,9 @@ GRANT TRIGGER ON public.sfide_coppie TO service_role;
 GRANT TRIGGER ON public.smazzate TO anon;
 GRANT TRIGGER ON public.smazzate TO authenticated;
 GRANT TRIGGER ON public.smazzate TO service_role;
+GRANT TRIGGER ON public.sondaggi TO anon;
+GRANT TRIGGER ON public.sondaggi TO authenticated;
+GRANT TRIGGER ON public.sondaggi TO service_role;
 GRANT TRIGGER ON public.tornei TO anon;
 GRANT TRIGGER ON public.tornei TO authenticated;
 GRANT TRIGGER ON public.tornei TO service_role;
@@ -5008,6 +5116,9 @@ GRANT TRUNCATE ON public.push_subscriptions TO service_role;
 GRANT TRUNCATE ON public.review_items TO anon;
 GRANT TRUNCATE ON public.review_items TO authenticated;
 GRANT TRUNCATE ON public.review_items TO service_role;
+GRANT TRUNCATE ON public.risposte_sondaggio TO anon;
+GRANT TRUNCATE ON public.risposte_sondaggio TO authenticated;
+GRANT TRUNCATE ON public.risposte_sondaggio TO service_role;
 GRANT TRUNCATE ON public.risultati_mano TO anon;
 GRANT TRUNCATE ON public.risultati_mano TO authenticated;
 GRANT TRUNCATE ON public.risultati_mano TO service_role;
@@ -5032,6 +5143,9 @@ GRANT TRUNCATE ON public.sfide_coppie TO service_role;
 GRANT TRUNCATE ON public.smazzate TO anon;
 GRANT TRUNCATE ON public.smazzate TO authenticated;
 GRANT TRUNCATE ON public.smazzate TO service_role;
+GRANT TRUNCATE ON public.sondaggi TO anon;
+GRANT TRUNCATE ON public.sondaggi TO authenticated;
+GRANT TRUNCATE ON public.sondaggi TO service_role;
 GRANT TRUNCATE ON public.tornei TO anon;
 GRANT TRUNCATE ON public.tornei TO authenticated;
 GRANT TRUNCATE ON public.tornei TO service_role;
@@ -5173,6 +5287,9 @@ GRANT UPDATE ON public.push_subscriptions TO service_role;
 GRANT UPDATE ON public.review_items TO anon;
 GRANT UPDATE ON public.review_items TO authenticated;
 GRANT UPDATE ON public.review_items TO service_role;
+GRANT UPDATE ON public.risposte_sondaggio TO anon;
+GRANT UPDATE ON public.risposte_sondaggio TO authenticated;
+GRANT UPDATE ON public.risposte_sondaggio TO service_role;
 GRANT UPDATE ON public.risultati_mano TO anon;
 GRANT UPDATE ON public.risultati_mano TO authenticated;
 GRANT UPDATE ON public.risultati_mano TO service_role;
@@ -5197,6 +5314,9 @@ GRANT UPDATE ON public.sfide_coppie TO service_role;
 GRANT UPDATE ON public.smazzate TO anon;
 GRANT UPDATE ON public.smazzate TO authenticated;
 GRANT UPDATE ON public.smazzate TO service_role;
+GRANT UPDATE ON public.sondaggi TO anon;
+GRANT UPDATE ON public.sondaggi TO authenticated;
+GRANT UPDATE ON public.sondaggi TO service_role;
 GRANT UPDATE ON public.tornei TO anon;
 GRANT UPDATE ON public.tornei TO authenticated;
 GRANT UPDATE ON public.tornei TO service_role;
@@ -5279,6 +5399,10 @@ REVOKE ALL ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO anon;
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO service_role;
+REVOKE ALL ON FUNCTION public.distribuzione_sondaggio(p_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
 REVOKE ALL ON FUNCTION public.genera_codice_amico() FROM PUBLIC;
