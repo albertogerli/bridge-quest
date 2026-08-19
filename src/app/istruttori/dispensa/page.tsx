@@ -11,6 +11,8 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
+import { getAllSmazzate } from "@/lib/catalog";
+import { mieNote } from "@/lib/note-smazzate";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -21,6 +23,8 @@ const NOME: Record<Position, string> = {
 };
 
 interface Foglio {
+  /** L'id nel catalogo, quando la mano viene da lì: serve per la nota. */
+  id?: string;
   hands: Record<Position, Card[]>;
   titolo: string;
   contratto?: string;
@@ -65,22 +69,55 @@ function Dispensa() {
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
   const [seed, setSeed] = useState(2026);
   const [quante, setQuante] = useState(8);
+  const [note, setNote] = useState<Map<string, string>>(new Map());
+  /** Formato compatto: ~24 mani per pagina, per gli hand record. */
+  const [compatto, setCompatto] = useState(false);
+  const [conPunti, setConPunti] = useState(false);
 
   useEffect(() => {
     if (!compitoId) return;
-    getAssignment(compitoId)
-      .then((a) => {
+    let vivo = true;
+    void (async () => {
+      try {
+        const a = await getAssignment(compitoId);
+        if (!vivo) return;
         setTitoloCompito(a.title);
-        setDaCompito(
-          (a.custom_hands ?? []).map((s: Smazzata) => ({
+
+        /**
+         * LE MANI DEL CATALOGO, non solo quelle importate.
+         *
+         * Prima si leggeva solo `custom_hands`, cioè le mani caricate da PBN.
+         * Un compito nato da «assegna la lezione» non ne ha nessuna — ha solo
+         * gli id delle smazzate — quindi la dispensa di quel compito usciva
+         * VUOTA e ripiegava sulle mani generate a caso: un foglio che non
+         * c'entrava niente con la lezione, stampato senza che nessuno se ne
+         * accorgesse.
+         */
+        const catalogo = await getAllSmazzate();
+        const perId = new Map(catalogo.map((s) => [s.id, s]));
+        const fogli = a.smazzata_ids
+          .map((id) => perId.get(id) ?? a.custom_hands?.find((h) => h.id === id))
+          .filter((s): s is Smazzata => s !== undefined)
+          .map((s) => ({
             hands: s.hands,
             titolo: s.title,
             contratto: s.contract,
             dichiarante: s.declarer,
-          }))
-        );
-      })
-      .catch((err) => reportError("dispensa:compito", err));
+            id: s.id,
+          }));
+        if (vivo) setDaCompito(fogli);
+
+        // Le note dell'insegnante seguono la mano: se ne ha scritta una l'anno
+        // scorso, ricompare su questo foglio senza cercarla.
+        const note = await mieNote(fogli.map((f) => f.id).filter(Boolean) as string[]);
+        if (vivo) setNote(note);
+      } catch (err) {
+        reportError("dispensa:compito", err);
+      }
+    })();
+    return () => {
+      vivo = false;
+    };
   }, [compitoId]);
 
   const modello = DEAL_TEMPLATES.find((t) => t.id === modelloId) ?? DEAL_TEMPLATES[0];
@@ -153,6 +190,12 @@ function Dispensa() {
               </Button>
             </>
           )}
+          <Button variant={compatto ? "default" : "outline"} onClick={() => setCompatto((v) => !v)}>
+            {compatto ? "Una per pagina" : "Formato compatto"}
+          </Button>
+          <Button variant={conPunti ? "default" : "outline"} onClick={() => setConPunti((v) => !v)}>
+            {conPunti ? "Nascondi i punti" : "Mostra i punti"}
+          </Button>
           <Button onClick={() => window.print()}>
             <Printer className="w-4 h-4 mr-1" aria-hidden="true" />
             {t("Stampa o salva in PDF")}
@@ -172,17 +215,50 @@ function Dispensa() {
           </p>
         </header>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        {/*
+          Due formati, e la differenza non è estetica: uno è il foglio da
+          consegnare — una mano per riquadro, con spazio per la nota — l'altro
+          è l'hand record, quello che si tiene sul tavolo mentre si gioca, dove
+          quello che conta è quante ne stanno su una pagina.
+        */}
+        <div
+          className={
+            compatto
+              ? "grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 print:grid-cols-4 print:text-[10pt]"
+              : "grid gap-5 sm:grid-cols-2"
+          }
+        >
           {fogli.map((f, i) => (
             // `break-inside-avoid`: senza, una mano finisce mezza su una pagina
             // e mezza sull'altra, ed è illeggibile proprio nel momento in cui
             // serve.
             <section
               key={i}
-              className="rounded-xl border border-border p-3 break-inside-avoid print:border-black"
+              className={`break-inside-avoid rounded-xl border border-border print:border-black ${
+                compatto ? "p-1.5" : "p-3"
+              }`}
             >
-              <h3 className="font-bold text-sm mb-2">{f.titolo}</h3>
+              {/*
+                Non meno di 12px a schermo: il guardiano in `tipografia.test.ts`
+                lo vieta, e ha ragione — il pubblico di BridgeLab ha fra i 45 e
+                i 65 anni. In stampa comanda comunque `print:text-[10pt]` sul
+                contenitore, che è la misura giusta per un hand record.
+              */}
+              <h3 className={`font-bold mb-2 ${compatto ? "text-[12px]" : "text-sm"}`}>
+                {compatto ? `${i + 1}. ${f.titolo}` : f.titolo}
+              </h3>
               <Diagramma hands={f.hands} />
+              {conPunti && (
+                <p className="mt-1 text-[12px] text-muted-foreground print:text-black">
+                  N {handHcp(f.hands.north)} · E {handHcp(f.hands.east)} · S{" "}
+                  {handHcp(f.hands.south)} · O {handHcp(f.hands.west)}
+                </p>
+              )}
+              {!compatto && f.id && note.get(f.id) && (
+                <p className="mt-2 border-t border-border pt-2 text-[12px] leading-relaxed print:border-black print:text-black">
+                  {note.get(f.id)}
+                </p>
+              )}
             </section>
           ))}
         </div>
