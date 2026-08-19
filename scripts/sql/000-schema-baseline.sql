@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   created_at timestamp with time zone NOT NULL,
   custom_hands jsonb,
   soluzioni text NOT NULL,
-  lesson_id integer
+  lesson_id integer,
+  minibridge boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -3242,6 +3243,7 @@ ALTER TABLE public.assignments ALTER COLUMN mode SET DEFAULT 'homework'::text;
 ALTER TABLE public.assignments ALTER COLUMN unlock_mode SET DEFAULT 'free'::text;
 ALTER TABLE public.assignments ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.assignments ALTER COLUMN soluzioni SET DEFAULT 'dopo-il-gioco'::text;
+ALTER TABLE public.assignments ALTER COLUMN minibridge SET DEFAULT false;
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
 ALTER TABLE public.badges ALTER COLUMN earned_at SET DEFAULT now();
 ALTER TABLE public.bbo_username_cleanup_2026_08 ALTER COLUMN cleared_at SET DEFAULT now();

@@ -24,6 +24,7 @@ import {
 import type { CardData } from "@/components/bridge/playing-card";
 import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
+import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { BenStatus } from "@/components/bridge/ben-status";
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
@@ -127,6 +128,7 @@ export default function CompitoPage({
     return (
       <CompitoHandGame
         smazzata={smazzata}
+        minibridge={assignment.minibridge}
         handNumber={currentIndex + 1}
         totalHands={hands.length}
         onFinish={async (score, details) => {
@@ -333,9 +335,11 @@ interface CompitoHandGameProps {
   totalHands: number;
   onFinish: (score: number, details: Record<string, unknown>) => void;
   onBack: () => void;
+  /** Il compito si gioca senza dichiarazione. */
+  minibridge?: boolean;
 }
 
-function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }: CompitoHandGameProps) {
+function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, minibridge }: CompitoHandGameProps) {
   const t = useT();
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
@@ -550,7 +554,18 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack }:
             {game.phase === "playing" && <GameTutorial />}
           </motion.div>
 
-          {smazzata.bidding && (!isMobile || game.phase === "ready") && (
+          {/*
+            In minibridge la cassetta non si mostra: l'allievo della prima
+            lezione non l'ha ancora vista, e metterla lì — anche solo da
+            leggere — è la cosa che il minibridge esiste per evitare.
+          */}
+          {minibridge && game.phase === "ready" && (
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-64">
+              <PannelloMinibridge mani={smazzata.hands} compatto />
+            </motion.div>
+          )}
+
+          {!minibridge && smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-48">
               <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
             </motion.div>

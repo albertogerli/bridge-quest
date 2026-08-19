@@ -90,6 +90,12 @@ export interface Assignment {
    * `scripts/sql/soluzioni-dopo-il-gioco-2026-08.sql`.
    */
   soluzioni: VisibilitaSoluzioni;
+  /**
+   * Si gioca senza dichiarazione, con le regole del minibridge. Le prime
+   * lezioni del Corso Fiori si fanno così, e un compito assegnato lì non deve
+   * mettere davanti all'allievo una cassetta che non gli è stata spiegata.
+   */
+  minibridge: boolean;
   live_active_index: number | null;
   created_at: string;
   /** Hands imported from PBN, referenced by ids in smazzata_ids (pbn_import.sql) */
@@ -404,6 +410,7 @@ export async function createAssignment(input: {
   mode?: AssignmentMode;
   unlockMode?: UnlockMode;
   soluzioni?: VisibilitaSoluzioni;
+  minibridge?: boolean;
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
 }): Promise<Assignment> {
@@ -420,6 +427,7 @@ export async function createAssignment(input: {
     // che gli insegnanti hanno chiesto, e vederla scritta nel form di
     // creazione vale più di un default nascosto in una colonna.
     soluzioni: input.soluzioni ?? "dopo-il-gioco",
+    minibridge: input.minibridge ?? false,
   };
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {

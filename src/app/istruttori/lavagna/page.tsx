@@ -14,6 +14,7 @@ import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
+import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -73,6 +74,13 @@ function Lavagna() {
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
   const [seed, setSeed] = useState(2026);
   const [divisioniVisibili, setDivisioniVisibili] = useState(false);
+  /**
+   * Le prime lezioni del Corso Fiori si fanno senza dichiarazione: acceso
+   * questo, la lavagna smette di parlare di contratto e mostra i punti delle
+   * due linee, chi gioca e quante prese dice la tabella. È una modalità della
+   * lavagna, non un'altra pagina — chi sta spiegando non deve andare altrove.
+   */
+  const [minibridge, setMinibridge] = useState(false);
 
   useEffect(() => {
     if (!compitoId) return;
@@ -220,6 +228,9 @@ function Lavagna() {
         <Button variant="outline" onClick={() => setDivisioniVisibili((v) => !v)}>
           {divisioniVisibili ? "Nascondi le divisioni" : "Divisioni dei semi"}
         </Button>
+        <Button variant={minibridge ? "default" : "outline"} onClick={() => setMinibridge((v) => !v)}>
+          {t("Minibridge")}
+        </Button>
         <ComandoProiezione
           mani={mano?.hands ?? {}}
           titolo={mano?.titolo}
@@ -227,6 +238,12 @@ function Lavagna() {
           scopertiEsterni={[...scoperti]}
         />
       </div>
+
+      {minibridge && mano && (
+        <div className="mx-auto mt-6 max-w-2xl">
+          <PannelloMinibridge mani={mano.hands} />
+        </div>
+      )}
 
       {/*
         Il pannello guarda solo le mani SCOPERTE, non tutte e quattro: è il conto
