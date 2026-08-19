@@ -86,16 +86,34 @@ export function valutaLicita(
   let commento: string;
 
   if (stelle === 3) {
+    /**
+     * TRE STELLE NON VUOL DIRE «PERFETTO».
+     *
+     * La scala dà tre stelle fino a un IMP di scarto, cioè fino a una
+     * quarantina di punti: è giusto, al tavolo quella differenza non si vede.
+     * Ma il commento diceva «in media nessun altro contratto rendeva di più»
+     * ANCHE con lo scarto, e quella frase è vera solo a scarto zero — con la
+     * tabella dei contratti stampata subito sotto, che mostrava il contratto
+     * migliore con un punteggio più alto di quello ottenuto. Visto in
+     * produzione il 19/08/2026: verdetto «la scelta migliore» sopra una
+     * tabella in cui 1♦ di Nord rendeva 101 e il contratto raggiunto 67.
+     *
+     * Una lode che il resto della schermata smentisce non è generosità: è il
+     * modo più rapido di far smettere di credere ai voti.
+     */
+    const perfetto = punteggio >= punteggioPar;
     if (metro === "atteso") {
-      commento =
-        punteggio > punteggioPar
+      commento = perfetto
+        ? punteggio > punteggioPar
           ? "Meglio del contratto migliore: con queste carte hai preso di più di quanto ci si potesse aspettare."
-          : "La scelta migliore: in media nessun altro contratto rendeva di più.";
+          : "La scelta migliore: in media nessun altro contratto rendeva di più."
+        : `Ottima scelta: solo ${differenza} punti sotto il contratto migliore, una differenza che al tavolo non si vede.`;
     } else {
-      commento =
-        punteggio > punteggioPar
+      commento = perfetto
+        ? punteggio > punteggioPar
           ? "Meglio del par: hai preso più di quanto la smazzata prometteva."
-          : "Contratto par: su questa smazzata non si poteva fare meglio.";
+          : "Contratto par: su questa smazzata non si poteva fare meglio."
+        : `Ottima scelta: solo ${differenza} punti sotto il par, una differenza che al tavolo non si vede.`;
     }
   } else {
     const rif = metro === "atteso" ? "sotto il contratto migliore" : "sotto il par";

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Position } from "./bridge-engine";
 import type { DdsTable, TableStrain } from "./dds-table";
-import { astaChiusa, esitoAsta, ordineDa, turnoDi } from "./licita-mano";
+import { astaChiusa, esitoAsta, ordineDa, turnoDi, ZONE_PER_BOARD } from "./licita-mano";
 
 /** Dieci prese a picche per Nord-Sud, poche per gli altri. */
 function tabella(): DdsTable {
@@ -144,5 +144,30 @@ describe("il contro non è un contratto", () => {
   it("nemmeno una dichiarazione mai vista rompe il conto", () => {
     expect(esitoAsta(["8♠", "P", "P", "P"], "north", t, "none")).toBeNull();
     expect(esitoAsta(["1Z", "P", "P", "P"], "north", t, "none")).toBeNull();
+  });
+});
+
+describe("la rotazione delle zone", () => {
+  it("è quella regolamentare del duplicato", () => {
+    // Board 1 nessuno, board 2 NS, board 3 EW, board 4 tutti: è la sequenza
+    // stampata su ogni astuccio, e chi gioca la riconosce.
+    expect(ZONE_PER_BOARD.slice(0, 4)).toEqual(["none", "ns", "ew", "both"]);
+    expect(ZONE_PER_BOARD).toHaveLength(16);
+  });
+
+  it("nei sedici board ogni zona compare quattro volte", () => {
+    const conta = new Map<string, number>();
+    for (const z of ZONE_PER_BOARD) conta.set(z, (conta.get(z) ?? 0) + 1);
+    expect([...conta.values()]).toEqual([4, 4, 4, 4]);
+  });
+
+  /**
+   * Il difetto che questa costante chiude: l'allenamento di licita generava le
+   * mani sempre con «nessuno in zona», quindi chi si allena senza account non
+   * ha mai visto una decisione in zona — che è metà del bridge.
+   */
+  it("i primi sedici turni non sono tutti fuori zona", () => {
+    const usate = new Set(Array.from({ length: 16 }, (_, i) => ZONE_PER_BOARD[i % 16]));
+    expect(usate.size).toBe(4);
   });
 });

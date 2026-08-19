@@ -132,3 +132,34 @@ describe("il commento descrive la distanza vera, non il voto", () => {
     expect(valutaLicita(0, 1430, "esatto").commento).toMatch(/slam|caduta pesante/);
   });
 });
+
+describe("tre stelle non vuol dire perfetto", () => {
+  /**
+   * Il caso visto in produzione il 19/08/2026: contratto raggiunto 67 di media,
+   * contratto migliore 101. Trentaquattro punti sono un IMP, quindi tre stelle
+   * — giusto — ma la frase diceva «nessun altro contratto rendeva di più»
+   * mentre la tabella sotto ne mostrava uno che rendeva di più.
+   */
+  it("con uno scarto non dichiara di essere il migliore", () => {
+    const e = valutaLicita(67, 101, "atteso");
+    expect(e.stelle).toBe(3);
+    expect(e.commento).not.toContain("nessun altro contratto rendeva di più");
+    expect(e.commento).toContain("34 punti sotto il contratto migliore");
+  });
+
+  it("a scarto zero lo dichiara, perché è vero", () => {
+    const e = valutaLicita(101, 101, "atteso");
+    expect(e.stelle).toBe(3);
+    expect(e.commento).toContain("nessun altro contratto rendeva di più");
+  });
+
+  it("sopra il riferimento resta il complimento pieno", () => {
+    const e = valutaLicita(150, 101, "atteso");
+    expect(e.commento).toContain("Meglio del contratto migliore");
+  });
+
+  it("vale anche col metro esatto", () => {
+    expect(valutaLicita(60, 90, "esatto").commento).toContain("30 punti sotto il par");
+    expect(valutaLicita(90, 90, "esatto").commento).toContain("non si poteva fare meglio");
+  });
+});

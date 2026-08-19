@@ -1,6 +1,7 @@
 "use client";
 
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import type { Vulnerability } from "@/lib/catalog";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import type { ContrattoValutato } from "@/lib/riepilogo-mano";
@@ -38,10 +39,24 @@ function seme(hand: readonly Card[], suit: Suit): string {
  * basso. Chi gioca a bridge legge le mani in quella disposizione da sempre, e
  * un elenco in colonna costringe a ricostruirla a mente ogni volta.
  */
+/**
+ * Come si dice la zona in italiano, per esteso.
+ *
+ * «NS» e «EW» sono le sigle del database, non parole: chi legge un riepilogo
+ * vuole sapere se era in zona lui.
+ */
+const ZONA_ETICHETTA: Record<Vulnerability, string> = {
+  none: "Nessuno in zona",
+  ns: "In zona Nord-Sud",
+  ew: "In zona Est-Ovest",
+  both: "Tutti in zona",
+};
+
 export function RiepilogoMano({
   deal,
   contratti,
   avversari = [],
+  vulnerability,
 }: {
   deal: Record<Position, Card[]>;
   contratti: ContrattoValutato[];
@@ -58,6 +73,16 @@ export function RiepilogoMano({
    * grosso o se non avevano comunque niente.
    */
   avversari?: ContrattoValutato[];
+  /**
+   * Chi era in zona.
+   *
+   * OGNI NUMERO DI QUESTA TABELLA NE DIPENDE, e non di poco: un 4♠ caduto di
+   * due vale −100 fuori zona e −200 dentro, una manche 420 o 620. Senza
+   * scriverlo, il riepilogo mostra punteggi che chi legge non può verificare —
+   * e chi prova a rifare il conto a mano trova un altro numero e pensa che il
+   * programma sbagli.
+   */
+  vulnerability?: Vulnerability;
 }) {
   const t = useT();
   // La colonna del valore atteso compare solo se la mano lo porta: le mani
@@ -67,9 +92,14 @@ export function RiepilogoMano({
 
   return (
     <div className="mt-4 pt-4 border-t border-border">
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-        {t("Tutta la smazzata")}
-      </p>
+      <div className="mb-3 flex flex-wrap items-baseline gap-x-3">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          {t("Tutta la smazzata")}
+        </p>
+        {vulnerability && (
+          <p className="text-xs text-muted-foreground">{ZONA_ETICHETTA[vulnerability]}</p>
+        )}
+      </div>
 
       {/* Le quattro mani, a forma di tavolo. */}
       <div className="grid grid-cols-3 gap-2 mb-5">
