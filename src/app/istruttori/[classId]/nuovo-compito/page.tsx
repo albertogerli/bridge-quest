@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
 import { useCatalog } from "@/store/use-catalog-store";
-import { createAssignment } from "@/lib/instructors";
+import { type VisibilitaSoluzioni, createAssignment } from "@/lib/instructors";
 import { parsePbn } from "@/lib/pbn";
 import type { Smazzata } from "@/lib/catalog";
 import {
@@ -63,6 +63,7 @@ export default function NuovoCompitoPage({
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [soluzioni, setSoluzioni] = useState<VisibilitaSoluzioni>("dopo-il-gioco");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -135,6 +136,7 @@ export default function NuovoCompitoPage({
         smazzataIds: Array.from(selected),
         instructorNote: note.trim() || null,
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+        soluzioni,
         customHands,
       });
       router.push(`/istruttori/${classId}`);
@@ -181,6 +183,26 @@ export default function NuovoCompitoPage({
             onChange={(e) => setDueDate(e.target.value)}
             className={`${selectClass} w-full`}
           />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="soluzioni" className="text-sm font-medium">
+            {t("Soluzioni")}
+          </label>
+          <select
+            id="soluzioni"
+            value={soluzioni}
+            onChange={(e) => setSoluzioni(e.target.value as VisibilitaSoluzioni)}
+            className={`${selectClass} w-full`}
+          >
+            <option value="dopo-il-gioco">{t("Dopo che l'allievo ha giocato la mano")}</option>
+            <option value="dopo-la-scadenza">{t("Solo dopo la scadenza")}</option>
+            <option value="subito">{t("Subito, come aiuto durante l'esercizio")}</option>
+          </select>
+          <p className="text-xs text-muted-foreground">
+            {soluzioni === "dopo-la-scadenza" && !dueDate
+              ? "Senza una scadenza le soluzioni non si aprono mai: metti una data qui sopra."
+              : "Il commento del maestro non arriva nemmeno al browser dell'allievo finché non gli spetta."}
+          </p>
         </div>
         <div className="space-y-1.5">
           <label htmlFor="note" className="text-sm font-medium">

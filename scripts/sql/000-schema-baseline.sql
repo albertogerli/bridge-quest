@@ -75,7 +75,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   unlock_mode text NOT NULL,
   live_active_index integer,
   created_at timestamp with time zone NOT NULL,
-  custom_hands jsonb
+  custom_hands jsonb,
+  soluzioni text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -143,7 +144,10 @@ CREATE TABLE IF NOT EXISTS public.classes (
   description text,
   invite_code text NOT NULL,
   invite_active boolean NOT NULL,
-  created_at timestamp with time zone NOT NULL
+  created_at timestamp with time zone NOT NULL,
+  approvazione_automatica boolean NOT NULL,
+  invite_expires_at timestamp with time zone,
+  stato text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -1102,6 +1106,73 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.commento_negato(p_smazzata_id text)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select exists (
+    select 1
+    from assignments a
+    join class_members m
+      on m.class_id = a.class_id
+     and m.student_id = auth.uid()
+     and m.status = 'active'
+    where a.soluzioni <> 'subito'
+      and p_smazzata_id = any (a.smazzata_ids)
+      and not is_instructor_of_class(a.class_id)
+      and case a.soluzioni
+        when 'dopo-il-gioco' then not exists (
+          select 1 from game_results gr
+          where gr.assignment_id = a.id
+            and gr.user_id = auth.uid()
+            and gr.details->>'smazzata_id' = p_smazzata_id
+        )
+        when 'dopo-la-scadenza' then (a.due_date is null or now() < a.due_date)
+        else false
+      end
+  );
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.compito_per_allievo(p_assignment_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  a assignments;
+  mani jsonb;
+begin
+  select * into a from assignments where id = p_assignment_id;
+  if a.id is null then
+    raise exception 'assignment not found' using errcode = 'P0002';
+  end if;
+
+  if not (is_instructor_of_class(a.class_id) or is_member_of_class(a.class_id)) then
+    raise exception 'not authorized for assignment %', p_assignment_id
+      using errcode = '42501';
+  end if;
+
+  mani := coalesce(a.custom_hands, '[]'::jsonb);
+
+  if not is_instructor_of_class(a.class_id) and a.soluzioni <> 'subito' then
+    select coalesce(jsonb_agg(
+      case when public.commento_negato(mano->>'id')
+        then mano - 'commentary'
+        else mano
+      end
+    ), '[]'::jsonb)
+    into mani
+    from jsonb_array_elements(mani) as mano;
+  end if;
+
+  return to_jsonb(a) || jsonb_build_object('custom_hands', mani);
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.confronto_campo(p_mano_id uuid)
  RETURNS jsonb
  LANGUAGE sql
@@ -1867,33 +1938,63 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.is_pending_of_class(p_class_id uuid)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select exists (
+    select 1 from class_members m
+    where m.class_id = p_class_id
+      and m.student_id = auth.uid()
+      and m.status = 'pending'
+  );
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.join_class_by_code(p_code text)
  RETURNS classes
  LANGUAGE plpgsql
  SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  declare
-    c classes;
-  begin
-    if auth.uid() is null then
-      raise exception 'not authenticated' using errcode = '42501';
-    end if;
+declare
+  c classes;
+  precedente text;
+  nuovo text;
+begin
+  if auth.uid() is null then
+    raise exception 'not authenticated' using errcode = '42501';
+  end if;
 
-    select * into c
-    from classes
-    where invite_code = upper(trim(p_code)) and invite_active = true;
+  select * into c
+  from classes
+  where invite_code = upper(trim(p_code))
+    and invite_active = true
+    and stato = 'aperta'
+    and (invite_expires_at is null or invite_expires_at > now());
 
-    if c.id is null then
-      raise exception 'invalid invite code' using errcode = 'P0002';
-    end if;
+  if c.id is null then
+    raise exception 'invalid invite code' using errcode = 'P0002';
+  end if;
 
-    insert into class_members (class_id, student_id, status)
-    values (c.id, auth.uid(), 'active')
-    on conflict (class_id, student_id) do update set status = 'active';
+  select status into precedente
+  from class_members
+  where class_id = c.id and student_id = auth.uid();
 
+  if precedente in ('active', 'pending', 'rejected') then
     return c;
-  end $function$
+  end if;
+
+  nuovo := case when c.approvazione_automatica then 'active' else 'pending' end;
+
+  insert into class_members (class_id, student_id, status)
+  values (c.id, auth.uid(), nuovo)
+  on conflict (class_id, student_id) do update set status = nuovo;
+
+  return c;
+end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.licite_in_attesa(p_user uuid, p_ore integer DEFAULT 12)
@@ -2805,6 +2906,19 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.smazzate_commenti(p_ids text[])
+ RETURNS TABLE(id text, commentary text, commentary_en text)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select s.id, s.commentary, s.commentary_en
+  from smazzate s
+  where s.id = any (p_ids)
+    and not commento_negato(s.id);
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.sync_asd_name()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -2956,6 +3070,7 @@ ALTER TABLE public.assignments ALTER COLUMN smazzata_ids SET DEFAULT '{}'::text[
 ALTER TABLE public.assignments ALTER COLUMN mode SET DEFAULT 'homework'::text;
 ALTER TABLE public.assignments ALTER COLUMN unlock_mode SET DEFAULT 'free'::text;
 ALTER TABLE public.assignments ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.assignments ALTER COLUMN soluzioni SET DEFAULT 'dopo-il-gioco'::text;
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
 ALTER TABLE public.badges ALTER COLUMN earned_at SET DEFAULT now();
 ALTER TABLE public.bbo_username_cleanup_2026_08 ALTER COLUMN cleared_at SET DEFAULT now();
@@ -2978,6 +3093,8 @@ ALTER TABLE public.classes ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.classes ALTER COLUMN invite_code SET DEFAULT generate_invite_code();
 ALTER TABLE public.classes ALTER COLUMN invite_active SET DEFAULT true;
 ALTER TABLE public.classes ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.classes ALTER COLUMN approvazione_automatica SET DEFAULT true;
+ALTER TABLE public.classes ALTER COLUMN stato SET DEFAULT 'aperta'::text;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -3162,12 +3279,14 @@ ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_periodo_key UNIQUE (tipo, p
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_mano_id_key UNIQUE (torneo_id, mano_id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
+ALTER TABLE public.assignments ADD CONSTRAINT assignments_soluzioni_check CHECK ((soluzioni = ANY (ARRAY['subito'::text, 'dopo-il-gioco'::text, 'dopo-la-scadenza'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHECK ((unlock_mode = ANY (ARRAY['free'::text, 'sequential'::text])));
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_check CHECK ((south_id <> north_id));
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
-ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text])));
+ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text, 'pending'::text, 'rejected'::text])));
+ALTER TABLE public.classes ADD CONSTRAINT classes_stato_check CHECK ((stato = ANY (ARRAY['bozza'::text, 'aperta'::text, 'chiusa'::text, 'archiviata'::text])));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_corpo_check CHECK (((char_length(btrim(corpo)) >= 1) AND (char_length(btrim(corpo)) <= 4000)));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_check CHECK ((a1 <> a2));
@@ -3436,13 +3555,13 @@ CREATE POLICY "Players can update own challenges" ON public.challenges AS PERMIS
 CREATE POLICY "Players can view own challenges" ON public.challenges AS PERMISSIVE FOR SELECT TO public USING (((auth.uid() = challenger_id) OR (auth.uid() = opponent_id)));
 CREATE POLICY "Users can create challenges" ON public.challenges AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = challenger_id));
 CREATE POLICY "Instructor or self can delete membership" ON public.class_members AS PERMISSIVE FOR DELETE TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id)));
-CREATE POLICY "Instructor or self can update membership" ON public.class_members AS PERMISSIVE FOR UPDATE TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id)));
+CREATE POLICY "Instructor or self can update membership" ON public.class_members AS PERMISSIVE FOR UPDATE TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id))) WITH CHECK ((is_instructor_of_class(class_id) OR ((student_id = auth.uid()) AND (status = 'removed'::text))));
 CREATE POLICY "Members and owning instructor can view membership" ON public.class_members AS PERMISSIVE FOR SELECT TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id)));
 CREATE POLICY "Students can join themselves" ON public.class_members AS PERMISSIVE FOR INSERT TO public WITH CHECK ((student_id = auth.uid()));
 CREATE POLICY "Authors can delete own class messages" ON public.class_messages AS PERMISSIVE FOR DELETE TO public USING (((user_id = auth.uid()) OR is_instructor_of_class(class_id)));
 CREATE POLICY "Members can read class messages" ON public.class_messages AS PERMISSIVE FOR SELECT TO public USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
 CREATE POLICY "Members can send class messages" ON public.class_messages AS PERMISSIVE FOR INSERT TO public WITH CHECK (((user_id = auth.uid()) AND (is_instructor_of_class(class_id) OR is_member_of_class(class_id))));
-CREATE POLICY "Instructors and members can view classes" ON public.classes AS PERMISSIVE FOR SELECT TO public USING (((instructor_id = auth.uid()) OR is_member_of_class(id)));
+CREATE POLICY "Instructors and members can view classes" ON public.classes AS PERMISSIVE FOR SELECT TO public USING (((instructor_id = auth.uid()) OR is_member_of_class(id) OR is_pending_of_class(id)));
 CREATE POLICY "Instructors can create classes" ON public.classes AS PERMISSIVE FOR INSERT TO public WITH CHECK (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
@@ -4598,6 +4717,14 @@ GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_ro
 REVOKE ALL ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) TO service_role;
+REVOKE ALL ON FUNCTION public.commento_negato(p_smazzata_id text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.commento_negato(p_smazzata_id text) TO anon;
+GRANT EXECUTE ON FUNCTION public.commento_negato(p_smazzata_id text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.commento_negato(p_smazzata_id text) TO service_role;
+REVOKE ALL ON FUNCTION public.compito_per_allievo(p_assignment_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.compito_per_allievo(p_assignment_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.compito_per_allievo(p_assignment_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.compito_per_allievo(p_assignment_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.confronto_campo(p_mano_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO service_role;
@@ -4668,6 +4795,10 @@ GRANT EXECUTE ON FUNCTION public.is_instructor_of_class(p_class_id uuid) TO serv
 REVOKE ALL ON FUNCTION public.is_member_of_class(p_class_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.is_member_of_class(p_class_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_member_of_class(p_class_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.is_pending_of_class(p_class_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_pending_of_class(p_class_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.is_pending_of_class(p_class_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_pending_of_class(p_class_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.join_class_by_code(p_code text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.join_class_by_code(p_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.join_class_by_code(p_code text) TO service_role;
@@ -4744,6 +4875,10 @@ GRANT EXECUTE ON FUNCTION public.sfida_coppie_iscrivi(p_compagno uuid, p_quante 
 REVOKE ALL ON FUNCTION public.sfida_coppie_vista(p_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sfida_coppie_vista(p_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.sfida_coppie_vista(p_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.smazzate_commenti(p_ids text[]) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.smazzate_commenti(p_ids text[]) TO anon;
+GRANT EXECUTE ON FUNCTION public.smazzate_commenti(p_ids text[]) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.smazzate_commenti(p_ids text[]) TO service_role;
 REVOKE ALL ON FUNCTION public.sync_asd_name() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO anon;
 GRANT EXECUTE ON FUNCTION public.sync_asd_name() TO authenticated;

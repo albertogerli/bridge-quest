@@ -15,6 +15,7 @@ import {
   resultVerdict,
 } from "@/lib/daily-hand";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useCommento } from "@/hooks/use-commento";
 
 // Pannello di condivisione: esiste solo nella schermata di fine mano.
 const ShareResult = dynamic(
@@ -41,6 +42,11 @@ export function DailyGameResult({
   xpLabel: string;
 }) {
   const t = useT();
+  /**
+   * Il commento della mano non viaggia più con il catalogo: lo si chiede, e
+   * arriva solo se spetta. Vedi `src/lib/commenti-smazzate.ts`.
+   */
+  const commento = useCommento(smazzata);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -188,7 +194,7 @@ export function DailyGameResult({
       </div>
 
       {/* Commentary / Maestro tip */}
-      {smazzata.commentary && (
+      {commento && (
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -204,7 +210,7 @@ export function DailyGameResult({
             </h4>
           </div>
           <p className="text-sm text-foreground/80 leading-relaxed">
-            {smazzata.commentary}
+            {commento}
           </p>
         </motion.div>
       )}

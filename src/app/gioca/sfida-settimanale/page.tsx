@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { useCommento } from "@/hooks/use-commento";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { usePlayableSmazzate, useSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
@@ -305,6 +306,11 @@ interface WeeklyHandGameProps {
 
 function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: WeeklyHandGameProps) {
   const t = useT();
+  /**
+   * Il commento della mano non viaggia più con il catalogo: lo si chiede, e
+   * arriva solo se spetta. Vedi `src/lib/commenti-smazzate.ts`.
+   */
+  const commento = useCommento(smazzata);
   const { tricksNeeded } = parseContract(smazzata.contract);
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
@@ -611,7 +617,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
         </AnimatePresence>
 
         {/* Hint */}
-        {game.phase === "ready" && smazzata.commentary && (
+        {game.phase === "ready" && commento && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6 mx-auto max-w-6xl">
             <button
               onClick={() => setShowHint(!showHint)}
@@ -623,7 +629,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
               {showHint && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
                   <div className="card-elevated rounded-2xl bg-card p-5">
-                    <p className="text-sm text-muted-foreground leading-relaxed">{smazzata.commentary}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{commento}</p>
                   </div>
                 </motion.div>
               )}
