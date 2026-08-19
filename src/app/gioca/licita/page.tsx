@@ -16,7 +16,7 @@ import { valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita"
 import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
 import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
-import { astaChiusa, esitoAsta, ordineDa } from "@/lib/licita-mano";
+import { astaChiusa, esitoAsta, ordineDa, ZONE_PER_BOARD } from "@/lib/licita-mano";
 import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { Stelle } from "@/components/bridge/stelle";
@@ -318,10 +318,28 @@ export default function LicitaPage() {
       const modello = DEAL_TEMPLATES[round % DEAL_TEMPLATES.length];
       const { deals } = generateDeals(modello.constraints, { count: 1, seed: seed + round * 191 });
       if (!deals.length) return;
-      calcTableAndPar(deals[0], "south", "none")
+
+      /**
+       * ZONA E DICHIARANTE COME AL TAVOLO, non fissi.
+       *
+       * Le mani generate qui uscivano sempre con Sud di mano e nessuno in
+       * zona. Sono le due cose che al bridge cambiano la decisione più di
+       * quasi tutto: in zona un parziale sicuro vale più di una manche
+       * incerta, e chi apre decide di chi è la parola. Chi si allenava senza
+       * account — cioè chi comincia — non ha mai visto una licita in zona.
+       *
+       * Il giro è quello del torneo, board 1..16: dichiarante e zona seguono
+       * la rotazione vera, così l'allenamento assomiglia a una sessione invece
+       * che a sedici copie della stessa situazione.
+       */
+      const board = round + 1;
+      const dealer = (["north", "east", "south", "west"] as const)[(board - 1) % 4];
+      const vulnerability = ZONE_PER_BOARD[(board - 1) % 16];
+
+      calcTableAndPar(deals[0], dealer, vulnerability)
         .then(({ table, par }) =>
           metti({
-            deal: deals[0], table, dealer: "south", vulnerability: "none",
+            deal: deals[0], table, dealer, vulnerability,
             riferimento: par.score, metro: "esatto", scenario: modello.label,
           })
         )
@@ -500,6 +518,7 @@ export default function LicitaPage() {
                     niente — anzi, toglie la spiegazione. */}
                 <RiepilogoMano
                   deal={mano.deal}
+                  vulnerability={mano.vulnerability}
                   // Le due migliori per loro: senza, non si capisce se la mano
                   // era vostra, e un parziale che li tiene fuori da una manche
                   // sembra un risultato mediocre.

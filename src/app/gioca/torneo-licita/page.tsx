@@ -328,6 +328,7 @@ export default function TorneoLicitaPage() {
               <p className="text-sm text-muted-foreground mb-3">{esito.commento}</p>
               <RiepilogoMano
                 deal={mano.hands}
+                vulnerability={mano.vulnerability}
                 avversari={contrattiDaRivedere({
                   table: tabella,
                   lato: "ew",

@@ -123,3 +123,19 @@ export function esitoAsta(
     doppio,
   };
 }
+
+/**
+ * La rotazione delle zone del bridge duplicato, board 1..16.
+ *
+ * NON È UN ELENCO ARBITRARIO: è la sequenza regolamentare, quella stampata su
+ * ogni astuccio. Il ciclo è di sedici e poi si ripete. Metterla qui, invece di
+ * scegliere una zona a caso, serve perché chi si allena ritrovi al torneo le
+ * stesse situazioni nello stesso ordine — la zona è metà della decisione, e
+ * impararla su una rotazione finta non insegna niente.
+ */
+export const ZONE_PER_BOARD: readonly Vulnerability[] = [
+  "none", "ns", "ew", "both",
+  "ns", "ew", "both", "none",
+  "ew", "both", "none", "ns",
+  "both", "none", "ns", "ew",
+];
