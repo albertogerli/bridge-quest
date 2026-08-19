@@ -223,3 +223,19 @@ test("a chi ha il browser in italiano non si propone niente", async ({ browser }
   await expect(page.getByText("This site is also available in English")).toHaveCount(0);
   await contesto.close();
 });
+
+test("i contenuti delle lezioni sono in inglese", async ({ page }) => {
+  // Non l'interfaccia: il CONTENUTO, che arriva dal database. È la fase 4, e
+  // la prova che le colonne `_en` vengono davvero lette — con la cache del
+  // catalogo che segue la lingua invece di restare quella del primo
+  // caricamento.
+  test.setTimeout(120_000);
+  await login(page);
+
+  await page.goto("/en/lezioni");
+  await expect(page.getByText("Clubs Course").first()).toBeVisible({ timeout: 45_000 });
+
+  await page.goto("/lezioni");
+  await expect(page.getByText("Corso Fiori").first()).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByText("Clubs Course")).toHaveCount(0);
+});

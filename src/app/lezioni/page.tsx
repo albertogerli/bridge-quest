@@ -205,7 +205,7 @@ export default function LezioniPage() {
                 >
                   <span className="text-lg">{course.icon}</span>
                   <div className="text-left">
-                    <div className="text-[13px] font-semibold leading-tight">{course.name.replace("Corso ", "")}</div>
+                    <div className="text-[13px] font-semibold leading-tight">{course.name.replace(/^Corso\s+/i, "").replace(/\s+Course$/i, "")}</div>
                     <div className={`text-[12px] leading-tight ${isActive ? "text-white" : "text-muted-foreground"}`}>
                       {stats.progress}%
                     </div>
