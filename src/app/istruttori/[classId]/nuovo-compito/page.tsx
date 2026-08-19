@@ -64,6 +64,7 @@ export default function NuovoCompitoPage({
   const [note, setNote] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [soluzioni, setSoluzioni] = useState<VisibilitaSoluzioni>("dopo-il-gioco");
+  const [minibridge, setMinibridge] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -137,6 +138,7 @@ export default function NuovoCompitoPage({
         instructorNote: note.trim() || null,
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
         soluzioni,
+        minibridge,
         customHands,
       });
       router.push(`/istruttori/${classId}`);
@@ -187,6 +189,22 @@ export default function NuovoCompitoPage({
             onChange={(e) => setDueDate(e.target.value)}
             className={`${selectClass} w-full`}
           />
+        </div>
+        <div className="space-y-1.5">
+          <label className="flex items-start gap-2 text-sm">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4"
+              checked={minibridge}
+              onChange={(e) => setMinibridge(e.target.checked)}
+            />
+            <span>
+              <span className="font-medium">{t("Minibridge")}</span>
+              <span className="block text-xs text-muted-foreground">
+                {t("Senza dichiarazione: chi ha più punti gioca e il livello viene dalla tabella. Per le prime lezioni.")}
+              </span>
+            </span>
+          </label>
         </div>
         <div className="space-y-1.5">
           <label htmlFor="soluzioni" className="text-sm font-medium">

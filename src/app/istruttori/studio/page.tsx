@@ -11,6 +11,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { createGame, getValidCards, parseContract, playCard, type GameState } from "@/lib/bridge-engine";
+import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { DEAL_TEMPLATES, generateDeals } from "@/lib/deal-generator";
 import { calcTableAndPar, cardOptions, type OpzioneCarta } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
@@ -66,6 +67,13 @@ function Studio() {
   const [storia, setStoria] = useState<GameState[]>([]);
   const [stato, setStato] = useState<GameState | null>(null);
   const [contratto, setContratto] = useState<{ contract: string; declarer: Position } | null>(null);
+  /**
+   * Modalità minibridge: niente par e niente contratto calcolato dal solver, il
+   * contratto lo si sceglie con le regole del minibridge — chi ha più punti
+   * gioca, il livello dalla tabella delle decisioni. Serve per le prime lezioni
+   * del Corso Fiori, che si fanno senza dichiarazione.
+   */
+  const [minibridge, setMinibridge] = useState(false);
   // Le valutazioni si conservano INSIEME alla posizione per cui valgono: così
   // «sto calcolando» è una deduzione, non un altro stato da tenere in sincronia
   // — e mostrare per un istante i numeri della posizione precedente sarebbe
@@ -225,6 +233,31 @@ function Studio() {
         </p>
       </header>
 
+      {/*
+        In minibridge il contratto non lo sceglie il solver: lo si legge dalle
+        due mani con le regole del minibridge, e il tavolo riparte da lì. È
+        sopra al tavolo perché in aula è il primo passo della lezione, non un
+        dettaglio a lato.
+      */}
+      {minibridge && deal && (
+        <div className="mb-4">
+          {/*
+            `deal`, non `stato.hands`: le mani nello stato si accorciano a ogni
+            carta giocata, e a metà mano i punti onori sarebbero quelli delle
+            carte rimaste — cioè un numero senza significato.
+          */}
+          <PannelloMinibridge
+            mani={deal}
+            contrattoScelto={contratto?.contract}
+            onScelta={(c, dichiarante) => {
+              setContratto({ contract: c, declarer: dichiarante });
+              setStato(createGame(deal, c, dichiarante));
+              setStoria([]);
+            }}
+          />
+        </div>
+      )}
+
       {archivioMancante && (
         <p className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4 text-sm text-amber-900 dark:text-amber-200">
           La mano dell&apos;archivio non c&apos;è più — cancellata, o salvata
@@ -249,6 +282,9 @@ function Studio() {
           </select>
         </div>
         <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>{t("Altra mano")}</Button>
+        <Button variant={minibridge ? "default" : "outline"} onClick={() => setMinibridge((v) => !v)}>
+          {t("Minibridge")}
+        </Button>
         <Button variant="outline" onClick={indietro} disabled={storia.length === 0}>
           <Undo2 className="w-4 h-4 mr-1" aria-hidden="true" />
           {t("Indietro")}
