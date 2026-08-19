@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
+import { Globe } from "lucide-react";
+import { SelettoreLingua } from "@/components/selettore-lingua";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSharedAuth } from "@/contexts/auth-provider";
@@ -212,6 +214,30 @@ export default function ImpostazioniPage() {
       </div>
 
       <div className="max-w-lg mx-auto px-4 -mt-4 pb-24 space-y-4">
+        {/* LA LINGUA PER PRIMA: chi arriva qui perché non capisce la lingua
+            della pagina non deve leggere sei sezioni per trovarla. I due nomi
+            sono scritti ciascuno nella propria lingua — «Italiano» e
+            «English» — così li riconosce anche chi non capisce l'altra. */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.05 }}
+          className="card-clean bg-card rounded-2xl p-5 shadow-sm border border-border"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-figb/8 dark:bg-primary/15 flex items-center justify-center">
+              <Globe className="w-5 h-5 text-figb dark:text-primary" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-foreground text-base">{t("Lingua")}</h2>
+              <p className="text-xs text-muted-foreground">
+                {t("Vale anche per le email che ti mandiamo")}
+              </p>
+            </div>
+          </div>
+          <SelettoreLingua className="justify-start" />
+        </motion.div>
+
         {/* Text Size */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

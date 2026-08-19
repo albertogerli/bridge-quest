@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePercorso } from "@/hooks/use-lingua";
 import { useT } from "@/contexts/traduzioni-provider";
+import { SelettoreLingua } from "@/components/selettore-lingua";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 
 const primaryNav = [
@@ -177,6 +178,12 @@ export function DesktopNav() {
       {/* Settings at bottom */}
       <div className="px-3 pb-4">
         <div className="h-px bg-border mb-3" />
+        {/* La lingua sopra le impostazioni, non dentro: da desktop questa barra
+            è sempre a schermo, e cambiare lingua non deve costare due clic e
+            una pagina. */}
+        <div className="mb-2 px-2">
+          <SelettoreLingua />
+        </div>
         <Link href="/impostazioni" aria-label={t("Impostazioni")}>
           <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
             pathname === "/impostazioni"
