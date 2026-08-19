@@ -52,6 +52,15 @@ export interface ClassRoom {
    * guadagnare.
    */
   risultati_nominativi: boolean;
+  /**
+   * La stanza di videoconferenza del corso.
+   *
+   * Non costruiamo video e audio nel portale, ma la lezione online si fa su
+   * Zoom o Meet e ignorarlo vuol dire che l'insegnante incolla il link in chat
+   * a mano ogni volta. Qui sta accanto al materiale, e finisce da solo nel
+   * promemoria e nel messaggio da mandare sul gruppo.
+   */
+  link_video: string | null;
   created_at: string;
 }
 
@@ -108,6 +117,8 @@ export interface Assignment {
   minibridge: boolean;
   /** Esercizi di posizione assegnati insieme alle smazzate. */
   esercizio_ids: string[];
+  /** Il link della singola lezione, quando cambia. Vuoto = quello della classe. */
+  link_video: string | null;
   live_active_index: number | null;
   created_at: string;
   /** Hands imported from PBN, referenced by ids in smazzata_ids (pbn_import.sql) */
@@ -292,6 +303,7 @@ export async function aggiornaImpostazioniClasse(
     invite_expires_at?: string | null;
     invite_active?: boolean;
     risultati_nominativi?: boolean;
+    link_video?: string | null;
   },
 ): Promise<void> {
   const supabase = createClient();

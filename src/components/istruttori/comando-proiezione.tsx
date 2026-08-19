@@ -249,6 +249,7 @@ export function ComandoProiezione({
             {interruttore("mostraGiocate", "Carte giocate")}
             {interruttore("mostraDoppioMorto", "Analisi doppio morto")}
             {interruttore("mostraDivisioni", "Divisioni dei semi")}
+            {interruttore("finestraCondivisa", "Condivido lo schermo su Zoom/Meet")}
           </div>
         </div>
       )}

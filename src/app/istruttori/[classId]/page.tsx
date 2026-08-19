@@ -292,6 +292,29 @@ export default function ClassDetailPage({
           </label>
 
           <div className="space-y-1.5">
+            <label htmlFor="link-video" className="text-sm font-medium">
+              {t("Stanza di videoconferenza")}
+            </label>
+            <input
+              id="link-video"
+              type="url"
+              defaultValue={classRoom.link_video ?? ""}
+              placeholder="https://meet.google.com/… oppure Zoom"
+              disabled={busy}
+              onBlur={(e) => {
+                const v = e.target.value.trim();
+                if (v !== (classRoom.link_video ?? "")) {
+                  void cambiaImpostazione({ link_video: v || null });
+                }
+              }}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("Compare all'allievo accanto al materiale, e finisce da solo nel messaggio da mandare sul gruppo.")}
+            </p>
+          </div>
+
+          <div className="space-y-1.5">
             <label htmlFor="stato-classe" className="text-sm font-medium">
               {t("Stato della classe")}
             </label>

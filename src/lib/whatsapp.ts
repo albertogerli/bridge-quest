@@ -50,15 +50,21 @@ export function compitoAssegnatoWhatsApp(
   classId: string,
   assignmentId: string,
   mani?: number,
+  /** La stanza di videoconferenza, se il corso ne ha una. */
+  linkVideo?: string | null,
 ): string {
   const quante = mani && mani > 0 ? ` (${mani} ${mani === 1 ? "mano" : "mani"})` : "";
-  return [
+  const righe = [
     `Nuovo compito: «${titolo}»${quante}.`,
     ``,
     `${SITO}/classi/${classId}/compito/${assignmentId}`,
-    ``,
-    `Le soluzioni si aprono dopo che avete giocato.`,
-  ].join("\n");
+  ];
+  // Il link della videoconferenza va QUI e non in un messaggio a parte: chi lo
+  // incolla a mano in chat prima di ogni lezione lo fa perché non c'è, e due
+  // messaggi separati nel gruppo diventano due cose da cercare.
+  if (linkVideo) righe.push(``, `Ci vediamo qui: ${linkVideo}`);
+  righe.push(``, `Le soluzioni si aprono dopo che avete giocato.`);
+  return righe.join("\n");
 }
 
 /** Il promemoria a ridosso della scadenza. */
