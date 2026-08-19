@@ -150,7 +150,8 @@ CREATE TABLE IF NOT EXISTS public.classes (
   created_at timestamp with time zone NOT NULL,
   approvazione_automatica boolean NOT NULL,
   invite_expires_at timestamp with time zone,
-  stato text NOT NULL
+  stato text NOT NULL,
+  risultati_nominativi boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -460,6 +461,18 @@ CREATE TABLE IF NOT EXISTS public.partner_profiles (
   availability text[] NOT NULL,
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.posizioni_preferite (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  titolo text NOT NULL,
+  hands jsonb NOT NULL,
+  contract text NOT NULL,
+  declarer text NOT NULL,
+  played jsonb NOT NULL,
+  nota text,
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.profiles (
@@ -1464,6 +1477,48 @@ AS $function$
       ) t2
     ) END
   ) END;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text)
+ RETURNS TABLE(nome text, prese integer, mantenuto boolean, e_mio boolean)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  with compito as (
+    select a.id, a.class_id from assignments a where a.id = p_assignment_id
+  ),
+  permesso as (
+    select c.class_id,
+           (select cl.risultati_nominativi from classes cl where cl.id = c.class_id) as nominativi,
+           is_instructor_of_class(c.class_id) as sono_insegnante
+    from compito c
+    where is_member_of_class(c.class_id) or is_instructor_of_class(c.class_id)
+  ),
+  primi as (
+    select distinct on (gr.user_id)
+      gr.user_id,
+      (gr.details->>'tricksMade')::int as prese,
+      gr.score >= 0 as mantenuto
+    from game_results gr, compito c
+    where gr.assignment_id = c.id
+      and gr.details->>'smazzata_id' = p_smazzata_id
+    order by gr.user_id, gr.created_at asc
+  )
+  select
+    case
+      when p.sono_insegnante or p.nominativi or primi.user_id = auth.uid()
+        then coalesce(pr.display_name, 'Allievo')
+      else 'Un compagno'
+    end,
+    primi.prese,
+    primi.mantenuto,
+    primi.user_id = auth.uid()
+  from primi
+  cross join permesso p
+  left join profiles pr on pr.id = primi.user_id
+  order by primi.prese desc nulls last;
 $function$
 ;
 
@@ -3317,6 +3372,7 @@ ALTER TABLE public.classes ALTER COLUMN invite_active SET DEFAULT true;
 ALTER TABLE public.classes ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.classes ALTER COLUMN approvazione_automatica SET DEFAULT true;
 ALTER TABLE public.classes ALTER COLUMN stato SET DEFAULT 'aperta'::text;
+ALTER TABLE public.classes ALTER COLUMN risultati_nominativi SET DEFAULT false;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -3398,6 +3454,9 @@ ALTER TABLE public.partner_profiles ALTER COLUMN looking SET DEFAULT true;
 ALTER TABLE public.partner_profiles ALTER COLUMN availability SET DEFAULT '{}'::text[];
 ALTER TABLE public.partner_profiles ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.partner_profiles ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.posizioni_preferite ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.posizioni_preferite ALTER COLUMN played SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.posizioni_preferite ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.profiles ALTER COLUMN profile_type SET DEFAULT 'adulto'::text;
 ALTER TABLE public.profiles ALTER COLUMN xp SET DEFAULT 0;
 ALTER TABLE public.profiles ALTER COLUMN streak SET DEFAULT 0;
@@ -3485,6 +3544,7 @@ ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_pkey PRIMARY KEY (id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
+ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_pkey PRIMARY KEY (id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_pkey PRIMARY KEY (id);
@@ -3630,6 +3690,7 @@ ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey F
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd_id) REFERENCES asd(id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
@@ -3702,6 +3763,7 @@ CREATE INDEX idx_login_history_user_date ON public.login_history USING btree (us
 CREATE INDEX idx_modelli_mani_autore ON public.modelli_mani USING btree (autore_id, created_at DESC);
 CREATE INDEX idx_modelli_mani_lezione ON public.modelli_mani USING btree (lesson_id) WHERE (lesson_id IS NOT NULL);
 CREATE INDEX idx_poll_votes_post ON public.forum_poll_votes USING btree (post_id, option_index);
+CREATE INDEX idx_preferite_utente ON public.posizioni_preferite USING btree (user_id, created_at DESC);
 CREATE INDEX idx_profiles_role ON public.profiles USING btree (role) WHERE (role <> 'user'::text);
 CREATE INDEX idx_segnalazioni_stato ON public.segnalazioni USING btree (stato, created_at DESC);
 CREATE INDEX idx_tournament_results_week ON public.tournament_results USING btree (week_num, total_tricks DESC);
@@ -3787,6 +3849,7 @@ ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.modelli_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.posizioni_preferite ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.review_items ENABLE ROW LEVEL SECURITY;
@@ -3896,6 +3959,7 @@ CREATE POLICY partner_profiles_delete ON public.partner_profiles AS PERMISSIVE F
 CREATE POLICY partner_profiles_insert ON public.partner_profiles AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY partner_profiles_select ON public.partner_profiles AS PERMISSIVE FOR SELECT TO authenticated USING ((looking OR (user_id = auth.uid())));
 CREATE POLICY partner_profiles_update ON public.partner_profiles AS PERMISSIVE FOR UPDATE TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "Ognuno vede solo le proprie" ON public.posizioni_preferite AS PERMISSIVE FOR ALL TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Authenticated users can read profiles" ON public.profiles AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Users can insert own profile" ON public.profiles AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((id = auth.uid()));
 CREATE POLICY "Users update own profile" ON public.profiles AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = id));
@@ -4035,6 +4099,9 @@ GRANT DELETE ON public.modelli_mani TO service_role;
 GRANT DELETE ON public.partner_profiles TO anon;
 GRANT DELETE ON public.partner_profiles TO authenticated;
 GRANT DELETE ON public.partner_profiles TO service_role;
+GRANT DELETE ON public.posizioni_preferite TO anon;
+GRANT DELETE ON public.posizioni_preferite TO authenticated;
+GRANT DELETE ON public.posizioni_preferite TO service_role;
 GRANT DELETE ON public.profiles TO anon;
 GRANT DELETE ON public.profiles TO authenticated;
 GRANT DELETE ON public.profiles TO service_role;
@@ -4191,6 +4258,9 @@ GRANT INSERT ON public.modelli_mani TO service_role;
 GRANT INSERT ON public.partner_profiles TO anon;
 GRANT INSERT ON public.partner_profiles TO authenticated;
 GRANT INSERT ON public.partner_profiles TO service_role;
+GRANT INSERT ON public.posizioni_preferite TO anon;
+GRANT INSERT ON public.posizioni_preferite TO authenticated;
+GRANT INSERT ON public.posizioni_preferite TO service_role;
 GRANT INSERT ON public.profiles TO anon;
 GRANT INSERT ON public.profiles TO authenticated;
 GRANT INSERT ON public.profiles TO service_role;
@@ -4347,6 +4417,9 @@ GRANT REFERENCES ON public.modelli_mani TO service_role;
 GRANT REFERENCES ON public.partner_profiles TO anon;
 GRANT REFERENCES ON public.partner_profiles TO authenticated;
 GRANT REFERENCES ON public.partner_profiles TO service_role;
+GRANT REFERENCES ON public.posizioni_preferite TO anon;
+GRANT REFERENCES ON public.posizioni_preferite TO authenticated;
+GRANT REFERENCES ON public.posizioni_preferite TO service_role;
 GRANT REFERENCES ON public.profiles TO anon;
 GRANT REFERENCES ON public.profiles TO authenticated;
 GRANT REFERENCES ON public.profiles TO service_role;
@@ -4503,6 +4576,9 @@ GRANT SELECT ON public.modelli_mani TO service_role;
 GRANT SELECT ON public.partner_profiles TO anon;
 GRANT SELECT ON public.partner_profiles TO authenticated;
 GRANT SELECT ON public.partner_profiles TO service_role;
+GRANT SELECT ON public.posizioni_preferite TO anon;
+GRANT SELECT ON public.posizioni_preferite TO authenticated;
+GRANT SELECT ON public.posizioni_preferite TO service_role;
 GRANT SELECT ON public.profiles TO anon;
 GRANT SELECT ON public.profiles TO service_role;
 GRANT SELECT ON public.push_subscriptions TO anon;
@@ -4656,6 +4732,9 @@ GRANT TRIGGER ON public.modelli_mani TO service_role;
 GRANT TRIGGER ON public.partner_profiles TO anon;
 GRANT TRIGGER ON public.partner_profiles TO authenticated;
 GRANT TRIGGER ON public.partner_profiles TO service_role;
+GRANT TRIGGER ON public.posizioni_preferite TO anon;
+GRANT TRIGGER ON public.posizioni_preferite TO authenticated;
+GRANT TRIGGER ON public.posizioni_preferite TO service_role;
 GRANT TRIGGER ON public.profiles TO anon;
 GRANT TRIGGER ON public.profiles TO authenticated;
 GRANT TRIGGER ON public.profiles TO service_role;
@@ -4812,6 +4891,9 @@ GRANT TRUNCATE ON public.modelli_mani TO service_role;
 GRANT TRUNCATE ON public.partner_profiles TO anon;
 GRANT TRUNCATE ON public.partner_profiles TO authenticated;
 GRANT TRUNCATE ON public.partner_profiles TO service_role;
+GRANT TRUNCATE ON public.posizioni_preferite TO anon;
+GRANT TRUNCATE ON public.posizioni_preferite TO authenticated;
+GRANT TRUNCATE ON public.posizioni_preferite TO service_role;
 GRANT TRUNCATE ON public.profiles TO anon;
 GRANT TRUNCATE ON public.profiles TO authenticated;
 GRANT TRUNCATE ON public.profiles TO service_role;
@@ -4968,6 +5050,9 @@ GRANT UPDATE ON public.modelli_mani TO service_role;
 GRANT UPDATE ON public.partner_profiles TO anon;
 GRANT UPDATE ON public.partner_profiles TO authenticated;
 GRANT UPDATE ON public.partner_profiles TO service_role;
+GRANT UPDATE ON public.posizioni_preferite TO anon;
+GRANT UPDATE ON public.posizioni_preferite TO authenticated;
+GRANT UPDATE ON public.posizioni_preferite TO service_role;
 GRANT UPDATE ON public.profiles TO anon;
 GRANT UPDATE ON public.profiles TO authenticated;
 GRANT UPDATE ON public.profiles TO service_role;
@@ -5079,6 +5164,10 @@ GRANT EXECUTE ON FUNCTION public.confronto_campo(p_mano_id uuid) TO service_role
 REVOKE ALL ON FUNCTION public.confronto_campo_filtrato(p_mano_id uuid, p_filtro text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.confronto_campo_filtrato(p_mano_id uuid, p_filtro text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.confronto_campo_filtrato(p_mano_id uuid, p_filtro text) TO service_role;
+REVOKE ALL ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO anon;
+GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
 REVOKE ALL ON FUNCTION public.genera_codice_amico() FROM PUBLIC;

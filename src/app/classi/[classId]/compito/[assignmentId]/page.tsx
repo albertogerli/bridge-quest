@@ -27,6 +27,8 @@ import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { Cronometro, ripulisci } from "@/lib/tempi";
+import { ConfrontoClasse } from "@/components/bridge/confronto-classe";
+import { ProvaDaQui } from "@/components/bridge/prova-da-qui";
 import { BenStatus } from "@/components/bridge/ben-status";
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
@@ -46,7 +48,7 @@ import {
   type Assignment,
   type HandResult,
 } from "@/lib/instructors";
-import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function CompitoPage({
@@ -306,7 +308,9 @@ export default function CompitoPage({
                   </Button>
                 )}
               </div>
-              {isPlayed && <SoluzioneMano smazzata={hand} ricarica={doneIds.size} />}
+              {isPlayed && (
+                <SoluzioneMano smazzata={hand} ricarica={doneIds.size} assignmentId={assignmentId} />
+              )}
             </motion.div>
           );
         })}
@@ -329,12 +333,66 @@ export default function CompitoPage({
  * spettare ancora (compito «dopo la scadenza»), e all'allievo le due cose
  * devono somigliare.
  */
-function SoluzioneMano({ smazzata, ricarica }: { smazzata: Smazzata; ricarica: unknown }) {
+function SoluzioneMano({
+  smazzata,
+  ricarica,
+  assignmentId,
+}: {
+  smazzata: Smazzata;
+  ricarica: unknown;
+  assignmentId?: string;
+}) {
   const [aperta, setAperta] = useState(false);
+  const [prova, setProva] = useState(false);
   const commento = useCommento(smazzata, ricarica);
-  if (!commento) return null;
+
   return (
-    <div className="mt-3 border-t border-border pt-3">
+    <div className="mt-3 space-y-3 border-t border-border pt-3">
+      {/*
+        Il confronto e la prova stanno QUI, sulla mano già giocata, e non nella
+        schermata di fine mano: lì si torna all'elenco dopo due secondi, e una
+        cosa che si vuole guardare con calma va messa dove si può tornare.
+      */}
+      {assignmentId && (
+        <ConfrontoClasse assignmentId={assignmentId} smazzataId={smazzata.id} />
+      )}
+
+      {smazzata.contract && (
+        prova ? (
+          <ProvaDaQui
+            hands={smazzata.hands}
+            contract={smazzata.contract}
+            declarer={smazzata.declarer}
+            onChiudi={() => setProva(false)}
+          />
+        ) : (
+          <button
+            onClick={() => setProva(true)}
+            className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Riprova questa mano — non conta
+          </button>
+        )
+      )}
+
+      {commento && <SpiegazioneMano commento={commento} aperta={aperta} onApri={setAperta} />}
+    </div>
+  );
+}
+
+function SpiegazioneMano({
+  commento,
+  aperta,
+  onApri,
+}: {
+  commento: string;
+  aperta: boolean;
+  onApri: (v: boolean) => void;
+}) {
+  const setAperta = onApri;
+  return (
+    <div>
       <button
         onClick={() => setAperta(!aperta)}
         className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
