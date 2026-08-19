@@ -102,3 +102,19 @@ create policy "Stato traduzioni visibile" on public.traduzioni_stato
 
 comment on table public.traduzioni_stato is
   'Da quale versione del testo italiano nasce ogni traduzione: serve a trovare le traduzioni invecchiate dopo una correzione ai contenuti.';
+
+-- ── La lingua della persona, per le email ───────────────────────────────────
+--
+-- Il sito la lingua ce l'ha nell'indirizzo, ma un'email parte quando nessuno
+-- sta navigando: senza questo campo l'unica scelta possibile sarebbe
+-- l'italiano per tutti, e chi legge in inglese riceverebbe promemoria che non
+-- capisce.
+--
+-- Default 'it' perché gli iscritti di oggi sono italiani: un default diverso
+-- cambierebbe la lingua a chi non ha chiesto niente.
+alter table public.profiles
+  add column if not exists lingua text not null default 'it'
+  check (lingua in ('it', 'en'));
+
+comment on column public.profiles.lingua is
+  'Lingua scelta dall''utente, usata per le email. Il sito usa il prefisso nell''indirizzo.';

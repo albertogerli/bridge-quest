@@ -139,7 +139,12 @@ const impronta = (t) => createHash("md5").update(String(t)).digest("hex");
 function rispostaSensata(originale, tradotta) {
   if (!tradotta) return false;
   if (/REGOLE|TESTO:|terminologia:|Rispondi con il solo/i.test(tradotta)) return false;
-  if (tradotta.length > Math.max(60, originale.length * 3)) return false;
+  // Il quadruplo, e mai sotto i 120 caratteri: l'inglese è più corto
+  // dell'italiano, ma una frase di venti caratteri può legittimamente
+  // diventarne settanta. Con la soglia al triplo il controllo bocciava
+  // traduzioni buone, e siccome un rifiuto fermava tutto il giro, una riga
+  // sola bloccava le altre trecento.
+  if (tradotta.length > Math.max(120, originale.length * 4)) return false;
   return true;
 }
 
@@ -313,6 +318,7 @@ async function main() {
   const client = new OpenAI({ apiKey: chiave });
 
   let fatte = 0;
+  let saltateTotali = 0;
   for (const t of TABELLE) {
     if (soloTabella && t.nome !== soloTabella) continue;
     const primoEn = Object.values(t.campi)[0];
@@ -332,6 +338,7 @@ async function main() {
     for (const riga of data) {
       const aggiornamento = {};
       const impronte = [];
+      try {
       for (const [it, en] of Object.entries(t.campi)) {
         const originale = riga[it];
         if (originale === null || originale === undefined || originale === "") continue;
@@ -345,6 +352,14 @@ async function main() {
           campo: it,
           impronta_it: impronta(struttura ? JSON.stringify(originale) : originale),
         });
+      }
+      } catch (errore) {
+        // Una riga che non si riesce a tradurre non deve fermare le altre
+        // trecento: si salta, si dice quale, e la si ritenta al giro dopo —
+        // lo script riparte da ciò che è ancora senza traduzione.
+        saltateTotali++;
+        console.error(`  ! ${riga[t.chiave]}: ${String(errore.message ?? errore).slice(0, 90)}`);
+        continue;
       }
       if (!Object.keys(aggiornamento).length) continue;
 
@@ -368,6 +383,9 @@ async function main() {
     }
   }
   console.log(`\n${fatte} righe tradotte${SCRIVI ? "" : " (prova: niente scritto)"}.`);
+  if (saltateTotali) {
+    console.log(`${saltateTotali} righe saltate: rilancia lo script per ritentarle.`);
+  }
 }
 
 main().catch((e) => {

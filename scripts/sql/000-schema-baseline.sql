@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-08-16
+-- Estratto il: 2026-08-19
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -175,7 +175,9 @@ CREATE TABLE IF NOT EXISTS public.collectible_cards (
   unlock jsonb NOT NULL,
   "position" integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  name_en text,
+  description_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.completed_modules (
@@ -196,7 +198,9 @@ CREATE TABLE IF NOT EXISTS public.course_worlds (
   icon_bg text,
   "position" integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  name_en text,
+  subtitle_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.courses (
@@ -209,7 +213,9 @@ CREATE TABLE IF NOT EXISTS public.courses (
   level text NOT NULL,
   "position" integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  name_en text,
+  subtitle_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.email_events (
@@ -227,7 +233,9 @@ CREATE TABLE IF NOT EXISTS public.eserciziario_exercises (
   content jsonb NOT NULL,
   "position" integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  title_en text,
+  content_en jsonb
 );
 
 CREATE TABLE IF NOT EXISTS public.forum_comments (
@@ -301,7 +309,10 @@ CREATE TABLE IF NOT EXISTS public.glossary (
   related_terms text[] NOT NULL,
   quiz jsonb NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  term_en text,
+  definition_en text,
+  example_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.guided_hands (
@@ -342,7 +353,9 @@ CREATE TABLE IF NOT EXISTS public.lesson_modules (
   content jsonb NOT NULL,
   "position" integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  title_en text,
+  content_en jsonb
 );
 
 CREATE TABLE IF NOT EXISTS public.lessons (
@@ -353,7 +366,9 @@ CREATE TABLE IF NOT EXISTS public.lessons (
   icon text,
   "position" integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  title_en text,
+  subtitle_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.live_tables (
@@ -430,7 +445,8 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   asd_code text,
   asd_name text,
   role text NOT NULL,
-  friend_code text
+  friend_code text,
+  lingua text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.push_subscriptions (
@@ -539,7 +555,9 @@ CREATE TABLE IF NOT EXISTS public.smazzate (
   commentary text NOT NULL,
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL,
-  dd_tricks smallint
+  dd_tricks smallint,
+  title_en text,
+  commentary_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.tornei (
@@ -566,6 +584,14 @@ CREATE TABLE IF NOT EXISTS public.tournament_results (
   completed_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.traduzioni_stato (
+  tabella text NOT NULL,
+  riga_id text NOT NULL,
+  campo text NOT NULL,
+  impronta_it text NOT NULL,
+  tradotto_il timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.trova_errore_scenarios (
   id integer NOT NULL,
   category text NOT NULL,
@@ -578,7 +604,10 @@ CREATE TABLE IF NOT EXISTS public.trova_errore_scenarios (
   correct_answer integer NOT NULL,
   explanation text NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  updated_at timestamp with time zone NOT NULL
+  updated_at timestamp with time zone NOT NULL,
+  situation_en text,
+  error_description_en text,
+  explanation_en text
 );
 
 CREATE TABLE IF NOT EXISTS public.weekly_challenges (
@@ -3027,6 +3056,7 @@ ALTER TABLE public.profiles ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.profiles ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.profiles ALTER COLUMN total_minutes SET DEFAULT 0;
 ALTER TABLE public.profiles ALTER COLUMN role SET DEFAULT 'user'::text;
+ALTER TABLE public.profiles ALTER COLUMN lingua SET DEFAULT 'it'::text;
 ALTER TABLE public.push_subscriptions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_items_id_seq'::regclass);
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
@@ -3052,6 +3082,7 @@ ALTER TABLE public.tournament_results ALTER COLUMN id SET DEFAULT gen_random_uui
 ALTER TABLE public.tournament_results ALTER COLUMN total_tricks SET DEFAULT 0;
 ALTER TABLE public.tournament_results ALTER COLUMN total_needed SET DEFAULT 0;
 ALTER TABLE public.tournament_results ALTER COLUMN completed_at SET DEFAULT now();
+ALTER TABLE public.traduzioni_stato ALTER COLUMN tradotto_il SET DEFAULT now();
 ALTER TABLE public.trova_errore_scenarios ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.trova_errore_scenarios ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.weekly_challenges ALTER COLUMN gradient SET DEFAULT ''::text;
@@ -3107,6 +3138,7 @@ ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
 ALTER TABLE public.tornei ADD CONSTRAINT tornei_pkey PRIMARY KEY (id);
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_pkey PRIMARY KEY (torneo_id, numero);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
+ALTER TABLE public.traduzioni_stato ADD CONSTRAINT traduzioni_stato_pkey PRIMARY KEY (tabella, riga_id, campo);
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_pkey PRIMARY KEY (id);
 ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_pkey PRIMARY KEY (id);
 ALTER TABLE public.asd ADD CONSTRAINT asd_name_key UNIQUE (name);
@@ -3165,6 +3197,7 @@ ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_lingua_check CHECK ((lingua = ANY (ARRAY['it'::text, 'en'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['junior'::text, 'giovane'::text, 'adulto'::text, 'senior'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_box_check CHECK (((box >= 1) AND (box <= 5)));
@@ -3385,6 +3418,7 @@ ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tornei ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.torneo_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.traduzioni_stato ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trova_errore_scenarios ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.weekly_challenges ENABLE ROW LEVEL SECURITY;
 
@@ -3491,6 +3525,7 @@ CREATE POLICY "Mani del torneo leggibili" ON public.torneo_mani AS PERMISSIVE FO
 CREATE POLICY "Authenticated can read tournament results" ON public.tournament_results AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Users can insert own tournament result" ON public.tournament_results AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Users can update own tournament result" ON public.tournament_results AS PERMISSIVE FOR UPDATE TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "Stato traduzioni visibile" ON public.traduzioni_stato AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY trova_errore_public_read ON public.trova_errore_scenarios AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY weekly_challenges_public_read ON public.weekly_challenges AS PERMISSIVE FOR SELECT TO public USING (true);
 
@@ -3633,6 +3668,9 @@ GRANT DELETE ON public.torneo_mani TO service_role;
 GRANT DELETE ON public.tournament_results TO anon;
 GRANT DELETE ON public.tournament_results TO authenticated;
 GRANT DELETE ON public.tournament_results TO service_role;
+GRANT DELETE ON public.traduzioni_stato TO anon;
+GRANT DELETE ON public.traduzioni_stato TO authenticated;
+GRANT DELETE ON public.traduzioni_stato TO service_role;
 GRANT DELETE ON public.trova_errore_scenarios TO anon;
 GRANT DELETE ON public.trova_errore_scenarios TO authenticated;
 GRANT DELETE ON public.trova_errore_scenarios TO service_role;
@@ -3777,6 +3815,9 @@ GRANT INSERT ON public.torneo_mani TO service_role;
 GRANT INSERT ON public.tournament_results TO anon;
 GRANT INSERT ON public.tournament_results TO authenticated;
 GRANT INSERT ON public.tournament_results TO service_role;
+GRANT INSERT ON public.traduzioni_stato TO anon;
+GRANT INSERT ON public.traduzioni_stato TO authenticated;
+GRANT INSERT ON public.traduzioni_stato TO service_role;
 GRANT INSERT ON public.trova_errore_scenarios TO anon;
 GRANT INSERT ON public.trova_errore_scenarios TO authenticated;
 GRANT INSERT ON public.trova_errore_scenarios TO service_role;
@@ -3921,6 +3962,9 @@ GRANT REFERENCES ON public.torneo_mani TO service_role;
 GRANT REFERENCES ON public.tournament_results TO anon;
 GRANT REFERENCES ON public.tournament_results TO authenticated;
 GRANT REFERENCES ON public.tournament_results TO service_role;
+GRANT REFERENCES ON public.traduzioni_stato TO anon;
+GRANT REFERENCES ON public.traduzioni_stato TO authenticated;
+GRANT REFERENCES ON public.traduzioni_stato TO service_role;
 GRANT REFERENCES ON public.trova_errore_scenarios TO anon;
 GRANT REFERENCES ON public.trova_errore_scenarios TO authenticated;
 GRANT REFERENCES ON public.trova_errore_scenarios TO service_role;
@@ -4064,6 +4108,9 @@ GRANT SELECT ON public.torneo_mani TO service_role;
 GRANT SELECT ON public.tournament_results TO anon;
 GRANT SELECT ON public.tournament_results TO authenticated;
 GRANT SELECT ON public.tournament_results TO service_role;
+GRANT SELECT ON public.traduzioni_stato TO anon;
+GRANT SELECT ON public.traduzioni_stato TO authenticated;
+GRANT SELECT ON public.traduzioni_stato TO service_role;
 GRANT SELECT ON public.trova_errore_scenarios TO anon;
 GRANT SELECT ON public.trova_errore_scenarios TO authenticated;
 GRANT SELECT ON public.trova_errore_scenarios TO service_role;
@@ -4208,6 +4255,9 @@ GRANT TRIGGER ON public.torneo_mani TO service_role;
 GRANT TRIGGER ON public.tournament_results TO anon;
 GRANT TRIGGER ON public.tournament_results TO authenticated;
 GRANT TRIGGER ON public.tournament_results TO service_role;
+GRANT TRIGGER ON public.traduzioni_stato TO anon;
+GRANT TRIGGER ON public.traduzioni_stato TO authenticated;
+GRANT TRIGGER ON public.traduzioni_stato TO service_role;
 GRANT TRIGGER ON public.trova_errore_scenarios TO anon;
 GRANT TRIGGER ON public.trova_errore_scenarios TO authenticated;
 GRANT TRIGGER ON public.trova_errore_scenarios TO service_role;
@@ -4352,6 +4402,9 @@ GRANT TRUNCATE ON public.torneo_mani TO service_role;
 GRANT TRUNCATE ON public.tournament_results TO anon;
 GRANT TRUNCATE ON public.tournament_results TO authenticated;
 GRANT TRUNCATE ON public.tournament_results TO service_role;
+GRANT TRUNCATE ON public.traduzioni_stato TO anon;
+GRANT TRUNCATE ON public.traduzioni_stato TO authenticated;
+GRANT TRUNCATE ON public.traduzioni_stato TO service_role;
 GRANT TRUNCATE ON public.trova_errore_scenarios TO anon;
 GRANT TRUNCATE ON public.trova_errore_scenarios TO authenticated;
 GRANT TRUNCATE ON public.trova_errore_scenarios TO service_role;
@@ -4496,6 +4549,9 @@ GRANT UPDATE ON public.torneo_mani TO service_role;
 GRANT UPDATE ON public.tournament_results TO anon;
 GRANT UPDATE ON public.tournament_results TO authenticated;
 GRANT UPDATE ON public.tournament_results TO service_role;
+GRANT UPDATE ON public.traduzioni_stato TO anon;
+GRANT UPDATE ON public.traduzioni_stato TO authenticated;
+GRANT UPDATE ON public.traduzioni_stato TO service_role;
 GRANT UPDATE ON public.trova_errore_scenarios TO anon;
 GRANT UPDATE ON public.trova_errore_scenarios TO authenticated;
 GRANT UPDATE ON public.trova_errore_scenarios TO service_role;
