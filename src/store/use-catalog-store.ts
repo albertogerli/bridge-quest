@@ -22,6 +22,8 @@
 
 import { create } from "zustand";
 import { useEffect } from "react";
+import type { Lingua } from "@/lib/lingua";
+import { useLingua } from "@/hooks/use-lingua";
 import {
   getCourses,
   type Course,
@@ -43,7 +45,9 @@ interface CatalogState {
    * already loaded; idempotent on re-call after success. On error,
    * leaves `isLoaded` false so the next call retries.
    */
-  fetchCatalog: () => Promise<void>;
+  fetchCatalog: (lingua?: Lingua) => Promise<void>;
+  /** La lingua del catalogo in memoria: cambiandola si ricarica. */
+  lingua: Lingua;
 }
 
 export const useCatalogStore = create<CatalogState>((set, get) => ({
@@ -51,13 +55,21 @@ export const useCatalogStore = create<CatalogState>((set, get) => ({
   isLoading: false,
   isLoaded: false,
   error: null,
+  lingua: "it",
 
-  fetchCatalog: async () => {
-    const { isLoading, isLoaded } = get();
-    if (isLoading || isLoaded) return;
+  fetchCatalog: async (lingua = "it") => {
+    const { isLoading, isLoaded, lingua: inMemoria } = get();
+    // Cambiare lingua ricarica anche se il catalogo era già pronto: è l'unico
+    // modo perché i contenuti seguano il selettore invece di restare nella
+    // lingua in cui la pagina è stata aperta la prima volta.
+    if (lingua !== inMemoria) {
+      set({ isLoaded: false, isLoading: false, lingua });
+    } else if (isLoading || isLoaded) {
+      return;
+    }
     set({ isLoading: true, error: null });
     try {
-      const courses = await getCourses();
+      const courses = await getCourses(lingua);
       set({ courses, isLoading: false, isLoaded: true });
     } catch (err) {
         // Anche il fallimento è uno stato finale: senza `isLoaded`, l'effetto
@@ -85,13 +97,15 @@ export const useCatalogStore = create<CatalogState>((set, get) => ({
 function useEnsureCatalog(): void {
   const isLoaded = useCatalogStore((s) => s.isLoaded);
   const isLoading = useCatalogStore((s) => s.isLoading);
+  const inMemoria = useCatalogStore((s) => s.lingua);
   const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
+  const { lingua } = useLingua();
 
   useEffect(() => {
-    if (!isLoaded && !isLoading) {
-      void fetchCatalog();
+    if (lingua !== inMemoria || (!isLoaded && !isLoading)) {
+      void fetchCatalog(lingua);
     }
-  }, [isLoaded, isLoading, fetchCatalog]);
+  }, [isLoaded, isLoading, inMemoria, lingua, fetchCatalog]);
 }
 
 // ─── Public hooks ────────────────────────────────────────────────────────
