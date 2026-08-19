@@ -1,0 +1,27 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 100: The First Trick"
+
+Display these key concepts:
+1. The THINKING PAUSE at the first trick is essential - icon of a clock/brain thinking
+2. DEDUCTIONS from the opening lead and the bidding - arrows from the opening lead to a question mark
+3. NORMAL OPENING LEAD RULES: not under an Ace in trump, from a sequence, partner's suit
+4. UNBLOCKING HONORS at the first trick: if you have KQ doubleton and the Ace is in the dummy, play the King!
+5. SUSPECT UNUSUAL LEADS: when the opponent does not lead normally, look for a ruff
+6. Table diagram: North hand (dummy) with visible cards, South (declarer) reflecting before playing
+7. Red arrow with "STOP! THINK!" above the first trick
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, under the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: youth aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

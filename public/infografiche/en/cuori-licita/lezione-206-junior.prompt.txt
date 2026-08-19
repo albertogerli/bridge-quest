@@ -1,0 +1,40 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 206: Weak Two Bids"
+
+Display these key concepts:
+1. TITLE: "WEAK TWO BIDS: 2D, 2H, 2S - preemptive with 6 cards"
+2. REQUIREMENTS (blue box with checklist):
+   - 6 cards in the suit
+   - 6-10 high card points
+   - 2 Diamonds: excellent suit, at least 2 HIGH HONORS (A, K, Q)
+3. PROHIBITION (red box with large X):
+   "NEVER open a weak two with a side 4-card MAJOR!"
+   Example: with 6 diamonds + 4 hearts -> DO NOT open 2D, you risk missing the heart fit
+4. OGUST (2NT from responder) - Colored table:
+   - 3 Clubs = MINIMUM + BAD suit
+   - 3 Diamonds = MINIMUM + GOOD suit
+   - 3 Hearts = MAXIMUM + BAD suit
+   - 3 Spades = MAXIMUM + GOOD suit
+   - 3 No Trump = AKQxxx (very solid suit!)
+5. RAISE TO 3 (yellow caution box):
+   "Raise to 3 in the suit = SIGN OFF"
+   "NOT an invitation! Partner MUST pass!"
+6. Example hand: AKJ875 with 8 high card points -> "Perfect for 2 Spades!"
+7. Motto box: "The weak two bid steals space from opponents and describes a precise hand!"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spade, red heart, red diamond, green club, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for caution, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,46 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 208: Competitive, Constructive, Preemptive"
+
+Display these key concepts:
+1. TITLE: "Three types of bidding: recognize them!"
+2. THREE COLUMNS with colored traffic lights:
+   COMPETITIVE (yellow, shield icon):
+   - "Without game ambitions"
+   - "Suits to play, NOT jump bids"
+   - "Only to compete on the part score"
+
+   CONSTRUCTIVE (green, upward arrow icon):
+   - "Serious attempt for game or slam"
+   - "Informative double / Cue bid / Forcing suit change"
+   - "Invites partner to evaluate"
+
+   PREEMPTIVE (red, explosion icon):
+   - "Many tricks on offense + few on defense"
+   - "ALWAYS jump bids!"
+   - "Takes away opponents' bidding space"
+3. HOW TO RECOGNIZE THEM (blue box with magnifying glass):
+   - Look at the SYSTEM (conventions)
+   - Look at the STRONG ALTERNATIVES available
+   - Look at the INTENTION already shown
+4. GOLDEN PREEMPTIVE RULE (large red box):
+   "Make the preemptive bid at the HIGHEST level at the FIRST opportunity!"
+   "Don't wait: the second round is too late!"
+5. Example: with 7 cards and 5 points on the first round -> 3 in the suit immediately!
+6. Motto box: "Competitive = defend, Constructive = propose, Preemptive = attack!"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, under the text "FIGB" in blue)
+- At the bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spades), Hearts (red hearts), Diamonds (red diamonds), Clubs (black/green clubs)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

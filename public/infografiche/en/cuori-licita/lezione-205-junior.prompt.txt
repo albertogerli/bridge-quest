@@ -1,0 +1,40 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 205: Approaching Slam - Cue Bids"
+
+Display these key concepts:
+1. TITLE: "CUE BID: show your CONTROLS to your partner!"
+2. DEFINITION (blue box):
+   "Cue bid = bidding a CONTROL (Ace, void, King, singleton) in a side suit"
+3. THE 4 RULES (4 numbered boxes with icons):
+   Rule 1: "DO NOT cue in the trump suit!" (red X)
+   Rule 2: "Make the LOWEST available cue bid" (down arrow)
+   Rule 3: "SKIPPED Cue = that control is MISSING!" (highlighted gap)
+   Rule 4: "Skipped cue then made = THIRD round control" (King/singleton)
+4. BELOW GAME (green box with exclamation point):
+   "Cue bids below game are MANDATORY!"
+   "DO NOT deny with a minimum hand - only deny if you lack the control!"
+5. THE 4 PHASES OF SLAM (step-by-step diagram with arrows):
+   Phase 1: SET the trump suit
+   Phase 2: VERIFY controls (cue bid)
+   Phase 3: REDEFINE strength
+   Phase 4: 4NT (Blackwood) or final cue bid
+6. GUARD LEVEL (yellow box):
+   "Resting at the guard level = MINIMUM. Exceeding = EXTRA strength"
+7. Motto box: "Cue bid = dialogue about controls. Every piece of information counts for the slam!"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- Top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spade, red heart, red diamond, green club, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

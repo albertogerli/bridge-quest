@@ -1,0 +1,37 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 202: Texas Transfers on 1NT and 2NT Opening"
+
+Display these key concepts:
+1. TITLE: "TRANSFER (Jacoby): transfer the play to your partner!"
+2. MAIN TRANSFER SCHEME (large colored arrows):
+   - 2 Diamonds -> "I have 5+ HEARTS" (partner bids 2 Hearts)
+   - 2 Hearts -> "I have 5+ SPADES" (partner bids 2 Spades)
+3. SUPER ACCEPTANCE (golden box with star):
+   "Partner with FOUR-CARD FIT + MAXIMUM -> jump to 3 in the transfer suit!"
+   Example: 1NT - 2D - 3H! (four-card heart fit + 16-17 high card points)
+4. CONTINUATIONS after the transfer (3-level table):
+   - PASS = weak (0-7 high card points, part score)
+   - 2NT = invitational (8-9 high card points)
+   - 3NT = game (10+ high card points, choice between 3NT and 4 in a major)
+5. MINOR SUIT TRANSFERS (gray box):
+   - 2 Spades = "I have CLUBS" (partner bids 3 Clubs)
+   - 2NT = "I have DIAMONDS" (partner bids 3 Diamonds)
+6. SIX-STEP STAYMAN on 1NT (tree diagram with 6 possible responses)
+7. Reminder box: "The transfer lets the NT player play = protects their honors!"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spade, red heart, red diamond, green club, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

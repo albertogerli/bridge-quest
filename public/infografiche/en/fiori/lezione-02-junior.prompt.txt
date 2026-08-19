@@ -1,0 +1,27 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 02: The Defenders' Perspective"
+
+Display these key concepts:
+1. Defenders' goal: defeat the contract (reach a total of 14)
+2. OPENING LEAD in No Trump: choose the longest suit
+3. Rule 1 - LEAD FROM THE TOP (with sequence): KQJ→King, QJ9→Queen, J1094→Jack
+4. Rule 2 - LEAD FROM THE BOTTOM (without sequence): K10543→the 3, AJ952→the 2
+5. THIRD HAND: play the lowest of equals (KQJ→Jack, AKQ→Queen)
+6. SECOND POSITION RULE: low on low, cover honor with honor
+7. Visual diagram with arrows showing the order of play in a trick
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

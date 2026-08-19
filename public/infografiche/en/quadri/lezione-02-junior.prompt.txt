@@ -1,0 +1,34 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 2: Opening Evaluations"
+
+Display these key concepts:
+1. The 5 FLAWS of 11-point hands (list with icons):
+   → Few high cards (not concentrated)
+   → Honor impurities (isolated honors)
+   → Non-competitive suits (too short)
+   → Unfavorable position (honors behind the opener)
+   → Poor second bid
+2. RULE: with 2 or more flaws on 11 points → PASS!
+3. PREEMPTIVE BIDS:
+   → Opening at level 3: 7+ honored cards, message "3 tricks less"
+   → Opening at level 4: 8+ cards, even more aggressive message
+4. EVALUATE DISTRIBUTION:
+   → 4432 = much better than 4333
+   → The more distributed the hand, the more it is worth
+5. Diagram: "11 points: open or pass?" with flaw checklist
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

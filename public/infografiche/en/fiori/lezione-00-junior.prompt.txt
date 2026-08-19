@@ -1,0 +1,27 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 00: Bridge - A Trick-Taking Game"
+
+Display these key concepts:
+1. A green bridge table from above with the 4 positions: NORTH, SOUTH, EAST, WEST
+2. The 4 card suits with symbols: Spades (♠), Hearts (♥), Diamonds (♦), Clubs (♣)
+3. The hierarchy of bidding: NT > ♠ > ♥ > ♦ > ♣
+4. What is a TRICK: 4 cards played (1 per player), the highest wins
+5. The CONTRACT: pair's commitment to take X tricks (e.g., "3NT" = 9 tricks)
+6. Roles: DECLARER (plays their cards + the DUMMY's), DEFENDERS (the other 2)
+7. Basic scoring: Game = 3NT, 4♥, 4♠, 5♣, 5♦
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black ♠), Hearts (red ♥), Diamonds (red ♦), Clubs (black/green ♣)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,31 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 10: The Opener Describes"
+
+Display these key concepts:
+1. Two strength ranges (diagram):
+   DIRECT = 12-15 points | REVERSE = 16-20 points
+2. SAFETY LEVEL (SL): last "safe" contract
+3. Balanced DIRECT: stay below 1NT
+4. Unbalanced DIRECT: stay below "2 of their suit"
+5. REVERSE: ALWAYS EXCEEDS the Safety Level
+   → Jump shift (e.g., 1♣-1♦ → 2♠ = reverse!)
+   → Support at level 3
+   → Balanced 18-20: jump to 2NT
+6. After a 2 over 1 response: describes ONLY distribution (game already guaranteed)
+7. Diagram: arrows connecting responses → opener's rebids
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green felt seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as an A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,43 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 209: Fit Hands in the Major - Standard"
+
+Display these key concepts:
+1. TITLE: "FIT in the Major: how to communicate strength with support"
+2. SUPPORT BARRAGE TABLE (red box):
+   - Support at 3 = FOURTH fit with 0-7 points (barrage)
+   - Support at 4 = FIFTH fit with 0-7 points (shutout barrage)
+   "Objective: take away space from opponents!"
+3. 2NT TRUSCOTT (golden box with star):
+   "2NT = THIRD or FOURTH fit + game invitation (10-12 points)"
+   "NOT no-trump! It's conventional!"
+4. 1NT SEMI-FORCING (light blue box):
+   "1NT = 5-11 points, the opener MUST rebid"
+   "The opener invents a minor even with only 3 cards!"
+5. SUPPORT AT 2 (gray box):
+   "Too strong for barrage at 3, too weak for 2NT Truscott"
+   "Too balanced for barrage: use support at 2"
+6. WITH OPPONENT'S INTERVENTION (yellow box with arrow):
+   "2NT Truscott becomes UNLIMITED (11+ points)!"
+   "The intervention changes the meanings"
+7. Summary chart:
+   0-7 + fit 4 = 3 in the major (barrage)
+   0-7 + fit 5 = 4 in the major (barrage)
+   8-9 = support at 2
+   10-12 = 2NT Truscott
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, under the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

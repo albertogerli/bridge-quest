@@ -1,0 +1,41 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 213: Special Cases after 1 over 1 Responses"
+
+Display these key concepts:
+1. TITLE: "After 1 over 1: Reverse, Free Bids, and Special Cases"
+2. NO TRUMP REVERSE (light blue box with table):
+   - 2NT = 17-18 points (5332 distribution)
+   - 3NT = 19-20 points (5332 distribution)
+   "Balanced Reverse: Show the precise strength!"
+3. FREE BIDS AFTER INTERVENTION (yellow box with star):
+   "Free = after the opponent has spoken"
+   "Make a free bid ONLY with something special!"
+   "If nothing special: PASS (partner will speak)"
+4. IMMEDIATE FREE SUPPORT (green box):
+   "Free support = guarantees FOURTH fit!"
+   "Without intervention could be third fit, with intervention = always fourth"
+5. FREE CUE BID (golden box with crown):
+   "The FREE CUE BID = the STRONGEST way to communicate fit!"
+   "Bidding the opponent's suit = strength + fit in partner's suit"
+6. FREE DOUBLE (red box):
+   "Free double = 8+ points, response value (NOT 16-20!)"
+   "Indicates 4 cards in each unbid suit"
+   "Replaces the 1 over 1 response when the opponent has interfered"
+7. Motto box: "After the intervention, bids become more precise: free = special!"
+
+MANDATORY Graphic Style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spade, red heart, red diamond, green club, under the word "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

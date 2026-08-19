@@ -1,0 +1,32 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 5: Broken Suits - How to Handle Honors"
+
+Display these key concepts:
+1. FIRST TO MOVE IS AT A DISADVANTAGE: play towards honors, not from them
+2. SPECIFIC HONORS (card diagrams):
+   → AQ54 + J632: finesse towards the Queen
+   → KQ5 + 432: play towards KQ
+   → AJ642 + K53: combine finesse and length
+3. ENTRY LADDER: entries are needed to repeat the finesse
+   → Diagram: arrows showing the path back and forth
+4. GOLDEN RULE:
+   → Missing 1 honor + 2-3 small cards = FINESSE
+   → Missing 1 honor + only 1 small card = play HIGH
+5. PROBE PLAY: play to discover the position of opponents' honors
+6. Summary chart: "When to finesse vs play high"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful suit details
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

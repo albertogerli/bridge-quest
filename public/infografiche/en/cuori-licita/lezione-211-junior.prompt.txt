@@ -1,0 +1,43 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 211: Fit Hands in the Major - Forcing NT"
+
+Display these key concepts:
+1. TITLE: "FORCING 1NT: the modern system for raises"
+2. RAISE TO 2 = CONSTRUCTIVE (green box with scale):
+   "Raise to 2 = 8-10 points with THIRD fit"
+   "Constructive: partner evaluates whether to go to game"
+3. FORCING 1NT (large blue box):
+   "Range: 5-11 points"
+   "2 over 1 responses = GAME FORCING (12+ points)"
+   "1NT covers the entire weak-medium range"
+4. 2NT TRUSCOTT (golden box):
+   "FOURTH fit + game invitation (10-12 points)"
+   "With THIRD fit: use 1NT, not 2NT"
+5. WITH FIFTH FIT (special purple box):
+   "2NT then raise ANYWAY = 10 cards in line!"
+   "RULE: 10 cards = 10 tricks! Go to game!"
+6. AFTER OPPONENT'S INTERVENTION (yellow box):
+   "Raise to 2 = entire range (5-10 points)"
+   "The intervention simplifies: precision is no longer needed"
+7. Comparative table:
+   Fit 3 + 8-10 = raise to 2
+   Fit 4 + 10-12 = 2NT Truscott
+   Fit 5 + 10 = 2NT then raise
+   5-11 any = forcing 1NT
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spade, red heart, red diamond, green club, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for attention, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,35 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 200: The Law of Total Tricks"
+
+Display these key concepts:
+1. CENTRAL FORMULA in large blue box: "TOTAL TRICKS = sum of total trumps between the two partnerships"
+   Example: we have 8 trumps + they have 8 trumps = 16 total tricks (divided between the two partnerships)
+2. LEVEL OF SAFETY (table with traffic light):
+   - 8 trumps in line -> level 2 (safe to bid at level 2)
+   - 9 trumps in line -> level 3 (safe to bid at level 3)
+   - 10 trumps in line -> level 4!
+3. FLAT DISTRIBUTIONS (red box with WARNING sign):
+   - 5332, 4333 = DISADVANTAGEOUS distributions, need CAUTION
+   - Fewer tricks than the Law predicts
+4. BONUS (green box with +1):
+   - Singleton in opponent's suit = +1 extra trick
+   - Double fit (fit in two suits) = +1 extra trick
+5. Visual diagram: bridge table with North-South having 9 trumps and arrow "Level 3 safe!"
+6. Summary box: "Count the trumps, check the distribution, and choose the right level!"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for suits
+- At the top: FIGB logo (4 blue diamonds with symbols of the 4 suits: black spade, red heart, red diamond, green club, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (black spade), Hearts (red heart), Diamonds (red diamond), Clubs (black/green club)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+- Use bright colors to highlight important concepts (red for caution, green for correct, blue for info)
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -1,0 +1,39 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 8: Approaching Game"
+
+
+Display these key concepts:
+1. THIRD SUIT (diagram with example):
+   → Forcing for one round or game forcing
+   → Used when there is no fit and the right denomination is being sought
+2. FOURTH SUIT:
+   → Game FORCING (except at level 1)
+   → Conventional: does not promise cards in the suit
+3. OPENER'S BEHAVIOR ON FOURTH SUIT (priority):
+   → 1st Show major fit (3 cards)
+   → 2nd Bid No Trump with a stopper
+   → 3rd Show additional lengths
+4. SUIT CHANGE WITH FIT FOUND:
+   → Investigations for game or slam
+   → It is not a rejection of the fit!
+5. 2NT AS A GENERAL INVITATION:
+   → Shows about 11 points, balanced
+6. Diagram: bidding path from opening to game
+
+
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black spades, red hearts, red diamonds, green clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue italics
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: children aged 8-17, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.

@@ -60,6 +60,10 @@ const PERDONATE = [
   /\bmatch(ing)?\s+cards?\s+and\s+concepts?\b/i,
   /\bmatch\b.*\bmemory\b/i,
   /\bno\b.*\bmatch\b/i, // «no players found / nothing matches»
+  // «cut communications» / «cut the links» è inglese di bridge corretto:
+  // interrompere i collegamenti fra le mani avversarie, non tagliare con
+  // l'atout. Chi difende «taglia le comunicazioni» anche in italiano.
+  /\bcut\b.*\b(communication|link|entry|entries)/i,
 ];
 
 let problemi = 0;

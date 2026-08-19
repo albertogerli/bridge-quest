@@ -1,0 +1,36 @@
+Generate an educational infographic for the FIGB (Federazione Italiana Gioco Bridge).
+
+Title: "Lesson 11: Defense - Reasoning and Deduction"
+
+Display these key concepts:
+1. REMEMBER THE BIDDING:
+   → Reconstruct the declarer's hand from the auction
+   → Points shown + promised distribution
+2. ANALYZE THE FIRST TRICK:
+   → Which card did partner play? (signal)
+   → Which card did the declarer play? (deduction)
+3. DO NOT ESTABLISH CARDS FOR THE DECLARER:
+   → Do not play Aces on small cards
+   → Wait for the right moment to take
+4. UNDERSTAND THE PLAY PLAN AND COUNTER IT:
+   → If the declarer wants to ruff → play trumps!
+   → If the declarer wants to establish → cut the links!
+5. MAINTAIN THE SAME LENGTH AS THE DUMMY:
+   → If the dummy has 4 Hearts, keep 4 Hearts
+   → "Keep what the dummy keeps"
+6. Diagram: "The 5 Steps of the Thinking Defender"
+
+MANDATORY graphic style:
+- Vertical educational infographic, clean and modern vector style
+- White background with FIGB blue accents (#0098D4) and colorful details for the suits
+- At the top: FIGB logo (4 blue diamonds with the symbols of the 4 suits: black Spades, red Hearts, red Diamonds, green Clubs, below the text "FIGB" in blue)
+- Bottom right: "Maestro Franci" in blue cursive
+- Bridge table: green cloth seen from above, rectangular shape with rounded edges, 4 positions (NORTH, SOUTH, EAST, WEST)
+- Card suits: Spades (♠ black), Hearts (♥ red), Diamonds (♦ red), Clubs (♣ black/green)
+- ALL text in AMERICAN ENGLISH, readable, clean sans-serif font
+- Layout suitable for printing as A4 handout
+- NO Italian text, NO "BridgeQuest"
+- Simple, clear, educational icons and diagrams
+- Target: kids 8-17 years old, so colorful and engaging but not childish
+
+LANGUAGE — THIS OVERRIDES ANYTHING ABOVE: every single word rendered inside the image must be in AMERICAN ENGLISH. No Italian text anywhere, including headings, labels, table seats and captions. Use North / South / East / West for the seats and Spades / Hearts / Diamonds / Clubs for the suits.
