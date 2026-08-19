@@ -1,6 +1,53 @@
 # Feedback degli insegnanti — ricognizione e piano
 
-Stato: **ricognizione**, nessuna riga di codice scritta. 19/08/2026.
+Stato: **fatto**, salvo l'intervento 5 che resta fermo su una decisione non
+tecnica. Ricognizione 19/08/2026, realizzazione 19/08/2026.
+
+> ## Cosa si è rivelato diverso dalla ricognizione
+>
+> Cinque previsioni di questo documento erano sbagliate, e vale la pena
+> lasciarle scritte invece di correggerle in silenzio: sono lo scarto tipico fra
+> il leggere il codice e l'eseguirlo.
+>
+> 1. **§4.2 — «le RLS non guardano lo stato».** Guardavano già:
+>    `is_member_of_class` chiede `status = 'active'`, e da lì passano `classes`,
+>    `assignments` e `class_messages`. Un allievo in attesa non ha mai visto i
+>    contenuti. C'erano invece DUE modi di approvarsi da soli, che nessuno aveva
+>    previsto: la policy di UPDATE senza `with check`, e il
+>    `on conflict do update set status = 'active'` dentro `join_class_by_code`.
+>    Entrambi chiusi, ed entrambi verificati dal gruppo [15] di `test-rls.mjs`.
+>
+> 2. **§4.4 — «`unlock_mode` si può riusare».** No: vale `free | sequential`,
+>    è l'ordine di sblocco delle mani. Serve una colonna sua (`soluzioni`).
+>
+> 3. **§4.4 — l'ampiezza del problema.** Il commento non arrivava dal compito ma
+>    dal CATALOGO, caricato tutto in una query all'avvio, su una tabella con
+>    `using (true)`: era leggibile da chiunque, anche senza account. E le mani
+>    importate da PBN stavano dentro `assignments.custom_hands`, fuori dal
+>    catalogo, quindi chiudere solo quello avrebbe lasciato scoperti i compiti
+>    costruiti a mano.
+>
+> 4. **§4.3 — «`/istruttori/archivio` esiste già».** Esiste, ma è l'archivio
+>    delle mani salvate, non delle classi.
+>
+> 5. **§4.9 — «i tavoli: va verificato in esecuzione».** Verificato, ed era
+>    peggio: contratto e dichiarante non venivano mai impostati, quindi al
+>    tavolo condiviso non si poteva muovere una carta — un sottosistema intero
+>    già scritto e irraggiungibile. In più la pagina dell'allievo stava sotto
+>    `/classe/` (singolare) e non la linkava nessuno. L'assegnazione dei posti,
+>    che il documento dava per mancante, c'era già.
+>
+> **§4.8 (gruppi e difficoltà) era già fatto**: la difficoltà è calcolata e
+> compare solo nel modulo dell'insegnante, e il nome libero del gruppo è il
+> titolo del compito.
+>
+> Sui **diagrammi troppo larghi** (§4.9): misurato lo sbordo orizzontale a
+> 1366×768 e su telefono. A 1366×768 non sborda niente. L'unico sbordo su
+> telefono era la riga dei filtri di `/gioca/smazzata` — `-mx-5` dentro un
+> contenitore `px-4` — e non un diagramma. Se la lamentela riguarda l'aspetto e
+> non lo sbordo, la causa è che `CardDisplay` disegna ogni carta come un
+> riquadro a sé su una riga sola che va a capo: si può stringere, ma cambia
+> l'aspetto delle carte in tutta l'applicazione e va deciso guardandolo.
 
 Il documento serve a decidere cosa fare e in che ordine. Dove il codice attuale
 rende un intervento più caro del previsto, sta scritto; dove esiste già metà del
