@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import { Briciole } from "@/components/briciole";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,6 +19,7 @@ import { useEnrolledClasses } from "@/store/use-classes-store";
 import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { getOpenLiveTable } from "@/lib/live-table";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function StudentClassPage({
@@ -34,7 +36,32 @@ export default function StudentClassPage({
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [progress, setProgress] = useState<Map<string, Set<string>>>(new Map());
   const [loading, setLoading] = useState(true);
+  /**
+   * Il tavolo aperto dall'insegnante.
+   *
+   * La pagina dell'insegnante dice «gli allievi lo trovano nella loro classe»,
+   * e non era vero: nessun collegamento in tutta l'app puntava al tavolo:
+   * l'unico modo di arrivarci era digitare l'indirizzo a mano. Si ricontrolla
+   * ogni quindici secondi, perché la classe la si apre prima della lezione e
+   * il tavolo arriva dopo.
+   */
+  const [tavoloAperto, setTavoloAperto] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    const cerca = () => {
+      void getOpenLiveTable(classId).then((id) => {
+        if (vivo) setTavoloAperto(id);
+      });
+    };
+    cerca();
+    const t = setInterval(cerca, 15000);
+    return () => {
+      vivo = false;
+      clearInterval(t);
+    };
+  }, [classId]);
 
   useEffect(() => {
     let active = true;
@@ -69,12 +96,34 @@ export default function StudentClassPage({
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
-      <Link href="/classi" className="text-sm text-muted-foreground hover:underline">
-        ← Le mie classi
-      </Link>
-      <h1 className="mt-3 mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
+      <Briciole
+        percorso={[
+          { etichetta: "Le mie classi", href: "/classi" },
+          { etichetta: classRoom?.name ?? "Classe" },
+        ]}
+      />
+      <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {classRoom?.name ?? "Classe"}
       </h1>
+
+      {tavoloAperto && (
+        <Link
+          href={`/classi/${classId}/tavolo`}
+          className="mb-6 flex items-center gap-3 rounded-xl border border-primary/40 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
+        >
+          <span className="relative flex h-3 w-3 shrink-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-sm font-bold text-foreground">{t("C'è un tavolo aperto")}</span>
+            <span className="block text-xs text-muted-foreground">
+              {t("L'insegnante sta mostrando una mano adesso.")}
+            </span>
+          </span>
+          <span className="ml-auto shrink-0 text-sm font-semibold text-primary">{t("Entra →")}</span>
+        </Link>
+      )}
 
       {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
 

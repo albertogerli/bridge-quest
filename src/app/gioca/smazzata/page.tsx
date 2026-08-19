@@ -180,7 +180,14 @@ function SmazzataBrowserContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-5 -mx-5 px-5 space-y-2"
+          /*
+            Il rientro negativo deve valere ESATTAMENTE quanto il margine del
+            contenitore, che è `px-4 sm:px-5`. Con `-mx-5` fisso, su telefono
+            la riga sporgeva di quattro pixel per lato e trascinava l'intera
+            pagina nello scorrimento orizzontale — misurato: documento 394 su
+            una finestra da 390.
+          */
+          className="mb-5 -mx-4 space-y-2 px-4 sm:-mx-5 sm:px-5"
         >
           {(() => {
             // Group lessons by course

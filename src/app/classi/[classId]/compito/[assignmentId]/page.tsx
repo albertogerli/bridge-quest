@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, use } from "react";
+import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
@@ -159,12 +160,15 @@ export default function CompitoPage({
   // Overview
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
-      <Link href={`/classi/${classId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:underline">
-        <ArrowLeft className="h-4 w-4" />
-        {t("Torna alla classe")}
-      </Link>
+      <Briciole
+        percorso={[
+          { etichetta: "Le mie classi", href: "/classi" },
+          { etichetta: "La classe", href: `/classi/${classId}` },
+          { etichetta: assignment.title },
+        ]}
+      />
 
-      <div className="mt-3 mb-2">
+      <div className="mb-2">
         <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
           {assignment.title}
         </h1>

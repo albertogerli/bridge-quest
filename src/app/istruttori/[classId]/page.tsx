@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import { Briciole } from "@/components/briciole";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -136,12 +137,15 @@ export default function ClassDetailPage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
-      <Link href="/istruttori" className="text-sm text-muted-foreground hover:underline">
-        ← Le tue classi
-      </Link>
+      <Briciole
+        percorso={[
+          { etichetta: "Le tue classi", href: "/istruttori" },
+          { etichetta: classRoom.name },
+        ]}
+      />
 
       {/* Header */}
-      <div className="mt-3 mb-6">
+      <div className="mb-6">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
             {classRoom.name}

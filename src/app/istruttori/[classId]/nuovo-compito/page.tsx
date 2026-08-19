@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, use } from "react";
-import Link from "next/link";
+import { Briciole } from "@/components/briciole";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -151,10 +151,14 @@ export default function NuovoCompitoPage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 pb-44 sm:px-6 lg:pb-28">
-      <Link href={`/istruttori/${classId}`} className="text-sm text-muted-foreground hover:underline">
-        ← Dettaglio classe
-      </Link>
-      <h1 className="mt-3 mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
+      <Briciole
+        percorso={[
+          { etichetta: "Le tue classi", href: "/istruttori" },
+          { etichetta: "La classe", href: `/istruttori/${classId}` },
+          { etichetta: "Nuovo compito" },
+        ]}
+      />
+      <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {t("Nuovo compito")}
       </h1>
 

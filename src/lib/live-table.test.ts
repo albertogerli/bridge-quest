@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Card, Position, Rank, Suit } from "./bridge-engine";
-import { statoDelGioco } from "./live-table";
+import { parseContract } from "./bridge-engine";
+import { CONTRATTI, statoDelGioco } from "./live-table";
 
 /**
  * Il tavolo condiviso conserva SOLO la successione delle carte: tutto il resto
@@ -86,5 +87,34 @@ describe("statoDelGioco", () => {
     expect(s.prese).toHaveLength(1);
     expect(s.presaCorrente).toHaveLength(1);
     expect(s.turno).toBe("north");
+  });
+});
+
+describe("i contratti scegliibili al tavolo", () => {
+  it("sono tutti e trentacinque, dal livello uno al sette", () => {
+    expect(CONTRATTI.length).toBe(35);
+    expect(CONTRATTI[0]).toBe("1♣");
+    expect(CONTRATTI[CONTRATTI.length - 1]).toBe("7SA");
+  });
+
+  /**
+   * Il valore proposto dal tavolo è il par, che arriva da `par-contract.ts` in
+   * notazione italiana con i simboli dei semi. Se l'elenco usasse un'altra
+   * notazione il `<select>` non troverebbe l'opzione e resterebbe vuoto,
+   * cancellando il contratto al primo tocco.
+   */
+  it("sono nella stessa notazione che produce il par", () => {
+    expect(CONTRATTI).toContain("4♠");
+    expect(CONTRATTI).toContain("3SA");
+    expect(CONTRATTI).not.toContain("3NT");
+  });
+
+  it("li sa leggere tutti il motore di gioco", () => {
+    for (const c of CONTRATTI) {
+      const { level, tricksNeeded } = parseContract(c);
+      expect(level, c).toBeGreaterThanOrEqual(1);
+      expect(level, c).toBeLessThanOrEqual(7);
+      expect(tricksNeeded, c).toBe(level + 6);
+    }
   });
 });
