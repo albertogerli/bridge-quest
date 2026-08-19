@@ -16,6 +16,12 @@ export type EmailKind =
 export interface EmailContext {
   name?: string | null;
   profileType?: string | null; // junior | giovane | adulto | senior
+  /**
+   * In che lingua scrivere. Arriva da `profiles.lingua`, perché quando parte
+   * un'email non c'è nessun indirizzo da cui dedurla: la persona non sta
+   * navigando, è proprio per questo che le stiamo scrivendo.
+   */
+  lingua?: "it" | "en" | null;
   streak?: number;
   daysInactive?: number | null;
   modulesDone?: number;
@@ -138,6 +144,17 @@ function isYoung(profileType?: string | null): boolean {
 }
 
 export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: string): RenderedEmail {
+  /**
+   * Il testo nella lingua giusta, con le due versioni AFFIANCATE.
+   *
+   * Per un'email il dizionario esterno è la scelta sbagliata: il testo è
+   * dentro l'HTML, spezzato fra tag, e chi lo rilegge deve poter vedere le due
+   * lingue nello stesso punto — altrimenti si corregge l'italiano e ci si
+   * dimentica dell'inglese, che è esattamente il difetto che la traduzione
+   * porta con sé. Con sette email e poche frasi ciascuna, questa è la forma
+   * che si controlla a colpo d'occhio.
+   */
+  const T = <V,>(it: V, en: V): V => (ctx.lingua === "en" ? en : it);
   const hi = greeting(ctx.name);
   const learn = `${SITE}/impara`;
   const daily = `${SITE}/gioca/sfida`;
@@ -145,8 +162,9 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
 
   switch (kind) {
     case "welcome": {
-      const heading = "Benvenuto al tavolo! 🃏";
-      const bodyHtml = `
+      const heading = T("Benvenuto al tavolo! 🃏", "Welcome to the table! 🃏");
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}, il tuo posto a Bridge LAB è pronto.</p>
         <p style="margin:0 0 14px;">Il bridge è il gioco di carte più affascinante del mondo — logica, memoria e gioco di squadra. Qui lo impari <strong>passo dopo passo</strong>, con lezioni brevi, mini-giochi e una sfida nuova ogni giorno.</p>
         <p style="margin:0 0 4px;">Il primo passo dura 5 minuti:</p>
@@ -154,13 +172,33 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           <li style="margin-bottom:4px;">Fai la <strong>Lezione 1</strong> e guadagna i tuoi primi XP</li>
           <li style="margin-bottom:4px;">Sblocca la tua prima <strong>striscia 🔥</strong></li>
           <li>Prova la <strong>Sfida del Giorno</strong></li>
-        </ul>`;
+        </ul>`,
+        `
+        <p style="margin:0 0 14px;">${hi}, your seat at Bridge LAB is ready.</p>
+        <p style="margin:0 0 14px;">Bridge is the most fascinating card game there is — logic, memory and teamwork. Here you learn it <strong>step by step</strong>, with short lessons, mini-games and a new challenge every day.</p>
+        <p style="margin:0 0 4px;">The first step takes 5 minutes:</p>
+        <ul style="margin:0 0 8px;padding-left:20px;color:#3a3a44;">
+          <li style="margin-bottom:4px;">Do <strong>Lesson 1</strong> and earn your first XP</li>
+          <li style="margin-bottom:4px;">Start your first <strong>streak 🔥</strong></li>
+          <li>Try the <strong>Daily Challenge</strong></li>
+        </ul>`
+      );
       return {
-        subject: "Benvenuto in Bridge LAB 🃏",
-        html: layout({ preheader: "Il tuo posto al tavolo è pronto — inizia dalla Lezione 1.", emoji: "🃏", heading, bodyHtml, ctaLabel: "Inizia la Lezione 1", ctaUrl: learn }),
+        subject: T("Benvenuto in Bridge LAB 🃏", "Welcome to Bridge LAB 🃏"),
+        html: layout({
+          preheader: T(
+            "Il tuo posto al tavolo è pronto — inizia dalla Lezione 1.",
+            "Your seat at the table is ready — start with Lesson 1."
+          ),
+          emoji: "🃏", heading, bodyHtml,
+          ctaLabel: T("Inizia la Lezione 1", "Start Lesson 1"), ctaUrl: learn,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}, benvenuto in Bridge LAB!`, "", "Impara il bridge passo dopo passo: lezioni brevi, mini-giochi e una sfida ogni giorno.", "Il primo passo dura 5 minuti: fai la Lezione 1 e guadagna i primi XP."],
-          "Inizia la Lezione 1", learn
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}, benvenuto in Bridge LAB!`, "", "Impara il bridge passo dopo passo: lezioni brevi, mini-giochi e una sfida ogni giorno.", "Il primo passo dura 5 minuti: fai la Lezione 1 e guadagna i primi XP."],
+            [`${hi.replace(/<[^>]+>/g, "")}, welcome to Bridge LAB!`, "", "Learn bridge step by step: short lessons, mini-games and a challenge every day.", "The first step takes 5 minutes: do Lesson 1 and earn your first XP."]
+          ),
+          T("Inizia la Lezione 1", "Start Lesson 1"), learn
         ),
         transactional: true,
       };
@@ -168,17 +206,34 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
 
     case "onboarding_start": {
       const casual = isYoung(ctx.profileType);
-      const heading = casual ? "La tua prima mano ti aspetta 🎴" : "Pronti a scoprire il bridge?";
-      const bodyHtml = `
+      const heading = casual
+        ? T("La tua prima mano ti aspetta 🎴", "Your first hand is waiting 🎴")
+        : T("Pronti a scoprire il bridge?", "Ready to discover bridge?");
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}! Ti sei iscritto a Bridge LAB ma il bello deve ancora iniziare.</p>
         <p style="margin:0 0 14px;">Bastano <strong>5 minuti</strong> per la Lezione 1: capirai come si prende una presa e farai la tua prima mano guidata — senza pressione, al tuo ritmo.</p>
-        <p style="margin:0;">Ogni lezione completata sblocca XP, badge e nuovi mini-giochi. Si parte da qui. 👇</p>`;
+        <p style="margin:0;">Ogni lezione completata sblocca XP, badge e nuovi mini-giochi. Si parte da qui. 👇</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! You signed up for Bridge LAB, but the good part hasn't started yet.</p>
+        <p style="margin:0 0 14px;">Lesson 1 takes <strong>5 minutes</strong>: you'll see how a trick is won and play your first guided hand — no pressure, at your own pace.</p>
+        <p style="margin:0;">Every lesson you finish unlocks XP, badges and new mini-games. It starts here. 👇</p>`
+      );
       return {
-        subject: casual ? "La tua Lezione 1 ti aspetta 🎴" : "Inizia la tua prima lezione di bridge",
-        html: layout({ preheader: "5 minuti per la Lezione 1 e la tua prima mano guidata.", emoji: "🎴", heading, bodyHtml, ctaLabel: "Fai la Lezione 1", ctaUrl: learn, unsubUrl }),
+        subject: casual
+          ? T("La tua Lezione 1 ti aspetta 🎴", "Your Lesson 1 is waiting 🎴")
+          : T("Inizia la tua prima lezione di bridge", "Start your first bridge lesson"),
+        html: layout({
+          preheader: T("5 minuti per la Lezione 1 e la tua prima mano guidata.", "5 minutes for Lesson 1 and your first guided hand."),
+          emoji: "🎴", heading, bodyHtml,
+          ctaLabel: T("Fai la Lezione 1", "Do Lesson 1"), ctaUrl: learn, unsubUrl,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}! Ti sei iscritto a Bridge LAB ma non hai ancora iniziato.`, "", "Bastano 5 minuti per la Lezione 1 e la tua prima mano guidata."],
-          "Fai la Lezione 1", learn, unsubUrl
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! Ti sei iscritto a Bridge LAB ma non hai ancora iniziato.`, "", "Bastano 5 minuti per la Lezione 1 e la tua prima mano guidata."],
+            [`${hi.replace(/<[^>]+>/g, "")}! You signed up for Bridge LAB but haven't started yet.`, "", "Lesson 1 takes 5 minutes, and your first guided hand comes with it."]
+          ),
+          T("Fai la Lezione 1", "Do Lesson 1"), learn, unsubUrl
         ),
         transactional: false,
       };
@@ -186,58 +241,110 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
 
     case "inactive_7": {
       const days = ctx.daysInactive ?? 7;
-      const heading = "Ci manchi al tavolo 🃏";
+      const heading = T("Ci manchi al tavolo 🃏", "We miss you at the table 🃏");
       const streakLine =
         (ctx.streak ?? 0) > 0
-          ? `<p style="margin:0 0 14px;">Avevi una striscia di <strong>${ctx.streak} giorni</strong>: riprendila oggi e non perdere lo slancio.</p>`
+          ? T(
+              `<p style="margin:0 0 14px;">Avevi una striscia di <strong>${ctx.streak} giorni</strong>: riprendila oggi e non perdere lo slancio.</p>`,
+              `<p style="margin:0 0 14px;">You had a <strong>${ctx.streak}-day streak</strong>: pick it back up today and keep the momentum.</p>`
+            )
           : "";
-      const bodyHtml = `
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}, sono passati ${days} giorni dall'ultima volta.</p>
         ${streakLine}
         <p style="margin:0 0 14px;">Ti basta una partita per rientrare in ritmo: la <strong>Sfida del Giorno</strong> è nuova e dura pochi minuti.</p>
-        <p style="margin:0;">Riprendi da dove avevi lasciato — il tuo progresso è ancora tutto lì.</p>`;
+        <p style="margin:0;">Riprendi da dove avevi lasciato — il tuo progresso è ancora tutto lì.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}, it's been ${days} days since your last hand.</p>
+        ${streakLine}
+        <p style="margin:0 0 14px;">One game is enough to get back into it: the <strong>Daily Challenge</strong> is new and takes a few minutes.</p>
+        <p style="margin:0;">Pick up where you left off — your progress is all still there.</p>`
+      );
       return {
-        subject: "Ci manchi al tavolo di bridge 🃏",
-        html: layout({ preheader: "La Sfida del Giorno è nuova e dura pochi minuti.", emoji: "🃏", heading, bodyHtml, ctaLabel: "Riprendi ora", ctaUrl: daily, unsubUrl }),
+        subject: T("Ci manchi al tavolo di bridge 🃏", "We miss you at the bridge table 🃏"),
+        html: layout({
+          preheader: T("La Sfida del Giorno è nuova e dura pochi minuti.", "The Daily Challenge is new and takes a few minutes."),
+          emoji: "🃏", heading, bodyHtml,
+          ctaLabel: T("Riprendi ora", "Pick it back up"), ctaUrl: daily, unsubUrl,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}, sono passati ${days} giorni.`, "", "Ti basta una partita per rientrare in ritmo: la Sfida del Giorno è nuova."],
-          "Riprendi ora", daily, unsubUrl
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}, sono passati ${days} giorni.`, "", "Ti basta una partita per rientrare in ritmo: la Sfida del Giorno è nuova."],
+            [`${hi.replace(/<[^>]+>/g, "")}, it's been ${days} days.`, "", "One game is enough to get back into it: the Daily Challenge is new."]
+          ),
+          T("Riprendi ora", "Pick it back up"), daily, unsubUrl
         ),
         transactional: false,
       };
     }
 
     case "inactive_14": {
-      const heading = "Rimettiamoci in gioco?";
-      const bodyHtml = `
+      const heading = T("Rimettiamoci in gioco?", "Shall we get back to it?");
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}, è passato un po' di tempo — nessun problema, il bridge ti aspetta sempre.</p>
         <p style="margin:0 0 14px;">Abbiamo aggiunto nuove <strong>sfide</strong>, <strong>mini-giochi</strong> e mani da giocare. Riparti quando vuoi, anche solo con 5 minuti.</p>
-        <p style="margin:0;">Se preferisci ripassare le basi, le lezioni sono sempre lì per te.</p>`;
+        <p style="margin:0;">Se preferisci ripassare le basi, le lezioni sono sempre lì per te.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}, it's been a while — no problem, bridge waits for you.</p>
+        <p style="margin:0 0 14px;">We've added new <strong>challenges</strong>, <strong>mini-games</strong> and hands to play. Start again whenever you like, even with just 5 minutes.</p>
+        <p style="margin:0;">And if you'd rather review the basics, the lessons are always there.</p>`
+      );
       return {
-        subject: "Rimettiamoci in gioco a bridge?",
-        html: layout({ preheader: "Nuove sfide e mini-giochi ti aspettano. Bastano 5 minuti.", emoji: "♠️", heading, bodyHtml, ctaLabel: "Torna a giocare", ctaUrl: play, unsubUrl }),
+        subject: T("Rimettiamoci in gioco a bridge?", "Shall we get back to bridge?"),
+        html: layout({
+          preheader: T("Nuove sfide e mini-giochi ti aspettano. Bastano 5 minuti.", "New challenges and mini-games are waiting. Five minutes is enough."),
+          emoji: "♠️", heading, bodyHtml,
+          ctaLabel: T("Torna a giocare", "Come back and play"), ctaUrl: play, unsubUrl,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}, è passato un po' di tempo.`, "", "Nuove sfide e mini-giochi ti aspettano. Riparti anche solo con 5 minuti."],
-          "Torna a giocare", play, unsubUrl
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}, è passato un po' di tempo.`, "", "Nuove sfide e mini-giochi ti aspettano. Riparti anche solo con 5 minuti."],
+            [`${hi.replace(/<[^>]+>/g, "")}, it's been a while.`, "", "New challenges and mini-games are waiting. Five minutes is enough to start again."]
+          ),
+          T("Torna a giocare", "Come back and play"), play, unsubUrl
         ),
         transactional: false,
       };
     }
 
     case "friend_request": {
-      const sender = (ctx.senderName || "Un giocatore").trim();
+      const sender = (ctx.senderName || T("Un giocatore", "A player")).trim();
       const amici = `${SITE}/amici`;
-      const heading = `${sender} vuole giocare con te 🤝`; // layout() fa già esc()
-      const bodyHtml = `
+      const heading = T(
+        `${sender} vuole giocare con te 🤝`,
+        `${sender} wants to play with you 🤝`
+      ); // layout() fa già esc()
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}! <strong>${esc(sender)}</strong> ti ha inviato una richiesta di amicizia su Bridge LAB.</p>
         <p style="margin:0 0 14px;">Accettala per sfidarlo a colpi di smazzate e confrontare i vostri risultati.</p>
-        <p style="margin:0;">Trovi la richiesta nella sezione <strong>Amici → Richieste</strong>.</p>`;
+        <p style="margin:0;">Trovi la richiesta nella sezione <strong>Amici → Richieste</strong>.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! <strong>${esc(sender)}</strong> sent you a friend request on Bridge LAB.</p>
+        <p style="margin:0 0 14px;">Accept it to challenge them deal by deal and compare your results.</p>
+        <p style="margin:0;">You'll find the request under <strong>Friends → Requests</strong>.</p>`
+      );
       return {
-        subject: `${sender} ti ha inviato una richiesta di amicizia 🤝`,
-        html: layout({ preheader: `Accetta la richiesta di ${sender} e sfidalo a bridge.`, emoji: "🤝", heading, bodyHtml, ctaLabel: "Vedi la richiesta", ctaUrl: amici }),
+        subject: T(
+          `${sender} ti ha inviato una richiesta di amicizia 🤝`,
+          `${sender} sent you a friend request 🤝`
+        ),
+        html: layout({
+          preheader: T(
+            `Accetta la richiesta di ${sender} e sfidalo a bridge.`,
+            `Accept ${sender}'s request and challenge them to bridge.`
+          ),
+          emoji: "🤝", heading, bodyHtml,
+          ctaLabel: T("Vedi la richiesta", "See the request"), ctaUrl: amici,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}! ${sender} ti ha inviato una richiesta di amicizia su Bridge LAB.`, "", "Accettala nella sezione Amici → Richieste per sfidarlo a bridge."],
-          "Vedi la richiesta", amici
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! ${sender} ti ha inviato una richiesta di amicizia su Bridge LAB.`, "", "Accettala nella sezione Amici → Richieste per sfidarlo a bridge."],
+            [`${hi.replace(/<[^>]+>/g, "")}! ${sender} sent you a friend request on Bridge LAB.`, "", "Accept it under Friends → Requests to challenge them to bridge."]
+          ),
+          T("Vedi la richiesta", "See the request"), amici
         ),
         transactional: true,
       };
@@ -255,20 +362,40 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
     case "turno_licita": {
       const quante = Math.max(1, ctx.liciteFerme ?? 1);
       const licite = `${SITE}/gioca/licita-amico`;
-      const quali = quante === 1 ? "una licita" : `${quante} licite`;
+      const quali = quante === 1
+        ? T("una licita", "one auction")
+        : T(`${quante} licite`, `${quante} auctions`);
       const heading = quante === 1
-        ? "Tocca a te 🂡"
-        : `Tocca a te in ${quante} licite 🂡`;
-      const bodyHtml = `
+        ? T("Tocca a te 🂡", "Your turn 🂡")
+        : T(`Tocca a te in ${quante} licite 🂡`, `Your turn in ${quante} auctions 🂡`);
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}! ${quante === 1 ? "C'è" : "Ci sono"} <strong>${quali}</strong> in cui il tuo compagno ha già dichiarato e sta aspettando la tua risposta.</p>
         <p style="margin:0 0 14px;">Ci vuole un minuto: vedi la tua mano, scegli la dichiarazione, e la parola torna a lui.</p>
-        <p style="margin:0;">Non serve essere collegati insieme — ma se nessuno dei due torna, la licita resta lì.</p>`;
+        <p style="margin:0;">Non serve essere collegati insieme — ma se nessuno dei due torna, la licita resta lì.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! There ${quante === 1 ? "is" : "are"} <strong>${quali}</strong> where your partner has already bid and is waiting for your call.</p>
+        <p style="margin:0 0 14px;">It takes a minute: look at your hand, choose your bid, and it's back to them.</p>
+        <p style="margin:0;">You don't have to be online at the same time — but if neither of you comes back, the auction just sits there.</p>`
+      );
       return {
-        subject: quante === 1 ? "Tocca a te: una licita ti aspetta 🂡" : `Tocca a te: ${quante} licite ti aspettano 🂡`,
-        html: layout({ preheader: "Il tuo compagno ha dichiarato e aspetta la tua risposta.", emoji: "🂡", heading, bodyHtml, ctaLabel: "Rispondi ora", ctaUrl: licite }),
+        subject: quante === 1
+          ? T("Tocca a te: una licita ti aspetta 🂡", "Your turn: an auction is waiting 🂡")
+          : T(`Tocca a te: ${quante} licite ti aspettano 🂡`, `Your turn: ${quante} auctions are waiting 🂡`),
+        html: layout({
+          preheader: T(
+            "Il tuo compagno ha dichiarato e aspetta la tua risposta.",
+            "Your partner has bid and is waiting for your call."
+          ),
+          emoji: "🂡", heading, bodyHtml,
+          ctaLabel: T("Rispondi ora", "Bid now"), ctaUrl: licite,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}! ${quante === 1 ? "C'è una licita" : `Ci sono ${quante} licite`} in cui il tuo compagno sta aspettando la tua dichiarazione.`, "", "Ci vuole un minuto: vedi la tua mano, dichiara, e la parola torna a lui."],
-          "Rispondi ora", licite
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! ${quante === 1 ? "C'è una licita" : `Ci sono ${quante} licite`} in cui il tuo compagno sta aspettando la tua dichiarazione.`, "", "Ci vuole un minuto: vedi la tua mano, dichiara, e la parola torna a lui."],
+            [`${hi.replace(/<[^>]+>/g, "")}! ${quante === 1 ? "There's one auction" : `There are ${quante} auctions`} where your partner is waiting for your bid.`, "", "It takes a minute: look at your hand, bid, and it's back to them."]
+          ),
+          T("Rispondi ora", "Bid now"), licite
         ),
         transactional: true,
       };
@@ -276,17 +403,36 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
 
     case "streak_risk": {
       const s = ctx.streak ?? 3;
-      const heading = `🔥 La tua striscia di ${s} giorni sta per finire`;
-      const bodyHtml = `
+      const heading = T(
+        `🔥 La tua striscia di ${s} giorni sta per finire`,
+        `🔥 Your ${s}-day streak is about to end`
+      );
+      const bodyHtml = T(
+        `
         <p style="margin:0 0 14px;">${hi}! Non hai ancora giocato oggi e la tua striscia di <strong>${s} giorni</strong> rischia di azzerarsi a mezzanotte.</p>
         <p style="margin:0 0 14px;">Ti basta la <strong>Sfida del Giorno</strong> — pochi minuti e la striscia è salva. 💪</p>
-        <p style="margin:0;">Ogni giorno consecutivo vale XP bonus: non lasciarla spezzare proprio ora.</p>`;
+        <p style="margin:0;">Ogni giorno consecutivo vale XP bonus: non lasciarla spezzare proprio ora.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! You haven't played today, and your <strong>${s}-day streak</strong> resets at midnight.</p>
+        <p style="margin:0 0 14px;">The <strong>Daily Challenge</strong> is all it takes — a few minutes and the streak is safe. 💪</p>
+        <p style="margin:0;">Every day in a row is worth bonus XP: don't let it break now.</p>`
+      );
       return {
-        subject: `🔥 Salva la tua striscia di ${s} giorni`,
-        html: layout({ preheader: "Pochi minuti con la Sfida del Giorno e la striscia è salva.", emoji: "🔥", heading, bodyHtml, ctaLabel: "Gioca ora e salva la striscia", ctaUrl: daily, unsubUrl }),
+        subject: T(`🔥 Salva la tua striscia di ${s} giorni`, `🔥 Save your ${s}-day streak`),
+        html: layout({
+          preheader: T(
+            "Pochi minuti con la Sfida del Giorno e la striscia è salva.",
+            "A few minutes with the Daily Challenge and the streak is safe."
+          ),
+          emoji: "🔥", heading, bodyHtml,
+          ctaLabel: T("Gioca ora e salva la striscia", "Play now and save your streak"), ctaUrl: daily, unsubUrl,
+        }),
         text: textFallback(
-          [`${hi.replace(/<[^>]+>/g, "")}! La tua striscia di ${s} giorni rischia di azzerarsi a mezzanotte.`, "", "Ti basta la Sfida del Giorno: pochi minuti e la striscia è salva."],
-          "Gioca ora", daily, unsubUrl
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! La tua striscia di ${s} giorni rischia di azzerarsi a mezzanotte.`, "", "Ti basta la Sfida del Giorno: pochi minuti e la striscia è salva."],
+            [`${hi.replace(/<[^>]+>/g, "")}! Your ${s}-day streak resets at midnight.`, "", "The Daily Challenge is all it takes: a few minutes and the streak is safe."]
+          ),
+          T("Gioca ora", "Play now"), daily, unsubUrl
         ),
         transactional: false,
       };

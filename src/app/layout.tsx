@@ -7,6 +7,7 @@ import { LayoutShell } from "@/components/layout-shell";
 import { LinguaDelDocumento } from "@/components/lingua-del-documento";
 import { TraduzioniProvider } from "@/contexts/traduzioni-provider";
 import { PropostaLingua } from "@/components/proposta-lingua";
+import { RicordaLingua } from "@/components/ricorda-lingua";
 import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
 import { MetaPixelLoader } from "@/components/meta-pixel-loader";
@@ -219,6 +220,9 @@ export default function RootLayout({
           {/* Propone l'altra lingua a chi ha il browser configurato così. Non
               reindirizza: decide chi legge, e la scelta viene ricordata. */}
           <PropostaLingua />
+          {/* Registra la lingua sul profilo: serve alle email, che partono
+              quando nessuno sta navigando e l'indirizzo non c'è. */}
+          <RicordaLingua />
         </TraduzioniProvider>
         <ToasterLazy />
         <Analytics />

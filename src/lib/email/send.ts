@@ -1,4 +1,5 @@
 import { renderEmail, type EmailKind, type EmailContext } from "./templates";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { makeUnsubToken } from "./tokens";
 
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://bridgelab.it").replace(/\/$/, "");
@@ -42,9 +43,35 @@ export async function sendLifecycleEmail(params: {
     return { ok: false, skipped: "no-key" };
   }
 
+  /**
+   * La lingua si legge QUI, non nei chiamanti.
+   *
+   * I punti che inviano email sono tre e cresceranno: se ognuno dovesse
+   * ricordarsi di passare la lingua, prima o poi uno se ne dimentica e quella
+   * persona riceve un messaggio nella lingua sbagliata — un difetto che non si
+   * vede in sviluppo, perché in sviluppo le email non partono. Chi spedisce ha
+   * già l'identificativo: la trova da sé.
+   *
+   * Se la lettura fallisce resta l'italiano, che è la lingua di casa.
+   */
+  const ctxConLingua = { ...ctx };
+  if (!ctxConLingua.lingua) {
+    try {
+      const admin = createAdminSupabaseClient();
+      const { data } = await admin
+        .from("profiles")
+        .select("lingua")
+        .eq("id", userId)
+        .maybeSingle();
+      ctxConLingua.lingua = (data?.lingua as "it" | "en" | undefined) ?? "it";
+    } catch {
+      ctxConLingua.lingua = "it";
+    }
+  }
+
   const from = process.env.RESEND_FROM || "BridgeLab <onboarding@resend.dev>";
   const unsubUrl = unsubscribeUrl(userId);
-  const email = renderEmail(kind, ctx, kind === "welcome" ? undefined : unsubUrl);
+  const email = renderEmail(kind, ctxConLingua, kind === "welcome" ? undefined : unsubUrl);
 
   const headers: Record<string, string> = {};
   if (!email.transactional) {
