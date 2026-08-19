@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
+import { AssegnaLezioni } from "@/components/instructors/assegna-lezioni";
 import {
   getClassDetail,
   regenerateInviteCode,
@@ -314,6 +315,7 @@ export default function ClassDetailPage({
       <Tabs defaultValue="compiti">
         <TabsList>
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
+          <TabsTrigger value="lezioni">{t("Lezioni")}</TabsTrigger>
           <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
           <TabsTrigger value="classifica">{t("Classifica")}</TabsTrigger>
           <TabsTrigger value="chat">{t("Chat")}</TabsTrigger>
@@ -376,6 +378,14 @@ export default function ClassDetailPage({
               ))}
             </div>
           )}
+        </TabsContent>
+
+        {/* Lezioni: assegnare in blocco */}
+        <TabsContent value="lezioni" className="mt-4">
+          <p className="mb-4 text-sm text-muted-foreground">
+            {t("Un tocco assegna tutte le mani della lezione. Per un compito su misura c'è «Nuovo compito».")}
+          </p>
+          <AssegnaLezioni classId={classId} />
         </TabsContent>
 
         {/* Classifica */}

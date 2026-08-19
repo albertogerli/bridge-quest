@@ -901,3 +901,57 @@ export function subscribeLiveResults(
     void supabase.removeChannel(channel);
   };
 }
+
+// ----------------------------------------------------------------------------
+// Assegnare una lezione intera
+// ----------------------------------------------------------------------------
+
+/** Una riga di `stato_compiti_classe`: a che punto è la classe su un compito. */
+export interface StatoCompito {
+  assignment_id: string;
+  /** La lezione, se il compito è nato da un'assegnazione in blocco. */
+  lesson_id: number | null;
+  title: string;
+  n_mani: number;
+  n_allievi: number;
+  /** Allievi che hanno giocato TUTTE le mani, non mani giocate in totale. */
+  n_completi: number;
+}
+
+/**
+ * Crea il compito con tutte le mani di una lezione.
+ *
+ * Premuto due volte non crea doppioni: il vincolo è nel database, su
+ * (classe, lezione), e la funzione restituisce il compito che c'è già. Vedi
+ * `scripts/sql/assegna-lezione-2026-08.sql` — controllarlo qui non basterebbe,
+ * due schede aperte non si parlano.
+ *
+ * Le mani le sceglie il database: passare l'elenco da qui vorrebbe dire
+ * assegnare il catalogo che questa scheda ha in memoria, che può essere di ieri.
+ */
+export async function assegnaLezione(
+  classId: string,
+  lessonId: number,
+  opzioni?: { soluzioni?: VisibilitaSoluzioni; dueDate?: string | null },
+): Promise<Assignment> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("assegna_lezione", {
+    p_class_id: classId,
+    p_lesson_id: lessonId,
+    p_soluzioni: opzioni?.soluzioni ?? "dopo-il-gioco",
+    p_due_date: opzioni?.dueDate ?? null,
+  });
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  return row as Assignment;
+}
+
+/** Per ogni compito della classe: quante mani, quanti allievi, quanti hanno finito. */
+export async function getStatoCompiti(classId: string): Promise<StatoCompito[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("stato_compiti_classe", {
+    p_class_id: classId,
+  });
+  if (error) throw error;
+  return (data ?? []) as StatoCompito[];
+}
