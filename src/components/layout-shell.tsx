@@ -12,6 +12,7 @@ import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider, useSharedAuth } from "@/contexts/auth-provider";
 import { RicordaLingua } from "@/components/ricorda-lingua";
 import { CookieBanner } from "@/components/cookie-banner";
+import { OspiteConverti } from "@/components/ospite-converti";
 import { SiteFooter } from "@/components/site-footer";
 import { useExitIntent } from "@/hooks/use-exit-intent";
 import type { UserProfile } from "@/hooks/use-profile";
@@ -46,12 +47,12 @@ const ExitIntentModal = dynamic(
  * rinfrescando. La pagina, per conto suo, non legge niente dal database: riceve
  * solo quello che la finestra accanto le manda.
  */
-const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione"];
+const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione", "/aula"];
 
 /** Routes accessible without authentication */
 // /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi
 // arriva da Google veniva rimbalzato al login e il lavoro SEO era vanificato.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione"];
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione", "/aula"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
@@ -155,6 +156,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
       <>
         <main id="main-content" className="min-h-svh" data-profile={profile}>{children}</main>
         <CookieBanner />
+      <OspiteConverti />
       </>
     );
   }

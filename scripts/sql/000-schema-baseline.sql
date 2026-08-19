@@ -371,6 +371,17 @@ CREATE TABLE IF NOT EXISTS public.instructor_requests (
   review_message text
 );
 
+CREATE TABLE IF NOT EXISTS public.inviti_aula (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  token text NOT NULL,
+  creato_da uuid,
+  scade_il timestamp with time zone NOT NULL,
+  revocato boolean NOT NULL,
+  max_ospiti integer NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.lesson_modules (
   lesson_id integer NOT NULL,
   module_id text NOT NULL,
@@ -508,7 +519,9 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   asd_name text,
   role text NOT NULL,
   friend_code text,
-  lingua text NOT NULL
+  lingua text NOT NULL,
+  ospite boolean NOT NULL,
+  ospite_scade_il timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS public.push_subscriptions (
@@ -3432,6 +3445,10 @@ ALTER TABLE public.guided_hands ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.instructor_requests ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.instructor_requests ALTER COLUMN status SET DEFAULT 'pending'::text;
 ALTER TABLE public.instructor_requests ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.inviti_aula ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.inviti_aula ALTER COLUMN revocato SET DEFAULT false;
+ALTER TABLE public.inviti_aula ALTER COLUMN max_ospiti SET DEFAULT 40;
+ALTER TABLE public.inviti_aula ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.lesson_modules ALTER COLUMN xp_reward SET DEFAULT 0;
 ALTER TABLE public.lesson_modules ALTER COLUMN content SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.lesson_modules ALTER COLUMN created_at SET DEFAULT now();
@@ -3477,6 +3494,7 @@ ALTER TABLE public.profiles ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.profiles ALTER COLUMN total_minutes SET DEFAULT 0;
 ALTER TABLE public.profiles ALTER COLUMN role SET DEFAULT 'user'::text;
 ALTER TABLE public.profiles ALTER COLUMN lingua SET DEFAULT 'it'::text;
+ALTER TABLE public.profiles ALTER COLUMN ospite SET DEFAULT false;
 ALTER TABLE public.push_subscriptions ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.review_items ALTER COLUMN id SET DEFAULT nextval('review_items_id_seq'::regclass);
 ALTER TABLE public.review_items ALTER COLUMN wrong_count SET DEFAULT 1;
@@ -3545,6 +3563,7 @@ ALTER TABLE public.game_results ADD CONSTRAINT game_results_pkey PRIMARY KEY (id
 ALTER TABLE public.glossary ADD CONSTRAINT glossary_pkey PRIMARY KEY (id);
 ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_pkey PRIMARY KEY (id);
+ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_pkey PRIMARY KEY (id);
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_pkey PRIMARY KEY (lesson_id, module_id);
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
@@ -3582,6 +3601,7 @@ ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_
 ALTER TABLE public.forum_poll_votes ADD CONSTRAINT forum_poll_votes_post_id_user_id_key UNIQUE (post_id, user_id);
 ALTER TABLE public.friendships ADD CONSTRAINT friendships_user_id_friend_id_key UNIQUE (user_id, friend_id);
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_user_id_key UNIQUE (user_id);
+ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_token_key UNIQUE (token);
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_lesson_id_position_key UNIQUE (lesson_id, "position");
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_world_id_position_key UNIQUE (world_id, "position");
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_username_key UNIQUE (username);
@@ -3690,6 +3710,8 @@ ALTER TABLE public.game_results ADD CONSTRAINT game_results_assignment_id_fkey F
 ALTER TABLE public.game_results ADD CONSTRAINT game_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_reviewed_by_fkey FOREIGN KEY (reviewed_by) REFERENCES auth.users(id);
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_creato_da_fkey FOREIGN KEY (creato_da) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.lessons ADD CONSTRAINT lessons_world_id_fkey FOREIGN KEY (world_id) REFERENCES course_worlds(id) ON DELETE CASCADE;
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
@@ -3767,6 +3789,7 @@ CREATE INDEX idx_game_results_platform ON public.game_results USING btree (platf
 CREATE INDEX idx_game_results_type ON public.game_results USING btree (game_type, score DESC);
 CREATE INDEX idx_game_results_user ON public.game_results USING btree (user_id, created_at DESC);
 CREATE INDEX idx_instructor_requests_status ON public.instructor_requests USING btree (status, created_at DESC);
+CREATE INDEX idx_inviti_classe ON public.inviti_aula USING btree (class_id, created_at DESC);
 CREATE INDEX idx_login_history_date ON public.login_history USING btree (logged_in_at DESC);
 CREATE INDEX idx_login_history_platform ON public.login_history USING btree (platform, logged_in_at DESC);
 CREATE INDEX idx_login_history_user_date ON public.login_history USING btree (user_id, logged_in_at DESC);
@@ -3852,6 +3875,7 @@ ALTER TABLE public.game_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.glossary ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.guided_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.instructor_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inviti_aula ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lesson_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
@@ -3947,6 +3971,7 @@ CREATE POLICY guided_hands_public_read ON public.guided_hands AS PERMISSIVE FOR 
 CREATE POLICY "Self or admin can read requests" ON public.instructor_requests AS PERMISSIVE FOR SELECT TO public USING (((user_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Self or admin can update request" ON public.instructor_requests AS PERMISSIVE FOR UPDATE TO public USING (((user_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Users can file own request" ON public.instructor_requests AS PERMISSIVE FOR INSERT TO public WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "L'insegnante gestisce gli inviti della sua classe" ON public.inviti_aula AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
 CREATE POLICY lesson_modules_public_read ON public.lesson_modules AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY lessons_public_read ON public.lessons AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Instructor manages own live tables" ON public.live_tables AS PERMISSIVE FOR ALL TO authenticated USING (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
@@ -4090,6 +4115,9 @@ GRANT DELETE ON public.guided_hands TO service_role;
 GRANT DELETE ON public.instructor_requests TO anon;
 GRANT DELETE ON public.instructor_requests TO authenticated;
 GRANT DELETE ON public.instructor_requests TO service_role;
+GRANT DELETE ON public.inviti_aula TO anon;
+GRANT DELETE ON public.inviti_aula TO authenticated;
+GRANT DELETE ON public.inviti_aula TO service_role;
 GRANT DELETE ON public.lesson_modules TO anon;
 GRANT DELETE ON public.lesson_modules TO authenticated;
 GRANT DELETE ON public.lesson_modules TO service_role;
@@ -4252,6 +4280,9 @@ GRANT INSERT ON public.guided_hands TO service_role;
 GRANT INSERT ON public.instructor_requests TO anon;
 GRANT INSERT ON public.instructor_requests TO authenticated;
 GRANT INSERT ON public.instructor_requests TO service_role;
+GRANT INSERT ON public.inviti_aula TO anon;
+GRANT INSERT ON public.inviti_aula TO authenticated;
+GRANT INSERT ON public.inviti_aula TO service_role;
 GRANT INSERT ON public.lesson_modules TO anon;
 GRANT INSERT ON public.lesson_modules TO authenticated;
 GRANT INSERT ON public.lesson_modules TO service_role;
@@ -4414,6 +4445,9 @@ GRANT REFERENCES ON public.guided_hands TO service_role;
 GRANT REFERENCES ON public.instructor_requests TO anon;
 GRANT REFERENCES ON public.instructor_requests TO authenticated;
 GRANT REFERENCES ON public.instructor_requests TO service_role;
+GRANT REFERENCES ON public.inviti_aula TO anon;
+GRANT REFERENCES ON public.inviti_aula TO authenticated;
+GRANT REFERENCES ON public.inviti_aula TO service_role;
 GRANT REFERENCES ON public.lesson_modules TO anon;
 GRANT REFERENCES ON public.lesson_modules TO authenticated;
 GRANT REFERENCES ON public.lesson_modules TO service_role;
@@ -4576,6 +4610,9 @@ GRANT SELECT ON public.guided_hands TO service_role;
 GRANT SELECT ON public.instructor_requests TO anon;
 GRANT SELECT ON public.instructor_requests TO authenticated;
 GRANT SELECT ON public.instructor_requests TO service_role;
+GRANT SELECT ON public.inviti_aula TO anon;
+GRANT SELECT ON public.inviti_aula TO authenticated;
+GRANT SELECT ON public.inviti_aula TO service_role;
 GRANT SELECT ON public.lesson_modules TO anon;
 GRANT SELECT ON public.lesson_modules TO authenticated;
 GRANT SELECT ON public.lesson_modules TO service_role;
@@ -4735,6 +4772,9 @@ GRANT TRIGGER ON public.guided_hands TO service_role;
 GRANT TRIGGER ON public.instructor_requests TO anon;
 GRANT TRIGGER ON public.instructor_requests TO authenticated;
 GRANT TRIGGER ON public.instructor_requests TO service_role;
+GRANT TRIGGER ON public.inviti_aula TO anon;
+GRANT TRIGGER ON public.inviti_aula TO authenticated;
+GRANT TRIGGER ON public.inviti_aula TO service_role;
 GRANT TRIGGER ON public.lesson_modules TO anon;
 GRANT TRIGGER ON public.lesson_modules TO authenticated;
 GRANT TRIGGER ON public.lesson_modules TO service_role;
@@ -4897,6 +4937,9 @@ GRANT TRUNCATE ON public.guided_hands TO service_role;
 GRANT TRUNCATE ON public.instructor_requests TO anon;
 GRANT TRUNCATE ON public.instructor_requests TO authenticated;
 GRANT TRUNCATE ON public.instructor_requests TO service_role;
+GRANT TRUNCATE ON public.inviti_aula TO anon;
+GRANT TRUNCATE ON public.inviti_aula TO authenticated;
+GRANT TRUNCATE ON public.inviti_aula TO service_role;
 GRANT TRUNCATE ON public.lesson_modules TO anon;
 GRANT TRUNCATE ON public.lesson_modules TO authenticated;
 GRANT TRUNCATE ON public.lesson_modules TO service_role;
@@ -5059,6 +5102,9 @@ GRANT UPDATE ON public.guided_hands TO service_role;
 GRANT UPDATE ON public.instructor_requests TO anon;
 GRANT UPDATE ON public.instructor_requests TO authenticated;
 GRANT UPDATE ON public.instructor_requests TO service_role;
+GRANT UPDATE ON public.inviti_aula TO anon;
+GRANT UPDATE ON public.inviti_aula TO authenticated;
+GRANT UPDATE ON public.inviti_aula TO service_role;
 GRANT UPDATE ON public.lesson_modules TO anon;
 GRANT UPDATE ON public.lesson_modules TO authenticated;
 GRANT UPDATE ON public.lesson_modules TO service_role;
