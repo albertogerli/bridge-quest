@@ -155,7 +155,11 @@ def main() -> int:
         stile = getattr(modulo, "STYLE_PROMPT", "")
 
         for lezione in modulo.LEZIONI:
-            nome = f"lezione-{str(lezione['id']).zfill(2)}-junior.png"
+            # `.jpg` come le italiane: il codice costruisce il percorso con
+            # quell'estensione, e un `.png` accanto a un `.jpg` atteso dà 404 in
+            # produzione senza che niente si lamenti in fase di build (successo
+            # il 19/08/2026). Pesano anche un terzo.
+            nome = f"lezione-{str(lezione['id']).zfill(2)}-junior.jpg"
             destinazione = cartella / nome
             if destinazione.exists():
                 saltate += 1
@@ -192,7 +196,7 @@ def main() -> int:
             )
             # Il prompt tradotto si conserva: è l'unico modo di rileggere cosa
             # è stato chiesto senza riaprire l'immagine.
-            (cartella / (nome.replace(".png", ".prompt.txt"))).write_text(prompt_en, encoding="utf-8")
+            (cartella / (nome.replace(".jpg", ".prompt.txt"))).write_text(prompt_en, encoding="utf-8")
 
             if args.prova:
                 print(f"  tradotto {corso['seme']}/{nome}")
@@ -207,7 +211,21 @@ def main() -> int:
                     quality="high",
                     n=1,
                 )
-                destinazione.write_bytes(base64.b64decode(immagine.data[0].b64_json))
+                # Il modello restituisce PNG: si converte, perché il nome del
+                # file deve corrispondere a quello che il sito va a cercare.
+                grezzo = base64.b64decode(immagine.data[0].b64_json)
+                try:
+                    from io import BytesIO
+                    from PIL import Image
+
+                    Image.open(BytesIO(grezzo)).convert("RGB").save(
+                        destinazione, "JPEG", quality=82, optimize=True
+                    )
+                except ImportError:
+                    # Senza Pillow si salva il PNG e si converte a mano con
+                    # `sips`: meglio un file nel formato sbagliato che nessuno.
+                    destinazione.with_suffix(".png").write_bytes(grezzo)
+                    print("    (Pillow assente: salvato .png, converti con sips)")
                 fatte += 1
                 print(f"  {corso['seme']}/{nome}")
             except Exception as errore:  # noqa: BLE001 — si continua col resto
