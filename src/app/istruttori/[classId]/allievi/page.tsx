@@ -196,7 +196,7 @@ export default function AllieviPage({
           </label>
         ) : (
           <div className="mb-6 rounded-xl border border-border p-4">
-            <p className="mb-3 text-sm font-semibold">Che cosa c&rsquo;è in ogni colonna?</p>
+            <p className="mb-3 text-sm font-semibold">{t("Che cosa c’è in ogni colonna?")}</p>
             <div className="mb-4 space-y-2">
               {foglio.intestazioni.map((h, i) => (
                 <div key={i} className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export default function AllieviPage({
         <div className="h-24 animate-pulse rounded-xl bg-muted" />
       ) : righe.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Nessun allievo nell&rsquo;elenco. Carica il tuo file.
+          {t("Nessun allievo nell’elenco. Carica il tuo file.")}
         </p>
       ) : tavoli.length > 0 ? (
         <div className="space-y-4">

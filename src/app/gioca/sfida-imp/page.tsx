@@ -643,7 +643,7 @@ function SfidaIMPContent() {
                     3
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Chi ottiene pi&ugrave; IMP alla fine di tutte le mani vince il match.
+                    {t("Chi ottiene più IMP alla fine di tutte le mani vince il match.")}
                   </p>
                 </div>
               </div>
@@ -1056,8 +1056,7 @@ function SfidaIMPContent() {
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2">{t("Risultati inviati!")}</h2>
             <p className="text-sm text-muted-foreground mb-2 max-w-xs mx-auto">
-              I tuoi risultati sono stati registrati.
-              Ti notificheremo quando il tuo avversario avr&agrave; completato la sfida.
+              {t("I tuoi risultati sono stati registrati. Ti notificheremo quando il tuo avversario avrà completato la sfida.")}
             </p>
 
             {/* My results summary */}

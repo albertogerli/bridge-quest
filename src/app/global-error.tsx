@@ -54,8 +54,7 @@ export default function GlobalError({
               color: "#555",
             }}
           >
-            Si è verificato un errore imprevisto. Riprova: di solito basta un
-            nuovo tentativo.
+            {t("Si è verificato un errore imprevisto. Riprova: di solito basta un nuovo tentativo.")}
           </p>
           <button
             onClick={() => reset()}

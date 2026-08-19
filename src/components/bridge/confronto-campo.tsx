@@ -136,7 +136,7 @@ export function ConfrontoCampoPannello({
             })}
           </ul>
           <p className="text-xs text-muted-foreground mt-2">
-            Quanti l&apos;hanno dichiarato e quanto ha reso in media. In grassetto il tuo.
+            {t("Quanti l'hanno dichiarato e quanto ha reso in media. In grassetto il tuo.")}
           </p>
 
           {filtro === "amici" && dati.persone && dati.persone.length > 0 && (

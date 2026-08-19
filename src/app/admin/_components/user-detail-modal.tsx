@@ -107,7 +107,7 @@ export function UserDetailModal({
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Giorni dall&apos;iscrizione</span>
+                <span className="text-gray-500">{t("Giorni dall'iscrizione")}</span>
                 <span className="font-semibold text-gray-900">{daysSinceReg}</span>
               </div>
               <div className="flex justify-between">

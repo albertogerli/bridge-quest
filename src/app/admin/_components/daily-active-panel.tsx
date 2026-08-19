@@ -33,10 +33,7 @@ export function DailyActivePanel({
           {t("Utenti attivi per giorno (ultimi 14 giorni)")}
         </h2>
         <p className="text-sm text-amber-800">
-          Dato non disponibile: la lettura degli accessi non è riuscita. Il
-          grafico non viene mostrato perché l&apos;unico ripiego disponibile
-          conta ogni utente una volta sola, nel giorno della sua ultima visita,
-          e risponderebbe a una domanda diversa.
+          {t("Dato non disponibile: la lettura degli accessi non è riuscita. Il grafico non viene mostrato perché l'unico ripiego disponibile conta ogni utente una volta sola, nel giorno della sua ultima visita, e risponderebbe a una domanda diversa.")}
         </p>
         <p className="text-xs text-gray-500 mt-2">
           {t("Serve la funzione")} <code>admin_login_history</code>: vedi

@@ -1,7 +1,18 @@
 import Link from "next/link";
+import { tServer } from "@/lib/traduzioni-server";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 
-export default function NotFound() {
+/**
+ * La pagina che non c'è.
+ *
+ * È un componente SERVER e traduce con `tServer()`: `useT()` è un hook e qui
+ * non gira. Renderla client per poter tradurre sarebbe stato il gesto più
+ * corto e il peggiore — una 404 deve arrivare subito e senza JavaScript, ed è
+ * anche la pagina che vede chi segue un collegamento vecchio da un motore di
+ * ricerca.
+ */
+export default async function NotFound() {
+  const t = await tServer();
   return (
     <div className="min-h-screen bg-gradient-to-b from-figb/5 dark:from-primary/10 via-background to-background flex flex-col items-center justify-center px-6 text-center">
       {/* Flipped card illustration */}
@@ -16,7 +27,7 @@ export default function NotFound() {
       <h1 className="text-4xl font-black text-foreground font-display mb-2">404</h1>
       <p className="text-lg font-bold text-foreground/80 mb-1">Pagina non trovata</p>
       <p className="text-sm text-muted-foreground max-w-xs mb-8">
-        Questa carta non è nel mazzo! La pagina che cerchi non esiste o è stata spostata.
+        {t("Questa carta non è nel mazzo! La pagina che cerchi non esiste o è stata spostata.")}
       </p>
 
       {/* Navigation links */}
@@ -28,25 +39,25 @@ export default function NotFound() {
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
           </svg>
-          Home
+          {t("Home")}
         </Link>
         <Link
           href="/lezioni"
           className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-card text-foreground/80 font-semibold text-sm border-2 border-border hover:border-figb/30 dark:hover:border-primary/40 transition-colors"
         >
-          Lezioni
+          {t("Lezioni")}
         </Link>
         <Link
           href="/gioca"
           className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-card text-foreground/80 font-semibold text-sm border-2 border-border hover:border-figb/30 dark:hover:border-primary/40 transition-colors"
         >
-          Gioca
+          {t("Gioca")}
         </Link>
         <Link
           href="/forum"
           className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-card text-foreground/80 font-semibold text-sm border-2 border-border hover:border-figb/30 dark:hover:border-primary/40 transition-colors"
         >
-          Forum
+          {t("Forum")}
         </Link>
       </div>
 

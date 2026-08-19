@@ -95,8 +95,7 @@ export default function TrovaCompagnoPage() {
           <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" aria-hidden="true" />
           <h1 className="text-xl font-bold font-display mb-2">{t("Trova un compagno")}</h1>
           <p className="text-sm text-muted-foreground mb-5">
-            Per cercare un compagno di gioco serve un account: è gratuito e ci
-            vuole un minuto.
+            {t("Per cercare un compagno di gioco serve un account: è gratuito e ci vuole un minuto.")}
           </p>
           <Button onClick={() => router.push("/login?mode=signup&redirect=/trova-compagno")}>
             {t("Registrati")}
@@ -113,8 +112,7 @@ export default function TrovaCompagnoPage() {
       <header className="mb-6">
         <h1 className="text-2xl font-bold font-display">{t("Trova un compagno")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Il bridge si gioca in due. Qui trovi altri iscritti che stanno
-          cercando qualcuno con cui giocare.
+          {t("Il bridge si gioca in due. Qui trovi altri iscritti che stanno cercando qualcuno con cui giocare.")}
         </p>
       </header>
 
@@ -123,9 +121,7 @@ export default function TrovaCompagnoPage() {
         <div className="rounded-2xl border border-border bg-card p-5 mb-6">
           <h2 className="font-bold mb-1">{t("Mettiti in cerca")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Comparirai nell&apos;elenco con il tuo nome, il livello, la provincia e
-            le fasce in cui sei disponibile. Niente altro: né la tua email, né
-            un recapito. Puoi toglierti quando vuoi.
+            {t("Comparirai nell'elenco con il tuo nome, il livello, la provincia e le fasce in cui sei disponibile. Niente altro: né la tua email, né un recapito. Puoi toglierti quando vuoi.")}
           </p>
           <Button onClick={() => setEditing(true)}>{t("Compila la scheda")}</Button>
         </div>
@@ -149,7 +145,7 @@ export default function TrovaCompagnoPage() {
 
       {inDirectory && !editing && myProfile && (
         <div className="rounded-2xl border border-border bg-card p-4 mb-6 flex flex-wrap items-center gap-3">
-          <Badge variant="secondary">Sei nell&apos;elenco</Badge>
+          <Badge variant="secondary">{t("Sei nell'elenco")}</Badge>
           <span className="text-sm text-muted-foreground">
             {LEVEL_LABELS[myProfile.level]}
             {myProfile.province ? ` · ${myProfile.province}` : ""} ·{" "}
@@ -166,7 +162,7 @@ export default function TrovaCompagnoPage() {
                 void refresh(filters);
               }}
             >
-              Esci dall&apos;elenco
+              {t("Esci dall'elenco")}
             </Button>
           </div>
         </div>
@@ -240,8 +236,7 @@ export default function TrovaCompagnoPage() {
             <div className="py-12 text-center">
               <Search className="w-10 h-10 mx-auto text-muted-foreground mb-3" aria-hidden="true" />
               <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                Nessuno corrisponde a questi filtri. Prova ad allargarli — la
-                funzione è appena nata e l&apos;elenco si riempirà col tempo.
+                {t("Nessuno corrisponde a questi filtri. Prova ad allargarli — la funzione è appena nata e l'elenco si riempirà col tempo.")}
               </p>
             </div>
           ) : (
@@ -399,8 +394,7 @@ function PartnerForm({
         ))}
       </select>
       <p className="text-xs text-muted-foreground mb-4">
-        Serve solo a farti trovare da chi ti sta vicino. Non chiediamo la città
-        né l&apos;indirizzo.
+        {t("Serve solo a farti trovare da chi ti sta vicino. Non chiediamo la città né l'indirizzo.")}
       </p>
 
       <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">

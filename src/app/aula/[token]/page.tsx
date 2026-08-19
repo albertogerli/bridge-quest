@@ -122,8 +122,7 @@ function Ingresso({ params }: { params: Promise<{ token: string }> }) {
         </Button>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Non serve registrarsi. A fine lezione potrai tenere quello che hai fatto creando un
-          account, se vorrai.
+          {t("Non serve registrarsi. A fine lezione potrai tenere quello che hai fatto creando un account, se vorrai.")}
         </p>
       </div>
     </div>

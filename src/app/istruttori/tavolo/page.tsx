@@ -310,8 +310,7 @@ function Tavolo() {
           {t("Tavolo condiviso")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Tu vedi tutte e quattro le mani. Gli allievi vedono solo la propria,
-          e le altre quando le scopri tu.
+          {t("Tu vedi tutte e quattro le mani. Gli allievi vedono solo la propria, e le altre quando le scopri tu.")}
         </p>
       </header>
 
@@ -392,9 +391,7 @@ function Tavolo() {
             {t("Chi siede dove")}
           </h2>
           <p className="text-xs text-muted-foreground mb-3">
-            Ogni allievo vede la mano del posto che gli assegni. Senza posto vede
-            solo quello che scopri a tutti — ed è la situazione normale a inizio
-            lezione, non un errore.
+            {t("Ogni allievo vede la mano del posto che gli assegni. Senza posto vede solo quello che scopri a tutti — ed è la situazione normale a inizio lezione, non un errore.")}
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {allievi.map((a) => (
@@ -441,7 +438,7 @@ function Tavolo() {
             </span>
             <Button variant="outline" onClick={() => undoLiveCard(tableId)}>
               <Undo2 className="w-4 h-4 mr-1" aria-hidden="true" />
-              Annulla l&apos;ultima
+              {t("Annulla l'ultima")}
             </Button>
           </div>
         </div>
@@ -544,7 +541,7 @@ function Tavolo() {
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border bg-card p-3">
           <span className="text-sm font-medium text-muted-foreground">{t("Si gioca")}</span>
           <select
-            aria-label="Contratto"
+            aria-label={t("Contratto")}
             value={stato.contract ?? ""}
             onChange={(e) => void cambiaContratto(e.target.value, stato.declarer ?? "south")}
             className="rounded-md border border-border bg-background px-2 py-1.5 text-sm"
@@ -555,7 +552,7 @@ function Tavolo() {
           </select>
           <span className="text-sm text-muted-foreground">{t("giocato da")}</span>
           <select
-            aria-label="Dichiarante"
+            aria-label={t("Dichiarante")}
             value={stato.declarer ?? "south"}
             onChange={(e) => void cambiaContratto(stato.contract ?? "3SA", e.target.value as Position)}
             className="rounded-md border border-border bg-background px-2 py-1.5 text-sm"

@@ -10,7 +10,25 @@ import {
 const PROTECTED_ROUTES = ["/admin"];
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  /**
+   * LA LINGUA ANCHE ALLE PAGINE DI SERVER, e va messa qui in cima.
+   *
+   * `useLingua()` la ricava dall'indirizzo, ma è un hook: in un componente
+   * server non gira. E il server l'indirizzo con il prefisso non lo vede
+   * nemmeno, perché `/en/...` è una RISCRITTURA — il browser mostra `/en`, il
+   * server riceve `/`. Senza questo, una pagina resa sul server non ha modo di
+   * sapere in che lingua si sta leggendo, e resta italiana anche sotto `/en`:
+   * è quello che succedeva a `/accessibilita`.
+   *
+   * Va sulle intestazioni della RICHIESTA, non della risposta: `headers()` in
+   * un componente server legge quelle in entrata. Sulla risposta non la
+   * vedrebbe nessuno.
+   */
+  const linguaRichiesta = linguaDaPercorso(request.nextUrl.pathname);
+  const intestazioni = new Headers(request.headers);
+  intestazioni.set("x-bridgelab-lingua", linguaRichiesta);
+
+  let supabaseResponse = NextResponse.next({ request: { headers: intestazioni } });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,7 +42,7 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({ request });
+          supabaseResponse = NextResponse.next({ request: { headers: intestazioni } });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -46,7 +64,7 @@ export async function proxy(request: NextRequest) {
    * lingua, e che nessuna prova in italiano vedrebbe mai.
    */
   const percorsoIntero = request.nextUrl.pathname;
-  const lingua = linguaDaPercorso(percorsoIntero);
+  const lingua = linguaRichiesta;
   const pathname = senzaLingua(percorsoIntero);
 
   const isProtected = PROTECTED_ROUTES.some((route) =>

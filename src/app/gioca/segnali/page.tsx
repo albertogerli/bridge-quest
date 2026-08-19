@@ -367,7 +367,7 @@ export default function SegnaliPage() {
               {t("In difesa si parla con le carte: impara a dare (e leggere) i segnali del compagno.")}
             </p>
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
-              <h3 className="font-bold text-sm text-foreground mb-2">Le regole d&apos;oro</h3>
+              <h3 className="font-bold text-sm text-foreground mb-2">{t("Le regole d'oro")}</h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
                   <span className="font-bold text-foreground/80">{t("Gradimento:")}</span> carta alta = «continua», carta bassa = «cambia colore»

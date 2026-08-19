@@ -110,8 +110,7 @@ export default function QuizPresePage() {
           {t("Quante prese?")}
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Vedi tutte e quattro le mani. Conta quante prese fa Nord-Sud con
-          gioco perfetto di entrambe le linee.
+          {t("Vedi tutte e quattro le mani. Conta quante prese fa Nord-Sud con gioco perfetto di entrambe le linee.")}
         </p>
         <div className="space-y-3">
           {QUIZ_LEVELS.map((l) => (
@@ -129,8 +128,7 @@ export default function QuizPresePage() {
           ))}
         </div>
         <p className="text-xs text-muted-foreground mt-6">
-          Sbagliare di una presa vale comunque punti: su tredici, significa aver
-          visto quasi tutto.
+          {t("Sbagliare di una presa vale comunque punti: su tredici, significa aver visto quasi tutto.")}
         </p>
       </div>
     );
@@ -257,9 +255,7 @@ export default function QuizPresePage() {
               >
                 <p className="font-semibold text-sm mb-1">{esito.message}</p>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Il conteggio è a carte scoperte, con gioco perfetto di
-                  entrambe le linee: al tavolo, senza vedere le mani avversarie,
-                  alcune di queste prese non sarebbero trovabili.
+                  {t("Il conteggio è a carte scoperte, con gioco perfetto di entrambe le linee: al tavolo, senza vedere le mani avversarie, alcune di queste prese non sarebbero trovabili.")}
                 </p>
                 <Button onClick={() => setRound((r) => r + 1)}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}

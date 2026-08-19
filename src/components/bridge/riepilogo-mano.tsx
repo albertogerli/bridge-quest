@@ -121,8 +121,7 @@ export function RiepilogoMano({
       </p>
       {contratti.length === 0 && (
         <p className="text-sm text-muted-foreground">
-          Su questa smazzata la tua linea non aveva nessun contratto che
-          reggesse: era mano loro, e passare era la scelta giusta.
+          {t("Su questa smazzata la tua linea non aveva nessun contratto che reggesse: era mano loro, e passare era la scelta giusta.")}
         </p>
       )}
 

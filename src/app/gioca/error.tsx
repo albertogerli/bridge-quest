@@ -33,8 +33,7 @@ export default function GameError({
           {t("Errore durante il gioco")}
         </h1>
         <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-          Si è verificato un problema con il gioco. Riprova per ricominciare
-          oppure torna alla selezione dei giochi.
+          {t("Si è verificato un problema con il gioco. Riprova per ricominciare oppure torna alla selezione dei giochi.")}
         </p>
 
         {error.digest && (

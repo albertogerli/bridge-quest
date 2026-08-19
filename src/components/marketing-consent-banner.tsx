@@ -73,9 +73,7 @@ export function MarketingConsentBanner({
 
             {/* Description */}
             <p className="text-center text-sm text-muted-foreground leading-relaxed mb-5">
-              Vuoi ricevere aggiornamenti su eventi, corsi e tornei di bridge
-              dalla FIGB? Solo informazioni utili per la tua crescita nel
-              bridge, niente spam.
+              {t("Vuoi ricevere aggiornamenti su eventi, corsi e tornei di bridge dalla FIGB? Solo informazioni utili per la tua crescita nel bridge, niente spam.")}
             </p>
 
             {/* Accept button */}

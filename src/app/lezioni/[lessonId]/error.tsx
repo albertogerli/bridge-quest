@@ -33,8 +33,7 @@ export default function LessonError({
           {t("Errore nel caricamento della lezione")}
         </h1>
         <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-          Non siamo riusciti a caricare questa lezione. Potrebbe trattarsi di un
-          problema temporaneo: riprova tra un momento.
+          {t("Non siamo riusciti a caricare questa lezione. Potrebbe trattarsi di un problema temporaneo: riprova tra un momento.")}
         </p>
 
         {error.digest && (

@@ -162,7 +162,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
                 setOccupato(false);
               }}
             >
-              Apri l&rsquo;aula
+              {t("Apri l’aula")}
             </Button>
           </div>
         </>
@@ -205,7 +205,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
                 setOccupato(false);
               }}
             >
-              Chiudi l&rsquo;aula
+              {t("Chiudi l’aula")}
             </Button>
           </div>
 

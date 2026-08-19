@@ -114,7 +114,7 @@ export default function EsercizioPage({
   if (!esercizio) {
     return (
       <p className="mx-auto max-w-2xl px-4 py-10 text-sm text-muted-foreground">
-        Questo esercizio non c&rsquo;è più, oppure non è per te.
+        {t("Questo esercizio non c’è più, oppure non è per te.")}
       </p>
     );
   }

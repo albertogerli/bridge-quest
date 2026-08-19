@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bridge LAB — Minigioco dei Punteggi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --figb:#003DA5; --figb-light:#4d8fe6; --ivory:#F7F5F0; --ink:#1a1a2e;
+  --gold:#c8a44e; --gold-deep:#a8842e; --red:#B91C1C; --green:#1a7a3a;
+  --felt1:#0b3d2e; --felt2:#134e3a; --muted:#5a5f6b; --line:#e4e0d6;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:
+  radial-gradient(120% 120% at 80% 0%, rgba(0,61,165,.06), transparent 55%),
+  var(--ivory); min-height:100vh; display:flex; justify-content:center; padding:24px 16px;}
+.font-display{font-family:'Bricolage Grotesque','Inter',sans-serif;}
+.app{width:100%; max-width:560px;}
+
+/* header */
+.top{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand .logo{font-size:22px; letter-spacing:2px;}
+.brand .logo .r{color:var(--red);} .brand .logo .b{color:var(--ink);}
+.brand h1{font-family:'Bricolage Grotesque',sans-serif; font-size:18px; color:var(--figb); line-height:1;}
+.brand p{font-size:11px; color:var(--muted);}
+.stats{display:flex; gap:14px; align-items:center;}
+.stat{text-align:right;}
+.stat .n{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:20px; color:var(--figb); line-height:1; font-variant-numeric:tabular-nums;}
+.stat .l{font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted);}
+.lives{font-size:18px; letter-spacing:2px;}
+.lives .off{opacity:.2;}
+
+/* start screen */
+.start{border-radius:24px; padding:34px 28px; color:#fff; text-align:center; position:relative; overflow:hidden;
+  background:radial-gradient(120% 130% at 85% 5%, rgba(200,164,78,.18), transparent 50%),
+    linear-gradient(155deg, var(--felt1) 0%, var(--felt2) 55%, #0d2b47 100%);
+  box-shadow:0 20px 44px -22px rgba(0,0,0,.5);}
+.start .suits{font-size:34px; letter-spacing:10px; margin-bottom:8px;}
+.start .suits .r{color:#ff9d9d;}
+.start h2{font-family:'Bricolage Grotesque',sans-serif; font-size:30px; margin-bottom:6px;}
+.start .sub{font-size:14.5px; color:#d9e2df; margin-bottom:24px; line-height:1.5;}
+.modes{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;}
+.mode{background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.2); border-radius:18px; padding:20px 16px; cursor:pointer; transition:.15s; text-align:left;}
+.mode:hover{border-color:var(--gold); background:rgba(255,255,255,.12);}
+.mode.sel{border-color:var(--gold); background:rgba(200,164,78,.18); box-shadow:0 0 0 2px rgba(200,164,78,.35) inset;}
+.mode .mi{font-size:26px; margin-bottom:8px;}
+.mode .mt{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:18px; margin-bottom:4px;}
+.mode .md{font-size:12.5px; color:#cfe0da; line-height:1.4;}
+.toggle{display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:22px; font-size:14.5px; color:#e9efe8;}
+.sw{position:relative; width:52px; height:28px; border-radius:999px; background:rgba(255,255,255,.2); cursor:pointer; transition:.2s; flex-shrink:0;}
+.sw.on{background:var(--gold);}
+.sw::after{content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:.2s;}
+.sw.on::after{left:27px;}
+.toggle .tl{font-weight:600;} .toggle .th{font-size:11.5px; color:#bcd0c8;}
+.play{width:100%; background:linear-gradient(120deg,var(--gold),#e0c074); color:#3a2c05; border:none; border-radius:14px; padding:16px;
+  font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:17px; cursor:pointer;}
+.play:hover{filter:brightness(1.05);}
+.start .rlink{margin-top:14px; font-size:12.5px; color:#cfe0da; cursor:pointer; background:none; border:none;}
+
+/* table card */
+.table{position:relative; border-radius:24px; padding:24px 26px 26px; color:#fff; overflow:hidden;
+  background:radial-gradient(120% 130% at 85% 5%, rgba(200,164,78,.16), transparent 50%),
+    linear-gradient(155deg, var(--felt1) 0%, var(--felt2) 55%, #0d2b47 100%);
+  box-shadow:0 20px 44px -22px rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.06);}
+.table .watermark{position:absolute; right:-24px; bottom:-40px; font-size:180px; opacity:.07; font-family:serif; line-height:1;}
+.round-row{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+.round-label{font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:#f4e8c6; font-weight:700;}
+.timer-num{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:16px; color:#fff; font-variant-numeric:tabular-nums; display:none;}
+.timer-num.show{display:block;}
+.tbar{height:6px; border-radius:6px; background:rgba(255,255,255,.14); overflow:hidden; margin-bottom:16px; display:none;}
+.tbar.show{display:block;}
+.tbar .fill{height:100%; width:100%; background:var(--green); border-radius:6px; transition:width .1s linear, background .3s;}
+.contract-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+.contract{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:62px; line-height:.9; display:flex; align-items:center; gap:2px;}
+.contract .suit-r{color:#ff9d9d;} .contract .suit-b{color:#fff;}
+.contract .dbl{font-size:28px; color:var(--gold); margin-left:6px; vertical-align:super;}
+.badges{display:flex; flex-direction:column; gap:8px;}
+.badge{display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; padding:6px 13px; border-radius:999px; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.06);}
+.badge.vul{background:rgba(185,28,28,.30); border-color:rgba(255,120,120,.5); color:#ffd9d9;}
+.badge.novul{background:rgba(26,122,58,.25); border-color:rgba(120,220,150,.4); color:#d6f5e0;}
+.result-line{margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.16); font-size:15.5px; color:#e9efe8;}
+.result-line b{color:#fff;} .result-line .made{color:#a6e6bf;} .result-line .down{color:#ff9d9d;}
+
+/* question + answers */
+.q{margin:22px 2px 12px; font-family:'Bricolage Grotesque',sans-serif; font-size:20px; color:var(--figb); text-align:center;}
+.opts{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.opt{background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:18px 12px; cursor:pointer;
+  font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:24px; color:var(--ink);
+  transition:transform .08s, border-color .15s, background .15s; font-variant-numeric:tabular-nums; text-align:center;}
+.opt:hover{border-color:var(--figb-light); transform:translateY(-2px);}
+.opt.correct{background:#e7f6ec; border-color:var(--green); color:var(--green);}
+.opt.wrong{background:#fbeaea; border-color:var(--red); color:var(--red);}
+.opt.dim{opacity:.45;}
+.opt:disabled{cursor:default;}
+/* input mode */
+.inputrow{display:none; gap:10px;}
+.inputrow.show{display:flex;}
+.inputrow input{flex:1; border:1.5px solid var(--line); border-radius:14px; padding:16px 18px; font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:800; font-size:26px; color:var(--ink); text-align:center; font-variant-numeric:tabular-nums; background:#fff; min-width:0;}
+.inputrow input:focus{outline:none; border-color:var(--figb-light);}
+.inputrow input.correct{border-color:var(--green); background:#e7f6ec; color:var(--green);}
+.inputrow input.wrong{border-color:var(--red); background:#fbeaea; color:var(--red);}
+.inputrow button{background:linear-gradient(120deg,var(--figb),var(--figb-light)); color:#fff; border:none; border-radius:14px; padding:0 24px; font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:16px; cursor:pointer;}
+.hint{text-align:center; font-size:12px; color:var(--muted); margin-top:8px;}
+
+/* feedback */
+.fb{margin-top:16px; border-radius:16px; padding:18px 20px; border:1px solid var(--line); background:#fff; display:none;}
+.fb.show{display:block; animation:pop .25s ease;}
+@keyframes pop{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+.fb .verdict{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:18px; margin-bottom:4px; display:flex; align-items:center; gap:8px;}
+.fb.ok .verdict{color:var(--green);} .fb.no .verdict{color:var(--red);}
+.fb .youans{font-size:13px; color:var(--muted); margin-bottom:10px;}
+.breakdown{font-size:14px; color:#3a3f47; line-height:1.5;}
+.breakdown table{width:100%; border-collapse:collapse; margin-top:4px;}
+.breakdown td{padding:3px 0; border-bottom:1px dashed var(--line);}
+.breakdown td:last-child{text-align:right; font-variant-numeric:tabular-nums; font-weight:600;}
+.breakdown tr.tot td{border-bottom:none; padding-top:8px; font-weight:800; color:var(--figb); font-size:15.5px;}
+.speed{color:var(--gold-deep); font-weight:700;}
+.next{margin-top:16px; width:100%; background:linear-gradient(120deg,var(--figb),var(--figb-light)); color:#fff; border:none;
+  border-radius:14px; padding:15px; font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:16px; cursor:pointer;}
+.next:hover{filter:brightness(1.06);}
+
+/* footer / rules */
+.foot{margin-top:18px; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted);}
+.link{color:var(--figb); font-weight:600; cursor:pointer; background:none; border:none; font-size:12px;}
+.rules{display:none; margin-top:12px; background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; font-size:13px; line-height:1.55; color:#3a3f47;}
+.rules.show{display:block;}
+.rules h3{font-family:'Bricolage Grotesque',sans-serif; color:var(--figb); font-size:15px; margin:12px 0 6px;}
+.rules h3:first-child{margin-top:0;}
+.rules b{color:var(--ink);} .rules ul{margin:4px 0 0 18px;} .rules li{margin-bottom:3px;}
+
+.over{text-align:center; padding:40px 20px;}
+.over h2{font-family:'Bricolage Grotesque',sans-serif; font-size:30px; color:#fff; margin-bottom:8px;}
+.over p{color:#d9e2df; margin-bottom:6px;}
+.over .big{font-family:'Bricolage Grotesque',sans-serif; font-size:56px; font-weight:800; color:var(--gold); margin:10px 0;}
+.over .play{max-width:240px; margin:18px auto 0;}
+.hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo"><span class="b">♠</span><span class="r">♥</span><span class="r">♦</span><span class="b">♣</span></div>
+      <div><h1>Punteggi del Bridge</h1><p>Quanto vale il contratto?</p></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="score">0</div><div class="l">Punti</div></div>
+      <div class="stat"><div class="n" id="streak">0</div><div class="l">Serie</div></div>
+      <div class="lives" id="lives"></div>
+    </div>
+  </div>
+
+  <!-- START -->
+  <div class="start" id="start">
+    <div class="suits">♠ <span class="r">♥</span> <span class="r">♦</span> ♣</div>
+    <h2>Minigioco dei Punteggi</h2>
+    <div class="sub">Ti do un contratto e il risultato: indovina quanto segna il dichiarante.<br>Scegli la modalità.</div>
+    <div class="modes">
+      <div class="mode sel" id="modeFacile" onclick="selMode('choice')">
+        <div class="mi">👆</div>
+        <div class="mt">Facile</div>
+        <div class="md">Scegli tra 4 punteggi</div>
+      </div>
+      <div class="mode" id="modeDifficile" onclick="selMode('input')">
+        <div class="mi">⌨️</div>
+        <div class="mt">Difficile</div>
+        <div class="md">Scrivi tu il punteggio</div>
+      </div>
+    </div>
+    <div class="toggle">
+      <div><span class="tl">⏱ Modalità a tempo</span><br><span class="th">countdown per smazzata + bonus velocità</span></div>
+      <div class="sw on" id="sw" onclick="toggleTimed()"></div>
+    </div>
+    <button class="play" onclick="startGame()">Inizia a giocare →</button>
+    <button class="rlink" onclick="document.getElementById('rules').classList.toggle('show')">📖 Vedi le regole di punteggio</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="hidden">
+    <div class="table">
+      <div class="watermark" id="wm">♠</div>
+      <div class="round-row">
+        <div class="round-label">Smazzata <span id="round">1</span></div>
+        <div class="timer-num" id="timerNum">--</div>
+      </div>
+      <div class="tbar" id="tbar"><div class="fill" id="tfill"></div></div>
+      <div class="contract-row">
+        <div class="contract" id="contract"></div>
+        <div class="badges">
+          <span class="badge" id="vulBadge"></span>
+          <span class="badge" id="byBadge">Dichiarante: Sud</span>
+        </div>
+      </div>
+      <div class="result-line" id="result"></div>
+    </div>
+
+    <div class="q" id="qtext">Quanto segna il dichiarante?</div>
+    <div class="opts" id="opts"></div>
+    <div class="inputrow" id="inputrow">
+      <input id="answerInput" type="text" inputmode="numeric" placeholder="es. 420 o -100" autocomplete="off">
+      <button onclick="submitInput()">OK</button>
+    </div>
+    <div class="hint" id="hint"></div>
+
+    <div class="fb" id="fb">
+      <div class="verdict" id="verdict"></div>
+      <div class="youans" id="youans"></div>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+    <button class="next" id="next" style="display:none">Prossima smazzata →</button>
+
+    <div class="foot">
+      <button class="link" onclick="document.getElementById('rules').classList.toggle('show')">📖 Regole di punteggio</button>
+      <span>Bridge LAB · bridgelab.it</span>
+    </div>
+  </div>
+
+  <!-- RULES (shared) -->
+  <div class="rules" id="rules">
+    <h3>Punti delle prese (oltre le prime 6)</h3>
+    <ul><li>♣ ♦ (minori): <b>20</b> a presa</li><li>♥ ♠ (maggiori): <b>30</b> a presa</li><li>SA: <b>40</b> la prima, poi <b>30</b></li></ul>
+    <p style="margin-top:6px">Contro = punti presa <b>×2</b>, Surcontro <b>×4</b>. Se i punti presa ≥ 100 → <b>manche</b>.</p>
+    <h3>Premi</h3>
+    <ul><li>Parziale: <b>50</b></li><li>Manche: <b>300</b> (non vul.) · <b>500</b> (vul.)</li>
+      <li>Piccolo Slam: <b>+500</b> / <b>+750</b></li><li>Grande Slam: <b>+1000</b> / <b>+1500</b></li>
+      <li>Premio "onore" (contratto contrato mantenuto): <b>+50</b> · surcontro <b>+100</b></li></ul>
+    <h3>Prese in più (surlevée)</h3>
+    <ul><li>Senza contro: come una presa del colore</li><li>Contrato: <b>100</b>/<b>200</b> (nv/vul) — surcontro <b>200</b>/<b>400</b></li></ul>
+    <h3>Cadute (penalità)</h3>
+    <ul><li>Senza contro: <b>50</b> (nv) · <b>100</b> (vul) a presa</li>
+      <li>Contrato nv: 1ª <b>100</b>, 2ª-3ª <b>200</b>, poi <b>300</b></li>
+      <li>Contrato vul: 1ª <b>200</b>, poi <b>300</b> — surcontro ×2</li></ul>
+  </div>
+</div>
+
+<script>
+// ===== Scoring engine (Law 77) — verificato =====
+function scoreContract(c){
+  const {level, strain, vul, dbl, made} = c;
+  const needed = level + 6, result = made - needed;
+  const per = (strain==='C'||strain==='D') ? 20 : 30;
+  const dm = dbl===0?1:dbl===1?2:4;
+  const lines = [];
+  if (result >= 0){
+    const base = strain==='N' ? 40 + 30*(level-1) : per*level;
+    const contract = base*dm;
+    lines.push(['Punti presa'+(dbl?(dbl===1?' (contro ×2)':' (surcontro ×4)'):''), contract]);
+    const game = contract >= 100;
+    let bonus = game ? (vul?500:300) : 50;
+    lines.push([game?('Premio manche '+(vul?'(vul.)':'(non vul.)')):'Premio parziale', bonus]);
+    if (level===6){ const s=vul?750:500; bonus+=s; lines.push(['Piccolo slam',s]); }
+    if (level===7){ const s=vul?1500:1000; bonus+=s; lines.push(['Grande slam',s]); }
+    if (dbl===1){ bonus+=50; lines.push(['Premio onore (contro)',50]); }
+    if (dbl===2){ bonus+=100; lines.push(['Premio onore (surcontro)',100]); }
+    let ot=0;
+    if (result>0){
+      if (dbl===0) ot = ((strain==='C'||strain==='D')?20:30)*result;
+      else ot = (dbl===1?(vul?200:100):(vul?400:200))*result;
+      lines.push([result+' presa/e in più', ot]);
+    }
+    return {total: contract+bonus+ot, lines};
+  } else {
+    const down = -result;
+    if (dbl===0){ const p=(vul?100:50)*down; lines.push([down+' sotto '+(vul?'(vul., 100)':'(non vul., 50)'), -p]); return {total:-p, lines}; }
+    let tot=0;
+    for (let i=1;i<=down;i++){ let v; if(!vul){ v=i===1?100:i<=3?200:300; } else { v=i===1?200:300; } tot+=v; }
+    if (dbl===2) tot*=2;
+    lines.push([down+' sotto contrato'+(dbl===2?' (surcontro)':'')+(vul?' vul.':' non vul.'), -tot]);
+    return {total:-tot, lines};
+  }
+}
+
+// ===== contratti pesati: classici frequenti, "strani" più rari =====
+const CLASSIC=[
+  {l:1,s:'N',w:5},{l:2,s:'N',w:2},
+  {l:1,s:'S',w:5},{l:1,s:'H',w:5},{l:2,s:'S',w:6},{l:2,s:'H',w:6},{l:3,s:'S',w:3},{l:3,s:'H',w:3},
+  {l:1,s:'C',w:3},{l:1,s:'D',w:3},{l:2,s:'C',w:3},{l:2,s:'D',w:3},{l:3,s:'C',w:3},{l:3,s:'D',w:3},
+  {l:3,s:'N',w:10},{l:4,s:'H',w:9},{l:4,s:'S',w:9},{l:5,s:'C',w:4},{l:5,s:'D',w:4},
+  {l:6,s:'N',w:2},{l:6,s:'H',w:3},{l:6,s:'S',w:3},{l:6,s:'C',w:2},{l:6,s:'D',w:2},
+  {l:7,s:'N',w:1},{l:7,s:'H',w:1},{l:7,s:'S',w:1},{l:7,s:'C',w:1},{l:7,s:'D',w:1},
+];
+const rnd=(a)=>a[Math.floor(Math.random()*a.length)];
+const ri=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+function pickContractLS(round){
+  const allowSlam = round>=3;
+  const weirdAllowed = round>=4;
+  if (weirdAllowed && Math.random()<0.20){           // contratto "strano"
+    return {level:ri(1,7), strain:rnd(['C','D','H','S','N'])};
+  }
+  let pool = CLASSIC.filter(x=> allowSlam || x.l<=5);
+  const tot = pool.reduce((a,x)=>a+x.w,0); let r=Math.random()*tot;
+  for (const x of pool){ if((r-=x.w)<=0) return {level:x.l, strain:x.s}; }
+  return {level:3, strain:'N'};
+}
+
+const SUITS={C:{s:'♣',c:'b'},D:{s:'♦',c:'r'},H:{s:'♥',c:'r'},S:{s:'♠',c:'b'},N:{s:'SA',c:'b'}};
+let state={score:0,streak:0,lives:3,round:1,best:0,cur:null,locked:false,mode:'choice',timed:true};
+let timer={id:null,remaining:0,total:0};
+
+function selMode(m){
+  state.mode=m;
+  document.getElementById('modeFacile').classList.toggle('sel', m==='choice');
+  document.getElementById('modeDifficile').classList.toggle('sel', m==='input');
+}
+function toggleTimed(){ state.timed=!state.timed; document.getElementById('sw').classList.toggle('on', state.timed); }
+function startGame(){
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('rules').classList.remove('show');
+  document.getElementById('game').classList.remove('hidden');
+  document.getElementById('tbar').classList.toggle('show', state.timed);
+  document.getElementById('timerNum').classList.toggle('show', state.timed);
+  newRound();
+}
+
+function baseTime(){ const b = state.mode==='input'?32:20; return Math.max(state.mode==='input'?16:10, b - (state.round-1)*0.5); }
+function startTimer(){
+  if(!state.timed) return;
+  clearInterval(timer.id); timer.total=baseTime(); timer.remaining=timer.total; drawTimer();
+  timer.id=setInterval(()=>{ timer.remaining-=0.1; if(timer.remaining<=0){ timer.remaining=0; drawTimer(); clearInterval(timer.id); resolve(null,null,true);} else drawTimer(); },100);
+}
+function drawTimer(){
+  const pct=Math.max(0,timer.remaining/timer.total*100);
+  const f=document.getElementById('tfill'); f.style.width=pct+'%';
+  f.style.background = pct>50?'var(--green)': pct>22?'var(--gold)':'var(--red)';
+  document.getElementById('timerNum').textContent = Math.ceil(timer.remaining)+'s';
+}
+function stopTimer(){ clearInterval(timer.id); }
+
+function buildOptions(correct){
+  const set=new Set([correct]);
+  const cand=[correct+200,correct-200,correct+100,correct-100,correct+50,correct-50,correct+300,correct-300,correct+120,correct-120,correct+30,correct+20];
+  for (const v of cand.sort(()=>Math.random()-0.5)){ if(set.size>=4) break; if(!set.has(v)) set.add(v); }
+  const arr=[...set].slice(0,4);
+  for (let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+function renderLives(){ let h=''; for(let i=0;i<3;i++) h+= i<state.lives?'❤️':'<span class="off">🤍</span>'; document.getElementById('lives').innerHTML=h; }
+const fmt=(n)=>(n>0?'+':'')+n;
+
+function newRound(){
+  state.locked=false;
+  const ls=pickContractLS(state.round);
+  const allowVul=state.round>=2, allowDown=state.round>=3, allowDbl=state.round>=4;
+  const vul = allowVul ? Math.random()<0.45 : false;
+  let dbl=0; if(allowDbl && Math.random()<0.4) dbl = Math.random()<0.8?1:2;
+  const needed=ls.level+6; let made; const r=Math.random();
+  if (allowDown && r<0.32) made=needed - ri(1, Math.min(3,needed));
+  else if (r<0.62){ const maxOt=Math.min(3,13-needed); made=needed+(maxOt>0?ri(1,maxOt):0); }
+  else made=needed;
+  const c={level:ls.level,strain:ls.strain,vul,dbl,made};
+  const res=scoreContract(c); state.cur={c,res};
+
+  const su=SUITS[c.strain];
+  const dblMark=c.dbl===1?'<span class="dbl">×</span>':c.dbl===2?'<span class="dbl">××</span>':'';
+  document.getElementById('contract').innerHTML=`<span>${c.level}</span><span class="suit-${su.c}">${su.s}</span>${dblMark}`;
+  document.getElementById('wm').textContent=c.strain==='N'?'♠':su.s;
+  const vb=document.getElementById('vulBadge'); vb.className='badge '+(c.vul?'vul':'novul'); vb.textContent=c.vul?'Vulnerabile':'Non vulnerabile';
+  const diff=c.made-needed; let rl;
+  if(diff>0) rl=`Prese: <b>${c.made}</b> su ${needed} richieste — <span class="made">mantenuto +${diff}</span>`;
+  else if(diff===0) rl=`Prese: <b>${c.made}</b> su ${needed} — <span class="made">mantenuto esatto</span>`;
+  else rl=`Prese: <b>${c.made}</b> su ${needed} — <span class="down">caduto di ${-diff}</span>`;
+  document.getElementById('result').innerHTML=rl;
+  document.getElementById('round').textContent=state.round;
+
+  // answer UI
+  const opts=document.getElementById('opts'), inrow=document.getElementById('inputrow'), inp=document.getElementById('answerInput');
+  document.getElementById('fb').className='fb'; document.getElementById('next').style.display='none';
+  document.getElementById('hint').textContent = state.mode==='input' ? 'Scrivi il punteggio del dichiarante (può essere negativo se cade). Invio per confermare.' : '';
+  if (state.mode==='choice'){
+    inrow.classList.remove('show'); opts.style.display='grid'; opts.innerHTML='';
+    buildOptions(res.total).forEach(v=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=v; b.dataset.v=v; b.onclick=()=>resolve(v,b,false); opts.appendChild(b); });
+  } else {
+    opts.style.display='none'; opts.innerHTML=''; inrow.classList.add('show');
+    inp.value=''; inp.className=''; inp.disabled=false; inp.focus();
+  }
+  startTimer();
+}
+
+function submitInput(){
+  if(state.locked) return;
+  const raw=document.getElementById('answerInput').value.trim();
+  if(raw===''||raw==='-'){ return; }
+  const v=parseInt(raw,10); if(isNaN(v)) return;
+  resolve(v,null,false);
+}
+document.addEventListener('keydown',(e)=>{ if(e.key==='Enter' && state.mode==='input' && !state.locked && !document.getElementById('game').classList.contains('hidden')) submitInput(); });
+
+function resolve(chosen, btn, timedOut){
+  if(state.locked) return; state.locked=true; stopTimer();
+  const {res}=state.cur; const correct=res.total;
+  const ok = !timedOut && chosen===correct;
+
+  if(state.mode==='choice'){
+    document.querySelectorAll('.opt').forEach(o=>{ o.disabled=true; const ov=Number(o.dataset.v);
+      if(ov===correct) o.classList.add('correct'); else if(o===btn) o.classList.add('wrong'); else o.classList.add('dim'); });
+  } else {
+    const inp=document.getElementById('answerInput'); inp.disabled=true;
+    inp.classList.add(ok?'correct':'wrong'); if(timedOut) inp.value=inp.value||'—';
+  }
+
+  let speed=0;
+  if(ok){ state.streak++; const b=100+(state.streak-1)*20; speed=state.timed?Math.round(timer.remaining*4):0; state.score+=b+speed; }
+  else { state.streak=0; state.lives--; renderLives(); }
+  document.getElementById('score').textContent=state.score; document.getElementById('streak').textContent=state.streak;
+
+  const fb=document.getElementById('fb'); fb.className='fb show '+(ok?'ok':'no');
+  document.getElementById('verdict').innerHTML = ok?'✓ Esatto!':(timedOut?'⏱ Tempo scaduto':'✗ Non ci siamo');
+  const ya=document.getElementById('youans');
+  if(timedOut) ya.textContent='Non hai risposto in tempo.';
+  else if(!ok) ya.innerHTML=`La tua risposta: <b>${chosen}</b>`;
+  else ya.textContent='';
+  let rows=res.lines.map(l=>`<tr><td>${l[0]}</td><td>${fmt(l[1])}</td></tr>`).join('');
+  rows+=`<tr class="tot"><td>Totale dichiarante</td><td>${correct}</td></tr>`;
+  let html=`<table>${rows}</table>`;
+  if(ok && speed>0) html+=`<div style="margin-top:8px" class="speed">⏱ Bonus velocità +${speed} punti</div>`;
+  document.getElementById('breakdown').innerHTML=html;
+
+  const nb=document.getElementById('next'); nb.style.display='block';
+  if(state.lives<=0){ nb.textContent='Vedi risultato ↻'; nb.onclick=gameOver; }
+  else { nb.textContent='Prossima smazzata →'; nb.onclick=()=>{ state.round++; newRound(); }; }
+}
+
+function gameOver(){
+  state.best=Math.max(state.best,state.score);
+  document.getElementById('game').innerHTML=`<div class="table"><div class="over">
+    <h2>Fine partita</h2><p>Hai totalizzato</p><div class="big">${state.score}</div>
+    <p>Smazzate: ${state.round} · Record: ${state.best}</p>
+    <button class="play" onclick="restart()">Nuova partita</button></div></div>`;
+}
+function restart(){ state={score:0,streak:0,lives:3,round:1,best:state.best,cur:null,locked:false,mode:state.mode,timed:state.timed}; location.reload(); }
+
+renderLives();
+</script>
+</body>
+</html>

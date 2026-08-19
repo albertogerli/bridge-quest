@@ -94,9 +94,7 @@ export default function ScopriPage() {
               </p>
 
               <p className="text-sm text-foreground/80 leading-relaxed mb-5">
-                La FIGB organizza campionati a livello regionale, nazionale e internazionale,
-                promuove l&apos;insegnamento del bridge nelle scuole e nei circoli, e rappresenta
-                l&apos;Italia nelle competizioni europee e mondiali.
+                {t("La FIGB organizza campionati a livello regionale, nazionale e internazionale, promuove l'insegnamento del bridge nelle scuole e nei circoli, e rappresenta l'Italia nelle competizioni europee e mondiali.")}
               </p>
 
               {/* Links */}
@@ -128,7 +126,7 @@ export default function ScopriPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-foreground">bridgeditalia.it</p>
-                    <p className="text-xs text-muted-foreground">Bridge d&apos;Italia Magazine - Notizie e approfondimenti</p>
+                    <p className="text-xs text-muted-foreground">{t("Bridge d'Italia Magazine - Notizie e approfondimenti")}</p>
                   </div>
                   <ExternalLink className="w-4 h-4 text-figb/50 dark:text-primary/50 group-hover:text-figb dark:group-hover:text-primary transition-colors shrink-0" />
                 </a>

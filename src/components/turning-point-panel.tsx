@@ -65,8 +65,7 @@ export function TurningPointPanel({
           {t("Dove è cambiata la mano")}
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Rigioca la smazzata presa per presa e indica i momenti in cui il
-          risultato ottenibile è cambiato.
+          {t("Rigioca la smazzata presa per presa e indica i momenti in cui il risultato ottenibile è cambiato.")}
         </p>
         {failed && (
           <p className="text-sm text-red-600 dark:text-red-400 mb-3">
@@ -100,8 +99,7 @@ export function TurningPointPanel({
 
       {momenti.length === 0 ? (
         <p className="text-sm">
-          Il risultato non è mai cambiato: la mano è stata giocata e difesa
-          senza sbandamenti rispetto al gioco a carte scoperte.
+          {t("Il risultato non è mai cambiato: la mano è stata giocata e difesa senza sbandamenti rispetto al gioco a carte scoperte.")}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -143,10 +141,7 @@ export function TurningPointPanel({
       {/* Senza questa avvertenza lo strumento insegnerebbe che quelle prese
           erano trovabili al tavolo, il che è falso e scoraggiante. */}
       <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
-        Il conteggio è a carte scoperte, con gioco perfetto di entrambe le
-        linee. Al tavolo, senza vedere le mani avversarie, alcune di queste
-        prese non erano trovabili: questi sono i momenti su cui ragionare, non
-        errori.
+        {t("Il conteggio è a carte scoperte, con gioco perfetto di entrambe le linee. Al tavolo, senza vedere le mani avversarie, alcune di queste prese non erano trovabili: questi sono i momenti su cui ragionare, non errori.")}
       </p>
     </div>
   );

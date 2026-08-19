@@ -1,4 +1,7 @@
+"use client";
+
 import { motion } from "motion/react";
+import { useT } from "@/contexts/traduzioni-provider";
 import Link from "next/link";
 import { Zap, Target } from "lucide-react";
 
@@ -33,6 +36,7 @@ export function HeroSection({
   hasStarted,
   nextModule,
 }: HeroSectionProps) {
+  const t = useT();
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E3B] via-[#14472D] to-[#0D3321] px-4 sm:px-5 pb-20 pt-10 lg:pb-14 lg:pt-6">
       <div className="relative mx-auto max-w-lg">
@@ -70,11 +74,11 @@ export function HeroSection({
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{stats.streak}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Streak</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Streak")}</p>
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{totalModulesCompleted}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Moduli</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Moduli")}</p>
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{handsPlayed}</p>
@@ -116,7 +120,7 @@ export function HeroSection({
                 <div className="flex items-center gap-3 w-full">
                   <span className="text-2xl">{nextModule.lessonIcon}</span>
                   <div className="flex-1 text-left min-w-0">
-                    <p className="text-[12px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">Riprendi</p>
+                    <p className="text-[12px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">{t("Riprendi")}</p>
                     <p className="text-sm font-bold text-[#1B5E3B] truncate">{nextModule.moduleTitle}</p>
                   </div>
                   <svg className="h-5 w-5 text-[#1B5E3B]/40 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -129,7 +133,7 @@ export function HeroSection({
             <Link href="/lezioni">
               <div className="btn-squishy btn-squishy-white w-full h-14 rounded-2xl bg-white flex items-center justify-center gap-2 font-semibold text-base text-[#1B5E3B] cursor-pointer">
                 <Target className="w-5 h-5" aria-hidden="true" />
-                Inizia il tuo viaggio
+                {t("Inizia il tuo viaggio")}
               </div>
             </Link>
           )}

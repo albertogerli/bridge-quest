@@ -145,14 +145,13 @@ export function PulsanteSegnalazione({
             <span>
               {t("Manda anche una foto dello schermo")}
               <span className="block opacity-80">
-                Fotografa quello che c&rsquo;è adesso sulla pagina. La vediamo solo noi.
+                {t("Fotografa quello che c’è adesso sulla pagina. La vediamo solo noi.")}
               </span>
             </span>
           </label>
 
           <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">
-            Mandiamo anche: pagina, mano in corso, dimensioni dello schermo, browser ed
-            eventuali errori. Nessun dato personale.
+            {t("Mandiamo anche: pagina, mano in corso, dimensioni dello schermo, browser ed eventuali errori. Nessun dato personale.")}
           </p>
 
           {errore && <p className="mt-2 text-xs text-destructive">{errore}</p>}

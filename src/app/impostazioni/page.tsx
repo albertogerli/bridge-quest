@@ -383,7 +383,7 @@ export default function ImpostazioniPage() {
             </div>
             <div>
               <h2 className="font-semibold text-foreground text-base">{t("Tema")}</h2>
-              <p className="text-xs text-muted-foreground">Scegli l&apos;aspetto dell&apos;app</p>
+              <p className="text-xs text-muted-foreground">{t("Scegli l'aspetto dell'app")}</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -673,7 +673,7 @@ export default function ImpostazioniPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="font-semibold text-foreground text-base">Esci dall&apos;account</h2>
+                  <h2 className="font-semibold text-foreground text-base">{t("Esci dall'account")}</h2>
                   <p className="text-xs text-muted-foreground">{t("Disconnettiti da Bridge LAB")}</p>
                 </div>
               </div>
@@ -723,7 +723,7 @@ export default function ImpostazioniPage() {
                       variant="outline"
                       className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-bold h-11 text-sm"
                     >
-                      Esci dall&apos;account
+                      {t("Esci dall'account")}
                     </Button>
                   </motion.div>
                 )}

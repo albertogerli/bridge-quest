@@ -66,10 +66,7 @@ export function CookieBanner() {
         >
           <div className="w-full max-w-lg mx-4 mb-4 bg-card border border-border rounded-2xl shadow-xl p-5">
             <p className="text-sm text-foreground/80 leading-relaxed">
-              Usiamo cookie tecnici, necessari al funzionamento della
-              piattaforma. Con il tuo consenso usiamo anche cookie di
-              statistica e pubblicitari, che ci aiutano a far conoscere il
-              bridge a chi non lo conosce.
+              {t("Usiamo cookie tecnici, necessari al funzionamento della piattaforma. Con il tuo consenso usiamo anche cookie di statistica e pubblicitari, che ci aiutano a far conoscere il bridge a chi non lo conosce.")}
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch gap-2 mt-4">

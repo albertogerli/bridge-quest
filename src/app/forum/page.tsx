@@ -232,7 +232,7 @@ export default function ForumPage() {
                                 <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                                   <path d="M18 20V10M12 20V4M6 20v-6" />
                                 </svg>
-                                SONDAGGIO
+                                {t("SONDAGGIO")}
                               </span>
                             )}
                             <span className="text-[12px] text-muted-foreground">

@@ -1,0 +1,43 @@
+
+> figb-bridge-lab@0.1.0 test
+> vitest run
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.10 /Users/albertogiovannigerli/Desktop/Personale/Bridge/bridgequest
+
+ ❯ src/lib/palette.test.ts (4 tests | 1 failed) 107ms
+     × l'elenco del debito è aggiornato 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/palette.test.ts > tavolozza — il debito di colore può solo scendere > l'elenco del debito è aggiornato
+AssertionError: Ottimo, il debito è sceso: rigenera l'elenco con `node scripts/aggiorna-baseline-palette.mjs` per bloccare il guadagno.: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "src/components/home/landing-page.tsx: 2 → 0",
++ ]
+
+ ❯ src/lib/palette.test.ts:88:7
+     86|       "Ottimo, il debito è sceso: rigenera l'elenco con " +
+     87|         "`node scripts/aggiorna-baseline-palette.mjs` per bloccare il …
+     88|     ).toEqual([]);
+       |       ^
+     89|   });
+     90|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 35 passed (36)
+      Tests  1 failed | 737 passed (738)
+   Start at  13:10:07
+   Duration  33.10s (transform 7.74s, setup 0ms, import 14.74s, tests 35.19s, environment 161ms)
+
+EXIT:1

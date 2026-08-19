@@ -29,9 +29,7 @@ export function MaestroTip() {
               </Badge>
             </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed">
-              Il Torneo Settimanale ti permette di sfidare tutti i
-              giocatori sulle stesse 5 mani. Ogni settimana nuove mani
-              e una nuova classifica. Concentrati su ogni presa!
+              {t("Il Torneo Settimanale ti permette di sfidare tutti i giocatori sulle stesse 5 mani. Ogni settimana nuove mani e una nuova classifica. Concentrati su ogni presa!")}
             </p>
           </div>
         </div>

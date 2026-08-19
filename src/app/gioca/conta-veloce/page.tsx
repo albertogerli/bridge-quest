@@ -527,7 +527,7 @@ export default function ContaVelocePage() {
         {/* Hint for senior */}
         {profile === "senior" && !showAnswer && (
           <p className="text-center text-[12px] text-muted-foreground mt-3">
-            A=4, K=3, Q=2, J=1
+            {t("A=4, K=3, Q=2, J=1")}
           </p>
         )}
 

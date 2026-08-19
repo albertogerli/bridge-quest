@@ -249,8 +249,7 @@ export default function PraticaLicitaPage() {
               {t("Pratica Licita")}
             </h1>
             <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
-              Esercitati nella dichiarazione: il compagno ha aperto, quale bid
-              fai tu?
+              {t("Esercitati nella dichiarazione: il compagno ha aperto, quale bid fai tu?")}
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-xs font-bold border-0">

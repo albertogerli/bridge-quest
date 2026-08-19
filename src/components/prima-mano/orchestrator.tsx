@@ -291,8 +291,7 @@ export function PrimaManoV2({
                   <div className="flex items-center gap-2 text-xs text-[#6b7280]">
                     <BookOpen className="h-4 w-4 text-[#8f6b16]" />
                     <span className="hidden sm:inline">
-                      Ispirato alla logica FIGB dell&apos;ingresso morbido al
-                      tavolo.
+                      {t("Ispirato alla logica FIGB dell'ingresso morbido al tavolo.")}
                     </span>
                   </div>
                   <button

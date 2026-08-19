@@ -1,0 +1,17 @@
+{
+  "rows": 59553,
+  "by_game_type": {
+    "compito": 554,
+    "conta-veloce": 2577,
+    "dichiara": 1168,
+    "impasse": 1371,
+    "mano-del-giorno": 3497,
+    "mano-guidata": 1129,
+    "memory": 1865,
+    "pratica-licita": 882,
+    "quiz-lampo": 1902,
+    "sfida": 10633,
+    "smazzata": 33383,
+    "trova-errore": 592
+  }
+}

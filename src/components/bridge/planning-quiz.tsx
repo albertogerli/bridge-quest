@@ -84,8 +84,7 @@ export function PlanningQuiz({
               {t("Fai il piano prima di giocare")}
             </p>
             <p className="mt-1 text-xs font-medium text-amber-700 dark:text-amber-300">
-              Guarda il morto e conta: quante prese puoi realizzare con il gioco
-              migliore?
+              {t("Guarda il morto e conta: quante prese puoi realizzare con il gioco migliore?")}
             </p>
 
             {!answered && (

@@ -122,8 +122,7 @@ export function ProvaDaQui({
       </div>
 
       <p className="mb-3 text-xs text-muted-foreground">
-        Qui non si registra niente: è pratica. Il risultato del compito resta quello del primo
-        tentativo.
+        {t("Qui non si registra niente: è pratica. Il risultato del compito resta quello del primo tentativo.")}
       </p>
 
       <p className="mb-2 text-sm">

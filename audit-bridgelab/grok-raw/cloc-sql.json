@@ -1,0 +1,15 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "2.06",
+  "n_files"            : 33,
+  "n_lines"            : 3376},
+"SQL" :{
+  "nFiles": 33,
+  "blank": 321,
+  "comment": 1112,
+  "code": 1943},
+"SUM": {
+  "blank": 321,
+  "comment": 1112,
+  "code": 1943,
+  "nFiles": 33} }

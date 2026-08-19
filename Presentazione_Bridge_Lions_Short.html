@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Il Bridge — Versione short per Lions Club</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --figb:#003DA5; --figb-light:#4d8fe6; --ivory:#F7F5F0; --ink:#1a1a2e;
+  --gold:#c8a44e; --gold-deep:#a8842e; --red:#B91C1C;
+  --felt1:#0b3d2e; --felt2:#134e3a; --muted:#5a5f6b; --line:#e4e0d6;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+@page{ size:A4 landscape; margin:0; }
+html,body{ background:#333; }
+body{ font-family:'Inter',system-ui,sans-serif; color:var(--ink); }
+
+.slide{ position:relative; width:1122px; height:793px; background:var(--ivory);
+  overflow:hidden; page-break-after:always; break-after:page; }
+.slide:last-child{ page-break-after:auto; }
+
+.pad{ padding:70px 78px; height:100%; display:flex; flex-direction:column; }
+.kicker{ display:inline-flex; align-items:center; gap:10px; font-size:13px; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--figb); }
+.kicker::before{ content:""; width:34px; height:3px; background:var(--gold); border-radius:3px; }
+.slide-title{ font-family:'Bricolage Grotesque',sans-serif; font-weight:800; color:var(--figb);
+  line-height:1.02; letter-spacing:-.01em; font-size:52px; margin-top:16px; }
+.slide-sub{ font-size:20px; color:var(--muted); margin-top:16px; max-width:840px; line-height:1.5; }
+.suit-red{ color:var(--red);} .suit-dark{ color:var(--ink);}
+
+.footer{ position:absolute; left:78px; right:78px; bottom:34px; display:flex; justify-content:space-between;
+  align-items:center; font-size:12.5px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px; }
+.footer .brand{ font-weight:700; color:var(--figb); }
+.pageno{ font-variant-numeric:tabular-nums; font-weight:600; }
+
+/* COVER */
+.cover{ background:
+  radial-gradient(120% 120% at 82% 8%, rgba(200,164,78,.16), transparent 46%),
+  radial-gradient(120% 130% at 12% 96%, rgba(77,143,230,.20), transparent 50%),
+  linear-gradient(150deg, var(--felt1) 0%, var(--felt2) 46%, #0d2b47 100%); color:#fff; }
+.cover .pad{ justify-content:center; }
+.cover-suits{ position:absolute; inset:0; pointer-events:none; opacity:.14; font-size:520px; line-height:1; }
+.cover-suits span{ position:absolute; font-family:serif; }
+.cs1{ top:-120px; right:-40px; color:#fff; } .cs2{ bottom:-190px; left:-70px; font-size:420px; color:var(--gold); opacity:.8; }
+.cover-kicker{ display:inline-flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.24em;
+  text-transform:uppercase; font-size:14px; color:#f4e8c6; }
+.cover-kicker .dot{ width:8px; height:8px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(200,164,78,.25);}
+.cover-title{ font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:132px; line-height:.9;
+  letter-spacing:-.02em; margin:24px 0 0; }
+.cover-title .em{ color:var(--gold); }
+.cover-lead{ font-size:26px; color:#e9efe8; margin-top:26px; max-width:760px; line-height:1.4; }
+.cover-suitrow{ margin-top:40px; font-size:40px; letter-spacing:16px; }
+.cover-suitrow .r{ color:#f0b8b8; } .cover-suitrow .b{ color:#fff; }
+.cover-foot{ position:absolute; left:78px; right:78px; bottom:52px; display:flex; justify-content:space-between;
+  align-items:flex-end; font-size:15px; color:#d9e2df; }
+.cover-foot .strong{ color:#fff; font-weight:700; font-size:17px; }
+.cover-badge{ border:1.5px solid rgba(255,255,255,.4); border-radius:999px; padding:9px 20px; font-size:13px;
+  font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#fff; background:rgba(255,255,255,.06); }
+
+/* COS'È + DSA */
+.lead-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:44px; margin-top:34px; flex:1; align-items:center;}
+.body-copy p{ font-size:20px; line-height:1.62; color:#33383f; margin-bottom:20px; }
+.body-copy strong{ color:var(--figb); font-weight:700; }
+.body-copy .hl{ color:var(--gold-deep); font-weight:700; }
+
+.credential{ background:linear-gradient(160deg,#04294a,#003DA5 70%); color:#fff; border-radius:24px;
+  padding:40px 38px; box-shadow:0 26px 54px -26px rgba(0,61,165,.75); border-top:5px solid var(--gold); text-align:center; }
+.credential .medal{ font-size:58px; line-height:1; margin-bottom:14px; }
+.credential .coni{ font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:40px; letter-spacing:.16em; color:var(--gold);}
+.credential .dsa{ font-family:'Bricolage Grotesque',sans-serif; font-size:23px; font-weight:700; margin-top:12px; line-height:1.25;}
+.credential .sub{ font-size:14.5px; color:#c9d8ee; margin-top:12px; line-height:1.45;}
+.mini-facts{ display:flex; justify-content:center; gap:0; margin-top:26px; padding-top:20px; border-top:1px solid rgba(255,255,255,.18);}
+.mini-facts div{ flex:1; }
+.mini-facts .n{ font-family:'Bricolage Grotesque',sans-serif; font-size:30px; font-weight:800; color:#fff; }
+.mini-facts .l{ font-size:12px; color:#b9cbe6; letter-spacing:.04em; margin-top:2px; }
+.mini-facts .sep{ flex:0 0 1px; background:rgba(255,255,255,.18); }
+
+/* value cards */
+.cards4{ display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:38px; flex:1; }
+.vcard{ background:#fff; border:1px solid var(--line); border-radius:20px; padding:30px 32px;
+  box-shadow:0 12px 34px -20px rgba(0,0,0,.25); display:flex; flex-direction:column; }
+.vcard .ic{ width:56px; height:56px; border-radius:15px; display:flex; align-items:center; justify-content:center;
+  font-size:28px; margin-bottom:18px; background:linear-gradient(140deg, rgba(0,61,165,.10), rgba(77,143,230,.14)); color:var(--figb); }
+.vcard.gold .ic{ background:linear-gradient(140deg, rgba(200,164,78,.18), rgba(200,164,78,.30)); color:var(--gold-deep);}
+.vcard h3{ font-family:'Bricolage Grotesque',sans-serif; font-size:22px; color:var(--figb); margin-bottom:9px; }
+.vcard p{ font-size:15.5px; line-height:1.5; color:#4a4f57; }
+
+/* GIOVANI */
+.youth-grid{ display:grid; grid-template-columns:1.06fr .94fr; gap:44px; margin-top:30px; flex:1; align-items:center;}
+.ylist{ display:flex; flex-direction:column; gap:20px; }
+.yrow{ display:flex; gap:16px; align-items:flex-start; }
+.yrow .yic{ width:48px; height:48px; border-radius:13px; flex-shrink:0; display:flex; align-items:center;
+  justify-content:center; font-size:24px; background:linear-gradient(140deg, rgba(0,61,165,.10), rgba(77,143,230,.14)); color:var(--figb); }
+.yrow h4{ font-family:'Bricolage Grotesque',sans-serif; font-size:19px; color:var(--figb); margin-bottom:3px; }
+.yrow p{ font-size:15px; line-height:1.45; color:#4a4f57; }
+.digital-card{ background:
+    radial-gradient(120% 120% at 85% 10%, rgba(200,164,78,.20), transparent 50%),
+    linear-gradient(155deg, var(--felt1) 0%, #0d3a55 100%);
+  color:#fff; border-radius:24px; padding:36px 34px; box-shadow:0 24px 50px -26px rgba(0,0,0,.6); border-top:5px solid var(--gold);}
+.digital-card .tag{ display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:#0b3d2e; background:var(--gold); padding:5px 13px; border-radius:999px; margin-bottom:18px; }
+.digital-card .dc-name{ font-family:'Bricolage Grotesque',sans-serif; font-size:36px; font-weight:800; color:var(--gold); letter-spacing:-.01em;}
+.digital-card p{ font-size:15.5px; line-height:1.55; color:#e6eef0; margin-top:12px; }
+.digital-card .note{ margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,.2); font-size:13.5px; color:#cfe0da; }
+.digital-card .note b{ color:#fff; }
+
+/* invito */
+.invite{ background:
+  radial-gradient(120% 130% at 88% 10%, rgba(200,164,78,.14), transparent 46%),
+  linear-gradient(155deg,#062a48 0%, var(--figb) 60%, #0a2f52 100%); color:#fff; }
+.invite .slide-title{ color:#fff; } .invite .kicker{ color:#f4e8c6; } .invite .kicker::before{ background:var(--gold); }
+.invite-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; margin-top:34px; flex:1; align-items:center;}
+.invite-copy p{ font-size:18px; line-height:1.6; color:#e7eef4; margin-bottom:18px;}
+.invite-copy .big{ font-family:'Bricolage Grotesque',sans-serif; font-size:26px; color:#fff; line-height:1.3; margin-bottom:20px;}
+.invite-copy strong{ color:var(--gold); }
+.contact-card{ background:rgba(255,255,255,.97); color:var(--ink); border-radius:22px; padding:34px 36px;
+  box-shadow:0 24px 50px -24px rgba(0,0,0,.55); border-top:5px solid var(--gold); }
+.contact-card .cc-name{ font-family:'Bricolage Grotesque',sans-serif; font-size:26px; color:var(--figb); font-weight:800; }
+.contact-card .cc-site{ font-size:16px; color:var(--gold-deep); font-weight:700; margin:4px 0 20px; }
+.cc-row{ display:flex; gap:13px; align-items:flex-start; margin-bottom:14px; font-size:15.5px; color:#333; line-height:1.4;}
+.cc-row .cic{ width:30px; height:30px; border-radius:9px; background:rgba(0,61,165,.08); color:var(--figb);
+  display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
+.cc-row b{ display:block; color:var(--ink); }
+.cc-social{ margin-top:20px; padding-top:18px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); display:flex; gap:18px;}
+.cc-social span{ color:var(--figb); font-weight:600; }
+.disclaimer{ position:absolute; bottom:30px; left:78px; font-size:11px; color:rgba(255,255,255,.55); letter-spacing:.03em;}
+</style>
+</head>
+<body>
+
+<!-- ===== 1 — COVER ===== -->
+<section class="slide cover">
+  <div class="cover-suits"><span class="cs1">&#9824;</span><span class="cs2">&#9827;</span></div>
+  <div class="pad">
+    <div class="cover-kicker"><span class="dot"></span> Lions Club &nbsp;·&nbsp; Service &amp; Comunità</div>
+    <h1 class="cover-title">Il <span class="em">Bridge</span></h1>
+    <p class="cover-lead">Lo sport della mente che allena il pensiero e unisce le persone.</p>
+    <div class="cover-suitrow"><span class="b">&#9824;</span> <span class="r">&#9829;</span> <span class="r">&#9830;</span> <span class="b">&#9827;</span></div>
+  </div>
+  <div class="cover-foot">
+    <div>
+      <div class="strong">Una presentazione per il Lions Club</div>
+      <div>Disciplina Sportiva Associata al CONI</div>
+    </div>
+    <div class="cover-badge">in collaborazione con Padova Bridge</div>
+  </div>
+</section>
+
+<!-- ===== 2 — COS'È + DSA CONI ===== -->
+<section class="slide">
+  <div class="pad">
+    <div class="kicker">Che cos'è</div>
+    <h2 class="slide-title">Molto più di<br>un gioco di carte</h2>
+    <div class="lead-grid">
+      <div class="body-copy">
+        <p>Il Bridge è un <strong>gioco di squadra della mente</strong>: si gioca in quattro, due coppie che si sfidano. Conta il ragionamento e l'intesa con il compagno, non la fortuna delle carte.</p>
+        <p>È un'attività di <strong>logica, memoria e relazione</strong>: semplice da avvicinare, profonda da approfondire per tutta la vita.</p>
+        <p>E soprattutto è uno <span class="hl">sport riconosciuto</span>: una vera disciplina, con corsi, tornei e una comunità in tutta Italia.</p>
+      </div>
+      <div class="credential">
+        <div class="medal">&#127941;</div>
+        <div class="coni">CONI</div>
+        <div class="dsa">Disciplina Sportiva<br>Associata</div>
+        <div class="sub">Riconosciuto dal CONI tramite la Federazione Italiana Gioco Bridge (FIGB)</div>
+        <div class="mini-facts">
+          <div><div class="n">4</div><div class="l">giocatori</div></div>
+          <div class="sep"></div>
+          <div><div class="n">2</div><div class="l">coppie</div></div>
+          <div class="sep"></div>
+          <div><div class="n">&#9733;</div><div class="l">sport mente</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand">Il Bridge · Lions Club</span><span class="pageno">02</span></div>
+</section>
+
+<!-- ===== 3 — PERCHÉ (valori Lions) ===== -->
+<section class="slide">
+  <div class="pad">
+    <div class="kicker">Perché proprio il Bridge</div>
+    <h2 class="slide-title">Quattro buoni motivi,<br>vicini ai valori Lions</h2>
+    <div class="cards4">
+      <div class="vcard">
+        <div class="ic">&#129504;</div>
+        <h3>Mente allenata</h3>
+        <p>Memoria, logica e concentrazione: un allenamento cognitivo prezioso per mantenere la mente attiva a ogni età. Un investimento sul benessere delle persone.</p>
+      </div>
+      <div class="vcard gold">
+        <div class="ic">&#129309;</div>
+        <h3>Socialità e comunità</h3>
+        <p>Si gioca in coppia e ci si ritrova in circolo: dialogo, relazioni, appartenenza. Un potente antidoto alla solitudine, in particolare per gli over 60.</p>
+      </div>
+      <div class="vcard gold">
+        <div class="ic">&#127891;</div>
+        <h3>Una palestra per i giovani</h3>
+        <p>Logica, matematica e concentrazione: il bridge sviluppa competenze utili a scuola e nella vita. Un ponte tra generazioni, dai ragazzi ai senior.</p>
+      </div>
+      <div class="vcard">
+        <div class="ic">&#10084;</div>
+        <h3>Valori condivisi</h3>
+        <p>Collaborazione, rispetto delle regole e fair play: gli stessi principi di servizio e comunità che animano il mondo Lions.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand">Il Bridge · Lions Club</span><span class="pageno">03</span></div>
+</section>
+
+<!-- ===== 4 — I GIOVANI ===== -->
+<section class="slide">
+  <div class="pad">
+    <div class="kicker">Guardando al futuro</div>
+    <h2 class="slide-title">Un alleato per la<br>crescita dei ragazzi</h2>
+    <div class="youth-grid">
+      <div class="ylist">
+        <div class="yrow">
+          <div class="yic">&#129518;</div>
+          <div><h4>Logica e pensiero matematico</h4><p>Calcolo, probabilità e deduzione messi in gioco a ogni mano: competenze che aiutano anche a scuola.</p></div>
+        </div>
+        <div class="yrow">
+          <div class="yic">&#127919;</div>
+          <div><h4>Concentrazione e memoria</h4><p>Allena l'attenzione e la costanza, in un'epoca di distrazione continua e schermi passivi.</p></div>
+        </div>
+        <div class="yrow">
+          <div class="yic">&#129513;</div>
+          <div><h4>Decidere con informazioni incomplete</h4><p>Valutare rischi, cambiare piano, scegliere sotto incertezza: una vera competenza per la vita.</p></div>
+        </div>
+        <div class="yrow">
+          <div class="yic">&#129309;</div>
+          <div><h4>Spirito di squadra e fair play</h4><p>Si gioca in coppia: comunicazione, fiducia e rispetto dell'avversario. Educazione, non solo gioco.</p></div>
+        </div>
+      </div>
+      <div class="digital-card">
+        <span class="tag">Impara online</span>
+        <div class="dc-name">bridgelab.it</div>
+        <p>La piattaforma digitale per imparare il bridge <b>giocando</b>: lezioni interattive, quiz e sfide nel linguaggio dei nativi digitali. Il modo più semplice per avvicinare i ragazzi.</p>
+        <div class="note">In aula come online: il bridge entra sempre più <b>nelle scuole</b> come strumento didattico, con i progetti promossi dalla FIGB.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand">Il Bridge · Lions Club</span><span class="pageno">04</span></div>
+</section>
+
+<!-- ===== 5 — PROPOSTA + CONTATTI ===== -->
+<section class="slide invite">
+  <div class="pad">
+    <div class="kicker">Proviamo insieme</div>
+    <h2 class="slide-title">Una proposta<br>per il territorio</h2>
+    <div class="invite-grid">
+      <div class="invite-copy">
+        <p class="big">Bastano poche lezioni per iniziare a giocare — e una vita per non smettere di imparare.</p>
+        <p>Padova Bridge organizza <strong>corsi per principianti</strong>, gioco guidato e tornei, in aula e con la piattaforma digitale <strong>bridgelab.it</strong>.</p>
+        <p>La <strong>proposta al Lions Club</strong>: incontri introduttivi ed eventi dimostrativi per soci, famiglie e ragazzi — un progetto che unisce mente attiva, giovani e servizio alla comunità.</p>
+      </div>
+      <div class="contact-card">
+        <div class="cc-name">Padova Bridge</div>
+        <div class="cc-site">padovabridge.it</div>
+        <div class="cc-row"><span class="cic">&#128205;</span><span><b>Sede</b>Via Armistizio 277<br>35142 Padova – Italy</span></div>
+        <div class="cc-row"><span class="cic">&#9993;</span><span><b>Email</b>info@padovabridge.it</span></div>
+        <div class="cc-row"><span class="cic">&#128222;</span><span><b>Telefono</b>+39 388 97 89 467</span></div>
+        <div class="cc-row"><span class="cic">&#128187;</span><span><b>Impara online</b>bridgelab.it</span></div>
+        <div class="cc-social">Seguici: <span>Facebook</span> <span>Instagram</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="disclaimer">Disciplina Sportiva Associata al CONI (FIGB) · Riferimenti: padovabridge.it · bridgelab.it</div>
+</section>
+
+</body>
+</html>

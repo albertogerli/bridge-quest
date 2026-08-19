@@ -87,8 +87,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
                   {t("Non perdere la striscia 🔥")}
                 </h3>
                 <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                  Attiva i promemoria: ti avvisiamo per la Sfida del Giorno e prima
-                  che la tua striscia si azzeri.
+                  {t("Attiva i promemoria: ti avvisiamo per la Sfida del Giorno e prima che la tua striscia si azzeri.")}
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   <button

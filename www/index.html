@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BridgeLab</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #F5F2EB;
+      color: #1B5E3B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 24px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .container {
+      text-align: center;
+      max-width: 320px;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 20px;
+      background: #1B5E3B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(27, 94, 59, 0.2);
+    }
+    .logo svg {
+      width: 44px;
+      height: 44px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1B5E3B;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 32px;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #1B5E3B;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .status {
+      font-size: 13px;
+      color: #9ca3af;
+      transition: opacity 0.3s;
+    }
+    .error-state { display: none; }
+    .error-state.visible { display: block; }
+    .loading-state.hidden { display: none; }
+    .error-msg {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .retry-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 28px;
+      background: #1B5E3B;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.2s;
+    }
+    .retry-btn:active { opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <h1>BridgeLab</h1>
+    <p class="subtitle">Impara il bridge giocando</p>
+
+    <div class="loading-state" id="loading">
+      <div class="spinner"></div>
+      <p class="status" id="status">Caricamento in corso…</p>
+    </div>
+
+    <div class="error-state" id="error">
+      <p class="error-msg">
+        Impossibile connettersi al server.<br/>
+        Verifica la connessione internet e riprova.
+      </p>
+      <button class="retry-btn" onclick="retry()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Riprova
+      </button>
+    </div>
+  </div>
+
+  <script>
+    var REMOTE_URL = 'https://bridgelab.it';
+    var TIMEOUT_MS = 15000;
+    var timer = null;
+
+    function showError() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('error').classList.add('visible');
+    }
+
+    function retry() {
+      document.getElementById('error').classList.remove('visible');
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('status').textContent = 'Caricamento in corso…';
+      attemptLoad();
+    }
+
+    function attemptLoad() {
+      clearTimeout(timer);
+
+      // Try to reach the remote URL
+      timer = setTimeout(function() {
+        document.getElementById('status').textContent = 'La connessione è lenta…';
+        // Give extra 10 seconds before showing error
+        timer = setTimeout(showError, 10000);
+      }, TIMEOUT_MS);
+
+      // Attempt to fetch the remote page
+      fetch(REMOTE_URL, { mode: 'no-cors', cache: 'no-store' })
+        .then(function() {
+          clearTimeout(timer);
+          window.location.href = REMOTE_URL;
+        })
+        .catch(function() {
+          clearTimeout(timer);
+          showError();
+        });
+    }
+
+    // Start loading check after a brief delay (splash screen covers initial load)
+    setTimeout(attemptLoad, 500);
+  </script>
+</body>
+</html>

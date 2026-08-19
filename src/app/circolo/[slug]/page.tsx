@@ -322,8 +322,7 @@ export default function CircoloPage() {
                 {t("Nessun membro ancora")}
               </p>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                I membri di questo circolo appariranno qui quando si
-                registreranno su BridgeLab e selezioneranno la propria ASD.
+                {t("I membri di questo circolo appariranno qui quando si registreranno su BridgeLab e selezioneranno la propria ASD.")}
               </p>
               <Link href="/registrati">
                 <motion.div

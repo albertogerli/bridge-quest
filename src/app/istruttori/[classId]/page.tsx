@@ -333,10 +333,10 @@ export default function ClassDetailPage({
               onChange={(e) => void cambiaImpostazione({ stato: e.target.value as StatoClasse })}
               className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm sm:w-auto"
             >
-              <option value="bozza">Bozza — la sto preparando, non si entra</option>
-              <option value="aperta">Aperta — si entra e si lavora</option>
-              <option value="chiusa">Chiusa — niente nuovi iscritti, chi c&rsquo;è continua</option>
-              <option value="archiviata">Archiviata — corso finito</option>
+              <option value="bozza">{t("Bozza — la sto preparando, non si entra")}</option>
+              <option value="aperta">{t("Aperta — si entra e si lavora")}</option>
+              <option value="chiusa">{t("Chiusa — niente nuovi iscritti, chi c’è continua")}</option>
+              <option value="archiviata">{t("Archiviata — corso finito")}</option>
             </select>
             <p className="text-xs text-muted-foreground">
               {t("Chiudere e archiviare non cancella niente: allievi, compiti e risultati restano tutti.")}
