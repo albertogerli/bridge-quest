@@ -1,6 +1,6 @@
 "use client";
 
-import {useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { usePercorso } from "@/hooks/use-lingua";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -73,12 +73,28 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
     if (showExitModal) setExitModalArmed(true);
   }, [showExitModal]);
 
-  // Auth gate: redirect to login if not authenticated on protected routes
+  /**
+   * Auth gate: chi non è collegato va al login, PORTANDOSI DIETRO DOVE STAVA
+   * ANDANDO.
+   *
+   * Prima mandava a `/login` e basta. Il proxy la destinazione la conserva
+   * (`?redirect=`), ma il proxy protegge solo `/admin`: per tutto il resto
+   * arriva prima questo cancello, e la buttava via. Il costo si vede quando
+   * qualcuno riceve un collegamento diretto — un compito mandato su WhatsApp
+   * dall'insegnante, per dire: fa il login e si ritrova sulla home, a cercare
+   * a mano la cosa su cui aveva appena cliccato.
+   *
+   * Si usa il percorso INTERO, prefisso di lingua compreso: `usePercorso()` lo
+   * toglie per i confronti qui sopra, ma come destinazione servirebbe quello
+   * vero, o un inglese tornerebbe sulla pagina italiana.
+   */
+  const percorsoIntero = usePathname();
   useEffect(() => {
     if (!authLoading && !user && !isPublic) {
-      router.replace("/login");
+      const dove = percorsoIntero && percorsoIntero !== "/" ? percorsoIntero : null;
+      router.replace(dove ? `/login?redirect=${encodeURIComponent(dove)}` : "/login");
     }
-  }, [authLoading, user, isPublic, router]);
+  }, [authLoading, user, isPublic, router, percorsoIntero]);
 
   // Load profile for visual adaptation
   useEffect(() => {

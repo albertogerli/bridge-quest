@@ -11,7 +11,9 @@ export type EmailKind =
   | "inactive_14"
   | "streak_risk"
   | "friend_request"
-  | "turno_licita";
+  | "turno_licita"
+  | "compito_assegnato"
+  | "compito_in_scadenza";
 
 export interface EmailContext {
   name?: string | null;
@@ -28,6 +30,16 @@ export interface EmailContext {
   senderName?: string | null; // friend_request: chi ha inviato la richiesta
   /** turno_licita: quante licite aperte stanno aspettando una tua risposta. */
   liciteFerme?: number;
+  /** compito_*: il titolo del compito, così com'è stato scritto dall'insegnante. */
+  compitoTitolo?: string | null;
+  /** compito_*: dove si va a farlo. */
+  compitoUrl?: string | null;
+  /** compito_*: la classe, per dire da chi arriva. */
+  classeNome?: string | null;
+  /** compito_assegnato: quante mani, per far capire quanto ci vuole. */
+  compitoMani?: number;
+  /** compito_in_scadenza: fra quanti giorni scade. 0 = oggi. */
+  giorniAllaScadenza?: number;
 }
 
 export interface RenderedEmail {
@@ -396,6 +408,105 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
             [`${hi.replace(/<[^>]+>/g, "")}! ${quante === 1 ? "There's one auction" : `There are ${quante} auctions`} where your partner is waiting for your bid.`, "", "It takes a minute: look at your hand, bid, and it's back to them."]
           ),
           T("Rispondi ora", "Bid now"), licite
+        ),
+        transactional: true,
+      };
+    }
+
+
+    /**
+     * L'insegnante ha assegnato un compito.
+     *
+     * TRANSAZIONALE, e non è una forzatura: la persona si è iscritta a una
+     * classe con un codice che le ha dato il suo insegnante, e questo messaggio
+     * è la conseguenza diretta di quel gesto. Non chiede il consenso al
+     * marketing e non porta il piè di pagina di disiscrizione — chi non vuole
+     * più i compiti esce dalla classe, che è la stessa cosa detta bene.
+     *
+     * Non dice quali mani sono, e nemmeno il numero della lezione: se lo
+     * dicesse, l'allievo saprebbe cosa lo aspetta prima di aprire. Dice il
+     * titolo che l'insegnante ha scelto e quante mani sono, che serve solo a
+     * capire se c'è tempo adesso o stasera.
+     */
+    case "compito_assegnato": {
+      const titolo = esc(ctx.compitoTitolo ?? T("Nuovo compito", "New homework"));
+      const dove = ctx.compitoUrl ?? `${SITE}/classi`;
+      const classe = ctx.classeNome ? esc(ctx.classeNome) : null;
+      const mani = ctx.compitoMani ?? 0;
+      const quante = mani > 0
+        ? T(`${mani} ${mani === 1 ? "mano" : "mani"}`, `${mani} ${mani === 1 ? "hand" : "hands"}`)
+        : null;
+      const bodyHtml = T(
+        `
+        <p style="margin:0 0 14px;">${hi}! Il tuo insegnante${classe ? ` di <strong>${classe}</strong>` : ""} ti ha assegnato <strong>${titolo}</strong>${quante ? ` — ${quante}` : ""}.</p>
+        <p style="margin:0;">Le soluzioni si aprono dopo che hai giocato: prima provaci, poi leggi il commento del maestro.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! Your teacher${classe ? ` of <strong>${classe}</strong>` : ""} has assigned you <strong>${titolo}</strong>${quante ? ` — ${quante}` : ""}.</p>
+        <p style="margin:0;">The solutions open after you play: try first, then read the analysis.</p>`
+      );
+      return {
+        subject: T(`Nuovo compito: ${ctx.compitoTitolo ?? "da fare"} 📘`, `New homework: ${ctx.compitoTitolo ?? "to do"} 📘`),
+        html: layout({
+          preheader: T("Il tuo insegnante ti ha assegnato delle mani.", "Your teacher has assigned you some hands."),
+          emoji: "📘",
+          heading: T("Hai un compito", "You have homework"),
+          bodyHtml,
+          ctaLabel: T("Vai al compito", "Go to the homework"),
+          ctaUrl: dove,
+        }),
+        text: textFallback(
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! Il tuo insegnante ti ha assegnato "${ctx.compitoTitolo ?? "un compito"}"${quante ? ` — ${quante}` : ""}.`, "", "Le soluzioni si aprono dopo che hai giocato."],
+            [`${hi.replace(/<[^>]+>/g, "")}! Your teacher has assigned you "${ctx.compitoTitolo ?? "some homework"}"${quante ? ` — ${quante}` : ""}.`, "", "The solutions open after you play."]
+          ),
+          T("Vai al compito", "Go to the homework"), dove
+        ),
+        transactional: true,
+      };
+    }
+
+    /**
+     * La scadenza si avvicina, e il compito non è finito.
+     *
+     * Si manda SOLO a chi non ha finito — chi ha già giocato tutte le mani non
+     * deve ricevere niente, o il promemoria diventa rumore e la prossima volta
+     * non lo legge nessuno. Il filtro sta in chi chiama, non qui.
+     */
+    case "compito_in_scadenza": {
+      const titolo = esc(ctx.compitoTitolo ?? T("Il tuo compito", "Your homework"));
+      const dove = ctx.compitoUrl ?? `${SITE}/classi`;
+      const g = ctx.giorniAllaScadenza ?? 1;
+      const quando = g <= 0
+        ? T("scade oggi", "is due today")
+        : g === 1
+          ? T("scade domani", "is due tomorrow")
+          : T(`scade fra ${g} giorni`, `is due in ${g} days`);
+      const bodyHtml = T(
+        `
+        <p style="margin:0 0 14px;">${hi}! <strong>${titolo}</strong> ${quando}, e non l'hai ancora finito.</p>
+        <p style="margin:0;">Sono poche mani: se le fai adesso, alla prossima lezione sai già di cosa si parla.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! <strong>${titolo}</strong> ${quando}, and you haven't finished it.</p>
+        <p style="margin:0;">It's only a few hands: do them now and you'll know what the next lesson is about.</p>`
+      );
+      return {
+        subject: g <= 0
+          ? T(`Ultimo giorno: ${ctx.compitoTitolo ?? "il tuo compito"} ⏳`, `Last day: ${ctx.compitoTitolo ?? "your homework"} ⏳`)
+          : T(`${ctx.compitoTitolo ?? "Il tuo compito"} ${quando} ⏳`, `${ctx.compitoTitolo ?? "Your homework"} ${quando} ⏳`),
+        html: layout({
+          preheader: T("Ti mancano ancora delle mani.", "You still have hands to play."),
+          emoji: "⏳",
+          heading: T("Non l'hai ancora finito", "You haven't finished it"),
+          bodyHtml,
+          ctaLabel: T("Finiscilo", "Finish it"),
+          ctaUrl: dove,
+        }),
+        text: textFallback(
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! "${ctx.compitoTitolo ?? "Il tuo compito"}" ${quando}, e non l'hai ancora finito.`],
+            [`${hi.replace(/<[^>]+>/g, "")}! "${ctx.compitoTitolo ?? "Your homework"}" ${quando}, and you haven't finished it.`]
+          ),
+          T("Finiscilo", "Finish it"), dove
         ),
         transactional: true,
       };
