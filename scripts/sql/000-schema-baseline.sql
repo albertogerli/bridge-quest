@@ -4215,8 +4215,6 @@ GRANT SELECT ON public.sfida_board TO service_role;
 GRANT SELECT ON public.sfide_coppie TO anon;
 GRANT SELECT ON public.sfide_coppie TO authenticated;
 GRANT SELECT ON public.sfide_coppie TO service_role;
-GRANT SELECT ON public.smazzate TO anon;
-GRANT SELECT ON public.smazzate TO authenticated;
 GRANT SELECT ON public.smazzate TO service_role;
 GRANT SELECT ON public.tornei TO anon;
 GRANT SELECT ON public.tornei TO authenticated;
