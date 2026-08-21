@@ -71,6 +71,20 @@ CI: `.github/workflows/ci.yml` (typecheck + lint + test su ogni push/PR).
 
 Debito noto (perizie tecniche in `PERIZIA-*.md` e piano in `PIANO-MIGLIORAMENTO-2026-08.md`): pagine monolitiche (fino a ~2.200 righe), niente i18n (scelta di prodotto), error monitoring assente (aggancio pronto in `src/lib/report-error.ts`), schema DB senza migrazioni versionate.
 
+## Manuali d'uso
+
+Non documentazione tecnica: sono i manuali per chi la piattaforma la usa, da
+consegnare così come sono.
+
+| manuale | per chi |
+|---|---|
+| [`docs/manuale-utenti.md`](docs/manuale-utenti.md) | chi usa Bridge LAB per conto proprio |
+| [`docs/manuale-allievi.md`](docs/manuale-allievi.md) | chi segue un corso con un istruttore |
+| [`docs/manuale-istruttori.md`](docs/manuale-istruttori.md) | gli istruttori: classi, compiti, strumenti d'aula |
+
+Quando cambia una funzione visibile, cambiano anche loro: un manuale che
+descrive la versione di sei mesi fa fa perdere più tempo di uno che non esiste.
+
 ## Note operative
 
 - **Admin**: autorizzazione a ruolo (`profiles.role = 'admin'`), sia client sia RLS/RPC.
