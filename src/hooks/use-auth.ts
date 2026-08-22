@@ -300,21 +300,34 @@ export function useAuth() {
   };
 
   // Update profile
+  //
+  // NIENTE `.select()` DOPO LA UPDATE. Il client Supabase lo traduce in
+  // `RETURNING *`, e `authenticated` ha il privilegio di lettura solo su nove
+  // colonne di `profiles` (vedi `scripts/sql/pii-columns-2026-08.sql`).
+  // Postgres controlla i privilegi quando pianifica l'istruzione, non quando la
+  // esegue: con il RETURNING la UPDATE viene rifiutata PER INTERO e la riga non
+  // si aggiorna affatto. In produzione questo significava «Salvataggio del
+  // profilo non riuscito» a ogni tentativo, con `permission denied for table
+  // profiles` su Sentry (20/08/2026).
+  //
+  // Il profilo aggiornato si rilegge dalla RPC, che è la stessa strada del
+  // caricamento iniziale ed è l'unica che restituisce la riga intera.
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!state.user) return { error: new Error("Not logged in") };
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq("id", state.user.id)
-      .select()
-      .single();
+      .eq("id", state.user.id);
 
+    if (error) return { data: null, error };
+
+    const data = await fetchProfileInBackground(state.user.id);
     if (data) {
-      setState((prev) => ({ ...prev, profile: data as Profile }));
+      setState((prev) => ({ ...prev, profile: data }));
     }
 
-    return { data, error };
+    return { data, error: null };
   };
 
   // Upload avatar
