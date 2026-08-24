@@ -15,7 +15,7 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import type { DdsTable } from "@/lib/dds-table";
-import { benBid } from "@/lib/ben-client";
+import { benBid, riprovareServe, type MotivoBen } from "@/lib/ben-client";
 import { astaChiusa, esitoAsta, ordineDa } from "@/lib/licita-mano";
 import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import { valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
@@ -29,6 +29,35 @@ import { useT } from "@/contexts/traduzioni-provider";
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 type Tipo = "giornaliero" | "settimanale";
+
+/**
+ * Che cosa dire quando il compagno non ha dichiarato.
+ *
+ * PRIMA ERA UNA FRASE SOLA — «non ha risposto in tempo» — per otto cause
+ * diverse: sessione scaduta, limite di richieste, BEN spento, parametri
+ * rifiutati. Spesso quella frase era semplicemente falsa, e in più nascondeva
+ * l'unica cosa che serve a chi legge: se riprovare possa funzionare. Con il
+ * limite di richieste era anche un consiglio dannoso, perché è proprio il
+ * riprovare a farlo scattare di nuovo.
+ */
+function spiegazioneMuto(motivo: MotivoBen | null, t: (frase: string) => string): string {
+  switch (motivo) {
+    case "limite":
+      return t("Hai chiesto troppe dichiarazioni in poco tempo ed è scattato il limite. Aspetta un minuto: la mano resta dov'è.");
+    case "sessione":
+      return t("La tua sessione è scaduta. Rientra e l'asta riprende da dove si è fermata.");
+    case "server":
+    case "risposta":
+    case "richiesta":
+      return t("Il motore che dichiara per lui ha risposto male: è un problema nostro, ed è già stato segnalato. La mano non è persa.");
+    case "irraggiungibile":
+      return t("Il motore che dichiara per lui non risponde. La mano non è persa: l'asta riprende da dove si è fermata.");
+    case "rete":
+      return t("La connessione si è interrotta. La mano non è persa: l'asta riprende da dove si è fermata.");
+    default:
+      return t("Il motore che dichiara per lui non ha risposto in tempo. La mano non è persa: l'asta riprende da dove si è fermata.");
+  }
+}
 
 /**
  * Tornei di licita: le stesse smazzate per tutti, con una classifica.
@@ -71,21 +100,34 @@ export default function TorneoLicitaPage() {
   const [avversarioMuto, setAvversarioMuto] = useState(false);
   /** Il compagno non ha risposto: l'asta è ferma e va detto. */
   const [compagnoMuto, setCompagnoMuto] = useState(false);
+  /** PERCHÉ non ha risposto: decide che cosa dire e se offrire di riprovare. */
+  const [motivoMuto, setMotivoMuto] = useState<MotivoBen | null>(null);
 
-  /** Una dichiarazione dal motore, con l'errore già ridotto a «non risponde». */
+  /**
+   * Una dichiarazione dal motore.
+   *
+   * `benBid` NON LANCIA MAI: cattura tutto e restituisce `fallback: true`.
+   * Qui c'era un `try/catch` con dentro l'unica segnalazione a Sentry di
+   * questa schermata, e quel ramo non è mai stato eseguito: quando l'esercizio
+   * si bloccava, in Sentry non arrivava niente e la causa restava invisibile.
+   * Adesso si segnala sul valore di ritorno, che è dove l'errore arriva
+   * davvero.
+   */
   const chiediABen = async (m: ManoCondivisa, chi: Position, fatte: string[]) => {
-    try {
-      return await benBid({
-        hand: m.hands[chi],
-        seat: chi,
-        dealer: m.dealer,
-        vulnerability: m.vulnerability,
-        bidding: { dealer: m.dealer, bids: fatte },
-      });
-    } catch (err) {
-      reportError("torneo-licita:ben", err);
-      return { bid: "P", fallback: true };
+    const r = await benBid({
+      hand: m.hands[chi],
+      seat: chi,
+      dealer: m.dealer,
+      vulnerability: m.vulnerability,
+      bidding: { dealer: m.dealer, bids: fatte },
+    });
+    if (r.fallback) {
+      reportError(
+        "torneo-licita:ben",
+        new Error(`BEN non ha dichiarato per ${chi}: ${r.motivo ?? "motivo ignoto"}`),
+      );
     }
+    return r;
   };
 
   const chiudi = async (m: ManoCondivisa, t: DdsTable, finali: string[]) => {
@@ -128,6 +170,7 @@ export default function TorneoLicitaPage() {
     let correnti = iniziali;
     setBids(correnti);
     setCompagnoMuto(false);
+    setMotivoMuto(null);
     if (astaChiusa(correnti)) { await chiudi(m, t, correnti); return; }
 
     setAttesa(true);
@@ -138,9 +181,15 @@ export default function TorneoLicitaPage() {
 
       setAttesaDi(chi);
       let r = await chiediABen(m, chi, correnti);
-      if (r.fallback) r = await chiediABen(m, chi, correnti);
+      // Il secondo tentativo ha senso solo se la causa può cambiare da sola.
+      // Con il limite di richieste era anzi controproducente: raddoppiava il
+      // consumo e avvicinava il limite successivo.
+      if (r.fallback && riprovareServe(r.motivo ?? "attesa")) {
+        r = await chiediABen(m, chi, correnti);
+      }
       if (r.fallback) {
         if (chi === "north") {
+          setMotivoMuto(r.motivo ?? null);
           // Senza il compagno l'esercizio non esiste, e in torneo la mano non
           // si può annullare: la classifica è la stessa per tutti e un buco
           // resterebbe. Si dice cosa è successo e si lascia riprovare da dove
@@ -172,6 +221,7 @@ export default function TorneoLicitaPage() {
     setGiocato(null);
     setAvversarioMuto(false);
     setCompagnoMuto(false);
+    setMotivoMuto(null);
     if (m && t && m.dealer !== "south") void avanza(m, t, []);
   };
 
@@ -299,7 +349,7 @@ export default function TorneoLicitaPage() {
 
           {avversarioMuto && (
             <p className="text-xs text-muted-foreground mb-3">
-              {t("Un avversario non ha risposto in tempo e ha passato d'ufficio.")}
+              {t("Un avversario non ha dichiarato e ha passato d'ufficio: non è che abbia scelto di passare.")}
             </p>
           )}
 
@@ -309,11 +359,17 @@ export default function TorneoLicitaPage() {
                 {t("Il compagno non ha risposto")}
               </p>
               <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
-                {t("Il motore che dichiara per lui non ha risposto in tempo. La mano non è persa: l'asta riprende da dove si è fermata.")}
+                {spiegazioneMuto(motivoMuto, t)}
               </p>
-              <Button onClick={() => { void avanza(mano, tabella, bids); }}>
-                {t("Riprova")}
-              </Button>
+              {riprovareServe(motivoMuto ?? "attesa") ? (
+                <Button onClick={() => { void avanza(mano, tabella, bids); }}>
+                  {t("Riprova")}
+                </Button>
+              ) : (
+                <p className="text-xs text-amber-900/80 dark:text-amber-200/80">
+                  {t("Riprovare adesso darebbe lo stesso errore. La mano resta dov'è: puoi tornare più tardi e l'asta riparte da qui.")}
+                </p>
+              )}
             </div>
           )}
 

@@ -123,11 +123,60 @@ export async function benLead(
 }
 
 /**
+ * Perché il motore non ha dichiarato. Non è un dettaglio da diagnostica: da
+ * questo dipende se riprovare serve a qualcosa.
+ *
+ *   `attesa`        BEN c'è ma ci ha messo troppo. Riprovare può funzionare.
+ *   `irraggiungibile` il server non risponde affatto. Riprovare subito no.
+ *   `server`        BEN ha risposto con un errore suo.
+ *   `risposta`      ha risposto qualcosa che non è una dichiarazione.
+ *   `limite`        troppe richieste al minuto: è il RIPROVA stesso a
+ *                   causarlo, e l'unica cosa che aiuta è aspettare.
+ *   `sessione`      la sessione è scaduta: si rientra e riparte.
+ *   `richiesta`     parametri rifiutati — un difetto nostro, riprovare non
+ *                   cambierà niente.
+ *   `rete`          la connessione del browser.
+ */
+export type MotivoBen =
+  | "attesa"
+  | "irraggiungibile"
+  | "server"
+  | "risposta"
+  | "limite"
+  | "sessione"
+  | "richiesta"
+  | "rete";
+
+/** True se ha senso offrire «riprova»: per le altre cause non cambierebbe nulla. */
+export function riprovareServe(motivo: MotivoBen): boolean {
+  return motivo === "attesa" || motivo === "rete" || motivo === "irraggiungibile";
+}
+
+function motivoDa(status: number, errore: unknown): MotivoBen {
+  if (status === 401) return "sessione";
+  if (status === 429) return "limite";
+  if (status === 400) return "richiesta";
+  const testo = typeof errore === "string" ? errore : "";
+  if (/timeout|scaduto/i.test(testo)) return "attesa";
+  if (/non raggiungibile/i.test(testo)) return "irraggiungibile";
+  if (/non valida/i.test(testo)) return "risposta";
+  return "server";
+}
+
+/**
  * La dichiarazione del compagno, dal modello neurale di BEN.
  *
  * Restituisce `fallback: true` quando BEN non risponde: chi chiama decide
  * cosa fare, e nell'esercizio di licita il compagno passa — dicendolo. Fingere
  * che abbia scelto di passare sarebbe peggio del silenzio.
+ *
+ * IL MOTIVO VIENE FUORI, e prima non usciva. Ogni causa — sessione scaduta,
+ * limite di richieste, BEN spento, risposta malformata — arrivava a chi chiama
+ * come lo stesso identico `fallback: true`, e la schermata ne concludeva
+ * sempre «non ha risposto in tempo». Spesso era falso, e soprattutto
+ * nascondeva l'unica informazione che serve all'utente: se riprovare abbia
+ * una speranza. Con il limite di richieste è perfino il riprova a causare
+ * l'errore successivo.
  */
 export async function benBid(req: {
   hand: Card[];
@@ -135,7 +184,7 @@ export async function benBid(req: {
   dealer: Position;
   vulnerability: Vulnerability;
   bidding?: BiddingData;
-}): Promise<{ bid: string; fallback: boolean }> {
+}): Promise<{ bid: string; fallback: boolean; motivo?: MotivoBen }> {
   try {
     const res = await fetch("/api/ben/bid", {
       method: "POST",
@@ -148,12 +197,16 @@ export async function benBid(req: {
         ctx: biddingToCTX(req.bidding),
       }),
     });
-    if (!res.ok) return { bid: "P", fallback: true };
-    const data = await res.json();
-    if (data.fallback || typeof data.bid !== "string") return { bid: "P", fallback: true };
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error) };
+    }
+    if (data?.fallback || typeof data?.bid !== "string") {
+      return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error) };
+    }
     return { bid: benBidToItaliano(data.bid), fallback: false };
   } catch {
-    return { bid: "P", fallback: true };
+    return { bid: "P", fallback: true, motivo: "rete" };
   }
 }
 
