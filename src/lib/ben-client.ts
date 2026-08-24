@@ -161,6 +161,14 @@ function motivoDa(status: number, errore: unknown): MotivoBen {
   if (status === 429) return "limite";
   if (status === 400) return "richiesta";
   const testo = typeof errore === "string" ? errore : "";
+  // `ben unavailable` è il 502 che la GUARDIA davanti a BEN restituisce quando
+  // ha smesso di aspettarlo. Non è BEN che sbaglia: è BEN che ci mette troppo,
+  // e in produzione succede mentre il contenitore si sveglia — dopodiché le
+  // stesse richieste tornano a rispondere in mezzo secondo (misurato il
+  // 24/08/2026). Quindi è un'attesa, e riprovare ha davvero senso: leggerlo
+  // come «errore del server» toglieva all'utente l'unica mossa che funziona.
+  if (/ben unavailable/i.test(testo)) return "attesa";
+  if (/ben timeout/i.test(testo)) return "attesa";
   if (/timeout|scaduto/i.test(testo)) return "attesa";
   if (/non raggiungibile/i.test(testo)) return "irraggiungibile";
   if (/non valida/i.test(testo)) return "risposta";
