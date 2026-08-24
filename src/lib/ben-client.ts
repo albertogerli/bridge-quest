@@ -135,6 +135,9 @@ export async function benLead(
  *   `sessione`      la sessione è scaduta: si rientra e riparte.
  *   `richiesta`     parametri rifiutati — un difetto nostro, riprovare non
  *                   cambierà niente.
+ *   `autorizzazione` il segreto con cui parliamo a BEN non combacia: la
+ *                   guardia risponde 404 apposta. È configurazione, non un
+ *                   guasto, e nessun tentativo la sistema.
  *   `rete`          la connessione del browser.
  */
 export type MotivoBen =
@@ -145,6 +148,7 @@ export type MotivoBen =
   | "limite"
   | "sessione"
   | "richiesta"
+  | "autorizzazione"
   | "rete";
 
 /** True se ha senso offrire «riprova»: per le altre cause non cambierebbe nulla. */
@@ -160,6 +164,12 @@ function motivoDa(status: number, errore: unknown): MotivoBen {
   if (/timeout|scaduto/i.test(testo)) return "attesa";
   if (/non raggiungibile/i.test(testo)) return "irraggiungibile";
   if (/non valida/i.test(testo)) return "risposta";
+  // `BEN returned 404` ha un significato preciso e VOLUTO: la guardia davanti
+  // a BEN risponde 404 — non 401 — a chi non ha il segreto giusto, per non
+  // confermare nemmeno che ci sia qualcosa da indovinare
+  // (`deploy/ben-railway/guard.py`). Se arriva questo, il token della
+  // piattaforma e quello del server non coincidono: non è BEN a stare male.
+  if (/\b404\b/.test(testo)) return "autorizzazione";
   return "server";
 }
 
@@ -184,7 +194,7 @@ export async function benBid(req: {
   dealer: Position;
   vulnerability: Vulnerability;
   bidding?: BiddingData;
-}): Promise<{ bid: string; fallback: boolean; motivo?: MotivoBen }> {
+}): Promise<{ bid: string; fallback: boolean; motivo?: MotivoBen; dettaglio?: string }> {
   try {
     const res = await fetch("/api/ben/bid", {
       method: "POST",
@@ -198,15 +208,13 @@ export async function benBid(req: {
       }),
     });
     const data = await res.json().catch(() => null);
-    if (!res.ok) {
-      return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error) };
-    }
-    if (data?.fallback || typeof data?.bid !== "string") {
-      return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error) };
+    const dettaglio = typeof data?.error === "string" ? data.error : `HTTP ${res.status}`;
+    if (!res.ok || data?.fallback || typeof data?.bid !== "string") {
+      return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error), dettaglio };
     }
     return { bid: benBidToItaliano(data.bid), fallback: false };
   } catch {
-    return { bid: "P", fallback: true, motivo: "rete" };
+    return { bid: "P", fallback: true, motivo: "rete", dettaglio: "fetch fallita nel browser" };
   }
 }
 
