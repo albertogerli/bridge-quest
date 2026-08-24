@@ -33,7 +33,28 @@ import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/
 /** Il tetto della funzione: il timeout qui sopra deve starci sotto. */
 export const maxDuration = 30;
 
-const TIMEOUT_MS = 12000;
+/**
+ * DEV'ESSERE PIÙ LUNGO DELLA GUARDIA, non uguale.
+ *
+ * Fra noi e BEN c'è `deploy/ben-railway/guard.py`, che aspetta a sua volta —
+ * `BEN_TIMEOUT`, di norma 12 secondi — e se BEN non risponde restituisce un
+ * 502 `ben unavailable`. Con due attese IDENTICHE in serie i due timer
+ * scadono insieme, e a decidere che cosa vede l'utente è chi arriva primo:
+ * il 502 della guardia («il motore ha risposto male, è un problema nostro»)
+ * oppure la nostra interruzione («non ha risposto in tempo, riprova»). Lo
+ * stesso identico guasto prendeva due nomi a caso, e uno dei due non offriva
+ * nemmeno di riprovare.
+ *
+ * Misurato in produzione il 24/08/2026: a servizio caldo la mediana è 0,37 s
+ * e un'asta in corso costa fino a 7,6 s; il 502 arriva solo mentre il
+ * contenitore si sveglia, e lì la guardia sfonda i suoi 12 secondi. Aspettare
+ * più di lei significa lasciarle sempre l'ultima parola, che è quella
+ * informativa: sappiamo che BEN c'era e non ha fatto in tempo.
+ *
+ * Resta sotto `maxDuration`, altrimenti la piattaforma abbatte la funzione
+ * prima e al browser arriva una pagina di errore invece del ripiego.
+ */
+const TIMEOUT_MS = 18000;
 const RATE_MAX_PER_MIN = 60;
 
 const bodySchema = z.object({
@@ -105,7 +126,15 @@ export async function POST(req: NextRequest) {
     clearTimeout(timeout);
 
     if (!res.ok) {
-      return NextResponse.json({ fallback: true, error: `BEN returned ${res.status}` }, { status: 502 });
+      // IL CORPO VA RIPORTATO, non solo il numero. La guardia distingue già
+      // «BEN non risponde» (502 `ben unavailable`) da un errore di BEN stesso,
+      // e buttare via quel testo faceva finire due guasti diversi sotto la
+      // stessa etichetta. Si tronca: è diagnostica, non una risposta.
+      const corpo = (await res.text().catch(() => "")).trim().slice(0, 120);
+      return NextResponse.json(
+        { fallback: true, error: `BEN returned ${res.status}${corpo ? `: ${corpo}` : ""}` },
+        { status: 502 },
+      );
     }
 
     const data = await res.json();

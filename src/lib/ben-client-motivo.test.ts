@@ -71,6 +71,22 @@ describe("benBid: da che cosa nasce il motivo", () => {
     expect(r.dettaglio).toBe("BEN returned 500");
   });
 
+  it("«ben unavailable» e «ben timeout» sono ATTESE, non guasti del motore", async () => {
+    // Sono i due messaggi della guardia davanti a BEN. Arrivano con 502/504,
+    // e leggerli come «errore del server» toglieva il pulsante Riprova —
+    // proprio nel caso in cui riprovare funziona, cioè al risveglio del
+    // contenitore: subito dopo le stesse richieste rispondono in mezzo secondo.
+    rispondi(502, { fallback: true, error: "BEN returned 502: {\"error\":\"ben unavailable\"}" });
+    let r = await chiedi();
+    expect(r.motivo).toBe("attesa");
+    expect(riprovareServe(r.motivo!)).toBe(true);
+
+    rispondi(502, { fallback: true, error: "BEN returned 504: {\"error\":\"ben timeout\"}" });
+    r = await chiedi();
+    expect(r.motivo).toBe("attesa");
+    expect(riprovareServe(r.motivo!)).toBe(true);
+  });
+
   it("il 404 della guardia è configurazione, non un guasto di BEN", async () => {
     // `deploy/ben-railway/guard.py` risponde 404 — non 401 — a chi non ha il
     // segreto giusto, per non confermare che ci sia qualcosa da indovinare.

@@ -12,7 +12,7 @@ più di una carta da giocare e non c'è motivo di offrirli a Internet.
 Non gira con `npm test`: è Python, e la suite del progetto è Vitest.
 """
 
-import os, sys, threading, urllib.request, urllib.error
+import os, sys, threading, time, urllib.request, urllib.error
 os.environ["BEN_API_TOKEN"] = "T" * 32
 os.environ["BEN_INTERNAL_PORT"] = "18085"
 sys.path.insert(0, ".")
@@ -22,6 +22,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer  # noqa: E40
 class FintoBen(BaseHTTPRequestHandler):
     def log_message(self, *a): pass
     def do_GET(self):
+        # `/lento` non risponde entro il tempo della guardia: serve a
+        # distinguere «BEN c'è ma tarda» da «BEN non c'è», che prima erano lo
+        # stesso 502 e mandavano a cercare il guasto nel posto sbagliato.
+        if self.path.startswith("/bid?lento"):
+            time.sleep(3)
         corpo = b'{"card":"SA"}'
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
@@ -54,6 +59,19 @@ casi = [
     ("/bids NON ammesso, pur col segreto", chiama("/bids", buono), 404),
     ("/healthz senza segreto", chiama("/healthz"), 200),
 ]
+
+# ── BEN lento contro BEN assente ───────────────────────────────────────────
+# La piattaforma decide dal messaggio se offrire «riprova»: con l'attesa serve
+# (succede al risveglio del contenitore, e subito dopo risponde in mezzo
+# secondo), con il server spento no. Confonderli toglieva all'utente l'unica
+# mossa utile.
+guard.TIMEOUT = 1.0
+casi.append(("BEN che tarda -> 504, non 502", chiama("/bid?lento=1", buono), 504))
+
+upstream_vero = guard.UPSTREAM
+guard.UPSTREAM = "http://127.0.0.1:18099"  # nessuno in ascolto
+casi.append(("BEN assente -> 502", chiama("/bid", buono), 502))
+guard.UPSTREAM = upstream_vero
 falliti = 0
 for nome, avuto, atteso in casi:
     esito = "OK  " if avuto == atteso else "FAIL"

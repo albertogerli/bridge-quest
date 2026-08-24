@@ -106,8 +106,26 @@ class Guardia(BaseHTTPRequestHandler):
         except urllib.error.HTTPError as e:
             self._rispondi(e.code, e.read() or b'{"error":"upstream"}')
         except Exception as e:
-            _log(f"upstream non raggiungibile: {e}")
-            self._rispondi(502, b'{"error":"ben unavailable"}')
+            # DUE GUASTI DIVERSI, non uno.
+            #
+            # «BEN c'è ma non ha finito entro TIMEOUT» e «BEN non c'è» finivano
+            # entrambi in `ben unavailable`, e la piattaforma li leggeva come un
+            # errore del motore. Il primo invece è un'attesa: succede mentre il
+            # contenitore si sveglia, e subito dopo le stesse richieste
+            # rispondono in mezzo secondo (misurato in produzione il
+            # 24/08/2026). Lì riprovare funziona davvero, ma nessuno lo diceva.
+            #
+            # `urlopen` la scadenza la segnala in due forme a seconda del punto
+            # in cui scatta: `TimeoutError` diretta, oppure dentro `URLError`.
+            scaduto = isinstance(e, TimeoutError) or isinstance(
+                getattr(e, "reason", None), TimeoutError
+            )
+            if scaduto:
+                _log(f"upstream non ha risposto entro {TIMEOUT}s")
+                self._rispondi(504, b'{"error":"ben timeout"}')
+            else:
+                _log(f"upstream non raggiungibile: {e}")
+                self._rispondi(502, b'{"error":"ben unavailable"}')
 
     # BEN espone anche delle POST (`/cuebid`, `/cuebidscores`): l'app non le
     # usa e non vengono inoltrate.
