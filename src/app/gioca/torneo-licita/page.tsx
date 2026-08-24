@@ -49,6 +49,7 @@ function spiegazioneMuto(motivo: MotivoBen | null, t: (frase: string) => string)
     case "server":
     case "risposta":
     case "richiesta":
+    case "autorizzazione":
       return t("Il motore che dichiara per lui ha risposto male: è un problema nostro, ed è già stato segnalato. La mano non è persa.");
     case "irraggiungibile":
       return t("Il motore che dichiara per lui non risponde. La mano non è persa: l'asta riprende da dove si è fermata.");
@@ -122,9 +123,17 @@ export default function TorneoLicitaPage() {
       bidding: { dealer: m.dealer, bids: fatte },
     });
     if (r.fallback) {
+      // IL DETTAGLIO VA DENTRO IL MESSAGGIO. Con il solo motivo, «server»
+      // copriva due cose che si correggono in posti diversi: il segreto che
+      // non combacia (la guardia risponde 404) e il modello spento dietro la
+      // guardia (che inoltra 502). Il numero ce l'avevamo e lo buttavamo via,
+      // costringendo a indovinare davanti a una segnalazione.
       reportError(
         "torneo-licita:ben",
-        new Error(`BEN non ha dichiarato per ${chi}: ${r.motivo ?? "motivo ignoto"}`),
+        new Error(
+          `BEN non ha dichiarato per ${chi}: ${r.motivo ?? "motivo ignoto"}` +
+            (r.dettaglio ? ` (${r.dettaglio})` : ""),
+        ),
       );
     }
     return r;

@@ -62,9 +62,23 @@ describe("benBid: da che cosa nasce il motivo", () => {
     expect((await chiedi()).motivo).toBe("irraggiungibile");
   });
 
-  it("BEN che risponde con un errore suo è «server»", async () => {
+  it("BEN che risponde con un errore suo è «server», col numero in chiaro", async () => {
     rispondi(502, { fallback: true, error: "BEN returned 500" });
-    expect((await chiedi()).motivo).toBe("server");
+    const r = await chiedi();
+    expect(r.motivo).toBe("server");
+    // Il dettaglio è quello che rende una segnalazione leggibile: senza, il
+    // solo «server» copre il modello spento e il segreto sbagliato insieme.
+    expect(r.dettaglio).toBe("BEN returned 500");
+  });
+
+  it("il 404 della guardia è configurazione, non un guasto di BEN", async () => {
+    // `deploy/ben-railway/guard.py` risponde 404 — non 401 — a chi non ha il
+    // segreto giusto, per non confermare che ci sia qualcosa da indovinare.
+    // Confonderlo con «BEN sta male» manda a cercare nel posto sbagliato.
+    rispondi(502, { fallback: true, error: "BEN returned 404" });
+    const r = await chiedi();
+    expect(r.motivo).toBe("autorizzazione");
+    expect(riprovareServe(r.motivo!)).toBe(false);
   });
 
   it("una risposta che non è una dichiarazione è «risposta»", async () => {
