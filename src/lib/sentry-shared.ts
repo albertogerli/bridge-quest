@@ -91,6 +91,32 @@ const WAITING_SU_UNDEFINED =
 const REGISTRAZIONE_NON_SCARICATA =
   /Failed to register a ServiceWorker/i;
 
+/**
+ * Quarta forma, vista in produzione il 23/08/2026 su Chrome per iOS:
+ *
+ *   TypeError: Script https://bridgelab.it/sw.js load failed
+ *
+ * È la STESSA cosa della terza, detta da WebKit invece che da Blink. Non
+ * arrivava però nessun fotogramma di stack, quindi il filtro per nome di
+ * funzione non poteva vederla, e `IGNORE_ERRORS` nemmeno: lì c'è «Load
+ * failed» con la maiuscola, e qui la elle è minuscola.
+ *
+ * Su iOS ogni browser gira dentro WKWebView, dove il service worker non è
+ * disponibile come su un browser desktop. Che la causa sia quella o la rete
+ * del telefono, la conclusione non cambia e non c'è niente da correggere:
+ * senza service worker la PWA degrada da sola.
+ *
+ * VERIFICATO PRIMA DI FILTRARE, come per la terza forma: in produzione
+ * `/sw.js` risponde 200, `application/javascript`, `no-store`, 66 KB di
+ * Serwist. Il file c'è ed è servito bene.
+ *
+ * Il filtro è ancorato ai NOSTRI due service worker — `sw.js` e
+ * `sw-notifications.js` — e non alla frase «load failed» da sola: se domani
+ * non si caricasse un pezzo dell'applicazione, quell'errore deve continuare
+ * ad arrivare.
+ */
+const SCRIPT_SW_NON_CARICATO = /Script \S*\/sw(-[\w-]+)?\.js load failed/i;
+
 /** True se l'evento è rumore di registrazione del service worker. */
 export function isServiceWorkerNoise(event: {
   exception?: {
@@ -109,7 +135,8 @@ export function isServiceWorkerNoise(event: {
     values.some(
       (v) =>
         WAITING_SU_UNDEFINED.test(v.value ?? "") ||
-        REGISTRAZIONE_NON_SCARICATA.test(v.value ?? "")
+        REGISTRAZIONE_NON_SCARICATA.test(v.value ?? "") ||
+        SCRIPT_SW_NON_CARICATO.test(v.value ?? "")
     )
   );
 }
