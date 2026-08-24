@@ -204,3 +204,45 @@ describe("registrazione del service worker non scaricata", () => {
     ).toBe(false);
   });
 });
+
+/**
+ * La stessa cosa detta da WebKit. Su iOS ogni browser gira dentro WKWebView,
+ * quindi questa è la formulazione che arriva da iPhone e iPad — e arriva
+ * SENZA fotogrammi di stack, il che rendeva cieco il filtro per nome di
+ * funzione.
+ */
+describe("registrazione del service worker — la formulazione di WebKit", () => {
+  const conMessaggio = (value: string) => ({ exception: { values: [{ value }] } });
+
+  it("scarta l'evento reale del 2026-08-23 da Chrome per iOS", () => {
+    expect(
+      isServiceWorkerNoise(conMessaggio("Script https://bridgelab.it/sw.js load failed"))
+    ).toBe(true);
+  });
+
+  it("scarta anche il service worker delle notifiche", () => {
+    expect(
+      isServiceWorkerNoise(
+        conMessaggio("Script https://bridgelab.it/sw-notifications.js load failed")
+      )
+    ).toBe(true);
+  });
+
+  it("NON scarta il mancato caricamento di un pezzo dell'applicazione", () => {
+    // Il confine che conta: se un giorno non si caricasse un chunk, quello è
+    // un guasto vero e deve arrivare. Vale anche per un file il cui nome
+    // COMINCIA per «sw» senza essere un service worker.
+    expect(
+      isServiceWorkerNoise(
+        conMessaggio("Script https://bridgelab.it/_next/static/chunks/main.js load failed")
+      )
+    ).toBe(false);
+    expect(
+      isServiceWorkerNoise(conMessaggio("Script https://bridgelab.it/js/switch.js load failed"))
+    ).toBe(false);
+  });
+
+  it("NON scarta un «load failed» che non nomina uno script", () => {
+    expect(isServiceWorkerNoise(conMessaggio("Image load failed"))).toBe(false);
+  });
+});
