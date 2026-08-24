@@ -81,13 +81,27 @@ export async function POST(req: NextRequest) {
     if (!params.has("ctx")) params.set("ctx", "");
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    // Il flag serve a distinguere DUE cose che finiscono nello stesso `catch`:
+    // l'attesa scaduta (BEN c'è, ma è lento: riprovare ha senso) e il server
+    // che non risponde affatto (riprovare subito no). Chi chiama decide in
+    // base a questo se offrire «riprova», quindi confonderle costa all'utente.
+    let scaduto = false;
+    const timeout = setTimeout(() => { scaduto = true; controller.abort(); }, TIMEOUT_MS);
 
     const { url: benUrl, headers: benHeaders } = benEndpoint();
-    const res = await fetch(`${benUrl}/bid?${params.toString()}`, {
-      signal: controller.signal,
-      headers: benHeaders,
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${benUrl}/bid?${params.toString()}`, {
+        signal: controller.signal,
+        headers: benHeaders,
+      });
+    } catch {
+      clearTimeout(timeout);
+      return NextResponse.json(
+        { fallback: true, error: scaduto ? "BEN timeout" : "BEN non raggiungibile" },
+        { status: 502 },
+      );
+    }
     clearTimeout(timeout);
 
     if (!res.ok) {
