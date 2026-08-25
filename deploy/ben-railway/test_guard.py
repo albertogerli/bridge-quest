@@ -72,6 +72,40 @@ upstream_vero = guard.UPSTREAM
 guard.UPSTREAM = "http://127.0.0.1:18099"  # nessuno in ascolto
 casi.append(("BEN assente -> 502", chiama("/bid", buono), 502))
 guard.UPSTREAM = upstream_vero
+# ── Il config derivato ──────────────────────────────────────────────────────
+# Le due righe che cambiamo decidono quanto dura una dichiarazione difficile.
+# Il rischio vero non è sbagliare il numero: è colpire la riga sbagliata —
+# `sample_boards_for_auction` è un PREFISSO di `sample_boards_for_auction_step`
+# e di `..._opening_lead`, e toccarli cambierebbe cose che non c'entrano.
+FINTO_CONF = """[sampling]
+# commento che nomina sample_hands_auction senza esserlo
+sample_hands_auction = 200
+sample_boards_for_auction = 30000
+sample_boards_for_auction_step = 2000
+sample_boards_for_auction_opening_lead = 20000
+min_sample_hands_auction = 15
+"""
+import tempfile  # noqa: E402
+d = tempfile.mkdtemp()
+orig = os.path.join(d, "in.conf"); dest = os.path.join(d, "out.conf")
+open(orig, "w").write(FINTO_CONF)
+guard.MANI_SIMULAZIONE = "100"
+guard.MANI_GENERATE = "15000"
+esito = guard.prepara_config(orig, dest)
+prodotto = open(dest).read() if esito else ""
+righe = dict(
+    r.split(" = ", 1) for r in prodotto.splitlines() if " = " in r and not r.startswith("#")
+)
+casi += [
+    ("config: mani simulate abbassate", righe.get("sample_hands_auction"), "100"),
+    ("config: mani generate abbassate", righe.get("sample_boards_for_auction"), "15000"),
+    ("config: il passo NON si tocca", righe.get("sample_boards_for_auction_step"), "2000"),
+    ("config: l'attacco NON si tocca", righe.get("sample_boards_for_auction_opening_lead"), "20000"),
+    ("config: il minimo NON si tocca", righe.get("min_sample_hands_auction"), "15"),
+]
+# Senza il file di BEN non si inventa niente: si parte con il suo.
+casi.append(("config: origine assente -> nessun config", guard.prepara_config("/non/esiste", dest), None))
+
 falliti = 0
 for nome, avuto, atteso in casi:
     esito = "OK  " if avuto == atteso else "FAIL"
