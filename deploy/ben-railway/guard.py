@@ -26,6 +26,7 @@ significherebbe poterle rompere.
 
 import hmac
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -58,10 +59,11 @@ UPSTREAM = f"http://127.0.0.1:{PORTA_BEN}"
 # uccise a 12,43 s.
 #
 # Ventidue secondi lasciano finire anche la simulazione più lenta con margine.
-# È un'attesa lunga per chi gioca, ma è il tempo che quel calcolo costa
-# davvero: l'alternativa non è «più veloce», è «buttarlo via». Chi volesse
-# accorciarla deve agire sui parametri di simulazione di BEN (`BEN_CONFIG`),
-# non su questo numero.
+# NON è il numero che rende BEN veloce — quello lo decide quanto campiona, e
+# si regola più sotto con `MANI_SIMULAZIONE`. Questo è solo la soglia oltre la
+# quale si smette di aspettare: tenerla bassa non accorcia il calcolo, lo
+# butta via. Resta larga apposta, come rete di sicurezza per il caso in cui
+# una simulazione costi più del previsto.
 #
 # Deve restare SOTTO il timeout della rotta `/api/ben/bid` (26 s), così a
 # raccontare cosa è successo è sempre la guardia, che ne sa di più.
@@ -154,6 +156,81 @@ class Guardia(BaseHTTPRequestHandler):
         self._rispondi(404, b'{"error":"not found"}')
 
 
+# Quante mani BEN valuta quando SIMULA, invece di fidarsi della rete.
+#
+# È il parametro che decide quanto dura una dichiarazione difficile. BEN
+# risponde in due modi: `NN` (~0,35 s) quando la rete è sicura, `Simulation`
+# quando non lo è — e la simulazione punteggia `sample_hands_auction` mani a
+# doppio morto PER OGNI dichiarazione candidata. Il costo è quindi
+# proporzionale a questo numero.
+#
+# Misurato in produzione il 25/08/2026 con il valore di BEN (200 mani): le
+# simulazioni stavano fra 6,4 e 10,6 s. Per restare entro cinque secondi anche
+# nel caso peggiore serve circa la metà — 200 × 5/10,6 ≈ 94 — e si arrotonda a
+# 100. `sample_boards_for_auction` scende in proporzione: è il tetto di mani
+# GENERATE per trovarne 100 buone, e lasciarlo a 30000 terrebbe una coda lunga
+# senza che serva più a niente.
+#
+# QUESTO È UN COMPROMESSO, non un'ottimizzazione gratuita: con metà campione
+# le dichiarazioni difficili sono un po' meno accurate. Si accetta perché
+# l'alternativa misurata era peggio — a 12 secondi la guardia le uccideva e la
+# dichiarazione non arrivava affatto.
+#
+# Si regolano senza ricostruire l'immagine, cambiando le variabili su Railway.
+MANI_SIMULAZIONE = os.environ.get("BEN_SAMPLE_HANDS_AUCTION", "100").strip()
+MANI_GENERATE = os.environ.get("BEN_SAMPLE_BOARDS_AUCTION", "15000").strip()
+
+
+def prepara_config(
+    origine: str = "/app/src/config/default_api.conf",
+    destinazione: str = "/tmp/bridgelab-ben.conf",
+) -> str | None:
+    """
+    Il config di BEN con i nostri due valori, derivato dal suo.
+
+    PERCHÉ DERIVATO E NON COPIATO. `default_api.conf` è lungo diciassettemila
+    caratteri e appartiene a BEN: copiarlo qui vorrebbe dire congelarlo, e al
+    primo aggiornamento di `BEN_COMMIT` ci ritroveremmo a far girare il motore
+    nuovo con la configurazione vecchia — senza che niente lo segnali. Qui si
+    legge il suo, si cambiano le due righe che ci interessano e si scrive
+    altrove: quello che non tocchiamo resta di BEN e si aggiorna con lui.
+
+    I percorsi dei modelli non ne risentono: `gameapi.py` li risolve rispetto
+    alla propria cartella di esecuzione, non rispetto al file di configurazione
+    (`Models.from_conf(configuration, config_path…)`).
+    """
+    if not os.path.exists(origine):
+        _log(f"config di BEN non trovato in {origine}: parte con il suo.")
+        return None
+    try:
+        with open(origine, encoding="utf8") as f:
+            testo = f.read()
+        cambi = {
+            "sample_hands_auction": MANI_SIMULAZIONE,
+            "sample_boards_for_auction": MANI_GENERATE,
+        }
+        for chiave, valore in cambi.items():
+            # `^chiave = ...` e non una sostituzione qualsiasi: nel file la
+            # stessa parola compare nei commenti, e `sample_boards_for_auction`
+            # è un prefisso di `sample_boards_for_auction_step`, che NON va
+            # toccato.
+            testo, n = re.subn(
+                rf"^{chiave} = .*$", f"{chiave} = {valore}", testo, flags=re.MULTILINE
+            )
+            if n != 1:
+                _log(f"attenzione: '{chiave}' sostituita {n} volte, attese 1.")
+        with open(destinazione, "w", encoding="utf8") as f:
+            f.write(testo)
+        _log(
+            f"config derivato: sample_hands_auction={MANI_SIMULAZIONE}, "
+            f"sample_boards_for_auction={MANI_GENERATE}"
+        )
+        return destinazione
+    except Exception as e:
+        _log(f"config non derivabile ({e}): BEN parte con il suo.")
+        return None
+
+
 def avvia_ben() -> subprocess.Popen:
     """BEN in ascolto solo su localhost: da fuori si passa da qui o da nulla."""
     cmd = [
@@ -162,7 +239,9 @@ def avvia_ben() -> subprocess.Popen:
         "--host", "127.0.0.1",
         "--port", str(PORTA_BEN),
     ]
-    conf = os.environ.get("BEN_CONFIG")
+    # `BEN_CONFIG` esplicito ha la precedenza: è la via d'uscita per provare
+    # un'altra configurazione senza toccare questo file.
+    conf = os.environ.get("BEN_CONFIG") or prepara_config()
     if conf:
         cmd += ["--config", conf]
     _log(f"avvio BEN: {' '.join(cmd)}")
