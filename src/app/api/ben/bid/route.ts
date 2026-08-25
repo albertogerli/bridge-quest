@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
+import { reportError } from "@/lib/report-error";
 
 /**
  * Quanto si aspetta BEN prima di rinunciare, e perché questo numero conta.
@@ -118,10 +119,9 @@ export async function POST(req: NextRequest) {
       });
     } catch {
       clearTimeout(timeout);
-      return NextResponse.json(
-        { fallback: true, error: scaduto ? "BEN timeout" : "BEN non raggiungibile" },
-        { status: 502 },
-      );
+      const motivo = scaduto ? "BEN timeout" : "BEN non raggiungibile";
+      reportError("api:ben-bid", new Error(motivo));
+      return NextResponse.json({ fallback: true, error: motivo }, { status: 502 });
     }
     clearTimeout(timeout);
 
@@ -131,6 +131,12 @@ export async function POST(req: NextRequest) {
       // e buttare via quel testo faceva finire due guasti diversi sotto la
       // stessa etichetta. Si tronca: è diagnostica, non una risposta.
       const corpo = (await res.text().catch(() => "")).trim().slice(0, 120);
+      // SEGNALATO DAL SERVER, che è l'unico a sapere davvero cosa ha risposto
+      // BEN. Finora l'unica traccia era una stringa ricostruita nel browser, e
+      // quando quella si perdeva per strada restava un «HTTP 502» che non dice
+      // niente: tre giri di indagine per una cosa che il server aveva sotto gli
+      // occhi. Nessun dato dell'utente finisce qui: solo stato e corpo di BEN.
+      reportError("api:ben-bid", new Error(`BEN returned ${res.status}: ${corpo || "(corpo vuoto)"}`));
       return NextResponse.json(
         { fallback: true, error: `BEN returned ${res.status}${corpo ? `: ${corpo}` : ""}` },
         { status: 502 },
@@ -141,11 +147,13 @@ export async function POST(req: NextRequest) {
     // BEN risponde con la dichiarazione in forma compatta ("1S", "PASS", "X").
     const bid: unknown = data.bid ?? data.call;
     if (typeof bid !== "string" || bid.length === 0) {
+      reportError("api:ben-bid", new Error("Risposta di BEN non valida"));
       return NextResponse.json({ fallback: true, error: "Risposta di BEN non valida" }, { status: 502 });
     }
 
     return NextResponse.json({ bid, fallback: false });
-  } catch {
+  } catch (err) {
+    reportError("api:ben-bid", err);
     return NextResponse.json({ fallback: true, error: "BEN non raggiungibile" }, { status: 502 });
   }
 }

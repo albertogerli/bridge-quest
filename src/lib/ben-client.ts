@@ -172,12 +172,35 @@ function motivoDa(status: number, errore: unknown): MotivoBen {
   if (/timeout|scaduto/i.test(testo)) return "attesa";
   if (/non raggiungibile/i.test(testo)) return "irraggiungibile";
   if (/non valida/i.test(testo)) return "risposta";
-  // `BEN returned 404` ha un significato preciso e VOLUTO: la guardia davanti
-  // a BEN risponde 404 — non 401 — a chi non ha il segreto giusto, per non
-  // confermare nemmeno che ci sia qualcosa da indovinare
-  // (`deploy/ben-railway/guard.py`). Se arriva questo, il token della
-  // piattaforma e quello del server non coincidono: non è BEN a stare male.
-  if (/\b404\b/.test(testo)) return "autorizzazione";
+
+  // Lo stato con cui ha risposto BEN, quando lo sappiamo.
+  const suo = testo.match(/BEN returned (\d{3})/);
+  if (suo) {
+    const stato = Number(suo[1]);
+    // 404 ha un significato preciso e VOLUTO: la guardia davanti a BEN
+    // risponde 404 — non 401 — a chi non ha il segreto giusto, per non
+    // confermare nemmeno che ci sia qualcosa da indovinare
+    // (`deploy/ben-railway/guard.py`). Se arriva questo, il token della
+    // piattaforma e quello del server non coincidono: non è BEN a stare male.
+    if (stato === 404) return "autorizzazione";
+    // Un 5xx del motore è transitorio per definizione. In produzione sono i
+    // risvegli del contenitore: la stessa richiesta, mezzo minuto dopo,
+    // risponde in mezzo secondo.
+    if (stato >= 500) return "attesa";
+    return "server";
+  }
+
+  // NON SAPPIAMO. Succede quando la risposta non è JSON leggibile, e in
+  // Sentry si presentava come «server (HTTP 502)» — una diagnosi che il
+  // client si era inventato non avendo dati.
+  //
+  // Nel dubbio si sceglie l'ipotesi TRANSITORIA, perché il danno non è
+  // simmetrico: dire «riprova» quando non serviva costa un tocco a vuoto,
+  // mentre NON dirlo quando serviva lascia la mano bloccata e l'esercizio
+  // finito lì. Il 502 questa rotta lo emette solo per problemi del motore,
+  // che sono quasi sempre passeggeri. La causa vera adesso la riferisce il
+  // server (`api:ben-bid`), che è l'unico a conoscerla davvero.
+  if (status === 502) return "attesa";
   return "server";
 }
 
@@ -215,8 +238,20 @@ export async function benBid(req: {
         ctx: biddingToCTX(req.bidding),
       }),
     });
-    const data = await res.json().catch(() => null);
-    const dettaglio = typeof data?.error === "string" ? data.error : `HTTP ${res.status}`;
+    // SI LEGGE IL TESTO, POI SI PROVA A INTERPRETARLO. Con `res.json()` diretto,
+    // una risposta non-JSON spariva senza lasciare niente e restava solo
+    // «HTTP 502»: il corpo c'era e lo buttavamo via prima di guardarlo.
+    const grezzo = await res.text().catch(() => "");
+    let data: { error?: unknown; fallback?: unknown; bid?: unknown } | null = null;
+    try {
+      data = grezzo ? JSON.parse(grezzo) : null;
+    } catch {
+      data = null;
+    }
+    const dettaglio =
+      typeof data?.error === "string"
+        ? data.error
+        : grezzo.trim().slice(0, 120) || `HTTP ${res.status} senza corpo`;
     if (!res.ok || data?.fallback || typeof data?.bid !== "string") {
       return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error), dettaglio };
     }

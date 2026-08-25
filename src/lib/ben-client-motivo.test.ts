@@ -28,7 +28,16 @@ function rispondi(status: number, corpo: unknown) {
   vi.stubGlobal("fetch", vi.fn(async () => ({
     ok: status >= 200 && status < 300,
     status,
-    json: async () => corpo,
+    text: async () => JSON.stringify(corpo),
+  })));
+}
+
+/** Una risposta che NON è JSON: il caso che produceva «server (HTTP 502)». */
+function rispondiGrezzo(status: number, corpo: string) {
+  vi.stubGlobal("fetch", vi.fn(async () => ({
+    ok: status >= 200 && status < 300,
+    status,
+    text: async () => corpo,
   })));
 }
 
@@ -62,13 +71,14 @@ describe("benBid: da che cosa nasce il motivo", () => {
     expect((await chiedi()).motivo).toBe("irraggiungibile");
   });
 
-  it("BEN che risponde con un errore suo è «server», col numero in chiaro", async () => {
-    rispondi(502, { fallback: true, error: "BEN returned 500" });
-    const r = await chiedi();
-    expect(r.motivo).toBe("server");
+  it("il numero di BEN resta in chiaro nel dettaglio", async () => {
     // Il dettaglio è quello che rende una segnalazione leggibile: senza, il
     // solo «server» copre il modello spento e il segreto sbagliato insieme.
+    rispondi(502, { fallback: true, error: "BEN returned 500" });
+    const r = await chiedi();
     expect(r.dettaglio).toBe("BEN returned 500");
+    // 500 è un 5xx: transitorio, quindi riprovare va offerto.
+    expect(r.motivo).toBe("attesa");
   });
 
   it("«ben unavailable» e «ben timeout» sono ATTESE, non guasti del motore", async () => {
@@ -112,13 +122,37 @@ describe("benBid: da che cosa nasce il motivo", () => {
     expect(await chiedi()).toEqual({ bid: "1♠", fallback: false });
   });
 
-  it("regge un corpo che non è JSON", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => ({
-      ok: false,
-      status: 502,
-      json: async () => { throw new SyntaxError("Unexpected token"); },
-    })));
-    expect(await chiedi()).toMatchObject({ fallback: true, motivo: "server" });
+  it("un corpo che non è JSON non si butta via: diventa il dettaglio", async () => {
+    // Prima finiva tutto in un «HTTP 502» che non diceva niente, e ha portato
+    // a tre giri di indagine su una causa che il corpo aveva già scritta.
+    rispondiGrezzo(502, "<html><body>An error occurred with your deployment</body></html>");
+    const r = await chiedi();
+    expect(r.dettaglio).toContain("An error occurred");
+    expect(r.motivo).toBe("attesa");
+  });
+
+  it("un 502 che non sappiamo spiegare offre comunque di riprovare", async () => {
+    // IL DANNO NON È SIMMETRICO: un «riprova» inutile costa un tocco, un
+    // «riprova» mancante lascia la mano bloccata e l'esercizio finito lì.
+    rispondiGrezzo(502, "");
+    const r = await chiedi();
+    expect(r.motivo).toBe("attesa");
+    expect(riprovareServe(r.motivo!)).toBe(true);
+    expect(r.dettaglio).toBe("HTTP 502 senza corpo");
+  });
+
+  it("un 5xx del motore è transitorio, non un guasto da arrendersi", async () => {
+    rispondi(502, { fallback: true, error: "BEN returned 503: service unavailable" });
+    const r = await chiedi();
+    expect(r.motivo).toBe("attesa");
+    expect(riprovareServe(r.motivo!)).toBe(true);
+  });
+
+  it("ma un 4xx del motore resta un errore che riprovare non risolve", async () => {
+    rispondi(502, { fallback: true, error: "BEN returned 400: auction and seat do not match" });
+    const r = await chiedi();
+    expect(r.motivo).toBe("server");
+    expect(riprovareServe(r.motivo!)).toBe(false);
   });
 });
 
