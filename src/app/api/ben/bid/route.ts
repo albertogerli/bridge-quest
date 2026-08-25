@@ -4,58 +4,41 @@ import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/
 import { reportError } from "@/lib/report-error";
 
 /**
- * Quanto si aspetta BEN prima di rinunciare, e perché questo numero conta.
+ * Quanto si aspetta BEN, e perché il numero è cambiato tre volte.
  *
- * DEV'ESSERE PIÙ CORTO DEL LIMITE DELLA FUNZIONE, altrimenti non serve a
- * niente: quando BEN è lento la piattaforma abbatte la funzione prima che il
- * nostro timeout scatti, e al browser arriva una pagina di errore invece del
- * ripiego pulito. È successo in produzione il 15/08/2026: l'asta
- * «P 1♦ 1♠ contro P» faceva impiegare a BEN più di dodici secondi, ogni volta,
- * e l'esercizio di licita si interrompeva con «mano annullata» — mentre con un
- * ripiego onesto sarebbe potuto continuare.
+ * BEN risponde in due modi, e lo dichiara nel campo `who` della risposta:
+ *   · `NN`         la rete neurale risponde da sola       ~0,35 s
+ *   · `Simulation` non è sicura e simula in Monte Carlo    6,4 – 10,6 s
  *
- * `maxDuration` è dichiarato qui sotto proprio per non doverlo indovinare.
+ * Misurato in produzione il 25/08/2026 su 14 aste reali: la correlazione è
+ * perfetta — ogni risposta oltre i cinque secondi è una `Simulation`, nessuna
+ * `NN` ci va vicino. È questa la cosa da sapere prima di toccare il numero:
+ * non c'è una latenza «tipica», ce ne sono due, e distano trenta volte.
  *
- * DODICI SECONDI, E NON È UN NUMERO A CASO. Misurato sui log di produzione del
- * 15/08/2026, 21 chiamate reali a `/bid`:
- *   · mediana 0,51 s — la maggior parte è immediata;
- *   · con asta VUOTA (l'apertura) sempre 0,16 s: il modello è già caldo, e un
- *     ping periodico per tenerlo su non servirebbe a niente;
- *   · con un'asta in corso oscilla fra 0,3 e 9,16 s, a seconda di quanto è
- *     difficile campionare mani compatibili con quelle dichiarazioni;
- *   · massimo osservato 9,16 s, nessuna oltre i 10.
- * A 8 secondi ne tagliavamo 4 su 21 — quasi una dichiarazione su cinque
- * diventava «l'avversario non ha risposto in tempo». A 12 non se ne taglia
- * nessuna, e restiamo comunque ben sotto il tetto della funzione.
+ * LA STORIA DEI NUMERI, che è la parte utile.
+ *   · 8 s  → tagliava una dichiarazione su cinque;
+ *   · 12 s → sembrava sicuro perché il massimo osservato era 9,16 s. Ma le
+ *            simulazioni stanno fra 6,4 e 10,6 s: erano appena sotto il
+ *            taglio, e bastava del traffico contemporaneo per superarlo.
+ *            Riprodotto in produzione: otto richieste insieme, due uccise a
+ *            12,43 s con `ben unavailable`. Il lavoro veniva buttato via un
+ *            secondo prima di essere pronto;
+ *   · 26 s → lascia finire anche la simulazione più lenta, e resta sotto
+ *            `maxDuration`.
+ *
+ * DEV'ESSERE PIÙ LUNGO DELLA GUARDIA (22 s, `deploy/ben-railway/guard.py`) e
+ * PIÙ CORTO DI `maxDuration`. Il primo vincolo lascia l'ultima parola alla
+ * guardia, che sa distinguere «BEN tarda» da «BEN non c'è»; il secondo evita
+ * che la piattaforma abbatta la funzione e al browser arrivi una pagina di
+ * errore invece del ripiego pulito.
  *
  * NON È LA MEMORIA: l'istanza ne ha in abbondanza e non ha mai riavviato per
- * esaurimento. È il costo dell'inferenza, e si paga aspettando.
+ * esaurimento. È il costo della simulazione, e si paga aspettando.
  */
 /** Il tetto della funzione: il timeout qui sopra deve starci sotto. */
 export const maxDuration = 30;
 
-/**
- * DEV'ESSERE PIÙ LUNGO DELLA GUARDIA, non uguale.
- *
- * Fra noi e BEN c'è `deploy/ben-railway/guard.py`, che aspetta a sua volta —
- * `BEN_TIMEOUT`, di norma 12 secondi — e se BEN non risponde restituisce un
- * 502 `ben unavailable`. Con due attese IDENTICHE in serie i due timer
- * scadono insieme, e a decidere che cosa vede l'utente è chi arriva primo:
- * il 502 della guardia («il motore ha risposto male, è un problema nostro»)
- * oppure la nostra interruzione («non ha risposto in tempo, riprova»). Lo
- * stesso identico guasto prendeva due nomi a caso, e uno dei due non offriva
- * nemmeno di riprovare.
- *
- * Misurato in produzione il 24/08/2026: a servizio caldo la mediana è 0,37 s
- * e un'asta in corso costa fino a 7,6 s; il 502 arriva solo mentre il
- * contenitore si sveglia, e lì la guardia sfonda i suoi 12 secondi. Aspettare
- * più di lei significa lasciarle sempre l'ultima parola, che è quella
- * informativa: sappiamo che BEN c'era e non ha fatto in tempo.
- *
- * Resta sotto `maxDuration`, altrimenti la piattaforma abbatte la funzione
- * prima e al browser arriva una pagina di errore invece del ripiego.
- */
-const TIMEOUT_MS = 18000;
+const TIMEOUT_MS = 26000;
 const RATE_MAX_PER_MIN = 60;
 
 const bodySchema = z.object({
