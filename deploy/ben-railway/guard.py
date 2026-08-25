@@ -42,9 +42,30 @@ PORTA = int(os.environ.get("PORT", "8080"))
 PORTA_BEN = int(os.environ.get("BEN_INTERNAL_PORT", "8085"))
 UPSTREAM = f"http://127.0.0.1:{PORTA_BEN}"
 
-# Timeout più corto di quello del proxy di BridgeLab (15 s): meglio un errore
-# netto che una richiesta appesa che occupa un lavoratore.
-TIMEOUT = float(os.environ.get("BEN_TIMEOUT", "12"))
+# QUANTO ASPETTARE BEN, e perché dodici secondi erano proprio il numero
+# sbagliato.
+#
+# BEN risponde in due modi diversi, e lo dichiara nel campo `who`:
+#   · `NN`         la rete neurale risponde da sola      ~0,35 s
+#   · `Simulation` non è sicura e simula in Monte Carlo   6,4 – 10,6 s
+#
+# Misurato in produzione il 25/08/2026 su 14 aste reali: la correlazione è
+# perfetta, ogni risposta oltre i 5 secondi è una `Simulation` e nessuna `NN`
+# ci arriva vicino. Con il taglio a 12 secondi le simulazioni finivano
+# sull'orlo: bastava un po' di traffico contemporaneo per superarlo, e il
+# risultato era un 502 `ben unavailable` — cioè il lavoro buttato via UN
+# SECONDO prima che fosse pronto. Riprodotto: otto richieste insieme, due
+# uccise a 12,43 s.
+#
+# Ventidue secondi lasciano finire anche la simulazione più lenta con margine.
+# È un'attesa lunga per chi gioca, ma è il tempo che quel calcolo costa
+# davvero: l'alternativa non è «più veloce», è «buttarlo via». Chi volesse
+# accorciarla deve agire sui parametri di simulazione di BEN (`BEN_CONFIG`),
+# non su questo numero.
+#
+# Deve restare SOTTO il timeout della rotta `/api/ben/bid` (26 s), così a
+# raccontare cosa è successo è sempre la guardia, che ne sa di più.
+TIMEOUT = float(os.environ.get("BEN_TIMEOUT", "22"))
 
 # I soli percorsi usati da src/app/api/ben/*. `/` è la sonda di salute.
 # `/bid` è il modello neurale di licita: stessa rete, altro endpoint.

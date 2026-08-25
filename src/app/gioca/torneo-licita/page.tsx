@@ -189,13 +189,19 @@ export default function TorneoLicitaPage() {
       if (chi === "south") break;
 
       setAttesaDi(chi);
-      let r = await chiediABen(m, chi, correnti);
-      // Il secondo tentativo ha senso solo se la causa può cambiare da sola.
-      // Con il limite di richieste era anzi controproducente: raddoppiava il
-      // consumo e avvicinava il limite successivo.
-      if (r.fallback && riprovareServe(r.motivo ?? "attesa")) {
-        r = await chiediABen(m, chi, correnti);
-      }
+      // NIENTE SECONDO TENTATIVO AUTOMATICO. C'era, e aveva senso quando la
+      // rinuncia arrivava dopo 12 secondi. Ora la catena aspetta fino a 22
+      // (la guardia) proprio per lasciar finire le simulazioni di BEN, che
+      // costano fino a 10,6 s: un secondo giro silenzioso porterebbe l'attesa
+      // a quarantaquattro secondi prima di dire qualcosa, e chi gioca penserebbe
+      // che si è rotto tutto. Se dopo ventidue secondi non è arrivata, il
+      // problema non si scioglie da solo: meglio dirlo subito e lasciare che
+      // sia l'utente a premere «Riprova», che è lì apposta.
+      const r = await chiediABen(m, chi, correnti);
+      // La dichiarazione da mettere nell'asta: quella di BEN, oppure il passo
+      // d'ufficio dell'avversario che non ha risposto. Si tiene separata da `r`
+      // perché il suo `motivo` serve ancora dopo, per dire cosa è successo.
+      let dichiarazione = r.bid;
       if (r.fallback) {
         if (chi === "north") {
           setMotivoMuto(r.motivo ?? null);
@@ -209,9 +215,9 @@ export default function TorneoLicitaPage() {
           return;
         }
         setAvversarioMuto(true);
-        r = { bid: "P", fallback: false };
+        dichiarazione = "P";
       }
-      correnti = [...correnti, r.bid];
+      correnti = [...correnti, dichiarazione];
       setBids(correnti);
     }
     setAttesa(false);
