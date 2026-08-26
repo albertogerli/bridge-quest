@@ -116,29 +116,40 @@ export default function TorneoLicitaPage() {
    * Adesso si segnala sul valore di ritorno, che è dove l'errore arriva
    * davvero.
    */
-  const chiediABen = async (m: ManoCondivisa, chi: Position, fatte: string[]) => {
-    const r = await benBid({
+  /**
+   * Una dichiarazione dal motore.
+   *
+   * NON SEGNALA NIENTE, ed è deliberato. Qui c'era un `reportError` su ogni
+   * fallimento, compreso quello che il ritentativo subito dopo rimediava: chi
+   * giocava non si accorgeva di nulla e a noi arrivava un avviso lo stesso.
+   * Un allarme deve voler dire «qualcuno è rimasto bloccato», altrimenti si
+   * impara a ignorarlo — ed è il modo in cui gli allarmi smettono di servire.
+   * La segnalazione si fa quando si rinuncia davvero, più sotto.
+   *
+   * I guasti veri di BEN li riferisce comunque il server (`api:ben-bid`), che
+   * li vede tutti, ritentati o no.
+   */
+  const chiediABen = (m: ManoCondivisa, chi: Position, fatte: string[]) =>
+    benBid({
       hand: m.hands[chi],
       seat: chi,
       dealer: m.dealer,
       vulnerability: m.vulnerability,
       bidding: { dealer: m.dealer, bids: fatte },
     });
-    if (r.fallback) {
-      // IL DETTAGLIO VA DENTRO IL MESSAGGIO. Con il solo motivo, «server»
-      // copriva due cose che si correggono in posti diversi: il segreto che
-      // non combacia (la guardia risponde 404) e il modello spento dietro la
-      // guardia (che inoltra 502). Il numero ce l'avevamo e lo buttavamo via,
-      // costringendo a indovinare davanti a una segnalazione.
-      reportError(
-        "torneo-licita:ben",
-        new Error(
-          `BEN non ha dichiarato per ${chi}: ${r.motivo ?? "motivo ignoto"}` +
-            (r.dettaglio ? ` (${r.dettaglio})` : ""),
-        ),
-      );
-    }
-    return r;
+
+  /** Si è rinunciato: adesso sì che vale la pena dirlo. */
+  const segnalaRinuncia = (
+    chi: Position,
+    r: { motivo?: MotivoBen; dettaglio?: string },
+  ) => {
+    reportError(
+      "torneo-licita:ben",
+      new Error(
+        `BEN non ha dichiarato per ${chi}: ${r.motivo ?? "motivo ignoto"}` +
+          (r.dettaglio ? ` (${r.dettaglio})` : ""),
+      ),
+    );
   };
 
   const chiudi = async (m: ManoCondivisa, t: DdsTable, finali: string[]) => {
@@ -191,19 +202,26 @@ export default function TorneoLicitaPage() {
       if (chi === "south") break;
 
       setAttesaDi(chi);
-      // UN SOLO RITENTATIVO, E SOLO PER I GUASTI ISTANTANEI.
+      // SI RITENTA SOLO SUI GUASTI ISTANTANEI, e fino a due volte.
       //
       // Il ritentativo automatico su tutto era stato tolto per un buon motivo:
       // quando la rinuncia arriva dopo venti secondi di attesa, rifarla in
       // silenzio porta l'utente a quaranta secondi di schermo fermo prima di
       // sapere qualcosa.
       //
-      // `edge` è l'eccezione, ed è diversa in natura: lì a rispondere non è la
-      // nostra rotta ma una pagina d'errore di ciò che sta davanti, e arriva
-      // SUBITO. Ritentare costa un attimo e quasi sempre basta, perché è un
-      // intoppo di rete e non un calcolo che non sta nei tempi.
+      // `edge` è l'eccezione, ed è diversa in natura. Lì a rispondere non è la
+      // nostra rotta ma Cloudflare, che sta davanti a bridgelab.it, con un
+      // «502 Bad gateway»: la richiesta non è mai arrivata al motore, e arriva
+      // indietro SUBITO. Due tentativi in più costano meno di un secondo in
+      // tutto, e un intoppo di connessione raramente si ripete tre volte.
+      //
+      // La pausa fra i tentativi non è cerimoniale: rifare la richiesta
+      // nell'identico istante rischia di ripassare per la stessa connessione
+      // guasta. Un attimo basta perché ne venga aperta un'altra.
       let r = await chiediABen(m, chi, correnti);
-      if (r.fallback && r.motivo === "edge") {
+      for (const pausa of [300, 800]) {
+        if (!r.fallback || r.motivo !== "edge") break;
+        await new Promise((ok) => setTimeout(ok, pausa));
         r = await chiediABen(m, chi, correnti);
       }
       // La dichiarazione da mettere nell'asta: quella di BEN, oppure il passo
@@ -211,6 +229,7 @@ export default function TorneoLicitaPage() {
       // perché il suo `motivo` serve ancora dopo, per dire cosa è successo.
       let dichiarazione = r.bid;
       if (r.fallback) {
+        segnalaRinuncia(chi, r);
         if (chi === "north") {
           setMotivoMuto(r.motivo ?? null);
           // Senza il compagno l'esercizio non esiste, e in torneo la mano non
