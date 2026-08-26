@@ -53,6 +53,8 @@ function spiegazioneMuto(motivo: MotivoBen | null, t: (frase: string) => string)
       return t("Il motore che dichiara per lui ha risposto male: è un problema nostro, ed è già stato segnalato. La mano non è persa.");
     case "irraggiungibile":
       return t("Il motore che dichiara per lui non risponde. La mano non è persa: l'asta riprende da dove si è fermata.");
+    case "edge":
+      return t("Un intoppo di rete fra il tuo dispositivo e noi: la richiesta non è nemmeno arrivata al motore. La mano non è persa, riprova.");
     case "rete":
       return t("La connessione si è interrotta. La mano non è persa: l'asta riprende da dove si è fermata.");
     default:
@@ -189,15 +191,21 @@ export default function TorneoLicitaPage() {
       if (chi === "south") break;
 
       setAttesaDi(chi);
-      // NIENTE SECONDO TENTATIVO AUTOMATICO. C'era, e aveva senso quando la
-      // rinuncia arrivava dopo 12 secondi. Ora la catena aspetta fino a 22
-      // (la guardia) proprio per lasciar finire le simulazioni di BEN, che
-      // costano fino a 10,6 s: un secondo giro silenzioso porterebbe l'attesa
-      // a quarantaquattro secondi prima di dire qualcosa, e chi gioca penserebbe
-      // che si è rotto tutto. Se dopo ventidue secondi non è arrivata, il
-      // problema non si scioglie da solo: meglio dirlo subito e lasciare che
-      // sia l'utente a premere «Riprova», che è lì apposta.
-      const r = await chiediABen(m, chi, correnti);
+      // UN SOLO RITENTATIVO, E SOLO PER I GUASTI ISTANTANEI.
+      //
+      // Il ritentativo automatico su tutto era stato tolto per un buon motivo:
+      // quando la rinuncia arriva dopo venti secondi di attesa, rifarla in
+      // silenzio porta l'utente a quaranta secondi di schermo fermo prima di
+      // sapere qualcosa.
+      //
+      // `edge` è l'eccezione, ed è diversa in natura: lì a rispondere non è la
+      // nostra rotta ma una pagina d'errore di ciò che sta davanti, e arriva
+      // SUBITO. Ritentare costa un attimo e quasi sempre basta, perché è un
+      // intoppo di rete e non un calcolo che non sta nei tempi.
+      let r = await chiediABen(m, chi, correnti);
+      if (r.fallback && r.motivo === "edge") {
+        r = await chiediABen(m, chi, correnti);
+      }
       // La dichiarazione da mettere nell'asta: quella di BEN, oppure il passo
       // d'ufficio dell'avversario che non ha risposto. Si tiene separata da `r`
       // perché il suo `motivo` serve ancora dopo, per dire cosa è successo.
