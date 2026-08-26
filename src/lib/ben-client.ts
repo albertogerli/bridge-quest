@@ -138,6 +138,9 @@ export async function benLead(
  *   `autorizzazione` il segreto con cui parliamo a BEN non combacia: la
  *                   guardia risponde 404 apposta. È configurazione, non un
  *                   guasto, e nessun tentativo la sistema.
+ *   `edge`          non ha risposto la nostra rotta ma qualcosa DAVANTI: una
+ *                   pagina d'errore invece del JSON. Fallisce subito, quindi
+ *                   riprovare costa poco e spesso basta.
  *   `rete`          la connessione del browser.
  */
 export type MotivoBen =
@@ -149,11 +152,50 @@ export type MotivoBen =
   | "sessione"
   | "richiesta"
   | "autorizzazione"
+  | "edge"
   | "rete";
 
 /** True se ha senso offrire «riprova»: per le altre cause non cambierebbe nulla. */
 export function riprovareServe(motivo: MotivoBen): boolean {
-  return motivo === "attesa" || motivo === "rete" || motivo === "irraggiungibile";
+  return (
+    motivo === "attesa" ||
+    motivo === "rete" ||
+    motivo === "irraggiungibile" ||
+    motivo === "edge"
+  );
+}
+
+/**
+ * Il succo di una risposta che non è JSON.
+ *
+ * IL PROBLEMA CHE RISOLVE. Quando fra il telefono e noi si mette di mezzo una
+ * pagina d'errore, i suoi primi centoventi caratteri sono sempre gli stessi —
+ * dottipo e commenti condizionali per Internet Explorer — e il codice vero sta
+ * più in basso. In Sentry è arrivato questo:
+ *
+ *   attesa (<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js ie6…
+ *
+ * cioè un ritaglio che non dice niente: si sa solo che qualcosa ha risposto in
+ * HTML. Tagliare dall'inizio è comodo per un JSON, dove il campo utile è
+ * subito, ed è inutile per una pagina.
+ *
+ * Qui si cercano i pezzi che identificano l'errore: il titolo della pagina e i
+ * marcatori di Cloudflare, che sta davanti a bridgelab.it. Se non si trova
+ * niente si ripiega sul ritaglio, che è sempre meglio del nulla.
+ */
+export function riassumiCorpo(grezzo: string): string {
+  const testo = grezzo.trim();
+  if (!/^\s*<(!doctype|html)/i.test(testo)) return testo.slice(0, 120);
+
+  const pezzi: string[] = [];
+  const titolo = testo.match(/<title[^>]*>([\s\S]{0,120}?)<\/title>/i);
+  if (titolo) pezzi.push(titolo[1].replace(/\s+/g, " ").trim());
+  const codice = testo.match(/\bError\s*(?:code\s*)?(\d{3,4})\b/i);
+  if (codice && !pezzi.some((p) => p.includes(codice[1]))) pezzi.push(`Error ${codice[1]}`);
+  const ray = testo.match(/Ray ID:?\s*(?:<[^>]*>\s*)*([0-9a-f]{10,})/i);
+  if (ray) pezzi.push(`Ray ${ray[1]}`);
+
+  return pezzi.length ? `pagina HTML — ${pezzi.join(" · ")}` : `pagina HTML (${testo.length} caratteri)`;
 }
 
 function motivoDa(status: number, errore: unknown): MotivoBen {
@@ -251,9 +293,19 @@ export async function benBid(req: {
     const dettaglio =
       typeof data?.error === "string"
         ? data.error
-        : grezzo.trim().slice(0, 120) || `HTTP ${res.status} senza corpo`;
+        : riassumiCorpo(grezzo) || `HTTP ${res.status} senza corpo`;
     if (!res.ok || data?.fallback || typeof data?.bid !== "string") {
-      return { bid: "P", fallback: true, motivo: motivoDa(res.status, data?.error), dettaglio };
+      // Se non è JSON e lo stato è 5xx, a rispondere NON è stata la nostra
+      // rotta — che manda sempre JSON — ma qualcosa davanti. Va distinto:
+      // fallisce subito e riprovare costa un attimo, mentre le altre cause
+      // arrivano dopo secondi di attesa.
+      const dallEdge = data === null && res.status >= 500;
+      return {
+        bid: "P",
+        fallback: true,
+        motivo: dallEdge ? "edge" : motivoDa(res.status, data?.error),
+        dettaglio,
+      };
     }
     return { bid: benBidToItaliano(data.bid), fallback: false };
   } catch {

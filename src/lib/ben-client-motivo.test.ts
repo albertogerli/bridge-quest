@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { benBid, riprovareServe } from "./ben-client";
+import { benBid, riassumiCorpo, riprovareServe } from "./ben-client";
 import type { Card } from "./bridge-engine";
 
 /**
@@ -40,6 +40,12 @@ function rispondiGrezzo(status: number, corpo: string) {
     text: async () => corpo,
   })));
 }
+
+/** La pagina d'errore di Cloudflare, nella forma in cui è arrivata davvero. */
+const PAGINA_CLOUDFLARE = `<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<head><title>bridgelab.it | 502: Bad gateway</title></head>
+<body><h1>Error 502</h1><p>Ray ID: 8a3f19c2be4471aa</p></body></html>`;
 
 const chiedi = () =>
   benBid({ hand: MANO, seat: "north", dealer: "north", vulnerability: "none" });
@@ -122,13 +128,24 @@ describe("benBid: da che cosa nasce il motivo", () => {
     expect(await chiedi()).toEqual({ bid: "1♠", fallback: false });
   });
 
+  it("una pagina d'errore è «edge», non un guasto del motore", async () => {
+    // Evento reale del 25/08/2026: a rispondere non era la nostra rotta — che
+    // manda sempre JSON — ma Cloudflare, che sta davanti a bridgelab.it. È un
+    // guasto ISTANTANEO, e va distinto da un calcolo che non sta nei tempi.
+    rispondiGrezzo(502, PAGINA_CLOUDFLARE);
+    const r = await chiedi();
+    expect(r.motivo).toBe("edge");
+    expect(riprovareServe(r.motivo!)).toBe(true);
+    expect(r.dettaglio).toContain("502");
+  });
+
   it("un corpo che non è JSON non si butta via: diventa il dettaglio", async () => {
     // Prima finiva tutto in un «HTTP 502» che non diceva niente, e ha portato
     // a tre giri di indagine su una causa che il corpo aveva già scritta.
-    rispondiGrezzo(502, "<html><body>An error occurred with your deployment</body></html>");
+    rispondiGrezzo(502, "<html><title>Deployment error</title><body>x</body></html>");
     const r = await chiedi();
-    expect(r.dettaglio).toContain("An error occurred");
-    expect(r.motivo).toBe("attesa");
+    expect(r.dettaglio).toContain("Deployment error");
+    expect(r.motivo).toBe("edge");
   });
 
   it("un 502 che non sappiamo spiegare offre comunque di riprovare", async () => {
@@ -136,7 +153,7 @@ describe("benBid: da che cosa nasce il motivo", () => {
     // «riprova» mancante lascia la mano bloccata e l'esercizio finito lì.
     rispondiGrezzo(502, "");
     const r = await chiedi();
-    expect(r.motivo).toBe("attesa");
+    expect(riprovareServe(r.motivo!)).toBe(true);
     expect(riprovareServe(r.motivo!)).toBe(true);
     expect(r.dettaglio).toBe("HTTP 502 senza corpo");
   });
@@ -169,5 +186,31 @@ describe("riprovareServe", () => {
     expect(riprovareServe("richiesta")).toBe(false);
     expect(riprovareServe("server")).toBe(false);
     expect(riprovareServe("risposta")).toBe(false);
+  });
+});
+
+describe("riassumiCorpo: dalla pagina d'errore al fatto", () => {
+  it("estrae titolo, codice e Ray dalla pagina di Cloudflare", () => {
+    const r = riassumiCorpo(PAGINA_CLOUDFLARE);
+    expect(r).toContain("502");
+    expect(r).toContain("Ray 8a3f19c2be4471aa");
+    // La cosa che NON deve più succedere: restituire il dottipo e i commenti
+    // per Internet Explorer, che sono uguali in ogni pagina d'errore.
+    expect(r).not.toContain("DOCTYPE");
+    expect(r).not.toContain("ie6");
+  });
+
+  it("un corpo che non è HTML resta com'è", () => {
+    expect(riassumiCorpo("BEN returned 502: ben unavailable")).toBe(
+      "BEN returned 502: ben unavailable",
+    );
+  });
+
+  it("regge una pagina senza titolo né codice", () => {
+    expect(riassumiCorpo("<html><body>niente di utile</body></html>")).toContain("pagina HTML");
+  });
+
+  it("non esplode sul vuoto", () => {
+    expect(riassumiCorpo("")).toBe("");
   });
 });
