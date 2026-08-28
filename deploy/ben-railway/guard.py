@@ -161,24 +161,33 @@ class Guardia(BaseHTTPRequestHandler):
 # È il parametro che decide quanto dura una dichiarazione difficile. BEN
 # risponde in due modi: `NN` (~0,35 s) quando la rete è sicura, `Simulation`
 # quando non lo è — e la simulazione punteggia `sample_hands_auction` mani a
-# doppio morto PER OGNI dichiarazione candidata. Il costo è quindi
-# proporzionale a questo numero.
+# doppio morto PER OGNI dichiarazione candidata. Il costo è proporzionale a
+# questo numero.
 #
-# Misurato in produzione il 25/08/2026 con il valore di BEN (200 mani): le
-# simulazioni stavano fra 6,4 e 10,6 s. Per restare entro cinque secondi anche
-# nel caso peggiore serve circa la metà — 200 × 5/10,6 ≈ 94 — e si arrotonda a
-# 100. `sample_boards_for_auction` scende in proporzione: è il tetto di mani
-# GENERATE per trovarne 100 buone, e lasciarlo a 30000 terrebbe una coda lunga
-# senza che serva più a niente.
+# SETTANTACINQUE, E NON È UN NUMERO A CASO. Ricavato misurando sul servizio
+# vero, in due passaggi, con `scripts/misura-ben-licita.mjs`:
 #
-# QUESTO È UN COMPROMESSO, non un'ottimizzazione gratuita: con metà campione
-# le dichiarazioni difficili sono un po' meno accurate. Si accetta perché
-# l'alternativa misurata era peggio — a 12 secondi la guardia le uccideva e la
-# dichiarazione non arrivava affatto.
+#   200 (il valore di BEN)  simulazioni 5,6 – 9,2 s   massimo 9,24 s
+#   100                     simulazioni 3,5 – 6,4 s   massimo 6,41 s
+#   75                      simulazioni 2,8 – 4,7 s   massimo 4,66 s
+#
+# La prima stima era 100, calcolata proporzionalmente da 200: ha portato il
+# massimo a 6,4 e non bastava. Il secondo giro è partito da lì — 100 × 5/6,4 ≈
+# 78 — ed è finito a 75 per avere margine. Tre misure consecutive dopo il
+# cambio: nessuna simulazione sopra i cinque secondi.
+#
+# LA QUALITÀ NON È CROLLATA, per quanto si è potuto vedere: sulle tre aste di
+# prova le dichiarazioni sono rimaste le stesse di prima (PASS, 3♠, 1♠) con un
+# terzo dei campioni. Resta un compromesso — su altre mani un campione più
+# piccolo può decidere diversamente — e va riguardato se qualcuno segnala che
+# il compagno dichiara peggio proprio nelle mani difficili.
+#
+# `sample_boards_for_auction` scende in proporzione: è il tetto di mani
+# GENERATE per trovarne 75 buone.
 #
 # Si regolano senza ricostruire l'immagine, cambiando le variabili su Railway.
-MANI_SIMULAZIONE = os.environ.get("BEN_SAMPLE_HANDS_AUCTION", "100").strip()
-MANI_GENERATE = os.environ.get("BEN_SAMPLE_BOARDS_AUCTION", "15000").strip()
+MANI_SIMULAZIONE = os.environ.get("BEN_SAMPLE_HANDS_AUCTION", "75").strip()
+MANI_GENERATE = os.environ.get("BEN_SAMPLE_BOARDS_AUCTION", "11000").strip()
 
 
 def prepara_config(
