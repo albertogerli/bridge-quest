@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
 import { reportError } from "@/lib/report-error";
+import { dichiarazioneNota, ricordaDichiarazione } from "@/lib/cache-licita";
 
 /**
  * Quanto si aspetta BEN, e perché il numero è cambiato tre volte.
@@ -85,6 +86,17 @@ export async function POST(req: NextRequest) {
     // prima dichiarazione, cioè sempre.
     if (!params.has("ctx")) params.set("ctx", "");
 
+    // GIÀ CHIESTA? Nel torneo la smazzata è la stessa per tutti e le aste si
+    // ripetono: l'apertura del mazziere è identica per ogni partecipante.
+    // Ripescarla evita una richiesta che, quando BEN simula, costa fino a nove
+    // secondi — ed è su quelle lunghe che Cloudflare ci ha restituito 502.
+    // Vedi `src/lib/cache-licita.ts` anche per il motivo di equità.
+    const chiave = params.toString();
+    const nota = dichiarazioneNota(chiave);
+    if (nota) {
+      return NextResponse.json({ bid: nota, fallback: false, cache: true });
+    }
+
     const controller = new AbortController();
     // Il flag serve a distinguere DUE cose che finiscono nello stesso `catch`:
     // l'attesa scaduta (BEN c'è, ma è lento: riprovare ha senso) e il server
@@ -134,6 +146,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ fallback: true, error: "Risposta di BEN non valida" }, { status: 502 });
     }
 
+    ricordaDichiarazione(chiave, bid);
     return NextResponse.json({ bid, fallback: false });
   } catch (err) {
     reportError("api:ben-bid", err);

@@ -129,24 +129,34 @@ export default function TorneoLicitaPage() {
    * I guasti veri di BEN li riferisce comunque il server (`api:ben-bid`), che
    * li vede tutti, ritentati o no.
    */
-  const chiediABen = (m: ManoCondivisa, chi: Position, fatte: string[]) =>
-    benBid({
+  const chiediABen = async (m: ManoCondivisa, chi: Position, fatte: string[]) => {
+    // QUANTO CI HA MESSO fa parte della risposta. Sul ritentativo dei guasti
+    // `edge` avevo dato per scontato che arrivassero subito — plausibile, mai
+    // misurato. Se invece arrivassero dopo dieci secondi, ritentare due volte
+    // terrebbe fermo lo schermo mezzo minuto: la decisione va presa sul fatto,
+    // non sull'ipotesi. Il tempo finisce anche nella segnalazione, così la
+    // prossima volta non ci sarà da indovinare.
+    const avvio = Date.now();
+    const r = await benBid({
       hand: m.hands[chi],
       seat: chi,
       dealer: m.dealer,
       vulnerability: m.vulnerability,
       bidding: { dealer: m.dealer, bids: fatte },
     });
+    return { ...r, durata: Date.now() - avvio };
+  };
 
   /** Si è rinunciato: adesso sì che vale la pena dirlo. */
   const segnalaRinuncia = (
     chi: Position,
-    r: { motivo?: MotivoBen; dettaglio?: string },
+    r: { motivo?: MotivoBen; dettaglio?: string; durata?: number },
   ) => {
+    const tempo = r.durata !== undefined ? ` dopo ${(r.durata / 1000).toFixed(1)}s` : "";
     reportError(
       "torneo-licita:ben",
       new Error(
-        `BEN non ha dichiarato per ${chi}: ${r.motivo ?? "motivo ignoto"}` +
+        `BEN non ha dichiarato per ${chi}${tempo}: ${r.motivo ?? "motivo ignoto"}` +
           (r.dettaglio ? ` (${r.dettaglio})` : ""),
       ),
     );
@@ -221,6 +231,10 @@ export default function TorneoLicitaPage() {
       let r = await chiediABen(m, chi, correnti);
       for (const pausa of [300, 800]) {
         if (!r.fallback || r.motivo !== "edge") break;
+        // Si ritenta solo se il guasto è arrivato SUBITO. Un `edge` lento
+        // sarebbe una cosa diversa — qualcosa che scade invece che rompersi —
+        // e insistere raddoppierebbe un'attesa già lunga.
+        if (r.durata > 3000) break;
         await new Promise((ok) => setTimeout(ok, pausa));
         r = await chiediABen(m, chi, correnti);
       }
