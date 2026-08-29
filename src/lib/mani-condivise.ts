@@ -465,6 +465,44 @@ export interface ClassificaTorneo {
   righe: RigaClassifica[];
 }
 
+
+/**
+ * Segnala un errore dei tornei, TRANNE quando è solo la sessione finita.
+ *
+ * Le funzioni dei tornei sono concesse al solo ruolo `authenticated`: chi non
+ * ha (più) l'accesso riceve «permission denied for function torneo_corrente»,
+ * ed è il comportamento voluto, non un guasto. Capita davvero — la sessione
+ * scade mentre la pagina è aperta — e finiva in Sentry come errore.
+ *
+ * NON SI ZITTISCONO I «permission denied» IN BLOCCO. Il 20/08/2026 uno di
+ * quelli era un difetto vero, e nasconderlo sarebbe costato giorni: il profilo
+ * non si salvava perché mancava un privilegio. La differenza la fa la
+ * sessione, e qui la si guarda: senza sessione il rifiuto è atteso e si tace;
+ * CON una sessione valida un rifiuto è un problema di configurazione e deve
+ * arrivare.
+ *
+ * `getSession()` legge quello che c'è in locale e non fa richieste: non
+ * aggiunge attesa e non fallisce a sua volta.
+ */
+export function vaSegnalato(errore: unknown, haSessione: boolean): boolean {
+  const messaggio =
+    typeof errore === "object" && errore !== null && "message" in errore
+      ? String((errore as { message?: unknown }).message ?? "")
+      : String(errore ?? "");
+  if (/permission denied/i.test(messaggio) && !haSessione) return false;
+  return true;
+}
+
+async function segnalaSeNonEScaduta(
+  supabase: ReturnType<typeof createClient>,
+  scope: string,
+  errore: unknown,
+): Promise<void> {
+  const { data } = await supabase.auth.getSession();
+  if (!vaSegnalato(errore, !!data.session)) return;
+  reportError(scope, errore);
+}
+
 /** Il torneo del periodo, creandolo se è il primo ad arrivare. */
 export async function torneoCorrente(
   tipo: "giornaliero" | "settimanale"
@@ -473,7 +511,7 @@ export async function torneoCorrente(
     const supabase = createClient();
     const { data, error } = await supabase.rpc("torneo_corrente", { p_tipo: tipo });
     if (error) {
-      reportError("tornei:corrente", error);
+      await segnalaSeNonEScaduta(supabase, "tornei:corrente", error);
       return null;
     }
     return (data as TorneoCorrente | null) ?? null;
@@ -496,7 +534,7 @@ export async function torneoMano(
     const supabase = createClient();
     const { data, error } = await supabase.rpc("torneo_mano", { p_torneo: torneoId });
     if (error) {
-      reportError("tornei:mano", error);
+      await segnalaSeNonEScaduta(supabase, "tornei:mano", error);
       return null;
     }
     return (data as (ManoCondivisa & { numero: number }) | null) ?? null;
@@ -519,17 +557,32 @@ export async function registraRisultatoTorneo(r: {
     const { data: sessione } = await supabase.auth.getUser();
     const uid = sessione.user?.id;
     if (!uid) return false;
-    const { error } = await supabase.from("risultati_torneo").insert({
-      torneo_id: r.torneoId,
-      mano_id: r.manoId,
-      user_id: uid,
-      contratto: r.contratto,
-      dichiarante: r.dichiarante,
-      punteggio: r.punteggio,
-      stelle: r.stelle,
-    });
+    // SCRIVERE DUE VOLTE LA STESSA MANO NON È UN ERRORE, è un doppio tocco.
+    //
+    // La chiave primaria è (torneo_id, mano_id, user_id), e con una `insert`
+    // il secondo tentativo faceva fallire tutto con «duplicate key value
+    // violates unique constraint» — visto in produzione il 28/08/2026 da un
+    // telefono. Non serviva un caso strano: quando la dichiarazione dell'utente
+    // chiude l'asta, la registrazione parte subito e per il tempo della
+    // scrittura i pulsanti restano premibili.
+    //
+    // `ignoreDuplicates` fa sì che il secondo arrivo non scriva niente, e non è
+    // solo comodo: nel torneo VALE IL PRIMO RISULTATO. Sovrascriverlo darebbe a
+    // chi tocca due volte un secondo tentativo che gli altri non hanno.
+    const { error } = await supabase.from("risultati_torneo").upsert(
+      {
+        torneo_id: r.torneoId,
+        mano_id: r.manoId,
+        user_id: uid,
+        contratto: r.contratto,
+        dichiarante: r.dichiarante,
+        punteggio: r.punteggio,
+        stelle: r.stelle,
+      },
+      { onConflict: "torneo_id,mano_id,user_id", ignoreDuplicates: true },
+    );
     if (error) {
-      reportError("tornei:registra", error);
+      await segnalaSeNonEScaduta(supabase, "tornei:registra", error);
       return false;
     }
     return true;
@@ -544,7 +597,7 @@ export async function classificaTorneo(torneoId: string): Promise<ClassificaTorn
     const supabase = createClient();
     const { data, error } = await supabase.rpc("classifica_torneo", { p_torneo: torneoId });
     if (error) {
-      reportError("tornei:classifica", error);
+      await segnalaSeNonEScaduta(supabase, "tornei:classifica", error);
       return null;
     }
     return (data as ClassificaTorneo | null) ?? null;
