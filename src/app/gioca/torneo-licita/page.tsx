@@ -203,7 +203,18 @@ export default function TorneoLicitaPage() {
     setBids(correnti);
     setCompagnoMuto(false);
     setMotivoMuto(null);
-    if (astaChiusa(correnti)) { await chiudi(m, t, correnti); return; }
+    if (astaChiusa(correnti)) {
+      // L'ATTESA SI ACCENDE ANCHE QUI. Quando è la dichiarazione dell'utente a
+      // chiudere l'asta si andava dritti a `chiudi` senza accenderla, e per
+      // tutto il tempo della scrittura i pulsanti restavano premibili: due
+      // tocchi rapidi su un telefono facevano registrare due volte la stessa
+      // mano. Il database lo rifiuta — è la sua chiave primaria — e l'utente
+      // vedeva un errore per aver premuto due volte.
+      setAttesa(true);
+      await chiudi(m, t, correnti);
+      setAttesa(false);
+      return;
+    }
 
     setAttesa(true);
     const ordine = ordineDa(m.dealer);

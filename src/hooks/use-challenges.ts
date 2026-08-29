@@ -80,7 +80,15 @@ export function useChallenges() {
   const getUserId = useCallback(async (): Promise<string | null> => {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) {
-      reportError("use-challenges:getUser", error);
+      // «Auth session missing» NON è un guasto: è come si presenta chi non ha
+      // fatto l'accesso, e su queste pagine capita di continuo. Segnalarlo
+      // riempiva Sentry di allarmi per una condizione normale — e un allarme
+      // che descrive la normalità insegna a ignorare tutti gli altri.
+      // Gli errori VERI (rete caduta, token corrotto) continuano ad arrivare.
+      const senzaSessione =
+        (error as { name?: string }).name === "AuthSessionMissingError" ||
+        /session missing/i.test(error.message ?? "");
+      if (!senzaSessione) reportError("use-challenges:getUser", error);
       return null;
     }
     return user?.id ?? null;
