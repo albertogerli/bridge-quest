@@ -45,6 +45,23 @@ const QUANTE = iMani > -1 ? Number(argv[iMani + 1]) : 30;
 
 const ORDINE = ["N", "E", "S", "W"];
 const SEATS = { north: "N", east: "E", south: "S", west: "W" };
+/**
+ * La vulnerabilità nella forma che vuole BEN.
+ *
+ * Veniva letta dal database e poi ignorata: a BEN andava sempre `None`. Non è
+ * un dettaglio — in zona si dichiara diversamente, si rischia meno sulle
+ * manche incerte e si contra di più — quindi un banco che la azzera misura
+ * BEN in una situazione che nel torneo non capita quasi mai.
+ */
+const VULNERABILITA = {
+  none: "None", nessuno: "None", "": "None",
+  all: "Both", both: "Both", entrambi: "Both", tutti: "Both",
+  ns: "N-S", "n-s": "N-S", "nord-sud": "N-S",
+  ew: "E-W", "e-w": "E-W", "est-ovest": "E-W",
+};
+function vulBen(v) {
+  return VULNERABILITA[String(v ?? "").trim().toLowerCase()] ?? "None";
+}
 const RANGHI = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 
 /** Da carte dell'app a mano PBN, come vuole BEN. */
@@ -114,7 +131,12 @@ async function raccogli(destinazione) {
   });
   const { data, error } = await db
     .from("smazzate")
+    // L'ORDINAMENTO VA NELLA QUERY. Con `.limit()` da solo il database può
+    // restituire righe diverse a ogni chiamata, e ordinarle DOPO ordinerebbe
+    // un insieme già diverso: le due raccolte da confrontare finirebbero per
+    // riguardare mani diverse, e il confronto non direbbe niente.
     .select("id,lesson_id,board,hands,bidding,vulnerability")
+    .order("id", { ascending: true })
     .limit(400);
   if (error) throw new Error(error.message);
 
@@ -122,7 +144,6 @@ async function raccogli(destinazione) {
   // raccolta e l'altra, altrimenti si confronterebbero insiemi diversi.
   const mani = (data ?? [])
     .filter((s) => s.hands && Object.keys(s.hands).length === 4)
-    .sort((a, b) => String(a.id).localeCompare(String(b.id)))
     .slice(0, QUANTE);
 
   console.log(`${mani.length} smazzate, asta completa su ciascuna\n`);
@@ -132,7 +153,7 @@ async function raccogli(destinazione) {
     // manca si parte da Nord — quello che conta è che la SCELTA sia la stessa
     // nelle due raccolte, non quale sia.
     const dealer = SEATS[s.bidding?.dealer] ?? "N";
-    const vul = "None";
+    const vul = vulBen(s.vulnerability);
     let bids = [];
     let ctx = "";
     let simulazioni = 0;
@@ -204,6 +225,24 @@ function confronta(fileA, fileB) {
 
 if (iRaccogli > -1) {
   if (!url) { console.error("Manca BEN_API_URL."); process.exit(2); }
+  // NON SI CARICA IL BEN DI PRODUZIONE. Il 29/08/2026 questo banco lo ha messo
+  // fuori uso: duecentoquaranta richieste di fila lo hanno fatto entrare in
+  // uno stato in cui rispondeva 400 a tutto, e ci sono finiti dentro utenti
+  // veri. La guardia adesso se ne accorge e riavvia, ma accorgersene dopo non
+  // è come non romperlo.
+  //
+  // Serve un BEN separato — stessa immagine, stesso commit — acceso per il
+  // confronto e spento dopo. Se proprio non c'è, `--anche-in-produzione` lo
+  // consente: è esplicito apposta, così non capita per distrazione.
+  if (!argv.includes("--anche-in-produzione")) {
+    console.error(
+      "Questo banco fa centinaia di richieste di fila e il 29/08/2026 ha messo\n" +
+      "fuori uso il BEN di produzione. Puntalo a un servizio dedicato:\n\n" +
+      "  BEN_API_URL=https://ben-di-prova… node scripts/qualita-licita-ben.mjs --raccogli …\n\n" +
+      "Se sai quello che fai, aggiungi --anche-in-produzione.",
+    );
+    process.exit(2);
+  }
   await raccogli(argv[iRaccogli + 1]);
 } else if (iConfronta > -1) {
   confronta(argv[iConfronta + 1], argv[iConfronta + 2]);

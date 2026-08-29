@@ -196,10 +196,24 @@ export default function TorneoLicitaPage() {
       //
       // `gia-presente` avanza ma NON incrementa: la riga c'è (l'ha scritta il
       // primo tocco) e contarla due volte farebbe saltare una mano.
-      if (contatoreCresce(esitoScrittura)) {
-        setTorneo({ ...torneo, fatte: torneo.fatte + 1 });
-      }
       if (manoArchiviata(esitoScrittura)) {
+        // IL CONTATORE LO DICE IL DATABASE. Incrementarlo qui sembrava
+        // equivalente e non lo è: se la scrittura riesce ma la risposta si
+        // perde per strada, al tentativo successivo torna `gia-presente` — la
+        // riga c'è, ma NOI non l'abbiamo mai contata, e la mano resterebbe
+        // scoperta per sempre.
+        //
+        // `torneoCorrente` calcola `fatte` contando le righe vere
+        // (`scripts/sql/tornei-licita-2026-08.sql`). Costa una richiesta in
+        // più a fine mano — una ogni paio di minuti — e in cambio il numero a
+        // schermo è quello che il torneo userà per la classifica.
+        const aggiornato = await torneoCorrente(tipo);
+        if (aggiornato) setTorneo(aggiornato);
+        else if (contatoreCresce(esitoScrittura)) {
+          // Non è arrivata la rilettura: si ripiega sul conteggio locale, che
+          // è meglio di lasciare il numero fermo.
+          setTorneo({ ...torneo, fatte: torneo.fatte + 1 });
+        }
         setClassifica(await classificaTorneo(torneo.id));
       }
     }
@@ -529,7 +543,16 @@ export default function TorneoLicitaPage() {
                       : t("Non siamo riusciti a scrivere il risultato. Il voto è già calcolato: premi Salva per riprovare, la mano non va rigiocata.")}
                   </p>
                   <Button
-                    onClick={() => { if (mano && tabella) void chiudi(mano, tabella, bids); }}
+                    onClick={() => {
+                      if (!mano || !tabella) return;
+                      // L'ATTESA VA ACCESA QUI. `disabled={attesa}` da solo non
+                      // proteggeva niente: `chiudi` non la accende, quindi il
+                      // pulsante restava premibile e due tocchi avviavano due
+                      // salvataggi in parallelo. L'idempotenza salva il
+                      // database, non l'interfaccia.
+                      setAttesa(true);
+                      void chiudi(mano, tabella, bids).finally(() => setAttesa(false));
+                    }}
                     disabled={attesa}
                   >
                     {t("Salva il risultato")}
