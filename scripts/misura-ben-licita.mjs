@@ -28,6 +28,19 @@ const url = (process.env.BEN_API_URL || "").replace(/\/$/, "");
 const token = process.env.BEN_API_TOKEN || "";
 const i = process.argv.indexOf("--soglia");
 const SOGLIA = i > -1 ? Number(process.argv[i + 1]) : 5;
+/**
+ * `--determinismo` chiede due volte ogni asta e segnala se la risposta cambia.
+ *
+ * Serve a tenere sotto controllo una proprietà su cui poggia una decisione di
+ * architettura. Il 29/08/2026 è stato misurato che BEN risponde SEMPRE allo
+ * stesso modo alla stessa domanda, simulazioni comprese: usa un seme fisso.
+ * Per questo la cache delle dichiarazioni può restare in memoria, per istanza,
+ * senza compromettere la parità di trattamento fra i concorrenti di un torneo.
+ *
+ * Se questo controllo iniziasse a fallire, quella decisione andrebbe rifatta:
+ * servirebbe una risposta canonica condivisa, scritta nel database.
+ */
+const DETERMINISMO = process.argv.includes("--determinismo");
 
 if (!url) {
   console.error("Manca BEN_API_URL. Vedi l'intestazione di questo file.");
@@ -94,6 +107,29 @@ for (const [seat, ctx] of PROVE) {
   console.log(
     `  ${`${seat}/${ctx || "vuota"}`.padEnd(20)} ${chi.padEnd(14)} ${String(bid).padEnd(6)} ${secondi.toFixed(2)}s${segno}`,
   );
+}
+
+if (DETERMINISMO) {
+  console.log("\n── stessa domanda, seconda volta ──");
+  let diverse = 0;
+  for (const [seat, ctx] of PROVE) {
+    const primo = await chiedi(seat, ctx);
+    const secondo = await chiedi(seat, ctx);
+    const uguali = primo.bid === secondo.bid;
+    if (!uguali) diverse++;
+    console.log(
+      `  ${`${seat}/${ctx || "vuota"}`.padEnd(20)} ${primo.bid} / ${secondo.bid}` +
+        (uguali ? "" : "   <<< RISPOSTA DIVERSA"),
+    );
+  }
+  console.log(
+    diverse
+      ? `\n${diverse} aste rispondono in modo diverso: BEN NON è più deterministico.\n` +
+          "La cache in memoria non basta più a garantire la parità nei tornei —\n" +
+          "vedi la nota in src/lib/cache-licita.ts."
+      : "\nDeterministico: ogni asta ha risposto allo stesso modo.",
+  );
+  if (diverse) process.exitCode = 1;
 }
 
 const sopra = simulazioni.filter((s) => s > SOGLIA);

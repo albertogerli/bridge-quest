@@ -21,9 +21,10 @@ import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import { valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
 import type { Strain } from "@/lib/minibridge";
 import {
-  classificaTorneo, evDelContratto, registraRisultatoTorneo, riferimento,
+  classificaTorneo, contatoreCresce, evDelContratto, manoArchiviata,
+  registraRisultatoTorneo, riferimento,
   torneoCorrente, torneoMano,
-  type ClassificaTorneo, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
+  type ClassificaTorneo, type EsitoRegistrazione, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -105,6 +106,8 @@ export default function TorneoLicitaPage() {
   const [compagnoMuto, setCompagnoMuto] = useState(false);
   /** PERCHÉ non ha risposto: decide che cosa dire e se offrire di riprovare. */
   const [motivoMuto, setMotivoMuto] = useState<MotivoBen | null>(null);
+  /** Esito dell'ultima scrittura del risultato: governa se la mano è archiviata. */
+  const [registrazione, setRegistrazione] = useState<EsitoRegistrazione | null>(null);
 
   /**
    * Una dichiarazione dal motore.
@@ -176,7 +179,7 @@ export default function TorneoLicitaPage() {
     setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio } : null);
 
     if (torneo) {
-      await registraRisultatoTorneo({
+      const esitoScrittura = await registraRisultatoTorneo({
         torneoId: torneo.id,
         manoId: m.id,
         contratto: e?.contratto ?? null,
@@ -184,8 +187,21 @@ export default function TorneoLicitaPage() {
         punteggio: e?.punteggio ?? 0,
         stelle: voto.stelle,
       });
-      setTorneo({ ...torneo, fatte: torneo.fatte + 1 });
-      setClassifica(await classificaTorneo(torneo.id));
+      setRegistrazione(esitoScrittura);
+
+      // SI AVANZA SOLO SE IL DATABASE HA DAVVERO LA RIGA. Prima il contatore
+      // cresceva comunque: con la sessione scaduta o un errore di scrittura la
+      // mano risultava fatta a schermo e non esisteva da nessuna parte — il
+      // guasto peggiore, perché non si vede.
+      //
+      // `gia-presente` avanza ma NON incrementa: la riga c'è (l'ha scritta il
+      // primo tocco) e contarla due volte farebbe saltare una mano.
+      if (contatoreCresce(esitoScrittura)) {
+        setTorneo({ ...torneo, fatte: torneo.fatte + 1 });
+      }
+      if (manoArchiviata(esitoScrittura)) {
+        setClassifica(await classificaTorneo(torneo.id));
+      }
     }
   };
 
@@ -211,8 +227,14 @@ export default function TorneoLicitaPage() {
       // mano. Il database lo rifiuta — è la sua chiave primaria — e l'utente
       // vedeva un errore per aver premuto due volte.
       setAttesa(true);
-      await chiudi(m, t, correnti);
-      setAttesa(false);
+      // `finally`: se `chiudi` sollevasse un'eccezione, senza questo la
+      // schermata resterebbe in attesa per sempre e l'unica via d'uscita
+      // sarebbe ricaricare la pagina.
+      try {
+        await chiudi(m, t, correnti);
+      } finally {
+        setAttesa(false);
+      }
       return;
     }
 
@@ -231,10 +253,15 @@ export default function TorneoLicitaPage() {
       // sapere qualcosa.
       //
       // `edge` è l'eccezione, ed è diversa in natura. Lì a rispondere non è la
-      // nostra rotta ma Cloudflare, che sta davanti a bridgelab.it, con un
-      // «502 Bad gateway»: la richiesta non è mai arrivata al motore, e arriva
+      // nostra rotta ma qualcosa che le sta davanti, con una pagina d'errore
+      // invece del JSON: la richiesta non è mai arrivata al motore, e torna
       // indietro SUBITO. Due tentativi in più costano meno di un secondo in
       // tutto, e un intoppo di connessione raramente si ripete tre volte.
+      //
+      // Fino al 28/08/2026 davanti c'era anche Cloudflare, ed era lui a
+      // restituire quei «502 Bad gateway». Ora il proxy non c'è più: se questi
+      // eventi continuano, la causa è un'altra e va cercata altrove — non
+      // dare per scontato il colpevole di ieri.
       //
       // La pausa fra i tentativi non è cerimoniale: rifare la richiesta
       // nell'identico istante rischia di ripassare per la stessa connessione
@@ -274,7 +301,14 @@ export default function TorneoLicitaPage() {
     }
     setAttesa(false);
     setAttesaDi(null);
-    if (astaChiusa(correnti)) await chiudi(m, t, correnti);
+    if (astaChiusa(correnti)) {
+      setAttesa(true);
+      try {
+        await chiudi(m, t, correnti);
+      } finally {
+        setAttesa(false);
+      }
+    }
   };
 
   const prossima = async () => {
@@ -289,6 +323,7 @@ export default function TorneoLicitaPage() {
     setAvversarioMuto(false);
     setCompagnoMuto(false);
     setMotivoMuto(null);
+    setRegistrazione(null);
     if (m && t && m.dealer !== "south") void avanza(m, t, []);
   };
 
@@ -479,9 +514,32 @@ export default function TorneoLicitaPage() {
                       : undefined,
                 })}
               />
-              <Button className="mt-4" onClick={prossima}>
-                {torneo && torneo.fatte >= torneo.quante ? "Vedi la classifica" : "Prossima mano"}
-              </Button>
+              {/* IL RISULTATO NON È ARRIVATO AL DATABASE. Non si passa avanti:
+                  la mano sembrerebbe fatta e non esisterebbe da nessuna parte.
+                  Il voto resta a schermo, l'asta non si ridichiara, e si offre
+                  di risalvare — che è l'unica cosa che manca. */}
+              {registrazione && !manoArchiviata(registrazione) ? (
+                <div className="mt-4 rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4">
+                  <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                    {t("Il risultato non è stato salvato")}
+                  </p>
+                  <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
+                    {registrazione === "sessione-scaduta"
+                      ? t("Il tuo accesso è scaduto mentre giocavi. Rientra e premi Salva: la mano non va rigiocata, il voto è già calcolato.")
+                      : t("Non siamo riusciti a scrivere il risultato. Il voto è già calcolato: premi Salva per riprovare, la mano non va rigiocata.")}
+                  </p>
+                  <Button
+                    onClick={() => { if (mano && tabella) void chiudi(mano, tabella, bids); }}
+                    disabled={attesa}
+                  >
+                    {t("Salva il risultato")}
+                  </Button>
+                </div>
+              ) : (
+                <Button className="mt-4" onClick={prossima}>
+                  {torneo && torneo.fatte >= torneo.quante ? "Vedi la classifica" : "Prossima mano"}
+                </Button>
+              )}
             </div>
           )}
         </>

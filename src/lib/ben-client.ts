@@ -179,9 +179,15 @@ export function riprovareServe(motivo: MotivoBen): boolean {
  * HTML. Tagliare dall'inizio è comodo per un JSON, dove il campo utile è
  * subito, ed è inutile per una pagina.
  *
- * Qui si cercano i pezzi che identificano l'errore: il titolo della pagina e i
- * marcatori di Cloudflare, che sta davanti a bridgelab.it. Se non si trova
- * niente si ripiega sul ritaglio, che è sempre meglio del nulla.
+ * Qui si cercano i pezzi che identificano l'errore: il titolo della pagina, un
+ * codice di errore e un identificativo di richiesta (il `Ray ID` di
+ * Cloudflare, ma la forma è comune). Se non si trova niente si ripiega sul
+ * ritaglio, che è sempre meglio del nulla.
+ *
+ * NOTA PER CHI LEGGERÀ UN EVENTO NUOVO: fino al 28/08/2026 davanti al sito
+ * c'era Cloudflare, ed era la sua pagina ad arrivare qui. Adesso non c'è più.
+ * Una pagina HTML che comparisse ora viene da qualcos'altro — Vercel, un
+ * portale di rete, un proxy aziendale — e la diagnosi va rifatta da capo.
  */
 export function riassumiCorpo(grezzo: string): string {
   const testo = grezzo.trim();
