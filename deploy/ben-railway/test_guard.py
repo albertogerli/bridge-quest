@@ -78,17 +78,34 @@ guard.UPSTREAM = upstream_vero
 AVVELENATO = b'{"error":"An error occurred: Attempting to capture an EagerTensor without building a function."}'
 LEGITTIMO = b'{"error":"An error occurred: Dealer 0, auction and seat 0 do not match!"}'
 
-guard._consecutivi = 0
-for _ in range(4):
-    guard._registra_esito(400, AVVELENATO)
-casi.append(("avvelenato: sotto soglia non esce", guard._quanti_avvelenati(), 4))
+# L'uscita si intercetta: verificare che l'interruttore SCATTI è l'unica cosa
+# che conta, e un test che si ferma un passo prima non verifica niente.
+uscite = []
+guard._esci = lambda codice: uscite.append(codice)
 
+guard._consecutivi = 0
+for _ in range(guard.SOGLIA_AVVELENATO - 1):
+    guard._registra_esito(400, AVVELENATO)
+casi.append(("avvelenato: sotto soglia NON esce", list(uscite), []))
+casi.append(("...ma la sonda si è già insospettita", chiama("/healthz"), 503))
+
+guard._registra_esito(400, AVVELENATO)   # il quinto
+casi.append(("raggiunta la soglia: ESCE", list(uscite), [1]))
+
+uscite.clear()
+guard._consecutivi = 0
+casi.append(("sonda di nuovo serena dopo l'azzeramento", chiama("/healthz"), 200))
+
+for _ in range(guard.SOGLIA_AVVELENATO - 1):
+    guard._registra_esito(400, AVVELENATO)
 guard._registra_esito(200, b'{"bid":"1N"}')
 casi.append(("una risposta buona azzera il conto", guard._quanti_avvelenati(), 0))
 
-for _ in range(10):
+for _ in range(20):
     guard._registra_esito(400, LEGITTIMO)
-casi.append(("un 400 legittimo NON conta", guard._quanti_avvelenati(), 0))
+casi.append(("un 400 legittimo NON conta, per quanti ne arrivino", guard._quanti_avvelenati(), 0))
+casi.append(("...e non fa uscire nessuno", list(uscite), []))
+guard._consecutivi = 0
 
 # ── Il config derivato ──────────────────────────────────────────────────────
 # Le due righe che cambiamo decidono quanto dura una dichiarazione difficile.

@@ -115,16 +115,26 @@ if (DETERMINISMO) {
   for (const [seat, ctx] of PROVE) {
     const primo = await chiedi(seat, ctx);
     const secondo = await chiedi(seat, ctx);
-    const uguali = primo.bid === secondo.bid;
+    // DUE ERRORI NON SONO UN ACCORDO. Una richiesta fallita restituisce
+    // `bid: "-"`, quindi due fallimenti si somigliavano abbastanza da essere
+    // contati come «stessa risposta»: il controllo avrebbe dichiarato
+    // deterministico un motore che non risponde affatto.
+    const valida = (r) => r.bid !== "-" && !r.chi.startsWith("HTTP") && !r.chi.endsWith("Error");
+    const entrambeValide = valida(primo) && valida(secondo);
+    const uguali = entrambeValide && primo.bid === secondo.bid;
     if (!uguali) diverse++;
+    const nota = !entrambeValide
+      ? "   <<< RISPOSTA NON VALIDA"
+      : uguali
+        ? ""
+        : "   <<< RISPOSTA DIVERSA";
     console.log(
-      `  ${`${seat}/${ctx || "vuota"}`.padEnd(20)} ${primo.bid} / ${secondo.bid}` +
-        (uguali ? "" : "   <<< RISPOSTA DIVERSA"),
+      `  ${`${seat}/${ctx || "vuota"}`.padEnd(20)} ${primo.bid} / ${secondo.bid}${nota}`,
     );
   }
   console.log(
     diverse
-      ? `\n${diverse} aste rispondono in modo diverso: BEN NON è più deterministico.\n` +
+      ? `\n${diverse} aste non hanno confermato il determinismo (risposte diverse o non valide).\n` +
           "La cache in memoria non basta più a garantire la parità nei tornei —\n" +
           "vedi la nota in src/lib/cache-licita.ts."
       : "\nDeterministico: ogni asta ha risposto allo stesso modo.",

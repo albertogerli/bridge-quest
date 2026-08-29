@@ -102,9 +102,25 @@ INTESTAZIONE = "X-BEN-Token"
 # disastro. Si conta solo questo errore, e solo se si ripete: una risposta
 # buona azzera il conto.
 FIRMA_AVVELENATO = b"Attempting to capture an EagerTensor"
-# Cinque di fila. Meno rischierebbe di reagire a una coincidenza; molte di più
-# vorrebbe dire lasciare gli utenti a sbattere per minuti.
+# DUE SOGLIE, e la differenza fra loro è il punto.
+#
+# Nella prima versione erano lo stesso numero, e il risultato era che la sonda
+# non poteva MAI dire 503: il contatore arrivava a cinque solo dentro
+# `_registra_esito`, che a quel punto usciva subito. Il ramo «non sto bene»
+# esisteva nel codice e non era raggiungibile — peggio che assente, perché
+# sembrava una rete di sicurezza.
+#
+# Ora la sonda si insospettisce PRIMA (tre) e l'interruttore scatta dopo
+# (cinque). Così Railway ha una possibilità di intervenire per conto suo
+# guardando la salute, e se non lo fa ci pensa la guardia a uscire.
+SOGLIA_SONDA = 3
 SOGLIA_AVVELENATO = 5
+
+# `os._exit` passa da qui per poter essere sostituito nei test: verificare che
+# l'interruttore scatti davvero è l'unica cosa che conta di questo meccanismo,
+# e un test che si ferma un passo prima non verifica niente.
+def _esci(codice: int) -> None:  # pragma: no cover - sostituita nei test
+    os._exit(codice)
 
 _avvelenato = threading.Lock()
 _consecutivi = 0
@@ -127,7 +143,7 @@ def _registra_esito(stato: int, corpo: bytes) -> None:
             f"BEN avvelenato: {n} risposte di fila con «EagerTensor». "
             "Esco così Railway riavvia: da questo stato non si torna indietro."
         )
-        os._exit(1)
+        _esci(1)
 
 
 def _quanti_avvelenati() -> int:
@@ -169,7 +185,7 @@ class Guardia(BaseHTTPRequestHandler):
             # nessuno si accorgeva del guasto. Ora tiene conto anche di come
             # stanno andando le richieste che contano.
             avvelenati = _quanti_avvelenati()
-            sano = vivo and avvelenati < SOGLIA_AVVELENATO
+            sano = vivo and avvelenati < SOGLIA_SONDA
             corpo = b'{"ben":%s,"avvelenati":%d}' % (
                 b"true" if vivo else b"false",
                 avvelenati,

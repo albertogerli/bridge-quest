@@ -633,7 +633,20 @@ export async function registraRisultatoTorneo(r: {
       .select("mano_id");
     if (error) {
       await segnalaSeNonEScaduta(supabase, "tornei:registra", error);
-      return /permission denied/i.test(error.message ?? "") ? "sessione-scaduta" : "errore";
+      // «permission denied» NON basta a dire «sessione scaduta». L'identità era
+      // stata appena verificata con `getUser()`: se il rifiuto arriva subito
+      // dopo, la spiegazione più probabile è un privilegio configurato male —
+      // e mostrare «rientra» manderebbe l'utente a rifare l'accesso per un
+      // problema nostro, che il nuovo accesso non risolve.
+      //
+      // Si richiede l'identità UNA VOLTA, solo su questo ramo: se adesso non
+      // c'è più, la sessione è davvero caduta nel frattempo (finestra stretta
+      // ma reale); se c'è ancora, è un errore e va detto come tale.
+      if (/permission denied/i.test(error.message ?? "")) {
+        const { data: ancora, error: erroreAncora } = await supabase.auth.getUser();
+        return erroreAncora || !ancora.user ? "sessione-scaduta" : "errore";
+      }
+      return "errore";
     }
     return (scritte?.length ?? 0) > 0 ? "salvato" : "gia-presente";
   } catch (err) {
