@@ -89,7 +89,8 @@ export async function POST(req: NextRequest) {
     // GIÀ CHIESTA? Nel torneo la smazzata è la stessa per tutti e le aste si
     // ripetono: l'apertura del mazziere è identica per ogni partecipante.
     // Ripescarla evita una richiesta che, quando BEN simula, costa fino a nove
-    // secondi — ed è su quelle lunghe che Cloudflare ci ha restituito 502.
+    // secondi — ed è su quelle lunghe che l'infrastruttura davanti a noi ha
+    // restituito 502 (fino al 28/08/2026 il proxy Cloudflare, poi rimosso).
     // Vedi `src/lib/cache-licita.ts` anche per il motivo di equità.
     const chiave = params.toString();
     const nota = dichiarazioneNota(chiave);

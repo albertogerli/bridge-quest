@@ -101,9 +101,12 @@ export async function registraRisultato(r: {
 }): Promise<boolean> {
   try {
     const supabase = createClient();
-    const { data: sessione } = await supabase.auth.getUser();
+    // `getUser()` e non `getSession()`: qui si sta per SCRIVERE, e la domanda
+    // non è «ho un token sul disco» ma «quel token vale ancora». Sono due cose
+    // diverse per la finestra in cui il token è scaduto ma non ancora scartato.
+    const { data: sessione, error: erroreSessione } = await supabase.auth.getUser();
     const uid = sessione.user?.id;
-    if (!uid) return false;
+    if (erroreSessione || !uid) return false;
     const { error } = await supabase.from("risultati_mano").insert({
       mano_id: r.manoId,
       user_id: uid,
@@ -544,6 +547,42 @@ export async function torneoMano(
   }
 }
 
+/**
+ * Come è andata la registrazione. NON è un dettaglio diagnostico: da questo
+ * dipende se la schermata può considerare la mano archiviata.
+ *
+ *   `salvato`         la riga è stata scritta adesso.
+ *   `gia-presente`    c'era già (doppio tocco): il risultato È nel database,
+ *                     ma il contatore delle mani fatte NON va incrementato di
+ *                     nuovo — altrimenti chi tocca due volte «avanza» di due.
+ *   `sessione-scaduta` l'accesso non è più valido: niente è stato scritto, e
+ *                     l'unica cosa che serve è rientrare.
+ *   `errore`          qualsiasi altro fallimento. Niente è stato scritto.
+ */
+export type EsitoRegistrazione =
+  | "salvato"
+  | "gia-presente"
+  | "sessione-scaduta"
+  | "errore";
+
+/**
+ * Si può passare alla mano successiva: il risultato è al sicuro nel database.
+ * `gia-presente` conta come archiviata — la riga c'è, l'ha scritta il primo
+ * tocco.
+ */
+export function manoArchiviata(esito: EsitoRegistrazione): boolean {
+  return esito === "salvato" || esito === "gia-presente";
+}
+
+/**
+ * Il contatore delle mani fatte cresce SOLO per una scrittura nuova.
+ * Incrementarlo anche su `gia-presente` farebbe saltare una mano del torneo a
+ * chi tocca due volte.
+ */
+export function contatoreCresce(esito: EsitoRegistrazione): boolean {
+  return esito === "salvato";
+}
+
 export async function registraRisultatoTorneo(r: {
   torneoId: string;
   manoId: string;
@@ -551,12 +590,15 @@ export async function registraRisultatoTorneo(r: {
   dichiarante: string | null;
   punteggio: number;
   stelle: number;
-}): Promise<boolean> {
+}): Promise<EsitoRegistrazione> {
   try {
     const supabase = createClient();
-    const { data: sessione } = await supabase.auth.getUser();
+    // `getUser()` e non `getSession()`: qui si sta per SCRIVERE, e la domanda
+    // non è «ho un token sul disco» ma «quel token vale ancora». Sono due cose
+    // diverse per la finestra in cui il token è scaduto ma non ancora scartato.
+    const { data: sessione, error: erroreSessione } = await supabase.auth.getUser();
     const uid = sessione.user?.id;
-    if (!uid) return false;
+    if (erroreSessione || !uid) return "sessione-scaduta";
     // SCRIVERE DUE VOLTE LA STESSA MANO NON È UN ERRORE, è un doppio tocco.
     //
     // La chiave primaria è (torneo_id, mano_id, user_id), e con una `insert`
@@ -569,26 +611,34 @@ export async function registraRisultatoTorneo(r: {
     // `ignoreDuplicates` fa sì che il secondo arrivo non scriva niente, e non è
     // solo comodo: nel torneo VALE IL PRIMO RISULTATO. Sovrascriverlo darebbe a
     // chi tocca due volte un secondo tentativo che gli altri non hanno.
-    const { error } = await supabase.from("risultati_torneo").upsert(
-      {
-        torneo_id: r.torneoId,
-        mano_id: r.manoId,
-        user_id: uid,
-        contratto: r.contratto,
-        dichiarante: r.dichiarante,
-        punteggio: r.punteggio,
-        stelle: r.stelle,
-      },
-      { onConflict: "torneo_id,mano_id,user_id", ignoreDuplicates: true },
-    );
+    // Il `.select()` serve a SAPERE se la riga è stata scritta adesso: con
+    // `ON CONFLICT DO NOTHING` un conflitto non è un errore, e senza rileggere
+    // non si distingue «salvato» da «c'era già». La differenza conta, perché
+    // il contatore delle mani fatte non deve crescere due volte per un doppio
+    // tocco.
+    const { data: scritte, error } = await supabase
+      .from("risultati_torneo")
+      .upsert(
+        {
+          torneo_id: r.torneoId,
+          mano_id: r.manoId,
+          user_id: uid,
+          contratto: r.contratto,
+          dichiarante: r.dichiarante,
+          punteggio: r.punteggio,
+          stelle: r.stelle,
+        },
+        { onConflict: "torneo_id,mano_id,user_id", ignoreDuplicates: true },
+      )
+      .select("mano_id");
     if (error) {
       await segnalaSeNonEScaduta(supabase, "tornei:registra", error);
-      return false;
+      return /permission denied/i.test(error.message ?? "") ? "sessione-scaduta" : "errore";
     }
-    return true;
+    return (scritte?.length ?? 0) > 0 ? "salvato" : "gia-presente";
   } catch (err) {
     reportError("tornei:registra", err);
-    return false;
+    return "errore";
   }
 }
 

@@ -72,6 +72,24 @@ upstream_vero = guard.UPSTREAM
 guard.UPSTREAM = "http://127.0.0.1:18099"  # nessuno in ascolto
 casi.append(("BEN assente -> 502", chiama("/bid", buono), 502))
 guard.UPSTREAM = upstream_vero
+# ── BEN avvelenato ──────────────────────────────────────────────────────────
+# Lo stato in cui BEN resta vivo ma risponde 400 a tutto. Le due proprietà:
+# non si reagisce a un 400 legittimo, e non si resta a sbattere per sempre.
+AVVELENATO = b'{"error":"An error occurred: Attempting to capture an EagerTensor without building a function."}'
+LEGITTIMO = b'{"error":"An error occurred: Dealer 0, auction and seat 0 do not match!"}'
+
+guard._consecutivi = 0
+for _ in range(4):
+    guard._registra_esito(400, AVVELENATO)
+casi.append(("avvelenato: sotto soglia non esce", guard._quanti_avvelenati(), 4))
+
+guard._registra_esito(200, b'{"bid":"1N"}')
+casi.append(("una risposta buona azzera il conto", guard._quanti_avvelenati(), 0))
+
+for _ in range(10):
+    guard._registra_esito(400, LEGITTIMO)
+casi.append(("un 400 legittimo NON conta", guard._quanti_avvelenati(), 0))
+
 # ── Il config derivato ──────────────────────────────────────────────────────
 # Le due righe che cambiamo decidono quanto dura una dichiarazione difficile.
 # Il rischio vero non è sbagliare il numero: è colpire la riga sbagliata —

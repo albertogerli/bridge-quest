@@ -75,6 +75,65 @@ CONSENTITI = {"/", "/play", "/lead", "/autoplay", "/bid"}
 
 INTESTAZIONE = "X-BEN-Token"
 
+# ── BEN AVVELENATO ──────────────────────────────────────────────────────────
+#
+# Il 29/08/2026 BEN è rimasto in piedi rispondendo 400 a OGNI richiesta, di
+# licita e di gioco, con questo errore di TensorFlow:
+#
+#   Attempting to capture an EagerTensor without building a function.
+#
+# È uno stato da cui non si esce da soli: una volta entrato, ogni richiesta
+# successiva fallisce allo stesso modo. È capitato sotto un carico prolungato
+# (duecentoquaranta richieste di fila su tutti e quattro i posti) con la
+# configurazione ORIGINALE di BEN, quindi non è colpa del campionamento
+# ridotto: è una fragilità sua.
+#
+# LA COSA GRAVE NON È IL GUASTO, È CHE NESSUNO SE NE SIA ACCORTO. `/healthz`
+# rispondeva 200 tutto il tempo, perché guarda solo se il processo risponde su
+# `/` — e quello era vivo. Railway non aveva motivo di riavviare, e gli utenti
+# hanno continuato a ricevere errori finché non è stato ridistribuito a mano.
+#
+# Un riavvio pulito lo risolve. Quindi qui si riconosce lo stato e si esce: la
+# guardia muore, e Railway riavvia tutto — è la stessa strada già usata quando
+# BEN termina.
+#
+# LA FIRMA È STRETTA APPOSTA. Un 400 può essere legittimo — BEN lo restituisce
+# quando il posto non corrisponde all'asta — e riavviare per quello sarebbe un
+# disastro. Si conta solo questo errore, e solo se si ripete: una risposta
+# buona azzera il conto.
+FIRMA_AVVELENATO = b"Attempting to capture an EagerTensor"
+# Cinque di fila. Meno rischierebbe di reagire a una coincidenza; molte di più
+# vorrebbe dire lasciare gli utenti a sbattere per minuti.
+SOGLIA_AVVELENATO = 5
+
+_avvelenato = threading.Lock()
+_consecutivi = 0
+
+
+def _registra_esito(stato: int, corpo: bytes) -> None:
+    """Conta gli errori di avvelenamento consecutivi; una risposta buona azzera."""
+    global _consecutivi
+    with _avvelenato:
+        if 200 <= stato < 300:
+            _consecutivi = 0
+            return
+        if stato == 400 and FIRMA_AVVELENATO in corpo:
+            _consecutivi += 1
+            n = _consecutivi
+        else:
+            return
+    if n >= SOGLIA_AVVELENATO:
+        _log(
+            f"BEN avvelenato: {n} risposte di fila con «EagerTensor». "
+            "Esco così Railway riavvia: da questo stato non si torna indietro."
+        )
+        os._exit(1)
+
+
+def _quanti_avvelenati() -> int:
+    with _avvelenato:
+        return _consecutivi
+
 
 def _log(msg: str) -> None:
     print(f"[guard] {msg}", flush=True)
@@ -105,7 +164,17 @@ class Guardia(BaseHTTPRequestHandler):
                     vivo = r.status == 200
             except Exception:
                 vivo = False
-            self._rispondi(200 if vivo else 503, b'{"ben":%s}' % (b"true" if vivo else b"false"))
+            # NON BASTA CHE IL PROCESSO RISPONDA. Il 29/08/2026 BEN era vivo e
+            # rispondeva 400 a ogni richiesta vera: questa sonda diceva 200 e
+            # nessuno si accorgeva del guasto. Ora tiene conto anche di come
+            # stanno andando le richieste che contano.
+            avvelenati = _quanti_avvelenati()
+            sano = vivo and avvelenati < SOGLIA_AVVELENATO
+            corpo = b'{"ben":%s,"avvelenati":%d}' % (
+                b"true" if vivo else b"false",
+                avvelenati,
+            )
+            self._rispondi(200 if sano else 503, corpo)
             return
 
         atteso = self.headers.get(INTESTAZIONE, "")
@@ -126,8 +195,13 @@ class Guardia(BaseHTTPRequestHandler):
                 corpo = r.read()
                 tipo = r.headers.get("Content-Type", "application/json")
                 self._rispondi(r.status, corpo, tipo)
+                _registra_esito(r.status, corpo)
         except urllib.error.HTTPError as e:
-            self._rispondi(e.code, e.read() or b'{"error":"upstream"}')
+            corpo = e.read() or b'{"error":"upstream"}'
+            self._rispondi(e.code, corpo)
+            # Dopo aver risposto: se BEN è avvelenato questo fa uscire il
+            # processo, e l'utente ha comunque avuto la sua risposta.
+            _registra_esito(e.code, corpo)
         except Exception as e:
             # DUE GUASTI DIVERSI, non uno.
             #
