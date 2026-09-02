@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>BridgeLab — risposta al feedback</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: #1a1a2e; background: #fff;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.2pt; line-height: 1.5;
+  }
+  h1 { font-size: 20pt; line-height: 1.15; margin: 0 0 4pt; letter-spacing: -.4pt; }
+  .occhiello { font-size: 8pt; letter-spacing: 1.4pt; text-transform: uppercase; color: #003DA5; font-weight: 700; }
+  .sommario { color: #4a5568; font-size: 10.5pt; margin: 6pt 0 0; max-width: 62em; }
+  h2 {
+    font-size: 13pt; margin: 20pt 0 6pt; padding-bottom: 3pt;
+    border-bottom: 1.5pt solid #003DA5; letter-spacing: -.2pt;
+    break-after: avoid;
+  }
+  h3 { font-size: 10.8pt; margin: 13pt 0 4pt; break-after: avoid; }
+  p { margin: 0 0 6pt; max-width: 62em; }
+  ul { margin: 0 0 8pt; padding-left: 15pt; max-width: 62em; }
+  li { margin-bottom: 3pt; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 9.4pt; }
+  th {
+    text-align: left; font-size: 7.6pt; text-transform: uppercase; letter-spacing: .8pt;
+    color: #5b6779; font-weight: 700; padding: 5pt 6pt; border-bottom: 1pt solid #cbd2dc;
+  }
+  td { padding: 6pt; border-bottom: .5pt solid #e5e7eb; vertical-align: top; }
+  tr { break-inside: avoid; }
+  td.stato { white-space: nowrap; font-weight: 700; font-size: 8.6pt; width: 76pt; }
+  .si { color: #15803d; } .parz { color: #b45309; } .no { color: #9f1239; }
+  .nota {
+    border-left: 2.5pt solid #c8a44e; background: #fffdf5; padding: 7pt 9pt;
+    margin: 8pt 0 10pt; font-size: 9.4pt; max-width: 62em; break-inside: avoid;
+  }
+  .nota strong { color: #7a5c12; }
+  .legenda { font-size: 8.8pt; color: #5b6779; margin: 10pt 0 0; }
+  .legenda b { font-weight: 700; }
+  footer {
+    margin-top: 18pt; padding-top: 7pt; border-top: .5pt solid #cbd2dc;
+    font-size: 8.4pt; color: #5b6779;
+  }
+  .pagina-nuova { break-before: page; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.8pt; background: #eef1f6; padding: 0 3pt; border-radius: 2pt; }
+</style>
+</head>
+<body>
+
+<div class="occhiello">Bridge LAB · Federazione Italiana Gioco Bridge</div>
+<h1>Risposta al feedback sul portale</h1>
+<p class="sommario">
+  Questo documento segue la lettera di osservazioni sul portale, punto per punto,
+  e dice per ciascuno che cosa c'è oggi. Nella seconda parte le cose fatte nello
+  stesso periodo che la lettera non chiedeva, perché cambiano il quadro di alcune
+  richieste. Settembre 2026.
+</p>
+
+<div class="nota">
+  <p><strong>Come è stato compilato.</strong> Ogni riga è stata verificata nel
+  codice in funzione, non ricostruita a memoria. Dove una richiesta è soddisfatta
+  solo in parte è scritto <em>in parte</em> e non <em>fatto</em>: un elenco che
+  promette più di quello che c'è si paga alla prima prova in aula.</p>
+</div>
+
+<p class="legenda">
+  <b class="si">FATTO</b> — è in produzione e si può provare. &nbsp;·&nbsp;
+  <b class="parz">IN PARTE</b> — c'è il meccanismo, manca un pezzo della richiesta. &nbsp;·&nbsp;
+  <b class="no">DA FARE</b> — non c'è.
+</p>
+
+<h2>1 · Iscrizioni e controllo degli accessi</h2>
+
+<p>Era il gruppo di dubbi più concreto: il codice che circola, il tempo che
+l'insegnante non ha, le iscrizioni chiuse per sbaglio.</p>
+
+<table>
+  <tr><th style="width:32%">La richiesta</th><th class="stato">Stato</th><th>Che cosa c'è oggi</th></tr>
+
+  <tr>
+    <td>Un allievo può passare il codice a chiunque; controllare le iscrizioni
+    costa tempo che l'insegnante non ha</td>
+    <td class="stato si">FATTO</td>
+    <td>La classe ha un interruttore <em>approvazione delle iscrizioni</em>. Con
+    l'approvazione attiva il codice da solo non basta: chi lo usa resta in attesa
+    finché l'insegnante non decide. Chi non vuole il controllo lo lascia
+    spento e nulla cambia rispetto a prima.</td>
+  </tr>
+
+  <tr>
+    <td>Poter approvare le richieste <em>cumulativamente e singolarmente</em>, in
+    un'area dedicata</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>L'area dedicata c'è, dentro la pagina della classe, e mostra chi è in
+    attesa. Si approva o si respinge <strong>una richiesta per volta</strong>:
+    l'approvazione cumulativa non è stata fatta. È un lavoro breve — dimmi se la
+    vuoi e la aggiungo.</td>
+  </tr>
+
+  <tr>
+    <td>Riapertura di una classe con iscrizioni chiuse</td>
+    <td class="stato si">FATTO</td>
+    <td>Le iscrizioni si chiudono e si riaprono quando si vuole, dallo stesso
+    pulsante. Chiudere non cancella niente: chi è già dentro resta.</td>
+  </tr>
+
+  <tr>
+    <td>Perché mai rigenerare un codice?</td>
+    <td class="stato si">C'È, ED È SPIEGATO</td>
+    <td>Serve esattamente al caso del dubbio precedente: quando il codice è
+    circolato più del previsto. Rigenerarlo invalida il vecchio senza toccare chi
+    è già iscritto — così non si deve chiudere la classe né rifarla.</td>
+  </tr>
+
+  <tr>
+    <td>—</td>
+    <td class="stato si">AGGIUNTO</td>
+    <td><strong>Scadenza del codice.</strong> Oltre una data smette di valere. La
+    locandina lo segnala <em>prima</em> di stamparla, così non si appende in
+    bacheca un foglio già scaduto.</td>
+  </tr>
+</table>
+
+<h2>2 · Esercizi e assegnazioni</h2>
+
+<table>
+  <tr><th style="width:32%">La richiesta</th><th class="stato">Stato</th><th>Che cosa c'è oggi</th></tr>
+
+  <tr>
+    <td>Assegnare con un solo click, dopo ogni lezione, il set predefinito del
+    Corso Fiori — è quello che farà la maggior parte degli insegnanti</td>
+    <td class="stato si">FATTO</td>
+    <td>Dalla lezione si assegna l'intero set con un'azione sola. È anche
+    <em>idempotente</em>: premere due volte non crea due compiti doppi, che è
+    l'errore che si fa quando la connessione è lenta e non si è sicuri che il
+    primo click sia arrivato.</td>
+  </tr>
+
+  <tr>
+    <td>Eliminare la colonna «difficoltà», perché è relativa e può prevenire
+    l'allievo</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>La difficoltà <strong>non arriva mai all'allievo</strong>: nella sua
+    pagina del compito non compare (verificato). Resta come <em>filtro</em> per
+    l'insegnante mentre sceglie le mani. Se il fastidio è anche quello, si toglie
+    del tutto: basta dirlo.</td>
+  </tr>
+
+  <tr>
+    <td>Organizzare gli esercizi per gruppi (una lezione del Corso Fiori = un
+    gruppo; per gli altri il nome lo dà l'insegnante)</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>Il raggruppamento <em>per lezione</em> esiste ed è la base
+    dell'assegnazione con un click. Manca il gruppo con nome libero, definito
+    dall'insegnante. È la richiesta che più si lega alle «Smazzate Didattiche»
+    (§5) e converrebbe farle insieme.</td>
+  </tr>
+
+  <tr>
+    <td>Importare smazzate in PBN e assegnare set personalizzati</td>
+    <td class="stato si">FATTO</td>
+    <td>Si caricano file <code>.pbn</code> dal proprio programma di smazzatura
+    (Dealer4, BridgeComposer, BBO) e si mescolano nello stesso compito con le
+    mani del catalogo e con le posizioni salvate dall'insegnante.</td>
+  </tr>
+</table>
+
+<h2>3 · Soluzioni, dispensa, visualizzazione</h2>
+
+<table>
+  <tr><th style="width:32%">La richiesta</th><th class="stato">Stato</th><th>Che cosa c'è oggi</th></tr>
+
+  <tr>
+    <td>I risultati vanno resi visibili solo <em>dopo</em> che l'allievo ha
+    completato l'esercizio, con o senza commento a scelta dell'insegnante</td>
+    <td class="stato si">FATTO</td>
+    <td>Ogni compito ha tre possibilità: soluzioni <em>dopo che l'allievo ha
+    giocato la mano</em>, <em>solo dopo la scadenza</em>, oppure <em>subito, come
+    aiuto durante l'esercizio</em>. La prima è il comportamento predefinito.</td>
+  </tr>
+
+  <tr>
+    <td>La dispensa deve contenere <em>solo</em> il testo della lezione, non i
+    risultati degli esercizi</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>La visibilità delle soluzioni <em>a schermo</em> è risolta (riga sopra).
+    Il foglio stampabile invece porta ancora le soluzioni in fondo: era pensato
+    per essere consegnato a fine lezione. Va separato in due stampe — dispensa e
+    soluzioni — ed è una modifica piccola.</td>
+  </tr>
+
+  <tr>
+    <td>I diagrammi delle mani sono troppo larghi: su schermi normali non si
+    vedono per intero, e lo zoom rimpicciolisce i caratteri</td>
+    <td class="stato no">DA FARE</td>
+    <td>Non è stato toccato. L'osservazione sulla lavagna è corretta: lì gli
+    spazi sono già più stretti. Gli spazi fissi per tredici carte per seme si
+    possono togliere. Serve una prova sullo schermo dove il problema si vede —
+    utile farla insieme in riunione.</td>
+  </tr>
+
+  <tr>
+    <td>Nel tavolo di studio non si vede dove inserire la dichiarazione, e la
+    carta giocata non si posiziona vicino al giocatore</td>
+    <td class="stato no">DA FARE</td>
+    <td>Confermato, sono due cose distinte: manca l'inserimento della
+    dichiarazione, e la disposizione delle carte in mezzo al tavolo non segue il
+    posto di chi le ha giocate. Entrambe da correggere.</td>
+  </tr>
+
+  <tr>
+    <td>Dentro le aree delle classi manca un tasto per tornare indietro</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>C'è in alcune pagine (tavolo di studio, combinazioni, lavagna, elenco
+    allievi) e manca in altre. Va reso uniforme: è il tipo di mancanza che si
+    nota solo usando il portale sul serio.</td>
+  </tr>
+</table>
+
+<h2 class="pagina-nuova">4 · L'aula, i tavoli, i posti</h2>
+
+<p>Il dubbio era: «quando si apre un tavolo c'è scritto che gli allievi lo trovano
+già nella loro classe; in che senso? Come si posizionano gli allievi e come si
+vedono tutti i tavoli?». Qui la risposta è più lunga, perché nel frattempo è
+stata costruita un'aula vera.</p>
+
+<table>
+  <tr><th style="width:32%">La richiesta</th><th class="stato">Stato</th><th>Che cosa c'è oggi</th></tr>
+
+  <tr>
+    <td>Come fanno gli allievi a «trovare il tavolo»</td>
+    <td class="stato si">FATTO</td>
+    <td>L'insegnante apre l'aula dicendo quanti tavoli. Gli allievi entrano dalla
+    pagina della loro classe e la mano compare da sola: non si manda nessun link
+    e non si ricarica niente.</td>
+  </tr>
+
+  <tr>
+    <td>Posizionare gli allievi in modo mirato o casuale</td>
+    <td class="stato si">FATTO</td>
+    <td>L'elenco della classe si carica da un file CSV con le colonne
+    <em>tavolo</em> e <em>posto</em>: chi vuole assegnare i posti lo fa in Excel,
+    che è lo strumento che gli insegnanti hanno già. Da lì si stampano i
+    <strong>tagliandi</strong>, uno per allievo, con il QR e il nome già scritto:
+    l'allievo inquadra e si trova al suo posto senza digitare nulla.</td>
+  </tr>
+
+  <tr>
+    <td>Vedere tutti i tavoli</td>
+    <td class="stato si">FATTO</td>
+    <td>La console mostra lo stato di tutti i tavoli insieme, e
+    <em>«manda a tutti i tavoli»</em> distribuisce la stessa mano ovunque in una
+    sola operazione — non una per tavolo. È la differenza fra «la classe vede la
+    mano insieme» e «a scaglioni».</td>
+  </tr>
+</table>
+
+<div class="nota">
+  <p><strong>Un dato di misura, perché la domanda arriverà.</strong> Con 40 tavoli
+  aperti: apertura 13 ms, distribuzione della mano 3 ms, lettura dello stato
+  2 ms. Non è stato provato con 160 browser contemporanei — quello si potrà dire
+  solo dopo una lezione vera.</p>
+</div>
+
+<h2>5 · La struttura che proponi per la home dell'insegnante</h2>
+
+<table>
+  <tr><th style="width:32%">La voce proposta</th><th class="stato">Stato</th><th>Che cosa c'è oggi</th></tr>
+
+  <tr><td>1. Nuova Lezione Zero (staff, abilitazioni, locandina, QR, link)</td>
+    <td class="stato no">DA FARE</td>
+    <td>Vedi §7: è ferma su una decisione che non è tecnica. Locandina, QR e link
+    esistono già, ma per la classe.</td></tr>
+
+  <tr><td>2. Nuova classe legata a una Lezione Zero</td>
+    <td class="stato no">DA FARE</td>
+    <td>Dipende dalla precedente.</td></tr>
+
+  <tr><td>3. Classi attive, con gli strumenti subordinati a ciascuna classe e una
+    «Gestione Classe»</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>Le classi attive ci sono, e la pagina della classe raccoglie già
+    impostazioni, allievi, compiti e aula. Gli otto strumenti di lezione però
+    stanno <em>fuori</em>, in un elenco globale: la gerarchia che proponi —
+    strumenti dentro la classe — non c'è. È una riorganizzazione della
+    navigazione, non codice nuovo.</td></tr>
+
+  <tr><td>4. Storico Classi con report e grafici</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>Le classi hanno uno stato (<em>bozza · aperta · chiusa · archiviata</em>)
+    e archiviare non cancella niente, quindi lo storico esiste come dato. Manca
+    la vista di sintesi: report, andamenti, grafici.</td></tr>
+
+  <tr><td>5. Smazzate Didattiche a cura dell'insegnante</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>Ci sono già quattro pezzi: <em>generatore di mani</em> con vincoli
+    (e modelli salvabili e riusabili), <em>archivio</em> delle posizioni salvate
+    dal tavolo di studio, <em>libreria</em> condivisa fra insegnanti, e
+    l'importazione PBN. Manca il contenitore che li tiene insieme come gruppi
+    con un nome, riutilizzabili su più classi — che è poi la stessa cosa chiesta
+    al §2 sui gruppi di esercizi.</td></tr>
+</table>
+
+<h2>6 · La struttura che proponi per la home dell'allievo</h2>
+
+<table>
+  <tr><th style="width:32%">La voce proposta</th><th class="stato">Stato</th><th>Che cosa c'è oggi</th></tr>
+  <tr><td>1. Iscrizione a una Lezione Zero</td><td class="stato no">DA FARE</td><td>Vedi §7.</td></tr>
+  <tr><td>2. Iscrizione a un corso con link, QR o codice</td><td class="stato si">FATTO</td>
+    <td>Tutte e tre le strade funzionano. Dal QR di un tagliando l'allievo entra
+    <em>senza registrarsi</em>: scrive solo il nome. A fine lezione, se vuole,
+    crea un account e tiene quello che ha fatto — senza migrazioni.</td></tr>
+  <tr><td>3. Area Dispense</td><td class="stato parz">IN PARTE</td><td>Esiste, ma è del portale, non della classe.</td></tr>
+  <tr><td>4. Area Esercizi, con quelli da fare in primo piano e lo storico</td>
+    <td class="stato parz">IN PARTE</td>
+    <td>I compiti sono in primo piano nella classe con scadenza e segno di
+    completato. Lo storico separato non c'è.</td></tr>
+  <tr><td>5. Area Videolezioni riservata agli allievi dei corsi</td>
+    <td class="stato no">DA FARE</td>
+    <td>Le videolezioni oggi sono accessibili a chiunque. Riservarle è una
+    scelta di prodotto prima che tecnica: va decisa insieme.</td></tr>
+  <tr><td>6. Area Valutazioni, abilitabile dall'insegnante</td>
+    <td class="stato no">DA FARE</td>
+    <td>I dati per farla ci sono già — esito di ogni mano, tempo impiegato,
+    errori ricorrenti — ma non c'è una vista per l'allievo né l'interruttore
+    dell'insegnante.</td></tr>
+</table>
+
+<h2 class="pagina-nuova">7 · Lezione Zero — ferma, e non per motivi tecnici</h2>
+
+<p>È la richiesta più strutturale della lettera ed è l'unica bloccata da una
+decisione che non posso prendere da solo.</p>
+
+<p>La parte modellistica è chiara e la tua indicazione — trattarla come un
+<em>tipo</em> di classe, così riusa codici, staff e anagrafica — è quella giusta.
+Il nodo è un altro: <strong>alla Lezione Zero ci si iscrive senza avere un
+account</strong>. Vuol dire raccogliere nome, cognome, telefono ed email di
+persone che non sono utenti del portale e non hanno accettato nulla.</p>
+
+<p>Serve stabilire, prima di scrivere una riga: chi è il titolare del trattamento
+(la Federazione, l'ASD, l'insegnante), su quale base giuridica, con quale
+informativa al momento della raccolta e per quanto tempo si conservano quei dati
+se al corso poi non si iscrivono.</p>
+
+<p>Nel frattempo la parte che <em>non</em> dipende da quella decisione è già
+stata fatta e serve anche alla Lezione Zero: l'iscrizione al corso in qualsiasi
+momento, previa validazione dell'insegnante (§1).</p>
+
+<div class="nota">
+  <p><strong>Una scelta già presa in questa direzione.</strong> L'elenco allievi
+  salva <em>solo il nome</em>. Se il file CSV caricato contiene email e telefono,
+  quelle colonne vengono lette per aiutare a riconoscere le righe ma non vengono
+  scritte da nessuna parte — proprio per non aprire quel fronte prima di aver
+  deciso.</p>
+</div>
+
+<h2>8 · Le due richieste di fondo</h2>
+
+<h3>Home page distinte per insegnante e allievo</h3>
+<p><strong>Non è stata fatta</strong>, ed è la richiesta più grande della lettera.
+Va detto con chiarezza perché è anche quella che cambia di più il portale: non è
+una pagina in più, è decidere che l'allievo di un corso <em>non veda</em> il
+resto. Tocca la navigazione, i permessi e il modo in cui il portale si presenta.</p>
+<p>Il meccanismo per sbloccare le restrizioni «quando l'insegnante lo riterrà
+opportuno, singolarmente o collettivamente» somiglia molto a quello delle
+iscrizioni già costruito, quindi una parte del lavoro è riusabile. Prima però
+serve concordare che cosa esattamente l'allievo vede e non vede: è la prima cosa
+che metterei sul tavolo alla riunione.</p>
+
+<h3>Presentare il portale con due finalità distinte</h3>
+<p>Questa è comunicazione più che codice, e nel frattempo un passo è stato fatto:
+sono stati scritti <strong>tre manuali separati</strong> — per gli istruttori, per
+chi segue un corso, e per chi usa il portale da solo. Sono divisi esattamente
+secondo la distinzione che proponi, così l'insegnante può consegnare al suo
+allievo il manuale del corso senza consegnargli tutto il resto.</p>
+
+<h2>9 · Cose fatte nello stesso periodo, che la lettera non chiedeva</h2>
+
+<p>Alcune riguardano direttamente la lezione in presenza e cambiano il quadro di
+qualche richiesta qui sopra.</p>
+
+<ul>
+  <li><strong>Aula multi-tavolo</strong> con console e distribuzione simultanea
+  (§4).</li>
+  <li><strong>Vista di proiezione</strong> per il videoproiettore: segue il tavolo
+  dell'insegnante e mostra solo le mani già scoperte. Funziona <em>senza rete</em>
+  — le due finestre parlano dentro lo stesso computer — perché nelle sedi il
+  wi-fi non è sempre affidabile. Il limite da conoscere: dev'essere lo stesso
+  computer, non un secondo dispositivo.</li>
+  <li><strong>Tavolo di studio</strong> che mostra quanto costa ogni carta,
+  presa per presa, con i numeri nascondibili per far ragionare la classe.</li>
+  <li><strong>Combinazioni di carte</strong>: poche carte per posto, per mostrare
+  un impasse senza il resto della smazzata.</li>
+  <li><strong>Ospite d'aula</strong>: chi entra dal QR gioca senza registrarsi, e
+  può creare l'account dopo tenendo quello che ha fatto. Risponde alla tua
+  osservazione sulle persone poco pratiche di strumenti informatici, che spesso
+  si fermano proprio alla registrazione.</li>
+  <li><strong>Locandina A4</strong> con QR per la bacheca, e <strong>tagliandi</strong>
+  con il nome già scritto.</li>
+  <li><strong>Invito su WhatsApp</strong> dalla pagina della classe, con il
+  messaggio già pronto. Non sostituisce la chat come chiedevi — vedi sotto — ma
+  è il primo pezzo in quella direzione.</li>
+  <li><strong>Sondaggi in aula</strong>, note sulle smazzate, segnalazioni.</li>
+  <li><strong>Verifica di tutte le 272 smazzate del catalogo</strong> con il
+  solutore a carte scoperte: sette contratti non erano realizzabili nemmeno
+  giocando perfettamente e sono stati corretti, licitazione compresa. Le 129 mani
+  in cui è l'allievo a difendere — dove il contratto <em>deve</em> cadere — sono
+  state riconosciute e lasciate stare.</li>
+  <li><strong>Versione inglese</strong> completa dell'interfaccia, con un
+  controllo automatico che impedisce di aggiungere testi non tradotti.</li>
+</ul>
+
+<h3>Sulla chat e WhatsApp</h3>
+<p>La tua osservazione è giusta e la accolgo: l'informazione non può dipendere
+dalla buona volontà di aprire il portale. Oggi c'è l'invito su WhatsApp, ma la
+chat della classe è rimasta. La strada che proporrei non è togliere la chat,
+è <em>non farci contare l'insegnante sopra</em>: le comunicazioni che devono
+arrivare (nuovo compito, scadenza vicina) escono dal portale e finiscono dove le
+persone guardano. Da decidere insieme quali.</p>
+
+<h2>10 · Che cosa proporrei per la riunione</h2>
+
+<ul>
+  <li><strong>Lezione Zero</strong> — sciogliere il nodo dei dati personali. È il
+  blocco più grande e non si sblocca scrivendo codice.</li>
+  <li><strong>Home distinte</strong> — concordare esattamente che cosa l'allievo
+  di un corso vede e non vede, e come l'insegnante lo sblocca dopo.</li>
+  <li><strong>Un giro insieme sul portale</strong>, come proponevi: i diagrammi
+  troppo larghi e il tavolo di studio sono difetti che si vedono in due minuti
+  di uso e si descrivono male a parole.</li>
+  <li><strong>Le cose brevi</strong> — approvazione cumulativa, tasto indietro
+  ovunque, dispensa separata dalle soluzioni, gruppi di esercizi con nome: si
+  possono chiudere subito, basta la conferma che siano quelle giuste.</li>
+</ul>
+
+<footer>
+  Bridge LAB · un progetto della Federazione Italiana Gioco Bridge · bridgelab.it<br>
+  Stato verificato sul portale in produzione a settembre 2026.
+</footer>
+
+</body>
+</html>
