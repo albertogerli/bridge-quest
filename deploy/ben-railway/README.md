@@ -3,6 +3,35 @@
 Ospita [BEN](https://github.com/lorserker/ben) (l'avversario a rete neurale) su
 Railway e lo collega a BridgeLab.
 
+## Attenzione a dove si lancia `railway up`
+
+**Il servizio `ben` si deploya solo da questa cartella**, e il comando va dato
+con progetto e servizio espliciti:
+
+```bash
+cd deploy/ben-railway
+railway up -s ben -p 8909e811-f028-4429-80ea-2b1aed342a00 -e production --ci
+```
+
+Il motivo non è pedanteria. Il 02/09/2026 un `railway up` di **un altro
+progetto** — un'applicazione FastAPI, con `backend/`, Playwright e migrazioni —
+è finito su questo servizio. Il build è fallito, quindi BEN ha continuato a
+girare col deploy precedente e nessuno se n'è accorto se non per l'email di
+Railway. Se fosse riuscito, il motore di BridgeLab sarebbe stato sostituito da
+un'applicazione che non c'entra niente.
+
+La causa: la CLI di Railway tiene i collegamenti **per cartella** in
+`~/.railway/config.json`, e risalendo i genitori. Una cartella temporanea era
+rimasta collegata a questo progetto, così un `railway up` lanciato lì dentro
+puntava qui. Il collegamento è stato tolto; se dovesse ricomparire, si controlla
+con:
+
+```bash
+python3 -c "import json,os;d=json.load(open(os.path.expanduser('~/.railway/config.json')));[print(k) for k,v in d['projects'].items() if v.get('project')=='8909e811-f028-4429-80ea-2b1aed342a00']"
+```
+
+Deve stampare **solo** `deploy/ben-railway`.
+
 ## Perché non su Vercel
 
 BEN è Python con TensorFlow: carica circa 200 MB di modelli in memoria e deve
