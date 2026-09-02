@@ -3,11 +3,32 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import { eDiRete } from "@/lib/errore-di-rete";
 import {
   evaluateChannel,
   persistentFailureMessage,
   POLL_HEALTHY_MS,
 } from "@/lib/realtime-health";
+
+/**
+ * Segnala, TRANNE quando è solo la rete.
+ *
+ * Questa schermata parla continuamente con il database — amici, richieste,
+ * profili — e su un telefono in movimento le richieste falliscono. Non è un
+ * difetto: è un treno in galleria. Segnalarlo riempiva Sentry di allarmi per
+ * una condizione normale, e l'evento del 01/09/2026 arrivava proprio così.
+ *
+ * Gli errori VERI del database — un permesso negato, un vincolo violato —
+ * continuano ad arrivare tutti: la distinzione è in `eDiRete`, con i test che
+ * fissano il confine.
+ *
+ * L'utente se ne accorge lo stesso: la lista non si popola. Qui si decide solo
+ * se vale la pena svegliare qualcuno.
+ */
+function segnala(scope: string, errore: unknown): void {
+  if (eDiRete(errore)) return;
+  reportError(scope, errore);
+}
 
 /**
  * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
@@ -83,7 +104,7 @@ export function useFriends() {
       }
       return null;
     } catch (error) {
-      reportError("use-friends:getUser", error);
+      segnala("use-friends:getUser", error);
       return null;
     }
   }, [supabase]);
@@ -101,7 +122,7 @@ export function useFriends() {
         .eq("status", "accepted");
 
       if (sentError) {
-        reportError("use-friends:fetchFriends", sentError);
+        segnala("use-friends:fetchFriends", sentError);
         return;
       }
 
@@ -113,7 +134,7 @@ export function useFriends() {
         .eq("status", "accepted");
 
       if (receivedError) {
-        reportError("use-friends:fetchFriends", receivedError);
+        segnala("use-friends:fetchFriends", receivedError);
         return;
       }
 
@@ -134,7 +155,7 @@ export function useFriends() {
         .in("id", allProfileIds);
 
       if (profilesError) {
-        reportError("use-friends:fetchFriends", profilesError);
+        segnala("use-friends:fetchFriends", profilesError);
         return;
       }
 
@@ -162,7 +183,7 @@ export function useFriends() {
 
       setFriends(combinedFriends);
     } catch (error) {
-      reportError("use-friends:fetchFriends", error);
+      segnala("use-friends:fetchFriends", error);
     }
   }, [supabase, getCurrentUserId]);
 
@@ -179,7 +200,7 @@ export function useFriends() {
         .eq("status", "pending");
 
       if (receivedError) {
-        reportError("use-friends:fetchPending", receivedError);
+        segnala("use-friends:fetchPending", receivedError);
         return;
       }
 
@@ -191,7 +212,7 @@ export function useFriends() {
         .eq("status", "pending");
 
       if (sentError) {
-        reportError("use-friends:fetchPending", sentError);
+        segnala("use-friends:fetchPending", sentError);
         return;
       }
 
@@ -209,7 +230,7 @@ export function useFriends() {
           .in("id", allProfileIds);
 
         if (profilesError) {
-          reportError("use-friends:fetchPending", profilesError);
+          segnala("use-friends:fetchPending", profilesError);
           return;
         }
 
@@ -247,7 +268,7 @@ export function useFriends() {
       setPendingReceived(pendingReceivedList);
       setPendingSent(pendingSentList);
     } catch (error) {
-      reportError("use-friends:fetchPending", error);
+      segnala("use-friends:fetchPending", error);
     }
   }, [supabase, getCurrentUserId]);
 
@@ -280,14 +301,14 @@ export function useFriends() {
         });
 
         if (error) {
-          reportError("use-friends:search", error);
+          segnala("use-friends:search", error);
           setSearchResults([]);
           return;
         }
 
         setSearchResults((data as SearchResult[]) || []);
       } catch (error) {
-        reportError("use-friends:search", error);
+        segnala("use-friends:search", error);
         setSearchResults([]);
       } finally {
         setSearchLoading(false);
@@ -313,7 +334,7 @@ export function useFriends() {
           .single();
 
         if (error) {
-          reportError("use-friends:add", error);
+          segnala("use-friends:add", error);
           return;
         }
 
@@ -328,7 +349,7 @@ export function useFriends() {
 
         await fetchPending();
       } catch (error) {
-        reportError("use-friends:add", error);
+        segnala("use-friends:add", error);
       }
     },
     [supabase, getCurrentUserId, fetchPending]
@@ -343,13 +364,13 @@ export function useFriends() {
           .eq("id", friendshipId);
 
         if (error) {
-          reportError("use-friends:accept", error);
+          segnala("use-friends:accept", error);
           return;
         }
 
         await fetchAll();
       } catch (error) {
-        reportError("use-friends:accept", error);
+        segnala("use-friends:accept", error);
       }
     },
     [supabase, fetchAll]
@@ -364,13 +385,13 @@ export function useFriends() {
           .eq("id", friendshipId);
 
         if (error) {
-          reportError("use-friends:decline", error);
+          segnala("use-friends:decline", error);
           return;
         }
 
         await fetchPending();
       } catch (error) {
-        reportError("use-friends:decline", error);
+        segnala("use-friends:decline", error);
       }
     },
     [supabase, fetchPending]
@@ -385,13 +406,13 @@ export function useFriends() {
           .eq("id", friendshipId);
 
         if (error) {
-          reportError("use-friends:remove", error);
+          segnala("use-friends:remove", error);
           return;
         }
 
         await fetchAll();
       } catch (error) {
-        reportError("use-friends:remove", error);
+        segnala("use-friends:remove", error);
       }
     },
     [supabase, fetchAll]
@@ -413,7 +434,7 @@ export function useFriends() {
       .then(({ data }) => {
         if (!cancelled) setRealtimeUserId(data.user?.id ?? null);
       })
-      .catch((error) => reportError("use-friends:getUser", error));
+      .catch((error) => segnala("use-friends:getUser", error));
 
     const {
       data: { subscription },
