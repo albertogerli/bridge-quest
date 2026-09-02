@@ -100,3 +100,6 @@ _dump-contenuti.json
 audit-contenuti.json
 validazione-smazzate.json
 /public/vendor/
+
+# PDF generati da docs/*.html con scripts/pdf-da-html.mjs: si rifanno, non si versionano
+*.pdf
