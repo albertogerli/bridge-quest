@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ChevronLeft, ChevronRight, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RanghiSeme } from "@/components/bridge/ranghi-seme";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
@@ -319,7 +320,7 @@ function Casella({
         SUITS.map((suit) => (
           <p key={suit} className="text-2xl font-mono flex items-center gap-2 leading-snug">
             <SuitSymbol suit={suit} size="sm" />
-            {formatSuit(cards, suit)}
+            <RanghiSeme ranghi={ranghiDelSeme(cards, suit)} />
           </p>
         ))
       ) : (
@@ -333,10 +334,10 @@ function nomePosto(p: Position): string {
   return SEATS.find((s) => s.key === p)?.label ?? p;
 }
 
-function formatSuit(hand: readonly Card[], suit: Suit): string {
-  const cards = hand
+/** I ranghi del seme, ordinati. Il raggruppamento lo fa `RanghiSeme`. */
+function ranghiDelSeme(hand: readonly Card[], suit: Suit): string[] {
+  return hand
     .filter((c) => c.suit === suit)
     .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
     .map((c) => c.rank);
-  return cards.length ? cards.join(" ") : "—";
 }

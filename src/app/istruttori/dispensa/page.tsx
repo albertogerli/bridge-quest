@@ -13,6 +13,7 @@ import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
 import { getAllSmazzate } from "@/lib/catalog";
 import { mieNote } from "@/lib/note-smazzate";
+import { RanghiSeme } from "@/components/bridge/ranghi-seme";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -371,17 +372,17 @@ function ManoStampa({ cards, etichetta }: { cards: Card[]; etichetta: string }) 
       </p>
       {SUITS.map((suit) => (
         <p key={suit} className="whitespace-nowrap">
-          {SIMBOLO[suit]} {formatSuit(cards, suit)}
+          {SIMBOLO[suit]} <RanghiSeme ranghi={ranghiDelSeme(cards, suit)} />
         </p>
       ))}
     </div>
   );
 }
 
-function formatSuit(hand: readonly Card[], suit: Suit): string {
-  const cards = hand
+/** I ranghi del seme, ordinati. Il raggruppamento lo fa `RanghiSeme`. */
+function ranghiDelSeme(hand: readonly Card[], suit: Suit): string[] {
+  return hand
     .filter((c) => c.suit === suit)
     .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
     .map((c) => c.rank);
-  return cards.length ? cards.join("") : "—";
 }
