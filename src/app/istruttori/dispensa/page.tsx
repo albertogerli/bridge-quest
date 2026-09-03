@@ -22,6 +22,31 @@ const NOME: Record<Position, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
 };
 
+/**
+ * Che cosa finisce sul foglio.
+ *
+ * PERCHÉ TRE VALORI E NON UN INTERRUTTORE. «Con o senza soluzioni» sembra un
+ * sì/no, ma le stampe che servono sono tre e diverse fra loro: il foglio da
+ * consegnare, il foglietto delle sole risposte da tenere in mano mentre si
+ * spiega, e il documento intero per l'archivio dell'insegnante.
+ *
+ * PRONTO PER IL PERMESSO CHE ARRIVERÀ. Giuseppe Trevissoi ha chiesto anche che
+ * sia l'insegnante a decidere se l'allievo possa avere le soluzioni. Quella
+ * richiesta è ancora ambigua — se intenda «scelgo cosa metto nel PDF che
+ * distribuisco» oppure «l'allievo stampa da solo dal portale» — e va chiarita
+ * con lui. Qui la scelta è già un valore tipizzato e non un booleano sparso:
+ * quando il permesso arriverà basterà restringere le opzioni disponibili, non
+ * rifare la pagina.
+ */
+type ParteDaStampare = "dispensa" | "soluzioni" | "tutto";
+
+const MOSTRA_MANI: Record<ParteDaStampare, boolean> = {
+  dispensa: true, soluzioni: false, tutto: true,
+};
+const MOSTRA_SOLUZIONI: Record<ParteDaStampare, boolean> = {
+  dispensa: false, soluzioni: true, tutto: true,
+};
+
 interface Foglio {
   /** L'id nel catalogo, quando la mano viene da lì: serve per la nota. */
   id?: string;
@@ -45,10 +70,16 @@ interface Foglio {
  * in bianco e nero, uno per riquadro, con l'interruzione di pagina messa dove
  * non spezza una mano a metà.
  *
- * LE SOLUZIONI VANNO IN FONDO
- * Un foglio che accanto a ogni mano scrive il contratto giusto si legge una
- * volta e si butta. Contratti e dichiaranti stanno in ultima pagina, così il
- * foglio si può usare come esercizio prima di diventare una risposta.
+ * TRE FOGLI, NON UNO
+ * Prima era un documento solo con le soluzioni in ultima pagina. Giuseppe
+ * Trevissoi ha fatto notare che quella che si consegna deve contenere solo gli
+ * esercizi: se l'allievo ha già le risposte, non viene a lezione a sentirsele
+ * spiegare. Quindi si sceglie che cosa stampare — dispensa, sole soluzioni,
+ * oppure tutto — e la dispensa parte senza risposte.
+ *
+ * Contratti e dichiaranti, quando ci sono, restano comunque in ultima pagina e
+ * mai accanto alla mano: un foglio che scrive la risposta di fianco
+ * all'esercizio si legge una volta e si butta.
  */
 export default function DispensaPage() {
   return (
@@ -72,6 +103,13 @@ function Dispensa() {
   const [note, setNote] = useState<Map<string, string>>(new Map());
   /** Formato compatto: ~24 mani per pagina, per gli hand record. */
   const [compatto, setCompatto] = useState(false);
+  /**
+   * Il foglio da consegnare parte SENZA soluzioni: è la richiesta di
+   * Trevissoi — «la dispensa deve contenere solo il testo della lezione, non i
+   * risultati degli esercizi» — e il motivo didattico è che se l'allievo ha già
+   * le risposte non viene a lezione a sentirsele spiegare.
+   */
+  const [parte, setParte] = useState<ParteDaStampare>("dispensa");
   const [conPunti, setConPunti] = useState(false);
 
   useEffect(() => {
@@ -149,7 +187,11 @@ function Dispensa() {
       <div className="print:hidden mb-6">
         <h1 className="text-2xl font-bold font-display mb-1">{t("Dispensa")}</h1>
         <p className="text-sm text-muted-foreground mb-4">
-          {t("Il foglio da consegnare a fine lezione. Le soluzioni stanno in fondo, così la stessa dispensa serve prima come esercizio.")}
+          {parte === "dispensa"
+            ? t("Il foglio da consegnare a fine lezione: solo le mani, senza le risposte.")
+            : parte === "soluzioni"
+              ? t("Solo contratti e dichiaranti: il foglietto da tenere in mano mentre spieghi.")
+              : t("Mani e soluzioni insieme, con le risposte in ultima pagina: la copia per te.")}
         </p>
 
         <div className="flex flex-wrap items-end gap-3 mb-4">
@@ -200,6 +242,25 @@ function Dispensa() {
             {t("Stampa o salva in PDF")}
           </Button>
         </div>
+
+        {/* Che cosa stampare: tre fogli diversi, non un interruttore. */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">{t("Cosa stampare:")}</span>
+          {([
+            ["dispensa", t("Dispensa per gli allievi")],
+            ["soluzioni", t("Solo le soluzioni")],
+            ["tutto", t("Tutto")],
+          ] as [ParteDaStampare, string][]).map(([valore, etichetta]) => (
+            <Button
+              key={valore}
+              size="sm"
+              variant={parte === valore ? "default" : "outline"}
+              onClick={() => setParte(valore)}
+            >
+              {etichetta}
+            </Button>
+          ))}
+        </div>
       </div>
 
       {/* Il foglio vero e proprio */}
@@ -211,6 +272,7 @@ function Dispensa() {
           )}
           <p className="text-xs text-muted-foreground print:text-black mt-1">
             Bridge LAB — FIGB · {fogli.length} {fogli.length === 1 ? "mano" : "mani"}
+            {parte === "soluzioni" && ` · ${t("soluzioni")}`}
           </p>
         </header>
 
@@ -220,6 +282,7 @@ function Dispensa() {
           è l'hand record, quello che si tiene sul tavolo mentre si gioca, dove
           quello che conta è quante ne stanno su una pagina.
         */}
+        {MOSTRA_MANI[parte] && (
         <div
           className={
             compatto
@@ -261,9 +324,10 @@ function Dispensa() {
             </section>
           ))}
         </div>
+        )}
 
-        {conSoluzioni && (
-          <section className="mt-8 break-before-page">
+        {conSoluzioni && MOSTRA_SOLUZIONI[parte] && (
+          <section className={MOSTRA_MANI[parte] ? "mt-8 break-before-page" : "mt-4"}>
             <h2 className="text-lg font-bold mb-3">{t("Soluzioni")}</h2>
             <ol className="text-sm space-y-1">
               {fogli.map((f, i) => (
