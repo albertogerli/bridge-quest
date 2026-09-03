@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Hand } from "./hand";
 import { DummyHand } from "./dummy-hand";
+import { RanghiSeme } from "./ranghi-seme";
 import type { CardData } from "./playing-card";
 import { useShopCosmetics } from "@/hooks/use-shop-cosmetics";
 import {
@@ -92,13 +93,10 @@ function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string
           // ambiguità — ed è così che il portale lo scrive da sempre altrove.
           <div key={suit} className="flex items-baseline gap-2 py-px leading-tight" aria-hidden="true">
             <span className={`w-[18px] shrink-0 text-xl ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
-            {sc.length ? (
-              <span className={`font-mono text-[22px] font-bold ${suitColorClass[suit]}`}>
-                {sc.map((c) => c.rank).join("")}
-              </span>
-            ) : (
-              <span className="font-mono text-[22px] font-bold text-gray-300">—</span>
-            )}
+            <RanghiSeme
+              ranghi={sc.map((c) => c.rank)}
+              className={`font-mono text-[22px] font-bold ${suitColorClass[suit]}`}
+            />
           </div>
         );
       })}
