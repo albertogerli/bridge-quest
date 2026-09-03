@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-08-19
+-- Estratto il: 2026-09-03
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -129,7 +129,8 @@ CREATE TABLE IF NOT EXISTS public.class_members (
   class_id uuid NOT NULL,
   student_id uuid NOT NULL,
   status text NOT NULL,
-  joined_at timestamp with time zone NOT NULL
+  joined_at timestamp with time zone NOT NULL,
+  uscito_il timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS public.class_messages (
@@ -153,7 +154,9 @@ CREATE TABLE IF NOT EXISTS public.classes (
   invite_expires_at timestamp with time zone,
   stato text NOT NULL,
   risultati_nominativi boolean NOT NULL,
-  link_video text
+  link_video text,
+  inizio_corso date,
+  fine_corso date
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -521,6 +524,18 @@ CREATE TABLE IF NOT EXISTS public.posizioni_preferite (
   contract text NOT NULL,
   declarer text NOT NULL,
   played jsonb NOT NULL,
+  nota text,
+  created_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.presenze (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  student_id uuid,
+  elenco_id uuid,
+  data date NOT NULL,
+  presente boolean NOT NULL,
+  registrata_da uuid NOT NULL,
   nota text,
   created_at timestamp with time zone NOT NULL
 );
@@ -3055,6 +3070,22 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.segna_uscita_da_classe()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+begin
+  if new.status is distinct from old.status then
+    if old.status = 'active' and new.status <> 'active' then
+      new.uscito_il := now();
+    elsif new.status = 'active' then
+      new.uscito_il := null;
+    end if;
+  end if;
+  return new;
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.sfida_board_chiudi(p_sessione uuid)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -3734,6 +3765,8 @@ ALTER TABLE public.partner_profiles ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.posizioni_preferite ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.posizioni_preferite ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.posizioni_preferite ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.presenze ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.presenze ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.profiles ALTER COLUMN profile_type SET DEFAULT 'adulto'::text;
 ALTER TABLE public.profiles ALTER COLUMN xp SET DEFAULT 0;
 ALTER TABLE public.profiles ALTER COLUMN streak SET DEFAULT 0;
@@ -3837,6 +3870,7 @@ ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_pkey PRIMARY KEY (id
 ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_pkey PRIMARY KEY (autore_id, smazzata_id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
 ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_pkey PRIMARY KEY (id);
+ALTER TABLE public.presenze ADD CONSTRAINT presenze_pkey PRIMARY KEY (id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_pkey PRIMARY KEY (id);
@@ -3886,6 +3920,7 @@ ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text, 'pending'::text, 'rejected'::text])));
+ALTER TABLE public.classes ADD CONSTRAINT classes_periodo_coerente CHECK (((fine_corso IS NULL) OR (inizio_corso IS NULL) OR (fine_corso >= inizio_corso)));
 ALTER TABLE public.classes ADD CONSTRAINT classes_stato_check CHECK ((stato = ANY (ARRAY['bozza'::text, 'aperta'::text, 'chiusa'::text, 'archiviata'::text])));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_corpo_check CHECK (((char_length(btrim(corpo)) >= 1) AND (char_length(btrim(corpo)) <= 4000)));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
@@ -3919,6 +3954,7 @@ ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
+ALTER TABLE public.presenze ADD CONSTRAINT presenze_una_sola_persona CHECK (((student_id IS NOT NULL) <> (elenco_id IS NOT NULL)));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_lingua_check CHECK ((lingua = ANY (ARRAY['it'::text, 'en'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((profile_type = ANY (ARRAY['junior'::text, 'giovane'::text, 'adulto'::text, 'senior'::text])));
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
@@ -3997,6 +4033,10 @@ ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_lesson_id_fkey FOREI
 ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.posizioni_preferite ADD CONSTRAINT posizioni_preferite_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE public.presenze ADD CONSTRAINT presenze_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.presenze ADD CONSTRAINT presenze_elenco_id_fkey FOREIGN KEY (elenco_id) REFERENCES elenco_allievi(id) ON DELETE CASCADE;
+ALTER TABLE public.presenze ADD CONSTRAINT presenze_registrata_da_fkey FOREIGN KEY (registrata_da) REFERENCES auth.users(id);
+ALTER TABLE public.presenze ADD CONSTRAINT presenze_student_id_fkey FOREIGN KEY (student_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_asd_id_fkey FOREIGN KEY (asd_id) REFERENCES asd(id);
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
@@ -4094,6 +4134,9 @@ CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, 
 CREATE INDEX mani_generate_ns_hcp_idx ON public.mani_generate USING btree (ns_hcp);
 CREATE INDEX mani_generate_scenario_idx ON public.mani_generate USING btree (scenario_id, created_at DESC);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
+CREATE INDEX presenze_per_classe_e_data ON public.presenze USING btree (class_id, data DESC);
+CREATE UNIQUE INDEX presenze_una_per_elenco_e_giorno ON public.presenze USING btree (class_id, elenco_id, data) WHERE (elenco_id IS NOT NULL);
+CREATE UNIQUE INDEX presenze_una_per_iscritto_e_giorno ON public.presenze USING btree (class_id, student_id, data) WHERE (student_id IS NOT NULL);
 CREATE INDEX profiles_asd_code_idx ON public.profiles USING btree (asd_code);
 CREATE UNIQUE INDEX profiles_friend_code_key ON public.profiles USING btree (friend_code) WHERE (friend_code IS NOT NULL);
 CREATE INDEX risultati_mano_idx ON public.risultati_mano USING btree (mano_id);
@@ -4119,6 +4162,7 @@ CREATE UNIQUE INDEX uq_modelli_ufficiali_lezione ON public.modelli_mani USING bt
 -- TRIGGER
 CREATE TRIGGER asd_clubs_touch BEFORE UPDATE ON public.asd_clubs FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER bidding_sessions_last_bid BEFORE UPDATE ON public.bidding_sessions FOR EACH ROW EXECUTE FUNCTION tocca_bidding_session();
+CREATE TRIGGER class_members_segna_uscita BEFORE UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION segna_uscita_da_classe();
 CREATE TRIGGER collectible_cards_touch BEFORE UPDATE ON public.collectible_cards FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER course_worlds_touch BEFORE UPDATE ON public.course_worlds FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER courses_touch BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -4174,6 +4218,7 @@ ALTER TABLE public.modelli_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.note_smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.posizioni_preferite ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.presenze ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.review_items ENABLE ROW LEVEL SECURITY;
@@ -4300,6 +4345,8 @@ CREATE POLICY partner_profiles_insert ON public.partner_profiles AS PERMISSIVE F
 CREATE POLICY partner_profiles_select ON public.partner_profiles AS PERMISSIVE FOR SELECT TO authenticated USING ((looking OR (user_id = auth.uid())));
 CREATE POLICY partner_profiles_update ON public.partner_profiles AS PERMISSIVE FOR UPDATE TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Ognuno vede solo le proprie" ON public.posizioni_preferite AS PERMISSIVE FOR ALL TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
+CREATE POLICY "L'allievo vede solo le proprie presenze" ON public.presenze AS PERMISSIVE FOR SELECT TO public USING ((student_id = auth.uid()));
+CREATE POLICY "L'insegnante gestisce le presenze della sua classe" ON public.presenze AS PERMISSIVE FOR ALL TO public USING (is_instructor_of_class(class_id)) WITH CHECK ((is_instructor_of_class(class_id) AND (registrata_da = auth.uid())));
 CREATE POLICY "Authenticated users can read profiles" ON public.profiles AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Users can insert own profile" ON public.profiles AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((id = auth.uid()));
 CREATE POLICY "Users update own profile" ON public.profiles AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = id));
@@ -4466,6 +4513,9 @@ GRANT DELETE ON public.partner_profiles TO service_role;
 GRANT DELETE ON public.posizioni_preferite TO anon;
 GRANT DELETE ON public.posizioni_preferite TO authenticated;
 GRANT DELETE ON public.posizioni_preferite TO service_role;
+GRANT DELETE ON public.presenze TO anon;
+GRANT DELETE ON public.presenze TO authenticated;
+GRANT DELETE ON public.presenze TO service_role;
 GRANT DELETE ON public.profiles TO anon;
 GRANT DELETE ON public.profiles TO authenticated;
 GRANT DELETE ON public.profiles TO service_role;
@@ -4646,6 +4696,9 @@ GRANT INSERT ON public.partner_profiles TO service_role;
 GRANT INSERT ON public.posizioni_preferite TO anon;
 GRANT INSERT ON public.posizioni_preferite TO authenticated;
 GRANT INSERT ON public.posizioni_preferite TO service_role;
+GRANT INSERT ON public.presenze TO anon;
+GRANT INSERT ON public.presenze TO authenticated;
+GRANT INSERT ON public.presenze TO service_role;
 GRANT INSERT ON public.profiles TO anon;
 GRANT INSERT ON public.profiles TO authenticated;
 GRANT INSERT ON public.profiles TO service_role;
@@ -4826,6 +4879,9 @@ GRANT REFERENCES ON public.partner_profiles TO service_role;
 GRANT REFERENCES ON public.posizioni_preferite TO anon;
 GRANT REFERENCES ON public.posizioni_preferite TO authenticated;
 GRANT REFERENCES ON public.posizioni_preferite TO service_role;
+GRANT REFERENCES ON public.presenze TO anon;
+GRANT REFERENCES ON public.presenze TO authenticated;
+GRANT REFERENCES ON public.presenze TO service_role;
 GRANT REFERENCES ON public.profiles TO anon;
 GRANT REFERENCES ON public.profiles TO authenticated;
 GRANT REFERENCES ON public.profiles TO service_role;
@@ -5006,6 +5062,9 @@ GRANT SELECT ON public.partner_profiles TO service_role;
 GRANT SELECT ON public.posizioni_preferite TO anon;
 GRANT SELECT ON public.posizioni_preferite TO authenticated;
 GRANT SELECT ON public.posizioni_preferite TO service_role;
+GRANT SELECT ON public.presenze TO anon;
+GRANT SELECT ON public.presenze TO authenticated;
+GRANT SELECT ON public.presenze TO service_role;
 GRANT SELECT ON public.profiles TO anon;
 GRANT SELECT ON public.profiles TO service_role;
 GRANT SELECT ON public.push_subscriptions TO anon;
@@ -5183,6 +5242,9 @@ GRANT TRIGGER ON public.partner_profiles TO service_role;
 GRANT TRIGGER ON public.posizioni_preferite TO anon;
 GRANT TRIGGER ON public.posizioni_preferite TO authenticated;
 GRANT TRIGGER ON public.posizioni_preferite TO service_role;
+GRANT TRIGGER ON public.presenze TO anon;
+GRANT TRIGGER ON public.presenze TO authenticated;
+GRANT TRIGGER ON public.presenze TO service_role;
 GRANT TRIGGER ON public.profiles TO anon;
 GRANT TRIGGER ON public.profiles TO authenticated;
 GRANT TRIGGER ON public.profiles TO service_role;
@@ -5363,6 +5425,9 @@ GRANT TRUNCATE ON public.partner_profiles TO service_role;
 GRANT TRUNCATE ON public.posizioni_preferite TO anon;
 GRANT TRUNCATE ON public.posizioni_preferite TO authenticated;
 GRANT TRUNCATE ON public.posizioni_preferite TO service_role;
+GRANT TRUNCATE ON public.presenze TO anon;
+GRANT TRUNCATE ON public.presenze TO authenticated;
+GRANT TRUNCATE ON public.presenze TO service_role;
 GRANT TRUNCATE ON public.profiles TO anon;
 GRANT TRUNCATE ON public.profiles TO authenticated;
 GRANT TRUNCATE ON public.profiles TO service_role;
@@ -5543,6 +5608,9 @@ GRANT UPDATE ON public.partner_profiles TO service_role;
 GRANT UPDATE ON public.posizioni_preferite TO anon;
 GRANT UPDATE ON public.posizioni_preferite TO authenticated;
 GRANT UPDATE ON public.posizioni_preferite TO service_role;
+GRANT UPDATE ON public.presenze TO anon;
+GRANT UPDATE ON public.presenze TO authenticated;
+GRANT UPDATE ON public.presenze TO service_role;
 GRANT UPDATE ON public.profiles TO anon;
 GRANT UPDATE ON public.profiles TO authenticated;
 GRANT UPDATE ON public.profiles TO service_role;
@@ -5825,6 +5893,10 @@ GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_
 REVOKE ALL ON FUNCTION public.search_users(p_query text, p_user_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.segna_uscita_da_classe() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.segna_uscita_da_classe() TO anon;
+GRANT EXECUTE ON FUNCTION public.segna_uscita_da_classe() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.segna_uscita_da_classe() TO service_role;
 REVOKE ALL ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.sfida_board_chiudi(p_sessione uuid) TO service_role;
