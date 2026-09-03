@@ -117,6 +117,13 @@ export interface Assignment {
   minibridge: boolean;
   /** Esercizi di posizione assegnati insieme alle smazzate. */
   esercizio_ids: string[];
+  /**
+   * La lezione da cui il compito è nato, se è stato assegnato in blocco.
+   * `null` per i compiti su misura. La colonna c'è da sempre — la valorizza
+   * `assegna_lezione` — ma non era dichiarata qui, e le query fanno
+   * `select("*")`: arrivava e nessuno poteva usarla senza che il tipo mentisse.
+   */
+  lesson_id: number | null;
   /** Il link della singola lezione, quando cambia. Vuoto = quello della classe. */
   link_video: string | null;
   live_active_index: number | null;
