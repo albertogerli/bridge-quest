@@ -1001,6 +1001,79 @@ export interface StatoCompito {
  * Le mani le sceglie il database: passare l'elenco da qui vorrebbe dire
  * assegnare il catalogo che questa scheda ha in memoria, che può essere di ieri.
  */
+
+/** Le mani della lezione già dentro il compito, se il compito esiste. */
+export async function maniGiaAssegnate(
+  classId: string,
+  lessonId: number,
+): Promise<string[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("assignments")
+    .select("smazzata_ids")
+    .eq("class_id", classId)
+    .eq("lesson_id", lessonId)
+    .maybeSingle();
+  if (error) throw error;
+  return (data?.smazzata_ids as string[] | undefined) ?? [];
+}
+
+/**
+ * Assegna ALCUNE mani di una lezione, aggiungendole a quelle già assegnate.
+ *
+ * PERCHÉ IL COMPITO CRESCE INVECE DI MOLTIPLICARSI. Il vincolo
+ * `assignments_una_lezione_per_classe` dice che di una lezione esiste un solo
+ * compito per classe, e va bene così: tre compiti «Lezione 4» nell'elenco
+ * dell'allievo sarebbero tre righe uguali fra cui indovinare. Quindi assegnare
+ * in più momenti vuol dire far crescere lo stesso compito — che è anche il modo
+ * in cui la vede l'insegnante: «la lezione di questa settimana», non «il terzo
+ * pezzo della lezione di questa settimana».
+ *
+ * UNIONE, MAI SOSTITUZIONE. Rimandare una mano già assegnata non deve creare un
+ * doppione né — peggio — togliere le altre. Chi ha già giocato non se ne accorge
+ * nemmeno.
+ *
+ * LA CORSA È GESTITA. Fra la lettura e la scrittura un'altra scheda può creare
+ * il compito: l'inserimento sbatte contro il vincolo (23505), e allora si
+ * rilegge e si aggiorna. Senza questo ramo il secondo insegnante vedrebbe un
+ * errore per una cosa che è andata a buon fine.
+ */
+export async function assegnaManiLezione(
+  classId: string,
+  lessonId: number,
+  titolo: string,
+  smazzataIds: string[],
+): Promise<{ totale: string[]; aggiunte: string[] }> {
+  const supabase = createClient();
+  const esistenti = await maniGiaAssegnate(classId, lessonId);
+  const aggiunte = smazzataIds.filter((id) => !esistenti.includes(id));
+
+  if (esistenti.length > 0) {
+    if (aggiunte.length === 0) return { totale: esistenti, aggiunte: [] };
+    const totale = [...esistenti, ...aggiunte];
+    const { error } = await supabase
+      .from("assignments")
+      .update({ smazzata_ids: totale })
+      .eq("class_id", classId)
+      .eq("lesson_id", lessonId);
+    if (error) throw error;
+    return { totale, aggiunte };
+  }
+
+  const { error } = await supabase.from("assignments").insert({
+    class_id: classId,
+    lesson_id: lessonId,
+    title: titolo,
+    smazzata_ids: smazzataIds,
+  });
+  if (!error) return { totale: smazzataIds, aggiunte: smazzataIds };
+
+  // 23505: qualcun altro ha creato il compito nel frattempo. Non è un errore
+  // da mostrare, è una corsa da chiudere unendo le mani a quelle sue.
+  if ((error as { code?: string }).code !== "23505") throw error;
+  return assegnaManiLezione(classId, lessonId, titolo, smazzataIds);
+}
+
 export async function assegnaLezione(
   classId: string,
   lessonId: number,

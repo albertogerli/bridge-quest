@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useSmazzate } from "@/store/use-smazzate-store";
-import { assegnaLezione, getStatoCompiti, type StatoCompito } from "@/lib/instructors";
+import {
+  assegnaLezione,
+  assegnaManiLezione,
+  getStatoCompiti,
+  maniGiaAssegnate,
+  type StatoCompito,
+} from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { compitoAssegnatoWhatsApp, linkWhatsApp } from "@/lib/whatsapp";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -38,6 +44,10 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
   const [inCorso, setInCorso] = useState<number | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
   const [corsoAperto, setCorsoAperto] = useState<string | null>(null);
+  /** La lezione di cui si stanno scegliendo le mani, e cosa c'è già dentro. */
+  const [scelta, setScelta] = useState<
+    { lessonId: number; titolo: string; gia: string[]; spuntate: Set<string> } | null
+  >(null);
 
   async function ricarica() {
     try {
@@ -83,6 +93,36 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
     }
   }
 
+  /** Apre la scelta delle mani per una lezione, con le già assegnate segnate. */
+  async function apriScelta(lessonId: number, titolo: string) {
+    setErrore(null);
+    try {
+      const gia = await maniGiaAssegnate(classId, lessonId);
+      // Le già assegnate partono spuntate: la spunta dice «questa mano fa parte
+      // del compito», non «questa la sto aggiungendo adesso».
+      setScelta({ lessonId, titolo, gia, spuntate: new Set(gia) });
+    } catch (err) {
+      reportError("assegna-lezioni:scelta", err);
+      setErrore("Non riesco a leggere cosa è già assegnato.");
+    }
+  }
+
+  async function confermaScelta() {
+    if (!scelta) return;
+    setInCorso(scelta.lessonId);
+    setErrore(null);
+    try {
+      await assegnaManiLezione(classId, scelta.lessonId, scelta.titolo, [...scelta.spuntate]);
+      setScelta(null);
+      await ricarica();
+    } catch (err) {
+      reportError("assegna-lezioni:assegna-parziale", err);
+      setErrore("Non sono riuscito ad assegnare le mani scelte.");
+    } finally {
+      setInCorso(null);
+    }
+  }
+
   if (caricando) {
     return (
       <div className="flex justify-center py-10">
@@ -100,8 +140,74 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
     }))
     .filter((c) => c.lezioni.length > 0);
 
+  /** Le mani di una lezione, in ordine di board. */
+  function maniDella(lessonId: number) {
+    return smazzate
+      .filter((sm) => sm.lesson === lessonId)
+      .sort((a, b) => a.board - b.board);
+  }
+
   return (
     <div className="space-y-4">
+      {scelta && (
+        <div className="rounded-lg border border-primary/40 bg-card p-4">
+          <p className="font-display text-base font-semibold">
+            {t("Quali mani assegnare")} — {scelta.titolo}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t("Le mani già assegnate sono spuntate. Togliere la spunta non le leva dal compito: si possono solo aggiungere.")}
+          </p>
+
+          <div className="mt-3 divide-y divide-border">
+            {maniDella(scelta.lessonId).map((sm) => {
+              const gia = scelta.gia.includes(sm.id);
+              return (
+                <label
+                  key={sm.id}
+                  className="flex min-h-11 cursor-pointer items-center gap-3 py-2"
+                >
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 accent-primary"
+                    checked={scelta.spuntate.has(sm.id)}
+                    disabled={gia}
+                    onChange={() =>
+                      setScelta((s0) => {
+                        if (!s0) return s0;
+                        const spuntate = new Set(s0.spuntate);
+                        if (spuntate.has(sm.id)) spuntate.delete(sm.id);
+                        else spuntate.add(sm.id);
+                        return { ...s0, spuntate };
+                      })
+                    }
+                  />
+                  <span className="text-sm">
+                    {t("Mano")} {sm.board} · {sm.contract}
+                  </span>
+                  {gia && (
+                    <Badge variant="secondary" className="ml-auto">
+                      {t("già assegnata")}
+                    </Badge>
+                  )}
+                </label>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button
+              disabled={inCorso !== null || scelta.spuntate.size === scelta.gia.length}
+              onClick={() => void confermaScelta()}
+            >
+              {t("Assegna le mani scelte")}
+            </Button>
+            <Button variant="ghost" onClick={() => setScelta(null)}>
+              {t("Annulla")}
+            </Button>
+          </div>
+        </div>
+      )}
+
       {errore && (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
           {errore}
@@ -134,7 +240,7 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{lezione.title}</p>
                         <p className="text-xs text-muted-foreground">
-                          {nMani} {nMani === 1 ? "mano" : "mani"}
+                          {compito ? `${compito.n_mani}/${nMani} ${t("mani assegnate")}` : `${nMani} ${nMani === 1 ? "mano" : "mani"}`}
                           {compito && (
                             <>
                               {" · "}
@@ -152,11 +258,22 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                         </p>
                       </div>
                       {compito ? (
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="gap-1">
-                            <Check className="h-3 w-3" />
-                            {t("Assegnata")}
-                          </Badge>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {compito.n_mani >= nMani ? (
+                            <Badge variant="outline" className="gap-1">
+                              <Check className="h-3 w-3" />
+                              {t("Assegnata")}
+                            </Badge>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={inCorso !== null}
+                              onClick={() => void apriScelta(lezione.id, lezione.title)}
+                            >
+                              {t("Aggiungi mani")}
+                            </Button>
+                          )}
                           <a
                             href={linkWhatsApp(
                               compitoAssegnatoWhatsApp(
@@ -185,13 +302,25 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                           </Link>
                         </div>
                       ) : (
-                        <Button
-                          size="sm"
-                          disabled={inCorso !== null}
-                          onClick={() => void assegna(lezione.id)}
-                        >
-                          {inCorso === lezione.id ? "Assegno…" : "Assegna"}
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          {/* L'assegnazione a blocco resta la principale: è quella
+                              che farà la maggior parte degli insegnanti. */}
+                          <Button
+                            size="sm"
+                            disabled={inCorso !== null}
+                            onClick={() => void assegna(lezione.id)}
+                          >
+                            {inCorso === lezione.id ? "Assegno…" : "Assegna"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            disabled={inCorso !== null}
+                            onClick={() => void apriScelta(lezione.id, lezione.title)}
+                          >
+                            {t("Scegli le mani")}
+                          </Button>
+                        </div>
                       )}
                     </div>
                   );
