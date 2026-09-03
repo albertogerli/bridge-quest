@@ -293,6 +293,43 @@ export async function decidiIscrizione(
   if (error) throw error;
 }
 
+/**
+ * Approva o respinge PIÙ richieste insieme.
+ *
+ * PERCHÉ UNA SOLA ISTRUZIONE E NON UN CICLO. Con venti chiamate in fila, se la
+ * decima fallisce restano nove approvate e undici in attesa, e chi guarda la
+ * schermata non sa a che punto è: dovrebbe ricontrollare a mano. Una `UPDATE`
+ * con `IN` è un'operazione sola per il database — o le tocca tutte o nessuna —
+ * e il problema di lasciare uno stato ambiguo non si presenta.
+ *
+ * Il caso vero: un corso con quaranta aderenti, l'insegnante apre la pagina la
+ * sera prima e deve smaltire venti richieste. Venti clic sono venti occasioni
+ * di sbagliarne uno.
+ *
+ * RESTITUISCE CHI È PASSATO DAVVERO. Le RLS potrebbero rifiutare qualche riga
+ * — un allievo che nel frattempo è uscito, una classe che non è più tua — e in
+ * quel caso l'istruzione riesce ma tocca meno righe di quelle chieste. Senza
+ * rileggere non ce ne accorgeremmo, e la schermata direbbe «fatto» per gente
+ * che è rimasta in attesa.
+ */
+export async function decidiIscrizioni(
+  classId: string,
+  studentIds: string[],
+  decisione: "approva" | "respingi",
+): Promise<{ decisi: string[]; nonDecisi: string[] }> {
+  if (studentIds.length === 0) return { decisi: [], nonDecisi: [] };
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("class_members")
+    .update({ status: decisione === "approva" ? "active" : "rejected" })
+    .eq("class_id", classId)
+    .in("student_id", studentIds)
+    .select("student_id");
+  if (error) throw error;
+  const decisi = (data ?? []).map((r) => r.student_id as string);
+  return { decisi, nonDecisi: studentIds.filter((id) => !decisi.includes(id)) };
+}
+
 /** Le impostazioni della classe che riguardano chi entra e quando. */
 export async function aggiornaImpostazioniClasse(
   classId: string,

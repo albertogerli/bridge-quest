@@ -24,12 +24,14 @@ import {
   regenerateInviteCode,
   setInviteActive,
   decidiIscrizione,
+  decidiIscrizioni,
   aggiornaImpostazioniClasse,
   ETICHETTE_STATO,
   type ClassDetail,
   type StatoClasse,
 } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
+import { copiaTesto } from "@/lib/appunti";
 
 export default function ClassDetailPage({
   params,
@@ -44,6 +46,12 @@ export default function ClassDetailPage({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  /** La copia non è riuscita: il codice va letto e trascritto a mano. */
+  const [copiaFallita, setCopiaFallita] = useState(false);
+  /** Le richieste spuntate, per decidere in blocco. */
+  const [selezionate, setSelezionate] = useState<Set<string>>(new Set());
+  /** Righe che la decisione in blocco non ha toccato: vanno dette, non nascoste. */
+  const [nonDecise, setNonDecise] = useState<number>(0);
 
   async function load() {
     setLoading(true);
@@ -94,6 +102,33 @@ export default function ClassDetailPage({
     }
   }
 
+  /** Decide in blocco le richieste spuntate. */
+  async function decidiSelezionate(decisione: "approva" | "respingi") {
+    const ids = [...selezionate];
+    if (ids.length === 0) return;
+    setBusy(true);
+    setNonDecise(0);
+    try {
+      const { nonDecisi } = await decidiIscrizioni(classId, ids, decisione);
+      // Se qualcuna non è passata lo si dice: «fatto» per gente rimasta in
+      // attesa manderebbe l'insegnante a lezione con una lista sbagliata.
+      setNonDecise(nonDecisi.length);
+      setSelezionate(new Set());
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function spunta(studentId: string) {
+    setSelezionate((precedenti) => {
+      const nuove = new Set(precedenti);
+      if (nuove.has(studentId)) nuove.delete(studentId);
+      else nuove.add(studentId);
+      return nuove;
+    });
+  }
+
   async function cambiaImpostazione(campi: Parameters<typeof aggiornaImpostazioniClasse>[1]) {
     setBusy(true);
     try {
@@ -104,9 +139,22 @@ export default function ClassDetailPage({
     }
   }
 
-  function copyCode() {
+  /**
+   * Il codice invito negli appunti.
+   *
+   * Qui non c'era nessun `catch`: la promessa rifiutata finiva fra gli errori
+   * non gestiti e, peggio, la schermata diceva «copiato» comunque. Su questo
+   * codice si regge l'ingresso di tutta la classe, quindi un insegnante che lo
+   * incolla e non trova niente lo scopre davanti agli allievi.
+   */
+  async function copyCode() {
     if (!detail) return;
-    void navigator.clipboard.writeText(detail.classRoom.invite_code);
+    const esito = await copiaTesto(detail.classRoom.invite_code);
+    if (esito !== "copiato") {
+      setCopiaFallita(true);
+      setTimeout(() => setCopiaFallita(false), 4000);
+      return;
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
@@ -178,7 +226,13 @@ export default function ClassDetailPage({
           >
             {classRoom.invite_code}
           </button>
-          <span className="text-xs text-muted-foreground">{copied ? t("Copiato ✓") : t("Tocca per copiare")}</span>
+          <span className="text-xs text-muted-foreground">
+            {copiaFallita
+              ? t("Non è riuscita: leggilo e trascrivilo a mano.")
+              : copied
+                ? t("Copiato ✓")
+                : t("Tocca per copiare")}
+          </span>
           {!classRoom.invite_active && (
             <Badge variant="outline">{t("Iscrizioni chiuse")}</Badge>
           )}
@@ -361,9 +415,64 @@ export default function ClassDetailPage({
               {t("Finché non decidi non vedono compiti né chat.")}
             </CardDescription>
           </CardHeader>
+
+          {/* Barra delle azioni in blocco. Il caso vero è un corso con quaranta
+              aderenti: venti clic sono venti occasioni di sbagliarne uno. */}
+          <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 pb-3">
+            <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="h-5 w-5 accent-primary"
+                checked={selezionate.size === inAttesa.length && inAttesa.length > 0}
+                onChange={(e) =>
+                  setSelezionate(
+                    e.target.checked ? new Set(inAttesa.map((m) => m.student_id)) : new Set(),
+                  )
+                }
+              />
+              {t("Seleziona tutte")}
+            </label>
+            {selezionate.size > 0 && (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  {selezionate.size} {t("selezionate")}
+                </span>
+                <div className="ml-auto flex gap-2">
+                  <Button size="sm" disabled={busy} onClick={() => void decidiSelezionate("approva")}>
+                    {t("Falle entrare")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={busy}
+                    onClick={() => void decidiSelezionate("respingi")}
+                  >
+                    {t("Respingi")}
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {nonDecise > 0 && (
+            <p className="border-b border-border px-6 py-3 text-sm text-amber-700 dark:text-amber-300">
+              {t("Alcune richieste non sono state applicate e sono rimaste in attesa:")}{" "}
+              {nonDecise}. {t("Riprova su quelle rimaste.")}
+            </p>
+          )}
+
           <CardContent className="divide-y divide-border p-0">
             {inAttesa.map((m) => (
               <div key={m.student_id} className="flex flex-wrap items-center gap-3 px-6 py-3">
+                <label className="flex min-h-11 cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 accent-primary"
+                    checked={selezionate.has(m.student_id)}
+                    onChange={() => spunta(m.student_id)}
+                    aria-label={`${t("Seleziona")} ${m.display_name ?? ""}`}
+                  />
+                </label>
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
                   {(m.display_name ?? "?").charAt(0)}
                 </div>
