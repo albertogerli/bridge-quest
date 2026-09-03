@@ -14,6 +14,9 @@ import { RicordaLingua } from "@/components/ricorda-lingua";
 import { CookieBanner } from "@/components/cookie-banner";
 import { OspiteConverti } from "@/components/ospite-converti";
 import { SiteFooter } from "@/components/site-footer";
+import { TornaIndietro } from "@/components/torna-indietro";
+import { destinazioneIndietro } from "@/lib/navigazione-indietro";
+import { useT } from "@/contexts/traduzioni-provider";
 import { useExitIntent } from "@/hooks/use-exit-intent";
 import type { UserProfile } from "@/hooks/use-profile";
 import { configureStatusBar } from "@/lib/native-bridge";
@@ -76,6 +79,8 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { user, loading: authLoading } = useSharedAuth();
   const isFullScreen = FULL_SCREEN_ROUTES.some((r) => pathname.startsWith(r));
+  const ritorno = destinazioneIndietro(pathname);
+  const t = useT();
   const isPublic = PUBLIC_ROUTES.some((r) => r === "/" ? pathname === "/" : pathname.startsWith(r));
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const { showExitModal, setShowExitModal } = useExitIntent();
@@ -172,7 +177,23 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
             (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
             contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
             "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
-        <main id="main-content" className="flex-1 pb-28 lg:pb-6">{children}</main>
+        <main id="main-content" className="flex-1 pb-28 lg:pb-6">
+          {/*
+            IL RITORNO STA QUI, non nelle singole pagine.
+            Delle ventidue pagine sotto le classi ne avevano uno vero due, e
+            dove c'era non era la stessa cosa: nella pagina della classe
+            compariva solo in caso di errore, nel tavolo di studio «Indietro»
+            vuol dire annulla l'ultima carta. Mettendolo nella cornice non si
+            può né dimenticare né spostare, e la regola su dove porta è una
+            funzione con i suoi test (`navigazione-indietro.ts`).
+          */}
+          {ritorno && (
+            <div className="mx-auto w-full max-w-6xl px-4 pt-3">
+              <TornaIndietro href={ritorno.href} etichetta={t(ritorno.etichetta)} />
+            </div>
+          )}
+          {children}
+        </main>
         <div className="hidden lg:block">
           <SiteFooter />
         </div>

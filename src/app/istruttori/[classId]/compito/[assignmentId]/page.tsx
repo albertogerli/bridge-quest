@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState, use } from "react";
 import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
-import Link from "next/link";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
 // Replay della mano: si apre su richiesta a fine partita.
 const HandReplay = dynamic(
@@ -140,9 +139,6 @@ export default function AssignmentResultsPage({
     return (
       <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-destructive">{error ?? "Compito non trovato"}</p>
-        <Link href={`/istruttori/${classId}`} className="mt-4 inline-block text-sm text-primary hover:underline">
-          ← Torna alla classe
-        </Link>
       </div>
     );
   }

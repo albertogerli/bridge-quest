@@ -119,9 +119,6 @@ export default function CompitoPage({
     return (
       <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-destructive">{error ?? "Compito non trovato"}</p>
-        <Link href={`/classi/${classId}`} className="mt-4 inline-block text-sm text-primary hover:underline">
-          ← Torna alla classe
-        </Link>
       </div>
     );
   }

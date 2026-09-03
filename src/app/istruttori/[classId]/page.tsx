@@ -171,9 +171,6 @@ export default function ClassDetailPage({
     return (
       <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-destructive">{error ?? "Classe non trovata"}</p>
-        <Link href="/istruttori" className="mt-4 inline-block text-sm text-primary hover:underline">
-          ← Torna alle classi
-        </Link>
       </div>
     );
   }
