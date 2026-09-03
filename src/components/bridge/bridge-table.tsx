@@ -73,22 +73,32 @@ function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string
           .filter((c) => c.suit === suit)
           .sort((a, b) => (rankVal[b.rank] ?? 0) - (rankVal[a.rank] ?? 0));
         return (
-          <div key={suit} className="flex items-center gap-1.5 py-0.5 leading-none" aria-hidden="true">
-            <span className={`w-4 text-base ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
-            <div className="flex flex-wrap gap-0.5">
-              {sc.length ? (
-                sc.map((c, i) => (
-                  <span
-                    key={i}
-                    className={`inline-flex h-6 min-w-[20px] items-center justify-center rounded-[5px] border border-gray-200 bg-white px-1 font-mono text-sm font-bold ${suitColorClass[suit]}`}
-                  >
-                    {c.rank}
-                  </span>
-                ))
-              ) : (
-                <span className="text-sm text-gray-300">—</span>
-              )}
-            </div>
+          // I RANGHI SONO UNA RIGA DI TESTO, non una fila di scatolette.
+          //
+          // Prima ogni carta era un riquadro con bordo, riempimento e spazio: a
+          // parità di posto il carattere doveva restare a 14px, e su un
+          // portatile da 1366 il diagramma non ci stava. Giuseppe Trevissoi l'ha
+          // detto così: «il rapporto fra spazi pieni e vuoti è molto basso, si
+          // potrà aumentare le dimensioni dei caratteri e accorpare i diagrammi».
+          //
+          // Misurato sulla mano 5-3-2-3: da 146×128 px a 112×126, con il
+          // carattere da 14 a 22px. Ventitré per cento più stretto E più
+          // leggibile, che sembra una contraddizione e non lo è — lo spazio se
+          // lo prendevano i bordi.
+          //
+          // È anche la forma che la lavagna e la dispensa usano già, e che lui
+          // indica come il riferimento buono. Il «10» resta scritto per esteso e
+          // attaccato agli altri: non esistono ranghi «1» e «0», quindi non c'è
+          // ambiguità — ed è così che il portale lo scrive da sempre altrove.
+          <div key={suit} className="flex items-baseline gap-2 py-px leading-tight" aria-hidden="true">
+            <span className={`w-[18px] shrink-0 text-xl ${suitColorClass[suit]}`}>{suitSymbol[suit]}</span>
+            {sc.length ? (
+              <span className={`font-mono text-[22px] font-bold ${suitColorClass[suit]}`}>
+                {sc.map((c) => c.rank).join("")}
+              </span>
+            ) : (
+              <span className="font-mono text-[22px] font-bold text-gray-300">—</span>
+            )}
           </div>
         );
       })}
