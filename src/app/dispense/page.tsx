@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { levelInfo, type CourseId } from "@/lib/catalog";
@@ -25,9 +26,28 @@ const courseGradients: Record<CourseId, string> = {
   "cuori-licita": "from-rose-500 to-rose-700",
 };
 
+/**
+ * L'indirizzo porta il corso: `?corso=quadri`.
+ *
+ * Serviva perché dalla classe si arrivasse ai materiali GIUSTI. Prima il corso
+ * era solo uno stato interno con «fiori» come partenza: un collegamento dalla
+ * pagina della classe atterrava sempre sul primo corso, e l'allievo di un corso
+ * Quadri si trovava davanti materiale che non è il suo. Il contenuto non è
+ * duplicato — è sempre questa pagina — cambia solo da dove ci si arriva.
+ */
 export default function DispensePage() {
+  return (
+    <Suspense fallback={null}>
+      <Dispense />
+    </Suspense>
+  );
+}
+
+function Dispense() {
   const t = useT();
-  const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
+  const parametri = useSearchParams();
+  const corsoRichiesto = parametri.get("corso") as CourseId | null;
+  const [selectedCourse, setSelectedCourse] = useState<CourseId>(corsoRichiesto ?? "fiori");
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];

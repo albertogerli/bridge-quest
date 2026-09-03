@@ -21,6 +21,8 @@ import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getOpenLiveTable } from "@/lib/live-table";
 import { Video } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCatalog } from "@/store/use-catalog-store";
 import { SondaggioAllievo } from "@/components/sondaggio-allievo";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -36,6 +38,7 @@ export default function StudentClassPage({
   const { profile } = useSharedAuth();
 
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const { courses } = useCatalog();
   const [progress, setProgress] = useState<Map<string, Set<string>>>(new Map());
   const [loading, setLoading] = useState(true);
   /**
@@ -92,6 +95,18 @@ export default function StudentClassPage({
     const done = progress.get(a.id);
     return !!done && a.smazzata_ids.every((id) => done.has(id));
   }
+
+  /**
+   * I corsi da cui vengono i compiti di questa classe.
+   *
+   * Si ricavano dalle lezioni assegnate invece di chiedere alla classe «di che
+   * corso sei»: quel dato non esiste, e un insegnante può benissimo assegnare
+   * una lezione di Quadri a una classe nata su Fiori. Così l'elenco segue
+   * quello che è stato davvero assegnato.
+   */
+  const corsiDellaClasse = courses.filter((c) =>
+    c.lessons.some((l) => assignments.some((a) => a.lesson_id === l.id)),
+  );
 
   const todo = assignments.filter((a) => !isDone(a));
   const completed = assignments.filter(isDone);
@@ -187,6 +202,34 @@ export default function StudentClassPage({
         </h2>
         <ClassLeaderboard classId={classId} highlightUserId={profile?.id} />
       </section>
+
+      {/*
+        I MATERIALI, RAGGIUNTI DALLA CLASSE.
+        Le dispense stanno dove sono sempre state — non si duplica niente — ma
+        finora ci si arrivava solo dal menu del portale, e sembravano materiale
+        «del sito». Passando dalla classe l'allievo li legge come roba del suo
+        corso, che è la richiesta di Giuseppe Trevissoi. Il corso viaggia
+        nell'indirizzo: chi fa Quadri non atterra sulle dispense di Fiori.
+      */}
+      {corsiDellaClasse.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            {t("Materiali del corso")}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {corsiDellaClasse.map((c) => (
+              <Link key={c.id} href={`/dispense?corso=${c.id}`}>
+                <Button variant="outline" size="sm">
+                  {t("Dispense")} — {c.name}
+                </Button>
+              </Link>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t("Le stesse dispense del portale, aperte sul corso che stai seguendo.")}
+          </p>
+        </section>
+      )}
 
       {/* Class chat */}
       <section className="mt-8">
