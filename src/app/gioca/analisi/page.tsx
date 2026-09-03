@@ -9,6 +9,7 @@ import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { TurningPointPanel } from "@/components/turning-point-panel";
 import { reportError } from "@/lib/report-error";
+import { copiaDaSegnalare, copiaTesto, type EsitoCopia } from "@/lib/appunti";
 import { useT } from "@/contexts/traduzioni-provider";
 
 interface GameData {
@@ -43,7 +44,9 @@ function AnalisiPage() {
   const [currentTrick, setCurrentTrick] = useState(0);
   const [showShareSuccess, setShowShareSuccess] = useState(false);
   /** Il browser ha negato la copia: va detto, invece di fingere che sia andata. */
-  const [copiaNegata, setCopiaNegata] = useState(false);
+  /** Perché la copia non è riuscita: decide che cosa dire, invece di
+   *  incolpare sempre il browser. */
+  const [copiaFallita, setCopiaFallita] = useState<EsitoCopia | null>(null);
   const searchParams = useSearchParams();
   const gameIndex = searchParams.get("game");
 
@@ -123,24 +126,29 @@ Gioca su bridgelab.it`;
   /**
    * Copia negli appunti, e dice «copiato» solo se ha copiato davvero.
    *
-   * `writeText` può essere RIFIUTATA — Safari la concede solo in risposta
-   * diretta a un tocco, e certi browser dentro le app la negano sempre. Senza
-   * il `catch` quella promessa rifiutata finiva fra gli errori non gestiti
-   * (visto in produzione il 15/08/2026: «Write permission denied»), e nel
-   * frattempo la schermata mostrava lo stesso «copiato» a chi non aveva
-   * niente negli appunti — che è il difetto peggiore dei due, perché lo
-   * scopre solo quando prova a incollare.
+   * La regola resta quella del 15/08/2026 — non mentire a chi legge — ma il
+   * come è cambiato: la logica sta in `copiaTesto()`, condivisa con gli altri
+   * punti del portale che copiano, e con un ripiego per quando l'API moderna
+   * si rifiuta.
+   *
+   * NON SI SEGNALA PIÙ LA PAGINA SENZA FUOCO. Il 03/09/2026 è arrivato un
+   * «Document is not focused»: succede quando fra il tocco e la copia l'utente
+   * passa a un'altra applicazione. Non è un difetto, è una persona che ha
+   * cambiato finestra, e riempirne Sentry insegna solo a ignorare gli allarmi.
+   * Resta segnalato il caso in cui non si capisce perché non si riesce.
    */
   async function copiaNegliAppunti(testo: string) {
-    try {
-      await navigator.clipboard.writeText(testo);
+    const esito = await copiaTesto(testo);
+    if (esito === "copiato") {
       setShowShareSuccess(true);
       setTimeout(() => setShowShareSuccess(false), 2000);
-    } catch (err) {
-      reportError("analisi:copia", err);
-      setCopiaNegata(true);
-      setTimeout(() => setCopiaNegata(false), 4000);
+      return;
     }
+    if (copiaDaSegnalare(esito)) {
+      reportError("analisi:copia", new Error(`copia non riuscita: ${esito}`));
+    }
+    setCopiaFallita(esito);
+    setTimeout(() => setCopiaFallita(null), 4000);
   }
 
   if (!gameData) {
@@ -245,9 +253,11 @@ Gioca su bridgelab.it`;
           </div>
         )}
 
-        {copiaNegata && (
+        {copiaFallita && (
           <div className="fixed top-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
-            {t("Il browser non ha concesso la copia. Seleziona il testo a mano.")}
+            {copiaFallita === "senza-fuoco"
+              ? t("La copia non è riuscita perché sei uscito dalla pagina. Riprova restando qui.")
+              : t("Il browser non ha concesso la copia. Seleziona il testo a mano.")}
           </div>
         )}
 
