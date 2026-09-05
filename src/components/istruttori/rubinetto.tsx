@@ -68,6 +68,7 @@ export function Rubinetto({
 }) {
   const t = useT();
   const [avanzateAperte, setAvanzateAperte] = useState(false);
+  const haEccezioni = Object.keys(permessi).length > 0;
 
   return (
     <div className="space-y-3">
@@ -101,6 +102,15 @@ export function Rubinetto({
           </button>
         );
       })}
+
+      {/* Un comando che fa PIÙ di quello che dice è fastidioso quanto uno che
+          fa meno, anche quando fa la cosa giusta: se ci sono eccezioni in
+          giro, si avverte prima e non dopo. */}
+      {haEccezioni && (
+        <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+          {t("Toccare una delle tre righe azzera le eccezioni che avevi impostato voce per voce.")}
+        </p>
+      )}
 
       {accessoLibero === "personalizzato" && (
         <p className="rounded-lg bg-muted/60 p-3 text-sm">
