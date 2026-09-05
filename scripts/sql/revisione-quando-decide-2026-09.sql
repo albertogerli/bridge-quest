@@ -44,6 +44,65 @@ comment on column public.assignments.soluzioni is
   '| dopo-la-scadenza | quando-l-insegnante-decide (predefinito dal 2026-09-05). '
   'La regola e'' applicata dal database, non dall''interfaccia.';
 
+-- ----------------------------------------------------------------------------
+-- 2 · Come lavora l'insegnante IN QUESTA CLASSE
+--
+-- DUE DOMANDE DIVERSE, E PRIMA ERANO COLLASSATE IN UNA.
+--   · «come lavoro io in questa classe» — si decide una volta, a settembre;
+--   · «questo compito quando si apre» — si decide caso per caso.
+-- Tenendo solo la seconda, ogni insegnante doveva rispondere ogni volta a una
+-- domanda che per lui ha una risposta stabile. Trevissoi terrà il manuale su
+-- tutto; un altro metterà automatico e non ci penserà più. Sono due modi
+-- legittimi di insegnare e lo strumento deve reggerli entrambi senza chiedere
+-- conferma venti volte.
+--
+-- QUESTO È SOLO IL VALORE DI PARTENZA dei compiti nuovi. Il singolo compito
+-- deroga sempre, perché `assignments.soluzioni` resta quello che comanda: chi
+-- lavora in automatico può tenere chiusa UNA revisione — quella mano la spiega
+-- giovedì — senza toccare l'impostazione della classe.
+-- ----------------------------------------------------------------------------
+alter table public.classes
+  add column if not exists soluzioni_predefinite text not null
+  default 'quando-l-insegnante-decide';
+
+alter table public.classes drop constraint if exists classes_soluzioni_predefinite_valide;
+alter table public.classes add constraint classes_soluzioni_predefinite_valide
+  check (soluzioni_predefinite in ('subito', 'dopo-il-gioco', 'dopo-la-scadenza', 'quando-l-insegnante-decide'));
+
+comment on column public.classes.soluzioni_predefinite is
+  'Valore iniziale di `assignments.soluzioni` per i compiti NUOVI di questa '
+  'classe. Il singolo compito deroga sempre. Le classi esistenti al 2026-09-05 '
+  'sono state messe su `dopo-il-gioco`, cioe'' come si comportavano gia''.';
+
+-- Le classi che esistono oggi continuano a comportarsi come ieri — UNA VOLTA
+-- SOLA. Stessa guardia del rubinetto e per lo stesso motivo: rieseguire lo
+-- script rimetterebbe in automatico le classi che l'insegnante ha nel frattempo
+-- messo in manuale, senza un errore e senza che nessuno se ne accorga.
+--
+-- Il motivo di merito: un insegnante di una classe attiva che crea un compito
+-- domani troverebbe le revisioni chiuse e gli allievi a chiedergli perche''.
+-- La novita'' vale per le classi nuove; le altre la adottano quando vogliono,
+-- perche'' l'impostazione si vede ed e'' modificabile.
+do $$
+declare gia_fatto boolean; toccate integer;
+begin
+  select exists (
+    select 1 from public.classes
+     where created_at < timestamptz '2026-09-05'
+       and soluzioni_predefinite <> 'quando-l-insegnante-decide'
+  ) into gia_fatto;
+
+  if gia_fatto then
+    raise notice 'Riempimento gia'' avvenuto: non tocco niente.';
+  else
+    update public.classes
+       set soluzioni_predefinite = 'dopo-il-gioco'
+     where created_at < timestamptz '2026-09-05';
+    get diagnostics toccate = row_count;
+    raise notice 'Classi esistenti lasciate in automatico: %', toccate;
+  end if;
+end $$;
+
 commit;
 
 -- ============================================================================
