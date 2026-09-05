@@ -5,6 +5,7 @@ import { usePercorso } from "@/hooks/use-lingua";
 import { useT } from "@/contexts/traduzioni-provider";
 import { SelettoreLingua } from "@/components/selettore-lingua";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
+import { useNascosti } from "@/hooks/use-permessi";
 
 const primaryNav = [
   { href: "/", icon: "home", label: "Home" },
@@ -107,6 +108,10 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
 };
 
 export function DesktopNav() {
+  // Vedi `use-permessi.ts`: solo le funzioni ludiche non ancora aperte
+  // spariscono dal menu. La didattica resta, e la restrizione si spiega dentro
+  // la pagina.
+  const { nascosti } = useNascosti();
   // Senza prefisso di lingua, o sotto `/en` nessuna voce risulta attiva.
   const pathname = usePercorso();
   const t = useT();
@@ -164,14 +169,14 @@ export function DesktopNav() {
 
       {/* Nav items */}
       <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {primaryNav.map(renderItem)}
+        {primaryNav.filter((v) => !nascosti.has(v.href)).map(renderItem)}
 
         {/* Secondary "Altro" group */}
         <div className="pt-4">
           <p className="px-4 pb-1 text-[12px] font-bold uppercase tracking-wider text-muted-foreground">
             {t("Altro")}
           </p>
-          {moreNav.map(renderItem)}
+          {moreNav.filter((v) => !nascosti.has(v.href)).map(renderItem)}
         </div>
       </div>
 

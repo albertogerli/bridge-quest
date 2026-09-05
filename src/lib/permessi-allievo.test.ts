@@ -128,3 +128,33 @@ describe("quello che il rubinetto non tocca", () => {
     expect(g.length).toBe(new Set(g).size);
   });
 });
+
+describe("le voci di menu che il rubinetto può togliere", () => {
+  it("le voci del menu «altro» chiuse a una classe nuova sono quelle sociali", () => {
+    // Guardia sulle rotte vere della navigazione: se qualcuno rinomina una
+    // voce senza aggiornare il catalogo, la voce resta proposta per sempre e
+    // il rubinetto non la governa più — senza che niente si rompa.
+    const { nascosti } = permessiAllievo([{ accessoLibero: "solo-il-corso" }]);
+    for (const voce of ["/amici", "/classifica", "/forum", "/negozio"]) {
+      expect(nascosti).toContain(voce);
+    }
+  });
+
+  it("le voci sempre visibili non spariscono mai, con nessuna impostazione", () => {
+    for (const impostazione of ["solo-il-corso", "personalizzato"] as const) {
+      const { nascosti, vietati } = permessiAllievo([{ accessoLibero: impostazione }]);
+      for (const voce of SEMPRE_VISIBILI) {
+        expect(nascosti).not.toContain(voce);
+        expect(vietati).not.toContain(voce);
+      }
+    }
+  });
+
+  it("«Impara» e «Scuola» restano nel menu anche se vietati", () => {
+    // Sono famiglia A: la restrizione si spiega dentro la pagina, non facendo
+    // sparire la voce. Sparire genera sospetto, dichiarare genera attesa.
+    const { nascosti } = permessiAllievo([{ accessoLibero: "solo-il-corso" }]);
+    expect(nascosti).not.toContain("/impara");
+    expect(nascosti).not.toContain("/scuola");
+  });
+});
