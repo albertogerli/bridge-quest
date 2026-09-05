@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { hapticTap } from "@/lib/native-bridge";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useNascosti } from "@/hooks/use-permessi";
 
 const MORE_LINKS = [
   { href: "/profilo", emoji: "👤", label: "Profilo" },
@@ -26,6 +27,10 @@ export function BottomNav() {
   const t = useT();
   const [moreOpen, setMoreOpen] = useState(false);
   const pendingFriends = usePendingFriendRequests();
+  // Le voci che l'insegnante non ha ancora aperto non si propongono. Niente
+  // lucchetti: un lucchetto dice «ti stanno tenendo fuori», l'assenza dice
+  // «non è ancora il momento».
+  const { nascosti } = useNascosti();
   const moreSheetRef = useRef<HTMLDivElement>(null);
   useFocusTrap(moreSheetRef, moreOpen, { onEscape: () => setMoreOpen(false) });
 
@@ -59,7 +64,7 @@ export function BottomNav() {
               <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted-foreground/30" aria-hidden="true" />
               <p id="bottomnav-more-title" className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Altro")}</p>
               <div className="grid grid-cols-4 gap-3">
-                {MORE_LINKS.map((l) => (
+                {MORE_LINKS.filter((l) => !nascosti.has(l.href)).map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}

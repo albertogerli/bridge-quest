@@ -10,6 +10,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import type { Smazzata } from "@/lib/catalog";
+import type { AccessoLibero, Gruppo } from "@/lib/permessi-allievo";
 
 // ----------------------------------------------------------------------------
 // Types (mirror the SQL tables)
@@ -61,6 +62,15 @@ export interface ClassRoom {
    * promemoria e nel messaggio da mandare sul gruppo.
    */
   link_video: string | null;
+  /** Livello del corso, testo libero: «Primo livello», «Approfondimento». */
+  livello: string | null;
+  /** Quanto l'insegnante ha aperto. Vedi `permessi-allievo.ts`. */
+  accesso_libero: AccessoLibero;
+  /** Eccezioni per gruppo. Vuoto = vale il cursore. */
+  permessi: Partial<Record<Gruppo, boolean>>;
+  /** Prima lezione. Diversa da `created_at`. */
+  inizio_corso: string | null;
+  fine_corso: string | null;
   created_at: string;
 }
 
