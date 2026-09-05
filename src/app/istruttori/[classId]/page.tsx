@@ -17,6 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { AssegnaLezioni } from "@/components/instructors/assegna-lezioni";
+import { Rubinetto } from "@/components/istruttori/rubinetto";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
 import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
 import {
@@ -349,6 +350,22 @@ export default function ClassDetailPage({
               </span>
             </span>
           </label>
+
+          {/*
+            IL RUBINETTO.
+            Sta qui, nelle impostazioni della classe, e non in una schermata a
+            parte: l'insegnante lo muove a fine lezione mentre chiude la sala,
+            dal telefono, e deve trovarlo dov'è già andato per il resto.
+          */}
+          <div className="space-y-2 border-t border-border pt-4">
+            <p className="text-sm font-medium">{t("Quanto portale vedono i tuoi allievi")}</p>
+            <Rubinetto
+              accessoLibero={classRoom.accesso_libero}
+              permessi={classRoom.permessi}
+              busy={busy}
+              onCambia={(campi) => void cambiaImpostazione(campi)}
+            />
+          </div>
 
           <div className="space-y-1.5">
             <label htmlFor="link-video" className="text-sm font-medium">
