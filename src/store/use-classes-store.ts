@@ -85,7 +85,13 @@ export function useMyClasses() {
   return { classes: myClasses, isLoading, isLoaded, error, refresh };
 }
 
-export function useEnrolledClasses() {
+/**
+ * `abilitato` esiste per la pagina di ingresso: quella è resa dal server per
+ * chi non ha fatto l'accesso, e partire lo stesso vorrebbe dire una query
+ * autenticata — che fallisce — a ogni visitatore anonimo, sulla schermata in
+ * cui il tempo di caricamento conta più che altrove.
+ */
+export function useEnrolledClasses(abilitato = true) {
   const enrolledClasses = useClassesStore((s) => s.enrolledClasses);
   const isLoading = useClassesStore((s) => s.enrolledLoading);
   const isLoaded = useClassesStore((s) => s.enrolledLoaded);
@@ -93,8 +99,8 @@ export function useEnrolledClasses() {
   const refresh = useClassesStore((s) => s.refreshEnrolledClasses);
 
   useEffect(() => {
-    if (!isLoaded && !isLoading) void refresh();
-  }, [isLoaded, isLoading, refresh]);
+    if (abilitato && !isLoaded && !isLoading) void refresh();
+  }, [abilitato, isLoaded, isLoading, refresh]);
 
   return { classes: enrolledClasses, isLoading, isLoaded, error, refresh };
 }

@@ -47,6 +47,16 @@ function Dispense() {
   const t = useT();
   const parametri = useSearchParams();
   const corsoRichiesto = parametri.get("corso") as CourseId | null;
+  /**
+   * Da quale classe si è arrivati.
+   *
+   * Serve perché l'insegnante manda i materiali su WhatsApp — è il canale che
+   * usa di più — e un link che atterra su una pagina orfana scavalca tutto il
+   * lavoro fatto sul percorso guidato: l'allievo si trova davanti «le dispense
+   * del sito» invece che «i materiali del mio corso». Il link del compito il
+   * contesto ce l'ha già (`/classi/<classe>/compito/<compito>`); questo no.
+   */
+  const classeDiProvenienza = parametri.get("classe");
   const [selectedCourse, setSelectedCourse] = useState<CourseId>(corsoRichiesto ?? "fiori");
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
@@ -94,8 +104,13 @@ function Dispense() {
           className="mb-2"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-            <Link href="/lezioni" className="hover:text-figb dark:hover:text-primary transition-colors">
-              {t("Lezioni")}
+            {/* Chi arriva da un link WhatsApp deve capire che è roba del suo
+                corso, non «le dispense del sito»: la briciola torna alla classe. */}
+            <Link
+              href={classeDiProvenienza ? `/classi/${classeDiProvenienza}` : "/lezioni"}
+              className="hover:text-figb dark:hover:text-primary transition-colors"
+            >
+              {classeDiProvenienza ? t("La tua classe") : t("Lezioni")}
             </Link>
             <span>/</span>
             <span className="text-figb dark:text-primary font-semibold">{t("Dispense")}</span>
