@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-03
+-- Estratto il: 2026-09-05
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -156,7 +156,10 @@ CREATE TABLE IF NOT EXISTS public.classes (
   risultati_nominativi boolean NOT NULL,
   link_video text,
   inizio_corso date,
-  fine_corso date
+  fine_corso date,
+  livello text,
+  accesso_libero text NOT NULL,
+  permessi jsonb NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -3667,6 +3670,8 @@ ALTER TABLE public.classes ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.classes ALTER COLUMN approvazione_automatica SET DEFAULT true;
 ALTER TABLE public.classes ALTER COLUMN stato SET DEFAULT 'aperta'::text;
 ALTER TABLE public.classes ALTER COLUMN risultati_nominativi SET DEFAULT false;
+ALTER TABLE public.classes ALTER COLUMN accesso_libero SET DEFAULT 'solo-il-corso'::text;
+ALTER TABLE public.classes ALTER COLUMN permessi SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -3920,6 +3925,8 @@ ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text, 'pending'::text, 'rejected'::text])));
+ALTER TABLE public.classes ADD CONSTRAINT classes_accesso_libero_valido CHECK ((accesso_libero = ANY (ARRAY['solo-il-corso'::text, 'con-pratica-libera'::text, 'tutto-aperto'::text, 'personalizzato'::text])));
+ALTER TABLE public.classes ADD CONSTRAINT classes_livello_breve CHECK (((livello IS NULL) OR (char_length(livello) <= 60)));
 ALTER TABLE public.classes ADD CONSTRAINT classes_periodo_coerente CHECK (((fine_corso IS NULL) OR (inizio_corso IS NULL) OR (fine_corso >= inizio_corso)));
 ALTER TABLE public.classes ADD CONSTRAINT classes_stato_check CHECK ((stato = ANY (ARRAY['bozza'::text, 'aperta'::text, 'chiusa'::text, 'archiviata'::text])));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_corpo_check CHECK (((char_length(btrim(corpo)) >= 1) AND (char_length(btrim(corpo)) <= 4000)));
