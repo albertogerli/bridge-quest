@@ -358,6 +358,17 @@ export async function aggiornaImpostazioniClasse(
     invite_active?: boolean;
     risultati_nominativi?: boolean;
     link_video?: string | null;
+    livello?: string | null;
+    inizio_corso?: string | null;
+    fine_corso?: string | null;
+    /**
+     * Il rubinetto. NON interrompe niente a chi sta usando il portale in quel
+     * momento: le funzioni della famiglia ludica non sono mai vietate, quindi
+     * chiuderlo cambia solo cosa viene PROPOSTO, e dalla visita successiva.
+     * Vedi `permessi-allievo.ts`.
+     */
+    accesso_libero?: AccessoLibero;
+    permessi?: Partial<Record<Gruppo, boolean>>;
   },
 ): Promise<void> {
   const supabase = createClient();
