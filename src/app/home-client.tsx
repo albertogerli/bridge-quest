@@ -18,6 +18,9 @@ import { HeroSection } from "@/components/home/hero-section";
 import { LicitaSection } from "@/components/home/licita-section";
 import { HomeFooter } from "@/components/home/home-footer";
 import { ReferralHandler } from "@/components/home/referral-handler";
+import { HomeAllievo } from "@/components/home/home-allievo";
+import { useEnrolledClasses } from "@/store/use-classes-store";
+import { corsiAttivi } from "@/lib/percorso-allievo";
 import { TreasureChests } from "@/components/home/treasure-chests";
 import { CollectionTeaser } from "@/components/home/collection-teaser";
 import { LandingPage } from "@/components/home/landing-page";
@@ -59,6 +62,8 @@ const WeeklyRecapModal = dynamic(
 export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const t = useT();
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
+  // Solo per chi ha fatto l'accesso: vedi `useEnrolledClasses`.
+  const { classes: classiIscritte } = useEnrolledClasses(!!user);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const stats = useLocalStats();
   const profile = useProfile();
@@ -255,6 +260,31 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
    * sarebbe una pagina in più da tenere allineata per due persone.
    */
   const insegna = authProfile?.role === "instructor" || authProfile?.role === "admin";
+  const corsiIscritti = corsiAttivi(classiIscritte);
+
+  /*
+   * IL SECONDO RAMO: chi segue un corso.
+   *
+   * Sta DOPO quello dell'insegnante perché molti insegnanti sono anche iscritti
+   * a un corso di aggiornamento, e in quel caso deve vincere il loro lavoro.
+   *
+   * Come per l'insegnante, non toglie niente: `onVaiAllaBacheca` porta al
+   * portale di sempre e la scelta viene ricordata. È il vincolo che ci siamo
+   * dati — chi è già dentro una classe non perde accesso a cose che vedeva —
+   * e vale anche per le diciotto classi che esistevano prima di questa home.
+   */
+  const segueUnCorso = !insegna && corsiIscritti.length > 0;
+  if (segueUnCorso && !vuoleLaBacheca) {
+    return (
+      <HomeAllievo
+        onVaiAllaBacheca={() => {
+          ricordaPreferenzaBacheca(true);
+          setVuoleLaBacheca(true);
+        }}
+      />
+    );
+  }
+
   if (insegna && !vuoleLaBacheca) {
     return (
       <HomeInsegnante
