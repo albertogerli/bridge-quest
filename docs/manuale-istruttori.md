@@ -198,5 +198,31 @@ ricordare il link.
 
 ---
 
+## Se una sera l'aula va a rilento
+
+Quasi sempre è la rete della sede, non la piattaforma. Vale la pena saperlo
+prima che succeda, perché è il momento in cui davanti a venti persone bisogna
+dire qualcosa.
+
+**Come si riconosce.** Va lenta per tutti insieme, o per chi sta più lontano
+dal modem; le carte arrivano con qualche secondo di ritardo ma arrivano; chi usa
+il telefono con la propria connessione dati va normale mentre gli altri no. Se
+invece è lento **solo per una persona**, quasi sempre è il suo telefono.
+
+**Cosa fare sul momento.** Non c'è niente da riavviare: il portale ricontrolla
+da solo ogni cinque secondi, quindi anche se la connessione salta la lezione
+continua — più lenta, non interrotta. Si va avanti.
+
+**Cosa fare per la volta dopo.** Un ripetitore wi-fi in sala, o spostare i
+tavoli più vicino al modem. Quaranta persone collegate insieme sono tante per la
+rete di un circolo: la piattaforma è stata provata con centosessanta
+collegamenti contemporanei e li regge senza rallentare, quindi quando rallenta
+il collo di bottiglia è fra la sala e la strada.
+
+**Se il rallentamento c'è anche con pochi collegati**, allora vale la pena
+segnalarlo: quello non è la rete.
+
+---
+
 *Segnalazioni e richieste: il pulsante di segnalazione dentro l'applicazione
 arriva direttamente a chi la mantiene.*
