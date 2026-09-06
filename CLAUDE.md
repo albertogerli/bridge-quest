@@ -69,6 +69,35 @@ node scripts/stringhe-da-tradurre.mjs --controlla  # nessuna frase senza inglese
 - RPC amministrative protette da `is_admin()` (`profiles.role = 'admin'`); tutte le tabelle hanno RLS.
 - `src/lib/supabase/admin.ts` (service role) è solo server: mai importarlo da componenti client.
 
+## La prima schermata dà, non chiede
+
+Prima di costruire qualunque punto d'ingresso, la domanda è una:
+**questa schermata chiede qualcosa o dà qualcosa?**
+
+Chiedere l'impegno prima di aver dato la ragione per impegnarsi è l'errore che
+in questo progetto è già stato fatto quattro volte, in punti che sembravano
+scollegati:
+
+- il QR della locandina portava a `/classi`, che chiede il codice del proprio
+  istruttore a chi non sa cosa sia una classe — e che rimbalzava al login;
+- `/evento` ha risolto quello, e il suo pulsante «Voglio venire» rimandava di
+  nuovo a `/classi`;
+- il modulo d'adesione stava per finire con «e adesso registrati»;
+- la navigazione filtrata stava per mostrare **lucchetti** invece di assenze:
+  «guarda cosa non puoi avere» prima di poter avere qualcosa.
+
+**PERCHÉ RICAPITA.** Non è solo che l'account è il presupposto tecnico di tutto.
+È che il portale lo guardiamo da dentro, dove è già sbloccato, e chi arriva lo
+guarda da fuori, dove non è sbloccato niente. Lo stesso sguardo che rendeva i
+posti occupati invisibili agli allievi e visibili in console: sono la stessa
+cosa vista due volte.
+
+**LA CONTROMISURA È UNA SOLA.** Qualunque cosa riguardi ciò che vede l'allievo
+— o chi non ha ancora un account — si verifica da un account che non ha niente,
+non dalla console dell'insegnante. Due difetti in due giorni sono stati trovati
+così, e nessuno dei due produceva un errore: solo persone che non capiscono
+cosa sta succedendo.
+
 ## Altre convenzioni
 
 - Gamification localStorage-first (store Zustand `use-game-store` + sync in `use-supabase-sync`): i componenti che leggono stato persistito devono attendere `useHasHydrated()`.
