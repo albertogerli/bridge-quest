@@ -400,7 +400,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         sa che esiste. Un allievo che digita il codice smette di essere «vista
         esterna» e diventa un allievo vero — che è l'obiettivo, non un ripiego.
       */}
-      {user && corsiIscritti.length === 0 && (
+      {user && classiIscritte.length === 0 && (
         <section className="px-4 sm:px-5 pt-4">
           <Link
             href="/classi"
@@ -411,6 +411,30 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
               <span className="block font-semibold">{t("Segui un corso? Hai un codice")}</span>
               <span className="block text-sm text-muted-foreground">
                 {t("Il tuo insegnante te l'ha dato: qui entri nella tua classe.")}
+              </span>
+            </span>
+          </Link>
+        </section>
+      )}
+
+      {/*
+        CHI IL CORSO L'HA FINITO NON VA RIMANDATO IN AULA.
+        Tecnicamente è «senza classe» — la sua classe è chiusa o archiviata —
+        ma invitarlo a digitare un codice che non ha è la cosa sbagliata da
+        mostrargli. A lui serve il passo dopo: un circolo dove giocare, che è
+        poi il traguardo di tutto il percorso.
+      */}
+      {user && classiIscritte.length > 0 && corsiIscritti.length === 0 && (
+        <section className="px-4 sm:px-5 pt-4">
+          <Link
+            href="/trova-circolo"
+            className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/40"
+          >
+            <span className="text-2xl" aria-hidden="true">📍</span>
+            <span className="min-w-0">
+              <span className="block font-semibold">{t("Il tuo corso è finito")}</span>
+              <span className="block text-sm text-muted-foreground">
+                {t("Adesso viene il bello: trova un circolo vicino a te e gioca con altri.")}
               </span>
             </span>
           </Link>
