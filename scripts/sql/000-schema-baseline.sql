@@ -465,7 +465,9 @@ CREATE TABLE IF NOT EXISTS public.live_tables (
   played jsonb NOT NULL,
   mani_viste jsonb NOT NULL,
   sessione_id uuid,
-  numero integer
+  numero integer,
+  in_attesa jsonb NOT NULL,
+  partecipazioni jsonb NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.login_history (
@@ -1152,6 +1154,38 @@ begin
 end $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.aula_aspetta(p_tavolo_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare v_class uuid; v_coda jsonb; v_posti jsonb;
+begin
+  select class_id, coalesce(in_attesa,'[]'::jsonb), coalesce(seat_of,'{}'::jsonb)
+    into v_class, v_coda, v_posti
+    from public.live_tables where id = p_tavolo_id and closed_at is null for update;
+
+  if v_class is null then return jsonb_build_object('esito','tavolo-chiuso'); end if;
+  if not (public.is_member_of_class(v_class) or public.is_instructor_of_class(v_class))
+    then return jsonb_build_object('esito','non-della-classe'); end if;
+  if v_posti ? auth.uid()::text then
+    return jsonb_build_object('esito','sei-gia-seduto');
+  end if;
+  if v_coda @> to_jsonb(auth.uid()::text) then
+    return jsonb_build_object('esito','gia-in-coda',
+      'mancano', public.aula_mani_al_turno(p_tavolo_id, auth.uid()));
+  end if;
+
+  update public.live_tables
+     set in_attesa = v_coda || to_jsonb(auth.uid()::text), updated_at = now()
+   where id = p_tavolo_id;
+
+  return jsonb_build_object('esito','in-coda',
+    'mancano', public.aula_mani_al_turno(p_tavolo_id, auth.uid()));
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.aula_chiudi(p_sessione_id uuid)
  RETURNS void
  LANGUAGE plpgsql
@@ -1201,6 +1235,22 @@ begin
   get diagnostics quanti = row_count;
   return quanti;
 end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_mani_al_turno(p_tavolo_id uuid, p_utente uuid)
+ RETURNS integer
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select coalesce(
+    (select (ord)::integer
+       from jsonb_array_elements_text(coalesce(t.in_attesa,'[]'::jsonb)) with ordinality as e(val, ord)
+      where e.val = p_utente::text
+      limit 1),
+    0)
+  from public.live_tables t where t.id = p_tavolo_id;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.aula_muovi(p_tavolo_id uuid, p_utente uuid, p_posto text)
@@ -1257,6 +1307,67 @@ begin
     'esito', case when v_altro is null then 'spostato'
                   when v_posto_di_chi_muovo is not null then 'scambiati'
                   else 'sostituito' end);
+end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_prossimo_a_uscire(p_tavolo_id uuid)
+ RETURNS uuid
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select s.key::uuid
+    from public.live_tables t,
+         jsonb_each_text(coalesce(t.seat_of,'{}'::jsonb)) s
+   where t.id = p_tavolo_id
+     and jsonb_array_length(coalesce(t.in_attesa,'[]'::jsonb)) > 0
+   order by coalesce((t.partecipazioni ->> s.key)::int, 0) desc, s.key
+   limit 1;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.aula_ruota(p_tavolo_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_class uuid; v_posti jsonb; v_coda jsonb; v_part jsonb;
+  v_esce uuid; v_posto text; v_entra text;
+begin
+  select class_id, coalesce(seat_of,'{}'::jsonb), coalesce(in_attesa,'[]'::jsonb),
+         coalesce(partecipazioni,'{}'::jsonb)
+    into v_class, v_posti, v_coda, v_part
+    from public.live_tables where id = p_tavolo_id and closed_at is null for update;
+
+  if v_class is null then return jsonb_build_object('esito','tavolo-chiuso'); end if;
+  if not public.is_instructor_of_class(v_class)
+    then return jsonb_build_object('esito','non-sei-l-insegnante'); end if;
+
+  -- FUSIONE, non ricostruzione: chi non è seduto conserva il suo conteggio.
+  select v_part || coalesce(jsonb_object_agg(s.key, coalesce((v_part ->> s.key)::int, 0) + 1), '{}'::jsonb)
+    into v_part
+    from jsonb_each_text(v_posti) s;
+  v_part := coalesce(v_part, '{}'::jsonb);
+
+  if jsonb_array_length(v_coda) = 0 then
+    update public.live_tables set partecipazioni = v_part, updated_at = now() where id = p_tavolo_id;
+    return jsonb_build_object('esito','nessuno-in-attesa');
+  end if;
+
+  v_esce := public.aula_prossimo_a_uscire(p_tavolo_id);
+  v_posto := v_posti ->> v_esce::text;
+  v_entra := v_coda ->> 0;
+
+  v_posti := (v_posti - v_esce::text) || jsonb_build_object(v_entra, v_posto);
+  v_coda := (v_coda - 0) || to_jsonb(v_esce::text);
+
+  update public.live_tables
+     set seat_of = v_posti, in_attesa = v_coda, partecipazioni = v_part, updated_at = now()
+   where id = p_tavolo_id;
+
+  return jsonb_build_object('esito','ruotato', 'esce', v_esce, 'entra', v_entra, 'posto', v_posto);
 end $function$
 ;
 
@@ -2819,7 +2930,7 @@ $function$
 CREATE OR REPLACE FUNCTION public.live_table_view(p_table_id uuid)
  RETURNS jsonb
  LANGUAGE plpgsql
- STABLE SECURITY DEFINER
+ SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
 DECLARE
@@ -2865,7 +2976,12 @@ BEGIN
     'id', t.id, 'classId', t.class_id, 'titolo', t.titolo,
     'hands', v_hands, 'played', t.played,
     'revealed', to_jsonb(t.revealed), 'seat', v_seat,
-    'seatOf', CASE WHEN v_is_owner THEN t.seat_of ELSE NULL END,
+    -- Chi siede dove lo vedono anche gli allievi: e' il presupposto della
+    -- scelta del posto.
+    'seatOf', coalesce(t.seat_of, '{}'::jsonb),
+    'inAttesa', coalesce(t.in_attesa, '[]'::jsonb),
+    'maniAlTurno', public.aula_mani_al_turno(t.id, auth.uid()),
+    'prossimoAUscire', public.aula_prossimo_a_uscire(t.id),
     'isInstructor', v_is_owner,
     'contract', CASE WHEN v_is_owner OR t.show_contract THEN t.contract END,
     'declarer', CASE WHEN v_is_owner OR t.show_contract THEN t.declarer END,
@@ -3887,6 +4003,8 @@ ALTER TABLE public.live_tables ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.live_tables ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.live_tables ALTER COLUMN mani_viste SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.live_tables ALTER COLUMN in_attesa SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.live_tables ALTER COLUMN partecipazioni SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.login_history ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.login_history ALTER COLUMN logged_in_at SET DEFAULT now();
 ALTER TABLE public.mani_generate ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -5847,6 +5965,10 @@ REVOKE ALL ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_tit
 GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_aspetta(p_tavolo_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_aspetta(p_tavolo_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_aspetta(p_tavolo_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_aspetta(p_tavolo_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.aula_chiudi(p_sessione_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.aula_chiudi(p_sessione_id uuid) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_chiudi(p_sessione_id uuid) TO authenticated;
@@ -5855,10 +5977,22 @@ REVOKE ALL ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands json
 GRANT EXECUTE ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aula_distribuisci(p_sessione_id uuid, p_hands jsonb, p_titolo text, p_contract text, p_declarer text) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_mani_al_turno(p_tavolo_id uuid, p_utente uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_mani_al_turno(p_tavolo_id uuid, p_utente uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_mani_al_turno(p_tavolo_id uuid, p_utente uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_mani_al_turno(p_tavolo_id uuid, p_utente uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.aula_muovi(p_tavolo_id uuid, p_utente uuid, p_posto text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.aula_muovi(p_tavolo_id uuid, p_utente uuid, p_posto text) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_muovi(p_tavolo_id uuid, p_utente uuid, p_posto text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aula_muovi(p_tavolo_id uuid, p_utente uuid, p_posto text) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_prossimo_a_uscire(p_tavolo_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_prossimo_a_uscire(p_tavolo_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_prossimo_a_uscire(p_tavolo_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_prossimo_a_uscire(p_tavolo_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.aula_ruota(p_tavolo_id uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aula_ruota(p_tavolo_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.aula_ruota(p_tavolo_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aula_ruota(p_tavolo_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) TO authenticated;
