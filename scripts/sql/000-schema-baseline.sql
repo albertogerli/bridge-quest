@@ -41,6 +41,18 @@ CREATE SEQUENCE IF NOT EXISTS public.push_subscriptions_id_seq;
 CREATE SEQUENCE IF NOT EXISTS public.review_items_id_seq;
 
 -- TABELLE (senza valori predefiniti: vedi più avanti)
+CREATE TABLE IF NOT EXISTS public.adesioni (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  nome text NOT NULL,
+  contatto text NOT NULL,
+  note text,
+  fonte text NOT NULL,
+  user_id uuid,
+  creata_il timestamp with time zone NOT NULL,
+  archiviata_il timestamp with time zone
+);
+
 CREATE TABLE IF NOT EXISTS public.asd (
   id integer NOT NULL,
   name text NOT NULL,
@@ -806,6 +818,40 @@ ALTER SEQUENCE public.forum_posts_id_seq OWNED BY public.forum_posts.id;
 ALTER SEQUENCE public.review_items_id_seq OWNED BY public.review_items.id;
 
 -- FUNZIONI
+CREATE OR REPLACE FUNCTION public.adesione_invia(p_codice text, p_nome text, p_contatto text, p_note text DEFAULT NULL::text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare v_class uuid;
+begin
+  if length(trim(coalesce(p_nome, ''))) < 2 then
+    return jsonb_build_object('esito', 'nome-mancante');
+  end if;
+  if length(trim(coalesce(p_contatto, ''))) < 3 then
+    return jsonb_build_object('esito', 'contatto-mancante');
+  end if;
+
+  select c.id into v_class
+    from public.classes c
+   where upper(c.invite_code) = upper(trim(p_codice))
+     and c.invite_active
+     and c.locandina <> '{}'::jsonb
+     and (c.invite_expires_at is null or c.invite_expires_at > now());
+
+  if v_class is null then
+    return jsonb_build_object('esito', 'evento-chiuso');
+  end if;
+
+  insert into public.adesioni(class_id, nome, contatto, note, fonte, user_id)
+  values (v_class, trim(p_nome), trim(p_contatto), nullif(trim(coalesce(p_note,'')), ''),
+          'locandina', auth.uid());
+
+  return jsonb_build_object('esito', 'ricevuta');
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.admin_class_detail(p_class_id uuid)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -3874,6 +3920,9 @@ AS $function$
 ;
 
 -- VALORI PREDEFINITI
+ALTER TABLE public.adesioni ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.adesioni ALTER COLUMN fonte SET DEFAULT 'locandina'::text;
+ALTER TABLE public.adesioni ALTER COLUMN creata_il SET DEFAULT now();
 ALTER TABLE public.asd ALTER COLUMN id SET DEFAULT nextval('asd_id_seq'::regclass);
 ALTER TABLE public.asd ALTER COLUMN active SET DEFAULT true;
 ALTER TABLE public.asd_clubs ALTER COLUMN kind SET DEFAULT ''::text;
@@ -4090,6 +4139,7 @@ ALTER TABLE public.weekly_challenges ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.weekly_challenges ALTER COLUMN updated_at SET DEFAULT now();
 
 -- VINCOLI
+ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_pkey PRIMARY KEY (id);
 ALTER TABLE public.asd ADD CONSTRAINT asd_pkey PRIMARY KEY (id);
 ALTER TABLE public.asd_clubs ADD CONSTRAINT asd_clubs_pkey PRIMARY KEY (code);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
@@ -4172,6 +4222,8 @@ ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_board_key UNIQUE (
 ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_periodo_key UNIQUE (tipo, periodo);
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_mano_id_key UNIQUE (torneo_id, mano_id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
+ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_contatto_non_vuoto CHECK (((length(TRIM(BOTH FROM contatto)) >= 3) AND (length(TRIM(BOTH FROM contatto)) <= 160)));
+ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_nome_non_vuoto CHECK (((length(TRIM(BOTH FROM nome)) >= 2) AND (length(TRIM(BOTH FROM nome)) <= 120)));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_soluzioni_check CHECK ((soluzioni = ANY (ARRAY['subito'::text, 'dopo-il-gioco'::text, 'dopo-la-scadenza'::text, 'quando-l-insegnante-decide'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHECK ((unlock_mode = ANY (ARRAY['free'::text, 'sequential'::text])));
@@ -4242,6 +4294,8 @@ ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_correct_answer_check CHECK ((correct_answer >= 0));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_difficulty_check CHECK ((difficulty = ANY (ARRAY['facile'::text, 'medio'::text, 'difficile'::text])));
 ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_xp_multiplier_check CHECK ((xp_multiplier > (0)::double precision));
+ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.badges ADD CONSTRAINT badges_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -4333,6 +4387,7 @@ ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_fkey FOREIGN
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
 -- INDICI
+CREATE INDEX adesioni_per_classe ON public.adesioni USING btree (class_id, creata_il DESC);
 CREATE INDEX asd_clubs_active_idx ON public.asd_clubs USING btree (active);
 CREATE INDEX asd_clubs_name_idx ON public.asd_clubs USING btree (name);
 CREATE INDEX asd_clubs_province_idx ON public.asd_clubs USING btree (province) WHERE (province <> ''::text);
@@ -4441,6 +4496,7 @@ CREATE TRIGGER trova_errore_touch BEFORE UPDATE ON public.trova_errore_scenarios
 CREATE TRIGGER weekly_challenges_touch BEFORE UPDATE ON public.weekly_challenges FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 
 -- ROW LEVEL SECURITY
+ALTER TABLE public.adesioni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.asd ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.asd_clubs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assignments ENABLE ROW LEVEL SECURITY;
@@ -4504,6 +4560,8 @@ ALTER TABLE public.trova_errore_scenarios ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.weekly_challenges ENABLE ROW LEVEL SECURITY;
 
 -- POLICY
+CREATE POLICY "L'insegnante gestisce le adesioni della sua classe" ON public.adesioni AS PERMISSIVE FOR ALL TO public USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
+CREATE POLICY "Ognuno vede la propria adesione" ON public.adesioni AS PERMISSIVE FOR SELECT TO public USING ((user_id = auth.uid()));
 CREATE POLICY "ASD visible to all" ON public.asd AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY asd_clubs_public_read ON public.asd_clubs AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Instructor and members can view assignments" ON public.assignments AS PERMISSIVE FOR SELECT TO public USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
@@ -4656,6 +4714,9 @@ CREATE POLICY trova_errore_public_read ON public.trova_errore_scenarios AS PERMI
 CREATE POLICY weekly_challenges_public_read ON public.weekly_challenges AS PERMISSIVE FOR SELECT TO public USING (true);
 
 -- PERMESSI SULLE TABELLE
+GRANT DELETE ON public.adesioni TO anon;
+GRANT DELETE ON public.adesioni TO authenticated;
+GRANT DELETE ON public.adesioni TO service_role;
 GRANT DELETE ON public.asd TO anon;
 GRANT DELETE ON public.asd TO authenticated;
 GRANT DELETE ON public.asd TO service_role;
@@ -4839,6 +4900,9 @@ GRANT DELETE ON public.trova_errore_scenarios TO service_role;
 GRANT DELETE ON public.weekly_challenges TO anon;
 GRANT DELETE ON public.weekly_challenges TO authenticated;
 GRANT DELETE ON public.weekly_challenges TO service_role;
+GRANT INSERT ON public.adesioni TO anon;
+GRANT INSERT ON public.adesioni TO authenticated;
+GRANT INSERT ON public.adesioni TO service_role;
 GRANT INSERT ON public.asd TO anon;
 GRANT INSERT ON public.asd TO authenticated;
 GRANT INSERT ON public.asd TO service_role;
@@ -5022,6 +5086,9 @@ GRANT INSERT ON public.trova_errore_scenarios TO service_role;
 GRANT INSERT ON public.weekly_challenges TO anon;
 GRANT INSERT ON public.weekly_challenges TO authenticated;
 GRANT INSERT ON public.weekly_challenges TO service_role;
+GRANT REFERENCES ON public.adesioni TO anon;
+GRANT REFERENCES ON public.adesioni TO authenticated;
+GRANT REFERENCES ON public.adesioni TO service_role;
 GRANT REFERENCES ON public.asd TO anon;
 GRANT REFERENCES ON public.asd TO authenticated;
 GRANT REFERENCES ON public.asd TO service_role;
@@ -5205,6 +5272,9 @@ GRANT REFERENCES ON public.trova_errore_scenarios TO service_role;
 GRANT REFERENCES ON public.weekly_challenges TO anon;
 GRANT REFERENCES ON public.weekly_challenges TO authenticated;
 GRANT REFERENCES ON public.weekly_challenges TO service_role;
+GRANT SELECT ON public.adesioni TO anon;
+GRANT SELECT ON public.adesioni TO authenticated;
+GRANT SELECT ON public.adesioni TO service_role;
 GRANT SELECT ON public.asd TO anon;
 GRANT SELECT ON public.asd TO authenticated;
 GRANT SELECT ON public.asd TO service_role;
@@ -5385,6 +5455,9 @@ GRANT SELECT ON public.trova_errore_scenarios TO service_role;
 GRANT SELECT ON public.weekly_challenges TO anon;
 GRANT SELECT ON public.weekly_challenges TO authenticated;
 GRANT SELECT ON public.weekly_challenges TO service_role;
+GRANT TRIGGER ON public.adesioni TO anon;
+GRANT TRIGGER ON public.adesioni TO authenticated;
+GRANT TRIGGER ON public.adesioni TO service_role;
 GRANT TRIGGER ON public.asd TO anon;
 GRANT TRIGGER ON public.asd TO authenticated;
 GRANT TRIGGER ON public.asd TO service_role;
@@ -5568,6 +5641,9 @@ GRANT TRIGGER ON public.trova_errore_scenarios TO service_role;
 GRANT TRIGGER ON public.weekly_challenges TO anon;
 GRANT TRIGGER ON public.weekly_challenges TO authenticated;
 GRANT TRIGGER ON public.weekly_challenges TO service_role;
+GRANT TRUNCATE ON public.adesioni TO anon;
+GRANT TRUNCATE ON public.adesioni TO authenticated;
+GRANT TRUNCATE ON public.adesioni TO service_role;
 GRANT TRUNCATE ON public.asd TO anon;
 GRANT TRUNCATE ON public.asd TO authenticated;
 GRANT TRUNCATE ON public.asd TO service_role;
@@ -5751,6 +5827,9 @@ GRANT TRUNCATE ON public.trova_errore_scenarios TO service_role;
 GRANT TRUNCATE ON public.weekly_challenges TO anon;
 GRANT TRUNCATE ON public.weekly_challenges TO authenticated;
 GRANT TRUNCATE ON public.weekly_challenges TO service_role;
+GRANT UPDATE ON public.adesioni TO anon;
+GRANT UPDATE ON public.adesioni TO authenticated;
+GRANT UPDATE ON public.adesioni TO service_role;
 GRANT UPDATE ON public.asd TO anon;
 GRANT UPDATE ON public.asd TO authenticated;
 GRANT UPDATE ON public.asd TO service_role;
@@ -5936,6 +6015,10 @@ GRANT UPDATE ON public.weekly_challenges TO authenticated;
 GRANT UPDATE ON public.weekly_challenges TO service_role;
 
 -- PERMESSI SULLE FUNZIONI
+REVOKE ALL ON FUNCTION public.adesione_invia(p_codice text, p_nome text, p_contatto text, p_note text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.adesione_invia(p_codice text, p_nome text, p_contatto text, p_note text) TO anon;
+GRANT EXECUTE ON FUNCTION public.adesione_invia(p_codice text, p_nome text, p_contatto text, p_note text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.adesione_invia(p_codice text, p_nome text, p_contatto text, p_note text) TO service_role;
 REVOKE ALL ON FUNCTION public.admin_class_detail(p_class_id uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.admin_class_detail(p_class_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_class_detail(p_class_id uuid) TO service_role;
