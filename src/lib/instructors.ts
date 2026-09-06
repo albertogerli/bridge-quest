@@ -70,6 +70,8 @@ export interface ClassRoom {
    * senza cambiare come lavora nel resto del corso.
    */
   soluzioni_predefinite: VisibilitaSoluzioni;
+  /** I campi della locandina, che alimentano anche `/evento/<codice>`. */
+  locandina: Record<string, unknown>;
   /** Quanto l'insegnante ha aperto. Vedi `permessi-allievo.ts`. */
   accesso_libero: AccessoLibero;
   /** Eccezioni per gruppo. Vuoto = vale il cursore. */
@@ -380,6 +382,7 @@ export async function aggiornaImpostazioniClasse(
     link_video?: string | null;
     livello?: string | null;
     soluzioni_predefinite?: VisibilitaSoluzioni;
+    locandina?: Record<string, unknown>;
     inizio_corso?: string | null;
     fine_corso?: string | null;
     /**

@@ -160,7 +160,8 @@ CREATE TABLE IF NOT EXISTS public.classes (
   livello text,
   accesso_libero text NOT NULL,
   permessi jsonb NOT NULL,
-  soluzioni_predefinite text NOT NULL
+  soluzioni_predefinite text NOT NULL,
+  locandina jsonb NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -1893,6 +1894,22 @@ BEGIN
 
   RETURN out;
 END;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.evento_da_codice(p_codice text)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select c.locandina
+    from public.classes c
+   where upper(c.invite_code) = upper(trim(p_codice))
+     and c.invite_active
+     and c.locandina <> '{}'::jsonb
+     and (c.invite_expires_at is null or c.invite_expires_at > now())
+   limit 1;
 $function$
 ;
 
@@ -3674,6 +3691,7 @@ ALTER TABLE public.classes ALTER COLUMN risultati_nominativi SET DEFAULT false;
 ALTER TABLE public.classes ALTER COLUMN accesso_libero SET DEFAULT 'solo-il-corso'::text;
 ALTER TABLE public.classes ALTER COLUMN permessi SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.classes ALTER COLUMN soluzioni_predefinite SET DEFAULT 'quando-l-insegnante-decide'::text;
+ALTER TABLE public.classes ALTER COLUMN locandina SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -5767,6 +5785,10 @@ GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO authentic
 GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
+REVOKE ALL ON FUNCTION public.evento_da_codice(p_codice text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.evento_da_codice(p_codice text) TO anon;
+GRANT EXECUTE ON FUNCTION public.evento_da_codice(p_codice text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.evento_da_codice(p_codice text) TO service_role;
 REVOKE ALL ON FUNCTION public.genera_codice_amico() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.genera_codice_amico() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.genera_codice_amico() TO service_role;
