@@ -639,7 +639,7 @@ export default function ClassDetailPage({
         <RevisioniDaAprire classId={classId} />
 
         {/* Chi ha detto «vengo»: serve la sera prima, per comporre i tavoli. */}
-        <ElencoAdesioni classId={classId} />
+        <ElencoAdesioni classId={classId} membri={detail.members} />
 
         {/* Lezioni: assegnare in blocco */}
         <TabsContent value="lezioni" className="mt-4">

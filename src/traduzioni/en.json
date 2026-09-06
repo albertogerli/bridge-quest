@@ -214,6 +214,7 @@
   "Chi può entrare": "Who can join",
   "Chi siede dove": "Who sits where",
   "Chi vince questa presa?": "Who wins this trick?",
+  "Chi è, fra gli iscritti?": "Who are they, among the enrolled?",
   "Chiedi (sì / no / non so)": "Ask (yes / no / not sure)",
   "Chiedi alla classe": "Ask the class",
   "Chiudere e archiviare non cancella niente: allievi, compiti e risultati restano tutti.": "Closing and archiving delete nothing: students, homework and results all stay.",
@@ -1358,6 +1359,8 @@
   "Seleziona tutte": "Select all",
   "Seme": "Suit",
   "Senza dichiarazione: chi ha più punti gioca e il livello viene dalla tabella. Per le prime lezioni.": "No bidding: the side with more points declares and the level comes from the decision table. For the first lessons.",
+  "Senza nome": "No name",
+  "Separa": "Unlink",
   "Sequenza di licita": "Auction",
   "Sequenza di licita, una colonna per posizione (Ovest, Nord, Est, Sud)": "The auction, one column per seat (West, North, East, South)",
   "Serve l'accesso: un torneo ha una classifica, e una classifica ha bisogno di sapere chi sei.": "You need to sign in: a tournament has a leaderboard, and a leaderboard needs to know who you are.",
@@ -1672,6 +1675,7 @@
   "archiviate": "archived",
   "completata": "completed",
   "con layout responsivo e supporto per la modalità scura (dark mode)": "with responsive layout and support for dark mode",
+  "di loro sono arrivati": "of them came",
   "e inserisci": "and enter",
   "email, nome visualizzato, tipo di profilo (fascia d'età), associazione sportiva (ASD) di appartenenza (opzionale), username BBO (opzionale).": "email, display name, profile type (age group), the club you belong to (optional), BBO username (optional).",
   "etichette {ariaLabel}, {ariaDescribedby} e ruoli ARIA per i componenti interattivi (quiz, minigiochi, menu)": "{ariaLabel} and {ariaDescribedby} labels and ARIA roles for interactive components (quizzes, mini-games, menus)",
@@ -1709,5 +1713,7 @@
   "utilizzo coerente di elementi come {main}, {nav}, {section}, {article} e intestazioni gerarchiche ({h1}–{h6})": "consistent use of elements such as {main}, {nav}, {section}, {article} and hierarchical headings ({h1}–{h6})",
   "{n} richieste di amicizia in attesa": "{n} pending friend requests",
   "{n} richieste in attesa": "{n} pending requests",
+  "È arrivata": "They came",
+  "è": "is",
   "è disponibile una modalità scura (dark mode) per ridurre l'affaticamento visivo": "a dark mode is available to reduce eye strain"
 }

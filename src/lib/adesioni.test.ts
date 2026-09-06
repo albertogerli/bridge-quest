@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { contattoNormalizzato, gruppiSimili, nomeNormalizzato, type Adesione } from "./adesioni";
+import {
+  candidatiPerAdesione, contattoNormalizzato, gruppiSimili, nomeNormalizzato,
+  type Adesione,
+} from "./adesioni";
 
 const ad = (over: Partial<Adesione>): Adesione => ({
   id: crypto.randomUUID(), class_id: "c1", nome: "Maria Rossi", contatto: "3331234567",
@@ -102,5 +105,43 @@ describe("i doppioni che l'insegnante deve vedere", () => {
 
   it("una lista vuota non esplode", () => {
     expect(gruppiSimili([])).toEqual([]);
+  });
+});
+
+describe("chi collegare a un'adesione: si suggerisce, non si decide", () => {
+  const membri = [
+    { student_id: "a", display_name: "Anna Verdi" },
+    { student_id: "b", display_name: "Maria Rossi" },
+    { student_id: "c", display_name: "Maria Rossi" },
+    { student_id: "d", display_name: "Rossi Giuseppe" },
+  ];
+
+  it("il nome uguale viene per primo", () => {
+    const c = candidatiPerAdesione({ nome: "Maria Rossi" }, membri, new Set());
+    expect(c[0].display_name).toBe("Maria Rossi");
+  });
+
+  it("LE DUE MARIA ROSSI RESTANO ENTRAMBE: sceglie l'insegnante", () => {
+    // È il caso per cui abbiamo scartato l'algoritmo. Se il portale ne
+    // proponesse una sola, sbaglierebbe proprio dove serve una persona.
+    const c = candidatiPerAdesione({ nome: "Maria Rossi" }, membri, new Set());
+    expect(c.filter((m) => m.display_name === "Maria Rossi")).toHaveLength(2);
+  });
+
+  it("chi è già collegato a un'altra adesione non ricompare", () => {
+    const c = candidatiPerAdesione({ nome: "Maria Rossi" }, membri, new Set(["b"]));
+    expect(c.map((m) => m.student_id)).not.toContain("b");
+  });
+
+  it("un cognome in comune basta a farlo salire, ma non a sceglierlo", () => {
+    const c = candidatiPerAdesione({ nome: "Giuseppe Rossi" }, membri, new Set());
+    expect(c[0].student_id).toBe("d");
+    expect(c).toHaveLength(4);
+  });
+
+  it("nessuna somiglianza: l'elenco resta completo, in ordine alfabetico", () => {
+    const c = candidatiPerAdesione({ nome: "Carlo Neri" }, membri, new Set());
+    expect(c).toHaveLength(4);
+    expect(c[0].display_name).toBe("Anna Verdi");
   });
 });
