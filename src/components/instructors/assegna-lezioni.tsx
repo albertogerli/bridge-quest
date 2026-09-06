@@ -8,12 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import {
+  apriRevisioni,
   assegnaLezione,
   assegnaManiLezione,
+  getClassAssignments,
   getStatoCompiti,
   maniGiaAssegnate,
+  type Assignment,
   type StatoCompito,
 } from "@/lib/instructors";
+import { aspettaLInsegnante } from "@/lib/revisioni";
 import { reportError } from "@/lib/report-error";
 import { compitoAssegnatoWhatsApp, linkWhatsApp } from "@/lib/whatsapp";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -40,6 +44,8 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
   const { courses } = useCatalog();
   const { smazzate } = useSmazzate();
   const [stato, setStato] = useState<StatoCompito[]>([]);
+  /** Serve solo per sapere se la revisione è ancora chiusa: `stato_compiti_classe` non lo dice. */
+  const [compiti, setCompiti] = useState<Assignment[]>([]);
   const [caricando, setCaricando] = useState(true);
   const [inCorso, setInCorso] = useState<number | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
@@ -51,7 +57,9 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
 
   async function ricarica() {
     try {
-      setStato(await getStatoCompiti(classId));
+      const [s, c] = await Promise.all([getStatoCompiti(classId), getClassAssignments(classId)]);
+      setStato(s);
+      setCompiti(c);
     } catch (err) {
       reportError("assegna-lezioni:stato", err);
       setErrore("Non riesco a leggere lo stato dei compiti.");
@@ -120,6 +128,17 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
       setErrore("Non sono riuscito ad assegnare le mani scelte.");
     } finally {
       setInCorso(null);
+    }
+  }
+
+  async function apri(assignmentId: string) {
+    setErrore(null);
+    try {
+      await apriRevisioni([assignmentId]);
+      await ricarica();
+    } catch (err) {
+      reportError("assegna-lezioni:apri-revisione", err);
+      setErrore("Non sono riuscito ad aprire la revisione.");
     }
   }
 
@@ -235,6 +254,13 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                 {corso.lezioni.map((lezione) => {
                   const nMani = maniPerLezione.get(lezione.id) ?? 0;
                   const compito = perLezione.get(lezione.id);
+                  // La revisione ancora chiusa, e se è il caso grave: hanno
+                  // finito tutti e stanno aspettando. Vedi `revisioni.ts`.
+                  const daAprire =
+                    compito &&
+                    compiti.some((a) => a.id === compito.assignment_id && aspettaLInsegnante(a));
+                  const finitaDaTutti =
+                    !!compito && compito.n_allievi > 0 && compito.n_completi >= compito.n_allievi;
                   return (
                     <div key={lezione.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
                       <div className="min-w-0 flex-1">
@@ -252,6 +278,25 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                                 }
                               >
                                 {compito.n_completi}/{compito.n_allievi} l&rsquo;hanno finita
+                              </span>
+                            </>
+                          )}
+                          {daAprire && (
+                            <>
+                              {" · "}
+                              {/* Quando hanno finito tutti la revisione chiusa
+                                  fa danno adesso: si marca. Quando ha finito
+                                  qualcuno è solo un promemoria. In entrambi i
+                                  casi resta sulla stessa riga — questa
+                                  schermata l'insegnante la scorre. */}
+                              <span
+                                className={
+                                  finitaDaTutti
+                                    ? "font-semibold text-amber-700 dark:text-amber-400"
+                                    : "text-muted-foreground"
+                                }
+                              >
+                                {finitaDaTutti ? t("revisione da aprire") : t("revisione chiusa")}
                               </span>
                             </>
                           )}
@@ -290,6 +335,16 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                               {t("Avvisa")}
                             </Button>
                           </a>
+                          {daAprire && (
+                            <Button
+                              size="sm"
+                              variant={finitaDaTutti ? "default" : "ghost"}
+                              disabled={inCorso !== null}
+                              onClick={() => void apri(compito.assignment_id)}
+                            >
+                              {t("Apri la revisione")}
+                            </Button>
+                          )}
                           <Link href={`/istruttori/dispensa?compito=${compito.assignment_id}`}>
                             <Button size="sm" variant="ghost">
                               {t("Dispensa")}
