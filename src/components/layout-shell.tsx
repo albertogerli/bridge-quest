@@ -50,12 +50,12 @@ const ExitIntentModal = dynamic(
  * rinfrescando. La pagina, per conto suo, non legge niente dal database: riceve
  * solo quello che la finestra accanto le manda.
  */
-const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione", "/aula"];
+const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione", "/aula", "/evento"];
 
 /** Routes accessible without authentication */
 // /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi
 // arriva da Google veniva rimbalzato al login e il lavoro SEO era vanificato.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione", "/aula"];
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione", "/aula", "/evento"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (

@@ -59,3 +59,20 @@ export function indirizzoIscrizione(codice: string, sito?: string): string {
   const base = (sito || process.env.NEXT_PUBLIC_SITE_URL || "https://bridgelab.it").replace(/\/$/, "");
   return `${base}/classi?codice=${encodeURIComponent(codice)}`;
 }
+
+/**
+ * Dove porta il QR della locandina.
+ *
+ * NON A `/classi`, che è la schermata di iscrizione: chi inquadra un cartello
+ * in una sala d'attesa non sa cosa sia una classe né di avere un codice, e
+ * quella pagina lo accoglie con «Iscriviti con il codice del tuo istruttore».
+ * Per giunta non è pubblica, quindi lo rimbalza al login prima ancora.
+ *
+ * `/evento/<codice>` racconta la serata — cos'è, quando, dove — e propone di
+ * venire come conseguenza. Da lì si arriva all'iscrizione col codice già in
+ * mano.
+ */
+export function indirizzoEvento(codice: string, sito?: string): string {
+  const base = (sito || process.env.NEXT_PUBLIC_SITE_URL || "https://bridgelab.it").replace(/\/$/, "");
+  return `${base}/evento/${encodeURIComponent(codice)}`;
+}

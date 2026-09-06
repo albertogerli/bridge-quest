@@ -6,9 +6,9 @@ import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { Briciole } from "@/components/briciole";
 import { FoglioLocandina } from "@/components/istruttori/foglio-locandina";
-import { getClassDetail, type ClassRoom } from "@/lib/instructors";
+import { aggiornaImpostazioniClasse, getClassDetail, type ClassRoom } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { indirizzoIscrizione, qrSvg } from "@/lib/qr";
+import { indirizzoEvento, qrSvg } from "@/lib/qr";
 import {
   CAMPI, CAMPI_FACOLTATIVI, campiMancanti, testiPredefiniti,
   type Facoltativi, type TestiLocandina,
@@ -51,7 +51,14 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
       .then((d) => {
         if (!vivo) return;
         setClasse(d.classRoom);
-        setTesti((precedenti) => precedenti ?? testiPredefiniti(d.classRoom, profile?.display_name ?? ""));
+        // Quello che l'ASD aveva già scritto torna com'era: ricompilare
+        // quattordici locandine due volte era il lavoro da togliere.
+        const salvata = d.classRoom.locandina as
+          | (Partial<TestiLocandina> & { facoltativi?: Facoltativi })
+          | undefined;
+        const predefiniti = testiPredefiniti(d.classRoom, profile?.display_name ?? "");
+        setTesti((precedenti) => precedenti ?? { ...predefiniti, ...salvata });
+        if (salvata?.facoltativi) setFacoltativi(salvata.facoltativi);
       })
       .catch((err) => {
         reportError("locandina:classe", err);
@@ -60,7 +67,9 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
     return () => { vivo = false; };
   }, [classId, profile?.display_name]);
 
-  const indirizzo = classe ? indirizzoIscrizione(classe.invite_code) : "";
+  // Il QR porta alla pagina dell'evento, non alla schermata di iscrizione:
+  // vedi `indirizzoEvento`.
+  const indirizzo = classe ? indirizzoEvento(classe.invite_code) : "";
   const svg = useMemo(() => (indirizzo ? qrSvg(indirizzo) : ""), [indirizzo]);
 
   /**
@@ -102,6 +111,14 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
     if (!foglio.current || !classe) return;
     setScaricando(true);
     try {
+      // La locandina si salva scaricandola, e non con un pulsante a parte: chi
+      // la scarica ha finito di compilarla, ed è esattamente il momento in cui
+      // il QR appena stampato deve cominciare a funzionare. Un «Salva» separato
+      // sarebbe un passaggio in più da dimenticare, con la conseguenza che il
+      // cartello in bacheca rimanda a una pagina vuota.
+      await aggiornaImpostazioniClasse(classId, {
+        locandina: { ...testi, facoltativi },
+      });
       // Tre volte le misure CSS: 794×1123 punti sono un A4 a 96 dpi, e per tre
       // fanno i 300 dpi che una stampante si aspetta.
       const png = await toPng(foglio.current, { pixelRatio: 3, cacheBust: true });
