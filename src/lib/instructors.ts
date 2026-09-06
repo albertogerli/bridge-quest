@@ -1071,6 +1071,8 @@ export async function assegnaManiLezione(
   lessonId: number,
   titolo: string,
   smazzataIds: string[],
+  /** Dalla classe: `classes.soluzioni_predefinite`. Il compito può derogare. */
+  soluzioni?: VisibilitaSoluzioni,
 ): Promise<{ totale: string[]; aggiunte: string[] }> {
   const supabase = createClient();
   const esistenti = await maniGiaAssegnate(classId, lessonId);
@@ -1088,18 +1090,23 @@ export async function assegnaManiLezione(
     return { totale, aggiunte };
   }
 
+  // `soluzioni` si passa SEMPRE, come fanno gli altri due punti che creano un
+  // compito. Lasciarlo al valore iniziale della colonna significherebbe che
+  // «Assegna» e «Scegli le mani» — due pulsanti sulla stessa riga di lezione —
+  // producono compiti che si comportano in modo diverso.
   const { error } = await supabase.from("assignments").insert({
     class_id: classId,
     lesson_id: lessonId,
     title: titolo,
     smazzata_ids: smazzataIds,
+    soluzioni: soluzioni ?? "dopo-il-gioco",
   });
   if (!error) return { totale: smazzataIds, aggiunte: smazzataIds };
 
   // 23505: qualcun altro ha creato il compito nel frattempo. Non è un errore
   // da mostrare, è una corsa da chiudere unendo le mani a quelle sue.
   if ((error as { code?: string }).code !== "23505") throw error;
-  return assegnaManiLezione(classId, lessonId, titolo, smazzataIds);
+  return assegnaManiLezione(classId, lessonId, titolo, smazzataIds, soluzioni);
 }
 
 export async function assegnaLezione(

@@ -43,8 +43,8 @@ select soluzioni_predefinite, count(*) as classi
 -- ----------------------------------------------------------------------------
 begin;
 
-alter table public.assignments
-  alter column soluzioni set default 'dopo-il-gioco';
+-- Il valore iniziale di `assignments.soluzioni` non era stato cambiato, quindi
+-- non c'è niente da rimettere: era e resta «dopo-il-gioco».
 
 -- Prima il vincolo, poi la colonna: al contrario resterebbe orfano e la
 -- riesecuzione dello script principale fallirebbe.
