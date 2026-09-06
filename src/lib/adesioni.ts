@@ -13,6 +13,35 @@
  * lui decide.
  */
 
+/**
+ * Chi si può collegare a un'adesione, ordinato per somiglianza del nome.
+ *
+ * L'ORDINE È UN SUGGERIMENTO, NON UNA DECISIONE. In una classe ci sono due
+ * Maria Rossi e chi le distingue è l'insegnante: il portale gli mette in cima
+ * quella che probabilmente cerca, e sceglie lui. Un algoritmo che collegasse da
+ * solo sbaglierebbe proprio nel caso per cui abbiamo scelto lui.
+ */
+export function candidatiPerAdesione<T extends { student_id: string; display_name?: string | null }>(
+  adesione: { nome: string },
+  membri: readonly T[],
+  giaCollegati: ReadonlySet<string>,
+): T[] {
+  const cercato = nomeNormalizzato(adesione.nome);
+  const parole = new Set(cercato.split(" ").filter(Boolean));
+  return membri
+    .filter((m) => !giaCollegati.has(m.student_id))
+    .map((m) => {
+      const suo = nomeNormalizzato(m.display_name ?? "");
+      const comuni = suo.split(" ").filter((p) => p && parole.has(p)).length;
+      return { m, esatto: suo === cercato && suo !== "", comuni };
+    })
+    .sort((a, b) =>
+      Number(b.esatto) - Number(a.esatto) || b.comuni - a.comuni ||
+      (a.m.display_name ?? "").localeCompare(b.m.display_name ?? ""),
+    )
+    .map((x) => x.m);
+}
+
 export interface Adesione {
   id: string;
   class_id: string;
