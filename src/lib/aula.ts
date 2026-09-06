@@ -135,3 +135,96 @@ export async function sessioneAperta(classId: string): Promise<SessioneAula | nu
 export function fermoDa(t: StatoTavolo): number {
   return Math.max(0, Date.now() - new Date(t.aggiornato).getTime());
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * I POSTI
+ * ───────────────────────────────────────────────────────────────────────── */
+
+export type EsitoPosto =
+  | { esito: "seduto"; posto: Position }
+  | { esito: "occupato"; da: string }
+  | { esito: "tavolo-chiuso" }
+  | { esito: "non-della-classe" }
+  | { esito: "posto-inesistente" }
+  | { esito: "errore" };
+
+/**
+ * L'allievo prende un posto libero.
+ *
+ * L'ATOMICITÀ STA NEL DATABASE e non qui, perché due browser non si parlano.
+ * In una sala dove venti persone entrano insieme, due che toccano lo stesso
+ * posto nello stesso istante è la sera normale: `aula_siediti` blocca la riga,
+ * decide, e al secondo risponde «occupato, c'è Maria».
+ *
+ * Che sia un'INFORMAZIONE e non un errore conta: «quel posto l'ha appena preso
+ * Maria» si capisce e si risolve da soli; un errore fa alzare la mano e
+ * chiamare l'insegnante, che è quello che stiamo cercando di evitare.
+ */
+export async function siediti(tavoloId: string, posto: Position): Promise<EsitoPosto> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("aula_siediti", {
+    p_tavolo_id: tavoloId,
+    p_posto: posto,
+  });
+  if (error) {
+    reportError("aula:siediti", error);
+    return { esito: "errore" };
+  }
+  return data as EsitoPosto;
+}
+
+/**
+ * L'insegnante mette una persona su un posto.
+ *
+ * SOSTITUZIONE E SCAMBIO SONO LA STESSA OPERAZIONE: se il posto è occupato i
+ * due si scambiano, se chi arriva non era seduto chi c'era esce. Trevissoi cura
+ * gli accoppiamenti per età e carattere, e «dopo un po' ti rendi conto che ci
+ * sono delle piccole incompatibilità»: deve poter spostare due persone senza
+ * chiudere e riaprire l'aula.
+ *
+ * IL QUANDO LO DECIDE L'INTERFACCIA, non questa funzione: a metà mano lo
+ * scambio cambierebbe proprietario alle carte già in mano, quindi si offre solo
+ * a mano finita — che è anche il momento in cui l'insegnante se ne accorge.
+ */
+export async function muovi(
+  tavoloId: string,
+  utente: string,
+  posto: Position,
+): Promise<{ esito: string }> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("aula_muovi", {
+    p_tavolo_id: tavoloId,
+    p_utente: utente,
+    p_posto: posto,
+  });
+  if (error) {
+    reportError("aula:muovi", error);
+    return { esito: "errore" };
+  }
+  return data as { esito: string };
+}
+
+/**
+ * I nomi dei compagni, per far vedere chi è già seduto.
+ *
+ * PASSA DALLA CLASSIFICA, e non è eleganza: `get_class_leaderboard` restituisce
+ * già `student_id` e `student_name` per tutti gli iscritti ed è la via che il
+ * portale usa da sempre per mostrare i nomi dei compagni a un allievo. Aggiungere
+ * una funzione al database per la stessa informazione sarebbe una migrazione in
+ * più da eseguire a mano, per un dato che è già raggiungibile.
+ *
+ * SERVE DAVVERO. Il metodo cura gli accoppiamenti per età e affinità, e una
+ * parte del lavoro la fanno gli allievi stessi sedendosi vicino a chi
+ * conoscono: con i posti anonimi l'insegnante ricomporrebbe i tavoli a mano
+ * ogni sera.
+ */
+export async function nomiDellaClasse(classId: string): Promise<Map<string, string>> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("get_class_leaderboard", { p_class_id: classId });
+  if (error) {
+    reportError("aula:nomi", error);
+    return new Map();
+  }
+  const righe = (data ?? []) as { student_id: string; student_name: string | null }[];
+  return new Map(righe.map((r) => [r.student_id, r.student_name ?? "Un compagno"]));
+}
