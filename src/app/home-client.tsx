@@ -386,6 +386,37 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       {/* Prima Mano banner for users who skipped onboarding */}
       {notOnboarded && !showOnboarding && <PrimaManoBanner />}
 
+      {/*
+        L'INVITO A ENTRARE IN UNA CLASSE, per chi non ne ha nessuna.
+
+        È tutto quello che serviva per la «vista esterna». Il punto 4 chiedeva
+        una versione ridotta del portale per chi non ha un insegnante, ma le
+        persone senza classe sono 1047 su 1098: ridurre avrebbe voluto dire
+        togliere qualcosa a quasi tutti gli iscritti, cioè la regressione
+        silenziosa che ci siamo vietati tre volte, alla scala più grande.
+
+        Quello che manca davvero non è una barriera: è la porta. L'unico modo
+        di entrare in una classe era `/classi`, che chi non ci è mai stato non
+        sa che esiste. Un allievo che digita il codice smette di essere «vista
+        esterna» e diventa un allievo vero — che è l'obiettivo, non un ripiego.
+      */}
+      {user && corsiIscritti.length === 0 && (
+        <section className="px-4 sm:px-5 pt-4">
+          <Link
+            href="/classi"
+            className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/40"
+          >
+            <span className="text-2xl" aria-hidden="true">🎟️</span>
+            <span className="min-w-0">
+              <span className="block font-semibold">{t("Segui un corso? Hai un codice")}</span>
+              <span className="block text-sm text-muted-foreground">
+                {t("Il tuo insegnante te l'ha dato: qui entri nella tua classe.")}
+              </span>
+            </span>
+          </Link>
+        </section>
+      )}
+
       {/* ===== HUB DI NAVIGAZIONE (Impara / Gioca / Scuola) ===== */}
       <section className="px-4 sm:px-5 pt-4">
         <div className="mx-auto grid max-w-3xl grid-cols-3 gap-3">
