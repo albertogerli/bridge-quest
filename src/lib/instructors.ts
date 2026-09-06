@@ -64,6 +64,12 @@ export interface ClassRoom {
   link_video: string | null;
   /** Livello del corso, testo libero: «Primo livello», «Approfondimento». */
   livello: string | null;
+  /**
+   * Da dove partono i compiti nuovi di questa classe. Il singolo compito
+   * deroga sempre: chi lavora in automatico può tenere chiusa UNA revisione
+   * senza cambiare come lavora nel resto del corso.
+   */
+  soluzioni_predefinite: VisibilitaSoluzioni;
   /** Quanto l'insegnante ha aperto. Vedi `permessi-allievo.ts`. */
   accesso_libero: AccessoLibero;
   /** Eccezioni per gruppo. Vuoto = vale il cursore. */
@@ -102,7 +108,21 @@ export interface ClassMember {
 }
 
 /** Vedi `assignments.soluzioni`. */
-export type VisibilitaSoluzioni = "subito" | "dopo-il-gioco" | "dopo-la-scadenza";
+/**
+ * Quando l'allievo può rivedere le mani di un compito.
+ *
+ * `quando-l-insegnante-decide` è la richiesta di Giuseppe Trevissoi: «è
+ * l'insegnante che le deve rendere disponibili dopo che le ha spiegate». Se
+ * l'allievo ha le risposte prima della lezione, alla lezione non ci va.
+ *
+ * La regola la applica il DATABASE, non l'interfaccia: un indirizzo passato nel
+ * gruppo WhatsApp della classe non deve funzionare.
+ */
+export type VisibilitaSoluzioni =
+  | "subito"
+  | "dopo-il-gioco"
+  | "dopo-la-scadenza"
+  | "quando-l-insegnante-decide";
 
 export interface Assignment {
   id: string;
@@ -359,6 +379,7 @@ export async function aggiornaImpostazioniClasse(
     risultati_nominativi?: boolean;
     link_video?: string | null;
     livello?: string | null;
+    soluzioni_predefinite?: VisibilitaSoluzioni;
     inizio_corso?: string | null;
     fine_corso?: string | null;
     /**
@@ -517,7 +538,7 @@ export async function createAssignment(input: {
     // Il default del database è lo stesso: qui è esplicito perché è la scelta
     // che gli insegnanti hanno chiesto, e vederla scritta nel form di
     // creazione vale più di un default nascosto in una colonna.
-    soluzioni: input.soluzioni ?? "dopo-il-gioco",
+    soluzioni: input.soluzioni ?? (await soluzioniPredefiniteDi(input.classId)),
     minibridge: input.minibridge ?? false,
     esercizio_ids: input.esercizioIds ?? [],
   };
@@ -1030,6 +1051,58 @@ export interface StatoCompito {
  * assegnare il catalogo che questa scheda ha in memoria, che può essere di ieri.
  */
 
+/**
+ * Da dove partono i compiti nuovi di una classe.
+ *
+ * ESISTE PERCHÉ I PERCORSI DI CREAZIONE SONO TRE, e finché ognuno scriveva
+ * «dopo-il-gioco» a mano bastava che uno nuovo se ne dimenticasse per avere due
+ * pulsanti accanto che si comportano in modo diverso. È già successo: il
+ * percorso aggiunto per ultimo era quello disallineato. Chi ne aggiungerà un
+ * quarto deve passare da qui.
+ */
+/**
+ * Apre la revisione su uno o più compiti, in un colpo solo.
+ *
+ * IN BLOCCO PERCHÉ IL GESTO È IN BLOCCO. Dopo la lezione l'insegnante ne apre
+ * cinque insieme — quelle che ha appena spiegato — non una per volta. È la
+ * stessa forma dell'approvazione delle iscrizioni: una sola `update`, quindi o
+ * le tocca tutte o nessuna, e non restano stati a metà da ricontrollare a mano.
+ *
+ * `eq("soluzioni", …)` non è ridondante: senza, una richiesta partita due volte
+ * riscriverebbe anche i compiti che nel frattempo l'insegnante aveva impostato
+ * diversamente a mano, e il conto di quelli aperti sarebbe falso.
+ *
+ * NON ESISTE IL GESTO CONTRARIO qui, ed è voluto: richiudere non toglie dagli
+ * occhi di chi ha già letto. Se serve si cambia l'impostazione del compito, ma
+ * dev'essere una scelta esplicita e non un pulsante accanto a quello che apre.
+ */
+export async function apriRevisioni(assignmentIds: string[]): Promise<string[]> {
+  if (assignmentIds.length === 0) return [];
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("assignments")
+    .update({ soluzioni: "dopo-il-gioco" })
+    .in("id", assignmentIds)
+    .eq("soluzioni", "quando-l-insegnante-decide")
+    .select("id");
+  if (error) throw error;
+  return (data ?? []).map((r) => r.id as string);
+}
+
+export async function soluzioniPredefiniteDi(classId: string): Promise<VisibilitaSoluzioni> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("classes")
+    .select("soluzioni_predefinite")
+    .eq("id", classId)
+    .maybeSingle();
+  // Se non si riesce a leggere non si blocca la creazione: si sbaglia verso il
+  // comportamento di sempre, che è visibile, invece che verso una revisione
+  // chiusa senza spiegazione.
+  if (error || !data) return "dopo-il-gioco";
+  return (data.soluzioni_predefinite as VisibilitaSoluzioni) ?? "dopo-il-gioco";
+}
+
 /** Le mani della lezione già dentro il compito, se il compito esiste. */
 export async function maniGiaAssegnate(
   classId: string,
@@ -1099,7 +1172,7 @@ export async function assegnaManiLezione(
     lesson_id: lessonId,
     title: titolo,
     smazzata_ids: smazzataIds,
-    soluzioni: soluzioni ?? "dopo-il-gioco",
+    soluzioni: soluzioni ?? (await soluzioniPredefiniteDi(classId)),
   });
   if (!error) return { totale: smazzataIds, aggiunte: smazzataIds };
 
@@ -1118,7 +1191,9 @@ export async function assegnaLezione(
   const { data, error } = await supabase.rpc("assegna_lezione", {
     p_class_id: classId,
     p_lesson_id: lessonId,
-    p_soluzioni: opzioni?.soluzioni ?? "dopo-il-gioco",
+    // Parte dalla classe, non da un valore scritto qui: vedi
+    // `soluzioniPredefiniteDi`.
+    p_soluzioni: opzioni?.soluzioni ?? (await soluzioniPredefiniteDi(classId)),
     p_due_date: opzioni?.dueDate ?? null,
   });
   if (error) throw error;
