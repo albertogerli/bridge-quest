@@ -19,6 +19,7 @@ import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { AssegnaLezioni } from "@/components/instructors/assegna-lezioni";
 import { Rubinetto } from "@/components/istruttori/rubinetto";
 import { RevisioniDaAprire } from "@/components/istruttori/revisioni-da-aprire";
+import { ElencoAdesioni } from "@/components/istruttori/elenco-adesioni";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
 import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
 import {
@@ -636,6 +637,9 @@ export default function ClassDetailPage({
 
         {/* Le revisioni chiuse, dove l'insegnante guarda per prima cosa. */}
         <RevisioniDaAprire classId={classId} />
+
+        {/* Chi ha detto «vengo»: serve la sera prima, per comporre i tavoli. */}
+        <ElencoAdesioni classId={classId} />
 
         {/* Lezioni: assegnare in blocco */}
         <TabsContent value="lezioni" className="mt-4">

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ModuloAdesione } from "@/components/modulo-adesione";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { TestiLocandina } from "@/lib/locandina";
 
@@ -98,12 +98,9 @@ export default async function EventoPage({ params }: { params: Promise<{ codice:
       */}
       <div className="mt-8">
         {evento.stato === "aperto" ? (
-          <Link
-            href={`/classi?codice=${encodeURIComponent(codice)}`}
-            className="flex min-h-14 w-full items-center justify-center rounded-xl bg-[#003DA5] px-6 text-lg font-bold text-white"
-          >
-            Voglio venire
-          </Link>
+          // Il modulo, non un collegamento: mandare a `/classi` significava
+          // chiedere di registrarsi, cioè rimettere il muro un passo più avanti.
+          <ModuloAdesione codice={codice} />
         ) : (
           <div className="rounded-xl border border-border bg-muted/50 p-4 text-center">
             <p className="font-semibold">Le iscrizioni a questa serata sono chiuse.</p>
