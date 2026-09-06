@@ -1903,12 +1903,17 @@ CREATE OR REPLACE FUNCTION public.evento_da_codice(p_codice text)
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  select c.locandina
+  select c.locandina || jsonb_build_object(
+           'stato',
+           case
+             when not c.invite_active then 'chiuso'
+             when c.invite_expires_at is not null and c.invite_expires_at <= now() then 'scaduto'
+             else 'aperto'
+           end
+         )
     from public.classes c
    where upper(c.invite_code) = upper(trim(p_codice))
-     and c.invite_active
      and c.locandina <> '{}'::jsonb
-     and (c.invite_expires_at is null or c.invite_expires_at > now())
    limit 1;
 $function$
 ;

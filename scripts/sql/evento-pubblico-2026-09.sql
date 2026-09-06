@@ -51,6 +51,11 @@ comment on column public.classes.locandina is
 -- è meglio che dia «non trovato» piuttosto che raccogliere adesioni che
 -- nessuno leggerà.
 -- ----------------------------------------------------------------------------
+-- LO STATO VIENE RESTITUITO, non usato per nascondere. Chi ha in mano il
+-- cartello non sa che le iscrizioni sono chiuse: rispondere «non trovato» gli
+-- fa concludere che il QR sia rotto o che il portale non funzioni, e allora non
+-- ci riprova e non chiama nemmeno l'ASD. Dirlo trasforma un vicolo cieco in
+-- un'informazione.
 create or replace function public.evento_da_codice(p_codice text)
 returns jsonb
 language sql
@@ -58,12 +63,17 @@ security definer
 set search_path = public
 stable
 as $$
-  select c.locandina
+  select c.locandina || jsonb_build_object(
+           'stato',
+           case
+             when not c.invite_active then 'chiuso'
+             when c.invite_expires_at is not null and c.invite_expires_at <= now() then 'scaduto'
+             else 'aperto'
+           end
+         )
     from public.classes c
    where upper(c.invite_code) = upper(trim(p_codice))
-     and c.invite_active
      and c.locandina <> '{}'::jsonb
-     and (c.invite_expires_at is null or c.invite_expires_at > now())
    limit 1;
 $$;
 

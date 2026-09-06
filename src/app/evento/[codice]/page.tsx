@@ -38,11 +38,15 @@ export async function generateMetadata({ params }: { params: Promise<{ codice: s
   };
 }
 
-async function leggiEvento(codice: string): Promise<TestiLocandina | null> {
+type StatoEvento = "aperto" | "chiuso" | "scaduto";
+
+async function leggiEvento(
+  codice: string,
+): Promise<(TestiLocandina & { stato: StatoEvento }) | null> {
   const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.rpc("evento_da_codice", { p_codice: codice });
   if (error || !data) return null;
-  return data as TestiLocandina;
+  return data as TestiLocandina & { stato: StatoEvento };
 }
 
 export default async function EventoPage({ params }: { params: Promise<{ codice: string }> }) {
@@ -85,14 +89,31 @@ export default async function EventoPage({ params }: { params: Promise<{ codice:
         «Vengo» viene DOPO aver letto di cosa si tratta, e porta al posto dove
         ci si iscrive con il codice già in mano — chi arriva di qui non deve
         digitarlo né sapere di averlo.
+
+        SE LE ISCRIZIONI SONO CHIUSE NON SI DICE «non trovato». Chi ha in mano
+        il cartello non sa che l'evento è chiuso: una pagina vuota gli fa
+        concludere che il QR sia rotto o che il portale non funzioni, e allora
+        non ci riprova e non chiama nemmeno l'ASD. Dirlo trasforma un vicolo
+        cieco in un'informazione — e il contatto, se c'è, resta la via d'uscita.
       */}
       <div className="mt-8">
-        <Link
-          href={`/classi?codice=${encodeURIComponent(codice)}`}
-          className="flex min-h-14 w-full items-center justify-center rounded-xl bg-[#003DA5] px-6 text-lg font-bold text-white"
-        >
-          Voglio venire
-        </Link>
+        {evento.stato === "aperto" ? (
+          <Link
+            href={`/classi?codice=${encodeURIComponent(codice)}`}
+            className="flex min-h-14 w-full items-center justify-center rounded-xl bg-[#003DA5] px-6 text-lg font-bold text-white"
+          >
+            Voglio venire
+          </Link>
+        ) : (
+          <div className="rounded-xl border border-border bg-muted/50 p-4 text-center">
+            <p className="font-semibold">Le iscrizioni a questa serata sono chiuse.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {evento.associazione
+                ? `Per sapere se ce ne sarà un'altra, chiedi a ${evento.associazione}.`
+                : "Per sapere se ce ne sarà un'altra, chiedi all'associazione che organizza."}
+            </p>
+          </div>
+        )}
         {evento.contatti && (
           <p className="mt-3 text-center text-sm text-muted-foreground">{evento.contatti}</p>
         )}
