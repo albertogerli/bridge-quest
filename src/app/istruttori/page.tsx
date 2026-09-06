@@ -22,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMyClasses } from "@/store/use-classes-store";
+import { dettagliClasse } from "@/lib/etichetta-classe";
 import { ETICHETTE_STATO } from "@/lib/instructors";
 import { createClass } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
@@ -41,6 +42,11 @@ export default function IstruttoriPage() {
    * l'elenco non si legge più.
    */
   const attive = classes.filter((c) => c.stato !== "archiviata");
+  /**
+   * L'ASD si mostra solo a chi insegna in più di un circolo: a chi ne ha uno
+   * solo comparirebbe identica su ogni riga, dove non distingue niente.
+   */
+  const mostraAsd = new Set(classes.map((c) => c.asd_code).filter(Boolean)).size > 1;
   const archiviate = classes.filter((c) => c.stato === "archiviata");
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -162,6 +168,15 @@ export default function IstruttoriPage() {
                       )
                     )}
                   </div>
+                  {/* Come si riconosce questa classe fra le altre: ASD,
+                      livello, periodo. Con quattordici corsi aperti insieme il
+                      solo nome non basta — due «Corso Fiori» sono la stessa
+                      riga scritta due volte. */}
+                  {dettagliClasse(c, { mostraAsd }).length > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {dettagliClasse(c, { mostraAsd }).join(" · ")}
+                    </p>
+                  )}
                   {c.description && (
                     <CardDescription className="line-clamp-2">{c.description}</CardDescription>
                   )}
