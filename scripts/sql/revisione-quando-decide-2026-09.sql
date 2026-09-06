@@ -14,18 +14,32 @@
 --
 --   «è l'insegnante che le deve rendere disponibili dopo che le ha spiegate».
 --
--- Si aggiunge il quarto valore e si sposta il PREDEFINITO su di esso, così i
--- compiti nuovi nascono con la revisione chiusa.
+-- Si aggiunge il quarto valore. IL PREDEFINITO DEL DATABASE NON SI TOCCA, e la
+-- ragione è emersa guardando il codice: dei tre punti che creano un compito,
+-- due passano già `soluzioni` esplicitamente con «dopo-il-gioco» scritto nel
+-- TypeScript, e solo uno si affida al valore iniziale della colonna.
+--
+-- Spostare il predefinito avrebbe quindi prodotto la cosa peggiore: nessun
+-- cambiamento sui due percorsi principali, e un comportamento DIVERSO sul
+-- terzo — la stessa riga di lezione, due pulsanti accanto, due esiti diversi.
+--
+-- Decide sempre il codice, partendo da `classes.soluzioni_predefinite`. Il
+-- valore iniziale della colonna resta «dopo-il-gioco» e fa da rete: se un
+-- percorso dimenticasse di passarlo, sbaglia verso la scelta di oggi invece
+-- che verso una revisione chiusa senza spiegazione.
+--
+-- CONSEGUENZA UTILE: questo script si può eseguire PRIMA o DOPO il codice,
+-- indifferentemente. Non esiste una finestra in cui il portale si comporta in
+-- un modo che nessuno ha scelto.
 --
 -- I 14 COMPITI CHE ESISTONO NON SI TOCCANO. Sono tutti `dopo-il-gioco` e ci
 -- restano: chi ha già giocato una di quelle mani la rivede come ieri. Togliere
 -- una cosa già concessa è la regressione silenziosa che ci siamo vietati.
 --
 -- È UNA MODIFICA COMPATIBILE: si allarga un elenco di valori ammessi e si
--- cambia un valore iniziale. Nessuna riga esistente diventa invalida, e il
--- codice che oggi legge `soluzioni` continua a funzionare — semplicemente non
--- ha ancora un ramo per il valore nuovo, che infatti nessuna riga usa finché
--- non lo si imposta.
+-- Nessuna riga esistente diventa invalida, e il codice che oggi legge
+-- `soluzioni` continua a funzionare: semplicemente non ha ancora un ramo per il
+-- valore nuovo, che infatti nessuna riga usa finché non lo si imposta.
 -- ============================================================================
 
 begin;
@@ -34,15 +48,12 @@ alter table public.assignments drop constraint if exists assignments_soluzioni_c
 alter table public.assignments add constraint assignments_soluzioni_check
   check (soluzioni in ('subito', 'dopo-il-gioco', 'dopo-la-scadenza', 'quando-l-insegnante-decide'));
 
--- I compiti nuovi nascono chiusi. Quelli vecchi non si toccano: non c'è nessun
--- `update`, ed è voluto.
-alter table public.assignments
-  alter column soluzioni set default 'quando-l-insegnante-decide';
-
 comment on column public.assignments.soluzioni is
   'Quando l''allievo puo'' rivedere le mani del compito: subito | dopo-il-gioco '
-  '| dopo-la-scadenza | quando-l-insegnante-decide (predefinito dal 2026-09-05). '
-  'La regola e'' applicata dal database, non dall''interfaccia.';
+  '| dopo-la-scadenza | quando-l-insegnante-decide. '
+  'La regola e'' applicata dal database, non dall''interfaccia. Il valore '
+  'iniziale resta «dopo-il-gioco» e fa da rete: a scegliere e'' il codice, che '
+  'parte da `classes.soluzioni_predefinite`.';
 
 -- ----------------------------------------------------------------------------
 -- 2 · Come lavora l'insegnante IN QUESTA CLASSE
@@ -61,47 +72,41 @@ comment on column public.assignments.soluzioni is
 -- lavora in automatico può tenere chiusa UNA revisione — quella mano la spiega
 -- giovedì — senza toccare l'impostazione della classe.
 -- ----------------------------------------------------------------------------
+-- LA COLONNA NASCE VUOTA, E QUESTO ELIMINA LA DATA.
+--
+-- «Esistente prima della modifica» si esprimeva con `created_at < '2026-09-05'`,
+-- cioè con una data scritta a mano: se lo script si esegue il giorno dopo la
+-- data è già sbagliata, e una classe creata stamattina si ritroverebbe la
+-- novità senza averla scelta.
+--
+-- Aggiungendo la colonna SENZA valore iniziale, le righe che esistono restano a
+-- `null`: sono esattamente quelle di prima, qualunque sia il giorno. Si
+-- riempiono, e solo dopo si mette il valore per le righe future.
+--
+-- Ne guadagna anche la riesecuzione: al secondo giro non ci sono più `null` da
+-- riempire, quindi non serve nessuna guardia. L'idempotenza viene dalla forma,
+-- non da un controllo che qualcuno potrebbe togliere.
 alter table public.classes
-  add column if not exists soluzioni_predefinite text not null
-  default 'quando-l-insegnante-decide';
+  add column if not exists soluzioni_predefinite text;
+
+update public.classes
+   set soluzioni_predefinite = 'dopo-il-gioco'
+ where soluzioni_predefinite is null;
+
+alter table public.classes
+  alter column soluzioni_predefinite set default 'quando-l-insegnante-decide';
+alter table public.classes
+  alter column soluzioni_predefinite set not null;
 
 alter table public.classes drop constraint if exists classes_soluzioni_predefinite_valide;
 alter table public.classes add constraint classes_soluzioni_predefinite_valide
   check (soluzioni_predefinite in ('subito', 'dopo-il-gioco', 'dopo-la-scadenza', 'quando-l-insegnante-decide'));
 
 comment on column public.classes.soluzioni_predefinite is
-  'Valore iniziale di `assignments.soluzioni` per i compiti NUOVI di questa '
-  'classe. Il singolo compito deroga sempre. Le classi esistenti al 2026-09-05 '
-  'sono state messe su `dopo-il-gioco`, cioe'' come si comportavano gia''.';
-
--- Le classi che esistono oggi continuano a comportarsi come ieri — UNA VOLTA
--- SOLA. Stessa guardia del rubinetto e per lo stesso motivo: rieseguire lo
--- script rimetterebbe in automatico le classi che l'insegnante ha nel frattempo
--- messo in manuale, senza un errore e senza che nessuno se ne accorga.
---
--- Il motivo di merito: un insegnante di una classe attiva che crea un compito
--- domani troverebbe le revisioni chiuse e gli allievi a chiedergli perche''.
--- La novita'' vale per le classi nuove; le altre la adottano quando vogliono,
--- perche'' l'impostazione si vede ed e'' modificabile.
-do $$
-declare gia_fatto boolean; toccate integer;
-begin
-  select exists (
-    select 1 from public.classes
-     where created_at < timestamptz '2026-09-05'
-       and soluzioni_predefinite <> 'quando-l-insegnante-decide'
-  ) into gia_fatto;
-
-  if gia_fatto then
-    raise notice 'Riempimento gia'' avvenuto: non tocco niente.';
-  else
-    update public.classes
-       set soluzioni_predefinite = 'dopo-il-gioco'
-     where created_at < timestamptz '2026-09-05';
-    get diagnostics toccate = row_count;
-    raise notice 'Classi esistenti lasciate in automatico: %', toccate;
-  end if;
-end $$;
+  'Valore di partenza di `assignments.soluzioni` per i compiti NUOVI di questa '
+  'classe: lo applica il codice, non il database. Il singolo compito deroga '
+  'sempre. Le classi che esistevano restano su «dopo-il-gioco», cioe'' come si '
+  'comportavano gia''.';
 
 commit;
 
@@ -114,7 +119,7 @@ commit;
 --   select column_default from information_schema.columns
 --    where table_schema='public' and table_name='assignments'
 --      and column_name='soluzioni';
---   -- atteso: 'quando-l-insegnante-decide'
+--   -- atteso: 'dopo-il-gioco' — NON cambia: a scegliere è il codice.
 --
 -- Poi: node scripts/dump-schema.mjs e committare 000-schema-baseline.sql
 -- ============================================================================
