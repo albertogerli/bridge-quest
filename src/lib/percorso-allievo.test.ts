@@ -9,6 +9,7 @@ const classe = (over: Partial<ClassRoom> = {}): ClassRoom => ({
   description: null, invite_code: "AAA111", invite_active: true, stato: "aperta",
   approvazione_automatica: true, invite_expires_at: null, risultati_nominativi: false,
   link_video: null, livello: null, accesso_libero: "tutto-aperto", permessi: {},
+  soluzioni_predefinite: "dopo-il-gioco",
   inizio_corso: null, fine_corso: null, created_at: "2026-01-01", ...over,
 });
 

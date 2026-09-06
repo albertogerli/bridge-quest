@@ -18,6 +18,7 @@ import { ClassChat } from "@/components/instructor/class-chat";
 import { ClassLeaderboard } from "@/components/instructors/class-leaderboard";
 import { AssegnaLezioni } from "@/components/instructors/assegna-lezioni";
 import { Rubinetto } from "@/components/istruttori/rubinetto";
+import { RevisioniDaAprire } from "@/components/istruttori/revisioni-da-aprire";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
 import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
 import {
@@ -583,6 +584,9 @@ export default function ClassDetailPage({
             </div>
           )}
         </TabsContent>
+
+        {/* Le revisioni chiuse, dove l'insegnante guarda per prima cosa. */}
+        <RevisioniDaAprire classId={classId} />
 
         {/* Lezioni: assegnare in blocco */}
         <TabsContent value="lezioni" className="mt-4">

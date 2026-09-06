@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-05
+-- Estratto il: 2026-09-06
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -159,7 +159,8 @@ CREATE TABLE IF NOT EXISTS public.classes (
   fine_corso date,
   livello text,
   accesso_libero text NOT NULL,
-  permessi jsonb NOT NULL
+  permessi jsonb NOT NULL,
+  soluzioni_predefinite text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -3672,6 +3673,7 @@ ALTER TABLE public.classes ALTER COLUMN stato SET DEFAULT 'aperta'::text;
 ALTER TABLE public.classes ALTER COLUMN risultati_nominativi SET DEFAULT false;
 ALTER TABLE public.classes ALTER COLUMN accesso_libero SET DEFAULT 'solo-il-corso'::text;
 ALTER TABLE public.classes ALTER COLUMN permessi SET DEFAULT '{}'::jsonb;
+ALTER TABLE public.classes ALTER COLUMN soluzioni_predefinite SET DEFAULT 'quando-l-insegnante-decide'::text;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -3918,7 +3920,7 @@ ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_periodo_key UNIQUE (tipo, p
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_mano_id_key UNIQUE (torneo_id, mano_id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
-ALTER TABLE public.assignments ADD CONSTRAINT assignments_soluzioni_check CHECK ((soluzioni = ANY (ARRAY['subito'::text, 'dopo-il-gioco'::text, 'dopo-la-scadenza'::text])));
+ALTER TABLE public.assignments ADD CONSTRAINT assignments_soluzioni_check CHECK ((soluzioni = ANY (ARRAY['subito'::text, 'dopo-il-gioco'::text, 'dopo-la-scadenza'::text, 'quando-l-insegnante-decide'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHECK ((unlock_mode = ANY (ARRAY['free'::text, 'sequential'::text])));
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_check CHECK ((south_id <> north_id));
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
@@ -3928,6 +3930,7 @@ ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK
 ALTER TABLE public.classes ADD CONSTRAINT classes_accesso_libero_valido CHECK ((accesso_libero = ANY (ARRAY['solo-il-corso'::text, 'con-pratica-libera'::text, 'tutto-aperto'::text, 'personalizzato'::text])));
 ALTER TABLE public.classes ADD CONSTRAINT classes_livello_breve CHECK (((livello IS NULL) OR (char_length(livello) <= 60)));
 ALTER TABLE public.classes ADD CONSTRAINT classes_periodo_coerente CHECK (((fine_corso IS NULL) OR (inizio_corso IS NULL) OR (fine_corso >= inizio_corso)));
+ALTER TABLE public.classes ADD CONSTRAINT classes_soluzioni_predefinite_valide CHECK ((soluzioni_predefinite = ANY (ARRAY['subito'::text, 'dopo-il-gioco'::text, 'dopo-la-scadenza'::text, 'quando-l-insegnante-decide'::text])));
 ALTER TABLE public.classes ADD CONSTRAINT classes_stato_check CHECK ((stato = ANY (ARRAY['bozza'::text, 'aperta'::text, 'chiusa'::text, 'archiviata'::text])));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_corpo_check CHECK (((char_length(btrim(corpo)) >= 1) AND (char_length(btrim(corpo)) <= 4000)));
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
