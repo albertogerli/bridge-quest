@@ -26,12 +26,29 @@ import type { Card, Position } from "@/lib/bridge-engine";
  * sarebbero quaranta andate e ritorni — cioè la differenza fra «la classe vede
  * la mano insieme» e «la vede a scaglioni».
  *
- * NON HO MISURATO 160 BROWSER VERI COLLEGATI INSIEME. Le 160 letture sono in
- * fila, non simultanee, e non dicono niente sul limite di connessioni Realtime
- * di Supabase né sulla banda di una sala con il wi-fi del circolo — che sono i
- * due limiti che in aula si incontrano per primi. Dichiararlo provato sarebbe
- * falso: quel numero si scopre alla prima lezione con quaranta tavoli veri, e
- * il polling di riserva ogni cinque secondi che il tavolo già ha è la rete
+ * MISURATO IL 07/09/2026, la parte che mancava — e non erano le connessioni.
+ *
+ * Ogni tavolo aperto in un browser, a OGNI aggiornamento, richiama la lettura
+ * del tavolo; e in più la richiama da solo ogni cinque secondi. Centosessanta
+ * persone sono quindi 32 letture al secondo a vuoto, più una raffica di 160
+ * ogni volta che l'insegnante distribuisce. È quello il carico vero:
+ *
+ *   raffica di 160 letture insieme        538 ms in tutto, nessun errore
+ *   regime di 32/s per trenta secondi     p50 93 ms, p95 111, nessun errore
+ *   raffica DURANTE il regime             393 ms, p95 del regime 273 ms
+ *   160 abbonamenti Realtime insieme      159 connessi in 965 ms
+ *
+ * Il server regge. Il primo tentativo però è fallito per il resolver DNS della
+ * macchina che lanciava la prova, non per Supabase: senza accorgersene si
+ * sarebbe scambiato per «non regge». Vedi `scripts/carico-aula.mjs`.
+ *
+ * UNO SU CENTOSESSANTA NON SI È ABBONATO, e non è un difetto da inseguire: è
+ * la ragione per cui il polling di riserva ogni cinque secondi deve restare.
+ * Con quaranta tavoli veri, che a qualcuno non arrivi il canale è la norma.
+ *
+ * QUELLO CHE RESTA NON MISURATO è la sala: centosessanta dispositivi sul wi-fi
+ * di un circolo, ognuno con la sua stretta di mano TLS. Qui le connessioni
+ * erano riusate e la rete era una sola. Il polling di riserva
  * messa lì apposta per quel giorno.
  */
 
