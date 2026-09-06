@@ -30,6 +30,20 @@ export interface LiveTable {
   revealed: Position[];
   /** Il posto assegnato a chi guarda, se ne ha uno. */
   seat: Position | null;
+  /**
+   * Chi aspetta il proprio turno, in coda. Vuoto quando il tavolo non è pieno.
+   */
+  inAttesa: string[];
+  /**
+   * Quante mani mancano al proprio turno. Zero = non si è in coda.
+   * «In attesa» senza sapere quanto è la parte fastidiosa dell'aspettare.
+   */
+  maniAlTurno: number;
+  /**
+   * Chi lascerà il posto al prossimo giro. Si dice PRIMA: scoprirlo quando le
+   * carte non arrivano sembra un guasto.
+   */
+  prossimoAUscire: string | null;
   /** Chi siede dove. Solo per l'insegnante: un allievo non ha motivo di
    *  sapere dove siedono i compagni. */
   seatOf: Record<string, Position> | null;

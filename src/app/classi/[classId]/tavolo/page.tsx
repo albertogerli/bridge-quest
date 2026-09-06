@@ -172,6 +172,9 @@ export default function TavoloAllievoPage({
             postiOccupati={stato.seatOf ?? {}}
             nomi={nomi}
             ioSono={user?.id ?? null}
+            inAttesa={stato.inAttesa ?? []}
+            maniAlTurno={stato.maniAlTurno ?? 0}
+            prossimoAUscire={stato.prossimoAUscire ?? null}
             // Il canale realtime porta già lo stato nuovo, ma può tardare di
             // qualche secondo: rileggere subito evita che chi si è appena
             // seduto veda ancora il posto libero e ci ritocchi sopra.

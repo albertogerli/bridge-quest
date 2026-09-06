@@ -228,3 +228,42 @@ export async function nomiDellaClasse(classId: string): Promise<Map<string, stri
   const righe = (data ?? []) as { student_id: string; student_name: string | null }[];
   return new Map(righe.map((r) => [r.student_id, r.student_name ?? "Un compagno"]));
 }
+
+/**
+ * Mettersi in coda quando i quattro posti sono presi.
+ *
+ * IL NONO ALLIEVO. Nove persone: due tavoli e uno fuori, che alla prima serata
+ * è la norma. Lasciarlo a guardare è brutto; dargli un tavolo di soli robot è
+ * peggio, ed è più umiliante che stare a guardare. In circolo si sta al tavolo
+ * come quinto e si entra a turno: vede le mani vere e alla smazzata dopo gioca.
+ */
+export async function aspetta(tavoloId: string): Promise<{ esito: string; mancano?: number }> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("aula_aspetta", { p_tavolo_id: tavoloId });
+  if (error) {
+    reportError("aula:aspetta", error);
+    return { esito: "errore" };
+  }
+  return data as { esito: string; mancano?: number };
+}
+
+/**
+ * Il giro di fine mano: si conta la mano giocata e cambia chi deve cambiare.
+ *
+ * ESCE CHI HA GIOCATO PIÙ MANI, non chi è entrato da più tempo. Sono la stessa
+ * cosa finché nessuno arriva o se ne va, e diventano diverse esattamente nella
+ * sera vera, dove qualcuno entra alla terza smazzata: contando le mani, chi è
+ * appena arrivato non salta il turno di chi gioca da un'ora.
+ *
+ * Il conteggio si aggiorna anche quando non c'è nessuno in coda: se si
+ * aspettasse il primo arrivo, i numeri sarebbero già falsi quando servono.
+ */
+export async function ruota(tavoloId: string): Promise<{ esito: string; esce?: string; entra?: string }> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("aula_ruota", { p_tavolo_id: tavoloId });
+  if (error) {
+    reportError("aula:ruota", error);
+    return { esito: "errore" };
+  }
+  return data as { esito: string; esce?: string; entra?: string };
+}

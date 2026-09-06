@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Position } from "@/lib/bridge-engine";
-import { siediti, type EsitoPosto } from "@/lib/aula";
+import { aspetta, siediti, type EsitoPosto } from "@/lib/aula";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -66,6 +66,9 @@ export function SceltaPosto({
   postiOccupati,
   nomi,
   ioSono,
+  inAttesa,
+  maniAlTurno,
+  prossimoAUscire,
   onCambiato,
 }: {
   tavoloId: string;
@@ -73,6 +76,9 @@ export function SceltaPosto({
   postiOccupati: Record<string, Position>;
   nomi: Map<string, string>;
   ioSono: string | null;
+  inAttesa: string[];
+  maniAlTurno: number;
+  prossimoAUscire: string | null;
   onCambiato: () => void;
 }) {
   const t = useT();
@@ -110,6 +116,17 @@ export function SceltaPosto({
     }
   }
 
+  const pieno = Object.keys(postiOccupati).length >= 4;
+  const inCoda = ioSono ? inAttesa.includes(ioSono) : false;
+  const escoIo = ioSono !== null && prossimoAUscire === ioSono;
+
+  async function mettitiInCoda() {
+    setMessaggio(null);
+    const r = await aspetta(tavoloId);
+    if (r.esito === "in-coda" || r.esito === "gia-in-coda") onCambiato();
+    else setMessaggio(t("Non sono riuscito a metterti in attesa. Riprova."));
+  }
+
   return (
     <div>
       <div className="mx-auto grid max-w-xs grid-cols-3 gap-2">
@@ -140,7 +157,43 @@ export function SceltaPosto({
       {messaggio && (
         <p className="mt-3 text-center text-sm text-muted-foreground">{messaggio}</p>
       )}
-      {!mioPosto && !messaggio && (
+      {/*
+        CHI STA PER USCIRE LO SA PRIMA. Scoprirlo quando le carte non arrivano
+        sembra un guasto; una riga alla fine della mano precedente basta.
+      */}
+      {escoIo && (
+        <p className="mt-3 rounded-lg bg-muted p-3 text-center text-sm">
+          {t("Alla prossima mano lasci il posto a chi aspetta. Rientri subito dopo.")}
+        </p>
+      )}
+
+      {/*
+        QUANTE MANI MANCANO, non solo «sei in attesa»: è la differenza fra
+        aspettare e non sapere.
+      */}
+      {inCoda && (
+        <p className="mt-3 rounded-lg bg-primary/10 p-3 text-center text-sm font-medium">
+          {maniAlTurno <= 1
+            ? t("Entri alla prossima mano.")
+            : `${t("Sei in attesa: mancano")} ${maniAlTurno} ${t("mani al tuo turno")}.`}
+        </p>
+      )}
+
+      {!mioPosto && !inCoda && pieno && (
+        <div className="mt-3 text-center">
+          <p className="text-sm text-muted-foreground">
+            {t("Il tavolo è al completo. Puoi aspettare il tuo turno: entri a giro, come in circolo.")}
+          </p>
+          <button
+            onClick={() => void mettitiInCoda()}
+            className="mt-2 min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+          >
+            {t("Mettiti in attesa")}
+          </button>
+        </div>
+      )}
+
+      {!mioPosto && !inCoda && !pieno && !messaggio && (
         <p className="mt-3 text-center text-sm text-muted-foreground">
           {t("Tocca un posto libero per sederti.")}
         </p>
