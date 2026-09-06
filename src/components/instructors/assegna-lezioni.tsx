@@ -19,7 +19,7 @@ import {
 } from "@/lib/instructors";
 import { aspettaLInsegnante } from "@/lib/revisioni";
 import { reportError } from "@/lib/report-error";
-import { compitoAssegnatoWhatsApp, linkWhatsApp } from "@/lib/whatsapp";
+import { compitoAssegnatoWhatsApp, linkWhatsApp, materialiLezioneWhatsApp } from "@/lib/whatsapp";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -326,6 +326,8 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                                 classId,
                                 compito.assignment_id,
                                 compito.n_mani,
+                                null,
+                                compiti.find((a) => a.id === compito.assignment_id)?.soluzioni,
                               ),
                             )}
                             target="_blank"
@@ -345,6 +347,24 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                               {t("Apri la revisione")}
                             </Button>
                           )}
+                          {/* I tre link della settimana, già scritti: è il
+                              gesto che l'insegnante fa a mano ogni lezione. */}
+                          <a
+                            href={linkWhatsApp(
+                              materialiLezioneWhatsApp({
+                                titoloLezione: `${corso.name} — ${lezione.title}`,
+                                classId,
+                                assignmentId: compito.assignment_id,
+                                corsoId: corso.id,
+                              }),
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button size="sm" variant="ghost">
+                              {t("Materiali")}
+                            </Button>
+                          </a>
                           <Link href={`/istruttori/dispensa?compito=${compito.assignment_id}`}>
                             <Button size="sm" variant="ghost">
                               {t("Dispensa")}

@@ -3,6 +3,7 @@ import {
   compitoAssegnatoWhatsApp,
   invitoClasse,
   linkWhatsApp,
+  materialiLezioneWhatsApp,
   promemoriaScadenzaWhatsApp,
 } from "./whatsapp";
 
@@ -62,5 +63,60 @@ describe("il link della videoconferenza nel messaggio", () => {
     const m = compitoAssegnatoWhatsApp("T", "c1", "a1", 4);
     expect(m).not.toContain("Ci vediamo qui");
     expect(m).not.toMatch(/\n\n\n/);
+  });
+});
+
+describe("il messaggio dei materiali", () => {
+  const base = { titoloLezione: "Corso Fiori — Le aperture", classId: "c1" };
+
+  it("la dispensa porta la classe nell'indirizzo", () => {
+    // Senza, chi tocca il link atterra su «le dispense del sito» invece che
+    // sui materiali del suo corso — e il canale che l'insegnante usa di più
+    // scavalcherebbe tutto il lavoro sul percorso guidato.
+    expect(materialiLezioneWhatsApp(base)).toContain("/dispense?classe=c1");
+  });
+
+  it("l'ordine è quello in cui si usano: si guarda, si legge, si esercita", () => {
+    const testo = materialiLezioneWhatsApp({
+      ...base, linkVideo: "https://video", assignmentId: "a1", corsoId: "fiori",
+    });
+    expect(testo.indexOf("videolezione")).toBeLessThan(testo.indexOf("dispensa"));
+    expect(testo.indexOf("dispensa")).toBeLessThan(testo.indexOf("esercizi"));
+  });
+
+  it("senza video e senza compito non lascia righe vuote né link rotti", () => {
+    const testo = materialiLezioneWhatsApp(base);
+    expect(testo).not.toContain("videolezione");
+    expect(testo).not.toContain("esercizi");
+    expect(testo).not.toContain("undefined");
+    expect(testo).not.toContain("null");
+  });
+
+  it("I LINK SONO ASSOLUTI: reggono se l'insegnante riscrive il testo intorno", () => {
+    // Molti aggiungeranno una riga di loro pugno, ed è giusto. Niente qui
+    // rilegge il messaggio, quindi non c'è niente che si possa rompere — ma i
+    // link devono valere anche da soli, staccati da tutto il resto.
+    const testo = materialiLezioneWhatsApp({ ...base, assignmentId: "a1" });
+    for (const riga of testo.split("\n").filter((r) => r.includes("http"))) {
+      const url = riga.slice(riga.indexOf("http"));
+      expect(() => new URL(url)).not.toThrow();
+    }
+  });
+});
+
+describe("il messaggio del compito non promette il falso", () => {
+  it("con «lo decide l'insegnante» non dice che si aprono dopo il gioco", () => {
+    // La frase era fissa e da quando esiste il quarto valore poteva mentire:
+    // un allievo che gioca, non vede le soluzioni e ha in mano un messaggio che
+    // gliele prometteva, pensa che il portale sia rotto.
+    const testo = compitoAssegnatoWhatsApp("Lezione 4", "c1", "a1", 8, null, "quando-l-insegnante-decide");
+    expect(testo).not.toContain("dopo che avete giocato");
+    expect(testo).toContain("le apro io");
+  });
+
+  it("gli altri tre valori dicono ciascuno la sua", () => {
+    expect(compitoAssegnatoWhatsApp("x", "c", "a", 1, null, "subito")).toContain("già disponibili");
+    expect(compitoAssegnatoWhatsApp("x", "c", "a", 1, null, "dopo-la-scadenza")).toContain("dopo la scadenza");
+    expect(compitoAssegnatoWhatsApp("x", "c", "a", 1, null, "dopo-il-gioco")).toContain("dopo che avete giocato");
   });
 });
