@@ -8,6 +8,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import {
+  getLiveTable,
   getOpenLiveTable,
   playLiveCard,
   statoDelGioco,
@@ -16,6 +17,8 @@ import {
 } from "@/lib/live-table";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
 import { SondaggioAllievo } from "@/components/sondaggio-allievo";
+import { SceltaPosto } from "@/components/istruttori/scelta-posto";
+import { nomiDellaClasse } from "@/lib/aula";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
@@ -45,6 +48,7 @@ export default function TavoloAllievoPage({
   const { user, loading } = useSharedAuth();
   const [tableId, setTableId] = useState<string | null>(null);
   const [stato, setStato] = useState<LiveTable | null>(null);
+  const [nomi, setNomi] = useState<Map<string, string>>(new Map());
   const [cercato, setCercato] = useState(false);
   const [errore, setErrore] = useState("");
 
@@ -85,6 +89,12 @@ export default function TavoloAllievoPage({
     if (!tableId) return;
     return watchLiveTable(tableId, setStato);
   }, [tableId]);
+
+  // I nomi dei compagni servono per far vedere chi è già seduto: si caricano
+  // una volta, non cambiano durante la lezione.
+  useEffect(() => {
+    void nomiDellaClasse(classId).then(setNomi);
+  }, [classId]);
 
   if (loading) return null;
   if (!user) {
@@ -143,10 +153,32 @@ export default function TavoloAllievoPage({
           </p>
         ) : (
           <p className="text-sm text-muted-foreground mt-1">
-            {t("Non hai ancora un posto: vedi le mani che l'insegnante scopre.")}
+            {t("Scegli dove sederti.")}
           </p>
         )}
       </header>
+
+      {/*
+        LA SCELTA DEL POSTO STA IN CIMA, e sparisce appena la mano comincia.
+        Prima l'allievo aspettava che l'insegnante gli assegnasse una sedia;
+        adesso si siede da sé, vedendo chi c'è già — che è come funziona in
+        circolo, e come Trevissoi ha chiesto: «loro devono poter sedere dove
+        vogliono, gli altri posti rimangono liberi e loro entrano».
+      */}
+      {tableId && stato && (stato.played?.length ?? 0) === 0 && (
+        <div className="mb-5">
+          <SceltaPosto
+            tavoloId={tableId}
+            postiOccupati={stato.seatOf ?? {}}
+            nomi={nomi}
+            ioSono={user?.id ?? null}
+            // Il canale realtime porta già lo stato nuovo, ma può tardare di
+            // qualche secondo: rileggere subito evita che chi si è appena
+            // seduto veda ancora il posto libero e ci ritocchi sopra.
+            onCambiato={() => void getLiveTable(tableId).then((t) => t && setStato(t))}
+          />
+        </div>
+      )}
 
       {/*
         Il sondaggio sta QUI e non solo nella pagina della classe: durante la
