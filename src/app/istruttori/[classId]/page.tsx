@@ -368,6 +368,55 @@ export default function ClassDetailPage({
             />
           </div>
 
+          {/* Come si riconosce questa classe nell'elenco. Con più corsi aperti
+              insieme, il nome da solo non basta: vedi `etichetta-classe.ts`. */}
+          <div className="grid gap-3 border-t border-border pt-4 sm:grid-cols-3">
+            <div className="space-y-1.5">
+              <label htmlFor="livello" className="text-sm font-medium">{t("Livello")}</label>
+              <input
+                id="livello"
+                type="text"
+                defaultValue={classRoom.livello ?? ""}
+                placeholder="Primo livello, Approfondimento…"
+                maxLength={60}
+                disabled={busy}
+                onBlur={(e) => {
+                  const v = e.target.value.trim();
+                  if (v !== (classRoom.livello ?? "")) void cambiaImpostazione({ livello: v || null });
+                }}
+                className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="inizio-corso" className="text-sm font-medium">{t("Prima lezione")}</label>
+              <input
+                id="inizio-corso"
+                type="date"
+                defaultValue={classRoom.inizio_corso ?? ""}
+                disabled={busy}
+                onBlur={(e) => {
+                  const v = e.target.value;
+                  if (v !== (classRoom.inizio_corso ?? "")) void cambiaImpostazione({ inizio_corso: v || null });
+                }}
+                className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="fine-corso" className="text-sm font-medium">{t("Ultima lezione")}</label>
+              <input
+                id="fine-corso"
+                type="date"
+                defaultValue={classRoom.fine_corso ?? ""}
+                disabled={busy}
+                onBlur={(e) => {
+                  const v = e.target.value;
+                  if (v !== (classRoom.fine_corso ?? "")) void cambiaImpostazione({ fine_corso: v || null });
+                }}
+                className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm"
+              />
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <label htmlFor="link-video" className="text-sm font-medium">
               {t("Stanza di videoconferenza")}
