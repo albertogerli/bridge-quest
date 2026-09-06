@@ -87,3 +87,22 @@ describe("l'elenco dei campi è un dato, non una pagina", () => {
     for (const c of tutti) expect(c.etichetta.length).toBeGreaterThan(2);
   });
 });
+
+describe("l'esempio nei campi non orienta le scelte di chi compila", () => {
+  it("il campo dei vincoli non suggerisce un limite d'età", () => {
+    // L'esempio lo copia chi non ha voglia di scrivere. La Federazione i
+    // giovani li vuole: un «riservato ai maggiori di 16 anni» precompilato
+    // lavorerebbe contro l'obiettivo, senza che nessuno l'abbia deciso.
+    const note = CAMPI_FACOLTATIVI.find((c) => c.chiave === "note");
+    const testo = (note?.esempio ?? "").toLowerCase();
+    for (const parola of ["anni", "età", "maggiori", "minori", "riservato"]) {
+      expect(testo).not.toContain(parola);
+    }
+  });
+
+  it("nessun esempio, in nessun campo, parla di età o di limiti di persone", () => {
+    for (const c of [...CAMPI, ...CAMPI_FACOLTATIVI]) {
+      expect((c.esempio ?? "").toLowerCase()).not.toContain("anni");
+    }
+  });
+});
