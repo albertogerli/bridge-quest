@@ -56,7 +56,15 @@ export const CAMPI: CampoLocandina[] = [
 
 /** I due campi che compaiono solo se il rispettivo interruttore è acceso. */
 export const CAMPI_FACOLTATIVI: CampoLocandina[] = [
-  { chiave: "note", etichetta: "Vincoli o limitazioni", lungo: true, esempio: "Riservato a…, numero massimo…" },
+  {
+    chiave: "note",
+    etichetta: "Vincoli o limitazioni",
+    lungo: true,
+    // L'esempio orienta chi non ha voglia di scrivere, quindi non può
+    // suggerire un limite d'età: la Federazione i giovani li vuole, e un
+    // «riservato ai maggiori di 16 anni» precompilato lavorerebbe contro.
+    esempio: "Numero massimo 24 partecipanti",
+  },
   { chiave: "contatti", etichetta: "Come iscriversi senza QR", esempio: "Per informazioni: 080 1234567" },
 ];
 
