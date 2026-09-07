@@ -213,7 +213,17 @@ export default function TavoloAllievoPage({
               <span className="text-xs text-muted-foreground">presa nuova</span>
             )}
           </div>
-          <p className="text-sm font-semibold mt-1">
+          {/*
+            ANNUNCIATO, non solo scritto. Di chi sia il turno cambia da solo —
+            lo decide una carta giocata da un'altra persona — e chi non guarda
+            lo schermo in quel momento non ha modo di accorgersene. È l'unica
+            cosa del tavolo che cambia senza che sia stato l'utente a farla
+            cambiare, ed è quella che serve sapere.
+
+            `polite` e non `assertive`: interrompere la lettura di una mano per
+            dire che tocca a un altro è peggio che dirlo un momento dopo.
+          */}
+          <p className="text-sm font-semibold mt-1" aria-live="polite" role="status">
             {tocca ? "Tocca a te" : `Gioca ${ETICHETTA[gioco.turno]}`}
           </p>
         </div>

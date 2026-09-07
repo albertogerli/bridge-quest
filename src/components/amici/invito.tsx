@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Copy, Share2, UserPlus } from "lucide-react";
+import { Check, Copy, QrCode, Share2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import {
   cercaPerCodice, linkInvito, mioCodice, messaggioInvito, normalizzaCodice,
 } from "@/lib/codice-amico";
+import { qrSvg } from "@/lib/qr";
 import { reportError } from "@/lib/report-error";
+import { copiaDaSegnalare, copiaTesto } from "@/lib/appunti";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -19,16 +21,24 @@ import { useT } from "@/contexts/traduzioni-provider";
  * situazioni diverse, e la nostra è la generazione che al circolo ci va
  * davvero.
  *
- * NIENTE QR, per ora. Il piano lo chiede e ha senso — al circolo due persone
- * sono nella stessa stanza e inquadrare è più veloce che trascrivere — ma
- * serve un encoder vero, e non abbiamo la libreria. Un pulsante «QR» che
- * mostra un rettangolo di testo è peggio di un pulsante che non c'è: promette
- * e non mantiene. Si aggiunge quando si aggiunge la dipendenza.
+ * IL QR C'È, e la storia di come non c'era vale più della funzione. Questo
+ * commento diceva «serve un encoder vero, e non abbiamo la libreria»: era vero
+ * quando è stato scritto e ha smesso di esserlo quando `qrcode-generator` è
+ * entrato fra le dipendenze per la locandina delle classi. Nessuno è tornato a
+ * rileggerlo, e la funzione è rimasta non fatta per una ragione che non
+ * esisteva più.
+ *
+ * È il difetto peggiore che un commento possa avere: qui i commenti spiegano
+ * PERCHÉ, e chi li legge si fida. Uno che mente non confonde — impedisce.
+ *
+ * Al circolo due persone sono nella stessa stanza, e inquadrare è più veloce
+ * che dettare sei caratteri a chi non sente bene.
  */
 export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: string | null) => void }) {
   const t = useT();
   const { user, profile } = useSharedAuth();
   const [codice, setCodice] = useState<string | null>(null);
+  const [mostraQr, setMostraQr] = useState(false);
   const [copiato, setCopiato] = useState(false);
   const [inserito, setInserito] = useState("");
   const [trovato, setTrovato] = useState<{ id: string; nome: string | null } | null>(null);
@@ -49,13 +59,15 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
   const messaggio = messaggioInvito(profile?.display_name ?? null, link);
 
   const copia = async () => {
-    try {
-      await navigator.clipboard.writeText(link);
+    const esito = await copiaTesto(link);
+    if (esito === "copiato") {
       setCopiato(true);
       setTimeout(() => setCopiato(false), 2000);
-    } catch (err) {
-      reportError("invito:copia", err);
+      return;
     }
+    // La pagina che perde il fuoco o il permesso negato non sono difetti:
+    // vedi `copiaDaSegnalare`.
+    if (copiaDaSegnalare(esito)) reportError("invito:copia", new Error(`copia: ${esito}`));
   };
 
   const cerca = async () => {
@@ -95,6 +107,10 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
           {copiato ? <Check className="w-4 h-4 mr-1" aria-hidden="true" /> : <Copy className="w-4 h-4 mr-1" aria-hidden="true" />}
           {copiato ? "Copiato" : "Copia link"}
         </Button>
+        <Button variant="outline" onClick={() => setMostraQr((v) => !v)} disabled={!codice}>
+          <QrCode className="w-4 h-4 mr-1" aria-hidden="true" />
+          {t("QR")}
+        </Button>
         <a
           href={`https://wa.me/?text=${encodeURIComponent(messaggio)}`}
           target="_blank"
@@ -106,6 +122,16 @@ export function InvitoAmico({ onTrovato }: { onTrovato?: (id: string, nome: stri
           </Button>
         </a>
       </div>
+
+      {mostraQr && codice && (
+        <div className="mb-3 flex flex-col items-center rounded-xl border border-border p-4">
+          {/* Generato qui: il codice di un amico non passa da un servizio esterno. */}
+          <div className="w-44" dangerouslySetInnerHTML={{ __html: qrSvg(link) }} />
+          <p className="mt-2 text-center text-sm text-muted-foreground">
+            {t("Fallo inquadrare: si ritrova con il codice già inserito.")}
+          </p>
+        </div>
+      )}
       <p className="text-xs text-muted-foreground mb-4">
         {t("Dettalo al telefono o mandalo: chi ce l'ha può aggiungerti.")}
       </p>
