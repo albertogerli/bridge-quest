@@ -34,6 +34,22 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bridgelab.it"),
   // Note: no global `canonical` here — a site-wide "/" canonical wrongly points
   // every page at the homepage. Each public route sets its own via a route layout.
+  //
+  // HREFLANG, che invece globale ci va. `/en/:path*` riscrive su `/:path*`:
+  // le stesse pagine esistono a due indirizzi, e senza dichiararlo un motore di
+  // ricerca vede due siti che si copiano — e ne penalizza uno dei due, di solito
+  // quello che non hai scelto tu.
+  //
+  // `x-default` punta all'italiano perché è la lingua predefinita del progetto
+  // e quella in cui si scrive per primi: chi arriva senza una preferenza di
+  // lingua deve trovare la versione completa, non quella che insegue.
+  alternates: {
+    languages: {
+      it: "/",
+      en: "/en",
+      "x-default": "/",
+    },
+  },
   openGraph: {
     title: "BridgeLab - Impara il Bridge giocando",
     description:
