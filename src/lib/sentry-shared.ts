@@ -29,6 +29,30 @@ export const IGNORE_ERRORS = [
   "top.GLOBALS",
   "chrome-extension://",
   "moz-extension://",
+  /**
+   * Le tre frasi con cui un'estensione del browser sbaglia a parlare con la
+   * propria pagina di servizio. Sono arrivate come errori NOSTRI perché
+   * emergono come rifiuti di promesse non gestiti dentro la nostra pagina, e
+   * il gestore globale di Sentry le raccoglie lì — ma il codice che le produce
+   * non è nostro e non è raggiungibile da noi.
+   *
+   * PERCHÉ NON BASTAVA QUELLO CHE C'ERA. `chrome-extension://` e i
+   * `DENY_URLS` filtrano sull'INDIRIZZO del file, e questi eventi arrivano
+   * senza nemmeno un fotogramma di stack: c'è solo il messaggio. Il primo caso
+   * reale è stato «Invalid call to runtime.sendMessage(). Tab not found.» dal
+   * browser DuckDuckGo su Mac, l'11/09/2026.
+   *
+   * PERCHÉ SI POSSONO FILTRARE SENZA RISCHIO: `runtime.sendMessage` è l'API
+   * delle estensioni, e BridgeLab non la chiama — verificato, non compare in
+   * una riga del sorgente. Le altre due sono la stessa famiglia: l'estensione
+   * è stata aggiornata o disattivata mentre la pagina era aperta.
+   *
+   * Sono qui e non in `beforeSend` perché `ignoreErrors` guarda il messaggio,
+   * che è l'unica cosa che questi eventi hanno.
+   */
+  "runtime.sendMessage",
+  "Extension context invalidated",
+  "The message port closed before a response was received",
 ];
 
 export const DENY_URLS = [

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isInAppBrowserNoise, isServiceWorkerNoise } from "./sentry-shared";
+import { IGNORE_ERRORS, isInAppBrowserNoise, isServiceWorkerNoise } from "./sentry-shared";
 
 /**
  * Il primo evento reale arrivato in produzione: il renderer di Google (WRS),
@@ -244,5 +244,34 @@ describe("registrazione del service worker — la formulazione di WebKit", () =>
 
   it("NON scarta un «load failed» che non nomina uno script", () => {
     expect(isServiceWorkerNoise(conMessaggio("Image load failed"))).toBe(false);
+  });
+});
+
+describe("il rumore delle estensioni del browser", () => {
+  /**
+   * `ignoreErrors` di Sentry confronta ogni voce con il messaggio: una stringa
+   * passa se è contenuta. Qui si verifica la stessa cosa che farà Sentry.
+   */
+  const scartato = (messaggio: string) =>
+    IGNORE_ERRORS.some((v) =>
+      typeof v === "string" ? messaggio.includes(v) : (v as RegExp).test(messaggio),
+    );
+
+  it("scarta l'errore vero arrivato da DuckDuckGo l'11/09/2026", () => {
+    expect(scartato("Invalid call to runtime.sendMessage(). Tab not found.")).toBe(true);
+  });
+
+  it("scarta gli altri due della stessa famiglia", () => {
+    // L'estensione aggiornata o disattivata mentre la pagina era aperta.
+    expect(scartato("Extension context invalidated.")).toBe(true);
+    expect(scartato("The message port closed before a response was received.")).toBe(true);
+  });
+
+  it("NON scarta un errore nostro che nomina un messaggio", () => {
+    // È il rischio di filtrare per sottostringa: se il filtro fosse «message»
+    // o «port», si porterebbe via anche i nostri. Questi devono passare.
+    expect(scartato("Non riesco a inviare il messaggio alla classe")).toBe(false);
+    expect(scartato("BEN non ha dichiarato per north: server")).toBe(false);
+    expect(scartato("permission denied for table adesioni")).toBe(false);
   });
 });
