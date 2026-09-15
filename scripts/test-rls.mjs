@@ -73,6 +73,14 @@ console.log("\n[1b] Funzioni SECURITY DEFINER — non eseguibili da anonimo");
     ["get_game_leaderboard", { p_game_type: "smazzata", p_limit: 5 }],
     ["is_admin", {}],
     ["admin_game_stats", {}],
+    ["ultimo_torneo_con_aste", { p_tipo: "giornaliero" }],
+    [
+      "aste_giocatore_torneo",
+      {
+        p_torneo: "00000000-0000-0000-0000-000000000000",
+        p_giocatore: "00000000-0000-0000-0000-000000000000",
+      },
+    ],
   ];
   for (const [fn, args] of probes) {
     const { data, error } = await anon.rpc(fn, args);
@@ -145,7 +153,13 @@ try {
   }
 
   // Le altre tabelle personali non devono essere leggibili fra utenti
-  for (const t of ["login_history", "game_results", "completed_modules", "review_items"]) {
+  for (const t of [
+    "login_history",
+    "game_results",
+    "completed_modules",
+    "review_items",
+    "risultati_torneo",
+  ]) {
     const { data, error } = await user.from(t).select("user_id").neq("user_id", testUserId).limit(1);
     const leaked = !error && (data?.length ?? 0) > 0;
     if (leaked) fail(`${t}: un utente legge le righe ALTRUI`);

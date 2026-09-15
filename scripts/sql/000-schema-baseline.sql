@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-06
+-- Estratto il: 2026-09-15
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -638,7 +638,8 @@ CREATE TABLE IF NOT EXISTS public.risultati_torneo (
   dichiarante text,
   punteggio integer NOT NULL,
   stelle numeric(2,1) NOT NULL,
-  created_at timestamp with time zone NOT NULL
+  created_at timestamp with time zone NOT NULL,
+  asta text[]
 );
 
 CREATE TABLE IF NOT EXISTS public.saved_hands (
@@ -1168,6 +1169,58 @@ begin
 
   return esito;
 end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select case when (select auth.uid()) is null then null else (
+    select jsonb_build_object(
+      'giocatore', jsonb_build_object(
+        'nome', p.display_name,
+        'asd', p.asd_name,
+        'sonoIo', p.id = (select auth.uid())
+      ),
+      'aste', (
+        select coalesce(
+          jsonb_agg(
+            jsonb_build_object(
+              'numero', tm.numero,
+              'dealer', m.dealer,
+              'bids', r.asta,
+              'contratto', r.contratto,
+              'stelle', r.stelle
+            )
+            order by tm.numero
+          ),
+          '[]'::jsonb
+        )
+        from public.risultati_torneo r
+        join public.torneo_mani tm
+          on tm.torneo_id = r.torneo_id
+         and tm.mano_id = r.mano_id
+        join public.mani_generate m on m.id = r.mano_id
+        where r.torneo_id = p_torneo
+          and r.user_id = p_giocatore
+          and r.asta is not null
+      )
+    )
+    from public.profiles p
+    join public.tornei t on t.id = p_torneo
+    where p.id = p_giocatore
+      and t.chiude_at <= now()
+      and exists (
+        select 1
+        from public.risultati_torneo r
+        where r.torneo_id = p_torneo
+          and r.user_id = p_giocatore
+          and r.asta is not null
+      )
+  ) end;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text DEFAULT NULL::text)
@@ -1735,39 +1788,57 @@ CREATE OR REPLACE FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti inte
  RETURNS jsonb
  LANGUAGE sql
  STABLE SECURITY DEFINER
- SET search_path TO 'public'
+ SET search_path TO ''
 AS $function$
-  SELECT CASE WHEN auth.uid() IS NULL THEN NULL ELSE jsonb_build_object(
-    'totale', (SELECT count(DISTINCT user_id) FROM public.risultati_torneo WHERE torneo_id = p_torneo),
+  select case when (select auth.uid()) is null then null else jsonb_build_object(
+    'totale', (
+      select count(distinct user_id)
+      from public.risultati_torneo
+      where torneo_id = p_torneo
+    ),
     'mia', (
-      SELECT jsonb_build_object('posizione', x.posizione, 'stelle', x.stelle, 'mani', x.mani)
-      FROM (
-        SELECT r.user_id,
-               rank() OVER (ORDER BY sum(r.stelle) DESC, max(r.created_at)) AS posizione,
-               sum(r.stelle) AS stelle, count(*) AS mani
-        FROM public.risultati_torneo r WHERE r.torneo_id = p_torneo
-        GROUP BY r.user_id
-      ) x WHERE x.user_id = auth.uid()
+      select jsonb_build_object(
+        'posizione', x.posizione,
+        'stelle', x.stelle,
+        'mani', x.mani
+      )
+      from (
+        select
+          r.user_id,
+          rank() over (order by sum(r.stelle) desc, max(r.created_at)) as posizione,
+          sum(r.stelle) as stelle,
+          count(*) as mani
+        from public.risultati_torneo r
+        where r.torneo_id = p_torneo
+        group by r.user_id
+      ) x
+      where x.user_id = (select auth.uid())
     ),
     'righe', (
-      SELECT coalesce(jsonb_agg(y ORDER BY (y->>'posizione')::int), '[]'::jsonb) FROM (
-        SELECT jsonb_build_object(
-          'posizione', rank() OVER (ORDER BY sum(r.stelle) DESC, max(r.created_at)),
+      select coalesce(
+        jsonb_agg(y order by (y->>'posizione')::int),
+        '[]'::jsonb
+      )
+      from (
+        select jsonb_build_object(
+          'posizione', rank() over (order by sum(r.stelle) desc, max(r.created_at)),
+          'giocatoreId', r.user_id,
+          'haAste', bool_or(r.asta is not null),
           'nome', p.display_name,
           'asd', p.asd_name,
           'stelle', sum(r.stelle),
           'mani', count(*),
-          'sonoIo', r.user_id = auth.uid()
-        ) AS y
-        FROM public.risultati_torneo r
-        JOIN public.profiles p ON p.id = r.user_id
-        WHERE r.torneo_id = p_torneo
-        GROUP BY r.user_id, p.display_name, p.asd_name
-        ORDER BY sum(r.stelle) DESC, max(r.created_at)
-        LIMIT greatest(1, least(coalesce(p_quanti, 50), 200))
+          'sonoIo', r.user_id = (select auth.uid())
+        ) as y
+        from public.risultati_torneo r
+        join public.profiles p on p.id = r.user_id
+        where r.torneo_id = p_torneo
+        group by r.user_id, p.display_name, p.asd_name
+        order by sum(r.stelle) desc, max(r.created_at)
+        limit greatest(1, least(coalesce(p_quanti, 50), 200))
       ) t
     )
-  ) END;
+  ) end;
 $function$
 ;
 
@@ -3919,6 +3990,35 @@ AS $function$
   $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.ultimo_torneo_con_aste(p_tipo text)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select case when (select auth.uid()) is null then null else (
+    select jsonb_build_object(
+      'id', t.id,
+      'tipo', t.tipo,
+      'periodo', t.periodo,
+      'chiudeAt', t.chiude_at,
+      'quante', (select count(*) from public.torneo_mani tm where tm.torneo_id = t.id)
+    )
+    from public.tornei t
+    where t.tipo = p_tipo
+      and t.chiude_at <= now()
+      and exists (
+        select 1
+        from public.risultati_torneo r
+        where r.torneo_id = t.id
+          and r.asta is not null
+      )
+    order by t.chiude_at desc
+    limit 1
+  ) end;
+$function$
+;
+
 -- VALORI PREDEFINITI
 ALTER TABLE public.adesioni ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.adesioni ALTER COLUMN fonte SET DEFAULT 'locandina'::text;
@@ -4275,6 +4375,7 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_profile_type_check CHECK ((p
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['user'::text, 'instructor'::text, 'admin'::text])));
 ALTER TABLE public.review_items ADD CONSTRAINT review_items_box_check CHECK (((box >= 1) AND (box <= 5)));
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
+ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_asta_dimensione_check CHECK (((asta IS NULL) OR ((array_ndims(asta) = 1) AND ((cardinality(asta) >= 4) AND (cardinality(asta) <= 319)) AND (array_position(asta, NULL::text) IS NULL))));
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((char_length(nota) <= 2000));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
@@ -4468,6 +4569,7 @@ CREATE INDEX sfide_coppie_partecipanti_idx ON public.sfide_coppie USING btree (a
 CREATE INDEX smazzate_bidding_gin ON public.smazzate USING gin (bidding jsonb_path_ops);
 CREATE INDEX smazzate_lesson_id_idx ON public.smazzate USING btree (lesson_id);
 CREATE INDEX tornei_aperti_idx ON public.tornei USING btree (chiude_at DESC);
+CREATE INDEX tornei_tipo_chiusura_idx ON public.tornei USING btree (tipo, chiude_at DESC);
 CREATE INDEX torneo_mani_mano_idx ON public.torneo_mani USING btree (mano_id);
 CREATE INDEX trova_errore_category_idx ON public.trova_errore_scenarios USING btree (category);
 CREATE INDEX trova_errore_difficulty_idx ON public.trova_errore_scenarios USING btree (difficulty);
@@ -4681,8 +4783,8 @@ CREATE POLICY "Si vede la propria risposta, e l'insegnante tutte" ON public.risp
   WHERE ((s.id = risposte_sondaggio.sondaggio_id) AND is_instructor_of_class(s.class_id))))));
 CREATE POLICY "Ognuno scrive il proprio risultato" ON public.risultati_mano AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Risultati leggibili" ON public.risultati_mano AS PERMISSIVE FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Ognuno legge il proprio risultato di torneo" ON public.risultati_torneo AS PERMISSIVE FOR SELECT TO authenticated USING ((( SELECT auth.uid() AS uid) = user_id));
 CREATE POLICY "Ognuno scrive il proprio risultato di torneo" ON public.risultati_torneo AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
-CREATE POLICY "Risultati del torneo leggibili" ON public.risultati_torneo AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Own saved hands" ON public.saved_hands AS PERMISSIVE FOR ALL TO authenticated USING ((owner_id = auth.uid())) WITH CHECK ((owner_id = auth.uid()));
 CREATE POLICY "Autore cancella i propri scenari" ON public.scenari AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Autore modifica i propri scenari" ON public.scenari AS PERMISSIVE FOR UPDATE TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
@@ -4855,8 +4957,6 @@ GRANT DELETE ON public.risposte_sondaggio TO service_role;
 GRANT DELETE ON public.risultati_mano TO anon;
 GRANT DELETE ON public.risultati_mano TO authenticated;
 GRANT DELETE ON public.risultati_mano TO service_role;
-GRANT DELETE ON public.risultati_torneo TO anon;
-GRANT DELETE ON public.risultati_torneo TO authenticated;
 GRANT DELETE ON public.risultati_torneo TO service_role;
 GRANT DELETE ON public.saved_hands TO anon;
 GRANT DELETE ON public.saved_hands TO authenticated;
@@ -5041,7 +5141,6 @@ GRANT INSERT ON public.risposte_sondaggio TO service_role;
 GRANT INSERT ON public.risultati_mano TO anon;
 GRANT INSERT ON public.risultati_mano TO authenticated;
 GRANT INSERT ON public.risultati_mano TO service_role;
-GRANT INSERT ON public.risultati_torneo TO anon;
 GRANT INSERT ON public.risultati_torneo TO authenticated;
 GRANT INSERT ON public.risultati_torneo TO service_role;
 GRANT INSERT ON public.saved_hands TO anon;
@@ -5227,8 +5326,6 @@ GRANT REFERENCES ON public.risposte_sondaggio TO service_role;
 GRANT REFERENCES ON public.risultati_mano TO anon;
 GRANT REFERENCES ON public.risultati_mano TO authenticated;
 GRANT REFERENCES ON public.risultati_mano TO service_role;
-GRANT REFERENCES ON public.risultati_torneo TO anon;
-GRANT REFERENCES ON public.risultati_torneo TO authenticated;
 GRANT REFERENCES ON public.risultati_torneo TO service_role;
 GRANT REFERENCES ON public.saved_hands TO anon;
 GRANT REFERENCES ON public.saved_hands TO authenticated;
@@ -5412,7 +5509,6 @@ GRANT SELECT ON public.risposte_sondaggio TO service_role;
 GRANT SELECT ON public.risultati_mano TO anon;
 GRANT SELECT ON public.risultati_mano TO authenticated;
 GRANT SELECT ON public.risultati_mano TO service_role;
-GRANT SELECT ON public.risultati_torneo TO anon;
 GRANT SELECT ON public.risultati_torneo TO authenticated;
 GRANT SELECT ON public.risultati_torneo TO service_role;
 GRANT SELECT ON public.saved_hands TO anon;
@@ -5596,8 +5692,6 @@ GRANT TRIGGER ON public.risposte_sondaggio TO service_role;
 GRANT TRIGGER ON public.risultati_mano TO anon;
 GRANT TRIGGER ON public.risultati_mano TO authenticated;
 GRANT TRIGGER ON public.risultati_mano TO service_role;
-GRANT TRIGGER ON public.risultati_torneo TO anon;
-GRANT TRIGGER ON public.risultati_torneo TO authenticated;
 GRANT TRIGGER ON public.risultati_torneo TO service_role;
 GRANT TRIGGER ON public.saved_hands TO anon;
 GRANT TRIGGER ON public.saved_hands TO authenticated;
@@ -5782,8 +5876,6 @@ GRANT TRUNCATE ON public.risposte_sondaggio TO service_role;
 GRANT TRUNCATE ON public.risultati_mano TO anon;
 GRANT TRUNCATE ON public.risultati_mano TO authenticated;
 GRANT TRUNCATE ON public.risultati_mano TO service_role;
-GRANT TRUNCATE ON public.risultati_torneo TO anon;
-GRANT TRUNCATE ON public.risultati_torneo TO authenticated;
 GRANT TRUNCATE ON public.risultati_torneo TO service_role;
 GRANT TRUNCATE ON public.saved_hands TO anon;
 GRANT TRUNCATE ON public.saved_hands TO authenticated;
@@ -5968,8 +6060,6 @@ GRANT UPDATE ON public.risposte_sondaggio TO service_role;
 GRANT UPDATE ON public.risultati_mano TO anon;
 GRANT UPDATE ON public.risultati_mano TO authenticated;
 GRANT UPDATE ON public.risultati_mano TO service_role;
-GRANT UPDATE ON public.risultati_torneo TO anon;
-GRANT UPDATE ON public.risultati_torneo TO authenticated;
 GRANT UPDATE ON public.risultati_torneo TO service_role;
 GRANT UPDATE ON public.saved_hands TO anon;
 GRANT UPDATE ON public.saved_hands TO authenticated;
@@ -6044,6 +6134,9 @@ REVOKE ALL ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integ
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO anon;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO service_role;
+REVOKE ALL ON FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_apri(p_class_id uuid, p_tavoli integer, p_titolo text) TO authenticated;
@@ -6315,6 +6408,9 @@ REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO anon;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO service_role;
+REVOKE ALL ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) TO service_role;
 
 -- PUBLICATION (Realtime)
 ALTER PUBLICATION supabase_realtime ADD TABLE public.challenges;

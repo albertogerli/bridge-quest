@@ -10,6 +10,7 @@ import { Asta } from "@/components/bridge/asta";
 import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { Stelle } from "@/components/bridge/stelle";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
+import { AsteTorneoConcluso } from "@/components/bridge/aste-torneo-concluso";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
@@ -182,6 +183,7 @@ export default function TorneoLicitaPage() {
       const esitoScrittura = await registraRisultatoTorneo({
         torneoId: torneo.id,
         manoId: m.id,
+        asta: finali,
         contratto: e?.contratto ?? null,
         dichiarante: e?.declarer ?? null,
         punteggio: e?.punteggio ?? 0,
@@ -610,6 +612,17 @@ export default function TorneoLicitaPage() {
           </div>
         )}
       </section>
+
+      {torneo && torneo.fatte >= torneo.quante && Date.parse(torneo.chiudeAt) > Date.now() && (
+        <p className="mt-4 text-pretty text-xs text-muted-foreground">
+          {t("Hai finito le tue mani. Le aste degli altri si apriranno quando il torneo sarà chiuso per tutti.")}
+        </p>
+      )}
+
+      {/* La chiave rimonta lo storico al cambio scheda: il componente riparte
+          dal proprio stato iniziale senza una batteria di setState sincroni
+          nell'effect di caricamento. */}
+      <AsteTorneoConcluso key={tipo} tipo={tipo} />
 
       <p className="text-xs text-muted-foreground mt-6">
         {t("Le mani del torneo non compaiono in allenamento finché è aperto: chi si allena molto le incontrerebbe prima, e la classifica non direbbe più niente.")}
