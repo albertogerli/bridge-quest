@@ -455,6 +455,10 @@ export interface TorneoCorrente {
 
 export interface RigaClassifica {
   posizione: number;
+  /** Serve alla richiesta puntuale delle aste; non viene mai mostrato. */
+  giocatoreId?: string;
+  /** Nei tornei anteriori alla funzione alcune righe non hanno un'asta. */
+  haAste?: boolean;
   nome: string | null;
   asd: string | null;
   stelle: number;
@@ -466,6 +470,33 @@ export interface ClassificaTorneo {
   totale: number;
   mia: { posizione: number; stelle: number; mani: number } | null;
   righe: RigaClassifica[];
+}
+
+/** Un torneo ormai chiuso che contiene almeno un'asta salvata. */
+export interface TorneoConAste {
+  id: string;
+  tipo: "giornaliero" | "settimanale";
+  periodo: number;
+  chiudeAt: string;
+  quante: number;
+}
+
+/** Il minimo necessario per rileggere un'asta, senza esporre le carte. */
+export interface AstaTorneo {
+  numero: number;
+  dealer: Position;
+  bids: string[];
+  contratto: string | null;
+  stelle: number;
+}
+
+export interface AsteGiocatoreTorneo {
+  giocatore: {
+    nome: string | null;
+    asd: string | null;
+    sonoIo: boolean;
+  };
+  aste: AstaTorneo[];
 }
 
 
@@ -586,6 +617,8 @@ export function contatoreCresce(esito: EsitoRegistrazione): boolean {
 export async function registraRisultatoTorneo(r: {
   torneoId: string;
   manoId: string;
+  /** Asta completa, nell'ordine delle chiamate. Viene salvata col risultato. */
+  asta: string[];
   contratto: string | null;
   dichiarante: string | null;
   punteggio: number;
@@ -623,6 +656,7 @@ export async function registraRisultatoTorneo(r: {
           torneo_id: r.torneoId,
           mano_id: r.manoId,
           user_id: uid,
+          asta: r.asta,
           contratto: r.contratto,
           dichiarante: r.dichiarante,
           punteggio: r.punteggio,
@@ -666,6 +700,58 @@ export async function classificaTorneo(torneoId: string): Promise<ClassificaTorn
     return (data as ClassificaTorneo | null) ?? null;
   } catch (err) {
     reportError("tornei:classifica", err);
+    return null;
+  }
+}
+
+/**
+ * L'ultimo torneo concluso per cui esistano aste registrate.
+ *
+ * Non basta conservare l'id del torneo corrente: al cambio di giorno o di
+ * settimana `torneoCorrente` passa immediatamente al periodo nuovo, proprio
+ * quando le aste del precedente diventano finalmente confrontabili.
+ */
+export async function ultimoTorneoConAste(
+  tipo: "giornaliero" | "settimanale"
+): Promise<TorneoConAste | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("ultimo_torneo_con_aste", { p_tipo: tipo });
+    if (error) {
+      await segnalaSeNonEScaduta(supabase, "tornei:ultimo-con-aste", error);
+      return null;
+    }
+    return (data as TorneoConAste | null) ?? null;
+  } catch (err) {
+    reportError("tornei:ultimo-con-aste", err);
+    return null;
+  }
+}
+
+/**
+ * Le aste di una sola riga della classifica.
+ *
+ * La funzione SQL risponde soltanto per tornei chiusi. Il controllo non viene
+ * duplicato qui con l'orologio del telefono: l'autorità è il database, così
+ * cambiare l'ora del dispositivo non apre in anticipo le aste degli altri.
+ */
+export async function asteGiocatoreTorneo(
+  torneoId: string,
+  giocatoreId: string
+): Promise<AsteGiocatoreTorneo | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("aste_giocatore_torneo", {
+      p_torneo: torneoId,
+      p_giocatore: giocatoreId,
+    });
+    if (error) {
+      await segnalaSeNonEScaduta(supabase, "tornei:aste-giocatore", error);
+      return null;
+    }
+    return (data as AsteGiocatoreTorneo | null) ?? null;
+  } catch (err) {
+    reportError("tornei:aste-giocatore", err);
     return null;
   }
 }
