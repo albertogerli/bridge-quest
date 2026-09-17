@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
 import { reportError } from "@/lib/report-error";
 import { dichiarazioneNota, ricordaDichiarazione } from "@/lib/cache-licita";
+import { erroreUpstreamRitentabile } from "@/lib/ben-retry";
 
 /**
  * Quanto si aspetta BEN, e perché il numero è cambiato tre volte.
@@ -107,12 +108,52 @@ export async function POST(req: NextRequest) {
     const timeout = setTimeout(() => { scaduto = true; controller.abort(); }, TIMEOUT_MS);
 
     const { url: benUrl, headers: benHeaders } = benEndpoint();
+    const url = `${benUrl}/bid?${params.toString()}`;
+    const inizioBen = Date.now();
     let res: Response;
+    let corpoGiaLetto: string | null = null;
+    let ritentato = false;
     try {
-      res = await fetch(`${benUrl}/bid?${params.toString()}`, {
+      res = await fetch(url, {
         signal: controller.signal,
         headers: benHeaders,
       });
+
+      // Il 16/09/2026 BEN ha finito correttamente in 5,767 s e Railway lo ha
+      // registrato come HTTP 200, ma il suo edge ha restituito al chiamante
+      // `502 upstream error`. Il browser non poteva riconoscerlo come errore
+      // edge perché questa rotta lo aveva già avvolto nel proprio JSON.
+      //
+      // Si ritenta QUI, una sola volta e soltanto per quella firma stretta.
+      // Il controller resta lo stesso: i due tentativi insieme non possono
+      // superare il tetto complessivo di 26 secondi della rotta. Un 504 dopo
+      // 22 secondi non passa da questo ramo e non viene raddoppiato.
+      if (!res.ok) {
+        const corpoPrimo = (await res.text().catch(() => "")).trim();
+        const durataPrimo = Date.now() - inizioBen;
+        if (erroreUpstreamRitentabile(res.status, corpoPrimo, durataPrimo)) {
+          const richiestaRailway = res.headers.get("x-railway-request-id");
+          const edgeRailway = res.headers.get("x-railway-edge");
+          ritentato = true;
+          await new Promise((risolvi) => setTimeout(risolvi, 300));
+          res = await fetch(url, {
+            signal: controller.signal,
+            headers: benHeaders,
+          });
+          if (res.ok) {
+            console.warn(JSON.stringify({
+              level: "warn",
+              message: "BEN: 502 upstream transitorio recuperato",
+              route: "/api/ben/bid",
+              primoTentativoMs: durataPrimo,
+              richiestaRailway,
+              edgeRailway,
+            }));
+          }
+        } else {
+          corpoGiaLetto = corpoPrimo;
+        }
+      }
     } catch {
       clearTimeout(timeout);
       const motivo = scaduto ? "BEN timeout" : "BEN non raggiungibile";
@@ -126,7 +167,17 @@ export async function POST(req: NextRequest) {
       // «BEN non risponde» (502 `ben unavailable`) da un errore di BEN stesso,
       // e buttare via quel testo faceva finire due guasti diversi sotto la
       // stessa etichetta. Si tronca: è diagnostica, non una risposta.
-      const corpo = (await res.text().catch(() => "")).trim().slice(0, 120);
+      const corpo = (corpoGiaLetto ?? await res.text().catch(() => "")).trim().slice(0, 120);
+      console.error(JSON.stringify({
+        level: "error",
+        message: "BEN ha risposto con errore",
+        route: "/api/ben/bid",
+        stato: res.status,
+        durataMs: Date.now() - inizioBen,
+        ritentato,
+        richiestaRailway: res.headers.get("x-railway-request-id"),
+        edgeRailway: res.headers.get("x-railway-edge"),
+      }));
       // SEGNALATO DAL SERVER, che è l'unico a sapere davvero cosa ha risposto
       // BEN. Finora l'unica traccia era una stringa ricostruita nel browser, e
       // quando quella si perdeva per strada restava un «HTTP 502» che non dice
