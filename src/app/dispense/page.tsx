@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { levelInfo, type CourseId } from "@/lib/catalog";
@@ -283,11 +284,12 @@ function InfographicCard({
       <div className="relative aspect-[3/4] bg-muted/50 overflow-hidden">
         {!error && imageSrc ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               ref={imgRef}
               src={imageSrc}
               alt={`Dispensa Lezione ${lessonNumber}`}
+              fill
+              sizes="(max-width: 640px) calc(50vw - 26px), (max-width: 1200px) calc(50vw - 40px), 560px"
               className={`w-full h-full object-cover transition-all duration-300 ${
                 loaded ? "opacity-100 group-hover:scale-105" : "opacity-0"
               } ${locked ? "grayscale opacity-50" : ""}`}
