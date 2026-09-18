@@ -269,6 +269,22 @@ describe("struttura dei titoli", () => {
   });
 });
 
+// ── Dispense: memoria delle anteprime ────────────────────────────────────────────
+
+describe("dispense: le anteprime non caricano tutte le immagini originali", () => {
+  const src = source("src/app/dispense/page.tsx");
+
+  it("usa l'ottimizzatore responsive di Next per le schede", () => {
+    // Le 13 JPEG del corso Fiori occupano circa 78 MiB una volta decodificate.
+    // Un <img> senza lazy loading le montava tutte alla risoluzione originale;
+    // `Image` serve invece una variante proporzionata alla scheda e carica di
+    // default soltanto quelle vicine alla finestra visibile.
+    expect(src).toContain('import Image from "next/image";');
+    expect(src).toMatch(/<Image[\s\S]{0,500}?fill[\s\S]{0,500}?sizes=/);
+    expect(src).not.toContain("<img");
+  });
+});
+
 /**
  * Tinte chiare prive della corrispondente variante scura *nella stessa stringa
  * di classi* (una riga di sorgente): è lì che Tailwind decide il colore.
