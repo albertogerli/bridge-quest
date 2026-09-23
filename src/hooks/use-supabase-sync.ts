@@ -5,7 +5,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { useGameStore } from "@/store/use-game-store";
 import { reportError } from "@/lib/report-error";
-import { assertSyncResult, createProgressWriter, writeProgress, normalizeReview, SyncWriteError, type ProgressSnapshot, type ReviewProgress } from "@/lib/progress-sync";
+import { assertSyncResult, createProgressWriter, readProgress, writeProgress, normalizeReview, SyncSessionChangedError, SyncWriteError, type ProgressSnapshot, type ReviewProgress } from "@/lib/progress-sync";
 import { activateProgressOwner } from "@/lib/progress-owner";
 
 // Keys that still live in plain localStorage (not yet in the game store).
@@ -53,15 +53,21 @@ export function useSupabaseSync() {
   const { user, profile, loading } = useSharedAuth();
   const hasDoneInitialSync = useRef(false);
   const userIdRef = useRef<string | null>(null);
+  const generation = useRef(0);
   const supabase = createClient();
-  const writer = useRef(createProgressWriter((owner, snapshot, revision) => writeProgress(supabase, owner, snapshot, revision)));
+  const writer = useRef(createProgressWriter((owner, snapshot, revision, isCurrent) => writeProgress(
+    supabase, owner, snapshot, revision,
+    () => isCurrent() && userIdRef.current === owner && localStorage.getItem("bq_progress_owner") === owner,
+  )));
 
   // Keep user id in ref for event handlers
   useEffect(() => {
     if (loading) return;
+    const epoch = ++generation.current;
+    const currentWriter = writer.current;
     userIdRef.current = user?.id ?? null;
     hasDoneInitialSync.current = false;
-    writer.current.initialize(userIdRef.current);
+    currentWriter.initialize(userIdRef.current);
     try {
       const { xp, streak, handsPlayed, completedModules, lastLogin } = useGameStore.getState();
       const restored = activateProgressOwner(localStorage, userIdRef.current,
@@ -72,16 +78,30 @@ export function useSupabaseSync() {
       userIdRef.current = null; // Do not upload possibly mixed local state.
       reportError("sync:account", new Error("Impossibile isolare i progressi locali"));
     }
+    return () => {
+      generation.current = epoch + 1;
+      userIdRef.current = null;
+      hasDoneInitialSync.current = false;
+      currentWriter.initialize(null);
+    };
   }, [user?.id, loading]);
 
   const pushToSupabase = useCallback(async (userId: string, force = false) => {
     if (userIdRef.current !== userId || localStorage.getItem("bq_progress_owner") !== userId || (!force && !hasDoneInitialSync.current)) return;
+    const epoch = generation.current;
+    const isCurrent = () => epoch === generation.current && userIdRef.current === userId && localStorage.getItem("bq_progress_owner") === userId;
     try {
       const outcome = await writer.current.push(userId, getProgressSnapshot(), force);
-      if (userIdRef.current === userId && outcome.status === "saved") {
+      if (!isCurrent()) return;
+      if (outcome.status === "saved") {
         window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "saved" }));
+      } else if (outcome.status === "cancelled") {
+        // L'interfaccia può ancora mostrare l'utente mentre l'auth si aggiorna.
+        // Non dichiarare salvati i progressi rimasti locali; nessun falso allarme.
+        window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
       }
     } catch (error) {
+      if (!isCurrent()) return;
       // Re-read and merge on the next initial-sync attempt; never overwrite a newer revision.
       if (error instanceof SyncWriteError && error.code === "40001") hasDoneInitialSync.current = false;
       reportError("sync:push", error);
@@ -99,11 +119,8 @@ export function useSupabaseSync() {
       if (cancelled || initializing || hasDoneInitialSync.current) return;
       initializing = true;
       try {
-        const [moduleResult, badgeResult, reviewResult] = await Promise.all([
-          supabase.from("completed_modules").select("lesson_id, module_id").eq("user_id", user.id),
-          supabase.from("badges").select("badge_id").eq("user_id", user.id),
-          supabase.rpc("get_review_items_state"),
-        ]);
+        const { moduleResult, badgeResult, reviewResult } = await readProgress(supabase, user.id,
+          () => !cancelled && userIdRef.current === user.id && localStorage.getItem("bq_progress_owner") === user.id);
         assertSyncResult(moduleResult, "read-modules");
         assertSyncResult(badgeResult, "read-badges");
         assertSyncResult(reviewResult, "read-reviews");
@@ -223,13 +240,15 @@ export function useSupabaseSync() {
           await pushToSupabase(user.id, true);
 
           // Notify components
+          if (cancelled || userIdRef.current !== user.id) return;
           window.dispatchEvent(new Event("bq_stats_updated"));
           return;
         }
 
         // Both sides empty — nothing to do
       } catch (err) {
-        reportError("sync:initial", err);
+        if (cancelled || userIdRef.current !== user.id || localStorage.getItem("bq_progress_owner") !== user.id) return;
+        if (!(err instanceof SyncSessionChangedError)) reportError("sync:initial", err);
         window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
       } finally {
         initializing = false;
