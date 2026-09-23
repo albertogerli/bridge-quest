@@ -33,7 +33,7 @@
     "@sentry/nextjs": "^10.69.0",
     "@serwist/next": "9.5.12",
     "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.95.3",
+    "@supabase/supabase-js": "2.117.1",
     "@vercel/analytics": "^1.6.1",
     "bridge-dds": "^1.4.0",
     "class-variance-authority": "^0.7.1",

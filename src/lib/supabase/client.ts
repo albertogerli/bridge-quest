@@ -33,6 +33,10 @@ export function createClient(): SupabaseClient {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      // Keep the SDK's default session coordination. Since supabase-js
+      // 2.107 it handles concurrent refreshes without navigator.locks;
+      // an orphaned lock could abort initialization in 2.95.3 (Sentry
+      // 148959116). Do not restore a custom/no-op lock or filter AbortError.
       cookieOptions: {
         path: "/",
         sameSite: "lax" as const,

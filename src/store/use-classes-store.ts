@@ -79,8 +79,14 @@ export function useMyClasses() {
   const refresh = useClassesStore((s) => s.refreshMyClasses);
 
   useEffect(() => {
-    if (!isLoaded && !isLoading) void refresh();
-  }, [isLoaded, isLoading, refresh]);
+    // An error must settle the attempt. Retrying on every loading=false
+    // transition creates a render/request loop; callers can refresh explicitly.
+    // Read current state: several menus can mount in the same React commit.
+    // Only automatic loads are deduplicated; explicit refresh after a mutation
+    // must still load fresh data even if an older request is in progress.
+    const current = useClassesStore.getState();
+    if (!current.myLoaded && !current.myLoading && current.myError === null) void refresh();
+  }, [isLoaded, isLoading, error, refresh]);
 
   return { classes: myClasses, isLoading, isLoaded, error, refresh };
 }
@@ -99,8 +105,9 @@ export function useEnrolledClasses(abilitato = true) {
   const refresh = useClassesStore((s) => s.refreshEnrolledClasses);
 
   useEffect(() => {
-    if (abilitato && !isLoaded && !isLoading) void refresh();
-  }, [abilitato, isLoaded, isLoading, refresh]);
+    const current = useClassesStore.getState();
+    if (abilitato && !current.enrolledLoaded && !current.enrolledLoading && current.enrolledError === null) void refresh();
+  }, [abilitato, isLoaded, isLoading, error, refresh]);
 
   return { classes: enrolledClasses, isLoading, isLoaded, error, refresh };
 }
