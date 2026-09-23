@@ -419,6 +419,9 @@ export default function LicitaPage() {
       </header>
 
       <h1 className="sr-only">{t("Licita e vediamo")}</h1>
+      <p className="text-xs text-muted-foreground mb-4">
+        {t("Qui i robot usano BEN: le loro scelte possono differire dagli accordi del corso Fiori 2022. Il voto valuta il contratto, non l'aderenza al sistema del corso.")}
+      </p>
 
       {!mano && <p className="py-16 text-center text-sm text-muted-foreground">{t("Preparo la mano…")}</p>}
 

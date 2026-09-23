@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
-import { writeFileSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { leggiEnv } from "./env";
+import { assertTestTarget } from "../scripts/test-target.mjs";
 
 /**
  * Crea un utente di test usa-e-getta via service role (email confermata,
@@ -12,7 +13,9 @@ import { leggiEnv } from "./env";
 export const CREDS_FILE = join(__dirname, ".test-user.json");
 
 export default async function globalSetup() {
+  if (existsSync(CREDS_FILE)) throw new Error("Fixture E2E precedente ancora presente: completare il teardown prima di creare un altro utente");
   const env = leggiEnv(["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]);
+  assertTestTarget(env.NEXT_PUBLIC_SUPABASE_URL, env.BRIDGELAB_TEST_SUPABASE_URL);
   const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false },
   });
@@ -30,5 +33,5 @@ export default async function globalSetup() {
     throw new Error(`global-setup: creazione utente di test fallita: ${error?.message}`);
   }
 
-  writeFileSync(CREDS_FILE, JSON.stringify({ email, password, userId: data.user.id }));
+  writeFileSync(CREDS_FILE, JSON.stringify({ email, password, userId: data.user.id, target: env.NEXT_PUBLIC_SUPABASE_URL }), { mode: 0o600 });
 }

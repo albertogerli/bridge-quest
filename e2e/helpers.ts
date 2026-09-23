@@ -28,8 +28,11 @@ export function testCreds(): TestCreds {
  * (il consenso negato è il default e non deve rompere nulla).
  */
 export async function dismissCookieBanner(page: Page) {
-  const cookieBtn = page.getByRole("button", { name: "Solo necessari" });
-  if (await cookieBtn.isVisible().catch(() => false)) {
+  // SSR initially hides the banner; an immediate isVisible() can miss it and
+  // leave the dialog covering the page once hydration completes.
+  await page.waitForFunction(() => !!window.bridgelabConsent, undefined, { timeout: 20_000 });
+  const cookieBtn = page.getByRole("button", { name: /^(Solo necessari|Essential only)$/ });
+  if (await page.evaluate(() => window.bridgelabConsent?.status() === "pending")) {
     await cookieBtn.click();
     await expect(cookieBtn).toBeHidden();
   }

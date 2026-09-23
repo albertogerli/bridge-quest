@@ -12,6 +12,7 @@ import { getInfographicForLesson } from "@/components/maestro-video";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useLingua } from "@/hooks/use-lingua";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
   fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
@@ -46,6 +47,7 @@ export default function DispensePage() {
 
 function Dispense() {
   const t = useT();
+  const { lingua } = useLingua();
   const parametri = useSearchParams();
   const corsoRichiesto = parametri.get("corso") as CourseId | null;
   /**
@@ -60,9 +62,27 @@ function Dispense() {
   const classeDiProvenienza = parametri.get("classe");
   const [selectedCourse, setSelectedCourse] = useState<CourseId>(corsoRichiesto ?? "fiori");
   const completedMap = useGameStore((s) => s.completedModules);
-  const { courses, isLoaded: catalogLoaded } = useCatalog();
+  const { courses, isLoaded: catalogLoaded, isLoading, error, retry } = useCatalog();
   const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];
   const profile = "junior"; // Currently only Junior infographics available
+
+  // All hooks are above these guards. Never dereference an empty catalog.
+  if (error) {
+    return (
+      <div className="pt-10 text-center text-muted-foreground text-sm" role="alert">
+        <p>{t("Impossibile caricare i corsi.")}</p>
+        <button type="button" disabled={isLoading} onClick={() => void retry()} className="mt-3 underline disabled:opacity-50">
+          {t("Riprova")}
+        </button>
+      </div>
+    );
+  }
+  if (!catalogLoaded) {
+    return <div className="pt-10 text-center text-muted-foreground text-sm" role="status">{t("Caricamento corsi…")}</div>;
+  }
+  if (!currentCourse) {
+    return <div className="pt-10 text-center text-muted-foreground text-sm" role="status">{t("Nessun corso disponibile.")}</div>;
+  }
 
   // Check if a lesson has any completed modules
   const isLessonStarted = (lessonId: number) => {
@@ -73,7 +93,7 @@ function Dispense() {
 
   const infographics = currentCourse.lessons.map((lesson) => ({
     lesson,
-    info: getInfographicForLesson(lesson.id, profile),
+    info: getInfographicForLesson(lesson.id, profile, lingua),
     locked: !isLessonStarted(lesson.id),
   }));
 
@@ -86,14 +106,6 @@ function Dispense() {
     0,
   );
   const isCourseCompleted = totalModules > 0 && completedModulesCount === totalModules;
-
-  if (!catalogLoaded || !currentCourse) {
-    return (
-      <div className="pt-10 text-center text-muted-foreground text-sm" role="status" aria-label={t("Caricamento corsi")}>
-        {t("Caricamento corsi…")}
-      </div>
-    );
-  }
 
   return (
     <div className="pt-6 px-5 pb-24">

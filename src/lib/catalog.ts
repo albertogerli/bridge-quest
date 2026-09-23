@@ -21,6 +21,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Card, Position } from "@/lib/bridge-engine";
 import type { Lingua } from "@/lib/lingua";
+import { withReviewedAuction } from "@/lib/catalog-auction";
 
 // ─── Types (mirror legacy @/data/courses; small fields tweaked) ──────────
 
@@ -37,6 +38,10 @@ export interface ContentBlock {
   correctAnswer?: number;
   correctCard?: string;
   correctValue?: number;
+  /** Explicit unit for numeric exercises; absent on legacy generic questions. */
+  numericUnit?: "hcp" | "percent" | "number";
+  numericMin?: number;
+  numericMax?: number;
   correctOrder?: number[];
   explanation?: string;
 }
@@ -110,6 +115,8 @@ export interface Smazzata {
     west: Card[];
   };
   bidding?: BiddingData;
+  /** The recorded auction is withheld until reconciled with the official source. */
+  biddingUnderReview?: boolean;
   /**
    * Il commento didattico — presente SOLO sulle mani che se lo portano dietro:
    * quelle importate da PBN o generate dall'insegnante, che stanno dentro il
@@ -474,7 +481,7 @@ async function loadSmazzate(): Promise<Smazzata[]> {
   }
 
   const rows = (data ?? []) as RawSmazzata[];
-  return rows.map<Smazzata>((r) => ({
+  return rows.map<Smazzata>((r) => withReviewedAuction({
     id: r.id,
     lesson: r.lesson_id,
     board: r.board,
@@ -546,100 +553,16 @@ function nextPos(p: Position): Position {
   return order[(order.indexOf(p) + 1) % 4];
 }
 
-function declarerFromBidding(bidding: { dealer: Position; bids: string[] }): Position | null {
-  const order: Position[] = ["south", "west", "north", "east"];
-  const dealerIdx = order.indexOf(bidding.dealer);
-  if (dealerIdx === -1) return null;
-
-  let lastBidIdx = -1;
-  for (let i = bidding.bids.length - 1; i >= 0; i--) {
-    const b = bidding.bids[i];
-    if (b !== "P" && b !== "Dbl" && b !== "Rdbl" && b !== "X" && b !== "XX") {
-      lastBidIdx = i;
-      break;
-    }
-  }
-  if (lastBidIdx === -1) return null;
-
-  const lastBidderPos = order[(dealerIdx + lastBidIdx) % 4];
-  const winningSide = lastBidderPos === "north" || lastBidderPos === "south" ? "ns" : "ew";
-  const denom = bidding.bids[lastBidIdx].replace(/[0-9]/g, "").toUpperCase();
-
-  for (let i = 0; i < bidding.bids.length; i++) {
-    const pos = order[(dealerIdx + i) % 4];
-    const bid = bidding.bids[i];
-    if (bid === "P" || bid === "Dbl" || bid === "Rdbl" || bid === "X" || bid === "XX") continue;
-    const bidDenom = bid.replace(/[0-9]/g, "").toUpperCase();
-    const bidSide = pos === "north" || pos === "south" ? "ns" : "ew";
-    if (bidSide === winningSide && bidDenom === denom) return pos;
-  }
-  return lastBidderPos;
-}
-
-function pickOpeningLead(hand: Card[], trumpSuit: string | null): Card {
-  const suits = ["spade", "heart", "diamond", "club"] as const;
-  const nonTrump = suits.filter((s) => s !== trumpSuit);
-  const preferred = [...nonTrump, ...(trumpSuit ? [trumpSuit as typeof suits[number]] : [])];
-
-  for (const suit of preferred) {
-    const cards = hand
-      .filter((c) => c.suit === suit)
-      .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
-    if (cards.length >= 4) return cards[3];
-    if (cards.length >= 2) return cards[0];
-  }
-  return hand[0];
-}
-
-function contractTrumpSuit(contract: string): string | null {
-  const normalized = contract
-    .replace(/♠/g, "S")
-    .replace(/♥/g, "H")
-    .replace(/♦/g, "D")
-    .replace(/♣/g, "C");
-  const m = normalized.match(/\d(NT|S|H|D|C)/i);
-  if (!m) return null;
-  const s = m[1].toUpperCase();
-  if (s === "S") return "spade";
-  if (s === "H") return "heart";
-  if (s === "D") return "diamond";
-  if (s === "C") return "club";
-  return null;
-}
-
-function fixDeclarerFromBidding(s: Smazzata): Smazzata {
-  if (!s.bidding) return s;
-  const correct = declarerFromBidding(s.bidding);
-  if (!correct || correct === s.declarer) return s;
-
-  const newLeader = nextPos(correct);
-  const leaderHand = s.hands[newLeader];
-  const hasLead = leaderHand.some(
-    (c) => c.suit === s.openingLead.suit && c.rank === s.openingLead.rank,
-  );
-
-  return {
-    ...s,
-    declarer: correct,
-    openingLead: hasLead
-      ? s.openingLead
-      : pickOpeningLead(leaderHand, contractTrumpSuit(s.contract)),
-  };
-}
-
-/**
- * Apply `fixDeclarerFromBidding` and filter out smazzate with data
- * issues: hand sizes ≠ 13, duplicated cards, opening lead missing from
- * the leader's hand.
- */
+/** Validate the original position; withhold an inconsistent auction without changing the cards. */
 export function validateSmazzate(hands: Smazzata[]): Smazzata[] {
-  return hands.map(fixDeclarerFromBidding).filter((s) => {
+  return hands.map(withReviewedAuction).filter((s) => {
     for (const pos of POSITIONS) {
       if (s.hands[pos].length !== 13) return false;
     }
     const seen = new Set<string>();
     for (const pos of POSITIONS) {
       for (const c of s.hands[pos]) {
+        if (!RANK_ORDER.includes(c.rank) || !["spade", "heart", "diamond", "club"].includes(c.suit)) return false;
         const key = `${c.suit}-${c.rank}`;
         if (seen.has(key)) return false;
         seen.add(key);
@@ -775,24 +698,32 @@ export interface GlossaryEntry {
   id: string;
   term: string;
   definition: string;
+  termEn?: string;
+  definitionEn?: string;
+  exampleEn?: string;
   emoji: string;
   category: GlossaryCategory;
   example?: string;
   cards?: string;
   relatedTerms: string[];   // sanitised by the seeder (no dangling refs)
   quiz: GlossaryQuiz;
+  quizEn?: GlossaryQuiz;
 }
 
 interface RawGlossary {
   id: string;
   term: string;
   definition: string;
+  term_en: string | null;
+  definition_en: string | null;
+  example_en: string | null;
   emoji: string;
   category: GlossaryCategory;
   example: string | null;
   cards: string | null;
   related_terms: string[] | null;
   quiz: GlossaryQuiz;
+  quiz_en: GlossaryQuiz | null;
 }
 
 let glossaryPromise: Promise<Record<string, GlossaryEntry>> | null = null;
@@ -802,7 +733,7 @@ async function loadGlossary(): Promise<Record<string, GlossaryEntry>> {
   const { data, error } = await supabase
     .from("glossary")
     .select(
-      "id, term, definition, emoji, category, example, cards, related_terms, quiz",
+      "id, term, definition, term_en, definition_en, example_en, emoji, category, example, cards, related_terms, quiz, quiz_en",
     );
 
   if (error) {
@@ -816,12 +747,16 @@ async function loadGlossary(): Promise<Record<string, GlossaryEntry>> {
       id: r.id,
       term: r.term,
       definition: r.definition,
+      termEn: r.term_en ?? undefined,
+      definitionEn: r.definition_en ?? undefined,
+      exampleEn: r.example_en ?? undefined,
       emoji: r.emoji,
       category: r.category,
       example: r.example ?? undefined,
       cards: r.cards ?? undefined,
       relatedTerms: r.related_terms ?? [],
       quiz: r.quiz,
+      quizEn: r.quiz_en ?? undefined,
     };
   }
   return map;
@@ -1301,7 +1236,7 @@ export interface EserciziarioExercise {
 }
 
 interface RawEserciziarioExercise {
-  id: string;
+  module_id: string;
   lesson_id: number;
   title: string;
   content: ContentBlock[];
@@ -1313,18 +1248,21 @@ let eserciziarioPromise: Promise<EserciziarioExercise[]> | null = null;
 async function loadEserciziario(): Promise<EserciziarioExercise[]> {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("eserciziario_exercises")
-    .select("id, lesson_id, title, content, position")
+    // Canonical published modules. Legacy eserciziario_exercises is retained as an archive,
+    // not merged or reseeded: it contains superseded examples (including a 14-card hand).
+    .from("lesson_modules")
+    .select("module_id, lesson_id, title, content, position")
+    .like("module_id", "eserciziario-%")
     .order("lesson_id", { ascending: true })
     .order("position", { ascending: true });
 
   if (error) {
-    throw new Error(`catalog: failed to load eserciziario_exercises: ${error.message}`);
+    throw new Error(`catalog: failed to load canonical eserciziario: ${error.code}`);
   }
 
   const rows = (data ?? []) as RawEserciziarioExercise[];
   return rows.map<EserciziarioExercise>((r) => ({
-    id: r.id,
+    id: r.module_id,
     lesson: r.lesson_id,
     title: r.title,
     content: r.content ?? [],

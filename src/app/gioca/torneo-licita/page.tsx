@@ -398,6 +398,9 @@ export default function TorneoLicitaPage() {
       <p className="text-sm text-muted-foreground mb-4">
         {t("Le stesse smazzate per tutti. Si dichiara, si prendono le stelle, si finisce in classifica.")}
       </p>
+      <p className="text-xs text-muted-foreground mb-4">
+        {t("Qui i robot usano BEN: le loro scelte possono differire dagli accordi del corso Fiori 2022. Il voto valuta il contratto, non l'aderenza al sistema del corso.")}
+      </p>
 
       <div className="flex gap-2 mb-5" role="group" aria-label={t("Quale torneo")}>
         {([["giornaliero", "Oggi · 8 mani"], ["settimanale", "Settimana · 24 mani"]] as [Tipo, string][])
@@ -420,7 +423,7 @@ export default function TorneoLicitaPage() {
       {torneo && (
         <p className="text-sm mb-4">
           <strong>{torneo.fatte}</strong> mani su {torneo.quante}
-          {torneo.fatte >= torneo.quante && " — finito"}
+          {torneo.quante > 0 && torneo.fatte >= torneo.quante && t(" — finito")}
         </p>
       )}
 
@@ -428,9 +431,11 @@ export default function TorneoLicitaPage() {
       {torneo && !mano && (
         <div className="rounded-2xl border border-border bg-card p-5 mb-6">
           <p className="text-sm">
-            {torneo.fatte >= torneo.quante
-              ? "Hai finito questo torneo. La classifica qui sotto continua ad aggiornarsi finché non chiude."
-              : "Non ci sono altre mani da dichiarare: il torneo è chiuso."}
+            {torneo.quante === 0
+              ? t("Le mani di questo torneo non sono ancora disponibili. Riprova più tardi: non hai completato né perso alcuna mano.")
+              : torneo.fatte >= torneo.quante
+                ? t("Hai finito questo torneo. La classifica qui sotto continua ad aggiornarsi finché non chiude.")
+                : t("Non ci sono altre mani da dichiarare: il torneo è chiuso.")}
           </p>
         </div>
       )}
@@ -613,7 +618,7 @@ export default function TorneoLicitaPage() {
         )}
       </section>
 
-      {torneo && torneo.fatte >= torneo.quante && Date.parse(torneo.chiudeAt) > Date.now() && (
+      {torneo && torneo.quante > 0 && torneo.fatte >= torneo.quante && Date.parse(torneo.chiudeAt) > Date.now() && (
         <p className="mt-4 text-pretty text-xs text-muted-foreground">
           {t("Hai finito le tue mani. Le aste degli altri si apriranno quando il torneo sarà chiuso per tutti.")}
         </p>

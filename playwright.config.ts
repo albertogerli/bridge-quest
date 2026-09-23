@@ -8,7 +8,8 @@ import { defineConfig } from "@playwright/test";
  * eliminato a fine run. Le chiavi arrivano dall'ambiente o da `.env.local`
  * (vedi `e2e/env.ts`).
  *
- * Gira anche di notte su GitHub, nell'ambiente protetto `verifiche`.
+ * Di notte GitHub usa Supabase locale e una fixture editoriale versionata,
+ * senza credenziali cloud: vedere scripts/quality-local.mjs.
  */
 /**
  * La porta si può cambiare, e non è un vezzo.
@@ -46,9 +47,11 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: `npm run dev -- --port ${PORTA}`,
+    command: process.env.BRIDGELAB_E2E_PREBUILT === "1"
+      ? `node node_modules/next/dist/bin/next start --port ${PORTA}`
+      : `npm run dev -- --port ${PORTA}`,
     url: INDIRIZZO,
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     timeout: 180_000,
   },
 });

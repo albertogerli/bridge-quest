@@ -24,6 +24,8 @@ export type BiddingScenario = {
   /** 1 = easy, 2 = medium, 3 = hard */
   difficulty: 1 | 2 | 3;
   topic: string;
+  /** Explicit alternative agreement, not the natural strong twos of Fiori 2022. */
+  system?: "due-deboli";
 };
 
 export const biddingScenarios: BiddingScenario[] = [
@@ -44,7 +46,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♥",
     wrongBids: ["2♠", "3NT", "Passo"],
     explanation:
-      "Con 5 picche e 10 HCP, usa la Texas transfer: 2♥ chiede al compagno di dire 2♠. Poi passerai.",
+      "Con 5 picche e 9 HCP, usa la Texas transfer: 2♥ chiede al compagno di dire 2♠. Poi invita a manche con 2NT: non passare automaticamente.",
     difficulty: 1,
     topic: "Texas Transfer",
   },
@@ -84,7 +86,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "1♠",
     wrongBids: ["2♠", "1NT", "Passo"],
     explanation:
-      "Con 11 HCP e 5 picche, rispondi 1♠. Si cambia colore al livello 1 con 6+ punti e 4+ carte nel nuovo seme.",
+      "Con 10 HCP e 5 picche, rispondi 1♠. Si cambia colore al livello 1 con 6+ punti e 4+ carte nel nuovo seme.",
     difficulty: 1,
     topic: "Risposte all'apertura",
   },
@@ -144,7 +146,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♦",
     wrongBids: ["2♥", "3♥", "3NT"],
     explanation:
-      "Con 6 cuori e 10 HCP, usa la Texas: 2♦ chiede al compagno di dire 2♥. Con 6+ carte in un nobile si usa sempre la transfer dopo 1NT.",
+      "Con 6 cuori e 9 HCP, usa la Texas: 2♦ chiede al compagno di dire 2♥. Poi invita con 3♥, mostrando sei carte e forza invitante.",
     difficulty: 1,
     topic: "Texas Transfer",
   },
@@ -152,8 +154,8 @@ export const biddingScenarios: BiddingScenario[] = [
   // 7. 3NT diretto su 1NT
   {
     id: 7,
-    hand: { spades: "A84", hearts: "KQ3", diamonds: "QJ72", clubs: "K95" },
-    handDisplay: "♠ A84  ♥ KQ3  ♦ QJ72  ♣ K95",
+    hand: { spades: "A84", hearts: "KQ3", diamonds: "QJ72", clubs: "Q95" },
+    handDisplay: "♠ A84  ♥ KQ3  ♦ QJ72  ♣ Q95",
     biddingHistory: [
       { seat: "N", bid: "1NT" },
       { seat: "E", bid: "Passo" },
@@ -164,7 +166,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "3NT",
     wrongBids: ["2NT", "2♣", "4NT"],
     explanation:
-      "Con 15 HCP e distribuzione bilanciata 3-3-4-3 senza nobile quinto, vai diretto a 3NT. Punti combinati: 30-32, sufficienti per la manche.",
+      "Con 14 HCP e distribuzione bilanciata 3-3-4-3 senza quarte nobili, vai diretto a 3NT. Punti combinati: 29-31, sufficienti per la manche.",
     difficulty: 1,
     topic: "Risposte a 1NT",
   },
@@ -174,6 +176,7 @@ export const biddingScenarios: BiddingScenario[] = [
   // 8. Apertura debole 2♠
   {
     id: 8,
+    system: "due-deboli",
     hand: { spades: "KQJ974", hearts: "83", diamonds: "Q52", clubs: "64" },
     handDisplay: "♠ KQJ974  ♥ 83  ♦ Q52  ♣ 64",
     biddingHistory: [],
@@ -191,6 +194,7 @@ export const biddingScenarios: BiddingScenario[] = [
   // 9. 2♣ Forte convenzionale
   {
     id: 9,
+    system: "due-deboli",
     hand: { spades: "AKQJ5", hearts: "AK84", diamonds: "A3", clubs: "K7" },
     handDisplay: "♠ AKQJ5  ♥ AK84  ♦ A3  ♣ K7",
     biddingHistory: [],
@@ -200,7 +204,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♣",
     wrongBids: ["2♠", "1♠", "2NT"],
     explanation:
-      "Con 25 HCP e mano potentissima, apri 2♣ forte convenzionale e forzante. È l'unica apertura con 22+ HCP.",
+      "Con 24 HCP e mano sbilanciata molto forte, apri 2♣ artificiale e forzante nel sistema a due deboli di questo esercizio. Nel Naturale Fiori le aperture forti a colore seguono regole diverse.",
     difficulty: 2,
     topic: "2♣ Forte",
   },
@@ -258,7 +262,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "3♣",
     wrongBids: ["Passo", "3NT", "3♠"],
     explanation:
-      "Dopo 2NT (20-21 HCP), anche con solo 5 HCP cerchi la manche. Con 4-4 nei nobili, usa Stayman (3♣) per cercare il fit. I punti combinati bastano per la manche.",
+      "Dopo 2NT (21-23 HCP, Fiori 2022), con 6 HCP cerchi la manche. Con 4-4 nei nobili, usa Stayman (3♣) per cercare il fit.",
     difficulty: 2,
     topic: "Stayman",
   },
@@ -266,6 +270,7 @@ export const biddingScenarios: BiddingScenario[] = [
   // 13. Risposta 2♦ (negativa) a 2♣ forte
   {
     id: 13,
+    system: "due-deboli",
     hand: { spades: "8743", hearts: "952", diamonds: "J84", clubs: "Q63" },
     handDisplay: "♠ 8743  ♥ 952  ♦ J84  ♣ Q63",
     biddingHistory: [
@@ -298,7 +303,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "4♥",
     wrongBids: ["2♥", "3♥", "Passo"],
     explanation:
-      "Con 5 cuori di fit, singolo a picche, 7 HCP e distribuzione 1-5-5-2, salta diretto a 4♥ (barrage con fit). Blocchi l'intervento avversario e sfrutti la distribuzione.",
+      "Con 5 cuori di fit, singolo a picche, 6 HCP e distribuzione 1-5-5-2, salta diretto a 4♥ (barrage con fit). Blocchi l'intervento avversario e sfrutti la distribuzione.",
     difficulty: 2,
     topic: "Risposte all'apertura",
   },
@@ -322,7 +327,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "3♦",
     wrongBids: ["3♠", "4♠", "Contro"],
     explanation:
-      "Con 17 HCP e fit a picche (4 carte), fai una cue bid (3♦) sul seme avversario. Mostra forza e fit, invitando lo slam senza definire ancora il livello.",
+      "Con 16 HCP e fit a picche (4 carte), fai una cue bid (3♦) sul seme avversario. Mostra forza e fit senza definire ancora il livello finale.",
     difficulty: 3,
     topic: "Cue Bid",
   },
@@ -382,7 +387,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♥",
     wrongBids: ["3♠", "4NT", "3NT"],
     explanation:
-      "Con 17 HCP e 5 picche, inizia con la Texas (2♥ → 2♠), poi continuerai con 4NT (Blackwood). La Texas mette il compagno forte come dichiarante. Punti combinati: 32-34, zona slam.",
+      "Con 17 HCP e 5 picche, inizia con la Texas (2♥ → 2♠). La linea ha 32-34 punti: valuta lo slam. Senza un fit concordato, il successivo 4NT è quantitativo, non una richiesta d'assi Blackwood.",
     difficulty: 3,
     topic: "Texas Transfer",
   },
@@ -390,6 +395,7 @@ export const biddingScenarios: BiddingScenario[] = [
   // 19. Contro punitivo dopo apertura debole
   {
     id: 19,
+    system: "due-deboli",
     hand: { spades: "A3", hearts: "KQJ84", diamonds: "AQ5", clubs: "K92" },
     handDisplay: "♠ A3  ♥ KQJ84  ♦ AQ5  ♣ K92",
     biddingHistory: [
@@ -409,8 +415,8 @@ export const biddingScenarios: BiddingScenario[] = [
   // 20. Risposte dopo Stayman — compagno dice 2♥
   {
     id: 20,
-    hand: { spades: "AJ73", hearts: "Q84", diamonds: "KQ5", clubs: "J92" },
-    handDisplay: "♠ AJ73  ♥ Q84  ♦ KQ5  ♣ J92",
+    hand: { spades: "AJ73", hearts: "Q84", diamonds: "KQ5", clubs: "K92" },
+    handDisplay: "♠ AJ73  ♥ Q84  ♦ KQ5  ♣ K92",
     biddingHistory: [
       { seat: "S", bid: "1NT" },
       { seat: "W", bid: "Passo" },

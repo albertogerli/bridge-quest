@@ -20,6 +20,8 @@ import {
   Shuffle,
 } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useLingua } from "@/hooks/use-lingua";
+import { localizeGlossary } from "@/lib/glossary-language";
 
 // ── Types ───────────────────────────────────────────────
 type Phase = "browse" | "quiz-globale";
@@ -107,6 +109,7 @@ function getStars(percentage: number): number {
 // ── Component ───────────────────────────────────────────
 export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEntry[] }) {
   const t = useT();
+  const { lingua } = useLingua();
   const profile = useProfile();
   const { play } = useSound();
 
@@ -115,7 +118,8 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
   // Prefer server-rendered entries (already in the SSR HTML → instant LCP);
   // fall back to the client store fetch only if the server passed nothing.
   const { entries: storeEntries } = useGlossary();
-  const entries = initialEntries.length > 0 ? initialEntries : storeEntries;
+  const entries = useMemo(() => initialEntries.length > 0
+    ? initialEntries.map((entry) => localizeGlossary(entry, lingua)) : storeEntries, [initialEntries, storeEntries, lingua]);
   const allTerms = useMemo(
     () => entries.map((e) => ({ ...e, key: e.id })),
     [entries],
@@ -751,7 +755,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                       CATEGORY_BADGE_CLASSES[currentTerm.category]
                     }`}
                   >
-                    {CATEGORY_LABELS[currentTerm.category].label}
+                    {t(CATEGORY_LABELS[currentTerm.category].label)}
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-foreground mb-1">
@@ -939,7 +943,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                   }`}
                 >
                   <span className="text-xs">{emoji}</span>
-                  {label}
+                  {t(label)}
                 </button>
               );
             })}
@@ -1031,7 +1035,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
                               CATEGORY_BADGE_CLASSES[entry.category]
                             }`}
                           >
-                            {CATEGORY_LABELS[entry.category].label}
+                            {t(CATEGORY_LABELS[entry.category].label)}
                           </span>
                           {!isExpanded && (
                             <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">

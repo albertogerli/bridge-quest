@@ -558,6 +558,7 @@ function LoginContent() {
             type="button"
             onClick={() => {
               try { localStorage.setItem("bq_guest", "1"); } catch {}
+              // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
               window.location.href = "/";
             }}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"

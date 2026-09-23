@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./test";
 import { login } from "./helpers";
 
 /**
@@ -48,7 +48,10 @@ async function collectCspViolations(page: Page) {
 
   page.on("console", (msg) => {
     const text = msg.text();
-    if (/content security policy|refused to (execute|load|connect|apply)/i.test(text)) {
+    // "Refused to execute" also describes MIME/404 errors (e.g. the Vercel
+    // analytics URL on localhost), not necessarily a CSP violation. The DOM
+    // securitypolicyviolation collector above remains authoritative.
+    if (/content[- ]security[- ]policy/i.test(text)) {
       consoleMessages.push(text);
     }
   });

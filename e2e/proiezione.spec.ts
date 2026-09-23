@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { leggiEnv } from "./env";
 import { login, testCreds } from "./helpers";
 

@@ -4,7 +4,9 @@ import { useEffect, useRef, useCallback } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { useGameStore } from "@/store/use-game-store";
-import { logError } from "@/lib/log";
+import { reportError } from "@/lib/report-error";
+import { assertSyncResult, createProgressWriter, writeProgress, normalizeReview, SyncWriteError, type ProgressSnapshot, type ReviewProgress } from "@/lib/progress-sync";
+import { activateProgressOwner } from "@/lib/progress-owner";
 
 // Keys that still live in plain localStorage (not yet in the game store).
 const LS_KEYS = {
@@ -18,28 +20,25 @@ const LS_KEYS = {
   totalMinutes: "bq_total_minutes",
 } as const;
 
-/** Snapshot of last-synced values to skip unnecessary pushes */
-let lastSyncedSnapshot = "";
-
-function getLocalSnapshot(): string {
-  try {
-    const { xp, streak, handsPlayed, completedModules } = useGameStore.getState();
-    return JSON.stringify({
-      xp: String(xp),
-      streak: String(streak),
-      handsPlayed: String(handsPlayed),
-      profile: localStorage.getItem(LS_KEYS.profile) || "adulto",
-      memoryBest: localStorage.getItem(LS_KEYS.memoryBest) || "",
-      textSize: localStorage.getItem(LS_KEYS.textSize) || "medio",
-      animSpeed: localStorage.getItem(LS_KEYS.animSpeed) || "normale",
-      sound: localStorage.getItem(LS_KEYS.sound) ?? "true",
-      completedModules: JSON.stringify(completedModules),
-      badges: localStorage.getItem(LS_KEYS.badges) || "[]",
-      totalMinutes: localStorage.getItem(LS_KEYS.totalMinutes) || "0",
-    });
-  } catch {
-    return "";
+/** Captures every synchronized field once, including review-only changes. */
+export function getProgressSnapshot(): ProgressSnapshot {
+  const { xp, streak, handsPlayed, completedModules } = useGameStore.getState();
+  const badges: unknown = JSON.parse(localStorage.getItem(LS_KEYS.badges) || "[]");
+  const reviewItems: unknown = JSON.parse(localStorage.getItem(LS_KEYS.reviewItems) || "[]");
+  if (!Array.isArray(badges) || !badges.every((b) => typeof b === "string") || !Array.isArray(reviewItems)) {
+    throw new Error("Invalid local progress");
   }
+  const memoryBest = localStorage.getItem(LS_KEYS.memoryBest);
+  return {
+    xp, streak, handsPlayed, completedModules: { ...completedModules },
+    profile: localStorage.getItem(LS_KEYS.profile) || "adulto",
+    memoryBest: memoryBest ? Number(memoryBest) : null,
+    textSize: localStorage.getItem(LS_KEYS.textSize) || "medio",
+    animSpeed: localStorage.getItem(LS_KEYS.animSpeed) || "normale",
+    sound: localStorage.getItem(LS_KEYS.sound) !== "false",
+    badges: badges as string[], reviewItems: reviewItems as ReviewProgress[],
+    totalMinutes: Math.round(Number(localStorage.getItem(LS_KEYS.totalMinutes) || "0")),
+  };
 }
 
 /**
@@ -51,168 +50,66 @@ function getLocalSnapshot(): string {
  * - On page close: best-effort push
  */
 export function useSupabaseSync() {
-  const { user, profile } = useSharedAuth();
+  const { user, profile, loading } = useSharedAuth();
   const hasDoneInitialSync = useRef(false);
   const userIdRef = useRef<string | null>(null);
   const supabase = createClient();
+  const writer = useRef(createProgressWriter((owner, snapshot, revision) => writeProgress(supabase, owner, snapshot, revision)));
 
   // Keep user id in ref for event handlers
   useEffect(() => {
+    if (loading) return;
     userIdRef.current = user?.id ?? null;
-  }, [user]);
+    hasDoneInitialSync.current = false;
+    writer.current.initialize(userIdRef.current);
+    try {
+      const { xp, streak, handsPlayed, completedModules, lastLogin } = useGameStore.getState();
+      const restored = activateProgressOwner(localStorage, userIdRef.current,
+        { xp, streak, handsPlayed, completedModules, lastLogin },
+        { xp: 0, streak: 0, handsPlayed: 0, completedModules: {}, lastLogin: null }, Object.values(LS_KEYS));
+      if (restored) useGameStore.setState(restored);
+    } catch {
+      userIdRef.current = null; // Do not upload possibly mixed local state.
+      reportError("sync:account", new Error("Impossibile isolare i progressi locali"));
+    }
+  }, [user?.id, loading]);
 
-  // Push current localStorage state to Supabase
-  const pushToSupabase = useCallback(
-    async (userId: string, force = false) => {
-      try {
-        const snapshot = getLocalSnapshot();
-        if (!force && snapshot === lastSyncedSnapshot) return;
-
-        const { xp, streak, handsPlayed, completedModules } = useGameStore.getState();
-        const profileType = localStorage.getItem(LS_KEYS.profile) || "adulto";
-        const memoryBest = localStorage.getItem(LS_KEYS.memoryBest);
-        const textSize = localStorage.getItem(LS_KEYS.textSize) || "medio";
-        const animSpeed = localStorage.getItem(LS_KEYS.animSpeed) || "normale";
-        const sound = localStorage.getItem(LS_KEYS.sound);
-        const totalMinutes = Math.round(parseFloat(localStorage.getItem(LS_KEYS.totalMinutes) || "0"));
-
-        // Push profile data
-        await supabase
-          .from("profiles")
-          .update({
-            xp,
-            streak,
-            hands_played: handsPlayed,
-            profile_type: profileType as "junior" | "giovane" | "adulto" | "senior",
-            memory_best: memoryBest ? parseInt(memoryBest, 10) : null,
-            text_size: textSize,
-            anim_speed: animSpeed,
-            sound_on: sound !== "false",
-            total_minutes: totalMinutes,
-            last_login: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", userId);
-
-        // Push completed modules from the store
-        try {
-          const keys = Object.keys(completedModules);
-          // INVARIANTE (rilievo perizia 2026-08, documentato invece che
-          // rifattorizzato): la chiave dello store è `${lessonId}-${moduleId}`
-          // e i moduli hanno id con trattini ("0-1", "Q1-1"), quindi questo
-          // split NON ricostruisce le colonne originali (es. lezione 3, modulo
-          // "0-1" -> lesson_id "3-0", module_id "1"). Va bene SOLO perché:
-          //   1) la lettura ricompone la stessa chiave concatenata;
-          //   2) nessuna query SQL aggrega per lesson_id su questa tabella
-          //      (solo COUNT per utente in email-automation.sql).
-          // Se servisse lesson_id affidabile lato SQL, migrare le righe
-          // esistenti insieme al formato della chiave.
-          const rows = keys.map((moduleKey: string) => {
-            const parts = moduleKey.split("-");
-            const lessonId = parts.slice(0, -1).join("-");
-            const moduleId = parts[parts.length - 1];
-            return { user_id: userId, lesson_id: lessonId, module_id: moduleId };
-          });
-          if (rows.length > 0) {
-            await supabase.from("completed_modules").upsert(rows, {
-              onConflict: "user_id,lesson_id,module_id",
-            });
-          }
-        } catch (e) {
-          logError("sync:completed_modules", e);
-        }
-
-        // Push badges
-        const badgesRaw = localStorage.getItem(LS_KEYS.badges);
-        if (badgesRaw) {
-          try {
-            const badges: string[] = JSON.parse(badgesRaw);
-            const rows = badges.map((badgeId) => ({
-              user_id: userId,
-              badge_id: badgeId,
-            }));
-            if (rows.length > 0) {
-              /**
-               * `ignoreDuplicates`, cioè «inserisci se non c'è» e basta.
-               *
-               * Un upsert normale chiede al database anche il permesso di
-               * AGGIORNARE, e su `badges` quel permesso non c'è: esistono solo
-               * le regole di lettura e di inserimento. Il risultato era un 403
-               * a ogni sincronizzazione — quattro o cinque per sessione nei log
-               * di un utente — e i badge conquistati non arrivavano mai al
-               * database: chi cambiava dispositivo li ritrovava spariti.
-               *
-               * E la regola mancante non va aggiunta: un badge conquistato non
-               * cambia più. Poter aggiornare una riga vorrebbe dire poter
-               * riscrivere la data in cui è stato preso.
-               */
-              const { error: eBadge } = await supabase
-                .from("badges")
-                .upsert(rows, { onConflict: "user_id,badge_id", ignoreDuplicates: true });
-              if (eBadge) logError("sync:badges", eBadge);
-            }
-          } catch (e) {
-            logError("sync:badges", e);
-          }
-        }
-
-        // Push review items
-        const reviewRaw = localStorage.getItem(LS_KEYS.reviewItems);
-        if (reviewRaw) {
-          try {
-            const items: Array<{
-              lessonId: string;
-              moduleId: string;
-              question?: string;
-              wrongCount: number;
-              /** La scatola di Leitner: senza, il ripasso riparte da capo. */
-              box?: number;
-              lastReview?: string;
-              nextReview?: string;
-            }> = JSON.parse(reviewRaw);
-
-            // Delete old items and re-insert (simpler than diffing)
-            await supabase.from("review_items").delete().eq("user_id", userId);
-
-            if (items.length > 0) {
-              const rows = items.map((item) => ({
-                user_id: userId,
-                lesson_id: item.lessonId,
-                module_id: item.moduleId,
-                question: item.question || null,
-                wrong_count: item.wrongCount,
-                // La scatola va salvata, altrimenti chi cambia dispositivo
-                // ritrova ogni carta nella prima e rifà da capo tutto il
-                // ripasso già fatto — proprio quello che il metodo serve a
-                // evitare.
-                box: item.box ?? 1,
-                last_review: item.lastReview || null,
-                next_review: item.nextReview || null,
-              }));
-              await supabase.from("review_items").insert(rows);
-            }
-          } catch (e) {
-            logError("sync:review_items", e);
-          }
-        }
-
-        lastSyncedSnapshot = snapshot;
-      } catch (err) {
-        console.error("[Sync] Push error:", err);
+  const pushToSupabase = useCallback(async (userId: string, force = false) => {
+    if (userIdRef.current !== userId || localStorage.getItem("bq_progress_owner") !== userId || (!force && !hasDoneInitialSync.current)) return;
+    try {
+      const outcome = await writer.current.push(userId, getProgressSnapshot(), force);
+      if (userIdRef.current === userId && outcome.status === "saved") {
+        window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "saved" }));
       }
-    },
-    [supabase]
-  );
+    } catch (error) {
+      // Re-read and merge on the next initial-sync attempt; never overwrite a newer revision.
+      if (error instanceof SyncWriteError && error.code === "40001") hasDoneInitialSync.current = false;
+      reportError("sync:push", error);
+      window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
+    }
+  }, []);
 
   // Initial bidirectional sync (once per session)
   useEffect(() => {
-    if (!user || !profile || hasDoneInitialSync.current) return;
-    hasDoneInitialSync.current = true;
+    if (loading || !user || !profile || profile.id !== user.id || userIdRef.current !== user.id) return;
+    let cancelled = false;
+    let initializing = false;
 
     const initialSync = async () => {
+      if (cancelled || initializing || hasDoneInitialSync.current) return;
+      initializing = true;
       try {
+        const [moduleResult, badgeResult, reviewResult] = await Promise.all([
+          supabase.from("completed_modules").select("lesson_id, module_id").eq("user_id", user.id),
+          supabase.from("badges").select("badge_id").eq("user_id", user.id),
+          supabase.rpc("get_review_items_state"),
+        ]);
+        assertSyncResult(moduleResult, "read-modules");
+        assertSyncResult(badgeResult, "read-badges");
+        assertSyncResult(reviewResult, "read-reviews");
+        if (cancelled || userIdRef.current !== user.id || localStorage.getItem("bq_progress_owner") !== user.id) return;
         // Read local values BEFORE any overwrite — game stats from the store,
-        // everything else still from plain localStorage.
+        // AFTER the network request, so activity during the request is not lost.
         const { xp: localXp, streak: localStreak, handsPlayed: localHands, completedModules: localModules } =
           useGameStore.getState();
         const localMinutes = Math.round(parseFloat(localStorage.getItem(LS_KEYS.totalMinutes) || "0"));
@@ -226,7 +123,7 @@ export function useSupabaseSync() {
         } catch {}
 
         let localReviewItems: Array<{
-          lessonId: string;
+          lessonId: number;
           moduleId: string;
           question?: string;
           wrongCount: number;
@@ -236,18 +133,20 @@ export function useSupabaseSync() {
         }> = [];
         try {
           const raw = localStorage.getItem(LS_KEYS.reviewItems);
-          if (raw) localReviewItems = JSON.parse(raw);
+          if (raw) localReviewItems = (JSON.parse(raw) as ReviewProgress[]).map(normalizeReview);
         } catch {}
 
         const hasLocalData = localXp > 0 || localHands > 0 || Object.keys(localModules).length > 0;
 
-        if (profile.xp > 0 || hasLocalData) {
-          // Fetch remote collections
-          const [{ data: modules }, { data: badges }, { data: reviews }] = await Promise.all([
-            supabase.from("completed_modules").select("lesson_id, module_id").eq("user_id", user.id),
-            supabase.from("badges").select("badge_id").eq("user_id", user.id),
-            supabase.from("review_items").select("*").eq("user_id", user.id),
-          ]);
+        if (profile.xp >= 0 || hasLocalData) {
+          const modules = moduleResult.data;
+          const badges = badgeResult.data;
+          const reviewState = reviewResult.data as { items: ReviewProgress[]; revision: string };
+          if (!reviewState || !Array.isArray(reviewState.items) || typeof reviewState.revision !== "string") {
+            throw new Error("Invalid remote review state");
+          }
+          writer.current.initialize(user.id, reviewState.revision);
+          const reviews = reviewState.items.map(normalizeReview);
 
           // MERGE numeric values: take the MAX
           const mergedXp = Math.max(profile.xp, localXp);
@@ -278,18 +177,18 @@ export function useSupabaseSync() {
           }
           if (reviews && reviews.length > 0) {
             for (const r of reviews) {
-              const key = `${r.lesson_id}-${r.module_id}-${r.question || ""}`;
+              const key = `${r.lessonId}-${r.moduleId}-${r.question || ""}`;
               const existing = reviewMap.get(key);
               const remoteItem = {
-                lessonId: r.lesson_id,
-                moduleId: r.module_id,
-                question: r.question,
-                wrongCount: r.wrong_count,
+                lessonId: r.lessonId,
+                moduleId: r.moduleId,
+                question: r.question ?? undefined,
+                wrongCount: r.wrongCount,
                 box: r.box ?? 1,
-                lastReview: r.last_review,
-                nextReview: r.next_review,
+                lastReview: r.lastReview ?? undefined,
+                nextReview: r.nextReview ?? undefined,
               };
-              if (!existing || (r.last_review && (!existing.lastReview || r.last_review > existing.lastReview))) {
+              if (!existing || (r.lastReview && (!existing.lastReview || r.lastReview > existing.lastReview))) {
                 reviewMap.set(key, remoteItem);
               }
             }
@@ -318,7 +217,7 @@ export function useSupabaseSync() {
             localStorage.setItem(LS_KEYS.reviewItems, JSON.stringify(mergedReviewItems));
           }
 
-          lastSyncedSnapshot = getLocalSnapshot();
+          hasDoneInitialSync.current = true;
 
           // Push merged state back to Supabase so both sides are in sync
           await pushToSupabase(user.id, true);
@@ -330,12 +229,20 @@ export function useSupabaseSync() {
 
         // Both sides empty — nothing to do
       } catch (err) {
-        console.error("[Sync] Initial sync error:", err);
+        reportError("sync:initial", err);
+        window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
+      } finally {
+        initializing = false;
       }
     };
 
-    initialSync();
-  }, [user, profile, supabase, pushToSupabase]);
+    void initialSync();
+    const retryInitial = setInterval(() => { void initialSync(); }, 30_000);
+    const retry = () => { if (!hasDoneInitialSync.current) void initialSync(); else void pushToSupabase(user.id); };
+    window.addEventListener("bq_sync_retry", retry);
+    window.addEventListener("online", retry);
+    return () => { cancelled = true; clearInterval(retryInitial); window.removeEventListener("bq_sync_retry", retry); window.removeEventListener("online", retry); };
+  }, [user, profile, loading, supabase, pushToSupabase]);
 
   // Continuous sync: periodic push + visibility change + beforeunload
   useEffect(() => {

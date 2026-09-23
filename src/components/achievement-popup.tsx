@@ -33,8 +33,9 @@ export const allBadges: BadgeDef[] = [
   { id: "small_slam", name: "Piccolo Slam", icon: "⭐", desc: "Raggiungi 500 XP", check: (s) => s.xp >= 500 },
   { id: "world_done", name: "Mondo Completo", icon: "🌍", desc: "Completa un mondo intero", check: (s) => s.worldsCompleted >= 1 },
   { id: "grand_slam", name: "Grande Slam", icon: "👑", desc: "Raggiungi 2000 XP", check: (s) => s.xp >= 2000 },
-  { id: "prima_mano", name: "Prima Mano", icon: "🎴", desc: "Completa il tutorial Prima Mano", check: (s) => s.handsPlayed >= 1 && s.xp >= 50 },
-  { id: "guided_master", name: "Maestro Guidato", icon: "🎯", desc: "Completa entrambe le Mani Guidate", check: (s) => s.handsPlayed >= 3 },
+  // Awarded only by actual tutorial/guided-hand completion events, never generic counters.
+  { id: "prima_mano", name: "Prima Mano", icon: "🎴", desc: "Completa il tutorial Prima Mano", check: () => false },
+  { id: "guided_master", name: "Maestro Guidato", icon: "🎯", desc: "Completa entrambe le Mani Guidate", check: () => false },
   { id: "first_week", name: "Prima Settimana", icon: "📅", desc: "7 giorni consecutivi di pratica", check: (s) => s.streak >= 7 },
 ];
 

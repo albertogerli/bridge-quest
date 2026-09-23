@@ -11,171 +11,7 @@ import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";
 import { useT } from "@/contexts/traduzioni-provider";
 
-type HandScenario = {
-  hand: string; // Formatted: "♠ AK32 ♥ Q87 ♦ KJ5 ♣ 943"
-  hcp: number;
-  distribution: string; // e.g. "4-3-3-3"
-  correctBid: string;
-  explanation: string;
-  options: string[];
-};
-
-// 24 scenarios based on FIGB bidding rules (Corso Fiori, Quadri, Cuori Licita)
-// HCP: A=4, K=3, Q=2, J=1. Every hand verified for 13 cards and correct HCP total.
-const scenarios: HandScenario[] = [
-  // === PASS (4 scenarios, 8-11 HCP) ===
-  {
-    hand: "♠ Q93  ♥ K72  ♦ J84  ♣ A653",
-    hcp: 10, distribution: "3-3-3-4",
-    correctBid: "Passo", explanation: "10 HCP: sotto il minimo di 12 per aprire",
-    options: ["Passo", "1♣", "1NT", "1♦"],
-  },
-  {
-    hand: "♠ J842  ♥ Q73  ♦ K95  ♣ A84",
-    hcp: 10, distribution: "4-3-3-3",
-    correctBid: "Passo", explanation: "10 HCP: troppo debole per aprire, servono almeno 12",
-    options: ["Passo", "1♠", "1♦", "1♣"],
-  },
-  {
-    hand: "♠ K63  ♥ Q984  ♦ J72  ♣ A53",
-    hcp: 10, distribution: "3-4-3-3",
-    correctBid: "Passo", explanation: "10 HCP: non si apre con meno di 12 punti onori",
-    options: ["1♥", "Passo", "1♣", "1NT"],
-  },
-  {
-    hand: "♠ A72  ♥ QJ3  ♦ K984  ♣ J105",
-    hcp: 11, distribution: "3-3-4-3",
-    correctBid: "Passo", explanation: "11 HCP: ancora sotto il minimo di 12 per aprire",
-    options: ["Passo", "1♦", "1♣", "1NT"],
-  },
-  // === 1NT (4 scenarios, 15-17 HCP balanced) ===
-  {
-    hand: "♠ KJ5  ♥ AQ83  ♦ K72  ♣ Q94",
-    hcp: 15, distribution: "3-4-3-3",
-    correctBid: "1NT", explanation: "15 HCP, bilanciata 3-4-3-3: apri 1NT (15-17)",
-    options: ["1♥", "1NT", "1♦", "Passo"],
-  },
-  {
-    hand: "♠ AJ62  ♥ KQ3  ♦ A84  ♣ Q75",
-    hcp: 16, distribution: "4-3-3-3",
-    correctBid: "1NT", explanation: "16 HCP, bilanciata 4-3-3-3: apri 1NT. La quarta di picche non conta, 1NT ha la precedenza!",
-    options: ["1♠", "1NT", "1♣", "1♦"],
-  },
-  {
-    hand: "♠ A94  ♥ KJ85  ♦ AQ3  ♣ J72",
-    hcp: 15, distribution: "3-4-3-3",
-    correctBid: "1NT", explanation: "15 HCP, bilanciata: con 15-17 e distribuzione bilanciata si apre sempre 1NT",
-    options: ["1♥", "1NT", "1♦", "1♣"],
-  },
-  {
-    hand: "♠ KQ84  ♥ A73  ♦ KJ5  ♣ Q92",
-    hcp: 15, distribution: "4-3-3-3",
-    correctBid: "1NT", explanation: "15 HCP, bilanciata 4-3-3-3: 1NT prevale sull'apertura a colore",
-    options: ["1♠", "1NT", "1♣", "Passo"],
-  },
-  // === 1♠ (3 scenarios, 12-21 HCP, 5+ spades) ===
-  {
-    hand: "♠ AK832  ♥ Q74  ♦ K95  ♣ J3",
-    hcp: 13, distribution: "5-3-3-2",
-    correctBid: "1♠", explanation: "13 HCP, 5 picche: apri 1♠ nel seme più lungo",
-    options: ["Passo", "1♠", "1NT", "1♣"],
-  },
-  {
-    hand: "♠ AQJ74  ♥ K5  ♦ Q83  ♣ 962",
-    hcp: 12, distribution: "5-2-3-3",
-    correctBid: "1♠", explanation: "12 HCP, 5 picche: si apre nel seme più lungo, 1♠",
-    options: ["1♠", "Passo", "1♦", "1NT"],
-  },
-  {
-    hand: "♠ KQ9742  ♥ A5  ♦ AJ3  ♣ 84",
-    hcp: 14, distribution: "6-2-3-2",
-    correctBid: "1♠", explanation: "14 HCP, 6 picche: apri 1♠. Con 6 carte non bilanciata, niente 1NT",
-    options: ["1♠", "2♠", "1NT", "Passo"],
-  },
-  // === 1♥ (3 scenarios) ===
-  {
-    hand: "♠ 84  ♥ AKJ63  ♦ Q72  ♣ K95",
-    hcp: 13, distribution: "2-5-3-3",
-    correctBid: "1♥", explanation: "13 HCP, 5 cuori: apri 1♥ nel seme più lungo",
-    options: ["1♥", "1NT", "Passo", "1♣"],
-  },
-  {
-    hand: "♠ KJ84  ♥ AQ73  ♦ K92  ♣ 65",
-    hcp: 13, distribution: "4-4-3-2",
-    correctBid: "1♥", explanation: "13 HCP, 4-4 nei nobili: con 4♠ e 4♥ si apre 1♥ (standard FIGB)",
-    options: ["1♠", "1♥", "1♦", "1NT"],
-  },
-  {
-    hand: "♠ 5  ♥ AQJ84  ♦ K73  ♣ AQ92",
-    hcp: 16, distribution: "1-5-3-4",
-    correctBid: "1♥", explanation: "16 HCP, 5 cuori: sbilanciata, si apre nel seme più lungo 1♥",
-    options: ["1♥", "1♣", "1NT", "2♥"],
-  },
-  // === 1♦ (3 scenarios) ===
-  {
-    hand: "♠ K84  ♥ A53  ♦ KJ952  ♣ Q7",
-    hcp: 13, distribution: "3-3-5-2",
-    correctBid: "1♦", explanation: "13 HCP, 5 quadri: apri nel seme più lungo, 1♦",
-    options: ["1♦", "1♣", "1NT", "Passo"],
-  },
-  {
-    hand: "♠ AQ73  ♥ K84  ♦ QJ95  ♣ 62",
-    hcp: 12, distribution: "4-3-4-2",
-    correctBid: "1♦", explanation: "12 HCP, 4♠ e 4♦: con due quarti si apre nel più basso di rango, 1♦",
-    options: ["1♠", "1♦", "1♣", "Passo"],
-  },
-  {
-    hand: "♠ K83  ♥ Q5  ♦ AKJ74  ♣ 962",
-    hcp: 13, distribution: "3-2-5-3",
-    correctBid: "1♦", explanation: "13 HCP, 5 quadri: si apre nel seme più lungo",
-    options: ["1♦", "1♣", "Passo", "1NT"],
-  },
-  // === 1♣ (3 scenarios) ===
-  {
-    hand: "♠ QJ5  ♥ K84  ♦ A73  ♣ KJ62",
-    hcp: 14, distribution: "3-3-3-4",
-    correctBid: "1♣", explanation: "14 HCP, bilanciata 3-3-3-4: non 15-17 per 1NT, apri nel seme più lungo 1♣",
-    options: ["1♣", "1NT", "1♦", "Passo"],
-  },
-  {
-    hand: "♠ K42  ♥ Q73  ♦ A85  ♣ KJ94",
-    hcp: 13, distribution: "3-3-3-4",
-    correctBid: "1♣", explanation: "13 HCP, bilanciata 3-3-3-4: con 12-14 bilanciata apri nel più lungo, 1♣",
-    options: ["1♣", "1♦", "1NT", "Passo"],
-  },
-  {
-    hand: "♠ K53  ♥ A84  ♦ Q62  ♣ AJ73",
-    hcp: 14, distribution: "3-3-3-4",
-    correctBid: "1♣", explanation: "14 HCP, bilanciata 3-3-3-4: con i minori di 4 carte, apri 1♣ (FIGB)",
-    options: ["1♣", "1♦", "1NT", "1♥"],
-  },
-  // === 2NT (2 scenarios, 20-21 HCP balanced) ===
-  {
-    hand: "♠ AKQ5  ♥ K3  ♦ AJ84  ♣ K72",
-    hcp: 20, distribution: "4-2-4-3",
-    correctBid: "2NT", explanation: "20 HCP, bilanciata: apri 2NT (20-21 bilanciata)",
-    options: ["1♠", "2NT", "1NT", "2♣"],
-  },
-  {
-    hand: "♠ AJ3  ♥ KQ84  ♦ AK5  ♣ QJ7",
-    hcp: 20, distribution: "3-4-3-3",
-    correctBid: "2NT", explanation: "20 HCP, bilanciata 3-4-3-3: troppo forte per 1NT (max 17), apri 2NT",
-    options: ["1♥", "2NT", "2♣", "1NT"],
-  },
-  // === 2♣ (2 scenarios, 22+ HCP) ===
-  {
-    hand: "♠ AKJ5  ♥ AKQ3  ♦ AK2  ♣ 84",
-    hcp: 24, distribution: "4-4-3-2",
-    correctBid: "2♣", explanation: "24 HCP: mano fortissima, apri 2♣ forte convenzionale (22+ HCP)",
-    options: ["2♣", "2NT", "1♠", "1♥"],
-  },
-  {
-    hand: "♠ AK3  ♥ AQJ84  ♦ AK7  ♣ A5",
-    hcp: 25, distribution: "3-5-3-2",
-    correctBid: "2♣", explanation: "25 HCP: con 22+ punti si apre 2♣ (forte, artificiale, forzante)",
-    options: ["2♣", "2NT", "1♥", "2♥"],
-  },
-];
+import { openingScenarios as scenarios, type HandScenario } from "@/data/opening-scenarios";
 
 const TOTAL_ROUNDS = 10;
 
@@ -337,11 +173,12 @@ export default function DichiaraPage() {
 
             <div className="mt-6 bg-card card-clean rounded-2xl p-4 text-left">
               <h3 className="font-bold text-sm text-foreground mb-2">{t("Regole di apertura FIGB")}</h3>
+              <p className="text-xs text-muted-foreground mb-2">{t("Riferimento: FIGB Fiori 2022, quinta maggiore e quadri quarto. 2SA 21–23; 2♣ bilanciata da 24.")}</p>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li>12+ HCP: puoi aprire</li>
-                <li>15-17 HCP bilanciata: apri 1NT</li>
-                <li>20-21 HCP bilanciata: apri 2NT</li>
-                <li>22+ HCP: apri 2♣ (forte convenzionale)</li>
+                <li>{t("12+ HCP: puoi aprire")}</li>
+                <li>{t("15-17 HCP bilanciata: apri 1NT")}</li>
+                <li>{t("21-23 punti, bilanciata: 2NT (Fiori 2022)")}</li>
+                <li>{t("24+ punti, bilanciata: 2♣ (Fiori 2022)")}</li>
                 <li>{t("Con 5+ carte in un seme: apri a quel colore")}</li>
               </ul>
             </div>
@@ -355,8 +192,8 @@ export default function DichiaraPage() {
                   className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
-                    <p className="font-semibold">{cfg.label}</p>
-                    <p className="text-white/70 text-sm">{cfg.desc}</p>
+                    <p className="font-semibold">{t(cfg.label)}</p>
+                    <p className="text-white/70 text-sm">{t(cfg.desc)}</p>
                   </div>
                   <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </button>
@@ -448,11 +285,11 @@ export default function DichiaraPage() {
                             <div className="flex-1 min-w-0">
                               <p className="text-[12px] text-muted-foreground mb-0.5">{s.hand}</p>
                               <p className="text-xs text-muted-foreground">
-                                {t("Hai dichiarato:")} <span className="font-bold">{answer.selected}</span>
+                                {t("Hai dichiarato:")} <span className="font-bold">{t(answer.selected)}</span>
                               </p>
                               {!answer.correct && (
                                 <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
-                                  Corretta: {s.correctBid} — {s.explanation}
+                                  {t("Risposta corretta:")} {t(s.correctBid)} — {t(s.explanation)}
                                 </p>
                               )}
                             </div>
@@ -573,7 +410,7 @@ export default function DichiaraPage() {
                     <p className={`font-bold ${profile === "senior" ? "text-2xl" : "text-xl"} ${
                       bid === "Passo" ? "text-muted-foreground" : "text-figb dark:text-primary"
                     }`}>
-                      {bid}
+                      {t(bid)}
                     </p>
                   </button>
                 );
@@ -591,7 +428,7 @@ export default function DichiaraPage() {
                   <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>
                     {lastCorrect ? "Corretto!" : "Sbagliato!"}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">{scenario.explanation}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t(scenario.explanation)}</p>
                 </motion.div>
               )}
             </AnimatePresence>

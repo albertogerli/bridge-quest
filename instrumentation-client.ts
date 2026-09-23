@@ -20,8 +20,8 @@ if (SENTRY_ENABLED) {
     // (dati personali) e non serve per la diagnosi degli errori.
     sendDefaultPii: false,
     beforeSend(event) {
-      // Crawler e browser senza service worker: rumore, non difetti (vedi
-      // isServiceWorkerNoise). Scartato prima di consumare quota e notifiche.
+      // Solo la firma esplicita del renderer Google. Un generico fallimento
+      // del service worker potrebbe essere un difetto di deploy o CSP.
       if (isServiceWorkerNoise(event)) return null;
 
       // Browser dentro le app (Facebook, Instagram): la loro strumentazione

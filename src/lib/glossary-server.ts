@@ -16,12 +16,16 @@ type RawGlossary = {
   id: string;
   term: string;
   definition: string;
+  term_en: string | null;
+  definition_en: string | null;
+  example_en: string | null;
   emoji: string;
   category: GlossaryEntry["category"];
   example: string | null;
   cards: string | null;
   related_terms: string[] | null;
   quiz: GlossaryEntry["quiz"];
+  quiz_en: GlossaryEntry["quiz"] | null;
 };
 
 export async function getGlossaryServer(): Promise<GlossaryEntry[]> {
@@ -35,7 +39,7 @@ export async function getGlossaryServer(): Promise<GlossaryEntry[]> {
     });
     const { data, error } = await supabase
       .from("glossary")
-      .select("id, term, definition, emoji, category, example, cards, related_terms, quiz");
+      .select("id, term, definition, term_en, definition_en, example_en, emoji, category, example, cards, related_terms, quiz, quiz_en");
 
     if (error || !data) return [];
 
@@ -43,12 +47,16 @@ export async function getGlossaryServer(): Promise<GlossaryEntry[]> {
       id: r.id,
       term: r.term,
       definition: r.definition,
+      termEn: r.term_en ?? undefined,
+      definitionEn: r.definition_en ?? undefined,
+      exampleEn: r.example_en ?? undefined,
       emoji: r.emoji,
       category: r.category,
       example: r.example ?? undefined,
       cards: r.cards ?? undefined,
       relatedTerms: r.related_terms ?? [],
       quiz: r.quiz,
+      quizEn: r.quiz_en ?? undefined,
     }));
   } catch {
     return [];

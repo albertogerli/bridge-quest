@@ -6,6 +6,32 @@ on:
   pull_request:
 
 jobs:
+  review-sync-sql:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: synthetic-fixture-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Atomic review sync, isolated synthetic PostgreSQL
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: synthetic-fixture-only
+        run: |
+          psql -v ON_ERROR_STOP=1 -f scripts/sql/test-review-sync-fixture.sql
+          psql -v ON_ERROR_STOP=1 -f scripts/sql/review-sync-2026-09.sql
+          psql -v ON_ERROR_STOP=1 -f scripts/sql/test-review-sync-assertions.sql
   verify:
     runs-on: ubuntu-latest
     steps:

@@ -37,18 +37,20 @@ import {
 interface CatalogState {
   courses: Course[];
   isLoading: boolean;
-  isLoaded: boolean;          // true once the first successful fetch lands
+  isLoaded: boolean;          // true once the first attempt ends; inspect error separately
   error: string | null;
 
   /**
    * Fires the underlying Supabase load. No-op if already loading or
    * already loaded; idempotent on re-call after success. On error,
-   * leaves `isLoaded` false so the next call retries.
+   * leaves an explicit error so manual retry is possible without an auto-retry loop.
    */
   fetchCatalog: (lingua?: Lingua) => Promise<void>;
   /** La lingua del catalogo in memoria: cambiandola si ricarica. */
   lingua: Lingua;
 }
+
+let catalogRequest = 0;
 
 export const useCatalogStore = create<CatalogState>((set, get) => ({
   courses: [],
@@ -58,20 +60,23 @@ export const useCatalogStore = create<CatalogState>((set, get) => ({
   lingua: "it",
 
   fetchCatalog: async (lingua = "it") => {
-    const { isLoading, isLoaded, lingua: inMemoria } = get();
+    const { isLoading, isLoaded, error, lingua: inMemoria } = get();
     // Cambiare lingua ricarica anche se il catalogo era già pronto: è l'unico
     // modo perché i contenuti seguano il selettore invece di restare nella
     // lingua in cui la pagina è stata aperta la prima volta.
     if (lingua !== inMemoria) {
-      set({ isLoaded: false, isLoading: false, lingua });
-    } else if (isLoading || isLoaded) {
+      set({ courses: [], isLoaded: false, isLoading: false, lingua });
+    } else if (isLoading || (isLoaded && !error)) {
       return;
     }
+    const request = ++catalogRequest;
     set({ isLoading: true, error: null });
     try {
       const courses = await getCourses(lingua);
+      if (request !== catalogRequest) return;
       set({ courses, isLoading: false, isLoaded: true });
     } catch (err) {
+      if (request !== catalogRequest) return;
         // Anche il fallimento è uno stato finale: senza `isLoaded`, l'effetto
         // che chiama questa funzione riparte (la sua guardia è
         // `!isLoaded && !isLoading`, e il passaggio di isLoading a false la
@@ -123,13 +128,16 @@ export function useCatalog(): {
   isLoading: boolean;
   isLoaded: boolean;
   error: string | null;
+  retry: () => Promise<void>;
 } {
   useEnsureCatalog();
   const courses = useCatalogStore((s) => s.courses);
   const isLoading = useCatalogStore((s) => s.isLoading);
   const isLoaded = useCatalogStore((s) => s.isLoaded);
   const error = useCatalogStore((s) => s.error);
-  return { courses, isLoading, isLoaded, error };
+  const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
+  const { lingua } = useLingua();
+  return { courses, isLoading, isLoaded, error, retry: () => fetchCatalog(lingua) };
 }
 
 export function useCourse(id: CourseId | undefined): Course | undefined {

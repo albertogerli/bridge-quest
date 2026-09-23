@@ -8,6 +8,8 @@ import { DesktopNav } from "@/components/desktop-nav";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
+import { useResultQueueSync } from "@/hooks/use-game-results";
+import { SyncNotice } from "@/components/sync-notice";
 import { useActivityTracker } from "@/hooks/use-activity-tracker";
 import { AuthProvider, useSharedAuth } from "@/contexts/auth-provider";
 import { RicordaLingua } from "@/components/ricorda-lingua";
@@ -143,6 +145,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
   // Continuous Supabase sync (runs on every page, no-op if not logged in)
   useSupabaseSync();
+  useResultQueueSync();
 
   // Track time spent in app (30s heartbeat, pauses when tab hidden)
   useActivityTracker();
@@ -159,6 +162,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   if (isFullScreen) {
     return (
       <>
+        <SyncNotice />
         <main id="main-content" className="min-h-svh" data-profile={profile}>{children}</main>
         <CookieBanner />
       <OspiteConverti />
@@ -173,6 +177,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Center: main content */}
       <div className="flex-1 flex flex-col min-w-0">
+        <SyncNotice />
         {/* pb-28: il bottone "Gioca" e' alto 60px e sporge di 24 sopra la barra
             (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
             contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo

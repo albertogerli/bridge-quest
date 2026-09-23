@@ -381,17 +381,17 @@ function PlayingView({
   /**
    * Modalità iniziale.
    *
-   * 56 delle 272 smazzate del catalogo (il 21%) non si mantengono nemmeno a
+   * Alcune smazzate didattiche non si mantengono nemmeno a
    * carte scoperte: aprirle come dichiarante condanna l'allievo a «Caduto di
    * 1 — Da rivedere» per quanto bene giochi. Non sono contenuti sbagliati,
    * sono esercizi di controgioco proposti nel verso sbagliato. Quando il
-   * contratto è imbattibile si apre in difesa, dove l'esercizio ha senso e si
+   * contratto è battibile si apre in difesa, dove l'esercizio ha senso e si
    * può vincere. Resta commutabile a mano.
    */
-  const contrattoImbattibile =
+  const contrattoBattibile =
     typeof smazzata.ddTricks === "number" && smazzata.ddTricks < tricksNeeded;
   const [mode, setMode] = useState<"declare" | "defend">(
-    contrattoImbattibile ? "defend" : "declare"
+    contrattoBattibile ? "defend" : "declare"
   );
   const dummy = getDummy(declarer);
   // Anchor = the seat shown at the bottom (the human). Declaring → declarer;
@@ -807,6 +807,10 @@ function PlayingView({
             </motion.div>
           )}
         </div>
+
+        {smazzata.biddingUnderReview && <p className="mt-3 text-sm text-muted-foreground" role="status">
+          {t("Asta in revisione editoriale. Contratto, carte e attacco dell'esercizio restano invariati.")}
+        </p>}
 
         {/* Message */}
         <div className={`mt-3 text-center ${isMobile ? "sticky bottom-16 z-20 bg-card/90 backdrop-blur-sm rounded-xl py-2 mx-auto max-w-xs shadow-sm" : ""}`}>

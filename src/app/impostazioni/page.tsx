@@ -166,6 +166,7 @@ export default function ImpostazioniPage() {
       try { localStorage.removeItem("bq_guest"); } catch {}
       await signOut();
       // Hard redirect to force full page reload and clean auth state
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
       window.location.href = "/";
     } catch (err) {
       reportError("impostazioni:logout", err);

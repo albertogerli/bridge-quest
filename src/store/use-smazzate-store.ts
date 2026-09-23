@@ -45,8 +45,8 @@ export const useSmazzateStore = create<SmazzateState>((set, get) => ({
   error: null,
 
   fetchSmazzate: async () => {
-    const { isLoading, isLoaded } = get();
-    if (isLoading || isLoaded) return;
+    const { isLoading, isLoaded, error } = get();
+    if (isLoading || (isLoaded && !error)) return;
     set({ isLoading: true, error: null });
     try {
       const smazzate = await getAllSmazzate();
@@ -102,6 +102,7 @@ export function useSmazzate(): {
   isLoading: boolean;
   isLoaded: boolean;
   error: string | null;
+  retry: () => Promise<void>;
 } {
   useEnsureSmazzate();
   const smazzate = useSmazzateStore((s) => s.smazzate);
@@ -110,7 +111,8 @@ export function useSmazzate(): {
   const isLoading = useSmazzateStore((s) => s.isLoading);
   const isLoaded = useSmazzateStore((s) => s.isLoaded);
   const error = useSmazzateStore((s) => s.error);
-  return { smazzate, validated, playable, isLoading, isLoaded, error };
+  const retry = useSmazzateStore((s) => s.fetchSmazzate);
+  return { smazzate, validated, playable, isLoading, isLoaded, error, retry };
 }
 
 /** Single smazzata by id. Returns undefined until catalog is loaded. */

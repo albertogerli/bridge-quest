@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/lib/ben-guard";
+import { measureBenRoute, benEngine, type BenMetricContext } from "@/lib/ben-metrics";
 
 /**
  * Quanto si aspetta BEN prima di rinunciare, e perché questo numero conta.
@@ -30,6 +31,10 @@ const bodySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  return measureBenRoute("autoplay", req, handlePost);
+}
+
+async function handlePost(req: NextRequest, metric: BenMetricContext) {
   const userId = await getAuthUserId();
   if (!userId) {
     return NextResponse.json({ fallback: true, error: "Non autenticato" }, { status: 401 });
@@ -56,6 +61,7 @@ export async function POST(req: NextRequest) {
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
     const { url: benUrl, headers: benHeaders } = benEndpoint();
+    metric.attempts = 1;
     const res = await fetch(`${benUrl}/autoplay?${params.toString()}`, {
       signal: controller.signal,
       headers: benHeaders,
@@ -70,6 +76,7 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await res.json();
+    metric.engine = benEngine(data.who);
     return NextResponse.json({ fallback: false, ...data });
   } catch {
     return NextResponse.json({ fallback: true, error: "BEN unavailable" }, { status: 502 });

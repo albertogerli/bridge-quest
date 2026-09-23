@@ -245,6 +245,7 @@ export default function PraticaLicitaPage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl shadow-figb/20 mb-6">
               🗣️
             </div>
+
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {t("Pratica Licita")}
             </h1>
@@ -484,6 +485,13 @@ export default function PraticaLicitaPage() {
         {scenario && (
           <>
             {/* Topic badge */}
+            <p className="mb-3 text-sm text-muted-foreground">
+              {scenario.system === "due-deboli"
+                ? t("Accordo dell'esercizio: due deboli e 2♣ artificiale forte. Variante rispetto al corso Fiori 2022.")
+                : scenario.topic === "Texas Transfer"
+                  ? t("Accordo dell'esercizio: transfer a livello due, non risposte naturali del corso Fiori 2022.")
+                  : t("Riferimento di base: FIGB Fiori 2022; le convenzioni aggiuntive sono indicate nell'esercizio.")}
+            </p>
             <div className="flex items-center gap-2 mb-3">
               <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
                 {scenario.topic}
@@ -647,7 +655,7 @@ export default function PraticaLicitaPage() {
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    {scenario.explanation}
+                    {t(scenario.explanation)}
                   </p>
                   <button
                     onClick={() => {

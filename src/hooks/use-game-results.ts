@@ -1,27 +1,16 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
-import { getPlatform, type Platform } from "@/lib/native-bridge";
-
-// ===== Types =====
+import { getPlatform } from "@/lib/native-bridge";
+import { createResultQueue } from "@/lib/game-result-queue";
+import { reportError } from "@/lib/report-error";
 
 export type GameType =
-  | "mano-del-giorno"
-  | "sfida"
-  | "smazzata"
-  | "torneo"
-  | "quiz-lampo"
-  | "conta-veloce"
-  | "impasse"
-  | "memory"
-  | "trova-errore"
-  | "mano-guidata"
-  | "dichiara"
-  | "pratica-licita"
-  | "sfida-settimanale"
-  | "segnali";
+  | "mano-del-giorno" | "sfida" | "smazzata" | "torneo" | "quiz-lampo"
+  | "conta-veloce" | "impasse" | "memory" | "trova-errore" | "mano-guidata"
+  | "dichiara" | "pratica-licita" | "sfida-settimanale" | "segnali";
 
 export interface GameResult {
   gameType: GameType;
@@ -30,148 +19,76 @@ export interface GameResult {
   details?: Record<string, unknown>;
 }
 
-// localStorage key for offline queue
-const LS_RESULTS_QUEUE = "bq_game_results_queue";
-
-// ===== localStorage helpers =====
-
-interface QueuedResult extends GameResult {
-  timestamp: string;
-  platform: Platform;
+let queue: ReturnType<typeof createResultQueue> | undefined;
+function resultQueue() {
+  return queue ??= createResultQueue(localStorage, async (entry) => {
+    const supabase = createClient();
+    const { data, error: authError } = await supabase.auth.getUser();
+    if (authError || !entry.owner || data.user?.id !== entry.owner) {
+      throw new Error("Sessione non valida per il salvataggio del risultato");
+    }
+    // Existing UUID primary key + DO NOTHING: no new schema or UPDATE privilege.
+    const { error } = await supabase.from("game_results").upsert({
+      id: entry.id, user_id: entry.owner, game_type: entry.gameType,
+      lesson_id: entry.lessonId ?? null, score: entry.score,
+      details: entry.details ?? null, created_at: entry.timestamp, platform: entry.platform,
+    }, { onConflict: "id", ignoreDuplicates: true });
+    // Never log payload, user ID, or database details that could contain them.
+    if (error) throw new Error("Salvataggio risultato rifiutato (" + (error.code ?? "database") + ")");
+  });
 }
 
-function getQueue(): QueuedResult[] {
+async function flushResults(owner: string) {
   try {
-    const raw = localStorage.getItem(LS_RESULTS_QUEUE);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
+    await resultQueue().flush(owner);
+    window.dispatchEvent(new Event("bq_results_synced"));
+  } catch (error) {
+    reportError("game-results:sync", error);
+    window.dispatchEvent(new Event("bq_results_pending"));
   }
 }
 
-function addToQueue(result: GameResult) {
-  try {
-    const queue = getQueue();
-    queue.push({ ...result, timestamp: new Date().toISOString(), platform: getPlatform() });
-    // Keep max 200 entries to avoid localStorage bloat
-    if (queue.length > 200) queue.splice(0, queue.length - 200);
-    localStorage.setItem(LS_RESULTS_QUEUE, JSON.stringify(queue));
-  } catch {
-    // Storage full or unavailable - silently ignore
-  }
+/** Mounted once in the shell: pending events retry even after leaving a game. */
+export function useResultQueueSync() {
+  const { user } = useSharedAuth();
+  const owner = user?.id ?? null;
+  useEffect(() => {
+    if (!owner) return;
+    const retry = () => { void flushResults(owner); };
+    retry();
+    window.addEventListener("online", retry);
+    window.addEventListener("focus", retry);
+    window.addEventListener("bq_sync_retry", retry);
+    const timer = setInterval(retry, 30_000);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("online", retry);
+      window.removeEventListener("focus", retry);
+      window.removeEventListener("bq_sync_retry", retry);
+    };
+  }, [owner]);
 }
-
-function clearQueue() {
-  try {
-    localStorage.removeItem(LS_RESULTS_QUEUE);
-  } catch {}
-}
-
-// ===== Hook =====
 
 export function useGameResults() {
   const { user } = useSharedAuth();
-
-  /**
-   * Save a game result.
-   * - Always saves to localStorage queue (for offline/guest users)
-   * - If authenticated, also inserts to Supabase (fire-and-forget)
-   * - On authenticated save, flushes any queued offline results too
-   */
-  const saveGameResult = useCallback(
-    (result: GameResult) => {
-      // 1. Always save to localStorage queue
-      addToQueue(result);
-
-      // 2. If authenticated, send to Supabase (fire-and-forget)
-      if (user?.id) {
-        const supabase = createClient();
-        const userId = user.id;
-
-        // Insert current result (fire-and-forget)
-        Promise.resolve(
-          supabase
-            .from("game_results")
-            .insert({
-              user_id: userId,
-              game_type: result.gameType,
-              lesson_id: result.lessonId ?? null,
-              score: result.score,
-              details: result.details ?? null,
-              platform: getPlatform(),
-            })
-        )
-          .then(({ error }) => {
-            if (error) {
-              console.warn("[GameResults] Supabase insert error:", error.message);
-            } else {
-              // Successfully saved - flush any old queued results
-              flushQueue(supabase, userId);
-            }
-          })
-          .catch((err: unknown) => {
-            console.warn("[GameResults] Supabase insert failed:", err);
-          });
-      }
-    },
-    [user]
-  );
-
+  const owner = user?.id ?? null;
+  const saveGameResult = useCallback((result: GameResult) => {
+    try {
+      resultQueue().enqueue(result, owner, getPlatform());
+      if (owner) void flushResults(owner);
+    } catch {
+      reportError("game-results:queue", new Error("Memoria locale non disponibile: risultato non accodato"));
+      window.dispatchEvent(new Event("bq_results_pending"));
+    }
+  }, [owner]);
   return { saveGameResult };
 }
 
-// ===== Flush offline queue to Supabase =====
-
-async function flushQueue(
-  supabase: ReturnType<typeof createClient>,
-  userId: string
-) {
-  try {
-    const queue = getQueue();
-    if (queue.length <= 1) {
-      // Only the result we just inserted (or empty) - clear and done
-      clearQueue();
-      return;
-    }
-
-    // Skip the last entry (we just inserted it directly above)
-    const oldEntries = queue.slice(0, -1);
-    if (oldEntries.length === 0) {
-      clearQueue();
-      return;
-    }
-
-    const rows = oldEntries.map((entry) => ({
-      user_id: userId,
-      game_type: entry.gameType,
-      lesson_id: entry.lessonId ?? null,
-      score: entry.score,
-      details: entry.details ?? null,
-      created_at: entry.timestamp,
-      platform: entry.platform,
-    }));
-
-    const { error } = await supabase.from("game_results").insert(rows);
-    if (error) {
-      console.warn("[GameResults] Queue flush error:", error.message);
-      // Don't clear queue on error - will retry next time
-      return;
-    }
-
-    // Success - clear the queue
-    clearQueue();
-  } catch (err) {
-    console.warn("[GameResults] Queue flush failed:", err);
-  }
-}
-
-// ===== Standalone function (for use outside React components) =====
-
-/**
- * Save a game result without the hook.
- * Only saves to localStorage queue. Use for contexts where
- * the auth hook isn't available.
- */
+/** Guest results stay on this device; never attribute an unknown legacy owner to the next login. */
 export function saveGameResultDirect(result: GameResult) {
-  addToQueue(result);
+  try {
+    resultQueue().enqueue(result, null, getPlatform());
+  } catch {
+    reportError("game-results:queue", new Error("Memoria locale non disponibile: risultato non accodato"));
+  }
 }

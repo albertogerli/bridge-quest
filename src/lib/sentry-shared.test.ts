@@ -25,8 +25,8 @@ describe("isServiceWorkerNoise", () => {
     ).toBe(true);
   });
 
-  it("scarta qualunque fallimento di registrazione del service worker", () => {
-    expect(isServiceWorkerNoise(evt([{ function: "navigator.serviceWorker.register" }]))).toBe(true);
+  it("conserva un fallimento di registrazione senza la firma del crawler", () => {
+    expect(isServiceWorkerNoise(evt([{ function: "navigator.serviceWorker.register" }]))).toBe(false);
   });
 
   it("NON scarta un errore applicativo qualsiasi", () => {
@@ -54,32 +54,31 @@ describe("isServiceWorkerNoise", () => {
 
 /**
  * Seconda forma: la registrazione non fallisce, risolve `undefined`, e la
- * libreria della PWA legge `.waiting` su niente. Il filtro sullo stack non
- * bastava — in produzione la funzione era minificata in `o.register`, un nome
- * su cui non si può filtrare senza scartare mezzo mondo.
+ * libreria della PWA legge `.waiting` su niente. Il messaggio non dimostra
+ * che sia un crawler: senza quella firma va conservato per la diagnosi.
  */
 const msg = (value: string, frames: Array<{ function?: string }> = []) => ({
   exception: { values: [{ value, stacktrace: { frames } }] },
 });
 
 describe("isServiceWorkerNoise — .waiting su undefined", () => {
-  it("scarta l'evento reale del 2026-08-13, minificato", () => {
+  it("conserva l'evento minificato: la causa innocua non è dimostrata", () => {
     expect(
       msgNoise("Cannot read properties of undefined (reading 'waiting')", [
         { function: "o.register" },
       ])
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it("riconosce la stessa cosa detta da Firefox e da Safari", () => {
-    expect(msgNoise("this._registration is undefined")).toBe(true);
+    expect(msgNoise("this._registration is undefined")).toBe(false);
     expect(
       msgNoise("undefined is not an object (evaluating 'this._registration.waiting')")
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  it("scarta anche la variante con null", () => {
-    expect(msgNoise("Cannot read properties of null (reading 'waiting')")).toBe(true);
+  it("conserva anche la variante con null", () => {
+    expect(msgNoise("Cannot read properties of null (reading 'waiting')")).toBe(false);
   });
 
   it("NON scarta un errore nostro che parla d'altro", () => {
@@ -183,9 +182,8 @@ describe("isInAppBrowserNoise — il ponte Java sparito", () => {
 describe("registrazione del service worker non scaricata", () => {
   const conMessaggio = (value: string) => ({ exception: { values: [{ value }] } });
 
-  it("scarta il fallimento di download dello script", () => {
-    // Chrome per Android, 15/08/2026: rete caduta mentre scaricava /sw.js.
-    // Verificato che in produzione /sw.js risponda 200 col tipo giusto.
+  it("conserva il fallimento di download: potrebbe essere rete, CSP o deploy", () => {
+    // Un controllo HTTP riuscito in passato non prova la causa di questo evento.
     expect(
       isServiceWorkerNoise(
         conMessaggio(
@@ -193,7 +191,7 @@ describe("registrazione del service worker non scaricata", () => {
             "script ('https://bridgelab.it/sw.js'): An unknown error occurred when fetching the script."
         )
       )
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it("ma un errore DENTRO il service worker arriva lo stesso", () => {
@@ -214,18 +212,18 @@ describe("registrazione del service worker non scaricata", () => {
 describe("registrazione del service worker — la formulazione di WebKit", () => {
   const conMessaggio = (value: string) => ({ exception: { values: [{ value }] } });
 
-  it("scarta l'evento reale del 2026-08-23 da Chrome per iOS", () => {
+  it("conserva l'evento reale da Chrome per iOS senza attribuirgli una causa", () => {
     expect(
       isServiceWorkerNoise(conMessaggio("Script https://bridgelab.it/sw.js load failed"))
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  it("scarta anche il service worker delle notifiche", () => {
+  it("conserva anche il service worker delle notifiche", () => {
     expect(
       isServiceWorkerNoise(
         conMessaggio("Script https://bridgelab.it/sw-notifications.js load failed")
       )
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it("NON scarta il mancato caricamento di un pezzo dell'applicazione", () => {
@@ -256,6 +254,14 @@ describe("il rumore delle estensioni del browser", () => {
     IGNORE_ERRORS.some((v) =>
       typeof v === "string" ? messaggio.includes(v) : (v as RegExp).test(messaggio),
     );
+
+  it.each([
+    "Failed to fetch", "NetworkError when attempting to fetch resource",
+    "Load failed", "AbortError", "The operation was aborted",
+    "Non-Error promise rejection captured", "salvataggio: Failed to fetch",
+  ])("non nasconde errori senza una causa innocua dimostrata: %s", message => {
+    expect(scartato(message)).toBe(false);
+  });
 
   it("scarta l'errore vero arrivato da DuckDuckGo l'11/09/2026", () => {
     expect(scartato("Invalid call to runtime.sendMessage(). Tab not found.")).toBe(true);

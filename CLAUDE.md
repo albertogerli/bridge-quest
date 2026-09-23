@@ -105,3 +105,13 @@ cosa sta succedendo.
 - I motori in `src/lib/` (engine, scoring, pbn, encoder…) sono puri e testati: modifiche lì richiedono l'aggiornamento dei relativi `*.test.ts`.
 - Errori: usare sempre `reportError(scope, err)` da `src/lib/report-error.ts` (console + Sentry con tag `scope`), mai `console.error` diretto in codice nuovo. `catch {}` è ammesso solo attorno a puri accessi `localStorage`.
 - Sentry è attivo solo con `NEXT_PUBLIC_SENTRY_DSN`: non inviare mai dati personali negli eventi (niente Session Replay, niente email/ID utente).
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

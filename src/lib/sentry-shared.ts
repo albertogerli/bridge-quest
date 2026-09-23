@@ -13,18 +13,14 @@ export const TRACES_SAMPLE_RATE =
   process.env.NODE_ENV === "production" ? 0.1 : 1.0;
 
 /**
- * Rumore da non inviare: estensioni del browser, errori di rete transitori,
- * interruzioni volontarie (l'utente cambia pagina mentre una fetch è in volo).
+ * Firme note di rumore del browser. Non filtrare gli errori di rete per
+ * messaggio: "Failed to fetch" può nascondere un guasto dei salvataggi.
+ * Anche AbortError, senza il contesto del chiamante, non prova che la
+ * cancellazione fosse volontaria. Gli abort previsti vanno gestiti lì.
  */
 export const IGNORE_ERRORS = [
   "ResizeObserver loop limit exceeded",
   "ResizeObserver loop completed with undelivered notifications",
-  "Non-Error promise rejection captured",
-  "AbortError",
-  "The operation was aborted",
-  "Failed to fetch",
-  "NetworkError when attempting to fetch resource",
-  "Load failed",
   // Estensioni/browser
   "top.GLOBALS",
   "chrome-extension://",
@@ -63,85 +59,13 @@ export const DENY_URLS = [
 ];
 
 /**
- * La registrazione del service worker fallisce in ambienti che non lo
- * supportano — e il primo caso reale è stato il renderer di Google (WRS), che
- * la rifiuta sempre: il crawler di Google Ads ha aperto la landing e ha
- * generato un `Error: Rejected` non gestito.
- *
- * Non è un difetto dell'app e nessun utente ne è toccato: la PWA degrada da
- * sola. Segnalarlo consuma solo quota e notifiche, quindi questi eventi
- * vengono scartati riconoscendoli dallo stack (il messaggio "Rejected", da
- * solo, sarebbe troppo generico per filtrarlo senza rischi).
+ * Only the known Google renderer shim proves an unsupported crawler context.
+ * A failed download, `.waiting` on undefined or a register frame alone can
+ * also be a broken deployment, CSP or service-worker implementation.
+ * A historical successful GET /sw.js cannot rule those out for a later event.
  */
-const SERVICE_WORKER_NOISE = /serviceWorker\.register|wrsParams|_registerScript/;
+const GOOGLE_RENDERER_SW = /wrsParams\.serviceWorkers\.navigator\.serviceWorker\.register/;
 
-/**
- * Seconda forma della stessa cosa, vista in produzione il 13/08/2026.
- *
- * Dove `navigator.serviceWorker.register()` non fallisce ma risolve
- * `undefined` — succede con i renderer dei crawler e con le estensioni che lo
- * sostituiscono con un finto — la libreria della PWA legge `.waiting` su
- * niente e produce un `TypeError` non gestito.
- *
- * Il filtro sopra non lo prendeva: cerca il NOME della funzione, e in
- * produzione la minificazione l'aveva ridotta a `o.register`. Cercare `o\.`
- * sarebbe assurdo, quindi qui si riconosce il messaggio, che è specifico: in
- * tutto il nostro codice non esiste una sola lettura di `.waiting`, quindi
- * questo errore può venire solo da lì. Ogni browser lo formula a modo suo.
- *
- * Nessun utente ne è toccato: senza service worker la PWA degrada da sola.
- */
-const WAITING_SU_UNDEFINED =
-  /(undefined|null).*\bwaiting\b|\bwaiting\b.*\b(undefined|null)\b|_registration is (undefined|null)/i;
-
-/**
- * Terza forma, vista in produzione il 15/08/2026 su Chrome per Android:
- *
- *   TypeError: Failed to register a ServiceWorker for scope ('https://…/')
- *   with script ('https://…/sw.js'): An unknown error occurred when fetching
- *   the script.
- *
- * Il browser non è riuscito a SCARICARE lo script. Prima di considerarlo
- * rumore è stato verificato che in produzione `/sw.js` risponda 200 con il
- * tipo giusto e senza cache: risponde. Resta quindi la rete del telefono —
- * connessione persa a metà, portale captive, dati esauriti — e per quella non
- * c'è niente da correggere: senza service worker la PWA degrada da sola e
- * l'utente non se ne accorge.
- *
- * Il filtro è stretto sul messaggio del browser e non sulla parola
- * «ServiceWorker» da sola: un errore DENTRO il nostro service worker deve
- * continuare ad arrivare.
- */
-const REGISTRAZIONE_NON_SCARICATA =
-  /Failed to register a ServiceWorker/i;
-
-/**
- * Quarta forma, vista in produzione il 23/08/2026 su Chrome per iOS:
- *
- *   TypeError: Script https://bridgelab.it/sw.js load failed
- *
- * È la STESSA cosa della terza, detta da WebKit invece che da Blink. Non
- * arrivava però nessun fotogramma di stack, quindi il filtro per nome di
- * funzione non poteva vederla, e `IGNORE_ERRORS` nemmeno: lì c'è «Load
- * failed» con la maiuscola, e qui la elle è minuscola.
- *
- * Su iOS ogni browser gira dentro WKWebView, dove il service worker non è
- * disponibile come su un browser desktop. Che la causa sia quella o la rete
- * del telefono, la conclusione non cambia e non c'è niente da correggere:
- * senza service worker la PWA degrada da sola.
- *
- * VERIFICATO PRIMA DI FILTRARE, come per la terza forma: in produzione
- * `/sw.js` risponde 200, `application/javascript`, `no-store`, 66 KB di
- * Serwist. Il file c'è ed è servito bene.
- *
- * Il filtro è ancorato ai NOSTRI due service worker — `sw.js` e
- * `sw-notifications.js` — e non alla frase «load failed» da sola: se domani
- * non si caricasse un pezzo dell'applicazione, quell'errore deve continuare
- * ad arrivare.
- */
-const SCRIPT_SW_NON_CARICATO = /Script \S*\/sw(-[\w-]+)?\.js load failed/i;
-
-/** True se l'evento è rumore di registrazione del service worker. */
 export function isServiceWorkerNoise(event: {
   exception?: {
     values?: Array<{
@@ -150,17 +74,10 @@ export function isServiceWorkerNoise(event: {
     }>;
   };
 }): boolean {
-  const values = event.exception?.values ?? [];
-  const frames = values.flatMap((v) => v.stacktrace?.frames ?? []);
-  return (
-    frames.some(
-      (f) => SERVICE_WORKER_NOISE.test(f.function ?? "") || SERVICE_WORKER_NOISE.test(f.filename ?? "")
-    ) ||
-    values.some(
-      (v) =>
-        WAITING_SU_UNDEFINED.test(v.value ?? "") ||
-        REGISTRAZIONE_NON_SCARICATA.test(v.value ?? "") ||
-        SCRIPT_SW_NON_CARICATO.test(v.value ?? "")
+  return (event.exception?.values ?? []).some(value =>
+    (value.stacktrace?.frames ?? []).some(frame =>
+      GOOGLE_RENDERER_SW.test(frame.function ?? "") ||
+      GOOGLE_RENDERER_SW.test(frame.filename ?? "")
     )
   );
 }

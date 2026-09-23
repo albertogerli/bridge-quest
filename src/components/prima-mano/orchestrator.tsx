@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { BookOpen } from "lucide-react";
 import { useSounds } from "@/hooks/use-sounds";
 import { awardGameXp } from "@/lib/xp-utils";
+import { awardActivityBadge } from "@/lib/activity-badges";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { ProgressSidebar } from "./progress-sidebar";
 import { STEPS, type StepId, type HandResult } from "./types";
@@ -130,6 +131,7 @@ export function PrimaManoV2({
 
         // Reaching vittoria — persist and award total XP
         if (STEPS[nextIdx].id === "vittoria") {
+          awardActivityBadge("prima_mano");
           awardGameXp(GAME_ID, newTotalXp);
           persistOnboarding();
         }

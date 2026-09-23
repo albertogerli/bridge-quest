@@ -4,6 +4,7 @@ import { getAuthUserId, benParam, benParamOpt, rateLimit, benEndpoint } from "@/
 import { reportError } from "@/lib/report-error";
 import { dichiarazioneNota, ricordaDichiarazione } from "@/lib/cache-licita";
 import { erroreUpstreamRitentabile } from "@/lib/ben-retry";
+import { measureBenRoute, benEngine, type BenMetricContext } from "@/lib/ben-metrics";
 
 /**
  * Quanto si aspetta BEN, e perché il numero è cambiato tre volte.
@@ -63,6 +64,10 @@ const bodySchema = z.object({
  * compagno.
  */
 export async function POST(req: NextRequest) {
+  return measureBenRoute("bid", req, handlePost);
+}
+
+async function handlePost(req: NextRequest, metric: BenMetricContext) {
   const userId = await getAuthUserId();
   if (!userId) {
     return NextResponse.json({ fallback: true, error: "Non autenticato" }, { status: 401 });
@@ -96,6 +101,7 @@ export async function POST(req: NextRequest) {
     const chiave = params.toString();
     const nota = dichiarazioneNota(chiave);
     if (nota) {
+      metric.cache = true;
       return NextResponse.json({ bid: nota, fallback: false, cache: true });
     }
 
@@ -114,6 +120,7 @@ export async function POST(req: NextRequest) {
     let corpoGiaLetto: string | null = null;
     let ritentato = false;
     try {
+      metric.attempts = 1;
       res = await fetch(url, {
         signal: controller.signal,
         headers: benHeaders,
@@ -135,6 +142,7 @@ export async function POST(req: NextRequest) {
           const richiestaRailway = res.headers.get("x-railway-request-id");
           const edgeRailway = res.headers.get("x-railway-edge");
           ritentato = true;
+          metric.attempts = 2;
           await new Promise((risolvi) => setTimeout(risolvi, 300));
           res = await fetch(url, {
             signal: controller.signal,
@@ -191,6 +199,7 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await res.json();
+    metric.engine = benEngine(data.who);
     // BEN risponde con la dichiarazione in forma compatta ("1S", "PASS", "X").
     const bid: unknown = data.bid ?? data.call;
     if (typeof bid !== "string" || bid.length === 0) {

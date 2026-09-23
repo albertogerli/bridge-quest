@@ -6,9 +6,10 @@
  * controllo meccanico che sui punti onori ha trovato due errori veri: qui la
  * superficie è di 272 mani e non è mai stata verificata.
  *
- * A carte scoperte è il metro GIUSTO per questo controllo: se un contratto non
- * si mantiene nemmeno vedendo tutte e 52 le carte, allora è sbagliato nel
- * contenuto, non difficile da giocare.
+ * Un contratto battibile NON dimostra un errore: molte dispense insegnano
+ * proprio il controgioco, indipendentemente dal posto del dichiarante.
+ * Non abbassare il contratto per farlo mantenere. Confrontare sempre fonte,
+ * asta, attacco e commento; la pagina può proporre la mano in difesa.
  *
  * Uso:  node scripts/valida-smazzate-dds.mjs
  */
@@ -134,18 +135,10 @@ for (const s of rows) {
   daScrivere.push({ id: s.id, dd_tricks: prese });
   if (s.declarer === "east" || s.declarer === "west") inDifesa++;
 
-  // DI CHI È IL CONTRATTO. Un contratto che cade è un difetto solo se a
-  // giocarlo è l'allievo. Delle 272 smazzate, 129 hanno il dichiarante in
-  // Est/Ovest: lì l'allievo difende, e farlo cadere È l'esercizio — «Il punto
-  // di vista dei difensori», «I colori da muovere in difesa». Segnalarle qui
-  // come guaste è un allarme falso, e uno dei peggiori: invita a «riparare»
-  // proprio le mani che funzionano. (Successo il 15/08/2026: 25 mani di
-  // controgioco abbassate di un livello per questo motivo, poi ripristinate.)
-  const difendeLAllievo = s.declarer === "east" || s.declarer === "west";
-
-  if (prese < servono && !difendeLAllievo) {
+  // Candidato didattico, non difetto: il posto N/S non cambia questa regola.
+  if (prese < servono) {
     problemi.push({
-      id: s.id, lezione: s.lesson_id, tipo: preseDopoAttacco === null ? "irrealizzabile-senza-attacco" : "irrealizzabile",
+      id: s.id, lezione: s.lesson_id, tipo: "contratto-battibile-da-confrontare-con-fonte",
       det: `${s.contract} ${s.declarer}: servono ${servono}, con l'attacco indicato ne fa ${prese} (cade di ${servono - prese}); contro difesa perfetta ${preseControDifesaPerfetta}`,
       caduta: servono - prese,
       titolo: s.title,

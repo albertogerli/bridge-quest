@@ -106,6 +106,7 @@ export function DesktopSidebar() {
             onClick={async () => {
               await signOut();
               try { localStorage.removeItem("bq_guest"); } catch {}
+              // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
               window.location.href = "/";
             }}
             aria-label={t("Esci dal tuo account")}

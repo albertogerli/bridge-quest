@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useGameStore } from "@/store/use-game-store";
+import { useCatalog, useCatalogStore } from "@/store/use-catalog-store";
+import { completedLessonInEveryCourse, readStoredStringList } from "@/lib/activity-badges";
 
 export interface SecretAchievement {
   id: string;
@@ -74,6 +76,7 @@ const SECRET_ACHIEVEMENTS: SecretAchievement[] = [
 ];
 
 export function useSecretAchievements() {
+  const { isLoaded: catalogLoaded } = useCatalog();
   const [earnedSecretAchievements, setEarnedSecretAchievements] = useState<
     string[]
   >([]);
@@ -86,7 +89,7 @@ export function useSecretAchievements() {
   ): SecretAchievement[] => {
     // Always read from localStorage to avoid stale state on mount
     const currentEarned: string[] = passedEarned
-      ?? JSON.parse(localStorage.getItem("bq_secret_achievements") || "[]");
+      ?? readStoredStringList("bq_secret_achievements");
     const newlyUnlocked: SecretAchievement[] = [];
 
     // Nottambulo - Play after midnight
@@ -147,23 +150,7 @@ export function useSecretAchievements() {
 
     // Tuttofare - Complete at least 1 lesson in each of 4 courses
     if (!currentEarned.includes("tuttofare")) {
-      const completedLessons = JSON.parse(
-        localStorage.getItem("bq_completed_lessons") || "[]"
-      );
-      const hasFiori = completedLessons.some(
-        (id: number) => id >= 0 && id <= 12
-      );
-      const hasQuadri = completedLessons.some(
-        (id: number) => id >= 1 && id <= 12
-      );
-      const hasCuoriGioco = completedLessons.some(
-        (id: number) => id >= 100 && id <= 109
-      );
-      const hasCuoriLicita = completedLessons.some(
-        (id: number) => id >= 200 && id <= 213
-      );
-
-      if (hasFiori && hasQuadri && hasCuoriGioco && hasCuoriLicita) {
+      if (completedLessonInEveryCourse(useCatalogStore.getState().courses, useGameStore.getState().completedModules)) {
         newlyUnlocked.push(
           SECRET_ACHIEVEMENTS.find((a) => a.id === "tuttofare")!
         );
@@ -191,9 +178,7 @@ export function useSecretAchievements() {
 
     // Collezionista - Buy 3+ items from shop
     if (!currentEarned.includes("collezionista")) {
-      const shopOwned = JSON.parse(
-        localStorage.getItem("bq_shop_owned") || "[]"
-      );
+      const shopOwned = readStoredStringList("bq_shop_owned");
       if (shopOwned.length >= 3) {
         newlyUnlocked.push(
           SECRET_ACHIEVEMENTS.find((a) => a.id === "collezionista")!
@@ -235,8 +220,7 @@ export function useSecretAchievements() {
 
   useEffect(() => {
     // Load earned achievements from localStorage
-    const stored = localStorage.getItem("bq_secret_achievements");
-    const earned = stored ? JSON.parse(stored) : [];
+    const earned = readStoredStringList("bq_secret_achievements");
     // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
     setEarnedSecretAchievements(earned);
 
@@ -245,7 +229,7 @@ export function useSecretAchievements() {
     if (newlyUnlocked.length > 0) {
       setNewAchievements(newlyUnlocked);
     }
-  }, []);
+  }, [catalogLoaded]);
 
 
   const earnedSecretAchievementObjects = SECRET_ACHIEVEMENTS.filter((a) =>
