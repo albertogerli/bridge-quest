@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { assertSyncResult, createProgressWriter, readProgress, writeProgress, SyncAuthError, SyncSessionChangedError, type ProgressSnapshot } from "./progress-sync";
+import { assertSyncResult, createProgressWriter, readProgress, writeProgress, SyncAuthError, SyncSessionChangedError, SyncWriteError, type ProgressSnapshot } from "./progress-sync";
+import { describeError } from "./describe-error";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { AuthApiError, AuthRetryableFetchError, AuthSessionMissingError, createClient } from "@supabase/supabase-js";
 
@@ -111,6 +112,56 @@ function authFixture() {
   vi.spyOn(db.auth, "getUser").mockImplementation(getUser);
   return { db, getSession, getUser, request };
 }
+
+describe("code-less profile failures through the real Supabase SDK", () => {
+  const privatePayload = "private-account-data-not-for-telemetry";
+  it.each([
+    { label: "Chrome network failure", failure: () => { throw new TypeError("Failed to fetch"); }, code: "network_error", status: 0 },
+    { label: "Firefox network failure", failure: () => { throw new TypeError("NetworkError when attempting to fetch resource."); }, code: "network_error", status: 0 },
+    { label: "Safari network failure", failure: () => { throw new TypeError("Load failed"); }, code: "network_error", status: 0 },
+    { label: "aborted request", failure: () => { throw new DOMException(privatePayload, "AbortError"); }, code: "request_aborted", status: 0 },
+    { label: "unknown client exception", failure: () => { throw new TypeError(privatePayload); }, code: "client_error", status: 0 },
+    { label: "HTML gateway failure", failure: () => new Response(`<html>${privatePayload}</html>`, { status: 502 }), code: "http_error", status: 502 },
+    { label: "code-less HTTP refusal", failure: () => new Response(JSON.stringify({ message: privatePayload }), { status: 403 }), code: "http_error", status: 403 },
+    { label: "non-JSON successful HTTP response", failure: () => new Response(`<html>${privatePayload}</html>`, { status: 200 }), code: "invalid_response", status: 200 },
+    ...[
+      { label: "permissions", code: "42501", status: 403 },
+      { label: "revision conflict", code: "40001", status: 409 },
+      { label: "PostgREST auth error", code: "PGRST301", status: 401 },
+    ].map(item => ({ ...item, failure: () => new Response(JSON.stringify({
+      code: item.code, message: privatePayload, details: privatePayload, hint: privatePayload,
+    }), { status: item.status }) })),
+    { label: "unsafe code", failure: () => new Response(JSON.stringify({ code: privatePayload, message: privatePayload }), { status: 400 }), code: "http_error", status: 400 },
+    { label: "blank server code", failure: () => new Response(JSON.stringify({ code: "", message: privatePayload }), { status: 500 }), code: "http_error", status: 500 },
+  ])("preserves safe diagnostics and retries unacknowledged state: $label", async ({ failure, code, status }) => {
+    const f = authFixture();
+    f.request.mockImplementationOnce(async () => failure());
+    const writer = createProgressWriter((owner, state, revision, current) => writeProgress(f.db, owner, state, revision, current));
+    writer.initialize("synthetic-a", "previous");
+
+    const error = await writer.push("synthetic-a", snapshot).catch(e => e);
+    expect(error).toBeInstanceOf(SyncWriteError);
+    expect(error).not.toBeInstanceOf(SyncSessionChangedError);
+    expect(error).toMatchObject({ name: "SyncWriteError", code, status });
+    expect(error.message).toBe(`Sync profile failed (${code}; status ${status})`);
+    expect(describeError(error).context).toEqual({ code, status });
+    expect(JSON.stringify(error)).not.toContain(privatePayload);
+    expect(error.message).not.toContain(privatePayload);
+    expect(error.cause).toBeUndefined();
+    expect(f.request).toHaveBeenCalledTimes(1); // No later writes after a failed profile.
+
+    await expect(writer.push("synthetic-a", snapshot)).resolves.toEqual({ status: "saved", reviewRevision: "next" });
+    expect(f.request).toHaveBeenCalledTimes(3);
+    await expect(writer.push("synthetic-a", snapshot)).resolves.toEqual({ status: "unchanged" });
+  });
+
+  it.each([undefined, NaN, -1, 600])("keeps unknown status/code explicit, not guessed as network: %s", (status) => {
+    let error: unknown;
+    try { assertSyncResult({ error: { code: " ", message: privatePayload }, status }, "profile"); } catch (e) { error = e; }
+    expect(error).toMatchObject({ code: "unknown_error", status: undefined, message: "Sync profile failed (unknown_error; status unknown)" });
+    expect(describeError(error).context).toEqual({ code: "unknown_error" });
+  });
+});
 
 describe("session interruption versus real authentication errors", () => {
   it.each(["getSession", "getUser"] as const)("keeps a network error from %s visible and does not write", async (step) => {

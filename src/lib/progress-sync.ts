@@ -68,10 +68,43 @@ export async function readProgress(db: SupabaseClient, owner: string, isCurrent:
   return { moduleResult, badgeResult, reviewResult };
 }
 
+type SyncOperation = "profile" | "modules" | "badges" | "reviews" | "read-modules" | "read-badges" | "read-reviews";
+type SyncResult = { error: { code?: string; message?: string } | null; status?: number };
+const DATABASE_CODE = /^(?:[A-Z0-9]{5}|PGRST[0-9]{3})$/;
+const CLIENT_CODES = new Set(["network_error", "request_aborted", "client_error", "http_error", "invalid_response", "unknown_error"]);
+
+function responseStatus(status: number | undefined): number | undefined {
+  return status === 0 || (status !== undefined && Number.isInteger(status) && status >= 100 && status <= 599) ? status : undefined;
+}
+
 export class SyncWriteError extends Error {
-  constructor(public readonly code: string, operation: string) {
-    super(`Sync ${operation} rejected (${code})`);
+  readonly code: string;
+  readonly status: number | undefined;
+  constructor(code: string, operation: SyncOperation, status?: number) {
+    const safeCode = DATABASE_CODE.test(code) || CLIENT_CODES.has(code) ? code : "unknown_error";
+    const safeStatus = responseStatus(status);
+    super(`Sync ${operation} failed (${safeCode}; status ${safeStatus ?? "unknown"})`);
+    this.name = "SyncWriteError";
+    this.code = safeCode;
+    this.status = safeStatus;
   }
+}
+
+function syncFailureCode(result: SyncResult): string {
+  const code = result.error?.code;
+  if (code && DATABASE_CODE.test(code)) return code;
+  const status = responseStatus(result.status);
+  if (status === 0) {
+    // PostgREST wraps client exceptions as { code: "", message: "Name: message" }.
+    // Inspect only to classify: never retain the raw message, stack, URL or cause.
+    const message = result.error?.message ?? "";
+    if (/^AbortError:/.test(message)) return "request_aborted";
+    if (/^TypeError: (Failed to fetch|Load failed|NetworkError when attempting to fetch resource\.?)$/.test(message)) return "network_error";
+    return "client_error"; // An arbitrary TypeError is not proof of a network fault.
+  }
+  if (status !== undefined && status >= 400) return "http_error";
+  if (status !== undefined && status >= 200 && status < 300) return "invalid_response";
+  return "unknown_error";
 }
 
 /** Local review UI uses numeric lesson IDs and calendar dates, not SQL timestamps. */
@@ -82,9 +115,9 @@ export function normalizeReview(item: ReviewProgress) {
     lastReview: item.lastReview?.slice(0, 10), nextReview: item.nextReview?.slice(0, 10) };
 }
 
-/** Only codes, never row values or database details, may reach telemetry. */
-export function assertSyncResult(result: { error: { code?: string } | null }, operation: string): void {
-  if (result.error) throw new SyncWriteError(result.error.code ?? "database", operation);
+/** Preserve codes/status and a bounded failure category, never row values or raw details. */
+export function assertSyncResult(result: SyncResult, operation: SyncOperation): void {
+  if (result.error) throw new SyncWriteError(syncFailureCode(result), operation, result.status);
 }
 
 export async function writeProgress(db: SupabaseClient, owner: string, snapshot: ProgressSnapshot, reviewRevision: string, isCurrent: () => boolean = () => true): Promise<string> {
