@@ -120,7 +120,10 @@ function ClassiContent() {
       {/* Enrolled list */}
       {error && (
         <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+          <p className="text-pretty" role="alert">{error}</p>
+          <Button className="mt-2" variant="outline" size="sm" onClick={() => void refresh()} disabled={isLoading}>
+            {t("Riprova")}
+          </Button>
         </div>
       )}
 

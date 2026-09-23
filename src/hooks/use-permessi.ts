@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useEnrolledClasses } from "@/store/use-classes-store";
 import { permessiAllievo } from "@/lib/permessi-allievo";
+import { useSharedAuth } from "@/contexts/auth-provider";
 
 /**
  * Le rotte che la navigazione non deve proporre.
@@ -22,7 +23,10 @@ import { permessiAllievo } from "@/lib/permessi-allievo";
  * applica il server.
  */
 export function useNascosti(): { nascosti: Set<string>; pronto: boolean } {
-  const { classes, isLoaded } = useEnrolledClasses();
+  const { user, loading } = useSharedAuth();
+  // Navigation also mounts on public pages: anonymous visitors have no
+  // enrolled classes to fetch. Authorization remains enforced on the server.
+  const { classes, isLoaded } = useEnrolledClasses(!loading && !!user);
 
   return useMemo(() => {
     if (!isLoaded) return { nascosti: new Set<string>(), pronto: false };
