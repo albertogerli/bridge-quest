@@ -99,6 +99,25 @@ it("sessione assente durante push: niente falso successo o allarme, stato locale
   expect(f.write.mock.calls[2][2].xp).toBe(20);
 });
 
+it.each([
+  { code: "network_error", status: 0 },
+  { code: "request_aborted", status: 0 },
+  { code: "http_error", status: 502 },
+])("mantiene il profilo da salvare dopo $code e riprova al prossimo intervallo", async ({ code, status }) => {
+  const error = new SyncWriteError(code, "profile", status);
+  f.write.mockRejectedValueOnce(error);
+  renderHook(() => useSupabaseSync());
+  await flush();
+  expect(statuses).toEqual(["error"]);
+  expect(f.report).toHaveBeenCalledExactlyOnceWith("sync:push", error);
+  expect(f.state.xp).toBe(10);
+  await act(() => vi.advanceTimersByTimeAsync(30_000));
+  expect(f.write).toHaveBeenCalledTimes(2);
+  expect(f.write.mock.calls[1][2]).toEqual(f.write.mock.calls[0][2]);
+  expect(f.write.mock.calls[1][3]).toBe("initial");
+  expect(statuses).toEqual(["error", "saved"]);
+});
+
 it("sessione assente in lettura: nessun merge/scrittura e ripresa al ritorno della sessione", async () => {
   f.read.mockRejectedValueOnce(new SyncSessionChangedError());
   renderHook(() => useSupabaseSync());
