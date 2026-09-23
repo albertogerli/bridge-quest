@@ -1,0 +1,2025 @@
+[
+  {
+    "id": "CG2-8",
+    "source": {
+      "file": "FIGB_CORSO CUORI GIOCO/GIOCO 2/Cuori2 Fit 5-3 o 4-4 smz.pdf",
+      "page": 2
+    },
+    "reason": "La fonte duplica il 2♦ e omette il 3♦. Si conserva la correzione già presente nella mano corrispondente del catalogo: ♦83 in Sud; ripristinati Ovest ed Est sulla linea dichiarante.",
+    "alternateDds": null,
+    "before": {
+      "id": "CG2-8",
+      "lesson_id": 101,
+      "board": 8,
+      "title": "Il Fit 5-3 e 4-4",
+      "title_en": "The 5-3 and 4-4 Fit",
+      "contract": "3♦",
+      "declarer": "south",
+      "vulnerability": "none",
+      "opening_lead": {
+        "rank": "K",
+        "suit": "spade"
+      },
+      "hands": {
+        "east": [
+          {
+            "rank": "7",
+            "suit": "spade"
+          },
+          {
+            "rank": "6",
+            "suit": "spade"
+          },
+          {
+            "rank": "4",
+            "suit": "spade"
+          },
+          {
+            "rank": "2",
+            "suit": "spade"
+          },
+          {
+            "rank": "8",
+            "suit": "heart"
+          },
+          {
+            "rank": "4",
+            "suit": "heart"
+          },
+          {
+            "rank": "5",
+            "suit": "diamond"
+          },
+          {
+            "rank": "4",
+            "suit": "diamond"
+          },
+          {
+            "rank": "A",
+            "suit": "club"
+          },
+          {
+            "rank": "Q",
+            "suit": "club"
+          },
+          {
+            "rank": "9",
+            "suit": "club"
+          },
+          {
+            "rank": "5",
+            "suit": "club"
+          },
+          {
+            "rank": "2",
+            "suit": "club"
+          }
+        ],
+        "west": [
+          {
+            "rank": "K",
+            "suit": "spade"
+          },
+          {
+            "rank": "J",
+            "suit": "spade"
+          },
+          {
+            "rank": "10",
+            "suit": "spade"
+          },
+          {
+            "rank": "Q",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "heart"
+          },
+          {
+            "rank": "10",
+            "suit": "heart"
+          },
+          {
+            "rank": "9",
+            "suit": "heart"
+          },
+          {
+            "rank": "8",
+            "suit": "diamond"
+          },
+          {
+            "rank": "3",
+            "suit": "diamond"
+          },
+          {
+            "rank": "J",
+            "suit": "club"
+          },
+          {
+            "rank": "10",
+            "suit": "club"
+          },
+          {
+            "rank": "7",
+            "suit": "club"
+          },
+          {
+            "rank": "3",
+            "suit": "club"
+          }
+        ],
+        "north": [
+          {
+            "rank": "A",
+            "suit": "spade"
+          },
+          {
+            "rank": "Q",
+            "suit": "spade"
+          },
+          {
+            "rank": "7",
+            "suit": "heart"
+          },
+          {
+            "rank": "6",
+            "suit": "heart"
+          },
+          {
+            "rank": "5",
+            "suit": "heart"
+          },
+          {
+            "rank": "3",
+            "suit": "heart"
+          },
+          {
+            "rank": "2",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "diamond"
+          },
+          {
+            "rank": "10",
+            "suit": "diamond"
+          },
+          {
+            "rank": "9",
+            "suit": "diamond"
+          },
+          {
+            "rank": "7",
+            "suit": "diamond"
+          },
+          {
+            "rank": "8",
+            "suit": "club"
+          },
+          {
+            "rank": "4",
+            "suit": "club"
+          }
+        ],
+        "south": [
+          {
+            "rank": "9",
+            "suit": "spade"
+          },
+          {
+            "rank": "8",
+            "suit": "spade"
+          },
+          {
+            "rank": "5",
+            "suit": "spade"
+          },
+          {
+            "rank": "3",
+            "suit": "spade"
+          },
+          {
+            "rank": "A",
+            "suit": "heart"
+          },
+          {
+            "rank": "K",
+            "suit": "heart"
+          },
+          {
+            "rank": "A",
+            "suit": "diamond"
+          },
+          {
+            "rank": "K",
+            "suit": "diamond"
+          },
+          {
+            "rank": "Q",
+            "suit": "diamond"
+          },
+          {
+            "rank": "6",
+            "suit": "diamond"
+          },
+          {
+            "rank": "2",
+            "suit": "diamond"
+          },
+          {
+            "rank": "K",
+            "suit": "club"
+          },
+          {
+            "rank": "6",
+            "suit": "club"
+          }
+        ]
+      },
+      "bidding": null,
+      "commentary": "Una mano molto semplice, basta non farsi prendere dallo sconforto quando si osserva la consistenza delle atout in linea. Vi consoli pensare che non esiste nessun altro contratto in cui si poteva evitare di pagare AKQ. Bisogna ostinatamente giocare atout e continuare, per evitare che, tagliando, gli avversari possano 'sdoppiarle'. Quando a lato delle Atout abbiamo solo vincenti (o facilmente affrancabili) battiamo le Atout il prima possibile.",
+      "commentary_en": "A very simple hand, just don't get discouraged when you see the strength of the trumps in line. Take comfort in knowing that there is no other contract where you could avoid losing AKQ. You must stubbornly play trumps and continue, to prevent the opponents from 'splitting' them by ruffing. When beside the trumps we have only winners (or easily established ones), we draw the trumps as soon as possible.",
+      "dd_tricks": 12
+    },
+    "after": {
+      "id": "CG2-8",
+      "lesson_id": 101,
+      "board": 8,
+      "title": "Il Fit 5-3 e 4-4",
+      "title_en": "The 5-3 and 4-4 Fit",
+      "contract": "4S",
+      "declarer": "east",
+      "vulnerability": "none",
+      "opening_lead": {
+        "suit": "heart",
+        "rank": "Q"
+      },
+      "hands": {
+        "north": [
+          {
+            "suit": "spade",
+            "rank": "A"
+          },
+          {
+            "suit": "spade",
+            "rank": "Q"
+          },
+          {
+            "suit": "heart",
+            "rank": "7"
+          },
+          {
+            "suit": "heart",
+            "rank": "6"
+          },
+          {
+            "suit": "heart",
+            "rank": "5"
+          },
+          {
+            "suit": "heart",
+            "rank": "3"
+          },
+          {
+            "suit": "heart",
+            "rank": "2"
+          },
+          {
+            "suit": "diamond",
+            "rank": "J"
+          },
+          {
+            "suit": "diamond",
+            "rank": "10"
+          },
+          {
+            "suit": "diamond",
+            "rank": "9"
+          },
+          {
+            "suit": "diamond",
+            "rank": "7"
+          },
+          {
+            "suit": "club",
+            "rank": "8"
+          },
+          {
+            "suit": "club",
+            "rank": "4"
+          }
+        ],
+        "east": [
+          {
+            "suit": "spade",
+            "rank": "7"
+          },
+          {
+            "suit": "spade",
+            "rank": "6"
+          },
+          {
+            "suit": "spade",
+            "rank": "4"
+          },
+          {
+            "suit": "spade",
+            "rank": "2"
+          },
+          {
+            "suit": "heart",
+            "rank": "8"
+          },
+          {
+            "suit": "heart",
+            "rank": "4"
+          },
+          {
+            "suit": "diamond",
+            "rank": "5"
+          },
+          {
+            "suit": "diamond",
+            "rank": "4"
+          },
+          {
+            "suit": "club",
+            "rank": "A"
+          },
+          {
+            "suit": "club",
+            "rank": "Q"
+          },
+          {
+            "suit": "club",
+            "rank": "9"
+          },
+          {
+            "suit": "club",
+            "rank": "5"
+          },
+          {
+            "suit": "club",
+            "rank": "2"
+          }
+        ],
+        "south": [
+          {
+            "suit": "spade",
+            "rank": "K"
+          },
+          {
+            "suit": "spade",
+            "rank": "J"
+          },
+          {
+            "suit": "spade",
+            "rank": "10"
+          },
+          {
+            "suit": "heart",
+            "rank": "Q"
+          },
+          {
+            "suit": "heart",
+            "rank": "J"
+          },
+          {
+            "suit": "heart",
+            "rank": "10"
+          },
+          {
+            "suit": "heart",
+            "rank": "9"
+          },
+          {
+            "suit": "diamond",
+            "rank": "8"
+          },
+          {
+            "suit": "diamond",
+            "rank": "3"
+          },
+          {
+            "suit": "club",
+            "rank": "J"
+          },
+          {
+            "suit": "club",
+            "rank": "10"
+          },
+          {
+            "suit": "club",
+            "rank": "7"
+          },
+          {
+            "suit": "club",
+            "rank": "3"
+          }
+        ],
+        "west": [
+          {
+            "suit": "spade",
+            "rank": "9"
+          },
+          {
+            "suit": "spade",
+            "rank": "8"
+          },
+          {
+            "suit": "spade",
+            "rank": "5"
+          },
+          {
+            "suit": "spade",
+            "rank": "3"
+          },
+          {
+            "suit": "heart",
+            "rank": "A"
+          },
+          {
+            "suit": "heart",
+            "rank": "K"
+          },
+          {
+            "suit": "diamond",
+            "rank": "A"
+          },
+          {
+            "suit": "diamond",
+            "rank": "K"
+          },
+          {
+            "suit": "diamond",
+            "rank": "Q"
+          },
+          {
+            "suit": "diamond",
+            "rank": "6"
+          },
+          {
+            "suit": "diamond",
+            "rank": "2"
+          },
+          {
+            "suit": "club",
+            "rank": "K"
+          },
+          {
+            "suit": "club",
+            "rank": "6"
+          }
+        ]
+      },
+      "bidding": {
+        "dealer": "west",
+        "bids": [
+          "1D",
+          "P",
+          "1S",
+          "P",
+          "4S",
+          "P",
+          "P",
+          "P"
+        ]
+      },
+      "commentary": "Est gioca 4♠, con otto atout in linea ma senza AKQJ10. Dopo l’attacco Q♥, prende al morto e muove subito picche, continuando a ogni occasione: deve perdere tre prese di atout, ma evita che la difesa ne ottenga altre con i tagli. Le vincenti laterali consentono poi dieci prese. Errata della dispensa: ♦82 in Sud duplica il 2♦ di Ovest; qui Sud ha ♦83, come nella mano valida già archiviata prima del ripristino dei posti.",
+      "commentary_en": "East plays 4♠ with eight combined trumps but none of the top five honors. Win the heart-queen lead in dummy and lead trumps immediately, continuing whenever possible. Three trump tricks must be lost, but drawing trumps prevents extra defensive ruffs. The side-suit winners then provide ten tricks. Source erratum: South’s ♦82 duplicates West’s diamond two; South has ♦83 here, retaining the valid holding from the archived deal before restoring the seats.",
+      "dd_tricks": 10
+    }
+  },
+  {
+    "id": "CG7-1",
+    "source": {
+      "file": "FIGB_CORSO CUORI GIOCO/GIOCO 7/Cuori7- Coprire o non coprire smz.pdf",
+      "page": 1
+    },
+    "reason": "La fonte mostra 14 carte in Sud e duplica il 2♠ di Ovest. Si conserva ♠763 in Sud, già valido nel catalogo; asta originale ripristinata.",
+    "alternateDds": null,
+    "before": {
+      "id": "CG7-1",
+      "lesson_id": 106,
+      "board": 1,
+      "title": "Coprire o non coprire",
+      "title_en": "To Cover or Not to Cover",
+      "contract": "3NT",
+      "declarer": "west",
+      "vulnerability": "none",
+      "opening_lead": {
+        "rank": "K",
+        "suit": "diamond"
+      },
+      "hands": {
+        "east": [
+          {
+            "rank": "J",
+            "suit": "spade"
+          },
+          {
+            "rank": "4",
+            "suit": "spade"
+          },
+          {
+            "rank": "Q",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "heart"
+          },
+          {
+            "rank": "9",
+            "suit": "heart"
+          },
+          {
+            "rank": "2",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "diamond"
+          },
+          {
+            "rank": "2",
+            "suit": "diamond"
+          },
+          {
+            "rank": "A",
+            "suit": "club"
+          },
+          {
+            "rank": "K",
+            "suit": "club"
+          },
+          {
+            "rank": "8",
+            "suit": "club"
+          },
+          {
+            "rank": "5",
+            "suit": "club"
+          },
+          {
+            "rank": "4",
+            "suit": "club"
+          }
+        ],
+        "west": [
+          {
+            "rank": "A",
+            "suit": "spade"
+          },
+          {
+            "rank": "K",
+            "suit": "spade"
+          },
+          {
+            "rank": "Q",
+            "suit": "spade"
+          },
+          {
+            "rank": "2",
+            "suit": "spade"
+          },
+          {
+            "rank": "A",
+            "suit": "heart"
+          },
+          {
+            "rank": "4",
+            "suit": "heart"
+          },
+          {
+            "rank": "3",
+            "suit": "heart"
+          },
+          {
+            "rank": "9",
+            "suit": "diamond"
+          },
+          {
+            "rank": "8",
+            "suit": "diamond"
+          },
+          {
+            "rank": "5",
+            "suit": "diamond"
+          },
+          {
+            "rank": "3",
+            "suit": "diamond"
+          },
+          {
+            "rank": "7",
+            "suit": "club"
+          },
+          {
+            "rank": "6",
+            "suit": "club"
+          }
+        ],
+        "north": [
+          {
+            "rank": "10",
+            "suit": "spade"
+          },
+          {
+            "rank": "9",
+            "suit": "spade"
+          },
+          {
+            "rank": "8",
+            "suit": "spade"
+          },
+          {
+            "rank": "5",
+            "suit": "spade"
+          },
+          {
+            "rank": "10",
+            "suit": "heart"
+          },
+          {
+            "rank": "6",
+            "suit": "heart"
+          },
+          {
+            "rank": "5",
+            "suit": "heart"
+          },
+          {
+            "rank": "A",
+            "suit": "diamond"
+          },
+          {
+            "rank": "K",
+            "suit": "diamond"
+          },
+          {
+            "rank": "Q",
+            "suit": "diamond"
+          },
+          {
+            "rank": "10",
+            "suit": "diamond"
+          },
+          {
+            "rank": "J",
+            "suit": "club"
+          },
+          {
+            "rank": "9",
+            "suit": "club"
+          }
+        ],
+        "south": [
+          {
+            "rank": "7",
+            "suit": "spade"
+          },
+          {
+            "rank": "6",
+            "suit": "spade"
+          },
+          {
+            "rank": "3",
+            "suit": "spade"
+          },
+          {
+            "rank": "K",
+            "suit": "heart"
+          },
+          {
+            "rank": "8",
+            "suit": "heart"
+          },
+          {
+            "rank": "7",
+            "suit": "heart"
+          },
+          {
+            "rank": "7",
+            "suit": "diamond"
+          },
+          {
+            "rank": "6",
+            "suit": "diamond"
+          },
+          {
+            "rank": "4",
+            "suit": "diamond"
+          },
+          {
+            "rank": "Q",
+            "suit": "club"
+          },
+          {
+            "rank": "10",
+            "suit": "club"
+          },
+          {
+            "rank": "3",
+            "suit": "club"
+          },
+          {
+            "rank": "2",
+            "suit": "club"
+          }
+        ]
+      },
+      "bidding": {
+        "bids": [
+          "P",
+          "1D",
+          "P",
+          "1H",
+          "P",
+          "3NT",
+          "P",
+          "P",
+          "P"
+        ],
+        "dealer": "south"
+      },
+      "commentary": "Nord attacca a quadri e incassa le prime 4 prese, poi gioca il 10 di picche (e Sud si guardi bene dall'invitare a cuori...). La sola speranza di Ovest è ricavare 4 prese dalle cuori. Potri riuscirci solo se Sud coprisse la Q di cuori al primo giro, condannando così il 10 del morto. Compagno. Se Sud non mette il Re, e si ferma a guardare il morto, chiuso con tutte prese vincenti. Dove può venire la presa del down? Solo da una promozione in Atout, se Sud gioca serenamente sotto. Proverai a giocare la Q cuori (ma Sud NON metterà il suo Re, non al primo giro). Quando una figura di impasse presenta due onori contigui non coprite mai il primo onore. Coprite il secondo, se verrà giocato.",
+      "commentary_en": "North leads a Diamond and cashes the first 4 tricks, then plays the 10 of Spades (and South should be careful not to signal in Hearts...). West's only hope is to take 4 tricks in Hearts. This can only happen if South covers the Queen of Hearts on the first round, thus condemning dummy's 10. Partner. If South doesn't play the King and just watches dummy, locked with all winning tricks. Where can the trick for down come from? Only from a trump promotion, if South calmly plays low. You will try to play the Queen of Hearts (but South will NOT play their King, not on the first round). When a finesse situation involves two touching honors, never cover the first honor. Cover the second, if it is played.",
+      "dd_tricks": 8
+    },
+    "after": {
+      "id": "CG7-1",
+      "lesson_id": 106,
+      "board": 1,
+      "title": "Coprire o non coprire",
+      "title_en": "To Cover or Not to Cover",
+      "contract": "3NT",
+      "declarer": "west",
+      "vulnerability": "none",
+      "opening_lead": {
+        "suit": "diamond",
+        "rank": "A"
+      },
+      "hands": {
+        "north": [
+          {
+            "suit": "spade",
+            "rank": "10"
+          },
+          {
+            "suit": "spade",
+            "rank": "9"
+          },
+          {
+            "suit": "spade",
+            "rank": "8"
+          },
+          {
+            "suit": "spade",
+            "rank": "5"
+          },
+          {
+            "suit": "heart",
+            "rank": "10"
+          },
+          {
+            "suit": "heart",
+            "rank": "6"
+          },
+          {
+            "suit": "heart",
+            "rank": "5"
+          },
+          {
+            "suit": "diamond",
+            "rank": "A"
+          },
+          {
+            "suit": "diamond",
+            "rank": "K"
+          },
+          {
+            "suit": "diamond",
+            "rank": "Q"
+          },
+          {
+            "suit": "diamond",
+            "rank": "10"
+          },
+          {
+            "suit": "club",
+            "rank": "J"
+          },
+          {
+            "suit": "club",
+            "rank": "9"
+          }
+        ],
+        "east": [
+          {
+            "suit": "spade",
+            "rank": "J"
+          },
+          {
+            "suit": "spade",
+            "rank": "4"
+          },
+          {
+            "suit": "heart",
+            "rank": "Q"
+          },
+          {
+            "suit": "heart",
+            "rank": "J"
+          },
+          {
+            "suit": "heart",
+            "rank": "9"
+          },
+          {
+            "suit": "heart",
+            "rank": "2"
+          },
+          {
+            "suit": "diamond",
+            "rank": "J"
+          },
+          {
+            "suit": "diamond",
+            "rank": "2"
+          },
+          {
+            "suit": "club",
+            "rank": "A"
+          },
+          {
+            "suit": "club",
+            "rank": "K"
+          },
+          {
+            "suit": "club",
+            "rank": "8"
+          },
+          {
+            "suit": "club",
+            "rank": "5"
+          },
+          {
+            "suit": "club",
+            "rank": "4"
+          }
+        ],
+        "south": [
+          {
+            "suit": "spade",
+            "rank": "7"
+          },
+          {
+            "suit": "spade",
+            "rank": "6"
+          },
+          {
+            "suit": "spade",
+            "rank": "3"
+          },
+          {
+            "suit": "heart",
+            "rank": "K"
+          },
+          {
+            "suit": "heart",
+            "rank": "8"
+          },
+          {
+            "suit": "heart",
+            "rank": "7"
+          },
+          {
+            "suit": "diamond",
+            "rank": "7"
+          },
+          {
+            "suit": "diamond",
+            "rank": "6"
+          },
+          {
+            "suit": "diamond",
+            "rank": "4"
+          },
+          {
+            "suit": "club",
+            "rank": "Q"
+          },
+          {
+            "suit": "club",
+            "rank": "10"
+          },
+          {
+            "suit": "club",
+            "rank": "3"
+          },
+          {
+            "suit": "club",
+            "rank": "2"
+          }
+        ],
+        "west": [
+          {
+            "suit": "spade",
+            "rank": "A"
+          },
+          {
+            "suit": "spade",
+            "rank": "K"
+          },
+          {
+            "suit": "spade",
+            "rank": "Q"
+          },
+          {
+            "suit": "spade",
+            "rank": "2"
+          },
+          {
+            "suit": "heart",
+            "rank": "A"
+          },
+          {
+            "suit": "heart",
+            "rank": "4"
+          },
+          {
+            "suit": "heart",
+            "rank": "3"
+          },
+          {
+            "suit": "diamond",
+            "rank": "9"
+          },
+          {
+            "suit": "diamond",
+            "rank": "8"
+          },
+          {
+            "suit": "diamond",
+            "rank": "5"
+          },
+          {
+            "suit": "diamond",
+            "rank": "3"
+          },
+          {
+            "suit": "club",
+            "rank": "7"
+          },
+          {
+            "suit": "club",
+            "rank": "6"
+          }
+        ]
+      },
+      "bidding": {
+        "dealer": "north",
+        "bids": [
+          "P",
+          "1C",
+          "P",
+          "1D",
+          "P",
+          "1H",
+          "P",
+          "3NT",
+          "P",
+          "P",
+          "P"
+        ]
+      },
+      "commentary": "Nord incassa le prime quattro quadri e continua con il 10♠. Ovest deve cercare quattro prese a cuori. Quando parte la Q♥ dal morto, Sud non deve coprire: se mette subito il Re, il dichiarante prende con l’Asso e può catturare il 10♥ di Nord. Sud conserva invece il Re per il secondo onore contiguo, proteggendo il 10 del compagno e assicurando la quinta presa difensiva. Non c’è alcuna promozione di atout: si gioca a senza atout. Errata della fonte: il 2♠ duplicato rende Sud di 14 carte; si conserva la sua mano valida di 13 carte, con ♠763.",
+      "commentary_en": "North cashes four diamonds and switches to the spade ten. West needs four heart tricks. When dummy leads the heart queen, South must not cover: covering immediately lets declarer win the ace and capture North’s heart ten. Instead retain the king for the second touching honor, protecting partner’s ten and ensuring a fifth defensive trick. There is no trump promotion in a notrump contract. Source erratum: a duplicated spade two gives South fourteen cards; the valid thirteen-card holding with ♠763 is retained.",
+      "dd_tricks": 8
+    }
+  },
+  {
+    "id": "CG9-4",
+    "source": {
+      "file": "FIGB_CORSO CUORI GIOCO/GIOCO 9/Cuori9 Come se smz.pdf",
+      "page": 1
+    },
+    "reason": "Errata dedotta dal mazzo e dalla soluzione: 10♥ duplicato, 5♥ assente. Il 10♥ deve restare in Sud per ottenere le tre prese descritte a cuori; Ovest diventa ♥8765.",
+    "alternateDds": null,
+    "before": {
+      "id": "CG9-4",
+      "lesson_id": 108,
+      "board": 4,
+      "title": "Giocare come se",
+      "title_en": "Play as if",
+      "contract": "5♦",
+      "declarer": "north",
+      "vulnerability": "none",
+      "opening_lead": {
+        "rank": "10",
+        "suit": "club"
+      },
+      "hands": {
+        "east": [
+          {
+            "rank": "10",
+            "suit": "spade"
+          },
+          {
+            "rank": "9",
+            "suit": "spade"
+          },
+          {
+            "rank": "8",
+            "suit": "spade"
+          },
+          {
+            "rank": "2",
+            "suit": "spade"
+          },
+          {
+            "rank": "A",
+            "suit": "heart"
+          },
+          {
+            "rank": "K",
+            "suit": "heart"
+          },
+          {
+            "rank": "10",
+            "suit": "heart"
+          },
+          {
+            "rank": "2",
+            "suit": "heart"
+          },
+          {
+            "rank": "10",
+            "suit": "diamond"
+          },
+          {
+            "rank": "10",
+            "suit": "club"
+          },
+          {
+            "rank": "9",
+            "suit": "club"
+          },
+          {
+            "rank": "4",
+            "suit": "club"
+          },
+          {
+            "rank": "2",
+            "suit": "club"
+          }
+        ],
+        "west": [
+          {
+            "rank": "Q",
+            "suit": "spade"
+          },
+          {
+            "rank": "4",
+            "suit": "spade"
+          },
+          {
+            "rank": "8",
+            "suit": "heart"
+          },
+          {
+            "rank": "7",
+            "suit": "heart"
+          },
+          {
+            "rank": "6",
+            "suit": "heart"
+          },
+          {
+            "rank": "5",
+            "suit": "heart"
+          },
+          {
+            "rank": "3",
+            "suit": "heart"
+          },
+          {
+            "rank": "4",
+            "suit": "diamond"
+          },
+          {
+            "rank": "3",
+            "suit": "diamond"
+          },
+          {
+            "rank": "J",
+            "suit": "club"
+          },
+          {
+            "rank": "7",
+            "suit": "club"
+          },
+          {
+            "rank": "5",
+            "suit": "club"
+          },
+          {
+            "rank": "3",
+            "suit": "club"
+          }
+        ],
+        "north": [
+          {
+            "rank": "7",
+            "suit": "spade"
+          },
+          {
+            "rank": "6",
+            "suit": "spade"
+          },
+          {
+            "rank": "Q",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "heart"
+          },
+          {
+            "rank": "A",
+            "suit": "diamond"
+          },
+          {
+            "rank": "K",
+            "suit": "diamond"
+          },
+          {
+            "rank": "8",
+            "suit": "diamond"
+          },
+          {
+            "rank": "7",
+            "suit": "diamond"
+          },
+          {
+            "rank": "5",
+            "suit": "diamond"
+          },
+          {
+            "rank": "2",
+            "suit": "diamond"
+          },
+          {
+            "rank": "A",
+            "suit": "club"
+          },
+          {
+            "rank": "Q",
+            "suit": "club"
+          },
+          {
+            "rank": "6",
+            "suit": "club"
+          }
+        ],
+        "south": [
+          {
+            "rank": "A",
+            "suit": "spade"
+          },
+          {
+            "rank": "K",
+            "suit": "spade"
+          },
+          {
+            "rank": "J",
+            "suit": "spade"
+          },
+          {
+            "rank": "5",
+            "suit": "spade"
+          },
+          {
+            "rank": "3",
+            "suit": "spade"
+          },
+          {
+            "rank": "9",
+            "suit": "heart"
+          },
+          {
+            "rank": "4",
+            "suit": "heart"
+          },
+          {
+            "rank": "Q",
+            "suit": "diamond"
+          },
+          {
+            "rank": "J",
+            "suit": "diamond"
+          },
+          {
+            "rank": "9",
+            "suit": "diamond"
+          },
+          {
+            "rank": "6",
+            "suit": "diamond"
+          },
+          {
+            "rank": "K",
+            "suit": "club"
+          },
+          {
+            "rank": "8",
+            "suit": "club"
+          }
+        ]
+      },
+      "bidding": null,
+      "commentary": "Nord attacca con l'Asso di Cuori e si ferma a guardare il morto, chiuso con tutte prese vincenti. Dove può venire la presa del down? Solo da una promozione in Atout, se Sud gioca il J di picche terzo o più. Giocando ancora Cuori Nord gioca la sua unica chance di salvezza. La sua unica speranza, se riesce o più. Anche in controgioco, quando sembra inevitabile che il giocante mantenga il contratto, se esiste una sola situazione possibile per battere bisogna trovarla e provarci.",
+      "commentary_en": "North leads the Ace of Hearts and pauses to look at the dummy, which is filled with all winning tricks. Where can the trick for down come from? Only from a trump promotion, if South holds the J of Spades third or more. By continuing Hearts, North plays their only chance for salvation. Their only hope, if it succeeds or not. Even in defense, when it seems inevitable that the declarer will make the contract, if there is only one possible situation to defeat it, you must find it and try it.",
+      "dd_tricks": 13
+    },
+    "after": {
+      "id": "CG9-4",
+      "lesson_id": 108,
+      "board": 4,
+      "title": "Giocare come se",
+      "title_en": "Play as if",
+      "contract": "7C",
+      "declarer": "north",
+      "vulnerability": "none",
+      "opening_lead": {
+        "suit": "spade",
+        "rank": "10"
+      },
+      "hands": {
+        "north": [
+          {
+            "suit": "spade",
+            "rank": "7"
+          },
+          {
+            "suit": "spade",
+            "rank": "6"
+          },
+          {
+            "suit": "heart",
+            "rank": "Q"
+          },
+          {
+            "suit": "heart",
+            "rank": "J"
+          },
+          {
+            "suit": "diamond",
+            "rank": "A"
+          },
+          {
+            "suit": "diamond",
+            "rank": "K"
+          },
+          {
+            "suit": "diamond",
+            "rank": "8"
+          },
+          {
+            "suit": "club",
+            "rank": "A"
+          },
+          {
+            "suit": "club",
+            "rank": "K"
+          },
+          {
+            "suit": "club",
+            "rank": "8"
+          },
+          {
+            "suit": "club",
+            "rank": "7"
+          },
+          {
+            "suit": "club",
+            "rank": "5"
+          },
+          {
+            "suit": "club",
+            "rank": "2"
+          }
+        ],
+        "east": [
+          {
+            "suit": "spade",
+            "rank": "10"
+          },
+          {
+            "suit": "spade",
+            "rank": "9"
+          },
+          {
+            "suit": "spade",
+            "rank": "8"
+          },
+          {
+            "suit": "spade",
+            "rank": "4"
+          },
+          {
+            "suit": "spade",
+            "rank": "2"
+          },
+          {
+            "suit": "heart",
+            "rank": "K"
+          },
+          {
+            "suit": "heart",
+            "rank": "9"
+          },
+          {
+            "suit": "heart",
+            "rank": "3"
+          },
+          {
+            "suit": "heart",
+            "rank": "2"
+          },
+          {
+            "suit": "diamond",
+            "rank": "7"
+          },
+          {
+            "suit": "diamond",
+            "rank": "6"
+          },
+          {
+            "suit": "diamond",
+            "rank": "4"
+          },
+          {
+            "suit": "diamond",
+            "rank": "3"
+          }
+        ],
+        "south": [
+          {
+            "suit": "spade",
+            "rank": "A"
+          },
+          {
+            "suit": "spade",
+            "rank": "Q"
+          },
+          {
+            "suit": "heart",
+            "rank": "A"
+          },
+          {
+            "suit": "heart",
+            "rank": "10"
+          },
+          {
+            "suit": "heart",
+            "rank": "4"
+          },
+          {
+            "suit": "diamond",
+            "rank": "Q"
+          },
+          {
+            "suit": "diamond",
+            "rank": "J"
+          },
+          {
+            "suit": "diamond",
+            "rank": "10"
+          },
+          {
+            "suit": "club",
+            "rank": "Q"
+          },
+          {
+            "suit": "club",
+            "rank": "J"
+          },
+          {
+            "suit": "club",
+            "rank": "10"
+          },
+          {
+            "suit": "club",
+            "rank": "9"
+          },
+          {
+            "suit": "club",
+            "rank": "3"
+          }
+        ],
+        "west": [
+          {
+            "suit": "spade",
+            "rank": "K"
+          },
+          {
+            "suit": "spade",
+            "rank": "J"
+          },
+          {
+            "suit": "spade",
+            "rank": "5"
+          },
+          {
+            "suit": "spade",
+            "rank": "3"
+          },
+          {
+            "suit": "heart",
+            "rank": "5"
+          },
+          {
+            "suit": "heart",
+            "rank": "8"
+          },
+          {
+            "suit": "heart",
+            "rank": "7"
+          },
+          {
+            "suit": "heart",
+            "rank": "6"
+          },
+          {
+            "suit": "diamond",
+            "rank": "9"
+          },
+          {
+            "suit": "diamond",
+            "rank": "5"
+          },
+          {
+            "suit": "diamond",
+            "rank": "2"
+          },
+          {
+            "suit": "club",
+            "rank": "6"
+          },
+          {
+            "suit": "club",
+            "rank": "4"
+          }
+        ]
+      },
+      "bidding": {
+        "dealer": "west",
+        "bids": [
+          "P",
+          "1C",
+          "P",
+          "2C",
+          "P",
+          "3C",
+          "P",
+          "3NT",
+          "P",
+          "4C",
+          "P",
+          "4H",
+          "P",
+          "4NT",
+          "P",
+          "5S",
+          "P",
+          "7C",
+          "P",
+          "P",
+          "P"
+        ]
+      },
+      "commentary": "Nord gioca 7♣ e sull’attacco 10♠ conta undici prese immediate: sei fiori, tre quadri e due Assi nei nobili. Per arrivare a tredici deve ricavare tre prese dalle cuori: gioca come se il Re fosse in Est, nell’impasse favorevole. Prende quindi l’attacco con l’Asso di picche, batte le atout e muove Q♥, conservando i rientri per ripetere la manovra se Est non copre. Rischiare prima l’impasse a picche aggiungerebbe un rischio inutile. Errata dedotta: il 10♥ è duplicato nella fonte; resta in Sud, indispensabile alla manovra, e il 5♥ mancante va in Ovest (♥8765).",
+      "commentary_en": "North plays 7♣ and counts eleven immediate tricks on the spade-ten lead: six clubs, three diamonds and the two major-suit aces. Making thirteen requires three heart tricks, so play as if East holds the heart king, onside for the finesse. Win the spade ace, draw trumps and lead the heart queen, preserving entries to repeat the finesse if East ducks. Taking a spade finesse first adds an unnecessary risk. Inferred source correction: the duplicated heart ten remains with South, where the plan requires it; the missing heart five goes to West (♥8765).",
+      "dd_tricks": 13
+    }
+  },
+  {
+    "id": "CG9-5",
+    "source": {
+      "file": "FIGB_CORSO CUORI GIOCO/GIOCO 9/Cuori9 Come se smz.pdf",
+      "page": 2
+    },
+    "reason": "La fonte duplica il 2♦ e omette il 3♦. Assunzione editoriale esplicita: Ovest ♦93, Sud ♦86542. Verificare anche variante Ovest ♦92/Sud ♦86543: identico valore DDS e identica manovra a cuori/picche.",
+    "alternateDds": 11,
+    "before": {
+      "id": "CG9-5",
+      "lesson_id": 108,
+      "board": 5,
+      "title": "Giocare come se",
+      "title_en": "Play as if",
+      "contract": "7NT",
+      "declarer": "west",
+      "vulnerability": "none",
+      "opening_lead": {
+        "rank": "10",
+        "suit": "spade"
+      },
+      "hands": {
+        "east": [
+          {
+            "rank": "Q",
+            "suit": "spade"
+          },
+          {
+            "rank": "7",
+            "suit": "spade"
+          },
+          {
+            "rank": "6",
+            "suit": "spade"
+          },
+          {
+            "rank": "K",
+            "suit": "heart"
+          },
+          {
+            "rank": "10",
+            "suit": "heart"
+          },
+          {
+            "rank": "7",
+            "suit": "heart"
+          },
+          {
+            "rank": "A",
+            "suit": "diamond"
+          },
+          {
+            "rank": "10",
+            "suit": "diamond"
+          },
+          {
+            "rank": "9",
+            "suit": "diamond"
+          },
+          {
+            "rank": "4",
+            "suit": "diamond"
+          },
+          {
+            "rank": "K",
+            "suit": "club"
+          },
+          {
+            "rank": "6",
+            "suit": "club"
+          },
+          {
+            "rank": "2",
+            "suit": "club"
+          }
+        ],
+        "west": [
+          {
+            "rank": "A",
+            "suit": "spade"
+          },
+          {
+            "rank": "K",
+            "suit": "spade"
+          },
+          {
+            "rank": "5",
+            "suit": "spade"
+          },
+          {
+            "rank": "A",
+            "suit": "heart"
+          },
+          {
+            "rank": "Q",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "heart"
+          },
+          {
+            "rank": "K",
+            "suit": "diamond"
+          },
+          {
+            "rank": "Q",
+            "suit": "diamond"
+          },
+          {
+            "rank": "8",
+            "suit": "diamond"
+          },
+          {
+            "rank": "7",
+            "suit": "diamond"
+          },
+          {
+            "rank": "A",
+            "suit": "club"
+          },
+          {
+            "rank": "Q",
+            "suit": "club"
+          },
+          {
+            "rank": "J",
+            "suit": "club"
+          }
+        ],
+        "north": [
+          {
+            "rank": "10",
+            "suit": "spade"
+          },
+          {
+            "rank": "9",
+            "suit": "spade"
+          },
+          {
+            "rank": "8",
+            "suit": "spade"
+          },
+          {
+            "rank": "4",
+            "suit": "spade"
+          },
+          {
+            "rank": "2",
+            "suit": "spade"
+          },
+          {
+            "rank": "9",
+            "suit": "heart"
+          },
+          {
+            "rank": "8",
+            "suit": "heart"
+          },
+          {
+            "rank": "4",
+            "suit": "heart"
+          },
+          {
+            "rank": "3",
+            "suit": "heart"
+          },
+          {
+            "rank": "2",
+            "suit": "heart"
+          },
+          {
+            "rank": "6",
+            "suit": "diamond"
+          },
+          {
+            "rank": "8",
+            "suit": "club"
+          },
+          {
+            "rank": "7",
+            "suit": "club"
+          }
+        ],
+        "south": [
+          {
+            "rank": "J",
+            "suit": "spade"
+          },
+          {
+            "rank": "3",
+            "suit": "spade"
+          },
+          {
+            "rank": "6",
+            "suit": "heart"
+          },
+          {
+            "rank": "5",
+            "suit": "heart"
+          },
+          {
+            "rank": "J",
+            "suit": "diamond"
+          },
+          {
+            "rank": "5",
+            "suit": "diamond"
+          },
+          {
+            "rank": "3",
+            "suit": "diamond"
+          },
+          {
+            "rank": "2",
+            "suit": "diamond"
+          },
+          {
+            "rank": "10",
+            "suit": "club"
+          },
+          {
+            "rank": "9",
+            "suit": "club"
+          },
+          {
+            "rank": "5",
+            "suit": "club"
+          },
+          {
+            "rank": "4",
+            "suit": "club"
+          },
+          {
+            "rank": "3",
+            "suit": "club"
+          }
+        ]
+      },
+      "bidding": {
+        "bids": [
+          "P",
+          "2C",
+          "P",
+          "2D",
+          "P",
+          "2NT",
+          "P",
+          "3NT",
+          "P",
+          "7NT",
+          "P",
+          "P",
+          "P"
+        ],
+        "dealer": "south"
+      },
+      "commentary": "Con la replica 2 quadri Est mostra mano di Diritto; 2NT è forzante e 3NT mostra una bilanciata. Se Ovest sa far di somma, chiamare il grande (a Senza!) non è difficile. Dopo l'attacco conta 12 prese certe, 13 se le quadri ne daranno 4. Prima di giocare il seme di Quadri però si potrebbe esaminare, giocando gli altri semi, a volte si scopre qualcosa di utile. Giocando 3 Picche e 3 Cuori; per differenza Sud possiede 4 cuori. Quindi K quadri e A quadri, e poi impasse su di lui.",
+      "commentary_en": "With the 2 Diamonds response, East shows a Game Force hand; 2NT is forcing and 3NT shows a balanced hand. If West can add up, bidding the grand (in No Trump!) is not difficult. After the opening lead, count 12 sure tricks, 13 if Diamonds provide 4. Before playing the Diamond suit, however, you might examine by playing the other suits; sometimes you discover something useful. By playing 3 Spades and 3 Hearts, by elimination South holds 4 Hearts. Then play the King of Diamonds and Ace of Diamonds, and then finesse against South.",
+      "dd_tricks": 13
+    },
+    "after": {
+      "id": "CG9-5",
+      "lesson_id": 108,
+      "board": 5,
+      "title": "Giocare come se",
+      "title_en": "Play as if",
+      "contract": "6S",
+      "declarer": "west",
+      "vulnerability": "none",
+      "opening_lead": {
+        "suit": "heart",
+        "rank": "A"
+      },
+      "hands": {
+        "north": [
+          {
+            "suit": "spade",
+            "rank": "8"
+          },
+          {
+            "suit": "spade",
+            "rank": "2"
+          },
+          {
+            "suit": "heart",
+            "rank": "A"
+          },
+          {
+            "suit": "heart",
+            "rank": "K"
+          },
+          {
+            "suit": "heart",
+            "rank": "J"
+          },
+          {
+            "suit": "heart",
+            "rank": "10"
+          },
+          {
+            "suit": "heart",
+            "rank": "6"
+          },
+          {
+            "suit": "heart",
+            "rank": "5"
+          },
+          {
+            "suit": "heart",
+            "rank": "2"
+          },
+          {
+            "suit": "diamond",
+            "rank": "10"
+          },
+          {
+            "suit": "diamond",
+            "rank": "7"
+          },
+          {
+            "suit": "club",
+            "rank": "7"
+          },
+          {
+            "suit": "club",
+            "rank": "5"
+          }
+        ],
+        "east": [
+          {
+            "suit": "spade",
+            "rank": "A"
+          },
+          {
+            "suit": "spade",
+            "rank": "K"
+          },
+          {
+            "suit": "spade",
+            "rank": "Q"
+          },
+          {
+            "suit": "spade",
+            "rank": "6"
+          },
+          {
+            "suit": "heart",
+            "rank": "3"
+          },
+          {
+            "suit": "diamond",
+            "rank": "A"
+          },
+          {
+            "suit": "diamond",
+            "rank": "K"
+          },
+          {
+            "suit": "diamond",
+            "rank": "Q"
+          },
+          {
+            "suit": "diamond",
+            "rank": "J"
+          },
+          {
+            "suit": "club",
+            "rank": "A"
+          },
+          {
+            "suit": "club",
+            "rank": "K"
+          },
+          {
+            "suit": "club",
+            "rank": "Q"
+          },
+          {
+            "suit": "club",
+            "rank": "3"
+          }
+        ],
+        "south": [
+          {
+            "suit": "spade",
+            "rank": "J"
+          },
+          {
+            "suit": "spade",
+            "rank": "9"
+          },
+          {
+            "suit": "spade",
+            "rank": "3"
+          },
+          {
+            "suit": "heart",
+            "rank": "9"
+          },
+          {
+            "suit": "diamond",
+            "rank": "8"
+          },
+          {
+            "suit": "diamond",
+            "rank": "6"
+          },
+          {
+            "suit": "diamond",
+            "rank": "5"
+          },
+          {
+            "suit": "diamond",
+            "rank": "4"
+          },
+          {
+            "suit": "diamond",
+            "rank": "2"
+          },
+          {
+            "suit": "club",
+            "rank": "J"
+          },
+          {
+            "suit": "club",
+            "rank": "10"
+          },
+          {
+            "suit": "club",
+            "rank": "9"
+          },
+          {
+            "suit": "club",
+            "rank": "4"
+          }
+        ],
+        "west": [
+          {
+            "suit": "spade",
+            "rank": "10"
+          },
+          {
+            "suit": "spade",
+            "rank": "7"
+          },
+          {
+            "suit": "spade",
+            "rank": "5"
+          },
+          {
+            "suit": "spade",
+            "rank": "4"
+          },
+          {
+            "suit": "heart",
+            "rank": "Q"
+          },
+          {
+            "suit": "heart",
+            "rank": "8"
+          },
+          {
+            "suit": "heart",
+            "rank": "7"
+          },
+          {
+            "suit": "heart",
+            "rank": "4"
+          },
+          {
+            "suit": "diamond",
+            "rank": "9"
+          },
+          {
+            "suit": "diamond",
+            "rank": "3"
+          },
+          {
+            "suit": "club",
+            "rank": "8"
+          },
+          {
+            "suit": "club",
+            "rank": "6"
+          },
+          {
+            "suit": "club",
+            "rank": "2"
+          }
+        ]
+      },
+      "bidding": {
+        "dealer": "north",
+        "bids": [
+          "3H",
+          "X",
+          "P",
+          "3S",
+          "P",
+          "4NT",
+          "P",
+          "5C",
+          "P",
+          "6S",
+          "P",
+          "P",
+          "P"
+        ]
+      },
+      "commentary": "Ovest gioca 6♠ dopo il barrage di 3♥ di Nord e il contro forte di Est. Nord prende con A♥ e vede al morto tutte vincenti: la possibilità di battere il contratto è promuovere un’atout di Sud, che deve avere J♠ terzo o più. Continua quindi cuori, costringendo il morto a tagliare prima di Sud: un taglio basso può essere superato, uno alto accorcia gli onori che controllano il Fante. Si difende come se questa unica possibilità esistesse. La fonte duplica il 2♦: per completare il mazzo si assume Ovest ♦93 e Sud ♦86542. Scambiare il 2 e il 3 tra questi due giocatori non cambia il tema né le prese double-dummy verificate.",
+      "commentary_en": "West plays 6♠ after North’s 3♥ preempt and East’s strong double. North wins the heart ace and sees a dummy full of winners. The chance to defeat the contract is to promote South’s trump jack, which must be at least three cards long. Continue hearts, forcing dummy to ruff before South: a low ruff can be overruffed, while a high ruff uses an honor needed to control the jack. Defend as though this necessary position exists. The source duplicates the diamond two; the completed deck assumes West ♦93 and South ♦86542. Swapping the diamond two and three between those players changes neither the theme nor the verified double-dummy trick count.",
+      "dd_tricks": 11
+    }
+  }
+]

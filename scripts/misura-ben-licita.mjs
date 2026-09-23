@@ -4,9 +4,8 @@
  *   BEN_API_URL=… BEN_API_TOKEN=… node scripts/misura-ben-licita.mjs
  *   … node scripts/misura-ben-licita.mjs --soglia 5      (secondi, default 5)
  *
- * Le due variabili si prendono dalla produzione con:
- *   npx vercel env pull /tmp/env.prod --environment=production --yes
- * e il file va cancellato subito dopo: contiene tutti i segreti.
+ * Usare solo il servizio BEN isolato di prova. Per un host remoto confermare
+ * il suo URL in BRIDGELAB_TEST_BEN_URL. Non scaricare segreti di produzione.
  *
  * PERCHÉ ESISTE. BEN ha due velocità e lo dichiara nel campo `who` della
  * risposta: `NN` quando la rete neurale risponde da sola (~0,35 s) e
@@ -24,6 +23,7 @@
  * `robot-quality-harness.ts`. Qui si guarda solo il tempo.
  */
 
+import { assertTestTarget } from "./test-target.mjs";
 const url = (process.env.BEN_API_URL || "").replace(/\/$/, "");
 const token = process.env.BEN_API_TOKEN || "";
 const i = process.argv.indexOf("--soglia");
@@ -46,6 +46,7 @@ if (!url) {
   console.error("Manca BEN_API_URL. Vedi l'intestazione di questo file.");
   process.exit(2);
 }
+assertTestTarget(url, process.env.BRIDGELAB_TEST_BEN_URL, "BEN");
 
 /**
  * Aste scelte per coprire ENTRAMBE le velocità: se si misurassero solo le

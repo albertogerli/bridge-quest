@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "./test";
 import { dismissCookieBanner, login } from "./helpers";
 
 /**
@@ -34,6 +34,7 @@ import { dismissCookieBanner, login } from "./helpers";
 
 /** Le rotte protette mostrano uno spinner senza testo finché l'auth non risolve. */
 const LOAD_TIMEOUT = 30_000;
+
 
 /**
  * RPC Supabase non installate sul progetto puntato da `.env.local`

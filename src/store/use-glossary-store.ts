@@ -10,7 +10,9 @@
  */
 
 import { create } from "zustand";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useLingua } from "@/hooks/use-lingua";
+import { localizeGlossary } from "@/lib/glossary-language";
 import {
   getGlossary,
   type GlossaryEntry,
@@ -33,8 +35,8 @@ export const useGlossaryStore = create<GlossaryState>((set, get) => ({
   error: null,
 
   fetchGlossary: async () => {
-    const { isLoading, isLoaded } = get();
-    if (isLoading || isLoaded) return;
+    const { isLoading, isLoaded, error } = get();
+    if (isLoading || (isLoaded && !error)) return;
     set({ isLoading: true, error: null });
     try {
       const glossary = await getGlossary();
@@ -81,8 +83,10 @@ export function useGlossary(): {
   error: string | null;
 } {
   useEnsureGlossary();
-  const glossary = useGlossaryStore((s) => s.glossary);
-  const entries = useGlossaryStore((s) => s.entries);
+  const raw = useGlossaryStore((s) => s.entries);
+  const { lingua } = useLingua();
+  const entries = useMemo(() => raw.map((entry) => localizeGlossary(entry, lingua)), [raw, lingua]);
+  const glossary = useMemo(() => Object.fromEntries(entries.map((entry) => [entry.id, entry])), [entries]);
   const isLoading = useGlossaryStore((s) => s.isLoading);
   const isLoaded = useGlossaryStore((s) => s.isLoaded);
   const error = useGlossaryStore((s) => s.error);
@@ -91,5 +95,7 @@ export function useGlossary(): {
 
 export function useGlossaryEntry(id: string | undefined): GlossaryEntry | undefined {
   useEnsureGlossary();
-  return useGlossaryStore((s) => (id ? s.glossary[id] : undefined));
+  const entry = useGlossaryStore((s) => (id ? s.glossary[id] : undefined));
+  const { lingua } = useLingua();
+  return useMemo(() => entry ? localizeGlossary(entry, lingua) : undefined, [entry, lingua]);
 }

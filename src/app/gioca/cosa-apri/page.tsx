@@ -18,7 +18,11 @@ const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3",
 const ROUNDS = 10;
 
 /** Le dichiarazioni fra cui scegliere: quelle che la regola può produrre. */
-const RISPOSTE = ["1♣", "1♦", "1♥", "1♠", "1SA", "3♣", "3♦", "3♥", "3♠"];
+const RISPOSTE = [
+  "1♣", "1♦", "1♥", "1♠", "1SA",
+  "2♣", "2♦", "2♥", "2♠", "2SA",
+  "3♣", "3♦", "3♥", "3♠",
+];
 
 interface Domanda {
   hand: Card[];
@@ -182,7 +186,7 @@ export default function CosaApriPage() {
           </AnimatePresence>
 
           <p className="text-xs text-muted-foreground mt-5">
-            {t("Sistema Naturale, quinta maggiore — quello dei corsi FIGB.")}
+            {t("Riferimento: FIGB Fiori 2022, quinta maggiore e quadri quarto. 2SA 21–23; 2♣ bilanciata da 24.")}
           </p>
         </>
       )}

@@ -1,6 +1,7 @@
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import { Serwist, NetworkOnly } from "serwist";
+import { isDatabaseRequest } from "../lib/database-network-only";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -38,11 +39,7 @@ declare const self: ServiceWorkerGlobalScope;
  * particolare e conviene tenerle.
  */
 const CHIAMATE_AL_DATABASE = ({ url }: { url: URL }) =>
-  url.hostname.endsWith(".supabase.co") &&
-  (url.pathname.startsWith("/rest/") ||
-    url.pathname.startsWith("/auth/") ||
-    url.pathname.startsWith("/functions/") ||
-    url.pathname.startsWith("/realtime/"));
+  isDatabaseRequest(url, process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,

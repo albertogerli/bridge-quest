@@ -6,6 +6,7 @@ import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
 import withBundleAnalyzerInit from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
+import { localTestCspSources } from "./scripts/local-test-csp.mjs";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -239,7 +240,11 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
               "frame-src https://www.youtube.com https://youtube.com https://td.doubleclick.net",
-              "connect-src 'self' https: wss://*.supabase.co",
+              ["connect-src 'self' https: wss://*.supabase.co", ...localTestCspSources(
+                process.env.NEXT_PUBLIC_SUPABASE_URL,
+                process.env.BRIDGELAB_TEST_SUPABASE_URL,
+                process.env.VERCEL === "1",
+              )].join(" "),
               "media-src 'self' blob: https:",
               "worker-src 'self' blob:",
             ].join("; "),

@@ -34,7 +34,7 @@ export function TrueFalseBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
         <EnrichedText text={block.content} termMap={glossaryTermMap} />
       </p>
       <div className="grid grid-cols-2 gap-3">
-        {["Vero", "Falso"].map((label, idx) => {
+        {[t("Vero"), t("Falso")].map((label, idx) => {
           const isSelected = quizAnswers[blockIndex] === idx;
           const isCorrectOpt = block.correctAnswer === idx;
           let cls = "bg-muted/50 border-border text-foreground/80";

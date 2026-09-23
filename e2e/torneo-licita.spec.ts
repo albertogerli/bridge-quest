@@ -1,5 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { login } from "./helpers";
+
+test("un torneo senza mani non viene dichiarato completato", async ({ page }) => {
+  await page.route("**/rest/v1/rpc/torneo_corrente", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({id:"00000000-0000-4000-a000-000000000000",tipo:"giornaliero",periodo:1,quante:0,fatte:0,chiudeAt:"2099-01-01T00:00:00Z"}),
+  }));
+  await login(page);
+  await page.goto("/gioca/torneo-licita");
+  await expect(page.getByText("Le mani di questo torneo non sono ancora disponibili.", {exact:false})).toBeVisible();
+  await expect(page.getByText("Hai finito questo torneo.", {exact:false})).toHaveCount(0);
+  await expect(page.getByText("Hai finito le tue mani.", {exact:false})).toHaveCount(0);
+});
 
 /**
  * Il torneo di licita deve poter cominciare, qualunque sia il mazziere.

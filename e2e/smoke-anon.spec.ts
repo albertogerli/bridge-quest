@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 test.describe("visitatore non autenticato", () => {
   test("la landing si carica con il brand e la CTA", async ({ page }) => {

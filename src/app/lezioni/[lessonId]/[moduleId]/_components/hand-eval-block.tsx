@@ -5,11 +5,17 @@ import { CardDisplay } from "@/components/bridge/card-display";
 import type { ContentBlockProps } from "../_types";
 import { EnrichedText } from "./enriched-text";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useState } from "react";
+import { numericAnswerDomain, parseNumericAnswer } from "@/lib/numeric-exercise";
 
-/** Quiz «Valuta la mano»: si sceglie il conteggio in punti, da 5 a 19. */
+/** Numeric questions include HCP counts AND percentages. Never infer options from the solution. */
 export function HandEvalBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) {
   const t = useT();
   const { glossaryTermMap, quizAnswers, showExplanation, handleHandEval } = ctx;
+  const [answer, setAnswer] = useState("");
+  const domain = numericAnswerDomain(block);
+  const value = parseNumericAnswer(answer, domain);
+  const unit = block.numericUnit === "percent" ? "%" : block.numericUnit === "hcp" ? t("punti") : "";
 
   const heAnswered = quizAnswers[blockIndex] !== undefined;
   const heCorrect = quizAnswers[blockIndex] === block.correctValue;
@@ -38,26 +44,29 @@ export function HandEvalBlock({ block, blockIndex, delay, ctx }: ContentBlockPro
         </div>
       )}
       {!heAnswered ? (
-        <div className="flex flex-wrap gap-2 justify-center">
-          {Array.from({ length: 15 }, (_, i) => i + 5).map((pts) => (
-            <motion.button
-              key={pts}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => handleHandEval(blockIndex, pts, pts === block.correctValue)}
-              className="w-10 h-10 rounded-lg border-2 border-border bg-card text-sm font-bold text-foreground/80 hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-all cursor-pointer"
-            >
-              {pts}
-            </motion.button>
-          ))}
-        </div>
+        <form className="flex flex-wrap items-end gap-3" onSubmit={(event) => {
+          event.preventDefault();
+          if (value !== null && !heAnswered) handleHandEval(blockIndex, value, value === block.correctValue);
+        }}>
+          <label className="flex flex-col gap-1 text-sm">
+            <span>{t("La tua risposta")} {unit}</span>
+            <input type="number" inputMode="numeric" min={domain.min} max={domain.max} step={1}
+              value={answer} onChange={(event) => setAnswer(event.target.value)}
+              className="w-28 rounded-lg border border-border bg-card p-3 text-foreground" required />
+          </label>
+          <button type="submit" disabled={value === null}
+            className="rounded-lg bg-primary px-4 py-3 text-primary-foreground disabled:opacity-50">
+            {t("Conferma")}
+          </button>
+        </form>
       ) : (
         <div className={`rounded-xl p-4 text-center ${heCorrect ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900" : "bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900"}`}>
           <p className={`text-2xl font-bold ${heCorrect ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
-            {heCorrect ? "✓" : "✗"} {block.correctValue} punti
+            {heCorrect ? "✓" : "✗"} {block.correctValue} {unit}
           </p>
           {!heCorrect && (
             <p className="text-sm text-red-700 dark:text-red-300 mt-1">
-              Hai risposto {quizAnswers[blockIndex]}
+              {t("Hai risposto")} {quizAnswers[blockIndex]}
             </p>
           )}
         </div>

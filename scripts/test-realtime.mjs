@@ -16,18 +16,14 @@
 // eliminati anche in caso di errore.
 
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync } from "fs";
-
-const env = Object.fromEntries(
-  readFileSync(new URL("../.env.local", import.meta.url), "utf8")
-    .split("\n")
-    .filter((l) => l.includes("=") && !l.startsWith("#"))
-    .map((l) => [l.slice(0, l.indexOf("=")).trim(), l.slice(l.indexOf("=") + 1).trim()])
-);
+import { leggiEnv } from "./leggi-env.mjs";
+import { assertTestTarget } from "./test-target.mjs";
+const env = leggiEnv(['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY']);
 
 const URL_ = env.NEXT_PUBLIC_SUPABASE_URL;
 const ANON = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SERVICE = env.SUPABASE_SERVICE_ROLE_KEY;
+assertTestTarget(URL_, env.BRIDGELAB_TEST_SUPABASE_URL);
 
 if (!URL_ || !ANON || !SERVICE) {
   console.log("  FAIL .env.local incompleto (servono URL, ANON key e SERVICE ROLE key)");
@@ -63,6 +59,9 @@ async function makeUser(tag) {
   if (error || !created.user) throw new Error(`creazione utente ${tag}: ${error?.message}`);
 
   const client = createClient(URL_, ANON, { auth: { persistSession: false } });
+  // Track immediately: failed login must not leak the already-created user.
+  const user = { id: created.user.id, client, tag };
+  users.push(user);
   const { data: session, error: signInErr } = await client.auth.signInWithPassword({
     email,
     password,
@@ -73,42 +72,67 @@ async function makeUser(tag) {
   // evento — un falso negativo che sembra "il Realtime non funziona".
   await client.realtime.setAuth(session.session.access_token);
 
-  return { id: created.user.id, client, tag };
+  return user;
 }
 
-/** Sottoscrive un canale e risolve solo quando il server conferma il join.
+/** Resolve only after BOTH channel join and PostgreSQL CDC readiness.
+ * SUBSCRIBED alone can precede the database subscription on a cold start.
  *  `bindings` = [{ table, filter? }]. Restituisce { channel, events, waitFor }. */
 async function listen(user, name, bindings) {
   const events = [];
+  const lifecycle = [];
+  const startedAt = Date.now();
   let channel = user.client.channel(`test-${name}-${Math.random().toString(36).slice(2, 10)}`);
+  channel.on("system", {}, (payload) => {
+    if (payload?.extension === 'postgres_changes') {
+      lifecycle.push({ kind: 'postgres', status: payload.status, ms: Date.now() - startedAt });
+    }
+  });
 
   for (const b of bindings) {
     const opts = { event: "*", schema: "public", table: b.table };
     if (b.filter) opts.filter = b.filter;
     channel = channel.on("postgres_changes", opts, (payload) => {
-      events.push({ at: Date.now(), table: b.table, type: payload.eventType, row: payload.new });
+      events.push({ at: Date.now(), table: b.table, type: payload.eventType, row: payload.new, old: payload.old });
     });
   }
 
   await new Promise((resolve, reject) => {
+    let joined = false;
+    let databaseReady = false;
+    const complete = () => {
+      if (joined && databaseReady) { clearTimeout(timer); resolve(); }
+    };
     const timer = setTimeout(
-      () => reject(new Error(`canale ${name}: nessun SUBSCRIBED entro ${SUBSCRIBE_TIMEOUT} ms`)),
+      () => reject(new Error(`canale ${name}: join=${joined}, postgres=${databaseReady} entro ${SUBSCRIBE_TIMEOUT} ms`)),
       SUBSCRIBE_TIMEOUT
     );
+    channel.on('system', {}, payload => {
+      if (payload?.extension !== 'postgres_changes') return;
+      if (payload.status === 'ok') { databaseReady = true; complete(); }
+      else if (payload.status === 'error') {
+        clearTimeout(timer);
+        reject(new Error(`canale ${name}: sottoscrizione PostgreSQL rifiutata`));
+      }
+    });
     channel.subscribe((status, err) => {
       if (status === "SUBSCRIBED") {
-        clearTimeout(timer);
-        resolve();
+        lifecycle.push({ kind: 'channel', status, ms: Date.now() - startedAt });
+        joined = true;
+        complete();
       } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
         clearTimeout(timer);
         reject(new Error(`canale ${name}: stato ${status}${err ? ` (${err.message})` : ""}`));
       }
     });
   });
+  info(JSON.stringify({channel:name,lifecycle}));
 
   return {
     channel,
     events,
+    lifecycle,
+    startedAt,
     /** Attende il primo evento che soddisfa `match`; null se scade il tempo. */
     async waitFor(match, timeout = EVENT_TIMEOUT) {
       const deadline = Date.now() + timeout;
@@ -127,8 +151,11 @@ const createdChallengeIds = [];
 
 try {
   console.log("\n[0] Setup — tre utenti di test (A destinatario, B mittente, C estraneo)");
-  const [A, B, C] = await Promise.all([makeUser("a"), makeUser("b"), makeUser("c")]);
-  users.push(A, B, C);
+  // Wait for every creation before entering cleanup, even if one fails.
+  const setup = await Promise.allSettled([makeUser("a"), makeUser("b"), makeUser("c")]);
+  const rejected = setup.find(result => result.status === 'rejected');
+  if (rejected) throw rejected.reason;
+  const [A, B, C] = setup.map(result => result.value);
   ok("utenti creati e autenticati");
 
   // -------------------------------------------------------------------------
@@ -167,6 +194,7 @@ try {
     ok(`A riceve l'INSERT della richiesta in ${gotFriend.at - sentAt} ms`);
   } else {
     fail(`A NON ha ricevuto l'evento entro ${EVENT_TIMEOUT} ms`);
+    info(JSON.stringify({diagnostic:'recipient INSERT',insertMs:sentAt-listenA.startedAt,lifecycle:listenA.lifecycle,received:listenA.events.map(e=>({type:e.type,idType:typeof e.row?.id,idMatches:String(e.row?.id)===String(friendship.id)})),expectedIdType:typeof friendship.id}));
   }
 
   // Controprova: il canale di C deve essere VIVO, altrimenti "C non riceve
@@ -193,7 +221,7 @@ try {
   if (delErr) throw new Error(`delete friendship: ${delErr.message}`);
 
   const gotDelete = await listenA.waitFor(
-    (e) => e.type === "DELETE" && e.at >= beforeDelete
+    (e) => e.type === "DELETE" && e.table === "friendships" && e.old?.id === friendship.id && e.at >= beforeDelete
   );
   if (gotDelete) {
     ok(`A riceve il DELETE della richiesta in ${gotDelete.at - beforeDelete} ms`);
@@ -291,7 +319,7 @@ try {
   }
   for (const u of users) {
     const { error } = await admin.auth.admin.deleteUser(u.id);
-    if (error) info(`utente ${u.tag} NON eliminato (${error.message}) — rimuoverlo a mano`);
+    if (error) fail(`pulizia utente sintetico ${u.tag} fallita (${error.message})`);
     try {
       await u.client.removeAllChannels();
       u.client.realtime.disconnect();
@@ -299,7 +327,7 @@ try {
       // il socket può essere già chiuso: irrilevante per l'esito
     }
   }
-  if (users.length) info("utenti di test eliminati");
+  if (users.length) info("pulizia degli utenti sintetici eseguita; eventuali fallimenti segnalati sopra");
 }
 
 console.log(

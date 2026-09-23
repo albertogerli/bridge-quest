@@ -237,7 +237,8 @@ export default function RootLayout({
           <PropostaLingua />
         </TraduzioniProvider>
         <ToasterLazy />
-        <Analytics />
+        {/* This endpoint exists on Vercel, not on standalone/local Next builds. */}
+        {process.env.VERCEL === "1" ? <Analytics /> : null}
         {/* Google tag (gtag.js) — caricato una sola volta, serve sia GA4 che Google Ads */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}

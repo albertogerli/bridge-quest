@@ -69,7 +69,7 @@ export function currentlyOnline(): boolean {
 }
 
 export interface HealthDecision {
-  /** Il canale sta consegnando eventi. */
+  /** Join del canale riuscito; da solo NON prova la readiness PostgreSQL. */
   healthy: boolean;
   /** Fallimenti consecutivi dopo questo stato. */
   failures: number;
@@ -104,10 +104,11 @@ export function evaluateChannel(
   //
   //   - il dispositivo è offline. Non c'è niente da riparare da questa parte, e
   //     l'utente lo sa già meglio di noi;
-  //   - il canale si era stabilito e poi è caduto. Se la sottoscrizione è
-  //     passata una volta, publication, policy e chiave sono a posto: quello
-  //     che è cambiato è la rete. È il caso dei telefoni, ed era il grosso di
-  //     quello che arrivava a Sentry.
+  //   - il canale si era stabilito e poi è caduto: i generici stati di
+  //     trasporto vengono trattati conservativamente come transitori. Non è
+  //     una prova che policy, publication o chiave siano ancora corrette.
+  //     Gli errori espliciti PostgreSQL del protocollo `system` sono gestiti
+  //     separatamente da realtime-recovery.ts, anche dopo un join riuscito.
   //
   // Resta segnalato ciò per cui la soglia era stata scritta: un canale che non
   // si stabilisce MAI, con il dispositivo connesso.

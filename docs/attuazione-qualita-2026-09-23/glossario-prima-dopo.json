@@ -1,0 +1,1766 @@
+[
+  {
+    "id": "apertura",
+    "before": {
+      "options": [
+        "8-10 punti",
+        "10-11 punti",
+        "12-13 punti",
+        "15+ punti"
+      ],
+      "question": "Di quanti punti onore hai generalmente bisogno per aprire?",
+      "explanation": "Per aprire la licita servono di solito 12-13+ punti onore (HCP). Con meno si passa.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "8-10 punti",
+        "10-11 punti",
+        "12-13 punti",
+        "15+ punti"
+      ],
+      "question": "Di quanti punti onore hai generalmente bisogno per aprire?",
+      "explanation": "Una normale apertura a livello uno richiede generalmente circa 12–13 punti onori. Barrage e mani distribuzionali richiedono valutazioni specifiche: non basta una soglia unica.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many high-card points do you generally need to open?",
+      "options": [
+        "8-10 points",
+        "10-11 points",
+        "12-13 points",
+        "15+ points"
+      ],
+      "explanation": "A normal one-level opening generally starts around 12-13 HCP. Pre-empts and distributional exceptions require separate evaluation.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "atout",
+    "before": {
+      "options": [
+        "♠A perché l'Asso è la carta più alta",
+        "♥3 se giocato come taglio (cuori è atout)",
+        "Dipende da chi gioca per primo",
+        "Nessuna delle due"
+      ],
+      "question": "Se il contratto è 4♥, quale carta vince tra ♥3 e ♠A?",
+      "explanation": "Con cuori atout, un qualsiasi cuori giocato come taglio batte qualsiasi carta di un altro seme, anche un Asso.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "♠A perché l'Asso è la carta più alta",
+        "♥3 se giocato come taglio (cuori è atout)",
+        "Dipende da chi gioca per primo",
+        "Nessuna delle due"
+      ],
+      "question": "Se il contratto è 4♥, quale carta vince tra ♥3 e ♠A?",
+      "explanation": "Con cuori atout, un qualsiasi cuori giocato come taglio batte qualsiasi carta di un altro seme, anche un Asso.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "In a 4♥ contract, which wins between ♥3 and ♠A?",
+      "options": [
+        "♠A, because an ace is highest",
+        "♥3 if played as a ruff: hearts are trumps",
+        "It depends on who plays first",
+        "Neither"
+      ],
+      "explanation": "A heart legally played as a ruff beats any non-trump card, including an ace.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "attacco",
+    "before": {
+      "options": [
+        "Il dichiarante",
+        "Il morto",
+        "Il difensore alla sinistra del dichiarante",
+        "Il difensore alla destra del dichiarante"
+      ],
+      "question": "Chi fa l'attacco iniziale?",
+      "explanation": "L'attacco iniziale spetta sempre al difensore alla sinistra del dichiarante.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "Il dichiarante",
+        "Il morto",
+        "Il difensore alla sinistra del dichiarante",
+        "Il difensore alla destra del dichiarante"
+      ],
+      "question": "Chi fa l'attacco iniziale?",
+      "explanation": "L'attacco iniziale spetta sempre al difensore alla sinistra del dichiarante.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "Who makes the opening lead?",
+      "options": [
+        "Declarer",
+        "Dummy",
+        "The defender to declarer's left",
+        "The defender to declarer's right"
+      ],
+      "explanation": "The defender to declarer's left makes the opening lead.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "bilanciata",
+    "before": {
+      "options": [
+        "4-3-3-3",
+        "4-4-3-2",
+        "5-3-3-2",
+        "6-3-2-2"
+      ],
+      "question": "Quale distribuzione NON è bilanciata?",
+      "explanation": "6-3-2-2 non è bilanciata: il doppietto (2 carte) la rende sbilanciata. Le bilanciate sono 4-3-3-3, 4-4-3-2, 5-3-3-2.",
+      "correctAnswer": 3
+    },
+    "after": {
+      "options": [
+        "4-3-3-3",
+        "4-4-3-2",
+        "5-3-3-2",
+        "6-3-2-2"
+      ],
+      "question": "Quale distribuzione NON è bilanciata?",
+      "explanation": "6-3-2-2 ha un seme sesto e due doppietti. Le bilanciate del corso sono 4333, 4432 e 5332: un solo doppietto non rende automaticamente sbilanciata una mano.",
+      "correctAnswer": 3
+    },
+    "english": {
+      "question": "Which distribution is NOT balanced?",
+      "options": [
+        "4-3-3-3",
+        "4-4-3-2",
+        "5-3-3-2",
+        "6-3-2-2"
+      ],
+      "explanation": "A 6-3-2-2 hand has a six-card suit and two doubletons. The balanced shapes taught here are 4-3-3-3, 4-4-3-2 and 5-3-3-2; a single doubleton does not itself make a hand unbalanced.",
+      "correctAnswer": 3
+    }
+  },
+  {
+    "id": "caduta",
+    "before": {
+      "options": [
+        "1",
+        "2",
+        "3",
+        "6"
+      ],
+      "question": "Se il contratto è 3SA e il dichiarante fa 7 prese, di quante è la caduta?",
+      "explanation": "3SA = 9 prese necessarie. Con 7 prese fatte, la caduta è di 9-7 = 2.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "1",
+        "2",
+        "3",
+        "6"
+      ],
+      "question": "Se il contratto è 3SA e il dichiarante fa 7 prese, di quante è la caduta?",
+      "explanation": "3SA = 9 prese necessarie. Con 7 prese fatte, la caduta è di 9-7 = 2.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "If declarer takes seven tricks in 3NT, how many undertricks are there?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "6"
+      ],
+      "explanation": "3NT requires nine tricks. Seven tricks means two down: 9 minus 7.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "contare",
+    "before": {
+      "options": [
+        "Solo i propri punti",
+        "Le carte giocate in ogni seme per sapere quante ne restano",
+        "Solo le prese fatte",
+        "Solo le carte del morto"
+      ],
+      "question": "Cosa si conta nel bridge?",
+      "explanation": "Contare le carte giocate in ogni seme permette di sapere la distribuzione residua e prendere decisioni migliori.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Solo i propri punti",
+        "Le carte giocate in ogni seme per sapere quante ne restano",
+        "Solo le prese fatte",
+        "Solo le carte del morto"
+      ],
+      "question": "Cosa si conta nel bridge?",
+      "explanation": "Contare le carte giocate in ogni seme permette di sapere la distribuzione residua e prendere decisioni migliori.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What should you count during play?",
+      "options": [
+        "Only your own points",
+        "Cards played in each suit, to know what remains",
+        "Only tricks won",
+        "Only dummy's cards"
+      ],
+      "explanation": "Counting the cards played helps you work out the remaining distribution and choose a line of play.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "contratto",
+    "before": {
+      "options": [
+        "3 prese",
+        "6 prese",
+        "9 prese",
+        "13 prese"
+      ],
+      "question": "Se il contratto è 3♠, quante prese deve fare il dichiarante?",
+      "explanation": "Il numero del contratto si aggiunge a 6 (il 'libro'). Quindi 3♠ = 6+3 = 9 prese da fare con picche come atout.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "3 prese",
+        "6 prese",
+        "9 prese",
+        "13 prese"
+      ],
+      "question": "Se il contratto è 3♠, quante prese deve fare il dichiarante?",
+      "explanation": "Il numero del contratto si aggiunge a 6 (il 'libro'). Quindi 3♠ = 6+3 = 9 prese da fare con picche come atout.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many tricks must declarer take in 3♠?",
+      "options": [
+        "3 tricks",
+        "6 tricks",
+        "9 tricks",
+        "13 tricks"
+      ],
+      "explanation": "Add the bid level to the six-trick book: 3♠ requires nine tricks with spades as trumps.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "contro",
+    "before": {
+      "options": [
+        "Il contratto viene annullato",
+        "I punti (premi o penalità) vengono raddoppiati",
+        "Si ridistribuiscono le carte",
+        "L'avversario deve cambiare seme"
+      ],
+      "question": "Cosa succede quando contri un contratto avversario?",
+      "explanation": "Il Contro raddoppia i punti: se il contratto riesce, gli avversari guadagnano di più; se cade, le penalità sono maggiori.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Il contratto viene annullato",
+        "I punti delle prese di contratto raddoppiano; premi e penalità seguono la scala del contro",
+        "Si ridistribuiscono le carte",
+        "L’avversario deve cambiare seme"
+      ],
+      "question": "Cosa succede quando contri un contratto avversario?",
+      "explanation": "Il contro raddoppia i punti delle prese di contratto, non ogni voce del punteggio. Se il contratto riesce si applicano premi specifici; se cade, le penalità seguono la scala dei contratti contrati.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What does doubling an opposing contract change?",
+      "options": [
+        "The contract is cancelled",
+        "Contract trick points are doubled and special bonuses or penalties apply",
+        "The cards are redealt",
+        "The opponents must change suits"
+      ],
+      "explanation": "A double doubles contract trick points, not every scoring item. A made doubled contract has additional bonuses; undertricks use the doubled penalty scale.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "cue_bid",
+    "before": {
+      "options": [
+        "A confondere gli avversari",
+        "A mostrare un controllo (Asso o vuoto) in vista di un possibile slam",
+        "A cambiare il seme atout",
+        "A chiudere la licita"
+      ],
+      "question": "A cosa serve un cue bid?",
+      "explanation": "Il cue bid mostra un controllo (Asso, Re, singolo o vuoto) per esplorare la possibilità di giocare uno slam.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "A confondere gli avversari",
+        "A mostrare un controllo (Asso o vuoto) in vista di un possibile slam",
+        "A cambiare il seme atout",
+        "A chiudere la licita"
+      ],
+      "question": "Con fit concordato, a cosa serve una dichiarazione di controllo nella ricerca dello slam?",
+      "explanation": "Mostra un controllo di primo o secondo giro, secondo gli accordi, per esplorare lo slam. La dichiarazione del colore avversario può avere altri significati in sequenze diverse.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "With an agreed trump fit, what is the purpose of a control bid when exploring slam?",
+      "options": [
+        "To confuse the opponents",
+        "To show a control, such as an ace or void",
+        "To change the trump suit",
+        "To end the auction"
+      ],
+      "explanation": "A control bid shows first- or second-round control, depending on the agreement, to investigate slam. Bidding the opponents' suit can have other meanings in other auctions.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "dichiarante",
+    "before": {
+      "options": [
+        "Chi fa l'ultima dichiarazione nella licita",
+        "Chi ha più punti nella coppia",
+        "Chi ha nominato per primo il seme del contratto finale",
+        "Chi siede a Nord"
+      ],
+      "question": "Chi è il dichiarante?",
+      "explanation": "Il dichiarante è chi nella coppia vincente ha nominato per primo il seme (o SA) del contratto finale.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "Chi fa l’ultima dichiarazione",
+        "Chi ha più punti nella coppia",
+        "Chi nella linea vincente ha nominato per primo il seme o i SA del contratto finale",
+        "Chi siede a Nord"
+      ],
+      "question": "Chi è il dichiarante?",
+      "explanation": "Il dichiarante è chi nella coppia vincente ha nominato per primo il seme (o SA) del contratto finale.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "Who is declarer?",
+      "options": [
+        "The player who makes the last bid",
+        "The partner with the most points",
+        "The player on the declaring side who first bid the final denomination",
+        "The player sitting North"
+      ],
+      "explanation": "Declarer is the player in the winning partnership who first bid the suit or notrump denomination of the final contract.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "difensori",
+    "before": {
+      "options": [
+        "3 prese",
+        "4 prese",
+        "5 prese",
+        "Dipende dalla vulnerabilità"
+      ],
+      "question": "Quante prese devono fare i difensori per far cadere un contratto di 4♠?",
+      "explanation": "4♠ = 10 prese necessarie. I difensori devono fare 14-10 = 4 prese per far cadere il contratto.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "3 prese",
+        "4 prese",
+        "5 prese",
+        "Dipende dalla vulnerabilità"
+      ],
+      "question": "Quante prese devono fare i difensori per far cadere un contratto di 4♠?",
+      "explanation": "4♠ = 10 prese necessarie. I difensori devono fare 14-10 = 4 prese per far cadere il contratto.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "How many tricks must the defenders win to defeat 4♠?",
+      "options": [
+        "3 tricks",
+        "4 tricks",
+        "5 tricks",
+        "It depends on vulnerability"
+      ],
+      "explanation": "4♠ requires ten tricks. Four defensive tricks leave declarer with at most nine.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "distribuzione",
+    "before": {
+      "options": [
+        "4-3-3-3",
+        "5-3-3-2",
+        "5-4-3-1",
+        "6-4-2-1"
+      ],
+      "question": "Una mano con 5♠ 4♥ 3♦ 1♣ ha quale distribuzione?",
+      "explanation": "La distribuzione si indica in ordine decrescente: 5-4-3-1. Indica quante carte ha ogni seme.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "4-3-3-3",
+        "5-3-3-2",
+        "5-4-3-1",
+        "6-4-2-1"
+      ],
+      "question": "Una mano con 5♠ 4♥ 3♦ 1♣ ha quale distribuzione?",
+      "explanation": "La distribuzione si indica in ordine decrescente: 5-4-3-1. Indica quante carte ha ogni seme.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "What is the shape of a hand with five spades, four hearts, three diamonds and one club?",
+      "options": [
+        "4-3-3-3",
+        "5-3-3-2",
+        "5-4-3-1",
+        "6-4-2-1"
+      ],
+      "explanation": "The shape is 5-4-3-1. These numbers describe the suit lengths in descending order.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "ducking",
+    "before": {
+      "options": [
+        "Per fare un regalo agli avversari",
+        "Per mantenere i rientri e sviluppare un seme lungo",
+        "Perché è obbligatorio",
+        "Per cambiare l'atout"
+      ],
+      "question": "Perché si fa ducking (si perde una presa intenzionalmente)?",
+      "explanation": "Il ducking mantiene i rientri verso la mano con il seme lungo, permettendo poi di incassare tutte le carte sviluppate.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Per fare un regalo agli avversari",
+        "Per mantenere i rientri e sviluppare un seme lungo",
+        "Perché è obbligatorio",
+        "Per cambiare l'atout"
+      ],
+      "question": "Perché si fa ducking (si perde una presa intenzionalmente)?",
+      "explanation": "Il ducking mantiene i rientri verso la mano con il seme lungo, permettendo poi di incassare tutte le carte sviluppate.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Why deliberately lose a trick by ducking?",
+      "options": [
+        "To give the opponents a gift",
+        "To preserve entries while establishing a long suit",
+        "Because it is compulsory",
+        "To change trumps"
+      ],
+      "explanation": "Ducking can preserve access to the hand containing the long suit, allowing its established cards to be cashed later.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "eliminazione",
+    "before": {
+      "options": [
+        "Giocare velocemente per finire la mano",
+        "Forzare l'avversario a giocare una carta che ti avvantaggia",
+        "Fare sempre la prima presa",
+        "Contare i punti a fine mano"
+      ],
+      "question": "Qual è il principio dell'endplay?",
+      "explanation": "L'endplay forza un avversario in una posizione dove qualsiasi carta giochi ti darà un vantaggio.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Giocare velocemente per finire la mano",
+        "Forzare l'avversario a giocare una carta che ti avvantaggia",
+        "Fare sempre la prima presa",
+        "Contare i punti a fine mano"
+      ],
+      "question": "Qual è il principio dell'endplay?",
+      "explanation": "L'endplay forza un avversario in una posizione dove qualsiasi carta giochi ti darà un vantaggio.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is the principle of an endplay?",
+      "options": [
+        "Play quickly to finish",
+        "Force an opponent to make a favourable lead for you",
+        "Always win the first trick",
+        "Count points at the end"
+      ],
+      "explanation": "An endplay leaves an opponent on lead with no safe exit: their next play gives you an advantage.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "fit",
+    "before": {
+      "options": [
+        "Almeno 6",
+        "Almeno 7",
+        "Almeno 8",
+        "Almeno 10"
+      ],
+      "question": "Quante carte servono in un seme tra i due compagni per avere un 'fit'?",
+      "explanation": "Il fit richiede almeno 8 carte in un seme tra dichiarante e morto. Con 8+ carte, quel seme è un ottimo atout.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "Almeno 6",
+        "Almeno 7",
+        "Almeno 8",
+        "Almeno 10"
+      ],
+      "question": "Quante carte servono in un seme tra i due compagni per avere un 'fit'?",
+      "explanation": "Il fit richiede almeno 8 carte in un seme tra dichiarante e morto. Con 8+ carte, quel seme è un ottimo atout.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many combined cards in one suit normally constitute a fit?",
+      "options": [
+        "At least 6",
+        "At least 7",
+        "At least 8",
+        "At least 10"
+      ],
+      "explanation": "A fit normally means at least eight cards in the suit between the two partners.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "forzante",
+    "before": {
+      "options": [
+        "Il compagno deve raddoppiare",
+        "Il compagno non può passare e deve fare un'altra dichiarazione",
+        "Gli avversari devono passare",
+        "Si deve giocare quel contratto"
+      ],
+      "question": "Cosa significa che una dichiarazione è 'forzante'?",
+      "explanation": "Una dichiarazione forzante obbliga il compagno a continuare la licita: non può passare.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Il compagno deve raddoppiare",
+        "Il compagno non può passare e deve fare un'altra dichiarazione",
+        "Gli avversari devono passare",
+        "Si deve giocare quel contratto"
+      ],
+      "question": "Cosa significa che una dichiarazione è 'forzante'?",
+      "explanation": "Una dichiarazione forzante obbliga il compagno a continuare la licita: non può passare.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What does a forcing bid mean?",
+      "options": [
+        "Partner must double",
+        "Partner must keep bidding and cannot pass",
+        "The opponents must pass",
+        "That contract must be played"
+      ],
+      "explanation": "A forcing bid requires partner to continue the auction rather than pass, within the agreed forcing conditions.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "hold_up",
+    "before": {
+      "options": [
+        "Far credere di non avere l'Asso",
+        "Esaurire il seme d'attacco in un difensore per tagliare le comunicazioni",
+        "Contare quante carte hanno gli avversari",
+        "Permettere al morto di tagliare"
+      ],
+      "question": "Qual è lo scopo dell'hold-up a SA?",
+      "explanation": "L'hold-up a SA serve a esaurire il seme d'attacco in un difensore, così quando riprende la mano non può continuare quel seme.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Far credere di non avere l'Asso",
+        "Esaurire il seme d'attacco in un difensore per tagliare le comunicazioni",
+        "Contare quante carte hanno gli avversari",
+        "Permettere al morto di tagliare"
+      ],
+      "question": "Qual è lo scopo dell'hold-up a SA?",
+      "explanation": "L'hold-up a SA serve a esaurire il seme d'attacco in un difensore, così quando riprende la mano non può continuare quel seme.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is the purpose of a hold-up in notrump?",
+      "options": [
+        "Pretend not to hold the ace",
+        "Exhaust one defender's cards in the led suit to break communications",
+        "Count the opponents' cards",
+        "Allow dummy to ruff"
+      ],
+      "explanation": "Holding up can exhaust the led suit in one defender's hand, so that defender cannot continue it after gaining the lead.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "impasse",
+    "before": {
+      "options": [
+        "Eliminare tutti gli atout avversari",
+        "Cercare di catturare un onore avversario giocando verso una carta strategica",
+        "Fare sempre 13 prese",
+        "Contare le carte rimaste"
+      ],
+      "question": "Qual è lo scopo di un'impasse?",
+      "explanation": "L'impasse mira a catturare un onore avversario (es. il Re) giocando verso un onore (es. AQ) sperando nella posizione favorevole.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Eliminare tutti gli atout avversari",
+        "Cercare di catturare un onore avversario giocando verso una carta strategica",
+        "Fare sempre 13 prese",
+        "Contare le carte rimaste"
+      ],
+      "question": "Qual è lo scopo di un'impasse?",
+      "explanation": "L'impasse mira a catturare un onore avversario (es. il Re) giocando verso un onore (es. AQ) sperando nella posizione favorevole.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is the aim of a finesse?",
+      "options": [
+        "Draw all opposing trumps",
+        "Gain a trick by playing towards an honour when an opposing honour is favourably placed",
+        "Always take thirteen tricks",
+        "Count the remaining cards"
+      ],
+      "explanation": "A finesse tries to gain a trick from the favourable location of an opposing honour, for example by leading towards AQ when hoping the king is onside.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "libro",
+    "before": {
+      "options": [
+        "4 prese",
+        "5 prese",
+        "6 prese",
+        "7 prese"
+      ],
+      "question": "Quante prese compongono il 'libro'?",
+      "explanation": "Il libro è composto da 6 prese. Il numero del contratto si aggiunge al libro: 1♠ = 6+1 = 7 prese.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "4 prese",
+        "5 prese",
+        "6 prese",
+        "7 prese"
+      ],
+      "question": "Quante prese compongono il 'libro'?",
+      "explanation": "Il libro è composto da 6 prese. Il numero del contratto si aggiunge al libro: 1♠ = 6+1 = 7 prese.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many tricks make up the book?",
+      "options": [
+        "4 tricks",
+        "5 tricks",
+        "6 tricks",
+        "7 tricks"
+      ],
+      "explanation": "The book is six tricks. Add the bid level: 1♠ requires 6 plus 1, or seven tricks.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "licita",
+    "before": {
+      "options": [
+        "Si gioca senza atout",
+        "La mano è annullata e si ridistribuisce",
+        "Il mazziere sceglie il contratto",
+        "Si gioca a 1♣"
+      ],
+      "question": "Nella licita, cosa succede se tutti e 4 i giocatori passano?",
+      "explanation": "Se tutti e 4 passano alla prima opportunità, la mano non si gioca e le carte vengono ridistribuite.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Si gioca senza atout",
+        "La mano termina senza contratto: tutti passano",
+        "Il mazziere sceglie il contratto",
+        "Si gioca a 1♣"
+      ],
+      "question": "Nella licita, cosa succede se tutti e 4 i giocatori passano?",
+      "explanation": "Quattro passi iniziali chiudono la mano senza contratto. Nel bridge duplicato si registra zero: non si ridistribuiscono le carte del board per gli altri tavoli (Leggi WBF 22 e 77).",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What happens if all four players pass at their first turn?",
+      "options": [
+        "The hand is played in notrump",
+        "The board is passed out: no contract is played",
+        "Dealer chooses the contract",
+        "The contract is 1♣"
+      ],
+      "explanation": "The auction ends without a contract. In duplicate bridge the board is scored as passed out; it is not redealt for the other tables.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "manche",
+    "before": {
+      "options": [
+        "3SA",
+        "4♥",
+        "2♠",
+        "5♣"
+      ],
+      "question": "Quale di questi NON è un contratto di manche?",
+      "explanation": "2♠ è un contratto parziale, non di manche. I contratti di manche sono: 3SA, 4♠, 4♥, 5♦, 5♣.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "3SA",
+        "4♥",
+        "2♠",
+        "5♣"
+      ],
+      "question": "Quale di questi contratti NON contrati non raggiunge la manche?",
+      "explanation": "2♠ è un contratto parziale, non di manche. I contratti di manche sono: 3SA, 4♠, 4♥, 5♦, 5♣.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "Which undoubled contract is NOT game?",
+      "options": [
+        "3NT",
+        "4♥",
+        "2♠",
+        "5♣"
+      ],
+      "explanation": "2♠ is a partscore. The lowest undoubled game contracts are 3NT, 4♥, 4♠, 5♣ and 5♦.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "mano",
+    "before": {
+      "options": [
+        "10 carte",
+        "12 carte",
+        "13 carte",
+        "Dipende dal contratto"
+      ],
+      "question": "Quante carte ha ogni giocatore in una mano di bridge?",
+      "explanation": "Il mazzo da 52 carte è diviso equamente tra 4 giocatori: 52 ÷ 4 = 13 carte ciascuno.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "10 carte",
+        "12 carte",
+        "13 carte",
+        "Dipende dal contratto"
+      ],
+      "question": "Quante carte ha ogni giocatore in una mano di bridge?",
+      "explanation": "Il mazzo da 52 carte è diviso equamente tra 4 giocatori: 52 ÷ 4 = 13 carte ciascuno.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many cards does each player receive?",
+      "options": [
+        "10 cards",
+        "12 cards",
+        "13 cards",
+        "It depends on the contract"
+      ],
+      "explanation": "The 52-card deck is divided equally among four players: thirteen cards each.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "mazziere",
+    "before": {
+      "options": [
+        "Sceglie il seme atout",
+        "Distribuisce le carte e parla per primo nella licita",
+        "Gioca sempre per primo",
+        "Può guardare le carte del morto"
+      ],
+      "question": "Qual è il privilegio del mazziere?",
+      "explanation": "Il mazziere distribuisce le carte e ha il diritto/dovere di parlare per primo nella licita.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Sceglie il seme atout",
+        "Distribuisce le carte e parla per primo nella licita",
+        "Gioca sempre per primo",
+        "Può guardare le carte del morto"
+      ],
+      "question": "Qual è il privilegio del mazziere?",
+      "explanation": "Il mazziere distribuisce le carte e ha il diritto/dovere di parlare per primo nella licita.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is dealer's role at the start?",
+      "options": [
+        "Choose trumps",
+        "Deal the cards and make the first call",
+        "Always play the first card",
+        "Look at dummy's cards"
+      ],
+      "explanation": "Dealer distributes the cards and has the first turn to call in the auction.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "morto",
+    "before": {
+      "options": [
+        "Subito dopo la licita",
+        "Dopo che il difensore alla sinistra del dichiarante ha giocato la prima carta",
+        "Prima della licita",
+        "Quando il dichiarante lo decide"
+      ],
+      "question": "Quando il morto espone le carte?",
+      "explanation": "Il morto espone le carte dopo l'attacco iniziale, cioè dopo che il difensore alla sinistra del dichiarante gioca la prima carta.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Subito dopo la licita",
+        "Dopo che il difensore alla sinistra del dichiarante ha giocato la prima carta",
+        "Prima della licita",
+        "Quando il dichiarante lo decide"
+      ],
+      "question": "Quando il morto espone le carte?",
+      "explanation": "Il morto espone le carte dopo l'attacco iniziale, cioè dopo che il difensore alla sinistra del dichiarante gioca la prima carta.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "When does dummy expose their cards?",
+      "options": [
+        "Immediately after the auction",
+        "After the defender to declarer's left makes the opening lead",
+        "Before the auction",
+        "Whenever declarer decides"
+      ],
+      "explanation": "Dummy exposes their cards after the opening lead, not before it.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "onori",
+    "before": {
+      "options": [
+        "Solo Asso e Re",
+        "Asso, Re e Donna",
+        "Asso, Re, Donna, Fante e 10",
+        "Tutte le figure"
+      ],
+      "question": "Quali carte sono considerate 'onori'?",
+      "explanation": "I 5 onori sono: Asso (A), Re (K), Donna (Q), Fante (J) e 10. Sono le carte che valgono punti onore.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "Solo Asso e Re",
+        "Asso, Re e Donna",
+        "Asso, Re, Donna, Fante e 10",
+        "Tutte le figure"
+      ],
+      "question": "Quali carte sono considerate 'onori'?",
+      "explanation": "Gli onori sono A, K, Q, J e 10. Nel conteggio Milton Work valgono punti onori soltanto A=4, K=3, Q=2, J=1. Il 10 vale zero punti onori.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "Which cards are honours?",
+      "options": [
+        "Only ace and king",
+        "Ace, king and queen",
+        "Ace, king, queen, jack and ten",
+        "All picture cards"
+      ],
+      "explanation": "The five honours are A, K, Q, J and 10. Only A, K, Q and J have Milton Work HCP values; the ten is worth zero HCP.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "parziale",
+    "before": {
+      "options": [
+        "3SA",
+        "4♥",
+        "2♠",
+        "6♦"
+      ],
+      "question": "Quale di questi è un contratto parziale?",
+      "explanation": "2♠ è un parziale (sotto il livello di manche). I contratti di manche sono 3SA, 4♠, 4♥, 5♦, 5♣.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "3SA",
+        "4♥",
+        "2♠",
+        "6♦"
+      ],
+      "question": "Quale di questi contratti NON contrati è un parziale?",
+      "explanation": "2♠ è un parziale (sotto il livello di manche). I contratti di manche sono 3SA, 4♠, 4♥, 5♦, 5♣.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "Which undoubled contract is a partscore?",
+      "options": [
+        "3NT",
+        "4♥",
+        "2♠",
+        "6♦"
+      ],
+      "explanation": "Undoubled 2♠ is below game. The lowest game contracts are 3NT, 4♥, 4♠, 5♣ and 5♦.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "presa",
+    "before": {
+      "options": [
+        "Chi gioca per primo",
+        "Chi gioca la carta più alta del seme (o atout più alto)",
+        "Chi ha più carte dello stesso seme",
+        "Chi ha più punti onore in mano"
+      ],
+      "question": "Cosa determina chi vince una presa?",
+      "explanation": "Vince la presa chi gioca la carta più alta del seme d'attacco. Se qualcuno taglia con un atout, vince l'atout più alto.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Chi gioca per primo",
+        "Chi gioca la carta più alta del seme (o atout più alto)",
+        "Chi ha più carte dello stesso seme",
+        "Chi ha più punti onore in mano"
+      ],
+      "question": "Cosa determina chi vince una presa?",
+      "explanation": "Vince la presa chi gioca la carta più alta del seme d'attacco. Se qualcuno taglia con un atout, vince l'atout più alto.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Who wins a trick?",
+      "options": [
+        "The player who leads",
+        "The highest card in the suit led, or the highest trump if any are played",
+        "The player with the longest suit",
+        "The player with the most HCP"
+      ],
+      "explanation": "The highest trump wins if any trump is played; otherwise the highest card in the suit led wins.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "presa_perdente",
+    "before": {
+      "options": [
+        "Non si può mai eliminare",
+        "Con un'impasse, tagliandola o scartandola su una vincente",
+        "Solo rilanciando nella licita",
+        "Chiedendo al compagno"
+      ],
+      "question": "Come si può eliminare una presa perdente?",
+      "explanation": "Le perdenti si eliminano con tecniche come l'impasse, il taglio (ruff) al morto, o lo scarto su carte vincenti.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Non si può mai eliminare",
+        "Con un'impasse, tagliandola o scartandola su una vincente",
+        "Solo rilanciando nella licita",
+        "Chiedendo al compagno"
+      ],
+      "question": "Come si può eliminare una presa perdente?",
+      "explanation": "Le perdenti si eliminano con tecniche come l'impasse, il taglio (ruff) al morto, o lo scarto su carte vincenti.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "How can you eliminate a loser?",
+      "options": [
+        "You can never eliminate one",
+        "By a finesse, a ruff or discarding it on a winner",
+        "Only by bidding again",
+        "By asking partner"
+      ],
+      "explanation": "Losers can be eliminated through a finesse, a ruff in dummy or a discard on a winning card.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "presa_sicura",
+    "before": {
+      "options": [
+        "Essere un atout",
+        "Essere la carta più alta rimasta nel seme",
+        "Essere giocata per prima",
+        "Avere il seme più lungo"
+      ],
+      "question": "Cosa rende una carta una 'presa sicura'?",
+      "explanation": "Una presa sicura (o vincente) è una carta che vincerà perché è la più alta rimasta nel suo seme.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Essere un atout",
+        "Essere la carta più alta rimasta nel seme",
+        "Essere giocata per prima",
+        "Avere il seme più lungo"
+      ],
+      "question": "A Senza Atout, cosa rende una carta una presa sicura?",
+      "explanation": "La carta più alta rimasta in un seme vince quando quel seme viene giocato a Senza Atout, purché si possa raggiungere la mano che la possiede per incassarla.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "At notrump, what makes a card a sure winner?",
+      "options": [
+        "Being a trump",
+        "Being the highest remaining card in its suit",
+        "Being played first",
+        "Belonging to the longest suit"
+      ],
+      "explanation": "The highest remaining card in a suit wins when that suit is played at notrump, provided the hand can be reached to cash it.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "punti_distribuzione",
+    "before": {
+      "options": [
+        "0 punti",
+        "1 punto",
+        "2 punti",
+        "3 punti"
+      ],
+      "question": "Quanti punti distribuzione vale un singolo (1 sola carta in un seme)?",
+      "explanation": "Punti distribuzione: vuoto (0 carte) = 3, singolo (1 carta) = 2, doppietto (2 carte) = 1.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "0 punti",
+        "1 punto",
+        "2 punti",
+        "3 punti"
+      ],
+      "question": "Nello schema di punti di corta qui illustrato, quanto vale un singolo?",
+      "explanation": "In questo schema, da usare per rivalutare una mano con fit: vuoto=3, singolo=2, doppietto=1. Non sono punti onori.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "In the shortage-point scheme shown here, how many points is a singleton worth?",
+      "options": [
+        "0 points",
+        "1 point",
+        "2 points",
+        "3 points"
+      ],
+      "explanation": "In this scheme, used to revalue a hand with a trump fit: void 3, singleton 2, doubleton 1. These are not HCP.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "punti_onore",
+    "before": {
+      "options": [
+        "1 punto",
+        "2 punti",
+        "3 punti",
+        "4 punti"
+      ],
+      "question": "Quanti punti vale un Re nel sistema HCP?",
+      "explanation": "Nel sistema HCP: Asso=4, Re=3, Donna=2, Fante=1. Il 10 non vale punti onore.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "1 punto",
+        "2 punti",
+        "3 punti",
+        "4 punti"
+      ],
+      "question": "Quanti punti vale un Re nel sistema HCP?",
+      "explanation": "Nel sistema HCP: Asso=4, Re=3, Donna=2, Fante=1. Il 10 non vale punti onore.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many HCP is a king worth?",
+      "options": [
+        "1 point",
+        "2 points",
+        "3 points",
+        "4 points"
+      ],
+      "explanation": "Milton Work HCP: ace 4, king 3, queen 2, jack 1. Tens have no HCP value.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "regola_venti",
+    "before": {
+      "options": [
+        "Aprire solo con 20+ punti",
+        "Sommare HCP + lunghezza dei 2 semi più lunghi: se ≥ 20, si apre",
+        "Fare sempre 20 prese",
+        "Avere almeno 20 carte alte"
+      ],
+      "question": "In cosa consiste la Regola del 20?",
+      "explanation": "La Regola del 20: HCP + carte nei 2 semi più lunghi ≥ 20 → si può aprire anche con meno di 12 HCP.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Aprire solo con 20+ punti",
+        "Sommare HCP + lunghezza dei 2 semi più lunghi: se ≥ 20, si apre",
+        "Fare sempre 20 prese",
+        "Avere almeno 20 carte alte"
+      ],
+      "question": "In cosa consiste la Regola del 20?",
+      "explanation": "Punti onori più carte nei due semi più lunghi: se la somma raggiunge 20 si può valutare l’apertura anche sotto 12 punti. È una guida, non un obbligo.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is the Rule of 20?",
+      "options": [
+        "Open only with 20+ HCP",
+        "Add HCP and the lengths of the two longest suits; 20 suggests an opening",
+        "Always take twenty tricks",
+        "Hold at least twenty high cards"
+      ],
+      "explanation": "If HCP plus the lengths of the two longest suits reaches twenty, opening with fewer than twelve HCP may be considered. It is a guideline, not an obligation.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "rientro",
+    "before": {
+      "options": [
+        "Per confondere gli avversari",
+        "Per poter giocare le carte vincenti dalla mano giusta (morto o dichiarante)",
+        "Per fare punti extra",
+        "Per cambiare il contratto"
+      ],
+      "question": "Perché i rientri sono importanti?",
+      "explanation": "I rientri servono per trasferire il gioco alla mano dove si hanno prese vincenti da incassare.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Per confondere gli avversari",
+        "Per poter giocare le carte vincenti dalla mano giusta (morto o dichiarante)",
+        "Per fare punti extra",
+        "Per cambiare il contratto"
+      ],
+      "question": "Perché i rientri sono importanti?",
+      "explanation": "I rientri servono per trasferire il gioco alla mano dove si hanno prese vincenti da incassare.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Why are entries important?",
+      "options": [
+        "To confuse the opponents",
+        "To reach the hand whose winners you need to cash",
+        "To earn extra points",
+        "To change the contract"
+      ],
+      "explanation": "Entries let you transfer the lead to the hand containing the winners you want to cash.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "risposta",
+    "before": {
+      "options": [
+        "Solo quanti punti ha",
+        "Solo la distribuzione dei semi",
+        "Punti e distribuzione (e se c'è fit)",
+        "Il contratto finale"
+      ],
+      "question": "Cosa comunica la risposta del compagno dell'apertore?",
+      "explanation": "La risposta indica sia la forza della mano (punti) sia la distribuzione, aiutando a trovare il contratto giusto.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "Solo quanti punti ha",
+        "Solo la distribuzione dei semi",
+        "Punti e distribuzione (e se c'è fit)",
+        "Il contratto finale"
+      ],
+      "question": "Cosa comunica la risposta del compagno dell'apertore?",
+      "explanation": "La risposta indica sia la forza della mano (punti) sia la distribuzione, aiutando a trovare il contratto giusto.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "What does responder communicate to opener?",
+      "options": [
+        "Only HCP",
+        "Only suit distribution",
+        "Strength and distribution, including any fit",
+        "The final contract"
+      ],
+      "explanation": "Responses describe strength and shape to help the partnership find a suitable contract.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "ruff",
+    "before": {
+      "options": [
+        "Perché fa perdere carte agli avversari",
+        "Perché crea prese extra senza indebolire gli atout in mano",
+        "Perché è obbligatorio",
+        "Perché annulla la vulnerabilità"
+      ],
+      "question": "Perché il taglio al morto è vantaggioso?",
+      "explanation": "Tagliare al morto con i suoi atout 'corti' crea prese extra senza sacrificare gli atout del dichiarante.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Perché fa perdere carte agli avversari",
+        "Perché crea prese extra senza indebolire gli atout in mano",
+        "Perché è obbligatorio",
+        "Perché annulla la vulnerabilità"
+      ],
+      "question": "Perché può essere vantaggioso tagliare al morto quando ha meno atout del dichiarante?",
+      "explanation": "Tagliare al morto con i suoi atout 'corti' crea prese extra senza sacrificare gli atout del dichiarante.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Why can ruffing in dummy gain tricks when dummy has shorter trumps?",
+      "options": [
+        "It removes the opponents' cards",
+        "It adds tricks without shortening declarer's longer trumps",
+        "It is compulsory",
+        "It removes vulnerability"
+      ],
+      "explanation": "Ruffing with the shorter trump holding can create extra tricks while preserving declarer's longer trumps.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "scarto",
+    "before": {
+      "options": [
+        "Non c'è differenza",
+        "Taglio usa un atout, scarto usa una carta di un altro seme non-atout",
+        "Scarto si fa solo a SA",
+        "Taglio si fa solo nella prima presa"
+      ],
+      "question": "Qual è la differenza tra taglio e scarto?",
+      "explanation": "Il taglio usa un atout per vincere la presa. Lo scarto è giocare una carta di un seme diverso (non atout) rinunciando alla presa.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Non c'è differenza",
+        "Taglio usa un atout, scarto usa una carta di un altro seme non-atout",
+        "Scarto si fa solo a SA",
+        "Taglio si fa solo nella prima presa"
+      ],
+      "question": "Qual è la differenza tra taglio e scarto?",
+      "explanation": "Il taglio usa un atout per vincere la presa. Lo scarto è giocare una carta di un seme diverso (non atout) rinunciando alla presa.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is the difference between a ruff and a discard?",
+      "options": [
+        "There is no difference",
+        "A ruff uses a trump; a discard is an off-suit non-trump card",
+        "Discards occur only at notrump",
+        "Ruffs occur only on the first trick"
+      ],
+      "explanation": "When unable to follow suit, playing a trump is a ruff; playing a non-trump card of another suit is a discard.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "segnale",
+    "before": {
+      "options": [
+        "Che vuoi cambiare seme",
+        "Che vuoi che il compagno continui quel seme (segnale incoraggiante)",
+        "Che non hai più carte di quel seme",
+        "Che vuoi che il compagno passi la mano"
+      ],
+      "question": "Cosa indica giocare una carta alta come difensore?",
+      "explanation": "Un segnale alto (es. 9, 8) è incoraggiante: dice al compagno di continuare quel seme. Basso (2, 3) è scoraggiante.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Che vuoi cambiare seme",
+        "Che vuoi che il compagno continui quel seme (segnale incoraggiante)",
+        "Che non hai più carte di quel seme",
+        "Che vuoi che il compagno passi la mano"
+      ],
+      "question": "Con l’accordo alto=incoraggiante, cosa suggerisce una carta alta in un segnale di gradimento?",
+      "explanation": "In questo accordo di gradimento, alto incoraggia e basso scoraggia. I segnali di conto, preferenza e altri accordi hanno significati diversi.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Under a high-encouraging attitude agreement, what does a high defensive spot card suggest?",
+      "options": [
+        "Switch suits",
+        "Continue this suit",
+        "I have no cards left in this suit",
+        "Give up the lead"
+      ],
+      "explanation": "With this attitude agreement, high encourages and low discourages. Count, suit-preference and other signalling methods have different meanings.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "seme_lungo",
+    "before": {
+      "options": [
+        "3+ carte",
+        "4+ carte",
+        "5+ carte",
+        "6+ carte"
+      ],
+      "question": "Da quante carte un seme si definisce 'lungo'?",
+      "explanation": "Un seme lungo ha 5 o più carte. È una fonte preziosa di prese extra, specialmente se sviluppato.",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "3+ carte",
+        "4+ carte",
+        "5+ carte",
+        "6+ carte"
+      ],
+      "question": "Da quante carte un seme si definisce 'lungo'?",
+      "explanation": "Un seme lungo ha 5 o più carte. È una fonte preziosa di prese extra, specialmente se sviluppato.",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "From how many cards is a suit normally called long?",
+      "options": [
+        "3+ cards",
+        "4+ cards",
+        "5+ cards",
+        "6+ cards"
+      ],
+      "explanation": "A long suit normally contains at least five cards and may provide extra tricks once established.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "senza_atout",
+    "before": {
+      "options": [
+        "Puoi tagliare con un altro seme",
+        "Devi scartare (e non puoi vincere quella presa)",
+        "Puoi scegliere di non giocare",
+        "Prendi automaticamente la presa"
+      ],
+      "question": "In un contratto Senza Atout, cosa succede se non hai carte del seme giocato?",
+      "explanation": "Senza atout non esiste il taglio. Se non hai carte del seme, devi scartare una carta di un altro seme e non puoi vincere.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Puoi tagliare con un altro seme",
+        "Devi scartare (e non puoi vincere quella presa)",
+        "Puoi scegliere di non giocare",
+        "Prendi automaticamente la presa"
+      ],
+      "question": "In un contratto Senza Atout, cosa succede se non hai carte del seme giocato?",
+      "explanation": "Senza atout non esiste il taglio. Se non hai carte del seme, devi scartare una carta di un altro seme e non puoi vincere.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "At notrump, what happens if you cannot follow suit?",
+      "options": [
+        "You may ruff with another suit",
+        "You must discard and cannot win that trick",
+        "You may skip your turn",
+        "You win automatically"
+      ],
+      "explanation": "There are no trumps at notrump. If void in the suit led, you must discard a card of another suit, which cannot win the trick.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "slam",
+    "before": {
+      "options": [
+        "10 prese",
+        "11 prese",
+        "12 prese",
+        "13 prese"
+      ],
+      "question": "Quante prese servono per un piccolo slam?",
+      "explanation": "Il piccolo slam richiede 12 prese (contratto a livello 6). Il grande slam richiede tutte 13 (livello 7).",
+      "correctAnswer": 2
+    },
+    "after": {
+      "options": [
+        "10 prese",
+        "11 prese",
+        "12 prese",
+        "13 prese"
+      ],
+      "question": "Quante prese servono per un piccolo slam?",
+      "explanation": "Il piccolo slam richiede 12 prese (contratto a livello 6). Il grande slam richiede tutte 13 (livello 7).",
+      "correctAnswer": 2
+    },
+    "english": {
+      "question": "How many tricks does a small slam require?",
+      "options": [
+        "10 tricks",
+        "11 tricks",
+        "12 tricks",
+        "13 tricks"
+      ],
+      "explanation": "A small slam is a six-level contract requiring twelve tricks. A grand slam requires all thirteen.",
+      "correctAnswer": 2
+    }
+  },
+  {
+    "id": "sottomano",
+    "before": {
+      "options": [
+        "Per far vincere il compagno",
+        "Per conservare gli onori per un uso migliore",
+        "Perché è obbligatorio",
+        "Per contare le carte"
+      ],
+      "question": "Perché si gioca 'sottomano' (carta bassa in seconda posizione)?",
+      "explanation": "Giocare basso in seconda posizione conserva gli onori per catturare carte più importanti in seguito.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Per far vincere il compagno",
+        "Per conservare gli onori per un uso migliore",
+        "Perché è obbligatorio",
+        "Per contare le carte"
+      ],
+      "question": "Perché si gioca 'sottomano' (carta bassa in seconda posizione)?",
+      "explanation": "Secondo basso è una guida per conservare gli onori, non una regola assoluta: alcune posizioni richiedono di giocare alto.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Why is playing low in second hand often useful?",
+      "options": [
+        "To let partner win automatically",
+        "To conserve honours for a more effective play later",
+        "Because it is compulsory",
+        "To count cards"
+      ],
+      "explanation": "Second hand low is a guideline for conserving honours, not an absolute rule; the position may require playing high.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "squeeze",
+    "before": {
+      "options": [
+        "Avere tutti e 4 gli Assi",
+        "Un avversario che deve proteggere più semi di quante carte può tenere",
+        "Giocare a Senza Atout",
+        "Avere più di 20 punti"
+      ],
+      "question": "Cosa rende possibile uno squeeze?",
+      "explanation": "Lo squeeze funziona quando un avversario non riesce a proteggere tutti i semi che deve guardiare.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Avere tutti e 4 gli Assi",
+        "Un avversario che deve proteggere più semi di quante carte può tenere",
+        "Giocare a Senza Atout",
+        "Avere più di 20 punti"
+      ],
+      "question": "Cosa rende possibile uno squeeze?",
+      "explanation": "Lo squeeze funziona quando un avversario non riesce a proteggere tutti i semi che deve guardiare.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What makes a squeeze possible?",
+      "options": [
+        "Holding all four aces",
+        "A defender must guard more suits than their remaining cards allow",
+        "Playing notrump",
+        "Holding more than twenty points"
+      ],
+      "explanation": "A squeeze forces a defender to abandon a guard because they cannot keep enough cards to protect all the relevant suits.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "stayman",
+    "before": {
+      "options": [
+        "Se il compagno ha fiori lunghe",
+        "Se il compagno ha un seme maggiore quarto (4♠ o 4♥)",
+        "Quanti punti ha il compagno",
+        "Se il compagno vuole giocare a SA"
+      ],
+      "question": "Dopo 1SA, cosa chiede la risposta 2♣ (Stayman)?",
+      "explanation": "La Stayman (2♣ dopo 1SA) chiede: 'Hai 4 carte in un seme maggiore?' per cercare un fit 4-4 in ♠ o ♥.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Se il compagno ha fiori lunghe",
+        "Se il compagno ha un seme maggiore quarto (4♠ o 4♥)",
+        "Quanti punti ha il compagno",
+        "Se il compagno vuole giocare a SA"
+      ],
+      "question": "Dopo 1SA, cosa chiede la risposta 2♣ (Stayman)?",
+      "explanation": "La Stayman (2♣ dopo 1SA) chiede: 'Hai 4 carte in un seme maggiore?' per cercare un fit 4-4 in ♠ o ♥.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "After 1NT, what does 2♣ Stayman ask?",
+      "options": [
+        "Whether partner has long clubs",
+        "Whether partner has a four-card major",
+        "Exactly how many HCP partner has",
+        "Whether partner wants to play notrump"
+      ],
+      "explanation": "Stayman asks about four-card majors to look for a 4-4 heart or spade fit.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "surtaglio",
+    "before": {
+      "options": [
+        "Tagliare per la seconda volta nella stessa presa",
+        "Tagliare con un atout più alto rispetto a chi ha già tagliato",
+        "Giocare due atout contemporaneamente",
+        "Rinunciare a tagliare"
+      ],
+      "question": "Cos'è un surtaglio?",
+      "explanation": "Il surtaglio (overruff) è giocare un atout più alto di quello già giocato come taglio da un altro giocatore.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Tagliare per la seconda volta nella stessa presa",
+        "Tagliare con un atout più alto rispetto a chi ha già tagliato",
+        "Giocare due atout contemporaneamente",
+        "Rinunciare a tagliare"
+      ],
+      "question": "Cos'è un surtaglio?",
+      "explanation": "Il surtaglio (overruff) è giocare un atout più alto di quello già giocato come taglio da un altro giocatore.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What is an overruff?",
+      "options": [
+        "Ruffing a second time in the same trick",
+        "Playing a higher trump than a previous ruff in the trick",
+        "Playing two trumps at once",
+        "Choosing not to ruff"
+      ],
+      "explanation": "An overruff uses a trump higher than the trump already played as a ruff in that trick.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "sviluppo",
+    "before": {
+      "options": [
+        "Distribuire le carte equamente",
+        "Far cadere le carte alte avversarie per rendere vincenti le carte basse",
+        "Giocare sempre il seme più lungo",
+        "Cambiare il seme atout durante il gioco"
+      ],
+      "question": "Cosa significa 'sviluppare' un seme?",
+      "explanation": "Sviluppare un seme significa giocare le carte alte per far cadere quelle avversarie, rendendo vincenti le piccole rimanenti.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Distribuire le carte equamente",
+        "Far cadere le carte alte avversarie per rendere vincenti le carte basse",
+        "Giocare sempre il seme più lungo",
+        "Cambiare il seme atout durante il gioco"
+      ],
+      "question": "Cosa significa 'sviluppare' un seme?",
+      "explanation": "Sviluppare un seme significa giocare le carte alte per far cadere quelle avversarie, rendendo vincenti le piccole rimanenti.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What does it mean to establish a suit?",
+      "options": [
+        "Deal the cards evenly",
+        "Remove opposing high cards so that remaining lower cards become winners",
+        "Always play the longest suit",
+        "Change the trump suit during play"
+      ],
+      "explanation": "Establishing a suit promotes lower cards into winners, for example by driving out opposing high cards.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "taglio",
+    "before": {
+      "options": [
+        "Sempre, quando vuoi",
+        "Quando non hai carte del seme giocato e hai atout",
+        "Solo quando hai un Asso atout",
+        "Solo nella prima presa"
+      ],
+      "question": "Quando puoi 'tagliare'?",
+      "explanation": "Puoi tagliare solo quando non hai carte del seme richiesto. In quel caso puoi giocare un atout per vincere la presa.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Sempre, quando vuoi",
+        "Quando non hai carte del seme giocato e hai atout",
+        "Solo quando hai un Asso atout",
+        "Solo nella prima presa"
+      ],
+      "question": "Quando puoi 'tagliare'?",
+      "explanation": "Puoi tagliare solo quando non hai carte del seme richiesto. In quel caso puoi giocare un atout per vincere la presa.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "When can you ruff?",
+      "options": [
+        "Whenever you want",
+        "When void in the suit led and holding a trump",
+        "Only with the ace of trumps",
+        "Only on the first trick"
+      ],
+      "explanation": "You may ruff only when you cannot follow the suit led. Playing a trump may win the trick, unless a higher trump is played.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "terza_alta",
+    "before": {
+      "options": [
+        "In terza posizione, gioca la carta più bassa",
+        "In terza posizione, gioca la carta più alta disponibile",
+        "Gioca il terzo atout che hai",
+        "Fai sempre tre prese di fila"
+      ],
+      "question": "Cosa dice la regola 'terza alta'?",
+      "explanation": "In terza posizione (dopo compagno e morto), si gioca alto per cercare di vincere la presa o forzare un onore avversario.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "In terza posizione, gioca la carta più bassa",
+        "In terza posizione gioca alto per vincere o forzare un onore avversario",
+        "Gioca il terzo atout che hai",
+        "Fai sempre tre prese di fila"
+      ],
+      "question": "Cosa dice la regola 'terza alta'?",
+      "explanation": "In terza posizione si gioca generalmente alto per vincere o forzare un onore. Fra carte equivalenti si usa la più bassa; la posizione può richiedere eccezioni.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What does the guideline third hand high suggest?",
+      "options": [
+        "Play the lowest card in third position",
+        "Play high enough in third position to try to win or force an opposing honour",
+        "Play your third trump",
+        "Take three consecutive tricks"
+      ],
+      "explanation": "Third hand generally plays high to win or force an honour. Use the lowest of touching equals; the layout may create exceptions.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "transfer",
+    "before": {
+      "options": [
+        "Che hai quadri lunghe",
+        "Che chiedi al compagno di dire 2♥ (hai cuori lunghe)",
+        "Che vuoi giocare a quadri",
+        "Che passi"
+      ],
+      "question": "Nella Jacoby Transfer dopo 1SA, cosa significa dire 2♦?",
+      "explanation": "2♦ è un transfer a cuori: dice al compagno di 1SA 'ho cuori lunghe, di' 2♥ così sei tu il morto'.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Che hai quadri lunghe",
+        "Che chiedi al compagno di dire 2♥ (hai cuori lunghe)",
+        "Che vuoi giocare a quadri",
+        "Che passi"
+      ],
+      "question": "Nella Jacoby Transfer dopo 1SA, cosa significa dire 2♦?",
+      "explanation": "2♦ chiede all’apertore di 1SA di dire 2♥. Se si giocherà a cuori, l’apertore sarà il dichiarante; il rispondente che ha effettuato il transfer sarà il morto.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "Using Jacoby transfers after 1NT, what does 2♦ mean?",
+      "options": [
+        "I have long diamonds",
+        "Please bid 2♥: I have long hearts",
+        "I want to play diamonds",
+        "I pass"
+      ],
+      "explanation": "2♦ asks opener to bid 2♥. If hearts become trumps, opener will be declarer and responder, who made the transfer, will be dummy.",
+      "correctAnswer": 1
+    }
+  },
+  {
+    "id": "vulnerabile",
+    "before": {
+      "options": [
+        "Non può fare contratti di slam",
+        "I premi e le penalità sono maggiori",
+        "Deve sempre aprire la licita",
+        "Non può contrare"
+      ],
+      "question": "Cosa cambia quando una coppia è vulnerabile?",
+      "explanation": "La vulnerabilità aumenta sia i premi per contratti riusciti sia le penalità per cadute.",
+      "correctAnswer": 1
+    },
+    "after": {
+      "options": [
+        "Non può fare contratti di slam",
+        "Aumentano i premi di manche e slam e le penalità per caduta",
+        "Deve sempre aprire la licita",
+        "Non può contrare"
+      ],
+      "question": "Cosa cambia quando una coppia è vulnerabile?",
+      "explanation": "La vulnerabilità aumenta i premi di manche e slam e le penalità per caduta; non modifica ogni voce del punteggio.",
+      "correctAnswer": 1
+    },
+    "english": {
+      "question": "What changes when a partnership is vulnerable?",
+      "options": [
+        "It cannot bid slams",
+        "Game and slam bonuses and undertrick penalties are higher",
+        "It must always open",
+        "It cannot double"
+      ],
+      "explanation": "Vulnerability increases game and slam bonuses and undertrick penalties; it does not change every scoring item.",
+      "correctAnswer": 1
+    }
+  }
+]

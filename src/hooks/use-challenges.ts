@@ -3,10 +3,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
+import { createPostgresRecovery } from "@/lib/realtime-recovery";
 import {
   evaluateChannel,
   persistentFailureMessage,
   POLL_HEALTHY_MS,
+  POLL_DEGRADED_MS,
 } from "@/lib/realtime-health";
 import { generateSeed } from "@/lib/hand-encoder";
 import { calculateBoardIMP } from "@/lib/bridge-scoring";
@@ -72,7 +74,7 @@ export function useChallenges() {
   // minuti. Il contatore sta in un ref perché non deve far ridisegnare nulla.
   const [pollMs, setPollMs] = useState(POLL_HEALTHY_MS);
   const failuresRef = useRef(0);
-  /** Il canale c'è già riuscito una volta: da lì in poi le cadute sono rete. */
+  /** Readiness PostgreSQL osservata; non prova la causa dei guasti futuri. */
   const connessoRef = useRef(false);
 
   const supabase = createClient();
@@ -176,12 +178,27 @@ export function useChallenges() {
   useEffect(() => {
     if (!realtimeUserId) return;
 
+    let active = true;
+    failuresRef.current = 0;
+    connessoRef.current = false;
     const onChange = () => {
-      void refreshQuiet();
+      if (active) void refreshQuiet();
     };
+    setPollMs(POLL_DEGRADED_MS);
+    const recovery = createPostgresRecovery({
+      refresh: onChange,
+      ready: () => {
+        failuresRef.current = 0;
+        connessoRef.current = true;
+        setPollMs(POLL_HEALTHY_MS);
+      },
+      pending: () => setPollMs(POLL_DEGRADED_MS),
+      protocolError: () => reportError('use-challenges:realtime', new Error('PostgreSQL Realtime subscription failed; polling remains active')),
+    });
 
     const channel = supabase
       .channel(`challenges-${realtimeUserId}-${Math.random().toString(36).slice(2, 10)}`)
+      .on('system', {}, recovery.system)
       .on(
         "postgres_changes",
         {
@@ -203,6 +220,9 @@ export function useChallenges() {
         onChange
       )
       .subscribe((status, error) => {
+        if (!active) return;
+        recovery.status(status);
+        if (status === 'SUBSCRIBED') return; // Database readiness is a separate system message.
         // Un canale che cade su rete mobile è ordinaria amministrazione: si
         // degrada il ripiegamento invece di segnalare. Solo un guasto
         // ripetuto viene riportato, e una volta sola. Vedi realtime-health.ts.
@@ -221,6 +241,8 @@ export function useChallenges() {
       });
 
     return () => {
+      active = false;
+      recovery.dispose();
       void supabase.removeChannel(channel);
     };
   }, [supabase, realtimeUserId, refreshQuiet]);

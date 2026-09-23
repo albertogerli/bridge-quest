@@ -156,11 +156,13 @@ export function getInfographicForLesson(
     : "junior";
 
   const radice = lingua === "en" ? "/infografiche/en" : "/infografiche";
+  const revision = courseFolder === "fiori" && [7, 8].includes(lessonId) ? "-rev2022" : "";
+  const courseRevision = courseFolder === "fiori" ? "-rev2022" : "";
 
   return {
-    image: `${radice}/${courseFolder}/lezione-${formattedId}-${p}.jpg`,
-    pdf: `${radice}/${courseFolder}/lezione-${formattedId}-${p}.pdf`,
-    coursePdf: `${radice}/${courseFolder}/corso-${courseFolder}-${p}.pdf`,
+    image: `${radice}/${courseFolder}/lezione-${formattedId}-${p}${revision}.jpg`,
+    pdf: `${radice}/${courseFolder}/lezione-${formattedId}-${p}${revision}.pdf`,
+    coursePdf: `${radice}/${courseFolder}/corso-${courseFolder}-${p}${courseRevision}.pdf`,
   };
 }
 

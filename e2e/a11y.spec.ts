@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./test";
 import { dismissCookieBanner, login } from "./helpers";
 
 /**
@@ -46,25 +46,34 @@ const DISABLED_RULES: { id: string; why: string }[] = [
  */
 async function settleInViewAnimations(page: Page) {
   await page.evaluate(async () => {
-    const step = Math.max(200, window.innerHeight);
-    for (let y = 0; y < document.body.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise((r) => setTimeout(r, 150));
+    // Landing scrolls inside a fixed overlay, not document.body. Measure the
+    // scrollable roots once, then reveal every section in each actual root.
+    const roots = [...new Set([document.scrollingElement,
+      ...[...document.querySelectorAll<HTMLElement>("body *")].filter(el =>
+        /auto|scroll/.test(getComputedStyle(el).overflowY) && el.clientHeight > 0 && el.scrollHeight > el.clientHeight
+      ),
+    ])].filter((el): el is Element => el !== null)
+      .map(el => ({el,height:el.scrollHeight,step:Math.max(200,el.clientHeight)}));
+    for (const {el,height,step} of roots) {
+      for (let y = 0; y < height; y += step) {
+        el.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 150));
+      }
+      el.scrollTo(0, 0);
     }
-    window.scrollTo(0, 0);
   });
 
   // Attesa DETERMINISTICA: le pagine caricano i contenuti dal DB, e ogni
   // arrivo di dati rimonta le sezioni facendo ripartire le animazioni. Un
   // timeout fisso è quindi intrinsecamente instabile: si aspetta invece che
-  // nessun elemento resti trasparente (axe leggerebbe contrasto ~0).
+  // le animazioni finite siano terminate. Non pretendere opacità 1 su tutti
+  // i nodi: un'icona decorativa al 50% è uno stile stabile, non un caricamento.
   await page
     .waitForFunction(
       () =>
-        [...document.querySelectorAll<HTMLElement>("body *")].every((el) => {
-          const o = getComputedStyle(el).opacity;
-          return o === "" || parseFloat(o) > 0.99 || el.offsetParent === null;
-        }),
+        document.getAnimations().every(animation =>
+          animation.playState !== "running" || animation.effect?.getTiming().iterations === Infinity
+        ),
       undefined,
       { timeout: 15_000 }
     )
@@ -120,6 +129,10 @@ async function auditPage(page: Page, path: string) {
 }
 
 test.describe("audit accessibilità (axe)", () => {
+  // The full glossary requires scrolling every term and running all axe rules.
+  // Keep the complete audit; allow its measured workload more than the 60s
+  // functional-test budget instead of disabling rules or skipping nodes.
+  test.setTimeout(120_000);
   test("landing pubblica /", async ({ page }) => {
     await auditPage(page, "/");
   });

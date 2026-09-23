@@ -87,6 +87,7 @@ public/swe-worker-* [0-9]*.js
 /tmp/
 /output/
 /.next.nosync/
+/.next.quality/
 /.playwright-cli/
 scripts/__pycache__/
 scripts/*.log
@@ -103,3 +104,6 @@ validazione-smazzate.json
 
 # PDF generati da docs/*.html con scripts/pdf-da-html.mjs: si rifanno, non si versionano
 *.pdf
+# Reviewed course corrections and English downloads are runtime assets, not reports.
+!public/infografiche/fiori/*-rev2022.pdf
+!public/infografiche/en/*/*.pdf

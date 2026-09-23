@@ -10,6 +10,7 @@ import { GameActions } from "@/components/bridge/game-actions";
 import { useGameStore } from "@/store/use-game-store";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { useGuidedHands } from "@/store/use-guided-hands-store";
+import { awardActivityBadge } from "@/lib/activity-badges";
 import type { GuidedHand } from "@/lib/catalog";
 import type { Position } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, partnershipOf } from "@/lib/bridge-engine";
@@ -310,6 +311,8 @@ function GuidedGameplay({
       const xp = 25 + (game.result.result >= 0 ? 10 : 0);
       awardGameXp(`guided-hand-${hand.id}`, xp);
       if (!alreadyCompleted) markHandCompleted(hand.id);
+      // The two guided activities have stable catalog IDs 2 and 3.
+      if (isHandCompleted(2) && isHandCompleted(3)) awardActivityBadge("guided_master");
       try { updateLastActivity(); } catch {}
       saveGameResult({
         gameType: "mano-guidata",

@@ -12,6 +12,7 @@ import { useProfile } from "@/hooks/use-profile";
 import Link from "next/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useLingua } from "@/hooks/use-lingua";
 
 export default function LessonDetailPage({
   params,
@@ -19,6 +20,7 @@ export default function LessonDetailPage({
   params: Promise<{ lessonId: string }>;
 }) {
   const t = useT();
+  const { lingua } = useLingua();
   const { lessonId } = use(params);
   const lessonIdNum = parseInt(lessonId);
 
@@ -70,7 +72,7 @@ export default function LessonDetailPage({
 
   const lessonNumber = getLessonDisplayNumber(lesson.id);
   const maestroName = getMaestroName(profileConfig.profile);
-  const infographic = getInfographicForLesson(lesson.id, profileConfig.profile);
+  const infographic = getInfographicForLesson(lesson.id, profileConfig.profile, lingua);
 
   const completedModules = lesson.modules.filter(
     (m) => completedMap[`${lesson.id}-${m.id}`]

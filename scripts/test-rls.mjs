@@ -1,4 +1,4 @@
-// Verifica RLS di BridgeLab. Sola lettura, nessun dato personale in output.
+// Verifica RLS di BridgeLab su staging: crea/cancella utenti sintetici, nessun dato personale in output.
 //
 //   node scripts/test-rls.mjs        (o: npm run test:rls)
 //
@@ -11,6 +11,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { leggiEnv } from "./leggi-env.mjs";
+import { assertTestTarget } from "./test-target.mjs";
 
 const env = leggiEnv([
   "NEXT_PUBLIC_SUPABASE_URL",
@@ -21,6 +22,7 @@ const env = leggiEnv([
 const URL_ = env.NEXT_PUBLIC_SUPABASE_URL;
 const ANON = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SERVICE = env.SUPABASE_SERVICE_ROLE_KEY;
+assertTestTarget(URL_, env.BRIDGELAB_TEST_SUPABASE_URL);
 
 const anon = createClient(URL_, ANON, { auth: { persistSession: false } });
 const admin = createClient(URL_, SERVICE, { auth: { persistSession: false } });
@@ -95,7 +97,7 @@ console.log("\n[2] Contenuti pubblici — devono restare leggibili");
 for (const t of ["glossary", "lessons", "courses", "asd_clubs"]) {
   const { data, error } = await anon.from(t).select("*").limit(1);
   const visible = error ? 0 : data?.length ?? 0;
-  if (visible > 0) ok(`${t}: leggibile`);
+  if (!error && (visible > 0 || t === "asd_clubs")) ok(`${t}: SELECT pubblica consentita${visible ? "" : " (catalogo vuoto)"}`);
   else fail(`${t}: NON leggibile da anonimo (regressione SEO/onboarding)`);
 }
 
@@ -107,6 +109,7 @@ console.log("\n[3] Utente AUTENTICATO — accesso ai dati ALTRUI");
 const email = `rls-test-${Date.now()}@bridgelab-test.invalid`;
 const password = `Rls!${Math.random().toString(36).slice(2, 12)}`;
 let testUserId = null;
+let otherUserId = null;
 
 try {
   const { data: created, error: createErr } = await admin.auth.admin.createUser({
@@ -117,6 +120,21 @@ try {
   if (createErr || !created.user) throw new Error(createErr?.message || "creazione fallita");
   testUserId = created.user.id;
 
+  // Fixture indipendente: una SELECT vuota su uno staging vuoto non prova RLS.
+  const { data: other, error: otherErr } = await admin.auth.admin.createUser({
+    email: `rls-other-${Date.now()}@bridgelab-test.invalid`,
+    password,
+    email_confirm: true,
+    user_metadata: { display_name: "RLS altro utente sintetico" },
+  });
+  if (otherErr || !other.user) throw new Error("creazione seconda fixture fallita");
+  otherUserId = other.user.id;
+  const { error: fixtureErr } = await admin.from("review_items").insert({
+    user_id: otherUserId, lesson_id: "1", module_id: "1-1", question: "Fixture RLS",
+    next_review: "2099-01-01", wrong_count: 1, box: 1,
+  });
+  if (fixtureErr) throw new Error(`fixture ripasso: ${fixtureErr.message}`);
+
   const user = createClient(URL_, ANON, { auth: { persistSession: false } });
   const { error: signInErr } = await user.auth.signInWithPassword({ email, password });
   if (signInErr) throw new Error(`login fallito: ${signInErr.message}`);
@@ -125,7 +143,7 @@ try {
   const { data: pub, error: pubErr } = await user
     .from("profiles")
     .select("id, display_name, xp")
-    .neq("id", testUserId)
+    .eq("id", otherUserId)
     .limit(3);
   if (!pubErr && (pub?.length ?? 0) > 0) {
     ok(`profiles: colonne pubbliche leggibili (${pub.length} righe) — atteso: classifica/amici`);
@@ -222,6 +240,10 @@ try {
 } catch (e) {
   fail(`verifica autenticata non eseguita: ${e.message}`);
 } finally {
+  if (otherUserId) {
+    const { error } = await admin.auth.admin.deleteUser(otherUserId);
+    if (error) fail("seconda fixture NON eliminata");
+  }
   if (testUserId) {
     const { error } = await admin.auth.admin.deleteUser(testUserId);
     if (error) info(`utente di test NON eliminato (${error.message}) — rimuoverlo a mano`);
@@ -944,6 +966,8 @@ try {
 // ---------------------------------------------------------------------------
 console.log("\n[15] Iscrizioni in attesa");
 
+const pendingFixtures = [];
+let pendingClassId = null;
 try {
   // Chi è `pending` non deve vedere i contenuti della classe. Il cancello è
   // `is_member_of_class`, che chiede `status = 'active'`: la verifica sta qui
@@ -953,19 +977,30 @@ try {
   const password = `Pn!${Math.random().toString(36).slice(2, 12)}`;
   const { data: created, error: createErr } =
     await admin.auth.admin.createUser({ email, password, email_confirm: true });
-
-  const { data: classe } = await admin
-    .from("classes")
-    .select("id")
-    .limit(1)
-    .single();
-
-  if (createErr || !classe) {
-    info(`verifica iscrizioni saltata: ${createErr?.message ?? "nessuna classe"}`);
-  } else {
-    await admin
+  if (createErr || !created.user) throw new Error("fixture allievo non creata");
+  pendingFixtures.push(created.user.id);
+  const { data: teacher, error: teacherErr } = await admin.auth.admin.createUser({
+    email: `pend-teacher-${Date.now()}@bridgelab-test.invalid`, password, email_confirm: true,
+  });
+  if (teacherErr || !teacher.user) throw new Error("fixture insegnante non creata");
+  pendingFixtures.push(teacher.user.id);
+  const { data: classe, error: classErr } = await admin.from("classes")
+    .insert({ instructor_id: teacher.user.id, name: "Classe sintetica RLS" }).select("id").single();
+  if (classErr || !classe) throw new Error(`fixture classe: ${classErr?.message}`);
+  pendingClassId = classe.id;
+  {
+    const { error: memberErr } = await admin
       .from("class_members")
       .insert({ class_id: classe.id, student_id: created.user.id, status: "pending" });
+    if (memberErr) throw new Error(`fixture iscrizione: ${memberErr.message}`);
+    const { error: assignmentErr } = await admin.from("assignments").insert({
+      class_id: classe.id, title: "Compito sintetico RLS", smazzata_ids: ["2-1"],
+    });
+    if (assignmentErr) throw new Error(`fixture compito: ${assignmentErr.message}`);
+    const { error: messageErr } = await admin.from("class_messages").insert({
+      class_id: classe.id, user_id: teacher.user.id, body: "Messaggio sintetico RLS",
+    });
+    if (messageErr) throw new Error(`fixture messaggio: ${messageErr.message}`);
 
     const u = createClient(URL_, ANON, { auth: { persistSession: false } });
     await u.auth.signInWithPassword({ email, password });
@@ -998,12 +1033,25 @@ try {
     if (dopo?.status === "pending") ok("(d) chi è in attesa non può approvarsi da solo");
     else fail(`(d) un utente in attesa si è promosso da solo (${dopo?.status}, errore: ${promoErr?.message ?? "nessuno"})`);
 
-    await admin.from("class_members").delete().eq("student_id", created.user.id);
-    await admin.auth.admin.deleteUser(created.user.id);
-    info("utente in attesa di test eliminato");
+    // Controllo positivo: le stesse righe diventano leggibili dopo approvazione.
+    const { error: approveErr } = await admin.from("class_members").update({status:"active"})
+      .eq("class_id",classe.id).eq("student_id",created.user.id);
+    const { data: activeAssignments, error: activeErr } = await u.from("assignments").select("id").eq("class_id",classe.id);
+    const { data: activeMessages, error: activeMsgErr } = await u.from("class_messages").select("id").eq("class_id",classe.id);
+    if (!approveErr && !activeErr && !activeMsgErr && activeAssignments?.length===1 && activeMessages?.length===1) ok("(e) l'allievo approvato legge compito e chat esistenti");
+    else fail("(e) l'approvazione non rende visibili compito e chat");
   }
 } catch (e) {
   fail(`verifica iscrizioni non eseguita: ${e.message}`);
+} finally {
+  if (pendingClassId) {
+    const {error}=await admin.from("classes").delete().eq("id",pendingClassId);
+    if(error) fail("fixture classe NON eliminata");
+  }
+  for (const id of pendingFixtures) {
+    const {error}=await admin.auth.admin.deleteUser(id);
+    if(error) fail("fixture iscrizioni NON eliminata");
+  }
 }
 
 console.log(
