@@ -85,6 +85,9 @@ function vociDiPublic(): { url: string; revision: string }[] {
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
+  // Register from our client component so a refused registration is handled
+  // and diagnosed, not emitted as an unhandled rejection by the auto entry.
+  register: false,
   cacheOnNavigation: true,
   reloadOnOnline: true,
   disable: process.env.NODE_ENV === "development",

@@ -36,6 +36,10 @@ test("risultato: risposta persa, retry in due schede e isolamento proprietario",
       localStorage.setItem(otherKey, JSON.stringify({ ...base, id: otherId, owner: otherOwner }));
       window.dispatchEvent(new Event("bq_sync_retry"));
     }, { id, owner, otherId, otherOwner, key, otherKey });
+    // The fault starts only after Auth completes and the server commits.
+    // Do not start the banner assertion's timeout while that request is still
+    // waiting to be sent during browser/auth initialization.
+    await expect.poll(() => delivered, { timeout: 20_000 }).toBe(true);
     await expect(page.getByText("Salvataggio online non confermato. Non cancellare i dati di questo dispositivo.")).toBeVisible();
     await expect.poll(async () => {
       const { count, error } = await admin.from("game_results").select("id", { count: "exact", head: true }).eq("id", id).eq("user_id", owner!);

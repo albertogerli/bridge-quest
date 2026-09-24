@@ -10,6 +10,7 @@ import { PropostaLingua } from "@/components/proposta-lingua";
 import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
 import { MetaPixelLoader } from "@/components/meta-pixel-loader";
+import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
 import "./globals.css";
 
 const inter = Inter({
@@ -237,6 +238,7 @@ export default function RootLayout({
           <PropostaLingua />
         </TraduzioniProvider>
         <ToasterLazy />
+        <ServiceWorkerRegistration />
         {/* This endpoint exists on Vercel, not on standalone/local Next builds. */}
         {process.env.VERCEL === "1" ? <Analytics /> : null}
         {/* Google tag (gtag.js) — caricato una sola volta, serve sia GA4 che Google Ads */}
