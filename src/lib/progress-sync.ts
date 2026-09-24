@@ -44,20 +44,26 @@ function assertCurrent(isCurrent: () => boolean) {
 }
 
 /** Capture a token, validate THAT token server-side, then bind each request to it. */
-async function progressAuthorization(db: SupabaseClient, owner: string): Promise<string> {
-  const session = await db.auth.getSession();
-  assertAuthResult(session.error);
+async function progressAuthorization(db: SupabaseClient, owner: string, isCurrent: () => boolean): Promise<string> {
+  const session = await retrySafeSyncRequest(async () => {
+    const result = await db.auth.getSession();
+    assertAuthResult(result.error);
+    return result;
+  }, isCurrent);
   const token = session.data.session?.access_token;
   if (!token) throw new SyncSessionChangedError();
-  const auth = await db.auth.getUser(token);
-  assertAuthResult(auth.error);
+  const auth = await retrySafeSyncRequest(async () => {
+    const result = await db.auth.getUser(token);
+    assertAuthResult(result.error);
+    return result;
+  }, isCurrent);
   if (!auth.data.user || auth.data.user.id !== owner) throw new SyncSessionChangedError();
   return `Bearer ${token}`;
 }
 
 export async function readProgress(db: SupabaseClient, owner: string, isCurrent: () => boolean = () => true) {
   assertCurrent(isCurrent);
-  const authorization = await progressAuthorization(db, owner);
+  const authorization = await progressAuthorization(db, owner, isCurrent);
   assertCurrent(isCurrent);
   const [moduleResult, badgeResult, reviewResult] = await Promise.all([
     db.from("completed_modules").select("lesson_id, module_id").eq("user_id", owner).setHeader("Authorization", authorization),
@@ -99,7 +105,9 @@ function syncFailureCode(result: SyncResult): string {
     // Inspect only to classify: never retain the raw message, stack, URL or cause.
     const message = result.error?.message ?? "";
     if (/^AbortError:/.test(message)) return "request_aborted";
-    if (/^TypeError: (Failed to fetch|Load failed|NetworkError when attempting to fetch resource\.?)$/.test(message)) return "network_error";
+    // Sentry's fetch instrumentation appends (host), including on Edge/Safari.
+    // Accept only that suffix, never arbitrary TypeErrors or raw URLs/payloads.
+    if (/^TypeError: (Failed to fetch|Load failed|NetworkError when attempting to fetch resource\.?)(?: \((?:[a-zA-Z0-9.-]+|\[[a-fA-F0-9:]+\])(?::\d{1,5})?\))?$/.test(message)) return "network_error";
     return "client_error"; // An arbitrary TypeError is not proof of a network fault.
   }
   if (status !== undefined && status >= 400) return "http_error";
@@ -120,16 +128,48 @@ export function assertSyncResult(result: SyncResult, operation: SyncOperation): 
   if (result.error) throw new SyncWriteError(syncFailureCode(result), operation, result.status);
 }
 
+/** Only callers that can safely repeat their specific request may use this. */
+async function retrySafeSyncRequest<T>(request: () => Promise<T>, isCurrent: () => boolean): Promise<T> {
+  const delays = [1_000, 3_000];
+  for (let attempt = 0; ; attempt++) {
+    assertCurrent(isCurrent);
+    try {
+      const result = await request();
+      assertCurrent(isCurrent);
+      return result;
+    } catch (error) {
+      assertCurrent(isCurrent);
+      const transient = error instanceof SyncWriteError
+        ? error.code === "network_error" || (error.code === "http_error" && [502, 503, 504].includes(error.status ?? -1))
+        : error instanceof SyncAuthError && error.code === "AuthRetryableFetchError" && [0, 502, 503, 504].includes(error.status ?? -1);
+      if (!transient || attempt >= delays.length || (typeof navigator !== "undefined" && navigator.onLine === false)) throw error;
+      // Bounded wait. The next iteration rechecks ownership before any request.
+      await new Promise<void>(resolve => setTimeout(resolve, delays[attempt]));
+    }
+  }
+}
+
+async function writeIdempotently<T extends SyncResult>(request: () => PromiseLike<T>, operation: SyncOperation, isCurrent: () => boolean): Promise<T> {
+  return retrySafeSyncRequest(async () => {
+    const result = await request();
+    assertSyncResult(result, operation);
+    return result;
+  }, isCurrent);
+}
+
 export async function writeProgress(db: SupabaseClient, owner: string, snapshot: ProgressSnapshot, reviewRevision: string, isCurrent: () => boolean = () => true): Promise<string> {
   assertCurrent(isCurrent);
-  const authorization = await progressAuthorization(db, owner);
+  const authorization = await progressAuthorization(db, owner, isCurrent);
   assertCurrent(isCurrent);
-  const profile = await db.from("profiles").update({
+  const profileValues = {
     xp: snapshot.xp, streak: snapshot.streak, hands_played: snapshot.handsPlayed,
     profile_type: snapshot.profile, memory_best: snapshot.memoryBest,
     text_size: snapshot.textSize, anim_speed: snapshot.animSpeed, sound_on: snapshot.sound,
     total_minutes: snapshot.totalMinutes, last_login: new Date().toISOString(), updated_at: new Date().toISOString(),
-  }, { count: "exact" }).eq("id", owner).setHeader("Authorization", authorization);
+  };
+  // Absolute values, not increments; retain the same payload/token on retry.
+  const profile = await writeIdempotently(() => db.from("profiles").update(profileValues,
+    { count: "exact" }).eq("id", owner).setHeader("Authorization", authorization), "profile", isCurrent);
   assertCurrent(isCurrent);
   assertSyncResult(profile, "profile");
   if (profile.count !== 1) throw new Error("Sync profile not updated");
@@ -139,17 +179,18 @@ export async function writeProgress(db: SupabaseClient, owner: string, snapshot:
     const split = key.lastIndexOf("-");
     return { user_id: owner, lesson_id: key.slice(0, split), module_id: key.slice(split + 1) };
   });
-  if (modules.length) assertSyncResult(await db.from("completed_modules").upsert(modules, {
+  if (modules.length) await writeIdempotently(() => db.from("completed_modules").upsert(modules, {
     onConflict: "user_id,lesson_id,module_id", ignoreDuplicates: true,
-  }).setHeader("Authorization", authorization), "modules");
+  }).setHeader("Authorization", authorization), "modules", isCurrent);
   assertCurrent(isCurrent);
-  if (snapshot.badges.length) assertSyncResult(await db.from("badges").upsert(
+  if (snapshot.badges.length) await writeIdempotently(() => db.from("badges").upsert(
     snapshot.badges.map((badge_id) => ({ user_id: owner, badge_id })),
     { onConflict: "user_id,badge_id", ignoreDuplicates: true },
-  ).setHeader("Authorization", authorization), "badges");
+  ).setHeader("Authorization", authorization), "badges", isCurrent);
   assertCurrent(isCurrent);
 
   // One transaction, optimistic revision check, and authenticated owner derived in SQL.
+  // Never blind-retry this RPC: a lost response may follow a committed revision.
   const reviews = await db.rpc("sync_review_items", { p_items: snapshot.reviewItems, p_expected_revision: reviewRevision }).setHeader("Authorization", authorization);
   assertCurrent(isCurrent);
   assertSyncResult(reviews, "reviews");

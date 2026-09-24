@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { addFetchInstrumentationHandler, resetInstrumentationHandlers } from "@sentry/core";
 import { assertSyncResult, createProgressWriter, readProgress, writeProgress, SyncAuthError, SyncSessionChangedError, SyncWriteError, type ProgressSnapshot } from "./progress-sync";
 import { describeError } from "./describe-error";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -9,6 +10,8 @@ const snapshot: ProgressSnapshot = {
   memoryBest: null, textSize: "medio", animSpeed: "normale", sound: true,
   totalMinutes: 1, badges: [], reviewItems: [],
 };
+beforeEach(() => vi.useFakeTimers());
+afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 describe("progress acknowledgement", () => {
   it("does not acknowledge a refused write and retries the same state", async () => {
     const write = vi.fn().mockRejectedValueOnce(new Error("denied")).mockResolvedValue("revision2");
@@ -113,12 +116,127 @@ function authFixture() {
   return { db, getSession, getUser, request };
 }
 
+it("recognizes errors enhanced by the installed Sentry instrumentation, without retaining the host", async () => {
+  const nativeFetch = vi.fn<typeof fetch>();
+  vi.stubGlobal("fetch", nativeFetch);
+  resetInstrumentationHandlers();
+  const remove = addFetchInstrumentationHandler(() => {});
+  try {
+    const db = createClient("https://private-host.invalid", "synthetic-key", {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      global: { fetch: globalThis.fetch },
+    });
+    for (const message of ["Failed to fetch", "Load failed", "NetworkError when attempting to fetch resource."]) {
+      nativeFetch.mockRejectedValueOnce(new TypeError(message));
+      const response = await db.from("profiles").update({ xp: 10 });
+      expect(response.error?.message).toBe(`TypeError: ${message} (private-host.invalid)`);
+      let failure: unknown;
+      try { assertSyncResult(response, "profile"); } catch (error) { failure = error; }
+      expect(failure).toMatchObject({ code: "network_error", status: 0 });
+      expect(JSON.stringify(describeError(failure))).not.toContain("private-host");
+    }
+  } finally { remove(); resetInstrumentationHandlers(); }
+});
+
+describe("bounded retries of safe requests", () => {
+  it.each(["profiles", "completed_modules", "badges"])("recovers %s alone without repeating completed writes", async (table) => {
+    const f = authFixture();
+    const success = f.request.getMockImplementation()!;
+    let failed = false;
+    f.request.mockImplementation(async (input) => {
+      if (String(input).includes(`/${table}?`) || String(input).endsWith(`/${table}`)) {
+        if (!failed) { failed = true; throw new TypeError("Failed to fetch (sync-test.invalid)"); }
+      }
+      return success(input);
+    });
+    const pending = writeProgress(f.db, "synthetic-a", { ...snapshot, completedModules: { "1-1": true }, badges: ["test"] }, "previous");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await expect(pending).resolves.toBe("next");
+    const counts = (name: string) => f.request.mock.calls.filter(([url]) => new URL(String(url)).pathname.endsWith(`/${name}`)).length;
+    expect(counts(table)).toBe(2);
+    for (const other of ["profiles", "completed_modules", "badges"].filter(name => name !== table)) expect(counts(other)).toBe(1);
+    expect(counts("sync_review_items")).toBe(1);
+  });
+  it.each(["getSession", "getUser"] as const)("recovers transient %s failures before writing", async (step) => {
+    const f = authFixture();
+    f[step].mockResolvedValueOnce({ data: { session: null, user: null }, error: new AuthRetryableFetchError("private detail", 0) });
+    const pending = writeProgress(f.db, "synthetic-a", snapshot, "previous");
+    await vi.advanceTimersByTimeAsync(999);
+    expect(f.request).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    await expect(pending).resolves.toBe("next");
+    expect(f.getUser).toHaveBeenLastCalledWith("synthetic-token-a");
+  });
+  it.each([502, 503, 504])("recovers a transient HTTP %s", async (status) => {
+    const f = authFixture();
+    f.request.mockResolvedValueOnce(new Response("gateway failure", { status }));
+    const pending = writeProgress(f.db, "synthetic-a", snapshot, "previous");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await expect(pending).resolves.toBe("next");
+    expect(f.request).toHaveBeenCalledTimes(3);
+  });
+  it("keeps the exact profile payload and verified token across a retry", async () => {
+    const f = authFixture();
+    const success = f.request.getMockImplementation()!;
+    const attempts: RequestInit[] = [];
+    f.request.mockImplementation(async (input, ...args: unknown[]) => {
+      if (String(input).includes("/profiles?")) {
+        attempts.push(args[0] as RequestInit);
+        if (attempts.length === 1) {
+          f.getSession.mockResolvedValue({ data: { session: { access_token: "synthetic-token-b" } }, error: null });
+          throw new TypeError("Load failed");
+        }
+      }
+      return success(input);
+    });
+    const pending = writeProgress(f.db, "synthetic-a", snapshot, "previous");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await expect(pending).resolves.toBe("next");
+    expect(attempts[1].body).toBe(attempts[0].body);
+    expect(new Headers(attempts[1].headers).get("Authorization")).toBe("Bearer synthetic-token-a");
+  });
+  it("does not retry a revision-changing RPC after a possibly committed response is lost", async () => {
+    const f = authFixture();
+    const success = f.request.getMockImplementation()!;
+    f.request.mockImplementation(async input => {
+      if (String(input).endsWith("/sync_review_items")) throw new TypeError("Failed to fetch");
+      return success(input);
+    });
+    await expect(writeProgress(f.db, "synthetic-a", snapshot, "previous")).rejects.toMatchObject({ code: "network_error" });
+    expect(f.request).toHaveBeenCalledTimes(2);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  it("cancels a retry if ownership changes during the wait", async () => {
+    const f = authFixture();
+    f.request.mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    let current = true;
+    const pending = writeProgress(f.db, "synthetic-a", snapshot, "previous", () => current).catch(error => error);
+    await vi.advanceTimersByTimeAsync(500);
+    current = false;
+    await vi.advanceTimersByTimeAsync(500);
+    expect(await pending).toBeInstanceOf(SyncSessionChangedError);
+    expect(f.request).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  it("does not burn short retries when the browser reports offline", async () => {
+    vi.stubGlobal("navigator", { onLine: false });
+    const f = authFixture();
+    f.request.mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    await expect(writeProgress(f.db, "synthetic-a", snapshot, "previous")).rejects.toMatchObject({ code: "network_error" });
+    expect(f.request).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
 describe("code-less profile failures through the real Supabase SDK", () => {
   const privatePayload = "private-account-data-not-for-telemetry";
   it.each([
     { label: "Chrome network failure", failure: () => { throw new TypeError("Failed to fetch"); }, code: "network_error", status: 0 },
     { label: "Firefox network failure", failure: () => { throw new TypeError("NetworkError when attempting to fetch resource."); }, code: "network_error", status: 0 },
     { label: "Safari network failure", failure: () => { throw new TypeError("Load failed"); }, code: "network_error", status: 0 },
+    { label: "Sentry-enhanced Edge failure", failure: () => { throw new TypeError("Failed to fetch (sync-test.invalid)"); }, code: "network_error", status: 0 },
+    { label: "Sentry-enhanced Safari failure", failure: () => { throw new TypeError("Load failed (sync-test.invalid)"); }, code: "network_error", status: 0 },
+    { label: "Sentry-enhanced Firefox failure", failure: () => { throw new TypeError("NetworkError when attempting to fetch resource. (sync-test.invalid:56321)"); }, code: "network_error", status: 0 },
     { label: "aborted request", failure: () => { throw new DOMException(privatePayload, "AbortError"); }, code: "request_aborted", status: 0 },
     { label: "unknown client exception", failure: () => { throw new TypeError(privatePayload); }, code: "client_error", status: 0 },
     { label: "HTML gateway failure", failure: () => new Response(`<html>${privatePayload}</html>`, { status: 502 }), code: "http_error", status: 502 },
@@ -135,11 +253,14 @@ describe("code-less profile failures through the real Supabase SDK", () => {
     { label: "blank server code", failure: () => new Response(JSON.stringify({ code: "", message: privatePayload }), { status: 500 }), code: "http_error", status: 500 },
   ])("preserves safe diagnostics and retries unacknowledged state: $label", async ({ failure, code, status }) => {
     const f = authFixture();
-    f.request.mockImplementationOnce(async () => failure());
+    const successfulRequest = f.request.getMockImplementation()!;
+    f.request.mockImplementation(async () => failure());
     const writer = createProgressWriter((owner, state, revision, current) => writeProgress(f.db, owner, state, revision, current));
     writer.initialize("synthetic-a", "previous");
 
-    const error = await writer.push("synthetic-a", snapshot).catch(e => e);
+    const pending = writer.push("synthetic-a", snapshot).catch(e => e);
+    await vi.advanceTimersByTimeAsync(4_000);
+    const error = await pending;
     expect(error).toBeInstanceOf(SyncWriteError);
     expect(error).not.toBeInstanceOf(SyncSessionChangedError);
     expect(error).toMatchObject({ name: "SyncWriteError", code, status });
@@ -148,10 +269,12 @@ describe("code-less profile failures through the real Supabase SDK", () => {
     expect(JSON.stringify(error)).not.toContain(privatePayload);
     expect(error.message).not.toContain(privatePayload);
     expect(error.cause).toBeUndefined();
-    expect(f.request).toHaveBeenCalledTimes(1); // No later writes after a failed profile.
+    const attempts = code === "network_error" || status === 502 ? 3 : 1;
+    expect(f.request).toHaveBeenCalledTimes(attempts); // No later writes after a failed profile.
 
+    f.request.mockImplementation(successfulRequest);
     await expect(writer.push("synthetic-a", snapshot)).resolves.toEqual({ status: "saved", reviewRevision: "next" });
-    expect(f.request).toHaveBeenCalledTimes(3);
+    expect(f.request).toHaveBeenCalledTimes(attempts + 2);
     await expect(writer.push("synthetic-a", snapshot)).resolves.toEqual({ status: "unchanged" });
   });
 
@@ -166,12 +289,15 @@ describe("code-less profile failures through the real Supabase SDK", () => {
 describe("session interruption versus real authentication errors", () => {
   it.each(["getSession", "getUser"] as const)("keeps a network error from %s visible and does not write", async (step) => {
     const f = authFixture();
-    f[step].mockResolvedValueOnce({ data: { session: null, user: null }, error: new AuthRetryableFetchError("private diagnostic not for telemetry", 0) });
-    const error = await writeProgress(f.db, "synthetic-a", snapshot, "previous").catch(e => e);
+    f[step].mockResolvedValue({ data: { session: null, user: null }, error: new AuthRetryableFetchError("private diagnostic not for telemetry", 0) });
+    const pending = writeProgress(f.db, "synthetic-a", snapshot, "previous").catch(e => e);
+    await vi.advanceTimersByTimeAsync(4_000);
+    const error = await pending;
     expect(error).toBeInstanceOf(SyncAuthError);
     expect(error).toMatchObject({ code: "AuthRetryableFetchError", status: 0 });
     expect(error.message).not.toContain("private diagnostic");
     expect(f.request).not.toHaveBeenCalled();
+    expect(f[step]).toHaveBeenCalledTimes(3);
   });
   it.each([
     new AuthApiError("private response", 403, "unexpected_failure"),
