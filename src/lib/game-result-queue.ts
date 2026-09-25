@@ -2,6 +2,25 @@ import type { GameResult } from "@/hooks/use-game-results";
 import type { Platform } from "@/lib/native-bridge";
 
 export const RESULT_PREFIX = "bq_game_result_v2:";
+
+/**
+ * La sessione non c'è più, o non è di chi ha prodotto il risultato.
+ *
+ * NON È UN DIFETTO, ed è per questo che ha un tipo suo. Il risultato resta
+ * dov'è — in memoria locale — e parte al prossimo accesso valido: è
+ * esattamente il lavoro per cui la coda esiste. Segnalarlo come errore
+ * riempiva Sentry di eventi su cui non c'era niente da fare, uno ogni trenta
+ * secondi finché il provider di autenticazione non si accorgeva della scadenza.
+ *
+ * Distinguerlo serve a tenere il resto: un rifiuto del database — un permesso
+ * mancante, una riga malformata — continua ad arrivare, e quello va guardato.
+ */
+export class SessioneNonValida extends Error {
+  constructor() {
+    super("Sessione non valida per il salvataggio del risultato");
+    this.name = "SessioneNonValida";
+  }
+}
 export interface PendingGameResult extends GameResult {
   id: string;
   owner: string | null;

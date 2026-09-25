@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createResultQueue } from "./game-result-queue";
+import { createResultQueue, SessioneNonValida } from "./game-result-queue";
 
 const memory = new Map<string, string>();
 const localStorage: Storage = {
@@ -56,5 +56,52 @@ describe("durable game-result queue", () => {
     a.enqueue({ gameType: "sfida", score: 1 }, "owner-a", "web");
     b.enqueue({ gameType: "sfida", score: 2 }, "owner-a", "web");
     expect(a.pending("owner-a")).toHaveLength(2);
+  });
+});
+
+describe("la sessione scaduta non è un difetto", () => {
+  it("ha un tipo proprio, riconoscibile da chi decide se segnalare", () => {
+    // Prima era un `Error` generico con un messaggio: distinguerlo voleva dire
+    // confrontare stringhe, e una stringa cambia senza che nessuno se ne
+    // accorga. Il tipo no.
+    const e = new SessioneNonValida();
+    expect(e).toBeInstanceOf(SessioneNonValida);
+    expect(e).toBeInstanceOf(Error);
+    expect(e.name).toBe("SessioneNonValida");
+  });
+
+  it("IL RISULTATO RESTA IN CODA: è il lavoro per cui la coda esiste", async () => {
+    // La prova che conta. Se la sessione è scaduta il risultato non si perde:
+    // resta dov'è e parte al prossimo accesso valido. Cancellarlo — o smettere
+    // di riprovare — sarebbe perdere una partita che l'utente ha giocato.
+    const coda = createResultQueue(localStorage, async () => {
+      throw new SessioneNonValida();
+    });
+    coda.enqueue({ gameType: "trova-errore", score: 3 }, "utente-1", "web");
+
+    await expect(coda.flush("utente-1")).rejects.toBeInstanceOf(SessioneNonValida);
+    expect(coda.pending("utente-1")).toHaveLength(1);
+  });
+
+  it("quando la sessione torna, il risultato parte", async () => {
+    let sessioneValida = false;
+    const coda = createResultQueue(localStorage, async () => {
+      if (!sessioneValida) throw new SessioneNonValida();
+    });
+    coda.enqueue({ gameType: "trova-errore", score: 3 }, "utente-1", "web");
+
+    await coda.flush("utente-1").catch(() => {});
+    expect(coda.pending("utente-1")).toHaveLength(1);
+
+    sessioneValida = true;
+    await coda.flush("utente-1");
+    expect(coda.pending("utente-1")).toHaveLength(0);
+  });
+
+  it("un rifiuto del database resta un errore vero, non si confonde", () => {
+    // È il motivo per cui si distingue invece di zittire tutto: un permesso
+    // mancante o una riga malformata vanno ancora guardati.
+    const rifiuto = new Error("Salvataggio risultato rifiutato (42501)");
+    expect(rifiuto).not.toBeInstanceOf(SessioneNonValida);
   });
 });

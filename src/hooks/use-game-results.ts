@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { getPlatform } from "@/lib/native-bridge";
-import { createResultQueue } from "@/lib/game-result-queue";
+import { createResultQueue, SessioneNonValida } from "@/lib/game-result-queue";
 import { reportError } from "@/lib/report-error";
 
 export type GameType =
@@ -25,7 +25,7 @@ function resultQueue() {
     const supabase = createClient();
     const { data, error: authError } = await supabase.auth.getUser();
     if (authError || !entry.owner || data.user?.id !== entry.owner) {
-      throw new Error("Sessione non valida per il salvataggio del risultato");
+      throw new SessioneNonValida();
     }
     // Existing UUID primary key + DO NOTHING: no new schema or UPDATE privilege.
     const { error } = await supabase.from("game_results").upsert({
@@ -43,7 +43,10 @@ async function flushResults(owner: string) {
     await resultQueue().flush(owner);
     window.dispatchEvent(new Event("bq_results_synced"));
   } catch (error) {
-    reportError("game-results:sync", error);
+    // La sessione scaduta non si segnala: il risultato resta in memoria locale
+    // e parte al prossimo accesso: è il lavoro per cui la coda esiste. Prima
+    // arrivava un evento ogni trenta secondi, su cui non c'era niente da fare.
+    if (!(error instanceof SessioneNonValida)) reportError("game-results:sync", error);
     window.dispatchEvent(new Event("bq_results_pending"));
   }
 }
