@@ -10,6 +10,7 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useFriends } from "@/hooks/use-friends";
 import { Asta } from "@/components/bridge/asta";
+import { eDiRete } from "@/lib/errore-di-rete";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { generateDeals, handHcp } from "@/lib/deal-generator";
@@ -97,7 +98,16 @@ function LicitaAmico() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId: s.id }),
-        }).catch((err) => reportError("licita-amico:sblocca", err));
+          // LA RETE CHE CADE NON SI SEGNALA. Questo è il caso più probabile su
+          // un telefono, ed è anche quello in cui non c'è niente da correggere:
+          // la licita resta sul turno dell'avversario e l'effetto RIPROVA alla
+          // prossima apertura — è la stessa rete di sicurezza descritta qui
+          // sopra, vista dall'altro lato.
+          //
+          // Tutto il resto continua ad arrivare: un 500 dell'API o una risposta
+          // malformata vogliono dire che il robot non si sveglia MAI, e quella
+          // è la cosa da sapere.
+        }).catch((err) => { if (!eDiRete(err)) reportError("licita-amico:sblocca", err); });
         const aggiornata = await leggiLicita(idAperta);
         if (vivo) setSessione(aggiornata);
       })
