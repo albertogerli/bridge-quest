@@ -50,6 +50,8 @@ export interface VoceLibreria {
   nota_curatore: string | null;
   usi: number;
   created_at: string;
+  /** Aggiornato dal database a ogni modifica: arriva, e prima non si vedeva. */
+  updated_at: string;
 }
 
 export async function cerca(filtri?: {
