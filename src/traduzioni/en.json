@@ -1838,5 +1838,10 @@
   "Chi ha giocato più mani negli ultimi 7 giorni. Si riparte ogni settimana: gli XP di sempre qui non contano.": "Who has played the most hands in the last 7 days. It resets every week: lifetime XP doesn't count here.",
   "Iscritto a “{nome}” ✓": "You're enrolled in “{nome}” ✓",
   "La tua richiesta per “{nome}” non è stata accettata. Se pensi sia un errore, parlane con il tuo insegnante.": "Your request to join “{nome}” wasn't accepted. If you think that's a mistake, talk to your teacher.",
-  "Richiesta inviata a “{nome}”. L'insegnante deve approvarla: la classe comparirà qui sotto quando lo fa.": "Request sent to “{nome}”. Your teacher has to approve it: the class will appear below once they do."
+  "Richiesta inviata a “{nome}”. L'insegnante deve approvarla: la classe comparirà qui sotto quando lo fa.": "Request sent to “{nome}”. Your teacher has to approve it: the class will appear below once they do.",
+  "Avvisi mentre BridgeLab è aperto": "Alerts while BridgeLab is open",
+  "Sfide, risultati e promemoria compaiono mentre l’app è aperta. Quando non lo è, i promemoria arrivano per email.": "Challenges, results and reminders appear while the app is open. When it isn't, reminders come by email.",
+  "Avvisi attivi! Li vedrai mentre giochi. 🔥": "Alerts on! You'll see them while you play. 🔥",
+  "Attiva gli avvisi: mentre giochi ti diciamo subito quando arriva una sfida o il risultato di una tua sfida.": "Turn on alerts: while you play we'll tell you right away when a challenge or a result comes in.",
+  "Attiva gli avvisi": "Turn on alerts"
 }

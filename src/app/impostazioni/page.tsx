@@ -433,7 +433,7 @@ export default function ImpostazioniPage() {
                 </div>
                 <div>
                   <h2 className="font-semibold text-foreground text-base">{t("Notifiche")}</h2>
-                  <p className="text-xs text-muted-foreground">{t("Promemoria streak e lezioni")}</p>
+                  <p className="text-xs text-muted-foreground">{t("Avvisi mentre BridgeLab è aperto")}</p>
                 </div>
               </div>
               <button
@@ -461,6 +461,9 @@ export default function ImpostazioniPage() {
                 {notifications.enabled ? "Attive" : notifications.permission === "denied" ? "Bloccate dal browser" : "Disattivate"}
               </Badge>
             </div>
+            <p className="mt-2 text-[12px] text-muted-foreground">
+              {t("Sfide, risultati e promemoria compaiono mentre l’app è aperta. Quando non lo è, i promemoria arrivano per email.")}
+            </p>
             {notifications.permission === "denied" && (
               <p className="mt-2 text-[12px] text-red-500/80">
                 {t("Le notifiche sono bloccate dal browser. Per riattivarle, modifica le impostazioni del sito nel browser.")}
