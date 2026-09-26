@@ -93,7 +93,11 @@ function Tavolo() {
     getMyClasses()
       .then((c) => {
         setClassi(c);
-        setClassId((attuale) => attuale || c[0]?.id || "");
+        // SI PRESELEZIONA SOLO SE CE N'È UNA. Con quattordici corsi aperti
+        // insieme — il caso vero in Puglia — scegliere la prima dell'elenco
+        // vuol dire aprire il tavolo alla classe sbagliata senza accorgersene:
+        // l'insegnante guarda le mani, non il menu che non ha toccato.
+        setClassId((attuale) => attuale || (c.length === 1 ? c[0].id : ""));
       })
       .catch((err) => reportError("tavolo:classi", err));
   }, []);
@@ -116,6 +120,7 @@ function Tavolo() {
   // più e il lint del progetto lo vieta, con ragione.
   const stato = tableId ? statoGrezzo : null;
 
+  const nomeClasse = classi.find((c) => c.id === classId)?.name ?? "";
   const modello = DEAL_TEMPLATES.find((t) => t.id === modelloId) ?? DEAL_TEMPLATES[0];
   const mani = useMemo(
     () => generateDeals(modello.constraints, { count: 8, seed }).deals,
@@ -393,9 +398,18 @@ function Tavolo() {
         )}
 
         {!tableId ? (
+          // IL PULSANTE DICE COSA SUCCEDE, e a chi. «Apri il tavolo» suona
+          // come aprire un foglio per sé: in realtà da quel momento ogni
+          // allievo di quella classe lo vede. Il nome della classe sul
+          // pulsante è più difficile da ignorare di una finestra di conferma,
+          // che si chiude senza leggerla.
           <Button disabled={!classId || occupato} onClick={apri}>
             <Play className="w-4 h-4 mr-1" aria-hidden="true" />
-            {occupato ? t("Apro…") : t("Apri il tavolo")}
+            {occupato
+              ? t("Apro…")
+              : nomeClasse
+                ? `${t("Apri per")} ${nomeClasse}`
+                : t("Scegli una classe")}
           </Button>
         ) : (
           <Button
@@ -407,6 +421,12 @@ function Tavolo() {
           </Button>
         )}
       </div>
+
+      {!tableId && classId && (
+        <p className="mb-5 text-sm text-muted-foreground">
+          {t("Appena apri, gli allievi di questa classe vedono il tavolo. Fino ad allora stai preparando in privato.")}
+        </p>
+      )}
 
       {tableId && (
         <div className="rounded-2xl border border-figb/30 bg-figb/5 p-4 mb-5">
