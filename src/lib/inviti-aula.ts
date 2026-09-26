@@ -23,6 +23,8 @@ export interface InvitoAula {
   scade_il: string;
   revocato: boolean;
   max_ospiti: number;
+  /** Chi l'ha creato. La tabella ce l'ha e le letture `select("*")` lo portano. */
+  creato_da: string | null;
   created_at: string;
 }
 

@@ -28,6 +28,8 @@ export interface ModelloMani {
   lesson_id: number | null;
   usi: number;
   created_at: string;
+  /** Aggiornato dal database a ogni modifica: arriva, e prima non si vedeva. */
+  updated_at: string;
 }
 
 /** Tutti i modelli che chi guarda ha diritto di vedere: propri, ufficiali, condivisi. */

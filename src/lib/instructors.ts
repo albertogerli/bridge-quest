@@ -110,6 +110,14 @@ export interface ClassMember {
   student_id: string;
   status: MemberStatus;
   joined_at: string;
+  /**
+   * Quando l'allievo è uscito. Lo scrive il database, e finora non lo leggeva
+   * nessuno: il caso opposto agli altri tre tipi corretti insieme a questo —
+   * là arrivava un dato che il tipo non dichiarava, qui c'è un dato che
+   * nessuno ha mai guardato. Serve a distinguere «uscito la settimana scorsa»
+   * da «uscito a marzo» quando l'insegnante rilegge l'elenco.
+   */
+  uscito_il?: string | null;
   // Joined from profiles (when fetched via getClassDetail)
   display_name?: string | null;
   avatar_url?: string | null;
