@@ -64,7 +64,20 @@ export interface ChallengeStats {
   avg_imp_margin: number;
 }
 
-export function useChallenges() {
+/**
+ * `live: false` per chi usa questo hook SOLO per le sue funzioni.
+ *
+ * Tre punti su quattro chiamano `useChallenges()` per prendersi una funzione
+ * — `submitResults`, `getHistory`, `createChallenge` — e si portavano dietro
+ * un canale Realtime e un intervallo di rilettura che nessuno guardava. Il
+ * tetto del piano è cinquecento connessioni, e una serata d'aula ne accende
+ * già una per tavolo: sprecarne una per pagina aperta è il modo in cui si
+ * arriva al tetto senza sapere chi l'ha riempito.
+ *
+ * Il valore predefinito resta `true`: chi non passa niente ottiene quello di
+ * prima, e a spegnersi sono solo i punti che si sono guardati uno per uno.
+ */
+export function useChallenges({ live = true }: { live?: boolean } = {}) {
   const [pendingChallenges, setPendingChallenges] = useState<ChallengeData[]>([]);
   const [activeChallenges, setActiveChallenges] = useState<ChallengeData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -176,6 +189,7 @@ export function useChallenges() {
   //    rifiuta o consegna i risultati.
   // I filtri sono lato server e le RLS di `challenges` valgono anche qui.
   useEffect(() => {
+    if (!live) return;
     if (!realtimeUserId) return;
 
     let active = true;
@@ -245,10 +259,11 @@ export function useChallenges() {
       recovery.dispose();
       void supabase.removeChannel(channel);
     };
-  }, [supabase, realtimeUserId, refreshQuiet]);
+  }, [supabase, realtimeUserId, refreshQuiet, live]);
 
   // Rete di sicurezza: intervallo dinamico, vedi realtime-health.ts.
   useEffect(() => {
+    if (!live) return;
     const interval = setInterval(() => {
       void refreshQuiet();
     }, pollMs);
@@ -262,7 +277,7 @@ export function useChallenges() {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [refreshQuiet, pollMs]);
+  }, [refreshQuiet, pollMs, live]);
 
   const createChallenge = useCallback(
     async (

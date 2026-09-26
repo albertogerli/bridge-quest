@@ -101,8 +101,27 @@ export function ComandoProiezione({
     });
   }, [titolo, mani, imp, dichiarazione, giocate, contratto, dichiarante, doppioMorto]);
 
+  // IL CANALE SI APRE UNA VOLTA SOLA, alla comparsa del comando.
+  //
+  // Stava in un effetto che dipendeva da `manda`, e `manda` cambia a ogni
+  // render utile — cioè a ogni carta giocata, a ogni interruttore toccato.
+  // Quindi il canale veniva CHIUSO E RIAPERTO in mezzo alla lezione, decine
+  // di volte. Se la finestra proiettata mandava il suo «chiedi-stato» nella
+  // fessura fra la chiusura e l'apertura, quel messaggio non lo riceveva
+  // nessuno: la proiezione restava nera fino al battito successivo, davanti
+  // alla classe, senza che comparisse un errore da nessuna parte.
   useEffect(() => {
     canale.current = apriCanale();
+    return () => {
+      canale.current?.close();
+      canale.current = null;
+    };
+  }, []);
+
+  // L'ascolto invece si riaggancia quando `manda` cambia, perché deve
+  // rispondere con lo stato di ADESSO. Riassegnare `onmessage` non chiude
+  // niente: è la differenza fra cambiare la persona al telefono e riattaccare.
+  useEffect(() => {
     const c = canale.current;
     if (!c) return;
     // La finestra proiettata chiede lo stato quando si apre o si ricarica.
@@ -110,11 +129,8 @@ export function ComandoProiezione({
       if (e.data?.tipo === "chiedi-stato") manda();
     };
     return () => {
-      c.close();
-      canale.current = null;
+      c.onmessage = null;
     };
-    // `manda` cambia a ogni render utile: la si legge dalla chiusura aggiornata
-    // grazie alla dipendenza qui sotto.
   }, [manda]);
 
   // Ogni cambiamento di stato o di impostazioni parte subito…

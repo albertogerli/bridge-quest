@@ -101,7 +101,8 @@ function SfidaIMPContent() {
   const isMobile = useMobile();
   const auth = useSharedAuth();
   const supabase = createClient();
-  const { submitResults } = useChallenges();
+  // Solo `submitResults`: questa pagina si gioca, non guarda le altre sfide.
+  const { submitResults } = useChallenges({ live: false });
 
   // ---------------------------------------------------------------------------
   // State

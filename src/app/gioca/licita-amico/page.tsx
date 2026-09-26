@@ -56,7 +56,9 @@ function LicitaAmico() {
   const router = useRouter();
   const idAperta = params.get("s");
 
-  const { friends } = useFriends();
+  // L'elenco serve per scegliere con chi giocare, e lo si legge una volta
+  // all'apertura: un amico aggiunto nel frattempo lo si vede rientrando.
+  const { friends } = useFriends({ live: false });
   const [elenco, setElenco] = useState<RigaElenco[] | null>(null);
   const [sessione, setSessione] = useState<SessioneLicita | null>(null);
   const [attesa, setAttesa] = useState(false);

@@ -75,7 +75,18 @@ export interface SearchResult {
   asd_name: string | null;
 }
 
-export function useFriends() {
+/**
+ * `live: false` per chi usa questo hook SOLO per le sue funzioni o per
+ * l'elenco di partenza.
+ *
+ * Vedi la nota gemella in `use-challenges.ts`: un canale Realtime e un
+ * intervallo di rilettura accesi da una pagina che non guarda gli aggiornamenti
+ * sono connessioni tolte al tetto del piano — cinquecento — che una serata
+ * d'aula consuma sul serio.
+ *
+ * Il valore predefinito resta `true`.
+ */
+export function useFriends({ live = true }: { live?: boolean } = {}) {
   const [friends, setFriends] = useState<Friendship[]>([]);
   const [pendingReceived, setPendingReceived] = useState<Friendship[]>([]);
   const [pendingSent, setPendingSent] = useState<Friendship[]>([]);
@@ -461,6 +472,7 @@ export function useFriends() {
   // hook è montato da più componenti contemporaneamente (o in StrictMode, dove
   // l'effetto viene eseguito due volte).
   useEffect(() => {
+    if (!live) return;
     if (!realtimeUserId) return;
 
     let active = true;
@@ -530,13 +542,14 @@ export function useFriends() {
       recovery.dispose();
       void supabase.removeChannel(channel);
     };
-  }, [supabase, realtimeUserId, refreshQuiet]);
+  }, [supabase, realtimeUserId, refreshQuiet, live]);
 
   // Rete di sicurezza (intervallo dinamico, vedi realtime-health.ts): il Realtime può perdere
   // eventi mentre il socket è giù e non li ritrasmette alla riconnessione.
   // Un timer lento più un refresh quando la tab torna in primo piano coprono
   // il buco senza reintrodurre il costo del polling a 30 s.
   useEffect(() => {
+    if (!live) return;
     const interval = setInterval(() => {
       void refreshQuiet();
     }, pollMs);
@@ -550,7 +563,7 @@ export function useFriends() {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [refreshQuiet, pollMs]);
+  }, [refreshQuiet, pollMs, live]);
 
   return {
     friends,

@@ -42,7 +42,8 @@ import { useT } from "@/contexts/traduzioni-provider";
 export default function SfidaCoppiePage() {
   const t = useT();
   const { user } = useSharedAuth();
-  const { friends } = useFriends();
+  // Come in licita-amico: l'elenco serve a scegliere, non a seguire.
+  const { friends } = useFriends({ live: false });
   const [elenco, setElenco] = useState<RigaSfida[] | null>(null);
   const [aperta, setAperta] = useState<VistaSfida | null>(null);
   const [compagno, setCompagno] = useState("");
