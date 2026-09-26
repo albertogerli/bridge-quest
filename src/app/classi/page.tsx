@@ -13,7 +13,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useEnrolledClasses } from "@/store/use-classes-store";
-import { joinClass, statoMiaIscrizione } from "@/lib/instructors";
+import { joinClass, statoMiaIscrizione, type MemberStatus } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ClassiPage() {
@@ -47,7 +47,7 @@ function ClassiContent() {
    * l'esecuzione dello script SQL e il deploy. Lo stato si legge subito dopo
    * dalla propria riga, che le RLS lasciano vedere in entrambi i casi.
    */
-  const [esito, setEsito] = useState<{ nome: string; inAttesa: boolean } | null>(null);
+  const [esito, setEsito] = useState<{ nome: string; stato: MemberStatus | null } | null>(null);
 
   async function handleJoin() {
     const trimmed = code.trim();
@@ -57,7 +57,12 @@ function ClassiContent() {
     setEsito(null);
     try {
       const c = await joinClass(trimmed);
-      setEsito({ nome: c.name, inAttesa: (await statoMiaIscrizione(c.id)) === "pending" });
+      // Gli stati sono tre, non due. `join_class_by_code` restituisce la
+      // classe anche a chi l'insegnante ha RESPINTO — senza cambiargli
+      // niente, che è giusto — e leggere «in attesa oppure iscritto» qui
+      // significava dire «Iscritto ✓» a chi non lo è e non lo sarà. Quello
+      // poi aspettava che la classe comparisse più sotto, e non compariva.
+      setEsito({ nome: c.name, stato: await statoMiaIscrizione(c.id) });
       setCode("");
       await refresh();
     } catch (err) {
@@ -108,10 +113,26 @@ function ClassiContent() {
           </div>
           {joinError && <p className="mt-2 text-sm text-destructive">{joinError}</p>}
           {esito && (
-            <p className={`mt-2 text-sm ${esito.inAttesa ? "text-muted-foreground" : "text-primary"}`}>
-              {esito.inAttesa
-                ? `Richiesta inviata a “${esito.nome}”. L'insegnante deve approvarla: la classe comparirà qui sotto quando lo fa.`
-                : `Iscritto a “${esito.nome}” ✓`}
+            <p
+              className={`mt-2 text-sm ${
+                esito.stato === "active"
+                  ? "text-primary"
+                  : esito.stato === "rejected"
+                    ? "text-destructive"
+                    : "text-muted-foreground"
+              }`}
+            >
+              {esito.stato === "active"
+                ? t("Iscritto a “{nome}” ✓", { nome: esito.nome })
+                : esito.stato === "rejected"
+                  ? t(
+                      "La tua richiesta per “{nome}” non è stata accettata. Se pensi sia un errore, parlane con il tuo insegnante.",
+                      { nome: esito.nome },
+                    )
+                  : t(
+                      "Richiesta inviata a “{nome}”. L'insegnante deve approvarla: la classe comparirà qui sotto quando lo fa.",
+                      { nome: esito.nome },
+                    )}
             </p>
           )}
         </CardContent>

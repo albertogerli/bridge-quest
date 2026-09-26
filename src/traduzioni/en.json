@@ -1835,5 +1835,8 @@
   "è": "is",
   "è disponibile una modalità scura (dark mode) per ridurre l'affaticamento visivo": "a dark mode is available to reduce eye strain",
   "Non riesco a correggere adesso. Riprova fra un momento.": "I can't check your answer right now. Please try again in a moment.",
-  "Chi ha giocato più mani negli ultimi 7 giorni. Si riparte ogni settimana: gli XP di sempre qui non contano.": "Who has played the most hands in the last 7 days. It resets every week: lifetime XP doesn't count here."
+  "Chi ha giocato più mani negli ultimi 7 giorni. Si riparte ogni settimana: gli XP di sempre qui non contano.": "Who has played the most hands in the last 7 days. It resets every week: lifetime XP doesn't count here.",
+  "Iscritto a “{nome}” ✓": "You're enrolled in “{nome}” ✓",
+  "La tua richiesta per “{nome}” non è stata accettata. Se pensi sia un errore, parlane con il tuo insegnante.": "Your request to join “{nome}” wasn't accepted. If you think that's a mistake, talk to your teacher.",
+  "Richiesta inviata a “{nome}”. L'insegnante deve approvarla: la classe comparirà qui sotto quando lo fa.": "Request sent to “{nome}”. Your teacher has to approve it: the class will appear below once they do."
 }
