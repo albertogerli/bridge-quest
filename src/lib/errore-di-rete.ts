@@ -46,6 +46,51 @@ function messaggio(errore: unknown): string {
 }
 
 /**
+ * I codici che dicono «la richiesta non è mai arrivata al server».
+ *
+ * PERCHÉ NON BASTA IL MESSAGGIO. `SyncAuthError` in `progress-sync.ts`
+ * BUTTA VIA il messaggio originale — apposta, per non far finire in Sentry
+ * quello che l'autenticazione si porta dietro — e ne tiene solo il codice
+ * ripulito. Il risultato arriva come «Sync authentication failed
+ * (AuthRetryableFetchError)»: dentro non c'è più nessun «Load failed» da
+ * riconoscere. Visto in produzione il 26/09/2026, Android su
+ * /gioca/mano-del-giorno, dopo che il filtro sui messaggi era già in piedi.
+ *
+ * Il segnale però c'è, in un campo invece che in una frase.
+ */
+const CODICI_DI_RETE = new Set([
+  "AuthRetryableFetchError", // supabase-auth-js: lo dice il nome
+  "network_error",           // SyncWriteError: la fetch non è partita
+  "request_aborted",         // la pagina è cambiata sotto, o il tempo è scaduto
+]);
+
+/**
+ * Lo `status` HTTP, se l'errore ne porta uno.
+ *
+ * LA LINEA È QUI, ed è la distinzione che conta: `status 0` (o assente) vuol
+ * dire che la richiesta non ha MAI raggiunto il server — è la rete di chi
+ * gioca. Un 502 o un 503 vuol dire che il server ha risposto, e ha risposto
+ * male: quello è un problema nostro e deve svegliare qualcuno. Lo stesso
+ * codice `AuthRetryableFetchError` può presentarsi in entrambi i modi.
+ */
+function stato(errore: unknown): number | undefined {
+  if (errore && typeof errore === "object") {
+    const o = errore as { status?: unknown };
+    if (typeof o.status === "number") return o.status;
+  }
+  return undefined;
+}
+
+function codice(errore: unknown): string {
+  if (errore && typeof errore === "object") {
+    const o = errore as { code?: unknown; name?: unknown };
+    if (typeof o.code === "string" && CODICI_DI_RETE.has(o.code)) return o.code;
+    if (typeof o.name === "string" && CODICI_DI_RETE.has(o.name)) return o.name;
+  }
+  return "";
+}
+
+/**
  * True se l'errore è la rete che non c'è, e non qualcosa da correggere.
  *
  * Chi lo usa NON deve tacere in silenzio: deve comunque far vedere all'utente
@@ -53,6 +98,9 @@ function messaggio(errore: unknown): string {
  * qualcuno.
  */
 export function eDiRete(errore: unknown): boolean {
+  const s = stato(errore);
+  if (codice(errore) && (s === undefined || s === 0)) return true;
+
   const testo = messaggio(errore);
   if (!testo) return false;
   return FORME_DI_RETE.some((f) => f.test(testo));

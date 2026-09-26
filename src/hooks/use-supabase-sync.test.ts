@@ -3,6 +3,7 @@ import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AuthRetryableFetchError } from "@supabase/supabase-js";
 import { SyncAuthError, SyncSessionChangedError, SyncWriteError } from "@/lib/progress-sync";
+import { eDiRete } from "@/lib/errore-di-rete";
 import { useSupabaseSync } from "./use-supabase-sync";
 
 const f = vi.hoisted(() => ({
@@ -12,7 +13,16 @@ const f = vi.hoisted(() => ({
 }));
 vi.mock("@/contexts/auth-provider", () => ({ useSharedAuth: () => f.auth }));
 vi.mock("@/lib/supabase/client", () => ({ createClient: () => f.client }));
-vi.mock("@/lib/report-error", () => ({ reportError: f.report, segnalaSalvoRete: f.report }));
+// `segnalaSalvoRete` usa il filtro VERO, non la spia nuda: mandare tutte e
+// due le funzioni sulla stessa spia farebbe passare questi test qualunque
+// cosa facciano: è esattamente come non averli.
+vi.mock("@/lib/report-error", async (original) => ({
+  ...await original<typeof import("@/lib/report-error")>(),
+  reportError: f.report,
+  segnalaSalvoRete: (scope: string, err: unknown) => {
+    if (!eDiRete(err)) f.report(scope, err);
+  },
+}));
 vi.mock("@/store/use-game-store", () => ({ useGameStore: {
   getState: () => f.state,
   setState: (next: Partial<typeof f.state>) => { f.state = { ...f.state, ...next }; },
@@ -70,14 +80,28 @@ it("conferma solo una scrittura completata", async () => {
   expect(f.write).toHaveBeenCalledTimes(1);
 });
 
-it("mantiene visibile un guasto auth/rete e recupera gli stessi progressi al retry", async () => {
+/**
+ * VISIBILE ALL'UTENTE SÌ, A SENTRY NO.
+ *
+ * Il test prima pretendeva anche la segnalazione a Sentry. È cambiato il
+ * 26/09/2026, dopo che un Android su /gioca/mano-del-giorno ne ha mandata
+ * una: questo è il telefono di chi gioca che perde il segnale, DOPO che
+ * retrySafeSyncRequest ha già riprovato con attesa crescente. Non c'è niente
+ * su cui intervenire, e quello che conta — il progresso resta in locale,
+ * l'utente vede «error», il giro dopo salva — lo verifica il resto del test,
+ * che è rimasto identico.
+ *
+ * `SyncAuthError` butta via il messaggio originale apposta, quindi il filtro
+ * lo riconosce dal codice più lo stato zero. Vedi errore-di-rete.ts.
+ */
+it("un guasto di rete resta visibile all'utente ma non sveglia nessuno", async () => {
   renderHook(() => useSupabaseSync());
   await flush();
   f.state.xp = 20;
   const error = new SyncAuthError(new AuthRetryableFetchError("diagnostica privata", 0));
   f.write.mockRejectedValueOnce(error);
   await retry();
-  expect(f.report).toHaveBeenCalledExactlyOnceWith("sync:push", error);
+  expect(f.report).not.toHaveBeenCalled();
   expect(statuses).toEqual(["saved", "error"]);
   expect(f.state.xp).toBe(20);
   await retry();
@@ -99,17 +123,22 @@ it("sessione assente durante push: niente falso successo o allarme, stato locale
   expect(f.write.mock.calls[2][2].xp).toBe(20);
 });
 
+// `segnalato` dice se quel guasto deve arrivare a Sentry. La linea non è il
+// codice ma lo STATO: zero vuol dire che la richiesta non è mai partita — la
+// rete di chi gioca — mentre un 502 è il server che ha risposto male, e
+// quello è un problema nostro.
 it.each([
-  { code: "network_error", status: 0 },
-  { code: "request_aborted", status: 0 },
-  { code: "http_error", status: 502 },
-])("mantiene il profilo da salvare dopo $code e riprova al prossimo intervallo", async ({ code, status }) => {
+  { code: "network_error", status: 0, segnalato: false },
+  { code: "request_aborted", status: 0, segnalato: false },
+  { code: "http_error", status: 502, segnalato: true },
+])("mantiene il profilo da salvare dopo $code e riprova al prossimo intervallo", async ({ code, status, segnalato }) => {
   const error = new SyncWriteError(code, "profile", status);
   f.write.mockRejectedValueOnce(error);
   renderHook(() => useSupabaseSync());
   await flush();
   expect(statuses).toEqual(["error"]);
-  expect(f.report).toHaveBeenCalledExactlyOnceWith("sync:push", error);
+  if (segnalato) expect(f.report).toHaveBeenCalledExactlyOnceWith("sync:push", error);
+  else expect(f.report).not.toHaveBeenCalled();
   expect(f.state.xp).toBe(10);
   await act(() => vi.advanceTimersByTimeAsync(30_000));
   expect(f.write).toHaveBeenCalledTimes(2);

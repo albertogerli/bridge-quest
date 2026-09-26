@@ -66,4 +66,40 @@ describe("eDiRete — le forme della rete che manca", () => {
     expect(eDiRete("Script https://x/sw.js load failed")).toBe(true);
     expect(eDiRete("LOAD FAILED")).toBe(true);
   });
+
+  /**
+   * Gli errori INCARTATI, che il messaggio non lo portano più.
+   *
+   * `SyncAuthError` butta via il messaggio originale apposta e tiene solo il
+   * codice: dentro «Sync authentication failed (AuthRetryableFetchError)»
+   * non c'è nessun «Load failed» da riconoscere. Il segnale sta nel campo.
+   */
+  it("riconosce un errore di rete dal codice quando il messaggio non ce l'ha", () => {
+    expect(
+      eDiRete({
+        name: "SyncAuthError",
+        code: "AuthRetryableFetchError",
+        status: 0,
+        message: "Sync authentication failed (AuthRetryableFetchError)",
+      }),
+    ).toBe(true);
+    expect(eDiRete({ name: "SyncWriteError", code: "network_error", status: 0 })).toBe(true);
+    expect(eDiRete({ name: "SyncWriteError", code: "request_aborted", status: 0 })).toBe(true);
+  });
+
+  /**
+   * LA LINEA. `status 0` è la richiesta che non è mai partita — la rete di
+   * chi gioca. Un 502 è il server che ha risposto male: è un problema
+   * nostro, e deve svegliare qualcuno. Lo stesso codice può presentarsi in
+   * tutti e due i modi, quindi il codice da solo non basta.
+   */
+  it("un 5xx NON è la rete: il server ha risposto, e ha risposto male", () => {
+    expect(eDiRete({ code: "AuthRetryableFetchError", status: 502 })).toBe(false);
+    expect(eDiRete({ name: "SyncWriteError", code: "http_error", status: 503 })).toBe(false);
+  });
+
+  it("un errore del database resta un difetto, codice o non codice", () => {
+    expect(eDiRete({ code: "42501", message: "permission denied for table profiles" })).toBe(false);
+    expect(eDiRete({ code: "23505", message: "duplicate key value" })).toBe(false);
+  });
 });

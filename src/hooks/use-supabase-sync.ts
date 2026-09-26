@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { useGameStore } from "@/store/use-game-store";
-import { reportError } from "@/lib/report-error";
+import { reportError , segnalaSalvoRete } from "@/lib/report-error";
 import { assertSyncResult, createProgressWriter, readProgress, writeProgress, normalizeReview, SyncSessionChangedError, SyncWriteError, type ProgressSnapshot, type ReviewProgress } from "@/lib/progress-sync";
 import { activateProgressOwner } from "@/lib/progress-owner";
 
@@ -104,7 +104,14 @@ export function useSupabaseSync() {
       if (!isCurrent()) return;
       // Re-read and merge on the next initial-sync attempt; never overwrite a newer revision.
       if (error instanceof SyncWriteError && error.code === "40001") hasDoneInitialSync.current = false;
-      reportError("sync:push", error);
+      // `segnalaSalvoRete` e non `reportError`: qui arrivano anche i guasti
+      // di rete di chi gioca dal telefono, DOPO che retrySafeSyncRequest ha
+      // già riprovato con attesa crescente. Il progresso resta in locale e
+      // riparte al giro dopo, e l'utente lo vede lo stesso — l'evento
+      // `bq_sync_status: error` qui sotto è quello che glielo dice. A Sentry
+      // resta quello su cui possiamo intervenire: un 5xx del server, un
+      // permesso negato, un conflitto di revisione.
+      segnalaSalvoRete("sync:push", error);
       window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
     }
   }, []);
