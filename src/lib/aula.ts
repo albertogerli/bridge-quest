@@ -290,3 +290,4 @@ export async function ruota(tavoloId: string): Promise<{ esito: string; esce?: s
   }
   return data as { esito: string; esce?: string; entra?: string };
 }
+
