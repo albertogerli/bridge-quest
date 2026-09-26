@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { SENTRY_ENABLED } from "@/lib/sentry-shared";
 import { describeError, toError } from "@/lib/describe-error";
+import { eDiRete } from "@/lib/errore-di-rete";
 
 /**
  * Punto unico di segnalazione errori dell'app.
@@ -30,4 +31,37 @@ export function reportError(scope: string, error: unknown): void {
     tags: { scope },
     ...(context ? { contexts: { errore: context } } : {}),
   });
+}
+
+/**
+ * Come `reportError`, ma la rete caduta non sveglia nessuno.
+ *
+ * PERCHÉ ESISTE. Il 26/09/2026 sono arrivate quattro segnalazioni Sentry in
+ * un giorno — /admin, /gioca/sfida-imp, /login, e prima ancora
+ * licita-amico e commenti-smazzate — tutte con lo stesso contenuto: «Load
+ * failed», «Failed to fetch», «AuthRetryableFetchError». Nessuna era un
+ * difetto. Erano telefoni in galleria e portatili che cambiano rete.
+ *
+ * Il rimedio applicato fin lì era scrivere `if (!eDiRete(e))` davanti a ogni
+ * `reportError`. Funziona, e non regge: una scansione ne ha trovati
+ * CENTOVENTI di punti senza. Una regola che va ricordata centoventi volte
+ * non è una regola, è una probabilità.
+ *
+ * COSA NON FA. Non tace: la riga in console c'è sempre, con lo stesso scope,
+ * e chi apre la console durante una lezione vede esattamente cosa non è
+ * arrivato. E non filtra gli errori del database — permesso negato, vincolo
+ * violato, colonna che non esiste passano di qui e arrivano a Sentry come
+ * prima. La distinzione è in `eDiRete`, che ha i suoi test.
+ *
+ * IL PREZZO, detto chiaro: se Supabase cadesse del tutto, Sentry starebbe
+ * zitto. Lo si vedrebbe altrove — dal cruscotto Supabase, da Vercel, e dagli
+ * utenti, che un messaggio d'errore in faccia ce l'hanno comunque. Sentry
+ * serve a trovare i difetti nostri, e la rete degli altri non lo è.
+ */
+export function segnalaSalvoRete(scope: string, error: unknown): void {
+  if (eDiRete(error)) {
+    console.warn(`[${scope}] rete non raggiungibile:`, error);
+    return;
+  }
+  reportError(scope, error);
 }

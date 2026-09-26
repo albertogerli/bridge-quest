@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { eDiRete } from "@/lib/errore-di-rete";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Position } from "@/lib/bridge-engine";
 
 /**
@@ -74,7 +73,7 @@ export async function apriAula(
     p_titolo: titolo ?? null,
   });
   if (error) {
-    reportError("aula:apri", error);
+    segnalaSalvoRete("aula:apri", error);
     return null;
   }
   return data as string;
@@ -94,7 +93,7 @@ export async function distribuisciATutti(
     p_declarer: opzioni?.declarer ?? null,
   });
   if (error) {
-    reportError("aula:distribuisci", error);
+    segnalaSalvoRete("aula:distribuisci", error);
     return 0;
   }
   return (data as number) ?? 0;
@@ -104,7 +103,7 @@ export async function statoAula(sessioneId: string): Promise<StatoTavolo[]> {
   const supabase = createClient();
   const { data, error } = await supabase.rpc("aula_stato", { p_sessione_id: sessioneId });
   if (error) {
-    if (!eDiRete(error)) reportError("aula:stato", error);
+    segnalaSalvoRete("aula:stato", error);
     return [];
   }
   return (data ?? []) as StatoTavolo[];
@@ -113,7 +112,7 @@ export async function statoAula(sessioneId: string): Promise<StatoTavolo[]> {
 export async function chiudiAula(sessioneId: string): Promise<boolean> {
   const supabase = createClient();
   const { error } = await supabase.rpc("aula_chiudi", { p_sessione_id: sessioneId });
-  if (error) reportError("aula:chiudi", error);
+  if (error) segnalaSalvoRete("aula:chiudi", error);
   return !error;
 }
 
@@ -136,7 +135,7 @@ export async function sessioneAperta(classId: string): Promise<SessioneAula | nu
     .limit(1)
     .maybeSingle();
   if (error) {
-    if (!eDiRete(error)) reportError("aula:sessione", error);
+    segnalaSalvoRete("aula:sessione", error);
     return null;
   }
   return (data as SessioneAula) ?? null;
@@ -185,7 +184,7 @@ export async function siediti(tavoloId: string, posto: Position): Promise<EsitoP
     p_posto: posto,
   });
   if (error) {
-    reportError("aula:siediti", error);
+    segnalaSalvoRete("aula:siediti", error);
     return { esito: "errore" };
   }
   return data as EsitoPosto;
@@ -216,7 +215,7 @@ export async function muovi(
     p_posto: posto,
   });
   if (error) {
-    reportError("aula:muovi", error);
+    segnalaSalvoRete("aula:muovi", error);
     return { esito: "errore" };
   }
   return data as { esito: string };
@@ -245,7 +244,7 @@ export async function nomiDellaClasse(classId: string): Promise<Map<string, stri
   const supabase = createClient();
   const { data, error } = await supabase.rpc("nomi_della_classe", { p_class_id: classId });
   if (error) {
-    if (!eDiRete(error)) reportError("aula:nomi", error);
+    segnalaSalvoRete("aula:nomi", error);
     return new Map();
   }
   const righe = (data ?? []) as { student_id: string; display_name: string | null }[];
@@ -264,7 +263,7 @@ export async function aspetta(tavoloId: string): Promise<{ esito: string; mancan
   const supabase = createClient();
   const { data, error } = await supabase.rpc("aula_aspetta", { p_tavolo_id: tavoloId });
   if (error) {
-    reportError("aula:aspetta", error);
+    segnalaSalvoRete("aula:aspetta", error);
     return { esito: "errore" };
   }
   return data as { esito: string; mancano?: number };
@@ -285,7 +284,7 @@ export async function ruota(tavoloId: string): Promise<{ esito: string; esce?: s
   const supabase = createClient();
   const { data, error } = await supabase.rpc("aula_ruota", { p_tavolo_id: tavoloId });
   if (error) {
-    reportError("aula:ruota", error);
+    segnalaSalvoRete("aula:ruota", error);
     return { esito: "errore" };
   }
   return data as { esito: string; esce?: string; entra?: string };

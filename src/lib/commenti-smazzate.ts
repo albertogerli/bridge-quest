@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { eDiRete } from "@/lib/errore-di-rete";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete} from "@/lib/report-error";
 import type { Smazzata } from "@/lib/catalog";
 
 /**
@@ -59,7 +58,7 @@ export async function caricaCommenti(
       // commento, e alla prossima apertura si ricarica. Gli errori veri del
       // database, un permesso negato o una funzione mancante, continuano ad
       // arrivare: la distinzione è in `eDiRete`, con i suoi test.
-      if (!eDiRete(error)) reportError("commenti-smazzate:carica", error);
+      segnalaSalvoRete("commenti-smazzate:carica", error);
     } else {
       for (const riga of (data ?? []) as RigaCommento[]) {
         const it = riga.commentary ?? "";

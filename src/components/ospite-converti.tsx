@@ -5,7 +5,7 @@ import { Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -61,7 +61,7 @@ export function OspiteConverti() {
         .eq("id", user!.id);
       setFatto(true);
     } catch (err) {
-      reportError("ospite:converti", err);
+      segnalaSalvoRete("ospite:converti", err);
       setErrore("Non riesco a salvarlo. Forse quell'indirizzo è già usato.");
     } finally {
       setInCorso(false);

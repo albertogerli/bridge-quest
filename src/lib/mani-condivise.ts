@@ -21,6 +21,7 @@ import type { Vulnerability } from "./catalog";
 import { strainOf, type TableStrain } from "./dds-table";
 import { evDaDistribuzione, type Distribuzione } from "./valore-atteso";
 import { reportError } from "./report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export interface ContrattoAttesoDb {
   level: number;
@@ -76,12 +77,12 @@ export async function manoDaFare(slug?: string): Promise<ManoCondivisa | null> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("mano_da_fare", { p_slug: slug ?? null });
     if (error) {
-      reportError("mani-condivise:pesca", error);
+      segnalaSalvoRete("mani-condivise:pesca", error);
       return null;
     }
     return (data as ManoCondivisa | null) ?? null;
   } catch (err) {
-    reportError("mani-condivise:pesca", err);
+    segnalaSalvoRete("mani-condivise:pesca", err);
     return null;
   }
 }
@@ -117,7 +118,7 @@ export async function registraRisultato(r: {
       stelle: r.stelle,
     });
     if (error) {
-      reportError("mani-condivise:registra", error);
+      segnalaSalvoRete("mani-condivise:registra", error);
       return false;
     }
     return true;
@@ -161,12 +162,12 @@ export async function confrontoFiltrato(
       p_filtro: filtro,
     });
     if (error) {
-      reportError("mani-condivise:confronto-filtrato", error);
+      segnalaSalvoRete("mani-condivise:confronto-filtrato", error);
       return null;
     }
     return (data as (ConfrontoCampo & { persone: PersonaConfronto[] | null }) | null) ?? null;
   } catch (err) {
-    reportError("mani-condivise:confronto-filtrato", err);
+    segnalaSalvoRete("mani-condivise:confronto-filtrato", err);
     return null;
   }
 }
@@ -177,12 +178,12 @@ export async function confrontoCampo(manoId: string): Promise<ConfrontoCampo | n
     const supabase = createClient();
     const { data, error } = await supabase.rpc("confronto_campo", { p_mano_id: manoId });
     if (error) {
-      reportError("mani-condivise:confronto", error);
+      segnalaSalvoRete("mani-condivise:confronto", error);
       return null;
     }
     return (data as ConfrontoCampo | null) ?? null;
   } catch (err) {
-    reportError("mani-condivise:confronto", err);
+    segnalaSalvoRete("mani-condivise:confronto", err);
     return null;
   }
 }
@@ -374,7 +375,7 @@ export async function pubblicaScenario(
       .select("id")
       .single();
     if (eSc || !sc) {
-      reportError("mani-condivise:pubblica-scenario", eSc);
+      segnalaSalvoRete("mani-condivise:pubblica-scenario", eSc);
       return { errore: "Solo chi insegna può pubblicare uno scenario." };
     }
 
@@ -392,13 +393,13 @@ export async function pubblicaScenario(
     if (eM) {
       // Uno scenario senza mani è peggio di nessuno scenario: si ritira.
       await supabase.from("scenari").delete().eq("id", sc.id);
-      reportError("mani-condivise:pubblica-mani", eM);
+      segnalaSalvoRete("mani-condivise:pubblica-mani", eM);
       return { errore: "Le mani non sono state salvate: scenario annullato." };
     }
 
     return { id: sc.id, quante: mani.length };
   } catch (err) {
-    reportError("mani-condivise:pubblica", err);
+    segnalaSalvoRete("mani-condivise:pubblica", err);
     return { errore: "Non è stato possibile pubblicare." };
   }
 }
@@ -550,7 +551,7 @@ export async function torneoCorrente(
     }
     return (data as TorneoCorrente | null) ?? null;
   } catch (err) {
-    reportError("tornei:corrente", err);
+    segnalaSalvoRete("tornei:corrente", err);
     return null;
   }
 }
@@ -573,7 +574,7 @@ export async function torneoMano(
     }
     return (data as (ManoCondivisa & { numero: number }) | null) ?? null;
   } catch (err) {
-    reportError("tornei:mano", err);
+    segnalaSalvoRete("tornei:mano", err);
     return null;
   }
 }
@@ -684,7 +685,7 @@ export async function registraRisultatoTorneo(r: {
     }
     return (scritte?.length ?? 0) > 0 ? "salvato" : "gia-presente";
   } catch (err) {
-    reportError("tornei:registra", err);
+    segnalaSalvoRete("tornei:registra", err);
     return "errore";
   }
 }
@@ -699,7 +700,7 @@ export async function classificaTorneo(torneoId: string): Promise<ClassificaTorn
     }
     return (data as ClassificaTorneo | null) ?? null;
   } catch (err) {
-    reportError("tornei:classifica", err);
+    segnalaSalvoRete("tornei:classifica", err);
     return null;
   }
 }
@@ -723,7 +724,7 @@ export async function ultimoTorneoConAste(
     }
     return (data as TorneoConAste | null) ?? null;
   } catch (err) {
-    reportError("tornei:ultimo-con-aste", err);
+    segnalaSalvoRete("tornei:ultimo-con-aste", err);
     return null;
   }
 }
@@ -751,7 +752,7 @@ export async function asteGiocatoreTorneo(
     }
     return (data as AsteGiocatoreTorneo | null) ?? null;
   } catch (err) {
-    reportError("tornei:aste-giocatore", err);
+    segnalaSalvoRete("tornei:aste-giocatore", err);
     return null;
   }
 }

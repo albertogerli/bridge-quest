@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 /**
  * Le segnalazioni, con il contesto raccolto da sole.
@@ -134,7 +134,7 @@ export async function inviaSegnalazione(params: {
     const { error } = await supabase.storage
       .from("segnalazioni")
       .upload(nome, params.screenshot, { contentType: "image/png", upsert: false });
-    if (error) reportError("segnalazioni:screenshot", error);
+    if (error) segnalaSalvoRete("segnalazioni:screenshot", error);
     else percorsoImmagine = nome;
   }
 
@@ -146,7 +146,7 @@ export async function inviaSegnalazione(params: {
   });
 
   if (error) {
-    reportError("segnalazioni:invio", error);
+    segnalaSalvoRete("segnalazioni:invio", error);
     return { ok: false, errore: "Non sono riuscito a mandarla. Riprova fra un attimo." };
   }
   return { ok: true };

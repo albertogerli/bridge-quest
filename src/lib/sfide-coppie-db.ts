@@ -14,6 +14,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "./report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export interface BoardSfidaDb {
   numero: number;
@@ -61,12 +62,12 @@ export async function creaSfida(
       p_quante: quante,
     });
     if (error) {
-      reportError("sfide-coppie:crea", error);
+      segnalaSalvoRete("sfide-coppie:crea", error);
       return null;
     }
     return (data as string | null) ?? null;
   } catch (err) {
-    reportError("sfide-coppie:crea", err);
+    segnalaSalvoRete("sfide-coppie:crea", err);
     return null;
   }
 }
@@ -76,12 +77,12 @@ export async function mieSfide(): Promise<RigaSfida[]> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("mie_sfide_coppie");
     if (error) {
-      reportError("sfide-coppie:elenco", error);
+      segnalaSalvoRete("sfide-coppie:elenco", error);
       return [];
     }
     return (data as RigaSfida[]) ?? [];
   } catch (err) {
-    reportError("sfide-coppie:elenco", err);
+    segnalaSalvoRete("sfide-coppie:elenco", err);
     return [];
   }
 }
@@ -91,12 +92,12 @@ export async function vistaSfida(id: string): Promise<VistaSfida | null> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("sfida_coppie_vista", { p_id: id });
     if (error) {
-      reportError("sfide-coppie:vista", error);
+      segnalaSalvoRete("sfide-coppie:vista", error);
       return null;
     }
     return (data as VistaSfida | null) ?? null;
   } catch (err) {
-    reportError("sfide-coppie:vista", err);
+    segnalaSalvoRete("sfide-coppie:vista", err);
     return null;
   }
 }
@@ -116,12 +117,12 @@ export async function chiudiBoard(sessioneId: string): Promise<boolean> {
       p_sessione: sessioneId,
     });
     if (error) {
-      reportError("sfide-coppie:chiudi", error);
+      segnalaSalvoRete("sfide-coppie:chiudi", error);
       return false;
     }
     return (data as { ok?: boolean } | null)?.ok === true;
   } catch (err) {
-    reportError("sfide-coppie:chiudi", err);
+    segnalaSalvoRete("sfide-coppie:chiudi", err);
     return false;
   }
 }
@@ -158,12 +159,12 @@ export async function statisticheSfide(): Promise<StatisticheSfide | null> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("mie_statistiche_sfide");
     if (error) {
-      reportError("sfide-coppie:statistiche", error);
+      segnalaSalvoRete("sfide-coppie:statistiche", error);
       return null;
     }
     return (data as StatisticheSfide | null) ?? null;
   } catch (err) {
-    reportError("sfide-coppie:statistiche", err);
+    segnalaSalvoRete("sfide-coppie:statistiche", err);
     return null;
   }
 }
@@ -195,7 +196,7 @@ export async function statoCoda(): Promise<StatoCoda | null> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("sfida_coppie_coda_stato");
     if (error) {
-      if (!funzioneAssente(error)) reportError("sfide-coppie:coda-stato", error);
+      if (!funzioneAssente(error)) segnalaSalvoRete("sfide-coppie:coda-stato", error);
       return null;
     }
     const d = (data ?? {}) as Record<string, unknown>;
@@ -227,7 +228,7 @@ export async function iscrivitiInCoda(
       p_quante: quante,
     });
     if (error) {
-      if (!funzioneAssente(error)) reportError("sfide-coppie:iscrivi", error);
+      if (!funzioneAssente(error)) segnalaSalvoRete("sfide-coppie:iscrivi", error);
       return { stato: "errore", motivo: "L'iscrizione non è ancora disponibile." };
     }
     const d = (data ?? {}) as Record<string, unknown>;
@@ -250,12 +251,12 @@ export async function esciDallaCoda(): Promise<boolean> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("sfida_coppie_esci");
     if (error) {
-      if (!funzioneAssente(error)) reportError("sfide-coppie:esci", error);
+      if (!funzioneAssente(error)) segnalaSalvoRete("sfide-coppie:esci", error);
       return false;
     }
     return data === true;
   } catch (err) {
-    reportError("sfide-coppie:esci", err);
+    segnalaSalvoRete("sfide-coppie:esci", err);
     return false;
   }
 }

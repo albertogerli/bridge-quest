@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 /**
  * Come hanno giocato la stessa mano gli altri della classe.
@@ -35,7 +35,7 @@ export async function confrontoMano(
     p_smazzata_id: smazzataId,
   });
   if (error) {
-    reportError("confronto:mano", error);
+    segnalaSalvoRete("confronto:mano", error);
     return [];
   }
   return (data ?? []) as RigaConfronto[];

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import type { DealConstraints } from "@/lib/deal-generator";
 
 /**
@@ -44,7 +44,7 @@ export async function elencaModelli(): Promise<ModelloMani[]> {
     .order("lesson_id", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: false });
   if (error) {
-    reportError("modelli:elenca", error);
+    segnalaSalvoRete("modelli:elenca", error);
     return [];
   }
   return (data ?? []) as ModelloMani[];
@@ -74,7 +74,7 @@ export async function salvaModello(input: {
     .select()
     .single();
   if (error) {
-    reportError("modelli:salva", error);
+    segnalaSalvoRete("modelli:salva", error);
     return null;
   }
   return data as ModelloMani;
@@ -86,7 +86,7 @@ export async function rinominaModello(id: string, nome: string): Promise<boolean
     .from("modelli_mani")
     .update({ nome: nome.trim().slice(0, 120), updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("modelli:rinomina", error);
+  if (error) segnalaSalvoRete("modelli:rinomina", error);
   return !error;
 }
 
@@ -96,14 +96,14 @@ export async function condividiModello(id: string, condiviso: boolean): Promise<
     .from("modelli_mani")
     .update({ condiviso, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("modelli:condividi", error);
+  if (error) segnalaSalvoRete("modelli:condividi", error);
   return !error;
 }
 
 export async function eliminaModello(id: string): Promise<boolean> {
   const supabase = createClient();
   const { error } = await supabase.from("modelli_mani").delete().eq("id", id);
-  if (error) reportError("modelli:elimina", error);
+  if (error) segnalaSalvoRete("modelli:elimina", error);
   return !error;
 }
 

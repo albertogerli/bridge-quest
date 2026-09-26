@@ -10,8 +10,7 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useFriends } from "@/hooks/use-friends";
 import { Asta } from "@/components/bridge/asta";
-import { eDiRete } from "@/lib/errore-di-rete";
-import { reportError } from "@/lib/report-error";
+import { reportError , segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { generateDeals, handHcp } from "@/lib/deal-generator";
 import {
@@ -109,7 +108,7 @@ function LicitaAmico() {
           // Tutto il resto continua ad arrivare: un 500 dell'API o una risposta
           // malformata vogliono dire che il robot non si sveglia MAI, e quella
           // è la cosa da sapere.
-        }).catch((err) => { if (!eDiRete(err)) reportError("licita-amico:sblocca", err); });
+        }).catch((err) => { segnalaSalvoRete("licita-amico:sblocca", err); });
         const aggiornata = await leggiLicita(idAperta);
         if (vivo) setSessione(aggiornata);
       })

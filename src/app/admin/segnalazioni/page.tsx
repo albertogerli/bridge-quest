@@ -6,7 +6,7 @@ import { Bug, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 type Stato = "nuova" | "presa-in-carico" | "risolta" | "archiviata";
@@ -61,7 +61,7 @@ export default function SegnalazioniPage() {
       if (error) throw error;
       setRighe((data ?? []) as Segnalazione[]);
     } catch (err) {
-      reportError("admin:segnalazioni", err);
+      segnalaSalvoRete("admin:segnalazioni", err);
     } finally {
       setCaricando(false);
     }
@@ -77,7 +77,7 @@ export default function SegnalazioniPage() {
       .from("segnalazioni")
       .update({ stato, updated_at: new Date().toISOString() })
       .eq("id", id);
-    if (error) reportError("admin:segnalazioni:stato", error);
+    if (error) segnalaSalvoRete("admin:segnalazioni:stato", error);
     else await carica();
   }
 
@@ -87,7 +87,7 @@ export default function SegnalazioniPage() {
     const { data, error } = await supabase.storage
       .from("segnalazioni")
       .createSignedUrl(s.screenshot_path, 3600);
-    if (error) reportError("admin:segnalazioni:foto", error);
+    if (error) segnalaSalvoRete("admin:segnalazioni:foto", error);
     else if (data) setImmagini((p) => ({ ...p, [s.id]: data.signedUrl }));
   }
 

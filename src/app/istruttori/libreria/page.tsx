@@ -17,7 +17,7 @@ import {
   type VoceLibreria,
 } from "@/lib/libreria";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -55,7 +55,7 @@ export default function LibreriaPage() {
         const { data } = await supabase.from("profiles").select("role").eq("id", user.id).single();
         setCuratore(data?.role === "curatore" || data?.role === "admin");
       } catch (err) {
-        reportError("libreria:ruolo", err);
+        segnalaSalvoRete("libreria:ruolo", err);
       }
     })();
   }, []);

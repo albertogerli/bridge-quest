@@ -15,7 +15,7 @@ const fixture = vi.hoisted(() => ({
 vi.mock("@/contexts/auth-provider", () => ({ useSharedAuth: () => ({ user: fixture.user }) }));
 vi.mock("@/hooks/use-lingua", () => ({ useLingua: () => ({ lingua: fixture.lingua }) }));
 vi.mock("@/lib/supabase/client", () => ({ createClient: () => fixture.client }));
-vi.mock("@/lib/report-error", () => ({ reportError: fixture.report }));
+vi.mock("@/lib/report-error", () => ({ reportError: fixture.report, segnalaSalvoRete: fixture.report }));
 
 const ok = (count = 1) => new Response(null, {
   status: 204,

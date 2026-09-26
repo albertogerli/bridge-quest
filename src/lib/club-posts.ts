@@ -15,6 +15,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "./report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export interface ClubPost {
   id: string;
@@ -82,12 +83,12 @@ export async function pubblicaAvviso(input: {
       corpo: input.corpo.trim(),
     });
     if (error) {
-      reportError("bacheca:pubblica", error);
+      segnalaSalvoRete("bacheca:pubblica", error);
       return { ok: false, errore: "Non è stato possibile pubblicare l'avviso." };
     }
     return { ok: true };
   } catch (err) {
-    reportError("bacheca:pubblica", err);
+    segnalaSalvoRete("bacheca:pubblica", err);
     return { ok: false, errore: "Non è stato possibile pubblicare l'avviso." };
   }
 }
@@ -98,12 +99,12 @@ export async function cancellaAvviso(id: string): Promise<boolean> {
     const supabase = createClient();
     const { error } = await supabase.from("club_posts").delete().eq("id", id);
     if (error) {
-      reportError("bacheca:cancella", error);
+      segnalaSalvoRete("bacheca:cancella", error);
       return false;
     }
     return true;
   } catch (err) {
-    reportError("bacheca:cancella", err);
+    segnalaSalvoRete("bacheca:cancella", err);
     return false;
   }
 }

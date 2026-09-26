@@ -11,8 +11,7 @@
  * quando è la rete: in quel caso la copia locale c'è e la classifica si
  * riallinea al salvataggio dopo.
  */
-import { eDiRete } from "@/lib/errore-di-rete";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete} from "@/lib/report-error";
 
 import { decideProgressRestore, mergeHistory } from "@/lib/tournament-stats";
 import type { Smazzata } from "@/lib/catalog";
@@ -161,9 +160,9 @@ export async function saveTournamentToSupabase(result: TournamentResult) {
       },
       { onConflict: "user_id,week_num" }
     );
-    if (error && !eDiRete(error)) reportError("torneo:classifica", error);
+    if (error) segnalaSalvoRete("torneo:classifica", error);
   } catch (err) {
-    if (!eDiRete(err)) reportError("torneo:classifica", err);
+    segnalaSalvoRete("torneo:classifica", err);
   }
 }
 

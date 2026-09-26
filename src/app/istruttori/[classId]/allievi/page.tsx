@@ -6,7 +6,7 @@ import { Printer, Upload, UserMinus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Briciole } from "@/components/briciole";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import {
   componiAllievi,
   ETICHETTE_CAMPO,
@@ -81,7 +81,7 @@ export default function AllieviPage({
       if (error) throw error;
       setRighe((data ?? []) as Riga[]);
     } catch (err) {
-      reportError("allievi:elenco", err);
+      segnalaSalvoRete("allievi:elenco", err);
     } finally {
       setCaricando(false);
     }
@@ -123,7 +123,7 @@ export default function AllieviPage({
       setAnteprima([]);
       await ricarica();
     } catch (err) {
-      reportError("allievi:importa", err);
+      segnalaSalvoRete("allievi:importa", err);
       setMessaggio("Non sono riuscito a importarli.");
     }
   }

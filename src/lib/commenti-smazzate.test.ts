@@ -18,7 +18,7 @@ vi.mock("@/lib/supabase/client", () => ({
   }),
 }));
 
-vi.mock("@/lib/report-error", () => ({ reportError: () => {} }));
+vi.mock("@/lib/report-error", () => ({ reportError: () => {}, segnalaSalvoRete: () => {} }));
 
 const { caricaCommenti, svuotaCacheCommenti, commentoGiaPresente } = await import("./commenti-smazzate");
 

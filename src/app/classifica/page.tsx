@@ -12,7 +12,7 @@ import { useCatalog } from "@/store/use-catalog-store";
 import type { CourseId } from "@/lib/catalog";
 import { Clock, Trophy, Landmark, ChevronUp, Filter, Target, Gamepad2, Search, X } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const medals = ["🥇", "🥈", "🥉"];
@@ -170,7 +170,7 @@ export default function ClassificaPage() {
           user = authUser;
           if (user) setCurrentUserId(user.id);
         } catch (e) {
-          reportError("classifica:get-user", e);
+          segnalaSalvoRete("classifica:get-user", e);
         }
 
         // Fetch all profiles
@@ -314,7 +314,7 @@ export default function ClassificaPage() {
     const supabase = createClient();
     void supabase.rpc("classifica_settimanale", { p_quanti: 100 }).then(({ data, error }) => {
       if (error) {
-        reportError("classifica:settimanale", error);
+        segnalaSalvoRete("classifica:settimanale", error);
         return;
       }
       const righe = (data ?? []) as {

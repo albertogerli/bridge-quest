@@ -12,7 +12,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import type { Card, Position } from "./bridge-engine";
-import { reportError } from "./report-error";
+import { segnalaSalvoRete } from "./report-error";
 
 export interface SessioneLicita {
   id: string;
@@ -84,12 +84,12 @@ export async function apriLicita(input: {
       p_dealer: input.dealer ?? "south",
     });
     if (error) {
-      reportError("licita-due:apri", error);
+      segnalaSalvoRete("licita-due:apri", error);
       return null;
     }
     return (data as string | null) ?? null;
   } catch (err) {
-    reportError("licita-due:apri", err);
+    segnalaSalvoRete("licita-due:apri", err);
     return null;
   }
 }
@@ -101,7 +101,7 @@ export async function leggiLicita(id: string): Promise<SessioneLicita | null> {
     if (error || !data) return null;
     return data as SessioneLicita;
   } catch (err) {
-    reportError("licita-due:leggi", err);
+    segnalaSalvoRete("licita-due:leggi", err);
     return null;
   }
 }
@@ -111,13 +111,13 @@ export async function dichiara(id: string, bid: string): Promise<{ ok: boolean; 
     const supabase = createClient();
     const { data, error } = await supabase.rpc("bidding_session_bid", { p_id: id, p_bid: bid });
     if (error) {
-      reportError("licita-due:dichiara", error);
+      segnalaSalvoRete("licita-due:dichiara", error);
       return { ok: false, errore: "Non è stato possibile dichiarare." };
     }
     const r = data as { ok: boolean; errore?: string };
     return r?.ok ? { ok: true } : { ok: false, errore: r?.errore };
   } catch (err) {
-    reportError("licita-due:dichiara", err);
+    segnalaSalvoRete("licita-due:dichiara", err);
     return { ok: false, errore: "Non è stato possibile dichiarare." };
   }
 }
@@ -129,7 +129,7 @@ export async function mieLicite(): Promise<RigaElenco[]> {
     if (error || !data) return [];
     return data as RigaElenco[];
   } catch (err) {
-    reportError("licita-due:elenco", err);
+    segnalaSalvoRete("licita-due:elenco", err);
     return [];
   }
 }

@@ -14,6 +14,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Card, Position } from "./bridge-engine";
 import { reportError } from "./report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export interface SavedHand {
   id: string;
@@ -37,7 +38,7 @@ export async function getSavedHands(limite = 50): Promise<SavedHand[]> {
     if (error || !data) return [];
     return data as SavedHand[];
   } catch (err) {
-    reportError("archivio:leggi", err);
+    segnalaSalvoRete("archivio:leggi", err);
     return [];
   }
 }
@@ -66,7 +67,7 @@ export async function saveHand(input: {
       played: input.played ?? [],
     });
     if (error) {
-      reportError("archivio:salva", error);
+      segnalaSalvoRete("archivio:salva", error);
       return { ok: false, errore: "Non è stato possibile salvare la mano." };
     }
     return { ok: true };
@@ -81,12 +82,12 @@ export async function deleteSavedHand(id: string): Promise<boolean> {
     const supabase = createClient();
     const { error } = await supabase.from("saved_hands").delete().eq("id", id);
     if (error) {
-      reportError("archivio:cancella", error);
+      segnalaSalvoRete("archivio:cancella", error);
       return false;
     }
     return true;
   } catch (err) {
-    reportError("archivio:cancella", err);
+    segnalaSalvoRete("archivio:cancella", err);
     return false;
   }
 }

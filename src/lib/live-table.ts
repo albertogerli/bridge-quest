@@ -16,8 +16,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Card, Position, Suit } from "./bridge-engine";
 import { determineTrickWinner, nextPlayer } from "./bridge-engine";
-import { reportError } from "./report-error";
-import { eDiRete } from "@/lib/errore-di-rete";
+import { reportError , segnalaSalvoRete } from "./report-error";
 
 export interface LiveTable {
   id: string;
@@ -80,7 +79,7 @@ export async function getLiveTable(id: string): Promise<LiveTable | null> {
     if (error || !data) return null;
     return data as LiveTable;
   } catch (err) {
-    reportError("live-table:view", err);
+    segnalaSalvoRete("live-table:view", err);
     return null;
   }
 }
@@ -92,7 +91,7 @@ export async function getOpenLiveTable(classId: string): Promise<string | null> 
     const { data, error } = await supabase.rpc("live_table_open", { p_class_id: classId });
     return error ? null : ((data as string | null) ?? null);
   } catch (err) {
-    if (!eDiRete(err)) reportError("live-table:open", err);
+    segnalaSalvoRete("live-table:open", err);
     return null;
   }
 }
@@ -169,7 +168,7 @@ export async function setRevealed(id: string, revealed: Position[]): Promise<voi
     .from("live_tables")
     .update({ revealed, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("live-table:scopri", error);
+  if (error) segnalaSalvoRete("live-table:scopri", error);
 }
 
 /** Mostra o nasconde il contratto. */
@@ -179,7 +178,7 @@ export async function setShowContract(id: string, mostra: boolean): Promise<void
     .from("live_tables")
     .update({ show_contract: mostra, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("live-table:contratto", error);
+  if (error) segnalaSalvoRete("live-table:contratto", error);
 }
 
 /**
@@ -201,7 +200,7 @@ export async function setContract(
     .from("live_tables")
     .update({ contract, declarer, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("live-table:imposta-contratto", error);
+  if (error) segnalaSalvoRete("live-table:imposta-contratto", error);
 }
 
 /**
@@ -225,7 +224,7 @@ export async function registraManoVista(
     p_id: id,
     p_mano: mano,
   });
-  if (error) reportError("live-table:registra-mano", error);
+  if (error) segnalaSalvoRete("live-table:registra-mano", error);
 }
 
 /** Le mani mostrate finora in questa sessione. */
@@ -239,7 +238,7 @@ export async function maniViste(id: string): Promise<
     .eq("id", id)
     .maybeSingle();
   if (error) {
-    reportError("live-table:mani-viste", error);
+    segnalaSalvoRete("live-table:mani-viste", error);
     return [];
   }
   return ((data?.mani_viste ?? []) as { hands: Record<Position, Card[]> }[]) as never;
@@ -252,7 +251,7 @@ export async function setSeats(id: string, seatOf: Record<string, Position>): Pr
     .from("live_tables")
     .update({ seat_of: seatOf, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("live-table:posti", error);
+  if (error) segnalaSalvoRete("live-table:posti", error);
 }
 
 /**
@@ -276,13 +275,13 @@ export async function playLiveCard(
       p_card: card,
     });
     if (error) {
-      reportError("live-table:gioca", error);
+      segnalaSalvoRete("live-table:gioca", error);
       return { ok: false, errore: "Non è stato possibile giocare la carta." };
     }
     const esito = data as { ok: boolean; errore?: string };
     return esito?.ok ? { ok: true } : { ok: false, errore: esito?.errore };
   } catch (err) {
-    reportError("live-table:gioca", err);
+    segnalaSalvoRete("live-table:gioca", err);
     return { ok: false, errore: "Non è stato possibile giocare la carta." };
   }
 }
@@ -292,9 +291,9 @@ export async function undoLiveCard(id: string): Promise<void> {
   try {
     const supabase = createClient();
     const { error } = await supabase.rpc("live_table_undo", { p_table_id: id });
-    if (error) reportError("live-table:annulla", error);
+    if (error) segnalaSalvoRete("live-table:annulla", error);
   } catch (err) {
-    reportError("live-table:annulla", err);
+    segnalaSalvoRete("live-table:annulla", err);
   }
 }
 
@@ -304,7 +303,7 @@ export async function closeLiveTable(id: string): Promise<void> {
     .from("live_tables")
     .update({ closed_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("live-table:chiudi", error);
+  if (error) segnalaSalvoRete("live-table:chiudi", error);
 }
 
 /**

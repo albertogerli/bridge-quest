@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -83,7 +83,7 @@ function Ingresso({ params }: { params: Promise<{ token: string }> }) {
 
       router.replace(`/classi/${dati.classId}/tavolo`);
     } catch (err) {
-      reportError("aula:entra", err);
+      segnalaSalvoRete("aula:entra", err);
       setErrore("Non riesco a farti entrare adesso. Riprova fra un attimo.");
       setInCorso(false);
     }
