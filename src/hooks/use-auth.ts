@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getPlatform } from "@/lib/native-bridge";
 import { reportError } from "@/lib/report-error";
 import type { User, Session } from "@supabase/supabase-js";
+import { oggiInItalia } from "@/lib/data-locale";
 
 export interface Profile {
   id: string;
@@ -138,10 +139,14 @@ export function useAuth() {
 
         // Update last_login on sign-in or token refresh. The platform is
         // written alongside so the DB trigger can stamp login_history with it.
+        //
+        // `last_login` è una colonna `date`, non un istante: ci va il GIORNO
+        // italiano. Con toISOString() ci finiva il giorno UTC, e un accesso
+        // dopo la mezzanotte italiana veniva contato il giorno prima.
         if (session?.user && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
           supabase
             .from("profiles")
-            .update({ last_login: new Date().toISOString(), platform: getPlatform() })
+            .update({ last_login: oggiInItalia(), platform: getPlatform() })
             .eq("id", session.user.id)
             .then(() => {});
         }
