@@ -78,3 +78,39 @@ it("disables unhandled auto-registration and mounts the managed registration", (
   expect(readFileSync("next.config.ts", "utf8")).toMatch(/register:\s*false/);
   expect(readFileSync("src/app/layout.tsx", "utf8")).toContain("<ServiceWorkerRegistration />");
 });
+
+/**
+ * Un crawler che fallisce la registrazione non dice niente su di noi: non ha
+ * nulla da installare. Il primo caso reale è stato HeadlessChrome su Linux.
+ *
+ * Il filtro guarda CHI chiede, non che errore è — ed è la differenza che conta:
+ * filtrare per codice avrebbe nascosto anche il `registration_type_error` di un
+ * utente vero, che invece può voler dire `sw.js` servito con il tipo sbagliato.
+ */
+function conWebdriver(valore: boolean | undefined) {
+  const originale = Object.getOwnPropertyDescriptor(navigator, "webdriver");
+  Object.defineProperty(navigator, "webdriver", { value: valore, configurable: true });
+  return () => {
+    if (originale) Object.defineProperty(navigator, "webdriver", originale);
+    else delete (navigator as unknown as Record<string, unknown>).webdriver;
+  };
+}
+
+it("un browser automatico fallisce e non sveglia nessuno", async () => {
+  const ripristina = conWebdriver(true);
+  await registerServiceWorker({ register: () => Promise.reject(new TypeError("boom")) });
+  expect(report).not.toHaveBeenCalled();
+  ripristina();
+});
+
+it("UN UTENTE VERO CON LO STESSO ERRORE VIENE SEGNALATO", async () => {
+  // È la metà che conta: `registration_type_error` da un browser vero può
+  // essere `sw.js` servito male, e quello va visto.
+  const ripristina = conWebdriver(undefined);
+  await registerServiceWorker({ register: () => Promise.reject(new TypeError("boom")) });
+  expect(report).toHaveBeenCalledExactlyOnceWith(
+    "pwa:register",
+    expect.objectContaining({ code: "registration_type_error" }),
+  );
+  ripristina();
+});
