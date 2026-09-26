@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { eDiRete } from "@/lib/errore-di-rete";
 import { reportError } from "@/lib/report-error";
 import type { Smazzata } from "@/lib/catalog";
 
@@ -53,7 +54,12 @@ export async function caricaCommenti(
     const supabase = createClient();
     const { data, error } = await supabase.rpc("smazzate_commenti", { p_ids: mancanti });
     if (error) {
-      reportError("commenti-smazzate:carica", error);
+      // LA RETE CHE CADE NON SI SEGNALA: su un iPad in giro è la condizione
+      // normale, e non c'è niente da correggere — la mano si gioca, manca il
+      // commento, e alla prossima apertura si ricarica. Gli errori veri del
+      // database, un permesso negato o una funzione mancante, continuano ad
+      // arrivare: la distinzione è in `eDiRete`, con i suoi test.
+      if (!eDiRete(error)) reportError("commenti-smazzate:carica", error);
     } else {
       for (const riga of (data ?? []) as RigaCommento[]) {
         const it = riga.commentary ?? "";

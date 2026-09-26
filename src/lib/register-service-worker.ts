@@ -21,6 +21,17 @@ export class ServiceWorkerRegistrationError extends Error {
   }
 }
 
+/**
+ * Un browser guidato da un programma: crawler, prova automatica, robot.
+ *
+ * `navigator.webdriver` è la dichiarazione standard, ed è quella che ci si può
+ * permettere di credere: non serve a difendersi da nessuno, serve a non
+ * svegliare qualcuno per un robot che non installerà mai niente.
+ */
+function eAutomatico(): boolean {
+  return typeof navigator !== "undefined" && navigator.webdriver === true;
+}
+
 /** Once per Serwist instance, including React StrictMode/remounts. No TLS bypass or retry loop. */
 export function registerServiceWorker(client: RegistrationClient): Promise<void> {
   const existing = attempts.get(client);
@@ -28,6 +39,14 @@ export function registerServiceWorker(client: RegistrationClient): Promise<void>
   const attempt = Promise.resolve().then(() => client.register()).then(() => {}, (error: unknown) => {
     // Offline installation is optional; the online app must remain usable.
     // Keep security/deployment faults visible instead of globally filtering them.
+    //
+    // UN BROWSER AUTOMATICO NON HA NULLA DA INSTALLARE. Il primo caso reale è
+    // stato HeadlessChrome su Linux — un crawler — che fallisce la
+    // registrazione per una propria restrizione, non per un difetto nostro.
+    // Il filtro guarda CHI chiede, non che errore è: filtrare per codice
+    // avrebbe nascosto anche il `registration_type_error` di un utente vero,
+    // che invece vogliamo vedere perché può essere `sw.js` servito male.
+    if (eAutomatico()) return;
     reportError("pwa:register", new ServiceWorkerRegistrationError(error));
   });
   attempts.set(client, attempt);
