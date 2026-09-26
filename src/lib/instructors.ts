@@ -1154,10 +1154,17 @@ export async function maniGiaAssegnate(
  * doppione né — peggio — togliere le altre. Chi ha già giocato non se ne accorge
  * nemmeno.
  *
- * LA CORSA È GESTITA. Fra la lettura e la scrittura un'altra scheda può creare
- * il compito: l'inserimento sbatte contro il vincolo (23505), e allora si
- * rilegge e si aggiorna. Senza questo ramo il secondo insegnante vedrebbe un
- * errore per una cosa che è andata a buon fine.
+ * L'UNIONE LA FA IL DATABASE, NON QUESTA FUNZIONE. Prima leggeva le mani già
+ * assegnate e riscriveva l'unione: fra la lettura e la scrittura ci sta
+ * un'altra scheda, e il secondo insegnante cancellava le aggiunte del primo
+ * senza un errore. Ora è una sola chiamata, `aggiungi_mani_al_compito`, che
+ * calcola l'unione sulla riga che il database ha davvero in quel momento
+ * (`scripts/sql/mani-compito-senza-corsa-2026-09.sql`). Il giro sul 23505 non
+ * serve più: non c'è più niente contro cui sbattere.
+ *
+ * `soluzioni` la risolve la funzione SQL quando non gliela si passa, leggendola
+ * dalla classe — così non dipende più dal fatto che il chiamante si ricordi di
+ * passarla, che è esattamente il modo in cui era già andata storta una volta.
  */
 export async function assegnaManiLezione(
   classId: string,
@@ -1168,38 +1175,16 @@ export async function assegnaManiLezione(
   soluzioni?: VisibilitaSoluzioni,
 ): Promise<{ totale: string[]; aggiunte: string[] }> {
   const supabase = createClient();
-  const esistenti = await maniGiaAssegnate(classId, lessonId);
-  const aggiunte = smazzataIds.filter((id) => !esistenti.includes(id));
-
-  if (esistenti.length > 0) {
-    if (aggiunte.length === 0) return { totale: esistenti, aggiunte: [] };
-    const totale = [...esistenti, ...aggiunte];
-    const { error } = await supabase
-      .from("assignments")
-      .update({ smazzata_ids: totale })
-      .eq("class_id", classId)
-      .eq("lesson_id", lessonId);
-    if (error) throw error;
-    return { totale, aggiunte };
-  }
-
-  // `soluzioni` si passa SEMPRE, come fanno gli altri due punti che creano un
-  // compito. Lasciarlo al valore iniziale della colonna significherebbe che
-  // «Assegna» e «Scegli le mani» — due pulsanti sulla stessa riga di lezione —
-  // producono compiti che si comportano in modo diverso.
-  const { error } = await supabase.from("assignments").insert({
-    class_id: classId,
-    lesson_id: lessonId,
-    title: titolo,
-    smazzata_ids: smazzataIds,
-    soluzioni: soluzioni ?? (await soluzioniPredefiniteDi(classId)),
+  const { data, error } = await supabase.rpc("aggiungi_mani_al_compito", {
+    p_class_id: classId,
+    p_lesson_id: lessonId,
+    p_titolo: titolo,
+    p_smazzate: smazzataIds,
+    p_soluzioni: soluzioni ?? null,
   });
-  if (!error) return { totale: smazzataIds, aggiunte: smazzataIds };
-
-  // 23505: qualcun altro ha creato il compito nel frattempo. Non è un errore
-  // da mostrare, è una corsa da chiudere unendo le mani a quelle sue.
-  if ((error as { code?: string }).code !== "23505") throw error;
-  return assegnaManiLezione(classId, lessonId, titolo, smazzataIds, soluzioni);
+  if (error) throw error;
+  const esito = data as { totale?: string[]; aggiunte?: string[] } | null;
+  return { totale: esito?.totale ?? [], aggiunte: esito?.aggiunte ?? [] };
 }
 
 export async function assegnaLezione(

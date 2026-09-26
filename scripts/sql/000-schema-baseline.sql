@@ -1105,6 +1105,54 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text DEFAULT NULL::text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SET search_path TO ''
+AS $function$
+declare
+  v_prima text[];
+  v_dopo  text[];
+begin
+  select smazzata_ids into v_prima
+  from public.assignments
+  where class_id = p_class_id and lesson_id = p_lesson_id
+  for update;
+
+  insert into public.assignments (class_id, lesson_id, title, smazzata_ids, soluzioni)
+  values (
+    p_class_id, p_lesson_id, p_titolo, coalesce(p_smazzate, '{}'::text[]),
+    coalesce(
+      p_soluzioni,
+      (select c.soluzioni_predefinite from public.classes c where c.id = p_class_id),
+      'dopo-il-gioco'
+    )
+  )
+  on conflict (class_id, lesson_id) where lesson_id is not null
+  do update set smazzata_ids = (
+    select coalesce(array_agg(d.x order by d.ord), '{}'::text[])
+    from (
+      select u.x, min(u.ord) as ord
+      from unnest(assignments.smazzata_ids || excluded.smazzata_ids)
+        with ordinality as u(x, ord)
+      group by u.x
+    ) d
+  )
+  returning smazzata_ids into v_dopo;
+
+  return jsonb_build_object(
+    'totale', to_jsonb(coalesce(v_dopo, '{}'::text[])),
+    'aggiunte', to_jsonb(coalesce(
+      (select array_agg(s order by o)
+         from unnest(coalesce(p_smazzate, '{}'::text[])) with ordinality as n(s, o)
+        where not (s = any (coalesce(v_prima, '{}'::text[])))),
+      '{}'::text[]
+    ))
+  );
+end
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.amico_da_codice(p_codice text)
  RETURNS jsonb
  LANGUAGE sql
@@ -6671,6 +6719,9 @@ GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
+REVOKE ALL ON FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text) TO service_role;
 REVOKE ALL ON FUNCTION public.amico_da_codice(p_codice text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.amico_da_codice(p_codice text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.amico_da_codice(p_codice text) TO service_role;
