@@ -126,10 +126,24 @@ export async function POST(req: NextRequest) {
   // La sessione ospite dura quanto l'invito: finita la lezione, finita.
   const scade = invito.scade_il;
 
-  await admin
+  const { error: erroreProfilo } = await admin
     .from("profiles")
     .update({ display_name: nome, ospite: true, ospite_scade_il: scade, role: "user" })
     .eq("id", uid);
+
+  // SE QUESTA FALLISCE L'OSPITE NON È PIÙ UN OSPITE. Senza `ospite` e senza
+  // `ospite_scade_il` resta un account PERMANENTE che nessuno sa di aver
+  // creato: il commento qui sopra — «finita la lezione, finita» — diventa
+  // falso, e la pulizia non lo troverà mai perché cerca proprio quei campi.
+  //
+  // Si ritira come già si fa quando fallisce l'iscrizione alla classe, poco
+  // più sotto: un utente a metà è peggio di un ingresso negato, perché
+  // l'ingresso negato lo si riprova.
+  if (erroreProfilo) {
+    reportError("aula:profilo-ospite", erroreProfilo);
+    await admin.auth.admin.deleteUser(uid);
+    return NextResponse.json({ errore: "Non riesco a farti entrare adesso." }, { status: 500 });
+  }
 
   const { error: erroreIscrizione } = await admin
     .from("class_members")

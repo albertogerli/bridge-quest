@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { eDiRete } from "@/lib/errore-di-rete";
 import { reportError } from "@/lib/report-error";
 import type { Card, Suit } from "@/lib/bridge-engine";
 
@@ -138,7 +139,7 @@ export async function sondaggioAperto(classId: string): Promise<Sondaggio | null
     .limit(1)
     .maybeSingle();
   if (error) {
-    reportError("sondaggi:aperto", error);
+    if (!eDiRete(error)) reportError("sondaggi:aperto", error);
     return null;
   }
   return (data as Sondaggio) ?? null;
@@ -164,7 +165,7 @@ export async function distribuzione(sondaggioId: string): Promise<VoceDistribuzi
   const supabase = createClient();
   const { data, error } = await supabase.rpc("distribuzione_sondaggio", { p_id: sondaggioId });
   if (error) {
-    reportError("sondaggi:distribuzione", error);
+    if (!eDiRete(error)) reportError("sondaggi:distribuzione", error);
     return [];
   }
   return (data ?? []) as VoceDistribuzione[];

@@ -113,6 +113,20 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
   const [xpPopAmount, setXpPopAmount] = useState(0);
   const [achievement, setAchievement] = useState<string | null>(null);
   const [stepsViewed, setStepsViewed] = useState<Set<number>>(new Set([0]));
+  /**
+   * I passi il cui tempo minimo di lettura è già scaduto.
+   *
+   * SEPARATO DA `stepsViewed`, E NON È UN DOPPIONE. `stepsViewed` serve agli
+   * XP e viene scritto NELLO STESSO istante in cui si arriva sul passo:
+   * l'effetto del cronometro, rigirando, trovava il passo già «visto» e
+   * concludeva che il tempo non serviva. Risultato: `MIN_READ_SECONDS` non si
+   * applicava a nessun passo — nemmeno al primo, pre-seminato — e una lezione
+   * si attraversava a clic incassando gli XP di lettura a ogni passaggio.
+   *
+   * Qui il passo entra quando il tempo è SCADUTO, che è la domanda vera che
+   * l'effetto deve fare: «questo l'ha già letto?», non «ci è già arrivato?».
+   */
+  const [stepsCronometrati, setStepsCronometrati] = useState<Set<number>>(new Set());
   const [quizTimer, setQuizTimer] = useState(0);
 
   // Minimum reading time per step (prevents clicking "Avanti" instantly for XP)
@@ -151,14 +165,19 @@ export function useModuleSession(lessonId: string, moduleId: string): ModuleSess
   useEffect(() => {
     if (!mod) return;
     // Already-viewed steps or quiz steps don't need the timer
-    if (!needsReadTimer(mod.content[currentStep], stepsViewed.has(currentStep))) {
+    if (!needsReadTimer(mod.content[currentStep], stepsCronometrati.has(currentStep))) {
       setCanAdvance(true);
       return;
     }
     setCanAdvance(false);
-    const readTimer = setTimeout(() => setCanAdvance(true), MIN_READ_SECONDS * 1000);
+    const readTimer = setTimeout(() => {
+      setCanAdvance(true);
+      // Segnato solo ADESSO: tornando indietro su un passo già letto il tempo
+      // non si riapplica, ma la prima volta si aspetta davvero.
+      setStepsCronometrati((prev) => new Set(prev).add(currentStep));
+    }, MIN_READ_SECONDS * 1000);
     return () => clearTimeout(readTimer);
-  }, [currentStep, mod, stepsViewed]);
+  }, [currentStep, mod, stepsCronometrati]);
 
   // Quiz timer for "giovane" profile
   useEffect(() => {
