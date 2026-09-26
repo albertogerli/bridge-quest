@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 /**
  * La nota che un insegnante allega a una smazzata.
@@ -35,7 +35,7 @@ export async function mieNote(ids: string[]): Promise<Map<string, string>> {
     .eq("autore_id", user.id)
     .in("smazzata_id", ids);
   if (error) {
-    reportError("note:leggi", error);
+    segnalaSalvoRete("note:leggi", error);
     return esito;
   }
   for (const r of (data ?? []) as NotaSmazzata[]) esito.set(r.smazzata_id, r.testo);
@@ -57,7 +57,7 @@ export async function salvaNota(smazzataId: string, testo: string): Promise<bool
       .delete()
       .eq("autore_id", user.id)
       .eq("smazzata_id", smazzataId);
-    if (error) reportError("note:cancella", error);
+    if (error) segnalaSalvoRete("note:cancella", error);
     return !error;
   }
 
@@ -67,7 +67,7 @@ export async function salvaNota(smazzataId: string, testo: string): Promise<bool
     testo: pulito.slice(0, 4000),
     updated_at: new Date().toISOString(),
   });
-  if (error) reportError("note:salva", error);
+  if (error) segnalaSalvoRete("note:salva", error);
   return !error;
 }
 

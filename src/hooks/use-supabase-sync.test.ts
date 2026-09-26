@@ -12,7 +12,7 @@ const f = vi.hoisted(() => ({
 }));
 vi.mock("@/contexts/auth-provider", () => ({ useSharedAuth: () => f.auth }));
 vi.mock("@/lib/supabase/client", () => ({ createClient: () => f.client }));
-vi.mock("@/lib/report-error", () => ({ reportError: f.report }));
+vi.mock("@/lib/report-error", () => ({ reportError: f.report, segnalaSalvoRete: f.report }));
 vi.mock("@/store/use-game-store", () => ({ useGameStore: {
   getState: () => f.state,
   setState: (next: Partial<typeof f.state>) => { f.state = { ...f.state, ...next }; },

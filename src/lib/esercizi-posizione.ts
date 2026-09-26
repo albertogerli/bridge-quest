@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Position } from "@/lib/bridge-engine";
 import type { Vulnerability } from "@/lib/catalog";
 
@@ -126,7 +126,7 @@ export async function elencaMieiEsercizi(): Promise<EsercizioPosizione[]> {
   // filtra per autore e restituisce la riga intera solo a lui.
   const { data, error } = await supabase.rpc("i_miei_esercizi");
   if (error) {
-    reportError("esercizi:elenca", error);
+    segnalaSalvoRete("esercizi:elenca", error);
     return [];
   }
   return (data ?? []) as EsercizioPosizione[];
@@ -140,7 +140,7 @@ export async function leggiEsercizi(ids: string[]): Promise<EsercizioPerAllievo[
   );
   const primoErrore = esiti.find((e) => e.error)?.error;
   if (primoErrore) {
-    reportError("esercizi:leggi", primoErrore);
+    segnalaSalvoRete("esercizi:leggi", primoErrore);
     return [];
   }
   const data = esiti.map((e) => e.data).filter(Boolean);
@@ -206,7 +206,7 @@ export async function verificaEsercizio(
     p_risposta_norm: normalizzaRisposta(risposta),
   });
   if (error) {
-    reportError("esercizi:verifica", error);
+    segnalaSalvoRete("esercizi:verifica", error);
     return null;
   }
   return (data as EsitoEsercizio | null) ?? null;

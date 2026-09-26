@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useAsdClubs } from "@/store/use-asd-store";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete} from "@/lib/report-error";
 import { computeStats, countInstructors, mapProfilesToUsers } from "@/lib/admin-stats";
 import type { GameStats, LoginRecord, ProfileRecord, Stats, UserRow } from "./_types";
 import { eDiRete } from "@/lib/errore-di-rete";
@@ -125,7 +125,7 @@ export function useAdminData(): AdminData {
           // legge il messaggio qui sotto e riprova. Quello che deve arrivare
           // a Sentry è il resto — un permesso negato, una colonna che non
           // c'è, la RPC che non esiste più.
-          if (!eDiRete(error)) reportError("admin:elenco-utenti", error);
+          segnalaSalvoRete("admin:elenco-utenti", error);
           setFetchError(
             eDiRete(error)
               ? "L'elenco degli iscritti non è arrivato: la connessione si è interrotta. " +
@@ -167,7 +167,7 @@ export function useAdminData(): AdminData {
         if (error) {
           // Senza la RPC non si finge: meglio un pannello che dichiara di non
           // sapere che uno che mostra numeri inventati da un ripiego.
-          reportError("admin:fetch-accessi", error);
+          segnalaSalvoRete("admin:fetch-accessi", error);
           accessiOk = false;
           break;
         }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { candidatiPerAdesione, gruppiSimili, type Adesione } from "@/lib/adesioni";
 import type { ClassMember } from "@/lib/instructors";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -49,7 +49,7 @@ export function ElencoAdesioni({
       if (error) throw error;
       setAdesioni((data ?? []) as Adesione[]);
     } catch (err) {
-      reportError("adesioni:carica", err);
+      segnalaSalvoRete("adesioni:carica", err);
     }
   }, [classId]);
 
@@ -73,7 +73,7 @@ export function ElencoAdesioni({
       setCollegando(null);
       await carica();
     } catch (err) {
-      reportError("adesioni:collega", err);
+      segnalaSalvoRete("adesioni:collega", err);
     } finally {
       setBusy(false);
     }
@@ -88,7 +88,7 @@ export function ElencoAdesioni({
         .eq("id", id);
       await carica();
     } catch (err) {
-      reportError("adesioni:archivia", err);
+      segnalaSalvoRete("adesioni:archivia", err);
     } finally {
       setBusy(false);
     }

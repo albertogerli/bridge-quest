@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import { salvaModello } from "@/lib/modelli-mani";
 import type { DealConstraints } from "@/lib/deal-generator";
 
@@ -131,7 +131,7 @@ export async function daModerare(): Promise<VoceLibreria[]> {
     .eq("stato", "in-attesa")
     .order("created_at", { ascending: true });
   if (error) {
-    reportError("libreria:modera", error);
+    segnalaSalvoRete("libreria:modera", error);
     return [];
   }
   return (data ?? []) as VoceLibreria[];
@@ -147,7 +147,7 @@ export async function decidi(
     .from("libreria")
     .update({ stato, nota_curatore: nota ?? null, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) reportError("libreria:decidi", error);
+  if (error) segnalaSalvoRete("libreria:decidi", error);
   return !error;
 }
 
@@ -172,7 +172,7 @@ export async function importa(v: VoceLibreria): Promise<boolean> {
   // di scrivere sulla riga altrui, ed è proprio quella che deve cambiare.
   const supabase = createClient();
   const { error } = await supabase.rpc("libreria_segna_uso", { p_id: v.id });
-  if (error) reportError("libreria:uso", error);
+  if (error) segnalaSalvoRete("libreria:uso", error);
   return true;
 }
 
@@ -189,7 +189,7 @@ export async function mieVoci(): Promise<VoceLibreria[]> {
     .eq("autore_id", user.id)
     .order("created_at", { ascending: false });
   if (error) {
-    reportError("libreria:mie", error);
+    segnalaSalvoRete("libreria:mie", error);
     return [];
   }
   return (data ?? []) as VoceLibreria[];

@@ -8,7 +8,7 @@
  */
 
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "./report-error";
+import { segnalaSalvoRete } from "./report-error";
 
 /** Le lettere ambigue non fanno parte dell'alfabeto: qui si normalizza. */
 export function normalizzaCodice(grezzo: string): string {
@@ -31,12 +31,12 @@ export async function mioCodice(): Promise<string | null> {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("mio_codice_amico");
     if (error) {
-      reportError("codice-amico:mio", error);
+      segnalaSalvoRete("codice-amico:mio", error);
       return null;
     }
     return (data as string | null) ?? null;
   } catch (err) {
-    reportError("codice-amico:mio", err);
+    segnalaSalvoRete("codice-amico:mio", err);
     return null;
   }
 }
@@ -52,7 +52,7 @@ export async function cercaPerCodice(
     if (error || !data) return null;
     return data as { id: string; nome: string | null };
   } catch (err) {
-    reportError("codice-amico:cerca", err);
+    segnalaSalvoRete("codice-amico:cerca", err);
     return null;
   }
 }

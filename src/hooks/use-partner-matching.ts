@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import {
   normalizeAvailability,
   sortCandidates,
@@ -52,7 +52,7 @@ export function usePartnerMatching() {
       .maybeSingle();
 
     if (error) {
-      reportError("partner:load-mine", error);
+      segnalaSalvoRete("partner:load-mine", error);
       return null;
     }
     if (!data) return null;
@@ -79,7 +79,7 @@ export function usePartnerMatching() {
       });
 
       if (error) {
-        reportError("partner:candidates", error);
+        segnalaSalvoRete("partner:candidates", error);
         setCandidates([]);
         return;
       }

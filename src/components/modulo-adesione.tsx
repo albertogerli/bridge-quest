@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 /**
  * «Vengo» — l'adesione dalla pagina dell'evento.
@@ -47,7 +47,7 @@ export function ModuloAdesione({ codice }: { codice: string }) {
       else if (esito === "evento-chiuso") setErrore("Le iscrizioni a questa serata si sono chiuse.");
       else setErrore("Controlla il nome e il recapito.");
     } catch (err) {
-      reportError("adesione:invia", err);
+      segnalaSalvoRete("adesione:invia", err);
       setErrore("Non sono riuscito a registrare la tua adesione. Riprova fra poco.");
     } finally {
       setInCorso(false);

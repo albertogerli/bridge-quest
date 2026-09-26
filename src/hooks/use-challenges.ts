@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import { createPostgresRecovery } from "@/lib/realtime-recovery";
 import {
   evaluateChannel,
@@ -12,7 +12,6 @@ import {
 } from "@/lib/realtime-health";
 import { generateSeed } from "@/lib/hand-encoder";
 import { calculateBoardIMP } from "@/lib/bridge-scoring";
-import { eDiRete } from "@/lib/errore-di-rete";
 
 /**
  * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
@@ -104,7 +103,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
       const senzaSessione =
         (error as { name?: string }).name === "AuthSessionMissingError" ||
         /session missing/i.test(error.message ?? "");
-      if (!senzaSessione) reportError("use-challenges:getUser", error);
+      if (!senzaSessione) segnalaSalvoRete("use-challenges:getUser", error);
       return null;
     }
     return user?.id ?? null;
@@ -126,7 +125,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
         .rpc("get_pending_challenges", { p_user_id: userId });
 
       if (pendingError) {
-        reportError("use-challenges:pending", pendingError);
+        segnalaSalvoRete("use-challenges:pending", pendingError);
       } else {
         setPendingChallenges((pending as ChallengeData[]) ?? []);
       }
@@ -139,7 +138,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
         .order("created_at", { ascending: false });
 
       if (activeError) {
-        reportError("use-challenges:active", activeError);
+        segnalaSalvoRete("use-challenges:active", activeError);
       } else {
         setActiveChallenges((active as ChallengeData[]) ?? []);
       }
@@ -179,7 +178,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
       // considera da riprovare. È la rete, non un difetto — e il messaggio
       // che porta è «Load failed», la forma di Safari.
       .catch((err) => {
-        if (!eDiRete(err)) reportError("use-challenges:getUser", err);
+        segnalaSalvoRete("use-challenges:getUser", err);
       });
 
     const {
@@ -341,13 +340,13 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
           .eq("id", challengeId);
 
         if (error) {
-          reportError("use-challenges:accept", error);
+          segnalaSalvoRete("use-challenges:accept", error);
           return;
         }
 
         await fetchChallenges();
       } catch (err) {
-        reportError("use-challenges:accept", err);
+        segnalaSalvoRete("use-challenges:accept", err);
       }
     },
     [supabase, fetchChallenges]
@@ -362,13 +361,13 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
           .eq("id", challengeId);
 
         if (error) {
-          reportError("use-challenges:decline", error);
+          segnalaSalvoRete("use-challenges:decline", error);
           return;
         }
 
         await fetchChallenges();
       } catch (err) {
-        reportError("use-challenges:decline", err);
+        segnalaSalvoRete("use-challenges:decline", err);
       }
     },
     [supabase, fetchChallenges]
@@ -392,7 +391,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
           .eq("id", challengeId);
 
         if (updateError) {
-          reportError("use-challenges:submit", updateError);
+          segnalaSalvoRete("use-challenges:submit", updateError);
           return;
         }
 
@@ -404,7 +403,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
           .single();
 
         if (fetchError || !challenge) {
-          reportError("use-challenges:submit", fetchError);
+          segnalaSalvoRete("use-challenges:submit", fetchError);
           return;
         }
 
@@ -445,7 +444,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
             .eq("id", challengeId);
 
           if (completeError) {
-            reportError("use-challenges:submit", completeError);
+            segnalaSalvoRete("use-challenges:submit", completeError);
           }
         } else {
           // Only one side has submitted so far
@@ -455,13 +454,13 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
             .eq("id", challengeId);
 
           if (playingError) {
-            reportError("use-challenges:submit", playingError);
+            segnalaSalvoRete("use-challenges:submit", playingError);
           }
         }
 
         await fetchChallenges();
       } catch (err) {
-        reportError("use-challenges:submit", err);
+        segnalaSalvoRete("use-challenges:submit", err);
       }
     },
     [supabase, fetchChallenges]
@@ -480,13 +479,13 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
         });
 
         if (error) {
-          reportError("use-challenges:history", error);
+          segnalaSalvoRete("use-challenges:history", error);
           return [];
         }
 
         return (data as ChallengeData[]) ?? [];
       } catch (err) {
-        reportError("use-challenges:history", err);
+        segnalaSalvoRete("use-challenges:history", err);
         return [];
       }
     },
@@ -503,7 +502,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
       });
 
       if (error) {
-        reportError("use-challenges:stats", error);
+        segnalaSalvoRete("use-challenges:stats", error);
         return null;
       }
 

@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { eDiRete } from "@/lib/errore-di-rete";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Suit } from "@/lib/bridge-engine";
 
 /**
@@ -139,7 +138,7 @@ export async function sondaggioAperto(classId: string): Promise<Sondaggio | null
     .limit(1)
     .maybeSingle();
   if (error) {
-    if (!eDiRete(error)) reportError("sondaggi:aperto", error);
+    segnalaSalvoRete("sondaggi:aperto", error);
     return null;
   }
   return (data as Sondaggio) ?? null;
@@ -157,7 +156,7 @@ export async function rispondi(sondaggioId: string, risposta: string): Promise<b
   const { error } = await supabase
     .from("risposte_sondaggio")
     .upsert({ sondaggio_id: sondaggioId, user_id: user.id, risposta });
-  if (error) reportError("sondaggi:rispondi", error);
+  if (error) segnalaSalvoRete("sondaggi:rispondi", error);
   return !error;
 }
 
@@ -165,7 +164,7 @@ export async function distribuzione(sondaggioId: string): Promise<VoceDistribuzi
   const supabase = createClient();
   const { data, error } = await supabase.rpc("distribuzione_sondaggio", { p_id: sondaggioId });
   if (error) {
-    if (!eDiRete(error)) reportError("sondaggi:distribuzione", error);
+    segnalaSalvoRete("sondaggi:distribuzione", error);
     return [];
   }
   return (data ?? []) as VoceDistribuzione[];
@@ -177,7 +176,7 @@ export async function aggiornaSondaggio(
 ): Promise<boolean> {
   const supabase = createClient();
   const { error } = await supabase.from("sondaggi").update(campi).eq("id", id);
-  if (error) reportError("sondaggi:aggiorna", error);
+  if (error) segnalaSalvoRete("sondaggi:aggiorna", error);
   return !error;
 }
 
@@ -196,7 +195,7 @@ export async function sondaggiRiusabili(): Promise<Sondaggio[]> {
     .order("created_at", { ascending: false })
     .limit(50);
   if (error) {
-    reportError("sondaggi:riusabili", error);
+    segnalaSalvoRete("sondaggi:riusabili", error);
     return [];
   }
   return (data ?? []) as Sondaggio[];

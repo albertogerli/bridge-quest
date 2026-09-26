@@ -8,7 +8,7 @@ import { ServiceWorkerRegistration } from "@/components/service-worker-registrat
 import { describeError } from "./describe-error";
 
 const report = vi.hoisted(() => vi.fn());
-vi.mock("@/lib/report-error", () => ({ reportError: report }));
+vi.mock("@/lib/report-error", () => ({ reportError: report, segnalaSalvoRete: report }));
 beforeEach(() => report.mockReset());
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 

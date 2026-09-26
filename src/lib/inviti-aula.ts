@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 /**
  * Gli inviti d'aula: il link con cui si entra senza registrarsi.
@@ -60,7 +60,7 @@ export async function invitoAttivo(classId: string): Promise<InvitoAula | null> 
     .limit(1)
     .maybeSingle();
   if (error) {
-    reportError("inviti:leggi", error);
+    segnalaSalvoRete("inviti:leggi", error);
     return null;
   }
   return (data as InvitoAula) ?? null;
@@ -88,7 +88,7 @@ export async function creaInvito(
     .select()
     .single();
   if (error) {
-    reportError("inviti:crea", error);
+    segnalaSalvoRete("inviti:crea", error);
     return null;
   }
   return data as InvitoAula;
@@ -97,7 +97,7 @@ export async function creaInvito(
 export async function revocaInvito(id: string): Promise<boolean> {
   const supabase = createClient();
   const { error } = await supabase.from("inviti_aula").update({ revocato: true }).eq("id", id);
-  if (error) reportError("inviti:revoca", error);
+  if (error) segnalaSalvoRete("inviti:revoca", error);
   return !error;
 }
 

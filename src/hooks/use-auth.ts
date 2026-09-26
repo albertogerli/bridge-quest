@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getPlatform } from "@/lib/native-bridge";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete} from "@/lib/report-error";
 import type { User, Session } from "@supabase/supabase-js";
 import { oggiInItalia } from "@/lib/data-locale";
 
@@ -73,13 +73,19 @@ export function useAuth() {
     try {
       const { data, error } = await supabase.rpc("get_own_profile");
       if (error) {
-        reportError("use-auth:get_own_profile", error);
+        // La rete caduta non si segnala. Questo è il punto che gira a OGNI
+        // apertura di pagina e a ogni rinnovo del token, in tutta
+        // l'applicazione: se passasse da qui ogni connessione interrotta,
+        // Sentry racconterebbe la qualità delle reti degli allievi invece
+        // dei difetti del sito. Il profilo torna `null`, che è già il caso
+        // previsto — si ricarica al giro dopo.
+        segnalaSalvoRete("use-auth:get_own_profile", error);
         return null;
       }
       return Array.isArray(data) && data.length > 0 ? (data[0] as Profile) : null;
     } catch (e) {
       // Niente toast: gira in background, ma l'errore non va scartato.
-      reportError("use-auth:fetchProfileInBackground", e);
+      segnalaSalvoRete("use-auth:fetchProfileInBackground", e);
       return null;
     }
   }, [supabase]);
