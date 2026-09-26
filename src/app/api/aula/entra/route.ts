@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { reportError } from "@/lib/report-error";
+import { aulaAlCompleto } from "@/lib/aula-tetto";
 
 export const dynamic = "force-dynamic";
 
@@ -93,13 +94,38 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 2. Il tetto ────────────────────────────────────────────────────────────
-  const { count } = await admin
+  // SI CONTANO GLI OSPITI, NON GLI ISCRITTI. Contare i membri attivi voleva
+  // dire che una classe con quaranta allievi veri risultava «al completo»
+  // prima che entrasse il primo ospite: il tetto scattava su gente che non
+  // c'entrava niente, e l'insegnante vedeva il link non funzionare senza
+  // capire perché — proprio le sere in cui la classe è grande.
+  //
+  // Si contano gli ospiti DI QUESTA CLASSE e non di questo singolo invito
+  // perché non esiste un legame fra l'ospite e il gettone con cui è entrato.
+  // È anche la lettura giusta per l'insegnante: il tetto è «quanti estranei
+  // ho in aula stasera», non «quanti ne ho fatti entrare con quel link».
+  //
+  // Gli ospiti SCADUTI non occupano posto: finita la lezione il posto torna
+  // libero, altrimenti il tetto si riempirebbe una volta per sempre.
+  const { data: membri } = await admin
     .from("class_members")
-    .select("student_id", { count: "exact", head: true })
+    .select("student_id")
     .eq("class_id", invito.class_id)
     .eq("status", "active");
 
-  if ((count ?? 0) >= invito.max_ospiti) {
+  const idMembri = (membri ?? []).map((m) => m.student_id as string);
+  let ospitiInAula = 0;
+  if (idMembri.length > 0) {
+    const { count } = await admin
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .in("id", idMembri)
+      .eq("ospite", true)
+      .gt("ospite_scade_il", new Date().toISOString());
+    ospitiInAula = count ?? 0;
+  }
+
+  if (aulaAlCompleto(ospitiInAula, invito.max_ospiti)) {
     return NextResponse.json(
       { errore: "L'aula è al completo. Dillo al tuo insegnante." },
       { status: 429 },
