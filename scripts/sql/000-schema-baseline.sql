@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-23
+-- Estratto il: 2026-09-26
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -169,7 +169,8 @@ CREATE TABLE IF NOT EXISTS public.classes (
   accesso_libero text NOT NULL,
   permessi jsonb NOT NULL,
   soluzioni_predefinite text NOT NULL,
-  locandina jsonb NOT NULL
+  locandina jsonb NOT NULL,
+  video_tavolo boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -4187,6 +4188,7 @@ ALTER TABLE public.classes ALTER COLUMN accesso_libero SET DEFAULT 'solo-il-cors
 ALTER TABLE public.classes ALTER COLUMN permessi SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.classes ALTER COLUMN soluzioni_predefinite SET DEFAULT 'quando-l-insegnante-decide'::text;
 ALTER TABLE public.classes ALTER COLUMN locandina SET DEFAULT '{}'::jsonb;
+ALTER TABLE public.classes ALTER COLUMN video_tavolo SET DEFAULT false;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();

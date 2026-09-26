@@ -72,6 +72,12 @@ export interface ClassRoom {
   soluzioni_predefinite: VisibilitaSoluzioni;
   /** I campi della locandina, che alimentano anche `/evento/<codice>`. */
   locandina: Record<string, unknown>;
+  /**
+   * Se al tavolo si può accendere la telecamera. Spenta di partenza: il video
+   * fra persone non si trova acceso senza averlo scelto, e acceso questo ogni
+   * persona resta padrona della propria.
+   */
+  video_tavolo: boolean;
   /** Quanto l'insegnante ha aperto. Vedi `permessi-allievo.ts`. */
   accesso_libero: AccessoLibero;
   /** Eccezioni per gruppo. Vuoto = vale il cursore. */
@@ -383,6 +389,7 @@ export async function aggiornaImpostazioniClasse(
     livello?: string | null;
     soluzioni_predefinite?: VisibilitaSoluzioni;
     locandina?: Record<string, unknown>;
+    video_tavolo?: boolean;
     inizio_corso?: string | null;
     fine_corso?: string | null;
     /**
