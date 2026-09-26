@@ -13,6 +13,10 @@ describe("eDiRete — le forme della rete che manca", () => {
   it("riconosce le formulazioni dei tre browser", () => {
     expect(eDiRete(new TypeError("Failed to fetch"))).toBe(true);           // Chrome
     expect(eDiRete(new TypeError("Load failed"))).toBe(true);               // Safari
+    // La forma esatta vista in produzione il 26/09/2026, iPhone su /admin:
+    // supabase-js consegna l'errore di rete come oggetto con il nome del tipo
+    // davanti al messaggio, e il filtro deve prenderlo lo stesso.
+    expect(eDiRete({ message: "TypeError: Load failed" })).toBe(true);
     expect(eDiRete({ message: "NetworkError when attempting to fetch resource." })).toBe(true);
   });
 
