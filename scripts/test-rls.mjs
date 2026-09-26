@@ -1041,6 +1041,35 @@ try {
     if (!approveErr && !activeErr && !activeMsgErr && activeAssignments?.length===1 && activeMessages?.length===1) ok("(e) l'allievo approvato legge compito e chat esistenti");
     else fail("(e) l'approvazione non rende visibili compito e chat");
   }
+
+    // (f) Il respinto non si riammette da solo.
+    //     Uscire dalla classe è lecito, e chi è uscito può rientrare col
+    //     codice: è la stessa porta. Per questo il respinto non deve poter
+    //     nemmeno uscire — altrimenti la decisione dell'insegnante la annulla
+    //     chi la subisce, in due mosse e senza un errore.
+    await admin.from("class_members").update({ status: "rejected" })
+      .eq("class_id", classe.id).eq("student_id", created.user.id);
+    await u.from("class_members").update({ status: "removed" })
+      .eq("class_id", classe.id).eq("student_id", created.user.id);
+    await u.from("class_members").update({ status: "active" })
+      .eq("class_id", classe.id).eq("student_id", created.user.id);
+    const { data: dopoRifiuto } = await admin
+      .from("class_members").select("status")
+      .eq("class_id", classe.id).eq("student_id", created.user.id).single();
+    if (dopoRifiuto?.status === "rejected") ok("(f) il respinto non si riammette da solo");
+    else fail(`(f) il respinto ha aggirato la decisione dell'insegnante (${dopoRifiuto?.status})`);
+
+    // Controprova: un allievo ATTIVO deve poter ancora uscire di sua volontà.
+    await admin.from("class_members").update({ status: "active" })
+      .eq("class_id", classe.id).eq("student_id", created.user.id);
+    await u.from("class_members").update({ status: "removed" })
+      .eq("class_id", classe.id).eq("student_id", created.user.id);
+    const { data: dopoUscita } = await admin
+      .from("class_members").select("status")
+      .eq("class_id", classe.id).eq("student_id", created.user.id).single();
+    if (dopoUscita?.status === "removed") ok("(g) l'allievo attivo può ancora uscire da solo");
+    else fail(`(g) la stretta su (f) ha bloccato anche l'uscita legittima (${dopoUscita?.status})`);
+  }
 } catch (e) {
   fail(`verifica iscrizioni non eseguita: ${e.message}`);
 } finally {

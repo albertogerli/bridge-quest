@@ -4828,7 +4828,7 @@ CREATE POLICY "Players can update own challenges" ON public.challenges AS PERMIS
 CREATE POLICY "Players can view own challenges" ON public.challenges AS PERMISSIVE FOR SELECT TO public USING (((auth.uid() = challenger_id) OR (auth.uid() = opponent_id)));
 CREATE POLICY "Users can create challenges" ON public.challenges AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = challenger_id));
 CREATE POLICY "Instructor or self can delete membership" ON public.class_members AS PERMISSIVE FOR DELETE TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id)));
-CREATE POLICY "Instructor or self can update membership" ON public.class_members AS PERMISSIVE FOR UPDATE TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id))) WITH CHECK ((is_instructor_of_class(class_id) OR ((student_id = auth.uid()) AND (status = 'removed'::text))));
+CREATE POLICY "Instructor or self can update membership" ON public.class_members AS PERMISSIVE FOR UPDATE TO public USING ((is_instructor_of_class(class_id) OR ((student_id = auth.uid()) AND (status <> 'rejected'::text)))) WITH CHECK ((is_instructor_of_class(class_id) OR ((student_id = auth.uid()) AND (status = 'removed'::text))));
 CREATE POLICY "Members and owning instructor can view membership" ON public.class_members AS PERMISSIVE FOR SELECT TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id)));
 CREATE POLICY "Students can join themselves" ON public.class_members AS PERMISSIVE FOR INSERT TO public WITH CHECK ((student_id = auth.uid()));
 CREATE POLICY "Authors can delete own class messages" ON public.class_messages AS PERMISSIVE FOR DELETE TO public USING (((user_id = auth.uid()) OR is_instructor_of_class(class_id)));

@@ -486,12 +486,22 @@ export async function leaveClass(classId: string): Promise<void> {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Non autenticato");
 
-  const { error } = await supabase
+  // `.neq("status", "rejected")` ripete a mano ciò che la policy RLS già
+  // impone (respinto-non-si-riammette-2026-09.sql): chi è stato respinto non
+  // può uscire da solo, perché uscire vuol dire poter rientrare col codice.
+  // Senza il filtro la policy farebbe passare zero righe in silenzio e questa
+  // funzione direbbe «fatto»; col filtro il caso è visibile e ha un errore.
+  const { data, error } = await supabase
     .from("class_members")
     .update({ status: "removed" })
     .eq("class_id", classId)
-    .eq("student_id", user.id);
+    .eq("student_id", user.id)
+    .neq("status", "rejected")
+    .select("status");
   if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error("Iscrizione non trovata, o decisa dall'insegnante");
+  }
 }
 
 /** Classes the current student is an active member of. */
