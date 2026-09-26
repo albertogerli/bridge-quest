@@ -48,13 +48,16 @@ export function HomeAllievo({ onVaiAllaBacheca }: { onVaiAllaBacheca: () => void
     let vivo = true;
     (async () => {
       try {
-        const perClasse = new Map<string, Assignment[]>();
-        const tutti: Assignment[] = [];
-        for (const c of attivi) {
-          const lista = await getClassAssignments(c.id);
-          perClasse.set(c.id, lista);
-          tutti.push(...lista);
-        }
+        // IN PARALLELO, NON IN FILA. Le classi si chiedono tutte insieme:
+        // una per volta, con due corsi sono due viaggi in sequenza — e
+        // l'insegnante che ne segue quattordici li aspetta tutti e quattordici
+        // prima di vedere qualcosa. Le richieste sono indipendenti, quindi
+        // metterle in fila non dava nessuna garanzia in cambio del tempo.
+        const liste = await Promise.all(attivi.map((c) => getClassAssignments(c.id)));
+        const perClasse = new Map<string, Assignment[]>(
+          attivi.map((c, i) => [c.id, liste[i]]),
+        );
+        const tutti: Assignment[] = liste.flat();
         const prog = await getMyAssignmentProgress(tutti.map((a) => a.id));
         if (!vivo) return;
         setCompiti(perClasse);
