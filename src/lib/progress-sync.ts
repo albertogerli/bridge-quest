@@ -1,4 +1,5 @@
 import { isAuthSessionMissingError, type AuthError, type SupabaseClient } from "@supabase/supabase-js";
+import { oggiInItalia } from "@/lib/data-locale";
 
 export interface ReviewProgress {
   lessonId: string | number; moduleId: string; question?: string | null;
@@ -165,7 +166,7 @@ export async function writeProgress(db: SupabaseClient, owner: string, snapshot:
     xp: snapshot.xp, streak: snapshot.streak, hands_played: snapshot.handsPlayed,
     profile_type: snapshot.profile, memory_best: snapshot.memoryBest,
     text_size: snapshot.textSize, anim_speed: snapshot.animSpeed, sound_on: snapshot.sound,
-    total_minutes: snapshot.totalMinutes, last_login: new Date().toISOString(), updated_at: new Date().toISOString(),
+    total_minutes: snapshot.totalMinutes, last_login: oggiInItalia(), updated_at: new Date().toISOString(),
   };
   // Absolute values, not increments; retain the same payload/token on retry.
   const profile = await writeIdempotently(() => db.from("profiles").update(profileValues,
