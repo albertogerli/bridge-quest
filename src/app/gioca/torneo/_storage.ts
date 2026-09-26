@@ -2,10 +2,17 @@
  * Persistenza del torneo settimanale: localStorage (risultato e progresso in
  * corso) e Supabase (`tournament_results` + classifica).
  *
- * Estratta da `src/app/gioca/torneo/page.tsx` senza cambi di comportamento: le
- * decisioni sono nelle funzioni pure di `@/lib/tournament-stats`, qui resta solo
- * l'I/O (che fallisce sempre in silenzio, come prima).
+ * Estratta da `src/app/gioca/torneo/page.tsx`: le decisioni sono nelle funzioni
+ * pure di `@/lib/tournament-stats`, qui resta l'I/O.
+ *
+ * NON FALLISCE PIÙ IN SILENZIO. Il salvataggio in classifica ignorava
+ * l'errore — e il `catch` che avrebbe dovuto raccoglierlo non scattava
+ * comunque, perché un `upsert` di PostgREST non lancia. Adesso arriva, tranne
+ * quando è la rete: in quel caso la copia locale c'è e la classifica si
+ * riallinea al salvataggio dopo.
  */
+import { eDiRete } from "@/lib/errore-di-rete";
+import { reportError } from "@/lib/report-error";
 
 import { decideProgressRestore, mergeHistory } from "@/lib/tournament-stats";
 import type { Smazzata } from "@/lib/catalog";
@@ -117,7 +124,22 @@ export function restoreProgress(
 
 // ─── Supabase ───────────────────────────────────────────────────────────────
 
-/** Try to save to Supabase (gracefully fail if table doesn't exist) */
+/**
+ * Il risultato in classifica.
+ *
+ * IL `catch` DI PRIMA NON SCATTAVA MAI, e il commento che lo accompagnava —
+ * «gracefully fail if table doesn't exist» — era doppiamente falso: la tabella
+ * esiste dal `security-fixes-2026-08.sql` e questa stessa funzione la rilegge
+ * poco sotto per la classifica; e soprattutto un `upsert` di PostgREST NON
+ * lancia, restituisce `{ error }`. Quell'errore non veniva nemmeno letto.
+ *
+ * Il risultato non si perdeva del tutto — resta in memoria locale — ma il
+ * giocatore spariva dalla classifica senza che niente lo registrasse: per lui
+ * è andato tutto bene, per gli altri non ha giocato.
+ *
+ * La rete caduta non si segnala: la copia locale c'è e la classifica si
+ * riallinea al prossimo salvataggio riuscito.
+ */
 export async function saveTournamentToSupabase(result: TournamentResult) {
   try {
     const { createClient } = await import("@/lib/supabase/client");
@@ -129,7 +151,7 @@ export async function saveTournamentToSupabase(result: TournamentResult) {
     } = await supabase.auth.getSession();
     if (!session?.user) return;
 
-    await supabase.from("tournament_results").upsert(
+    const { error } = await supabase.from("tournament_results").upsert(
       {
         user_id: session.user.id,
         week_num: result.weekNum,
@@ -139,8 +161,9 @@ export async function saveTournamentToSupabase(result: TournamentResult) {
       },
       { onConflict: "user_id,week_num" }
     );
-  } catch {
-    // Gracefully handle: table may not exist yet
+    if (error && !eDiRete(error)) reportError("torneo:classifica", error);
+  } catch (err) {
+    if (!eDiRete(err)) reportError("torneo:classifica", err);
   }
 }
 

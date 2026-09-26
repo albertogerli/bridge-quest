@@ -716,3 +716,39 @@ describe("collectRuleTexts", () => {
     expect(collectRuleTexts([block("text")])).toEqual([]);
   });
 });
+
+describe("il tempo minimo di lettura — la domanda che il cronometro deve fare", () => {
+  /**
+   * `needsReadTimer` è sempre stata corretta. Il difetto stava in CHI gliela
+   * chiedeva: l'hook della lezione le passava «ci sei già arrivato?» al posto
+   * di «l'hai già letto?», e siccome il passo veniva segnato come visto
+   * nell'istante stesso dell'arrivo, la risposta era sempre «sì».
+   *
+   * Risultato: `MIN_READ_SECONDS` non si applicava a nessun passo e una
+   * lezione si attraversava a clic incassando gli XP di lettura. Per una
+   * piattaforma didattica validata da un Maestro Federale è il difetto
+   * peggiore possibile: non rompe niente e svuota il senso della lezione.
+   *
+   * Questi test fissano il contratto della funzione, così chi la richiama
+   * sbagliando ha almeno qui la risposta su cosa significa il parametro.
+   */
+  const testo = { type: "text", text: "Il bridge si gioca in quattro." } as never;
+
+  it("un passo mai letto richiede il tempo", () => {
+    expect(needsReadTimer(testo, false)).toBe(true);
+  });
+
+  it("un passo GIÀ LETTO non lo richiede più", () => {
+    // «già letto» = il tempo è scaduto una volta, non «ci sono appena
+    // arrivato». È la distinzione che mancava.
+    expect(needsReadTimer(testo, true)).toBe(false);
+  });
+
+  it("un passo inesistente chiede il tempo come uno di testo", () => {
+    // Verificato: `isQuizBlock(undefined)` è falso, quindi il cronometro
+    // parte. Innocuo — scaduto il tempo si prosegue — e preferibile
+    // all'opposto: un blocco che non si sa cos'è non deve poter essere
+    // saltato per il solo fatto di non essere riconosciuto.
+    expect(needsReadTimer(undefined, false)).toBe(true);
+  });
+});

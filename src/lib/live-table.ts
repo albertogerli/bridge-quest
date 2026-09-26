@@ -17,6 +17,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { Card, Position, Suit } from "./bridge-engine";
 import { determineTrickWinner, nextPlayer } from "./bridge-engine";
 import { reportError } from "./report-error";
+import { eDiRete } from "@/lib/errore-di-rete";
 
 export interface LiveTable {
   id: string;
@@ -91,7 +92,7 @@ export async function getOpenLiveTable(classId: string): Promise<string | null> 
     const { data, error } = await supabase.rpc("live_table_open", { p_class_id: classId });
     return error ? null : ((data as string | null) ?? null);
   } catch (err) {
-    reportError("live-table:open", err);
+    if (!eDiRete(err)) reportError("live-table:open", err);
     return null;
   }
 }

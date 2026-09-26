@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { eDiRete } from "@/lib/errore-di-rete";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position } from "@/lib/bridge-engine";
 
@@ -103,7 +104,7 @@ export async function statoAula(sessioneId: string): Promise<StatoTavolo[]> {
   const supabase = createClient();
   const { data, error } = await supabase.rpc("aula_stato", { p_sessione_id: sessioneId });
   if (error) {
-    reportError("aula:stato", error);
+    if (!eDiRete(error)) reportError("aula:stato", error);
     return [];
   }
   return (data ?? []) as StatoTavolo[];
@@ -135,7 +136,7 @@ export async function sessioneAperta(classId: string): Promise<SessioneAula | nu
     .limit(1)
     .maybeSingle();
   if (error) {
-    reportError("aula:sessione", error);
+    if (!eDiRete(error)) reportError("aula:sessione", error);
     return null;
   }
   return (data as SessioneAula) ?? null;
