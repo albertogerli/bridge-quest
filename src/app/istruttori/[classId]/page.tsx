@@ -418,6 +418,32 @@ export default function ClassDetailPage({
             </div>
           </div>
 
+          {/*
+            LA TELECAMERA AL TAVOLO, e l'interruttore è dell'insegnante.
+            Il video fra persone è la funzione più delicata del portale — ci
+            sono principianti over 60 e, nei corsi giovani, dei minorenni — e la
+            responsabilità di chi sta in quella stanza è sua. Acceso questo, ogni
+            allievo resta padrone della propria telecamera: nessuno viene
+            inquadrato senza aver toccato un pulsante.
+          */}
+          <label className="flex items-start gap-3 border-t border-border pt-4 text-sm">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-5 w-5 accent-primary"
+              checked={classRoom.video_tavolo}
+              disabled={busy}
+              onChange={(e) => void cambiaImpostazione({ video_tavolo: e.target.checked })}
+            />
+            <span>
+              <span className="font-medium">{t("Telecamera al tavolo")}</span>
+              <span className="block text-xs text-muted-foreground">
+                {classRoom.video_tavolo
+                  ? "Chi è seduto a un tavolo può accendere la propria telecamera e vedere i compagni di quel tavolo. Niente passa dai nostri server e niente viene registrato."
+                  : "Spenta. Accendendola, ogni allievo potrà decidere se farsi vedere dai compagni del suo tavolo — nessuno viene inquadrato senza toccare un pulsante."}
+              </span>
+            </span>
+          </label>
+
           <div className="space-y-1.5">
             <label htmlFor="link-video" className="text-sm font-medium">
               {t("Stanza di videoconferenza")}

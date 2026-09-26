@@ -18,6 +18,8 @@ import {
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
 import { SondaggioAllievo } from "@/components/sondaggio-allievo";
 import { SceltaPosto } from "@/components/istruttori/scelta-posto";
+import { VideoTavolo } from "@/components/bridge/video-tavolo";
+import { createClient } from "@/lib/supabase/client";
 import { nomiDellaClasse } from "@/lib/aula";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -49,6 +51,7 @@ export default function TavoloAllievoPage({
   const [tableId, setTableId] = useState<string | null>(null);
   const [stato, setStato] = useState<LiveTable | null>(null);
   const [nomi, setNomi] = useState<Map<string, string>>(new Map());
+  const [videoAcceso, setVideoAcceso] = useState(false);
   const [cercato, setCercato] = useState(false);
   const [errore, setErrore] = useState("");
 
@@ -94,6 +97,14 @@ export default function TavoloAllievoPage({
   // una volta, non cambiano durante la lezione.
   useEffect(() => {
     void nomiDellaClasse(classId).then(setNomi);
+  }, [classId]);
+
+  // Se l'insegnante ha acceso la telecamera per questa classe. Spenta di
+  // partenza: in caso di dubbio non si apre niente.
+  useEffect(() => {
+    const supabase = createClient();
+    void supabase.from("classes").select("video_tavolo").eq("id", classId).maybeSingle()
+      .then(({ data }) => setVideoAcceso(data?.video_tavolo === true));
   }, [classId]);
 
   if (loading) return null;
@@ -165,6 +176,15 @@ export default function TavoloAllievoPage({
         circolo, e come Trevissoi ha chiesto: «loro devono poter sedere dove
         vogliono, gli altri posti rimangono liberi e loro entrano».
       */}
+      {/*
+        LA TELECAMERA, se la classe l'ha accesa. Sta sopra al tavolo e non
+        dentro: chi gioca guarda le carte, e un riquadro in mezzo alle mani
+        sposterebbe l'attenzione proprio dove non deve stare.
+      */}
+      {tableId && videoAcceso && user && (
+        <VideoTavolo tavoloId={tableId} io={user.id} nomi={nomi} />
+      )}
+
       {tableId && stato && (stato.played?.length ?? 0) === 0 && (
         <div className="mb-5">
           <SceltaPosto
