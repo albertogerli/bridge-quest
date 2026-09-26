@@ -12,6 +12,7 @@ import {
 } from "@/lib/realtime-health";
 import { generateSeed } from "@/lib/hand-encoder";
 import { calculateBoardIMP } from "@/lib/bridge-scoring";
+import { eDiRete } from "@/lib/errore-di-rete";
 
 /**
  * Rete di sicurezza dietro il Realtime: le connessioni WebSocket cadono
@@ -160,7 +161,13 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
 
   // Utente corrente per il canale Realtime: tenuto in stato perché il canale
   // va ricreato a ogni cambio utente (login/logout).
+  //
+  // SERVE SOLO AL CANALE, quindi non gira quando il canale non c'è. Con
+  // `live: false` questa chiamata era lavoro buttato — e il 26/09/2026 è
+  // proprio lei ad aver fallito su /gioca/sfida-imp, che il canale non lo
+  // apre nemmeno.
   useEffect(() => {
+    if (!live) return;
     let cancelled = false;
 
     supabase.auth
@@ -168,7 +175,12 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
       .then(({ data }) => {
         if (!cancelled) setRealtimeUserId(data.user?.id ?? null);
       })
-      .catch((err) => reportError("use-challenges:getUser", err));
+      // `AuthRetryableFetchError` lo dice nel nome: la libreria stessa lo
+      // considera da riprovare. È la rete, non un difetto — e il messaggio
+      // che porta è «Load failed», la forma di Safari.
+      .catch((err) => {
+        if (!eDiRete(err)) reportError("use-challenges:getUser", err);
+      });
 
     const {
       data: { subscription },
@@ -180,7 +192,7 @@ export function useChallenges({ live = true }: { live?: boolean } = {}) {
       cancelled = true;
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, live]);
 
   // Supabase Realtime, due sottoscrizioni mirate sullo stesso canale:
   //  - `opponent_id=eq.<me>`: sfide che ricevo, e sfide aperte a cui vengo
