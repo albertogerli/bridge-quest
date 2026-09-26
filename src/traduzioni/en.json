@@ -1833,5 +1833,6 @@
   "{n} richieste in attesa": "{n} pending requests",
   "È arrivata": "They came",
   "è": "is",
-  "è disponibile una modalità scura (dark mode) per ridurre l'affaticamento visivo": "a dark mode is available to reduce eye strain"
+  "è disponibile una modalità scura (dark mode) per ridurre l'affaticamento visivo": "a dark mode is available to reduce eye strain",
+  "Non riesco a correggere adesso. Riprova fra un momento.": "I can't check your answer right now. Please try again in a moment."
 }

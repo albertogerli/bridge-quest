@@ -58,21 +58,24 @@ export function useAuth() {
   // `profiles` (marketing_consent, last_login, total_minutes, platform…) non
   // sono più leggibili direttamente: i privilegi di colonna valgono per ruolo
   // e non per riga, quindi bloccherebbero anche il proprio profilo.
-  // Il fallback su select("*") copre l'intervallo fra il deploy di questo
-  // codice e l'esecuzione di scripts/sql/pii-columns-2026-08.sql; si potrà
-  // rimuovere una volta applicata la PARTE B di quello script.
-  const fetchProfileInBackground = useCallback(async (userId: string) => {
+  // C'ERA UN FALLBACK su select("*"), messo per coprire l'intervallo fra il
+  // deploy di questo codice e l'esecuzione della PARTE B di
+  // scripts/sql/pii-columns-2026-08.sql. La parte B è stata eseguita: oggi
+  // `authenticated` ha nove colonne di `profiles` e nessun permesso sulla
+  // tabella, quindi quel select non poteva riuscire — restituiva «permission
+  // denied» e il ramo finiva a null. Non copriva più niente: nascondeva
+  // soltanto l'eventuale rottura della RPC dietro un secondo tentativo
+  // destinato a fallire.
+  // Non prende più l'id: la RPC lavora sull'utente del token, e passarglielo
+  // faceva sembrare che si potesse chiedere il profilo di un altro.
+  const fetchProfileInBackground = useCallback(async () => {
     try {
       const { data, error } = await supabase.rpc("get_own_profile");
-      if (!error && Array.isArray(data) && data.length > 0) {
-        return data[0] as Profile;
+      if (error) {
+        reportError("use-auth:get_own_profile", error);
+        return null;
       }
-      const { data: legacy } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-      return legacy as Profile | null;
+      return Array.isArray(data) && data.length > 0 ? (data[0] as Profile) : null;
     } catch (e) {
       // Niente toast: gira in background, ma l'errore non va scartato.
       reportError("use-auth:fetchProfileInBackground", e);
@@ -103,7 +106,7 @@ export function useAuth() {
         // Set user IMMEDIATELY (don't wait for profile fetch)
         setState({ user: session.user, profile: null, session, loading: false });
         // Fetch profile in background (non-blocking)
-        fetchProfileInBackground(session.user.id).then((profile) => {
+        fetchProfileInBackground().then((profile) => {
           if (mounted && profile) {
             setState((prev) => ({ ...prev, profile }));
           }
@@ -323,7 +326,7 @@ export function useAuth() {
 
     if (error) return { data: null, error };
 
-    const data = await fetchProfileInBackground(state.user.id);
+    const data = await fetchProfileInBackground();
     if (data) {
       setState((prev) => ({ ...prev, profile: data }));
     }
@@ -367,7 +370,7 @@ export function useAuth() {
     uploadAvatar,
     refreshProfile: async () => {
       if (state.user) {
-        const profile = await fetchProfileInBackground(state.user.id);
+        const profile = await fetchProfileInBackground();
         setState((prev) => ({ ...prev, profile }));
       }
     },

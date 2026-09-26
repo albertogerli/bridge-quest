@@ -13,8 +13,9 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import {
   ETICHETTE_CONSEGNA,
   leggiEsercizi,
-  rispostaGiusta,
-  type EsercizioPosizione,
+  verificaEsercizio,
+  type EsercizioPerAllievo,
+  type EsitoEsercizio,
 } from "@/lib/esercizi-posizione";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -45,11 +46,12 @@ export default function EsercizioPage({
   const cerca = useSearchParams();
   const assignmentId = cerca.get("compito");
 
-  const [esercizio, setEsercizio] = useState<EsercizioPosizione | null>(null);
+  const [esercizio, setEsercizio] = useState<EsercizioPerAllievo | null>(null);
   const [caricando, setCaricando] = useState(true);
   const [risposta, setRisposta] = useState("");
-  const [dato, setDato] = useState<{ giusta: boolean; testo: string } | null>(null);
+  const [dato, setDato] = useState<(EsitoEsercizio & { testo: string }) | null>(null);
   const [spiegazione, setSpiegazione] = useState(false);
+  const [erroreRisposta, setErroreRisposta] = useState(false);
 
   useEffect(() => {
     let vivo = true;
@@ -67,8 +69,18 @@ export default function EsercizioPage({
 
   async function rispondi() {
     if (!esercizio) return;
-    const giusta = rispostaGiusta(risposta, esercizio.risposte);
-    setDato({ giusta, testo: risposta });
+    // Il responso lo dà il database: qui le risposte attese non ci sono mai
+    // state e non ci devono essere. Se la chiamata non riesce non si inventa
+    // un verdetto — dire «giusto» per non lasciare la pagina ferma sarebbe
+    // peggio di dire «riprova».
+    const esito = await verificaEsercizio(esercizio.id, risposta);
+    if (!esito) {
+      setErroreRisposta(true);
+      return;
+    }
+    setErroreRisposta(false);
+    const giusta = esito.giusta;
+    setDato({ ...esito, testo: risposta });
 
     /**
      * Il risultato va nella stessa tabella delle mani giocate.
@@ -195,6 +207,11 @@ export default function EsercizioPage({
           <Button onClick={() => void rispondi()} disabled={!risposta.trim()} className="w-full">
             {t("Rispondi")}
           </Button>
+          {erroreRisposta && (
+            <p className="text-sm text-red-600">
+              {t("Non riesco a correggere adesso. Riprova fra un momento.")}
+            </p>
+          )}
         </div>
       ) : (
         <div className="mt-6 space-y-4">
@@ -212,25 +229,25 @@ export default function EsercizioPage({
             )}
             <div>
               <p className="font-bold">
-                {esercizio.risposte.length === 0
+                {dato.risposte.length === 0
                   ? "Risposta registrata"
                   : dato.giusta
                     ? "Giusto"
                     : "Non era questa"}
               </p>
-              {!dato.giusta && esercizio.risposte.length > 0 && (
+              {!dato.giusta && dato.risposte.length > 0 && (
                 <p className="text-sm text-muted-foreground">
-                  {esercizio.risposte.length === 1 ? "La risposta era" : "Andavano bene"}:{" "}
-                  {esercizio.risposte.join(", ")}
+                  {dato.risposte.length === 1 ? "La risposta era" : "Andavano bene"}:{" "}
+                  {dato.risposte.join(", ")}
                 </p>
               )}
             </div>
           </div>
 
-          {esercizio.soluzione &&
+          {dato.soluzione &&
             (spiegazione ? (
               <p className="rounded-xl border border-border bg-card p-4 text-sm leading-relaxed">
-                {esercizio.soluzione}
+                {dato.soluzione}
               </p>
             ) : (
               <Button variant="outline" onClick={() => setSpiegazione(true)} className="w-full">

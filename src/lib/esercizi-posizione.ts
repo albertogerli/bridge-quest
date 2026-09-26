@@ -60,23 +60,58 @@ export interface EsercizioPosizione {
 
 export type NuovoEsercizio = Omit<EsercizioPosizione, "id" | "autore_id" | "created_at">;
 
-export async function salvaEsercizio(e: NuovoEsercizio): Promise<EsercizioPosizione | null> {
+/**
+ * L'esercizio come arriva all'ALLIEVO: senza le risposte, senza la soluzione,
+ * e con le sole mani che si vedrebbero al tavolo.
+ *
+ * È un tipo diverso e non un `Partial` apposta: sono due cose diverse. Un
+ * campo opzionale invita a scriverlo «se c'è»; qui non c'è mai, e il compilatore
+ * deve dirlo a chi prova a leggerlo.
+ */
+export interface EsercizioPerAllievo
+  extends Omit<EsercizioPosizione, "hands" | "risposte" | "soluzione"> {
+  /** Solo la propria, più il morto se il gioco è cominciato e il morto non sei tu. */
+  hands: Partial<Record<Position, Card[]>>;
+  /** Quante risposte attese ci sono — non quali. Zero vuol dire domanda aperta. */
+  quante_risposte: number;
+}
+
+/** Il responso, che arriva solo dopo aver risposto. */
+export interface EsitoEsercizio {
+  giusta: boolean;
+  risposte: string[];
+  soluzione: string | null;
+}
+
+export async function salvaEsercizio(e: NuovoEsercizio): Promise<{ id: string } | null> {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return null;
 
+  // `risposte_norm` si scrive QUI, con la stessa funzione che normalizzerà
+  // quello che l'allievo digita. È il motivo per cui il confronto può stare
+  // nel database senza che il database sappia normalizzare: due
+  // implementazioni della stessa regola sarebbero due regole, e il giorno che
+  // divergono un allievo si vede dare sbagliata una risposta giusta.
   const { data, error } = await supabase
     .from("esercizi_posizione")
-    .insert({ ...e, autore_id: user.id })
-    .select()
+    .insert({
+      ...e,
+      autore_id: user.id,
+      risposte_norm: e.risposte.map(normalizzaRisposta),
+    })
+    // Solo `id`: le altre colonne l'insegnante le ha già in mano, e `hands`,
+    // `risposte` e `soluzione` non sono più leggibili dal browser nemmeno a
+    // lui — `RETURNING` vuole il privilegio di lettura come ogni select.
+    .select("id")
     .single();
   if (error) {
     reportError("esercizi:salva", error);
     return null;
   }
-  return data as EsercizioPosizione;
+  return data as { id: string };
 }
 
 export async function elencaMieiEsercizi(): Promise<EsercizioPosizione[]> {
@@ -85,12 +120,11 @@ export async function elencaMieiEsercizi(): Promise<EsercizioPosizione[]> {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
-  const { data, error } = await supabase
-    .from("esercizi_posizione")
-    .select("*")
-    .eq("autore_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(200);
+  // Via RPC e non `select("*")`: le colonne con dentro la soluzione non sono
+  // leggibili dal browser, nemmeno da chi le ha scritte, perché il privilegio
+  // è per ruolo e l'insegnante è `authenticated` come l'allievo. La funzione
+  // filtra per autore e restituisce la riga intera solo a lui.
+  const { data, error } = await supabase.rpc("i_miei_esercizi");
   if (error) {
     reportError("esercizi:elenca", error);
     return [];
@@ -98,18 +132,22 @@ export async function elencaMieiEsercizi(): Promise<EsercizioPosizione[]> {
   return (data ?? []) as EsercizioPosizione[];
 }
 
-export async function leggiEsercizi(ids: string[]): Promise<EsercizioPosizione[]> {
+export async function leggiEsercizi(ids: string[]): Promise<EsercizioPerAllievo[]> {
   if (ids.length === 0) return [];
   const supabase = createClient();
-  const { data, error } = await supabase.from("esercizi_posizione").select("*").in("id", ids);
-  if (error) {
-    reportError("esercizi:leggi", error);
+  const esiti = await Promise.all(
+    ids.map((id) => supabase.rpc("esercizio_per_allievo", { p_id: id })),
+  );
+  const primoErrore = esiti.find((e) => e.error)?.error;
+  if (primoErrore) {
+    reportError("esercizi:leggi", primoErrore);
     return [];
   }
+  const data = esiti.map((e) => e.data).filter(Boolean);
   // Nell'ordine in cui li ha messi l'insegnante, non in quello del database:
   // un esercizio che introduce e uno che verifica non sono intercambiabili.
-  const per = new Map((data ?? []).map((r) => [(r as EsercizioPosizione).id, r as EsercizioPosizione]));
-  return ids.map((i) => per.get(i)).filter((x): x is EsercizioPosizione => x !== undefined);
+  const per = new Map(data.map((r) => [(r as EsercizioPerAllievo).id, r as EsercizioPerAllievo]));
+  return ids.map((i) => per.get(i)).filter((x): x is EsercizioPerAllievo => x !== undefined);
 }
 
 /**
@@ -140,6 +178,38 @@ export function rispostaGiusta(data: string, attese: readonly string[]): boolean
   if (attese.length === 0) return true; // Nessuna risposta attesa: è una domanda aperta.
   const n = normalizzaRisposta(data);
   return attese.some((a) => normalizzaRisposta(a) === n);
+}
+
+/**
+ * Il responso, chiesto al database.
+ *
+ * PERCHÉ NON SI CORREGGE PIÙ NEL BROWSER. Correggere qui voleva dire avere qui
+ * le risposte attese, e averle qui vuol dire che stanno nella scheda di rete
+ * prima ancora che l'allievo legga la domanda. La correzione va dove stanno le
+ * risposte, e le risposte devono stare dove l'allievo non arriva.
+ *
+ * SI MANDA LA RISPOSTA GIÀ NORMALIZZATA, con la stessa `normalizzaRisposta`
+ * che ha normalizzato le attese quando l'insegnante le ha scritte: una regola
+ * sola, in un punto solo, invece di una copia in SQL che col tempo diverge.
+ *
+ * Che si possa sbagliare apposta per farsi dire la soluzione è vero ed è
+ * voluto: l'esercizio chiede di impegnarsi, non di rendere impossibile
+ * barare. Quello che è cambiato è che adesso impegnarsi è necessario.
+ */
+export async function verificaEsercizio(
+  id: string,
+  risposta: string,
+): Promise<EsitoEsercizio | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("verifica_esercizio", {
+    p_id: id,
+    p_risposta_norm: normalizzaRisposta(risposta),
+  });
+  if (error) {
+    reportError("esercizi:verifica", error);
+    return null;
+  }
+  return (data as EsitoEsercizio | null) ?? null;
 }
 
 /**

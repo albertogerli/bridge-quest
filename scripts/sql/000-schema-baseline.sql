@@ -281,7 +281,8 @@ CREATE TABLE IF NOT EXISTS public.esercizi_posizione (
   soluzione text,
   gruppo text,
   class_id uuid,
-  created_at timestamp with time zone NOT NULL
+  created_at timestamp with time zone NOT NULL,
+  risposte_norm text[] NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.eserciziario_exercises (
@@ -2335,6 +2336,57 @@ END;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.esercizio_dell_autore(p_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare e public.esercizi_posizione%rowtype;
+begin
+  if not public.insegna_esercizio(p_id) then return null; end if;
+  select * into e from public.esercizi_posizione where id = p_id;
+  return to_jsonb(e);
+end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.esercizio_per_allievo(p_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+  e public.esercizi_posizione%rowtype;
+  v_morto text;
+  v_mani jsonb := '{}'::jsonb;
+begin
+  if not public.puo_vedere_esercizio(p_id) then return null; end if;
+  select * into e from public.esercizi_posizione where id = p_id;
+
+  v_mani := jsonb_build_object(e.posizione, e.hands -> e.posizione);
+
+  if jsonb_array_length(e.played) > 0 and e.declarer is not null then
+    v_morto := case e.declarer
+      when 'north' then 'south' when 'south' then 'north'
+      when 'east'  then 'west'  when 'west'  then 'east' end;
+    if v_morto is not null and v_morto <> e.posizione then
+      v_mani := v_mani || jsonb_build_object(v_morto, e.hands -> v_morto);
+    end if;
+  end if;
+
+  return jsonb_build_object(
+    'id', e.id, 'autore_id', e.autore_id, 'titolo', e.titolo,
+    'consegna', e.consegna, 'domanda', e.domanda, 'hands', v_mani,
+    'dealer', e.dealer, 'vulnerability', e.vulnerability,
+    'bids', to_jsonb(e.bids), 'played', e.played, 'posizione', e.posizione,
+    'contract', e.contract, 'declarer', e.declarer,
+    'gruppo', e.gruppo, 'class_id', e.class_id, 'created_at', e.created_at,
+    'quante_risposte', coalesce(array_length(e.risposte, 1), 0)
+  );
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.evento_da_codice(p_codice text)
  RETURNS jsonb
  LANGUAGE sql
@@ -2795,6 +2847,21 @@ AS $function$
   $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.i_miei_esercizi()
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select coalesce(jsonb_agg(to_jsonb(e) order by e.created_at desc), '[]'::jsonb)
+  from (
+    select * from public.esercizi_posizione
+    where autore_id = (select auth.uid())
+    order by created_at desc limit 200
+  ) e;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.imp_da_differenza(p_diff integer)
  RETURNS integer
  LANGUAGE sql
@@ -2814,6 +2881,25 @@ AS $function$
     WHEN abs(p_diff) <= 2490 THEN 20 WHEN abs(p_diff) <= 2990 THEN 21
     WHEN abs(p_diff) <= 3490 THEN 22 WHEN abs(p_diff) <= 3990 THEN 23
     ELSE 24 END;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.insegna_esercizio(p_id uuid)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select exists (
+    select 1 from public.esercizi_posizione e
+    where e.id = p_id and (
+      e.autore_id = (select auth.uid())
+      or (e.class_id is not null and public.is_instructor_of_class(e.class_id))
+      or exists (select 1 from public.assignments a
+                 where e.id = any (a.esercizio_ids)
+                   and public.is_instructor_of_class(a.class_id))
+    )
+  );
 $function$
 ;
 
@@ -3524,6 +3610,27 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.puo_vedere_esercizio(p_id uuid)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select exists (
+    select 1 from public.esercizi_posizione e
+    where e.id = p_id and (
+      e.autore_id = (select auth.uid())
+      or (e.class_id is not null and (public.is_member_of_class(e.class_id)
+                                      or public.is_instructor_of_class(e.class_id)))
+      or exists (select 1 from public.assignments a
+                 where e.id = any (a.esercizio_ids)
+                   and (public.is_member_of_class(a.class_id)
+                        or public.is_instructor_of_class(a.class_id)))
+    )
+  );
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text DEFAULT NULL::text)
  RETURNS void
  LANGUAGE plpgsql
@@ -4205,6 +4312,30 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.verifica_esercizio(p_id uuid, p_risposta_norm text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+  e public.esercizi_posizione%rowtype;
+  v_giusta boolean;
+begin
+  if not public.puo_vedere_esercizio(p_id) then return null; end if;
+  select * into e from public.esercizi_posizione where id = p_id;
+
+  v_giusta := coalesce(array_length(e.risposte_norm, 1), 0) = 0
+              or p_risposta_norm = any (e.risposte_norm);
+
+  return jsonb_build_object(
+    'giusta', v_giusta,
+    'risposte', to_jsonb(e.risposte),
+    'soluzione', e.soluzione
+  );
+end $function$
+;
+
 -- VALORI PREDEFINITI
 ALTER TABLE public.adesioni ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.adesioni ALTER COLUMN fonte SET DEFAULT 'locandina'::text;
@@ -4287,6 +4418,7 @@ ALTER TABLE public.esercizi_posizione ALTER COLUMN played SET DEFAULT '[]'::json
 ALTER TABLE public.esercizi_posizione ALTER COLUMN posizione SET DEFAULT 'south'::text;
 ALTER TABLE public.esercizi_posizione ALTER COLUMN risposte SET DEFAULT '{}'::text[];
 ALTER TABLE public.esercizi_posizione ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.esercizi_posizione ALTER COLUMN risposte_norm SET DEFAULT '{}'::text[];
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN content SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN updated_at SET DEFAULT now();
@@ -5584,7 +5716,6 @@ GRANT DELETE ON TABLE public.esercizi_posizione TO anon;
 GRANT INSERT ON TABLE public.esercizi_posizione TO anon;
 GRANT MAINTAIN ON TABLE public.esercizi_posizione TO anon;
 GRANT REFERENCES ON TABLE public.esercizi_posizione TO anon;
-GRANT SELECT ON TABLE public.esercizi_posizione TO anon;
 GRANT TRIGGER ON TABLE public.esercizi_posizione TO anon;
 GRANT TRUNCATE ON TABLE public.esercizi_posizione TO anon;
 GRANT UPDATE ON TABLE public.esercizi_posizione TO anon;
@@ -5592,7 +5723,6 @@ GRANT DELETE ON TABLE public.esercizi_posizione TO authenticated;
 GRANT INSERT ON TABLE public.esercizi_posizione TO authenticated;
 GRANT MAINTAIN ON TABLE public.esercizi_posizione TO authenticated;
 GRANT REFERENCES ON TABLE public.esercizi_posizione TO authenticated;
-GRANT SELECT ON TABLE public.esercizi_posizione TO authenticated;
 GRANT TRIGGER ON TABLE public.esercizi_posizione TO authenticated;
 GRANT TRUNCATE ON TABLE public.esercizi_posizione TO authenticated;
 GRANT UPDATE ON TABLE public.esercizi_posizione TO authenticated;
@@ -6658,6 +6788,21 @@ GRANT SELECT ON TABLE public.weekly_challenges TO service_role;
 GRANT TRIGGER ON TABLE public.weekly_challenges TO service_role;
 GRANT TRUNCATE ON TABLE public.weekly_challenges TO service_role;
 GRANT UPDATE ON TABLE public.weekly_challenges TO service_role;
+GRANT SELECT (id) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (autore_id) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (titolo) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (consegna) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (domanda) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (dealer) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (vulnerability) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (bids) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (played) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (posizione) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (contract) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (declarer) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (gruppo) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (class_id) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (created_at) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (id) ON TABLE public.profiles TO authenticated;
 GRANT SELECT (display_name) ON TABLE public.profiles TO authenticated;
 GRANT SELECT (bbo_username) ON TABLE public.profiles TO authenticated;
@@ -6818,6 +6963,12 @@ GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO authentic
 GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.dump_schema() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.dump_schema() TO service_role;
+REVOKE ALL ON FUNCTION public.esercizio_dell_autore(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.esercizio_dell_autore(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.esercizio_dell_autore(p_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.esercizio_per_allievo(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.esercizio_per_allievo(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.esercizio_per_allievo(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.evento_da_codice(p_codice text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.evento_da_codice(p_codice text) TO anon;
 GRANT EXECUTE ON FUNCTION public.evento_da_codice(p_codice text) TO authenticated;
@@ -6868,11 +7019,17 @@ GRANT EXECUTE ON FUNCTION public.get_review_items_state() TO service_role;
 REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.handle_new_user() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.handle_new_user() TO service_role;
+REVOKE ALL ON FUNCTION public.i_miei_esercizi() FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.i_miei_esercizi() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.i_miei_esercizi() TO service_role;
 REVOKE ALL ON FUNCTION public.imp_da_differenza(p_diff integer) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO anon;
 GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO service_role;
+REVOKE ALL ON FUNCTION public.insegna_esercizio(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.insegna_esercizio(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.insegna_esercizio(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO service_role;
@@ -6964,6 +7121,9 @@ GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain t
 GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO anon;
 GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO service_role;
+REVOKE ALL ON FUNCTION public.puo_vedere_esercizio(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.puo_vedere_esercizio(p_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.puo_vedere_esercizio(p_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO service_role;
@@ -7028,6 +7188,9 @@ GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO service_role;
 REVOKE ALL ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) TO service_role;
+REVOKE ALL ON FUNCTION public.verifica_esercizio(p_id uuid, p_risposta_norm text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.verifica_esercizio(p_id uuid, p_risposta_norm text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.verifica_esercizio(p_id uuid, p_risposta_norm text) TO service_role;
 
 -- TRIGGER APPLICATIVI SU AUTH
 CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION handle_new_user();
