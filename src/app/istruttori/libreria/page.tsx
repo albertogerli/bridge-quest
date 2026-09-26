@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Download, Library, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -60,20 +60,51 @@ export default function LibreriaPage() {
     })();
   }, []);
 
+  /**
+   * IL TESTO ASPETTA, I FILTRI NO.
+   *
+   * La ricerca partiva a ogni tasto premuto: scrivere «squeeze» erano sette
+   * interrogazioni, di cui sei buttate. E non solo sprecate — arrivavano
+   * anche in ordine qualunque, quindi la risposta per «squee» poteva
+   * atterrare dopo quella per «squeeze» e riscrivere l'elenco con dei
+   * risultati vecchi. Da fuori si vede come una ricerca che «ogni tanto non
+   * trova quello che c'è».
+   *
+   * Un terzo di secondo di attesa sul testo, e niente attesa su scheda,
+   * lezione e tipo: quelli sono clic, uno per volta, e aspettare li farebbe
+   * solo sembrare lenti.
+   */
+  const [testoDifferito, setTestoDifferito] = useState(testo);
+  useEffect(() => {
+    const t = setTimeout(() => setTestoDifferito(testo), 300);
+    return () => clearTimeout(t);
+  }, [testo]);
+
+  // L'ultima richiesta partita vince. Senza questo, il debounce riduce le
+  // corse ma non le toglie: due ricerche possono comunque sovrapporsi, e la
+  // più lenta sarebbe l'ultima a scrivere.
+  const ultimaRichiesta = useRef(0);
+
   const ricarica = useCallback(async () => {
+    const mia = ++ultimaRichiesta.current;
     setCaricando(true);
     try {
-      if (scheda === "cerca") {
-        setVoci(await cerca({ testo, lessonId: lezione === "" ? null : lezione, tipo: tipo || null }));
-      } else if (scheda === "mie") {
-        setVoci(await mieVoci());
-      } else {
-        setVoci(await daModerare());
-      }
+      const risultato =
+        scheda === "cerca"
+          ? await cerca({
+              testo: testoDifferito,
+              lessonId: lezione === "" ? null : lezione,
+              tipo: tipo || null,
+            })
+          : scheda === "mie"
+            ? await mieVoci()
+            : await daModerare();
+      if (mia !== ultimaRichiesta.current) return;
+      setVoci(risultato);
     } finally {
-      setCaricando(false);
+      if (mia === ultimaRichiesta.current) setCaricando(false);
     }
-  }, [scheda, testo, lezione, tipo]);
+  }, [scheda, testoDifferito, lezione, tipo]);
 
   useEffect(() => {
     void ricarica();
