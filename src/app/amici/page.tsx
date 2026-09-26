@@ -39,7 +39,9 @@ export default function AmiciPage() {
     declineFriend,
     removeFriend,
   } = useFriends();
-  const { createChallenge } = useChallenges();
+  // Gli amici QUI vanno seguiti in diretta — è la pagina dove si accettano le
+  // richieste — ma le sfide no: serve solo crearle.
+  const { createChallenge } = useChallenges({ live: false });
 
   const [activeTab, setActiveTab] = useState<Tab>("amici");
   const [searchQuery, setSearchQuery] = useState("");

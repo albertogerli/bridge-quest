@@ -126,7 +126,8 @@ export function useProfileData(): ProfileData {
   // Armato insieme all'achievement (vedi effetto sotto): un effetto dedicato
   // che reagiva a `pendingAchievement` era un render a cascata inutile.
   const [achievementPopupArmed, setAchievementPopupArmed] = useState(false);
-  const { getHistory, getStats: getChallengeStats } = useChallenges();
+  // Solo due funzioni di lettura: il profilo non segue le sfide in diretta.
+  const { getHistory, getStats: getChallengeStats } = useChallenges({ live: false });
   const [challengeHistory, setChallengeHistory] = useState<ChallengeData[]>([]);
   const [challengeStats, setChallengeStats] = useState<ChallengeStats | null>(null);
 

@@ -45,7 +45,9 @@ export default function TrovaCompagnoPage() {
   const router = useRouter();
   const { myProfile, candidates, loading, saving, refresh, saveProfile, stopLooking } =
     usePartnerMatching();
-  const { addFriend } = useFriends();
+  // Serve solo `addFriend`: niente canale Realtime, niente rilettura a
+  // intervallo. Vedi la nota su `live` in use-friends.ts.
+  const { addFriend } = useFriends({ live: false });
   const clubs = useActiveAsdClubs();
 
   const [filters, setFilters] = useState<PartnerFilters>({
