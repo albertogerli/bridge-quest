@@ -10,7 +10,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
-import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
+import { DEAL_TEMPLATES, generateDeals, handHcp, satisfiesDeal } from "@/lib/deal-generator";
 import { calcTableAndPar } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import {
@@ -234,6 +234,34 @@ function Tavolo() {
 
   const manoCorrente = stato?.hands ?? mani[indice];
 
+  /**
+   * LA MANO AL TAVOLO È DAVVERO DI QUESTO ARGOMENTO?
+   *
+   * La mano del tavolo aperto vince su quella generata qui — e deve vincere,
+   * perché è quella che la classe sta guardando. Ma cambiando argomento nel
+   * menu l'etichetta cambia e la mano no: si finisce a spiegare l'apertura di
+   * 1NT davanti a una mano in cui Sud ha nove punti. È successo davvero, il
+   * 26/09/2026, ed è il difetto peggiore di tutti — non rompe niente, toglie
+   * credibilità davanti alla classe.
+   *
+   * Non si aggiorna da sé di proposito: sostituire le carte mentre la classe le
+   * sta guardando sarebbe peggio del disallineamento. Si dice, e l'insegnante
+   * decide con il pulsante che c'è già.
+   *
+   * Il controllo è sui VINCOLI e non sull'identità della mano: risponde alla
+   * domanda vera — «quello che vedono è in tema?» — e prende anche le mani
+   * arrivate da strade che oggi non esistono.
+   */
+  const alTavolo = stato?.hands;
+  // Servono tutte e quattro: `hands` è parziale per costruzione, perché
+  // all'allievo torna solo la propria. Lato insegnante ci sono tutte.
+  const completa =
+    !!alTavolo && (["north", "east", "south", "west"] as Position[]).every((p) => alTavolo[p]);
+  const fuoriTema =
+    completa &&
+    Object.keys(modello.constraints).length > 0 &&
+    !satisfiesDeal(alTavolo as Record<Position, Card[]>, modello.constraints);
+
   // Turno e presa in corso dalle carte giocate, con le stesse regole del resto
   // del gioco. L'insegnante gioca per CHIUNQUE: serve quando un allievo non sa
   // che fare o gli cade la connessione, ed è la differenza fra un tavolo
@@ -349,6 +377,20 @@ function Tavolo() {
         </div>
 
         <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>{t("Altre mani")}</Button>
+
+        {/*
+          L'AVVISO STA ACCANTO AL MENU che ha causato il disallineamento, non in
+          fondo alla pagina: si legge nel momento in cui si è appena cambiato
+          argomento, che è l'unico in cui serve.
+        */}
+        {fuoriTema && (
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">
+            <span>{t("Al tavolo c'è ancora una mano di un altro argomento.")}</span>
+            <Button size="sm" disabled={occupato} onClick={() => void mandaMano(indice)}>
+              {t("Manda una mano di")} {t(modello.label)}
+            </Button>
+          </div>
+        )}
 
         {!tableId ? (
           <Button disabled={!classId || occupato} onClick={apri}>
