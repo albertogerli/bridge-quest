@@ -1,0 +1,48 @@
+-- ============================================================================
+-- La classifica di classe rispetta l'anonimato, e i posti al tavolo no
+--
+-- ESEGUIRE A MANO su Supabase → SQL Editor. Rollback nel file accanto.
+-- DOPO: `node scripts/dump-schema.mjs` e committare il baseline.
+--
+-- ----------------------------------------------------------------------------
+-- LA PROMESSA ERA SCRITTA A SCHERMO E CONTRADDETTA UN DITO PIÙ IN BASSO
+--
+-- L'insegnante ha una casella «Nel confronto si vedono i nomi», spenta di
+-- partenza, con sotto: «ognuno vede come è andata agli altri, ma senza nomi. È
+-- il modo in cui il confronto resta un aiuto invece che una classifica».
+--
+-- `confronto_mano` la rispettava. `get_class_leaderboard` non la leggeva
+-- affatto — e la pagina dell'allievo mostra proprio quella, con le medaglie e i
+-- nomi di tutti, nella stessa schermata.
+--
+-- SI NASCONDONO GLI ALTRI, NON SE STESSI. Senza il proprio nome la classifica
+-- non serve a niente, perché non ci si riconosce. Chi insegna li vede tutti:
+-- gli servono per sapere chi richiamare.
+--
+-- ----------------------------------------------------------------------------
+-- E UNA SECONDA FUNZIONE, PERCHÉ LE DOMANDE SONO DUE
+--
+-- «Chi ha fatto meglio» può essere anonima. «Chi è seduto a nord» no: quella
+-- persona è nella stessa stanza, e il metodo cura gli accoppiamenti per età e
+-- affinità — i posti anonimi farebbero ricomporre i tavoli a mano ogni sera.
+--
+-- I nomi per i posti venivano presi dalla classifica: una scorciatoia presa il
+-- 07/09/2026 e documentata come tale, che con questa correzione sarebbe
+-- diventata un difetto — rendere anonima la classifica avrebbe svuotato anche i
+-- posti. `nomi_della_classe` restituisce solo nome e identificativo, nessun
+-- dato di prestazione.
+-- ============================================================================
+
+-- Il corpo aggiornato delle due funzioni è nel baseline
+-- (`000-schema-baseline.sql`): qui restano le ragioni, che il baseline non ha.
+--
+--   get_class_leaderboard(uuid)  → nome NULL per gli altri a classe anonima
+--   nomi_della_classe(uuid)      → nuova, per i posti al tavolo
+--
+-- VERIFICATO sui ruoli veri, in transazione annullata:
+--   anonima · vedo il mio nome                 1
+--   anonima · vedo nomi altrui                 0
+--   anonima · l'insegnante vede i nomi         3
+--   nominativa · l'allievo vede i nomi         3
+--   nomi per i posti, anonima o no             3
+--   un estraneo chiede i nomi                  0
