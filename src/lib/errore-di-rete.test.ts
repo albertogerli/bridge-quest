@@ -17,6 +17,10 @@ describe("eDiRete — le forme della rete che manca", () => {
     // supabase-js consegna l'errore di rete come oggetto con il nome del tipo
     // davanti al messaggio, e il filtro deve prenderlo lo stesso.
     expect(eDiRete({ message: "TypeError: Load failed" })).toBe(true);
+    // `AuthRetryableFetchError`, da supabase-auth-js: il nome dice già che è
+    // da riprovare, ma a `eDiRete` arriva solo il messaggio. Visto in
+    // produzione il 26/09/2026 su /gioca/sfida-imp.
+    expect(eDiRete({ name: "AuthRetryableFetchError", message: "Load failed" })).toBe(true);
     expect(eDiRete({ message: "NetworkError when attempting to fetch resource." })).toBe(true);
   });
 

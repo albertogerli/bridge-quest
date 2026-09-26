@@ -439,7 +439,10 @@ export function useFriends({ live = true }: { live?: boolean } = {}) {
   // Utente corrente per il canale Realtime. Va tenuto in stato (non solo nel
   // ref) perché il canale deve essere ricreato al cambio utente: login, logout
   // e refresh del token passano tutti da onAuthStateChange.
+  // Come in use-challenges: serve solo al canale, quindi con `live: false`
+  // non gira. `segnala` filtra già gli errori di rete.
   useEffect(() => {
+    if (!live) return;
     let cancelled = false;
 
     supabase.auth
@@ -461,7 +464,7 @@ export function useFriends({ live = true }: { live?: boolean } = {}) {
       cancelled = true;
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, live]);
 
   // Supabase Realtime: due sottoscrizioni mirate sulla stessa connessione.
   // `friend_id=eq.<me>` copre le richieste RICEVUTE (insert) e il loro ciclo di
