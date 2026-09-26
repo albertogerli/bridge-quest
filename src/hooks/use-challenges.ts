@@ -489,58 +489,26 @@ export function useChallenges() {
     }
   }, [supabase, getUserId]);
 
-  const findRandomOpponent = useCallback(
-    async (boardCount: 1 | 4 | 8): Promise<string | null> => {
-      try {
-        const userId = await getUserId();
-        if (!userId) return null;
-
-        // Look for existing open challenges not created by me
-        const { data: openChallenges, error: searchError } = await supabase
-          .from("challenges")
-          .select("*")
-          .is("opponent_id", null)
-          .eq("status", "pending")
-          .eq("board_count", boardCount)
-          .neq("challenger_id", userId)
-          .order("created_at", { ascending: true })
-          .limit(1);
-
-        if (searchError) {
-          reportError("use-challenges:random", searchError);
-          return null;
-        }
-
-        if (openChallenges && openChallenges.length > 0) {
-          // Found an open challenge -- join it
-          const match = openChallenges[0] as ChallengeData;
-
-          const { error: joinError } = await supabase
-            .from("challenges")
-            .update({
-              opponent_id: userId,
-              status: "accepted",
-            })
-            .eq("id", match.id);
-
-          if (joinError) {
-            reportError("use-challenges:random", joinError);
-            return null;
-          }
-
-          await fetchChallenges();
-          return match.id;
-        }
-
-        // No open challenge found -- create a new one waiting for an opponent
-        return await createChallenge(null, boardCount);
-      } catch (err) {
-        reportError("use-challenges:random", err);
-        return null;
-      }
-    },
-    [supabase, getUserId, fetchChallenges, createChallenge]
-  );
+  // RIMOSSO: `findRandomOpponent`, l'abbinamento con un avversario a caso.
+  //
+  // Non è mai stato collegato a niente — nell'interfaccia «casuale» sono le
+  // MANI, mai gli avversari — e portava dentro due difetti che sarebbero
+  // usciti il giorno in cui qualcuno gli avesse messo un pulsante davanti:
+  //
+  //  1. cercava una sfida aperta e poi la rivendicava con un UPDATE senza
+  //     condizione sull'avversario. Due giocatori che cercano nello stesso
+  //     istante trovano la stessa sfida e la prendono tutti e due: il secondo
+  //     scrive sopra il primo, e il primo resta ad aspettare un avversario
+  //     che sta giocando con qualcun altro;
+  //  2. non avrebbe comunque funzionato: la policy di lettura su `challenges`
+  //     mostra solo le sfide in cui si è già sfidante o sfidato, quindi la
+  //     ricerca non poteva vedere nessuna sfida aperta altrui. In produzione
+  //     infatti non esiste una sola riga con `opponent_id` nullo.
+  //
+  // Se un giorno si vuole l'abbinamento a caso, il punto da progettare è il
+  // (2), non il (1): la policy che nasconde le sfide altrui è una scelta di
+  // riservatezza giusta, e l'abbinamento va fatto da una funzione SQL che
+  // trova e rivendica in una sola istruzione, non da due chiamate del browser.
 
   return {
     pendingChallenges,
@@ -550,7 +518,6 @@ export function useChallenges() {
     acceptChallenge,
     declineChallenge,
     submitResults,
-    findRandomOpponent,
     getHistory,
     getStats,
     refresh: fetchChallenges,
