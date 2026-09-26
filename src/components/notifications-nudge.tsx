@@ -68,7 +68,7 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
             >
               <Bell className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
               <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
-                {t("Promemoria attivi! Ti avviseremo per non perdere la striscia. 🔥")}
+                {t("Avvisi attivi! Li vedrai mentre giochi. 🔥")}
               </p>
             </motion.div>
           ) : (
@@ -87,14 +87,14 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
                   {t("Non perdere la striscia 🔥")}
                 </h3>
                 <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                  {t("Attiva i promemoria: ti avvisiamo per la Sfida del Giorno e prima che la tua striscia si azzeri.")}
+                  {t("Attiva gli avvisi: mentre giochi ti diciamo subito quando arriva una sfida o il risultato di una tua sfida.")}
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   <button
                     onClick={enable}
                     className="rounded-xl bg-figb px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-figb-dark active:scale-[0.98]"
                   >
-                    {t("Attiva i promemoria")}
+                    {t("Attiva gli avvisi")}
                   </button>
                   <button
                     onClick={dismiss}

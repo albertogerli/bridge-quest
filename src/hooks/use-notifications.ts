@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 
+// Serve a `checkReminders`, che gira all'APERTURA della pagina: lì la soglia
+// ha senso. Non serviva al promemoria programmato, che infatti non c'è più.
+const TWENTY_HOURS_MS = 20 * 60 * 60 * 1000;
 const LS_KEY_ENABLED = "bq_notifications";
 const LS_KEY_LAST_ACTIVITY = "bq_last_activity";
-const TWENTY_HOURS_MS = 20 * 60 * 60 * 1000;
 
 type NotificationPermissionState = "default" | "granted" | "denied";
 
@@ -195,21 +197,19 @@ export function useNotifications() {
     }
   }, [enabled]);
 
-  // Schedule a delayed reminder using setTimeout (for when user might leave)
-  const scheduleReminder = useCallback(() => {
-    if (!enabled) return;
-
-    // Schedule a reminder for 20 hours from now
-    // This will only fire if the tab remains open (edge case but useful for PWA)
-    const timer = setTimeout(() => {
-      showNotification(
-        "Torna a giocare!",
-        "Non perdere la streak! Gioca oggi \ud83c\udfaf"
-      );
-    }, TWENTY_HOURS_MS);
-
-    return () => clearTimeout(timer);
-  }, [enabled]);
+  // RIMOSSO: `scheduleReminder`, un setTimeout di VENTI ORE.
+  //
+  // Sarebbe scattato solo se la scheda fosse rimasta aperta venti ore di
+  // fila. Il commento originale lo sapeva — «only fire if the tab remains
+  // open (edge case but useful for PWA)» — ma non è un caso limite: è il caso
+  // normale. Nessuno tiene una scheda aperta da un giorno all'altro, e una
+  // PWA chiusa non esegue timer. Quel promemoria non è mai partito.
+  //
+  // Quello che manca per farlo davvero è il push del web: chiavi VAPID, una
+  // tabella di sottoscrizioni, un service worker che riceve, e un lavoro
+  // periodico che spedisce. Non è una riga da aggiungere qui, è un pezzo a
+  // sé, e finché non c'è i promemoria a app chiusa restano quelli via email
+  // (cron giornaliero su /api/cron/engagement).
 
   // Notify when someone sends a challenge
   const notifyChallenge = useCallback((challengerName: string) => {
@@ -251,7 +251,6 @@ export function useNotifications() {
     toggle,
     requestPermission,
     checkReminders,
-    scheduleReminder,
     notifyLessonComplete,
     notifyChallenge,
     notifyChallengeResult,

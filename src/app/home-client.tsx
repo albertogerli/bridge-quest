@@ -68,7 +68,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const stats = useLocalStats();
   const profile = useProfile();
   useSpacedReview();
-  const { checkReminders, scheduleReminder } = useNotifications();
+  const { checkReminders } = useNotifications();
   const { isGuidedMode, isStuck, isOnboarded } = useBeginnerStatus();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [notOnboarded, setNotOnboarded] = useState(false);
@@ -145,13 +145,13 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     }
   }, [hydrated]);
 
-  // Check notification reminders on page load and schedule future reminders
+  // I promemoria si controllano all'apertura. Non se ne programmano più per
+  // il futuro: quel setTimeout era da venti ore e non poteva scattare — vedi
+  // la nota in use-notifications.ts.
   useEffect(() => {
     checkReminders();
     updateLastActivity();
-    const cleanup = scheduleReminder();
-    return cleanup;
-  }, [checkReminders, scheduleReminder]);
+  }, [checkReminders]);
 
   const handleOnboardingComplete = () => {
     try {
