@@ -7,6 +7,7 @@ import { useAsdClubs } from "@/store/use-asd-store";
 import { reportError } from "@/lib/report-error";
 import { computeStats, countInstructors, mapProfilesToUsers } from "@/lib/admin-stats";
 import type { GameStats, LoginRecord, ProfileRecord, Stats, UserRow } from "./_types";
+import { eDiRete } from "@/lib/errore-di-rete";
 
 export interface AdminData {
   users: UserRow[];
@@ -88,6 +89,18 @@ export function useAdminData(): AdminData {
        *
        * Si riprova una volta, perché la connessione chiusa è passeggera; se
        * non va, si dice cosa non è andato davvero.
+       *
+       * LA RIPROVA ASPETTA MEZZO SECONDO. Prima ripartiva nell'istante
+       * successivo, ed è il momento in cui ha meno probabilità di riuscire:
+       * se la rete è caduta, mezzo millisecondo dopo è ancora caduta. Il
+       * caso visto in produzione il 26/09/2026 — iPhone, «Load failed» —
+       * aveva fallito tutti e due i tentativi, che è quello che ci si
+       * aspetta da due tentativi senza pausa in mezzo.
+       *
+       * L'ELENCO PESA. Millecentoquarantasei righe con sedici colonne fanno
+       * qualche centinaio di kilobyte, in due pagine da mille: su una rete
+       * mobile ballerina è un trasferimento che può cadere davvero, e non
+       * c'è niente di rotto da cercare.
        */
       let allProfiles: ProfileRecord[] = [];
       // ATTENZIONE: PostgREST tronca OGNI risposta a 1000 righe, RPC incluse.
@@ -101,16 +114,24 @@ export function useAdminData(): AdminData {
           .range(from, from + RPC_PAGE - 1);
 
         if (error) {
+          await new Promise<void>((esci) => setTimeout(esci, 500));
           ({ data, error } = await supabase
             .rpc("admin_list_users")
             .range(from, from + RPC_PAGE - 1));
         }
 
         if (error) {
-          reportError("admin:elenco-utenti", error);
+          // La rete caduta non è un difetto da segnalare: l'amministratore
+          // legge il messaggio qui sotto e riprova. Quello che deve arrivare
+          // a Sentry è il resto — un permesso negato, una colonna che non
+          // c'è, la RPC che non esiste più.
+          if (!eDiRete(error)) reportError("admin:elenco-utenti", error);
           setFetchError(
-            `L'elenco degli iscritti non è arrivato: ${error.message}. ` +
-              "Se il problema resta, controlla di avere ancora il ruolo di amministratore."
+            eDiRete(error)
+              ? "L'elenco degli iscritti non è arrivato: la connessione si è interrotta. " +
+                "Riprova, magari da una rete più stabile — sono oltre mille righe."
+              : `L'elenco degli iscritti non è arrivato: ${error.message}. ` +
+                "Se il problema resta, controlla di avere ancora il ruolo di amministratore."
           );
           setLoading(false);
           return;
