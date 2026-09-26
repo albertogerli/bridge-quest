@@ -2424,17 +2424,22 @@ $function$
 CREATE OR REPLACE FUNCTION public.get_class_leaderboard(p_class_id uuid)
  RETURNS TABLE(student_id uuid, student_name text, hands_made integer, hands_played integer, total_tricks integer, total_ms bigint)
  LANGUAGE plpgsql
- STABLE SECURITY DEFINER
+ SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
+DECLARE
+  v_nominativi boolean;
+  v_insegnante boolean;
 BEGIN
   IF NOT (is_member_of_class(p_class_id) OR is_instructor_of_class(p_class_id)) THEN
     RAISE EXCEPTION 'not authorized for class %', p_class_id USING ERRCODE = '42501';
   END IF;
 
+  SELECT c.risultati_nominativi INTO v_nominativi FROM classes c WHERE c.id = p_class_id;
+  v_insegnante := is_instructor_of_class(p_class_id);
+
   RETURN QUERY
   WITH first_attempt AS (
-    -- one row per (student, assignment, hand): the FIRST attempt
     SELECT DISTINCT ON (gr.user_id, gr.assignment_id, gr.details->>'smazzata_id')
       gr.user_id,
       (gr.score >= 0)                                  AS made,
@@ -2449,7 +2454,11 @@ BEGIN
   )
   SELECT
     fa.user_id                                         AS student_id,
-    p.display_name                                     AS student_name,
+    CASE
+      WHEN v_insegnante OR coalesce(v_nominativi, false) OR fa.user_id = auth.uid()
+        THEN p.display_name
+      ELSE NULL
+    END                                                AS student_name,
     SUM(CASE WHEN fa.made THEN 1 ELSE 0 END)::int      AS hands_made,
     COUNT(*)::int                                      AS hands_played,
     SUM(fa.tricks)::int                                AS total_tricks,
@@ -3408,6 +3417,21 @@ AS $function$
       where r.week_num = m.week_num)::integer
   from mie m
   order by m.week_num desc;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.nomi_della_classe(p_class_id uuid)
+ RETURNS TABLE(student_id uuid, display_name text)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select m.student_id, p.display_name
+    from class_members m
+    join profiles p on p.id = m.student_id
+   where m.class_id = p_class_id
+     and m.status = 'active'
+     and (is_member_of_class(p_class_id) or is_instructor_of_class(p_class_id));
 $function$
 ;
 
@@ -6880,6 +6904,10 @@ GRANT EXECUTE ON FUNCTION public.my_bidding_sessions() TO service_role;
 REVOKE ALL ON FUNCTION public.my_tournament_history(limite integer) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.my_tournament_history(limite integer) TO service_role;
+REVOKE ALL ON FUNCTION public.nomi_della_classe(p_class_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.nomi_della_classe(p_class_id uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.nomi_della_classe(p_class_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.nomi_della_classe(p_class_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.punteggio_contratto(p_level integer, p_strain text, p_prese integer, p_zona boolean, p_doppio integer) TO anon;
