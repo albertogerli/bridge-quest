@@ -1831,6 +1831,34 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.classifica_settimanale(p_quanti integer DEFAULT 100)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select case when (select auth.uid()) is null then '[]'::jsonb else coalesce(
+    (select jsonb_agg(jsonb_build_object(
+        'id', t.user_id, 'nome', t.nome, 'asd', t.asd, 'xp', t.xp, 'mani', t.mani
+      ) order by t.mani desc, t.xp desc)
+     from (
+       select g.user_id,
+              p.display_name as nome,
+              p.asd_name as asd,
+              coalesce(p.xp, 0) as xp,
+              count(*) as mani
+       from public.game_results g
+       join public.profiles p on p.id = g.user_id
+       where g.created_at > now() - interval '7 days'
+         and coalesce(p.ospite, false) = false
+       group by g.user_id, p.display_name, p.asd_name, p.xp
+       order by count(*) desc, coalesce(p.xp, 0) desc
+       limit greatest(1, least(coalesce(p_quanti, 100), 500))
+     ) t),
+    '[]'::jsonb) end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer DEFAULT 50)
  RETURNS jsonb
  LANGUAGE sql
@@ -6935,6 +6963,9 @@ GRANT EXECUTE ON FUNCTION public.bidding_session_view(p_id uuid) TO service_role
 REVOKE ALL ON FUNCTION public.can_post_for_asd(p_asd_code text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.can_post_for_asd(p_asd_code text) TO service_role;
+REVOKE ALL ON FUNCTION public.classifica_settimanale(p_quanti integer) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.classifica_settimanale(p_quanti integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.classifica_settimanale(p_quanti integer) TO service_role;
 REVOKE ALL ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.classifica_torneo(p_torneo uuid, p_quanti integer) TO service_role;

@@ -129,6 +129,8 @@ interface PlayerEntry {
   xp: number;
   updated_at: string;
   asd_name: string | null;
+  /** Mani giocate negli ultimi 7 giorni. C'è solo nella scheda settimanale. */
+  mani?: number;
 }
 
 interface AsdRanking {
@@ -294,12 +296,42 @@ export default function ClassificaPage() {
   const league = getLeague(userXp);
   const nextLeague = leagues.find((l) => l.minXp > userXp);
 
-  // Filter players by activity period
-  const weeklyPlayers = useMemo(() => {
-    // eslint-disable-next-line react-hooks/purity -- cutoff temporale (ultimi 7 giorni) per il filtro attività: dipendenza dal tempo intenzionale
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    return allPlayers.filter((p) => new Date(p.updated_at) >= weekAgo);
-  }, [allPlayers]);
+  // LA SETTIMANALE LA CALCOLA IL DATABASE, e misura le mani giocate negli
+  // ultimi sette giorni.
+  //
+  // Prima prendeva la classifica globale, teneva chi aveva `updated_at`
+  // recente e poi `LeaderboardList` la riordinava per XP TOTALE: non era una
+  // classifica della settimana, era quella di sempre ristretta a chi si era
+  // fatto vivo. Il cartello prometteva «chi gioca di più sale in cima» e chi
+  // giocava di più restava sotto a un veterano passato di lì il martedì.
+  //
+  // Gli XP GUADAGNATI in una settimana non sono ricavabili: l'XP si assegna
+  // nel browser e si somma in `profiles.xp`, senza che resti traccia di
+  // quanto e quando. Le mani giocate invece ci sono, una riga per mano in
+  // `game_results` — ed è alla lettera quello che il cartello prometteva.
+  const [weeklyPlayers, setWeeklyPlayers] = useState<PlayerEntry[]>([]);
+  useEffect(() => {
+    const supabase = createClient();
+    void supabase.rpc("classifica_settimanale", { p_quanti: 100 }).then(({ data, error }) => {
+      if (error) {
+        reportError("classifica:settimanale", error);
+        return;
+      }
+      const righe = (data ?? []) as {
+        id: string; nome: string | null; asd: string | null; xp: number; mani: number;
+      }[];
+      setWeeklyPlayers(
+        righe.map((r) => ({
+          id: r.id,
+          name: r.nome ?? "Giocatore",
+          xp: r.xp,
+          asd_name: r.asd,
+          updated_at: "",
+          mani: r.mani,
+        })),
+      );
+    });
+  }, []);
 
   // Search/filter by player name
   const [search, setSearch] = useState("");
@@ -665,14 +697,14 @@ export default function ClassificaPage() {
                       className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/30 card-clean rounded-xl p-3"
                     >
                       <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
-                        {t("Classifica basata sugli XP dei giocatori attivi negli ultimi 7 giorni. Chi gioca di più sale in cima!")}
+                        {t("Chi ha giocato più mani negli ultimi 7 giorni. Si riparte ogni settimana: gli XP di sempre qui non contano.")}
                       </p>
                     </motion.div>
                     <LeaderboardSearch value={search} onChange={setSearch} />
                     {filteredWeekly.length === 0 ? (
                       <EmptyState message={`Nessun giocatore trovato per "${search}"`} />
                     ) : (
-                      <LeaderboardList players={filteredWeekly} currentUserId={currentUserId} league={league} />
+                      <LeaderboardList players={filteredWeekly} currentUserId={currentUserId} league={league} metrica="mani" />
                     )}
                   </>
                 )}
@@ -1106,15 +1138,24 @@ function LeaderboardList({
   players,
   currentUserId,
   league,
+  metrica = "xp",
 }: {
   players: PlayerEntry[];
   currentUserId: string | null;
   league: (typeof leagues)[0];
+  /**
+   * Su cosa si ordina e cosa si mostra a destra. Era fisso su "xp", ed è il
+   * motivo per cui la scheda settimanale non era settimanale: qualunque
+   * ordine le arrivasse, qui veniva rifatto per XP totale.
+   */
+  metrica?: "xp" | "mani";
 }) {
   const t = useT();
   // Dedupe by id (defensive: the source may contain a player twice) then sort.
   const unique = Array.from(new Map(players.map((p) => [p.id, p])).values());
-  const sorted = unique.sort((a, b) => b.xp - a.xp);
+  const sorted = unique.sort((a, b) =>
+    metrica === "mani" ? (b.mani ?? 0) - (a.mani ?? 0) || b.xp - a.xp : b.xp - a.xp,
+  );
   const ranked = sorted.map((p, i) => ({ ...p, rank: i + 1 }));
   const totalPlayers = ranked.length;
 
@@ -1211,9 +1252,11 @@ function LeaderboardList({
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-sm text-foreground">
-                      {formatNumber(player.xp)}
+                      {formatNumber(metrica === "mani" ? (player.mani ?? 0) : player.xp)}
                     </p>
-                    <p className="text-[12px] text-muted-foreground">XP</p>
+                    <p className="text-[12px] text-muted-foreground">
+                      {metrica === "mani" ? t("mani") : "XP"}
+                    </p>
                   </div>
                 </div>
 
