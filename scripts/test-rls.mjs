@@ -1040,7 +1040,6 @@ try {
     const { data: activeMessages, error: activeMsgErr } = await u.from("class_messages").select("id").eq("class_id",classe.id);
     if (!approveErr && !activeErr && !activeMsgErr && activeAssignments?.length===1 && activeMessages?.length===1) ok("(e) l'allievo approvato legge compito e chat esistenti");
     else fail("(e) l'approvazione non rende visibili compito e chat");
-  }
 
     // (f) Il respinto non si riammette da solo.
     //     Uscire dalla classe è lecito, e chi è uscito può rientrare col
