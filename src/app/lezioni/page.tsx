@@ -13,9 +13,10 @@ import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { isWorldLocked } from "@/lib/progression";
 import Link from "next/link";
-import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
+import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2, Play } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
+import { primoModuloIncompleto } from "@/lib/prossimo-modulo";
 
 // Colors for the path nodes per world
 const worldColors = [
@@ -52,6 +53,10 @@ export default function LezioniPage() {
   const t = useT();
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
+  // Dove riprendere. Stessa funzione che usa l'eroe della home: se
+  // divergessero, i due punti manderebbero l'allievo in lezioni diverse.
+  const riprendi = primoModuloIncompleto(courses, completedMap);
+
   const { smazzate: allSmazzate } = useSmazzate();
   const [selectedCourse, setSelectedCourse] = useState<CourseId>("fiori");
   const [onboarded, setOnboarded] = useState(false);
@@ -120,6 +125,49 @@ export default function LezioniPage() {
             {totalCompleted}/{totalModules} moduli completati
           </p>
         </motion.div>
+
+        {/*
+          RIPRENDI, IN CIMA.
+
+          Il percorso è di quarantanove lezioni su quattro corsi: chi torna
+          atterrava in cima e doveva CERCARE dove si era fermato, scorrendo.
+          Adesso la scheda «Percorso» è una delle quattro della barra — cioè
+          uno degli ingressi principali — e un ingresso che chiede di cercare
+          è un ingresso che chiede invece di dare.
+
+          Sta in cima e non è uno scorrimento automatico apposta: una lista
+          animata che si muove da sola sotto le dita è peggio del problema
+          che risolve, e chi vuole guardare il percorso dall'inizio deve
+          poterlo fare.
+        */}
+        {riprendi && totalCompleted > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4"
+          >
+            <Link
+              href={`/lezioni/${riprendi.lessonId}/${riprendi.moduleId}`}
+              aria-label={`${t("Riprendi")}: ${riprendi.moduleTitle}`}
+            >
+              <div className="flex items-center gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4 transition-all hover:shadow-lg active:scale-[0.99]">
+                <span className="text-2xl" aria-hidden="true">{riprendi.lessonIcon}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-bold uppercase tracking-wider text-primary">
+                    {t("Riprendi")}
+                  </span>
+                  <span className="block truncate text-sm font-bold text-foreground">
+                    {riprendi.moduleTitle}
+                  </span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {riprendi.lessonTitle}
+                  </span>
+                </span>
+                <Play className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+              </div>
+            </Link>
+          </motion.div>
+        )}
 
         {/* Prima Mano — lezione introduttiva, sempre visibile */}
         <motion.div
