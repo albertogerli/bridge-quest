@@ -39,6 +39,7 @@ import { GraduationCap, Zap } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 import { InstructorCard } from "@/components/home/instructor-card";
 import { useT } from "@/contexts/traduzioni-provider";
+import { richiestaDaMostrare } from "@/lib/richiesta-home";
 
 // Percorso "Prima Mano": ~16 kB gz di step interattivi che sostituiscono l'intera
 // home solo per chi non è ancora onboardato. Fuori dal first load di tutti gli altri.
@@ -79,6 +80,15 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const [weeklyData, setWeeklyData] = useState({ xpEarned: 0, modulesCompleted: 0, handsPlayed: 0, streakDays: 0 });
   const handsPlayed = useGameStore((s) => s.handsPlayed);
   const [isGuest, setIsGuest] = useState(false);
+
+  // UNA richiesta alla volta. La priorità sta in `richiesta-home.ts`.
+  const richiesta = richiestaDaMostrare({
+    nonAvviato: notOnboarded && !showOnboarding,
+    ospiteDaSalvare:
+      !user && isGuest && stats.xp === 0 && Object.keys(stats.completedModules).length === 0,
+    senzaCircolo: !authProfile?.asd_code,
+    autenticato: !!user,
+  });
   const [referralToast, setReferralToast] = useState(false);
   /**
    * Chi insegna ha chiesto di vedere la bacheca dell'allievo.
@@ -380,11 +390,12 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         nextModule={nextModule}
       />
 
-      {/* Guest login reminder */}
-      {!user && isGuest && stats.xp === 0 && Object.keys(stats.completedModules).length === 0 && <GuestLoginReminder />}
-
-      {/* Prima Mano banner for users who skipped onboarding */}
-      {notOnboarded && !showOnboarding && <PrimaManoBanner />}
+      {/* UNA richiesta alla volta: la regola e la priorità stanno in
+          `richiesta-home.ts`, con i suoi test. Prima erano quattro
+          condizioni sparse che non sapevano l'una dell'altra, e chi era
+          registrato e senza ASD ne vedeva due in fila. */}
+      {richiesta === "ospite" && <GuestLoginReminder />}
+      {richiesta === "prima-mano" && <PrimaManoBanner />}
 
       {/*
         L'INVITO A ENTRARE IN UNA CLASSE, per chi non ne ha nessuna.
@@ -464,7 +475,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       <LicitaSection />
 
       {/* ===== ATTIVA PROMEMORIA ===== (logged-in; activates the reminder loop) */}
-      {user && <NotificationsNudge />}
+      {richiesta === "notifiche" && <NotificationsNudge />}
 
       {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
 
@@ -498,7 +509,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       {hasStarted && !isGuidedMode && <SuggestedNextStep nextModule={nextModule} />}
 
       {/* ===== TROVA ASD BANNER ===== (logged-in users without ASD) */}
-      {user && !authProfile?.asd_code && <FindAsdBanner />}
+      {richiesta === "trova-asd" && <FindAsdBanner />}
 
       {/* ===== TREASURE CHESTS ===== (hidden in guided mode) */}
       {!isGuidedMode && (
