@@ -2,6 +2,7 @@
 
 import { forwardRef } from "react";
 import type { Facoltativi, TestiLocandina } from "@/lib/locandina";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Il foglio A4 vero e proprio.
@@ -29,6 +30,7 @@ export const FoglioLocandina = forwardRef<
     qrSvg: string;
   }
 >(function FoglioLocandina({ testi, facoltativi, logoAsd, qrSvg }, ref) {
+  const t = useT();
   const conQr = facoltativi.qr && qrSvg;
   return (
     <div
@@ -74,8 +76,8 @@ export const FoglioLocandina = forwardRef<
         </div>
 
         <div style={{ marginTop: 26, display: "flex", flexDirection: "column", gap: 7, fontSize: 20, color: "#3b4453" }}>
-          {testi.corso && <div><b style={{ color: "#0f1219" }}>Corso:</b> {testi.corso}</div>}
-          <div><b style={{ color: "#0f1219" }}>Insegnante:</b> {testi.insegnante}</div>
+          {testi.corso && <div><b style={{ color: "#0f1219" }}>{t("Corso:")}</b> {testi.corso}</div>}
+          <div><b style={{ color: "#0f1219" }}>{t("Insegnante:")}</b> {testi.insegnante}</div>
         </div>
 
         {facoltativi.note && testi.note && (
@@ -92,7 +94,7 @@ export const FoglioLocandina = forwardRef<
         textAlign: conQr ? "left" : "center",
       }}>
         <div style={{ fontSize: 19, color: "#3b4453", lineHeight: 1.4 }}>
-          Organizza
+          {t("Organizza")}
           <b style={{ display: "block", fontSize: 24, color: "#0f1219" }}>{testi.associazione}</b>
           {!conQr && testi.contatti && <span style={{ fontSize: 17 }}>{testi.contatti}</span>}
         </div>
@@ -101,7 +103,7 @@ export const FoglioLocandina = forwardRef<
             {/* Il QR è generato qui: nessun servizio esterno vede i codici. */}
             <div style={{ width: 150, height: 150 }} dangerouslySetInnerHTML={{ __html: qrSvg }} />
             <span style={{ display: "block", fontSize: 15, color: "#3b4453", marginTop: 7, fontWeight: 600 }}>
-              Inquadra per iscriverti
+              {t("Inquadra per iscriverti")}
             </span>
           </div>
         )}

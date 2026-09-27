@@ -25,7 +25,7 @@ export default async function NotFound() {
       </div>
 
       <h1 className="text-4xl font-black text-foreground font-display mb-2">404</h1>
-      <p className="text-lg font-bold text-foreground/80 mb-1">Pagina non trovata</p>
+      <p className="text-lg font-bold text-foreground/80 mb-1">{t("Pagina non trovata")}</p>
       <p className="text-sm text-muted-foreground max-w-xs mb-8">
         {t("Questa carta non è nel mazzo! La pagina che cerchi non esiste o è stata spostata.")}
       </p>

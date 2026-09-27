@@ -25,7 +25,13 @@ export type GameType =
   | "cosa-apri" | "quale-contratto" | "quiz-prese" | "licita"
   // Questa invece l'XP lo dava già, e il risultato no: chi gioca la sfida di
   // un amico prendeva punti che nessuna tabella conosceva.
-  | "sfida-link";
+  | "sfida-link"
+  // Lo scrive la pagina dell'esercizio di classe, con un insert DIRETTO su
+  // `game_results` invece che da questa coda: quindi oggi un esercizio
+  // consegnato mentre la rete è giù si perde, e non viene riprovato. È
+  // mancato all'unione fino al 27/09/2026, quando il confronto con il CHECK
+  // del database l'ha notato — vedi tipi-di-gioco.test.ts.
+  | "compito";
 
 export interface GameResult {
   gameType: GameType;

@@ -194,7 +194,7 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
               <div className="space-y-1.5 pl-8">
                 <label htmlFor="contatti" className="text-sm">{t("Come iscriversi senza QR")}</label>
                 <input id="contatti" type="text" value={testi.contatti}
-                  placeholder="Per informazioni: 080 1234567"
+                  placeholder={t("Per informazioni: 080 1234567")}
                   onChange={(e) => cambia("contatti", e.target.value)}
                   className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" />
               </div>

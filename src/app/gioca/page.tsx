@@ -8,10 +8,8 @@ import Link from "next/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
 import { getWeekNum } from "@/lib/tournament-stats";
-import {
-  Flame, CheckCircle2, Trophy, CalendarDays, Zap, Search,
-  Target, Hash, Megaphone, MessageCircle, Brain, Swords,
-  Spade, BookOpen, Link2, BarChart3, Radio, Calculator, Gavel, Users } from "lucide-react";
+import { CollegamentiSezione } from "@/components/collegamenti-sezione";
+import { BarChart3, BookOpen, Brain, Calculator, CalendarDays, CheckCircle2, Flame, Gavel, Handshake, Hash, Link2, Megaphone, MessageCircle, MessagesSquare, Radio, Search, Spade, Swords, Target, Trophy, Users, Zap } from "lucide-react";
 
 export default function GiocaPage() {
   const t = useT();
@@ -680,6 +678,19 @@ export default function GiocaPage() {
             </div>
           </div>
         </motion.div>
+
+        {/* Qui e non in un cassetto: classifiche, amici e forum si cercano
+            quando si sta giocando, non quando si stanno cercando le
+            impostazioni. */}
+        <CollegamentiSezione
+          titolo="Con gli altri"
+          voci={[
+            { href: "/classifica", icona: Trophy, etichetta: "Classifica", descrizione: "Come vai rispetto agli altri" },
+            { href: "/amici", icona: Users, etichetta: "Amici", descrizione: "Sfida chi conosci" },
+            { href: "/trova-compagno", icona: Handshake, etichetta: "Trova un compagno", descrizione: "Cerca qualcuno con cui giocare" },
+            { href: "/forum", icona: MessagesSquare, etichetta: "Forum", descrizione: "Domande e discussioni" },
+          ]}
+        />
       </div>
     </div>
   );

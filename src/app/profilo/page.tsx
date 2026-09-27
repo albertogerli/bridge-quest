@@ -35,6 +35,8 @@ import { ProfileStyleSelector } from "./_components/profile-style-selector";
 import { FichesCard } from "./_components/fiches-card";
 import { InviteFriendSection } from "./_components/invite-friend-section";
 import { AccountActions } from "./_components/account-actions";
+import { CollegamentiSezione } from "@/components/collegamenti-sezione";
+import { Globe, Layers, MapPin, Settings, ShoppingBag } from "lucide-react";
 
 export default function ProfiloPage() {
   const { user, profile: authProfile, loading: authLoading, signOut } = useSharedAuth();
@@ -316,6 +318,21 @@ export default function ProfiloPage() {
           onClose={() => data.setPendingAchievement(null)}
         />
       )}
+
+      {/* Premi, acquisti e impostazioni: le cose che riguardano te e non il
+          gioco né lo studio. */}
+      <div className="mx-auto w-full max-w-3xl px-4 pb-8 sm:px-6">
+        <CollegamentiSezione
+          titolo="Il tuo account"
+          voci={[
+            { href: "/collezione", icona: Layers, etichetta: "Collezione", descrizione: "Le carte che hai raccolto" },
+            { href: "/negozio", icona: ShoppingBag, etichetta: "Negozio", descrizione: "Spendi le monete guadagnate" },
+            { href: "/trova-circolo", icona: MapPin, etichetta: "Trova un circolo", descrizione: "Le ASD vicino a te" },
+            { href: "/scopri", icona: Globe, etichetta: "Scopri la FIGB", descrizione: "Tornei, federazione, bridge vero" },
+            { href: "/impostazioni", icona: Settings, etichetta: "Impostazioni", descrizione: "Lingua, aspetto, notifiche, account" },
+          ]}
+        />
+      </div>
     </div>
   );
 }
