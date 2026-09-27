@@ -208,3 +208,30 @@ describe("una voce che non passerà mai non blocca le altre", () => {
     expect(coda.pending("utente-1")).toHaveLength(0);
   });
 });
+
+describe("il gettone scaduto non è un rifiuto", () => {
+  /**
+   * Sentry, 27/09/2026: «Sync badges failed (PGRST303; status 401)». PGRST303
+   * è il gettone scaduto. Trattarlo da rifiuto permanente avrebbe buttato
+   * via la partita, quando basta il rinnovo e un altro tentativo.
+   */
+  it.each(["PGRST301", "PGRST302", "PGRST303"])("%s è sessione, non rifiuto", (code) => {
+    const e = erroreDiScrittura({ code, message: "JWT expired" });
+    expect(e).toBeInstanceOf(SessioneNonValida);
+    expect(e).not.toBeInstanceOf(RifiutoPermanente);
+  });
+
+  it("un vincolo violato resta un rifiuto: riprovarlo non cambia niente", () => {
+    expect(erroreDiScrittura({ code: "23514", message: "check constraint" }))
+      .toBeInstanceOf(RifiutoPermanente);
+  });
+
+  it("la voce con il gettone scaduto resta in coda", async () => {
+    const coda = createResultQueue(localStorage, async () => {
+      throw erroreDiScrittura({ code: "PGRST303", message: "JWT expired" });
+    });
+    coda.enqueue({ gameType: "licita", score: 3 }, "utente-2", "web");
+    await expect(coda.flush("utente-2")).rejects.toBeInstanceOf(SessioneNonValida);
+    expect(coda.pending("utente-2")).toHaveLength(1);
+  });
+});
