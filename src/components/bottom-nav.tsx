@@ -63,9 +63,12 @@ export function BottomNav() {
               icon={v.icon}
               label={v.label}
               active={isActive(v.href)}
-              // Le richieste di amicizia arrivano nel profilo, che è dove
-              // ora vivono gli amici: il pallino va lì o non si vede.
-              badge={v.href === "/profilo" && pendingFriends > 0}
+              // Il pallino va dove vanno gli amici, e gli amici sono finiti
+              // sotto Gioca — «Con gli altri». Il commento che c'era qui
+              // diceva «nel profilo», ed era rimasto indietro di una
+              // decisione: il pallino puntava a una scheda dove le richieste
+              // non ci sono.
+              badge={v.href === "/gioca" && pendingFriends > 0}
             />
           ))}
         </div>
