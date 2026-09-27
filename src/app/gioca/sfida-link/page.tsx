@@ -18,6 +18,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { awardGameXp } from "@/lib/xp-utils";
 import { generateSeed, dealFromSeed, encodeChallengeUrl } from "@/lib/hand-encoder";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useGameResults } from "@/hooks/use-game-results";
 
 // ──────────────────────────────────────────────
 // localStorage challenge results
@@ -63,6 +64,7 @@ function SfidaLinkContent() {
   const seedParam = searchParams.get("s");
   const isMobile = useMobile();
   const profile = useProfile();
+  const { saveGameResult } = useGameResults();
   const xpSaved = useRef(false);
 
   // State
@@ -140,7 +142,17 @@ function SfidaLinkContent() {
       const score = contractMade ? 100 + game.result.result * 30 : -50 * Math.abs(game.result.result);
 
       // Save result
+      // `saveChallengeResult` scrive in localStorage e basta: resta su un
+      // dispositivo solo. Finora era l'unica traccia — l'XP veniva dato e la
+      // partita non esisteva da nessuna parte, quindi non contava per la
+      // classifica settimanale, non compariva nelle statistiche del profilo,
+      // e sul cruscotto questa pagina sembrava non usata da nessuno.
       saveChallengeResult(seed, tricksMade, score);
+      saveGameResult({
+        gameType: "sfida-link",
+        score,
+        details: { prese: tricksMade, contrattoRealizzato: contractMade },
+      });
 
       // Award XP
       const gameXp = 30 + (contractMade ? 20 : 0) + Math.max(0, game.result.result) * 10;
@@ -149,7 +161,9 @@ function SfidaLinkContent() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setMode("finished");
     }
-  }, [game.phase, game.result, seed]);
+    // `xpSaved` è il guard: l'effetto può rigirare quanto vuole, il corpo
+    // entra una volta sola.
+  }, [game.phase, game.result, seed, saveGameResult]);
 
   // Copy challenge link
   const handleCopyLink = useCallback(async () => {

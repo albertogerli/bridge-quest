@@ -12,6 +12,7 @@ import type { Card, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { aperturaConsigliata, type Apertura } from "@/lib/apertura";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useGameResults } from "@/hooks/use-game-results";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -46,6 +47,7 @@ export default function CosaApriPage() {
   const [round, setRound] = useState(0);
   const [risposta, setRisposta] = useState<string | null>(null);
   const [punti, setPunti] = useState(0);
+  const { saveGameResult } = useGameResults();
 
   // La domanda si CALCOLA dal seme e dal numero di mano: generare è
   // deterministico, quindi non serve tenerla in stato né produrla in un
@@ -73,6 +75,12 @@ export default function CosaApriPage() {
   }, [seed, round]);
 
   const prossima = () => {
+    // Il risultato si registra all'ULTIMA risposta, non nella schermata
+    // finale: quella è un ramo di render e verrebbe eseguita a ogni
+    // ridisegno, moltiplicando le righe.
+    if (round + 1 >= ROUNDS) {
+      saveGameResult({ gameType: "cosa-apri", score: punti, details: { mani: ROUNDS } });
+    }
     setRisposta(null);
     setRound((r) => r + 1);
   };

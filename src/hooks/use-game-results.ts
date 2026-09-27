@@ -15,7 +15,16 @@ import { reportError } from "@/lib/report-error";
 export type GameType =
   | "mano-del-giorno" | "sfida" | "smazzata" | "torneo" | "quiz-lampo"
   | "conta-veloce" | "impasse" | "memory" | "trova-errore" | "mano-guidata"
-  | "dichiara" | "pratica-licita" | "sfida-settimanale" | "segnali";
+  | "dichiara" | "pratica-licita" | "sfida-settimanale" | "segnali"
+  // Aggiunti il 27/09/2026. Queste quattro partite esistevano da mesi e non
+  // lasciavano NIENTE: né un risultato né un XP. Sul cruscotto sembravano
+  // pagine morte, e non lo sapevamo perché non c'era il posto dove
+  // guardare. Contare zero righe di una tabella in cui nessuno scrive non
+  // dice che nessuno gioca: dice che non stiamo misurando.
+  | "cosa-apri" | "quale-contratto" | "quiz-prese" | "licita"
+  // Questa invece l'XP lo dava già, e il risultato no: chi gioca la sfida di
+  // un amico prendeva punti che nessuna tabella conosceva.
+  | "sfida-link";
 
 export interface GameResult {
   gameType: GameType;
