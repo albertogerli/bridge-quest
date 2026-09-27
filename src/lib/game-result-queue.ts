@@ -62,6 +62,15 @@ export class ReteNonRaggiungibile extends Error {
  * a ricordare. Il valore esatto non si perde — chi ne ha uno lo mette in
  * `details`, dove la colonna è `jsonb` e ci sta tutto.
  */
+/**
+ * I codici con cui PostgREST dice «il tuo gettone non va bene adesso».
+ *
+ * PGRST301 gettone non valido, PGRST302 accesso anonimo negato, PGRST303
+ * gettone scaduto. Tutti e tre passano dopo un rinnovo, quindi la partita
+ * NON si butta: si riprova.
+ */
+const SESSIONE = new Set(["PGRST301", "PGRST302", "PGRST303"]);
+
 export function punteggioIntero(score: number): number {
   return Number.isFinite(score) ? Math.round(score) : 0;
 }
@@ -110,6 +119,11 @@ export function erroreDiScrittura(
 ): Error | null {
   if (!errore) return null;
   if (eDiRete(errore)) return new ReteNonRaggiungibile();
+  // Il gettone è scaduto o non è più valido: non è un rifiuto permanente,
+  // è la sessione. Riprovare DOPO il rinnovo funziona, quindi la voce deve
+  // restare in coda. Visto il 27/09/2026 come «PGRST303; status 401»:
+  // trattarlo da rifiuto l'avrebbe buttata via, e con essa la partita.
+  if (SESSIONE.has(errore.code ?? "")) return new SessioneNonValida();
   // `||` e non `??`: `code` è la stringa VUOTA quando la fetch non parte, e
   // `??` la lascerebbe passare. È così che si è stampato «rifiutato ()».
   return new RifiutoPermanente(
