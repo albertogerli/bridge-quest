@@ -296,7 +296,7 @@ export default function LezioniPage() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-foreground">Dispense & Infografiche</p>
+                <p className="text-sm font-bold text-foreground">{t("Dispense e infografiche")}</p>
                 <p className="text-[12px] text-muted-foreground">{t("Scarica il materiale didattico")}</p>
               </div>
               <svg className="h-5 w-5 text-muted-foreground/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
