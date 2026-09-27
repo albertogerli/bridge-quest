@@ -7,6 +7,7 @@ import { getPlatform } from "@/lib/native-bridge";
 import {
   createResultQueue,
   erroreDiScrittura,
+  punteggioIntero,
   ReteNonRaggiungibile,
   SessioneNonValida,
 } from "@/lib/game-result-queue";
@@ -44,7 +45,11 @@ function resultQueue() {
     // Existing UUID primary key + DO NOTHING: no new schema or UPDATE privilege.
     const { error } = await supabase.from("game_results").upsert({
       id: entry.id, user_id: entry.owner, game_type: entry.gameType,
-      lesson_id: entry.lessonId ?? null, score: entry.score,
+      // `punteggioIntero` qui e non all'accodamento: così si sbloccano anche
+      // le voci GIÀ ferme nel localStorage di chi ha giocato una licita
+      // prima della correzione. Quelle non si possono riscrivere: si possono
+      // solo mandare bene adesso.
+      lesson_id: entry.lessonId ?? null, score: punteggioIntero(entry.score),
       details: entry.details ?? null, created_at: entry.timestamp, platform: entry.platform,
     }, { onConflict: "id", ignoreDuplicates: true });
     // Never log payload, user ID, or database details that could contain them.
