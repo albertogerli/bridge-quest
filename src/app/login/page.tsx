@@ -545,9 +545,9 @@ function LoginContent() {
                 <span>{t("Attendere...")}</span>
               </div>
             ) : mode === "login" ? (
-              "Accedi"
+              t("Accedi")
             ) : (
-              "Crea account"
+              t("Crea account")
             )}
           </Button>
         </form>

@@ -61,14 +61,14 @@ export function LicitaSection() {
                 <span className="text-xl" aria-hidden="true">
                   {p.emoji}
                 </span>
-                <span className="text-sm font-bold">{p.titolo}</span>
+                <span className="text-sm font-bold">{t(p.titolo)}</span>
                 {p.nuovo && (
                   <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide">
                     {t("Nuovo")}
                   </span>
                 )}
               </div>
-              <span className="text-[12px] leading-snug text-white/80">{p.desc}</span>
+              <span className="text-[12px] leading-snug text-white/80">{t(p.desc)}</span>
             </div>
           </Link>
         ))}
