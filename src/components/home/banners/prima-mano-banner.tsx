@@ -1,8 +1,12 @@
+"use client";
+
 import { motion } from "motion/react";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 export function PrimaManoBanner() {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -19,8 +23,8 @@ export function PrimaManoBanner() {
             <BookOpen className="w-5 h-5" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-[#12305f]">Hai 3 minuti? Prova Prima Mano</p>
-            <p className="text-[12px] text-[#51627f]">Impara le basi del bridge e guadagna +50 XP</p>
+            <p className="text-sm font-bold text-[#12305f]">{t("Hai 3 minuti? Prova Prima Mano")}</p>
+            <p className="text-[12px] text-[#51627f]">{t("Impara le basi del bridge e guadagna +50 XP")}</p>
           </div>
           <span className="shrink-0 rounded-full bg-[#c8a44e]/15 px-2.5 py-1 text-[12px] font-bold text-[#8f6b16]">+50 XP</span>
         </div>
