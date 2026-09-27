@@ -4,7 +4,12 @@ import { useCallback, useEffect } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { getPlatform } from "@/lib/native-bridge";
-import { createResultQueue, SessioneNonValida } from "@/lib/game-result-queue";
+import {
+  createResultQueue,
+  erroreDiScrittura,
+  ReteNonRaggiungibile,
+  SessioneNonValida,
+} from "@/lib/game-result-queue";
 import { reportError } from "@/lib/report-error";
 
 export type GameType =
@@ -34,7 +39,11 @@ function resultQueue() {
       details: entry.details ?? null, created_at: entry.timestamp, platform: entry.platform,
     }, { onConflict: "id", ignoreDuplicates: true });
     // Never log payload, user ID, or database details that could contain them.
-    if (error) throw new Error("Salvataggio risultato rifiutato (" + (error.code ?? "database") + ")");
+    // La distinzione fra rete e rifiuto la fa `erroreDiScrittura`, dove
+    // l'errore è ancora quello vero: qui ne resterebbe solo il codice, e
+    // quando la fetch non parte postgrest-js lo lascia vuoto.
+    const problema = erroreDiScrittura(error);
+    if (problema) throw problema;
   });
 }
 
@@ -46,7 +55,9 @@ async function flushResults(owner: string) {
     // La sessione scaduta non si segnala: il risultato resta in memoria locale
     // e parte al prossimo accesso: è il lavoro per cui la coda esiste. Prima
     // arrivava un evento ogni trenta secondi, su cui non c'era niente da fare.
-    if (!(error instanceof SessioneNonValida)) reportError("game-results:sync", error);
+    if (!(error instanceof SessioneNonValida) && !(error instanceof ReteNonRaggiungibile)) {
+      reportError("game-results:sync", error);
+    }
     window.dispatchEvent(new Event("bq_results_pending"));
   }
 }
