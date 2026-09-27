@@ -45,3 +45,39 @@ export function primoModuloIncompleto(
   }
   return null;
 }
+
+/**
+ * L'ultima lezione TOCCATA: quella su cui si sta lavorando, o appena finita.
+ *
+ * PERCHÉ NON `primoModuloIncompleto`. Quella dice dove ANDARE; questa dice
+ * dove SI È STATI. Servono a due cose diverse: per proporre una mano da
+ * giocare ci vuole la seconda, perché una mano sulla lezione che non hai
+ * ancora aperto non è un ripasso, è un anticipo — e ti fa sbagliare per una
+ * cosa che nessuno ti ha ancora spiegato.
+ *
+ * «Toccata» vuol dire con almeno un modulo completato. Si prende l'ULTIMA
+ * nell'ordine del catalogo e non la più recente nel tempo, perché il tempo
+ * non ce l'abbiamo: `completedModules` è una mappa di booleani, senza date.
+ * Nell'uso normale — si va avanti in ordine — le due cose coincidono.
+ */
+export function ultimaLezioneToccata(
+  courses: readonly Course[],
+  completati: Readonly<Record<string, boolean>>,
+): { lessonId: number; lessonTitle: string; lessonIcon: string } | null {
+  let ultima: { lessonId: number; lessonTitle: string; lessonIcon: string } | null = null;
+  for (const course of courses) {
+    for (const mondo of course.worlds) {
+      for (const lezione of mondo.lessons) {
+        const toccata = lezione.modules.some((m) => completati[`${lezione.id}-${m.id}`]);
+        if (toccata) {
+          ultima = {
+            lessonId: lezione.id,
+            lessonTitle: lezione.title,
+            lessonIcon: lezione.icon,
+          };
+        }
+      }
+    }
+  }
+  return ultima;
+}
