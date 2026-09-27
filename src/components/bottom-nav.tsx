@@ -100,14 +100,17 @@ function NavItem({
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
       </svg>
     ),
-    // Una strada che sale a tappe: è il percorso, non un libro. Il libro
-    // diceva «teoria», e il percorso non è solo teoria.
+    // Una strada che si allontana, con la striscia in mezzo.
+    //
+    // PRIMA ERA UNA CURVA CON TRE PALLINI e a ventidue pixel sembrava un
+    // serpente: i pallini non stavano sulla curva e la curva non si vedeva.
+    // L'ho scoperto guardando lo screenshot, che è l'unico modo di
+    // accorgersene — nel codice sembrava ragionevole.
     percorso: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.6 : 2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
-        <path d="M6 20c0-3 3-3 3-6s-3-3-3-6 3-3 3-3" />
-        <circle cx="6" cy="20" r="1.6" fill={active ? "currentColor" : "none"} />
-        <circle cx="9" cy="8" r="1.6" fill={active ? "currentColor" : "none"} />
-        <circle cx="18" cy="5" r="2.2" fill={active ? "currentColor" : "none"} />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.4 : 1.9} strokeLinecap="round" className="h-[22px] w-[22px]" aria-hidden="true">
+        <path d="M5 21 L9.5 3" />
+        <path d="M19 21 L14.5 3" />
+        <path d="M12 5.5v2.5M12 11v2.5M12 16.5v2.5" />
       </svg>
     ),
     gioca: (
