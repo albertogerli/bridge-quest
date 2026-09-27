@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { expect, test } from "./test";
 import { dismissCookieBanner, login } from "./helpers";
 
@@ -256,4 +258,79 @@ test("il selettore di lingua si trova senza cercarlo", async ({ page }) => {
   await nelleImpostazioni.click();
   await expect(page).toHaveURL(/\/en\/impostazioni/, { timeout: 30_000 });
   await expect(page.getByRole("link", { name: "Italiano" }).first()).toBeVisible();
+});
+
+/**
+ * Sotto /en non deve restare in vista una frase che la traduzione CE L'HA.
+ *
+ * PERCHÉ IL CANCELLO NON BASTA. `stringhe-da-tradurre.mjs` confronta i
+ * LETTERALI passati a `t()` con il dizionario, e da lì non si vedono tre
+ * casi che il 27/09/2026 erano tutti in produzione insieme:
+ *
+ *  · `{h.label}` — l'etichetta arriva da un oggetto e viene stampata senza
+ *    passare da `t()`. La traduzione c'è, non viene mai usata. Erano così le
+ *    tre porte della home e le tre della licita: nove frasi.
+ *  · `"Accedi"` dentro un ternario, e `Mani` scritto crudo nel JSX: letterali
+ *    che nessuno ha avvolto, e che lo script conta come «da fare» in un
+ *    rapporto che non blocca niente.
+ *  · `{profile.xpLabel} totali` — mezza variabile e mezzo italiano. Non c'è
+ *    nessun letterale da trovare, ed è intraducibile per costruzione.
+ *
+ * Il cancello guarda il codice; questa prova guarda lo SCHERMO. È l'unica
+ * che può accorgersene, ed è per questo che nessuno se n'era accorto.
+ *
+ * COSA CONTROLLA: ogni testo VISIBILE che coincide con una chiave italiana
+ * del dizionario la cui traduzione è diversa. Se si vede l'italiano e
+ * l'inglese esiste, qualcuno ha dimenticato `t()`.
+ */
+test.describe("sotto /en non resta italiano che sappiamo tradurre", () => {
+  const PAGINE = ["/en", "/en/glossario", "/en/login"];
+  // Due larghezze: la barra laterale esiste solo sul portatile, e lì si
+  // nascondeva `{profile.xpLabel} totali`.
+  const LARGHEZZE = [
+    { nome: "telefono", width: 390, height: 844 },
+    { nome: "portatile", width: 1280, height: 900 },
+  ];
+
+  for (const misura of LARGHEZZE) {
+    for (const percorso of PAGINE) {
+      test(`${misura.nome} ${percorso}`, async ({ page }) => {
+        await page.setViewportSize({ width: misura.width, height: misura.height });
+        await page.addInitScript(() => {
+          try {
+            localStorage.setItem("bq_guest", "1");
+            localStorage.setItem("bq_onboarded", "1");
+            localStorage.setItem("bq_guide_v2_seen", "1");
+          } catch { /* private mode: la prova vale lo stesso */ }
+        });
+        await page.goto(percorso, { waitUntil: "networkidle" });
+        await page.waitForTimeout(1200);
+
+        const dizionario = JSON.parse(
+          readFileSync(join(__dirname, "..", "src", "traduzioni", "en.json"), "utf8"),
+        ) as Record<string, string>;
+
+        const italiane = await page.evaluate((diz: Record<string, string>) => {
+          const trovate: string[] = [];
+          for (const e of Array.from(document.querySelectorAll("body *"))) {
+            if (e.children.length) continue;
+            const txt = e.textContent?.trim();
+            if (!txt || !(txt in diz) || diz[txt] === txt) continue;
+            const r = e.getBoundingClientRect();
+            const st = getComputedStyle(e);
+            if (!r.width || !r.height || st.visibility === "hidden" || st.display === "none") continue;
+            trovate.push(txt);
+          }
+          return [...new Set(trovate)];
+        }, dizionario);
+
+        expect(
+          italiane,
+          "queste frasi hanno la traduzione inglese e si vedono in italiano: " +
+            "manca una `t()` attorno a loro, oppure l'etichetta arriva da un " +
+            "oggetto e viene stampata cruda",
+        ).toEqual([]);
+      });
+    }
+  }
 });

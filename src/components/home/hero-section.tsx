@@ -82,7 +82,7 @@ export function HeroSection({
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{handsPlayed}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Mani</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Mani")}</p>
           </div>
         </motion.div>
 

@@ -452,19 +452,23 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         </section>
       )}
 
-      {/* ===== HUB DI NAVIGAZIONE (Impara / Gioca / Scuola) ===== */}
+      {/* ===== HUB DI NAVIGAZIONE (Percorso / Gioca / Scuola) =====
+          Le etichette passavano da `{h.label}` senza `t()`: la traduzione
+          esisteva nel dizionario e non veniva mai applicata, quindi sotto
+          /en uscivano in italiano. «Impara» diventa «Percorso» e punta a
+          /lezioni, come la barra. */}
       <section className="px-4 sm:px-5 pt-4">
         <div className="mx-auto grid max-w-3xl grid-cols-3 gap-3">
           {[
-            { href: "/impara", emoji: "🎓", label: "Impara", desc: "Percorso e corsi", cls: "from-[#1B5E3B] to-[#2A7A4F]" },
+            { href: "/lezioni", emoji: "🎓", label: "Percorso", desc: "Lezioni e corsi", cls: "from-[#1B5E3B] to-[#2A7A4F]" },
             { href: "/gioca", emoji: "🎮", label: "Gioca", desc: "Pratica e sfide", cls: "from-figb to-figb-light" },
             { href: "/scuola", emoji: "👨‍🏫", label: "Scuola", desc: "Le tue classi", cls: "from-[#c8a44e] to-[#a8842e]" },
           ].map((h) => (
-            <Link key={h.href} href={h.href} aria-label={h.label} className="block">
+            <Link key={h.href} href={h.href} aria-label={t(h.label)} className="block">
               <div className={`flex h-full flex-col items-center gap-1 rounded-2xl bg-gradient-to-br ${h.cls} p-4 text-center text-white transition-all hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98]`}>
                 <span className="text-2xl">{h.emoji}</span>
-                <span className="text-sm font-bold">{h.label}</span>
-                <span className="text-[12px] text-white/75">{h.desc}</span>
+                <span className="text-sm font-bold">{t(h.label)}</span>
+                <span className="text-[12px] text-white/75">{t(h.desc)}</span>
               </div>
             </Link>
           ))}
