@@ -1892,5 +1892,19 @@
   "Usa l’hashtag": "Use the hashtag",
   "Vai al contenuto": "Skip to content",
   "Percorso di navigazione": "Breadcrumb",
-  "Gioca una mano su quello che hai appena studiato": "Play a hand on what you've just studied"
+  "Gioca una mano su quello che hai appena studiato": "Play a hand on what you've just studied",
+  "Per queste mani non ci sono soluzioni": "There are no solutions for these hands",
+  "Le mani generate da un argomento sono nuove ogni volta: nessuno le ha commentate, quindi non esiste un contratto di riferimento da stampare.": "Hands generated from a topic are new every time: nobody has commented on them, so there is no reference contract to print.",
+  "Le soluzioni ci sono per le mani di un compito, che vengono dal catalogo: apri la dispensa da un compito assegnato.": "Solutions exist for the hands of an assignment, which come from the catalog: open the handout from an assignment.",
+  "Sei in {posizione}": "You're {posizione}",
+  "prima": "first to speak",
+  "seconda": "second to speak",
+  "terza": "third to speak",
+  "quarta": "fourth to speak",
+  "nessuno in zona": "nobody vulnerable",
+  "siamo in zona": "we're vulnerable",
+  "loro in zona": "they're vulnerable",
+  "tutti in zona": "everyone vulnerable",
+  "Apre {posto}": "{posto} deals",
+  "Mano {n} · sei Sud": "Hand {n} · you're South"
 }

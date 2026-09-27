@@ -27,6 +27,7 @@ import {
   torneoCorrente, torneoMano,
   type ClassificaTorneo, type EsitoRegistrazione, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
 import { useT } from "@/contexts/traduzioni-provider";
+import { CondizioniAsta } from "@/components/bridge/condizioni-asta";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -445,11 +446,16 @@ export default function TorneoLicitaPage() {
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
               <Badge variant="secondary">
-                Mano {mano.numero} · sei Sud
+                {t("Mano {n} · sei Sud", { n: mano.numero })}
               </Badge>
-              <span className="text-xs text-muted-foreground">
-                {handHcp(mano.hands.south)} PO
-              </span>
+              {/* La zona e la posizione: senza, la mano non si può
+                  dichiarare. Vedi `CondizioniAsta`. */}
+              <CondizioniAsta
+                io="south"
+                dealer={mano.dealer}
+                vulnerability={mano.vulnerability}
+                punti={handHcp(mano.hands.south)}
+              />
             </div>
             {SUITS.map((s) => (
               <p key={s} className="text-lg font-mono flex items-center gap-2">
