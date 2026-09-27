@@ -36,6 +36,7 @@ import { FichesCard } from "./_components/fiches-card";
 import { InviteFriendSection } from "./_components/invite-friend-section";
 import { AccountActions } from "./_components/account-actions";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
+import { Globe, Layers, MapPin, Settings, ShoppingBag } from "lucide-react";
 
 export default function ProfiloPage() {
   const { user, profile: authProfile, loading: authLoading, signOut } = useSharedAuth();
@@ -324,11 +325,11 @@ export default function ProfiloPage() {
         <CollegamentiSezione
           titolo="Il tuo account"
           voci={[
-            { href: "/collezione", emoji: "🃏", etichetta: "Collezione", descrizione: "Le carte che hai raccolto" },
-            { href: "/negozio", emoji: "🛍️", etichetta: "Negozio", descrizione: "Spendi le monete guadagnate" },
-            { href: "/trova-circolo", emoji: "📍", etichetta: "Trova un circolo", descrizione: "Le ASD vicino a te" },
-            { href: "/scopri", emoji: "🌐", etichetta: "Scopri la FIGB", descrizione: "Tornei, federazione, bridge vero" },
-            { href: "/impostazioni", emoji: "⚙️", etichetta: "Impostazioni", descrizione: "Lingua, aspetto, notifiche, account" },
+            { href: "/collezione", icona: Layers, etichetta: "Collezione", descrizione: "Le carte che hai raccolto" },
+            { href: "/negozio", icona: ShoppingBag, etichetta: "Negozio", descrizione: "Spendi le monete guadagnate" },
+            { href: "/trova-circolo", icona: MapPin, etichetta: "Trova un circolo", descrizione: "Le ASD vicino a te" },
+            { href: "/scopri", icona: Globe, etichetta: "Scopri la FIGB", descrizione: "Tornei, federazione, bridge vero" },
+            { href: "/impostazioni", icona: Settings, etichetta: "Impostazioni", descrizione: "Lingua, aspetto, notifiche, account" },
           ]}
         />
       </div>

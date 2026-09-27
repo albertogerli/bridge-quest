@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useNascosti } from "@/hooks/use-permessi";
 
@@ -25,7 +26,17 @@ import { useNascosti } from "@/hooks/use-permessi";
  */
 export interface Collegamento {
   href: string;
-  emoji: string;
+  /**
+   * Un'icona di lucide, non un'emoji.
+   *
+   * L'avevo fatto con le emoji: si scrivono in fretta e sembrano allegre.
+   * Ma il resto del sito usa lucide dentro un riquadro colorato, e un
+   * elenco di emoji accanto a quelle schede sembra di un altro sito. Le
+   * emoji per di più le disegna il sistema operativo: la stessa pagina è
+   * grafica diversa su Android, iPhone e Windows, e non si può allineare
+   * niente perché non si sa quanto sono larghe.
+   */
+  icona: LucideIcon;
   /** In italiano: la traduzione la fa il componente. */
   etichetta: string;
   /** Una riga che dice cosa ci si trova. Senza, è un elenco di parole. */
@@ -64,22 +75,33 @@ export function CollegamentiSezione({
       <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
         {t(titolo)}
       </h2>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {visibili.map((v) => (
-          <Link
-            key={v.href}
-            href={v.href}
-            className="card-clean flex items-center gap-3 rounded-xl bg-card p-3.5 transition-all hover:shadow-md active:scale-[0.99]"
-          >
-            <span className="text-xl" aria-hidden="true">
-              {v.emoji}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-bold text-foreground">{t(v.etichetta)}</span>
-              <span className="block text-xs text-muted-foreground">{t(v.descrizione)}</span>
-            </span>
-          </Link>
-        ))}
+      {/* Stessa griglia, stesse misure e stesse utility delle schede di
+          `/gioca`: card-clean + card-interactive, angoli 2xl, riquadro
+          dell'icona 10×10 su `bg-figb/10`. Non è pigrizia — una pagina che
+          usa due linguaggi grafici si legge come due pagine incollate. */}
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        {visibili.map((v) => {
+          const Icona = v.icona;
+          return (
+            <Link
+              key={v.href}
+              href={v.href}
+              className="card-clean card-interactive flex items-center gap-3 rounded-2xl bg-card p-4"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-figb/10 dark:bg-primary/15">
+                <Icona className="h-5 w-5 text-figb dark:text-primary" aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-semibold text-foreground">
+                  {t(v.etichetta)}
+                </span>
+                <span className="block text-[12px] leading-snug text-muted-foreground">
+                  {t(v.descrizione)}
+                </span>
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

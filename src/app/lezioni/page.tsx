@@ -13,7 +13,7 @@ import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { isWorldLocked } from "@/lib/progression";
 import Link from "next/link";
-import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2, Play } from "lucide-react";
+import { BookOpen, CheckCircle2, Compass, Construction, Crown, FileText, Lock, Play, RefreshCw, Spade, Sprout, Target, Trophy } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
@@ -536,6 +536,26 @@ export default function LezioniPage() {
                                     >
                                       Lez. {lessonNumber}
                                     </Badge>
+                                    {/*
+                                      «TOCCA A TE» SCRITTO, non solo colorato.
+
+                                      Lo stato «completato» si riconosce dalla
+                                      spunta dentro il cerchio, e va bene. Lo
+                                      stato «sei qui» invece si distingueva
+                                      SOLO per il colore del cerchio e per una
+                                      pulsazione — due cose che spariscono
+                                      insieme a chi non distingue i colori e
+                                      tiene il movimento ridotto, che sono
+                                      spesso la stessa persona.
+
+                                      Una parola costa dieci pixel e non si
+                                      può fraintendere.
+                                    */}
+                                    {isCurrent && (
+                                      <Badge className="border-0 bg-primary px-1.5 py-0 text-[12px] font-bold uppercase tracking-wide text-primary-foreground">
+                                        {t("Tocca a te")}
+                                      </Badge>
+                                    )}
                                     {(() => {
                                       const smazzateCount = allSmazzate.filter((s) => s.lesson === lesson.id).length;
                                       return smazzateCount > 0 ? (
@@ -644,12 +664,12 @@ export default function LezioniPage() {
         <CollegamentiSezione
           titolo="Strumenti di studio"
           voci={[
-            { href: "/ripasso", emoji: "🔁", etichetta: "Ripasso", descrizione: "Rivedi quello che rischi di dimenticare" },
-            { href: "/obiettivi", emoji: "🎯", etichetta: "Obiettivi", descrizione: "Cosa ti manca per il prossimo traguardo" },
-            { href: "/dispense", emoji: "📄", etichetta: "Dispense", descrizione: "Il materiale da leggere e stampare" },
-            { href: "/glossario", emoji: "📖", etichetta: "Glossario", descrizione: "I termini del bridge, spiegati" },
-            { href: "/guida", emoji: "🧭", etichetta: "Guida", descrizione: "Come funziona BridgeLab" },
-            { href: "/prima-mano", emoji: "🌱", etichetta: "Prima mano", descrizione: "Non hai mai giocato? Si comincia da qui" },
+            { href: "/ripasso", icona: RefreshCw, etichetta: "Ripasso", descrizione: "Rivedi quello che rischi di dimenticare" },
+            { href: "/obiettivi", icona: Target, etichetta: "Obiettivi", descrizione: "Cosa ti manca per il prossimo traguardo" },
+            { href: "/dispense", icona: FileText, etichetta: "Dispense", descrizione: "Il materiale da leggere e stampare" },
+            { href: "/glossario", icona: BookOpen, etichetta: "Glossario", descrizione: "I termini del bridge, spiegati" },
+            { href: "/guida", icona: Compass, etichetta: "Guida", descrizione: "Come funziona BridgeLab" },
+            { href: "/prima-mano", icona: Sprout, etichetta: "Prima mano", descrizione: "Non hai mai giocato? Si comincia da qui" },
           ]}
         />
       </div>
