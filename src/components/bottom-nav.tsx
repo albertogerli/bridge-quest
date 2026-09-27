@@ -7,6 +7,8 @@ import { motion } from "motion/react";
 import { hapticTap } from "@/lib/native-bridge";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 import { useNascosti } from "@/hooks/use-permessi";
+import { useSharedAuth } from "@/contexts/auth-provider";
+import { useEnrolledClasses } from "@/store/use-classes-store";
 
 /**
  * Quattro voci, tutte della stessa misura, e nessuna è un menu.
@@ -39,15 +41,38 @@ const VOCI = [
   { href: "/profilo", icon: "profilo", label: "Profilo" },
 ];
 
+/**
+ * «Classe» c'è SOLO per chi è iscritto a una classe.
+ *
+ * DECISO IL 27/09/2026, e la ragione è quella scritta in CLAUDE.md. Una
+ * scheda fissa che chiede il codice dell'insegnante a chi non sa cosa sia
+ * una classe è l'errore del QR della locandina — quello che portava a
+ * `/classi` e chiedeva un codice a chi arrivava da fuori — reso permanente
+ * per i due terzi che una classe non ce l'hanno.
+ *
+ * Chi invece la classe ce l'ha, ce l'ha come cosa principale: è il motivo
+ * per cui usa il sito. Per lui la barra ha cinque voci, e sono cinque posti
+ * veri — nessun menu, nessun cassetto.
+ *
+ * Chi il codice l'ha appena ricevuto lo mette dalla home, dove c'è l'invito
+ * con la spiegazione di cosa sia una classe: prima si dà, poi si chiede.
+ */
+const CLASSE = { href: "/classi", icon: "classe", label: "Classe" };
+
 export function BottomNav() {
   // Senza prefisso di lingua, o sotto `/en` nessuna voce risulta attiva.
   const pathname = usePercorso();
+  const { user, loading: authLoading } = useSharedAuth();
   const t = useT();
   const pendingFriends = usePendingFriendRequests();
   // Le voci che l'insegnante non ha ancora aperto non si propongono. Niente
   // lucchetti: un lucchetto dice «ti stanno tenendo fuori», l'assenza dice
   // «non è ancora il momento».
   const { nascosti } = useNascosti();
+  // `!loading && !!user`: agli anonimi non si chiede niente al database.
+  const { classes } = useEnrolledClasses(!authLoading && !!user);
+  const iscritto = classes.length > 0;
+  const voci = iscritto ? [...VOCI.slice(0, 3), CLASSE, VOCI[3]] : VOCI;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -56,7 +81,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label={t("Navigazione principale")}>
       <div className="bg-card/85 backdrop-blur-xl border-t border-border/50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.35)]">
         <div className="mx-auto flex max-w-2xl items-end justify-around px-0.5 py-1 safe-area-bottom">
-          {VOCI.filter((v) => !nascosti.has(v.href)).map((v) => (
+          {voci.filter((v) => !nascosti.has(v.href)).map((v) => (
             <NavItem
               key={v.href}
               href={v.href}
@@ -119,6 +144,12 @@ function NavItem({
     gioca: (
       <svg viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 0 : 2} strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
         <path d="M8 5v14l11-7z" />
+      </svg>
+    ),
+    classe: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.4 : 2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
+        <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+        <path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
       </svg>
     ),
     profilo: (

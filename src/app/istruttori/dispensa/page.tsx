@@ -327,6 +327,37 @@ function Dispensa() {
         </div>
         )}
 
+        {/*
+          QUANDO LE SOLUZIONI NON CI SONO, LO SI DICE.
+
+          `conSoluzioni` è falso per le mani GENERATE da un argomento: sono
+          nuove ogni volta e nessuno le ha commentate, quindi un contratto di
+          riferimento non esiste. Le soluzioni ci sono per le mani di un
+          compito, che vengono dal catalogo.
+
+          Prima, in quel caso, la pagina rendeva l'intestazione — «Apertura di
+          1NT · 8 mani · soluzioni» — e poi il vuoto. L'insegnante vedeva un
+          foglio bianco e non aveva modo di sapere se fosse un guasto, una
+          pagina ancora da caricare o una cosa che non esiste. Ed è il
+          bottone più facile da premere per sbaglio, perché «Solo le
+          soluzioni» è quello che serve durante la lezione.
+
+          Non si inventa una soluzione: il par a carte viste è il contratto
+          migliore, non la risposta didattica all'argomento, e spacciarlo per
+          tale insegnerebbe la cosa sbagliata.
+        */}
+        {!conSoluzioni && MOSTRA_SOLUZIONI[parte] && (
+          <section className="mt-4 rounded-xl border border-border bg-muted/40 p-4">
+            <h2 className="mb-1 text-lg font-bold">{t("Per queste mani non ci sono soluzioni")}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t("Le mani generate da un argomento sono nuove ogni volta: nessuno le ha commentate, quindi non esiste un contratto di riferimento da stampare.")}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("Le soluzioni ci sono per le mani di un compito, che vengono dal catalogo: apri la dispensa da un compito assegnato.")}
+            </p>
+          </section>
+        )}
+
         {conSoluzioni && MOSTRA_SOLUZIONI[parte] && (
           <section className={MOSTRA_MANI[parte] ? "mt-8 break-before-page" : "mt-4"}>
             <h2 className="text-lg font-bold mb-3">{t("Soluzioni")}</h2>
