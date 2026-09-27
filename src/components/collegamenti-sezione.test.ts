@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { Trophy, Users, MessagesSquare } from "lucide-react";
 import { vociVisibili, type Collegamento } from "./collegamenti-sezione";
 
 const voci: Collegamento[] = [
-  { href: "/classifica", emoji: "🏆", etichetta: "Classifica", descrizione: "x" },
-  { href: "/amici", emoji: "👥", etichetta: "Amici", descrizione: "y" },
-  { href: "/forum", emoji: "💬", etichetta: "Forum", descrizione: "z" },
+  { href: "/classifica", icona: Trophy, etichetta: "Classifica", descrizione: "x" },
+  { href: "/amici", icona: Users, etichetta: "Amici", descrizione: "y" },
+  { href: "/forum", icona: MessagesSquare, etichetta: "Forum", descrizione: "z" },
 ];
 
 describe("i collegamenti che l'insegnante ha nascosto", () => {
