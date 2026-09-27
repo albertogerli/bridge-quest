@@ -304,6 +304,24 @@ test.describe("regressione pagine monolitiche", () => {
     await expectNoProblems(problems, "/profilo");
   });
 
+  /**
+   * SERVICE WORKER SPENTO, e non è un dettaglio di comodo.
+   *
+   * La seconda metà di questa prova rende deterministico il caso «nessuna
+   * mano» impedendo la fetch delle smazzate con `page.route(... abort)`.
+   * Playwright NON intercetta le richieste che partono da un service
+   * worker: quelle escono dal worker, non dalla pagina.
+   *
+   * Finché le notturne giravano su `next dev` non si notava, perché
+   * `next.config.ts:93` spegne Serwist in sviluppo. Dal 23/09/2026 girano su
+   * una build di produzione (`next start`) e il worker si è acceso: la
+   * fetch è passata da lì, le cinque mani sono arrivate lo stesso, e la
+   * prova falliva chiedendone zero. Non era il torneo a essersi rotto: era
+   * il modo di metterlo in ginocchio che aveva smesso di funzionare.
+   */
+  test.describe(() => {
+    test.use({ serviceWorkers: "block" });
+
   test("torneo: stato settimanale e CTA coerente con le mani caricate", async ({
     page,
   }) => {
@@ -365,6 +383,7 @@ test.describe("regressione pagine monolitiche", () => {
       cta,
       "senza mani caricate la CTA del torneo deve essere disabilitata"
     ).toBeDisabled();
+  });
   });
 
   test("mano del giorno: la mano si carica e mostra il suo stato", async ({ page }) => {
