@@ -16,6 +16,7 @@ import Link from "next/link";
 import { Lock, Trophy, Target, Crown, Spade, Construction, BookOpen, CheckCircle2 } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
+import { CollegamentiSezione } from "@/components/collegamenti-sezione";
 
 // Colors for the path nodes per world
 const worldColors = [
@@ -588,6 +589,21 @@ export default function LezioniPage() {
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Gli strumenti di studio stavano in `/impara`, che era un menu
+            davanti al percorso. Tolto il menu, stanno qui: sotto il percorso,
+            dove si è quando servono. */}
+        <CollegamentiSezione
+          titolo="Strumenti di studio"
+          voci={[
+            { href: "/ripasso", emoji: "🔁", etichetta: "Ripasso", descrizione: "Rivedi quello che rischi di dimenticare" },
+            { href: "/obiettivi", emoji: "🎯", etichetta: "Obiettivi", descrizione: "Cosa ti manca per il prossimo traguardo" },
+            { href: "/dispense", emoji: "📄", etichetta: "Dispense", descrizione: "Il materiale da leggere e stampare" },
+            { href: "/glossario", emoji: "📖", etichetta: "Glossario", descrizione: "I termini del bridge, spiegati" },
+            { href: "/guida", emoji: "🧭", etichetta: "Guida", descrizione: "Come funziona BridgeLab" },
+            { href: "/prima-mano", emoji: "🌱", etichetta: "Prima mano", descrizione: "Non hai mai giocato? Si comincia da qui" },
+          ]}
+        />
       </div>
     </div>
   );
