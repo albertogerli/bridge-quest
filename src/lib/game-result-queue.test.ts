@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createResultQueue, SessioneNonValida } from "./game-result-queue";
+import { createResultQueue, erroreDiScrittura, ReteNonRaggiungibile, SessioneNonValida } from "./game-result-queue";
 
 const memory = new Map<string, string>();
 const localStorage: Storage = {
@@ -103,5 +103,48 @@ describe("la sessione scaduta non è un difetto", () => {
     // mancante o una riga malformata vanno ancora guardati.
     const rifiuto = new Error("Salvataggio risultato rifiutato (42501)");
     expect(rifiuto).not.toBeInstanceOf(SessioneNonValida);
+  });
+});
+
+describe("che cos'è andato storto scrivendo un risultato", () => {
+  it("nessun errore: niente da sollevare", () => {
+    expect(erroreDiScrittura(null)).toBeNull();
+    expect(erroreDiScrittura(undefined)).toBeNull();
+  });
+
+  /**
+   * IL CASO DEL 27/09/2026, iPad, applicazione nativa. postgrest-js, quando
+   * la fetch non parte, costruisce `code: ""` e mette il vero motivo nel
+   * messaggio. Il punto di chiamata teneva solo il codice e stampava
+   * «Salvataggio risultato rifiutato ()»: parentesi vuote, e ogni trenta
+   * secondi, perché la coda riprova.
+   */
+  it("la fetch che non parte è rete, non un rifiuto", () => {
+    const e = erroreDiScrittura({ code: "", message: "TypeError: Failed to fetch" });
+    expect(e).toBeInstanceOf(ReteNonRaggiungibile);
+  });
+
+  it("vale anche con la forma di Safari", () => {
+    expect(erroreDiScrittura({ code: "", message: "Load failed" })).toBeInstanceOf(
+      ReteNonRaggiungibile,
+    );
+  });
+
+  it("un permesso negato resta un rifiuto, col suo codice", () => {
+    const e = erroreDiScrittura({ code: "42501", message: "permission denied" });
+    expect(e).not.toBeInstanceOf(ReteNonRaggiungibile);
+    expect(e?.message).toBe("Salvataggio risultato rifiutato (42501)");
+  });
+
+  // Il difetto nel difetto: `??` lascia passare la stringa vuota, quindi il
+  // messaggio finiva senza niente dentro le parentesi proprio quando il
+  // codice mancava — cioè quando serviva di più sapere qualcos'altro.
+  it("senza codice si scrive «database», non le parentesi vuote", () => {
+    expect(erroreDiScrittura({ code: "", message: "qualcosa di strano" })?.message).toBe(
+      "Salvataggio risultato rifiutato (database)",
+    );
+    expect(erroreDiScrittura({ message: "senza codice" })?.message).toBe(
+      "Salvataggio risultato rifiutato (database)",
+    );
   });
 });
