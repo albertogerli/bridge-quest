@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { tServer } from "@/lib/traduzioni-server";
 import { ModuloAdesione } from "@/components/modulo-adesione";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { TestiLocandina } from "@/lib/locandina";
@@ -50,6 +51,12 @@ async function leggiEvento(
 }
 
 export default async function EventoPage({ params }: { params: Promise<{ codice: string }> }) {
+  // Componente SERVER: `useT` è un hook e qui non gira. `tServer()` legge la
+  // lingua dall'intestazione che mette il proxy — vedi traduzioni-server.ts.
+  // Questa pagina è l'indirizzo del QR sulla locandina: è la prima cosa che
+  // vede chi arriva da fuori, e se arriva da fuori può benissimo non essere
+  // italiano.
+  const t = await tServer();
   const { codice } = await params;
   const evento = await leggiEvento(codice);
   if (!evento) notFound();
@@ -103,7 +110,7 @@ export default async function EventoPage({ params }: { params: Promise<{ codice:
           <ModuloAdesione codice={codice} />
         ) : (
           <div className="rounded-xl border border-border bg-muted/50 p-4 text-center">
-            <p className="font-semibold">Le iscrizioni a questa serata sono chiuse.</p>
+            <p className="font-semibold">{t("Le iscrizioni a questa serata sono chiuse.")}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               {evento.associazione
                 ? `Per sapere se ce ne sarà un'altra, chiedi a ${evento.associazione}.`

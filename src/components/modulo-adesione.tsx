@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * «Vengo» — l'adesione dalla pagina dell'evento.
@@ -22,6 +23,7 @@ import { segnalaSalvoRete } from "@/lib/report-error";
  * abbiamo tolto dalla porta d'ingresso.
  */
 export function ModuloAdesione({ codice }: { codice: string }) {
+  const t = useT();
   const [nome, setNome] = useState("");
   const [contatto, setContatto] = useState("");
   const [note, setNote] = useState("");
@@ -57,9 +59,9 @@ export function ModuloAdesione({ codice }: { codice: string }) {
   if (fatto) {
     return (
       <div className="rounded-xl border border-border bg-card p-5 text-center">
-        <p className="text-lg font-bold">Ci vediamo lì.</p>
+        <p className="text-lg font-bold">{t("Ci vediamo lì.")}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Abbiamo avvisato chi organizza. Se qualcosa cambia ti contattano.
+          {t("Abbiamo avvisato chi organizza. Se qualcosa cambia ti contattano.")}
         </p>
       </div>
     );
@@ -67,9 +69,9 @@ export function ModuloAdesione({ codice }: { codice: string }) {
 
   return (
     <form onSubmit={invia} className="space-y-3 rounded-xl border border-border bg-card p-5">
-      <p className="font-semibold">Vuoi venire? Lascia i tuoi dati</p>
+      <p className="font-semibold">{t("Vuoi venire? Lascia i tuoi dati")}</p>
       <div>
-        <label htmlFor="ad-nome" className="text-sm">Come ti chiami</label>
+        <label htmlFor="ad-nome" className="text-sm">{t("Come ti chiami")}</label>
         <input
           id="ad-nome" required value={nome} onChange={(e) => setNome(e.target.value)}
           autoComplete="name"
@@ -77,21 +79,21 @@ export function ModuloAdesione({ codice }: { codice: string }) {
         />
       </div>
       <div>
-        <label htmlFor="ad-contatto" className="text-sm">Telefono o email</label>
+        <label htmlFor="ad-contatto" className="text-sm">{t("Telefono o email")}</label>
         <input
           id="ad-contatto" required value={contatto} onChange={(e) => setContatto(e.target.value)}
           placeholder="080 1234567 oppure maria@esempio.it"
           className="mt-1 min-h-12 w-full rounded-lg border border-border bg-background px-3 text-base"
         />
         <p className="mt-1 text-xs text-muted-foreground">
-          Serve solo per avvisarti se la serata si sposta.
+          {t("Serve solo per avvisarti se la serata si sposta.")}
         </p>
       </div>
       <div>
-        <label htmlFor="ad-note" className="text-sm">Vuoi dirci qualcosa? (facoltativo)</label>
+        <label htmlFor="ad-note" className="text-sm">{t("Vuoi dirci qualcosa? (facoltativo)")}</label>
         <input
           id="ad-note" value={note} onChange={(e) => setNote(e.target.value)}
-          placeholder="Vengo con mia moglie, preferirei il primo turno…"
+          placeholder={t("Vengo con mia moglie, preferirei il primo turno…")}
           className="mt-1 min-h-12 w-full rounded-lg border border-border bg-background px-3 text-base"
         />
       </div>
