@@ -29,8 +29,15 @@ export function Briciole({ percorso }: { percorso: Briciola[] }) {
   const navigabili = percorso.filter((b) => b.href);
   const ultimoLink = navigabili[navigabili.length - 1];
 
+  // «Percorso di navigazione» e non «Percorso»: dal 27/09/2026 «Percorso» è
+  // anche una delle quattro schede della barra, e il dizionario ha UNA CHIAVE
+  // SOLA per ogni parola italiana. Con la chiave condivisa la scheda della
+  // barra usciva «Breadcrumb» in inglese.
+  //
+  // L'etichetta è comunque migliore così: a un lettore di schermo «Percorso»
+  // da solo non dice di che percorso si tratta.
   return (
-    <nav aria-label={t("Percorso")} className="mb-3 text-sm text-muted-foreground">
+    <nav aria-label={t("Percorso di navigazione")} className="mb-3 text-sm text-muted-foreground">
       {/* Telefono: solo il passo indietro. */}
       {ultimoLink && (
         <Link
