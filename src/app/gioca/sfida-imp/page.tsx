@@ -1117,7 +1117,7 @@ function SfidaIMPContent() {
             </motion.div>
             <h2 className="text-xl font-bold text-foreground mb-2">{t("In attesa del risultato")}</h2>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-              Hai gi&agrave; giocato questa sfida. Stiamo aspettando che <strong>{opponentName}</strong> completi le sue mani.
+              {t("Hai già giocato questa sfida. Stiamo aspettando che")} <strong>{opponentName}</strong> {t("completi le sue mani.")}
             </p>
 
             {/* Check for updates */}

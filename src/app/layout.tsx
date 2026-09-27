@@ -11,6 +11,7 @@ import { GADS_ID } from "@/lib/gads";
 import { GA_ID } from "@/lib/ga";
 import { MetaPixelLoader } from "@/components/meta-pixel-loader";
 import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
+import { SaltaAlContenuto } from "@/components/salta-al-contenuto";
 import "./globals.css";
 
 const inter = Inter({
@@ -225,13 +226,19 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${bricolage.variable} font-sans antialiased`} suppressHydrationWarning>
-        <a href="#main-content" className="skip-link">Vai al contenuto</a>
         {/* Allinea `lang` all'indirizzo: il layout è statico e da solo non
             saprebbe se la pagina è italiana o inglese. Non disegna niente. */}
         <LinguaDelDocumento />
         {/* Il dizionario avvolge tutto: `useT()` deve funzionare in qualunque
             componente, e in italiano non carica niente. */}
         <TraduzioniProvider>
+          {/* DENTRO il provider, non sopra: `useT` senza dizionario ricade
+              sull'italiano, e il collegamento restava «Vai al contenuto»
+              anche sotto /en. L'avevo messo fuori e me ne sono accorto solo
+              guardando la pagina resa, non il codice.
+              Resta comunque il PRIMO elemento a fuoco della pagina, che è
+              l'unica cosa che conta per la sua funzione. */}
+          <SaltaAlContenuto />
           <LayoutShell>{children}</LayoutShell>
           {/* Propone l'altra lingua a chi ha il browser configurato così. Non
               reindirizza: decide chi legge, e la scelta viene ricordata. */}
