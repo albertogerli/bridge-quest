@@ -285,7 +285,7 @@ export default function ClassificaPage() {
         setAsdRankings(rankings);
       }
     } catch (e) {
-      reportError("classifica:fetch-asd", e);
+      segnalaSalvoRete("classifica:fetch-asd", e);
     }
     setAsdLoading(false);
   };

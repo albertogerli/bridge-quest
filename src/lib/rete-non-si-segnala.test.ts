@@ -26,13 +26,56 @@ vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
  * scritto accanto.
  */
 const RADICE = join(__dirname, "..");
-const CHIAMATA_SUPABASE = /(await\s+supabase|supabase\s*\.\s*(from|rpc|auth|channel)|\.rpc\()/;
+
+/**
+ * QUATTRO BUCHI IN UN GIORNO, tutti nel rilevatore e non nel codice sorvegliato.
+ *
+ * La prima versione cercava `reportError("` riga per riga, nei soli file che
+ * contenessero la parola «supabase». Il 27/09/2026 è arrivata una
+ * segnalazione da /gioca/torneo-licita che ci era passata in mezzo, e
+ * cercandone la ragione sono saltati fuori quattro modi diversi di
+ * nascondersi:
+ *
+ *  1. LO SCOPE È UNA VARIABILE — `reportError(scope, errore)` dentro un
+ *     involucro come `segnalaSeNonEScaduta`. Era il caso di torneo-licita.
+ *  2. GLI APICI SONO SINGOLI — `reportError('use-friends:realtime', …)`.
+ *  3. LA CHIAMATA STA SU PIÙ RIGHE — `reportError(\n  "scope",`: guardando
+ *     una riga per volta non si vede niente.
+ *  4. IL FILE NON NOMINA MAI SUPABASE — `bbo-username.ts` riceve il client
+ *     come parametro, e il filtro preliminare lo saltava per intero.
+ *
+ * Adesso si cerca `reportError(` su TUTTO il testo, in TUTTI i file, senza
+ * pretendere niente sulla forma degli argomenti. Un rilevatore che si lascia
+ * ingannare dalla punteggiatura dà una garanzia che non ha.
+ */
+const CHIAMATA_SUPABASE = /(await\s+\w+\s*\.\s*(from|rpc|auth)|\w+\s*\.\s*(from|rpc|channel)\s*\(|\.auth\s*\.)/;
 const FINESTRA = 12;
+
+/**
+ * LE ROTTE `app/api/` SONO ESCLUSE, ed è una regola e non una svista.
+ *
+ * Lì gira il SERVER. Se una fetch verso Supabase fallisce dal server non è
+ * il telefono di un allievo in galleria: è il nostro backend che non
+ * raggiunge il database, e quello deve svegliare qualcuno. Il filtro di
+ * rete serve a non farsi raccontare la qualità delle reti altrui, non a
+ * smettere di guardare le proprie.
+ */
+const SERVER = "app/api/";
 
 /** Punti in cui `reportError` accanto a Supabase è quello che si vuole. */
 const ECCEZIONI: string[] = [
-  // Nessuna, per ora. Chi ne aggiunge una scriva qui perché quell'errore
-  // deve arrivare a Sentry anche quando è la rete.
+  // `segnala()` filtra già con eDiRete alla riga sopra: è la stessa regola
+  // scritta a mano prima che esistesse segnalaSalvoRete.
+  "hooks/use-friends.ts:32",
+  // I due `protocolError` e i due `shouldReport` del Realtime non sono
+  // errori di fetch: sono un canale che non si aggancia. `evaluateChannel`
+  // decide già QUANDO vale la pena riportarli, una volta sola e dopo un
+  // guasto persistente — vedi realtime-health.ts. Zittirli qui vorrebbe
+  // dire perdere l'unico segnale che il Realtime non funziona.
+  "hooks/use-friends.ts:496",
+  "hooks/use-friends.ts:536",
+  "hooks/use-challenges.ts:221",
+  "hooks/use-challenges.ts:261",
 ];
 
 function sorgenti(dir: string): string[] {
@@ -51,16 +94,23 @@ describe("gli errori di rete non si segnalano a Sentry", () => {
     for (const f of sorgenti(RADICE)) {
       if (f.endsWith("report-error.ts")) continue;
       const sorgente = readFileSync(f, "utf8");
-      if (!sorgente.includes("supabase") && !sorgente.includes("createClient")) continue;
       const righe = sorgente.split("\n");
-      righe.forEach((riga, i) => {
-        if (!/reportError\(\s*"/.test(riga)) return;
+      // Su tutto il testo, non riga per riga: una chiamata spezzata su più
+      // righe è invisibile a chi guarda una riga per volta.
+      const relativo = f.slice(RADICE.length + 1);
+      if (relativo.startsWith(SERVER)) continue;
+      for (const m of sorgente.matchAll(/\breportError\s*\(/g)) {
+        const i = sorgente.slice(0, m.index).split("\n").length - 1;
+        // Un commento che NOMINA `reportError(` non è una chiamata. Senza
+        // questo, il guardiano segnalava la nota che spiega sé stesso.
+        const inizio = righe[i].trim();
+        if (inizio.startsWith("//") || inizio.startsWith("*")) continue;
         const intorno = righe.slice(Math.max(0, i - FINESTRA), i + 1).join("\n");
-        if (!CHIAMATA_SUPABASE.test(intorno)) return;
-        const punto = `${f.slice(RADICE.length + 1)}:${i + 1}`;
-        if (ECCEZIONI.includes(punto)) return;
+        if (!CHIAMATA_SUPABASE.test(intorno)) continue;
+        const punto = `${relativo}:${i + 1}`;
+        if (ECCEZIONI.includes(punto)) continue;
         colpevoli.push(punto);
-      });
+      }
     }
     expect(
       colpevoli,

@@ -535,7 +535,13 @@ async function segnalaSeNonEScaduta(
 ): Promise<void> {
   const { data } = await supabase.auth.getSession();
   if (!vaSegnalato(errore, !!data.session)) return;
-  reportError(scope, errore);
+  // `segnalaSalvoRete` e non `reportError`: questa funzione è il quarto modo
+  // di segnalare un errore di Supabase, ed è quello che è sfuggito sia alla
+  // scansione del 26/09/2026 sia al guardiano scritto insieme a quella —
+  // perché entrambi cercavano `reportError("` con lo scope scritto a mano,
+  // e qui lo scope è una VARIABILE. Il 27/09 ne è arrivata una da
+  // /gioca/torneo-licita: «Failed to fetch», Android, che è la rete e basta.
+  segnalaSalvoRete(scope, errore);
 }
 
 /** Il torneo del periodo, creandolo se è il primo ad arrivare. */

@@ -1,4 +1,4 @@
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 /**
  * Unicità del nome BBO (`profiles.bbo_username`).
@@ -92,7 +92,11 @@ export async function isBboUsernameTaken(
   });
 
   if (error) {
-    reportError(scope, error);
+    // Il commento qui sopra dice già che un errore di trasporto non deve
+    // bloccare nessuno: allora non deve nemmeno svegliare nessuno. Questo
+    // punto è sfuggito allo spazzino del 26/09/2026 perché il file non
+    // nomina mai «supabase» — il client arriva come parametro.
+    segnalaSalvoRete(scope, error);
     return false;
   }
 
