@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createResultQueue, erroreDiScrittura, ReteNonRaggiungibile, SessioneNonValida } from "./game-result-queue";
+import { createResultQueue, erroreDiScrittura, punteggioIntero, ReteNonRaggiungibile, RifiutoPermanente, SessioneNonValida } from "./game-result-queue";
 
 const memory = new Map<string, string>();
 const localStorage: Storage = {
@@ -146,5 +146,65 @@ describe("che cos'è andato storto scrivendo un risultato", () => {
     expect(erroreDiScrittura({ message: "senza codice" })?.message).toBe(
       "Salvataggio risultato rifiutato (database)",
     );
+  });
+});
+
+describe("il punteggio è una colonna intera", () => {
+  /**
+   * IL CASO DEL 27/09/2026. Le stelle della licita sono MEZZE — 2.5, 1.5,
+   * 0.5 — e `game_results.score` è `integer`. Un totale di 9.5 arrivava a
+   * Postgres come «sintassi non valida per il tipo integer», codice 22P02,
+   * e la partita non si salvava.
+   */
+  it("arrotonda le mezze stelle invece di farsi rifiutare", () => {
+    expect(punteggioIntero(9.5)).toBe(10);
+    expect(punteggioIntero(2.5)).toBe(3);
+    expect(punteggioIntero(0.5)).toBe(1);
+  });
+
+  it("lascia stare i punteggi che sono già interi", () => {
+    expect(punteggioIntero(0)).toBe(0);
+    expect(punteggioIntero(-50)).toBe(-50);
+    expect(punteggioIntero(1240)).toBe(1240);
+  });
+
+  // Meglio zero di un NaN che diventa `null` e sbatte contro NOT NULL.
+  it("un numero che non è un numero vale zero", () => {
+    expect(punteggioIntero(NaN)).toBe(0);
+    expect(punteggioIntero(Infinity)).toBe(0);
+  });
+});
+
+describe("una voce che non passerà mai non blocca le altre", () => {
+  /**
+   * PERCHÉ È PIÙ GRAVE DEL DIFETTO CHE L'HA CAUSATA. La coda manda in
+   * ordine e si ferma alla prima che fallisce. Una voce rifiutata dal
+   * database — che sarà rifiutata identica anche domani — resta in testa e
+   * blocca TUTTI i risultati successivi di quella persona, riprovando ogni
+   * trenta secondi per sempre.
+   */
+  it("il rifiuto del database è permanente, la rete no", () => {
+    expect(erroreDiScrittura({ code: "22P02", message: "invalid input syntax" }))
+      .toBeInstanceOf(RifiutoPermanente);
+    expect(erroreDiScrittura({ code: "", message: "Load failed" }))
+      .not.toBeInstanceOf(RifiutoPermanente);
+  });
+
+  it("la voce rifiutata sparisce dalla coda, quelle dopo passano", async () => {
+    const coda = createResultQueue(localStorage, async (entry) => {
+      if (entry.gameType === "licita") {
+        throw erroreDiScrittura({ code: "22P02", message: "invalid input syntax" });
+      }
+    });
+    coda.enqueue({ gameType: "licita", score: 9 }, "utente-1", "web");
+    coda.enqueue({ gameType: "smazzata", score: 1 }, "utente-1", "web");
+
+    // Il primo giro getta la voce avvelenata e propaga l'errore.
+    await expect(coda.flush("utente-1")).rejects.toBeInstanceOf(RifiutoPermanente);
+    expect(coda.pending("utente-1").map((v) => v.gameType)).toEqual(["smazzata"]);
+
+    // Il secondo giro passa: prima non ci sarebbe mai arrivato.
+    await coda.flush("utente-1");
+    expect(coda.pending("utente-1")).toHaveLength(0);
   });
 });

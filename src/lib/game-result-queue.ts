@@ -49,6 +49,47 @@ export class ReteNonRaggiungibile extends Error {
 }
 
 /**
+ * `game_results.score` è una colonna INTERA: qui si arrotonda.
+ *
+ * IL CASO DEL 27/09/2026. Strumentando il gioco «Licita» ho passato come
+ * punteggio le stelle, senza guardare che le stelle sono MEZZE: la scala in
+ * `stelle-licita.ts` dà 2.5, 1.5, 0.5. Un totale come 9.5 arriva a Postgres
+ * come «sintassi non valida per il tipo integer» — codice 22P02 — e la
+ * partita non si salva. Chiunque finisse una licita lo prendeva.
+ *
+ * Si arrotonda QUI e non nei punti di chiamata perché è un vincolo della
+ * colonna, non di chi gioca: chi aggiunge un gioco domani non deve andarselo
+ * a ricordare. Il valore esatto non si perde — chi ne ha uno lo mette in
+ * `details`, dove la colonna è `jsonb` e ci sta tutto.
+ */
+export function punteggioIntero(score: number): number {
+  return Number.isFinite(score) ? Math.round(score) : 0;
+}
+
+/**
+ * Un rifiuto che riprovare non risolve.
+ *
+ * PERCHÉ SERVE DISTINGUERLO. La coda riprova all'infinito, ed è giusto per
+ * la rete e per la sessione scaduta. Per un rifiuto del DATABASE no: un
+ * 22P02 sarà un 22P02 anche domani. E siccome la coda manda le voci in
+ * ordine e si ferma alla prima che fallisce, UNA voce malformata blocca
+ * tutti i risultati successivi di quella persona — per sempre, riprovando
+ * ogni trenta secondi.
+ *
+ * È così che il difetto delle mezze stelle è diventato più grave di sé
+ * stesso: non perdeva una partita di licita, perdeva tutto quello che veniva
+ * dopo. La voce che non può passare si toglie e si segnala.
+ */
+export class RifiutoPermanente extends Error {
+  readonly causa: Error;
+  constructor(causa: Error) {
+    super(causa.message);
+    this.name = "RifiutoPermanente";
+    this.causa = causa;
+  }
+}
+
+/**
  * Che cos'è andato storto scrivendo un risultato: il tipo, non il testo.
  *
  * Sta qui e non nel punto di chiamata perché è una REGOLA, e una regola
@@ -71,7 +112,9 @@ export function erroreDiScrittura(
   if (eDiRete(errore)) return new ReteNonRaggiungibile();
   // `||` e non `??`: `code` è la stringa VUOTA quando la fetch non parte, e
   // `??` la lascerebbe passare. È così che si è stampato «rifiutato ()».
-  return new Error("Salvataggio risultato rifiutato (" + (errore.code || "database") + ")");
+  return new RifiutoPermanente(
+    new Error("Salvataggio risultato rifiutato (" + (errore.code || "database") + ")"),
+  );
 }
 export interface PendingGameResult extends GameResult {
   id: string;
@@ -112,8 +155,17 @@ export function createResultQueue(storage: Storage, send: (entry: PendingGameRes
         while (true) {
           const entry = pending(owner)[0];
           if (!entry) break;
-          // A lost response keeps exactly the same UUID for the next retry.
-          await send(entry);
+          try {
+            // A lost response keeps exactly the same UUID for the next retry.
+            await send(entry);
+          } catch (errore) {
+            // Rete o sessione: si riprova, la voce resta. Rifiuto del
+            // database: riprovare non cambia niente e questa voce, restando
+            // in testa, bloccherebbe tutte le altre. Si toglie e si segnala.
+            if (!(errore instanceof RifiutoPermanente)) throw errore;
+            storage.removeItem(RESULT_PREFIX + entry.id);
+            throw errore;
+          }
           storage.removeItem(RESULT_PREFIX + entry.id);
         }
       })().finally(() => flights.delete(owner));

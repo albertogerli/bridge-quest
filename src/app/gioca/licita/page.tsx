@@ -379,7 +379,13 @@ export default function LicitaPage() {
     // All'ultima mano, non nella schermata finale: quella è un ramo di
     // render e registrarci dentro moltiplicherebbe le righe.
     if (round + 1 >= ROUNDS) {
-      saveGameResult({ gameType: "licita", score: stelleTotali, details: { mani: ROUNDS } });
+      // Le stelle sono MEZZE (2.5, 1.5, 0.5): `score` è una colonna intera e
+      // le arrotonda. Il valore esatto va in `details`, che è jsonb.
+      saveGameResult({
+        gameType: "licita",
+        score: stelleTotali,
+        details: { mani: ROUNDS, stelle: stelleTotali },
+      });
     }
     setLicita([]);
     setEsito(null);
