@@ -26,6 +26,7 @@ import {
   type ConfrontoCampo, type ManoCondivisa, riferimentoUnico } from "@/lib/mani-condivise";
 import type { Vulnerability } from "@/lib/catalog";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useGameResults } from "@/hooks/use-game-results";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -84,6 +85,7 @@ export default function LicitaPage() {
   const t = useT();
   const [seed] = useState(() => Math.floor(Date.now() % 1_000_000));
   const [round, setRound] = useState(0);
+  const { saveGameResult } = useGameResults();
   const [preparata, setPreparata] = useState<{ round: number; dati: Mano } | null>(null);
   const [licita, setLicita] = useState<string[]>([]);
   const [attesa, setAttesa] = useState(false);
@@ -374,6 +376,11 @@ export default function LicitaPage() {
   }, [round, seed]);
 
   const prossima = () => {
+    // All'ultima mano, non nella schermata finale: quella è un ramo di
+    // render e registrarci dentro moltiplicherebbe le righe.
+    if (round + 1 >= ROUNDS) {
+      saveGameResult({ gameType: "licita", score: stelleTotali, details: { mani: ROUNDS } });
+    }
     setLicita([]);
     setEsito(null);
     setContrattoFinale("");

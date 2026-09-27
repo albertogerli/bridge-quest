@@ -12,6 +12,7 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, strainOf, type DdsTable } from "@/lib/dds-table";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useGameResults } from "@/hooks/use-game-results";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -63,6 +64,15 @@ export default function QualeContrattoPage() {
   const [preparata, setPreparata] = useState<{ round: number; dati: Domanda } | null>(null);
   const [risposta, setRisposta] = useState<number | null>(null);
   const [punti, setPunti] = useState(0);
+  const { saveGameResult } = useGameResults();
+
+  // Registra all'ULTIMA risposta: la schermata finale è un ramo di render e
+  // registrarci dentro moltiplicherebbe le righe a ogni ridisegno.
+  const registraSeFinita = () => {
+    if (round + 1 >= ROUNDS) {
+      saveGameResult({ gameType: "quale-contratto", score: punti, details: { mani: ROUNDS } });
+    }
+  };
 
   // La catena sta in chiaro dentro l'effetto: nascosta in una funzione, il
   // controllo del progetto non vede che il `setState` arriva dopo un'attesa e
@@ -226,7 +236,7 @@ export default function QualeContrattoPage() {
                   a carte scoperte: al tavolo qualche presa in più o in meno
                   dipende dall&apos;attacco.
                 </p>
-                <Button onClick={() => { setRisposta(null); setRound((r) => r + 1); }}>
+                <Button onClick={() => { registraSeFinita(); setRisposta(null); setRound((r) => r + 1); }}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
                 </Button>
               </motion.div>

@@ -22,6 +22,7 @@ import {
   type QuizStrain,
 } from "@/lib/trick-quiz";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useGameResults } from "@/hooks/use-game-results";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -54,6 +55,15 @@ export default function QuizPresePage() {
   const [question, setQuestion] = useState<Question | null>(null);
   const [answer, setAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
+  const { saveGameResult } = useGameResults();
+
+  // All'ultima risposta, non nella schermata finale: quella è un ramo di
+  // render e registrarci dentro moltiplicherebbe le righe.
+  const registraSeFinita = () => {
+    if (round + 1 >= ROUNDS) {
+      saveGameResult({ gameType: "quiz-prese", score, details: { mani: ROUNDS } });
+    }
+  };
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -257,7 +267,7 @@ export default function QuizPresePage() {
                 <p className="text-xs text-muted-foreground mb-3">
                   {t("Il conteggio è a carte scoperte, con gioco perfetto di entrambe le linee: al tavolo, senza vedere le mani avversarie, alcune di queste prese non sarebbero trovabili.")}
                 </p>
-                <Button onClick={() => setRound((r) => r + 1)}>
+                <Button onClick={() => { registraSeFinita(); setRound((r) => r + 1); }}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
                 </Button>
               </motion.div>
