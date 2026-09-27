@@ -37,7 +37,12 @@ export function DesktopSidebar() {
             </div>
             <div className="text-right">
               <p className="text-xl font-bold text-primary">{stats.xp.toLocaleString()}</p>
-              <p className="text-[12px] text-muted-foreground font-medium">{profile.xpLabel} totali</p>
+              {/* Non `{profile.xpLabel} totali`: una frase metà variabile e metà
+                  italiano crudo non è traducibile, e l'estrattore non la vede
+                  perché non c'è nessun letterale da trovare. */}
+              <p className="text-[12px] text-muted-foreground font-medium">
+                {t("{etichetta} totali", { etichetta: profile.xpLabel })}
+              </p>
             </div>
           </div>
           <div className="h-3 rounded-full bg-muted border border-border overflow-hidden">

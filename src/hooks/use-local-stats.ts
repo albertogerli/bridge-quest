@@ -11,6 +11,7 @@ import {
 import { getProfileConfig, type UserProfile } from "@/hooks/use-profile";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { useCatalog } from "@/store/use-catalog-store";
+import { primoModuloIncompleto } from "@/lib/prossimo-modulo";
 
 /**
  * Canonical "player stats" reader. Subscribes to the Zustand
@@ -116,27 +117,9 @@ export function useLocalStats() {
     0,
   );
 
-  // First incomplete module across all courses.
-  const nextModule = (() => {
-    for (const course of courses) {
-      for (const w of course.worlds) {
-        for (const lesson of w.lessons) {
-          for (const mod of lesson.modules) {
-            if (!completedModules[`${lesson.id}-${mod.id}`]) {
-              return {
-                lessonId: lesson.id,
-                moduleId: mod.id,
-                moduleTitle: mod.title,
-                lessonTitle: lesson.title,
-                lessonIcon: lesson.icon,
-              };
-            }
-          }
-        }
-      }
-    }
-    return null;
-  })();
+  // Dove riprendere. La regola sta in `prossimo-modulo.ts` perché la usa
+  // anche la testa del Percorso: due copie sarebbero due regole.
+  const nextModule = primoModuloIncompleto(courses, completedModules);
 
   return {
     xp,

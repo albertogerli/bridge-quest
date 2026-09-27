@@ -155,7 +155,7 @@ export function DidactaBanner() {
                   <div className="flex items-start gap-3">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-black">3</span>
                     <p className="text-sm text-foreground/80 pt-0.5">
-                      Usa l&apos;hashtag <span className="font-black text-amber-600 dark:text-amber-400">{hashtag}</span>
+                      {t("Usa l’hashtag")} <span className="font-black text-amber-600 dark:text-amber-400">{hashtag}</span>
                     </p>
                   </div>
                   <div className="flex items-start gap-3">

@@ -357,7 +357,7 @@ export default function ImpassePage() {
                   {t("Ti manca un onore (K o Q): devi decidere la manovra")}
                 </li>
                 <li>
-                  <span className="font-bold text-blue-600 dark:text-blue-400">IMPASSE</span>{" "}
+                  <span className="font-bold text-blue-600 dark:text-blue-400">{t("IMPASSE")}</span>{" "}
                   = finesse verso l&apos;onore mancante
                 </li>
                 <li>
@@ -707,7 +707,7 @@ export default function ImpassePage() {
                 <path d="M8 24 L16 8 L24 24" />
                 <path d="M12 18 L20 18" />
               </svg>
-              <p className="text-xl font-bold">IMPASSE</p>
+              <p className="text-xl font-bold">{t("IMPASSE")}</p>
               <p className="text-[12px] text-white/70 font-bold mt-1">
                 {t("Finesse")}
               </p>

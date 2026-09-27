@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-26
+-- Estratto il: 2026-09-27
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -4702,7 +4702,7 @@ ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
 ALTER TABLE public.forum_posts ADD CONSTRAINT forum_posts_category_check CHECK ((category = ANY (ARRAY['lezioni'::text, 'strategia'::text, 'tornei'::text, 'generale'::text, 'off-topic'::text])));
 ALTER TABLE public.friendships ADD CONSTRAINT friendships_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])));
-ALTER TABLE public.game_results ADD CONSTRAINT game_results_game_type_check CHECK ((game_type = ANY (ARRAY['compito'::text, 'conta-veloce'::text, 'dichiara'::text, 'impasse'::text, 'mano-del-giorno'::text, 'mano-guidata'::text, 'memory'::text, 'pratica-licita'::text, 'quiz-lampo'::text, 'segnali'::text, 'sfida'::text, 'sfida-settimanale'::text, 'smazzata'::text, 'torneo'::text, 'trova-errore'::text])));
+ALTER TABLE public.game_results ADD CONSTRAINT game_results_game_type_check CHECK ((game_type = ANY (ARRAY['compito'::text, 'conta-veloce'::text, 'cosa-apri'::text, 'dichiara'::text, 'impasse'::text, 'licita'::text, 'mano-del-giorno'::text, 'mano-guidata'::text, 'memory'::text, 'pratica-licita'::text, 'quale-contratto'::text, 'quiz-lampo'::text, 'quiz-prese'::text, 'segnali'::text, 'sfida'::text, 'sfida-link'::text, 'sfida-settimanale'::text, 'smazzata'::text, 'torneo'::text, 'trova-errore'::text])));
 ALTER TABLE public.glossary ADD CONSTRAINT glossary_category_check CHECK ((category = ANY (ARRAY['base'::text, 'licita'::text, 'gioco'::text, 'difesa'::text, 'punteggio'::text])));
 ALTER TABLE public.glossary ADD CONSTRAINT glossary_quiz_check CHECK (((quiz ? 'question'::text) AND (quiz ? 'options'::text) AND (quiz ? 'correctAnswer'::text) AND (quiz ? 'explanation'::text) AND (jsonb_typeof((quiz -> 'options'::text)) = 'array'::text)));
 ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_declarer_check CHECK ((declarer = ANY (ARRAY['north'::text, 'south'::text, 'east'::text, 'west'::text])));

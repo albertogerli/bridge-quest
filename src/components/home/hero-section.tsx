@@ -50,7 +50,7 @@ export function HeroSection({
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 border border-white/10 text-lg">🃏</div>
             <div>
-              <h1 className="text-xl font-bold text-white tracking-tight font-display">BridgeLab</h1>
+              <h1 className="text-xl font-bold text-white tracking-tight font-display">{t("BridgeLab")}</h1>
               <p className="text-[12px] font-semibold text-white/50 uppercase tracking-wider">FIGB</p>
             </div>
           </div>
@@ -82,7 +82,7 @@ export function HeroSection({
           </div>
           <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
             <p className="text-lg font-bold text-white leading-none">{handsPlayed}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">Mani</p>
+            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Mani")}</p>
           </div>
         </motion.div>
 

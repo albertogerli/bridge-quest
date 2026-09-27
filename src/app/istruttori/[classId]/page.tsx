@@ -378,7 +378,7 @@ export default function ClassDetailPage({
                 id="livello"
                 type="text"
                 defaultValue={classRoom.livello ?? ""}
-                placeholder="Primo livello, Approfondimento…"
+                placeholder={t("Primo livello, Approfondimento…")}
                 maxLength={60}
                 disabled={busy}
                 onBlur={(e) => {

@@ -8,16 +8,20 @@ import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 import { useNascosti } from "@/hooks/use-permessi";
 
 const primaryNav = [
+  // Le stesse quattro della barra del telefono, nello stesso ordine: chi
+  // passa dal portatile al telefono non deve reimparare dove sono le cose.
+  // «Percorso» punta al percorso, non a un menu che lo contiene.
   { href: "/", icon: "home", label: "Home" },
-  { href: "/impara", icon: "book", label: "Impara" },
+  { href: "/lezioni", icon: "book", label: "Percorso" },
   { href: "/gioca", icon: "play", label: "Gioca" },
-  { href: "/scuola", icon: "scuola", label: "Scuola" },
-  { href: "/amici", icon: "friends", label: "Amici" },
-  { href: "/classifica", icon: "trophy", label: "Classifica" },
   { href: "/profilo", icon: "user", label: "Profilo" },
 ];
 
 const moreNav = [
+  // Sul portatile c'è spazio e restano in vista: è il telefono che non ne
+  // aveva, e lì queste vivono dentro Gioca, Percorso e Profilo.
+  { href: "/amici", icon: "friends", label: "Amici" },
+  { href: "/classifica", icon: "trophy", label: "Classifica" },
   { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/negozio", icon: "shop", label: "Negozio" },
   { href: "/trova-circolo", icon: "circolo", label: "Trova ASD" },

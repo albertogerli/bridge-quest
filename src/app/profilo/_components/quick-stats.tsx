@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { BookOpen, CheckCircle2, Globe, Spade } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Quattro riquadri di sintesi (moduli, mani, completamento, mondi).
@@ -20,6 +21,7 @@ export function QuickStats({
   worldsCompleted: number;
   totalWorldsCount: number;
 }) {
+  const t = useT();
   return (
     <div className="grid grid-cols-4 gap-2 mt-3">
       {[
@@ -38,7 +40,7 @@ export function QuickStats({
         >
           <span className="flex justify-center">{s.icon}</span>
           <p className="text-lg font-bold text-foreground mt-0.5">{s.val}</p>
-          <p className="text-[12px] text-muted-foreground font-medium">{s.label}</p>
+          <p className="text-[12px] text-muted-foreground font-medium">{t(s.label)}</p>
         </motion.div>
       ))}
     </div>
