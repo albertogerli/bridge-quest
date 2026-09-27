@@ -1153,7 +1153,7 @@
   "Percentuale vittorie": "Win rate",
   "Perché — si apre dopo, con le stesse regole delle soluzioni": "Why — it opens later, with the same rules as the solutions",
   "Perché?": "Why?",
-  "Percorso": "Breadcrumb",
+  "Percorso": "Path",
   "Percorso Consigliato": "Recommended path",
   "Perfetto! Nessun errore.": "Perfect! No mistakes.",
   "Perse": "Lost",
@@ -1890,5 +1890,6 @@
   "IMPASSE": "FINESSE",
   "Pagina non trovata": "Page not found",
   "Usa l’hashtag": "Use the hashtag",
-  "Vai al contenuto": "Skip to content"
+  "Vai al contenuto": "Skip to content",
+  "Percorso di navigazione": "Breadcrumb"
 }
