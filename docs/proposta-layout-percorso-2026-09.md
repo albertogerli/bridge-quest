@@ -1,254 +1,222 @@
-# Proposta: una sola strada
+# Proposta: una priorità chiara, non una strada obbligata
 
-*27 settembre 2026 — proposta di riorganizzazione del layout. Non è ancora una decisione.*
+*27 settembre 2026 — seconda stesura, dopo una revisione esterna.*
 
----
-
-## 1. Il fatto che conta
-
-**Il 62% di chi apre BridgeLab non apre mai una lezione.**
-
-Su 172 persone attive negli ultimi trenta giorni, 65 hanno completato almeno un
-modulo. Le altre 107 hanno solo giocato.
-
-Non è che la parte didattica sia brutta: 49 lezioni, 199 moduli, 1002 moduli
-completati in trenta giorni da chi ci arriva. È che il layout dice a tutti di
-fare un'altra cosa — e la gente fa quello che il layout dice.
-
-Guarda la barra in basso da un telefono:
-
-```
- 🏠        📖        ( 🎮 )        🏫        ⋯
-Home     Impara      GIOCA      Scuola     Altro
-                       ↑
-          grande, al centro, rialzato, colorato
-```
-
-«Gioca» è il pulsante più grosso dello schermo. «Impara» è una voce di menu
-come le altre, e dietro «Impara» non c'è ancora il percorso: c'è **un altro
-menu**, con dentro il collegamento al percorso.
-
-Il percorso vero dista **due tocchi** dall'ingresso. Il gioco ne dista uno, e
-quell'uno è il più visibile.
+**La prima stesura aveva la diagnosi sbagliata.** Non un'esagerazione: proprio
+sbagliata, e il documento la metteva in prima riga. Questa versione dice cosa
+non tornava, perché, e cosa resta in piedi. La correzione sta in fondo, in
+appendice, per esteso — perché il modo in cui ci siamo sbagliati è più utile
+del numero sbagliato.
 
 ---
 
-## 2. Gli altri numeri, in fila
+## 1. Il quadro vero
 
-| misura | valore |
+| misura (30 giorni) | valore |
 |---|---|
-| Rotte totali | 93 |
-| Pagine di gioco sotto `/gioca` | 28 |
-| Pagine di gioco con **almeno un risultato** in 30 giorni | 13 |
-| Pagine di gioco con **zero** risultati in 30 giorni | **15** |
-| Quota dei primi tre giochi sul totale giocato | **92%** |
-| Destinazioni raggiungibili in due tocchi dalla home | ~45 |
-| Voci nel cassetto «Altro» | 8 |
+| Persone attive | 173 |
+| Di queste, **hanno completato almeno un modulo, prima o poi** | **133 (77%)** |
+| Di queste, hanno completato un modulo **negli ultimi 30 giorni** | 58 (34%) |
+| Hanno giocato un torneo | 51 (29%) |
+| Iscritti a una classe | 56 |
 
-I primi tre — *smazzata*, *sfida del giorno*, *mano del giorno* — fanno il 92%.
-Gli altri venticinque si dividono l'8%.
+La prima stesura diceva «il 62% non apre mai una lezione». **È falso.** Tre
+persone attive su quattro dentro le lezioni ci sono già state. Quello che cala
+è il ritorno: nell'ultimo mese ha studiato una su tre.
 
-Un dettaglio che vale più della percentuale: **`mano-guidata` ha 43 persone e
-92 partite.** Due a testa. È la firma di una cosa che si prova una volta e non
-si ritrova più — non di una cosa che non piace.
-
----
-
-## 3. La diagnosi, in una frase
-
-> Tre delle cinque schede — Home, Impara, Gioca — rispondono alla stessa
-> domanda, «e adesso cosa faccio?», e nessuna delle tre ha l'ultima parola.
-
-La risposta esiste già: si chiama `SuggestedNextStep`, sta nella home, ed è
-**una scheda fra dodici**. La home monta dodici blocchi: eroe, prossimo passo,
-scrigni, collezione, licita, trova-circolo, scheda insegnante, banner consenso,
-richiamo notifiche, promemoria ospite, modale del riepilogo settimanale,
-popup dei traguardi. Ognuno chiede attenzione. Nessuno decide.
-
-È la stessa cosa scritta in `CLAUDE.md`, vista da un'altra angolazione: **la
-prima schermata dà, non chiede.** Tre menu in fila sono tre domande in fila.
+**Il problema non è trovare le lezioni. È tornarci.** Sono due problemi diversi
+e vogliono due soluzioni diverse: il primo si risolve spostando un pulsante, il
+secondo no.
 
 ---
 
-## 4. Cosa prendere da Duolingo, e cosa no
+## 2. Cosa resta in piedi, e cosa no
 
-**Da prendere: una cosa sola.** Duolingo non ha una home. Ha *il percorso*. Il
-percorso È la schermata iniziale, e a ogni apertura c'è esattamente un cerchio
-che pulsa. Non ti fa scegliere: ti dice.
+### Resta — la navigazione è affollata
 
-**Da NON prendere: la gamification.** Qui ce n'è già più che da loro — XP,
-livelli, leghe, striscia, scrigni, negozio, collezione, traguardi, classifiche
-per corso/ASD/gioco. Non manca l'incentivo: manca il posto dove guardare.
-Aggiungerne altra peggiorerebbe esattamente il problema.
+93 rotte. Cinque schede in basso, di cui una è un cassetto con dentro otto
+voci. Tre schede — Home, Impara, Gioca — rispondono alla stessa domanda, e
+«Impara» non porta al percorso: porta a un altro menu che contiene il percorso.
 
-**Da NON prendere: le lezioni da due minuti.** Una mano di bridge dura otto
-minuti e non si spezza. Il ritmo di Duolingo non è trasferibile, e provarci
-distruggerebbe la cosa migliore che questo sito ha.
+Questa è un'osservazione sulla struttura, verificabile guardando il codice.
+**Non è una misura di danno**, e la prima stesura la trattava come se lo fosse.
 
-**Da NON prendere: la solitudine.** Duolingo è un'app che si usa da soli. Qui
-c'è l'insegnante, e l'insegnante è il canale di distribuzione della FIGB. Va
-messo al centro, non nascosto.
+### Resta, ed è la cosa migliore — il legame lezione→gioco non esiste
+
+Il «Prossimo passo» alterna fra studio e gioco confrontando due marcatempo in
+`localStorage`, e quando suggerisce di giocare manda a
+`/gioca/smazzata?random=1`: **una mano a caso**, non una mano sull'argomento
+appena studiato (`suggested-next-step.tsx:38`).
+
+Qui c'è il lavoro che vale. Finita la lezione sul taglio, una mano dove il
+taglio serve davvero, con una spiegazione che parla di quella lezione. È anche
+la risposta plausibile al problema vero — tornare a studiare — perché dà allo
+studio un esito immediato invece di un XP.
+
+### Cade — «il percorso dista due tocchi»
+
+Falso per chi ha già cominciato. L'eroe della home mobile mostra **«Riprendi»**
+e porta dritto al modulo: `/lezioni/[lessonId]/[moduleId]`, un tocco
+(`hero-section.tsx:117`). L'avevo descritto come «gioca subito» senza averlo
+letto.
+
+### Cade — «una home da dodici blocchi, uguale per tutti»
+
+Le home sono **tre**, scelte dal ruolo: `HomeAllievo` per chi segue un corso,
+`HomeInsegnante` per chi insegna, la bacheca per gli altri
+(`home-client.tsx:276`). E i banner sono condizionati: un allievo iscritto e
+già avviato non vede il richiamo dell'ospite né quello della prima mano. Il
+massimo realistico in contemporanea sono tre, non dodici.
+
+### Cade, e questo è l'errore più grosso — «15 giochi con zero risultati»
+
+**Tredici pagine di gioco su ventisette non scrivono affatto in
+`game_results`.** Registrano altrove, o non registrano. Avevo contato le righe
+di una tabella sola e chiamato «inutilizzato» tutto ciò che non ci finiva.
+
+Il caso che smonta l'argomento da solo:
+
+| pagina | nella prima stesura | in realtà (30 giorni) |
+|---|---|---|
+| `/gioca/torneo` | «zero risultati» | **2771 partite, 51 persone** — in `risultati_torneo` |
+| `/gioca/licita-amico` | «zero risultati» | 62 sessioni, 19 persone — in `bidding_sessions` |
+| `/gioca/sfida-imp`, `sfida-amico`, `sfida-link` | «zero risultati» | 71 sfide, 16 persone — in `challenges` |
+
+Il torneo settimanale è la **terza cosa più giocata del sito**, e il documento
+lo dava per morto. Con i conti rifatti su tutte le tabelle: *smazzata* 42%,
+*sfida* 22%, *torneo* 22%, *mano del giorno* 7%.
+
+Restano davvero silenziose poche cose — `sfide-coppie` ha una riga in trenta
+giorni — e **sette pagine non sono misurabili affatto** (`analisi`, `pratica`,
+`cosa-apri`, `quiz-prese`, `quale-contratto`, `licita`, `sfida-link`): non
+scrivono da nessuna parte. Di quelle non sappiamo niente, e «non sappiamo» non
+è «nessuno le usa».
 
 ---
 
-## 5. La proposta
+## 3. La proposta, corretta
 
-### La barra scende da cinque voci a quattro, e nessuna è un menu
+> Una priorità chiara per ciascuno, non la stessa strada per tutti.
 
-```
-   🛤            🏋            🏫            👤
-Percorso    Allenamento     Classe       Profilo
-```
+La prima stesura proponeva di mettere il percorso all'ingresso **per tutti**.
+Era la soluzione sbagliata anche prima di scoprire che la diagnosi era
+sbagliata: il codice ha già tre home per ruolo, e rifarle una sola sarebbe
+tornare indietro.
 
-**La novità vera non è la barra: è che la Home sparisce.** L'indirizzo `/` non
-mostra più un cruscotto — mostra il percorso. Quella schermata esiste già,
-funziona già, si chiama «Il Percorso» e sta in `/lezioni`, con i suoi corsi e
-i suoi mondi. **Non c'è da costruirla. C'è da smettere di nasconderla.**
+### Chi vede cosa per primo
 
-### Prima e dopo
-
-```
-   OGGI                                   DOMANI
-┌────────────────────────┐        ┌────────────────────────┐
-│ ciao Marco  🔥3 ⭐1240  │        │ Cuori·Gioco 🔥3 ⭐1240  │
-├────────────────────────┤        ├────────────────────────┤
-│ [banner consenso]      │        │          ◯ ✓           │
-│ [nudge notifiche]      │        │        ◯ ✓             │
-│ [hai un codice?]       │        │          ◯ ✓           │
-│ ┌────────────────────┐ │        │                        │
-│ │ EROE: gioca subito │ │        │     ┌────────────┐     │
-│ └────────────────────┘ │        │     │  ▶  14     │     │
-│ Prossimo passo →       │ ←l'unica│    │ Il taglio  │     │
-│ ┌────┐┌────┐┌────┐     │  che    │    │  TOCCA A TE│     │
-│ │forz││coll││lici│     │  conta, │    └────────────┘     │
-│ └────┘└────┘└────┘     │  ottava │          ◯             │
-│ Scrigni · Collezione   │         │       ◯     🎁         │
-│ Trova un circolo       │         │          ◯             │
-├────────────────────────┤        ├────────────────────────┤
-│🏠  📖  (🎮)  🏫   ⋯   │        │ 🛤   🏋   🏫   👤      │
-└────────────────────────┘        └────────────────────────┘
-  3 schede, stessa domanda           1 schermata, 1 risposta
-```
-
-### Cosa c'è in ciascuna delle quattro
-
-**🛤 Percorso** — è `/lezioni` promosso a `/`. Corsi e mondi restano come sono.
-Cambia una cosa: fra un nodo e l'altro il percorso **intercala il gioco che
-allena quella lezione**. Finita «Il taglio», il nodo successivo non è la lezione
-15: è una mano da giocare col taglio. È così che i 28 giochi smettono di essere
-un menu e diventano il ritmo del percorso.
-
-**🏋 Allenamento** — quello che oggi è `/gioca`, ma senza la pretesa di essere
-la porta d'ingresso. Tre cose in cima (sfida del giorno, mano del giorno,
-torneo: il 92% del giocato), e sotto una libreria cercabile con il resto.
-
-**🏫 Classe** — compare **solo a chi una classe ce l'ha**. Per l'insegnante è
-la stessa voce che porta al suo pannello. Sparisce la parola «Scuola», sparisce
-la distinzione fra `/scuola`, `/classi` e `/impara` — tre nomi per cose che chi
-guarda da fuori non distingue.
-
-**👤 Profilo** — assorbe il cassetto «Altro»: amici, classifica, collezione,
-negozio, obiettivi, impostazioni. Otto voci nascoste dietro «⋯» diventano una
-pagina che si scorre.
-
-### Cosa succede ai dodici blocchi della home
-
-| blocco | dove va |
+| persona | prima cosa |
 |---|---|
-| Prossimo passo | **diventa la schermata** |
-| Eroe «gioca subito» | eliminato: il percorso è già un invito |
-| Scrigni, collezione, traguardi | Profilo |
-| Licita, trova-circolo | nodi dentro il percorso, al punto giusto |
-| Scheda insegnante | scheda Classe |
-| Banner consenso, notifiche, ospite | restano, ma **uno per volta**, mai in pila |
-| Riepilogo settimanale | resta modale, una volta a settimana |
+| Principiante senza classe | «Prova la tua prima mano», poi il percorso |
+| Allievo di un corso | Cosa ha assegnato l'insegnante, e da dove riprendere |
+| Autodidatta avviato | Il passo successivo del corso scelto, con il cambio corso a portata |
+| Giocatore esperto | Il gioco, e l'approfondimento pertinente **come proposta, non come pedaggio** |
+
+Non sono quattro interfacce: è la stessa struttura con un ordine diverso in
+cima. Niente prova d'ingresso obbligatoria prima di poter toccare qualcosa.
+
+### La barra
+
+```
+   🛤            🎮           🏫            👤
+Percorso      Gioca        Classe       Profilo
+```
+
+**«Gioca», non «Allenamento»**: comprende tornei, sfide e compagnia, e non fa
+sembrare tutto un compito. Sparisce il cassetto «Altro».
+
+**Il Profilo non è il cassetto con un altro nome.** È la distinzione che mi era
+sfuggita, e va scritta:
+
+- **Profilo**: progressi, premi, collezione, negozio, impostazioni.
+- **Gioca**: classifiche e tornei — si capiscono lì, non nel profilo.
+- **Gioca**: amici e trova-compagno — servono quando si vuole giocare insieme.
+- **Percorso**: dispense e glossario — servono mentre si studia.
+
+### Una tensione che non ho risolto
+
+Il revisore propone di mostrare «Classe» anche a chi non ne ha una, con uno
+stato vuoto «Entra con il codice»: chi ha appena ricevuto il codice deve sapere
+dove metterlo. È giusto.
+
+Ma `CLAUDE.md` registra l'errore opposto, commesso quattro volte: il QR della
+locandina portava a `/classi`, che **chiede il codice dell'istruttore a chi non
+sa cosa sia una classe**. Una scheda sempre visibile che chiede un codice è
+quella cosa lì, resa permanente, per la maggioranza che una classe non ce l'ha.
+
+Le due esigenze sono entrambe vere. **Non ho una risposta e non la invento**:
+va decisa guardando due persone vere, una con il codice in mano e una senza.
 
 ---
 
-## 6. I quindici giochi che nessuno apre
+## 4. Come si misura — e come no
 
-Quindici pagine su ventotto non hanno prodotto un solo risultato in trenta
-giorni. Non propongo di cancellarle: propongo di **decidere**, una per una, fra
-due destini.
+**Non con le aperture delle lezioni.** Se il percorso lo metti all'ingresso,
+quelle salgono per costruzione: misurerebbero lo spostamento del pulsante, non
+l'apprendimento. Era la verifica proposta nella prima stesura ed era una
+verifica che non poteva fallire.
 
-1. **Entra nel percorso** — se allena una cosa che una lezione insegna, diventa
-   il nodo di esercizio dopo quella lezione. Lì la gente ci arriva.
-2. **Va in libreria** — resta raggiungibile da Allenamento, cercabile, e smette
-   di occupare spazio nel menu di chi non la cerca.
+Quello che ha senso guardare, **separato per tipo di persona**:
 
-Il criterio è uno: *questa cosa allena una lezione che esiste?* Se sì, il suo
-posto è nel percorso; se no, è in libreria.
+- moduli **iniziati e finiti**, non aperti;
+- ritorno a distanza di una e quattro settimane;
+- quanto ci mette qualcuno a ritrovare il gioco che cercava;
+- continuità degli allievi di una classe dall'inizio alla fine del corso.
 
----
-
-## 7. Cosa NON si tocca
-
-- **I contenuti.** 49 lezioni, 199 moduli, 272 smazzate: non si riscrive niente.
-- **I motori.** Engine, scoring, PBN, DDS, la catena BEN: fuori dal perimetro.
-- **La gamification.** Resta tutta, si sposta nel Profilo.
-- **L'insegnante.** Il portale ASD non si semplifica: è l'unica parte del sito
-  con un utente che sa già cosa vuole.
-
-Questa proposta riguarda **dove stanno le cose**, non cosa sono.
+E prima ancora: **guardare cinque persone usare il sito.** I numeri dicono cosa
+succede, non perché. Tutto questo documento è costruito su numeri, e la prima
+stesura mostra cosa succede quando ci si ferma lì.
 
 ---
 
-## 8. Il rischio, detto chiaro
+## 5. Da dove partirei adesso
 
-**Il percorso presuppone un ordine, e il bridge non è il francese.** Chi arriva
-sapendo già giocare non vuole ricominciare dalla lezione 1, e un percorso
-lineare gli dice esattamente quello. Serve un modo di entrare a metà — una
-prova d'ingresso, o la scelta del corso al primo accesso — e va progettato
-prima, non dopo.
+**Primo — rendere evidente quello che già funziona.** «Riprendi» esiste ma è
+dentro l'eroe: va reso l'azione primaria, riconoscibile senza animazioni. La
+scheda didattica porta al percorso, non a un menu intermedio. I banner non si
+impilano mai in più di uno.
 
-**Si perde il giocatore che vuole solo giocare.** Oggi ha un pulsante grande al
-centro; domani ne ha uno normale in seconda posizione. Dei 107 che non studiano
-mai, qualcuno userà meno il sito. La scommessa è che altri, messi davanti a una
-strada invece che a un bivio, comincino a studiare. **È una scommessa, e va
-misurata**: la percentuale di attivi che apre una lezione, oggi 38%, è il
-numero da guardare dopo.
+**Secondo — il legame lezione→esercizio→spiegazione, su UN argomento solo.**
+Curato bene, dall'inizio alla fine: la mano allena davvero quel concetto, la
+difficoltà è coerente, l'errore riceve una spiegazione pertinente, e alla fine
+si torna al percorso senza perdersi. Se funziona lì, si estende. Non serve che
+sia sempre una mano intera: una decisione sull'attacco può bastare.
 
-**Non si fa in una settimana.** È un cambio di navigazione: tocca la barra, la
-home, tre hub e i punti d'ingresso di 28 giochi.
+**Terzo — la barra a quattro voci**, con le destinazioni divise come sopra.
 
----
+**Quarto — strumentare le sette pagine che non registrano niente**, perché
+finché non lo fanno qualunque decisione su di loro è a occhio. Questa
+probabilmente viene prima di tutto il resto.
 
-## 9. Come procederei
-
-**Fase 1 — una settimana.** `/` mostra il percorso. La barra scende a quattro
-voci. Niente altro. È il 90% del beneficio e si può annullare con un `git
-revert`: nessuna tabella, nessun contenuto, nessuna migrazione.
-
-**Fase 2 — due settimane.** I blocchi della home si spostano dove devono
-andare; i banner smettono di impilarsi. Il Profilo assorbe il cassetto.
-
-**Fase 3 — due settimane.** I giochi entrano nel percorso come nodi di
-esercizio, uno per lezione, partendo dai tre che già funzionano.
-
-**Fase 4 — da decidere.** I quindici giochi fermi: uno per uno, percorso o
-libreria.
-
-La Fase 1 da sola si misura: se dopo un mese la quota di attivi che apre una
-lezione non si muove dal 38%, il problema non era il layout e le fasi 2-4 non
-vanno fatte.
+Non metto durate. La prima stesura diceva «una settimana» e «il 90% del
+beneficio»: erano numeri inventati, e uno dei due sembrava perfino una misura.
 
 ---
 
-## La mezza pagina da portare in riunione
+## Appendice — come mi sono sbagliato
 
-Il sito ha 49 lezioni, 199 moduli e 28 giochi. Funziona tutto. Ma sei persone
-su dieci che lo aprono non vedono mai una lezione, e non perché non vogliano:
-perché il pulsante più grande dello schermo dice «Gioca» e la strada per
-studiare è nascosta dietro due menu.
+Il documento si reggeva su tre numeri. Due erano sbagliati e uno era
+ambiguo.
 
-Duolingo ha una cosa sola che qui manca, e non è la gamification — di quella ne
-abbiamo di più. È che la loro schermata iniziale non è un menu: è la strada, con
-un solo passo illuminato.
+**«Il 62% non apre mai una lezione»** veniva da `completed_modules`. Ma non
+aver completato un modulo non è non aver aperto una lezione, e nessuna tabella
+registra le aperture: il dato non esisteva. Guardando la domanda giusta — chi
+ha completato almeno un modulo *prima o poi* — il numero si ribalta: 77%.
 
-Quella strada qui c'è già, è fatta bene, e si chiama «Il Percorso». Proponiamo
-di metterla all'ingresso al posto del cruscotto, e di far scendere la barra da
-cinque voci a quattro. Una settimana di lavoro, nessun contenuto toccato,
-reversibile in un minuto.
+**«15 giochi con zero risultati»** veniva dal contare una tabella sola. Tredici
+pagine su ventisette non ci scrivono. Il torneo settimanale, dato per morto,
+ha 51 giocatori in trenta giorni.
 
-Poi si guarda un numero solo: oggi 38 persone su 100 aprono una lezione. Se fra
-un mese non si muove, avevamo torto noi e non il layout.
+**«Due tocchi per il percorso»** l'ho scritto leggendo la barra di navigazione
+e non la home, che ha un «Riprendi» a un tocco.
+
+C'è anche un'incongruenza interna che il revisore ha colto: al §2 i primi tre
+giochi erano *smazzata, sfida, mano del giorno*; al §5 diventavano *sfida, mano
+del giorno, torneo*, con la stessa percentuale accanto. Avevo scambiato una
+voce e tenuto il numero.
+
+Il filo comune non è la fretta: è **aver preso la mancanza di un dato per un
+dato.** Una tabella vuota sembra un fatto, e non lo è — è il posto dove
+nessuno ha scritto. Vale la pena ricordarlo, perché è lo stesso sguardo che in
+questo progetto ha già prodotto altri difetti: guardare da dentro, dove le cose
+che non vediamo sembrano non esserci.
