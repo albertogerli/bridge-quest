@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Archive, Eye, EyeOff, FlaskConical, RotateCcw, Save, Undo2 } from "lucide-react";
+import { ArrowLeftRight, Archive, Eye, EyeOff, FlaskConical, Percent, RotateCcw, Save, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -17,6 +17,7 @@ import { giocateInOrdine } from "@/lib/esercizi-posizione";
 import { DEAL_TEMPLATES, generateDeals } from "@/lib/deal-generator";
 import { calcTableAndPar, cardOptions, type OpzioneCarta } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
+import { PannelloRipartizioni } from "@/components/istruttori/pannello-ripartizioni";
 import { getSavedHands, saveHand } from "@/lib/saved-hands";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -100,6 +101,24 @@ function Studio() {
    */
   const [archivioMancante, setArchivioMancante] = useState(false);
 
+  /**
+   * LE MANI RITOCCATE A MANO. «Questo sei di cuori non lo voglio, voglio il
+   * singolo»: si scambiano due carte fra due mani e la lezione è pronta, senza
+   * andare a cercare un'altra smazzata. Idea del tavolo di insegnamento di
+   * BridgeChamp. Si fa prima della prima carta: a gioco iniziato la smazzata
+   * è un fatto, e cambiarla sotto a una presa giocata la renderebbe impossibile.
+   * Il contratto resta quello che era: l'insegnante ha scambiato una carta per
+   * mostrare qualcosa DENTRO quel contratto, e vederlo cambiare da solo
+   * disorienterebbe.
+   */
+  const [ritocchi, setRitocchi] = useState<Record<Position, Card[]> | null>(null);
+  const [scambio, setScambio] = useState(false);
+  const [primaCarta, setPrimaCarta] = useState<{ seat: Position; card: Card } | null>(null);
+  /** Le carte già giocate restano al loro posto, in grigio: si vede la mano intera. */
+  const [mostraGiocate, setMostraGiocate] = useState(false);
+  /** Le percentuali delle divisioni: spente, all'inizio della mano, o adesso. */
+  const [ripart, setRipart] = useState(false);
+
   // Mano ripresa dall'archivio: si riapre esattamente dov'era, carte già
   // giocate comprese. È il motivo per cui l'archivio serve.
   useEffect(() => {
@@ -137,7 +156,7 @@ function Studio() {
     () => generateDeals(modello.constraints, { count: 1, seed }).deals[0],
     [modello, seed]
   );
-  const deal = daArchivio?.hands ?? generata;
+  const deal = ritocchi ?? daArchivio?.hands ?? generata;
 
   // Contratto: il par della mano, come nel resto della piattaforma — così lo
   // studio parte da una dichiarazione sensata invece che da una scelta a caso.
@@ -146,7 +165,7 @@ function Studio() {
     // quando è arrivata dall'archivio. Qui non c'è nulla da calcolare.
     // Se la mano dell'archivio non c'è più si prosegue con quella generata,
     // invece di restare fermi su un tavolo vuoto.
-    if (daArchivio || (manoSalvata && !archivioMancante)) return;
+    if (ritocchi || daArchivio || (manoSalvata && !archivioMancante)) return;
     let vivo = true;
     calcTableAndPar(deal, "north", "none")
       .then(({ table, par }) => {
@@ -159,7 +178,7 @@ function Studio() {
       })
       .catch((err) => reportError("studio:par", err));
     return () => { vivo = false; };
-  }, [deal, daArchivio, manoSalvata, archivioMancante]);
+  }, [deal, ritocchi, daArchivio, manoSalvata, archivioMancante]);
 
   const trump = contratto ? parseContract(contratto.contract).trumpSuit : null;
 
@@ -199,6 +218,27 @@ function Studio() {
   const ricomincia = () => {
     if (!contratto) return;
     setStato(createGame(deal, contratto.contract, contratto.declarer));
+    setStoria([]);
+  };
+
+  const nessunaGiocata = !!stato && stato.tricks.length === 0 && stato.currentTrick.length === 0;
+
+  const tocca_carta_scambio = (seat: Position, card: Card) => {
+    if (!primaCarta) {
+      setPrimaCarta({ seat, card });
+      return;
+    }
+    // Stessa carta: si deseleziona. Stessa mano: si cambia scelta.
+    if (primaCarta.seat === seat) {
+      setPrimaCarta(chiave(primaCarta.card) === chiave(card) ? null : { seat, card });
+      return;
+    }
+    const nuove: Record<Position, Card[]> = { ...deal };
+    nuove[primaCarta.seat] = [...deal[primaCarta.seat].filter((c) => chiave(c) !== chiave(primaCarta.card)), card];
+    nuove[seat] = [...deal[seat].filter((c) => chiave(c) !== chiave(card)), primaCarta.card];
+    setRitocchi(nuove);
+    setPrimaCarta(null);
+    if (contratto) setStato(createGame(nuove, contratto.contract, contratto.declarer));
     setStoria([]);
   };
 
@@ -273,7 +313,7 @@ function Studio() {
           <select
             id="argomento"
             value={modelloId}
-            onChange={(e) => setModelloId(e.target.value)}
+            onChange={(e) => { setModelloId(e.target.value); setRitocchi(null); setScambio(false); }}
             className="h-11 px-3 rounded-xl border border-border bg-card text-sm"
           >
             {DEAL_TEMPLATES.map((t) => (
@@ -281,7 +321,7 @@ function Studio() {
             ))}
           </select>
         </div>
-        <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>{t("Altra mano")}</Button>
+        <Button variant="outline" onClick={() => { setSeed((s) => s + 1); setRitocchi(null); setScambio(false); }}>{t("Altra mano")}</Button>
         <Button variant={minibridge ? "default" : "outline"} onClick={() => setMinibridge((v) => !v)}>
           {t("Minibridge")}
         </Button>
@@ -314,7 +354,31 @@ function Studio() {
           {numeri ? <EyeOff className="w-4 h-4 mr-1" aria-hidden="true" /> : <Eye className="w-4 h-4 mr-1" aria-hidden="true" />}
           {numeri ? t("Nascondi i numeri") : t("Mostra i numeri")}
         </Button>
+        <Button
+          variant={scambio ? "default" : "outline"}
+          disabled={!nessunaGiocata}
+          title={nessunaGiocata ? undefined : t("Si scambiano le carte prima della prima carta giocata")}
+          onClick={() => { setScambio((v) => !v); setPrimaCarta(null); }}
+        >
+          <ArrowLeftRight className="w-4 h-4 mr-1" aria-hidden="true" />
+          {t("Scambia carte")}
+        </Button>
+        <Button variant={mostraGiocate ? "default" : "outline"} onClick={() => setMostraGiocate((v) => !v)}>
+          {t("Carte giocate")}
+        </Button>
+        <Button variant={ripart ? "default" : "outline"} onClick={() => setRipart((v) => !v)}>
+          <Percent className="w-4 h-4 mr-1" aria-hidden="true" />
+          {t("Distribuzioni")}
+        </Button>
       </div>
+
+      {scambio && (
+        <p className="mb-4 rounded-xl border border-figb/30 bg-figb/5 px-4 py-3 text-sm">
+          {primaCarta
+            ? t("Ora tocca la carta di un'altra mano con cui scambiarla.")
+            : t("Tocca una carta, poi quella di un'altra mano: si scambiano di posto. Il contratto resta lo stesso.")}
+        </p>
+      )}
 
       {contratto && (
         <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
@@ -333,15 +397,22 @@ function Studio() {
       {/* Il tavolo: Nord in alto, Sud in basso, Ovest ed Est ai lati. */}
       <div className="grid grid-cols-3 gap-2 items-start">
         <div />
-        <Mano seat="north" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca }} />
+        <Mano seat="north" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "north" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
         <div />
-        <Mano seat="west" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca }} />
+        <Mano seat="west" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "west" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
         <PresaCorrente stato={stato} />
-        <Mano seat="east" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca }} />
+        <Mano seat="east" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "east" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
         <div />
-        <Mano seat="south" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca }} />
+        <Mano seat="south" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "south" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
         <div />
       </div>
+
+      {ripart && stato && contratto && (
+        <section className="mt-5">
+          <h2 className="mb-2 text-sm font-semibold">{t("Distribuzioni: come si dividono le carte che mancano")}</h2>
+          <PannelloRipartizioni mani={deal} stato={stato} dichiarante={contratto.declarer} />
+        </section>
+      )}
 
       {/* Salvare la POSIZIONE, non solo la mano: è il momento che si vuole
           discutere alla lezione dopo. */}
@@ -413,7 +484,13 @@ function PresaCorrente({ stato }: { stato: GameState | null }) {
 
 function Mano({
   seat, stato, tocca, legaliSet, perCarta, migliore, numeri, gioca,
+  iniziali, mostraGiocate, scambio, primaCarta, onScambio,
 }: {
+  iniziali: Card[];
+  mostraGiocate: boolean;
+  scambio: boolean;
+  primaCarta: { seat: Position; card: Card } | null;
+  onScambio: (seat: Position, card: Card) => void;
   seat: Position;
   stato: GameState | null;
   tocca: Position | undefined;
@@ -424,7 +501,11 @@ function Mano({
   gioca: (c: Card) => void;
 }) {
   const etichetta = SEATS.find((s) => s.key === seat)!.label;
-  const cards = stato?.hands[seat] ?? [];
+  const inMano = stato?.hands[seat] ?? [];
+  const inManoSet = new Set(inMano.map(chiave));
+  // Con «carte giocate» accese si mostra la mano di partenza e le giocate si
+  // spengono al loro posto: il colore resta leggibile per intero.
+  const cards = mostraGiocate ? iniziali : inMano;
   const suoTurno = tocca === seat;
 
   return (
@@ -442,6 +523,28 @@ function Mano({
           <div key={suit} className="flex items-center gap-1.5 flex-wrap mb-1">
             <SuitSymbol suit={suit} size="xs" />
             {delSeme.map((c) => {
+              if (!inManoSet.has(chiave(c))) {
+                return (
+                  <span key={chiave(c)} className="px-1.5 py-0.5 font-mono text-base text-muted-foreground/50 line-through" title="già giocata">
+                    {c.rank}
+                  </span>
+                );
+              }
+              if (scambio) {
+                const scelta = primaCarta?.seat === seat && chiave(primaCarta.card) === chiave(c);
+                return (
+                  <button
+                    key={chiave(c)}
+                    onClick={() => onScambio(seat, c)}
+                    aria-pressed={scelta}
+                    className={`px-1.5 py-0.5 rounded-md font-mono text-base border ${
+                      scelta ? "bg-figb text-white border-figb" : "border-border hover:bg-muted"
+                    }`}
+                  >
+                    {c.rank}
+                  </button>
+                );
+              }
               const giocabile = suoTurno && legaliSet.has(chiave(c));
               const prese = perCarta.get(chiave(c));
               // Il costo rispetto alla carta migliore: è il numero che conta,
