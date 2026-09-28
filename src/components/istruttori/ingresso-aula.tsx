@@ -13,7 +13,7 @@ import {
 } from "@/lib/inviti-aula";
 import { qrSvg } from "@/lib/qr";
 import { linkWhatsApp } from "@/lib/whatsapp";
-import { getClassDetail, type ClassMember } from "@/lib/instructors";
+import { ClasseNonTrovata, getClassDetail, type ClassMember } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -36,12 +36,19 @@ export function IngressoAula({ classId }: { classId: string }) {
   const [caricando, setCaricando] = useState(true);
   const [occupato, setOccupato] = useState(false);
 
+  /** La classe è sparita (eliminata mentre la pagina era aperta): si smette di chiedere. */
+  const [sparita, setSparita] = useState(false);
+
   const ricarica = useCallback(async () => {
     try {
       const [i, d] = await Promise.all([invitoAttivo(classId), getClassDetail(classId)]);
       setInvito(i);
       setOspiti(d.members);
     } catch (err) {
+      if (err instanceof ClasseNonTrovata) {
+        setSparita(true);
+        return;
+      }
       reportError("ingresso-aula:carica", err);
     } finally {
       setCaricando(false);
@@ -49,16 +56,18 @@ export function IngressoAula({ classId }: { classId: string }) {
   }, [classId]);
 
   useEffect(() => {
+    if (sparita) return;
     void ricarica();
     // Ogni sei secondi: durante l'ingresso di una classe è il ritmo in cui le
     // cose cambiano, e fuori da quel momento sono due letture al minuto.
     const t = setInterval(() => void ricarica(), 6000);
     return () => clearInterval(t);
-  }, [ricarica]);
+  }, [ricarica, sparita]);
 
   const indirizzo = invito ? indirizzoAula(invito.token) : "";
   const svg = useMemo(() => (indirizzo ? qrSvg(indirizzo) : ""), [indirizzo]);
 
+  if (sparita) return null;
   if (caricando) return <div className="h-24 animate-pulse rounded-xl bg-muted" />;
 
   return (

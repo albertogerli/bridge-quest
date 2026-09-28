@@ -7,7 +7,7 @@ import { GraduationCap, Users, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
-import { getMyClasses, getClassDetail, ETICHETTE_STATO, type ClassRoom } from "@/lib/instructors";
+import { getMyClasses, getClassDetail, ClasseNonTrovata, ETICHETTE_STATO, type ClassRoom } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -68,7 +68,8 @@ export function HomeInsegnante({
               const d = await getClassDetail(c.id);
               if (d.inAttesa.length > 0) conteggi[c.id] = d.inAttesa.length;
             } catch (err) {
-              reportError("home-insegnante:attesa", err);
+              // Eliminata fra l'elenco e questa lettura: non c'è niente in attesa.
+              if (!(err instanceof ClasseNonTrovata)) reportError("home-insegnante:attesa", err);
             }
           }),
         );

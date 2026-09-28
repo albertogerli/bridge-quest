@@ -1933,5 +1933,7 @@
   "Non sono riuscito a salvare. Controlla la connessione e riprova.": "I couldn't save. Check your connection and try again.",
   "Per eliminare la classe scrivi il suo nome: {nome}": "To delete the class, type its name: {nome}",
   "Rinomina": "Rename",
-  "Spariscono iscrizioni, compiti, chat, tavoli ed elenco allievi, e non si recuperano. Per un corso finito è meglio «Archiviata», nelle impostazioni: non perde niente.": "Enrollments, assignments, chat, tables and the student list are removed and cannot be recovered. For a finished course, “Archived” in the settings is better: nothing is lost."
+  "Spariscono iscrizioni, compiti, chat, tavoli ed elenco allievi, e non si recuperano. Per un corso finito è meglio «Archiviata», nelle impostazioni: non perde niente.": "Enrollments, assignments, chat, tables and the student list are removed and cannot be recovered. For a finished course, “Archived” in the settings is better: nothing is lost.",
+  "Questa classe non esiste più, o non è tra le tue.": "This class no longer exists, or it isn't one of yours.",
+  "Non riesco a caricare la classe. Controlla la connessione e ricarica la pagina.": "I can't load the class. Check your connection and reload the page."
 }

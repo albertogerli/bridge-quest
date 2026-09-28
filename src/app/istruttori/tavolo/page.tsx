@@ -14,6 +14,7 @@ import { DEAL_TEMPLATES, generateDeals, handHcp, satisfiesDeal } from "@/lib/dea
 import { calcTableAndPar } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import {
+  ClasseNonTrovata,
   createAssignment,
   getClassDetail,
   getMyClasses,
@@ -107,7 +108,8 @@ function Tavolo() {
     getOpenLiveTable(classId).then(setTableId);
     getClassDetail(classId)
       .then((d) => setAllievi(d.members.filter((m) => m.status === "active")))
-      .catch((err) => reportError("tavolo:allievi", err));
+      // Una classe eliminata nel frattempo non è un difetto da segnalare.
+      .catch((err) => { if (!(err instanceof ClasseNonTrovata)) reportError("tavolo:allievi", err); });
   }, [classId]);
 
   useEffect(() => {
