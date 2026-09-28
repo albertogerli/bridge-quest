@@ -3692,6 +3692,31 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text)
+ RETURNS TABLE(risultato integer, quanti bigint)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  with prime as (
+    select distinct on (gr.user_id) (gr.details->>'result')::integer as r
+      from public.game_results gr
+     where gr.game_type = p_tipo
+       and gr.details ? 'result'
+       and (gr.details->>'result') ~ '^-?[0-9]+$'
+       and case p_tipo
+             when 'smazzata'          then gr.details->>'smazzataId' = p_chiave
+             when 'mano-del-giorno'   then gr.details->>'smazzataId' = p_chiave
+             when 'sfida'             then gr.details->>'date' = p_chiave
+             when 'sfida-settimanale' then (gr.details->>'weekChallenge') || '#' || (gr.details->>'handNumber') = p_chiave
+             else false
+           end
+     order by gr.user_id, gr.created_at asc
+  )
+  select r, count(*) from prime group by r order by r desc;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.search_users(p_query text, p_user_id uuid)
  RETURNS TABLE(id uuid, display_name text, bbo_username text, avatar_url text, asd_code text, asd_name text)
  LANGUAGE sql
@@ -7163,6 +7188,10 @@ GRANT EXECUTE ON FUNCTION public.puo_vedere_esercizio(p_id uuid) TO service_role
 REVOKE ALL ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO service_role;
+REVOKE ALL ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO anon;
+GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO service_role;
 REVOKE ALL ON FUNCTION public.search_users(p_query text, p_user_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO service_role;

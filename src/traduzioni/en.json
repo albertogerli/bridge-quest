@@ -1283,7 +1283,6 @@
   "Questo tavolo è stato chiuso.": "This table has been closed.",
   "Qui conta una sola cosa.": "Only one thing matters here.",
   "Qui i robot usano BEN: le loro scelte possono differire dagli accordi del corso Fiori 2022. Il voto valuta il contratto, non l'aderenza al sistema del corso.": "The robots here use BEN: their choices may differ from the Fiori 2022 course agreements. The rating evaluates the contract, not compliance with the course system.",
-  "Qui non si registra niente: è pratica. Il risultato del compito resta quello del primo tentativo.": "Nothing is recorded here: it's practice. Your homework result stays the one from your first attempt.",
   "Quiz": "Quiz",
   "Quiz Globale": "Global quiz",
   "Quiz Lampo": "Quick Quiz",
@@ -2015,5 +2014,10 @@
   "{n} mani importate, {e} saltate perché illeggibili.": "{n} deals imported, {e} skipped because unreadable.",
   "{n} mani importate.": "{n} deals imported.",
   "facoltativa": "optional",
-  "La classe vede": "The class sees"
+  "La classe vede": "The class sees",
+  "Rigioca da qui": "Replay from here",
+  "Rigioca dall'inizio": "Replay from the start",
+  "tu": "you",
+  "{n} persone hanno giocato questa mano; {f} l'hanno mantenuta. Conta la prima partita di ognuno.": "{n} people played this deal; {f} made the contract. Each person's first attempt counts.",
+  "Qui non si registra niente: è pratica. Il risultato che conta resta quello della partita giocata.": "Nothing is recorded here: it's practice. The result that counts is still the one from the game you played."
 }

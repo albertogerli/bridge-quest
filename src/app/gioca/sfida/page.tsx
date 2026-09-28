@@ -183,7 +183,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
       }
       // Save for AI analysis
       const parsed = parseContract(smazzata.contract);
-      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
+      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result, { tipo: "sfida", chiave: today });
       // Sync to Supabase
       saveGameResult({
         gameType: "sfida",

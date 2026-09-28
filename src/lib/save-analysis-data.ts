@@ -20,7 +20,13 @@ export function saveGameForAnalysis(
   hands: Record<Position, Card[]>,
   tricks: Trick[],
   contract: { level: number; suit: Suit | string | null; declarer: string },
-  result: GameResult
+  result: GameResult,
+  /**
+   * Come riconoscere «la stessa mano» fra i risultati degli altri: il tipo di
+   * gioco e la chiave che quel gioco salva (vedi `risultati_stessa_mano`).
+   * Assente per le mani che nessun altro ha giocato uguali.
+   */
+  confronto?: { tipo: string; chiave: string },
 ) {
   try {
     const data = {
@@ -37,6 +43,7 @@ export function saveGameForAnalysis(
       tricksMade: result.tricksMade,
       tricksNeeded: result.tricksNeeded,
       result: result.result,
+      confronto: confronto ?? null,
     };
     localStorage.setItem("bq_last_game_for_analysis", JSON.stringify(data));
   } catch {}

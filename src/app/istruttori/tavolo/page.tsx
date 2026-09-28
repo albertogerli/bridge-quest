@@ -42,6 +42,7 @@ import {
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { TavoloVerde } from "@/components/bridge/tavolo-verde";
+import { VideoTavolo } from "@/components/bridge/video-tavolo";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -122,6 +123,16 @@ function Tavolo() {
   const stato = tableId ? statoGrezzo : null;
 
   const nomeClasse = classi.find((c) => c.id === classId)?.name ?? "";
+  /**
+   * La telecamera c'è solo se l'insegnante l'ha accesa nelle impostazioni della
+   * classe: è la stessa regola che vale per gli allievi al tavolo. L'insegnante
+   * entra nella stessa maglia come quinto riquadro (il limite è sei).
+   */
+  const videoPermesso = classi.find((c) => c.id === classId)?.video_tavolo ?? false;
+  const nomiVideo = new Map<string, string>(
+    allievi.map((a) => [a.student_id, a.display_name ?? t("Allievo")] as [string, string]),
+  );
+  if (user) nomiVideo.set(user.id, t("Insegnante"));
   const modello = DEAL_TEMPLATES.find((t) => t.id === modelloId) ?? DEAL_TEMPLATES[0];
   const mani = useMemo(
     () => generateDeals(modello.constraints, { count: 8, seed }).deals,
@@ -518,6 +529,7 @@ function Tavolo() {
         attivo={!!tableId}
         onGioca={giocaPer}
         onVisibilita={scopri}
+        sopra={tableId && videoPermesso && user ? <VideoTavolo tavoloId={tableId} io={user.id} nomi={nomiVideo} /> : undefined}
       />
 
       {tableId && stato && (

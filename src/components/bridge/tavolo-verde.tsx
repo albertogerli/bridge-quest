@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Eye } from "lucide-react";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { PlayingCard } from "@/components/bridge/playing-card";
@@ -42,6 +43,7 @@ export function TavoloVerde({
   attivo,
   onGioca,
   onVisibilita,
+  sopra,
 }: {
   mani: Partial<Record<Position, Card[]>>;
   /** Le mani che la classe vede in questo momento. */
@@ -53,6 +55,12 @@ export function TavoloVerde({
   attivo: boolean;
   onGioca: (seat: Position, c: Card) => void;
   onVisibilita: (seat: Position) => void;
+  /**
+   * Quello che sta sul panno sopra le mani: i riquadri della telecamera.
+   * Nel tavolo didattico di BridgeChamp i volti sono SUL tavolo, non in una
+   * finestra a parte — si parla guardando le persone e le carte insieme.
+   */
+  sopra?: ReactNode;
 }) {
   const t = useT();
   const piccolo = useMobile(768);
@@ -175,6 +183,7 @@ export function TavoloVerde({
       )}
 
       <div className="felt-bg rounded-3xl px-1.5 py-3 shadow-lg sm:p-6">
+        {sopra && <div className="mb-4 rounded-2xl bg-black/20 p-2 sm:p-3">{sopra}</div>}
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1 sm:gap-4">
           <div />
           {inRiga("north")}

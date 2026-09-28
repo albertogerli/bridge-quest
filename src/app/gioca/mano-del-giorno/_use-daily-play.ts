@@ -124,7 +124,7 @@ export function useDailyPlay({
       // eslint-disable-next-line react-hooks/set-state-in-effect -- reazione a evento asincrono di fine partita (con guard anti-doppio): non derivabile durante il render
       setShowCelebration(true);
       // Save for AI analysis (both daily and yesterday)
-      { const p = parseContract(smazzata.contract); saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: p.level, suit: p.trumpSuit, declarer: smazzata.declarer }, game.result); }
+      { const p = parseContract(smazzata.contract); saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: p.level, suit: p.trumpSuit, declarer: smazzata.declarer }, game.result, { tipo: "mano-del-giorno", chiave: smazzata.id }); }
       if (isDaily) {
         onFinish(
           game.result.tricksMade,
