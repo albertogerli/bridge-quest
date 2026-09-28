@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
 import { useCatalog } from "@/store/use-catalog-store";
 import { type VisibilitaSoluzioni, createAssignment } from "@/lib/instructors";
+import { compitoPronto } from "@/lib/compito-pronto";
 import {
   ETICHETTE_CONSEGNA,
   elencaMieiEsercizi,
@@ -143,8 +144,14 @@ export default function NuovoCompitoPage({
     void elencaMieiEsercizi().then(setEsercizi);
   }, []);
 
+  // Una condizione sola per il pulsante e per il gestore: vedi compito-pronto.ts.
+  const { pronto, manca } = compitoPronto({
+    titolo: title, mani: selected.size, esercizi: eserciziScelti.size,
+  });
+  const mancaContenuto = manca === "contenuto";
+
   async function handleCreate() {
-    if (!title.trim() || (selected.size === 0 && eserciziScelti.size === 0)) return;
+    if (!pronto) return;
     setSaving(true);
     setSaveError(null);
     try {
@@ -475,16 +482,38 @@ export default function NuovoCompitoPage({
       {/* Sticky create bar */}
       <div className="fixed inset-x-0 bottom-[76px] z-40 border-t border-border bg-background/95 backdrop-blur lg:bottom-0 lg:left-[88px]">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          {/*
+            IL PULSANTE SPENTO DEVE DIRE PERCHÉ È SPENTO.
+
+            Segnalazione del 28/09/2026, da un insegnante al primo giorno:
+            «c'è qualcosa che sbaglio, non riesco a creare un compito». Il
+            pulsante era grigio e la barra diceva «0 mani selezionate»: c'era
+            l'avviso per il titolo mancante, non quello per le mani. Chi aveva
+            scritto il titolo premeva e non succedeva niente, e niente gli
+            diceva che doveva scegliere le mani nell'elenco qui sopra.
+
+            E c'era un difetto sotto: il gestore accetta un compito di soli
+            ESERCIZI, ma il pulsante si accendeva solo con almeno una MANO.
+            Quindi un compito di soli esercizi non si poteva creare affatto.
+            Ora la condizione è una sola, `pronto`, e la usano tutti e due.
+          */}
           <div className="text-sm">
-            <span className="font-semibold">{selected.size}</span> mani selezionate
-            {!title.trim() && selected.size > 0 && (
-              <span className="ml-3 text-amber-600">{t("Inserisci un titolo per assegnare")}</span>
+            <span className="font-semibold">{selected.size}</span> {t("mani selezionate")}
+            {eserciziScelti.size > 0 && (
+              <> · <span className="font-semibold">{eserciziScelti.size}</span> {t("esercizi")}</>
             )}
+            {mancaContenuto ? (
+              <span className="ml-3 text-amber-600">
+                {t("Scegli almeno una mano dall'elenco qui sopra")}
+              </span>
+            ) : !title.trim() ? (
+              <span className="ml-3 text-amber-600">{t("Inserisci un titolo per assegnare")}</span>
+            ) : null}
             {saveError && <span className="ml-3 text-destructive">{saveError}</span>}
           </div>
           <Button
             onClick={handleCreate}
-            disabled={saving || !title.trim() || selected.size === 0}
+            disabled={saving || !pronto}
           >
             {saving ? t("Creazione…") : t("Crea compito")}
           </Button>

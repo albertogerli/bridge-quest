@@ -105,3 +105,23 @@ export function eDiRete(errore: unknown): boolean {
   if (!testo) return false;
   return FORME_DI_RETE.some((f) => f.test(testo));
 }
+
+/**
+ * Il gettone di accesso è scaduto: non è un difetto, è il tempo che passa.
+ *
+ * PostgREST lo dice con PGRST301/302/303 e stato 401. Succede a chi lascia
+ * una scheda aperta la notte: la prima scrittura del mattino parte col
+ * gettone di ieri, fallisce, e al giro dopo — rinnovato il gettone — passa.
+ * Sentry ne ha ricevute due in otto ore il 27-28/09/2026 (sync profile, sync
+ * badges), nessuna con qualcosa da correggere.
+ *
+ * Stessa famiglia della rete caduta, e per lo stesso motivo non si segnala:
+ * chi lo vede non può fare niente, e il sistema si rimette da solo.
+ */
+const CODICI_SESSIONE = new Set(["PGRST301", "PGRST302", "PGRST303"]);
+
+export function eSessioneScaduta(errore: unknown): boolean {
+  if (!errore || typeof errore !== "object") return false;
+  const o = errore as { code?: unknown };
+  return typeof o.code === "string" && CODICI_SESSIONE.has(o.code);
+}
