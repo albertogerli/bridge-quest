@@ -1409,7 +1409,7 @@
   "Scegli la carta": "Choose a card",
   "Scegli la difficoltà degli avversari AI": "Choose how strong the AI opponents are",
   "Scegli la risposta corretta tra 4 opzioni": "Pick the right answer out of 4",
-  "Scegli le mani": "Choose the hands",
+  "Scegli le mani": "Pick the hands",
   "Scegli lo stile di gioco che preferisci": "Choose the playing style you prefer",
   "Scegli mano": "Choose a hand",
   "Scegli un file CSV": "Choose a CSV file",
@@ -1906,5 +1906,13 @@
   "loro in zona": "they're vulnerable",
   "tutti in zona": "everyone vulnerable",
   "Apre {posto}": "{posto} deals",
-  "Mano {n} · sei Sud": "Hand {n} · you're South"
+  "Mano {n} · sei Sud": "Hand {n} · you're South",
+  "mani selezionate": "hands selected",
+  "esercizi": "exercises",
+  "Scegli almeno una mano dall'elenco qui sopra": "Pick at least one hand from the list above",
+  "Nessun compito ancora.": "No assignments yet.",
+  "Il modo più rapido: assegna una lezione intera, con le sue mani già dentro. Oppure scegli tu le mani una per una.": "The quickest way: assign a whole lesson, with its hands already in it. Or pick the hands yourself, one by one.",
+  "Assegna una lezione": "Assign a lesson",
+  "Il sito non ti riconosce più: di solito è la sessione scaduta. Ricarica la pagina; se non basta, esci e rientra, poi riprova.": "The site no longer recognizes you: usually your session has expired. Reload the page; if that doesn't help, sign out and back in, then try again.",
+  "Non sono riuscito a importarli.": "I couldn't import them."
 }
