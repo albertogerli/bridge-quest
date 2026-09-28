@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, use, useState } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
+import { accountDaProteggere } from "@/lib/aula-sessione";
 
 /**
  * L'ingresso in aula: un nome, e si è dentro.
@@ -50,6 +51,47 @@ function Ingresso({ params }: { params: Promise<{ token: string }> }) {
   const [nome, setNome] = useState(cerca.get("nome")?.slice(0, 60) ?? "");
   const [inCorso, setInCorso] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
+  /**
+   * L'account già aperto in questo browser, se è un account vero.
+   * `undefined` finché non si sa: il modulo non si mostra prima, perché un
+   * «Entra» premuto in quel mezzo secondo sostituirebbe la sessione.
+   * Vedi `aula-sessione.ts` per il caso che l'ha reso necessario.
+   */
+  const [giaDentro, setGiaDentro] = useState<string | null | undefined>(undefined);
+  const [esco, setEsco] = useState(false);
+
+  useEffect(() => {
+    let vivo = true;
+    createClient()
+      .auth.getSession()
+      .then(({ data }) => {
+        if (!vivo) return;
+        const utente = data.session?.user;
+        setGiaDentro(
+          accountDaProteggere(utente)
+            ? ((utente?.user_metadata?.display_name as string | undefined) ?? utente?.email ?? "")
+            : null,
+        );
+      })
+      .catch(() => vivo && setGiaDentro(null));
+    return () => {
+      vivo = false;
+    };
+  }, []);
+
+  async function esciEdEntraComeOspite() {
+    setEsco(true);
+    try {
+      // Solo in questo browser: l'insegnante resta dentro sugli altri dispositivi.
+      await createClient().auth.signOut({ scope: "local" });
+      setGiaDentro(null);
+    } catch (err) {
+      segnalaSalvoRete("aula:esci-per-ospite", err);
+      setErrore(t("Non riesco a uscire adesso. Riprova fra un attimo."));
+    } finally {
+      setEsco(false);
+    }
+  }
 
   async function entra() {
     setInCorso(true);
@@ -87,6 +129,50 @@ function Ingresso({ params }: { params: Promise<{ token: string }> }) {
       setErrore("Non riesco a farti entrare adesso. Riprova fra un attimo.");
       setInCorso(false);
     }
+  }
+
+  if (giaDentro === undefined) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (giaDentro !== null) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-5">
+        <div className="w-full max-w-sm text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c8a44e]">
+            {t("Bridge LAB")}
+          </p>
+          <h1 className="mb-2 font-display text-3xl font-bold">{t("Sei già dentro")}</h1>
+          <p className="mb-2 text-sm text-muted-foreground">
+            {giaDentro
+              ? t("In questo browser sei entrato come {nome}.", { nome: giaDentro })
+              : t("In questo browser sei già entrato con il tuo account.")}
+          </p>
+          <p className="mb-6 text-sm text-muted-foreground">
+            {t("Questo link fa entrare gli allievi come ospiti. Se vuoi vedere cosa vedono loro, aprilo in una finestra in incognito: il tuo account resta dov'è.")}
+          </p>
+
+          {errore && <p className="mb-3 text-sm text-destructive">{errore}</p>}
+
+          <Button onClick={() => router.replace("/")} className="mb-3 h-12 w-full text-base">
+            {t("Resta nel tuo account")}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => void esciEdEntraComeOspite()}
+            disabled={esco}
+            className="h-12 w-full text-base"
+          >
+            {esco && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+            {t("Esci ed entra come ospite")}
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
