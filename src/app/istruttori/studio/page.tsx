@@ -84,6 +84,7 @@ function Studio() {
   // peggio che non mostrarli affatto.
   const [valutazione, setValutazione] = useState<{ posizione: string; lista: OpzioneCarta[] } | null>(null);
   const [titolo, setTitolo] = useState("");
+  const [cartella, setCartella] = useState("");
   const [salvata, setSalvata] = useState("");
   const [daArchivio, setDaArchivio] = useState<{
     hands: Record<Position, Card[]>;
@@ -101,6 +102,12 @@ function Studio() {
    * un tavolo vuoto con i comandi morti. Un link vecchio bastava.
    */
   const [archivioMancante, setArchivioMancante] = useState(false);
+  /**
+   * Mano d'archivio SENZA contratto: generata in un set o importata da un PBN
+   * senza dichiarazione. Prima la pagina la rifiutava; ora la tratta come una
+   * mano nuova e ne calcola il par.
+   */
+  const [archivioSenzaContratto, setArchivioSenzaContratto] = useState<Record<Position, Card[]> | null>(null);
 
   /**
    * LE MANI RITOCCATE A MANO. «Questo sei di cuori non lo voglio, voglio il
@@ -129,8 +136,12 @@ function Studio() {
       .then((tutte) => {
         const m = tutte.find((x) => x.id === manoSalvata);
         if (!vivo) return;
-        if (!m || !m.contract || !m.declarer) {
+        if (!m) {
           setArchivioMancante(true);
+          return;
+        }
+        if (!m.contract || !m.declarer) {
+          setArchivioSenzaContratto(m.hands);
           return;
         }
         setDaArchivio({
@@ -157,7 +168,7 @@ function Studio() {
     () => generateDeals(modello.constraints, { count: 1, seed }).deals[0],
     [modello, seed]
   );
-  const deal = ritocchi ?? daArchivio?.hands ?? generata;
+  const deal = ritocchi ?? daArchivio?.hands ?? archivioSenzaContratto ?? generata;
 
   // Contratto: il par della mano, come nel resto della piattaforma — così lo
   // studio parte da una dichiarazione sensata invece che da una scelta a caso.
@@ -166,7 +177,7 @@ function Studio() {
     // quando è arrivata dall'archivio. Qui non c'è nulla da calcolare.
     // Se la mano dell'archivio non c'è più si prosegue con quella generata,
     // invece di restare fermi su un tavolo vuoto.
-    if (ritocchi || daArchivio || (manoSalvata && !archivioMancante)) return;
+    if (ritocchi || daArchivio || (manoSalvata && !archivioMancante && !archivioSenzaContratto)) return;
     let vivo = true;
     calcTableAndPar(deal, "north", "none")
       .then(({ table, par }) => {
@@ -179,7 +190,7 @@ function Studio() {
       })
       .catch((err) => reportError("studio:par", err));
     return () => { vivo = false; };
-  }, [deal, ritocchi, daArchivio, manoSalvata, archivioMancante]);
+  }, [deal, ritocchi, daArchivio, manoSalvata, archivioMancante, archivioSenzaContratto]);
 
   const trump = contratto ? parseContract(contratto.contract).trumpSuit : null;
 
@@ -302,7 +313,7 @@ function Studio() {
 
       {archivioMancante && (
         <p className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4 text-sm text-amber-900 dark:text-amber-200">
-          {t("La mano dell'archivio non c'è più — cancellata, o salvata senza contratto. Qui sotto c'è una mano nuova.")}
+          {t("La mano dell'archivio non c'è più: forse è stata cancellata. Qui sotto c'è una mano nuova.")}
         </p>
       )}
 
@@ -460,6 +471,19 @@ function Studio() {
               className="w-full h-11 px-3 rounded-xl border border-border bg-card text-sm"
             />
           </div>
+          <div className="min-w-[10rem]">
+            <label htmlFor="cartella-mano" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+              {t("Cartella")}
+            </label>
+            <input
+              id="cartella-mano"
+              value={cartella}
+              maxLength={80}
+              onChange={(e) => setCartella(e.target.value)}
+              placeholder={t("facoltativa")}
+              className="w-full h-11 px-3 rounded-xl border border-border bg-card text-sm"
+            />
+          </div>
           <Button
             disabled={!titolo.trim()}
             onClick={async () => {
@@ -473,6 +497,7 @@ function Studio() {
                 contract: contratto.contract,
                 declarer: contratto.declarer,
                 played,
+                cartella,
               });
               setSalvata(esito.ok ? "Salvata nell'archivio." : (esito.errore ?? "Non riuscito."));
               if (esito.ok) setTitolo("");

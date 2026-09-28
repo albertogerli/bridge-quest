@@ -20,19 +20,25 @@ export interface ManoDaStampare {
   risultato?: string;
 }
 
-export function apriStampaMano(mano: ManoDaStampare): void {
+/** Una mano, o una cartella intera: una per pagina. */
+export function apriStampaMano(mano: ManoDaStampare | ManoDaStampare[]): void {
   try {
-    localStorage.setItem(CHIAVE_STAMPA, JSON.stringify({ ...mano, quando: new Date().toISOString() }));
+    const quando = new Date().toISOString();
+    const lista = Array.isArray(mano) ? mano : [mano];
+    localStorage.setItem(CHIAVE_STAMPA, JSON.stringify(lista.map((m) => ({ ...m, quando }))));
   } catch {
     // Senza memoria del browser la pagina di stampa dirà che non ha la mano.
   }
   window.open("/stampa-mano", "_blank", "noopener");
 }
 
-export function leggiManoDaStampare(): (ManoDaStampare & { quando?: string }) | null {
+export function leggiManiDaStampare(): (ManoDaStampare & { quando?: string })[] | null {
   try {
     const grezzo = localStorage.getItem(CHIAVE_STAMPA);
-    return grezzo ? JSON.parse(grezzo) : null;
+    if (!grezzo) return null;
+    const dati = JSON.parse(grezzo);
+    // Il formato di prima era una mano sola: la si accetta ancora.
+    return Array.isArray(dati) ? dati : [dati];
   } catch {
     return null;
   }
