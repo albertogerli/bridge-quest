@@ -6,7 +6,7 @@ import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { Briciole } from "@/components/briciole";
 import { FoglioLocandina } from "@/components/istruttori/foglio-locandina";
-import { aggiornaImpostazioniClasse, getClassDetail, type ClassRoom } from "@/lib/instructors";
+import { aggiornaImpostazioniClasse, ClasseNonToccata, getClassDetail, type ClassRoom } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { indirizzoEvento, qrSvg } from "@/lib/qr";
 import {
@@ -127,6 +127,12 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
       a.download = `locandina-${classe.name.replace(/[^\w-]+/g, "-").toLowerCase()}.png`;
       a.click();
     } catch (err) {
+      // Senza locandina salvata il QR stampato porta a una pagina vuota: in
+      // quel caso l'immagine non si scarica, e si dice perché.
+      if (err instanceof ClasseNonToccata) {
+        setErrore(t("Il sito non ti riconosce come insegnante di questa classe: esci, rientra con il tuo account e riprova."));
+        return;
+      }
       reportError("locandina:immagine", err);
       setErrore("Non sono riuscito a generare l'immagine.");
     } finally {

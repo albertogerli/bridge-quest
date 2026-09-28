@@ -411,8 +411,58 @@ export async function aggiornaImpostazioniClasse(
   },
 ): Promise<void> {
   const supabase = createClient();
-  const { error } = await supabase.from("classes").update(campi).eq("id", classId);
+  const { data, error } = await supabase
+    .from("classes")
+    .update(campi)
+    .eq("id", classId)
+    .select("id");
   if (error) throw error;
+  if (!data?.length) throw new ClasseNonToccata();
+}
+
+/**
+ * La scrittura è andata «bene» ma non ha toccato nessuna riga.
+ *
+ * Le RLS non rispondono «vietato»: filtrano, e un UPDATE su una riga che non
+ * puoi scrivere aggiorna zero righe senza errore. Così il 28/09/2026 la
+ * locandina di un insegnante non si è salvata — la sua sessione era diventata
+ * quella di un ospite — e la pagina ha scaricato l'immagine lo stesso: il QR
+ * stampato portava a una pagina vuota e nessuno lo sapeva.
+ */
+export class ClasseNonToccata extends Error {
+  constructor() {
+    super("Il sito non ti riconosce come insegnante di questa classe: esci, rientra con il tuo account e riprova.");
+    this.name = "ClasseNonToccata";
+  }
+}
+
+export async function rinominaClasse(classId: string, nome: string): Promise<void> {
+  const pulito = nome.trim().slice(0, 80);
+  if (!pulito) throw new Error("Il nome non può essere vuoto.");
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("classes")
+    .update({ name: pulito })
+    .eq("id", classId)
+    .select("id");
+  if (error) throw error;
+  if (!data?.length) throw new ClasseNonToccata();
+}
+
+/**
+ * Cancella la classe e, a cascata, iscrizioni, compiti, chat, tavoli, presenze
+ * ed elenco. I risultati personali degli allievi restano: sono loro.
+ * Per chiudere un corso finito c'è «archiviata», che non perde niente.
+ */
+export async function eliminaClasse(classId: string): Promise<void> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("classes")
+    .delete()
+    .eq("id", classId)
+    .select("id");
+  if (error) throw error;
+  if (!data?.length) throw new ClasseNonToccata();
 }
 
 /**

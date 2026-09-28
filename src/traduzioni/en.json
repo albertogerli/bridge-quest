@@ -1921,5 +1921,17 @@
   "In questo browser sei già entrato con il tuo account.": "In this browser you're already signed in with your account.",
   "Questo link fa entrare gli allievi come ospiti. Se vuoi vedere cosa vedono loro, aprilo in una finestra in incognito: il tuo account resta dov'è.": "This link lets students join as guests. To see what they see, open it in a private window: your account stays where it is.",
   "Resta nel tuo account": "Stay in your account",
-  "Esci ed entra come ospite": "Sign out and join as a guest"
+  "Esci ed entra come ospite": "Sign out and join as a guest",
+  "Elimina la classe": "Delete the class",
+  "Gestione classe": "Class management",
+  "Il nome non corrisponde: la classe non è stata eliminata.": "That isn't the class name: the class was not deleted.",
+  "Il sito non ti riconosce come insegnante di questa classe: esci, rientra con il tuo account e riprova.": "The site doesn't recognize you as this class's teacher: sign out, sign back in with your account, and try again.",
+  "Impostazioni della classe": "Class settings",
+  "Iscrizioni, cosa vedono gli allievi, date, video, stato": "Enrollment, what students see, dates, video, status",
+  "Locandina": "Poster",
+  "Nome della classe": "Class name",
+  "Non sono riuscito a salvare. Controlla la connessione e riprova.": "I couldn't save. Check your connection and try again.",
+  "Per eliminare la classe scrivi il suo nome: {nome}": "To delete the class, type its name: {nome}",
+  "Rinomina": "Rename",
+  "Spariscono iscrizioni, compiti, chat, tavoli ed elenco allievi, e non si recuperano. Per un corso finito è meglio «Archiviata», nelle impostazioni: non perde niente.": "Enrollments, assignments, chat, tables and the student list are removed and cannot be recovered. For a finished course, “Archived” in the settings is better: nothing is lost."
 }
