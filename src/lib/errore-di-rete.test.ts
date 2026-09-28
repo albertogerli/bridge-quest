@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eDiRete } from "./errore-di-rete";
+import { eDiRete, eSessioneScaduta } from "./errore-di-rete";
 
 /**
  * Il confine fra «non c'è rete» e «c'è un difetto».
@@ -101,5 +101,12 @@ describe("eDiRete — le forme della rete che manca", () => {
   it("un errore del database resta un difetto, codice o non codice", () => {
     expect(eDiRete({ code: "42501", message: "permission denied for table profiles" })).toBe(false);
     expect(eDiRete({ code: "23505", message: "duplicate key value" })).toBe(false);
+  });
+
+  it("il gettone scaduto non è rete, ma nemmeno un difetto", () => {
+    expect(eSessioneScaduta({ code: "PGRST303", message: "JWT expired" })).toBe(true);
+    expect(eSessioneScaduta({ code: "PGRST301" })).toBe(true);
+    expect(eSessioneScaduta({ code: "42501", message: "permission denied" })).toBe(false);
+    expect(eSessioneScaduta(null)).toBe(false);
   });
 });

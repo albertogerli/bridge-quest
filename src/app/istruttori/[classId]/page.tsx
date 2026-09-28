@@ -42,6 +42,7 @@ export default function ClassDetailPage({
   params: Promise<{ classId: string }>;
 }) {
   const t = useT();
+  const [scheda, setScheda] = useState("compiti");
   const { classId } = use(params);
 
   const [detail, setDetail] = useState<ClassDetail | null>(null);
@@ -592,8 +593,9 @@ export default function ClassDetailPage({
         </Card>
       )}
 
-      {/* Tabs */}
-      <Tabs defaultValue="compiti">
+      {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
+          alle Lezioni con un clic invece di descriverle a parole. */}
+      <Tabs value={scheda} onValueChange={setScheda}>
         <TabsList>
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
           <TabsTrigger value="lezioni">{t("Lezioni")}</TabsTrigger>
@@ -610,10 +612,34 @@ export default function ClassDetailPage({
             </Link>
           </div>
 
+          {/*
+            LA STRADA PIÙ CORTA PER IL PRIMO COMPITO.
+
+            Il testo diceva «crea il primo selezionando le smazzate dal
+            catalogo», che è la strada LUNGA: titolo, filtri, mani scelte una
+            per una. Quella corta esiste già — nella scheda Lezioni una
+            lezione si assegna intera con un clic, mani comprese — e
+            dall'elenco vuoto non si vedeva. Un insegnante al primo giorno
+            ha preso la strada lunga, si è fermato al pulsante spento e ha
+            scritto «c'è qualcosa che sbaglio».
+          */}
           {assignments.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              {t("Nessun compito assegnato. Crea il primo selezionando le smazzate dal catalogo.")}
-            </p>
+            <div className="py-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                {t("Nessun compito ancora.")}
+              </p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+                {t("Il modo più rapido: assegna una lezione intera, con le sue mani già dentro. Oppure scegli tu le mani una per una.")}
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <Button onClick={() => setScheda("lezioni")}>
+                  {t("Assegna una lezione")}
+                </Button>
+                <Link href={`/istruttori/${classId}/nuovo-compito`}>
+                  <Button variant="outline">{t("Scegli le mani")}</Button>
+                </Link>
+              </div>
+            </div>
           ) : (
             <div className="space-y-3">
               {assignments.map((a) => (

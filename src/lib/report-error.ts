@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { SENTRY_ENABLED } from "@/lib/sentry-shared";
 import { describeError, toError } from "@/lib/describe-error";
-import { eDiRete } from "@/lib/errore-di-rete";
+import { eDiRete, eSessioneScaduta } from "@/lib/errore-di-rete";
 
 /**
  * Punto unico di segnalazione errori dell'app.
@@ -59,6 +59,13 @@ export function reportError(scope: string, error: unknown): void {
  * serve a trovare i difetti nostri, e la rete degli altri non lo è.
  */
 export function segnalaSalvoRete(scope: string, error: unknown): void {
+  // Il nome dice «rete», ma dal 28/09/2026 copre anche la sessione scaduta:
+  // tutte e due sono cose che succedono a chi usa il sito, non difetti del
+  // sito, e tutte e due si rimettono da sole al giro dopo.
+  if (eSessioneScaduta(error)) {
+    console.warn(`[${scope}] sessione scaduta:`, error);
+    return;
+  }
   if (eDiRete(error)) {
     console.warn(`[${scope}] rete non raggiungibile:`, error);
     return;
