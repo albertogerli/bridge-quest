@@ -4,7 +4,8 @@ import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Share2, ArrowLeft } from "lucide-react";
-import { HandReplay } from "@/components/hand-replay";
+import { GiornaleMano } from "@/components/revisione/giornale-mano";
+import { maniIniziali, normalizzaPrese } from "@/lib/giornale-mano";
 import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { TurningPointPanel } from "@/components/turning-point-panel";
@@ -101,6 +102,14 @@ function AnalisiPage() {
     }
   }, [gameData]);
 
+  // Memorizzate: il giornale ricalcola l'analisi quando cambiano, e un
+  // oggetto nuovo a ogni render interromperebbe il calcolo a metà.
+  const prese = useMemo(() => (gameData ? normalizzaPrese(gameData.tricks) : []), [gameData]);
+  const maniDiPartenza = useMemo(
+    () => (gameData ? maniIniziali(gameData.hands, prese) : null),
+    [gameData, prese],
+  );
+
   const handleShare = () => {
     if (!gameData) return;
 
@@ -177,7 +186,6 @@ Gioca su bridgelab.it`;
   const contractStr = `${gameData.contract.level}${
     SUIT_SYMBOLS[gameData.contract.suit] || gameData.contract.suit
   }`;
-
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-7xl mx-auto space-y-4">
@@ -277,27 +285,38 @@ Gioca su bridgelab.it`;
           />
         </div>
 
-        {/* Main content: Replay + Analysis */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          {/* Replay panel */}
-          <div className="card-clean p-0 overflow-hidden" style={{ height: "600px" }}>
-            <HandReplay
-              hands={gameData.hands}
-              tricks={gameData.tricks}
-              contract={gameData.contract}
-              onTrickChange={setCurrentTrick}
-            />
-          </div>
+        {/*
+          La revisione: giornale delle prese e mano nel momento scelto, con
+          l'analisi carta per carta e le prese per posto. Ha preso il posto del
+          vecchio replay a pulsanti (28/09/2026, sul modello di BridgeChamp).
+        */}
+        <div className="card-clean p-4">
+          <GiornaleMano
+            mani={maniDiPartenza!}
+            prese={prese}
+            trump={
+              gameData.contract.suit === "NT" || gameData.contract.suit === "SA"
+                ? null
+                : (gameData.contract.suit as Suit)
+            }
+            dichiarante={gameData.contract.declarer as Position}
+            contratto={contractStr}
+            risultato={
+              gameData.result >= 0
+                ? `${t("Mantenuto")}${gameData.result > 0 ? ` +${gameData.result}` : ""}`
+                : t("Sotto di {n}", { n: Math.abs(gameData.result) })
+            }
+            onPresa={setCurrentTrick}
+          />
+        </div>
 
-          {/* Analysis panel */}
-          <div className="card-clean p-0 overflow-hidden" style={{ height: "600px" }}>
-            <HandAnalysisPanel
-              tricks={gameData.tricks}
-              hands={gameData.hands}
-              contract={gameData.contract}
-              currentTrick={currentTrick}
-            />
-          </div>
+        <div className="card-clean p-0 overflow-hidden" style={{ height: "600px" }}>
+          <HandAnalysisPanel
+            tricks={gameData.tricks}
+            hands={gameData.hands}
+            contract={gameData.contract}
+            currentTrick={currentTrick}
+          />
         </div>
 
         {/* Bottom CTA */}
