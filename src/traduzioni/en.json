@@ -1935,5 +1935,21 @@
   "Rinomina": "Rename",
   "Spariscono iscrizioni, compiti, chat, tavoli ed elenco allievi, e non si recuperano. Per un corso finito è meglio «Archiviata», nelle impostazioni: non perde niente.": "Enrollments, assignments, chat, tables and the student list are removed and cannot be recovered. For a finished course, “Archived” in the settings is better: nothing is lost.",
   "Questa classe non esiste più, o non è tra le tue.": "This class no longer exists, or it isn't one of yours.",
-  "Non riesco a caricare la classe. Controlla la connessione e ricarica la pagina.": "I can't load the class. Check your connection and reload the page."
+  "Non riesco a caricare la classe. Controlla la connessione e ricarica la pagina.": "I can't load the class. Check your connection and reload the page.",
+  "Carte attuali": "Current cards",
+  "Carte giocate": "Played cards",
+  "Carte rimaste": "Cards left",
+  "Distribuzioni": "Suit splits",
+  "Distribuzioni: come si dividono le carte che mancano": "Suit splits: how the missing cards are divided",
+  "Divisione": "Split",
+  "Nessuna carta fuori in questo seme.": "No missing cards in this suit.",
+  "Ora tocca la carta di un'altra mano con cui scambiarla.": "Now tap a card in another hand to swap it with.",
+  "Probabilità": "Probability",
+  "Scambia carte": "Swap cards",
+  "Si scambiano le carte prima della prima carta giocata": "Cards can be swapped before the first card is played",
+  "Tocca una carta, poi quella di un'altra mano: si scambiano di posto. Il contratto resta lo stesso.": "Tap a card, then one in another hand: they swap places. The contract stays the same.",
+  "Tutte le carte": "All cards",
+  "{nome} ha mostrato il vuoto: le carte sono tutte dall'altra parte.": "{nome} has shown out: all the cards are on the other side.",
+  "{n} mancanti": "{n} missing",
+  "{sx} / {dx}": "{sx} / {dx}"
 }
