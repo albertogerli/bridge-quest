@@ -42,6 +42,7 @@ import {
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { TavoloVerde } from "@/components/bridge/tavolo-verde";
+import { TornaIndietro } from "@/components/torna-indietro";
 import { VideoTavolo } from "@/components/bridge/video-tavolo";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
@@ -79,7 +80,10 @@ function Tavolo() {
 
   const [classi, setClassi] = useState<ClassRoom[]>([]);
   const [classId, setClassId] = useState(params.get("classe") ?? "");
-  const [tableId, setTableId] = useState<string | null>(null);
+  const [tableId, setTableId] = useState<string | null>(params.get("tavolo"));
+  /** Da dove si è arrivati: decide il ritorno (vedi `navigazione-indietro.ts`). */
+  const daAula = params.get("da") === "aula";
+  const tavoloRichiesto = params.get("tavolo");
   const [statoGrezzo, setStato] = useState<LiveTable | null>(null);
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
   const [seed, setSeed] = useState(2026);
@@ -105,12 +109,14 @@ function Tavolo() {
 
   useEffect(() => {
     if (!classId) return;
-    getOpenLiveTable(classId).then(setTableId);
+    // Un tavolo preciso dell'aula vince sul «tavolo aperto della classe»: il
+    // collegamento «Tavolo 3» deve aprire il tavolo 3, non il primo che c'è.
+    if (!tavoloRichiesto) getOpenLiveTable(classId).then(setTableId);
     getClassDetail(classId)
       .then((d) => setAllievi(d.members.filter((m) => m.status === "active")))
       // Una classe eliminata nel frattempo non è un difetto da segnalare.
       .catch((err) => { if (!(err instanceof ClasseNonTrovata)) reportError("tavolo:allievi", err); });
-  }, [classId]);
+  }, [classId, tavoloRichiesto]);
 
   useEffect(() => {
     if (!tableId) return;
@@ -249,7 +255,15 @@ function Tavolo() {
     );
   }
 
-  const manoCorrente = stato?.hands ?? mani[indice];
+  /**
+   * UN TAVOLO SENZA CARTE NON È UNA MANO. I tavoli dell'aula nascono vuoti e
+   * ricevono le carte con «Manda a tutti i tavoli»: prima si mostrava quel
+   * vuoto (trattini e zero punti) finché non si cambiava mano, e sembrava un
+   * guasto (controllo esterno, 28/09/2026). Finché è vuoto si vede la mano
+   * proposta.
+   */
+  const tavoloConCarte = !!stato && Object.values(stato.hands ?? {}).some((h) => (h?.length ?? 0) > 0);
+  const manoCorrente = tavoloConCarte ? stato!.hands : mani[indice];
 
   /**
    * LA MANO AL TAVOLO È DAVVERO DI QUESTO ARGOMENTO?
@@ -349,6 +363,11 @@ function Tavolo() {
 
   return (
     <div className="min-h-screen px-4 py-6 max-w-5xl mx-auto">
+      <TornaIndietro
+        href={daAula && classId ? `/istruttori/${classId}/aula` : classId ? `/istruttori/${classId}` : "/istruttori"}
+        etichetta={daAula ? t("Torna all'aula") : classId ? t("Torna alla classe") : t("Torna al portale")}
+        className="mb-2"
+      />
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Users className="w-6 h-6 text-figb" aria-hidden="true" />

@@ -36,6 +36,7 @@ import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { ArrowLeft, Target, CheckCircle2, ChevronRight } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 function isHandCompleted(handId: number): boolean {
   try {
@@ -153,7 +154,7 @@ function HandSelector({
                   </p>
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>{t("Contratto:")} <span className="font-bold text-foreground/80">{hand.contract}</span></span>
+                      <span>{t("Contratto:")} <span className="font-bold text-foreground/80">{contrattoLeggibile(hand.contract)}</span></span>
                       <span>{hand.tricksNeeded} prese</span>
                       {hand.hints.length > 0 && (
                         <span className="text-cyan-500 font-semibold">💡 Con suggerimenti</span>
@@ -383,7 +384,7 @@ function GuidedGameplay({
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-emerald-dark">{hand.contract}</p>
+              <p className="text-lg font-bold text-emerald-dark">{contrattoLeggibile(hand.contract)}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
@@ -410,7 +411,7 @@ function GuidedGameplay({
           className="flex-1 max-w-3xl mx-auto relative"
         >
           {hands ? (
-            <BridgeTable
+            <BridgeTable ancora={declarer}
               north={hands.north}
               south={hands.south}
               east={hands.east}
@@ -431,7 +432,7 @@ function GuidedGameplay({
               trumpSuit={game.gameState?.trumpSuit}
             />
           ) : (
-            <BridgeTable
+            <BridgeTable ancora={declarer}
               north={hand.hands[toGamePosition("north", declarer)] as CardData[]}
               south={hand.hands[toGamePosition("south", declarer)] as CardData[]}
               east={hand.hands[toGamePosition("east", declarer)] as CardData[]}

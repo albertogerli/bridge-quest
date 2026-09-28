@@ -396,7 +396,7 @@ function PlayStep({
         </div>
       </div>
 
-      <BridgeTable
+      <BridgeTable ancora={anchor}
         north={displayHandFor("north")}
         south={displayHandFor("south")}
         east={displayHandFor("east")}

@@ -316,6 +316,9 @@ export default function GeneraManiPage() {
    */
   const pubblica = async () => {
     if (!result?.deals.length || !analisi || analisi.length !== result.deals.length) return;
+    // Esce dalla classe e arriva a tutti: non è un gesto da fare per sbaglio,
+    // e il pulsante stava accanto a quelli innocui (controllo del 28/09/2026).
+    if (!confirm(t("Pubblicare {n} mani nella scorta condivisa? Le vedrà chiunque giochi «Licita e vediamo», non solo la tua classe.", { n: result.deals.length }))) return;
     setPubblicando(true);
     setPubblicato("");
     const esito = await pubblicaScenario(
@@ -548,7 +551,9 @@ export default function GeneraManiPage() {
               htmlFor="seme"
               className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider"
             >
-              {t("Seme")}
+              {/* «Seme» è la parola dei programmatori per questo numero, e per un
+                  insegnante di bridge un seme è ♠♥♦♣ (segnalato il 28/09/2026). */}
+              {t("Numero della serie")}
             </label>
             <input
               id="seme"
@@ -560,7 +565,7 @@ export default function GeneraManiPage() {
           </div>
         </div>
         <p className="text-xs text-muted-foreground mb-5">
-          {t("Lo stesso seme, con lo stesso argomento, produce sempre le stesse mani: annotalo e potrai ridistribuire alla classe esattamente la stessa serie, anche fra un anno.")}
+          {t("Lo stesso numero, con lo stesso argomento, produce sempre le stesse mani: annotalo e potrai ridistribuire alla classe esattamente la stessa serie, anche fra un anno.")}
         </p>
 
         <div className="flex flex-wrap gap-2">
@@ -726,7 +731,7 @@ export default function GeneraManiPage() {
             </p>
           ) : (
             <Button disabled={pubblicando} onClick={pubblica}>
-              {pubblicando ? "Pubblico…" : `Pubblica ${result.deals.length} mani`}
+              {pubblicando ? t("Pubblico…") : t("Pubblica {n} mani per tutti", { n: result.deals.length })}
             </Button>
           )}
           {pubblicato && <p className="text-sm mt-3 font-medium">{pubblicato}</p>}

@@ -35,11 +35,15 @@ describe("destinazioneIndietro — area insegnante", () => {
     });
   });
 
+  it("il tavolo condiviso sceglie il ritorno da sé: dipende da dove si arriva", () => {
+    expect(destinazioneIndietro("/istruttori/tavolo")).toBeNull();
+  });
+
   it("dagli strumenti si torna al portale, non a una classe inesistente", () => {
     // La trappola: «studio» ha la stessa forma di un identificativo di classe.
     for (const strumento of [
       "archivio", "combinazione", "dispensa", "genera-mani",
-      "lavagna", "libreria", "studio", "tavolo",
+      "lavagna", "libreria", "studio",
     ]) {
       expect(destinazioneIndietro(`/istruttori/${strumento}`)).toEqual({
         href: "/istruttori",

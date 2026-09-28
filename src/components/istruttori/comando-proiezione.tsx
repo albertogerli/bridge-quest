@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Monitor, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,12 @@ export function ComandoProiezione({
   const t = useT();
   const [aperta, setAperta] = useState(false);
   const [ripiegato, setRipiegato] = useState(false);
+  /**
+   * Il browser ha bloccato la finestra nuova. Succede, e prima il pannello
+   * dei comandi compariva lo stesso: sembrava che «Apri vista proiezione»
+   * aprisse solo delle opzioni (controllo esterno, 28/09/2026).
+   */
+  const [bloccata, setBloccata] = useState(false);
   const [interruttori, setInterruttori] = useState<Omit<ImpostazioniProiezione, "scoperti">>(
     IMPOSTAZIONI_INIZIALI,
   );
@@ -174,7 +181,7 @@ export function ComandoProiezione({
         variant="outline"
         size="sm"
         onClick={() => {
-          apriFinestraProiezione();
+          setBloccata(apriFinestraProiezione() === null);
           setAperta(true);
         }}
       >
@@ -206,6 +213,20 @@ export function ComandoProiezione({
           <X className="h-4 w-4" />
         </button>
       </div>
+
+      {bloccata && (
+        <p className="mb-2 rounded-lg bg-muted p-2 text-xs">
+          {t("Il browser ha bloccato la finestra di proiezione.")}{" "}
+          <Link
+            href="/istruttori/proiezione"
+            target="bridgelab-proiezione"
+            onClick={() => setBloccata(false)}
+            className="font-semibold text-primary underline"
+          >
+            {t("Aprila da qui")}
+          </Link>
+        </p>
+      )}
 
       {!ripiegato && (
         <div className="space-y-3">

@@ -18,6 +18,7 @@ import {
   type EsitoEsercizio,
 } from "@/lib/esercizi-posizione";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -178,7 +179,7 @@ export default function EsercizioPage({
         <p className="mb-4 text-sm text-muted-foreground">
           {esercizio.contract && (
             <>
-              {t("Contratto")} <strong>{esercizio.contract}</strong>
+              {t("Contratto")} <strong>{contrattoLeggibile(esercizio.contract)}</strong>
               {esercizio.declarer && ` di ${NOME[esercizio.declarer]}`} ·{" "}
             </>
           )}

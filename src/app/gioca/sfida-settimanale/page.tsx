@@ -49,6 +49,7 @@ import { awardGameXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import { ArrowLeft, Trophy, Zap, Clock, Play, CheckCircle2 } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const HANDS_PER_WEEK = 5;
 
@@ -219,7 +220,7 @@ export default function SfidaSettimanale() {
                       Mano {i + 1}: {hand.title}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Contratto {hand.contract} · Lezione {getLessonDisplayNumber(hand.lesson)}
+                      Contratto {contrattoLeggibile(hand.contract)} · Lezione {getLessonDisplayNumber(hand.lesson)}
                     </p>
                     {isPlayed && completedData && (
                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
@@ -442,7 +443,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-figb dark:text-primary">{smazzata.contract}</p>
+              <p className="text-lg font-bold text-figb dark:text-primary">{contrattoLeggibile(smazzata.contract)}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
@@ -470,7 +471,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
         <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="flex-1 max-w-3xl relative">
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
@@ -492,7 +493,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={smazzata.hands[toGamePosition("north", declarer)] as CardData[]}
                 south={smazzata.hands[toGamePosition("south", declarer)] as CardData[]}
                 east={smazzata.hands[toGamePosition("east", declarer)] as CardData[]}
@@ -515,7 +516,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
           {smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="w-full lg:w-48 shrink-0">
-              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>
           )}
         </div>

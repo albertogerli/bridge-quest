@@ -37,6 +37,14 @@ const STRUMENTI = [
  */
 const SENZA_RITORNO = ["/istruttori/proiezione"];
 
+/**
+ * Le pagine che il ritorno lo decidono da sé, perché dipende da DA DOVE si è
+ * arrivati e la cornice vede solo il percorso, non i parametri. Il tavolo
+ * condiviso aperto da un tavolo dell'aula deve riportare all'aula: con la
+ * regola comune diceva «Torna al portale» (controllo esterno, 28/09/2026).
+ */
+const RITORNO_NELLA_PAGINA = ["/istruttori/tavolo"];
+
 export interface Ritorno {
   href: string;
   /** Detto per esteso: «Torna alla classe», mai un «Indietro» che non dice dove. */
@@ -46,6 +54,7 @@ export interface Ritorno {
 export function destinazioneIndietro(percorso: string): Ritorno | null {
   const pulito = percorso.split("?")[0].replace(/\/+$/, "");
   if (SENZA_RITORNO.some((p) => pulito.startsWith(p))) return null;
+  if (RITORNO_NELLA_PAGINA.includes(pulito)) return null;
 
   const parti = pulito.split("/").filter(Boolean);
   if (parti.length === 0) return null;

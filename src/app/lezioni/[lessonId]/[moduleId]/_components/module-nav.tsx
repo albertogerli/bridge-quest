@@ -46,7 +46,7 @@ export function ModuleNav({
               onClick={onSaveAndExit}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              {t("Salva e esci")}
+              {t("Salva ed esci")}
             </button>
           </div>
         )}

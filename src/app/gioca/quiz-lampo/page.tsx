@@ -58,6 +58,15 @@ const difficultyConfig = {
 
 const TIMER_SECONDS = 30;
 
+/**
+ * Esegue `fn` dopo che il browser ha disegnato il fotogramma in corso, più un
+ * breve margine per l'animazione d'ingresso. Due `requestAnimationFrame`
+ * garantiscono che il primo disegno sia avvenuto.
+ */
+function dopoIlDisegno(fn: () => void, margine = 300) {
+  requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(fn, margine)));
+}
+
 // ===== Extract all quiz-type questions from courses =====
 
 function extractAllQuestions(courses: Course[]): QuizQuestion[] {
@@ -307,8 +316,11 @@ export default function QuizLampoPage() {
       lockedRef.current = false;
       setPhase("playing");
 
-      // Start timer for first question after a brief delay
-      setTimeout(() => {
+      // Il tempo parte quando la domanda è DISEGNATA, non a un orario fisso:
+      // su un telefono lento 300 ms dopo il tocco la domanda poteva non
+      // esserci ancora, e il conto alla rovescia correva su uno schermo
+      // vuoto (controllo esterno, 28/09/2026).
+      dopoIlDisegno(() => {
         setTimeLeft(TIMER_SECONDS);
         questionStartRef.current = Date.now();
         if (timerRef.current) clearInterval(timerRef.current);
@@ -352,8 +364,8 @@ export default function QuizLampoPage() {
         setShowResult(false);
         lockedRef.current = false;
 
-        // Start timer for next question
-        setTimeout(() => {
+        // Anche qui il tempo parte a domanda disegnata (vedi sopra).
+        dopoIlDisegno(() => {
           setTimeLeft(TIMER_SECONDS);
           questionStartRef.current = Date.now();
           if (timerRef.current) clearInterval(timerRef.current);

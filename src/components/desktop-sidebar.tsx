@@ -14,7 +14,7 @@ export function DesktopSidebar() {
   const t = useT();
   const stats = useStats();
   const profile = useProfile();
-  const { user, signOut } = useSharedAuth();
+  const { user, signOut, loading: authLoading } = useSharedAuth();
   useSpacedReview();
   useWeeklyObjectives();
   useCollectibleCards();
@@ -52,7 +52,7 @@ export function DesktopSidebar() {
             />
           </div>
           <p className="text-[12px] text-muted-foreground mt-1.5 font-medium">
-            {stats.xpInLevel.toLocaleString()} / {stats.xpNeededForNext.toLocaleString()} {profile.xpLabel} · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} moduli
+            {stats.xpInLevel.toLocaleString()} / {stats.xpNeededForNext.toLocaleString()} {profile.xpLabel} · {stats.totalModulesCompleted}/{stats.totalModulesAvailable} {t("moduli in tutti i corsi")}
           </p>
         </div>
 
@@ -105,8 +105,12 @@ export function DesktopSidebar() {
           </Link>
         )}
 
-        {/* Account */}
-        {user ? (
+        {/* Account. Mentre l'accesso si verifica non si mostra niente: prima
+            compariva «Accedi o Registrati» a chi era già dentro, per il mezzo
+            secondo che serve a leggere la sessione (controllo del 28/09/2026). */}
+        {authLoading ? (
+          <div className="h-14 rounded-xl bg-muted/50" aria-hidden="true" />
+        ) : user ? (
           <button
             onClick={async () => {
               await signOut();

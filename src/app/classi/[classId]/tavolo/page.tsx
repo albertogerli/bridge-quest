@@ -22,6 +22,7 @@ import { VideoTavolo } from "@/components/bridge/video-tavolo";
 import { createClient } from "@/lib/supabase/client";
 import { nomiDellaClasse } from "@/lib/aula";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -212,7 +213,7 @@ export default function TavoloAllievoPage({
 
       {stato?.contract && (
         <p className="text-center text-lg font-bold text-figb mb-4">
-          {stato.contract}
+          {contrattoLeggibile(stato.contract)}
           {stato.declarer ? ` — dichiara ${ETICHETTA[stato.declarer]}` : ""}
         </p>
       )}

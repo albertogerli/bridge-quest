@@ -8,6 +8,7 @@ import { shareContent } from "@/lib/share";
 import { useGameStore } from "@/store/use-game-store";
 import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 interface GameRecord {
   date: string;
@@ -302,7 +303,7 @@ export default function WrappedPage() {
       title: "Miglior punteggio",
       value: stats.bestScore.score > 0 ? `+${stats.bestScore.score}` : stats.bestScore.score,
       suffix: "",
-      subtitle: `${stats.bestScore.contract} - ${new Date(stats.bestScore.date).toLocaleDateString("it-IT")}`,
+      subtitle: `${contrattoLeggibile(stats.bestScore.contract)} - ${new Date(stats.bestScore.date).toLocaleDateString("it-IT")}`,
       gradient: GRADIENTS[3],
     },
     {

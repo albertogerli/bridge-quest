@@ -123,7 +123,9 @@ export default function LezioniPage() {
             {t("Il Percorso")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {totalCompleted}/{totalModules} moduli completati
+            {/* Del corso scelto: la colonna laterale conta tutti i corsi, e
+                «2/91» accanto a «2/199» sembrava un errore (28/09/2026). */}
+            {t("{fatti}/{totale} moduli completati in {corso}", { fatti: totalCompleted, totale: totalModules, corso: currentCourse.name })}
           </p>
         </motion.div>
 

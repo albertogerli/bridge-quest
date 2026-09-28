@@ -12,6 +12,7 @@ import {
 } from "@/lib/daily-hand";
 import { HandFanPreview } from "./hand-fan-preview";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /**
  * Scheda principale: data, contratto della mano di oggi, anteprima della mano
@@ -90,7 +91,7 @@ export function DailyHero({
                     {t("Contratto")}
                   </p>
                   <p className="text-lg font-bold text-emerald-dark leading-tight">
-                    {todayHand.contract}
+                    {contrattoLeggibile(todayHand.contract)}
                   </p>
                 </div>
                 <div className="h-8 w-px bg-amber-200/60" />

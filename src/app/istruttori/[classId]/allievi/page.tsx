@@ -18,6 +18,7 @@ import {
   type FoglioLetto,
 } from "@/lib/import-allievi";
 import { useT } from "@/contexts/traduzioni-provider";
+import { ClasseNonTrovata, getClassDetail } from "@/lib/instructors";
 
 interface Riga {
   id: string;
@@ -68,6 +69,22 @@ export default function AllieviPage({
   const [mappa, setMappa] = useState<Campo[]>([]);
   const [anteprima, setAnteprima] = useState<Allievo[]>([]);
   const [messaggio, setMessaggio] = useState("");
+  /**
+   * Gli iscritti al portale. Sono un elenco diverso da quello caricato da
+   * Excel — che contiene anche chi il portale non lo usa — e la pagina diceva
+   * «Nessun allievo» con un iscritto in classe (controllo esterno,
+   * 28/09/2026). Ora li si vede e li si aggiunge con un tocco.
+   */
+  const [iscritti, setIscritti] = useState<string[]>([]);
+  useEffect(() => {
+    let vivo = true;
+    getClassDetail(classId)
+      .then((d) => {
+        if (vivo) setIscritti(d.members.filter((m) => m.status === "active").map((m) => m.display_name ?? "").filter(Boolean));
+      })
+      .catch((err) => { if (!(err instanceof ClasseNonTrovata)) segnalaSalvoRete("allievi:iscritti", err); });
+    return () => { vivo = false; };
+  }, [classId]);
 
   const ricarica = useCallback(async () => {
     try {
@@ -277,11 +294,46 @@ export default function AllieviPage({
         )}
       </div>
 
+      {(() => {
+        const giaDentro = new Set(righe.map((r) => r.nome.trim().toLowerCase()));
+        const mancanti = iscritti.filter((n) => !giaDentro.has(n.trim().toLowerCase()));
+        if (caricando || mancanti.length === 0) return null;
+        return (
+          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card p-3 text-sm">
+            <span>
+              {mancanti.length === 1
+                ? t("1 iscritto al portale non è nell'elenco.")
+                : t("{n} iscritti al portale non sono nell'elenco.", { n: mancanti.length })}
+            </span>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={async () => {
+                const supabase = createClient();
+                const { error } = await supabase
+                  .from("elenco_allievi")
+                  .insert(mancanti.map((nome) => ({ class_id: classId, nome })));
+                if (error) {
+                  segnalaSalvoRete("allievi:aggiungi-iscritti", error);
+                  setMessaggio(t("Non sono riuscito ad aggiungerli."));
+                  return;
+                }
+                await ricarica();
+              }}
+            >
+              {t("Aggiungi gli iscritti al portale")}
+            </Button>
+          </div>
+        );
+      })()}
+
       {caricando ? (
         <div className="h-24 animate-pulse rounded-xl bg-muted" />
       ) : righe.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          {t("Nessun allievo nell’elenco. Carica il tuo file.")}
+          {iscritti.length > 0
+            ? t("L'elenco per i tavoli è vuoto: aggiungi gli iscritti qui sopra, o carica il tuo file.")
+            : t("Nessun allievo nell’elenco. Carica il tuo file.")}
         </p>
       ) : tavoli.length > 0 ? (
         <div className="space-y-4">

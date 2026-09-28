@@ -318,9 +318,22 @@ function lightOnlyTints(src: string): string[] {
 describe("l'ancora di rotazione è una sola", () => {
   const smazzata = readFileSync(join(ROOT, "src/app/gioca/smazzata/page.tsx"), "utf8");
 
-  it("la griglia d'asta e il replay ricevono l'ancora, non il dichiarante", () => {
-    expect(smazzata).toContain("<BiddingPanel bidding={smazzata.bidding} inBasso={anchor} />");
+  /**
+   * UN SOLO SISTEMA DI NOMI SULLA PAGINA. Prima la regola era «tutti ruotati»:
+   * tavolo, griglia d'asta e replay chiamavano «Sud» chi stava in basso. Dal
+   * 28/09/2026 la disposizione resta ruotata ma i NOMI sono quelli veri,
+   * perché il commento del maestro è scritto sui posti veri e diceva «Sud ha
+   * una mano disgraziata» sotto un «Sud» da 21 punti. Il test protegge la
+   * stessa cosa di prima — tre riquadri che parlano degli stessi posti — con
+   * la regola nuova: il tavolo riceve l'ancora per i nomi veri, la griglia
+   * d'asta non ruota, il replay usa i nomi veri.
+   */
+  it("tavolo, griglia d'asta e replay usano gli stessi nomi: quelli veri", () => {
+    expect(smazzata).toMatch(/<BridgeTable ancora=\{anchor\}/);
+    expect(smazzata).toContain("<BiddingPanel bidding={smazzata.bidding} />");
     expect(smazzata).toMatch(/<HandReplay[\s\S]{0,400}?inBasso=\{anchor\}/);
+    const replay = readFileSync(join(ROOT, "src/components/bridge/hand-replay.tsx"), "utf8");
+    expect(replay).not.toMatch(/displayLabel\(/);
   });
 
   it("nessuno passa più `declarer` a quelle due proprietà", () => {

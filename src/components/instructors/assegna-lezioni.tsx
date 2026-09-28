@@ -21,6 +21,7 @@ import { aspettaLInsegnante } from "@/lib/revisioni";
 import { reportError } from "@/lib/report-error";
 import { compitoAssegnatoWhatsApp, linkWhatsApp, materialiLezioneWhatsApp } from "@/lib/whatsapp";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /**
  * Le lezioni del corso, con lo stato per ciascuna e un pulsante per assegnarla.
@@ -201,7 +202,7 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                     }
                   />
                   <span className="text-sm">
-                    {t("Mano")} {sm.board} · {sm.contract}
+                    {t("Mano")} {sm.board} · {contrattoLeggibile(sm.contract)}
                   </span>
                   {gia && (
                     <Badge variant="secondary" className="ml-auto">

@@ -23,6 +23,10 @@ import {
   type SmazzataDifficulty,
 } from "@/lib/smazzata-meta";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import type { Card, Position } from "@/lib/bridge-engine";
+import { handHcp } from "@/lib/deal-generator";
+import { SuitSymbol } from "@/components/bridge/suit-symbol";
 
 type DiffFilter = "tutte" | SmazzataDifficulty;
 
@@ -80,6 +84,8 @@ export default function NuovoCompitoPage({
    */
   const [esercizi, setEsercizi] = useState<EsercizioPosizione[]>([]);
   const [eserciziScelti, setEserciziScelti] = useState<Set<string>>(new Set());
+  /** La mano di cui si vede il diagramma: una alla volta, l'elenco resta corto. */
+  const [anteprima, setAnteprima] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -126,7 +132,7 @@ export default function NuovoCompitoPage({
     return smazzate.filter((s) => {
       if (lessonFilter !== "tutte" && s.lesson !== lessonFilter) return false;
       if (diffFilter !== "tutte" && smazzataDifficulty(s) !== diffFilter) return false;
-      if (q && !`${s.title} ${s.contract} ${s.id}`.toLowerCase().includes(q)) return false;
+      if (q && !`${s.title} ${s.contract} ${contrattoLeggibile(s.contract)} ${s.id}`.toLowerCase().includes(q)) return false;
       return true;
     });
   }, [smazzate, lessonFilter, diffFilter, search]);
@@ -375,7 +381,7 @@ export default function NuovoCompitoPage({
                     </p>
                   </div>
                   <Badge variant="outline" className="shrink-0 font-mono">
-                    {s.contract}
+                    {contrattoLeggibile(s.contract)}
                   </Badge>
                   <button
                     type="button"
@@ -438,38 +444,61 @@ export default function NuovoCompitoPage({
           const diff = smazzataDifficulty(s);
           const isSel = selected.has(s.id);
           const meta = lessonMeta.get(s.lesson);
+          const aperta = anteprima === s.id;
           return (
-            <button
+            <div
               key={s.id}
-              onClick={() => toggle(s.id)}
-              className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
+              className={`rounded-lg border transition-colors ${
                 isSel
                   ? "border-primary bg-primary/5 ring-1 ring-primary"
                   : "border-border hover:bg-muted/50"
               }`}
             >
-              <span
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-                  isSel ? "border-primary bg-primary text-primary-foreground" : "border-border"
-                }`}
-              >
-                {isSel && "✓"}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{s.title}</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {meta ? `${meta.courseName} · ${meta.lessonTitle}` : `Lezione ${s.lesson}`}
-                </p>
+              <div className="flex w-full items-center gap-3 p-3">
+                <button
+                  type="button"
+                  onClick={() => toggle(s.id)}
+                  aria-pressed={isSel}
+                  className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                >
+                  <span
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
+                      isSel ? "border-primary bg-primary text-primary-foreground" : "border-border"
+                    }`}
+                  >
+                    {isSel && "✓"}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">{s.title}</span>
+                    {/* Con otto «Vincenti e affrancabili» di fila, il titolo da
+                        solo non distingue niente: numero della mano e
+                        dichiarante sì (controllo esterno, 28/09/2026). */}
+                    <span className="block truncate text-xs text-muted-foreground">
+                      {t("Mano {n}", { n: s.board })} · {t("dichiara {posto}", { posto: t(NOME_POSTO[s.declarer]) })}
+                      {" · "}
+                      {meta ? `${meta.courseName} · ${meta.lessonTitle}` : `Lezione ${s.lesson}`}
+                    </span>
+                  </span>
+                  <Badge variant="outline" className="shrink-0 font-mono">
+                    {contrattoLeggibile(s.contract)}
+                  </Badge>
+                  <span
+                    className={`hidden shrink-0 rounded-full px-2 py-0.5 text-xs font-medium sm:inline ${DIFFICULTY_CHIP[diff]}`}
+                  >
+                    {DIFFICULTY_LABELS[diff]}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAnteprima(aperta ? null : s.id)}
+                  aria-expanded={aperta}
+                  className="min-h-9 shrink-0 rounded-lg border border-border px-2 text-xs font-semibold hover:bg-muted"
+                >
+                  {aperta ? t("Chiudi") : t("Vedi")}
+                </button>
               </div>
-              <Badge variant="outline" className="shrink-0 font-mono">
-                {s.contract}
-              </Badge>
-              <span
-                className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${DIFFICULTY_CHIP[diff]}`}
-              >
-                {DIFFICULTY_LABELS[diff]}
-              </span>
-            </button>
+              {aperta && <MiniDiagramma mani={s.hands} />}
+            </div>
           );
         })}
         {filtered.length === 0 && (
@@ -519,6 +548,45 @@ export default function NuovoCompitoPage({
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+const NOME_POSTO: Record<Position, string> = { north: "Nord", east: "Est", south: "Sud", west: "Ovest" };
+const ORDINE_RANGHI = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+const SEMI_DIAGRAMMA: Card["suit"][] = ["spade", "heart", "diamond", "club"];
+
+/** Le quattro mani in piccolo, per scegliere guardando le carte e non il titolo. */
+function MiniDiagramma({ mani }: { mani: Record<Position, Card[]> }) {
+  const t = useT();
+  const mano = (p: Position) => (
+    <div className="min-w-0">
+      <p className="text-xs font-bold text-muted-foreground">
+        {t(NOME_POSTO[p])} <span className="font-normal">{handHcp(mani[p] ?? [])} PO</span>
+      </p>
+      {SEMI_DIAGRAMMA.map((seme) => (
+        <p key={seme} className="flex items-center gap-1 whitespace-nowrap font-mono text-xs">
+          <SuitSymbol suit={seme} size="xs" />
+          {(mani[p] ?? [])
+            .filter((c) => c.suit === seme)
+            .sort((a, b) => ORDINE_RANGHI.indexOf(a.rank) - ORDINE_RANGHI.indexOf(b.rank))
+            .map((c) => c.rank)
+            .join("") || "—"}
+        </p>
+      ))}
+    </div>
+  );
+  return (
+    <div className="grid grid-cols-3 gap-2 border-t border-border px-3 py-2">
+      <div />
+      {mano("north")}
+      <div />
+      {mano("west")}
+      <div />
+      {mano("east")}
+      <div />
+      {mano("south")}
+      <div />
     </div>
   );
 }
