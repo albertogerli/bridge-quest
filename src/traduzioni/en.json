@@ -1971,5 +1971,13 @@
   "SA": "NT",
   "Sotto di {n}": "Down {n}",
   "Stampa / PDF": "Print / PDF",
-  "dichiara": "by"
+  "dichiara": "by",
+  "Ancora nessuna risposta.": "No answers yet.",
+  "Cosa hanno risposto": "What they answered",
+  "Domanda {n}": "Question {n}",
+  "Giuste: {g} su {n}": "Correct: {g} of {n}",
+  "La prima risposta di ognuno: dopo un errore la soluzione si vede, e i tentativi seguenti non dicono più cosa pensavano.": "Everyone's first answer: after a mistake the solution is shown, and later attempts no longer tell you what they were thinking.",
+  "Licita finora": "Auction so far",
+  "Risposta attesa": "Expected answer",
+  "ha risposto {r}": "answered {r}"
 }
