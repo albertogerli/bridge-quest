@@ -129,8 +129,12 @@ export default function AllieviPage({
       // primo giorno; provato con la sua identità, l'inserimento passa. Il
       // messaggio generico «non sono riuscito» lasciava pensare a un guasto
       // o a un errore suo, e non diceva la sola cosa da fare.
+      //
+      // La causa vera, quel giorno, non era la sessione scaduta: l'insegnante
+      // aveva provato il proprio link dell'aula ed era diventato un ospite
+      // (vedi `aula-sessione.ts`). Il messaggio nomina entrambe le strade.
       if (/row-level security/i.test(String((err as { message?: string })?.message ?? ""))) {
-        setMessaggio(t("Il sito non ti riconosce più: di solito è la sessione scaduta. Ricarica la pagina; se non basta, esci e rientra, poi riprova."));
+        setMessaggio(t("Il sito non ti riconosce come insegnante di questa classe. Succede se in questo browser hai aperto il link dell'aula e sei entrato come ospite, o se la sessione è scaduta: esci, rientra con il tuo account e riprova."));
         segnalaSalvoRete("allievi:importa-sessione", err);
         return;
       }

@@ -1913,6 +1913,13 @@
   "Nessun compito ancora.": "No assignments yet.",
   "Il modo più rapido: assegna una lezione intera, con le sue mani già dentro. Oppure scegli tu le mani una per una.": "The quickest way: assign a whole lesson, with its hands already in it. Or pick the hands yourself, one by one.",
   "Assegna una lezione": "Assign a lesson",
-  "Il sito non ti riconosce più: di solito è la sessione scaduta. Ricarica la pagina; se non basta, esci e rientra, poi riprova.": "The site no longer recognizes you: usually your session has expired. Reload the page; if that doesn't help, sign out and back in, then try again.",
-  "Non sono riuscito a importarli.": "I couldn't import them."
+  "Non sono riuscito a importarli.": "I couldn't import them.",
+  "Il sito non ti riconosce come insegnante di questa classe. Succede se in questo browser hai aperto il link dell'aula e sei entrato come ospite, o se la sessione è scaduta: esci, rientra con il tuo account e riprova.": "The site doesn't recognize you as this class's teacher. This happens if you opened the classroom link in this browser and joined as a guest, or if your session expired: sign out, sign back in with your account, and try again.",
+  "Non riesco a uscire adesso. Riprova fra un attimo.": "I can't sign you out right now. Try again in a moment.",
+  "Sei già dentro": "You're already signed in",
+  "In questo browser sei entrato come {nome}.": "In this browser you're signed in as {nome}.",
+  "In questo browser sei già entrato con il tuo account.": "In this browser you're already signed in with your account.",
+  "Questo link fa entrare gli allievi come ospiti. Se vuoi vedere cosa vedono loro, aprilo in una finestra in incognito: il tuo account resta dov'è.": "This link lets students join as guests. To see what they see, open it in a private window: your account stays where it is.",
+  "Resta nel tuo account": "Stay in your account",
+  "Esci ed entra come ospite": "Sign out and join as a guest"
 }
