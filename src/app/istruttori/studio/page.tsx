@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowLeftRight, Archive, Eye, EyeOff, FlaskConical, Percent, RotateCcw, Save, Undo2 } from "lucide-react";
+import { ArrowLeftRight, Archive, Eye, EyeOff, FlaskConical, Percent, Printer, RotateCcw, Save, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -18,6 +18,7 @@ import { DEAL_TEMPLATES, generateDeals } from "@/lib/deal-generator";
 import { calcTableAndPar, cardOptions, type OpzioneCarta } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import { PannelloRipartizioni } from "@/components/istruttori/pannello-ripartizioni";
+import { apriStampaMano } from "@/lib/stampa-mano";
 import { getSavedHands, saveHand } from "@/lib/saved-hands";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -365,6 +366,34 @@ function Studio() {
         </Button>
         <Button variant={mostraGiocate ? "default" : "outline"} onClick={() => setMostraGiocate((v) => !v)}>
           {t("Carte giocate")}
+        </Button>
+        <Button
+          variant="outline"
+          disabled={!stato || !contratto}
+          onClick={() => {
+            if (!stato || !contratto) return;
+            // Le prese complete col loro vincitore, e quella in corso senza:
+            // il foglio stampa esattamente il punto in cui si è arrivati.
+            const prese = [
+              ...stato.tricks.map((tr) => ({
+                giocate: tr.plays.map((g) => ({ seat: g.position, card: g.card })),
+                vincitore: tr.winner ?? null,
+              })),
+              ...(stato.currentTrick.length
+                ? [{ giocate: stato.currentTrick.map((g) => ({ seat: g.position, card: g.card })), vincitore: null }]
+                : []),
+            ];
+            apriStampaMano({
+              titolo: titolo.trim() || modello.label,
+              mani: deal,
+              prese,
+              contratto: contratto.contract,
+              dichiarante: contratto.declarer,
+            });
+          }}
+        >
+          <Printer className="w-4 h-4 mr-1" aria-hidden="true" />
+          {t("Stampa / PDF")}
         </Button>
         <Button variant={ripart ? "default" : "outline"} onClick={() => setRipart((v) => !v)}>
           <Percent className="w-4 h-4 mr-1" aria-hidden="true" />
