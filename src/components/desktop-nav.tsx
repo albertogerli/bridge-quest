@@ -125,18 +125,10 @@ export function DesktopNav() {
 
   const renderItem = (item: { href: string; icon: string; label: string }) => {
     const active = isActive(item.href);
-    if (item.icon === "play") {
-      return (
-        <Link key={item.href} href={item.href} aria-label={t(item.label)}>
-          <div className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.97] mt-2 mb-2 bg-gradient-to-r from-figb to-figb-light text-white ${
-            active ? "shadow-md shadow-figb/25" : "shadow-sm hover:shadow-md"
-          }`}>
-            {icons[item.icon](active)}
-            <span>{t(item.label)}</span>
-          </div>
-        </Link>
-      );
-    }
+    // «Gioca» era un pulsante blu pieno in ogni pagina: sembrava sempre la
+    // voce selezionata, e un insegnante il 28/09/2026 ha scritto che il menu
+    // «resta su Gioca» qualunque cosa scelga e che l'accesso lo porta lì.
+    // Una voce di menu si accende solo dove si è.
     return (
       <Link key={item.href} href={item.href} aria-label={t(item.label)}>
         <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all active:scale-[0.97] ${

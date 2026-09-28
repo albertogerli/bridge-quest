@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import { useRouter } from "next/navigation";
 import { Briciole } from "@/components/briciole";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -29,12 +30,16 @@ import {
   decidiIscrizione,
   decidiIscrizioni,
   aggiornaImpostazioniClasse,
+  rinominaClasse,
+  eliminaClasse,
+  ClasseNonToccata,
   ETICHETTE_STATO,
   type ClassDetail,
   type StatoClasse,
 } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
 import { copiaTesto } from "@/lib/appunti";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export default function ClassDetailPage({
   params,
@@ -56,6 +61,60 @@ export default function ClassDetailPage({
   const [selezionate, setSelezionate] = useState<Set<string>>(new Set());
   /** Righe che la decisione in blocco non ha toccato: vanno dette, non nascoste. */
   const [nonDecise, setNonDecise] = useState<number>(0);
+  /** Un errore di scrittura, detto in cima alla pagina e non buttato in console. */
+  const [avviso, setAvviso] = useState<string | null>(null);
+  /** Il nome in modifica; `null` quando non si sta rinominando. */
+  const [nuovoNome, setNuovoNome] = useState<string | null>(null);
+  const router = useRouter();
+
+  /**
+   * Il messaggio per l'insegnante. Prima `cambiaImpostazione` non aveva un
+   * `catch`: un'impostazione non salvata tornava com'era senza una parola.
+   */
+  function spiega(err: unknown) {
+    if (err instanceof ClasseNonToccata) {
+      setAvviso(t("Il sito non ti riconosce come insegnante di questa classe: esci, rientra con il tuo account e riprova."));
+      return;
+    }
+    segnalaSalvoRete("classe:scrittura", err);
+    setAvviso(t("Non sono riuscito a salvare. Controlla la connessione e riprova."));
+  }
+
+  async function salvaNome() {
+    if (nuovoNome === null) return;
+    setBusy(true);
+    setAvviso(null);
+    try {
+      await rinominaClasse(classId, nuovoNome);
+      setNuovoNome(null);
+      await load();
+    } catch (err) {
+      spiega(err);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function elimina() {
+    if (!detail) return;
+    const scritto = prompt(
+      t("Per eliminare la classe scrivi il suo nome: {nome}", { nome: detail.classRoom.name }),
+    );
+    if (scritto === null) return;
+    if (scritto.trim() !== detail.classRoom.name.trim()) {
+      setAvviso(t("Il nome non corrisponde: la classe non è stata eliminata."));
+      return;
+    }
+    setBusy(true);
+    setAvviso(null);
+    try {
+      await eliminaClasse(classId);
+      router.replace("/istruttori");
+    } catch (err) {
+      spiega(err);
+      setBusy(false);
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -135,9 +194,12 @@ export default function ClassDetailPage({
 
   async function cambiaImpostazione(campi: Parameters<typeof aggiornaImpostazioniClasse>[1]) {
     setBusy(true);
+    setAvviso(null);
     try {
       await aggiornaImpostazioniClasse(classId, campi);
       await load();
+    } catch (err) {
+      spiega(err);
     } finally {
       setBusy(false);
     }
@@ -197,9 +259,39 @@ export default function ClassDetailPage({
       {/* Header */}
       <div className="mb-6">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-            {classRoom.name}
-          </h1>
+          {nuovoNome === null ? (
+            <>
+              <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+                {classRoom.name}
+              </h1>
+              <Button variant="ghost" size="sm" onClick={() => setNuovoNome(classRoom.name)}>
+                {t("Rinomina")}
+              </Button>
+            </>
+          ) : (
+            <form
+              className="flex w-full flex-wrap items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void salvaNome();
+              }}
+            >
+              <input
+                value={nuovoNome}
+                onChange={(e) => setNuovoNome(e.target.value)}
+                maxLength={80}
+                autoFocus
+                aria-label={t("Nome della classe")}
+                className="min-h-11 flex-1 rounded-lg border border-border bg-background px-3 font-display text-2xl font-bold"
+              />
+              <Button type="submit" disabled={busy || !nuovoNome.trim()}>
+                {t("Salva")}
+              </Button>
+              <Button type="button" variant="ghost" onClick={() => setNuovoNome(null)}>
+                {t("Annulla")}
+              </Button>
+            </form>
+          )}
           {classRoom.stato !== "aperta" && (
             <Badge variant={classRoom.stato === "archiviata" ? "outline" : "secondary"}>
               {ETICHETTE_STATO[classRoom.stato]}
@@ -210,6 +302,252 @@ export default function ClassDetailPage({
           <p className="mt-1 text-sm text-muted-foreground">{classRoom.description}</p>
         )}
       </div>
+
+      {/* Richieste in attesa */}
+      {inAttesa.length > 0 && (
+        <Card className="mb-6 border-primary/40">
+          <CardHeader>
+            <CardTitle className="text-lg">
+              {t("In attesa di una risposta")} ({inAttesa.length})
+            </CardTitle>
+            <CardDescription>
+              {t("Finché non decidi non vedono compiti né chat.")}
+            </CardDescription>
+          </CardHeader>
+
+          {/* Barra delle azioni in blocco. Il caso vero è un corso con quaranta
+              aderenti: venti clic sono venti occasioni di sbagliarne uno. */}
+          <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 pb-3">
+            <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="h-5 w-5 accent-primary"
+                checked={selezionate.size === inAttesa.length && inAttesa.length > 0}
+                onChange={(e) =>
+                  setSelezionate(
+                    e.target.checked ? new Set(inAttesa.map((m) => m.student_id)) : new Set(),
+                  )
+                }
+              />
+              {t("Seleziona tutte")}
+            </label>
+            {selezionate.size > 0 && (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  {selezionate.size} {t("selezionate")}
+                </span>
+                <div className="ml-auto flex gap-2">
+                  <Button size="sm" disabled={busy} onClick={() => void decidiSelezionate("approva")}>
+                    {t("Falle entrare")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={busy}
+                    onClick={() => void decidiSelezionate("respingi")}
+                  >
+                    {t("Respingi")}
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {nonDecise > 0 && (
+            <p className="border-b border-border px-6 py-3 text-sm text-amber-700 dark:text-amber-300">
+              {t("Alcune richieste non sono state applicate e sono rimaste in attesa:")}{" "}
+              {nonDecise}. {t("Riprova su quelle rimaste.")}
+            </p>
+          )}
+
+          <CardContent className="divide-y divide-border p-0">
+            {inAttesa.map((m) => (
+              <div key={m.student_id} className="flex flex-wrap items-center gap-3 px-6 py-3">
+                <label className="flex min-h-11 cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 accent-primary"
+                    checked={selezionate.has(m.student_id)}
+                    onChange={() => spunta(m.student_id)}
+                    aria-label={`${t("Seleziona")} ${m.display_name ?? ""}`}
+                  />
+                </label>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
+                  {(m.display_name ?? "?").charAt(0)}
+                </div>
+                <span className="text-sm font-medium">
+                  {m.display_name ?? "Allievo senza nome"}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  ha chiesto il {new Date(m.joined_at).toLocaleDateString("it-IT")}
+                </span>
+                <div className="ml-auto flex gap-2">
+                  <Button size="sm" disabled={busy} onClick={() => void decidi(m.student_id, "approva")}>
+                    {t("Fallo entrare")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={busy}
+                    onClick={() => void decidi(m.student_id, "respingi")}
+                  >
+                    {t("No")}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {avviso && (
+        <p role="alert" className="mb-4 rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          {avviso}
+        </p>
+      )}
+
+      {/*
+        LE AZIONI DI TUTTI I GIORNI, IN CIMA.
+        Stavano in fondo al riquadro del codice invito, sotto una schermata di
+        impostazioni che si toccano una volta sola: «le attività operative
+        devono avere i pulsanti in testa» (feedback di un insegnante, 28/09/2026).
+      */}
+      <div className="mb-6 flex flex-wrap gap-2">
+        <Link href={`/istruttori/${classId}/aula`}>
+          <Button>{t("Apri l'aula")}</Button>
+        </Link>
+        <Link href={`/istruttori/${classId}/nuovo-compito`}>
+          <Button variant="outline">{t("Nuovo compito")}</Button>
+        </Link>
+        <Button variant="outline" onClick={() => setScheda("lezioni")}>
+          {t("Assegna una lezione")}
+        </Button>
+        <Link href={`/istruttori/${classId}/allievi`}>
+          <Button variant="outline">{t("Allievi e tavoli")}</Button>
+        </Link>
+        <Link href="/istruttori/dispensa">
+          <Button variant="outline">{t("Dispensa")}</Button>
+        </Link>
+        <Link href={`/istruttori/${classId}/locandina`}>
+          <Button variant="outline">{t("Locandina")}</Button>
+        </Link>
+      </div>
+
+      {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
+          alle Lezioni con un clic invece di descriverle a parole. */}
+      <Tabs value={scheda} onValueChange={setScheda}>
+        <TabsList>
+          <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
+          <TabsTrigger value="lezioni">{t("Lezioni")}</TabsTrigger>
+          <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
+          <TabsTrigger value="classifica">{t("Classifica")}</TabsTrigger>
+          <TabsTrigger value="chat">{t("Chat")}</TabsTrigger>
+        </TabsList>
+
+        {/* Compiti */}
+        <TabsContent value="compiti" className="mt-4">
+          {/*
+            LA STRADA PIÙ CORTA PER IL PRIMO COMPITO.
+
+            Il testo diceva «crea il primo selezionando le smazzate dal
+            catalogo», che è la strada LUNGA: titolo, filtri, mani scelte una
+            per una. Quella corta esiste già — nella scheda Lezioni una
+            lezione si assegna intera con un clic, mani comprese — e
+            dall'elenco vuoto non si vedeva. Un insegnante al primo giorno
+            ha preso la strada lunga, si è fermato al pulsante spento e ha
+            scritto «c'è qualcosa che sbaglio».
+          */}
+          {assignments.length === 0 ? (
+            <div className="py-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                {t("Nessun compito ancora.")}
+              </p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+                {t("Il modo più rapido: assegna una lezione intera, con le sue mani già dentro. Oppure scegli tu le mani una per una.")}
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <Button onClick={() => setScheda("lezioni")}>
+                  {t("Assegna una lezione")}
+                </Button>
+                <Link href={`/istruttori/${classId}/nuovo-compito`}>
+                  <Button variant="outline">{t("Scegli le mani")}</Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {assignments.map((a) => (
+                <Link key={a.id} href={`/istruttori/${classId}/compito/${a.id}`} className="block">
+                  <Card className="transition-shadow hover:shadow-lg">
+                    <CardHeader>
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-lg">{a.title}</CardTitle>
+                        {a.mode === "live" && <Badge>{t("Live")}</Badge>}
+                      </div>
+                      <CardDescription>
+                        {a.smazzata_ids.length} {a.smazzata_ids.length === 1 ? "mano" : "mani"}
+                        {a.due_date && ` · scadenza ${new Date(a.due_date).toLocaleDateString("it-IT")}`}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Allievi */}
+        <TabsContent value="allievi" className="mt-4">
+          {members.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              {t("Nessun allievo iscritto. Condividi il codice invito per farli entrare.")}
+            </p>
+          ) : (
+            <div className="divide-y divide-border rounded-lg border border-border">
+              {members.map((m) => (
+                <div key={m.student_id} className="flex items-center gap-3 px-4 py-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
+                    {(m.display_name ?? "?").charAt(0)}
+                  </div>
+                  <span className="text-sm font-medium">
+                    {m.display_name ?? "Allievo senza nome"}
+                  </span>
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    iscritto il {new Date(m.joined_at).toLocaleDateString("it-IT")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Le revisioni chiuse, dove l'insegnante guarda per prima cosa. */}
+        <RevisioniDaAprire classId={classId} />
+
+        {/* Chi ha detto «vengo»: serve la sera prima, per comporre i tavoli. */}
+        <ElencoAdesioni classId={classId} membri={detail.members} />
+
+        {/* Lezioni: assegnare in blocco */}
+        <TabsContent value="lezioni" className="mt-4">
+          <p className="mb-4 text-sm text-muted-foreground">
+            {t("Un tocco assegna tutte le mani della lezione. Per un compito su misura c'è «Nuovo compito».")}
+          </p>
+          <AssegnaLezioni classId={classId} />
+        </TabsContent>
+
+        {/* Classifica */}
+        <TabsContent value="classifica" className="mt-4">
+          <ClassLeaderboard classId={classId} />
+        </TabsContent>
+
+        {/* Chat */}
+        <TabsContent value="chat" className="mt-4">
+          <ClassChat classId={classId} />
+        </TabsContent>
+      </Tabs>
+
+      {/* GESTIONE CLASSE: quello che si imposta una volta e si ritocca di rado. */}
+      <h2 className="mb-4 mt-10 font-display text-2xl font-bold">{t("Gestione classe")}</h2>
 
       {/* Invite code panel */}
       <Card className="mb-6">
@@ -253,19 +591,6 @@ export default function ClassDetailPage({
               {t("Invita su WhatsApp")}
             </Button>
           </a>
-          <Link href={`/istruttori/${classId}/aula`}>
-            <Button size="sm">{t("Apri l'aula")}</Button>
-          </Link>
-          <Link href={`/istruttori/${classId}/allievi`}>
-            <Button size="sm" variant="outline">
-              {t("Allievi e tavoli")}
-            </Button>
-          </Link>
-          <Link href={`/istruttori/${classId}/locandina`}>
-            <Button size="sm" variant="outline">
-              {t("Locandina da appendere")}
-            </Button>
-          </Link>
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={busy}>
             {t("Rigenera codice")}
           </Button>
@@ -276,7 +601,14 @@ export default function ClassDetailPage({
       </Card>
 
       {/* Chi entra, e quando */}
-      <Card className="mb-6">
+      <details className="group mb-6 rounded-xl border border-border bg-card">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 px-6 py-4 font-semibold">
+          {t("Impostazioni della classe")}
+          <span className="text-sm font-normal text-muted-foreground group-open:hidden">
+            {t("Iscrizioni, cosa vedono gli allievi, date, video, stato")}
+          </span>
+        </summary>
+      <Card className="border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg">{t("Chi può entrare")}</CardTitle>
           <CardDescription>
@@ -490,227 +822,23 @@ export default function ClassDetailPage({
           </div>
         </CardContent>
       </Card>
+      </details>
 
       {/* L'ingresso in aula, senza registrazione */}
       <div className="mb-6">
         <IngressoAula classId={classId} />
       </div>
 
-      {/* Richieste in attesa */}
-      {inAttesa.length > 0 && (
-        <Card className="mb-6 border-primary/40">
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {t("In attesa di una risposta")} ({inAttesa.length})
-            </CardTitle>
-            <CardDescription>
-              {t("Finché non decidi non vedono compiti né chat.")}
-            </CardDescription>
-          </CardHeader>
-
-          {/* Barra delle azioni in blocco. Il caso vero è un corso con quaranta
-              aderenti: venti clic sono venti occasioni di sbagliarne uno. */}
-          <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 pb-3">
-            <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                className="h-5 w-5 accent-primary"
-                checked={selezionate.size === inAttesa.length && inAttesa.length > 0}
-                onChange={(e) =>
-                  setSelezionate(
-                    e.target.checked ? new Set(inAttesa.map((m) => m.student_id)) : new Set(),
-                  )
-                }
-              />
-              {t("Seleziona tutte")}
-            </label>
-            {selezionate.size > 0 && (
-              <>
-                <span className="text-sm text-muted-foreground">
-                  {selezionate.size} {t("selezionate")}
-                </span>
-                <div className="ml-auto flex gap-2">
-                  <Button size="sm" disabled={busy} onClick={() => void decidiSelezionate("approva")}>
-                    {t("Falle entrare")}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={busy}
-                    onClick={() => void decidiSelezionate("respingi")}
-                  >
-                    {t("Respingi")}
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
-
-          {nonDecise > 0 && (
-            <p className="border-b border-border px-6 py-3 text-sm text-amber-700 dark:text-amber-300">
-              {t("Alcune richieste non sono state applicate e sono rimaste in attesa:")}{" "}
-              {nonDecise}. {t("Riprova su quelle rimaste.")}
-            </p>
-          )}
-
-          <CardContent className="divide-y divide-border p-0">
-            {inAttesa.map((m) => (
-              <div key={m.student_id} className="flex flex-wrap items-center gap-3 px-6 py-3">
-                <label className="flex min-h-11 cursor-pointer items-center">
-                  <input
-                    type="checkbox"
-                    className="h-5 w-5 accent-primary"
-                    checked={selezionate.has(m.student_id)}
-                    onChange={() => spunta(m.student_id)}
-                    aria-label={`${t("Seleziona")} ${m.display_name ?? ""}`}
-                  />
-                </label>
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
-                  {(m.display_name ?? "?").charAt(0)}
-                </div>
-                <span className="text-sm font-medium">
-                  {m.display_name ?? "Allievo senza nome"}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  ha chiesto il {new Date(m.joined_at).toLocaleDateString("it-IT")}
-                </span>
-                <div className="ml-auto flex gap-2">
-                  <Button size="sm" disabled={busy} onClick={() => void decidi(m.student_id, "approva")}>
-                    {t("Fallo entrare")}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={busy}
-                    onClick={() => void decidi(m.student_id, "respingi")}
-                  >
-                    {t("No")}
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
-          alle Lezioni con un clic invece di descriverle a parole. */}
-      <Tabs value={scheda} onValueChange={setScheda}>
-        <TabsList>
-          <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
-          <TabsTrigger value="lezioni">{t("Lezioni")}</TabsTrigger>
-          <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
-          <TabsTrigger value="classifica">{t("Classifica")}</TabsTrigger>
-          <TabsTrigger value="chat">{t("Chat")}</TabsTrigger>
-        </TabsList>
-
-        {/* Compiti */}
-        <TabsContent value="compiti" className="mt-4">
-          <div className="mb-4 flex justify-end">
-            <Link href={`/istruttori/${classId}/nuovo-compito`}>
-              <Button>+ Nuovo compito</Button>
-            </Link>
-          </div>
-
-          {/*
-            LA STRADA PIÙ CORTA PER IL PRIMO COMPITO.
-
-            Il testo diceva «crea il primo selezionando le smazzate dal
-            catalogo», che è la strada LUNGA: titolo, filtri, mani scelte una
-            per una. Quella corta esiste già — nella scheda Lezioni una
-            lezione si assegna intera con un clic, mani comprese — e
-            dall'elenco vuoto non si vedeva. Un insegnante al primo giorno
-            ha preso la strada lunga, si è fermato al pulsante spento e ha
-            scritto «c'è qualcosa che sbaglio».
-          */}
-          {assignments.length === 0 ? (
-            <div className="py-8 text-center">
-              <p className="text-sm text-muted-foreground">
-                {t("Nessun compito ancora.")}
-              </p>
-              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-                {t("Il modo più rapido: assegna una lezione intera, con le sue mani già dentro. Oppure scegli tu le mani una per una.")}
-              </p>
-              <div className="mt-4 flex flex-wrap justify-center gap-2">
-                <Button onClick={() => setScheda("lezioni")}>
-                  {t("Assegna una lezione")}
-                </Button>
-                <Link href={`/istruttori/${classId}/nuovo-compito`}>
-                  <Button variant="outline">{t("Scegli le mani")}</Button>
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {assignments.map((a) => (
-                <Link key={a.id} href={`/istruttori/${classId}/compito/${a.id}`} className="block">
-                  <Card className="transition-shadow hover:shadow-lg">
-                    <CardHeader>
-                      <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-lg">{a.title}</CardTitle>
-                        {a.mode === "live" && <Badge>{t("Live")}</Badge>}
-                      </div>
-                      <CardDescription>
-                        {a.smazzata_ids.length} {a.smazzata_ids.length === 1 ? "mano" : "mani"}
-                        {a.due_date && ` · scadenza ${new Date(a.due_date).toLocaleDateString("it-IT")}`}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        {/* Allievi */}
-        <TabsContent value="allievi" className="mt-4">
-          {members.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              {t("Nessun allievo iscritto. Condividi il codice invito per farli entrare.")}
-            </p>
-          ) : (
-            <div className="divide-y divide-border rounded-lg border border-border">
-              {members.map((m) => (
-                <div key={m.student_id} className="flex items-center gap-3 px-4 py-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
-                    {(m.display_name ?? "?").charAt(0)}
-                  </div>
-                  <span className="text-sm font-medium">
-                    {m.display_name ?? "Allievo senza nome"}
-                  </span>
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    iscritto il {new Date(m.joined_at).toLocaleDateString("it-IT")}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        {/* Le revisioni chiuse, dove l'insegnante guarda per prima cosa. */}
-        <RevisioniDaAprire classId={classId} />
-
-        {/* Chi ha detto «vengo»: serve la sera prima, per comporre i tavoli. */}
-        <ElencoAdesioni classId={classId} membri={detail.members} />
-
-        {/* Lezioni: assegnare in blocco */}
-        <TabsContent value="lezioni" className="mt-4">
-          <p className="mb-4 text-sm text-muted-foreground">
-            {t("Un tocco assegna tutte le mani della lezione. Per un compito su misura c'è «Nuovo compito».")}
-          </p>
-          <AssegnaLezioni classId={classId} />
-        </TabsContent>
-
-        {/* Classifica */}
-        <TabsContent value="classifica" className="mt-4">
-          <ClassLeaderboard classId={classId} />
-        </TabsContent>
-
-        {/* Chat */}
-        <TabsContent value="chat" className="mt-4">
-          <ClassChat classId={classId} />
-        </TabsContent>
-      </Tabs>
+      {/* Eliminare è l'ultima cosa della pagina, e chiede il nome per esteso. */}
+      <div className="mb-6 rounded-xl border border-destructive/30 p-6">
+        <p className="font-semibold">{t("Elimina la classe")}</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {t("Spariscono iscrizioni, compiti, chat, tavoli ed elenco allievi, e non si recuperano. Per un corso finito è meglio «Archiviata», nelle impostazioni: non perde niente.")}
+        </p>
+        <Button variant="outline" className="mt-4 text-destructive" disabled={busy} onClick={() => void elimina()}>
+          {t("Elimina la classe")}
+        </Button>
+      </div>
     </div>
   );
 }
