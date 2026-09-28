@@ -2014,5 +2014,6 @@
   "{n} mani create in «{cartella}».": "{n} deals created in “{cartella}”.",
   "{n} mani importate, {e} saltate perché illeggibili.": "{n} deals imported, {e} skipped because unreadable.",
   "{n} mani importate.": "{n} deals imported.",
-  "facoltativa": "optional"
+  "facoltativa": "optional",
+  "La classe vede": "The class sees"
 }

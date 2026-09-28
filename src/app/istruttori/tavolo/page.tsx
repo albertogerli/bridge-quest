@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
-import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import type { Card, Position } from "@/lib/bridge-engine";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
-import { DEAL_TEMPLATES, generateDeals, handHcp, satisfiesDeal } from "@/lib/deal-generator";
+import { DEAL_TEMPLATES, generateDeals, satisfiesDeal } from "@/lib/deal-generator";
 import { calcTableAndPar } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import {
@@ -41,12 +41,11 @@ import {
 } from "@/lib/live-table";
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
+import { TavoloVerde } from "@/components/bridge/tavolo-verde";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
 import { useT } from "@/contexts/traduzioni-provider";
 
-const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
-const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 const SEATS: { key: Position; label: string }[] = [
   { key: "north", label: "Nord" },
   { key: "east", label: "Est" },
@@ -508,20 +507,18 @@ function Tavolo() {
         </div>
       )}
 
-      {/* Il tavolo: Nord in alto, Sud in basso, Ovest ed Est ai lati. */}
-      <div className="grid grid-cols-3 gap-3">
-        <div />
-        <Posto seat="north" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
-        <div />
-        <Posto seat="west" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
-        <div className="flex items-center justify-center">
-          <div className="rounded-2xl border-2 border-dashed border-border w-full h-full min-h-[7rem]" aria-hidden="true" />
-        </div>
-        <Posto seat="east" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
-        <div />
-        <Posto seat="south" hands={manoCorrente} stato={stato} onToggle={scopri} attivo={!!tableId} turno={gioco?.turno} giocabiliSet={giocabiliSet} onGioca={giocaPer} />
-        <div />
-      </div>
+      {/* Il tavolo verde: carte vere, la presa in corso al centro, e una barra
+          sola per decidere quali mani vede la classe. */}
+      <TavoloVerde
+        mani={manoCorrente ?? {}}
+        visibili={stato?.revealed ?? []}
+        turno={gioco?.turno}
+        giocabili={giocabiliSet}
+        giocate={stato?.played ?? []}
+        attivo={!!tableId}
+        onGioca={giocaPer}
+        onVisibilita={scopri}
+      />
 
       {tableId && stato && (
         <div className="flex flex-wrap justify-center gap-2 mt-5">
@@ -636,86 +633,3 @@ function Tavolo() {
   );
 }
 
-/**
- * Un posto al tavolo.
- *
- * L'insegnante lo vede sempre; il riquadro dice se in quel momento lo vede
- * anche la classe. È l'informazione che serve mentre si parla: «questa
- * l'hanno davanti anche loro».
- */
-function Posto({
-  seat, hands, stato, onToggle, attivo, turno, giocabiliSet, onGioca,
-}: {
-  seat: Position;
-  hands: Partial<Record<Position, Card[]>> | undefined;
-  stato: LiveTable | null;
-  onToggle: (s: Position) => void;
-  attivo: boolean;
-  turno?: Position;
-  giocabiliSet: Set<string>;
-  onGioca: (seat: Position, c: Card) => void;
-}) {
-  const t = useT();
-  const etichetta = SEATS.find((s) => s.key === seat)!.label;
-  const cards = hands?.[seat] ?? [];
-  const vistaDaTutti = stato?.revealed.includes(seat) ?? false;
-  const suoTurno = turno === seat;
-
-  return (
-    <div
-      className={`rounded-2xl border-2 p-3 ${
-        suoTurno
-          ? "border-figb bg-figb/5"
-          : vistaDaTutti
-            ? "border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20"
-            : "border-border bg-card"
-      }`}
-    >
-      <div className="flex items-baseline justify-between mb-1">
-        <span className="font-bold">{etichetta}</span>
-        <span className="text-xs text-muted-foreground">{handHcp(cards)} PO</span>
-      </div>
-      {SUITS.map((suit) => {
-        const delSeme = cards
-          .filter((c) => c.suit === suit)
-          .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
-        if (delSeme.length === 0) {
-          return (
-            <p key={suit} className="text-base font-mono flex items-center gap-1.5 leading-snug">
-              <SuitSymbol suit={suit} size="xs" />—
-            </p>
-          );
-        }
-        return (
-          <div key={suit} className="flex items-center gap-1 flex-wrap leading-snug">
-            <SuitSymbol suit={suit} size="xs" />
-            {delSeme.map((c) => {
-              const giocabile = attivo && turno === seat && giocabiliSet.has(`${c.suit}-${c.rank}`);
-              return (
-                <button
-                  key={`${c.suit}-${c.rank}`}
-                  disabled={!giocabile}
-                  onClick={() => onGioca(seat, c)}
-                  className={`text-base font-mono px-1 rounded ${
-                    giocabile ? "bg-figb/10 hover:bg-figb/20 border border-figb/40" : ""
-                  }`}
-                >
-                  {c.rank}
-                </button>
-              );
-            })}
-          </div>
-        );
-      })}
-      {attivo && (
-        <button
-          onClick={() => onToggle(seat)}
-          className="mt-2 w-full text-xs font-semibold rounded-lg border border-border py-1.5 hover:bg-muted"
-          aria-pressed={vistaDaTutti}
-        >
-          {vistaDaTutti ? t("La classe la vede") : t("Mostra alla classe")}
-        </button>
-      )}
-    </div>
-  );
-}
