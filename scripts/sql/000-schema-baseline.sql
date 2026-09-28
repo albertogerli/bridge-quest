@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-27
+-- Estratto il: 2026-09-28
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -650,7 +650,9 @@ CREATE TABLE IF NOT EXISTS public.saved_hands (
   contract text,
   declarer text,
   played jsonb NOT NULL,
-  created_at timestamp with time zone NOT NULL
+  created_at timestamp with time zone NOT NULL,
+  cartella text,
+  preferita boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.scenari (
@@ -4547,6 +4549,7 @@ ALTER TABLE public.risultati_torneo ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.saved_hands ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.saved_hands ALTER COLUMN played SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.saved_hands ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.saved_hands ALTER COLUMN preferita SET DEFAULT false;
 ALTER TABLE public.scenari ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.scenari ALTER COLUMN ufficiale SET DEFAULT false;
 ALTER TABLE public.scenari ALTER COLUMN pubblico SET DEFAULT false;
@@ -4730,6 +4733,7 @@ ALTER TABLE public.review_items ADD CONSTRAINT review_items_box_check CHECK (((b
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_asta_dimensione_check CHECK (((asta IS NULL) OR ((array_ndims(asta) = 1) AND ((cardinality(asta) >= 4) AND (cardinality(asta) <= 319)) AND (array_position(asta, NULL::text) IS NULL))));
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
+ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_cartella_lunghezza CHECK (((cartella IS NULL) OR ((char_length(cartella) >= 1) AND (char_length(cartella) <= 80))));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_nota_check CHECK ((char_length(nota) <= 2000));
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 120)));
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_descrizione_check CHECK ((char_length(descrizione) <= 1000));
@@ -4914,6 +4918,7 @@ CREATE UNIQUE INDEX profiles_friend_code_key ON public.profiles USING btree (fri
 CREATE INDEX risultati_mano_idx ON public.risultati_mano USING btree (mano_id);
 CREATE INDEX risultati_torneo_classifica_idx ON public.risultati_torneo USING btree (torneo_id, user_id);
 CREATE INDEX risultati_utente_idx ON public.risultati_mano USING btree (user_id, created_at DESC);
+CREATE INDEX saved_hands_owner_cartella_idx ON public.saved_hands USING btree (owner_id, cartella);
 CREATE INDEX saved_hands_owner_idx ON public.saved_hands USING btree (owner_id, created_at DESC);
 CREATE INDEX scenari_pubblici_idx ON public.scenari USING btree (pubblico, ufficiale, created_at DESC);
 CREATE UNIQUE INDEX scenari_slug_key ON public.scenari USING btree (slug);
