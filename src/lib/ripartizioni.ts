@@ -1,4 +1,5 @@
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import { probabilitaDivisione } from "@/lib/divisioni";
 
 /**
  * Come si dividono fra i due avversari le carte che mancano in un seme.
@@ -16,6 +17,11 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
  * di recitarla.
  *
  * Idea presa dal tavolo di insegnamento di BridgeChamp (settembre 2026).
+ *
+ * LA FORMULA NON STA QUI: è `probabilitaDivisione` in `divisioni.ts`, lo
+ * stesso conto del pannello della lavagna e del tavolo condiviso. Qui ci sono
+ * solo le cose in più del tavolo di studio: la vista «tutte le carte», il
+ * vuoto già mostrato e le due metà tenute separate.
  */
 
 export interface Ripartizione {
@@ -24,13 +30,6 @@ export interface Ripartizione {
   /** Carte del seme nella seconda mano avversaria. */
   b: number;
   probabilita: number;
-}
-
-function binomiale(n: number, k: number): number {
-  if (k < 0 || k > n) return 0;
-  let r = 1;
-  for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i;
-  return r;
 }
 
 /**
@@ -48,11 +47,9 @@ export function ripartizioni(
   if (mancanti <= 0) return [];
   if (vuoto.a && !vuoto.b) return [{ a: 0, b: mancanti, probabilita: 1 }];
   if (vuoto.b && !vuoto.a) return [{ a: mancanti, b: 0, probabilita: 1 }];
-  const totale = postiA + postiB;
-  const casi = binomiale(totale, postiA);
   const esito: Ripartizione[] = [];
   for (let k = 0; k <= mancanti; k++) {
-    const p = (binomiale(mancanti, k) * binomiale(totale - mancanti, postiA - k)) / casi;
+    const p = probabilitaDivisione(k, mancanti, postiA, postiB);
     if (p > 0) esito.push({ a: k, b: mancanti - k, probabilita: p });
   }
   return esito;

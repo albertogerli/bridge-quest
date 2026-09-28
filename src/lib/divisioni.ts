@@ -68,6 +68,24 @@ function binomiale(n: number, k: number): number {
  * che uno dei due ha mostrato un vuoto in un altro colore, cambiano — ed è
  * lì che il conto smette di somigliare alla tabella del manuale.
  */
+/**
+ * La probabilità che esattamente `k` delle carte mancanti siano a sinistra.
+ * È la formula sola, esportata perché il tavolo di studio
+ * (`ripartizioni.ts`) la usi invece di averne una copia: il 28/09/2026 ce
+ * n'erano due, scritte in due momenti, e due conti per la stessa cosa prima o
+ * poi smettono di dare lo stesso numero.
+ */
+export function probabilitaDivisione(
+  k: number,
+  mancanti: number,
+  postiSinistra: number,
+  postiDestra: number,
+): number {
+  const totale = binomiale(postiSinistra + postiDestra, mancanti);
+  if (totale === 0) return 0;
+  return (binomiale(postiSinistra, k) * binomiale(postiDestra, mancanti - k)) / totale;
+}
+
 export function divisioniPossibili(
   mancanti: number,
   postiSinistra: number,
