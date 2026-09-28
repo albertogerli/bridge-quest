@@ -123,8 +123,19 @@ export default function AllieviPage({
       setAnteprima([]);
       await ricarica();
     } catch (err) {
+      // «new row violates row-level security policy» su una classe tua vuol
+      // dire una cosa sola: la richiesta è partita SENZA la tua sessione, e
+      // per il database eri nessuno. Visto il 28/09/2026 da un insegnante al
+      // primo giorno; provato con la sua identità, l'inserimento passa. Il
+      // messaggio generico «non sono riuscito» lasciava pensare a un guasto
+      // o a un errore suo, e non diceva la sola cosa da fare.
+      if (/row-level security/i.test(String((err as { message?: string })?.message ?? ""))) {
+        setMessaggio(t("Il sito non ti riconosce più: di solito è la sessione scaduta. Ricarica la pagina; se non basta, esci e rientra, poi riprova."));
+        segnalaSalvoRete("allievi:importa-sessione", err);
+        return;
+      }
       segnalaSalvoRete("allievi:importa", err);
-      setMessaggio("Non sono riuscito a importarli.");
+      setMessaggio(t("Non sono riuscito a importarli."));
     }
   }
 
