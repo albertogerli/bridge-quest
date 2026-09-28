@@ -21,6 +21,12 @@ export interface DailyFieldStats {
   percentile: number;
   /** Best contract delta in the field */
   best: number;
+  /**
+   * Quanti giocatori per ciascun risultato, dal migliore al peggiore.
+   * Chiesto dal forum il 28/09/2026: «quanti hanno realizzato −1, 0, +1, +2…,
+   * altrimenti non si riesce a posizionarsi». La percentuale da sola non basta.
+   */
+  distribuzione: { result: number; players: number }[];
 }
 
 interface FieldRow {
@@ -64,7 +70,10 @@ export function useDailyFieldStats(
         const percentile = Math.round(((beaten + tied * 0.5) / others) * 100);
         const best = Math.max(...rows.map((r) => r.result));
 
-        setStats({ players: total, percentile, best });
+        const distribuzione = [...rows]
+          .map((r) => ({ result: Number(r.result), players: Number(r.players) }))
+          .sort((a, b) => b.result - a.result);
+        setStats({ players: total, percentile, best, distribuzione });
       });
     return () => {
       active = false;

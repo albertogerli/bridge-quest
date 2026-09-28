@@ -163,3 +163,23 @@ describe("tre stelle non vuol dire perfetto", () => {
     expect(valutaLicita(90, 90, "esatto").commento).toContain("non si poteva fare meglio");
   });
 });
+
+describe("quando la fortuna contraddice il voto", () => {
+  it("un grande slam mantenuto per fortuna: lo dice, con tutti e due i numeri", () => {
+    // 7SA in media rende -300 contro 3SA a +660; stavolta ha fatto +2220.
+    const v = valutaLicita(-300, 660, "atteso", 2220);
+    expect(v.stelle).toBeLessThan(1);
+    expect(v.commento).toContain("+2220");
+    expect(v.commento).toContain("giudicano la scelta");
+  });
+  it("il contratto giusto caduto per sfortuna tiene le stelle e lo spiega", () => {
+    const v = valutaLicita(600, 620, "atteso", -100);
+    expect(v.stelle).toBe(3);
+    expect(v.commento).toContain("-100");
+    expect(v.commento).toContain("la scelta era buona");
+  });
+  it("senza punteggio reale, o col par esatto, il commento non cambia", () => {
+    expect(valutaLicita(-300, 660, "atteso").commento).not.toContain("Stavolta");
+    expect(valutaLicita(-300, 660, "esatto", 2220).commento).not.toContain("Stavolta");
+  });
+});

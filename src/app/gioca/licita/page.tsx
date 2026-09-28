@@ -166,7 +166,7 @@ export default function LicitaPage() {
           })
         : null) ?? e.punteggio;
 
-    const voto = valutaLicita(perStelle, mano.riferimento, mano.metro);
+    const voto = valutaLicita(perStelle, mano.riferimento, mano.metro, e.punteggio);
     setContrattoFinale(
       `${e.contratto} di ${ETICHETTA[e.declarer]} — ${e.prese} prese` +
         (e.lato === "ns" ? "" : " (dichiarano gli avversari)")
@@ -511,6 +511,11 @@ export default function LicitaPage() {
                   <Stelle quante={esito.stelle} className="[&_svg]:w-8 [&_svg]:h-8" />
                 </div>
                 <p className="text-center font-semibold mb-1">{contrattoFinale}</p>
+                {mano.metro === "atteso" && (
+                  <p className="mb-1 text-xs text-muted-foreground">
+                    {t("Le stelle giudicano la scelta del contratto — quanto rende in media — non il risultato di questa smazzata.")}
+                  </p>
+                )}
                 <p className="text-sm text-muted-foreground mb-2">{esito.commento}</p>
                 <p className="text-xs text-muted-foreground mb-3">
                   {mano.metro === "atteso" ? (
