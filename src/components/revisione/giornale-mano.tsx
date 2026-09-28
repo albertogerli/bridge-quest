@@ -175,7 +175,7 @@ export function GiornaleMano({
                           <span className={ROSSO(g.card.suit)}>{g.card.rank}</span>
                           <SuitSymbol suit={g.card.suit} size="xs" />
                           {analisi && v && (
-                            <span className={`ml-0.5 text-[10px] ${v.costo > 0 ? "font-bold text-destructive" : "text-muted-foreground"}`}>
+                            <span className={`ml-0.5 text-xs ${v.costo > 0 ? "font-bold text-destructive" : "text-muted-foreground"}`}>
                               {v.costo > 0 ? `−${v.costo}` : v.preseDichiarante}
                             </span>
                           )}

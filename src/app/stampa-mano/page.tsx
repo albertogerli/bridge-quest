@@ -94,7 +94,7 @@ export default function StampaManoPage() {
               <div className="grid grid-cols-3 grid-rows-3 place-items-center text-sm text-[#5b6478]">
                 <span className="col-start-2 row-start-1 font-bold">{puntiOnori(mano.mani.north)}</span>
                 <span className="col-start-1 row-start-2 font-bold">{puntiOnori(mano.mani.west)}</span>
-                <span className="col-start-2 row-start-2 text-[10px] uppercase">{t("PO")}</span>
+                <span className="col-start-2 row-start-2 text-xs uppercase">{t("PO")}</span>
                 <span className="col-start-3 row-start-2 font-bold">{puntiOnori(mano.mani.east)}</span>
                 <span className="col-start-2 row-start-3 font-bold">{puntiOnori(mano.mani.south)}</span>
               </div>
