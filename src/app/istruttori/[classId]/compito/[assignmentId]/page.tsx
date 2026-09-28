@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, use } from "react";
+import { RisposteClasse } from "@/components/istruttori/risposte-classe";
 import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
@@ -332,6 +333,11 @@ export default function AssignmentResultsPage({
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* ── Cosa hanno risposto agli esercizi ── */}
+      {assignment && (assignment.esercizio_ids ?? []).length > 0 && (
+        <RisposteClasse esercizioIds={assignment.esercizio_ids} righe={results} />
       )}
 
       {/* ── Le tue note sulle mani ── */}
