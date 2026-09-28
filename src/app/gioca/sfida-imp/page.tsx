@@ -496,9 +496,9 @@ function SfidaIMPContent() {
                 <XCircle className="w-8 h-8 text-red-500" />
               )}
             </div>
-            <h2 className="text-lg font-bold text-foreground mb-2">
-              {isNoChallengeId ? "Sfida IMP" : "Errore"}
-            </h2>
+            <h1 className="text-lg font-bold text-foreground mb-2">
+              {isNoChallengeId ? t("Sfida IMP") : t("Errore")}
+            </h1>
             <p className="text-sm text-muted-foreground mb-6">{error}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {isNoChallengeId && (

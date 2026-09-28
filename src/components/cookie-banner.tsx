@@ -64,15 +64,29 @@ export function CookieBanner() {
           role="dialog"
           aria-label={t("Preferenze cookie")}
         >
-          <div className="w-full max-w-lg mx-4 mb-4 bg-card border border-border rounded-2xl shadow-xl p-5">
-            <p className="text-sm text-foreground/80 leading-relaxed">
-              {t("Usiamo cookie tecnici, necessari al funzionamento della piattaforma. Con il tuo consenso usiamo anche cookie di statistica e pubblicitari, che ci aiutano a far conoscere il bridge a chi non lo conosce.")}
+          {/*
+            COMPATTO AL TELEFONO. Alto quasi trecento pixel, copriva il
+            pulsante «Accedi» del login e «Prova senza account» della pagina
+            d'ingresso: per entrare bisognava prima chiuderlo, e chi non
+            capiva cosa stava succedendo toccava lo schermo senza effetto
+            (visto nel controllo del 28/09/2026). I due pulsanti restano
+            affiancati e uguali, e l'informativa sta nella frase.
+          */}
+          <div className="w-full max-w-lg mx-3 mb-3 bg-card border border-border rounded-2xl shadow-xl p-4 sm:mx-4 sm:mb-4 sm:p-5">
+            <p className="text-sm text-foreground/80 leading-snug sm:leading-relaxed">
+              {t("Usiamo cookie tecnici, necessari al funzionamento della piattaforma. Con il tuo consenso usiamo anche cookie di statistica e pubblicitari, che ci aiutano a far conoscere il bridge a chi non lo conosce.")}{" "}
+              <Link
+                href="/privacy"
+                className="font-semibold text-figb dark:text-primary underline-offset-2 hover:underline"
+              >
+                {t("Informativa privacy")}
+              </Link>
             </p>
 
-            <div className="flex flex-col sm:flex-row items-stretch gap-2 mt-4">
+            <div className="flex flex-row items-stretch gap-2 mt-3 sm:mt-4">
               <button
                 onClick={() => decide(true)}
-                className="flex-1 py-2.5 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors active:scale-[0.98]"
+                className="flex-1 min-h-11 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors active:scale-[0.98]"
               >
                 {t("Accetta tutti")}
               </button>
@@ -81,20 +95,12 @@ export function CookieBanner() {
                   nascosto o scolorito non è una scelta libera. */}
               <button
                 onClick={() => decide(false)}
-                className="flex-1 py-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-sm font-bold transition-colors active:scale-[0.98]"
+                className="flex-1 min-h-11 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-sm font-bold transition-colors active:scale-[0.98]"
               >
                 {t("Solo necessari")}
               </button>
             </div>
 
-            <div className="mt-3 text-center">
-              <Link
-                href="/privacy"
-                className="text-xs font-semibold text-figb dark:text-primary transition-colors hover:underline"
-              >
-                {t("Informativa privacy")}
-              </Link>
-            </div>
           </div>
         </motion.div>
       )}
