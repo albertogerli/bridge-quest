@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Share2, ArrowLeft } from "lucide-react";
 import { GiornaleMano } from "@/components/revisione/giornale-mano";
+import { ConfrontoAltri } from "@/components/revisione/confronto-altri";
 import { maniIniziali, normalizzaPrese } from "@/lib/giornale-mano";
 import { HandAnalysisPanel } from "@/components/hand-analysis-panel";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
@@ -20,6 +21,8 @@ interface GameData {
   tricksMade: number;
   tricksNeeded: number;
   result: number;
+  /** Per il confronto con gli altri: assente nelle analisi salvate prima del 28/09/2026. */
+  confronto?: { tipo: string; chiave: string } | null;
 }
 
 const SUIT_SYMBOLS: Record<string, string> = {
@@ -309,6 +312,15 @@ Gioca su bridgelab.it`;
             onPresa={setCurrentTrick}
           />
         </div>
+
+        {gameData.confronto && (
+          <ConfrontoAltri
+            tipo={gameData.confronto.tipo}
+            chiave={gameData.confronto.chiave}
+            contratto={contractStr}
+            mio={gameData.result}
+          />
+        )}
 
         <div className="card-clean p-0 overflow-hidden" style={{ height: "600px" }}>
           <HandAnalysisPanel

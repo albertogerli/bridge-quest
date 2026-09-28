@@ -384,7 +384,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
       // Save for AI analysis
       const parsed = parseContract(smazzata.contract);
-      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result);
+      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result, { tipo: "sfida-settimanale", chiave: `${challenge.name}#${handNumber}` });
 
       saveGameResult({
         gameType: "sfida-settimanale",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, Printer } from "lucide-react";
+import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, Printer, RotateCcw } from "lucide-react";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { cardOptions } from "@/lib/dds-table";
 import {
@@ -14,6 +14,7 @@ import {
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Button } from "@/components/ui/button";
 import { TabellaPrese } from "@/components/revisione/tabella-prese";
+import { ProvaDaQui } from "@/components/bridge/prova-da-qui";
 import { apriStampaMano } from "@/lib/stampa-mano";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -74,6 +75,13 @@ export function GiornaleMano({
   const [analisi, setAnalisi] = useState(false);
   const [valutazioni, setValutazioni] = useState<(ValutazioneGiocata | null)[] | null>(null);
   const [mostraGiocate, setMostraGiocate] = useState(true);
+  /**
+   * «Gioca posizione» di BridgeChamp: si riparte dall'inizio o dal punto
+   * scelto nel giornale, a carte scoperte, senza toccare il risultato. Il
+   * numero è quante carte rigiocare prima di fermarsi.
+   */
+  const [prova, setProva] = useState<number | null>(null);
+  const finoA = useMemo(() => (prova === null ? [] : tutte.slice(0, prova)), [prova, tutte]);
 
   /**
    * Il calcolo parte una volta sola. NON dipende da `valutazioni`: ogni
@@ -137,10 +145,25 @@ export function GiornaleMano({
           <Printer className="mr-1 h-4 w-4" aria-hidden="true" />
           {t("Stampa / PDF")}
         </Button>
+        <Button variant="outline" onClick={() => setProva(passo < tutte.length ? passo : 0)}>
+          <RotateCcw className="mr-1 h-4 w-4" aria-hidden="true" />
+          {passo > 0 && passo < tutte.length ? t("Rigioca da qui") : t("Rigioca dall'inizio")}
+        </Button>
         {analisi && valutazioni && valutazioni.some((v) => v === null) && (
           <span className="text-xs text-muted-foreground">{t("Analizzo carta per carta…")}</span>
         )}
       </div>
+
+      {prova !== null && (
+        <ProvaDaQui
+          key={prova}
+          hands={mani}
+          contract={contratto}
+          declarer={dichiarante}
+          finoA={finoA}
+          onChiudi={() => setProva(null)}
+        />
+      )}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,22rem)_1fr]">
         {/* Il giornale */}

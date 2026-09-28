@@ -14,6 +14,20 @@ const ETICHETTA: Record<Posto, string> = {
 };
 const COLONNE: Posto[] = ["north", "east", "south", "west"];
 
+/**
+ * Il tono di ogni colonna del cassetto, come nella scatola di BridgeChamp: si
+ * trova il colore prima del numero, e a colpo d'occhio si distingue una riga
+ * di cuori da una di quadri. Le classi stanno in `globals.css`, ricavate dai
+ * colori dei semi del resto del sito.
+ */
+const TONO: Record<string, string> = {
+  "♣": "tono-seme-club",
+  "♦": "tono-seme-diamond",
+  "♥": "tono-seme-heart",
+  "♠": "tono-seme-spade",
+  SA: "tono-seme-sa",
+};
+
 const SEME_DI: Record<string, Suit | null> = {
   "♣": "club", "♦": "diamond", "♥": "heart", "♠": "spade", SA: null,
 };
@@ -160,9 +174,9 @@ export function Asta({
                     disabled={!ok || !posso}
                     onClick={() => onDichiara?.(bid)}
                     aria-label={`Dichiara ${bid}`}
-                    className={`h-10 rounded-lg border text-sm font-bold transition-colors ${
+                    className={`h-11 rounded-lg border text-sm font-bold transition-colors ${
                       ok && posso
-                        ? "border-border bg-card hover:bg-muted"
+                        ? TONO[d]
                         : "border-transparent bg-muted/30 text-muted-foreground/30"
                     }`}
                   >
@@ -178,9 +192,9 @@ export function Asta({
             <button
               disabled={!posso}
               onClick={() => onDichiara?.(PASSO)}
-              className={`flex-1 h-11 rounded-lg border text-sm font-bold ${
+              className={`flex-1 h-11 rounded-lg border text-sm font-bold uppercase tracking-wide ${
                 posso
-                  ? "border-border bg-card hover:bg-muted"
+                  ? "border-emerald-700 bg-emerald-600 text-white hover:bg-emerald-700"
                   : "border-transparent bg-muted/30 text-muted-foreground/30"
               }`}
             >
