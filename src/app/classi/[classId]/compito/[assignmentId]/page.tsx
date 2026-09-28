@@ -50,6 +50,7 @@ import {
 } from "@/lib/instructors";
 import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 export default function CompitoPage({
   params,
@@ -279,7 +280,7 @@ export default function CompitoPage({
                     Mano {i + 1}: {hand.title}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Contratto {hand.contract} ·{" "}
+                    Contratto {contrattoLeggibile(hand.contract)} ·{" "}
                     {hand.lesson > 0
                       ? `Lezione ${getLessonDisplayNumber(hand.lesson)}`
                       : "Mano dell'istruttore"}
@@ -591,7 +592,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
           <div className="flex items-center gap-5 rounded-xl border border-border bg-card px-4 py-2 text-sm">
             <div className="text-center">
               <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-primary">{smazzata.contract}</p>
+              <p className="text-lg font-bold text-primary">{contrattoLeggibile(smazzata.contract)}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
@@ -614,7 +615,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         <div className="flex flex-col items-start justify-center gap-4 lg:flex-row">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative max-w-3xl flex-1">
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
@@ -636,7 +637,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={smazzata.hands[toGamePosition("north", declarer)] as CardData[]}
                 south={smazzata.hands[toGamePosition("south", declarer)] as CardData[]}
                 east={smazzata.hands[toGamePosition("east", declarer)] as CardData[]}
@@ -670,7 +671,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
 
           {!minibridge && smazzata.bidding && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-48">
-              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>
           )}
         </div>

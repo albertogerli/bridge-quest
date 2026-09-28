@@ -7,6 +7,7 @@ import type { Smazzata } from "@/lib/catalog";
 import { computeHandTotals } from "@/lib/tournament-stats";
 import { type HandResult } from "../_types";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /**
  * Schermata fra una mano e la successiva: esito appena ottenuto e totale parziale.
@@ -144,7 +145,7 @@ export function HandTransition({
                 {nextHand.title}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                Contratto: {nextHand.contract} · Obiettivo:{" "}
+                Contratto: {contrattoLeggibile(nextHand.contract)} · Obiettivo:{" "}
                 {parseContract(nextHand.contract).tricksNeeded} prese
               </p>
             </div>

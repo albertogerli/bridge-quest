@@ -52,6 +52,7 @@ import { classifyPlayErrors, type PlayError } from "@/lib/play-error-classifier"
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import Link from "next/link";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 export default function SmazzataBrowserPage() {
   const t = useT();
@@ -276,7 +277,7 @@ function SmazzataBrowserContent() {
                       Board {smazzata.board}
                     </Badge>
                     <span className="text-lg font-bold text-emerald-dark">
-                      {smazzata.contract}
+                      {contrattoLeggibile(smazzata.contract)}
                     </span>
                   </div>
                   <p className="text-[12px] font-semibold text-foreground/80 leading-tight mt-1 mb-1 line-clamp-2">
@@ -312,7 +313,7 @@ function SmazzataBrowserContent() {
                   </p>
                 </div>
                 <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold border-0">
-                  {selectedSmazzata.contract}
+                  {contrattoLeggibile(selectedSmazzata.contract)}
                 </Badge>
               </div>
 
@@ -592,7 +593,18 @@ function PlayingView({
   }, [game.phase, game.result, game.gameState, ddsResult]);
 
   // Compute DDS-based star rating (1-5 scale)
-  const ddTricks = ddsResult?.ddTricks ?? null;
+  /**
+   * UN NUMERO SOLO PER «A CARTE SCOPERTE».
+   * Sulla stessa schermata c'erano «a carte scoperte ne fa 11» (il valore
+   * salvato con la smazzata) e «13 prese ottimali» (l'analisi di fine mano).
+   * Il secondo, quando il calcolo esatto non riesce, è una stima pari
+   * all'obiettivo del contratto: non deve mai scavalcare un valore esatto.
+   * Quando invece è esatto e diverso, è perché parte dall'attacco — e lo si
+   * dice, invece di lasciare due cifre che si smentiscono (28/09/2026).
+   */
+  const ddSalvato = typeof smazzata.ddTricks === "number" ? smazzata.ddTricks : null;
+  const ddTricks = ddsResult?.isExact ? ddsResult.ddTricks : ddSalvato ?? ddsResult?.ddTricks ?? null;
+  const ddDopoAttacco = !!ddsResult?.isExact && ddSalvato !== null && ddsResult.ddTricks !== ddSalvato;
   const declared = mode === "declare";
   const ddsStars = (() => {
     if (!game.result) return 0;
@@ -678,7 +690,7 @@ function PlayingView({
                 {t("Contratto")}
               </p>
               <p className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}>
-                {smazzata.contract}
+                {contrattoLeggibile(smazzata.contract)}
               </p>
             </div>
             <div className="h-8 w-px bg-border" />
@@ -747,7 +759,7 @@ function PlayingView({
             className="flex-1 w-full max-w-3xl relative"
           >
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={anchor}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
@@ -770,7 +782,7 @@ function PlayingView({
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable
+              <BridgeTable ancora={anchor}
                 north={smazzata.hands[gameAt("north")] as CardData[]}
                 south={smazzata.hands[gameAt("south")] as CardData[]}
                 east={smazzata.hands[gameAt("east")] as CardData[]}
@@ -803,7 +815,7 @@ function PlayingView({
               {/* `anchor`, non `declarer`: in difesa in basso c'è il difensore, e
                   passare il dichiarante girava la griglia di un posto rispetto
                   al tavolo che le sta a fianco. */}
-              <BiddingPanel bidding={smazzata.bidding} inBasso={anchor} />
+              <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>
           )}
         </div>
@@ -1017,15 +1029,20 @@ function PlayingView({
                     {ddsLoading && (
                       <span className="text-[12px] text-indigo-400 animate-pulse">{t("Calcolo...")}</span>
                     )}
-                    {ddsResult && !ddsResult.isExact && (
+                    {ddsResult && !ddsResult.isExact && ddSalvato === null && (
                       <span className="text-[12px] text-indigo-400">(stima)</span>
                     )}
                   </div>
                   {ddTricks !== null ? (
                     <div className="space-y-1">
                       <p className="text-sm font-bold text-indigo-900 dark:text-indigo-200">
-                        {ddTricks} prese ottimali
+                        {t("{n} prese ottimali", { n: ddTricks })}
                       </p>
+                      {ddDopoAttacco && (
+                        <p className="text-xs text-muted-foreground">
+                          {t("Contando dall'attacco. Prima dell'attacco erano {n}: l'attacco ha cambiato il conto.", { n: ddSalvato ?? 0 })}
+                        </p>
+                      )}
                       <p className={`text-xs font-semibold ${
                         (declared ? game.result.tricksMade >= ddTricks : game.result.tricksMade <= ddTricks)
                           ? "text-emerald-600 dark:text-emerald-400"
@@ -1187,7 +1204,7 @@ function PlayingView({
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">{t("Contratto")}</span>
-                    <span className="font-bold text-foreground">{smazzata.contract}</span>
+                    <span className="font-bold text-foreground">{contrattoLeggibile(smazzata.contract)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">{t("Lezione")}</span>

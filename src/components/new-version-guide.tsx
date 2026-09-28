@@ -5,15 +5,24 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useSharedAuth } from "@/contexts/auth-provider";
 
 /**
- * One-time "what's new" guide for existing users landing on the reorganised
- * version. Explains the three hubs (Impara / Gioca / Scuola) and the new
- * MiniBridge mode. Shown once (localStorage flag), only to users who already
- * completed the Prima Mano onboarding — brand-new users get Prima Mano instead.
+ * La guida «cosa è cambiato», una volta sola, per chi usava già il sito.
+ *
+ * DUE DIFETTI CORRETTI IL 28/09/2026, dopo un controllo esterno:
+ *  - raccontava la riorganizzazione PRECEDENTE («Impara, Gioca e Scuola»),
+ *    mentre la barra oggi ha Home, Percorso, Gioca e Profilo: descriveva
+ *    voci che non c'erano più;
+ *  - per capire se l'utente «c'era già» guardava `bq_onboarded`, che ha anche
+ *    chi ha appena finito l'avvio guidato: ogni nuovo iscritto si sentiva
+ *    dire «abbiamo riorganizzato tutto» dopo cinque minuti di sito.
+ * Ora la si mostra solo agli account creati prima della riorganizzazione.
  */
 
-const SEEN_KEY = "bq_guide_v2_seen";
+const SEEN_KEY = "bq_guide_v3_seen";
+/** Il giorno della riorganizzazione della barra: chi è nato dopo non ha niente da ritrovare. */
+const RIORGANIZZAZIONE = "2026-09-28T00:00:00Z";
 
 interface Slide {
   emoji: string;
@@ -27,32 +36,32 @@ interface Slide {
 const SLIDES: Slide[] = [
   {
     emoji: "✨",
-    title: "Benvenuto nella nuova BridgeLab",
-    body: "Abbiamo riorganizzato tutto per renderlo più semplice. Ora c'è un punto d'ingresso chiaro per ogni cosa: Impara, Gioca e Scuola. Ecco una mappa veloce.",
+    title: "BridgeLab è cambiata",
+    body: "La barra ha quattro voci: Home, Percorso, Gioca e Profilo. Se sei iscritto a una classe, compare anche Classe. Ecco dove sono le cose che usavi.",
     accent: "from-[#1B5E3B] to-[#2A7A4F]",
   },
   {
     emoji: "🎓",
-    title: "Impara",
-    body: "Il tuo percorso passo dopo passo — Prima Mano, MiniBridge, i corsi e le mani guidate — con sempre evidenziato il “prossimo passo”. Qui trovi anche dispense, glossario e ripasso.",
-    href: "/impara",
-    cta: "Apri Impara",
+    title: "Percorso",
+    body: "Il tuo corso, lezione dopo lezione, con il punto da cui riprendere. Qui trovi anche la Prima Mano, le dispense e il ripasso.",
+    href: "/lezioni",
+    cta: "Apri il Percorso",
     accent: "from-[#1B5E3B] to-[#2A7A4F]",
   },
   {
     emoji: "🎮",
     title: "Gioca",
-    body: "Tutti i modi per giocare, ordinati: Pratica (allena una singola abilità), Sfide (competi) e Gioco libero. E prova il nuovo MiniBridge: giochi una mano intera senza licita, contando i punti.",
+    body: "Tornei, sfide, la mano contro il computer, il MiniBridge e i giochi per allenare una singola abilità.",
     href: "/gioca",
     cta: "Apri Gioca",
     accent: "from-figb to-figb-light",
   },
   {
-    emoji: "👨‍🏫",
-    title: "Scuola",
-    body: "Le classi virtuali: gli istruttori assegnano compiti e seguono i progressi, gli allievi giocano le mani assegnate e chattano con la classe. Se insegni, qui richiedi l'accesso al Portale Istruttori.",
-    href: "/scuola",
-    cta: "Apri Scuola",
+    emoji: "👤",
+    title: "Profilo",
+    body: "I tuoi progressi, i premi, gli amici e le impostazioni. Se insegni, da qui chiedi l'accesso al portale insegnanti.",
+    href: "/profilo",
+    cta: "Apri il Profilo",
     accent: "from-[#c8a44e] to-[#a8842e]",
   },
 ];
@@ -61,19 +70,19 @@ export function NewVersionGuide() {
   const t = useT();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const { user } = useSharedAuth();
+  const utenteDiPrima = !!user?.created_at && user.created_at < RIORGANIZZAZIONE;
 
   useEffect(() => {
     try {
       const seen = localStorage.getItem(SEEN_KEY) === "1";
-      const onboarded = localStorage.getItem("bq_onboarded") === "1";
-      // Only existing (already-onboarded) users who haven't seen the guide.
-      if (!seen && onboarded) {
+      if (!seen && utenteDiPrima) {
         // small delay so it doesn't fight with page mount
         const t = setTimeout(() => setOpen(true), 600);
         return () => clearTimeout(t);
       }
     } catch {}
-  }, []);
+  }, [utenteDiPrima]);
 
   const close = () => {
     try {
@@ -118,11 +127,11 @@ export function NewVersionGuide() {
             {/* header band */}
             <div className={`flex flex-col items-center gap-2 bg-gradient-to-br ${slide.accent} px-6 pb-6 pt-8 text-center text-white`}>
               <span className="text-5xl" aria-hidden="true">{slide.emoji}</span>
-              <h2 id="new-version-guide-title" className="font-display text-2xl font-bold">{slide.title}</h2>
+              <h2 id="new-version-guide-title" className="font-display text-2xl font-bold">{t(slide.title)}</h2>
             </div>
 
             <div className="px-6 py-5">
-              <p className="text-sm leading-relaxed text-muted-foreground">{slide.body}</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{t(slide.body)}</p>
 
               {slide.href && (
                 <Link
@@ -130,7 +139,7 @@ export function NewVersionGuide() {
                   onClick={close}
                   className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
                 >
-                  {slide.cta} →
+                  {t(slide.cta ?? "")} →
                 </Link>
               )}
 

@@ -29,6 +29,7 @@ import { awardGameXp } from "@/lib/xp-utils";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 // ──────────────────────────────────────────────
 // Challenge encoding/decoding
@@ -516,7 +517,7 @@ function ActiveChallenge({
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-emerald-dark dark:text-emerald-300">{smazzata.contract}</p>
+              <p className="text-lg font-bold text-emerald-dark dark:text-emerald-300">{contrattoLeggibile(smazzata.contract)}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
@@ -544,7 +545,7 @@ function ActiveChallenge({
             className="flex-1 max-w-3xl relative"
           >
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
@@ -566,7 +567,7 @@ function ActiveChallenge({
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={smazzata.hands[toGamePosition("north", declarer)] as CardData[]}
                 south={smazzata.hands[toGamePosition("south", declarer)] as CardData[]}
                 east={smazzata.hands[toGamePosition("east", declarer)] as CardData[]}
@@ -594,7 +595,7 @@ function ActiveChallenge({
               transition={{ delay: 0.3 }}
               className="w-full lg:w-48 shrink-0"
             >
-              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>
           )}
         </div>
@@ -774,7 +775,7 @@ function ActiveChallenge({
                   <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
                   <h3 className="text-lg font-bold text-white">{t("Risultato Sfida")}</h3>
                   <p className="text-xs text-white/60 mt-1">
-                    Contratto: {smazzata.contract} {"\u00B7"} Obiettivo: {tricksNeeded} prese
+                    Contratto: {contrattoLeggibile(smazzata.contract)} {"\u00B7"} Obiettivo: {tricksNeeded} prese
                   </p>
                 </div>
 

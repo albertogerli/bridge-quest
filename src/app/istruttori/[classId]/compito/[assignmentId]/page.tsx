@@ -33,6 +33,7 @@ import {
 } from "@/lib/tempi";
 import { NotaSmazzata } from "@/components/istruttori/nota-smazzata";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /** Cell state for the heatmap. */
 type Cell =
@@ -125,7 +126,7 @@ export default function AssignmentResultsPage({
       declarer: sm.declarer,
       trumpSuit: parseContract(sm.contract).trumpSuit,
     } as unknown as GameState;
-    setReplay({ title: `${studentName} · ${sm.contract}`, gameState });
+    setReplay({ title: `${studentName} · ${contrattoLeggibile(sm.contract)}`, gameState });
   }
 
   if (loading) {

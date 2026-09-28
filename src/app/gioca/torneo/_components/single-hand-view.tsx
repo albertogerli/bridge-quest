@@ -13,6 +13,7 @@ import type { Smazzata } from "@/lib/catalog";
 import { useTournamentHand } from "../_use-tournament-hand";
 import type { HandResult } from "../_types";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 // Overlay del tutorial: compare solo a partita avviata e resta chiuso finché
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
 const GameTutorial = dynamic(
@@ -124,7 +125,7 @@ export function SingleHandView({
               <p
                 className={`${isMobile ? "text-base" : "text-lg"} font-bold text-emerald-dark`}
               >
-                {smazzata.contract}
+                {contrattoLeggibile(smazzata.contract)}
               </p>
             </div>
             <div className="h-8 w-px bg-border" />
@@ -175,7 +176,7 @@ export function SingleHandView({
             className="flex-1 w-full max-w-3xl relative"
           >
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
@@ -197,7 +198,7 @@ export function SingleHandView({
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={
                   smazzata.hands[
                     toGamePosition("north", declarer)
@@ -241,7 +242,7 @@ export function SingleHandView({
               transition={{ delay: 0.3 }}
               className="w-full lg:w-48 shrink-0"
             >
-              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>
           )}
         </div>

@@ -16,6 +16,7 @@ import {
 } from "@/lib/daily-hand";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useCommento } from "@/hooks/use-commento";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 // Pannello di condivisione: esiste solo nella schermata di fine mano.
 const ShareResult = dynamic(
@@ -229,7 +230,7 @@ export function DailyGameResult({
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">{t("Contratto")}</span>
             <span className="font-bold text-foreground">
-              {smazzata.contract}
+              {contrattoLeggibile(smazzata.contract)}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">

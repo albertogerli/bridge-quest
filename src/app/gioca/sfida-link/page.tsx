@@ -484,7 +484,7 @@ function SfidaLinkContent() {
           className="flex-1 max-w-3xl mx-auto relative"
         >
           {displayedHands ? (
-            <BridgeTable
+            <BridgeTable ancora={declarer}
               north={displayedHands.north}
               south={displayedHands.south}
               east={displayedHands.east}

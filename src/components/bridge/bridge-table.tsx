@@ -19,7 +19,19 @@ export interface TrickPlayDisplay {
   card: CardData;
 }
 
+import { toGamePosition, type Position } from "@/lib/bridge-engine";
 export interface BridgeTableProps {
+  /**
+   * Il posto VERO di chi sta in basso, quando il tavolo è ruotato.
+   *
+   * I giochi mettono sempre il giocatore in basso; prima il riquadro in basso
+   * si chiamava «Sud» comunque. Con il dichiarante a Nord, il commento del
+   * maestro — scritto sui posti veri — diceva «Sud ha una mano disgraziata»
+   * mentre sotto «Sud» c'erano 21 punti (controllo esterno, 28/09/2026). Con
+   * `ancora` ogni mano porta il nome del suo posto vero; la disposizione non
+   * cambia.
+   */
+  ancora?: Position;
   north: CardData[];
   south: CardData[];
   east: CardData[];
@@ -152,6 +164,7 @@ export function BridgeTable({
   disabled = false,
   compact = false,
   trumpSuit,
+  ancora,
 }: BridgeTableProps) {
   const t = useT();
   const cosmetics = useShopCosmetics();
@@ -204,14 +217,24 @@ export function BridgeTable({
 
   const isActive = (pos: string) => activePosition === pos;
 
+  /** Il nome del posto VERO di uno spazio del tavolo (vedi `ancora`). */
+  const nomeVero = (pos: Position): string => {
+    const labels: Record<Position, string> = { north: "Nord", south: "Sud", east: "Est", west: "Ovest" };
+    return labels[ancora ? toGamePosition(pos, ancora) : pos];
+  };
+
+  /** L'iniziale del posto vero, per la bussola al centro. */
+  const inizialeVera = (pos: Position): string => t(nomeVero(pos)).charAt(0);
+
   const posLabel = (pos: string, shortPos: string) => {
     const labels: Record<string, string> = { north: "Nord", south: "Sud", east: "Est", west: "Ovest" };
+    const vero = ancora && pos in labels ? toGamePosition(pos as Position, ancora) : pos;
     const isDcl = declarer === shortPos;
     const isDum = isDummy(pos);
     let extra = "";
     if (isDcl) extra = " · Dich.";
     else if (isDum) extra = " · Morto";
-    return labels[pos] + extra;
+    return labels[vero] + extra;
   };
 
   return (
@@ -220,7 +243,23 @@ export function BridgeTable({
       role="group"
       aria-label={`Tavolo da bridge${trumpSuit ? `, atout ${suitAriaLabel(trumpSuit)}` : ", senza atout"}${activePosition ? `, di turno ${posLabel(activePosition, "")}` : ""}`}
       className={`relative w-full max-w-3xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`}
-      style={{ aspectRatio: isCompact ? "4 / 5" : "1 / 1", touchAction: "manipulation" }}
+      // IL TAVOLO STA NELLO SCHERMO. Quadrato e largo fino a 48rem, su un
+      // portatile con la finestra non a tutta altezza superava lo schermo e
+      // bisognava scorrere fra il morto e la propria mano (controllo esterno,
+      // 28/09/2026). Il lato non supera l'altezza disponibile meno la parte
+      // sopra il tavolo, e non scende sotto i 22rem, dove le carte non si
+      // leggerebbero più.
+      style={{
+        aspectRatio: isCompact ? "4 / 5" : "1 / 1",
+        touchAction: "manipulation",
+        // Il limite vale in ENTRAMBI i formati, con la proporzione di ciascuno:
+        // il tavolo decide da sé se essere compatto guardando la propria
+        // larghezza, e un limite solo sul formato quadrato lo farebbe
+        // oscillare fra i due (stretto → compatto → senza limite → largo…).
+        maxWidth: isCompact
+          ? "max(18rem, min(48rem, calc((100svh - 14rem) * 0.8)))"
+          : "max(22rem, min(48rem, calc(100svh - 14rem)))",
+      }}
     >
       {/* Felt background — uses shop cosmetic if purchased */}
       <div
@@ -243,18 +282,18 @@ export function BridgeTable({
             >
               <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[12px]" : "text-[12px]"} font-bold`} aria-hidden="true">
                 <div />
-                <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>N</div>
+                <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>{inizialeVera("north")}</div>
                 <div />
-                <div className={`flex items-center justify-center ${isActive("west") ? "text-amber" : ""}`}>O</div>
+                <div className={`flex items-center justify-center ${isActive("west") ? "text-amber" : ""}`}>{inizialeVera("west")}</div>
                 <div className="flex flex-col items-center justify-center leading-tight">
                   <span className="text-amber text-xs font-black">{trickCount.ns}-{trickCount.ew}</span>
                   {(trickCount.ns > 0 || trickCount.ew > 0) && (
                     <span className="text-[12px] text-white/50 font-medium">dich-dif</span>
                   )}
                 </div>
-                <div className={`flex items-center justify-center ${isActive("east") ? "text-amber" : ""}`}>E</div>
+                <div className={`flex items-center justify-center ${isActive("east") ? "text-amber" : ""}`}>{inizialeVera("east")}</div>
                 <div />
-                <div className={`flex items-center justify-center ${isActive("south") ? "text-amber" : ""}`}>S</div>
+                <div className={`flex items-center justify-center ${isActive("south") ? "text-amber" : ""}`}>{inizialeVera("south")}</div>
                 <div />
               </div>
             </div>
@@ -389,7 +428,7 @@ export function BridgeTable({
             />
           )}
           <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
-            Est
+            {t(nomeVero("east"))}
           </span>
         </div>
       </div>
@@ -398,7 +437,7 @@ export function BridgeTable({
       <div className="absolute left-2 top-1/2 -translate-y-1/2 z-[5]">
         <div className="flex items-center gap-1">
           <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
-            {t("Ovest")}
+            {t(nomeVero("west"))}
           </span>
           {isDummy("west") && !westFaceDown ? (
             <SideDummy cards={west} trumpSuit={trumpSuit} />

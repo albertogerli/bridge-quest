@@ -153,7 +153,7 @@ export function StepManoVera({ onComplete, playSound, onHandResult }: StepManoVe
       {/* Bridge Table */}
       {hands && (
         <div className="rounded-[24px] border border-gray-200 bg-white p-2 shadow-md">
-          <BridgeTable
+          <BridgeTable ancora={declarer}
             north={hands.north}
             south={hands.south}
             east={hands.east}

@@ -7,6 +7,7 @@ import type { Smazzata } from "@/lib/catalog";
 import { formatDate } from "@/lib/daily-hand";
 import { getDailyResult } from "../_storage";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /** Mano di ieri: esito già registrato (con rigioco) oppure invito a giocarla. */
 export function YesterdayHandCard({
@@ -57,7 +58,7 @@ export function YesterdayHandCard({
             variant="outline"
             className="text-[12px] font-bold text-muted-foreground border-border"
           >
-            {yesterdayHand.contract}
+            {contrattoLeggibile(yesterdayHand.contract)}
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground mb-3">

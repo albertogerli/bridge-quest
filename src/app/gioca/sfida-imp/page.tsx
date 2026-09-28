@@ -746,7 +746,7 @@ function SfidaIMPContent() {
             className="max-w-3xl mx-auto"
           >
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}

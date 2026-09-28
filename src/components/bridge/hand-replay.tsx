@@ -17,6 +17,7 @@ import {
 import { cardAriaLabel, handAriaLabel, suitAriaLabel } from "@/lib/card-labels";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 // ── helpers ──────────────────────────────────────────────────────
 
@@ -34,9 +35,14 @@ const POSITION_LABELS: Record<Position, string> = {
   west: "Ovest",
 };
 
-function displayLabel(gamePos: Position, declarer: Position): string {
-  const dPos = toDisplayPosition(gamePos, declarer);
-  return POSITION_LABELS[dPos];
+/**
+ * Il nome del posto VERO. La disposizione resta ruotata (chi gioca in basso),
+ * ma i nomi no: il tavolo di gioco mostra i posti veri dal 28/09/2026, e il
+ * replay nella stessa pagina non può chiamare «Sud» quello che il tavolo
+ * chiama «Est» — né far leggere un commento del maestro sulla mano sbagliata.
+ */
+function nomeVero(pos: Position): string {
+  return POSITION_LABELS[pos];
 }
 
 /** Reconstruct all 4 original hands by collecting every card played + cards
@@ -248,9 +254,9 @@ function TrickTable({
 
 // ── commentary generator ────────────────────────────────────────
 
-function trickCommentary(trick: Trick, declarer: Position): string {
+function trickCommentary(trick: Trick): string {
   if (!trick.winner) return "";
-  const winnerLabel = displayLabel(trick.winner, declarer);
+  const winnerLabel = nomeVero(trick.winner);
   const winnerPlay = trick.plays.find((p) => p.position === trick.winner);
   if (!winnerPlay) return `${winnerLabel} vince la presa`;
   return `${winnerLabel} vince con ${cardToString(winnerPlay.card)}`;
@@ -373,8 +379,8 @@ export function HandReplay({
               {t("Rivedi la mano")}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {gameState.contract} &middot; Dich.{" "}
-              {displayLabel(gameState.declarer, ancora)}
+              {contrattoLeggibile(gameState.contract)} &middot; Dich.{" "}
+              {nomeVero(gameState.declarer)}
             </p>
           </div>
           <button
@@ -443,10 +449,10 @@ export function HandReplay({
               className="rounded-xl bg-muted px-4 py-2.5 text-center"
             >
               <p className="text-sm font-semibold text-foreground/80">
-                {trickCommentary(trick, ancora)}
+                {trickCommentary(trick)}
               </p>
               <p className="text-[12px] text-muted-foreground mt-0.5">
-                Attacco: {displayLabel(trick.leader, ancora)}
+                Attacco: {nomeVero(trick.leader)}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -475,7 +481,7 @@ export function HandReplay({
               return (
                 <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
                   <span className="text-[12px] font-bold text-muted-foreground uppercase">
-                    {POSITION_LABELS[slot]}
+                    {POSITION_LABELS[pos]}
                   </span>
                   <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
                 </div>

@@ -21,6 +21,7 @@ import { PannelloRipartizioni } from "@/components/istruttori/pannello-ripartizi
 import { apriStampaMano } from "@/lib/stampa-mano";
 import { getSavedHands, saveHand } from "@/lib/saved-hands";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -423,7 +424,7 @@ function Studio() {
       {contratto && (
         <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
           <Badge variant="secondary" className="text-base">
-            {contratto.contract} — dichiara {SEATS.find((s) => s.key === contratto.declarer)?.label}
+            {contrattoLeggibile(contratto.contract)} — dichiara {SEATS.find((s) => s.key === contratto.declarer)?.label}
           </Badge>
           {tocca && (
             <span className="text-sm font-semibold">

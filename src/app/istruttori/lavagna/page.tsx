@@ -19,6 +19,7 @@ import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SalvaEsercizio } from "@/components/istruttori/salva-esercizio";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -93,7 +94,7 @@ function Lavagna() {
           (s: Smazzata): Mano => ({
             hands: s.hands,
             titolo: s.title,
-            soluzione: `${s.contract} — dichiara ${nomePosto(s.declarer)}`,
+            soluzione: `${contrattoLeggibile(s.contract)} — dichiara ${nomePosto(s.declarer)}`,
           })
         );
         setDaCompito(mani);

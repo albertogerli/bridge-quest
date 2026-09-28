@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Briciole } from "@/components/briciole";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
+import { IngressoAula } from "@/components/istruttori/ingresso-aula";
 import {
   apriAula,
   chiudiAula,
@@ -133,6 +134,15 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
         {t("Aula")}
       </h1>
 
+      {/*
+        IL QR STA QUI, dove si fa lezione. Prima c'era solo in fondo alla
+        pagina della classe, sotto le impostazioni: chi apriva l'aula non lo
+        trovava (controllo esterno, 28/09/2026). È lo stesso pannello.
+      */}
+      <div className="mb-6 mt-4">
+        <IngressoAula classId={classId} />
+      </div>
+
       {!sessione ? (
         <>
           <p className="mb-4 text-sm text-muted-foreground">
@@ -169,7 +179,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
       ) : (
         <>
           <p className="mb-4 text-sm text-muted-foreground">
-            {tavoli.length} {tavoli.length === 1 ? "tavolo" : "tavoli"} aperti.
+            {tavoli.length === 1 ? t("1 tavolo aperto.") : t("{n} tavoli aperti.", { n: tavoli.length })}
           </p>
 
           <div className="mb-5 flex flex-wrap items-end gap-3 rounded-xl border border-border bg-card p-4">
@@ -199,6 +209,8 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
               variant="outline"
               disabled={occupato}
               onClick={async () => {
+                // Chiudere manda via tutti i tavoli insieme: si chiede prima.
+                if (!confirm(t("Chiudere l'aula? Tutti i tavoli si chiudono, anche quelli che stanno giocando."))) return;
                 setOccupato(true);
                 await chiudiAula(sessione.id);
                 await ricarica();
@@ -218,7 +230,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
               return (
                 <Link
                   key={t.tavolo_id}
-                  href={`/istruttori/tavolo?classe=${classId}`}
+                  href={`/istruttori/tavolo?classe=${classId}&tavolo=${t.tavolo_id}&da=aula`}
                   className={`rounded-xl border p-3 transition-colors hover:bg-muted/50 ${
                     inRitardo ? "border-amber-400" : "border-border"
                   }`}

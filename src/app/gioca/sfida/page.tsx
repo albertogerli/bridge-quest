@@ -44,6 +44,7 @@ import { useGameResults } from "@/hooks/use-game-results";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 // Deterministic daily hand: hash date string to index
 function getDailySmazzata(pool: Smazzata[]): Smazzata | null {
@@ -252,7 +253,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
             <div className="text-center">
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-emerald-dark">{smazzata.contract}</p>
+              <p className="text-lg font-bold text-emerald-dark">{contrattoLeggibile(smazzata.contract)}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
@@ -295,7 +296,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
             className="flex-1 max-w-3xl relative"
           >
             {hands ? (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
@@ -317,7 +318,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable
+              <BridgeTable ancora={declarer}
                 north={smazzata.hands[toGamePosition("north", declarer)] as CardData[]}
                 south={smazzata.hands[toGamePosition("south", declarer)] as CardData[]}
                 east={smazzata.hands[toGamePosition("east", declarer)] as CardData[]}
@@ -345,7 +346,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               transition={{ delay: 0.3 }}
               className="w-full lg:w-48 shrink-0"
             >
-              <BiddingPanel bidding={smazzata.bidding} inBasso={declarer} />
+              <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>
           )}
         </div>

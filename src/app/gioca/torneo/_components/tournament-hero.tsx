@@ -8,6 +8,7 @@ import type { Smazzata } from "@/lib/catalog";
 import { formatDateShort, handResultFor, tournamentCtaLabel } from "@/lib/tournament-stats";
 import { TOURNAMENT_HAND_COUNT, type TournamentResult } from "../_types";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /**
  * Card principale del torneo: stato della settimana, anteprima delle mani e
@@ -154,7 +155,7 @@ export function TournamentHero({
                       #{i + 1}
                     </p>
                     <p className="text-sm font-bold text-foreground leading-tight">
-                      {h.contract}
+                      {contrattoLeggibile(h.contract)}
                     </p>
                     <p className="text-[12px] text-muted-foreground">
                       {tricksNeeded}p
