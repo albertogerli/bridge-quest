@@ -33,6 +33,7 @@ import {
   rinominaClasse,
   eliminaClasse,
   ClasseNonToccata,
+  ClasseNonTrovata,
   ETICHETTE_STATO,
   type ClassDetail,
   type StatoClasse,
@@ -122,7 +123,13 @@ export default function ClassDetailPage({
     try {
       setDetail(await getClassDetail(classId));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Errore nel caricamento della classe");
+      // Il messaggio grezzo («Failed to fetch», «Cannot coerce…») non dice
+      // niente a un insegnante: o la classe non c'è, o non si è caricata.
+      setError(
+        err instanceof ClasseNonTrovata
+          ? t("Questa classe non esiste più, o non è tra le tue.")
+          : t("Non riesco a caricare la classe. Controlla la connessione e ricarica la pagina."),
+      );
     } finally {
       setLoading(false);
     }

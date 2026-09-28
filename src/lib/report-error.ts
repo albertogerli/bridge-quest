@@ -22,6 +22,19 @@ import { eDiRete, eSessioneScaduta } from "@/lib/errore-di-rete";
  * dell'utente.
  */
 export function reportError(scope: string, error: unknown): void {
+  // NEL BROWSER la rete caduta e la sessione scaduta non vanno a Sentry, da
+  // qualunque punto arrivino. Il guardiano `rete-non-si-segnala.test.ts`
+  // controlla solo le chiamate vicine a Supabase, e il 28/09/2026 è passato
+  // dal buco che non poteva vedere: un componente che chiama una funzione di
+  // libreria (`getClassDetail`), che chiama Supabase. Di quei punti ce ne sono
+  // decine. Filtrare qui li chiude tutti, compresi quelli che nasceranno.
+  //
+  // Solo nel browser: sul server una fetch fallita verso il database è il
+  // NOSTRO backend che non lo raggiunge, e deve svegliare qualcuno.
+  if (typeof window !== "undefined" && (eSessioneScaduta(error) || eDiRete(error))) {
+    console.warn(`[${scope}] rete o sessione, non segnalato:`, error);
+    return;
+  }
   console.error(`[${scope}]`, error);
 
   if (!SENTRY_ENABLED) return;

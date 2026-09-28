@@ -256,7 +256,7 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
   // discoverable relationship and errors. We fetch members, then their profiles
   // in a second query keyed by student_id (= profiles.id).
   const [classRes, membersRes, assignmentsRes] = await Promise.all([
-    supabase.from("classes").select("*").eq("id", classId).single(),
+    supabase.from("classes").select("*").eq("id", classId).maybeSingle(),
     supabase
       .from("class_members")
       .select("class_id, student_id, status, joined_at")
@@ -274,6 +274,7 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
   ]);
 
   if (classRes.error) throw classRes.error;
+  if (!classRes.data) throw new ClasseNonTrovata();
   if (membersRes.error) throw membersRes.error;
   if (assignmentsRes.error) throw assignmentsRes.error;
 
@@ -429,6 +430,22 @@ export async function aggiornaImpostazioniClasse(
  * quella di un ospite — e la pagina ha scaricato l'immagine lo stesso: il QR
  * stampato portava a una pagina vuota e nessuno lo sapeva.
  */
+/**
+ * La classe non c'è, o non è tua: le RLS non distinguono i due casi.
+ *
+ * Con `.single()` una classe cancellata diventava «Cannot coerce the result to
+ * a single JSON object» — in Sentry il 28/09/2026, dal pannello dell'ingresso
+ * in aula che si aggiorna ogni sei secondi e ha riletto la classe un attimo
+ * dopo che l'insegnante l'aveva eliminata. Non è un difetto: è una classe che
+ * non c'è più, e chi la guarda deve sentirselo dire così.
+ */
+export class ClasseNonTrovata extends Error {
+  constructor() {
+    super("Classe non trovata");
+    this.name = "ClasseNonTrovata";
+  }
+}
+
 export class ClasseNonToccata extends Error {
   constructor() {
     super("Il sito non ti riconosce come insegnante di questa classe: esci, rientra con il tuo account e riprova.");
