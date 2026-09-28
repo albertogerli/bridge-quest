@@ -7,6 +7,7 @@ import type { DailyFieldStats } from "@/hooks/use-daily-field";
 import { resultHeadline } from "@/lib/daily-hand";
 import type { DailyResult } from "../_types";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 // Pannello di condivisione: esiste solo nella schermata di fine mano.
 const ShareResult = dynamic(
@@ -180,6 +181,32 @@ export function DailyResultCard({
                   }`}
                 />
               </div>
+              {/* Tutti i risultati, non solo la percentuale: è quello che serve
+                  per posizionarsi (richiesta dal forum, 28/09/2026). */}
+              <ul className="mt-4 space-y-1.5" aria-label={t("Risultati di tutti")}>
+                {fieldStats.distribuzione.map((r) => {
+                  const tu = r.result === todayResult.result;
+                  const massimo = Math.max(...fieldStats.distribuzione.map((x) => x.players));
+                  const segno = r.result === 0 ? "=" : r.result > 0 ? `+${r.result}` : `−${-r.result}`;
+                  return (
+                    <li key={r.result} className="grid grid-cols-[5.5rem_1fr_3.5rem] items-center gap-2 text-sm">
+                      <span className={`font-mono ${tu ? "font-bold" : ""}`}>
+                        {contrattoLeggibile(contract)} {segno}
+                      </span>
+                      <span className="h-3 overflow-hidden rounded-full bg-muted">
+                        <span
+                          className={`block h-full rounded-full ${r.result >= 0 ? "bg-emerald-500" : "bg-red-400"}`}
+                          style={{ width: `${Math.max(4, (r.players / massimo) * 100)}%` }}
+                        />
+                      </span>
+                      <span className={`text-right tabular-nums ${tu ? "font-bold text-foreground" : "text-muted-foreground"}`}>
+                        {r.players}
+                        {tu ? ` · ${t("tu")}` : ""}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
               {fieldStats.best > todayResult.result && (
                 <p className="mt-2 text-[12px] text-muted-foreground">
                   Miglior risultato del campo:{" "}

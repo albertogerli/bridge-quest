@@ -77,7 +77,13 @@ const SCALA: { entro: number; stelle: number }[] = [
 export function valutaLicita(
   punteggio: number,
   punteggioPar: number,
-  metro: Metro = "esatto"
+  metro: Metro = "esatto",
+  /**
+   * Il punteggio realizzato su QUESTA smazzata, quando le stelle si danno sul
+   * valore atteso (`punteggio` è allora la media del contratto). Serve solo al
+   * commento: vedi sotto «quando la fortuna contraddice il voto».
+   */
+  punteggioReale?: number,
 ): EsitoLicita {
   const differenza = Math.max(0, punteggioPar - punteggio);
   const imp = rawToIMP(differenza);
@@ -139,6 +145,30 @@ export function valutaLicita(
       commento = `${differenza} punti ${rif}: una manche intera. O non è stata dichiarata, o il contratto scelto non stava in piedi.`;
     } else {
       commento = `${differenza} punti ${rif}: qui è andato perso uno slam, oppure il contratto è caduto pesante. Vale la pena rivedere la mano.`;
+    }
+  }
+
+  /**
+   * QUANDO LA FORTUNA CONTRADDICE IL VOTO.
+   *
+   * Con il metro atteso le stelle giudicano la SCELTA, e il punteggio reale può
+   * andare nella direzione opposta: un 7SA mantenuto per fortuna fa 2220 e
+   * prende mezza stella, un 4♠ caduto prende tre stelle perché in media era il
+   * contratto giusto. Il criterio è corretto — misura la scelta, non le carte
+   * messe bene — ma senza dirlo il giocatore vede +2220 accanto a «1500 punti
+   * sotto il contratto migliore» e conclude che le stelle sono «stabilite senza
+   * criterio» (forum, 28/09/2026: nei dati di trenta giorni, 174 coppie di
+   * risultati nella stessa mano con più punti e meno stelle). Qui lo si dice,
+   * con tutti e due i numeri.
+   */
+  if (metro === "atteso" && punteggioReale !== undefined) {
+    const media = Math.round(punteggio);
+    const reale = Math.round(punteggioReale);
+    const segno = (n: number) => (n > 0 ? `+${n}` : `${n}`);
+    if (stelle < 3 && reale >= punteggioPar) {
+      commento = `Stavolta ti è andata bene: ${segno(reale)}. Ma le stelle giudicano la scelta, e in media questo contratto rende ${segno(media)}, contro ${segno(punteggioPar)} del contratto migliore. Con le carte messe diversamente sarebbe andata peggio.`;
+    } else if (stelle >= 2.5 && reale < media - 100) {
+      commento = `Stavolta è andata male (${segno(reale)}), ma la scelta era buona: in media questo contratto rende ${segno(media)}. Le stelle giudicano la scelta, non la sfortuna di questa smazzata.`;
     }
   }
 

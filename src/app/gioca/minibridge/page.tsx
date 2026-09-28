@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -125,23 +125,31 @@ export default function MiniBridgePage() {
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
+      {/*
+        NIENTE DISSOLVENZA FRA UN PASSO E L'ALTRO. Con `AnimatePresence
+        mode="wait"` il passo vecchio spariva del tutto prima che comparisse il
+        nuovo: a ogni comando lo schermo si svuotava e si riempiva, e su un
+        telefono si vedeva come uno sfarfallio (segnalato nel forum il
+        28/09/2026; misurato: opacità a zero e pagina vuota a ogni tocco). Ora
+        il passo nuovo sostituisce subito il vecchio, con un piccolo scorrimento.
+      */}
+      <>
         {step === "reveal" && (
-          <motion.div key={`reveal-${round}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.div key={`reveal-${round}`} initial={{ y: 6 }} animate={{ y: 0 }} transition={{ duration: 0.15 }}>
             <RevealStep analysis={analysis} southHand={deal.hands.south} onNext={() => setStep("decide")} />
           </motion.div>
         )}
         {step === "decide" && (
-          <motion.div key={`decide-${round}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.div key={`decide-${round}`} initial={{ y: 6 }} animate={{ y: 0 }} transition={{ duration: 0.15 }}>
             <DecideStep analysis={analysis} role={role} southHand={deal.hands.south} onDeclare={chooseStrain} onDefend={startAsDefender} />
           </motion.div>
         )}
         {step === "play" && chosenContract && chosenStrain && (
-          <motion.div key={`play-${round}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <motion.div key={`play-${round}`}>
             <PlayStep prepared={prepared} contract={chosenContract} strain={chosenStrain} review={deal.review} onNext={newDeal} />
           </motion.div>
         )}
-      </AnimatePresence>
+      </>
     </div>
   );
 }
@@ -187,7 +195,7 @@ function RevealStep({ analysis, southHand, onNext }: { analysis: DealAnalysis; s
         {seats.map((pos, i) => (
           <motion.div
             key={pos}
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.2 }}
+            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06, duration: 0.15 }}
             className={`rounded-xl border p-3 ${pos === "south" ? "border-primary bg-primary/5" : "border-border bg-card"}`}
           >
             <p className="text-xs text-muted-foreground">{POS_LABEL[pos]}</p>
@@ -195,9 +203,8 @@ function RevealStep({ analysis, southHand, onNext }: { analysis: DealAnalysis; s
           </motion.div>
         ))}
       </div>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-        <Button className="mt-6" onClick={onNext}>{t("Continua →")}</Button>
-      </motion.div>
+      {/* Il pulsante c'è subito: prima compariva dopo quasi un secondo. */}
+      <Button className="mt-6" onClick={onNext}>{t("Continua →")}</Button>
     </div>
   );
 }

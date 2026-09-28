@@ -172,11 +172,14 @@ export default function TorneoLicitaPage() {
     const rif = riferimento(m, "ns");
     const perStelle =
       e && rif.metro === "atteso"
-        ? (evDelContratto(m, { level: e.level, strain: e.strain, declarer: e.declarer }) ??
+        ? // `doppio` come in «Licita e vediamo»: senza, un contratto contrato
+          // veniva valutato come se non lo fosse, e lo stesso 5♥X prendeva
+          // stelle diverse nelle due modalità (forum, 28/09/2026).
+          (evDelContratto(m, { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio }) ??
            e.punteggio)
         : (e?.punteggio ?? 0);
 
-    const voto = valutaLicita(perStelle, rif.punteggio, rif.metro);
+    const voto = valutaLicita(perStelle, rif.punteggio, rif.metro, e?.punteggio);
     setEsito(voto);
     setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio } : null);
 
@@ -507,6 +510,11 @@ export default function TorneoLicitaPage() {
               <div className="flex justify-center mb-2">
                 <Stelle quante={esito.stelle} className="[&_svg]:w-8 [&_svg]:h-8" />
               </div>
+              {riferimento(mano, "ns").metro === "atteso" && (
+                <p className="mb-1 text-xs text-muted-foreground">
+                  {t("Le stelle giudicano la scelta del contratto — quanto rende in media — non il risultato di questa smazzata.")}
+                </p>
+              )}
               <p className="text-sm text-muted-foreground mb-3">{esito.commento}</p>
               <RiepilogoMano
                 deal={mano.hands}
