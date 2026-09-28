@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { DesktopNav } from "@/components/desktop-nav";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
+import { apertaAgliOspiti } from "@/lib/rotte-ospite";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
 import { useResultQueueSync } from "@/hooks/use-game-results";
 import { SyncNotice } from "@/components/sync-notice";
@@ -84,6 +85,21 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   const ritorno = destinazioneIndietro(pathname);
   const t = useT();
   const isPublic = PUBLIC_ROUTES.some((r) => r === "/" ? pathname === "/" : pathname.startsWith(r));
+  /**
+   * Chi ha premuto «Prova senza account». `null` finché non si è letto il
+   * browser: il cancello qui sotto aspetta, altrimenti rimanderebbe al login
+   * un ospite nel mezzo secondo prima di sapere che lo è.
+   */
+  const [ospite, setOspite] = useState<boolean | null>(null);
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
+      setOspite(localStorage.getItem("bq_guest") === "1");
+    } catch {
+      setOspite(false);
+    }
+  }, [pathname]);
+  const accessibile = isPublic || (ospite === true && apertaAgliOspiti(pathname));
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const { showExitModal, setShowExitModal } = useExitIntent();
   // Una volta armato resta montato: così l'animazione di chiusura del Dialog
@@ -111,11 +127,11 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
    */
   const percorsoIntero = usePathname();
   useEffect(() => {
-    if (!authLoading && !user && !isPublic) {
+    if (!authLoading && !user && !accessibile && ospite !== null) {
       const dove = percorsoIntero && percorsoIntero !== "/" ? percorsoIntero : null;
       router.replace(dove ? `/login?redirect=${encodeURIComponent(dove)}` : "/login");
     }
-  }, [authLoading, user, isPublic, router, percorsoIntero]);
+  }, [authLoading, user, accessibile, ospite, router, percorsoIntero]);
 
   // Load profile for visual adaptation
   useEffect(() => {
@@ -151,7 +167,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
   useActivityTracker();
 
   // Show loading spinner while auth resolves on protected routes
-  if (!isPublic && (authLoading || !user)) {
+  if (!accessibile && (authLoading || !user)) {
     return (
       <div className="min-h-svh bg-background flex items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-3 border-border border-t-primary" />
@@ -172,8 +188,10 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-svh bg-background safe-area-top" data-profile={profile}>
-      {/* Left nav - desktop only */}
-      <DesktopNav />
+      {/* Left nav - desktop only. Chi non ha né account né la prova avviata
+          non la vede: ogni voce lo porterebbe al login, e mostrare una fila
+          di porte chiuse è chiedere prima di aver dato. */}
+      {(user || ospite) && <DesktopNav />}
 
       {/* Center: main content */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -202,7 +220,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
         <div className="hidden lg:block">
           <SiteFooter />
         </div>
-        <BottomNav />
+        {(user || ospite) && <BottomNav />}
       </div>
 
       {/* Right sidebar - desktop only */}

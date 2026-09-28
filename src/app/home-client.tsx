@@ -250,7 +250,16 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     }} />;
   }
 
-  if (showOnboarding) {
+  /**
+   * L'AVVIO GUIDATO È PER CHI IMPARA. «Il tuo primo torneo — tra 5 minuti
+   * giocherai la tua prima mano» accoglieva anche l'insegnante appena
+   * abilitato, prima della sua home con le classi (visto nel controllo del
+   * 28/09/2026). Finché il profilo non è arrivato il ruolo non si sa, e si
+   * mostra l'avvio come prima: un istante, invece di un'attesa che resterebbe
+   * infinita se il profilo non arrivasse.
+   */
+  const insegnaGia = authProfile?.role === "instructor" || authProfile?.role === "admin";
+  if (showOnboarding && !insegnaGia) {
     return <PrimaManoOnboarding onDismiss={handleOnboardingComplete} />;
   }
 

@@ -443,7 +443,9 @@ export default function ClassDetailPage({
       {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
           alle Lezioni con un clic invece di descriverle a parole. */}
       <Tabs value={scheda} onValueChange={setScheda}>
-        <TabsList>
+        {/* Al telefono le cinque schede non ci stanno: scorrono invece di
+            spingere la pagina di lato (controllo del 28/09/2026). */}
+        <TabsList className="max-w-full overflow-x-auto justify-start">
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
           <TabsTrigger value="lezioni">{t("Lezioni")}</TabsTrigger>
           <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>

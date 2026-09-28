@@ -609,7 +609,7 @@ function Mano({
                   key={chiave(c)}
                   disabled={!giocabile}
                   onClick={() => gioca(c)}
-                  className={`px-1.5 py-0.5 rounded-md font-mono text-base ${
+                  className={`min-h-9 min-w-8 px-1.5 py-0.5 rounded-md font-mono text-base ${
                     giocabile
                       ? costo === 0 && numeri
                         ? "bg-emerald-100 dark:bg-emerald-950/50 hover:bg-emerald-200"

@@ -346,6 +346,9 @@ export default function ImpostazioniPage() {
             </div>
             <button
               onClick={toggleSound}
+              role="switch"
+              aria-checked={sound}
+              aria-label={t("Suoni")}
               className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
                 sound ? "bg-figb dark:bg-primary" : "bg-gray-300 dark:bg-gray-600"
               }`}
@@ -438,6 +441,9 @@ export default function ImpostazioniPage() {
               </div>
               <button
                 onClick={() => notifications.toggle()}
+                role="switch"
+                aria-checked={notifications.enabled}
+                aria-label={t("Notifiche")}
                 className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
                   notifications.enabled ? "bg-figb dark:bg-primary" : "bg-gray-300 dark:bg-gray-600"
                 }`}

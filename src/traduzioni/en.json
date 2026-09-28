@@ -2019,5 +2019,6 @@
   "Rigioca dall'inizio": "Replay from the start",
   "tu": "you",
   "{n} persone hanno giocato questa mano; {f} l'hanno mantenuta. Conta la prima partita di ognuno.": "{n} people played this deal; {f} made the contract. Each person's first attempt counts.",
-  "Qui non si registra niente: è pratica. Il risultato che conta resta quello della partita giocata.": "Nothing is recorded here: it's practice. The result that counts is still the one from the game you played."
+  "Qui non si registra niente: è pratica. Il risultato che conta resta quello della partita giocata.": "Nothing is recorded here: it's practice. The result that counts is still the one from the game you played.",
+  "Errore": "Error"
 }
