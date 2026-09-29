@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Eye } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Bot, Eye, User } from "lucide-react";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { PlayingCard } from "@/components/bridge/playing-card";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -44,6 +44,9 @@ export function TavoloVerde({
   onGioca,
   onVisibilita,
   sopra,
+  occupanti,
+  allievi,
+  onScegliPosto,
 }: {
   mani: Partial<Record<Position, Card[]>>;
   /** Le mani che la classe vede in questo momento. */
@@ -61,23 +64,83 @@ export function TavoloVerde({
    * finestra a parte — si parla guardando le persone e le carte insieme.
    */
   sopra?: ReactNode;
+  /**
+   * Chi siede a ogni posto, come si legge sulla targhetta: il nome
+   * dell'allievo o «Computer». Assente = gioca l'insegnante.
+   */
+  occupanti?: Partial<Record<Position, { tipo: "allievo" | "computer"; nome: string }>>;
+  /** Gli allievi della classe, per il menu del posto. */
+  allievi?: { id: string; nome: string }[];
+  /**
+   * Il menu del posto, come «Posti al tavolo — Siediti / Invita / Bot» di
+   * BridgeChamp (29/09/2026): un tocco sulla targhetta e si decide chi gioca
+   * quella mano. Senza questa funzione la targhetta resta solo un'etichetta.
+   */
+  onScegliPosto?: (
+    seat: Position,
+    scelta: { tipo: "io" } | { tipo: "computer" } | { tipo: "allievo"; id: string },
+  ) => void;
 }) {
   const t = useT();
   const piccolo = useMobile(768);
+  const [menuAperto, setMenuAperto] = useState<Position | null>(null);
   const inCorso = giocate.length % 4 === 0 ? [] : giocate.slice(giocate.length - (giocate.length % 4));
 
   const targhetta = (p: Position) => {
     const info = POSTI.find((x) => x.p === p)!;
     const vista = visibili.includes(p);
     const tocca = turno === p;
-    return (
-      <div className={`mb-2 inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm ${
-        tocca ? "bg-[#c8a44e] text-[#1a1406]" : "bg-white/90 text-[#0f1219]"
-      }`}>
+    const chi = occupanti?.[p];
+    const contenuto = (
+      <>
         <span className="flex h-6 w-6 items-center justify-center rounded bg-[#003DA5] text-xs font-bold text-white">{info.iniziale}</span>
         <span className={piccolo ? "sr-only" : ""}>{t(info.l)}</span>
         <span className="text-xs font-normal opacity-70">{handHcp(mani[p] ?? [])}{piccolo ? "" : " PO"}</span>
         {vista && <Eye className="h-3.5 w-3.5 text-emerald-700" aria-label={t("La classe la vede")} />}
+        {chi && (
+          <span className="flex items-center gap-1 rounded bg-black/10 px-1.5 text-xs font-normal">
+            {chi.tipo === "computer" ? <Bot className="h-3 w-3" aria-hidden="true" /> : <User className="h-3 w-3" aria-hidden="true" />}
+            {chi.nome}
+          </span>
+        )}
+      </>
+    );
+    const classe = `mb-2 inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm ${
+      tocca ? "bg-[#c8a44e] text-[#1a1406]" : "bg-white/90 text-[#0f1219]"
+    }`;
+    if (!onScegliPosto) return <div className={classe}>{contenuto}</div>;
+    return (
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setMenuAperto(menuAperto === p ? null : p)}
+          aria-expanded={menuAperto === p}
+          aria-label={t("Chi gioca a {posto}", { posto: t(info.l) })}
+          className={`${classe} min-h-9 hover:ring-2 hover:ring-white/60`}
+        >
+          {contenuto}
+        </button>
+        {menuAperto === p && (
+          <div className="absolute left-1/2 top-full z-20 mt-1 w-56 -translate-x-1/2 rounded-xl border border-border bg-card p-2 text-left text-sm text-foreground shadow-xl">
+            <p className="px-1 pb-1 text-xs font-semibold text-muted-foreground">{t("Chi gioca a {posto}", { posto: t(info.l) })}</p>
+            <button type="button" className="flex min-h-10 w-full items-center gap-2 rounded-lg px-2 hover:bg-muted" onClick={() => { onScegliPosto(p, { tipo: "io" }); setMenuAperto(null); }}>
+              <User className="h-4 w-4" aria-hidden="true" /> {t("Gioco io")}
+            </button>
+            <button type="button" className="flex min-h-10 w-full items-center gap-2 rounded-lg px-2 hover:bg-muted" onClick={() => { onScegliPosto(p, { tipo: "computer" }); setMenuAperto(null); }}>
+              <Bot className="h-4 w-4" aria-hidden="true" /> {t("Computer")}
+            </button>
+            {(allievi ?? []).length > 0 && (
+              <div className="mt-1 max-h-48 overflow-y-auto border-t border-border pt-1">
+                {(allievi ?? []).map((a) => (
+                  <button key={a.id} type="button" className="flex min-h-10 w-full items-center gap-2 rounded-lg px-2 hover:bg-muted" onClick={() => { onScegliPosto(p, { tipo: "allievo", id: a.id }); setMenuAperto(null); }}>
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold uppercase">{a.nome.charAt(0)}</span>
+                    <span className="truncate">{a.nome}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   };
