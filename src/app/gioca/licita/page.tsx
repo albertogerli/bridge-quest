@@ -19,6 +19,7 @@ import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { astaChiusa, esitoAsta, ordineDa, ZONE_PER_BOARD } from "@/lib/licita-mano";
 import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
+import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { Stelle } from "@/components/bridge/stelle";
 import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
 import {
@@ -583,6 +584,14 @@ export default function LicitaPage() {
                         : undefined,
                   })}
                 />
+                <div className="mt-4">
+                  <RisultatoDoppioMorto
+                    mani={mano.deal}
+                    dealer={mano.dealer}
+                    vulnerability={mano.vulnerability}
+                    bids={licita}
+                  />
+                </div>
                 {campo && <ConfrontoCampoPannello campo={campo} manoId={mano.id} />}
                 <Button className="mt-4" onClick={prossima}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}

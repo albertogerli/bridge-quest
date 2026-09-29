@@ -24,6 +24,7 @@ import {
 import {
   closeLiveTable,
   getOpenLiveTable,
+  getLiveTable,
   openLiveTable,
   setLiveHands,
   setRevealed,
@@ -43,6 +44,7 @@ import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
 import { PannelloDivisioni } from "@/components/bridge/pannello-divisioni";
 import { TavoloVerde } from "@/components/bridge/tavolo-verde";
 import { TornaIndietro } from "@/components/torna-indietro";
+import { sceltaDelComputer } from "@/lib/computer-al-tavolo";
 import { VideoTavolo } from "@/components/bridge/video-tavolo";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
@@ -243,6 +245,53 @@ function Tavolo() {
     await setRevealed(tableId, [...attuali]);
   };
 
+  /**
+   * I POSTI DEL COMPUTER. Si decidono qui e giocano da qui: è il browser
+   * dell'insegnante a muovere per loro, con lo stesso motore dei giochi contro
+   * il computer. Non servono tabelle nuove — le carte passano da
+   * `playLiveCard` come quelle giocate a mano — e la scelta resta per tavolo
+   * nel browser, perché riguarda questa lezione e questo schermo.
+   */
+  const chiaveComputer = tableId ? `bq_tavolo_computer_${tableId}` : null;
+  const [computer, setComputer] = useState<Position[]>([]);
+  useEffect(() => {
+    if (!chiaveComputer) return;
+    try {
+      const salvati = JSON.parse(localStorage.getItem(chiaveComputer) ?? "[]") as Position[];
+      setComputer(Array.isArray(salvati) ? salvati : []);
+    } catch {
+      setComputer([]);
+    }
+  }, [chiaveComputer]);
+  const salvaComputer = (lista: Position[]) => {
+    setComputer(lista);
+    try { if (chiaveComputer) localStorage.setItem(chiaveComputer, JSON.stringify(lista)); } catch {}
+  };
+
+  // Il computer gioca quando tocca a lui, dopo una pausa: la classe deve fare in
+  // tempo a vedere la carta uscire.
+  // Calcolato qui, prima dei `return` anticipati: gli hook devono stare tutti
+  // sopra, e il turno si ricava dalla sola lista delle carte giocate.
+  const giocoBot = statoGrezzo?.declarer && statoGrezzo.contract
+    ? statoDelGioco(statoGrezzo.played ?? [], statoGrezzo.declarer, parseContract(statoGrezzo.contract).trumpSuit)
+    : null;
+  const turnoComputer =
+    tableId && giocoBot && giocoBot.prese.length < 13 && computer.includes(giocoBot.turno) ? giocoBot.turno : null;
+  const firmaPosizione = `${statoGrezzo?.played?.length ?? 0}-${turnoComputer ?? ""}`;
+  useEffect(() => {
+    const st = statoGrezzo;
+    if (!turnoComputer || !st?.declarer || !st.contract || !tableId) return;
+    const t = setTimeout(() => {
+      const carta = sceltaDelComputer(st.hands, st.played ?? [], st.contract!, st.declarer!, turnoComputer);
+      // Dopo la carta si rilegge subito il tavolo invece di aspettare
+      // l'aggiornamento in tempo reale: senza, il computer muoveva una carta
+      // ogni cinque secondi circa.
+      if (carta) void playLiveCard(tableId, carta, turnoComputer).then(() => getLiveTable(tableId)).then((nuovo) => { if (nuovo) setStato(nuovo); });
+    }, 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- si muove a ogni carta giocata, non a ogni render
+  }, [firmaPosizione]);
+
   if (loading) return null;
   if (!user) {
     return (
@@ -360,6 +409,32 @@ function Tavolo() {
     if (!tableId) return;
     await playLiveCard(tableId, carta, seat);
   };
+
+  const scegliPosto = async (
+    seat: Position,
+    scelta: { tipo: "io" } | { tipo: "computer" } | { tipo: "allievo"; id: string },
+  ) => {
+    if (!tableId) return;
+    // Il posto si libera da chi c'era: un allievo solo per posto.
+    const next: Record<string, Position> = {};
+    for (const [id, posto] of Object.entries(postoDi)) {
+      if (posto !== seat && !(scelta.tipo === "allievo" && id === scelta.id)) next[id] = posto;
+    }
+    if (scelta.tipo === "allievo") next[scelta.id] = seat;
+    await setSeats(tableId, next);
+    salvaComputer(
+      scelta.tipo === "computer"
+        ? [...new Set([...computer, seat])]
+        : computer.filter((p) => p !== seat),
+    );
+  };
+
+  /** «Computer ai posti liberi»: ogni posto senza un allievo lo prende il computer. */
+  const computerAiLiberi = () => {
+    const occupati = new Set(Object.values(postoDi));
+    salvaComputer((["north", "east", "south", "west"] as Position[]).filter((p) => !occupati.has(p)));
+  };
+
 
   return (
     <div className="min-h-screen px-4 py-6 max-w-5xl mx-auto">
@@ -548,11 +623,23 @@ function Tavolo() {
         attivo={!!tableId}
         onGioca={giocaPer}
         onVisibilita={scopri}
+        occupanti={Object.fromEntries([
+          ...Object.entries(postoDi).map(([id, posto]) => [
+            posto,
+            { tipo: "allievo" as const, nome: allievi.find((a) => a.student_id === id)?.display_name ?? t("Allievo") },
+          ]),
+          ...computer.map((p) => [p, { tipo: "computer" as const, nome: t("Computer") }]),
+        ])}
+        allievi={allievi.map((a) => ({ id: a.student_id, nome: a.display_name ?? t("Allievo") }))}
+        onScegliPosto={tableId ? (seat, scelta) => void scegliPosto(seat, scelta) : undefined}
         sopra={tableId && videoPermesso && user ? <VideoTavolo tavoloId={tableId} io={user.id} nomi={nomiVideo} /> : undefined}
       />
 
       {tableId && stato && (
         <div className="flex flex-wrap justify-center gap-2 mt-5">
+          <Button variant="outline" onClick={computerAiLiberi}>
+            {t("Computer ai posti liberi")}
+          </Button>
           <Button onClick={() => setRevealed(tableId, SEATS.map((s) => s.key))}>
             <Eye className="w-4 h-4 mr-1" aria-hidden="true" />
             {t("Scopri tutte alla classe")}

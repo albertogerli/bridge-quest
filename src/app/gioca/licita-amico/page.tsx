@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useFriends } from "@/hooks/use-friends";
+import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { Asta } from "@/components/bridge/asta";
 import { reportError , segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
@@ -222,6 +223,19 @@ function LicitaAmico() {
                 </div>
               ))}
             </div>
+            {/* Il risultato a doppio morto e il par: la risposta a «il nostro
+                contratto stava in piedi?». La zona è «nessuno»: è quella con
+                cui nascono tutte le licite a due (107 su 107 al 29/09/2026). */}
+            {(["north", "east", "south", "west"] as Position[]).every((p) => (sessione.hands[p]?.length ?? 0) === 13) && (
+              <div className="mt-4">
+                <RisultatoDoppioMorto
+                  mani={sessione.hands as Record<Position, Card[]>}
+                  dealer={sessione.dealer}
+                  vulnerability="none"
+                  bids={sessione.bids}
+                />
+              </div>
+            )}
           </div>
         ) : tocca ? (
           <p className="text-sm font-semibold text-center py-2">{t("Tocca a te")}</p>

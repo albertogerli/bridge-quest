@@ -26,17 +26,25 @@ export function TabellaPrese({
   mani,
   compatta = false,
   onPronta,
+  giaCalcolata,
 }: {
   mani: Record<Position, Card[]>;
   compatta?: boolean;
   onPronta?: (dati: { table: DdsTable; par: ParResult }) => void;
+  /**
+   * Tabella e par già calcolati con mazziere e zona VERI della mano: si
+   * mostrano quelli, senza risolvere di nuovo e senza la nota sul mazziere.
+   */
+  giaCalcolata?: { table: DdsTable; par: ParResult };
 }) {
   const t = useT();
-  const [dati, setDati] = useState<{ table: DdsTable; par: ParResult } | null>(null);
+  const [calcolata, setDati] = useState<{ table: DdsTable; par: ParResult } | null>(null);
+  const dati = giaCalcolata ?? calcolata;
   const [errore, setErrore] = useState(false);
   const firma = JSON.stringify(mani);
 
   useEffect(() => {
+    if (giaCalcolata) return;
     let vivo = true;
     calcTableAndPar(mani, "north", "none")
       .then((d) => {
@@ -51,7 +59,7 @@ export function TabellaPrese({
     return () => { vivo = false; };
     // `firma` al posto di `mani`: lo stesso contenuto non va ricalcolato.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- dipende dal contenuto delle mani, non dall'identità dell'oggetto
-  }, [firma]);
+  }, [firma, giaCalcolata]);
 
   if (errore) return <p className="text-sm text-muted-foreground">{t("Non riesco a calcolare le prese adesso.")}</p>;
   if (!dati) return <p className="text-sm text-muted-foreground">{t("Calcolo le prese…")}</p>;
@@ -83,7 +91,9 @@ export function TabellaPrese({
       </table>
       <p className={`mt-2 ${compatta ? "text-xs" : "text-sm"}`}>
         <b>{t("Par")}:</b> {dati.par.contracts.join(", ") || "–"} · <b>{t("Punteggio")}:</b> {dati.par.score}
-        <span className="block text-xs text-muted-foreground">{t("Calcolato con Nord mazziere e nessuno in zona.")}</span>
+        {!giaCalcolata && (
+          <span className="block text-xs text-muted-foreground">{t("Calcolato con Nord mazziere e nessuno in zona.")}</span>
+        )}
       </p>
     </div>
   );

@@ -10,6 +10,7 @@ import { Asta } from "@/components/bridge/asta";
 import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { Stelle } from "@/components/bridge/stelle";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
+import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { AsteTorneoConcluso } from "@/components/bridge/aste-torneo-concluso";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
@@ -549,6 +550,14 @@ export default function TorneoLicitaPage() {
                       : undefined,
                 })}
               />
+                <div className="mt-4">
+                  <RisultatoDoppioMorto
+                    mani={mano.hands}
+                    dealer={mano.dealer}
+                    vulnerability={mano.vulnerability}
+                    bids={bids}
+                  />
+                </div>
               {/* IL RISULTATO NON È ARRIVATO AL DATABASE. Non si passa avanti:
                   la mano sembrerebbe fatta e non esisterebbe da nessuna parte.
                   Il voto resta a schermo, l'asta non si ridichiara, e si offre
