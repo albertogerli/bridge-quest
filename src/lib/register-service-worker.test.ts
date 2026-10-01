@@ -29,7 +29,6 @@ it.each([
   [new DOMException("Failed to register a ServiceWorker for scope ('https://synthetic.invalid/?private=secret') with script ('https://synthetic.invalid/sw.js'): An SSL certificate error occurred when fetching the script.", "SecurityError"), "tls_certificate"],
   [new DOMException("Content Security Policy blocked private-url", "SecurityError"), "security_policy"],
   [new TypeError("Bad MIME type from private-url"), "registration_type_error"],
-  [new DOMException("private cancellation", "AbortError"), "registration_aborted"],
   [new Error("private implementation detail"), "registration_failed"],
   ["private non-Error rejection", "registration_failed"],
 ])("handles a rejected registration and keeps it observable: %s", async (error, code) => {
@@ -113,4 +112,29 @@ it("UN UTENTE VERO CON LO STESSO ERRORE VIENE SEGNALATO", async () => {
     expect.objectContaining({ code: "registration_type_error" }),
   );
   ripristina();
+});
+
+it("a registration that is merely aborted is not reported", async () => {
+  vi.spyOn(console, "warn").mockImplementation(() => {});
+  const client = { register: vi.fn().mockRejectedValue(new DOMException("private cancellation", "AbortError")) };
+  await expect(registerServiceWorker(client)).resolves.toBeUndefined();
+  expect(report).not.toHaveBeenCalled();
+});
+
+it.each([
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 15_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 musical_ly_46.3.2 BytedanceWebview/d8a21c6",
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 300.0",
+  "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile Safari/537.36 [FBAN/EMA;FBAV/400.0]",
+])("in-app browsers are not reported, whatever the code: %s", async (ua) => {
+  vi.stubGlobal("navigator", { userAgent: ua, webdriver: false });
+  const client = { register: vi.fn().mockRejectedValue(new DOMException("denied", "SecurityError")) };
+  await registerServiceWorker(client);
+  expect(report).not.toHaveBeenCalled();
+});
+
+it("a normal browser with a TLS failure is still reported", async () => {
+  vi.stubGlobal("navigator", { userAgent: "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15", webdriver: false });
+  const client = { register: vi.fn().mockRejectedValue(new DOMException("An SSL certificate error occurred when fetching the script.", "SecurityError")) };
+  await registerServiceWorker(client);
+  expect(report).toHaveBeenCalledExactlyOnceWith("pwa:register", expect.objectContaining({ code: "tls_certificate" }));
 });
