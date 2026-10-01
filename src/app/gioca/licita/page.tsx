@@ -575,15 +575,25 @@ export default function LicitaPage() {
                       ? riferimentoUnico(mano.condivisa).metro
                       : mano.metro,
                     giocato: giocato?.lato === "ns" ? giocato : null,
+                    // Il vostro contratto porta il voto in cima: vedi `stelleDelVoto`.
+                    stelleDelVoto: esito.stelle,
                     // Il valore atteso entra in tabella solo quando è anche il
                     // metro del riferimento: mostrarlo accanto a stelle
                     // calcolate sul par confonderebbe due conti diversi.
+                    // Il valore atteso segue il metro della TABELLA, non quello
+                    // del voto: con il riferimento medio e i punteggi reali le
+                    // righe confrontavano due cose diverse (01/10/2026).
                     ev:
-                      mano.metro === "atteso" && mano.condivisa
+                      mano.condivisa && riferimentoUnico(mano.condivisa).metro === "atteso"
                         ? (c) => evDelContratto(mano.condivisa!, c)
                         : undefined,
                   })}
                 />
+                {mano.metro !== (mano.condivisa ? riferimentoUnico(mano.condivisa).metro : mano.metro) && giocato?.lato === "ns" && (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {t("Sulla riga del vostro contratto c'è il voto in cima. Le altre righe si misurano sul miglior contratto in media della smazzata; il vostro voto invece sul par, perché in media il contratto migliore era degli avversari.")}
+                  </p>
+                )}
                 <div className="mt-4">
                   <RisultatoDoppioMorto
                     mani={mano.deal}
