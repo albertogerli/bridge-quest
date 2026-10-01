@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { calcTableAndPar, type DdsTable, type ParResult } from "@/lib/dds-table";
-import { esitoAsta } from "@/lib/licita-mano";
+import { votoLicitaChiusa } from "@/lib/voto-licita-chiusa";
+import { Stelle } from "@/components/bridge/stelle";
 import type { Vulnerability } from "@/lib/catalog";
 import { TabellaPrese } from "@/components/revisione/tabella-prese";
 import { segnalaSalvoRete } from "@/lib/report-error";
@@ -27,12 +28,19 @@ export function RisultatoDoppioMorto({
   dealer,
   vulnerability,
   bids,
+  conStelle = false,
 }: {
   mani: Record<Position, Card[]>;
   dealer: Position;
   vulnerability: Vulnerability;
   /** L'asta chiusa, nella notazione di `Asta`. */
   bids: readonly string[];
+  /**
+   * Mostra anche le stelle, sul par: per la licita con un amico, che prima
+   * finiva senza voto («poi devi dare anche le stelle», 01/10/2026). Le altre
+   * modalità hanno già il loro voto sopra e non lo ripetono.
+   */
+  conStelle?: boolean;
 }) {
   const t = useT();
   const [dati, setDati] = useState<{ table: DdsTable; par: ParResult } | null>(null);
@@ -49,7 +57,7 @@ export function RisultatoDoppioMorto({
 
   if (!dati) return <p className="text-sm text-muted-foreground">{t("Calcolo le prese…")}</p>;
 
-  const e = esitoAsta(bids, dealer, dati.table, vulnerability);
+  const { esito: e, voto } = votoLicitaChiusa(bids, dealer, vulnerability, dati);
   let riga: string;
   if (!e) {
     riga = t("Passo generale");
@@ -61,6 +69,14 @@ export function RisultatoDoppioMorto({
 
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
+      {conStelle && (
+        <div className="mb-3 text-center">
+          <div className="flex justify-center">
+            <Stelle quante={voto.stelle} className="[&_svg]:h-8 [&_svg]:w-8" />
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">{voto.commento}</p>
+        </div>
+      )}
       <p className="text-center text-sm font-semibold text-muted-foreground">{t("Risultato a doppio morto")}</p>
       <p className="mb-3 text-center font-display text-2xl font-bold tabular-nums">{riga}</p>
       <div className="flex justify-center">

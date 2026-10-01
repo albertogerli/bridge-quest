@@ -9,13 +9,17 @@ import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useFriends } from "@/hooks/use-friends";
+import { calcTableAndPar } from "@/lib/dds-table";
+import { votoLicitaChiusa } from "@/lib/voto-licita-chiusa";
+import { Stelle } from "@/components/bridge/stelle";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { Asta } from "@/components/bridge/asta";
 import { reportError , segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { generateDeals, handHcp } from "@/lib/deal-generator";
 import {
-  apriLicita, contrattoFinale, dichiara, leggiLicita, mieLicite,
+  apriLicita, apriSerie, contrattoFinale, dichiara, leggiLicita, mieLicite,
   turnoDi, type RigaElenco, type SessioneLicita,
 } from "@/lib/licita-a-due";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -117,6 +121,37 @@ function LicitaAmico() {
     return () => { vivo = false; };
   }, [idAperta, user, loading]);
 
+  /**
+   * IN DIRETTA. Prima la pagina diceva «puoi chiudere: quando il tuo compagno
+   * avrà dichiarato la troverai qui», e per vedere la sua dichiarazione
+   * bisognava ricaricare (01/10/2026: «bisogna sempre riaggiornare»). Ora,
+   * finché la licita è aperta e non tocca a te, la si rilegge ogni tre
+   * secondi — solo a pagina visibile, per non consumare batteria in tasca.
+   *
+   * NON IL TEMPO REALE DEL DATABASE: `bidding_sessions` non è nella
+   * pubblicazione Realtime, e aggiungercela manderebbe la riga intera — mani
+   * del compagno comprese — a chi la guarda. La lettura passa da
+   * `bidding_session_view`, che quelle mani le toglie.
+   */
+  const aspettoAltri = !!sessione && !sessione.chiusa && sessione.turno !== sessione.seat;
+  useEffect(() => {
+    if (!idAperta || !aspettoAltri) return;
+    let vivo = true;
+    const t = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      void leggiLicita(idAperta).then((nuova) => {
+        if (!vivo || !nuova) return;
+        setSessione((vecchia) =>
+          vecchia && vecchia.bids.length === nuova.bids.length && vecchia.chiusa === nuova.chiusa ? vecchia : nuova,
+        );
+      });
+    }, 3000);
+    return () => { vivo = false; clearInterval(t); };
+  }, [idAperta, aspettoAltri]);
+
+  /** Su quante mani confrontarsi: si sceglie prima di invitare. */
+  const [quanteMani, setQuanteMani] = useState<1 | 4 | 8>(4);
+
   if (loading) return null;
   if (!user) {
     return (
@@ -178,6 +213,9 @@ function LicitaAmico() {
         <div className="rounded-2xl border border-border bg-card p-5 my-4">
           <div className="flex items-center justify-between mb-3">
             <Badge variant="secondary">Sei {ETICHETTA[sessione.seat]}</Badge>
+            {sessione.di && sessione.di > 1 && (
+              <Badge variant="outline">{t("Mano {n} di {di}", { n: sessione.numero ?? 1, di: sessione.di })}</Badge>
+            )}
             <span className="text-xs text-muted-foreground">{handHcp(mia)} PO</span>
           </div>
           {SUITS.map((suit) => (
@@ -233,16 +271,25 @@ function LicitaAmico() {
                   dealer={sessione.dealer}
                   vulnerability="none"
                   bids={sessione.bids}
+                  conStelle
                 />
               </div>
+            )}
+            {sessione.prossima && (
+              <Button className="mt-4 w-full" onClick={() => router.push(`/gioca/licita-amico?s=${sessione.prossima}`)}>
+                {t("Mano successiva")} →
+              </Button>
+            )}
+            {sessione.serie && sessione.di && sessione.di > 1 && (
+              <RiepilogoSerie serie={sessione.serie} attuale={sessione.id} />
             )}
           </div>
         ) : tocca ? (
           <p className="text-sm font-semibold text-center py-2">{t("Tocca a te")}</p>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-6">
-            Tocca a {ETICHETTA[sessione.turno]}. Puoi chiudere la pagina: quando
-            il tuo compagno avrà dichiarato, la troverai qui.
+            Tocca a {ETICHETTA[sessione.turno]}. La pagina si aggiorna da sola; se
+            la chiudi, la ritrovi qui quando il tuo compagno avrà dichiarato.
           </p>
         )}
       </div>
@@ -253,10 +300,13 @@ function LicitaAmico() {
   /** Apre una licita nuova e restituisce dove andare. */
   const nuova = async (partnerId: string): Promise<string | null> => {
     setAttesa(true);
-    const { deals } = generateDeals({}, { count: 1, seed: seme });
+    const { deals } = generateDeals({}, { count: quanteMani, seed: seme });
     // Il prossimo invito avrà mani diverse.
     setSeme((s) => s + 7919);
-    const id = await apriLicita({ partnerId, hands: deals[0], dealer: "south" });
+    // Una mano sola resta com'era (mazziere Sud); da quattro in su è una serie.
+    const id = quanteMani === 1
+      ? await apriLicita({ partnerId, hands: deals[0], dealer: "south" })
+      : await apriSerie({ partnerId, mani: deals });
     setAttesa(false);
     if (!id) setErrore("Non è stato possibile aprire la licita.");
     return id;
@@ -279,6 +329,22 @@ function LicitaAmico() {
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-2">
         {t("Invita un amico")}
       </h2>
+      <div className="mb-3 flex items-center gap-2 text-sm">
+        <span className="text-muted-foreground">{t("Quante mani")}</span>
+        {([1, 4, 8] as const).map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => setQuanteMani(n)}
+            aria-pressed={quanteMani === n}
+            className={`min-h-10 min-w-10 rounded-lg px-3 font-semibold ${
+              quanteMani === n ? "bg-figb text-white" : "border border-border hover:bg-muted"
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
       {friends.length === 0 ? (
         <p className="text-sm text-muted-foreground mb-6">
           Non hai ancora amici sulla piattaforma.{" "}
@@ -314,7 +380,11 @@ function LicitaAmico() {
         <p className="text-sm text-muted-foreground">{t("Nessuna licita aperta.")}</p>
       )}
       <ul className="space-y-2">
-        {(elenco ?? []).map((r) => {
+        {/* Le mani di una serie nascono nello stesso istante: si ordinano per
+            numero, dalla prima, invece che come capita. */}
+        {[...(elenco ?? [])]
+          .sort((a, b) => b.createdAt.localeCompare(a.createdAt) || (a.numero ?? 0) - (b.numero ?? 0))
+          .map((r) => {
           const tuo = !r.chiusa && turnoDi(r.dealer, r.bids) === r.seat;
           return (
             <li key={r.id}>
@@ -327,6 +397,7 @@ function LicitaAmico() {
                     Con {r.compagno ?? "un amico"}
                   </p>
                   <p className="text-xs text-muted-foreground">
+                    {r.di && r.di > 1 ? `${t("Mano {n} di {di}", { n: r.numero ?? 1, di: r.di })} · ` : ""}
                     {r.chiusa
                       ? `Chiusa · ${contrattoFinale(r.bids) ?? "passo generale"}`
                       : `${r.bids.length} dichiarazioni`}
@@ -352,4 +423,62 @@ function formatSuit(hand: readonly Card[], suit: Suit): string {
     .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
     .map((c) => c.rank);
   return cards.length ? cards.join(" ") : "—";
+}
+
+/**
+ * Il riepilogo della serie: mano per mano contratto e stelle, e il totale.
+ *
+ * Le stelle si calcolano con `votoLicitaChiusa`, la stessa funzione del
+ * riquadro di fine mano: il totale non può dire una cosa e la mano un'altra.
+ * Le mani ancora aperte compaiono come «in corso»: la serie si legge anche a
+ * metà, e si vede quanto manca.
+ */
+function RiepilogoSerie({ serie, attuale }: { serie: string; attuale: string }) {
+  const t = useT();
+  const [righe, setRighe] = useState<{ id: string; numero: number; contratto: string | null; stelle: number | null }[] | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    (async () => {
+      const elenco = (await mieLicite()).filter((r) => r.serie === serie).sort((a, b) => (a.numero ?? 0) - (b.numero ?? 0));
+      const out: { id: string; numero: number; contratto: string | null; stelle: number | null }[] = [];
+      for (const r of elenco) {
+        if (!r.chiusa) { out.push({ id: r.id, numero: r.numero ?? 0, contratto: null, stelle: null }); continue; }
+        const s = await leggiLicita(r.id);
+        const mani = s?.hands as Record<Position, Card[]> | undefined;
+        if (!s || !mani || !(["north", "east", "south", "west"] as Position[]).every((p) => mani[p]?.length === 13)) {
+          out.push({ id: r.id, numero: r.numero ?? 0, contratto: contrattoFinale(r.bids), stelle: null });
+          continue;
+        }
+        const dati = await calcTableAndPar(mani, s.dealer, "none");
+        const { voto } = votoLicitaChiusa(s.bids, s.dealer, "none", dati);
+        out.push({ id: r.id, numero: r.numero ?? 0, contratto: contrattoFinale(r.bids), stelle: voto.stelle });
+      }
+      if (vivo) setRighe(out);
+    })().catch((err) => segnalaSalvoRete("licita-amico:serie", err));
+    return () => { vivo = false; };
+  }, [serie, attuale]);
+
+  if (!righe) return null;
+  const finite = righe.filter((r) => r.stelle !== null);
+  const totale = finite.reduce((s, r) => s + (r.stelle ?? 0), 0);
+  return (
+    <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+      <p className="mb-2 font-semibold">
+        {finite.length === righe.length
+          ? t("Serie finita: {s} stelle su {max}", { s: totale.toLocaleString("it-IT"), max: righe.length * 3 })
+          : t("La serie finora: {s} stelle in {n} mani", { s: totale.toLocaleString("it-IT"), n: finite.length })}
+      </p>
+      <ul className="space-y-1 text-sm">
+        {righe.map((r) => (
+          <li key={r.id} className={`flex items-center justify-between ${r.id === attuale ? "font-semibold" : ""}`}>
+            <Link href={`/gioca/licita-amico?s=${r.id}`} className="hover:underline">
+              {t("Mano {n}", { n: r.numero })} · {r.contratto ? contrattoLeggibile(r.contratto) : r.stelle === null ? t("in corso") : t("Passo generale")}
+            </Link>
+            {r.stelle !== null && <Stelle quante={r.stelle} />}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }

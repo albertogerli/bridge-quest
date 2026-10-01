@@ -24,6 +24,12 @@ export interface SessioneLicita {
   turno: Position;
   chiusa: boolean;
   createdAt: string;
+  /** La serie di mani a cui appartiene, se c'è (vedi `apriSerie`). */
+  serie?: string | null;
+  numero?: number | null;
+  di?: number | null;
+  /** L'id della mano dopo, nella stessa serie. */
+  prossima?: string | null;
 }
 
 export interface RigaElenco {
@@ -34,6 +40,9 @@ export interface RigaElenco {
   chiusa: boolean;
   compagno: string | null;
   createdAt: string;
+  serie?: string | null;
+  numero?: number | null;
+  di?: number | null;
 }
 
 /** L'ordine in cui si dichiara, a partire dal mazziere. */
@@ -119,6 +128,35 @@ export async function dichiara(id: string, bid: string): Promise<{ ok: boolean; 
   } catch (err) {
     segnalaSalvoRete("licita-due:dichiara", err);
     return { ok: false, errore: "Non è stato possibile dichiarare." };
+  }
+}
+
+/**
+ * Una serie di mani con lo stesso amico: 1, 4 o 8.
+ *
+ * «Devi poter scegliere il numero di mani in cui confrontarti» (01/10/2026):
+ * su una mano sola il confronto è un caso. Il database crea tutte le mani in
+ * una volta, con il mazziere che ruota come nei board veri, e restituisce la
+ * prima. Stessa regola della mano singola: solo con un amico.
+ */
+export async function apriSerie(input: {
+  partnerId: string;
+  mani: Record<Position, Card[]>[];
+}): Promise<string | null> {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("bidding_series_create", {
+      p_partner: input.partnerId,
+      p_hands: input.mani,
+    });
+    if (error) {
+      segnalaSalvoRete("licita-due:serie", error);
+      return null;
+    }
+    return (data as string | null) ?? null;
+  } catch (err) {
+    segnalaSalvoRete("licita-due:serie", err);
+    return null;
   }
 }
 

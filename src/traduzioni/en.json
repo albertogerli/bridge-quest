@@ -930,7 +930,7 @@
   "Mano del Giorno: una mano al giorno, uguale per tutti": "Hand of the Day: one hand a day, the same for everyone",
   "Mano di Ieri": "Yesterday's Hand",
   "Mano precedente": "Previous hand",
-  "Mano successiva": "Next hand",
+  "Mano successiva": "Next deal",
   "Mantenute": "Made",
   "Mantenuto ✓": "Made ✓",
   "Mantieni la streak per bonus extra!": "Keep your streak for extra bonuses!",
@@ -1261,7 +1261,7 @@
   "Quando l'insegnante apre il tavolo, la mano comparirà qui da sola: puoi lasciare la pagina aperta.": "When your teacher opens the table, the hand will appear here by itself: you can leave the page open.",
   "Quando puoi giocare": "When you can play",
   "Quando sbagli una domanda nei quiz, viene aggiunta qui per il ripasso. La ripetizione spaziata ti aiuta a memorizzare meglio: rivedi dopo 1, 3 e 7 giorni. Segna come padroneggiato quando sei sicuro!": "When you get a quiz question wrong, it's added here for review. Spaced repetition helps it stick: come back after 1, 3 and 7 days. Mark it as mastered when you're sure!",
-  "Quante mani": "How many hands",
+  "Quante mani": "How many deals",
   "Quante prese: conta le prese di Nord-Sud": "How many tricks: count North-South's tricks",
   "Quante prese?": "How many tricks?",
   "Quanti l'hanno dichiarato e quanto ha reso in media. In grassetto il tuo.": "How many bid it and what it scored on average. Yours in bold.",
@@ -2063,5 +2063,8 @@
   "Computer": "Computer",
   "Hai una richiesta di amicizia": "You have a friend request",
   "Hai {n} richieste di amicizia": "You have {n} friend requests",
-  "Sulla riga del vostro contratto c'è il voto in cima. Le altre righe si misurano sul miglior contratto in media della smazzata; il vostro voto invece sul par, perché in media il contratto migliore era degli avversari.": "Your contract's row shows the grade at the top. The other rows are measured against the best contract on average for the deal; your grade is measured against par instead, because on average the best contract belonged to the opponents."
+  "Sulla riga del vostro contratto c'è il voto in cima. Le altre righe si misurano sul miglior contratto in media della smazzata; il vostro voto invece sul par, perché in media il contratto migliore era degli avversari.": "Your contract's row shows the grade at the top. The other rows are measured against the best contract on average for the deal; your grade is measured against par instead, because on average the best contract belonged to the opponents.",
+  "Mano {n} di {di}": "Deal {n} of {di}",
+  "Serie finita: {s} stelle su {max}": "Series finished: {s} stars out of {max}",
+  "La serie finora: {s} stelle in {n} mani": "The series so far: {s} stars in {n} deals"
 }
