@@ -39,6 +39,7 @@ import { GraduationCap, Zap } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 import { InstructorCard } from "@/components/home/instructor-card";
 import { useT } from "@/contexts/traduzioni-provider";
+import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
 import { richiestaDaMostrare } from "@/lib/richiesta-home";
 
 // Percorso "Prima Mano": ~16 kB gz di step interattivi che sostituiscono l'intera
@@ -295,17 +296,22 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const segueUnCorso = !insegna && corsiIscritti.length > 0;
   if (segueUnCorso && !vuoleLaBacheca) {
     return (
-      <HomeAllievo
-        onVaiAllaBacheca={() => {
-          ricordaPreferenzaBacheca(true);
-          setVuoleLaBacheca(true);
-        }}
-      />
+      <>
+        <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
+        <HomeAllievo
+          onVaiAllaBacheca={() => {
+            ricordaPreferenzaBacheca(true);
+            setVuoleLaBacheca(true);
+          }}
+        />
+      </>
     );
   }
 
   if (insegna && !vuoleLaBacheca) {
     return (
+      <>
+      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
       <HomeInsegnante
         nome={authProfile?.display_name ?? null}
         onVaiAllaBacheca={() => {
@@ -313,6 +319,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           setVuoleLaBacheca(true);
         }}
       />
+      </>
     );
   }
 
@@ -330,6 +337,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
 
   return (
     <div>
+      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
       {/* Referral code handler (reads ?ref= from URL) */}
       <Suspense fallback={null}>
         <ReferralHandler onReferralBonus={handleReferralBonus} />

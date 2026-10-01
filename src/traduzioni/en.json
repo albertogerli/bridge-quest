@@ -2060,5 +2060,7 @@
   "Computer ai posti liberi": "Computer in the empty seats",
   "Chi gioca a {posto}": "Who plays {posto}",
   "Gioco io": "I'll play",
-  "Computer": "Computer"
+  "Computer": "Computer",
+  "Hai una richiesta di amicizia": "You have a friend request",
+  "Hai {n} richieste di amicizia": "You have {n} friend requests"
 }

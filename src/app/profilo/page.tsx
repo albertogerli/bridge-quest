@@ -37,6 +37,7 @@ import { InviteFriendSection } from "./_components/invite-friend-section";
 import { AccountActions } from "./_components/account-actions";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
 import { Globe, Layers, MapPin, Settings, ShoppingBag } from "lucide-react";
+import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
 
 export default function ProfiloPage() {
   const { user, profile: authProfile, loading: authLoading, signOut } = useSharedAuth();
@@ -183,6 +184,7 @@ export default function ProfiloPage() {
 
   return (
     <div className="pt-6 px-5">
+      <AvvisoRichiesteAmicizia className="mx-auto mb-4 max-w-4xl" />
       <div className="mx-auto max-w-6xl">
         {/* Login/Register CTA */}
         {!authLoading && !user && <LoginCta />}
