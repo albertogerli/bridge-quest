@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-09-28
+-- Estratto il: 2026-10-01
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -115,7 +115,10 @@ CREATE TABLE IF NOT EXISTS public.bidding_sessions (
   bids jsonb NOT NULL,
   closed_at timestamp with time zone,
   created_at timestamp with time zone NOT NULL,
-  last_bid_at timestamp with time zone NOT NULL
+  last_bid_at timestamp with time zone NOT NULL,
+  serie uuid,
+  numero smallint,
+  di smallint
 );
 
 CREATE TABLE IF NOT EXISTS public.challenges (
@@ -1677,6 +1680,44 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.bidding_series_create(p_partner uuid, p_hands jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_serie uuid := gen_random_uuid();
+  v_n int;
+  v_primo uuid;
+  v_id uuid;
+  ordine text[] := array['north','east','south','west'];
+begin
+  if auth.uid() is null or p_partner is null or p_partner = auth.uid() then
+    return null;
+  end if;
+  if not exists (
+    select 1 from public.friendships f
+     where f.status = 'accepted'
+       and ((f.user_id = auth.uid() and f.friend_id = p_partner)
+         or (f.friend_id = auth.uid() and f.user_id = p_partner))
+  ) then
+    return null;
+  end if;
+  if jsonb_typeof(p_hands) <> 'array' then return null; end if;
+  v_n := jsonb_array_length(p_hands);
+  if v_n < 1 or v_n > 8 then return null; end if;
+
+  for i in 0 .. v_n - 1 loop
+    insert into public.bidding_sessions (south_id, north_id, hands, dealer, serie, numero, di)
+    values (auth.uid(), p_partner, p_hands -> i, ordine[(i % 4) + 1], v_serie, i + 1, v_n)
+    returning id into v_id;
+    if i = 0 then v_primo := v_id; end if;
+  end loop;
+  return v_primo;
+end $function$
+;
+
 CREATE OR REPLACE FUNCTION public.bidding_session_bid(p_id uuid, p_bid text)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -1797,25 +1838,31 @@ CREATE OR REPLACE FUNCTION public.bidding_session_view(p_id uuid)
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-DECLARE
-  s public.bidding_sessions%ROWTYPE;
+declare
+  s public.bidding_sessions%rowtype;
   v_seat text; v_chiusa boolean; v_turno text; v_hands jsonb;
-  ordine text[] := ARRAY['north','east','south','west']; i_dealer int;
-BEGIN
-  SELECT * INTO s FROM public.bidding_sessions WHERE id = p_id;
-  IF NOT FOUND THEN RETURN NULL; END IF;
-  v_seat := CASE WHEN s.south_id = auth.uid() THEN 'south'
-                 WHEN s.north_id = auth.uid() THEN 'north' ELSE NULL END;
-  IF v_seat IS NULL THEN RETURN NULL; END IF;
-  v_chiusa := s.closed_at IS NOT NULL;
+  ordine text[] := array['north','east','south','west']; i_dealer int;
+  v_prossima uuid;
+begin
+  select * into s from public.bidding_sessions where id = p_id;
+  if not found then return null; end if;
+  v_seat := case when s.south_id = auth.uid() then 'south'
+                 when s.north_id = auth.uid() then 'north' else null end;
+  if v_seat is null then return null; end if;
+  v_chiusa := s.closed_at is not null;
   i_dealer := array_position(ordine, s.dealer);
   v_turno := ordine[((i_dealer - 1 + jsonb_array_length(s.bids)) % 4) + 1];
-  IF v_chiusa THEN v_hands := s.hands;
-  ELSE v_hands := jsonb_build_object(v_seat, s.hands -> v_seat); END IF;
-  RETURN jsonb_build_object('id', s.id, 'seat', v_seat, 'hands', v_hands,
+  if v_chiusa then v_hands := s.hands;
+  else v_hands := jsonb_build_object(v_seat, s.hands -> v_seat); end if;
+  if s.serie is not null then
+    select b.id into v_prossima from public.bidding_sessions b
+     where b.serie = s.serie and b.numero = s.numero + 1;
+  end if;
+  return jsonb_build_object('id', s.id, 'seat', v_seat, 'hands', v_hands,
     'bids', s.bids, 'dealer', s.dealer, 'turno', v_turno,
-    'chiusa', v_chiusa, 'createdAt', s.created_at);
-END $function$
+    'chiusa', v_chiusa, 'createdAt', s.created_at,
+    'serie', s.serie, 'numero', s.numero, 'di', s.di, 'prossima', v_prossima);
+end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.can_post_for_asd(p_asd_code text)
@@ -3541,18 +3588,19 @@ CREATE OR REPLACE FUNCTION public.my_bidding_sessions()
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  SELECT coalesce(jsonb_agg(jsonb_build_object(
+  select coalesce(jsonb_agg(jsonb_build_object(
     'id', x.id, 'seat', x.seat, 'bids', x.bids, 'dealer', x.dealer,
-    'chiusa', x.closed_at IS NOT NULL, 'compagno', x.compagno, 'createdAt', x.created_at
-  ) ORDER BY x.created_at DESC), '[]'::jsonb)
-  FROM (
-    SELECT s.id, s.bids, s.dealer, s.closed_at, s.created_at,
-           CASE WHEN s.south_id = auth.uid() THEN 'south' ELSE 'north' END AS seat,
-           (SELECT p.display_name FROM public.profiles p
-             WHERE p.id = CASE WHEN s.south_id = auth.uid() THEN s.north_id ELSE s.south_id END) AS compagno
-    FROM public.bidding_sessions s
-    WHERE s.south_id = auth.uid() OR s.north_id = auth.uid()
-    ORDER BY s.created_at DESC LIMIT 30
+    'chiusa', x.closed_at is not null, 'compagno', x.compagno, 'createdAt', x.created_at,
+    'serie', x.serie, 'numero', x.numero, 'di', x.di
+  ) order by x.created_at desc, x.numero desc), '[]'::jsonb)
+  from (
+    select s.id, s.bids, s.dealer, s.closed_at, s.created_at, s.serie, s.numero, s.di,
+           case when s.south_id = auth.uid() then 'south' else 'north' end as seat,
+           (select p.display_name from public.profiles p
+             where p.id = case when s.south_id = auth.uid() then s.north_id else s.south_id end) as compagno
+    from public.bidding_sessions s
+    where s.south_id = auth.uid() or s.north_id = auth.uid()
+    order by s.created_at desc limit 60
   ) x;
 $function$
 ;
@@ -4878,6 +4926,7 @@ CREATE INDEX asd_clubs_region_idx ON public.asd_clubs USING btree (region) WHERE
 CREATE UNIQUE INDEX assignments_una_lezione_per_classe ON public.assignments USING btree (class_id, lesson_id) WHERE (lesson_id IS NOT NULL);
 CREATE INDEX bidding_sessions_north_idx ON public.bidding_sessions USING btree (north_id, created_at DESC);
 CREATE INDEX bidding_sessions_players_idx ON public.bidding_sessions USING btree (south_id, created_at DESC);
+CREATE INDEX bidding_sessions_serie_idx ON public.bidding_sessions USING btree (serie, numero);
 CREATE INDEX club_posts_asd_idx ON public.club_posts USING btree (asd_code, created_at DESC);
 CREATE UNIQUE INDEX coda_sfide_coppie_a1_unico ON public.coda_sfide_coppie USING btree (a1);
 CREATE UNIQUE INDEX coda_sfide_coppie_a2_unico ON public.coda_sfide_coppie USING btree (a2);
@@ -6979,6 +7028,10 @@ GRANT EXECUTE ON FUNCTION public.aula_stato(p_sessione_id uuid) TO authenticated
 GRANT EXECUTE ON FUNCTION public.aula_stato(p_sessione_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.bersagli_email_compiti(p_limit integer) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.bersagli_email_compiti(p_limit integer) TO service_role;
+REVOKE ALL ON FUNCTION public.bidding_series_create(p_partner uuid, p_hands jsonb) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.bidding_series_create(p_partner uuid, p_hands jsonb) TO anon;
+GRANT EXECUTE ON FUNCTION public.bidding_series_create(p_partner uuid, p_hands jsonb) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.bidding_series_create(p_partner uuid, p_hands jsonb) TO service_role;
 REVOKE ALL ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.bidding_session_bid(p_id uuid, p_bid text) TO service_role;
