@@ -233,7 +233,11 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // Camera, microfono e posizione sono vietati a chiunque tranne a noi: il video
+          // al tavolo (getUserMedia) e «Trova circolo vicino a me» le chiedono. Con `()`
+          // il browser le nega prima ancora di chiedere, e l'allievo legge «hai negato
+          // l'accesso» senza aver negato niente.
+          { key: "Permissions-Policy", value: "camera=(self), microphone=(self), geolocation=(self)" },
           {
             key: "Content-Security-Policy",
             value: [
