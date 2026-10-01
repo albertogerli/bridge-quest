@@ -106,7 +106,9 @@ class AudioManager {
 
   setEnabled(enabled: boolean): void {
     this.enabled = enabled;
-    localStorage.setItem('bq_sound_enabled', String(enabled));
+    try {
+      localStorage.setItem('bq_sound_enabled', String(enabled));
+    } catch {}
   }
 
   isEnabled(): boolean {
@@ -115,7 +117,9 @@ class AudioManager {
 
   setVolume(vol: number): void {
     this.volume = Math.max(0, Math.min(1, vol));
-    localStorage.setItem('bq_sound_volume', String(this.volume));
+    try {
+      localStorage.setItem('bq_sound_volume', String(this.volume));
+    } catch {}
   }
 
   getVolume(): number {

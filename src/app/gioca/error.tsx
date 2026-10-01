@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useT } from "@/contexts/traduzioni-provider";
+import { reportError } from "@/lib/report-error";
 
 export default function GameError({
   error,
@@ -14,7 +15,7 @@ export default function GameError({
 }) {
   const t = useT();
   useEffect(() => {
-    console.error("[BridgeQuest] Errore gioco:", error);
+    reportError("gioca/error-boundary", error);
   }, [error]);
 
   return (

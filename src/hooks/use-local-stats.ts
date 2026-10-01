@@ -98,10 +98,12 @@ export function useLocalStats() {
   const xpNeededForNext = getXpForNextLevel(xp);
   const xpToNext = getXpToNextLevel(xp);
 
-  const profileKey =
-    typeof window !== "undefined"
-      ? (localStorage.getItem("bq_profile") as UserProfile | null)
-      : null;
+  let profileKey: UserProfile | null = null;
+  if (typeof window !== "undefined") {
+    try {
+      profileKey = localStorage.getItem("bq_profile") as UserProfile | null;
+    } catch {}
+  }
   const profileLevelNames = getProfileConfig(profileKey || "adulto").levelNames;
   const levelName =
     profileLevelNames[Math.min(level - 1, profileLevelNames.length - 1)];

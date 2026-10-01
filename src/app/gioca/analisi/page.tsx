@@ -86,7 +86,7 @@ function AnalisiPage() {
         setGameData(data);
       }
     } catch (err) {
-      console.error("Error loading game data:", err);
+      reportError("analisi/carica-partita", err);
     }
   }, [gameIndex]);
 

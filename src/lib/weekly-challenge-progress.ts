@@ -84,7 +84,12 @@ export function updateWeeklyChallengeProgress(
       { handId, score, xpGained, completedAt: new Date().toISOString() },
     ],
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  } catch {
+    // Storage pieno o bloccato: il progresso non si salva, ma la mano giocata sì.
+    return;
+  }
 
   if (updated.played >= TARGET) {
     unlockWeeklyBadge(currentChallenge.id, currentChallenge.badgeName);

@@ -75,6 +75,15 @@ const SECRET_ACHIEVEMENTS: SecretAchievement[] = [
   },
 ];
 
+/** Lettura di localStorage che non lancia con lo storage bloccato. */
+function leggiLs(chiave: string): string | null {
+  try {
+    return localStorage.getItem(chiave);
+  } catch {
+    return null;
+  }
+}
+
 export function useSecretAchievements() {
   const { isLoaded: catalogLoaded } = useCatalog();
   const [earnedSecretAchievements, setEarnedSecretAchievements] = useState<
@@ -105,7 +114,7 @@ export function useSecretAchievements() {
     // Schiacciasassi - 5 consecutive wins
     if (!currentEarned.includes("schiacciasassi")) {
       const consecutiveWins = parseInt(
-        localStorage.getItem("bq_consecutive_wins") || "0"
+        leggiLs("bq_consecutive_wins") || "0"
       );
       if (consecutiveWins >= 5) {
         newlyUnlocked.push(
@@ -116,7 +125,7 @@ export function useSecretAchievements() {
 
     // Primo Sangue - Win first hand
     if (!currentEarned.includes("primo-sangue")) {
-      const handsWon = parseInt(localStorage.getItem("bq_hands_won") || "0");
+      const handsWon = parseInt(leggiLs("bq_hands_won") || "0");
       if (handsWon >= 1) {
         newlyUnlocked.push(
           SECRET_ACHIEVEMENTS.find((a) => a.id === "primo-sangue")!
@@ -127,7 +136,7 @@ export function useSecretAchievements() {
     // Speedster - Complete hand in under 30 seconds
     if (!currentEarned.includes("speedster")) {
       const fastestHand = parseInt(
-        localStorage.getItem("bq_fastest_hand") || "999999"
+        leggiLs("bq_fastest_hand") || "999999"
       );
       if (fastestHand < 30000) {
         newlyUnlocked.push(
@@ -139,7 +148,7 @@ export function useSecretAchievements() {
     // Maratoneta - 10 hands in one session
     if (!currentEarned.includes("maratoneta")) {
       const sessionHands = parseInt(
-        localStorage.getItem("bq_session_hands") || "0"
+        leggiLs("bq_session_hands") || "0"
       );
       if (sessionHands >= 10) {
         newlyUnlocked.push(
@@ -208,10 +217,12 @@ export function useSecretAchievements() {
         ...currentEarned,
         ...newlyUnlocked.map((a) => a.id),
       ];
-      localStorage.setItem(
-        "bq_secret_achievements",
-        JSON.stringify(updatedEarned)
-      );
+      try {
+        localStorage.setItem(
+          "bq_secret_achievements",
+          JSON.stringify(updatedEarned)
+        );
+      } catch {}
       setEarnedSecretAchievements(updatedEarned);
     }
 

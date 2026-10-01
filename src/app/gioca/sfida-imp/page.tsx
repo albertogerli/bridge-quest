@@ -12,7 +12,7 @@ import { useChallenges, type ChallengeData, type BoardResult } from "@/hooks/use
 import { dealFromSeed } from "@/lib/hand-encoder";
 import { calcTableAndPar } from "@/lib/dds-table";
 import { contrattoDallaMano } from "@/lib/contratto-sfida";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import {
   calculateRawScore,
   calculateBoardIMP,
@@ -380,7 +380,7 @@ function SfidaIMPContent() {
           setChallenge(data as ChallengeData);
         }
       } catch (err) {
-        console.error("Errore invio risultati:", err);
+        segnalaSalvoRete("sfida-imp/invio-risultati", err);
       } finally {
         setSubmitting(false);
       }

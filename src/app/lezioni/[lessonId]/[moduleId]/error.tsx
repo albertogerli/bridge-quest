@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useT } from "@/contexts/traduzioni-provider";
+import { reportError } from "@/lib/report-error";
 
 export default function ModuleError({
   error,
@@ -14,7 +15,7 @@ export default function ModuleError({
 }) {
   const t = useT();
   useEffect(() => {
-    console.error("[BridgeQuest] Errore modulo:", error);
+    reportError("lezioni/modulo/error-boundary", error);
   }, [error]);
 
   return (

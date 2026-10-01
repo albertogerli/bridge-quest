@@ -54,3 +54,26 @@ describe("livello predefinito dell'avversario", () => {
     expect(getAILevel()).toBe("base");
   });
 });
+
+describe("storage bloccato (navigazione privata, dati del sito disattivati)", () => {
+  function conStorageChePrende() {
+    const prende = () => {
+      throw new DOMException("bloccato", "SecurityError");
+    };
+    (globalThis as { window?: unknown }).window = {};
+    (globalThis as { localStorage?: unknown }).localStorage = {
+      getItem: prende,
+      setItem: prende,
+    };
+  }
+
+  it("la lettura ricade sul livello predefinito invece di lanciare", () => {
+    conStorageChePrende();
+    expect(getAILevel()).toBe(AI_LEVEL_PREDEFINITO);
+  });
+
+  it("la scrittura non lancia", () => {
+    conStorageChePrende();
+    expect(() => setAILevel("base")).not.toThrow();
+  });
+});

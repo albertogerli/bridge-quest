@@ -18,17 +18,19 @@ export function useExitIntent() {
     // Detect navigation FROM /gioca/* to something NOT /gioca/*
     if (prev.startsWith("/gioca/") && !pathname.startsWith("/gioca/")) {
       const today = new Date().toISOString().slice(0, 10);
-      const hands = parseInt(
-        localStorage.getItem("bq_hands_today_" + today) || "0",
-        10
-      );
+      let hands = 0;
+      let dismissed = false;
+      try {
+        hands = parseInt(
+          localStorage.getItem("bq_hands_today_" + today) || "0",
+          10
+        ) || 0;
+        dismissed = localStorage.getItem("bq_exit_dismissed_" + today) === "1";
+      } catch {}
       // eslint-disable-next-line react-hooks/set-state-in-effect -- rilevamento di navigazione (exit intent) con lettura localStorage: client-only
       setHandsToday(hands);
 
-      if (
-        hands < 4 &&
-        localStorage.getItem("bq_exit_dismissed_" + today) !== "1"
-      ) {
+      if (hands < 4 && !dismissed) {
         setShowExitModal(true);
       }
     }
