@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useT } from "@/contexts/traduzioni-provider";
+import { reportError } from "@/lib/report-error";
 
 export default function GlobalError({
   error,
@@ -14,7 +15,7 @@ export default function GlobalError({
 }) {
   const t = useT();
   useEffect(() => {
-    console.error("[BridgeQuest] Errore globale:", error);
+    reportError("app/error-boundary", error);
   }, [error]);
 
   return (

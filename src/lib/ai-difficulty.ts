@@ -43,13 +43,20 @@ export const AI_LEVEL_PREDEFINITO: AILevel = "esperto";
 /** Read current AI level from localStorage */
 export function getAILevel(): AILevel {
   if (typeof window === "undefined") return AI_LEVEL_PREDEFINITO;
-  return (localStorage.getItem("bq_ai_level") as AILevel) || AI_LEVEL_PREDEFINITO;
+  try {
+    return (localStorage.getItem("bq_ai_level") as AILevel) || AI_LEVEL_PREDEFINITO;
+  } catch {
+    // Storage bloccato (navigazione privata, dati del sito disattivati).
+    return AI_LEVEL_PREDEFINITO;
+  }
 }
 
 /** Save AI level to localStorage */
 export function setAILevel(level: AILevel): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem("bq_ai_level", level);
+  try {
+    localStorage.setItem("bq_ai_level", level);
+  } catch {}
 }
 
 // ──────────────────────────────────────────────────────────────

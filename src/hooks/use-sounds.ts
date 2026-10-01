@@ -183,7 +183,10 @@ export function useSounds() {
   const isSoundEnabled = useCallback((): boolean => {
     if (typeof window === "undefined") return false;
     // Re-read on every call to respect setting changes in real-time
-    const val = localStorage.getItem("bq_sound");
+    let val: string | null = null;
+    try {
+      val = localStorage.getItem("bq_sound");
+    } catch {}
     const enabled = val !== "off";
     enabledRef.current = enabled;
     return enabled;

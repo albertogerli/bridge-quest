@@ -215,7 +215,7 @@ export function useAdminData(): AdminData {
         });
       }
     } catch (err) {
-      console.error("Admin fetch error:", err);
+      segnalaSalvoRete("admin/fetch", err);
       setFetchError(`Errore: ${err instanceof Error ? err.message : String(err)}`);
     }
 
