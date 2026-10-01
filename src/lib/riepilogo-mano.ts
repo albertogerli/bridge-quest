@@ -108,6 +108,17 @@ export function contrattiDaRivedere(opzioni: {
    * più interessante.
    */
   ancheSenzaContratto?: boolean;
+  /**
+   * Le stelle del voto in cima alla schermata. Se ci sono, la riga «il vostro»
+   * porta QUESTE e non quelle calcolate sul metro della tabella.
+   *
+   * Lo stesso contratto non può avere due voti sulla stessa schermata: sopra
+   * tre stelle («contratto par»), sotto due e mezza sulla riga «il vostro»
+   * (segnalato il 01/10/2026). La differenza nasce dal metro — il voto usa il
+   * par quando in media la mano era degli avversari, la tabella sempre il
+   * meglio della smazzata — e la pagina la spiega sotto la tabella.
+   */
+  stelleDelVoto?: number;
 }): ContrattoValutato[] {
   const { table, lato, vulnerability, riferimento, metro, ev } = opzioni;
   const posti: Position[] = lato === "ns" ? ["north", "south"] : ["east", "west"];
@@ -180,7 +191,9 @@ export function contrattiDaRivedere(opzioni: {
       prese,
       punteggio,
       ev: atteso,
-      stelle: valutaLicita(atteso ?? punteggio, riferimento, metro).stelle,
+      stelle: tuo && opzioni.stelleDelVoto !== undefined
+        ? opzioni.stelleDelVoto
+        : valutaLicita(atteso ?? punteggio, riferimento, metro).stelle,
       // Il dichiarante conta: con lo stesso contratto giocato dall'altra parte
       // del tavolo le righe diventano due, e devono essere distinguibili.
       tuo,

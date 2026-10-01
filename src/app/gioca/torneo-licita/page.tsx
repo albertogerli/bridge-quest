@@ -532,6 +532,8 @@ export default function TorneoLicitaPage() {
                   riferimento: riferimentoUnico(mano).punteggio,
                   metro: riferimentoUnico(mano).metro,
                   giocato,
+                  // Il vostro contratto porta il voto in cima: vedi `stelleDelVoto`.
+                  stelleDelVoto: esito.stelle,
                   ev: (c) => evDelContratto(mano, c),
                 }).slice(0, 2)}
                 contratti={contrattiDaRivedere({
@@ -550,6 +552,11 @@ export default function TorneoLicitaPage() {
                       : undefined,
                 })}
               />
+                {riferimento(mano, "ns").metro !== riferimentoUnico(mano).metro && giocato && (giocato.declarer === "north" || giocato.declarer === "south") && (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {t("Sulla riga del vostro contratto c'è il voto in cima. Le altre righe si misurano sul miglior contratto in media della smazzata; il vostro voto invece sul par, perché in media il contratto migliore era degli avversari.")}
+                  </p>
+                )}
                 <div className="mt-4">
                   <RisultatoDoppioMorto
                     mani={mano.hands}

@@ -395,3 +395,23 @@ describe("il contro cambia il punteggio del contratto giocato", () => {
     }
   });
 });
+
+describe("la riga del vostro contratto porta il voto in cima", () => {
+  it("con stelleDelVoto la riga «il vostro» non ricalcola: stesso contratto, stesso voto", () => {
+    const opzioni = {
+      table: tabella({ spade: 8, diamond: 9 }),
+      lato: "ns" as const,
+      vulnerability: "none" as const,
+      riferimento: 600,
+      metro: "esatto" as const,
+      giocato: { level: 2, strain: "spade" as const, declarer: "south" as Position },
+    };
+    const senza = contrattiDaRivedere(opzioni).find((r) => r.tuo)!;
+    const con = contrattiDaRivedere({ ...opzioni, stelleDelVoto: 3 }).find((r) => r.tuo)!;
+    expect(senza.stelle).toBeLessThan(3);
+    expect(con.stelle).toBe(3);
+    // Le altre righe non cambiano.
+    const altre = contrattiDaRivedere({ ...opzioni, stelleDelVoto: 3 }).filter((r) => !r.tuo);
+    expect(altre.map((r) => r.stelle)).toEqual(contrattiDaRivedere(opzioni).filter((r) => !r.tuo).map((r) => r.stelle));
+  });
+});
