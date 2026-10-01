@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { useT } from "@/contexts/traduzioni-provider";
+import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
 import Link from "next/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
@@ -53,6 +54,8 @@ export default function GiocaPage() {
           <h1 className="text-3xl font-bold text-foreground font-display">{t("Gioca")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("Metti in pratica quello che hai imparato")}</p>
         </motion.div>
+
+        <AvvisoRichiesteAmicizia className="mb-6" />
 
         <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Inizia da qui")}</h2>
 

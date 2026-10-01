@@ -44,6 +44,22 @@ export default function AmiciPage() {
   const { createChallenge } = useChallenges({ live: false });
 
   const [activeTab, setActiveTab] = useState<Tab>("amici");
+  /**
+   * SI APRE SULLE RICHIESTE QUANDO CE NE SONO. Prima si apriva sempre su
+   * «Amici», che a chi non ne ha ancora diceva «Non hai ancora amici» — con la
+   * richiesta in attesa nella scheda accanto, segnalata da un «1» piccolo. Nel
+   * database c'erano 92 richieste mai risposte (01/10/2026). Si sceglie una
+   * volta sola, al primo caricamento: dopo decide chi tocca le schede.
+   * `?tab=richieste` arriva dall'avviso in Home, Gioca e Profilo.
+   */
+  const schedaScelta = useRef(false);
+  useEffect(() => {
+    if (schedaScelta.current || loading) return;
+    schedaScelta.current = true;
+    const richiesta = new URLSearchParams(window.location.search).get("tab");
+    if (richiesta === "richieste" || richiesta === "cerca" || richiesta === "amici") setActiveTab(richiesta);
+    else if (pendingReceived.length > 0) setActiveTab("richieste");
+  }, [loading, pendingReceived.length]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showChallengeModal, setShowChallengeModal] = useState(false);
   const challengeDialogRef = useRef<HTMLDivElement>(null);
