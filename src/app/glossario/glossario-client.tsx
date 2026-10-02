@@ -920,6 +920,7 @@ export function GlossarioClient({ initialEntries }: { initialEntries: GlossaryEn
             </div>
             <button
               onClick={startQuizGlobale}
+              aria-label={t("Quiz Globale")}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-figb text-white text-sm font-semibold hover:bg-figb-dark transition-colors whitespace-nowrap"
             >
               <Shuffle className="w-4 h-4" />

@@ -28,7 +28,7 @@ export function BenStatus({ available, aiLevel = AI_LEVEL_PREDEFINITO }: BenStat
     },
     esperto: {
       bg: "rgba(5, 150, 105, 0.1)",
-      text: "#059669",
+      text: "#047857",
       dot: "#059669",
     },
   };

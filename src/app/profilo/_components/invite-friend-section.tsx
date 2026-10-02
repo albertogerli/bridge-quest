@@ -89,7 +89,7 @@ export function InviteFriendSection({
           {/* WhatsApp button */}
           <Button
             onClick={onWhatsApp}
-            className="rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold h-11 text-sm shadow-md shadow-[#25D366]/20 transition-colors"
+            className="rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-[#052e16] font-semibold h-11 text-sm shadow-md shadow-[#25D366]/20 transition-colors"
           >
             <MessageCircle className="w-4 h-4 mr-2" />
             {t("WhatsApp")}

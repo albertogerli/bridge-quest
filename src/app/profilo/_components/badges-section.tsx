@@ -120,7 +120,7 @@ export function BadgesSection({
             <Star className="w-4 h-4 text-amber-500" />
             {t("Achievement Segreti")}
           </h3>
-          <Badge variant="outline" className="text-[12px] text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900">
+          <Badge variant="outline" className="text-[12px] text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900">
             {earnedSecretAchievements.length} / {totalSecretAchievements}
           </Badge>
         </div>

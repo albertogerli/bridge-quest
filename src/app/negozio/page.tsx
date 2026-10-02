@@ -673,7 +673,7 @@ export default function NegozioPage() {
                           ) : (
                             <div className="flex items-center gap-1">
                               <Coins className={`w-3.5 h-3.5 ${!isOwned && fiches < item.price ? "text-rose-400" : "text-amber-500"}`} />
-                              <span className={`text-sm font-bold ${!isOwned && fiches < item.price ? "text-rose-500" : "text-amber-700"}`}>
+                              <span className={`text-sm font-bold ${!isOwned && fiches < item.price ? "text-rose-600" : "text-amber-700"}`}>
                                 {item.price}
                               </span>
                             </div>
@@ -688,7 +688,7 @@ export default function NegozioPage() {
                         </div>
                         {/* Not enough fiches warning */}
                         {!isOwned && !item.isFree && fiches < item.price && (
-                          <p className="text-[12px] font-semibold text-rose-500 leading-tight">
+                          <p className="text-[12px] font-semibold text-rose-600 leading-tight">
                             {t("Non abbastanza fiches")}
                           </p>
                         )}

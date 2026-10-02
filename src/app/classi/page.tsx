@@ -99,10 +99,10 @@ function ClassiContent() {
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <div className="mb-6">
         <div className="flex items-center gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#7a5a0f] dark:text-[#c8a44e]">
             {t("Le mie classi")}
           </p>
-          <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#9a7b2e] dark:text-[#c8a44e]">
+          <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#7a5a0f] dark:text-[#c8a44e]">
             {t("Beta")}
           </span>
         </div>

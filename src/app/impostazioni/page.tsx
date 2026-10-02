@@ -471,7 +471,7 @@ export default function ImpostazioniPage() {
               {t("Sfide, risultati e promemoria compaiono mentre l’app è aperta. Quando non lo è, i promemoria arrivano per email.")}
             </p>
             {notifications.permission === "denied" && (
-              <p className="mt-2 text-[12px] text-red-500/80">
+              <p className="mt-2 text-[12px] text-red-600 dark:text-red-400">
                 {t("Le notifiche sono bloccate dal browser. Per riattivarle, modifica le impostazioni del sito nel browser.")}
               </p>
             )}
@@ -652,7 +652,7 @@ export default function ImpostazioniPage() {
                 <Button
                   onClick={() => setShowResetConfirm(true)}
                   variant="outline"
-                  className="w-full rounded-xl border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-700 dark:hover:text-red-300 font-bold h-11 text-sm"
+                  className="w-full rounded-xl border-red-200 dark:border-red-900 text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-700 dark:hover:text-red-300 font-bold h-11 text-sm"
                 >
                   {t("Resetta tutti i progressi")}
                 </Button>
@@ -713,7 +713,7 @@ export default function ImpostazioniPage() {
                         onClick={() => handleLogout(false)}
                         disabled={loggingOut}
                         variant="outline"
-                        className="w-full rounded-xl text-sm font-bold h-10 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 disabled:opacity-50"
+                        className="w-full rounded-xl text-sm font-bold h-10 border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 disabled:opacity-50"
                       >
                         {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
                       </Button>
@@ -731,7 +731,7 @@ export default function ImpostazioniPage() {
                     <Button
                       onClick={() => setShowLogoutConfirm(true)}
                       variant="outline"
-                      className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-bold h-11 text-sm"
+                      className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-bold h-11 text-sm"
                     >
                       {t("Esci dall'account")}
                     </Button>
