@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
@@ -14,6 +15,10 @@ export default async function IstruttoriLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // La riscrittura `/en/...` è invisibile qui (il percorso arriva senza
+  // prefisso), ma il proxy segna la lingua nell'intestazione: senza questo un
+  // utente inglese rimbalzava sulla pagina italiana.
+  const prefisso = (await headers()).get("x-bridgelab-lingua") === "en" ? "/en" : "";
   const supabase = await createServerSupabaseClient();
 
   const {
@@ -21,7 +26,7 @@ export default async function IstruttoriLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect(`${prefisso}/login`);
   }
 
   const { data: profile, error: erroreProfilo } = await supabase
@@ -37,7 +42,7 @@ export default async function IstruttoriLayout({
   if (erroreProfilo) throw erroreProfilo;
 
   if (!profile || (profile.role !== "instructor" && profile.role !== "admin")) {
-    redirect("/diventa-istruttore");
+    redirect(`${prefisso}/diventa-istruttore`);
   }
 
   return <>{children}</>;
