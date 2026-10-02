@@ -153,6 +153,8 @@ export default function ResetPasswordPage() {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
+                    name="nuova-password"
+                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full h-12 px-4 pr-12 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"

@@ -41,6 +41,7 @@ import {
 import { useT } from "@/contexts/traduzioni-provider";
 import { copiaTesto } from "@/lib/appunti";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function ClassDetailPage({
   params,
@@ -96,16 +97,20 @@ export default function ClassDetailPage({
     }
   }
 
+  /**
+   * Eliminare una classe chiede DUE conferme, in una finestra vera e non in un
+   * popup del browser: prima l'avviso grande e rosso con cosa si perde, poi il
+   * nome della classe scritto per intero (richiesta di Trevissoi, ottobre 2026).
+   */
+  const [eliminazione, setEliminazione] = useState<null | "avviso" | "nome">(null);
+  const [nomeScritto, setNomeScritto] = useState("");
   async function elimina() {
     if (!detail) return;
-    const scritto = prompt(
-      t("Per eliminare la classe scrivi il suo nome: {nome}", { nome: detail.classRoom.name }),
-    );
-    if (scritto === null) return;
-    if (scritto.trim() !== detail.classRoom.name.trim()) {
+    if (nomeScritto.trim() !== detail.classRoom.name.trim()) {
       setAvviso(t("Il nome non corrisponde: la classe non è stata eliminata."));
       return;
     }
+    setEliminazione(null);
     setBusy(true);
     setAvviso(null);
     try {
@@ -855,10 +860,66 @@ export default function ClassDetailPage({
         <p className="mt-1 text-sm text-muted-foreground">
           {t("Spariscono iscrizioni, compiti, chat, tavoli ed elenco allievi, e non si recuperano. Per un corso finito è meglio «Archiviata», nelle impostazioni: non perde niente.")}
         </p>
-        <Button variant="outline" className="mt-4 text-destructive" disabled={busy} onClick={() => void elimina()}>
+        <Button
+          variant="outline"
+          className="mt-4 text-destructive"
+          disabled={busy}
+          onClick={() => {
+            setNomeScritto("");
+            setEliminazione("avviso");
+          }}
+        >
           {t("Elimina la classe")}
         </Button>
       </div>
+
+      <Dialog open={eliminazione !== null} onOpenChange={(aperta) => !aperta && setEliminazione(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-destructive">⚠️ {t("Eliminare la classe «{nome}»?", { nome: classRoom.name })}</DialogTitle>
+          </DialogHeader>
+          {eliminazione === "avviso" ? (
+            <>
+              <div className="rounded-xl border-2 border-destructive bg-destructive/10 p-4 text-base font-semibold text-destructive">
+                {t("Spariscono per sempre iscrizioni, compiti, risultati, chat, tavoli ed elenco allievi. Non si possono recuperare.")}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t("Se il corso è finito, è meglio archiviarla dalle impostazioni della classe: resta tutto consultabile.")}
+              </p>
+              <DialogFooter className="gap-2">
+                <Button onClick={() => setEliminazione(null)}>{t("Annulla")}</Button>
+                <Button variant="outline" className="text-destructive" onClick={() => setEliminazione("nome")}>
+                  {t("Ho capito, continua")}
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              <label className="text-sm font-medium">
+                {t("Per confermare scrivi il nome della classe: {nome}", { nome: classRoom.name })}
+              </label>
+              <input
+                value={nomeScritto}
+                onChange={(e) => setNomeScritto(e.target.value)}
+                autoComplete="off"
+                autoFocus
+                className="h-10 w-full rounded-lg border border-destructive/50 bg-card px-3 text-sm"
+              />
+              <DialogFooter className="gap-2">
+                <Button onClick={() => setEliminazione(null)}>{t("Annulla")}</Button>
+                <Button
+                  variant="outline"
+                  className="text-destructive"
+                  disabled={busy || nomeScritto.trim() !== classRoom.name.trim()}
+                  onClick={() => void elimina()}
+                >
+                  {t("Elimina definitivamente")}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

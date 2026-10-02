@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import type { User } from "@supabase/supabase-js";
@@ -28,6 +29,8 @@ export function AccountActions({
   onDeleteAccount: () => void;
 }) {
   const t = useT();
+  const [capito, setCapito] = useState(false);
+  const [parola, setParola] = useState("");
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -105,22 +108,50 @@ export function AccountActions({
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 p-4"
                   >
-                    <p className="text-sm font-bold text-rose-800 dark:text-rose-300 mb-1">{t("Sei sicuro?")}</p>
-                    <p className="text-xs text-rose-700 dark:text-rose-400 mb-3">{t("Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.")}</p>
-                    <div className="flex gap-2">
+                    {/* Due passaggi e una parola da scrivere: eliminare l'account non
+                        deve somigliare a «esci», né potersi fare con due tocchi. */}
+                    <p className="text-base font-bold text-destructive mb-1">⚠️ {t("Stai per eliminare il tuo account")}</p>
+                    <p className="text-sm text-destructive mb-3">{t("Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.")}</p>
+                    <label className="mb-3 flex items-start gap-2 text-sm text-foreground">
+                      <input
+                        type="checkbox"
+                        checked={capito}
+                        onChange={(e) => setCapito(e.target.checked)}
+                        className="mt-0.5 h-4 w-4"
+                      />
+                      <span>{t("Ho capito: perderò progressi, classi e risultati, e non si potranno recuperare.")}</span>
+                    </label>
+                    {capito && (
+                      <div className="mb-3">
+                        <label className="mb-1 block text-xs font-semibold text-foreground">
+                          {t("Per confermare scrivi ELIMINA")}
+                        </label>
+                        <input
+                          value={parola}
+                          onChange={(e) => setParola(e.target.value)}
+                          autoComplete="off"
+                          className="h-10 w-full rounded-lg border border-destructive/50 bg-card px-3 text-sm"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-col-reverse gap-2 sm:flex-row">
                       <Button
-                        onClick={onDeleteAccount}
-                        disabled={deleting}
-                        className="flex-1 bg-rose-700 hover:bg-rose-800 text-white rounded-xl text-xs font-semibold h-9"
+                        onClick={() => {
+                          setCapito(false);
+                          setParola("");
+                          onShowDeleteConfirm(false);
+                        }}
+                        className="flex-1 rounded-xl text-sm font-semibold h-10"
                       >
-                        {deleting ? "Eliminazione..." : "Conferma eliminazione"}
+                        {t("No, tieni il mio account")}
                       </Button>
                       <Button
-                        onClick={() => onShowDeleteConfirm(false)}
+                        onClick={onDeleteAccount}
+                        disabled={deleting || !capito || parola.trim().toUpperCase() !== "ELIMINA"}
                         variant="outline"
-                        className="flex-1 rounded-xl text-xs font-semibold h-9 border-rose-200 dark:border-rose-900"
+                        className="flex-1 rounded-xl text-sm font-semibold h-10 border-destructive/60 text-destructive disabled:opacity-40"
                       >
-                        {t("Annulla")}
+                        {deleting ? t("Eliminazione...") : t("Elimina definitivamente")}
                       </Button>
                     </div>
                   </motion.div>

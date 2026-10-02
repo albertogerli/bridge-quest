@@ -10,7 +10,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { useActiveAsdClubs } from "@/store/use-asd-store";
 import Link from "@/components/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
-import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
+import { Gamepad2, Zap, Spade, Coffee, Eye, EyeOff } from "lucide-react";
 import { trackRegistration } from "@/lib/gads";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 import { createClient } from "@/lib/supabase/client";
@@ -58,6 +58,8 @@ function LoginContent() {
   // Form fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confermaPassword, setConfermaPassword] = useState("");
+  const [mostraPassword, setMostraPassword] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [bboUsername, setBboUsername] = useState("");
   const [profileType, setProfileType] = useState<ProfileType>("adulto");
@@ -134,6 +136,11 @@ function LoginContent() {
         }
         if (password.length < 6) {
           setError("La password deve avere almeno 6 caratteri");
+          setLoading(false);
+          return;
+        }
+        if (password !== confermaPassword) {
+          setError("Le due password non coincidono.");
           setLoading(false);
           return;
         }
@@ -244,6 +251,8 @@ function LoginContent() {
             </label>
             <input
               type="email"
+              name="email"
+              autoComplete={mode === "signup" ? "email" : "username"}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -287,17 +296,58 @@ function LoginContent() {
             <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
               {t("Password")}
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              placeholder={mode === "signup" ? "Minimo 6 caratteri" : "La tua password"}
-            />
+            {/* `name` e `autoComplete` dicono al browser che cos'è il campo: senza,
+                il gestore delle password non la salva o la ripropone male. */}
+            <div className="relative">
+              <input
+                type={mostraPassword ? "text" : "password"}
+                name="password"
+                autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full h-12 px-4 pr-12 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                placeholder={mode === "signup" ? t("Minimo 6 caratteri") : t("La tua password")}
+              />
+              <button
+                type="button"
+                onClick={() => setMostraPassword((v) => !v)}
+                aria-label={mostraPassword ? t("Nascondi la password") : t("Mostra la password")}
+                aria-pressed={mostraPassword}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {mostraPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            {mode === "signup" && (
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                {t("Almeno 6 caratteri. Evita password semplici o già usate altrove (come «123456» o «password»): il sistema le rifiuta.")}
+              </p>
+            )}
             {mode === "signup" && <AvvisoPassword password={password} />}
           </div>
+
+          {mode === "signup" && (
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                {t("Ripeti la password")}
+              </label>
+              <input
+                type={mostraPassword ? "text" : "password"}
+                name="conferma-password"
+                autoComplete="new-password"
+                value={confermaPassword}
+                onChange={(e) => setConfermaPassword(e.target.value)}
+                required
+                className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                placeholder={t("Scrivila di nuovo")}
+              />
+              {confermaPassword.length > 0 && confermaPassword !== password && (
+                <p className="mt-1.5 text-xs font-medium text-destructive">{t("Le due password non coincidono.")}</p>
+              )}
+            </div>
+          )}
 
           {mode === "login" && (
             <div className="text-right">

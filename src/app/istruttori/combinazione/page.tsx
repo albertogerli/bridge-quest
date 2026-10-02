@@ -170,6 +170,35 @@ export default function CombinazionePage() {
             </span>
           </div>
 
+          {/* Le quattro mani in chiaro: prima la griglia mostrava solo «carta
+              presa / libera», e non si capiva a chi fosse andata una carta né
+              cosa contenesse un esempio appena caricato. */}
+          <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {POSTI.map((posto) => (
+              <button
+                key={posto.key}
+                type="button"
+                onClick={() => setPostoAttivo(posto.key)}
+                className={`rounded-lg border p-2 text-left text-sm ${
+                  postoAttivo === posto.key ? "border-primary ring-2 ring-primary/30" : "border-border"
+                }`}
+              >
+                <p className="mb-1 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t(posto.nome)}</p>
+                {SEMI.map((seme) => {
+                  const carte = hands[posto.key]
+                    .filter((c) => c.suit === seme)
+                    .sort((a, b) => RANGHI.indexOf(a.rank) - RANGHI.indexOf(b.rank));
+                  return (
+                    <p key={seme} className="flex items-center gap-1 font-mono text-sm leading-6">
+                      <SuitSymbol suit={seme} size="xs" />
+                      <span>{carte.length ? carte.map((c) => c.rank).join(" ") : "—"}</span>
+                    </p>
+                  );
+                })}
+              </button>
+            ))}
+          </div>
+
           <div className="mb-4 space-y-1.5">
             {SEMI.map((s) => (
               <div key={s} className="flex flex-wrap items-center gap-1">
@@ -177,18 +206,27 @@ export default function CombinazionePage() {
                 {RANGHI.map((r) => {
                   const carta = { suit: s, rank: r } as Card;
                   const p = dove(carta);
+                  const nomeDi = p ? t(POSTI.find((x) => x.key === p)?.nome ?? "") : "";
                   return (
                     <button
                       key={r}
                       onClick={() => tocca(carta)}
-                      className={`h-8 w-8 rounded border text-sm font-bold transition-colors ${
-                        p
+                      aria-label={p ? `${r} — ${nomeDi}` : `${r} — ${t("libera")}`}
+                      className={`relative h-8 w-8 rounded border text-sm font-bold transition-colors ${
+                        p === postoAttivo
                           ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:bg-muted"
+                          : p
+                            ? "border-border bg-muted text-muted-foreground"
+                            : "border-border hover:bg-muted"
                       }`}
-                      title={p ? POSTI.find((x) => x.key === p)?.nome : "libera"}
+                      title={p ? nomeDi : t("libera")}
                     >
                       {r}
+                      {p && p !== postoAttivo && (
+                        <span className="absolute -right-1 -top-1 rounded-full bg-foreground px-1 text-[12px] leading-4 text-background">
+                          {nomeDi.charAt(0)}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
