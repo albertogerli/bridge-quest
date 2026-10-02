@@ -21,5 +21,9 @@ export default function Link({ href, ...props }: ComponentProps<typeof NextLink>
     typeof href === "string"
       ? localizzaHref(href, lingua)
       : { ...href, pathname: href.pathname ? localizzaHref(href.pathname, lingua) : href.pathname };
-  return <NextLink href={localizzato} {...props} />;
+  // La radice `/en` è una riscrittura di `/`: il prefetch a segmenti di Next la
+  // cerca come rotta vera e riceve 404 (in produzione, a ogni pagina). Il clic
+  // funzionava lo stesso, ma ogni pagina inglese lasciava un 404 in rete.
+  const radiceInglese = typeof localizzato === "string" && /^\/en([?#]|$)/.test(localizzato);
+  return <NextLink href={localizzato} {...props} prefetch={radiceInglese ? false : props.prefetch} />;
 }
