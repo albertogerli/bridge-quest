@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getPlatform } from "@/lib/native-bridge";
 import { segnalaSalvoRete} from "@/lib/report-error";
-import type { User, Session } from "@supabase/supabase-js";
+import { createClient as createPlainClient, type User, type Session } from "@supabase/supabase-js";
 import { oggiInItalia } from "@/lib/data-locale";
 import { homeDi } from "@/lib/lingua";
 
@@ -306,7 +306,17 @@ export function useAuth() {
 
   // Reset password
   const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    // Flusso «implicito» SOLO per questa email. Con il flusso standard (PKCE)
+    // il link funziona soltanto nel browser in cui è stato chiesto: sul
+    // telefono l'email apre spesso un'altra app, e il recupero falliva. Con il
+    // flusso implicito il link porta con sé la sessione (nel frammento `#`, che
+    // non arriva a nessun server) e la pagina /reset-password la installa.
+    const implicito = createPlainClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { flowType: "implicit", persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } },
+    );
+    const { error } = await implicito.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback?type=recovery&next=/reset-password`,
     });
     return { error };

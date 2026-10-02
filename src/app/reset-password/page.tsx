@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/hooks/use-router-lingua";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,41 @@ import { Lock, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Link from "@/components/link";
 import { authErrorMessage } from "@/lib/auth-errors";
 import { useT } from "@/contexts/traduzioni-provider";
+import { segnalaSalvoRete } from "@/lib/report-error";
+
+/**
+ * Una sola installazione per caricamento di pagina. In sviluppo React esegue
+ * gli effetti due volte: la prima consumava il frammento salvato, la seconda
+ * non trovava più niente e dichiarava il link non valido.
+ */
+let installazione: Promise<"pronto" | "link-non-valido"> | null = null;
+
+function installaSessioneDelLink(supabase: ReturnType<typeof createClient>) {
+  installazione ??= (async () => {
+    // Il frammento lo mette da parte /auth/callback (vedi lì il perché); in
+    // ripiego si guarda anche l'indirizzo, se ci si arriva direttamente.
+    let salvato = "";
+    try {
+      salvato = sessionStorage.getItem("bq_recupero") ?? "";
+      sessionStorage.removeItem("bq_recupero");
+    } catch {}
+    const frammento = new URLSearchParams(salvato || window.location.hash.replace(/^#/, ""));
+    if (window.location.hash) window.history.replaceState(null, "", window.location.pathname);
+    if (frammento.get("error_code") || frammento.get("error")) return "link-non-valido" as const;
+    const accessToken = frammento.get("access_token");
+    const refreshToken = frammento.get("refresh_token");
+    if (accessToken && refreshToken) {
+      const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+      if (error) {
+        segnalaSalvoRete("reset-password:sessione", error);
+        return "link-non-valido" as const;
+      }
+    }
+    const { data } = await supabase.auth.getSession();
+    return data.session ? ("pronto" as const) : ("link-non-valido" as const);
+  })();
+  return installazione;
+}
 
 export default function ResetPasswordPage() {
   const t = useT();
@@ -18,7 +53,26 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
+  /**
+   * Prima di mostrare il modulo si controlla di avere una sessione.
+   *
+   * Il link di recupero arriva in flusso implicito (vedi `resetPassword` in
+   * use-auth): la sessione sta nel frammento `#access_token=…&refresh_token=…`
+   * e va installata qui. Se il link è scaduto o già usato, nel frammento c'è
+   * `error_code`; se non c'è niente, il modulo fallirebbe al salvataggio con un
+   * errore incomprensibile, quindi si dice subito cosa fare.
+   */
+  const [stato, setStato] = useState<"verifica" | "pronto" | "link-non-valido">("verifica");
+  useEffect(() => {
+    let attivo = true;
+    void installaSessioneDelLink(supabase).then((esito) => {
+      if (attivo) setStato(esito);
+    });
+    return () => {
+      attivo = false;
+    };
+  }, [supabase]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +120,20 @@ export default function ResetPasswordPage() {
             </p>
           </div>
 
-          {success ? (
+          {stato === "verifica" ? (
+            <div className="flex justify-center py-8">
+              <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-border border-t-primary" />
+            </div>
+          ) : stato === "link-non-valido" ? (
+            <div className="space-y-4 text-center">
+              <p className="text-sm text-foreground">
+                {t("Il link non è più valido: è scaduto o è già stato usato. Chiedine uno nuovo dalla pagina di accesso, con «Password dimenticata?».")}
+              </p>
+              <Link href="/login" className="inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+                {t("Chiedi un nuovo link")}
+              </Link>
+            </div>
+          ) : success ? (
             <div className="text-center space-y-4">
               <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
               <p className="text-green-700 font-semibold">

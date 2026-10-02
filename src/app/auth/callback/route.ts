@@ -25,6 +25,20 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=link_scaduto`);
   }
 
+  // Recupero in flusso implicito: niente `code`, la sessione viaggia nel
+  // frammento `#access_token=…`, che il server non vede. Una pagina minima, SENZA
+  // il client Supabase dell'app (che in modalità PKCE scarterebbe il frammento),
+  // lo mette da parte per /reset-password, che installa la sessione.
+  if (!code && recupero) {
+    const html =
+      '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="robots" content="noindex">' +
+      "<title>BridgeLab</title></head><body><script>" +
+      'try{sessionStorage.setItem("bq_recupero",location.hash.slice(1))}catch(e){}' +
+      'location.replace("/reset-password")' +
+      "</script></body></html>";
+    return new NextResponse(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
+  }
+
   if (code) {
     const supabase = await createServerSupabaseClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);

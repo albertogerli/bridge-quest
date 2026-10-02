@@ -2389,5 +2389,7 @@
   "Il link non è più valido: è scaduto o è già stato usato. Scrivi la tua email qui sotto e chiedine uno nuovo con «Password dimenticata?».": "This link is no longer valid: it has expired or was already used. Enter your email below and request a new one with “Forgot password?”.",
   "Il link va aperto nello stesso browser in cui l'hai chiesto. Se l'email l'ha aperto in un'altra app, chiedine uno nuovo da qui e aprilo dal browser che stai usando ora.": "The link must be opened in the same browser where you requested it. If your email opened it in another app, request a new one from here and open it in the browser you're using now.",
   "Non sono riuscito a completare l'accesso dal link. Riprova, o chiedine uno nuovo.": "I couldn't complete the sign-in from the link. Try again, or request a new one.",
-  "Email di reset inviata! Controlla la tua casella di posta.": "Reset email sent! Check your inbox."
+  "Email di reset inviata! Controlla la tua casella di posta.": "Reset email sent! Check your inbox.",
+  "Il link non è più valido: è scaduto o è già stato usato. Chiedine uno nuovo dalla pagina di accesso, con «Password dimenticata?».": "This link is no longer valid: it has expired or was already used. Request a new one from the sign-in page, with “Forgot password?”.",
+  "Chiedi un nuovo link": "Request a new link"
 }
