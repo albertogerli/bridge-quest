@@ -484,7 +484,7 @@ export default function WrappedPage() {
                   </div>
                   <div className="flex items-center justify-between border-b border-border pb-3">
                     <span className="text-muted-foreground">{t("Streak record")}</span>
-                    <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+                    <span className="text-2xl font-bold text-amber-700 dark:text-amber-400">
                       {stats.streakBest}
                     </span>
                   </div>

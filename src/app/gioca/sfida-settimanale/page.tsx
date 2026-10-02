@@ -420,6 +420,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
           <div className="flex items-center justify-center gap-2 mb-2">
             <button
               onClick={onBack}
+              aria-label={t("Torna ai giochi")}
               className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
             >
               <ArrowLeft className="h-4 w-4" />

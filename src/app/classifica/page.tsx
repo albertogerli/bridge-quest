@@ -20,16 +20,16 @@ const medals = ["🥇", "🥈", "🥉"];
 const avatarColors = [
   "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
   "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary",
-  "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300",
-  "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",
-  "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300",
-  "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300",
-  "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300",
-  "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300",
-  "bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300",
-  "bg-lime-100 text-lime-700 dark:bg-lime-950/40 dark:text-lime-300",
-  "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/40 dark:text-fuchsia-300",
-  "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
+  "bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300",
+  "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+  "bg-cyan-100 text-cyan-800 dark:bg-cyan-950/40 dark:text-cyan-300",
+  "bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300",
+  "bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300",
+  "bg-teal-100 text-teal-800 dark:bg-teal-950/40 dark:text-teal-300",
+  "bg-sky-100 text-sky-800 dark:bg-sky-950/40 dark:text-sky-300",
+  "bg-lime-100 text-lime-800 dark:bg-lime-950/40 dark:text-lime-300",
+  "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-950/40 dark:text-fuchsia-300",
+  "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
 ];
 
 function getLevel(xp: number) {
@@ -769,7 +769,7 @@ export default function ClassificaPage() {
                             <p className="font-bold text-sm text-foreground truncate">
                               <Link href={`/circolo/${asdNameToSlug(asd.asd_name)}`} className="hover:underline hover:text-figb dark:hover:text-primary transition-colors inline-flex items-center gap-1">
                                 {asd.asd_name}
-                                <span className="text-muted-foreground/40 text-xs">&rsaquo;</span>
+                                <span className="text-muted-foreground text-xs" aria-hidden="true">&rsaquo;</span>
                               </Link>
                             </p>
                             <p className="text-[12px] text-muted-foreground">
@@ -1201,7 +1201,7 @@ function LeaderboardList({
           <span className="text-[12px] font-bold text-muted-foreground">{t("Retrocessione")}</span>
         </div>
         <div className="flex-1" />
-        <span className="text-[12px] font-bold text-muted-foreground/40">{totalPlayers} giocatori</span>
+        <span className="text-[12px] font-bold text-muted-foreground">{totalPlayers} giocatori</span>
       </motion.div>
 
       {/* Leaderboard */}
@@ -1293,7 +1293,7 @@ function LeaderboardList({
               {player.rank === 3 && totalPlayers > 3 && (
                 <div className="flex items-center gap-2 my-2 px-2">
                   <div className="flex-1 h-px bg-emerald-200 dark:bg-emerald-900" />
-                  <span className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">zona promozione</span>
+                  <span className="text-[12px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">zona promozione</span>
                   <div className="flex-1 h-px bg-emerald-200 dark:bg-emerald-900" />
                 </div>
               )}
