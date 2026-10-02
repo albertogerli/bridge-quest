@@ -15,8 +15,12 @@ export function useExitIntent() {
     const prev = prevPathname.current;
     prevPathname.current = pathname;
 
-    // Detect navigation FROM /gioca/* to something NOT /gioca/*
-    if (prev.startsWith("/gioca/") && !pathname.startsWith("/gioca/")) {
+    // Detect navigation FROM /gioca/* to something NOT /gioca/*. L'indice
+    // `/gioca` fa parte della sezione: tornare dalla partita all'elenco dei
+    // giochi non è «andare via», e il messaggio «hai giocato solo 0 mani»
+    // compariva a chi stava solo cambiando gioco.
+    const dentroGioca = (percorso: string) => percorso === "/gioca" || percorso.startsWith("/gioca/");
+    if (prev.startsWith("/gioca/") && !dentroGioca(pathname)) {
       const today = new Date().toISOString().slice(0, 10);
       let hands = 0;
       let dismissed = false;
