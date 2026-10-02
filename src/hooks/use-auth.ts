@@ -305,12 +305,24 @@ export function useAuth() {
   };
 
   // Reset password
-  const resetPassword = async (email: string) => {
-    // Flusso «implicito» SOLO per questa email. Con il flusso standard (PKCE)
-    // il link funziona soltanto nel browser in cui è stato chiesto: sul
-    // telefono l'email apre spesso un'altra app, e il recupero falliva. Con il
-    // flusso implicito il link porta con sé la sessione (nel frammento `#`, che
-    // non arriva a nessun server) e la pagina /reset-password la installa.
+  const resetPassword = async (email: string): Promise<{ error: { message: string } | null }> => {
+    // L'email la manda il nostro server con Resend (vedi /api/auth/recupero):
+    // quella di Supabase non arrivava agli utenti. Se il server non risponde,
+    // si ripiega su Supabase, che almeno ai membri del progetto arriva.
+    try {
+      const risposta = await fetch("/api/auth/recupero", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (risposta.ok) return { error: null };
+      if (risposta.status === 429) return { error: { message: "rate limit" } };
+      if (risposta.status === 400) return { error: { message: "invalid email" } };
+    } catch (err) {
+      segnalaSalvoRete("auth:recupero-api", err);
+    }
+    // Flusso «implicito» SOLO per questa email: il link si apre da qualsiasi
+    // app o browser (con PKCE, solo in quello che l'ha chiesto).
     const implicito = createPlainClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

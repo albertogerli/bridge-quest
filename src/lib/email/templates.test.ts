@@ -11,6 +11,7 @@ const TUTTE: EmailKind[] = [
   "turno_licita",
   "compito_assegnato",
   "compito_in_scadenza",
+  "recupero_password",
 ];
 
 describe("le email di ciclo di vita", () => {
@@ -183,5 +184,17 @@ describe("l'involucro dell'email, non solo il corpo", () => {
     expect(en.text).toContain("Unsubscribe from reminders");
     const it = renderEmail("inactive_7", { lingua: "it" }, "https://x/unsub");
     expect(it.text).toContain("Disiscriviti dai promemoria");
+  });
+});
+
+describe("recupero password", () => {
+  it("è transazionale, porta il link e parla anche inglese", () => {
+    const link = "https://example.supabase.co/auth/v1/verify?token=abc&type=recovery";
+    const it_ = renderEmail("recupero_password", { name: "Anna", linkRecupero: link }, "https://x/unsub");
+    const en = renderEmail("recupero_password", { name: "Ann", linkRecupero: link, lingua: "en" });
+    expect(it_.transactional).toBe(true);
+    expect(it_.html).toContain(`href="${link}"`);
+    expect(it_.text).toContain(link);
+    expect(en.subject).not.toBe(it_.subject);
   });
 });
