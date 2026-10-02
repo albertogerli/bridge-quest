@@ -52,8 +52,8 @@ export function AdvancedStatsSection({
             <p className="text-sm font-bold text-foreground">{t("Statistiche Avanzate")}</p>
             <p className="text-[12px] text-muted-foreground">
               {gameStats.totalGames > 0
-                ? `${gameStats.totalGames} partite · ${gameStats.winRate}% vittorie`
-                : "Gioca per sbloccare le statistiche"}
+                ? t("{games} partite · {rate}% vittorie", { games: gameStats.totalGames, rate: gameStats.winRate })
+                : t("Gioca per sbloccare le statistiche")}
             </p>
           </div>
           <motion.svg

@@ -89,7 +89,7 @@ export function ProgressSidebar({
                     active ? "text-white/70" : done ? "text-[#f0d37a]" : "text-white/60"
                   }`}
                 >
-                  {item.kicker}
+                  {t(item.kicker)}
                 </p>
               </div>
               <p
@@ -97,7 +97,7 @@ export function ProgressSidebar({
                   active ? "text-white" : done ? "text-white/90" : "text-white/65"
                 }`}
               >
-                {item.title}
+                {t(item.title)}
               </p>
             </div>
           );

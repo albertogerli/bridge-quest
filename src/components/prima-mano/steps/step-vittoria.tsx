@@ -91,10 +91,10 @@ export function StepVittoria({
 
   const summaryItems = [
     ...ACHIEVEMENTS,
-    `Hai giocato 4 mini-prese. (${miniPreseScore.won}/${miniPreseScore.total})`,
+    t("Hai giocato 4 mini-prese. ({won}/{total})", { won: miniPreseScore.won, total: miniPreseScore.total }),
     handResult
-      ? `Hai giocato la tua prima mano vera! (${handResult.tricksMade}/${handResult.tricksNeeded} prese)`
-      : "Hai giocato la tua prima mano vera!",
+      ? t("Hai giocato la tua prima mano vera! ({made}/{needed} prese)", { made: handResult.tricksMade, needed: handResult.tricksNeeded })
+      : t("Hai giocato la tua prima mano vera!"),
   ];
 
   return (

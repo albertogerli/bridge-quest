@@ -217,7 +217,7 @@ export function PrimaManoV2({
             <div className="mb-4 rounded-2xl border border-gray-200 bg-white/80 px-4 py-2.5 backdrop-blur-sm lg:hidden">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[12px] font-bold text-[#8f6b16]">
-                  {STEPS[currentStep].kicker}
+                  {t(STEPS[currentStep].kicker)}
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="text-[12px] text-[#5c677d]">
