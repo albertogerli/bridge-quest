@@ -12,6 +12,7 @@ const TUTTE: EmailKind[] = [
   "compito_assegnato",
   "compito_in_scadenza",
   "recupero_password",
+  "recupero_non_registrato",
 ];
 
 describe("le email di ciclo di vita", () => {

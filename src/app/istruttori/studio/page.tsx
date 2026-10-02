@@ -518,22 +518,52 @@ function Studio() {
   );
 }
 
-/** Le carte giocate finora in questa presa. */
+/**
+ * Le carte giocate finora in questa presa, ciascuna davanti a chi l'ha giocata
+ * (Nord in alto, Sud in basso, Ovest a sinistra, Est a destra). Prima erano
+ * in fila: non si capiva chi avesse giocato cosa (Trevissoi, ottobre 2026).
+ */
 function PresaCorrente({ stato }: { stato: GameState | null }) {
+  const t = useT();
   return (
-    <div className="rounded-2xl border-2 border-dashed border-border min-h-[7rem] p-2 flex flex-wrap items-center justify-center gap-2">
-      {(stato?.currentTrick ?? []).map((p, i) => (
-        <span key={i} className="text-lg font-mono flex items-center gap-1">
-          <SuitSymbol suit={p.card.suit} size="xs" />
-          {p.card.rank}
+    <div className="rounded-2xl border-2 border-dashed border-border min-h-[7rem] p-2">
+      <div className="mx-auto grid w-fit grid-cols-3 grid-rows-3 place-items-center gap-1">
+        <span />
+        <CartaDellaPresa stato={stato} seat="north" />
+        <span />
+        <CartaDellaPresa stato={stato} seat="west" />
+        <span className="text-center text-[12px] leading-tight text-muted-foreground">
+          {stato && stato.tricks.length > 0 ? t("{n} prese giocate", { n: stato.tricks.length }) : t("inizio mano")}
         </span>
-      ))}
-      {stato?.currentTrick.length === 0 && (
-        <span className="text-xs text-muted-foreground">
-          {stato.tricks.length > 0 ? `${stato.tricks.length} prese giocate` : "inizio mano"}
-        </span>
-      )}
+        <CartaDellaPresa stato={stato} seat="east" />
+        <span />
+        <CartaDellaPresa stato={stato} seat="south" />
+        <span />
+      </div>
     </div>
+  );
+}
+
+function CartaDellaPresa({ stato, seat }: { stato: GameState | null; seat: Position }) {
+  const t = useT();
+  const c = stato?.currentTrick.find((p) => p.position === seat)?.card ?? null;
+  const nome = SEATS.find((x) => x.key === seat)!.label;
+  return (
+    <span
+      className={`flex h-12 w-10 flex-col items-center justify-center rounded-md border text-base font-bold ${
+        c ? "border-border bg-card shadow-sm" : "border-dashed border-border/60 text-muted-foreground"
+      }`}
+      aria-label={c ? `${t(nome)}: ${c.rank}` : t(nome)}
+    >
+      {c ? (
+        <>
+          {c.rank}
+          <SuitSymbol suit={c.suit} size="xs" />
+        </>
+      ) : (
+        <span className="text-xs">{t(nome).charAt(0)}</span>
+      )}
+    </span>
   );
 }
 

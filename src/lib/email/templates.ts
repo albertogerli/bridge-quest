@@ -14,7 +14,8 @@ export type EmailKind =
   | "turno_licita"
   | "compito_assegnato"
   | "compito_in_scadenza"
-  | "recupero_password";
+  | "recupero_password"
+  | "recupero_non_registrato";
 
 export interface EmailContext {
   name?: string | null;
@@ -389,6 +390,38 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
             [`${hi.replace(/<[^>]+>/g, "")}, you asked to reset your Bridge LAB password.`, "", "The link is valid for one hour and works once. If this wasn't you, ignore this email."]
           ),
           T("Scegli la nuova password", "Choose a new password"), link
+        ),
+        transactional: true,
+      };
+    }
+
+    case "recupero_non_registrato": {
+      const registrati = `${SITE}${ctx.lingua === "en" ? "/en" : ""}/login?mode=signup`;
+      const heading = T("Questo indirizzo non è ancora registrato", "This address isn't registered yet");
+      const bodyHtml = T(
+        `
+        <p style="margin:0 0 14px;">Ciao, qualcuno ha chiesto di reimpostare la password di Bridge LAB per questo indirizzo email, ma con questo indirizzo non c'è ancora nessun account.</p>
+        <p style="margin:0 0 14px;">Se volevi iscriverti, bastano due minuti: tocca il pulsante qui sotto. Se ti sei registrato con un altro indirizzo, chiedi il recupero da quello.</p>
+        <p style="margin:0;">Se non sei stato tu, ignora questa email.</p>`,
+        `
+        <p style="margin:0 0 14px;">Hi, someone asked to reset the Bridge LAB password for this email address, but there is no account with this address yet.</p>
+        <p style="margin:0 0 14px;">If you meant to sign up, it takes two minutes: tap the button below. If you registered with another address, request the reset from that one.</p>
+        <p style="margin:0;">If this wasn't you, ignore this email.</p>`
+      );
+      return {
+        subject: T("Non hai ancora un account Bridge LAB", "You don't have a Bridge LAB account yet"),
+        html: layout({
+          preheader: T("Registrati in due minuti.", "Sign up in two minutes."),
+          emoji: "✉️", heading, bodyHtml,
+          ctaLabel: T("Registrati", "Sign up"), ctaUrl: registrati,
+          lingua: ctx.lingua,
+        }),
+        text: textFallback(
+          T(
+            ["Qualcuno ha chiesto di reimpostare la password di Bridge LAB per questo indirizzo, ma non c'è ancora un account.", "", "Se non sei stato tu, ignora questa email."],
+            ["Someone asked to reset the Bridge LAB password for this address, but there is no account yet.", "", "If this wasn't you, ignore this email."]
+          ),
+          T("Registrati", "Sign up"), registrati
         ),
         transactional: true,
       };

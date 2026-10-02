@@ -101,19 +101,6 @@ export default function IstruttoriPage() {
         </Button>
       </div>
 
-      {/* Strumenti per la lezione: stessi della home, definiti una volta sola.
-          Stanno PRIMA delle classi perché si usano a ogni lezione, mentre una
-          classe si crea una volta e poi si apre di rado. */}
-      <section className="mb-8" aria-labelledby="strumenti-lezione">
-        <h2
-          id="strumenti-lezione"
-          className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground"
-        >
-          {t("Strumenti per la lezione")}
-        </h2>
-        <StrumentiLezione />
-      </section>
-
       {/* States */}
       {error && (
         <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
@@ -146,6 +133,11 @@ export default function IstruttoriPage() {
       )}
 
       {/* Class grid */}
+      {attive.length > 0 && (
+        <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground">
+          {t("Classi attive")} ({attive.length})
+        </h2>
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         {attive.map((c, i) => (
           <motion.div
@@ -196,10 +188,24 @@ export default function IstruttoriPage() {
         ))}
       </div>
 
+      {/* Strumenti per la lezione: stessi della home, definiti una volta sola.
+          Stanno DOPO le classi: tornando dal secondo o terzo livello
+          l'insegnante cerca la sua classe, e la trovava in fondo alla pagina
+          (Trevissoi, ottobre 2026). */}
+      <section className="mb-8 mt-10" aria-labelledby="strumenti-lezione">
+        <h2
+          id="strumenti-lezione"
+          className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground"
+        >
+          {t("Strumenti per la lezione")}
+        </h2>
+        <StrumentiLezione />
+      </section>
+
       {archiviate.length > 0 && (
         <div className="mt-10">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            {t("Archiviate")} ({archiviate.length})
+            {t("Storico classi")} ({archiviate.length})
           </h2>
           <div className="divide-y divide-border rounded-lg border border-border">
             {archiviate.map((c) => (

@@ -18,7 +18,9 @@ import { reportError } from "@/lib/report-error";
  * `/auth/callback` → `/reset-password` lo completa.
  *
  * Risponde sempre allo stesso modo, che l'indirizzo esista o no: altrimenti
- * questa rotta direbbe a chiunque quali email sono registrate.
+ * questa rotta direbbe a chiunque quali email sono registrate. Se l'indirizzo
+ * non è registrato parte comunque un'email — a quell'indirizzo, che è l'unico
+ * a vederla — con l'invito a registrarsi (richiesta di Trevissoi, ottobre 2026).
  */
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://bridgelab.it").replace(/\/$/, "");
 const FORMATO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,8 +28,11 @@ const FORMATO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "?";
   let email = "";
+  let lingua: "it" | "en" = "it";
   try {
-    email = String(((await request.json()) as { email?: unknown }).email ?? "").trim().toLowerCase();
+    const corpo = (await request.json()) as { email?: unknown; lingua?: unknown };
+    email = String(corpo.email ?? "").trim().toLowerCase();
+    if (corpo.lingua === "en") lingua = "en";
   } catch {
     return NextResponse.json({ errore: "richiesta non valida" }, { status: 400 });
   }
@@ -46,8 +51,14 @@ export async function POST(request: Request) {
       email,
       options: { redirectTo: `${SITE}/auth/callback?type=recovery&next=/reset-password` },
     });
-    // Indirizzo non registrato: stessa risposta, nessuna email.
+    // Indirizzo non registrato: stessa risposta a chi chiede, e all'indirizzo
+    // un invito a registrarsi.
     if (error || !data?.properties?.action_link || !data.user) {
+      const nonRegistrato = !error || /not found|user_not_found/i.test(`${error.code ?? ""} ${error.message}`);
+      if (nonRegistrato) {
+        const invio = await sendLifecycleEmail({ to: email, userId: "", kind: "recupero_non_registrato", ctx: { lingua } });
+        if (!invio.ok) reportError("auth:recupero-non-registrato", new Error(`invio non riuscito: ${invio.error ?? invio.skipped}`));
+      }
       return NextResponse.json({ ok: true });
     }
     const { data: profilo } = await admin

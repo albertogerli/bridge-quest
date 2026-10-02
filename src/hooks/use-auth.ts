@@ -313,7 +313,7 @@ export function useAuth() {
       const risposta = await fetch("/api/auth/recupero", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, lingua: window.location.pathname.startsWith("/en") ? "en" : "it" }),
       });
       if (risposta.ok) return { error: null };
       if (risposta.status === 429) return { error: { message: "rate limit" } };
