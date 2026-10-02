@@ -700,8 +700,8 @@ export default function ClassDetailPage({
               <span className="font-medium">{t("Nel confronto si vedono i nomi")}</span>
               <span className="block text-xs text-muted-foreground">
                 {classRoom.risultati_nominativi
-                  ? "Ogni allievo vede chi ha mantenuto e chi no."
-                  : "Ognuno vede come è andata agli altri, ma senza nomi. È il modo in cui il confronto resta un aiuto invece che una classifica."}
+                  ? t("Ogni allievo vede chi ha mantenuto e chi no.")
+                  : t("Ognuno vede come è andata agli altri, ma senza nomi. È il modo in cui il confronto resta un aiuto invece che una classifica.")}
               </span>
             </span>
           </label>

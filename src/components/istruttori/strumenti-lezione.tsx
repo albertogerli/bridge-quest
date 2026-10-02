@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Archive, ChevronRight, FlaskConical, Presentation, Printer, Users, Wand2, Library, Layers } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useT } from "@/contexts/traduzioni-provider";
 
 /**
  * Gli strumenti per la lezione, in un posto solo.
@@ -71,6 +72,7 @@ export const STRUMENTI_LEZIONE: Strumento[] = [
 ];
 
 export function StrumentiLezione({ className = "" }: { className?: string }) {
+  const t = useT();
   return (
     <div className={`grid gap-3 sm:grid-cols-2 ${className}`}>
       {STRUMENTI_LEZIONE.map(({ href, titolo, descrizione, icona: Icona }) => (
@@ -83,8 +85,8 @@ export function StrumentiLezione({ className = "" }: { className?: string }) {
             <Icona className="w-5 h-5" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">{titolo}</p>
-            <p className="text-xs text-muted-foreground">{descrizione}</p>
+            <p className="font-semibold text-sm">{t(titolo)}</p>
+            <p className="text-xs text-muted-foreground">{t(descrizione)}</p>
           </div>
           <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
         </Link>

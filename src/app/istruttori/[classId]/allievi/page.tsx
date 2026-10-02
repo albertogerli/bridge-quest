@@ -207,8 +207,8 @@ export default function AllieviPage({
         />
         <h1 className="mb-1 font-display text-3xl font-bold">{t("Allievi e tavoli")}</h1>
         <p className="mb-6 text-sm text-muted-foreground">
-          Carica il tuo elenco da Excel — salvato come CSV — e componi i tavoli. Di ogni allievo
-          conserviamo <strong>solo il nome</strong>: email e telefono restano nel tuo file.
+          {t("Carica il tuo elenco da Excel — salvato come CSV — e componi i tavoli. Di ogni allievo conserviamo")}{" "}
+          <strong>{t("solo il nome")}</strong>{t(": email e telefono restano nel tuo file.")}
         </p>
 
         {!foglio ? (
