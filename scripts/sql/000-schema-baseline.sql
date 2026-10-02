@@ -173,7 +173,8 @@ CREATE TABLE IF NOT EXISTS public.classes (
   permessi jsonb NOT NULL,
   soluzioni_predefinite text NOT NULL,
   locandina jsonb NOT NULL,
-  video_tavolo boolean NOT NULL
+  video_tavolo boolean NOT NULL,
+  posti_liberi boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.club_posts (
@@ -1554,8 +1555,15 @@ begin
     return jsonb_build_object('esito', 'tavolo-chiuso');
   end if;
 
+  -- Solo chi è iscritto a quella classe, o chi la insegna.
   if not (public.is_member_of_class(v_class) or public.is_instructor_of_class(v_class)) then
     return jsonb_build_object('esito', 'non-della-classe');
+  end if;
+
+  -- Posti decisi dall'insegnante: l'allievo non si siede da solo.
+  if not public.is_instructor_of_class(v_class)
+     and not coalesce((select posti_liberi from public.classes where id = v_class), true) then
+    return jsonb_build_object('esito', 'posti-dall-insegnante');
   end if;
 
   select key::uuid into v_occupante
@@ -1568,6 +1576,8 @@ begin
     return jsonb_build_object('esito', 'occupato', 'da', coalesce(v_nome, 'un compagno'));
   end if;
 
+  -- Chi si sposta lascia libero il posto di prima: senza, resterebbe seduto in
+  -- due punti e il tavolo mostrerebbe cinque persone su quattro sedie.
   v_posti := (
     select coalesce(jsonb_object_agg(key, value), '{}'::jsonb)
       from jsonb_each_text(v_posti)
@@ -4501,6 +4511,7 @@ ALTER TABLE public.classes ALTER COLUMN permessi SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.classes ALTER COLUMN soluzioni_predefinite SET DEFAULT 'quando-l-insegnante-decide'::text;
 ALTER TABLE public.classes ALTER COLUMN locandina SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.classes ALTER COLUMN video_tavolo SET DEFAULT false;
+ALTER TABLE public.classes ALTER COLUMN posti_liberi SET DEFAULT true;
 ALTER TABLE public.club_posts ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.club_posts ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.coda_sfide_coppie ALTER COLUMN id SET DEFAULT gen_random_uuid();

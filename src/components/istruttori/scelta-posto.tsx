@@ -108,6 +108,9 @@ export function SceltaPosto({
       case "tavolo-chiuso":
         setMessaggio(t("Questo tavolo è stato chiuso."));
         break;
+      case "posti-dall-insegnante":
+        setMessaggio(t("In questa classe i posti li assegna l'insegnante: aspetta che ti faccia sedere."));
+        break;
       case "non-della-classe":
         setMessaggio(t("Non risulti iscritto a questa classe."));
         break;

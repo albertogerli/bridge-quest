@@ -53,6 +53,8 @@ export interface ClassRoom {
    * guadagnare.
    */
   risultati_nominativi: boolean;
+  /** true: al tavolo gli allievi si siedono da soli; false: i posti li assegna l'insegnante. */
+  posti_liberi?: boolean;
   /**
    * La stanza di videoconferenza del corso.
    *
@@ -394,6 +396,7 @@ export async function aggiornaImpostazioniClasse(
     invite_expires_at?: string | null;
     invite_active?: boolean;
     risultati_nominativi?: boolean;
+    posti_liberi?: boolean;
     link_video?: string | null;
     livello?: string | null;
     soluzioni_predefinite?: VisibilitaSoluzioni;

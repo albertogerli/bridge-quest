@@ -171,9 +171,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ errore: "Non riesco a farti entrare adesso." }, { status: 500 });
   }
 
+  // Con l'approvazione automatica spenta, anche chi entra dal link aspetta
+  // l'OK dell'insegnante: lo vede arrivare in aula e decide (Trevissoi,
+  // ottobre 2026: «sempre previo OK dell'insegnante»).
+  const { data: classe } = await admin
+    .from("classes")
+    .select("approvazione_automatica")
+    .eq("id", invito.class_id)
+    .maybeSingle();
+  const stato = classe?.approvazione_automatica === false ? "pending" : "active";
   const { error: erroreIscrizione } = await admin
     .from("class_members")
-    .insert({ class_id: invito.class_id, student_id: uid, status: "active" });
+    .insert({ class_id: invito.class_id, student_id: uid, status: stato });
 
   if (erroreIscrizione) {
     // Un ospite senza classe non serve a niente e resterebbe lì: si ritira.

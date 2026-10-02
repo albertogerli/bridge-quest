@@ -23,6 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import { nomiDellaClasse } from "@/lib/aula";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { statoMiaIscrizione } from "@/lib/instructors";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -94,6 +95,25 @@ export default function TavoloAllievoPage({
     return watchLiveTable(tableId, setStato);
   }, [tableId]);
 
+  // Chi è entrato dal link e aspetta l'OK dell'insegnante: si ricontrolla ogni
+  // cinque secondi, e appena è dentro la pagina prosegue da sola.
+  const [inAttesa, setInAttesa] = useState(false);
+  useEffect(() => {
+    if (!user) return;
+    let vivo = true;
+    const controlla = () => {
+      void statoMiaIscrizione(classId).then((st) => {
+        if (vivo) setInAttesa(st === "pending");
+      });
+    };
+    controlla();
+    const timer = setInterval(controlla, 5000);
+    return () => {
+      vivo = false;
+      clearInterval(timer);
+    };
+  }, [classId, user]);
+
   // I nomi dei compagni servono per far vedere chi è già seduto: si caricano
   // una volta, non cambiano durante la lezione.
   useEffect(() => {
@@ -115,6 +135,18 @@ export default function TavoloAllievoPage({
         <p className="text-sm text-muted-foreground">
           <Link href={`/login?redirect=/classi/${classId}/tavolo`} className="underline">{t("Accedi")}</Link>{" "}
           per vedere il tavolo della tua classe.
+        </p>
+      </div>
+    );
+  }
+
+  if (inAttesa) {
+    return (
+      <div className="min-h-screen px-4 py-16 max-w-md mx-auto text-center">
+        <Users className="w-10 h-10 text-muted-foreground mx-auto mb-3" aria-hidden="true" />
+        <h1 className="text-xl font-bold font-display mb-2">{t("Aspetta l'insegnante")}</h1>
+        <p className="text-sm text-muted-foreground">
+          {t("L'insegnante deve farti entrare. Appena lo fa, il tavolo compare qui da solo: lascia la pagina aperta.")}
         </p>
       </div>
     );

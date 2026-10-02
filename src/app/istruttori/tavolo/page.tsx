@@ -3,9 +3,10 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Users, Play, Square, Undo2 } from "lucide-react";
+import { Eye, EyeOff, Users, Play, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { CaricaSet } from "@/components/istruttori/carica-set";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position } from "@/lib/bridge-engine";
@@ -142,10 +143,27 @@ function Tavolo() {
   );
   if (user) nomiVideo.set(user.id, t("Insegnante"));
   const modello = DEAL_TEMPLATES.find((t) => t.id === modelloId) ?? DEAL_TEMPLATES[0];
-  const mani = useMemo(
+  const generate = useMemo(
     () => generateDeals(modello.constraints, { count: 8, seed }).deals,
     [modello, seed]
   );
+  /**
+   * Un set già pronto al posto delle mani generate: le smazzate di una lezione
+   * (il materiale didattico) o una cartella dell'archivio dell'insegnante. Così
+   * al tavolo si discutono le mani degli esercizi assegnati o quelle preparate
+   * per la lezione (Trevissoi, ottobre 2026).
+   */
+  const [setCaricato, setSetCaricato] = useState<null | {
+    etichetta: string;
+    mani: { hands: Record<Position, Card[]>; titolo: string; contract: string | null; declarer: Position | null }[];
+  }>(null);
+  const elenco = useMemo(
+    () =>
+      setCaricato?.mani ??
+      generate.map((h, i) => ({ hands: h, titolo: `${modello.label} — mano ${i + 1}`, contract: null, declarer: null })),
+    [setCaricato, generate, modello.label],
+  );
+  const mani = useMemo(() => elenco.map((e) => e.hands), [elenco]);
 
   /**
    * IL CONTRATTO DEL TAVOLO, che prima non veniva mai impostato.
@@ -166,7 +184,8 @@ function Tavolo() {
    * Se il solver non risponde si va su 3SA da Sud: un contratto qualunque ma
    * giocabile è meglio di un tavolo su cui non si può muovere una carta.
    */
-  const contrattoDellaMano = useCallback(async (deal: Record<Position, Card[]>) => {
+  const contrattoDellaMano = useCallback(async (deal: Record<Position, Card[]>, dato?: { contract: string | null; declarer: Position | null }) => {
+    if (dato?.contract && dato.declarer) return { contract: dato.contract, declarer: dato.declarer };
     try {
       const { table, par } = await calcTableAndPar(deal, "north", "none");
       const a = parAssignmentFromContracts(par.contracts, table, deal);
@@ -180,11 +199,11 @@ function Tavolo() {
   const apri = useCallback(async () => {
     if (!classId || !mani.length) return;
     setOccupato(true);
-    const scelto = await contrattoDellaMano(mani[0]);
+    const scelto = await contrattoDellaMano(mani[0], elenco[0]);
     const id = await openLiveTable({
       classId,
       hands: mani[0],
-      titolo: `${modello.label} — mano 1`,
+      titolo: elenco[0].titolo,
       contract: scelto.contract,
       declarer: scelto.declarer,
     });
@@ -193,27 +212,27 @@ function Tavolo() {
     if (id) {
       await registraManoVista(id, {
         hands: mani[0],
-        titolo: `${modello.label} — mano 1`,
+        titolo: elenco[0].titolo,
         contract: scelto.contract,
         declarer: scelto.declarer,
       });
     }
     setOccupato(false);
-  }, [classId, mani, modello.label, contrattoDellaMano]);
+  }, [classId, mani, elenco, contrattoDellaMano]);
 
   const mandaMano = async (i: number) => {
     if (!tableId || !mani[i]) return;
     setIndice(i);
     setOccupato(true);
-    const scelto = await contrattoDellaMano(mani[i]);
+    const scelto = await contrattoDellaMano(mani[i], elenco[i]);
     await setLiveHands(tableId, mani[i], {
-      titolo: `${modello.label} — mano ${i + 1}`,
+      titolo: elenco[i].titolo,
       contract: scelto.contract,
       declarer: scelto.declarer,
     });
     await registraManoVista(tableId, {
       hands: mani[i],
-      titolo: `${modello.label} — mano ${i + 1}`,
+      titolo: elenco[i].titolo,
       contract: scelto.contract,
       declarer: scelto.declarer,
     });
@@ -338,6 +357,7 @@ function Tavolo() {
   const completa =
     !!alTavolo && (["north", "east", "south", "west"] as Position[]).every((p) => alTavolo[p]);
   const fuoriTema =
+    !setCaricato &&
     completa &&
     Object.keys(modello.constraints).length > 0 &&
     !satisfiesDeal(alTavolo as Record<Position, Card[]>, modello.constraints);
@@ -487,7 +507,15 @@ function Tavolo() {
           </select>
         </div>
 
-        <Button variant="outline" onClick={() => setSeed((s) => s + 1)}>{t("Altre mani")}</Button>
+        <Button variant="outline" onClick={() => { setSetCaricato(null); setSeed((s) => s + 1); }}>{t("Altre mani")}</Button>
+
+        <CaricaSet
+          attuale={setCaricato?.etichetta ?? null}
+          onCarica={(set) => {
+            setSetCaricato(set);
+            setIndice(0);
+          }}
+        />
 
         {/*
           L'AVVISO STA ACCANTO AL MENU che ha causato il disallineamento, non in
@@ -540,13 +568,14 @@ function Tavolo() {
             {t("Il tavolo è aperto. Gli allievi lo trovano nella loro classe.")}
           </p>
           <div className="flex flex-wrap gap-2">
-            {mani.map((_, i) => (
+            {elenco.map((e, i) => (
               <Button
                 key={i}
                 variant={i === indice ? "default" : "outline"}
                 onClick={() => mandaMano(i)}
+                title={e.titolo}
               >
-                Mano {i + 1}
+                {t("Mano {n}", { n: i + 1 })}
               </Button>
             ))}
           </div>
@@ -584,34 +613,6 @@ function Tavolo() {
         </div>
       )}
 
-      {gioco && tableId && (
-        <div className="rounded-2xl border border-border bg-card p-3 mb-4 text-center">
-          <p className="text-xs text-muted-foreground mb-1">
-            Presa {gioco.prese.length + 1} · Nord-Sud {gioco.preseNs} · Est-Ovest {gioco.preseEw}
-          </p>
-          <div className="flex items-center justify-center gap-3 min-h-[2rem]">
-            {gioco.presaCorrente.map((p, i) => (
-              <span key={i} className="text-lg font-mono flex items-center gap-1">
-                <SuitSymbol suit={p.card.suit} size="xs" />
-                {p.card.rank}
-              </span>
-            ))}
-            {gioco.presaCorrente.length === 0 && (
-              <span className="text-xs text-muted-foreground">presa nuova</span>
-            )}
-          </div>
-          <div className="flex items-center justify-center gap-3 mt-2">
-            <span className="text-sm font-semibold">
-              Gioca {SEATS.find((s) => s.key === gioco.turno)?.label}
-            </span>
-            <Button variant="outline" onClick={() => undoLiveCard(tableId)}>
-              <Undo2 className="w-4 h-4 mr-1" aria-hidden="true" />
-              {t("Annulla l'ultima")}
-            </Button>
-          </div>
-        </div>
-      )}
-
       {/* Il tavolo verde: carte vere, la presa in corso al centro, e una barra
           sola per decidere quali mani vede la classe. */}
       <TavoloVerde
@@ -632,6 +633,18 @@ function Tavolo() {
         ])}
         allievi={allievi.map((a) => ({ id: a.student_id, nome: a.display_name ?? t("Allievo") }))}
         onScegliPosto={tableId ? (seat, scelta) => void scegliPosto(seat, scelta) : undefined}
+        gioco={
+          gioco && tableId
+            ? {
+                contratto: stato?.contract ? contrattoLeggibile(stato.contract) : null,
+                dichiarante: stato?.declarer ?? null,
+                presa: Math.min(13, gioco.prese.length + 1),
+                preseNs: gioco.preseNs,
+                preseEw: gioco.preseEw,
+              }
+            : undefined
+        }
+        onAnnulla={tableId ? () => void undoLiveCard(tableId) : undefined}
         sopra={tableId && videoPermesso && user ? <VideoTavolo tavoloId={tableId} io={user.id} nomi={nomiVideo} /> : undefined}
       />
 
