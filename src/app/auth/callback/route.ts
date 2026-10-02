@@ -15,6 +15,15 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
   const type = searchParams.get("type");
+  const recupero = type === "recovery" || next === "/reset-password";
+
+  // Supabase rimanda qui SENZA codice quando il link non vale più: scaduto, già
+  // usato (anche da un filtro antispam che lo apre per controllarlo) o
+  // manomesso. Prima finiva in un generico «accesso fallito» che il login non
+  // mostrava nemmeno: la persona si ritrovava sul login senza sapere perché.
+  if (!code && (searchParams.get("error_code") || searchParams.get("error"))) {
+    return NextResponse.redirect(`${origin}/login?error=link_scaduto`);
+  }
 
   if (code) {
     const supabase = await createServerSupabaseClient();
@@ -47,6 +56,8 @@ export async function GET(request: Request) {
     }
   }
 
-  // If no code or exchange failed, redirect to login with error
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+  // Codice presente ma scambio fallito. Per il recupero password la causa quasi
+  // sempre è il browser: il link si apre solo dove è stato chiesto (PKCE), e sul
+  // telefono l'email apre spesso un'altra app.
+  return NextResponse.redirect(`${origin}/login?error=${recupero ? "link_altro_browser" : "auth_callback_failed"}`);
 }
