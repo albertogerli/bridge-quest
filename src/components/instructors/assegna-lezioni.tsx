@@ -40,7 +40,7 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
  * su (classe, lezione). Qui non c'è nessuna difesa contro il doppio clic, e non
  * serve — due schede aperte non si parlerebbero comunque.
  */
-export function AssegnaLezioni({ classId }: { classId: string }) {
+export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCambiato?: () => void }) {
   const t = useT();
   const { courses } = useCatalog();
   const { smazzate } = useSmazzate();
@@ -94,6 +94,7 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
     try {
       await assegnaLezione(classId, lessonId);
       await ricarica();
+      onCambiato?.();
     } catch (err) {
       reportError("assegna-lezioni:assegna", err);
       setErrore("Non sono riuscito ad assegnare la lezione.");
@@ -124,6 +125,7 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
       await assegnaManiLezione(classId, scelta.lessonId, scelta.titolo, [...scelta.spuntate]);
       setScelta(null);
       await ricarica();
+      onCambiato?.();
     } catch (err) {
       reportError("assegna-lezioni:assegna-parziale", err);
       setErrore("Non sono riuscito ad assegnare le mani scelte.");
@@ -137,6 +139,7 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
     try {
       await apriRevisioni([assignmentId]);
       await ricarica();
+      onCambiato?.();
     } catch (err) {
       reportError("assegna-lezioni:apri-revisione", err);
       setErrore("Non sono riuscito ad aprire la revisione.");
@@ -263,8 +266,10 @@ export function AssegnaLezioni({ classId }: { classId: string }) {
                   const finitaDaTutti =
                     !!compito && compito.n_allievi > 0 && compito.n_completi >= compito.n_allievi;
                   return (
-                    <div key={lezione.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-                      <div className="min-w-0 flex-1">
+                    <div key={lezione.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
+                      {/* basis-64: il testo ha sempre almeno 16rem, i pulsanti vanno a capo
+                          sotto invece di schiacciarlo (titolo «V..», dati una parola per riga). */}
+                      <div className="min-w-0 flex-1 basis-64">
                         <p className="truncate text-sm font-medium">{lezione.title}</p>
                         <p className="text-xs text-muted-foreground">
                           {compito ? `${compito.n_mani}/${nMani} ${t("mani assegnate")}` : `${nMani} ${nMani === 1 ? "mano" : "mani"}`}

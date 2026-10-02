@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -13,7 +13,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useEnrolledClasses } from "@/store/use-classes-store";
-import { joinClass, statoMiaIscrizione, type MemberStatus } from "@/lib/instructors";
+import { getStudentAssignments, joinClass, statoMiaIscrizione, type MemberStatus } from "@/lib/instructors";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
 export default function ClassiPage() {
@@ -48,6 +49,28 @@ function ClassiContent() {
    * dalla propria riga, che le RLS lasciano vedere in entrambi i casi.
    */
   const [esito, setEsito] = useState<{ nome: string; stato: MemberStatus | null } | null>(null);
+
+  /**
+   * Quanti compiti ha ogni classe. La scheda era solo un nome: chi si era appena
+   * iscritto non aveva modo di sapere che dentro c'era qualcosa da giocare.
+   */
+  const [compitiPerClasse, setCompitiPerClasse] = useState<Record<string, number>>({});
+  const idClassi = classes.map((c) => c.id).join(",");
+  useEffect(() => {
+    if (!idClassi) return;
+    let annullato = false;
+    getStudentAssignments()
+      .then((lista) => {
+        if (annullato) return;
+        const conto: Record<string, number> = {};
+        for (const a of lista) conto[a.class_id] = (conto[a.class_id] ?? 0) + 1;
+        setCompitiPerClasse(conto);
+      })
+      .catch((err) => segnalaSalvoRete("classi:conta-compiti", err));
+    return () => {
+      annullato = true;
+    };
+  }, [idClassi]);
 
   async function handleJoin() {
     const trimmed = code.trim();
@@ -175,6 +198,14 @@ function ClassiContent() {
                   {c.description && (
                     <CardDescription className="line-clamp-2">{c.description}</CardDescription>
                   )}
+                  <p className="pt-1 text-sm font-medium text-primary">
+                    {compitiPerClasse[c.id]
+                      ? (compitiPerClasse[c.id] === 1
+                          ? t("1 compito da giocare")
+                          : t("{n} compiti da giocare", { n: compitiPerClasse[c.id] }))
+                      : t("Apri la classe")}{" "}
+                    →
+                  </p>
                 </CardHeader>
               </Card>
             </Link>

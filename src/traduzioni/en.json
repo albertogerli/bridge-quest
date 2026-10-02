@@ -2066,5 +2066,10 @@
   "Sulla riga del vostro contratto c'è il voto in cima. Le altre righe si misurano sul miglior contratto in media della smazzata; il vostro voto invece sul par, perché in media il contratto migliore era degli avversari.": "Your contract's row shows the grade at the top. The other rows are measured against the best contract on average for the deal; your grade is measured against par instead, because on average the best contract belonged to the opponents.",
   "Mano {n} di {di}": "Deal {n} of {di}",
   "Serie finita: {s} stelle su {max}": "Series finished: {s} stars out of {max}",
-  "La serie finora: {s} stelle in {n} mani": "The series so far: {s} stars in {n} deals"
+  "La serie finora: {s} stelle in {n} mani": "The series so far: {s} stars in {n} deals",
+  "es. Corso Fiori 2026": "e.g. Clubs Course 2026",
+  "es. Corso base del martedì sera": "e.g. Tuesday evening beginners' course",
+  "1 compito da giocare": "1 assignment to play",
+  "{n} compiti da giocare": "{n} assignments to play",
+  "Apri la classe": "Open the class"
 }

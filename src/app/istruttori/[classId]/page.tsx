@@ -117,6 +117,17 @@ export default function ClassDetailPage({
     }
   }
 
+  /** Rilegge la classe senza svuotare la pagina: i compiti assegnati da un'altra scheda
+   *  (Lezioni) devono comparire subito in «Compiti (n)», non dopo un ricaricamento. */
+  async function aggiornaSenzaSchermataDiCaricamento() {
+    try {
+      setDetail(await getClassDetail(classId));
+    } catch (err) {
+      // resta quello che si vedeva: l'errore vero lo mostra il prossimo load()
+      segnalaSalvoRete("istruttori/classe:aggiorna", err);
+    }
+  }
+
   async function load() {
     setLoading(true);
     setError(null);
@@ -541,7 +552,7 @@ export default function ClassDetailPage({
           <p className="mb-4 text-sm text-muted-foreground">
             {t("Un tocco assegna tutte le mani della lezione. Per un compito su misura c'è «Nuovo compito».")}
           </p>
-          <AssegnaLezioni classId={classId} />
+          <AssegnaLezioni classId={classId} onCambiato={() => void aggiornaSenzaSchermataDiCaricamento()} />
         </TabsContent>
 
         {/* Classifica */}
