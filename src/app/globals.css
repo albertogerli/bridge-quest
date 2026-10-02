@@ -72,6 +72,8 @@
   --color-emerald: #047857;
   /* emerald-600 su avorio non arriva a 4.5:1 per il testo piccolo (3.4–3.65): axe, 2 ottobre */
   --color-emerald-600: #047857;
+  /* amber-600 (#e17100) sull'avorio: 3.0–3.2:1 per il testo piccolo */
+  --color-amber-600: #b45309;
   --color-emerald-light: #34d399;
   --color-emerald-dark: #047857;
 }
