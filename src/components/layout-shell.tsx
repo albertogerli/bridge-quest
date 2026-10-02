@@ -59,7 +59,10 @@ const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istrutt
 /** Routes accessible without authentication */
 // /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi
 // arriva da Google veniva rimbalzato al login e il lavoro SEO era vanificato.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
+// `/reset-password` è pubblica perché la sessione del recupero arriva nel
+// frammento del link e la installa la pagina stessa: il cancello, non
+// vedendola ancora, rimandava al login e il link si perdeva.
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
@@ -127,6 +130,15 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
    * vero, o un inglese tornerebbe sulla pagina italiana.
    */
   const percorsoIntero = usePathname();
+  // Se Supabase non riconosce l'indirizzo di ritorno di un recupero password
+  // rimanda alla radice del sito, con la sessione nel frammento. Da qualunque
+  // pagina arrivi, il recupero si completa su /reset-password.
+  useEffect(() => {
+    const frammento = window.location.hash;
+    if (frammento.includes("type=recovery") && !window.location.pathname.endsWith("/reset-password")) {
+      window.location.replace(`/reset-password${frammento}`);
+    }
+  }, []);
   useEffect(() => {
     if (!authLoading && !user && !accessibile && ospite !== null) {
       const dove = percorsoIntero && percorsoIntero !== "/" ? percorsoIntero : null;
