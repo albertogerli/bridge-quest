@@ -130,8 +130,8 @@ export default function QuizPresePage() {
               className="w-full text-left rounded-2xl border border-border bg-card p-4 hover:bg-muted transition-colors flex items-center gap-3"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-semibold">{l.label}</p>
-                <p className="text-xs text-muted-foreground">{l.description}</p>
+                <p className="font-semibold">{t(l.label)}</p>
+                <p className="text-xs text-muted-foreground">{t(l.description)}</p>
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
             </button>

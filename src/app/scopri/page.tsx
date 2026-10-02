@@ -86,11 +86,12 @@ export default function ScopriPage() {
               </div>
 
               <p className="text-sm text-foreground/80 leading-relaxed mb-4">
-                La <strong>{t("Federazione Italiana Gioco Bridge")}</strong> (FIGB) è l&apos;organismo
-                ufficiale che governa il bridge sportivo in Italia. Fondata nel <strong>1936</strong>,
-                è membro del <strong>CONI</strong> (Comitato Olimpico Nazionale Italiano) e conta
-                circa <strong>35.000 tesserati</strong> e oltre <strong>300 circoli</strong> su tutto
-                il territorio nazionale.
+                {t("La")} <strong>{t("Federazione Italiana Gioco Bridge")}</strong>{" "}
+                {t("(FIGB) è l'organismo ufficiale che governa il bridge sportivo in Italia. Fondata nel")}{" "}
+                <strong>1936</strong>{t(", è membro del")} <strong>CONI</strong>{" "}
+                {t("(Comitato Olimpico Nazionale Italiano) e conta circa")}{" "}
+                <strong>{t("35.000 tesserati")}</strong> {t("e oltre")} <strong>{t("300 circoli")}</strong>{" "}
+                {t("su tutto il territorio nazionale.")}
               </p>
 
               <p className="text-sm text-foreground/80 leading-relaxed mb-5">
@@ -154,30 +155,30 @@ export default function ScopriPage() {
               <div className="space-y-5">
                 {/* Timeline items */}
                 <TimelineItem
-                  year="XVII sec."
+                  year={t("XVII sec.")}
                   title={t("Le origini: il Whist")}
-                  description="Il bridge affonda le sue radici nel Whist, un gioco di carte nato in Inghilterra nel XVII secolo. Dall'evoluzione del Whist nacquero varianti sempre più sofisticate."
+                  description={t("Il bridge affonda le sue radici nel Whist, un gioco di carte nato in Inghilterra nel XVII secolo. Dall'evoluzione del Whist nacquero varianti sempre più sofisticate.")}
                   color="bg-gray-500"
                 />
 
                 <TimelineItem
                   year="1925"
                   title={t("Nasce il Contract Bridge")}
-                  description="Harold Stirling Vanderbilt, miliardario americano e appassionato giocatore di carte, inventa il Contract Bridge durante una crociera nel Canale di Panama. Le regole che codifica diventeranno lo standard mondiale."
+                  description={t("Harold Stirling Vanderbilt, miliardario americano e appassionato giocatore di carte, inventa il Contract Bridge durante una crociera nel Canale di Panama. Le regole che codifica diventeranno lo standard mondiale.")}
                   color="bg-blue-500"
                 />
 
                 <TimelineItem
                   year="1935"
                   title={t("Primo Campionato del Mondo")}
-                  description="Si disputa il primo Campionato del Mondo di bridge, sancendo la nascita del bridge come disciplina sportiva a livello internazionale."
+                  description={t("Si disputa il primo Campionato del Mondo di bridge, sancendo la nascita del bridge come disciplina sportiva a livello internazionale.")}
                   color="bg-emerald-500"
                 />
 
                 <TimelineItem
                   year="1957-1975"
                   title={t("L'era della Squadra Azzurra")}
-                  description="L'Italia domina il bridge mondiale con la leggendaria Squadra Azzurra (Blue Team), vincendo 16 titoli mondiali in meno di vent'anni - un record senza precedenti nella storia dello sport della mente."
+                  description={t("L'Italia domina il bridge mondiale con la leggendaria Squadra Azzurra (Blue Team), vincendo 16 titoli mondiali in meno di vent'anni - un record senza precedenti nella storia dello sport della mente.")}
                   color="bg-figb dark:bg-primary"
                   highlight
                 />
@@ -219,8 +220,8 @@ export default function ScopriPage() {
               <div className="mt-4 flex items-start gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
                 <Brain className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-sm text-amber-800 dark:text-amber-200">
-                  {t("Il bridge è riconosciuto come")} <strong>&quot;sport della mente&quot;</strong> dal
-                  Comitato Olimpico Internazionale (CIO) dal 1999.
+                  {t("Il bridge è riconosciuto come")} <strong>&quot;{t("sport della mente")}&quot;</strong>{" "}
+                  {t("dal Comitato Olimpico Internazionale (CIO) dal 1999.")}
                 </p>
               </div>
             </div>
@@ -242,26 +243,26 @@ export default function ScopriPage() {
             <FunFactCard
               icon={<Globe className="w-5 h-5 text-blue-500" />}
               iconBg="bg-blue-100 dark:bg-blue-900/30"
-              title="100+ paesi"
-              description="Il bridge è giocato in oltre 100 paesi in tutti i continenti, con milioni di appassionati."
+              title={t("100+ paesi")}
+              description={t("Il bridge è giocato in oltre 100 paesi in tutti i continenti, con milioni di appassionati.")}
             />
             <FunFactCard
               icon={<Users className="w-5 h-5 text-emerald-500" />}
               iconBg="bg-emerald-100 dark:bg-emerald-900/30"
               title={t("Giocatori illustri")}
-              description="Bill Gates e Warren Buffett sono appassionati giocatori di bridge e spesso giocano insieme."
+              description={t("Bill Gates e Warren Buffett sono appassionati giocatori di bridge e spesso giocano insieme.")}
             />
             <FunFactCard
               icon={<Heart className="w-5 h-5 text-rose-500" />}
               iconBg="bg-rose-100 dark:bg-rose-900/30"
-              title="635 miliardi di combinazioni"
-              description="Esistono 635.013.559.600 diverse distribuzioni possibili delle carte a bridge."
+              title={t("635 miliardi di combinazioni")}
+              description={t("Esistono 635.013.559.600 diverse distribuzioni possibili delle carte a bridge.")}
             />
             <FunFactCard
               icon={<Brain className="w-5 h-5 text-purple-500" />}
               iconBg="bg-purple-100 dark:bg-purple-900/30"
               title={t("Benefici cognitivi")}
-              description="Studi scientifici hanno dimostrato che giocare a bridge aiuta a prevenire il declino cognitivo."
+              description={t("Studi scientifici hanno dimostrato che giocare a bridge aiuta a prevenire il declino cognitivo.")}
             />
           </div>
         </motion.section>

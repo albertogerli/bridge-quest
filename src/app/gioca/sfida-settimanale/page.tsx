@@ -258,7 +258,7 @@ export default function SfidaSettimanale() {
         <div className="mx-auto max-w-6xl">
           <div className="bg-card rounded-2xl p-5 shadow-sm border border-border">
             <h2 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              💡 Suggerimenti per questa settimana
+              💡 {t("Suggerimenti per questa settimana")}
             </h2>
             <ul className="space-y-2">
               {challenge.tips.map((tip, i) => (

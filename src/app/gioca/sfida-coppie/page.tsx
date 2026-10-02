@@ -225,9 +225,7 @@ export default function SfidaCoppiePage() {
           ) : (
             <>
               <p className="text-sm text-muted-foreground mb-3">
-                Scegli il compagno e mettetevi in fila: gli avversari li trova la
-                coda. La prima coppia che si iscrive dopo di voi diventa la
-                vostra.
+                {t("Scegli il compagno e mettetevi in fila: gli avversari li trova la coda. La prima coppia che si iscrive dopo di voi diventa la vostra.")}
                 {coda.coppieInAttesa > 0 && (
                   <>
                     {" "}

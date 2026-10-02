@@ -324,7 +324,7 @@ function SfidaLinkContent() {
                   {mode === "create" ? "Crea Sfida via Link" : "Sfida Ricevuta!"}
                 </h1>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  {mode === "create" ? "Gioca questa mano e condividi il link" : "Un amico ti ha sfidato a questa mano"}
+                  {mode === "create" ? t("Gioca questa mano e condividi il link") : t("Un amico ti ha sfidato a questa mano")}
                 </p>
               </div>
             </div>

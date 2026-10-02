@@ -177,7 +177,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
           className="flex items-center justify-between w-full text-left"
         >
           <span className="font-semibold flex items-center gap-2">
-            💡 Suggerimenti per questa settimana
+            💡 {t("Suggerimenti per questa settimana")}
           </span>
           {showTips ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
         </button>
