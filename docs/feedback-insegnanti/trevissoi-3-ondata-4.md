@@ -29,3 +29,15 @@ altri o da una decisione, da approfondire.
 - Accesso degli insegnanti: già oggi la richiesta va approvata a mano, l'ingresso resta chiuso finché non si decide di aprirlo.
 - Sblocco delle restrizioni per singolo allievo: oggi solo per tutta la classe; annotato.
 - Riflessione strategica (due aree o solo portale insegnanti) e riunione privacy: da fissare con Luca.
+
+## Rimasti dalle ondate 1–3 (fatte il 2 ottobre 2026)
+
+| Richiesta | Cosa manca |
+|---|---|
+| Iscrizione al corso con i dati per il tesseramento | Servono i campi (punto 33) e la verifica privacy. Oggi: codice classe → richiesta → convalida dell'insegnante, una per una o in blocco. |
+| Storico classi con report e grafici | Oggi solo allievi e compiti per classe. |
+| Area videolezioni dell'allievo, riservata agli iscritti | Dipende dalla decisione sull'accesso (punto 31). |
+| Area valutazioni abilitabile dall'insegnante | Da definire cosa si valuta e come. |
+| Riferimenti completi degli allievi (contatti) | L'elenco tavoli conserva solo il nome, per scelta di privacy: va deciso con il punto 33. |
+| Diagrammi più compatti anche fuori dal tavolo verde (lavagna, compiti) | Fatto sul tavolo condiviso; il resto da rivedere schermata per schermata. |
+| Set della Commissione Insegnamento al tavolo | Il pulsante «carica un set» c'è; mancano i contenuti della Commissione (punto 30). |
