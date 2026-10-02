@@ -35,6 +35,8 @@ export function SelettoreLingua({ className = "" }: { className?: string }) {
             // `hreflang` dice ai motori di ricerca che cosa c'è dall'altra
             // parte, e ai lettori di schermo in che lingua è scritto il link.
             hrefLang={l}
+            // Un cambio di lingua non si prepara in anticipo: la radice `/en` darebbe 404 al prefetch.
+            prefetch={false}
             aria-current={attiva ? "true" : undefined}
             className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
               attiva

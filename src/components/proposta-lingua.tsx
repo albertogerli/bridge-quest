@@ -98,6 +98,7 @@ export function PropostaLingua() {
           href={versoLingua(proposta)}
           hrefLang={proposta}
           onClick={ricorda}
+          prefetch={false}
           className="rounded-xl bg-figb px-3 py-2 text-sm font-medium text-white hover:bg-figb-dark"
         >
           {inglese ? "Switch to English" : "Passa all'italiano"}
