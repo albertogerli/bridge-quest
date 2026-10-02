@@ -33,6 +33,7 @@ import {
 } from "@/lib/modelli-mani";
 import { proponi } from "@/lib/libreria";
 import { useT } from "@/contexts/traduzioni-provider";
+import { Briciole } from "@/components/briciole";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const SEATS: { key: Position; label: string }[] = [
@@ -371,6 +372,7 @@ export default function GeneraManiPage() {
 
   return (
     <div className="min-h-screen px-4 py-6 max-w-4xl mx-auto">
+      <Briciole percorso={[{ etichetta: "Le tue classi", href: "/istruttori" }, { etichetta: "Genera mani" }]} />
       <header className="mb-6">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Wand2 className="w-6 h-6 text-figb" aria-hidden="true" />

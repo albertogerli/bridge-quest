@@ -15,6 +15,7 @@ import { getAllSmazzate } from "@/lib/catalog";
 import { mieNote } from "@/lib/note-smazzate";
 import { RanghiSeme } from "@/components/bridge/ranghi-seme";
 import { useT } from "@/contexts/traduzioni-provider";
+import { Briciole } from "@/components/briciole";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const SIMBOLO: Record<Suit, string> = { spade: "♠", heart: "♥", diamond: "♦", club: "♣" };
@@ -186,6 +187,7 @@ function Dispensa() {
     <div className="min-h-screen px-4 py-6 max-w-4xl mx-auto">
       {/* Comandi: spariscono in stampa */}
       <div className="print:hidden mb-6">
+        <Briciole percorso={[{ etichetta: "Le tue classi", href: "/istruttori" }, { etichetta: "Dispensa" }]} />
         <h1 className="text-2xl font-bold font-display mb-1">{t("Dispensa")}</h1>
         <p className="text-sm text-muted-foreground mb-4">
           {parte === "dispensa"

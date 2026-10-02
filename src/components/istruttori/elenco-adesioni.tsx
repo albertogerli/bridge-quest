@@ -28,8 +28,14 @@ import { useT } from "@/contexts/traduzioni-provider";
 export function ElencoAdesioni({
   classId,
   membri = [],
+  onCreaCorso,
 }: {
   classId: string;
+  /**
+   * Dalla Lezione Zero al corso: una classe nuova che prende i dati di questa.
+   * Le adesioni restano qui, distinte dalle iscrizioni al corso.
+   */
+  onCreaCorso?: () => void;
   /** Gli iscritti alla classe, per collegare un'adesione a chi è arrivato. */
   membri?: ClassMember[];
 }) {
@@ -106,6 +112,20 @@ export function ElencoAdesioni({
 
   return (
     <section className="mt-8">
+      {onCreaCorso && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-primary/30 bg-primary/5 p-3 text-sm">
+          <span className="flex-1">
+            {t("Finita la Lezione Zero, crea il corso: prende i dati di questa classe e ti dà il codice da mandare a chi si iscrive.")}
+          </span>
+          <button
+            type="button"
+            onClick={onCreaCorso}
+            className="rounded-lg bg-primary px-3 py-2 font-semibold text-primary-foreground"
+          >
+            {t("Crea il corso da questa Lezione Zero")}
+          </button>
+        </div>
+      )}
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         {t("Hanno detto che vengono")} · {vive.length}
         {giaCollegati.size > 0 && (

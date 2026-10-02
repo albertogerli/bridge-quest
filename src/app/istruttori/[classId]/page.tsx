@@ -30,6 +30,7 @@ import {
   decidiIscrizione,
   decidiIscrizioni,
   aggiornaImpostazioniClasse,
+  createClass,
   rinominaClasse,
   eliminaClasse,
   ClasseNonToccata,
@@ -42,6 +43,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { copiaTesto } from "@/lib/appunti";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 
 export default function ClassDetailPage({
   params,
@@ -104,6 +106,36 @@ export default function ClassDetailPage({
    */
   const [eliminazione, setEliminazione] = useState<null | "avviso" | "nome">(null);
   const [nomeScritto, setNomeScritto] = useState("");
+  /**
+   * Il corso nasce dalla Lezione Zero con i suoi dati (ASD, descrizione,
+   * livello, date, stanza video), tutti modificabili poi. Le adesioni restano
+   * nella Lezione Zero: aderire e iscriversi al corso sono due cose distinte, e
+   * l'iscrizione la convalida l'insegnante (Trevissoi, ottobre 2026).
+   */
+  async function creaCorsoDaLezioneZero() {
+    if (!detail) return;
+    const base = detail.classRoom;
+    setBusy(true);
+    try {
+      const nuova = await createClass({
+        name: t("{nome} — Corso", { nome: base.name }),
+        description: base.description,
+        asdCode: base.asd_code,
+      });
+      await aggiornaImpostazioniClasse(nuova.id, {
+        livello: base.livello,
+        inizio_corso: base.inizio_corso,
+        fine_corso: base.fine_corso,
+        link_video: base.link_video,
+        approvazione_automatica: false,
+      });
+      router.push(`/istruttori/${nuova.id}`);
+    } catch (err) {
+      spiega(err);
+      setBusy(false);
+    }
+  }
+
   async function elimina() {
     if (!detail) return;
     if (nomeScritto.trim() !== detail.classRoom.name.trim()) {
@@ -435,25 +467,42 @@ export default function ClassDetailPage({
         impostazioni che si toccano una volta sola: «le attività operative
         devono avere i pulsanti in testa» (feedback di un insegnante, 28/09/2026).
       */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        <Link href={`/istruttori/${classId}/aula`}>
-          <Button>{t("Apri l'aula")}</Button>
-        </Link>
-        <Link href={`/istruttori/${classId}/nuovo-compito`}>
-          <Button variant="outline">{t("Nuovo compito")}</Button>
-        </Link>
-        <Button variant="outline" onClick={() => setScheda("lezioni")}>
-          {t("Assegna una lezione")}
-        </Button>
-        <Link href={`/istruttori/${classId}/allievi`}>
-          <Button variant="outline">{t("Allievi e tavoli")}</Button>
-        </Link>
-        <Link href="/istruttori/dispensa">
-          <Button variant="outline">{t("Dispensa")}</Button>
-        </Link>
-        <Link href={`/istruttori/${classId}/locandina`}>
-          <Button variant="outline">{t("Locandina")}</Button>
-        </Link>
+      {/*
+        IN ORDINE DI LAVORO. Dopo ogni lezione l'insegnante manda la dispensa,
+        poi l'esercizio, poi le smazzate giocate in aula con video e materiali;
+        l'aula e gli allievi sono un'altra riga (Trevissoi, ottobre 2026: il
+        menu della classe va rivisto sulla sequenza reale).
+      */}
+      <div className="mb-3">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("Dopo la lezione")}</p>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/istruttori/dispensa">
+            <Button variant="outline">1 · {t("Dispensa")}</Button>
+          </Link>
+          <Link href={`/istruttori/${classId}/nuovo-compito`}>
+            <Button variant="outline">2 · {t("Esercizio")}</Button>
+          </Link>
+          <Button variant="outline" onClick={() => setScheda("lezioni")}>
+            3 · {t("Smazzate della lezione, video e materiali")}
+          </Button>
+        </div>
+      </div>
+      <div className="mb-6">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("In aula")}</p>
+        <div className="flex flex-wrap gap-2">
+          <Link href={`/istruttori/${classId}/aula`}>
+            <Button>{t("Apri l'aula")}</Button>
+          </Link>
+          <Link href={`/istruttori/tavolo?classe=${classId}`}>
+            <Button variant="outline">{t("Tavolo condiviso")}</Button>
+          </Link>
+          <Link href={`/istruttori/${classId}/allievi`}>
+            <Button variant="outline">{t("Allievi e tavoli")}</Button>
+          </Link>
+          <Link href={`/istruttori/${classId}/locandina`}>
+            <Button variant="outline">{t("Locandina")}</Button>
+          </Link>
+        </div>
       </div>
 
       {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
@@ -550,7 +599,7 @@ export default function ClassDetailPage({
         <RevisioniDaAprire classId={classId} />
 
         {/* Chi ha detto «vengo»: serve la sera prima, per comporre i tavoli. */}
-        <ElencoAdesioni classId={classId} membri={detail.members} />
+        <ElencoAdesioni classId={classId} membri={detail.members} onCreaCorso={() => void creaCorsoDaLezioneZero()} />
 
         {/* Lezioni: assegnare in blocco */}
         <TabsContent value="lezioni" className="mt-4">
@@ -570,6 +619,16 @@ export default function ClassDetailPage({
           <ClassChat classId={classId} />
         </TabsContent>
       </Tabs>
+
+      {/* Gli strumenti per la lezione, dentro la classe: si usano per QUESTA
+          classe, e cercarli nel portale generale voleva dire uscire e
+          rientrare. */}
+      <section className="mb-8 mt-10" aria-labelledby="strumenti-classe">
+        <h2 id="strumenti-classe" className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground">
+          {t("Strumenti per la lezione")}
+        </h2>
+        <StrumentiLezione />
+      </section>
 
       {/* GESTIONE CLASSE: quello che si imposta una volta e si ritocca di rado. */}
       <h2 className="mb-4 mt-10 font-display text-2xl font-bold">{t("Gestione classe")}</h2>

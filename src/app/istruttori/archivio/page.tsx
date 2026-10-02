@@ -20,6 +20,7 @@ import {
 } from "@/lib/saved-hands";
 import { apriStampaMano } from "@/lib/stampa-mano";
 import { useT } from "@/contexts/traduzioni-provider";
+import { Briciole } from "@/components/briciole";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -115,6 +116,7 @@ export default function ArchivioPage() {
 
   return (
     <div className="min-h-screen px-4 py-6 max-w-3xl mx-auto">
+      <Briciole percorso={[{ etichetta: "Le tue classi", href: "/istruttori" }, { etichetta: "Le tue mani" }]} />
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Archive className="w-6 h-6 text-figb" aria-hidden="true" />
