@@ -237,7 +237,10 @@ export default function IstruttoriPage() {
                 id="class-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="es. Corso Fiori 2026"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !saving) void handleCreate();
+                }}
+                placeholder={t("es. Corso Fiori 2026")}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
                 autoFocus
               />
@@ -250,7 +253,7 @@ export default function IstruttoriPage() {
                 id="class-desc"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="es. Corso base del martedì sera"
+                placeholder={t("es. Corso base del martedì sera")}
                 rows={2}
                 className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
               />
