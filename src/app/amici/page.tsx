@@ -216,12 +216,12 @@ export default function AmiciPage() {
         </Link>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === tab.id
                   ? "bg-figb text-white shadow-sm"
                   : "bg-card border border-border text-foreground/80 hover:bg-muted/50"
