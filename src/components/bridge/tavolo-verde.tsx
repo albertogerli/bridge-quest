@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Bot, Eye, User } from "lucide-react";
+import { Bot, Eye, Undo2, User } from "lucide-react";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { PlayingCard } from "@/components/bridge/playing-card";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -47,6 +47,8 @@ export function TavoloVerde({
   occupanti,
   allievi,
   onScegliPosto,
+  gioco,
+  onAnnulla,
 }: {
   mani: Partial<Record<Position, Card[]>>;
   /** Le mani che la classe vede in questo momento. */
@@ -80,10 +82,27 @@ export function TavoloVerde({
     seat: Position,
     scelta: { tipo: "io" } | { tipo: "computer" } | { tipo: "allievo"; id: string },
   ) => void;
+  /**
+   * Contratto, prese e numero di presa, SUL panno: prima stavano in un
+   * riquadro sopra il tavolo e l'insegnante doveva guardare in due posti
+   * (Trevissoi, ottobre 2026).
+   */
+  gioco?: {
+    contratto?: string | null;
+    dichiarante?: Position | null;
+    presa: number;
+    preseNs: number;
+    preseEw: number;
+  };
+  /** Annulla l'ultima carta: il pulsante sta nella barra sul panno. */
+  onAnnulla?: () => void;
 }) {
   const t = useT();
   const piccolo = useMobile(768);
   const [menuAperto, setMenuAperto] = useState<Position | null>(null);
+  // I punti onori accanto al nome si possono togliere: in aula a volte si
+  // vuole che sia la classe a contarli.
+  const [mostraPunti, setMostraPunti] = useState(true);
   const inCorso = giocate.length % 4 === 0 ? [] : giocate.slice(giocate.length - (giocate.length % 4));
 
   const targhetta = (p: Position) => {
@@ -95,7 +114,7 @@ export function TavoloVerde({
       <>
         <span className="flex h-6 w-6 items-center justify-center rounded bg-[#003DA5] text-xs font-bold text-white">{info.iniziale}</span>
         <span className={piccolo ? "sr-only" : ""}>{t(info.l)}</span>
-        <span className="text-xs font-normal opacity-70">{handHcp(mani[p] ?? [])}{piccolo ? "" : " PO"}</span>
+        {mostraPunti && <span className="text-xs font-normal opacity-70">{handHcp(mani[p] ?? [])}{piccolo ? "" : " PO"}</span>}
         {vista && <Eye className="h-3.5 w-3.5 text-emerald-700" aria-label={t("La classe la vede")} />}
         {chi && (
           <span className="flex items-center gap-1 rounded bg-black/10 px-1.5 text-xs font-normal">
@@ -145,7 +164,7 @@ export function TavoloVerde({
     );
   };
 
-  const carta = (p: Position, c: Card, dimensione: "xs" | "sm") => {
+  const carta = (p: Position, c: Card, dimensione: "xs" | "sm" | "md") => {
     const giocabile = attivo && turno === p && giocabili.has(chiave(c));
     if (!giocabile) {
       // Piena e leggibile, solo non toccabile: `disabled` la sbiadirebbe, e una
@@ -196,8 +215,10 @@ export function TavoloVerde({
   const inRiga = (p: Position) => piccolo ? compatta(p) : (
     <div className="flex flex-col items-center">
       {targhetta(p)}
-      <div className={`flex ${piccolo ? "[&>*:not(:first-child)]:-ml-5" : "[&>*:not(:first-child)]:-ml-3"}`}>
-        {ordina(mani[p] ?? []).map((c) => carta(p, c, piccolo ? "xs" : "sm"))}
+      {/* Carte più grandi e più sovrapposte: stessa larghezza di prima, valori
+          leggibili dal fondo dell'aula senza ingrandire la pagina. */}
+      <div className={`flex ${piccolo ? "[&>*:not(:first-child)]:-ml-5" : "[&>*:not(:first-child)]:-ml-7"}`}>
+        {ordina(mani[p] ?? []).map((c) => carta(p, c, piccolo ? "xs" : "md"))}
       </div>
     </div>
   );
@@ -206,12 +227,12 @@ export function TavoloVerde({
   const perSeme = (p: Position) => piccolo ? compatta(p) : (
     <div className="flex flex-col items-center">
       {targhetta(p)}
-      <div className="space-y-1">
+      <div className={piccolo ? "space-y-1" : "-space-y-12"}>
         {SEMI.map((s) => {
           const delSeme = ordina((mani[p] ?? []).filter((c) => c.suit === s));
           return (
-            <div key={s} className={`flex min-h-6 ${piccolo ? "[&>*:not(:first-child)]:-ml-5" : "[&>*:not(:first-child)]:-ml-4"}`}>
-              {delSeme.length ? delSeme.map((c) => carta(p, c, piccolo ? "xs" : "sm")) : <span className="text-white/50">—</span>}
+            <div key={s} className={`flex min-h-6 ${piccolo ? "[&>*:not(:first-child)]:-ml-5" : "[&>*:not(:first-child)]:-ml-8"}`}>
+              {delSeme.length ? delSeme.map((c) => carta(p, c, piccolo ? "xs" : "md")) : <span className="text-white/50">—</span>}
             </div>
           );
         })}
@@ -225,6 +246,14 @@ export function TavoloVerde({
     <div className="space-y-3">
       {attivo && (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm">
+          <button
+            type="button"
+            onClick={() => setMostraPunti((v) => !v)}
+            aria-pressed={mostraPunti}
+            className="mr-2 rounded-lg border border-border px-2 py-1.5 text-xs font-semibold hover:bg-muted"
+          >
+            {mostraPunti ? t("Nascondi i punti") : t("Mostra i punti")}
+          </button>
           <span className="font-semibold">{t("La classe vede")}:</span>
           {POSTI.map(({ p, l, iniziale }) => {
             const vista = visibili.includes(p);
@@ -245,8 +274,35 @@ export function TavoloVerde({
         </div>
       )}
 
-      <div className="felt-bg rounded-3xl px-1.5 py-3 shadow-lg sm:p-6">
+      <div className="felt-bg rounded-3xl px-1.5 py-3 shadow-lg sm:p-4">
         {sopra && <div className="mb-4 rounded-2xl bg-black/20 p-2 sm:p-3">{sopra}</div>}
+        {gioco && (
+          <div className="mb-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 rounded-xl bg-black/25 px-3 py-1.5 text-sm text-white">
+            {gioco.contratto && (
+              <span className="font-bold">
+                {gioco.contratto}
+                {gioco.dichiarante ? ` · ${t(POSTI.find((x) => x.p === gioco.dichiarante)!.l)}` : ""}
+              </span>
+            )}
+            <span>{t("Presa {n}", { n: gioco.presa })}</span>
+            <span>{t("NS {ns} · EO {eo}", { ns: gioco.preseNs, eo: gioco.preseEw })}</span>
+            {turno && (
+              <span className="rounded bg-[#c8a44e] px-2 font-semibold text-[#1a1406]">
+                {t("Tocca a {posto}", { posto: t(POSTI.find((x) => x.p === turno)!.l) })}
+              </span>
+            )}
+            {onAnnulla && (
+              <button
+                type="button"
+                onClick={onAnnulla}
+                className="flex min-h-8 items-center gap-1 rounded-lg bg-white/15 px-2 font-semibold hover:bg-white/25"
+              >
+                <Undo2 className="h-4 w-4" aria-hidden="true" />
+                {t("Annulla l'ultima")}
+              </button>
+            )}
+          </div>
+        )}
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1 sm:gap-4">
           <div />
           {inRiga("north")}

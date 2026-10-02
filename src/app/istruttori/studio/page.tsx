@@ -22,6 +22,8 @@ import { apriStampaMano } from "@/lib/stampa-mano";
 import { getSavedHands, saveHand } from "@/lib/saved-hands";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { Asta } from "@/components/bridge/asta";
+import { astaFinita, ultimoContratto, dichiarante as dichiaranteAsta } from "@/lib/asta";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -72,6 +74,9 @@ function Studio() {
   const [storia, setStoria] = useState<GameState[]>([]);
   const [stato, setStato] = useState<GameState | null>(null);
   const [contratto, setContratto] = useState<{ contract: string; declarer: Position } | null>(null);
+  const [licita, setLicita] = useState<string[]>([]);
+  const [mazziere, setMazziere] = useState<Position>("north");
+  const [astaAperta, setAstaAperta] = useState(false);
   /**
    * Modalità minibridge: niente par e niente contratto calcolato dal solver, il
    * contratto lo si sceglie con le regole del minibridge — chi ha più punti
@@ -310,6 +315,57 @@ function Studio() {
             }}
           />
         </div>
+      )}
+
+      {/*
+        LA LICITA AL TAVOLO DI STUDIO. Prima non c'era dove scriverla: il
+        contratto si sceglieva da un menu, e la dichiarazione — che in aula si
+        discute quanto il gioco — restava fuori (Trevissoi, ottobre 2026).
+        L'insegnante la inserisce per tutti e quattro i posti; a fine asta può
+        far giocare quel contratto.
+      */}
+      {deal && (
+        <details className="mb-4 rounded-2xl border border-border bg-card p-4" open={astaAperta} onToggle={(e) => setAstaAperta((e.target as HTMLDetailsElement).open)}>
+          <summary className="cursor-pointer text-sm font-semibold">{t("Licita")}</summary>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+            <label className="flex items-center gap-2">
+              {t("Mazziere")}
+              <select
+                value={mazziere}
+                onChange={(e) => { setMazziere(e.target.value as Position); setLicita([]); }}
+                className="h-9 rounded-lg border border-border bg-card px-2"
+              >
+                {SEATS.map((x) => <option key={x.key} value={x.key}>{t(x.label)}</option>)}
+              </select>
+            </label>
+            <Button size="sm" variant="outline" onClick={() => setLicita((b) => b.slice(0, -1))} disabled={!licita.length}>
+              {t("Annulla l'ultima dichiarazione")}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setLicita([])} disabled={!licita.length}>
+              {t("Ricomincia")}
+            </Button>
+          </div>
+          <div className="mt-3 max-w-md">
+            <Asta dealer={mazziere} bids={licita} onDichiara={(b) => setLicita((x) => [...x, b])} disabilitato={astaFinita(licita)} />
+          </div>
+          {astaFinita(licita) && (() => {
+            const ultimo = ultimoContratto(licita);
+            const chi = dichiaranteAsta(mazziere, licita);
+            if (!ultimo || !chi) return <p className="text-sm text-muted-foreground">{t("Smazzata passata: nessun contratto.")}</p>;
+            return (
+              <Button
+                className="mt-2"
+                onClick={() => {
+                  setContratto({ contract: ultimo.bid, declarer: chi });
+                  setStato(createGame(deal, ultimo.bid, chi));
+                  setStoria([]);
+                }}
+              >
+                {t("Gioca {contratto} da {posto}", { contratto: ultimo.bid, posto: t(SEATS.find((x) => x.key === chi)!.label) })}
+              </Button>
+            );
+          })()}
+        </details>
       )}
 
       {archivioMancante && (

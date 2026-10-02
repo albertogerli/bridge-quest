@@ -711,6 +711,24 @@ export default function ClassDetailPage({
             </span>
           </label>
 
+          <label className="flex items-start gap-3 text-sm">
+            <input
+              type="checkbox"
+              className="mt-1 h-4 w-4"
+              disabled={busy}
+              checked={classRoom.posti_liberi ?? true}
+              onChange={(e) => void cambiaImpostazione({ posti_liberi: e.target.checked })}
+            />
+            <span>
+              <span className="font-medium">{t("Al tavolo gli allievi si siedono da soli")}</span>
+              <span className="block text-xs text-muted-foreground">
+                {classRoom.posti_liberi ?? true
+                  ? t("Ognuno sceglie un posto libero; tu puoi comunque spostare chiunque.")
+                  : t("I posti li assegni tu dal tavolo o dall'aula: gli allievi aspettano di essere fatti sedere.")}
+              </span>
+            </span>
+          </label>
+
           {/*
             IL RUBINETTO.
             Sta qui, nelle impostazioni della classe, e non in una schermata a

@@ -163,6 +163,7 @@ export type EsitoPosto =
   | { esito: "tavolo-chiuso" }
   | { esito: "non-della-classe" }
   | { esito: "posto-inesistente" }
+  | { esito: "posti-dall-insegnante" }
   | { esito: "errore" };
 
 /**
