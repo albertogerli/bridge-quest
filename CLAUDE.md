@@ -27,6 +27,13 @@ Piattaforma didattica bridge della FIGB, in produzione su bridgelab.it. Document
   vede solo sotto `/en`, dove non guarda nessuno finché non ci arriva un
   utente vero.
 
+  **I COLLEGAMENTI INTERNI CONSERVANO LA LINGUA.** Non importare `Link` da
+  `next/link` né `useRouter` da `next/navigation`: usa `@/components/link` e
+  `@/hooks/use-router-lingua`. Sotto `/en` un `href="/gioca"` nudo porta al sito
+  italiano al primo tocco, senza errori. Il guardiano
+  `src/lib/link-lingua-guard.test.ts` fallisce se ricompare l'import diretto
+  (eccezioni: i due selettori di lingua).
+
   ```bash
   node scripts/stringhe-da-tradurre.mjs --controlla   # gate CI: esce 1 se manca l'inglese
   node scripts/stringhe-da-tradurre.mjs --mancanti    # l'elenco da tradurre
