@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { parseContract } from "@/lib/bridge-engine";
 import type { Smazzata } from "@/lib/catalog";
-import { formatDateShort, handResultFor, tournamentCtaLabel } from "@/lib/tournament-stats";
+import { formatDateShort, handResultFor } from "@/lib/tournament-stats";
 import { TOURNAMENT_HAND_COUNT, type TournamentResult } from "../_types";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
@@ -120,8 +120,7 @@ export function TournamentHero({
             </div>
 
             <p className="text-[13px] font-semibold text-foreground/80 leading-snug">
-              Gioca {displayCount} mani selezionate: la stessa sfida per tutti i
-              giocatori questa settimana. Vince chi totalizza più prese!
+              {t("Gioca {n} mani selezionate: la stessa sfida per tutti i giocatori questa settimana. Vince chi totalizza più prese!", { n: displayCount })}
             </p>
           </div>
 
@@ -202,7 +201,7 @@ export function TournamentHero({
                 disabled={tournamentHands.length === 0}
                 className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30"
               >
-                {tournamentCtaLabel(inProgressCount, displayCount)}
+                {inProgressCount > 0 ? t("Riprendi il Torneo (mano {n}/{total})", { n: inProgressCount + 1, total: displayCount }) : t("Gioca il Torneo")}
               </Button>
             ) : (
               <Button

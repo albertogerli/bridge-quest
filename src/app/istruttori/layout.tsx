@@ -24,11 +24,17 @@ export default async function IstruttoriLayout({
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: erroreProfilo } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
+
+  // Un errore di lettura non è «non sei autorizzato»: rimandare a casa (o alla
+  // pagina «diventa istruttore») un insegnante vero perché il database ha
+  // balbettato lo fa credere escluso. Si lascia decidere al riquadro d'errore
+  // della pagina, che offre di riprovare.
+  if (erroreProfilo) throw erroreProfilo;
 
   if (!profile || (profile.role !== "instructor" && profile.role !== "admin")) {
     redirect("/diventa-istruttore");

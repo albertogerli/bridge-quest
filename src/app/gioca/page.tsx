@@ -145,8 +145,8 @@ export default function GiocaPage() {
                   </div>
                   <p className={`text-sm ${dailyDone ? "text-emerald-dark/60 dark:text-emerald-400/80" : "text-white/70"}`}>
                     {dailyDone
-                      ? "Sfida completata! Torna domani per una nuova mano."
-                      : `Una nuova mano ogni giorno. Gioca e guadagna ${profile.xpLabel} bonus!`}
+                      ? t("Sfida completata! Torna domani per una nuova mano.")
+                      : t("Una nuova mano ogni giorno. Gioca e guadagna {xp} bonus!", { xp: profile.xpLabel })}
                   </p>
                 </div>
                 <svg
@@ -561,7 +561,7 @@ export default function GiocaPage() {
                 </div>
                 <h3 className="font-semibold text-foreground text-[15px]">{t("Pratica Libera")}</h3>
                 <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  Gioca una mano casuale dalle {allSmazzate.length} disponibili
+                  {t("Gioca una mano casuale dalle {n} disponibili", { n: allSmazzate.length })}
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
                 </div>
@@ -582,7 +582,7 @@ export default function GiocaPage() {
                 </div>
                 <h3 className="font-semibold text-foreground text-[15px]">{t("Tutte le Smazzate")}</h3>
                 <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  Sfoglia e gioca le {allSmazzate.length} mani per lezione
+                  {t("Sfoglia e gioca le {n} mani per lezione", { n: allSmazzate.length })}
                 </p>
                 <div className="mt-3 flex items-center gap-1.5">
                   <span className="text-[12px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">

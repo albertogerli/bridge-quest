@@ -441,7 +441,7 @@ export default function NegozioPage() {
     (item: ShopItem) => {
       if (owned.includes(item.id)) return;
       if (fiches < item.price) {
-        showToast("Fiches insufficienti!", "error");
+        showToast(t("Fiches insufficienti!"), "error");
         return;
       }
 
@@ -464,11 +464,11 @@ export default function NegozioPage() {
         setConfettiItemId(item.id);
         setTimeout(() => setConfettiItemId(null), 1200);
 
-        showToast(`${item.name} acquistato!`, "success");
+        showToast(t("{name} acquistato!", { name: t(item.name) }), "success");
         setPurchasingId(null);
       }, 300);
     },
-    [fiches, owned, showToast]
+    [fiches, owned, showToast, t]
   );
 
   const handleEquip = useCallback(
@@ -476,9 +476,9 @@ export default function NegozioPage() {
       if (!owned.includes(item.id)) return;
       setActiveItem(item.category, item.id);
       setActiveItems((prev) => ({ ...prev, [item.category]: item.id }));
-      showToast(`${item.name} equipaggiato!`, "success");
+      showToast(t("{name} equipaggiato!", { name: t(item.name) }), "success");
     },
-    [owned, showToast]
+    [owned, showToast, t]
   );
 
   const filteredItems = shopItems.filter((i) => i.category === selectedCategory);
@@ -544,10 +544,10 @@ export default function NegozioPage() {
           className="mb-5"
         >
           <p className="text-sm text-muted-foreground font-medium">
-            {selectedCategory === "avatari" && "Cornici decorative per il tuo profilo"}
-            {selectedCategory === "temi-carta" && "Personalizza il retro delle tue carte"}
-            {selectedCategory === "sfondi-tavolo" && "Cambia l'aspetto del tavolo da gioco"}
-            {selectedCategory === "titoli" && "Titoli esclusivi sotto il tuo nome"}
+            {selectedCategory === "avatari" && t("Cornici decorative per il tuo profilo")}
+            {selectedCategory === "temi-carta" && t("Personalizza il retro delle tue carte")}
+            {selectedCategory === "sfondi-tavolo" && t("Cambia l'aspetto del tavolo da gioco")}
+            {selectedCategory === "titoli" && t("Titoli esclusivi sotto il tuo nome")}
           </p>
         </motion.div>
 
@@ -610,7 +610,7 @@ export default function NegozioPage() {
                           <div className="flex flex-col items-center gap-1.5">
                             {item.preview.icon || <Star className="w-6 h-6 text-white/90" />}
                             <div className="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/30">
-                              <span className="text-white text-[12px] font-bold tracking-wide">{item.name}</span>
+                              <span className="text-white text-[12px] font-bold tracking-wide">{t(item.name)}</span>
                             </div>
                           </div>
                         )}
@@ -657,10 +657,10 @@ export default function NegozioPage() {
                     {/* Info & Action */}
                     <div className="p-3">
                       <h3 className="text-sm font-bold text-foreground truncate">
-                        {item.name}
+                        {t(item.name)}
                       </h3>
                       <p className="text-[12px] text-muted-foreground mt-0.5 line-clamp-1">
-                        {item.description}
+                        {t(item.description)}
                       </p>
 
                       {/* Price */}

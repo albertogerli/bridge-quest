@@ -11,9 +11,9 @@ export function StepBenvenuto({ onComplete, playSound }: StepProps) {
   const t = useT();
   return (
     <StepShell
-      kicker="Arrivo al Club"
+      kicker={t("Arrivo al Club")}
       title={t("Il tuo primo torneo.")}
-      body="Tra 5 minuti giocherai la tua prima mano vera di bridge."
+      body={t("Tra 5 minuti giocherai la tua prima mano vera di bridge.")}
     >
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <motion.div

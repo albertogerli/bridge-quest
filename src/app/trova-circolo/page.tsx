@@ -30,7 +30,10 @@ export default function TrovaCircoloPage() {
   const t = useT();
   const { clubs: allClubs } = useAsdClubs();
   const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
-  const [geoError, setGeoError] = useState<string | null>(null);
+  // Si tiene il CODICE dell'errore e non il testo: tradurlo qui dentro farebbe
+  // dipendere `requestLocation` da `t`, che cambia quando arriva il dizionario,
+  // e la posizione verrebbe richiesta due volte.
+  const [geoError, setGeoError] = useState<"non-supportata" | "negata" | "non-disponibile" | "timeout" | null>(null);
   const [geoLoading, setGeoLoading] = useState(false);
   const [filter, setFilter] = useState<FilterMode>("tutti");
   const [searchText, setSearchText] = useState("");
@@ -40,7 +43,7 @@ export default function TrovaCircoloPage() {
 
   const requestLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setGeoError("Il tuo browser non supporta la geolocalizzazione");
+      setGeoError("non-supportata");
       return;
     }
     setGeoLoading(true);
@@ -51,9 +54,9 @@ export default function TrovaCircoloPage() {
         setGeoLoading(false);
       },
       (err) => {
-        if (err.code === 1) setGeoError("Permesso di geolocalizzazione negato. Abilita la posizione nelle impostazioni del browser.");
-        else if (err.code === 2) setGeoError("Posizione non disponibile. Riprova.");
-        else setGeoError("Timeout nella geolocalizzazione. Riprova.");
+        if (err.code === 1) setGeoError("negata");
+        else if (err.code === 2) setGeoError("non-disponibile");
+        else setGeoError("timeout");
         setGeoLoading(false);
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
@@ -136,7 +139,12 @@ export default function TrovaCircoloPage() {
               </div>
             ) : geoError ? (
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
-                <p className="text-sm text-white/80 mb-2">{geoError}</p>
+                <p className="text-sm text-white/80 mb-2">
+                  {geoError === "non-supportata" && t("Il tuo browser non supporta la geolocalizzazione")}
+                  {geoError === "negata" && t("Permesso di geolocalizzazione negato. Abilita la posizione nelle impostazioni del browser.")}
+                  {geoError === "non-disponibile" && t("Posizione non disponibile. Riprova.")}
+                  {geoError === "timeout" && t("Timeout nella geolocalizzazione. Riprova.")}
+                </p>
                 <button
                   onClick={requestLocation}
                   className="text-sm font-bold text-white bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"

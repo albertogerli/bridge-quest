@@ -202,13 +202,13 @@ export default function LezioniPage() {
                         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                         : "bg-[#c8a44e]/20 text-[#8f6b16]"
                     }`}>
-                      {onboarded ? "Completata ✓" : "3 min"}
+                      {onboarded ? t("Completata ✓") : t("3 min")}
                     </Badge>
                   </div>
                   <p className="text-[12px] text-muted-foreground">
                     {onboarded
-                      ? "Rivedi le basi: cos'è una presa, come si gioca, la tua prima mano"
-                      : "Inizia da qui! Scopri il bridge in 3 minuti e gioca la tua prima mano"}
+                      ? t("Rivedi le basi: cos'è una presa, come si gioca, la tua prima mano")
+                      : t("Inizia da qui! Scopri il bridge in 3 minuti e gioca la tua prima mano")}
                   </p>
                 </div>
                 <svg className="h-5 w-5 text-muted-foreground/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>

@@ -519,7 +519,7 @@ export default function ClassificaPage() {
               />
             </div>
             <p className="text-[12px] text-muted-foreground mt-1">
-              Mancano {formatNumber(nextLeague.minXp - userXp)} XP per la promozione
+              {t("Mancano {n} XP per la promozione", { n: formatNumber(nextLeague.minXp - userXp) })}
             </p>
           </motion.div>
         )}
