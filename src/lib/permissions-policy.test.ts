@@ -12,3 +12,13 @@ describe("Permissions-Policy", () => {
     expect(riga).toContain(`${nome}=(self)`);
   });
 });
+
+// gtag.config('AW-…') scarica lo script di conversione da questi host: se la
+// CSP non li ammette, ogni pagina ha una violazione in console e Google Ads
+// non riceve le conversioni.
+describe("Content-Security-Policy per Google Ads", () => {
+  const config = readFileSync(join(process.cwd(), "next.config.ts"), "utf8");
+  it.each(["https://googleads.g.doubleclick.net", "https://www.googleadservices.com"])("script-src ammette %s", (host) => {
+    expect(config).toContain(`"${host}"`);
+  });
+});
