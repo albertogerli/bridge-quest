@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion, AnimatePresence } from "motion/react";
 import { Gavel, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -187,7 +187,7 @@ export default function CosaApriPage() {
                   {(aperturaConsigliata(domanda.hand, t) ?? domanda.attesa).perche}
                 </p>
                 <Button onClick={prossima}>
-                  {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
+                  {round + 1 >= ROUNDS ? t("Vedi il risultato") : t("Prossima mano")}
                 </Button>
               </motion.div>
             )}

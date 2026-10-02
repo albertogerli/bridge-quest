@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {

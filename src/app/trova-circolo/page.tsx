@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { MapPin, Navigation, School, Filter, ChevronDown, ExternalLink } from "lucide-react";
 import { useAsdClubs } from "@/store/use-asd-store";
 import type { AsdClub } from "@/lib/catalog";

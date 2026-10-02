@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";

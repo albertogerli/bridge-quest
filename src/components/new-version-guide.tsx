@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useT } from "@/contexts/traduzioni-provider";

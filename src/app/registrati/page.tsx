@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { useSharedAuth } from "@/contexts/auth-provider";
 
 export default function RegistratiRedirect() {

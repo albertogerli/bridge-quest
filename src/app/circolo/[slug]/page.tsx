@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { BachecaCircolo } from "@/components/circolo/bacheca";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

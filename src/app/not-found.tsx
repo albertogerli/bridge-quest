@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/link";
 import { tServer } from "@/lib/traduzioni-server";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 

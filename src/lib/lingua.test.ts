@@ -3,6 +3,7 @@ import {
   conLingua,
   fuoriDallaTraduzione,
   linguaDaPercorso,
+  localizzaHref,
   senzaLingua,
   LINGUA_PREDEFINITA,
 } from "./lingua";
@@ -89,5 +90,26 @@ describe("fuoriDallaTraduzione", () => {
   it("una pagina che si chiama come un file non viene esclusa per sbaglio", () => {
     // `/apinsegnanti` comincia per «api» ma non è una API.
     expect(fuoriDallaTraduzione("/apinsegnanti")).toBe(false);
+  });
+});
+
+describe("localizzaHref", () => {
+  it("lascia l'italiano com'è", () => {
+    expect(localizzaHref("/gioca", "it")).toBe("/gioca");
+  });
+  it("mette il prefisso agli indirizzi interni in inglese", () => {
+    expect(localizzaHref("/gioca", "en")).toBe("/en/gioca");
+    expect(localizzaHref("/", "en")).toBe("/en");
+    expect(localizzaHref("/lezioni/3?x=1#a", "en")).toBe("/en/lezioni/3?x=1#a");
+  });
+  it("non tocca esterni, frammenti, parametri, lingue già presenti", () => {
+    for (const h of ["https://figb.it", "//cdn.x/y", "#faq", "?a=1", "mailto:a@b.it", "/en/gioca"]) {
+      expect(localizzaHref(h, "en")).toBe(h);
+    }
+  });
+  it("non tocca API, file dell'applicazione e risorse con estensione", () => {
+    for (const h of ["/api/ben/bid", "/sw.js", "/_next/static/x.js", "/infografiche/a.png", "/video/1.mp4", "/dispense/x.pdf"]) {
+      expect(localizzaHref(h, "en")).toBe(h);
+    }
   });
 });

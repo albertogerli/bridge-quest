@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Coins, ShoppingBag, Sparkles, Crown, Diamond, Frame, Palette, Image as ImageIcon, Check, Star, Flame, Rainbow, Award, Heart, Trophy, Gem, Type } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion } from "motion/react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useT } from "@/contexts/traduzioni-provider";

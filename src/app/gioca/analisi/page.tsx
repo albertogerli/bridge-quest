@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Share2, ArrowLeft } from "lucide-react";
 import { GiornaleMano } from "@/components/revisione/giornale-mano";
 import { ConfrontoAltri } from "@/components/revisione/confronto-altri";

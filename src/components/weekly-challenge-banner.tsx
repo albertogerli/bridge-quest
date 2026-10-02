@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion } from "motion/react";
 import { ChevronDown, ChevronUp, Clock, Trophy, Zap } from "lucide-react";
 import { useCurrentWeeklyChallenge } from "@/store/use-weekly-challenges-store";

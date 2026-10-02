@@ -22,7 +22,7 @@ const GameTutorial = dynamic(
   () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
   { ssr: false },
 );
-import Link from "next/link";
+import Link from "@/components/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { awardGameXp } from "@/lib/xp-utils";

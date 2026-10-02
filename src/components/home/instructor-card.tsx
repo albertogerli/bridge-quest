@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { ChevronRight, GraduationCap } from "lucide-react";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { getMyClasses } from "@/lib/instructors";

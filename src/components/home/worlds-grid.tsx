@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { levelInfo } from "@/lib/catalog";

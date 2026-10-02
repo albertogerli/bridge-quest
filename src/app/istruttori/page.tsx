@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {

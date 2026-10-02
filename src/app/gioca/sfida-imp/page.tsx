@@ -32,7 +32,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { ArrowLeft, Trophy, Clock, Swords, ChevronRight, CheckCircle2, XCircle, Minus } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useT } from "@/contexts/traduzioni-provider";
 

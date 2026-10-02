@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Lock, Eye, EyeOff, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { authErrorMessage } from "@/lib/auth-errors";
 import { useT } from "@/contexts/traduzioni-provider";
 

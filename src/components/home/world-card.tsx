@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export interface WorldSummary {
   id: number;

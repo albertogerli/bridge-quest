@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import Link from "@/components/link";
 import { AnimatePresence, motion } from "motion/react";
 import type { DailyFieldStats } from "@/hooks/use-daily-field";
 import { resultHeadline } from "@/lib/daily-hand";

@@ -7,7 +7,7 @@ import { useSound } from "@/hooks/use-sound";
 import { CardDisplay } from "@/components/bridge/card-display";
 import { useGlossary } from "@/store/use-glossary-store";
 import type { GlossaryEntry } from "@/lib/catalog";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import {
   Search,

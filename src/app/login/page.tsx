@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useActiveAsdClubs } from "@/store/use-asd-store";
-import Link from "next/link";
+import Link from "@/components/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { Gamepad2, Zap, Spade, Coffee } from "lucide-react";
 import { trackRegistration } from "@/lib/gads";
@@ -19,6 +19,7 @@ import { suggestEmailCorrection } from "@/lib/email-domain-hint";
 import { authErrorMessage, isAlreadyRegistered } from "@/lib/auth-errors";
 import { type ReactNode } from "react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { homeDi } from "@/lib/lingua";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
@@ -558,8 +559,8 @@ function LoginContent() {
             type="button"
             onClick={() => {
               try { localStorage.setItem("bq_guest", "1"); } catch {}
-              // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
-              window.location.href = "/";
+               
+              window.location.href = homeDi(window.location.pathname);
             }}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >

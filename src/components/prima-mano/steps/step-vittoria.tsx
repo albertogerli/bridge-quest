@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion } from "motion/react";
 import { Star, Play } from "lucide-react";
 import { ConfettiBurst, StarBurst } from "@/components/celebration-effects";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Button } from "@/components/ui/button";
 import { useEnrolledClasses } from "@/store/use-classes-store";
 import { useCatalog } from "@/store/use-catalog-store";

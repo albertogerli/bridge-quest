@@ -28,8 +28,8 @@ const ShareResult = dynamic(
   () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
   { ssr: false },
 );
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/components/link";
+import { useRouter } from "@/hooks/use-router-lingua";
 // Unica fonte di @radix-ui/react-dialog in questa route: si apre solo dopo una
 // mano riuscita, quindi il first load non deve pagarne il costo.
 const BonusHandModal = dynamic(

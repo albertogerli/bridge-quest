@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useCatalog } from "@/store/use-catalog-store";
 import type { Course, ContentBlock } from "@/lib/catalog";

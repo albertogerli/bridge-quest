@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Button } from "@/components/ui/button";
 import type { ProfileConfig } from "@/hooks/use-profile";
 import type { LessonModule } from "@/lib/catalog";

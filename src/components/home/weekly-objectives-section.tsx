@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import {
   Target,
   CheckCircle2,

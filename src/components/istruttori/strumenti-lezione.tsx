@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { Archive, ChevronRight, FlaskConical, Presentation, Printer, Users, Wand2, Library, Layers } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";

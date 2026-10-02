@@ -5,7 +5,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { useGameResults } from "@/hooks/use-game-results";

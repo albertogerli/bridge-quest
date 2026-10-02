@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { Briciole } from "@/components/briciole";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,

@@ -9,7 +9,7 @@ import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { isModuleLocked } from "@/lib/progression";
 import { getYouTubeEmbedUrl, getInfographicForLesson, getMaestroName } from "@/components/maestro-video";
 import { useProfile } from "@/hooks/use-profile";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";

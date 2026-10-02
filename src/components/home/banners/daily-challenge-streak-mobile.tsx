@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { CheckCircle2, Flame, CalendarDays } from "lucide-react";
 import { DailyCountdown } from "@/components/daily-countdown";
 import { useT } from "@/contexts/traduzioni-provider";

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { usePercorso } from "@/hooks/use-lingua";
 import { useT } from "@/contexts/traduzioni-provider";
 import { SelettoreLingua } from "@/components/selettore-lingua";

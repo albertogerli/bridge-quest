@@ -26,7 +26,7 @@ const ShareResult = dynamic(
   () => import("@/components/bridge/share-result").then((m) => m.ShareResult),
   { ssr: false },
 );
-import Link from "next/link";
+import Link from "@/components/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { updateLastActivity } from "@/hooks/use-notifications";

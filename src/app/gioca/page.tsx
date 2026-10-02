@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { useT } from "@/contexts/traduzioni-provider";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
 import { getWeekNum } from "@/lib/tournament-stats";

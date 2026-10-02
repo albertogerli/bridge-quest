@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeftRight, Archive, Eye, EyeOff, FlaskConical, Percent, Printer, RotateCcw, Save, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

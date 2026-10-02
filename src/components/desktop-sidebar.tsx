@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import Image from "next/image";
 import { useStats } from "@/hooks/use-local-stats";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
@@ -9,6 +9,7 @@ import { useCollectibleCards } from "@/store/use-collectible-cards-store";
 import { useProfile } from "@/hooks/use-profile";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useT } from "@/contexts/traduzioni-provider";
+import { homeDi } from "@/lib/lingua";
 
 export function DesktopSidebar() {
   const t = useT();
@@ -115,8 +116,8 @@ export function DesktopSidebar() {
             onClick={async () => {
               await signOut();
               try { localStorage.removeItem("bq_guest"); } catch {}
-              // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
-              window.location.href = "/";
+               
+              window.location.href = homeDi(window.location.pathname);
             }}
             aria-label={t("Esci dal tuo account")}
             className="w-full flex items-center gap-2.5 rounded-xl bg-card card-clean p-3 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors group"

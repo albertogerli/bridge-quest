@@ -5,8 +5,8 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/components/link";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { useT } from "@/contexts/traduzioni-provider";
 
 type Category = "lezioni" | "strategia" | "tornei" | "generale" | "off-topic";

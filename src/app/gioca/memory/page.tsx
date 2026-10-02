@@ -7,7 +7,7 @@ import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";
 import { useGameStore } from "@/store/use-game-store";
 import { useGameResults } from "@/hooks/use-game-results";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 
 // Card pairs for bridge memory - match card with its bridge concept

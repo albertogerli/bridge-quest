@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, Share2, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { shareContent } from "@/lib/share";
 import { useGameStore } from "@/store/use-game-store";
 import { reportError } from "@/lib/report-error";

@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useT } from "@/contexts/traduzioni-provider";
-import Link from "next/link";
+import Link from "@/components/link";
 import { MapPin } from "lucide-react";
 
 export function FindAsdBanner() {

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 
 type Category = "lezioni" | "strategia" | "tornei" | "generale" | "off-topic";

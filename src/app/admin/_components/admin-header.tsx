@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 
 /** Barra superiore: titolo, ora dell'ultimo aggiornamento, azioni. */
 export function AdminHeader({

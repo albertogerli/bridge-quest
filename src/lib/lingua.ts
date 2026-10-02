@@ -89,3 +89,35 @@ export function fuoriDallaTraduzione(percorso: string): boolean {
     percorso.startsWith("/cdn-cgi/")
   );
 }
+
+/**
+ * Un indirizzo interno nella lingua di chi sta leggendo.
+ *
+ * PERCHÉ ESISTE. La lingua sta nell'indirizzo e i componenti scrivono
+ * `href="/gioca"`: senza questo passaggio un lettore inglese che tocca una voce
+ * del menu, o «torna ai giochi», finisce sul sito italiano dopo il primo
+ * clic. Non produce un errore, quindi nessuna prova lo vede: lo vede solo chi
+ * ci prova.
+ *
+ * Restano come sono: gli indirizzi esterni, i soli frammenti (`#faq`) o
+ * parametri (`?x=1`), quelli già in una lingua, le API e i file
+ * dell'applicazione, e tutto ciò che ha un'estensione (immagini, PDF, video):
+ * non sono pagine e non hanno una versione tradotta.
+ */
+export function localizzaHref(href: string, lingua: Lingua): string {
+  if (lingua === LINGUA_PREDEFINITA) return href;
+  if (!href.startsWith("/") || href.startsWith("//")) return href;
+  const fine = href.search(/[?#]/);
+  const percorso = fine === -1 ? href : href.slice(0, fine);
+  const coda = fine === -1 ? "" : href.slice(fine);
+  if (linguaDaPercorso(percorso) !== LINGUA_PREDEFINITA) return href;
+  if (fuoriDallaTraduzione(percorso)) return href;
+  const ultimo = percorso.split("/").pop() ?? "";
+  if (ultimo.includes(".")) return href;
+  return conLingua(percorso, lingua) + coda;
+}
+
+/** La home nella lingua dell'indirizzo dato (per «esci» e simili, che ricaricano la pagina). */
+export function homeDi(percorso: string): string {
+  return conLingua("/", linguaDaPercorso(percorso));
+}
