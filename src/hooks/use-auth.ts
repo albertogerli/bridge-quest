@@ -272,7 +272,7 @@ export function useAuth() {
 
     // Upsert profile with additional info (handles case where auto-trigger hasn't created row yet)
     if (data.user) {
-      await supabase
+      const { error: erroreProfilo } = await supabase
         .from("profiles")
         .upsert({
           id: data.user.id,
@@ -283,6 +283,9 @@ export function useAuth() {
           profile_type: profileType || "adulto",
           platform: getPlatform(),
         }, { onConflict: "id" });
+      // L'account esiste comunque: non si blocca la registrazione, ma un
+      // profilo senza nome né associazione va saputo, non scoperto dopo.
+      if (erroreProfilo) segnalaSalvoRete("auth:registrazione-profilo", erroreProfilo);
     }
 
     return { data, error: null };
