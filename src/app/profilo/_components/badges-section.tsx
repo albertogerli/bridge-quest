@@ -139,7 +139,7 @@ export function BadgesSection({
           <div className="flex items-center gap-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 px-4 py-3">
             <span className="text-lg">🔒</span>
             <p className="text-xs text-amber-700 dark:text-amber-300">
-              {t("Ci sono")} <span className="font-bold">{totalSecretAchievements} achievement nascosti</span> da scoprire. Gioca, esplora e completa sfide per sbloccarli!
+              {t("Ci sono")} <span className="font-bold">{totalSecretAchievements} {t("achievement nascosti")}</span> {t("da scoprire. Gioca, esplora e completa sfide per sbloccarli!")}
             </p>
           </div>
         )}

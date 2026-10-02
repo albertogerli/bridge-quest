@@ -2383,5 +2383,7 @@
   "Un numero pari (alto-basso)": "An even number (high-low)",
   "Un numero dispari (basso-alto)": "An odd number (low-high)",
   "{first} poi {second}: alto-basso = numero PARI di carte. Conta la distribuzione del colore prima di decidere cosa tenere!": "{first} then {second}: high-low = an EVEN number of cards. Count the suit's distribution before deciding what to keep!",
-  "{first} poi {second}: basso-alto = numero DISPARI di carte. Il conto ti dice quante carte ha il dichiarante.": "{first} then {second}: low-high = an ODD number of cards. The count tells you how many cards declarer has."
+  "{first} poi {second}: basso-alto = numero DISPARI di carte. Il conto ti dice quante carte ha il dichiarante.": "{first} then {second}: low-high = an ODD number of cards. The count tells you how many cards declarer has.",
+  "achievement nascosti": "hidden achievements",
+  "da scoprire. Gioca, esplora e completa sfide per sbloccarli!": "to discover. Play, explore and complete challenges to unlock them!"
 }
