@@ -55,10 +55,14 @@ export function OspiteConverti() {
       const supabase = createClient();
       const { error } = await supabase.auth.updateUser({ email, password });
       if (error) throw error;
-      await supabase
+      // Se questo aggiornamento fallisce in silenzio l'account ha già email e
+      // password ma resta marcato «ospite» con la sua scadenza: chi ha appena
+      // convertito perderebbe tutto alla data indicata.
+      const { error: erroreProfilo } = await supabase
         .from("profiles")
         .update({ ospite: false, ospite_scade_il: null })
         .eq("id", user!.id);
+      if (erroreProfilo) throw erroreProfilo;
       setFatto(true);
     } catch (err) {
       segnalaSalvoRete("ospite:converti", err);

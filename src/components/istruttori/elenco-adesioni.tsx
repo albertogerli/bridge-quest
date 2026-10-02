@@ -69,7 +69,8 @@ export function ElencoAdesioni({
     setBusy(true);
     try {
       const supabase = createClient();
-      await supabase.from("adesioni").update({ user_id: userId }).eq("id", adesioneId);
+      const { error } = await supabase.from("adesioni").update({ user_id: userId }).eq("id", adesioneId);
+      if (error) throw error;
       setCollegando(null);
       await carica();
     } catch (err) {
@@ -83,9 +84,10 @@ export function ElencoAdesioni({
     setBusy(true);
     try {
       const supabase = createClient();
-      await supabase.from("adesioni")
+      const { error } = await supabase.from("adesioni")
         .update({ archiviata_il: annulla ? null : new Date().toISOString() })
         .eq("id", id);
+      if (error) throw error;
       await carica();
     } catch (err) {
       segnalaSalvoRete("adesioni:archivia", err);

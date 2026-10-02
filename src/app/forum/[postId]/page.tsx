@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 interface Post {
   id: number;
@@ -54,6 +55,15 @@ export default function PostDetailPage() {
   const [replyText, setReplyText] = useState("");
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Un'azione che non è andata a buon fine non deve sembrare riuscita: prima il
+  // commento spariva dalla casella, il contatore saliva e arrivavano +5 XP
+  // anche quando l'inserimento era stato rifiutato.
+  const [erroreAzione, setErroreAzione] = useState<string | null>(null);
+  useEffect(() => {
+    if (!erroreAzione) return;
+    const id = setTimeout(() => setErroreAzione(null), 7000);
+    return () => clearTimeout(id);
+  }, [erroreAzione]);
   const [hasLiked, setHasLiked] = useState(false);
   const [likedComments, setLikedComments] = useState<Set<number>>(new Set());
   const [expandedThreads, setExpandedThreads] = useState<Set<number>>(new Set());
@@ -237,12 +247,18 @@ export default function PostDetailPage() {
     if (!user || !commentText.trim() || !post) return;
     setSubmitting(true);
 
-    await supabase.from("forum_comments").insert({
+    const { error: erroreInserimento } = await supabase.from("forum_comments").insert({
       post_id: post.id,
       user_id: user.id,
       body: commentText.trim(),
       parent_id: null,
     });
+    if (erroreInserimento) {
+      segnalaSalvoRete("forum:commenta", erroreInserimento);
+      setErroreAzione(t("Non sono riuscito a pubblicare il commento. Il testo è ancora nella casella: riprova."));
+      setSubmitting(false);
+      return;
+    }
 
     await supabase
       .from("forum_posts")
@@ -261,12 +277,18 @@ export default function PostDetailPage() {
     if (!user || !replyText.trim() || !post) return;
     setSubmitting(true);
 
-    await supabase.from("forum_comments").insert({
+    const { error: erroreInserimento } = await supabase.from("forum_comments").insert({
       post_id: post.id,
       user_id: user.id,
       body: replyText.trim(),
       parent_id: parentId,
     });
+    if (erroreInserimento) {
+      segnalaSalvoRete("forum:rispondi", erroreInserimento);
+      setErroreAzione(t("Non sono riuscito a pubblicare la risposta. Il testo è ancora nella casella: riprova."));
+      setSubmitting(false);
+      return;
+    }
 
     await supabase
       .from("forum_posts")
@@ -299,7 +321,13 @@ export default function PostDetailPage() {
         .delete()
         .eq("parent_id", comment.id);
     }
-    await supabase.from("forum_comments").delete().eq("id", comment.id);
+    const { error: erroreCancellazione } = await supabase.from("forum_comments").delete().eq("id", comment.id);
+    if (erroreCancellazione) {
+      segnalaSalvoRete("forum:elimina-commento", erroreCancellazione);
+      setErroreAzione(t("Non sono riuscito a eliminare il commento. Riprova."));
+      fetchComments();
+      return;
+    }
 
     if (post) {
       const newCount = Math.max(0, post.comments_count - totalToRemove);
@@ -315,17 +343,27 @@ export default function PostDetailPage() {
   const handleDelete = async () => {
     if (!user || !post || user.id !== post.user_id) return;
     if (!confirm("Eliminare questo post?")) return;
-    await supabase.from("forum_posts").delete().eq("id", post.id);
+    const { error: erroreCancellazione } = await supabase.from("forum_posts").delete().eq("id", post.id);
+    if (erroreCancellazione) {
+      segnalaSalvoRete("forum:elimina-post", erroreCancellazione);
+      setErroreAzione(t("Non sono riuscito a eliminare il post. Riprova."));
+      return;
+    }
     router.push("/forum");
   };
 
   const handlePollVote = async (optionIndex: number) => {
     if (!user || !post || pollVote !== null) return;
-    await supabase.from("forum_poll_votes").insert({
+    const { error: erroreVoto } = await supabase.from("forum_poll_votes").insert({
       post_id: post.id,
       user_id: user.id,
       option_index: optionIndex,
     });
+    if (erroreVoto) {
+      segnalaSalvoRete("forum:voto-sondaggio", erroreVoto);
+      setErroreAzione(t("Non sono riuscito a registrare il voto. Riprova."));
+      return;
+    }
     setPollVote(optionIndex);
     setPollVotes((prev) => ({
       ...prev,
@@ -581,6 +619,11 @@ export default function PostDetailPage() {
 
   return (
     <div className="pt-6 px-4 sm:px-5 pb-24">
+      {erroreAzione && (
+        <div role="alert" className="fixed inset-x-4 bottom-24 z-50 rounded-xl bg-destructive px-4 py-3 text-sm font-medium text-white shadow-lg lg:bottom-6 lg:left-auto lg:max-w-sm">
+          {erroreAzione}
+        </div>
+      )}
       <div className="mx-auto max-w-6xl">
         {/* Back */}
         <Link

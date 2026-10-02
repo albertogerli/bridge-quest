@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Bell } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/contexts/traduzioni-provider";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 interface MarketingConsentBannerProps {
   user: { id: string } | null;
@@ -36,13 +37,16 @@ export function MarketingConsentBanner({
     setExiting(true);
 
     const supabase = createClient();
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({
         marketing_consent: consent,
         marketing_consent_date: new Date().toISOString(),
       })
       .eq("id", user.id);
+    // Il consenso non registrato non si può provare: lo si segnala, e il banner
+    // tornerà alla prossima visita perché il profilo è rimasto senza risposta.
+    if (error) segnalaSalvoRete("consenso-marketing:salva", error);
 
     // Let exit animation play, then hide
     setTimeout(() => setShow(false), 400);

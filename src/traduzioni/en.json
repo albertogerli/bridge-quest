@@ -2073,5 +2073,11 @@
   "{n} compiti da giocare": "{n} assignments to play",
   "Apri la classe": "Open the class",
   "Filtra per lezione": "Filter by lesson",
-  "Filtra per difficoltà": "Filter by difficulty"
+  "Filtra per difficoltà": "Filter by difficulty",
+  "Non sono riuscito a pubblicare il commento. Il testo è ancora nella casella: riprova.": "I couldn't post your comment. Your text is still in the box: try again.",
+  "Non sono riuscito a pubblicare la risposta. Il testo è ancora nella casella: riprova.": "I couldn't post your reply. Your text is still in the box: try again.",
+  "Non sono riuscito a eliminare il commento. Riprova.": "I couldn't delete the comment. Try again.",
+  "Non sono riuscito a eliminare il post. Riprova.": "I couldn't delete the post. Try again.",
+  "Non sono riuscito a registrare il voto. Riprova.": "I couldn't record your vote. Try again.",
+  "Non sono riuscito a salvare la modifica.": "I couldn't save the change."
 }

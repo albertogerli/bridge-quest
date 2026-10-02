@@ -8,7 +8,7 @@ import { Briciole } from "@/components/briciole";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { createClient } from "@/lib/supabase/client";
-import { reportError } from "@/lib/report-error";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import {
   ETICHETTE_CONSEGNA,
@@ -98,7 +98,10 @@ export default function EsercizioPage({
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
-      await supabase.from("game_results").insert({
+      // supabase-js non lancia: l'errore sta nella risposta. Ignorarlo
+      // lasciava l'allievo convinto di aver consegnato e l'insegnante senza
+      // la risposta, senza che nessuno lo vedesse.
+      const { error: erroreSalvataggio } = await supabase.from("game_results").insert({
         user_id: user.id,
         game_type: "compito",
         assignment_id: assignmentId,
@@ -111,8 +114,9 @@ export default function EsercizioPage({
           giusta,
         },
       });
+      if (erroreSalvataggio) throw erroreSalvataggio;
     } catch (err) {
-      reportError("esercizio:salva-risposta", err);
+      segnalaSalvoRete("esercizio:salva-risposta", err);
     }
   }
 

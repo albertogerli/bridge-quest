@@ -162,7 +162,11 @@ export default function AllieviPage({
 
   async function aggiorna(id: string, campi: Partial<Riga>) {
     const supabase = createClient();
-    await supabase.from("elenco_allievi").update(campi).eq("id", id);
+    const { error } = await supabase.from("elenco_allievi").update(campi).eq("id", id);
+    if (error) {
+      segnalaSalvoRete("allievi:aggiorna", error);
+      setMessaggio(t("Non sono riuscito a salvare la modifica."));
+    }
     await ricarica();
   }
 
