@@ -44,7 +44,14 @@ function LoginContent() {
   const { signIn, signUp, uploadAvatar, resetPassword } = useSharedAuth();
   const [mode, setMode] = useState<Mode>(initialMode);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  // Gli errori con cui il ritorno da un link email rimanda qui: vedi auth/callback.
+  const [error, setError] = useState(() => {
+    const codice = searchParams.get("error");
+    if (codice === "link_scaduto") return "Il link non è più valido: è scaduto o è già stato usato. Scrivi la tua email qui sotto e chiedine uno nuovo con «Password dimenticata?».";
+    if (codice === "link_altro_browser") return "Il link va aperto nello stesso browser in cui l'hai chiesto. Se l'email l'ha aperto in un'altra app, chiedine uno nuovo da qui e aprilo dal browser che stai usando ora.";
+    if (codice === "auth_callback_failed") return "Non sono riuscito a completare l'accesso dal link. Riprova, o chiedine uno nuovo.";
+    return "";
+  });
   const [success, setSuccess] = useState("");
 
   // Form fields
@@ -304,7 +311,7 @@ function LoginContent() {
                   const { error: err } = await resetPassword(email.trim());
                   setLoading(false);
                   if (err) {
-                    setError("Errore nell'invio dell'email di reset. Riprova.");
+                    setError(authErrorMessage(err.message));
                   } else {
                     setSuccess("Email di reset inviata! Controlla la tua casella di posta.");
                   }
@@ -508,7 +515,7 @@ function LoginContent() {
                         const { error: err } = await resetPassword(email.trim());
                         setLoading(false);
                         if (err) {
-                          setError("Errore nell'invio dell'email di reset. Riprova.");
+                          setError(authErrorMessage(err.message));
                         } else {
                           setSuccess("Email di reset inviata! Controlla la tua casella di posta.");
                         }
@@ -520,7 +527,7 @@ function LoginContent() {
                   </div>
                 </div>
               ) : (
-                error
+                t(error)
               )}
             </motion.div>
           )}
@@ -530,7 +537,7 @@ function LoginContent() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-sm font-medium rounded-xl px-4 py-3"
             >
-              {success}
+              {t(success)}
             </motion.div>
           )}
 
