@@ -303,8 +303,8 @@ export default function RipassoPage() {
             </h3>
             <p className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">
               {filter === "due"
-                ? "Sei in pari con tutti i ripassi! Continua a studiare le lezioni per aggiungere nuovi argomenti."
-                : "Non hai ancora argomenti da ripassare. Gli errori nei quiz verranno aggiunti automaticamente qui."
+                ? t("Sei in pari con tutti i ripassi! Continua a studiare le lezioni per aggiungere nuovi argomenti.")
+                : t("Non hai ancora argomenti da ripassare. Gli errori nei quiz verranno aggiunti automaticamente qui.")
               }
             </p>
             <Link href="/lezioni">

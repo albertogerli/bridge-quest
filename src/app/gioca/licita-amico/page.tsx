@@ -347,9 +347,9 @@ function LicitaAmico() {
       </div>
       {friends.length === 0 ? (
         <p className="text-sm text-muted-foreground mb-6">
-          Non hai ancora amici sulla piattaforma.{" "}
-          <Link href="/amici" className="underline">{t("Trovane uno")}</Link> e potrete
-          licitare insieme.
+          {t("Non hai ancora amici sulla piattaforma.")}{" "}
+          <Link href="/amici" className="underline">{t("Trovane uno")}</Link>{" "}
+          {t("e potrete licitare insieme.")}
         </p>
       ) : (
         <div className="flex flex-wrap gap-2 mb-6">

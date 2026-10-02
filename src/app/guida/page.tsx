@@ -268,7 +268,7 @@ export default function GuidaPage() {
                 href={`#${s.id}`}
                 className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                {s.emoji} {s.title}
+                {s.emoji} {t(s.title)}
               </a>
             ))}
             <a
@@ -301,10 +301,10 @@ export default function GuidaPage() {
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-2xl">{section.emoji}</span>
                 <h2 className="font-display text-2xl font-bold text-foreground">
-                  {section.title}
+                  {t(section.title)}
                 </h2>
               </div>
-              <p className="mb-4 max-w-2xl text-sm text-muted-foreground">{section.intro}</p>
+              <p className="mb-4 max-w-2xl text-sm text-muted-foreground">{t(section.intro)}</p>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 {section.features.map((f) => {
@@ -312,18 +312,18 @@ export default function GuidaPage() {
                     <div className="card-clean card-interactive flex h-full flex-col rounded-2xl bg-card p-4">
                       <div className="mb-1.5 flex items-center gap-2">
                         <span className="text-xl">{f.emoji}</span>
-                        <h3 className="text-[15px] font-semibold text-foreground">{f.title}</h3>
+                        <h3 className="text-[15px] font-semibold text-foreground">{t(f.title)}</h3>
                       </div>
-                      <p className="flex-1 text-[13px] leading-relaxed text-muted-foreground">{f.desc}</p>
+                      <p className="flex-1 text-[13px] leading-relaxed text-muted-foreground">{t(f.desc)}</p>
                       {f.href && (
                         <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary">
-                          {f.cta ?? "Provalo"} →
+                          {t(f.cta ?? "Provalo")} →
                         </span>
                       )}
                     </div>
                   );
                   return f.href ? (
-                    <Link key={f.title} href={f.href} className="block" aria-label={f.title}>
+                    <Link key={f.title} href={f.href} className="block" aria-label={t(f.title)}>
                       {inner}
                     </Link>
                   ) : (

@@ -377,20 +377,20 @@ export default function ImpassePage() {
               </h3>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>
-                  <span className="text-blue-600 dark:text-blue-400 font-bold">8 carte, manca K</span>{" "}
-                  = IMPASSE (50% vs 33%)
+                  <span className="text-blue-600 dark:text-blue-400 font-bold">{t("8 carte, manca K")}</span>{" "}
+                  = {t("IMPASSE")} (50% vs 33%)
                 </li>
                 <li>
-                  <span className="text-amber-600 dark:text-amber-400 font-bold">9 carte, manca Q</span>{" "}
-                  = DROP (&quot;con 9, non finessare&quot;)
+                  <span className="text-amber-600 dark:text-amber-400 font-bold">{t("9 carte, manca Q")}</span>{" "}
+                  = DROP (&quot;{t("con 9, non finessare")}&quot;)
                 </li>
                 <li>
-                  <span className="text-blue-600 dark:text-blue-400 font-bold">9 carte, manca K</span>{" "}
-                  = IMPASSE (56% - regola diversa!)
+                  <span className="text-blue-600 dark:text-blue-400 font-bold">{t("9 carte, manca K")}</span>{" "}
+                  = {t("IMPASSE")} ({t("56% - regola diversa!")})
                 </li>
                 <li>
-                  <span className="text-amber-600 dark:text-amber-400 font-bold">10+ carte</span>{" "}
-                  = quasi sempre DROP
+                  <span className="text-amber-600 dark:text-amber-400 font-bold">{t("10+ carte")}</span>{" "}
+                  = {t("quasi sempre DROP")}
                 </li>
               </ul>
             </div>
