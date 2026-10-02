@@ -69,7 +69,9 @@
   --color-felt: #15803d;
   --color-felt-light: #16a34a;
   --color-felt-dark: #14532d;
-  --color-emerald: #059669;
+  --color-emerald: #047857;
+  /* emerald-600 su avorio non arriva a 4.5:1 per il testo piccolo (3.4–3.65): axe, 2 ottobre */
+  --color-emerald-600: #047857;
   --color-emerald-light: #34d399;
   --color-emerald-dark: #047857;
 }
@@ -92,7 +94,7 @@
   --muted-foreground: #5b6779;
   --accent: #c8a44e;
   --accent-foreground: #1a1a2e;
-  --destructive: #e11d48;
+  --destructive: #be123c;
   --border: #e5e7eb;
   --input: #e5e7eb;
   --ring: #003DA5;

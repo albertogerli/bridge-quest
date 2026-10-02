@@ -778,7 +778,7 @@ export default function ImpostazioniPage() {
             </Badge>
           </div>
           <p className="text-muted-foreground text-xs mt-2">{t("FIGB - Federazione Italiana Gioco Bridge")}</p>
-          <p className="text-muted-foreground/40 text-[12px] mt-1">{t("Sviluppo: A. G. Gerli / Tourbillon Tech")}</p>
+          <p className="text-muted-foreground text-[12px] mt-1">{t("Sviluppo: A. G. Gerli / Tourbillon Tech")}</p>
         </motion.div>
       </div>
     </div>

@@ -401,6 +401,7 @@ export default function NuovoCompitoPage({
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <select
+          aria-label={t("Filtra per lezione")}
           value={lessonFilter}
           onChange={(e) =>
             setLessonFilter(e.target.value === "tutte" ? "tutte" : Number(e.target.value))
@@ -416,6 +417,7 @@ export default function NuovoCompitoPage({
         </select>
 
         <select
+          aria-label={t("Filtra per difficoltà")}
           value={diffFilter}
           onChange={(e) => setDiffFilter(e.target.value as DiffFilter)}
           className={selectClass}

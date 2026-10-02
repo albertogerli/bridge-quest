@@ -46,7 +46,7 @@ export function AccountActions({
               className="rounded-2xl bg-card border-2 border-rose-200 dark:border-rose-900 shadow-sm p-5"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
@@ -70,7 +70,7 @@ export function AccountActions({
                   onClick={() => onLogout(false)}
                   disabled={loggingOut}
                   variant="outline"
-                  className="w-full rounded-xl text-sm font-semibold h-10 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 disabled:opacity-50"
+                  className="w-full rounded-xl text-sm font-semibold h-10 border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 disabled:opacity-50"
                 >
                   {loggingOut ? "Uscita..." : "Esci e mantieni dati locali"}
                 </Button>
@@ -88,7 +88,7 @@ export function AccountActions({
               <Button
                 onClick={() => onShowLogoutConfirm(true)}
                 variant="outline"
-                className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-semibold h-12 text-sm border-2 shadow-sm"
+                className="w-full rounded-xl border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 dark:hover:text-rose-300 font-semibold h-12 text-sm border-2 shadow-sm"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -106,7 +106,7 @@ export function AccountActions({
                     className="mt-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 p-4"
                   >
                     <p className="text-sm font-bold text-rose-800 dark:text-rose-300 mb-1">{t("Sei sicuro?")}</p>
-                    <p className="text-xs text-rose-600 dark:text-rose-400 mb-3">{t("Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.")}</p>
+                    <p className="text-xs text-rose-700 dark:text-rose-400 mb-3">{t("Questa azione è irreversibile. Tutti i tuoi dati, progressi, badge e statistiche verranno eliminati permanentemente.")}</p>
                     <div className="flex gap-2">
                       <Button
                         onClick={onDeleteAccount}
@@ -129,7 +129,7 @@ export function AccountActions({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     onClick={() => onShowDeleteConfirm(true)}
-                    className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border-2 border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-800 transition-colors py-3 px-4 text-sm font-semibold"
+                    className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border-2 border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-800 transition-colors py-3 px-4 text-sm font-semibold"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="3 6 5 6 21 6" />
