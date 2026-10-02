@@ -25,6 +25,7 @@
 import type { Card, Suit } from "./bridge-engine";
 import { handHcp } from "./deal-generator";
 import { FIORI_2022 } from "./didactic-system";
+import { traduci } from "@/lib/traduzioni";
 
 const SIMBOLO: Record<Suit, string> = {
   spade: "♠",
@@ -39,6 +40,10 @@ const NOME: Record<Suit, string> = {
   diamond: "quadri",
   club: "fiori",
 };
+
+/** Come si traduce una frase con valori: `t` di `useT()`, o l'italiano se non si passa niente. */
+export type Traduttore = (frase: string, valori?: Record<string, string | number>) => string;
+const italiano: Traduttore = (frase, valori) => traduci(frase, null, valori);
 
 export interface Apertura {
   /** La dichiarazione, es. `1♠` o `1SA`. */
@@ -66,7 +71,7 @@ function bilanciata(l: Record<Suit, number>): boolean {
  * L'ordine dei controlli è quello che si insegna: prima si guarda se la mano è
  * bilanciata e nella fascia del senza atout, poi le lunghe.
  */
-export function aperturaConsigliata(hand: readonly Card[]): Apertura | null {
+export function aperturaConsigliata(hand: readonly Card[], tr: Traduttore = italiano): Apertura | null {
   if (hand.length !== 13 || new Set(hand.map((c) => `${c.suit}:${c.rank}`)).size !== 13) return null;
   const po = handHcp(hand);
   const l = lunghezze(hand);
@@ -76,7 +81,7 @@ export function aperturaConsigliata(hand: readonly Card[]): Apertura | null {
   // trattate più sotto. Fra 11 e 12 la scelta dipende dalla qualità dei
   // punti, che un esercizio automatico non sa valutare: si tace.
   if (po >= 15 && po <= 17 && bil) {
-    return { bid: "1SA", perche: `Mano bilanciata con ${po} punti onori: è la fascia esatta dell'apertura di 1SA.` };
+    return { bid: "1SA", perche: tr("Mano bilanciata con {po} punti onori: è la fascia esatta dell'apertura di 1SA.", { po }) };
   }
 
   // Aperture forti a Senza. Fiori 2022: bilanciata 21-23 apre 2SA; da 24
@@ -84,13 +89,13 @@ export function aperturaConsigliata(hand: readonly Card[]): Apertura | null {
   if (bil && po >= FIORI_2022.balancedTwoClubsMin) {
     return {
       bid: "2♣",
-      perche: `Mano bilanciata fortissima con ${po} punti onori: si apre 2♣ e si mostreranno i Senza al giro successivo.`,
+      perche: tr("Mano bilanciata fortissima con {po} punti onori: si apre 2♣ e si mostreranno i Senza al giro successivo.", { po }),
     };
   }
   if (bil && po >= FIORI_2022.twoNT.min) {
     return {
       bid: "2SA",
-      perche: `Mano bilanciata con ${po} punti onori: è la fascia dell'apertura forte di 2SA.`,
+      perche: tr("Mano bilanciata con {po} punti onori: è la fascia dell'apertura forte di 2SA.", { po }),
     };
   }
 
@@ -108,7 +113,7 @@ export function aperturaConsigliata(hand: readonly Card[]): Apertura | null {
       const s = piuLunghi[0];
       return {
         bid: `2${SIMBOLO[s]}`,
-        perche: `${po} punti onori, mano sbilanciata e ${l[s]} carte di ${NOME[s]}: è un'apertura forte di 2${SIMBOLO[s]}.`,
+        perche: tr("{po} punti onori, mano sbilanciata e {n} carte di {colore}: è un'apertura forte di 2{simbolo}.", { po, n: l[s], colore: tr(NOME[s]), simbolo: SIMBOLO[s] }),
       };
     }
     return null;
@@ -127,8 +132,7 @@ export function aperturaConsigliata(hand: readonly Card[]): Apertura | null {
       return {
         bid: `3${SIMBOLO[lunga]}`,
         perche:
-          `Solo ${po} punti onori ma sette ${NOME[lunga]}: si apre di barrage al livello di tre, ` +
-          `per togliere spazio agli avversari prima che si trovino.`,
+          tr("Solo {po} punti onori ma sette {colore}: si apre di barrage al livello di tre, per togliere spazio agli avversari prima che si trovino.", { po, colore: tr(NOME[lunga]) }),
       };
     }
     return null;
@@ -145,13 +149,13 @@ export function aperturaConsigliata(hand: readonly Card[]): Apertura | null {
     return {
       bid: `1${SIMBOLO[s]}`,
       perche: lunghe.length > 1
-        ? `Due colori di almeno cinque carte: nel sistema Fiori 2022 si apre il più alto di rango, 1${SIMBOLO[s]}.`
-        : `${l[s]} carte di ${NOME[s]} e ${po} punti onori: si apre il colore lungo.`,
+        ? tr("Due colori di almeno cinque carte: nel sistema Fiori 2022 si apre il più alto di rango, 1{simbolo}.", { simbolo: SIMBOLO[s] })
+        : tr("{n} carte di {colore} e {po} punti onori: si apre il colore lungo.", { n: l[s], colore: tr(NOME[s]), po }),
     };
   }
 
   if (l.diamond >= FIORI_2022.diamondMinLength) {
-    return { bid: "1♦", perche: `Nessun maggiore quinto: con almeno quattro quadri si apre 1♦ (Fiori 2022).` };
+    return { bid: "1♦", perche: tr("Nessun maggiore quinto: con almeno quattro quadri si apre 1♦ (Fiori 2022).") };
   }
-  return { bid: "1♣", perche: `Nessun maggiore quinto e meno di quattro quadri: si apre 1♣, anche con sole due carte (Fiori 2022).` };
+  return { bid: "1♣", perche: tr("Nessun maggiore quinto e meno di quattro quadri: si apre 1♣, anche con sole due carte (Fiori 2022).") };
 }

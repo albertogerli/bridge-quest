@@ -184,7 +184,7 @@ export default function CosaApriPage() {
                   {giusta ? "Esatto." : `La risposta è ${domanda.attesa.bid}.`}
                 </p>
                 <p className="text-xs text-muted-foreground mb-3">
-                  {domanda.attesa.perche}
+                  {(aperturaConsigliata(domanda.hand, t) ?? domanda.attesa).perche}
                 </p>
                 <Button onClick={prossima}>
                   {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}

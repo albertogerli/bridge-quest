@@ -80,7 +80,9 @@ interface DrillRound {
   explanation: string;
 }
 
-function genGradimento(): DrillRound {
+type Traduttore = (frase: string, valori?: Record<string, string | number>) => string;
+
+function genGradimento(tr: Traduttore): DrillRound {
   const suit = randomOf(SUITS);
   const sym = suitSymbols[suit];
   const positive = Math.random() < 0.5;
@@ -92,15 +94,15 @@ function genGradimento(): DrillRound {
     return {
       kind: "gradimento",
       scenario: [
-        `Difendi contro 4${suit === "spade" ? "♥" : "♠"}.`,
-        `Il compagno attacca con l'A${sym}.`,
+        tr("Difendi contro 4{palo}.", { palo: suit === "spade" ? "♥" : "♠" }),
+        tr("Il compagno attacca con l'A{sym}.", { sym }),
       ],
-      question: `Quale carta giochi per dare il segnale giusto?`,
+      question: tr("Quale carta giochi per dare il segnale giusto?"),
       holding: { suit, ranks },
       textOptions: null,
       correctRank: spots[0],
       correctIdx: null,
-      explanation: `Con ${honor}${sym} in mano vuoi la continuazione: gioca la carta più alta che puoi permetterti (${spots[0]}${sym}). Carta alta = gradimento. L'onore non si gioca mai sotto l'Asso del compagno!`,
+      explanation: tr("Con {honor}{sym} in mano vuoi la continuazione: gioca la carta più alta che puoi permetterti ({carta}{sym}). Carta alta = gradimento. L'onore non si gioca mai sotto l'Asso del compagno!", { honor, sym, carta: spots[0] }),
     };
   }
 
@@ -108,19 +110,19 @@ function genGradimento(): DrillRound {
   return {
     kind: "gradimento",
     scenario: [
-      `Difendi contro 4${suit === "spade" ? "♥" : "♠"}.`,
-      `Il compagno attacca con l'A${sym}.`,
+      tr("Difendi contro 4{palo}.", { palo: suit === "spade" ? "♥" : "♠" }),
+      tr("Il compagno attacca con l'A{sym}.", { sym }),
     ],
-    question: `Quale carta giochi per dare il segnale giusto?`,
+    question: tr("Quale carta giochi per dare il segnale giusto?"),
     holding: { suit, ranks: spots },
     textOptions: null,
     correctRank: spots[spots.length - 1],
     correctIdx: null,
-    explanation: `Senza onori in ${sym} non vuoi la continuazione: gioca la carta più bassa (${spots[spots.length - 1]}${sym}). Carta bassa = non gradimento, il compagno cambierà colore.`,
+    explanation: tr("Senza onori in {sym} non vuoi la continuazione: gioca la carta più bassa ({carta}{sym}). Carta bassa = non gradimento, il compagno cambierà colore.", { sym, carta: spots[spots.length - 1] }),
   };
 }
 
-function genConto(): DrillRound {
+function genConto(tr: Traduttore): DrillRound {
   const suit = randomOf(SUITS);
   const sym = suitSymbols[suit];
   const even = Math.random() < 0.5;
@@ -130,21 +132,21 @@ function genConto(): DrillRound {
   return {
     kind: "conto",
     scenario: [
-      `Difendi contro 3NT.`,
-      `Il dichiarante gioca ${sym} dal morto: tocca a te, non puoi vincere la presa.`,
+      tr("Difendi contro 3NT."),
+      tr("Il dichiarante gioca {sym} dal morto: tocca a te, non puoi vincere la presa.", { sym }),
     ],
-    question: `Quale carta giochi per dare il conto al compagno?`,
+    question: tr("Quale carta giochi per dare il conto al compagno?"),
     holding: { suit, ranks: spots },
     textOptions: null,
     correctRank: correct,
     correctIdx: null,
     explanation: even
-      ? `Hai ${spots.length} carte (numero PARI): inizia con la carta alta (${correct}${sym}), poi la più bassa. Alto-basso = pari.`
-      : `Hai ${spots.length} carte (numero DISPARI): inizia con la carta più bassa (${correct}${sym}). Basso-alto = dispari.`,
+      ? tr("Hai {n} carte (numero PARI): inizia con la carta alta ({carta}{sym}), poi la più bassa. Alto-basso = pari.", { n: spots.length, carta: correct, sym })
+      : tr("Hai {n} carte (numero DISPARI): inizia con la carta più bassa ({carta}{sym}). Basso-alto = dispari.", { n: spots.length, carta: correct, sym }),
   };
 }
 
-function genLettura(): DrillRound {
+function genLettura(tr: Traduttore): DrillRound {
   const suit = randomOf(SUITS);
   const sym = suitSymbols[suit];
   const variant = Math.floor(Math.random() * 4);
@@ -156,17 +158,17 @@ function genLettura(): DrillRound {
     return {
       kind: "lettura",
       scenario: [
-        `Attacchi con l'A${sym} da A-K-7-3-2.`,
-        `Il compagno gioca il ${card}${sym}, il dichiarante segue basso.`,
+        tr("Attacchi con l'A{sym} da A-K-7-3-2.", { sym }),
+        tr("Il compagno gioca il {card}{sym}, il dichiarante segue basso.", { card, sym }),
       ],
-      question: `Come continui la difesa?`,
+      question: tr("Come continui la difesa?"),
       holding: null,
-      textOptions: [`Continuo con il K${sym}`, `Cambio colore`],
+      textOptions: [tr("Continuo con il K{sym}", { sym }), tr("Cambio colore")],
       correctRank: null,
       correctIdx: likes ? 0 : 1,
       explanation: likes
-        ? `Il ${card}${sym} è una carta alta: gradimento! Il compagno ha un onore o vuole tagliare. Continua con il K${sym}.`
-        : `Il ${card}${sym} è una carta bassa: non gradimento. Insistere regala una presa: meglio cambiare colore.`,
+        ? tr("Il {card}{sym} è una carta alta: gradimento! Il compagno ha un onore o vuole tagliare. Continua con il K{sym}.", { card, sym })
+        : tr("Il {card}{sym} è una carta bassa: non gradimento. Insistere regala una presa: meglio cambiare colore.", { card, sym }),
     };
   }
 
@@ -178,17 +180,17 @@ function genLettura(): DrillRound {
   return {
     kind: "lettura",
     scenario: [
-      `Il dichiarante incassa A e K di ${sym}.`,
-      `Il compagno gioca prima il ${first}${sym}, poi il ${second}${sym}.`,
+      tr("Il dichiarante incassa A e K di {sym}.", { sym }),
+      tr("Il compagno gioca prima il {first}{sym}, poi il {second}{sym}.", { first, second, sym }),
     ],
-    question: `Quante carte di ${sym} aveva il compagno?`,
+    question: tr("Quante carte di {sym} aveva il compagno?", { sym }),
     holding: null,
-    textOptions: [`Un numero pari (alto-basso)`, `Un numero dispari (basso-alto)`],
+    textOptions: [tr("Un numero pari (alto-basso)"), tr("Un numero dispari (basso-alto)")],
     correctRank: null,
     correctIdx: even ? 0 : 1,
     explanation: even
-      ? `${first} poi ${second}: alto-basso = numero PARI di carte. Conta la distribuzione del colore prima di decidere cosa tenere!`
-      : `${first} poi ${second}: basso-alto = numero DISPARI di carte. Il conto ti dice quante carte ha il dichiarante.`,
+      ? tr("{first} poi {second}: alto-basso = numero PARI di carte. Conta la distribuzione del colore prima di decidere cosa tenere!", { first, second })
+      : tr("{first} poi {second}: basso-alto = numero DISPARI di carte. Il conto ti dice quante carte ha il dichiarante.", { first, second }),
   };
 }
 
@@ -226,11 +228,11 @@ const difficultyConfig: Record<
   },
 };
 
-function genRound(kinds: SignalKind[]): DrillRound {
+function genRound(kinds: SignalKind[], tr: Traduttore): DrillRound {
   const kind = randomOf(kinds);
-  if (kind === "gradimento") return genGradimento();
-  if (kind === "conto") return genConto();
-  return genLettura();
+  if (kind === "gradimento") return genGradimento(tr);
+  if (kind === "conto") return genConto(tr);
+  return genLettura(tr);
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────
@@ -264,8 +266,8 @@ export default function SegnaliPage() {
     setBestStreak(0);
     setCorrectCount(0);
     setAnswered(null);
-    setCurrent(genRound(difficultyConfig[diff].kinds));
-  }, []);
+    setCurrent(genRound(difficultyConfig[diff].kinds, t));
+  }, [t]);
 
   const finishGame = useCallback(
     (finalScore: number, finalCorrect: number, finalBestStreak: number) => {
@@ -327,13 +329,13 @@ export default function SegnaliPage() {
           } else {
             setRound((r) => r + 1);
             setAnswered(null);
-            setCurrent(genRound(config.kinds));
+            setCurrent(genRound(config.kinds, t));
           }
         },
         isCorrect ? 2400 : 3600
       );
     },
-    [current, answered, score, streak, bestStreak, correctCount, round, config, play, finishGame]
+    [current, answered, score, streak, bestStreak, correctCount, round, config, play, finishGame, t]
   );
 
   useEffect(() => {
