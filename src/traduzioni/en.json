@@ -2391,5 +2391,6 @@
   "Non sono riuscito a completare l'accesso dal link. Riprova, o chiedine uno nuovo.": "I couldn't complete the sign-in from the link. Try again, or request a new one.",
   "Email di reset inviata! Controlla la tua casella di posta.": "Reset email sent! Check your inbox.",
   "Il link non è più valido: è scaduto o è già stato usato. Chiedine uno nuovo dalla pagina di accesso, con «Password dimenticata?».": "This link is no longer valid: it has expired or was already used. Request a new one from the sign-in page, with “Forgot password?”.",
-  "Chiedi un nuovo link": "Request a new link"
+  "Chiedi un nuovo link": "Request a new link",
+  "Questa password compare in elenchi di password rubate: puoi usarla, ma è meglio sceglierne una che usi solo qui.": "This password appears in lists of stolen passwords: you can use it, but it's better to pick one you use only here."
 }
