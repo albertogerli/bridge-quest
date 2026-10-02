@@ -220,24 +220,22 @@ export default function QualeContrattoPage() {
               >
                 <p className="font-semibold text-sm mb-2">
                   {SCELTE[risposta].level === atteso
-                    ? "Esatto."
-                    : `Le carte reggono il livello ${atteso}.`}
+                    ? t("Esatto.")
+                    : t("Le carte reggono il livello {livello}.", { livello: atteso })}
                 </p>
                 <ul className="text-xs text-muted-foreground space-y-0.5 mb-3">
                   {([null, ...SUITS] as (Suit | null)[]).map((s) => (
                     <li key={s ?? "sa"} className="flex items-center gap-1.5">
                       {s ? <SuitSymbol suit={s} size="xs" /> : <span className="font-bold">SA</span>}
-                      <span>{preseNs(s)} prese</span>
+                      <span>{t("{n} prese", { n: preseNs(s) })}</span>
                     </li>
                   ))}
                 </ul>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Par della mano: {domanda.parContracts.join(", ")}. Il conteggio è
-                  a carte scoperte: al tavolo qualche presa in più o in meno
-                  dipende dall&apos;attacco.
+                  {t("Par della mano: {par}. Il conteggio è a carte scoperte: al tavolo qualche presa in più o in meno dipende dall'attacco.", { par: domanda.parContracts.join(", ") })}
                 </p>
                 <Button onClick={() => { registraSeFinita(); setRisposta(null); setRound((r) => r + 1); }}>
-                  {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
+                  {round + 1 >= ROUNDS ? t("Vedi il risultato") : t("Prossima mano")}
                 </Button>
               </motion.div>
             )}

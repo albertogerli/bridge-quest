@@ -21,6 +21,11 @@
  */
 
 import type { Suit } from "./bridge-engine";
+import { traduci } from "./traduzioni";
+
+/** `t` di `useT()`, o l'italiano se non si passa niente. */
+export type Traduttore = (frase: string, valori?: Record<string, string | number>) => string;
+const italiano: Traduttore = (frase, valori) => traduci(frase, null, valori);
 
 /** Seme di gioco della domanda; `null` = senza atout. */
 export type QuizStrain = Suit | null;
@@ -115,22 +120,22 @@ export const POINTS_NEAR = 40;
  * Esatta = pieno; sbagliata di una presa = parziale, perché a quel punto il
  * ragionamento era quasi tutto corretto; oltre = zero.
  */
-export function scoreAnswer(answer: number, correct: number): QuizScore {
+export function scoreAnswer(answer: number, correct: number, tr: Traduttore = italiano): QuizScore {
   const distance = Math.abs(answer - correct);
   if (distance === 0) {
-    return { points: POINTS_EXACT, accepted: true, message: "Esatto!" };
+    return { points: POINTS_EXACT, accepted: true, message: tr("Esatto!") };
   }
   if (distance === 1) {
     return {
       points: POINTS_NEAR,
       accepted: true,
-      message: `Quasi: ne fa ${correct}, hai sbagliato di una presa.`,
+      message: tr("Quasi: ne fa {n}, hai sbagliato di una presa.", { n: correct }),
     };
   }
   return {
     points: 0,
     accepted: false,
-    message: `Ne fa ${correct}, tu hai risposto ${answer}.`,
+    message: tr("Ne fa {n}, tu hai risposto {risposta}.", { n: correct, risposta: answer }),
   };
 }
 

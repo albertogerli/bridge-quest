@@ -101,8 +101,8 @@ export default function QuizPresePage() {
   }, [level, round, prepare]);
 
   const esito = useMemo(
-    () => (answer !== null && question ? scoreAnswer(answer, question.correct) : null),
-    [answer, question]
+    () => (answer !== null && question ? scoreAnswer(answer, question.correct, t) : null),
+    [answer, question, t]
   );
 
   const rispondi = (value: number) => {
@@ -268,7 +268,7 @@ export default function QuizPresePage() {
                   {t("Il conteggio è a carte scoperte, con gioco perfetto di entrambe le linee: al tavolo, senza vedere le mani avversarie, alcune di queste prese non sarebbero trovabili.")}
                 </p>
                 <Button onClick={() => { registraSeFinita(); setRound((r) => r + 1); }}>
-                  {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
+                  {round + 1 >= ROUNDS ? t("Vedi il risultato") : t("Prossima mano")}
                 </Button>
               </motion.div>
             )}

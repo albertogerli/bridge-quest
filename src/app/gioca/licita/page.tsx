@@ -604,7 +604,7 @@ export default function LicitaPage() {
                 </div>
                 {campo && <ConfrontoCampoPannello campo={campo} manoId={mano.id} />}
                 <Button className="mt-4" onClick={prossima}>
-                  {round + 1 >= ROUNDS ? "Vedi il risultato" : "Prossima mano"}
+                  {round + 1 >= ROUNDS ? t("Vedi il risultato") : t("Prossima mano")}
                 </Button>
               </motion.div>
             )}
