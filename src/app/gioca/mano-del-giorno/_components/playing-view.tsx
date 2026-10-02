@@ -85,7 +85,7 @@ export function PlayingView({
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <Badge className="bg-amber-50 text-amber-700 text-[12px] font-bold border-0 shrink-0">
-                  {isDaily ? "Mano del Giorno" : "Mano di Ieri"}
+                  {isDaily ? t("Mano del Giorno") : t("Mano di Ieri")}
                 </Badge>
                 <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
               </div>
