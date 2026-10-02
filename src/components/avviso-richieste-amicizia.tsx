@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { UserPlus } from "lucide-react";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 import { useT } from "@/contexts/traduzioni-provider";

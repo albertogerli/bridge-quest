@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { SelettoreLingua } from "@/components/selettore-lingua";
 import Image from "next/image";
 import { openConsentPreferences } from "@/lib/consent-client";

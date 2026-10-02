@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useNascosti } from "@/hooks/use-permessi";

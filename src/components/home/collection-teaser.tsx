@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { Badge } from "@/components/ui/badge";
 import { useCollectibleCards } from "@/store/use-collectible-cards-store";
 import { evaluateUnlock } from "@/lib/catalog";

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useSpacedReview, type ReviewItem } from "@/hooks/use-spaced-review";
 import { useCatalog } from "@/store/use-catalog-store";
 import type { Course } from "@/lib/catalog";

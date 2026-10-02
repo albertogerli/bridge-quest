@@ -6,6 +6,7 @@ import { getPlatform } from "@/lib/native-bridge";
 import { segnalaSalvoRete} from "@/lib/report-error";
 import type { User, Session } from "@supabase/supabase-js";
 import { oggiInItalia } from "@/lib/data-locale";
+import { homeDi } from "@/lib/lingua";
 
 export interface Profile {
   id: string;
@@ -209,8 +210,8 @@ export function useAuth() {
         try { localStorage.removeItem("bq_guest"); } catch {}
         await supabase.auth.signOut();
         setState({ user: null, profile: null, session: null, loading: false });
-        // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
-        window.location.href = "/";
+         
+        window.location.href = homeDi(window.location.pathname);
       }, INACTIVITY_TIMEOUT);
     };
 

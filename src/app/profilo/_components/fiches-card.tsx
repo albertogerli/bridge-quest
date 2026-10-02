@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion } from "motion/react";
 import { Coins } from "lucide-react";
 import { computeFiches } from "@/lib/profile-stats";

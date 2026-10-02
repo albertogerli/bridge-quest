@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useProfile, type UserProfile } from "@/hooks/use-profile";
 import { CelebrationCombo } from "@/components/celebration-effects";
 import { useSound } from "@/hooks/use-sound";

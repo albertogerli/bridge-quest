@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useAppunti } from "@/hooks/use-appunti";
 import { updateLastActivity } from "@/hooks/use-notifications";

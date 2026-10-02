@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 import { reportError } from "@/lib/report-error";
 

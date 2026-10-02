@@ -9,8 +9,8 @@ import { useFriends } from "@/hooks/use-friends";
 import { InvitoAmico } from "@/components/amici/invito";
 import { useChallenges } from "@/hooks/use-challenges";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/hooks/use-router-lingua";
+import Link from "@/components/link";
 import { Search, UserPlus, Users, Bell, Swords, X, Check } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 

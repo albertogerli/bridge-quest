@@ -38,6 +38,7 @@ import { AccountActions } from "./_components/account-actions";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
 import { Globe, Layers, MapPin, Settings, ShoppingBag } from "lucide-react";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
+import { homeDi } from "@/lib/lingua";
 
 export default function ProfiloPage() {
   const { user, profile: authProfile, loading: authLoading, signOut } = useSharedAuth();
@@ -72,8 +73,8 @@ export default function ProfiloPage() {
       try { localStorage.removeItem("bq_guest"); } catch {}
       await signOut();
       // Hard redirect to force full page reload and clean auth state
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
-      window.location.href = "/";
+       
+      window.location.href = homeDi(window.location.pathname);
     } catch (err) {
       reportError("profilo:logout", err);
       toast.error("Uscita non riuscita. Riprova.");
@@ -113,8 +114,8 @@ export default function ProfiloPage() {
       keys.forEach((k) => localStorage.removeItem(k));
       try { localStorage.removeItem("bq_guest"); } catch {}
       await signOut();
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
-      window.location.href = "/";
+       
+      window.location.href = homeDi(window.location.pathname);
     } catch (err) {
       reportError("profilo:delete-account", err);
       toast.error("Eliminazione account non riuscita. Riprova.");

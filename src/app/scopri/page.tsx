@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/link";
 import {
   Globe, ExternalLink, BookOpen, Trophy, Users, Brain,
   Landmark, Heart, Lightbulb, ArrowLeft, Award

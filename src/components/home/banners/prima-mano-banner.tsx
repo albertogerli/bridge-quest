@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { BookOpen } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 

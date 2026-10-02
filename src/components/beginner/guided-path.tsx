@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { BookOpen, Target, Brain, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";

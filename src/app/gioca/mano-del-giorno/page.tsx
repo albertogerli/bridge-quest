@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { parseContract } from "@/lib/bridge-engine";

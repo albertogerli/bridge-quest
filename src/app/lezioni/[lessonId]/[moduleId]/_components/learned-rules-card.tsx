@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { collectRuleTexts } from "@/lib/lesson-module";
 import type { ContentBlock } from "@/lib/catalog";
 import { useT } from "@/contexts/traduzioni-provider";

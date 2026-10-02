@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import {
   Trophy, Gift, Sparkles, FileText, Spade, Star, BookOpen,

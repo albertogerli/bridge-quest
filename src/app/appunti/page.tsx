@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppunti } from "@/hooks/use-appunti";
 import { useProfile } from "@/hooks/use-profile";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/contexts/traduzioni-provider";
 

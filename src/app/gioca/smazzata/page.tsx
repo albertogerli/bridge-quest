@@ -50,7 +50,7 @@ import { useDDS, type DDSAnalysis } from "@/hooks/use-dds";
 import { addGameRecordDirect } from "@/hooks/use-game-history";
 import { classifyPlayErrors, type PlayError } from "@/lib/play-error-classifier";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 

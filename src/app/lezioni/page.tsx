@@ -12,7 +12,7 @@ import { useCatalog } from "@/store/use-catalog-store";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { isWorldLocked } from "@/lib/progression";
-import Link from "next/link";
+import Link from "@/components/link";
 import { BookOpen, CheckCircle2, Compass, Construction, Crown, FileText, Lock, Play, RefreshCw, Spade, Sprout, Target, Trophy } from "lucide-react";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";

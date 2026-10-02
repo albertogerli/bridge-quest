@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Users } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useSharedAuth } from "@/contexts/auth-provider";

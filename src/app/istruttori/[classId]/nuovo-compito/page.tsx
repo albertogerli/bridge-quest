@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, use, useEffect } from "react";
 import { Briciole } from "@/components/briciole";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";

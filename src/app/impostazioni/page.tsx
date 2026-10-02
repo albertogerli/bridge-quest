@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Globe } from "lucide-react";
 import { SelettoreLingua } from "@/components/selettore-lingua";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useNotifications } from "@/hooks/use-notifications";
 import { useTheme, type ThemeMode } from "@/hooks/use-theme";
@@ -22,6 +22,7 @@ import { reportError } from "@/lib/report-error";
 import { toast } from "sonner";
 import { applyTextSize, parseTextSize, TEXT_SIZE_KEY } from "@/lib/text-size";
 import { useT } from "@/contexts/traduzioni-provider";
+import { homeDi } from "@/lib/lingua";
 
 const AI_LEVELS: AILevel[] = ["base", "intermedio", "esperto"];
 
@@ -166,8 +167,8 @@ export default function ImpostazioniPage() {
       try { localStorage.removeItem("bq_guest"); } catch {}
       await signOut();
       // Hard redirect to force full page reload and clean auth state
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- auth/guest transition requires a full reload to discard in-memory account state
-      window.location.href = "/";
+       
+      window.location.href = homeDi(window.location.pathname);
     } catch (err) {
       reportError("impostazioni:logout", err);
       toast.error("Uscita non riuscita. Riprova.");

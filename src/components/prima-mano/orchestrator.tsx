@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { motion, AnimatePresence } from "motion/react";
 import { BookOpen } from "lucide-react";
 import { useSounds } from "@/hooks/use-sounds";

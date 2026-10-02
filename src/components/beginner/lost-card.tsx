@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Compass, BookOpen, Target, Brain, X } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 

@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo, Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
@@ -12,7 +13,7 @@ import { parseContract, toDisplayPosition, toGamePosition, sortHand, partnership
 import type { CardData } from "@/components/bridge/playing-card";
 import { BenStatus } from "@/components/bridge/ben-status";
 import { PlayingCard } from "@/components/bridge/playing-card";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { awardGameXp } from "@/lib/xp-utils";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion, AnimatePresence } from "motion/react";
 import { consentPending, exposeConsentApi, setMarketingConsent } from "@/lib/consent-client";
 import { CONSENT_REOPEN_EVENT } from "@/lib/consent";

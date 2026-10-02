@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/components/link";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { motion, AnimatePresence } from "motion/react";
 import { useT } from "@/contexts/traduzioni-provider";
 

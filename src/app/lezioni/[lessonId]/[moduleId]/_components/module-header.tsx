@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Badge } from "@/components/ui/badge";
 import type { ProfileConfig } from "@/hooks/use-profile";
 

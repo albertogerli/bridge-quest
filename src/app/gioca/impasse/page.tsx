@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 import { impasseScenarios, type ImpasseScenario } from "@/data/impasse-data";
 import { useGameStore } from "@/store/use-game-store";
 import { useProfile } from "@/hooks/use-profile";

@@ -8,7 +8,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import { evaluateChannel, persistentFailureMessage } from "@/lib/realtime-health";
 import { Swords, Check, X, ChevronRight, Clock } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 
 interface Challenge {

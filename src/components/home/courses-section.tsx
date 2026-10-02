@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { GraduationCap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { levelInfo } from "@/lib/catalog";

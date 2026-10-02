@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { motion, AnimatePresence } from "motion/react";
 import { Calculator, ChevronRight, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";

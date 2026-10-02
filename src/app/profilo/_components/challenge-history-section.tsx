@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Swords } from "lucide-react";
 import type { ChallengeData, ChallengeStats } from "@/hooks/use-challenges";

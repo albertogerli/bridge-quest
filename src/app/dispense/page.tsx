@@ -9,7 +9,7 @@ import { levelInfo, type CourseId } from "@/lib/catalog";
 import { useCatalog } from "@/store/use-catalog-store";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { getInfographicForLesson } from "@/components/maestro-video";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";

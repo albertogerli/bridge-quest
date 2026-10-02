@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Badge } from "@/components/ui/badge";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Lesson, LessonModule } from "@/lib/catalog";
