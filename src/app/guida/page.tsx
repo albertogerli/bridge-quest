@@ -361,7 +361,7 @@ export default function GuidaPage() {
                     aria-expanded={isOpen}
                     className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-muted/40"
                   >
-                    <span className="text-sm font-semibold text-foreground">{item.q}</span>
+                    <span className="text-sm font-semibold text-foreground">{t(item.q)}</span>
                     <span
                       className={`shrink-0 text-muted-foreground transition-transform ${
                         isOpen ? "rotate-180" : ""
@@ -380,7 +380,7 @@ export default function GuidaPage() {
                         className="overflow-hidden"
                       >
                         <p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">
-                          {item.a}
+                          {t(item.a)}
                         </p>
                       </motion.div>
                     )}
@@ -407,7 +407,7 @@ export default function GuidaPage() {
               href="/prima-mano"
               className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-[#1B5E3B] transition-transform active:scale-95"
             >
-              🃏 Gioca la tua prima mano
+              🃏 {t("Gioca la tua prima mano")}
             </Link>
             <Link
               href="/gioca"

@@ -499,7 +499,7 @@ function SfidaIMPContent() {
             <h1 className="text-lg font-bold text-foreground mb-2">
               {isNoChallengeId ? t("Sfida IMP") : t("Errore")}
             </h1>
-            <p className="text-sm text-muted-foreground mb-6">{error}</p>
+            <p className="text-sm text-muted-foreground mb-6">{error ? t(error) : null}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {isNoChallengeId && (
                 <Link href="/amici">

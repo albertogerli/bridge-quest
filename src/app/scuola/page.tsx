@@ -100,8 +100,8 @@ export default function ScuolaPage() {
                     {c.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className={`font-semibold ${c.highlight ? "text-white" : ""}`}>{c.title}</p>
-                    <p className={`text-xs ${c.highlight ? "text-white/70" : "text-muted-foreground"}`}>{c.desc}</p>
+                    <p className={`font-semibold ${c.highlight ? "text-white" : ""}`}>{t(c.title)}</p>
+                    <p className={`text-xs ${c.highlight ? "text-white/70" : "text-muted-foreground"}`}>{t(c.desc)}</p>
                   </div>
                   <svg
                     className={`h-4 w-4 shrink-0 ${c.highlight ? "text-white/70" : "text-muted-foreground/50"}`}

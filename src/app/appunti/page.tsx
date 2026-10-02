@@ -42,8 +42,8 @@ export default function AppuntiPage() {
               </h1>
               <p className={`text-white/70 ${isSenior ? "text-base" : "text-sm"}`}>
                 {totalRules > 0
-                  ? `${totalRules} regole salvate da ${lessonIds.length} lezioni`
-                  : "Le regole che impari verranno salvate qui"}
+                  ? t("{rules} regole salvate da {lessons} lezioni", { rules: totalRules, lessons: lessonIds.length })
+                  : t("Le regole che impari verranno salvate qui")}
               </p>
             </div>
           </div>
