@@ -72,6 +72,7 @@ node scripts/stringhe-da-tradurre.mjs --controlla  # nessuna frase senza inglese
 ## Database
 
 - Le tabelle si gestiscono con gli script in `scripts/sql/`, eseguiti **a mano** su Supabase Dashboard → SQL Editor (in ordine; dipendenze nell'header di ogni script). Non esistono migrazioni automatiche: per una modifica di schema, scrivere un nuovo script idempotente in `scripts/sql/`, non modificarne uno già eseguito.
+- Ogni script nuovo **termina registrandosi**: `insert into public.script_applicati (nome) values ('<nome-file>.sql') on conflict (nome) do nothing;` (lo controlla `src/lib/sql-registro.test.ts`). `node scripts/sql-stato.mjs` dice quali script del repository non sono ancora stati applicati.
 - Dopo **ogni** modifica di schema: `node scripts/dump-schema.mjs` e committare `scripts/sql/000-schema-baseline.sql` insieme allo script. È il file da cui il database si ricostruisce da zero; se non lo si aggiorna, torna a divergere in silenzio.
 - RPC amministrative protette da `is_admin()` (`profiles.role = 'admin'`); tutte le tabelle hanno RLS.
 - `src/lib/supabase/admin.ts` (service role) è solo server: mai importarlo da componenti client.

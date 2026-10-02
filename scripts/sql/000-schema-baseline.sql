@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-01
+-- Estratto il: 2026-10-02
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -669,6 +669,12 @@ CREATE TABLE IF NOT EXISTS public.scenari (
   modulo text,
   created_at timestamp with time zone NOT NULL,
   slug text
+);
+
+CREATE TABLE IF NOT EXISTS public.script_applicati (
+  nome text NOT NULL,
+  applicato_il timestamp with time zone NOT NULL,
+  retroattivo boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.segnalazioni (
@@ -4627,6 +4633,8 @@ ALTER TABLE public.scenari ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.scenari ALTER COLUMN ufficiale SET DEFAULT false;
 ALTER TABLE public.scenari ALTER COLUMN pubblico SET DEFAULT false;
 ALTER TABLE public.scenari ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.script_applicati ALTER COLUMN applicato_il SET DEFAULT now();
+ALTER TABLE public.script_applicati ALTER COLUMN retroattivo SET DEFAULT false;
 ALTER TABLE public.segnalazioni ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.segnalazioni ALTER COLUMN contesto SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.segnalazioni ALTER COLUMN stato SET DEFAULT 'nuova'::text;
@@ -4718,6 +4726,7 @@ ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_pkey PRIMARY KEY
 ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_pkey PRIMARY KEY (torneo_id, mano_id, user_id);
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_pkey PRIMARY KEY (id);
+ALTER TABLE public.script_applicati ADD CONSTRAINT script_applicati_pkey PRIMARY KEY (nome);
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_pkey PRIMARY KEY (id);
 ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_pkey PRIMARY KEY (id);
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
@@ -5085,6 +5094,7 @@ ALTER TABLE public.risultati_mano ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.risultati_torneo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scenari ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.script_applicati ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.segnalazioni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sessioni_aula ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
@@ -5315,6 +5325,7 @@ REVOKE ALL ON TABLE public.risultati_mano FROM PUBLIC, anon, authenticated, serv
 REVOKE ALL ON TABLE public.risultati_torneo FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.saved_hands FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.scenari FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.script_applicati FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.segnalazioni FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.sessioni_aula FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.sfida_board FROM PUBLIC, anon, authenticated, service_role;
@@ -6609,6 +6620,14 @@ GRANT SELECT ON TABLE public.scenari TO service_role;
 GRANT TRIGGER ON TABLE public.scenari TO service_role;
 GRANT TRUNCATE ON TABLE public.scenari TO service_role;
 GRANT UPDATE ON TABLE public.scenari TO service_role;
+GRANT DELETE ON TABLE public.script_applicati TO service_role;
+GRANT INSERT ON TABLE public.script_applicati TO service_role;
+GRANT MAINTAIN ON TABLE public.script_applicati TO service_role;
+GRANT REFERENCES ON TABLE public.script_applicati TO service_role;
+GRANT SELECT ON TABLE public.script_applicati TO service_role;
+GRANT TRIGGER ON TABLE public.script_applicati TO service_role;
+GRANT TRUNCATE ON TABLE public.script_applicati TO service_role;
+GRANT UPDATE ON TABLE public.script_applicati TO service_role;
 GRANT DELETE ON TABLE public.segnalazioni TO anon;
 GRANT INSERT ON TABLE public.segnalazioni TO anon;
 GRANT MAINTAIN ON TABLE public.segnalazioni TO anon;
