@@ -293,7 +293,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-1 max-w-3xl relative"
+            className="w-full lg:w-auto flex-1 max-w-3xl relative"
           >
             {hands ? (
               <BridgeTable ancora={declarer}

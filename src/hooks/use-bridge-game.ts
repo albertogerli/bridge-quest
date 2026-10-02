@@ -13,7 +13,6 @@ import {
   claimTricks,
   partnerOf,
   partnershipOf,
-  toDisplayPosition,
 } from "@/lib/bridge-engine";
 import { ddsSolve } from "@/lib/dds-select";
 import { useSounds } from "@/hooks/use-sounds";
@@ -230,11 +229,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             if (isPlayerPosition(leader)) {
               const isDummyTurn = leader === partnerOf(configRef.current.declarer);
               setMessage(isDummyTurn
-                ? `Gioca dal morto (${positionName(leader, configRef.current.declarer)}). Tocca le carte evidenziate.`
+                ? `Gioca dal morto (${positionName(leader)}). Tocca le carte evidenziate.`
                 : "È il tuo turno. Scegli una carta da giocare."
               );
             } else {
-              setMessage(`${positionName(leader, configRef.current.declarer)} sta giocando...`);
+              setMessage(`${positionName(leader)} sta giocando...`);
             }
           }, TRICK_CLEAR_DELAY);
         } else {
@@ -248,12 +247,12 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             setHighlightedCards(valid);
             const isDummyTurn = next === partnerOf(configRef.current.declarer);
             setMessage(isDummyTurn
-              ? `Gioca dal morto (${positionName(next, configRef.current.declarer)}). Tocca le carte evidenziate.`
+              ? `Gioca dal morto (${positionName(next)}). Tocca le carte evidenziate.`
               : "Scegli una carta da giocare."
             );
           } else {
             setHighlightedCards([]);
-            setMessage(`${positionName(newState.currentPlayer, configRef.current.declarer)} sta giocando...`);
+            setMessage(`${positionName(newState.currentPlayer)} sta giocando...`);
           }
         }
       } catch (err) {
@@ -403,14 +402,14 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     if (isPlayerPosition(leader)) {
       const isDummyTurn = leader === partnerOf(config.declarer);
       setMessage(isDummyTurn
-        ? `Gioca dal morto (${positionName(leader, config.declarer)}).`
+        ? `Gioca dal morto (${positionName(leader)}).`
         : "Sei il primo a giocare. Scegli una carta."
       );
       setHighlightedCards(
         getValidCards(state.hands[leader], state.currentTrick)
       );
     } else {
-      setMessage(`${positionName(leader, config.declarer)} attacca...`);
+      setMessage(`${positionName(leader)} attacca...`);
     }
   }, [config, isPlayerPosition]);
 
@@ -588,13 +587,15 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   };
 }
 
-function positionName(pos: Position, declarer?: Position): string {
+// Il nome vero del posto. Il tavolo (`BridgeTable ancora=…`) scrive i nomi veri,
+// e un messaggio che dice «Gioca dal morto (Nord)» sopra un tavolo che scrive
+// «SUD · MORTO» fa credere all'allievo di aver sbagliato posto.
+function positionName(pos: Position): string {
   const names: Record<Position, string> = {
     north: "Nord",
     south: "Sud",
     east: "Est",
     west: "Ovest",
   };
-  const displayPos = declarer ? toDisplayPosition(pos, declarer) : pos;
-  return names[displayPos];
+  return names[pos];
 }
