@@ -196,12 +196,12 @@ export function GameTutorial() {
                     {currentStep + 1}
                   </span>
                   <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                    {step.title}
+                    {t(step.title)}
                   </span>
                 </div>
 
                 <p className="text-sm text-foreground/80 leading-relaxed">
-                  {step.description}
+                  {t(step.description)}
                 </p>
 
                 {/* Action button */}
