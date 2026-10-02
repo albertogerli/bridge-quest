@@ -114,3 +114,8 @@ validazione-smazzate.json
 # mancare anche lui, ma è già coperto da `android/.gitignore` — il controllo
 # guardava solo questo file, e per poco non aggiungevo una regola doppia.
 output/playwright/
+
+# Fotografia dei contenuti di produzione (scripts/esporta-contenuti.mjs):
+# contiene commenti e soluzioni che il database nasconde agli allievi, e il
+# repository è pubblico. Resta sul disco di chi la produce.
+scripts/contenuti/

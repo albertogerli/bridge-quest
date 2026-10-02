@@ -52,9 +52,15 @@ scripts/          pipeline video HeyGen, validatori smazzate, seed legacy
 
 ## Database
 
-Lo schema vive su Supabase e si evolve tramite gli script in `scripts/sql/` (eseguiti a mano sulla dashboard, in ordine cronologico). Non esiste una catena di migrazioni completa: le tabelle core (`profiles`, `lessons`, …) sono state create da dashboard. Tutte le tabelle hanno RLS; le RPC amministrative sono protette da `is_admin()` (colonna `profiles.role`).
+Lo schema vive su Supabase e si evolve con gli script di `scripts/sql/`, eseguiti **a mano** su Dashboard → SQL Editor. Non c'è una catena di migrazioni automatica, ma il database si ricostruisce dal repository e ogni script applicato è tracciato:
 
-**Correzioni di sicurezza pendenti/recenti**: `scripts/sql/security-fixes-2026-08.sql` (RLS su `profiles` e `login_history`, tabella `tournament_results`).
+- **`scripts/sql/000-schema-baseline.sql`** è lo schema completo di produzione (tabelle, vincoli, RLS, policy, funzioni, privilegi), generato dal database stesso con `node scripts/dump-schema.mjs`. Si rigenera e si committa insieme a ogni script che cambia lo schema.
+- **`public.script_applicati`** registra gli script eseguiti. Ogni script nuovo termina con la riga che lo registra (`insert into public.script_applicati …`): un test (`src/lib/sql-registro.test.ts`) fallisce se manca. `node scripts/sql-stato.mjs` elenca gli script del repository non ancora applicati in produzione ed esce con 1 se ce ne sono. Gli script anteriori al 2 ottobre 2026 sono registrati come *retroattivi*.
+- Ogni script è idempotente e ha il suo rollback (`*-rollback.sql`). Gli script `test-*.sql` sono prove da eseguire su un database di prova, non modifiche dello schema.
+
+Tutte le tabelle hanno RLS; le RPC amministrative sono protette da `is_admin()` (colonna `profiles.role`).
+
+**Contenuti didattici.** La fonte di verità è il database: lezioni, moduli, smazzate ed eserciziario si correggono lì (`UPDATE`), mai rieseguendo il seed. Il seed in `src/data/` è quello iniziale e **diverge** da produzione; `scripts/legacy/seed-supabase.ts` resta solo per storia. Per una copia aggiornata dei contenuti: `node scripts/esporta-contenuti.mjs` scrive `scripts/contenuti/*.json`, che non si committa (contiene commenti e soluzioni nascosti agli allievi, e il repository è pubblico).
 
 ## Qualità
 
