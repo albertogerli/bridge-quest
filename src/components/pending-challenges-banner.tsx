@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import { evaluateChannel, persistentFailureMessage } from "@/lib/realtime-health";
 import { Swords, Check, X, ChevronRight, Clock } from "lucide-react";
 import Link from "next/link";
@@ -188,10 +188,16 @@ export function PendingChallengesBanner() {
   const handleAccept = useCallback(
     async (challengeId: string) => {
       const supabase = createClient();
-      await supabase
+      const { error } = await supabase
         .from("challenges")
         .update({ status: "accepted" })
         .eq("id", challengeId);
+      // Se non è passata la sfida resta in elenco: sparire come se fosse
+      // accettata la farebbe perdere a chi non l'ha accettata davvero.
+      if (error) {
+        segnalaSalvoRete("sfide:accetta", error);
+        return;
+      }
 
       setChallenges((prev) => prev.filter((c) => c.id !== challengeId));
       // Refetch to get updated status
@@ -203,10 +209,14 @@ export function PendingChallengesBanner() {
   const handleDecline = useCallback(
     async (challengeId: string) => {
       const supabase = createClient();
-      await supabase
+      const { error } = await supabase
         .from("challenges")
         .update({ status: "declined" })
         .eq("id", challengeId);
+      if (error) {
+        segnalaSalvoRete("sfide:rifiuta", error);
+        return;
+      }
 
       setChallenges((prev) => prev.filter((c) => c.id !== challengeId));
     },

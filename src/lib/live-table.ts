@@ -110,11 +110,17 @@ export async function openLiveTable(input: {
 
   // Un tavolo per volta: se ne resta uno aperto, gli allievi rischiano di
   // guardare la mano sbagliata mentre l'insegnante ne ha già aperta un'altra.
-  await supabase
+  const { error: erroreChiusura } = await supabase
     .from("live_tables")
     .update({ closed_at: new Date().toISOString() })
     .eq("class_id", input.classId)
     .is("closed_at", null);
+  if (erroreChiusura) {
+    // Aprirne un secondo con il primo ancora aperto manderebbe gli allievi sul
+    // tavolo sbagliato: meglio non aprire niente e dirlo (null = «non aperto»).
+    segnalaSalvoRete("live-table:chiudi-precedente", erroreChiusura);
+    return null;
+  }
 
   const { data, error } = await supabase
     .from("live_tables")
