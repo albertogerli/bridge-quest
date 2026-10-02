@@ -50,6 +50,7 @@ import { VideoTavolo } from "@/components/bridge/video-tavolo";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
 import { useT } from "@/contexts/traduzioni-provider";
+import { Briciole } from "@/components/briciole";
 
 const SEATS: { key: Position; label: string }[] = [
   { key: "north", label: "Nord" },
@@ -462,6 +463,14 @@ function Tavolo() {
         href={daAula && classId ? `/istruttori/${classId}/aula` : classId ? `/istruttori/${classId}` : "/istruttori"}
         etichetta={daAula ? t("Torna all'aula") : classId ? t("Torna alla classe") : t("Torna al portale")}
         className="mb-2"
+      />
+      <Briciole
+        percorso={[
+          { etichetta: "Le tue classi", href: "/istruttori" },
+          ...(classId && nomeClasse ? [{ etichetta: nomeClasse, href: `/istruttori/${classId}` }] : []),
+          ...(daAula && classId ? [{ etichetta: "Aula", href: `/istruttori/${classId}/aula` }] : []),
+          { etichetta: "Tavolo condiviso" },
+        ]}
       />
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">

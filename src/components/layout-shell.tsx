@@ -24,6 +24,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { useExitIntent } from "@/hooks/use-exit-intent";
 import type { UserProfile } from "@/hooks/use-profile";
 import { configureStatusBar } from "@/lib/native-bridge";
+import { IscrizioneInSospeso } from "@/components/iscrizione-in-sospeso";
 
 // Overlay one-shot presenti nel layout condiviso (quindi in TUTTE le route) ma
 // invisibili al primo paint: caricarli staticamente costava a ogni pagina il
@@ -73,6 +74,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
           prerenderizzate venivano servite lo stesso: un difetto che il build
           nasconde è peggio di uno che rompe subito. */}
       <RicordaLingua />
+      <IscrizioneInSospeso />
       <LayoutShellInner>{children}</LayoutShellInner>
     </AuthProvider>
   );

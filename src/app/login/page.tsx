@@ -19,8 +19,9 @@ import { suggestEmailCorrection } from "@/lib/email-domain-hint";
 import { authErrorMessage, isAlreadyRegistered } from "@/lib/auth-errors";
 import { type ReactNode } from "react";
 import { useT } from "@/contexts/traduzioni-provider";
-import { homeDi } from "@/lib/lingua";
+import { homeDi, linguaDaPercorso, localizzaHref } from "@/lib/lingua";
 import { AvvisoPassword } from "@/components/avviso-password";
+import { joinClass } from "@/lib/instructors";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
@@ -62,6 +63,10 @@ function LoginContent() {
   const [mostraPassword, setMostraPassword] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [bboUsername, setBboUsername] = useState("");
+  // Il codice della classe, se l'insegnante ne ha dato uno: chi lo scrive entra
+  // direttamente nella sua classe invece che nella home generale (Trevissoi,
+  // ottobre 2026). Arriva già compilato da `?codice=` (QR della locandina).
+  const [codiceClasse, setCodiceClasse] = useState(() => (searchParams.get("codice") ?? "").trim().toUpperCase().slice(0, 6));
   const [profileType, setProfileType] = useState<ProfileType>("adulto");
   const [asdSearch, setAsdSearch] = useState("");
   const [selectedAsdCode, setSelectedAsdCode] = useState<string>("");
@@ -182,6 +187,19 @@ function LoginContent() {
           }
           // Save profile type to localStorage too
           try { localStorage.setItem("bq_profile", profileType); } catch {}
+          // Con il codice della classe si entra nella classe. Se la sessione non
+          // c'è ancora (email da confermare) il codice resta in sospeso e lo
+          // usa `IscrizioneInSospeso` al primo accesso.
+          if (codiceClasse.length === 6) {
+            try {
+              const classe = await joinClass(codiceClasse);
+              // Ricarica intera, come per il resto dell'accesso: la sessione appena creata va letta dal server.
+              window.location.href = localizzaHref(`/classi/${classe.id}`, linguaDaPercorso(window.location.pathname));
+              return;
+            } catch {
+              try { localStorage.setItem("bq_codice_classe", codiceClasse); } catch {}
+            }
+          }
           window.location.href = redirectTo;
           return;
         }
@@ -395,6 +413,21 @@ function LoginContent() {
                     onChange={(e) => setDisplayName(e.target.value)}
                     className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     placeholder={t("Come vuoi essere chiamato")}
+                  />
+                </div>
+
+                {/* Codice della classe */}
+                <div>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                    {t("Codice della tua classe")} <span className="text-muted-foreground/50 normal-case">({t("se te l'ha dato l'insegnante")})</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={codiceClasse}
+                    onChange={(e) => setCodiceClasse(e.target.value.trim().toUpperCase().slice(0, 6))}
+                    autoComplete="off"
+                    className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm font-mono tracking-widest uppercase focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    placeholder="A7B9XZ"
                   />
                 </div>
 

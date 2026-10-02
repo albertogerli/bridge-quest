@@ -160,6 +160,36 @@ export default function AllieviPage({
     }
   }
 
+  /**
+   * Aggiungere, correggere e togliere a mano, dopo il primo caricamento dal
+   * file: l'elenco di una classe cambia durante il corso (Trevissoi, ottobre
+   * 2026). Di ogni allievo resta solo il nome, come per l'importazione.
+   */
+  const [inModifica, setInModifica] = useState<string | null>(null);
+  const [nuovoNome, setNuovoNome] = useState("");
+  async function aggiungiAMano() {
+    const nome = nuovoNome.trim();
+    if (!nome) return;
+    const { error } = await createClient().from("elenco_allievi").insert({ class_id: classId, nome, presente: true });
+    if (error) {
+      segnalaSalvoRete("allievi:aggiungi", error);
+      setMessaggio(t("Non sono riuscito ad aggiungerlo."));
+      return;
+    }
+    setNuovoNome("");
+    await ricarica();
+  }
+  async function togli(r: Riga) {
+    if (!confirm(t("Togliere {nome} dall'elenco?", { nome: r.nome }))) return;
+    const { error } = await createClient().from("elenco_allievi").delete().eq("id", r.id);
+    if (error) {
+      segnalaSalvoRete("allievi:togli", error);
+      setMessaggio(t("Non sono riuscito a toglierlo."));
+      return;
+    }
+    await ricarica();
+  }
+
   async function aggiorna(id: string, campi: Partial<Riga>) {
     const supabase = createClient();
     const { error } = await supabase.from("elenco_allievi").update(campi).eq("id", id);
@@ -331,13 +361,32 @@ export default function AllieviPage({
         );
       })()}
 
+      <form
+        className="mb-4 flex flex-wrap gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void aggiungiAMano();
+        }}
+      >
+        <input
+          value={nuovoNome}
+          onChange={(e) => setNuovoNome(e.target.value)}
+          placeholder={t("Nome e cognome")}
+          aria-label={t("Aggiungi un allievo a mano")}
+          className="h-10 min-w-0 flex-1 rounded-lg border border-border bg-card px-3 text-sm"
+        />
+        <Button type="submit" variant="outline" disabled={!nuovoNome.trim()}>
+          {t("Aggiungi a mano")}
+        </Button>
+      </form>
+
       {caricando ? (
         <div className="h-24 animate-pulse rounded-xl bg-muted" />
       ) : righe.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
           {iscritti.length > 0
             ? t("L'elenco per i tavoli è vuoto: aggiungi gli iscritti qui sopra, o carica il tuo file.")
-            : t("Nessun allievo nell’elenco. Carica il tuo file.")}
+            : t("Nessun allievo nell’elenco. Carica il tuo file o aggiungili a mano.")}
         </p>
       ) : tavoli.length > 0 ? (
         <div className="space-y-4">
@@ -391,9 +440,38 @@ export default function AllieviPage({
                 type="checkbox"
                 className="h-4 w-4"
                 checked={r.presente}
+                aria-label={t("Presente")}
                 onChange={(e) => void aggiorna(r.id, { presente: e.target.checked })}
               />
-              <span className="min-w-0 flex-1 truncate">{r.nome}</span>
+              {inModifica === r.id ? (
+                <input
+                  autoFocus
+                  defaultValue={r.nome}
+                  aria-label={t("Nome")}
+                  className="h-8 min-w-0 flex-1 rounded-md border border-border bg-card px-2"
+                  onBlur={(e) => {
+                    const nuovo = e.target.value.trim();
+                    setInModifica(null);
+                    if (nuovo && nuovo !== r.nome) void aggiorna(r.id, { nome: nuovo });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                    if (e.key === "Escape") setInModifica(null);
+                  }}
+                />
+              ) : (
+                <span className="min-w-0 flex-1 truncate">{r.nome}</span>
+              )}
+              <button type="button" onClick={() => setInModifica(r.id)} className="rounded px-2 py-1 text-xs text-primary hover:bg-muted">
+                {t("Modifica")}
+              </button>
+              <button
+                type="button"
+                onClick={() => void togli(r)}
+                className="rounded px-2 py-1 text-xs text-destructive hover:bg-muted"
+              >
+                {t("Togli")}
+              </button>
             </div>
           ))}
         </div>

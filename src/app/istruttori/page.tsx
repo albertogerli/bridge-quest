@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "@/components/link";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,8 @@ import { createClass } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { useT } from "@/contexts/traduzioni-provider";
+import { createClient } from "@/lib/supabase/client";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export default function IstruttoriPage() {
   const t = useT();
@@ -48,8 +50,42 @@ export default function IstruttoriPage() {
    */
   const mostraAsd = new Set(classes.map((c) => c.asd_code).filter(Boolean)).size > 1;
   const archiviate = classes.filter((c) => c.stato === "archiviata");
+  /**
+   * Lo storico con un riassunto per classe: quanti allievi ha avuto e quanti
+   * compiti (Trevissoi, ottobre 2026: «storico classi con tutte le
+   * informazioni di dettaglio e di sintesi»). Due conteggi per classe, solo
+   * per le archiviate, che sono poche e si guardano di rado.
+   */
+  const [sintesi, setSintesi] = useState<Record<string, { allievi: number; compiti: number }>>({});
+  const idArchiviate = archiviate.map((c) => c.id).join(",");
+  useEffect(() => {
+    if (!idArchiviate) return;
+    let vivo = true;
+    const supabase = createClient();
+    void Promise.all(
+      idArchiviate.split(",").map(async (id) => {
+        const [m, a] = await Promise.all([
+          supabase.from("class_members").select("student_id", { count: "exact", head: true }).eq("class_id", id).eq("status", "active"),
+          supabase.from("assignments").select("id", { count: "exact", head: true }).eq("class_id", id),
+        ]);
+        if (m.error || a.error) segnalaSalvoRete("istruttori:storico", m.error ?? a.error);
+        return [id, { allievi: m.count ?? 0, compiti: a.count ?? 0 }] as const;
+      }),
+    ).then((righe) => {
+      if (vivo) setSintesi(Object.fromEntries(righe));
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [idArchiviate]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  // Dalla home dell'insegnante, «+ Nuova classe» arriva qui con `?nuova=1`.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("nuova") === "1") {
+      setDialogOpen(true);
+    }
+  }, []);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
@@ -203,7 +239,7 @@ export default function IstruttoriPage() {
       </section>
 
       {archiviate.length > 0 && (
-        <div className="mt-10">
+        <div id="storico" className="mt-10 scroll-mt-20">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             {t("Storico classi")} ({archiviate.length})
           </h2>
@@ -215,6 +251,12 @@ export default function IstruttoriPage() {
                 className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-muted/50"
               >
                 <span className="font-medium">{c.name}</span>
+                {sintesi[c.id] && (
+                  <span className="text-xs text-muted-foreground">
+                    {t("{a} allievi · {c} compiti", { a: sintesi[c.id].allievi, c: sintesi[c.id].compiti })}
+                    {dettagliClasse(c, { mostraAsd }).length > 0 && ` · ${dettagliClasse(c, { mostraAsd }).join(" · ")}`}
+                  </span>
+                )}
                 <span className="ml-auto font-mono text-xs tracking-widest text-muted-foreground">
                   {c.invite_code}
                 </span>

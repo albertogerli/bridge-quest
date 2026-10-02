@@ -116,9 +116,17 @@ export function HomeInsegnante({
       <section className="mb-8">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-lg font-semibold">{t("Le tue classi")}</h2>
-          <Link href="/istruttori" className="text-sm text-primary hover:underline">
-            {t("Tutte")} <ArrowRight className="inline h-3.5 w-3.5" />
-          </Link>
+          <div className="flex items-center gap-3 text-sm">
+            <Link href="/istruttori?nuova=1" className="font-semibold text-primary hover:underline">
+              + {t("Nuova classe")}
+            </Link>
+            <Link href="/istruttori#storico" className="text-primary hover:underline">
+              {t("Storico classi")}
+            </Link>
+            <Link href="/istruttori" className="text-primary hover:underline">
+              {t("Tutte")} <ArrowRight className="inline h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
 
         {caricando ? (
@@ -196,10 +204,19 @@ export function HomeInsegnante({
   );
 }
 
-/** Se chi insegna ha chiesto di vedere la bacheca dell'allievo. */
+/**
+ * Se chi insegna ha chiesto di vedere la bacheca dell'allievo.
+ *
+ * VALE PER LA SESSIONE, non per sempre: prima la scelta restava in
+ * `localStorage`, e un insegnante che una volta aveva aperto la bacheca non
+ * rivedeva più la propria home — «quando entra l'insegnante la sua home page
+ * deve essere quella sua» (Trevissoi, ottobre 2026). Chiudendo il browser si
+ * riparte dalla home del proprio ruolo.
+ */
 export function preferisceLaBacheca(): boolean {
   try {
-    return localStorage.getItem(CHIAVE_PREFERENZA) === "1";
+    localStorage.removeItem(CHIAVE_PREFERENZA);
+    return sessionStorage.getItem(CHIAVE_PREFERENZA) === "1";
   } catch {
     return false;
   }
@@ -207,7 +224,7 @@ export function preferisceLaBacheca(): boolean {
 
 export function ricordaPreferenzaBacheca(bacheca: boolean): void {
   try {
-    if (bacheca) localStorage.setItem(CHIAVE_PREFERENZA, "1");
-    else localStorage.removeItem(CHIAVE_PREFERENZA);
+    if (bacheca) sessionStorage.setItem(CHIAVE_PREFERENZA, "1");
+    else sessionStorage.removeItem(CHIAVE_PREFERENZA);
   } catch {}
 }
