@@ -220,6 +220,11 @@ const nextConfig: NextConfig = {
       ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
       "https://va.vercel-scripts.com",
       "https://www.googletagmanager.com",
+      // Google Ads: gtag.config('AW-…') scarica da questi due host lo script di
+      // conversione. Senza, la console segnala una violazione CSP a ogni
+      // pagina e le conversioni (anche in Consent Mode) non arrivano.
+      "https://googleads.g.doubleclick.net",
+      "https://www.googleadservices.com",
       // Meta Pixel. Lo script viene scaricato solo dopo il consenso
       // pubblicitario (src/components/meta-pixel-loader.tsx): la CSP lo
       // consente, il consenso decide se caricarlo.
