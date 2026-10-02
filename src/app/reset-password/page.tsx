@@ -9,6 +9,7 @@ import Link from "@/components/link";
 import { authErrorMessage } from "@/lib/auth-errors";
 import { useT } from "@/contexts/traduzioni-provider";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { AvvisoPassword } from "@/components/avviso-password";
 
 /**
  * Una sola installazione per caricamento di pagina. In sviluppo React esegue
@@ -167,6 +168,7 @@ export default function ResetPasswordPage() {
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
+                <AvvisoPassword password={password} />
               </div>
 
               <div>

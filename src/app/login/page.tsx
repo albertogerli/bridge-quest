@@ -20,6 +20,7 @@ import { authErrorMessage, isAlreadyRegistered } from "@/lib/auth-errors";
 import { type ReactNode } from "react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { homeDi } from "@/lib/lingua";
+import { AvvisoPassword } from "@/components/avviso-password";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
@@ -295,6 +296,7 @@ function LoginContent() {
               className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               placeholder={mode === "signup" ? "Minimo 6 caratteri" : "La tua password"}
             />
+            {mode === "signup" && <AvvisoPassword password={password} />}
           </div>
 
           {mode === "login" && (
