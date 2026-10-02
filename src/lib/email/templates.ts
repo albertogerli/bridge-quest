@@ -13,7 +13,8 @@ export type EmailKind =
   | "friend_request"
   | "turno_licita"
   | "compito_assegnato"
-  | "compito_in_scadenza";
+  | "compito_in_scadenza"
+  | "recupero_password";
 
 export interface EmailContext {
   name?: string | null;
@@ -40,6 +41,8 @@ export interface EmailContext {
   compitoMani?: number;
   /** compito_in_scadenza: fra quanti giorni scade. 0 = oggi. */
   giorniAllaScadenza?: number;
+  /** recupero_password: il link monouso generato da Supabase. */
+  linkRecupero?: string | null;
 }
 
 export interface RenderedEmail {
@@ -356,6 +359,38 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           T("Torna a giocare", "Come back and play"), play, unsubUrl, ctx.lingua
         ),
         transactional: false,
+      };
+    }
+
+    case "recupero_password": {
+      const link = ctx.linkRecupero || `${SITE}/login`;
+      const heading = T("Scegli una nuova password 🔑", "Choose a new password 🔑");
+      const bodyHtml = T(
+        `
+        <p style="margin:0 0 14px;">${hi}, hai chiesto di reimpostare la password di Bridge LAB.</p>
+        <p style="margin:0 0 14px;">Tocca il pulsante qui sotto: si apre la pagina dove scegliere la nuova password. Il link vale <strong>un'ora</strong> e si usa una volta sola, da qualsiasi telefono o computer.</p>
+        <p style="margin:0;">Se non sei stato tu, ignora questa email: la tua password resta quella di prima.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}, you asked to reset your Bridge LAB password.</p>
+        <p style="margin:0 0 14px;">Tap the button below: it opens the page where you choose a new password. The link is valid for <strong>one hour</strong> and works once, from any phone or computer.</p>
+        <p style="margin:0;">If this wasn't you, ignore this email: your password stays the same.</p>`
+      );
+      return {
+        subject: T("Reimposta la password di Bridge LAB", "Reset your Bridge LAB password"),
+        html: layout({
+          preheader: T("Il link per scegliere una nuova password, valido un'ora.", "The link to choose a new password, valid for one hour."),
+          emoji: "🔑", heading, bodyHtml,
+          ctaLabel: T("Scegli la nuova password", "Choose a new password"), ctaUrl: link,
+          lingua: ctx.lingua,
+        }),
+        text: textFallback(
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}, hai chiesto di reimpostare la password di Bridge LAB.`, "", "Il link vale un'ora e si usa una volta sola. Se non sei stato tu, ignora questa email."],
+            [`${hi.replace(/<[^>]+>/g, "")}, you asked to reset your Bridge LAB password.`, "", "The link is valid for one hour and works once. If this wasn't you, ignore this email."]
+          ),
+          T("Scegli la nuova password", "Choose a new password"), link
+        ),
+        transactional: true,
       };
     }
 
