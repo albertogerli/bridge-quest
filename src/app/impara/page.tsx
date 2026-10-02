@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLingua } from "@/hooks/use-lingua";
+import { conLingua } from "@/lib/lingua";
 
 /**
  * `/impara` non è più una pagina: è un rimando al percorso.
@@ -21,10 +23,12 @@ import { useRouter } from "next/navigation";
  */
 export default function ImparaPage() {
   const router = useRouter();
+  const { lingua } = useLingua();
 
+  // Il rimando conserva la lingua: da /en/impara si arriva a /en/lezioni.
   useEffect(() => {
-    router.replace("/lezioni");
-  }, [router]);
+    router.replace(conLingua("/lezioni", lingua));
+  }, [router, lingua]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
