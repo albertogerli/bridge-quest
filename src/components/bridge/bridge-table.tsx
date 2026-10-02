@@ -232,16 +232,16 @@ export function BridgeTable({
     const isDcl = declarer === shortPos;
     const isDum = isDummy(pos);
     let extra = "";
-    if (isDcl) extra = " · Dich.";
-    else if (isDum) extra = " · Morto";
-    return labels[vero] + extra;
+    if (isDcl) extra = ` · ${t("Dich.")}`;
+    else if (isDum) extra = ` · ${t("Morto")}`;
+    return t(labels[vero]) + extra;
   };
 
   return (
     <div
       ref={tableRef}
       role="group"
-      aria-label={`Tavolo da bridge${trumpSuit ? `, atout ${suitAriaLabel(trumpSuit)}` : ", senza atout"}${activePosition ? `, di turno ${posLabel(activePosition, "")}` : ""}`}
+      aria-label={`${t("Tavolo da bridge")}${trumpSuit ? `, ${t("atout")} ${suitAriaLabel(trumpSuit)}` : `, ${t("senza atout")}`}${activePosition ? `, ${t("di turno")} ${posLabel(activePosition, "")}` : ""}`}
       className={`relative w-full max-w-3xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`}
       // IL TAVOLO STA NELLO SCHERMO. Quadrato e largo fino a 48rem, su un
       // portatile con la finestra non a tutta altezza superava lo schermo e

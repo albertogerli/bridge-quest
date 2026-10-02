@@ -19,6 +19,7 @@ import { useSounds } from "@/hooks/use-sounds";
 import type { Vulnerability, BiddingData } from "@/lib/catalog";
 import { checkBenHealth, benPlay } from "@/lib/ben-client";
 import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
 import {
   getAILevel,
   aiSelectWithDifficulty,
@@ -108,13 +109,17 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
   const gameStateRef = useRef<GameState | null>(null);
   const [phase, setPhase] = useState<GamePhase>("ready");
   const [lastTrick, setLastTrick] = useState<TrickPlay[] | null>(null);
-  const [message, setMessage] = useState("Preparazione della mano…");
+  const [message, setMessage] = useState(MESSAGGIO_INIZIALE);
   const [highlightedCards, setHighlightedCards] = useState<Card[]>([]);
   const [benAvailable, setBenAvailable] = useState<boolean | null>(null);
   const [aiLevel, setAiLevel] = useState<AILevel>(() => getAILevel());
   const [claimStatus, setClaimStatus] = useState<ClaimStatus>(null);
 
   const { playSound } = useSounds();
+  const t = useT();
+  useEffect(() => {
+    tradFrase = t;
+  }, [t]);
 
   const aiTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const trickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -197,18 +202,18 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             // Mostra prima la 13ª presa completa (4 carte) come per tutte le altre,
             // poi passa a "finished". Senza questa pausa la 52ª carta non si vede.
             setPhase("trick-complete");
-            setMessage("Ultima presa...");
+            setMessage(tradFrase("Ultima presa..."));
             trickTimerRef.current = setTimeout(() => {
               setLastTrick(null);
               if (res.result >= 0) {
                 setMessage(
                   res.result === 0
-                    ? `Contratto mantenuto! ${res.tricksMade} prese.`
-                    : `Contratto fatto con ${res.result} presa/e in più!`
+                    ? tradFrase("Contratto mantenuto! {n} prese.", { n: res.tricksMade })
+                    : tradFrase("Contratto fatto con {n} presa/e in più!", { n: res.result })
                 );
               } else {
                 setMessage(
-                  `Contratto caduto di ${Math.abs(res.result)}. Prese: ${res.tricksMade}/${res.tricksNeeded}`
+                  tradFrase("Contratto caduto di {down}. Prese: {made}/{needed}", { down: Math.abs(res.result), made: res.tricksMade, needed: res.tricksNeeded })
                 );
               }
               setPhase("finished");
@@ -218,7 +223,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
 
           // Brief pause to show trick, then clear
           setPhase("trick-complete");
-          setMessage("Presa completata...");
+          setMessage(tradFrase("Presa completata..."));
           trickTimerRef.current = setTimeout(() => {
             setLastTrick(null);
             setPhase("playing");
@@ -229,11 +234,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             if (isPlayerPosition(leader)) {
               const isDummyTurn = leader === partnerOf(configRef.current.declarer);
               setMessage(isDummyTurn
-                ? `Gioca dal morto (${positionName(leader)}). Tocca le carte evidenziate.`
-                : "È il tuo turno. Scegli una carta da giocare."
+                ? tradFrase("Gioca dal morto ({seat}). Tocca le carte evidenziate.", { seat: positionName(leader) })
+                : tradFrase("È il tuo turno. Scegli una carta da giocare.")
               );
             } else {
-              setMessage(`${positionName(leader)} sta giocando...`);
+              setMessage(tradFrase("{seat} sta giocando...", { seat: positionName(leader) }));
             }
           }, TRICK_CLEAR_DELAY);
         } else {
@@ -247,17 +252,17 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
             setHighlightedCards(valid);
             const isDummyTurn = next === partnerOf(configRef.current.declarer);
             setMessage(isDummyTurn
-              ? `Gioca dal morto (${positionName(next)}). Tocca le carte evidenziate.`
-              : "Scegli una carta da giocare."
+              ? tradFrase("Gioca dal morto ({seat}). Tocca le carte evidenziate.", { seat: positionName(next) })
+              : tradFrase("Scegli una carta da giocare.")
             );
           } else {
             setHighlightedCards([]);
-            setMessage(`${positionName(newState.currentPlayer)} sta giocando...`);
+            setMessage(tradFrase("{seat} sta giocando...", { seat: positionName(newState.currentPlayer) }));
           }
         }
       } catch (err) {
         console.error("Play error:", err);
-        setMessage("Mossa non valida. Riprova.");
+        setMessage(tradFrase("Mossa non valida. Riprova."));
       }
     },
     [isPlayerPosition, playSound]
@@ -335,7 +340,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
           }
         } catch (fallbackErr) {
           console.error("AI fallback also failed:", fallbackErr);
-          setMessage("Errore AI. Tocca per riprovare.");
+          setMessage(tradFrase("Errore AI. Tocca per riprovare."));
         }
       }
     }, delay);
@@ -402,14 +407,14 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     if (isPlayerPosition(leader)) {
       const isDummyTurn = leader === partnerOf(config.declarer);
       setMessage(isDummyTurn
-        ? `Gioca dal morto (${positionName(leader)}).`
-        : "Sei il primo a giocare. Scegli una carta."
+        ? tradFrase("Gioca dal morto ({seat}).", { seat: positionName(leader) })
+        : tradFrase("Sei il primo a giocare. Scegli una carta.")
       );
       setHighlightedCards(
         getValidCards(state.hands[leader], state.currentTrick)
       );
     } else {
-      setMessage(`${positionName(leader)} attacca...`);
+      setMessage(tradFrase("{seat} attacca...", { seat: positionName(leader) }));
     }
   }, [config, isPlayerPosition]);
 
@@ -459,7 +464,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     if (remaining < 1) return false;
 
     setClaimStatus("checking");
-    setMessage("Verifica del reclamo…");
+    setMessage(tradFrase("Verifica del reclamo…"));
 
     const dds = await ddsSolve({
       hands: state.hands,
@@ -485,11 +490,11 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
       if (res.result >= 0) {
         setMessage(
           res.result === 0
-            ? `Reclamo accettato! Contratto mantenuto: ${res.tricksMade} prese.`
-            : `Reclamo accettato! Contratto fatto con ${res.result} presa/e in più.`
+            ? tradFrase("Reclamo accettato! Contratto mantenuto: {n} prese.", { n: res.tricksMade })
+            : tradFrase("Reclamo accettato! Contratto fatto con {n} presa/e in più.", { n: res.result })
         );
       } else {
-        setMessage(`Reclamo accettato. Prese: ${res.tricksMade}/${res.tricksNeeded}`);
+        setMessage(tradFrase("Reclamo accettato. Prese: {made}/{needed}", { made: res.tricksMade, needed: res.tricksNeeded }));
       }
       setPhase("finished");
       return true;
@@ -499,8 +504,8 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     setClaimStatus("rejected");
     setMessage(
       dds.available
-        ? "Reclamo rifiutato: gli avversari possono ancora fare una presa."
-        : "Posizione troppo complessa da verificare: continua a giocare."
+        ? tradFrase("Reclamo rifiutato: gli avversari possono ancora fare una presa.")
+        : tradFrase("Posizione troppo complessa da verificare: continua a giocare.")
     );
     if (claimTimerRef.current) clearTimeout(claimTimerRef.current);
     claimTimerRef.current = setTimeout(() => setClaimStatus(null), 3000);
@@ -547,7 +552,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
       }
     } catch (err) {
       reportError("bridge-game:annulla", err);
-      setMessage("Non è stato possibile ritirare la carta. La partita continua da qui.");
+      setMessage(tradFrase("Non è stato possibile ritirare la carta. La partita continua da qui."));
       return;
     }
     historyRef.current = newHist;
@@ -563,7 +568,7 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     setHighlightedCards(
       getValidCards(state.hands[state.currentPlayer], state.currentTrick)
     );
-    setMessage("Carta ritirata. Scegli di nuovo.");
+    setMessage(tradFrase("Carta ritirata. Scegli di nuovo."));
   }, [phase, isPlayerPosition]);
 
   return {
@@ -571,7 +576,9 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     phase,
     validCards,
     lastTrick,
-    message,
+    // Il messaggio iniziale nasce in italiano nello stato: lo si traduce qui, gli
+    // altri sono già tradotti nel momento in cui vengono scritti.
+    message: message === MESSAGGIO_INIZIALE ? t(MESSAGGIO_INIZIALE) : message,
     startGame,
     handleCardPlay,
     result,
@@ -590,6 +597,13 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
 // Il nome vero del posto. Il tavolo (`BridgeTable ancora=…`) scrive i nomi veri,
 // e un messaggio che dice «Gioca dal morto (Nord)» sopra un tavolo che scrive
 // «SUD · MORTO» fa credere all'allievo di aver sbagliato posto.
+const MESSAGGIO_INIZIALE = "Preparazione della mano…";
+
+// I messaggi di turno vengono scritti dentro callback che non si rifanno a ogni
+// cambio di lingua: la traduzione corrente sta qui, aggiornata dall'hook.
+let tradFrase: (frase: string, valori?: Record<string, string | number>) => string = (frase, valori) =>
+  valori ? frase.replace(/\{(\w+)\}/g, (_, k) => String(valori[k] ?? `{${k}}`)) : frase;
+
 function positionName(pos: Position): string {
   const names: Record<Position, string> = {
     north: "Nord",
@@ -597,5 +611,5 @@ function positionName(pos: Position): string {
     east: "Est",
     west: "Ovest",
   };
-  return names[pos];
+  return tradFrase(names[pos]);
 }
