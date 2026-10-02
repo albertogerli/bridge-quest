@@ -18,7 +18,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 const medals = ["🥇", "🥈", "🥉"];
 
 const avatarColors = [
-  "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+  "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
   "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary",
   "bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300",
   "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
@@ -414,7 +414,7 @@ export default function ClassificaPage() {
                     Lv.{getLevel(currentPlayer.xp).level} · {getLevel(currentPlayer.xp).name}
                   </p>
                   {currentPlayer.asd_name && (
-                    <span className="inline-flex items-center gap-1 mt-0.5 text-[12px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-2 py-0.5 font-medium">
+                    <span className="inline-flex items-center gap-1 mt-0.5 text-[12px] text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-2 py-0.5 font-medium">
                       <Landmark className="w-2.5 h-2.5" />
                       {currentPlayer.asd_name}
                     </span>
@@ -961,7 +961,7 @@ function PerCorsoView({
                         {formatNumber(player.courseXp)} XP corso
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[12px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[12px] text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
@@ -1244,7 +1244,7 @@ function LeaderboardList({
                         Lv.{pl.level} · {pl.name}
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[12px] text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[12px] text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}

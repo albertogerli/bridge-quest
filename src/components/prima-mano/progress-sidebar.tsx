@@ -86,7 +86,7 @@ export function ProgressSidebar({
                 {done && <Check className="h-3.5 w-3.5 text-[#f0d37a]" />}
                 <p
                   className={`text-[12px] font-bold uppercase tracking-[0.18em] ${
-                    active ? "text-white/70" : done ? "text-[#f0d37a]" : "text-white/35"
+                    active ? "text-white/70" : done ? "text-[#f0d37a]" : "text-white/60"
                   }`}
                 >
                   {item.kicker}
@@ -94,7 +94,7 @@ export function ProgressSidebar({
               </div>
               <p
                 className={`mt-1 text-sm font-semibold ${
-                  active ? "text-white" : done ? "text-white/90" : "text-white/45"
+                  active ? "text-white" : done ? "text-white/90" : "text-white/65"
                 }`}
               >
                 {item.title}
@@ -106,7 +106,7 @@ export function ProgressSidebar({
 
       {/* XP counter */}
       <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-5">
-        <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-white/45">
+        <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-white/65">
           {t("XP Guadagnati")}
         </p>
         <div className="mt-3 flex items-center gap-3">

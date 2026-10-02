@@ -197,7 +197,7 @@ export default function RipassoPage() {
       {/* Header */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="mx-auto max-w-6xl flex items-center gap-3 px-4 py-3.5">
-          <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-card border border-border shadow-sm">
+          <Link href="/" aria-label={t("Home")} className="flex h-9 w-9 items-center justify-center rounded-xl bg-card border border-border shadow-sm">
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </Link>
           <div className="flex-1">
@@ -271,7 +271,7 @@ export default function RipassoPage() {
         >
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 dark:bg-indigo-900 shrink-0 mt-0.5">
-              <Brain className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
+              <Brain className="w-5 h-5 text-indigo-700 dark:text-indigo-300" />
             </div>
             <div>
               <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">{t("Come funziona")}</p>

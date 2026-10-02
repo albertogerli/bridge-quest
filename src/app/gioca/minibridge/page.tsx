@@ -505,7 +505,7 @@ function ResultCard({
           <span className="rounded-full bg-muted px-3 py-1 text-sm font-semibold">{pointsForHuman} punti</span>
         )}
         {xpEarned > 0 && (
-          <span className="rounded-full bg-[#c8a44e]/15 px-3 py-1 text-sm font-bold text-[#9a7b2e] dark:text-[#c8a44e]">
+          <span className="rounded-full bg-[#c8a44e]/15 px-3 py-1 text-sm font-bold text-[#7a5a0f] dark:text-[#c8a44e]">
             +{xpEarned} XP
           </span>
         )}
