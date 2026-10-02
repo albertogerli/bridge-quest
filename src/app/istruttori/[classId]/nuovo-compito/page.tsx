@@ -254,8 +254,8 @@ export default function NuovoCompitoPage({
           </select>
           <p className="text-xs text-muted-foreground">
             {soluzioni === "dopo-la-scadenza" && !dueDate
-              ? "Senza una scadenza le soluzioni non si aprono mai: metti una data qui sopra."
-              : "Il commento del maestro non arriva nemmeno al browser dell'allievo finché non gli spetta."}
+              ? t("Senza una scadenza le soluzioni non si aprono mai: metti una data qui sopra.")
+              : t("Il commento del maestro non arriva nemmeno al browser dell'allievo finché non gli spetta.")}
           </p>
         </div>
         <div className="space-y-1.5">

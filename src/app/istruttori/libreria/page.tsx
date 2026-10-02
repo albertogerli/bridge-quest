@@ -190,10 +190,10 @@ export default function LibreriaPage() {
       ) : voci.length === 0 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
           {scheda === "cerca"
-            ? "Niente per questi filtri. La libreria è giovane."
+            ? t("Niente per questi filtri. La libreria è giovane.")
             : scheda === "mie"
-              ? "Non hai ancora pubblicato niente."
-              : "Nessuna proposta da guardare."}
+              ? t("Non hai ancora pubblicato niente.")
+              : t("Nessuna proposta da guardare.")}
         </p>
       ) : (
         <ul className="space-y-3">
