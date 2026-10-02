@@ -130,7 +130,7 @@ export function AsteTorneoConcluso({ tipo }: { tipo: TipoTorneo }) {
           </div>
 
           {classifica && classifica.righe.length > 0 && (
-            <div className="overflow-x-auto">
+            <div className="relative max-w-full overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-muted-foreground">
