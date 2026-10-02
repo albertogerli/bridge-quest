@@ -469,7 +469,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
 
         {/* Bridge Table + Bidding */}
         <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="flex-1 max-w-3xl relative">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="w-full lg:w-auto flex-1 max-w-3xl relative">
             {hands ? (
               <BridgeTable ancora={declarer}
                 north={hands.north}

@@ -613,7 +613,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
 
         {/* Bridge table + bidding */}
         <div className="flex flex-col items-start justify-center gap-4 lg:flex-row">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative max-w-3xl flex-1">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative w-full max-w-3xl flex-1 lg:w-auto">
             {hands ? (
               <BridgeTable ancora={declarer}
                 north={hands.north}
