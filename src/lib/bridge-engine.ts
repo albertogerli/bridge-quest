@@ -3,6 +3,8 @@
  * Handles trick-by-trick play logic, card validation, winner determination
  */
 
+import { leggiContratto } from "./contratto";
+
 export type Suit = "spade" | "heart" | "diamond" | "club";
 export type Rank = "A" | "K" | "Q" | "J" | "10" | "9" | "8" | "7" | "6" | "5" | "4" | "3" | "2";
 export type Position = "north" | "south" | "east" | "west";
@@ -174,35 +176,25 @@ export function determineTrickWinner(
   return winningPlay.position;
 }
 
-/** Parse contract string like "3NT", "4S", "2H", "6D", "7C" */
+/**
+ * Legge il contratto per il motore: «3NT», «4S», «4♠», «4SX», «4♠X», «2HXX».
+ * Il lavoro lo fa `leggiContratto`; qui un contratto illeggibile non deve
+ * rompere la pagina a metà partita (lo chiamano decine di componenti durante
+ * il render), quindi si ripiega sul senz'atout — ma solo per stringhe che non
+ * sono contratti, non più per un contro scritto in fondo.
+ */
 export function parseContract(contract: string): {
   level: number;
   trumpSuit: Suit | null;
   tricksNeeded: number;
 } {
-  const level = parseInt(contract[0]);
-  const suitStr = contract.slice(1).toUpperCase();
-
-  const suitMap: Record<string, Suit | null> = {
-    NT: null,
-    SA: null, // Senza Atout (Italian)
-    S: "spade",
-    "♠": "spade",
-    H: "heart",
-    "♥": "heart",
-    D: "diamond",
-    "♦": "diamond",
-    C: "club",
-    "♣": "club",
-  };
-
-  const trumpSuit = suitMap[suitStr] ?? null;
-
-  return {
-    level,
-    trumpSuit,
-    tricksNeeded: level + 6,
-  };
+  try {
+    const { level, trumpSuit, tricksNeeded } = leggiContratto(contract);
+    return { level, trumpSuit, tricksNeeded };
+  } catch {
+    const level = parseInt(contract?.[0] ?? "") || 0;
+    return { level, trumpSuit: null, tricksNeeded: level + 6 };
+  }
 }
 
 /** Create initial game state */

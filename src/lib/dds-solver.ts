@@ -12,8 +12,11 @@
  * Can be upgraded to full WASM DDS (Bo Haglund's dds-bridge/dds) in the future.
  */
 
+import { leggiContratto } from "./contratto";
+
 // ──────────────────────────────────────────────────────────────
-// Types (standalone, no imports from bridge-engine to keep worker-safe)
+// Types (standalone, no imports from bridge-engine to keep worker-safe;
+// `./contratto` has no imports of its own, so it is worker-safe too)
 // ──────────────────────────────────────────────────────────────
 
 export type Suit = "spade" | "heart" | "diamond" | "club";
@@ -81,22 +84,14 @@ const DEFAULT_TIMEOUT = 2000;
 // ──────────────────────────────────────────────────────────────
 
 function parseContractDDS(contract: string): { level: number; trumpSuit: Suit | null; tricksNeeded: number } {
-  const level = parseInt(contract[0]);
-  const suitStr = contract.slice(1).toUpperCase();
-
-  const suitMap: Record<string, Suit | null> = {
-    NT: null, SA: null,
-    S: "spade", "\u2660": "spade",
-    H: "heart", "\u2665": "heart",
-    D: "diamond", "\u2666": "diamond",
-    C: "club", "\u2663": "club",
-  };
-
-  return {
-    level,
-    trumpSuit: suitMap[suitStr] ?? null,
-    tricksNeeded: level + 6,
-  };
+  // Stesso parser del motore: le due copie di prima non toglievano il contro.
+  try {
+    const { level, trumpSuit, tricksNeeded } = leggiContratto(contract);
+    return { level, trumpSuit, tricksNeeded };
+  } catch {
+    const level = parseInt(contract?.[0] ?? "") || 0;
+    return { level, trumpSuit: null, tricksNeeded: level + 6 };
+  }
 }
 
 function partnershipOf(pos: Position): Partnership {
