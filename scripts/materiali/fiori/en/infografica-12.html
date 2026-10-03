@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Developments after the opponent's intervention</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 14px; }
+  .cambi { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  .cambio { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .cambio > b { display: block; color: var(--figb); font-size: 16px; font-family: "Bricolage Grotesque", sans-serif; line-height: 1.1; }
+  .cambio span b { color: var(--inchiostro); }
+  .cambio span { font-size: 11.5px; line-height: 1.35; color: #2c3242; }
+  .casi { display: grid; gap: 7px; }
+  .casi.due-col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .caso { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); }
+  .caso .asta { font-size: 11px; font-weight: 600; color: var(--tenue); letter-spacing: 0.02em; }
+  .caso .mano { --fs: 13px; }
+  .caso .esito { font-size: 11.5px; line-height: 1.35; color: #2c3242; }
+  .caso .esito b.dich { color: var(--figb); font-size: 13px; }
+  .regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+  .tabella { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 12px; margin: 4px 0 7px; font-size: 12px; }
+  .tabella dt { font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .tabella dd { color: #2c3242; }
+  /* il titolo inglese è lungo: su una riga sola */
+  h1 { font-size: 29px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">Developments after the opponent's intervention</h1>
+    <p class="sotto">How to go on when an opponent comes in: whoever bids now does so freely.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Forced and free bids</h2></div>
+      <p style="margin-bottom:6px">Without interference, responder must keep the bidding open even with 5 points: opener might hold 20. After an overcall opener gets another chance anyway, so any bid is a <b>free bid</b>.</p>
+      <div class="regola">A free bid always shows a hand that is happy to bid: more than the minimum.</div>
+      <div class="cambi">
+        <div class="cambio"><b>a</b><span>With 4–5 points and nothing special, <b>pass</b>.</span></div>
+        <div class="cambio"><b>b</b><span>Notrump is no longer a forced response: it promises a <b>stopper</b> in their suit.</span></div>
+        <div class="cambio"><b>c</b><span>Every new suit shows <b>at least five cards</b>.</span></div>
+        <div class="cambio"><b>d</b><span>Two new calls: the <b>double</b> (over a suit) and the <b>redouble</b> (over a double).</span></div>
+      </div>
+      <div class="caso" style="margin-top:7px"><span class="asta">1♦ – 1♠ – ?</span><div data-mano="Jxx.Kx.Qxxx.Qxxx" class="in-riga"></div><span class="esito"><b class="dich">Pass</b>: without the overcall you would bid 2♦. Now you don't have to: with 7 ordinary points, let partner decide.</span></div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">After their double</h2></div>
+      <div class="regola blu">The redouble (11+ points, any shape) is the only strong call. You describe the hand on the next round.</div>
+      <dl class="tabella">
+        <dt>New suit</dt><dd>not forcing: a proposed contract, at least 5–6 good cards, fewer than 11 points</dd>
+        <dt>Raises</dt><dd>as without the double, but always with fewer than 11 points</dd>
+        <dt>1NT</dt><dd>7–10 points, happy to play it, with stoppers in the doubler's suits</dd>
+      </dl>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">1♥ – Double – ?</span><div data-mano="Kx.Jx.AQx.KQJ10xx" class="in-riga"></div><span class="esito"><b class="dich">Redouble</b>, not 2♣: after the double, 2♣ would show fewer than 11 points.</span></div>
+        <div class="caso"><span class="asta">1♥ – Double – ?</span><div data-mano="xx.Jx.xxx.KQ10xxx" class="in-riga"></div><span class="esito"><b class="dich">2♣</b>: "I'd be happy to play 2♣." A good six-card suit, not enough to redouble.</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">After a suit overcall</h2></div>
+      <div class="regola blu">A new suit is forcing, with five or more cards. The double shows 8+ points (unlimited) and seeks a 4-4 fit.</div>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">1♦ – 1♠ – ?</span><div data-mano="xx.AQxxx.Qx.KJxx" class="in-riga"></div><span class="esito"><b class="dich">2♥</b>: a five-card suit and enough points for the two level.</span></div>
+        <div class="caso" style="align-content:center"><span class="esito"><b class="dich">Double</b>: "I'd like to play in one of the other suits." With the points to bid but not the length for a new suit, it asks opener to bid another suit, or notrump if possible.</span></div>
+      </div>
+      <p class="nota">Raises don't change: you don't need five cards to raise.</p>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">What opener does</h2></div>
+      <div class="regola">With ordinary hands, balanced or not, opener passes; with four-card support, opener raises by strength.</div>
+      <p style="margin-bottom:6px">Opener bids freely only with an unbalanced minimum hand holding an <b>excellent one-suiter</b> or a <b>two-suiter with at least 10 cards</b>; with 18–20 balanced and a stopper, opener bids notrump at the lowest level. A suit rebid freely is always a really good suit.</p>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">1♦ – 1♥ – 1♠ – 2♥ – ?</span><div data-mano="Jx.Kx.AQxxx.Qxxx" class="in-riga"></div><span class="esito"><b class="dich">Pass</b>: a minimum two-suiter, in points and in shape, is an ordinary hand.</span></div>
+        <div class="caso"><span class="asta">1♣ – Pass – 1♥ – 1♠ – ?</span><div data-mano="AQxx.x.Qx.KQxxxx" class="in-riga"></div><span class="esito"><b class="dich">Pass</b>: an unbalanced minimum, but no outstanding suit and no fit.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

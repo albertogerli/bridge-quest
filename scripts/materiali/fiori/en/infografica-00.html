@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bridge: A Trick-Taking Game</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 15px; }
+  p, li { font-size: 12.5px; }
+  .defs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .def { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 12px; line-height: 1.4; }
+  .def b { color: var(--figb); }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+  .semi { display: flex; gap: 14px; font-size: 13px; font-weight: 600; margin: 4px 0 6px; }
+  .semi span.g { font-size: 20px; }
+  .scala { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 4px 0 6px; }
+  .scala .liv { padding: 4px 10px; border-radius: 8px; background: var(--figb); color: #fff; font-weight: 700; font-size: 14px; }
+  .scala .liv:nth-child(3) { background: #1f53b8; } .scala .liv:nth-child(5) { background: #3d6cc6; }
+  .scala .liv:nth-child(7) { background: #6b8fd4; } .scala .liv:nth-child(9) { background: #9db4e3; color: var(--inchiostro); }
+  .scala .gt { color: var(--tenue); font-weight: 700; }
+  .scala .liv .s-S, .scala .liv .s-H, .scala .liv .s-D, .scala .liv .s-C { color: inherit; }
+  .cartellino { display: inline-grid; place-items: center; width: 54px; height: 54px; border-radius: 10px; background: #fff; border: 2px solid var(--figb); font-size: 22px; font-weight: 800; font-family: "Bricolage Grotesque", sans-serif; }
+  table.punti td, table.punti th { font-size: 12px; }
+  table.punti td.v { text-align: right; font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .manche { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .manche > span { padding: 3px 9px; border-radius: 999px; background: var(--oro-velo); font-weight: 700; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">Bridge: A Trick-Taking Game</h1>
+    <p class="sotto">Two partnerships, 52 cards, thirteen tricks to win: the side that bids highest in the auction chooses how the hand is played.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">The deck and the partnerships</h2></div>
+      <div class="lato">
+        <div style="display:grid;gap:6px;justify-items:center">
+          <div class="coppia" style="--fs:14px"><div class="r"><div data-mano="J8.AQJ43.KQ3.A98" class="in-riga"></div></div></div>
+          <span style="font-size:11px;color:var(--tenue)">one hand: 13 cards</span>
+        </div>
+        <div>
+          <p>Bridge is a partnership game: the player across the table is your partner, so it's <b>North-South against East-West</b>. The deck has <b>52 cards</b> in four suits of 13, from the ace down to the two.</p>
+          <div class="semi"><span><span class="g">♠</span> Spades</span><span><span class="g">♥</span> Hearts</span><span><span class="g">♦</span> Diamonds</span><span><span class="g">♣</span> Clubs</span></div>
+          <div class="regola" style="margin:0">Honors: A K Q J 10. Spot cards: 9 down to 2.</div>
+          <p class="nota">No cards in a suit: a <b>void</b>. One card: a <b>singleton</b>. Two: a <b>doubleton</b>.</p>
+        </div>
+      </div>
+          </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">The trick</h2></div>
+        <p>The first card played is the <b>opening lead</b>. The others, in clockwise order, must <b>follow suit</b>: play a card of the same suit.</p>
+        <div class="regola" style="margin:6px 0">The highest card of the suit led wins the trick.</div>
+        <div class="lato">
+          <div class="fig"><div data-figura4="S:3/K/7/A"></div></div>
+          <p style="font-size:12px">West leads the K♠, North plays the 3, East the 7: South wins with the <b>ace</b>. A player out of the suit <b>discards</b> another card, and a discard never wins the trick.</p>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Dummy and declarer</h2></div>
+        <p>After the opening lead, <b>dummy</b> lays its cards face up on the table, sorted by suit, and takes no further part: its partner, <b>declarer</b>, chooses every card.</p>
+        <div class="defs" style="grid-template-columns:1fr;margin-top:6px">
+          <div class="def"><b>Declarer sees 26 cards</b>: their own 13 and dummy's 13. That makes it possible to plan the play.</div>
+          <div class="def"><b>The defenders</b> see only their own cards and dummy's, never their partner's.</div>
+        </div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Trumps or notrump</h2></div>
+      <div class="defs">
+        <div class="def"><b>Trumps</b>: one suit gets special power. A player out of the suit led can <b>ruff</b> with a trump and win the trick.</div>
+        <div class="def"><b>Ruffing</b>: only when you can't follow suit, and never compulsory. If two players ruff, the higher trump wins.</div>
+        <div class="def"><b>Notrump</b> (NT): no suit can ruff. A player out of a suit can only discard.</div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">The auction and the contract</h2></div>
+      <div class="lato">
+        <div class="cartellino"><span>2♥</span></div>
+        <div>
+          <p>Through an auction a side commits to taking a number of tricks: the highest bid chooses how the hand is played. The number counts tricks <b>beyond the first six</b>: "2♥" means <b>at least 8 tricks, with hearts as trumps</b>.</p>
+        </div>
+      </div>
+      <div class="scala"><span style="font-size:12px;font-weight:600;margin-right:4px">From the top:</span><span class="liv">NT</span><span class="gt">›</span><span class="liv">♠</span><span class="gt">›</span><span class="liv">♥</span><span class="gt">›</span><span class="liv">♦</span><span class="gt">›</span><span class="liv">♣</span><span style="font-size:11.5px;color:var(--tenue);margin-left:8px">after 1♥ you can bid 1♠; 1♦ and 1♣ need the 2 level</span></div>
+      <div class="regola" style="margin:0">When a bid is followed by three passes, that bid becomes the contract.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">6</span><h2 class="display">Scoring</h2></div>
+      <div class="due" style="gap:16px">
+        <div>
+          <table class="punti">
+            <tr><th>Each trick bid beyond six</th><th></th></tr>
+            <tr><td>Clubs ♣ and diamonds ♦</td><td class="v">20</td></tr>
+            <tr><td>Hearts ♥ and spades ♠</td><td class="v">30</td></tr>
+            <tr><td>Notrump</td><td class="v">40 the first, 30 the rest</td></tr>
+          </table>
+          <p style="margin-top:6px;font-size:12px"><b>Game</b>: the tricks bid are worth at least 100.</p>
+          <div class="manche"><span>3NT</span><span>4♥</span><span>4♠</span><span>5♣</span><span>5♦</span></div>
+        </div>
+        <div>
+          <table class="punti">
+            <tr><th>Bonuses and penalties</th><th>non vul · vul</th></tr>
+            <tr><td>Game</td><td class="v">300 · 500</td></tr>
+            <tr><td>Small slam (12 tricks)</td><td class="v">500 · 750</td></tr>
+            <tr><td>Grand slam (13 tricks)</td><td class="v">1000 · 1500</td></tr>
+            <tr><td>Each trick down</td><td class="v">50 · 100</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

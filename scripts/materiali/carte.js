@@ -145,4 +145,30 @@
       el.append(r);
     });
   });
+  // I simboli scritti nel testo («1♥ – 2♦», «10♥») prendono il colore del seme,
+  // come le carte disegnate: in un'asta il rosso e il nero si leggono prima
+  // delle lettere.
+  const dentroSeme = (n) => n.parentElement && n.parentElement.closest("[class^='s-'], [class*=' s-'], script, style");
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const daColorare = [];
+  while (walker.nextNode()) {
+    const n = walker.currentNode;
+    if (/[♠♥♦♣]/.test(n.nodeValue) && !dentroSeme(n)) daColorare.push(n);
+  }
+  const CLASSE = { "♠": "s-S", "♥": "s-H", "♦": "s-D", "♣": "s-C" };
+  for (const n of daColorare) {
+    // Un solo contenitore in linea per frase: in un riquadro a griglia o flex
+    // ogni pezzo sciolto diventerebbe un elemento a sé, su una riga sua.
+    const f = document.createElement("span");
+    for (const parte of n.nodeValue.split(/([♠♥♦♣])/)) {
+      if (!parte) continue;
+      if (CLASSE[parte]) {
+        const sp = document.createElement("span");
+        sp.className = CLASSE[parte];
+        sp.textContent = parte;
+        f.append(sp);
+      } else f.append(document.createTextNode(parte));
+    }
+    n.replaceWith(f);
+  }
 })();

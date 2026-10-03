@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The opener describes</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 9px; }
+  .riquadro { padding: 9px 15px; }
+  p, li { font-size: 12.5px; }
+  .tipi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .tipo { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .tipo h3 { font-size: 13px; font-weight: 700; color: var(--figb); }
+  .tipo p { font-size: 11.5px; }
+  .fasce { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-bottom: 6px; }
+  .fascia { padding: 8px 12px; border-radius: 10px; background: var(--figb-velo); }
+  .fascia.rov { background: var(--oro-velo); }
+  .fascia b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 17px; color: var(--figb); line-height: 1.1; }
+  .fascia.rov b { color: #8a6a1c; }
+  .fascia span { font-size: 11.5px; }
+  .es { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .es .asta { font-size: 10.5px; font-weight: 700; color: var(--tenue); letter-spacing: 0.04em; }
+  .es .risp { font-size: 11.5px; }
+  .es .risp b { color: var(--figb); }
+  .esempi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-top: 6px; }
+  .tabella { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tabella th { text-align: left; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; padding: 0 6px 4px; }
+  .tabella td { padding: 4px 6px; border-top: 1px solid var(--linea); vertical-align: top; }
+  .tabella td.cosa { font-weight: 700; white-space: nowrap; }
+  .tabella td.val { font-weight: 700; color: var(--figb); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">The opener describes</h1>
+    <p class="sotto">With the second bid opener tells how strong the hand is and how it is shaped: partner needs two bids to know.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Decide or describe?</h2></div>
+      <div class="tipi">
+        <div class="tipo"><h3>Non-forcing response</h3><p>Opener <b>decides</b>: pass, invite or bid game.</p></div>
+        <div class="tipo"><h3>One-over-one response</h3><p>Opener describes <b>strength and shape</b>.</p></div>
+        <div class="tipo"><h3>Two-over-one response</h3><p>Opener describes <b>shape only</b>: game is already assured.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Minimum and strong hands</h2></div>
+      <div class="fasce">
+        <div class="fascia"><b>Minimum · 12-15</b><span>Describe the hand without passing the safety level.</span></div>
+        <div class="fascia rov"><b>Strong · 16-20</b><span>Go past the safety level to show the extra strength.</span></div>
+      </div>
+      <div class="regola blu"><b>Safety level</b>: the last contract beyond which, with no fit and only 18-19 points between you, a reasonable result is no longer sure.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Minimum hand after a one-over-one</h2></div>
+      <div class="fasce" style="margin-bottom:0">
+        <div class="fascia"><b>Balanced</b><span>Safety level = <b style="display:inline;font-size:13px">1NT</b></span></div>
+        <div class="fascia"><b>Unbalanced</b><span>Safety level = <b style="display:inline;font-size:13px">2 of the opening suit</b></span></div>
+      </div>
+      <div class="esempi">
+        <div class="es">
+          <span class="asta">1♥ – 1♠ – ?</span>
+          <div data-mano="J7.KQ943.AQ65.J7" class="in-riga"></div>
+          <span class="risp">Unbalanced, safety level 2♥: diamonds fit below it → <b>2♦</b>.</span>
+        </div>
+        <div class="es">
+          <span class="asta">1♣ – 1♠ – ?</span>
+          <div data-mano="AK7.QJ43.42.KJ86" class="in-riga"></div>
+          <span class="risp">Balanced, safety level 1NT: hearts would go past it → <b>1NT</b>.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Strong hand: go past the safety level</h2></div>
+      <div class="regola" style="margin:0">After a one-over-one response, with a strong hand opener always describes it by going past the safety level.</div>
+      <div class="esempi">
+        <div class="es">
+          <span class="asta">1♣ – 1♦ – ?</span>
+          <div data-mano="AKJ7.Q43.4.AKJ86" class="in-riga"></div>
+          <span class="risp">Spades with a jump → <b>2♠</b>: at least 16 points, four spades and long clubs.</span>
+        </div>
+        <div class="es">
+          <span class="asta">1♥ – 1♠ – ?</span>
+          <div data-mano="A7.AQ943.4.AKJ86" class="in-riga"></div>
+          <span class="risp">Within the safety level it would be 2♣; the jump → <b>3♣</b> shows the strength.</span>
+        </div>
+        <div class="es">
+          <span class="asta">1♦ – 1♠ – ?</span>
+          <div data-mano="A987.AK3.KQ874.6" class="in-riga"></div>
+          <span class="risp">16 points and four spades: raise to the 3 level → <b>3♠</b>.</span>
+        </div>
+        <div class="es" style="align-content:center">
+          <span class="asta">BALANCED 18-20</span>
+          <span class="risp">Too much for 1NT, too little to open 2NT: jump to <b>2NT</b> (1♥ – 1♠ – 2NT).</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">After a two-over-one</h2></div>
+        <p style="font-size:11.5px">The response is forcing to game: opener describes, whether minimum or strong.</p>
+        <div class="es" style="margin-top:5px">
+          <span class="asta">WEST 1♦ – EAST 2♣ – WEST ?</span>
+          <div data-mano="93.AK73.KQJ5.983" class="in-riga"></div>
+          <span class="risp">Nothing extra, but opener describes → <b>2♥</b>. East, no longer worried about that suit, bids 3NT.</span>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">Then responder</h2></div>
+        <p style="font-size:11.5px">After a one-over-one, once opener has bid twice:</p>
+        <table class="tabella" style="margin-top:3px">
+          <tr><td class="cosa">1NT, old suit at minimum level</td><td class="val">not forcing</td></tr>
+          <tr><td class="cosa">2NT, old suit with a jump</td><td class="val">invitational</td></tr>
+          <tr><td class="cosa">new suit</td><td class="val">forcing</td></tr>
+        </table>
+        <p class="nota" style="margin-top:4px">A new suit is the only way to make opener bid again: it acts as a prod and needs no length.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

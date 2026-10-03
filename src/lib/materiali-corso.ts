@@ -2,7 +2,7 @@
  * Slide e dispense ufficiali dei moduli, per gli insegnanti.
  *
  * I PDF stanno in `public/materiali/` e si rigenerano da HTML con
- * `node scripts/materiali/rendi-gioco-della-carta.mjs`: le carte e le mani
+ * `node scripts/materiali/rendi-materiali.mjs`: le carte e le mani
  * sono disegnate dai dati, e il render si ferma se una mano non ha 13 carte o
  * se una carta compare due volte. Correggere un esempio vuol dire cambiare una
  * riga del sorgente, non ridisegnare un'immagine.

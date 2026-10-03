@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Il Bridge: un gioco di prese</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 15px; }
+  p, li { font-size: 12.5px; }
+  .defs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .def { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 12px; line-height: 1.4; }
+  .def b { color: var(--figb); }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+  .semi { display: flex; gap: 14px; font-size: 13px; font-weight: 600; margin: 4px 0 6px; }
+  .semi span.g { font-size: 20px; }
+  .scala { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 4px 0 6px; }
+  .scala .liv { padding: 4px 10px; border-radius: 8px; background: var(--figb); color: #fff; font-weight: 700; font-size: 14px; }
+  .scala .liv:nth-child(3) { background: #1f53b8; } .scala .liv:nth-child(5) { background: #3d6cc6; }
+  .scala .liv:nth-child(7) { background: #6b8fd4; } .scala .liv:nth-child(9) { background: #9db4e3; color: var(--inchiostro); }
+  .scala .gt { color: var(--tenue); font-weight: 700; }
+  .scala .liv .s-S, .scala .liv .s-H, .scala .liv .s-D, .scala .liv .s-C { color: inherit; }
+  .cartellino { display: inline-grid; place-items: center; width: 54px; height: 54px; border-radius: 10px; background: #fff; border: 2px solid var(--figb); font-size: 22px; font-weight: 800; font-family: "Bricolage Grotesque", sans-serif; }
+  table.punti td, table.punti th { font-size: 12px; }
+  table.punti td.v { text-align: right; font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .manche { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .manche > span { padding: 3px 9px; border-radius: 999px; background: var(--oro-velo); font-weight: 700; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Corso Fiori</div>
+    <h1 class="display">Il Bridge: un gioco di prese</h1>
+    <p class="sotto">Due coppie, 52 carte, tredici prese da conquistare: chi offre di più all'asta sceglie il tipo di gioco.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Il mazzo e le coppie</h2></div>
+      <div class="lato">
+        <div style="display:grid;gap:6px;justify-items:center">
+          <div class="coppia" style="--fs:14px"><div class="r"><div data-mano="J8.AQJ43.KQ3.A98" class="in-riga"></div></div></div>
+          <span style="font-size:11px;color:var(--tenue)">una mano: 13 carte</span>
+        </div>
+        <div>
+          <p>Si gioca in coppia: chi siede di fronte è il compagno, quindi <b>Nord-Sud contro Est-Ovest</b>. Il mazzo francese ha <b>52 carte</b> in quattro semi da 13, dall'Asso al due.</p>
+          <div class="semi"><span><span class="g">♠</span> Picche</span><span><span class="g">♥</span> Cuori</span><span><span class="g">♦</span> Quadri</span><span><span class="g">♣</span> Fiori</span></div>
+          <div class="regola" style="margin:0">Onori: A K Q J 10. Cartine: dal 9 al 2.</div>
+          <p class="nota">Nessuna carta in un seme: <b>vuoto</b> o chicane. Una: <b>singolo</b>. Due: <b>doubleton</b>.</p>
+        </div>
+      </div>
+          </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">La presa</h2></div>
+        <p>La prima carta giocata si chiama <b>attacco</b>. Gli altri, in senso orario, devono <b>rispondere al colore</b>: giocare una carta dello stesso seme.</p>
+        <div class="regola" style="margin:6px 0">Vince la presa la carta più alta del seme giocato.</div>
+        <div class="lato">
+          <div class="fig"><div data-figura4="S:3/K/7/A"></div></div>
+          <p style="font-size:12px">Ovest attacca il K♠, Nord il 3, Est il 7: Sud vince con l'<b>Asso</b>. Chi non ha carte del seme <b>scarta</b> un'altra carta, e chi scarta non vince mai la presa.</p>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Il morto e il giocante</h2></div>
+        <p>Dopo l'attacco, il <b>morto</b> scopre sul tavolo le sue carte, ordinate per seme, e non gioca più: sceglie per lui il compagno, il <b>giocante</b>.</p>
+        <div class="defs" style="grid-template-columns:1fr;margin-top:6px">
+          <div class="def"><b>Il giocante vede 26 carte</b>: le sue 13 e le 13 del morto. Così può pianificare il gioco.</div>
+          <div class="def"><b>I difensori</b> vedono solo le proprie carte e quelle del morto, non quelle del compagno.</div>
+        </div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Con l'atout o a senz'atout</h2></div>
+      <div class="defs">
+        <div class="def"><b>Atout</b>: un seme diventa privilegiato. Chi non ha carte del seme giocato può <b>tagliare</b> con un atout e vincere la presa.</div>
+        <div class="def"><b>Il taglio</b>: solo senza carte del seme giocato, e mai obbligatorio. Se tagliano in due, vince l'atout più alto.</div>
+        <div class="def"><b>Senz'atout</b> (SA, o NT): nessun seme può tagliare. Chi ha finito le carte di un seme può solo scartare.</div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">L'asta e il contratto</h2></div>
+      <div class="lato">
+        <div class="cartellino"><span>2♥</span></div>
+        <div>
+          <p>Con un'asta la coppia si impegna a fare un certo numero di prese: chi offre di più sceglie il tipo di gioco. Il numero conta le prese <b>oltre le prime sei</b>: «2♥» vuol dire <b>almeno 8 prese, con le cuori atout</b>.</p>
+        </div>
+      </div>
+      <div class="scala"><span style="font-size:12px;font-weight:600;margin-right:4px">Dal seme più alto:</span><span class="liv">SA</span><span class="gt">›</span><span class="liv">♠</span><span class="gt">›</span><span class="liv">♥</span><span class="gt">›</span><span class="liv">♦</span><span class="gt">›</span><span class="liv">♣</span><span style="font-size:11.5px;color:var(--tenue);margin-left:8px">dopo 1♥ si può dire 1♠; 1♦ e 1♣ vanno a livello 2</span></div>
+      <div class="regola" style="margin:0">Quando, dopo una dichiarazione, gli altri tre passano, quella dichiarazione diventa il contratto.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">6</span><h2 class="display">Il punteggio</h2></div>
+      <div class="due" style="gap:16px">
+        <div>
+          <table class="punti">
+            <tr><th>Ogni presa oltre la sesta</th><th></th></tr>
+            <tr><td>Fiori ♣ e quadri ♦</td><td class="v">20</td></tr>
+            <tr><td>Cuori ♥ e picche ♠</td><td class="v">30</td></tr>
+            <tr><td>Senz'atout</td><td class="v">40 la prima, 30 le altre</td></tr>
+          </table>
+          <p style="margin-top:6px;font-size:12px"><b>Manche</b>: le prese dichiarate valgono almeno 100.</p>
+          <div class="manche"><span>3SA</span><span>4♥</span><span>4♠</span><span>5♣</span><span>5♦</span></div>
+        </div>
+        <div>
+          <table class="punti">
+            <tr><th>Premi e penalità</th><th>prima · in zona</th></tr>
+            <tr><td>Manche</td><td class="v">300 · 500</td></tr>
+            <tr><td>Piccolo slam (12 prese)</td><td class="v">500 · 750</td></tr>
+            <tr><td>Grande slam (13 prese)</td><td class="v">1000 · 1500</td></tr>
+            <tr><td>Ogni presa in meno</td><td class="v">50 · 100</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Corso Fiori</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

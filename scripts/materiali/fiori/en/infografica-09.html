@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Opening bids of 1 in a suit. The responses</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 7px; }
+  .riquadro { padding: 8px 15px; }
+  p, li { font-size: 12.5px; }
+  .tipi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .tipo { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .tipo h3 { font-size: 13px; font-weight: 700; color: var(--figb); }
+  .tipo p { font-size: 11.5px; }
+  .tabella { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tabella th { text-align: left; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; padding: 0 6px 4px; }
+  .tabella td { padding: 4px 6px; border-top: 1px solid var(--linea); vertical-align: top; }
+  .tabella td.asta { font-weight: 700; white-space: nowrap; }
+  .tabella td.pt { font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .es { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .es .asta { font-size: 10.5px; font-weight: 700; color: var(--tenue); letter-spacing: 0.04em; }
+  .es .risp { font-size: 11.5px; }
+  .es .risp b { color: var(--figb); }
+  .scala { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .gradino { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.4; }
+  .gradino b { color: var(--figb); display: block; font-size: 12.5px; }
+  /* l'inglese è più lungo */
+  main { gap: 5px; }
+  .riquadro { padding-top: 7px; padding-bottom: 7px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">Opening bids of 1 in a suit. The responses</h1>
+    <p class="sotto">Responder looks for a fit and measures strength: each response tells opener to stop or go on.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Three kinds of response</h2></div>
+      <div class="tipi">
+        <div class="tipo"><h3>Limit bids</h3><p>They show a minimum and a maximum: opener may pass.</p></div>
+        <div class="tipo"><h3>Invitational</h3><p>They show a limit but ask opener for something extra.</p></div>
+        <div class="tipo"><h3>Forcing</h3><p>A new suit: opener may not pass.</p></div>
+      </div>
+      <div class="regola" style="margin:7px 0 0">With 5 or more points never pass: opener may hold up to 20, and 25 between you means game.</div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">Raises</h2></div>
+        <table class="tabella">
+          <tr><th>Response</th><th>Points</th><th>Meaning</th></tr>
+          <tr><td class="asta">1♦ – 2♦</td><td class="pt">5-9</td><td>limit: with a minimum opener, no game</td></tr>
+          <tr><td class="asta">1♥ – 3♥</td><td class="pt">10-11</td><td>invitational: game if opener has 14+</td></tr>
+          <tr><td class="asta">1♠ – 4♠</td><td class="pt">max 11</td><td>4+ card fit and a hand made for ruffing</td></tr>
+        </table>
+        <p class="nota" style="margin-top:4px">Over 1♥/1♠ three-card support is enough; over 1♦ you need four. Raises are not forcing.</p>
+        <div class="es" style="margin-top:5px">
+          <span class="asta">PARTNER OPENS 1♦</span>
+          <div data-mano="Q53.A5.Q874.7654" class="in-riga"></div>
+          <span class="risp">→ <b>2♦</b>: 7 points and four diamonds.</span>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Revaluing with a fit</h2></div>
+        <div class="regola blu">With a 4+ card fit and an unbalanced hand, responder adds to the HCP: number of trumps minus cards in the shortest suit.</div>
+        <div class="es">
+          <span class="asta">PARTNER OPENS 1♥</span>
+          <div data-mano="8.KJ72.KQ74.7642" class="in-riga"></div>
+          <span class="risp">9 HCP + (4 − 1) = <b>12</b> → <b>4♥</b>.</span>
+        </div>
+        <p class="nota" style="margin-top:5px">Not with 4-3-3-3: without a short suit there is nothing to ruff.</p>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">New suits: forcing</h2></div>
+      <div class="due" style="gap:12px">
+        <div>
+          <table class="tabella">
+            <tr><th>Response</th><th>Points</th><th>Meaning</th></tr>
+            <tr><td class="asta">1♣ – 1♥</td><td class="pt">5+</td><td>one-over-one: 4+ cards, no upper limit; opener must bid again</td></tr>
+            <tr><td class="asta">1♠ – 2♦</td><td class="pt">12+</td><td>two-over-one: forcing to game</td></tr>
+          </table>
+          <p class="nota" style="margin-top:4px">Opening 1♥ or 1♠ shows five; as a response, four are enough.</p>
+        </div>
+        <div>
+          <div class="es">
+            <span class="asta">PARTNER OPENS 1♣</span>
+            <div data-mano="82.KJ72.Q92.7642" class="in-riga"></div>
+            <span class="risp">→ <b>1♥</b>: shows four hearts. Partner raises, bids 1♠ or rebids.</span>
+          </div>
+          <ul style="margin:6px 0 0 16px;display:grid;gap:1px">
+            <li style="font-size:11.5px">Two five-card suits: the higher-ranking first.</li>
+            <li style="font-size:11.5px">A five-card and a four-card suit: the five-card suit first.</li>
+            <li style="font-size:11.5px">Two four-card suits: the cheaper first.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="regola" style="margin:6px 0 0">Don't jump if you can bid your suit at the 1 level: 1♥ shows 5 or more points, even 17.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">Notrump responses</h2></div>
+      <div class="due" style="gap:12px">
+        <table class="tabella">
+          <tr><th>Response</th><th>Points</th><th>Meaning</th></tr>
+          <tr><td class="asta">1NT</td><td class="pt">5-10</td><td>not forcing; denies a 4-card suit biddable at the 1 level</td></tr>
+          <tr><td class="asta">2NT</td><td class="pt">11</td><td>invitational; denies a major-suit fit</td></tr>
+          <tr><td class="asta">3NT</td><td class="pt">12-15</td><td>game: balanced, no playable major</td></tr>
+        </table>
+        <div class="es" style="align-self:center">
+          <span class="asta">PARTNER OPENS 1♥</span>
+          <div data-mano="32.4.QJ973.KQ852" class="in-riga"></div>
+          <span class="risp">Two five-card suits, only 8 points: too weak for the 2 level → <b>1NT</b>.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">6</span><h2 class="display">Before you respond: a checklist</h2></div>
+      <div class="scala">
+        <div class="gradino"><b>1 · Do I have a fit?</b>Show it now, at the level my points allow.</div>
+        <div class="gradino"><b>2 · If not, a new suit?</b>Bid it: it is forcing and has no upper limit.</div>
+        <div class="gradino"><b>3 · Neither?</b>Respond in notrump, according to my points.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

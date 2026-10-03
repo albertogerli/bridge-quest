@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>L'intervento</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 14px; }
+  .tipi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .tipo { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .tipo h3 { font-size: 13px; color: var(--figb); font-weight: 700; margin-bottom: 2px; }
+  .tipo p { font-size: 11.5px; }
+  .casi { display: grid; gap: 7px; }
+  .casi.due-col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .caso { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); }
+  .caso .asta { font-size: 11px; font-weight: 600; color: var(--tenue); letter-spacing: 0.02em; }
+  .caso .mano { --fs: 13px; }
+  .casi[style*="--fs"] .mano { --fs: 12px; }
+  .caso .esito { font-size: 11.5px; line-height: 1.35; color: #2c3242; }
+  .caso .esito b.dich { color: var(--figb); font-size: 13px; }
+  .regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+  .contro-semi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 2px 0 7px; }
+  .contro-semi div { padding: 5px 8px; border-radius: 8px; background: var(--avorio); font-size: 11.5px; text-align: center; }
+  .contro-semi b { display: block; font-size: 13px; color: var(--figb); }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Corso Fiori</div>
+    <h1 class="display">L'intervento</h1>
+    <p class="sotto">Come entrare nella dichiarazione avversaria: tre modi, ognuno con i suoi requisiti.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Tre modi di intervenire</h2></div>
+      <p style="margin-bottom:6px">L'intervento è la prima dichiarazione diversa da Passo della linea avversaria all'apertore. È una <b>libera iniziativa</b>: si interviene solo se conviene.</p>
+      <div class="tipi">
+        <div class="tipo"><h3>Contro</h3><p>Corto nel colore avversario, gli altri tre colori giocabili. 12–16 punti.</p></div>
+        <div class="tipo"><h3>1NT</h3><p>Come l'apertura di 1NT: 15–17 bilanciata, con il <b>fermo</b> nel colore dell'apertore.</p></div>
+        <div class="tipo"><h3>A colore</h3><p>Un ottimo colore, oppure tanti punti adatti né al Contro né a 1NT. Massimo 16/17.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Il Contro informativo</h2></div>
+      <div class="regola blu">Il Contro chiede al compagno di scegliere un colore e di dichiararlo al livello a cui pensa di poter giocare.</div>
+      <div class="contro-semi">
+        <div><b>su 1♣ o 1♦</b>entrambi i nobili: 4-4 o 4-3, mai 4-2</div>
+        <div><b>su 1♥</b>garantisce 4 picche</div>
+        <div><b>su 1♠</b>garantisce 4 cuori</div>
+      </div>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">Sud apre 1♦, tocca a Ovest</span><div data-mano="KJ98.AQ74.5.K983" class="in-riga"></div><span class="esito"><b class="dich">Contro</b>: le due quarte nobili, il singolo a quadri e i punti giusti.</span></div>
+        <div class="caso"><span class="asta">Sud apre 1♣, tocca a te</span><div data-mano="9854.K4.A765.AJ3" class="in-riga"></div><span class="esito"><b class="dich">Passo</b>: i punti ci sono, ma mancano le cuori. Il compagno si sentirebbe tradito.</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Il compagno del contrante</h2></div>
+      <div class="regola">È obbligato a scegliere un colore: il minimo per dichiarare al livello più basso è zero punti.</div>
+      <div class="casi" style="grid-template-columns:repeat(3, minmax(0, 1fr));--fs:12px">
+        <div class="caso"><span class="asta">1♦ – Contro – Passo – ?</span><div data-mano="54.J986.952.Q532" class="in-riga"></div><span class="esito"><b class="dich">1♥</b>: mai passare. 1♦ contrato sarebbe un disastro.</span></div>
+        <div class="caso"><span class="asta">1♦ – Contro – Passo – ?</span><div data-mano="KJ954.A76.95.K64" class="in-riga"></div><span class="esito"><b class="dich">4♠</b>: dichiara come se vedessi le carte del compagno, almeno la 4-3 nei nobili.</span></div>
+        <div class="caso"><span class="asta">1♦ – Contro – Passo – ?</span><div data-mano="K42.Q86.AJ10.K954" class="in-riga"></div><span class="esito"><b class="dich">3NT</b>: punti sufficienti, niente fit nei nobili, fermo a quadri.</span></div>
+      </div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">4</span><h2 class="display">L'intervento di 1NT</h2></div>
+        <p>Stessa forza e forma dell'apertura di 1NT. Gli avversari hanno già un colore d'attacco: per questo <b>serve il fermo</b> nel colore dell'apertore.</p>
+        <div class="caso" style="margin-top:6px"><span class="asta">Sud apre 1♥, tocca a Ovest</span><div data-mano="AJ5.KJ7.AJ1053.K8" class="in-riga"></div><span class="esito"><b class="dich">1NT</b>: 17 punti, bilanciata, fermo a cuori.</span></div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">L'intervento a colore</h2></div>
+        <p><b>A livello 1</b>: 8–16 punti, 5 carte con almeno un onore (raramente 4 con due onori), oppure 6 carte qualsiasi.</p>
+        <div class="caso" style="margin-top:5px"><span class="asta">Sud apre 1♦</span><div data-mano="82.AKJ1042.86.983" class="in-riga"></div><span class="esito"><b class="dich">1♥</b>: 8 punti, tutti concentrati nel colore.</span></div>
+      </section>
+    </div>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">A colore, livello 2</h2></div>
+        <p>10–16 punti, di solito <b>6 carte</b> con almeno un onore. Eccezione: le cuori su 1♠ bastano quinte, con un onore e 13+ punti.</p>
+        <div class="caso" style="margin-top:5px"><span class="asta">Sud apre 1♠</span><div data-mano="54.98.KQJ862.A76" class="in-riga"></div><span class="esito"><b class="dich">2♦</b>: sesto con onori, 10 punti.</span></div>
+        <p class="nota">Oltre 16/17 punti non si interviene a colore: si passa dal Contro e poi si dice il colore.</p>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">7</span><h2 class="display">Il compagno dell'interveniente</h2></div>
+        <p>Parte dal <b>minimo garantito</b>. Con <b>9+ punti</b> non passa mai: 16 + 9 = 25, la manche è possibile. L'appoggio si può dare anche con tre sole carte.</p>
+        <div class="regola" style="margin:8px 0 0">Prima di dire un colore, ricorda: il compagno ci attaccherà. Se l'idea ti fa rizzare i capelli, l'intervento è sbagliato.</div>
+        <p class="nota">Quando c'è competizione, nel 70% dei casi il contratto finisce alla linea dell'apertore: ogni intervento guida il controgioco.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer><span>BridgeLab · Corso Fiori</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

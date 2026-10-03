@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hand Evaluation</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 10px; }
+  .riquadro { padding: 11px 15px; }
+  p, li { font-size: 12.5px; }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+  .valori { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 6px; }
+  .valore { display: grid; justify-items: center; gap: 2px; padding: 6px 4px; border-radius: 10px; background: var(--figb-velo); }
+  .valore b { font-size: 22px; color: var(--figb); font-family: "Bricolage Grotesque", sans-serif; line-height: 1; }
+  .valore span { font-size: 11.5px; font-weight: 600; }
+  .barra { display: grid; grid-template-columns: 5fr 7fr 5fr 4fr; border-radius: 8px; overflow: hidden; margin-top: 4px; }
+  .barra div { padding: 6px 6px; text-align: center; font-size: 11.5px; line-height: 1.25; color: #fff; }
+  .barra div b { display: block; font-size: 14px; color: #fff; }
+  .barra div:nth-child(1) { background: #6b8fd4; } .barra div:nth-child(2) { background: var(--figb); }
+  .barra div:nth-child(3) { background: #8a6a1c; } .barra div:nth-child(4) { background: #5e4612; }
+  .soglie { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .soglia { padding: 6px 8px; border-radius: 9px; text-align: center; font-size: 11.5px; line-height: 1.3; }
+  .soglia b { display: block; font-size: 15px; }
+  .soglia.si { background: var(--verde-velo); } .soglia.si b { color: var(--verde); }
+  .soglia.forse { background: var(--oro-velo); } .soglia.forse b { color: #8a6a1c; }
+  .soglia.no { background: var(--rosso-velo); } .soglia.no b { color: var(--rosso); }
+  table.ap td, table.ap th { font-size: 12px; }
+  table.ap td.d { font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .esempi { display: grid; gap: 4px; margin-top: 6px; }
+  .es { display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 8px; background: var(--avorio); --fs: 12.5px; }
+  .es .r { margin-left: auto; font-weight: 700; color: var(--figb); white-space: nowrap; font-size: 13px; }
+  .es .perche { font-size: 11px; color: var(--tenue); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">Hand Evaluation</h1>
+    <p class="sotto">Strength decides whether to open and at what level; shape decides which suit.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">1</span><h2 class="display">High card points</h2></div>
+        <div class="valori">
+          <div class="valore"><b>4</b><span>Ace</span></div>
+          <div class="valore"><b>3</b><span>King</span></div>
+          <div class="valore"><b>2</b><span>Queen</span></div>
+          <div class="valore"><b>1</b><span>Jack</span></div>
+        </div>
+        <p>Milton Work's count: <b>10 points</b> in each suit, <b>40</b> in the deck.</p>
+        <div class="es" style="margin-top:6px"><div data-mano="AQ854.K9.J87.AKJ" class="in-riga"></div><span class="r">18 HCP</span></div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">The partnership's points</h2></div>
+        <p>The more points a side holds, the more tricks it takes. As a guide:</p>
+        <div class="barra">
+          <div><b>20–24</b>part score</div>
+          <div><b>25–31</b>game</div>
+          <div><b>32–36</b>small slam</div>
+          <div><b>37+</b>grand slam</div>
+        </div>
+        <p style="margin-top:8px">Cards from the 10 down don't count: here 3 + 1 + 4 + 2 + 3 + 2 = <b>15 HCP</b>.</p>
+        <div class="es" style="margin-top:5px"><div data-mano="KJ73.AQ5.K84.Q92" class="in-riga"></div><span class="r">15 HCP</span></div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">When to open</h2></div>
+      <p>The opening bid is the first call other than pass: it's a choice, not a duty, and it depends on strength.</p>
+      <div class="soglie" style="margin-top:6px">
+        <div class="soglia si"><b>13+</b>always open</div>
+        <div class="soglia si"><b>12</b>almost always open</div>
+        <div class="soglia forse"><b>11</b>sometimes, with concentrated honors</div>
+        <div class="soglia no"><b>0–10</b>pass</div>
+      </div>
+      <div class="es" style="margin-top:6px"><div data-mano="93.J7.KQJ75.K753" class="in-riga"></div><span class="perche">10 HCP: nice diamonds, but not enough strength</span><span class="r">Pass</span></div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Balanced or unbalanced</h2></div>
+      <div class="lato" style="align-items:start">
+        <div>
+          <p>There are three <b>balanced</b> shapes:</p>
+          <div class="manche" style="display:flex;gap:6px;margin-top:5px"><span class="chip">4-3-3-3</span><span class="chip">4-4-3-2</span><span class="chip">5-3-3-2</span></div>
+        </div>
+        <table class="ap">
+          <tr><th>Hand</th><th>Points</th><th>Opening</th></tr>
+          <tr><td>balanced</td><td>15–17</td><td class="d">1NT</td></tr>
+          <tr><td>balanced</td><td>12–14 or 18–20</td><td class="d">1 of a suit</td></tr>
+          <tr><td>unbalanced</td><td>12–20</td><td class="d">1 of a suit</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">Which suit to open</h2></div>
+      <div class="regola">1♥ and 1♠ need at least five cards; 1♦ at least four; otherwise 1♣, even with two.</div>
+      <p>With one long suit, open it; with two suits of five or more, open the higher-ranking.</p>
+      <div class="esempi">
+        <div class="es"><div data-mano="K2.4.KJ876.AQ873" class="in-riga"></div><span class="perche">two five-card suits: the higher</span><span class="r">1♦</span></div>
+        <div class="es"><div data-mano="AQJ3.KJ62.Q7.853" class="in-riga"></div><span class="perche">no five-card major, only two diamonds</span><span class="r">1♣</span></div>
+        <div class="es"><div data-mano="53.AJ4.K9.AJ10762" class="in-riga"></div><span class="perche">long suit</span><span class="r">1♣</span></div>
+      </div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">Strong openings</h2></div>
+        <p><b>2♦, 2♥, 2♠</b>: an unbalanced hand with 21+ HCP, or with about 8–9 winners. Open your long suit.</p>
+        <p style="margin-top:4px"><b>2NT</b>: balanced, 21–23. <b>2♣</b>: balanced with 24+, or a strong club-based hand.</p>
+        <div class="regola blu" style="margin:6px 0 0">Responder may not pass a two-level suit opening.</div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">7</span><h2 class="display">Preemptive openings</h2></div>
+        <p>At the 3 and 4 levels: a suit of <b>at least 7 cards</b> with at least two honors, and nothing outside. The message: "on my own I take 3 tricks fewer than I bid."</p>
+        <div class="esempi">
+          <div class="es"><div data-mano="AKQ9653.2.65.873" class="in-riga"></div><span class="perche">7 winners</span><span class="r">4♠</span></div>
+          <div class="es"><div data-mano=".843.KQJ8763.972" class="in-riga"></div><span class="perche">6 winners</span><span class="r">3♦</span></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>
