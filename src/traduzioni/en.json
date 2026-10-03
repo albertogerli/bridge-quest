@@ -2460,5 +2460,21 @@
   "Nessun allievo nell’elenco. Carica il tuo file o aggiungili a mano.": "No students in the list. Upload your file or add them by hand.",
   "{a} allievi · {c} compiti": "{a} students · {c} assignments",
   "Codice della tua classe": "Your class code",
-  "se te l'ha dato l'insegnante": "if your teacher gave you one"
+  "se te l'ha dato l'insegnante": "if your teacher gave you one",
+  "I PDF sono in italiano.": "The PDFs are in Italian.",
+  "Le slide da proiettare in aula e le dispense da stampare o mandare agli allievi.": "Slides to project in class and handouts to print or send to your students.",
+  "Lezione {n}": "Lesson {n}",
+  "Lezioni {da}–{a}": "Lessons {da}–{a}",
+  "Slide da proiettare": "Slides to project",
+  "{n} pagine": "{n} pages",
+  "Slide e dispense ufficiali, da proiettare o da stampare": "Official slides and handouts, ready to project or print",
+  "Il gioco della carta": "Card play",
+  "Vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.": "Winners and establishable cards, defense, establishing tricks, and the play plan in notrump and with trumps.",
+  "Vincenti e affrancabili, l'attacco e il terzo di mano": "Winners and establishable cards, the opening lead and third hand",
+  "Il piano di gioco": "The play plan",
+  "Il gioco ad atout": "Playing with trumps",
+  "Vincenti e affrancabili": "Winners and Establishable Cards",
+  "Il punto di vista dei difensori": "The Defenders' Perspective",
+  "Affrancamenti di lunga e di posizione": "Establishing Long and Positional Cards",
+  "Il piano di gioco a senz'atout": "The No Trump Play Plan"
 }

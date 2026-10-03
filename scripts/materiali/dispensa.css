@@ -1,0 +1,100 @@
+/* Dispense A4 a più pagine: testo a colonna unica, esempi disegnati da carte.js.
+   Si stampa: fondo bianco, l'avorio resta solo dentro i riquadri. */
+
+@page {
+  size: A4;
+  margin: 15mm 17mm 17mm;
+  @bottom-left {
+    content: "BridgeLab · Il gioco della carta";
+    font-family: "Inter", sans-serif; font-size: 8pt; color: #5b6475;
+  }
+  @bottom-right {
+    content: counter(page);
+    font-family: "Inter", sans-serif; font-size: 8pt; color: #5b6475;
+  }
+}
+
+html, body { background: #fff; }
+body { font-size: 10.5pt; line-height: 1.55; color: #2c3242; }
+
+.testata {
+  position: relative; overflow: hidden; border-radius: 14px;
+  background: linear-gradient(135deg, var(--figb-scuro), var(--figb) 55%, var(--figb-chiaro));
+  color: #fff; padding: 18px 22px 16px; margin-bottom: 18px;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.testata::after {
+  content: "♠ ♥ ♦ ♣"; position: absolute; right: -4px; top: -18px;
+  font-size: 92px; letter-spacing: -5px; opacity: 0.08; white-space: nowrap;
+}
+.testata .occhiello { font-size: 8.5pt; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--oro); }
+.testata h1 { font-size: 27pt; font-weight: 800; line-height: 1.05; margin: 4px 0 6px; color: #fff; }
+.testata .sotto { font-size: 10pt; opacity: 0.9; max-width: 120mm; line-height: 1.4; color: #fff; }
+.testata img { position: absolute; right: 18px; bottom: 14px; height: 22px; background: #fff; border-radius: 6px; padding: 3px 6px; }
+
+h2 {
+  font-family: "Bricolage Grotesque", "Inter", sans-serif; letter-spacing: -0.01em;
+  font-size: 15pt; font-weight: 700; color: var(--figb); line-height: 1.2;
+  margin: 18px 0 6px; break-after: avoid; page-break-after: avoid;
+}
+h3 { font-size: 11pt; font-weight: 700; color: var(--inchiostro); margin: 12px 0 4px; break-after: avoid; }
+p { margin: 0 0 7px; orphans: 3; widows: 3; }
+b, strong { color: var(--inchiostro); }
+ul, ol { margin: 0 0 8px 20px; }
+li { margin-bottom: 3px; }
+li::marker { color: var(--figb); }
+
+.regola {
+  margin: 8px 0 10px; padding: 8px 13px; border-left: 4px solid var(--oro); background: var(--oro-velo);
+  border-radius: 0 8px 8px 0; font-weight: 600; color: var(--inchiostro); line-height: 1.45;
+  break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+
+.esempio {
+  margin: 8px 0 11px; padding: 10px 13px; border-radius: 12px; background: var(--avorio);
+  border: 1px solid var(--linea); break-inside: avoid; page-break-inside: avoid;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.esempio > .etichetta {
+  display: inline-block; font-size: 7.5pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--figb); margin-bottom: 6px;
+}
+.esempio .corpo { display: flex; gap: 18px; align-items: center; }
+.esempio .corpo > .testo { flex: 1; }
+.esempio p:last-child { margin-bottom: 0; }
+.esempio .figure { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: flex-end; justify-content: center; margin: 4px 0 8px; }
+.esempio .fig { display: grid; justify-items: center; gap: 4px; --fs: 14px; }
+.esempio .fig .conto { font-size: 9pt; color: var(--tenue); text-align: center; }
+.esempio .fig .conto b { color: var(--figb); }
+.esempio .mano-sola { background: #fff; border-radius: 8px; padding: 5px 11px; border: 1px solid var(--linea); --fs: 13.5px; }
+.esempio .smazzata4 { --fs: 13.5px; }
+.esempio .figura4 { --fs: 15px; }
+
+.domanda { font-weight: 600; color: var(--inchiostro); }
+.soluzione { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--linea); }
+.soluzione::before { content: "Soluzione · "; font-weight: 700; color: var(--verde); }
+
+table.conto { border-collapse: collapse; font-size: 9.5pt; margin: 4px 0; }
+table.conto th { text-align: left; font-size: 7.5pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; padding: 0 8px 3px; }
+table.conto td { padding: 2px 8px; border-top: 1px solid var(--linea); }
+table.conto td.n { text-align: center; font-weight: 700; }
+
+.salto { break-before: page; }
+
+/* Linea Nord-Sud con l'attacco in mezzo, accanto al testo dell'esempio. */
+.linea { display: grid; gap: 5px; justify-items: center; flex: none; }
+.linea .chi { font-size: 7.5pt; font-weight: 700; color: var(--tenue); letter-spacing: 0.1em; }
+.linea .attacco {
+  font-size: 8.5pt; font-weight: 700; color: #fff; background: var(--figb); border-radius: 999px; padding: 2px 10px;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.contratto { display: inline-block; font-size: 8pt; font-weight: 700; color: var(--figb); background: var(--figb-velo); border-radius: 999px; padding: 1px 9px; margin-bottom: 4px; }
+.linea.affiancata { grid-template-columns: auto auto auto; align-items: center; gap: 2px 8px; }
+.linea.affiancata .chi { grid-row: 1; }
+.linea.affiancata .chi.n { grid-column: 1; } .linea.affiancata .chi.s { grid-column: 3; }
+.linea.affiancata .attacco { grid-row: 2; grid-column: 2; }
+
+
+/* La frase che introduce un esempio, quando rischia di restare sola in fondo alla pagina. */
+.attacca { break-after: avoid; page-break-after: avoid; }

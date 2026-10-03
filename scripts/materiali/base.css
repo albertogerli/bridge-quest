@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --figb: #003da5;
+  --figb-scuro: #002a73;
+  --figb-chiaro: #2563eb;
+  --figb-velo: #e8eefa;
+  --avorio: #f7f5f0;
+  --carta: #ffffff;
+  --inchiostro: #1a1a2e;
+  --tenue: #5b6475;
+  --linea: #e3dfd5;
+  --oro: #c8a44e;
+  --oro-velo: #f6efdc;
+  --verde: #047857;
+  --verde-velo: #e3f3ec;
+  --rosso: #b91c1c;
+  --rosso-velo: #fbe9e9;
+  --nero-seme: #1a1a2e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--avorio); color: var(--inchiostro); }
+body { font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.display { font-family: "Bricolage Grotesque", "Inter", sans-serif; letter-spacing: -0.02em; }
+
+/* --- semi --- */
+.s-S, .s-C { color: var(--nero-seme); }
+.s-H, .s-D { color: var(--rosso); }
+
+/* --- carta singola --- */
+.carta {
+  display: inline-flex; flex-direction: column; justify-content: space-between;
+  width: var(--w, 34px); height: calc(var(--w, 34px) * 1.4);
+  background: var(--carta); border: 1px solid #d6d2c7; border-radius: calc(var(--w, 34px) * 0.12);
+  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.12);
+  padding: calc(var(--w, 34px) * 0.08) calc(var(--w, 34px) * 0.1);
+  font-weight: 700; line-height: 1;
+}
+.carta .r { font-size: calc(var(--w, 34px) * 0.42); }
+.carta .m { font-size: calc(var(--w, 34px) * 0.62); align-self: center; margin-bottom: calc(var(--w, 34px) * 0.08); }
+.carta.cede { opacity: 0.35; }
+.carta.evid { outline: 2px solid var(--oro); outline-offset: 1px; }
+.mazzetto { display: inline-flex; gap: 0; }
+.mazzetto .carta + .carta { margin-left: calc(var(--w, 34px) * -0.38); }
+
+/* --- figura: N sopra, S sotto, in un seme --- */
+.figura {
+  display: inline-grid; grid-template-columns: auto; justify-items: center; gap: 2px;
+  font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.figura .lato { white-space: nowrap; display: flex; align-items: baseline; gap: 6px; font-size: var(--fs, 17px); }
+.figura .lato .chi { font-size: 0.6em; font-weight: 600; color: var(--tenue); width: 1.1em; text-align: right; }
+.figura .lato .vuoto { color: var(--tenue); font-weight: 500; }
+.figura .rosa { width: 100%; min-width: 46px; height: 0; border-top: 2px solid var(--figb); opacity: 0.35; margin: 1px 0; }
+
+/* --- mano: elenco per semi --- */
+.mano { display: grid; gap: 1px; font-weight: 700; font-size: var(--fs, 15px); font-variant-numeric: tabular-nums; }
+.mano .riga { display: flex; gap: 6px; }
+.mano .riga .seme { width: 1em; text-align: center; }
+.mano.in-riga { display: flex; gap: 12px; white-space: nowrap; }
+.mano.in-riga .riga { gap: 3px; }
+
+/* --- etichette --- */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  background: var(--figb-velo); color: var(--figb);
+}
+.chip.verde { background: var(--verde-velo); color: var(--verde); }
+.chip.oro { background: var(--oro-velo); color: #8a6a1c; }
+.chip.rosso { background: var(--rosso-velo); color: var(--rosso); }
+
+/* --- un seme fra i quattro giocatori --- */
+.figura4 {
+  display: inline-grid; grid-template-columns: auto auto auto; grid-template-areas: ". n ." "o c e" ". s .";
+  align-items: center; justify-items: center; gap: 4px 12px;
+  font-weight: 700; font-size: var(--fs, 17px); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.figura4 .posto { display: flex; align-items: baseline; gap: 5px; }
+.figura4 .posto.n { grid-area: n; } .figura4 .posto.s { grid-area: s; }
+.figura4 .posto.o { grid-area: o; justify-self: end; } .figura4 .posto.e { grid-area: e; justify-self: start; }
+.figura4 .chi, .smazzata4 .chi { font-size: 0.6em; font-weight: 600; color: var(--tenue); }
+.rosa4 {
+  grid-area: c; width: 3em; height: 3em; border-radius: 8px; background: var(--figb); color: #fff;
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+  grid-template-areas: ". n ." "o . e" ". s ."; place-items: center;
+  font-size: 0.42em; font-weight: 700; line-height: 1; padding: 3px;
+}
+.rosa4 span:nth-child(1) { grid-area: n; } .rosa4 span:nth-child(2) { grid-area: o; }
+.rosa4 span:nth-child(3) { grid-area: e; } .rosa4 span:nth-child(4) { grid-area: s; }
+
+/* --- smazzata intera a croce --- */
+.smazzata4 {
+  display: inline-grid; grid-template-columns: auto auto auto; grid-template-areas: ". n ." "o c e" ". s .";
+  align-items: center; justify-items: center; gap: 8px 16px; font-size: var(--fs, 15px);
+}
+.smazzata4 .posto { display: grid; gap: 2px; justify-items: start; }
+.smazzata4 .posto.n { grid-area: n; } .smazzata4 .posto.s { grid-area: s; }
+.smazzata4 .posto.o { grid-area: o; } .smazzata4 .posto.e { grid-area: e; }
+.smazzata4 .chi { font-size: 0.7em; letter-spacing: 0.08em; text-transform: uppercase; }
+.smazzata4 .rosa4 { font-size: 0.6em; width: 4.2em; height: 4.2em; }
+.figura4 .rosa4 { font-size: 0.55em; width: 3.8em; height: 3.8em; }

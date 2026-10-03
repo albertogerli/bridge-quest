@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Il gioco ad atout</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../slide.css">
+<style>
+  .occhiello { font-size: 16px; }
+  .piede { font-size: 15px; }
+  .conta { font-size: 21px; }
+
+  /* copertina e chiusura */
+  .copertina { background: linear-gradient(135deg, var(--figb-scuro), var(--figb) 55%, var(--figb-chiaro)); color: #fff; justify-content: center; padding-left: 96px; }
+  .copertina::before { display: none; }
+  .copertina::after { content: "♠ ♥ ♦ ♣"; position: absolute; right: -30px; top: -70px; font-size: 280px; letter-spacing: -24px; opacity: 0.07; white-space: nowrap; }
+  .copertina .occhiello { font-size: 20px; }
+  .copertina h1 { color: #fff; font-size: 82px; margin: 14px 0 20px; max-width: 980px; }
+  .copertina .sotto { font-size: 28px; opacity: 0.9; max-width: 900px; line-height: 1.35; }
+  .copertina .logo { position: absolute; right: 64px; bottom: 44px; background: #fff; border-radius: 12px; padding: 8px 14px; }
+  .copertina .logo img { height: 36px; display: block; }
+
+  /* mattoni */
+  .riquadro { background: var(--carta); border: 1px solid var(--linea); border-radius: 18px; padding: 24px 30px; }
+  .testo { font-size: 24px; line-height: 1.4; }
+  .testo b { color: var(--figb); }
+  .banda { display: inline-block; background: var(--figb); color: #fff; font-weight: 700; font-size: 22px; border-radius: 10px; padding: 8px 18px; }
+  .banda.oro { background: var(--oro-velo); color: #7a5a12; }
+  .banda.verde { background: var(--verde-velo); color: var(--verde); }
+  .centro { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .riga { display: flex; align-items: center; gap: 40px; }
+  .freccia { color: var(--oro); font-size: 46px; font-weight: 800; line-height: 1; }
+  .citazione { font-family: "Bricolage Grotesque", sans-serif; font-size: 40px; font-weight: 700; line-height: 1.2; color: var(--inchiostro); }
+  .citazione::before { content: "«"; color: var(--oro); } .citazione::after { content: "»"; color: var(--oro); }
+  .grande-fig { --fs: 46px; }
+  .fig4 { --fs: 34px; }
+  .domanda { font-size: 28px; font-weight: 700; color: var(--figb); }
+  .risposta { background: var(--verde-velo); border-radius: 14px; padding: 14px 20px; font-size: 22px; line-height: 1.4; color: #134e3a; }
+  .risposta b { color: var(--verde); }
+  .nota { font-size: 20px; color: var(--tenue); }
+
+  .passi { display: grid; gap: 16px; }
+  .passo { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 18px; background: var(--carta); border: 1px solid var(--linea); border-radius: 16px; padding: 14px 22px; font-size: 26px; font-weight: 600; }
+  .passo .n { width: 52px; height: 52px; border-radius: 50%; background: var(--figb); color: #fff; display: grid; place-items: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 28px; font-weight: 800; }
+
+  /* tavolo dei ruoli */
+  .ruoli { display: grid; grid-template-columns: 430px 1fr; gap: 50px; align-items: center; flex: 1; }
+  .tavolo-ruoli { position: relative; width: 430px; height: 430px; }
+  .tavolo-ruoli svg { position: absolute; inset: 0; }
+  .tavolo-ruoli .panno { position: absolute; left: 140px; top: 140px; width: 150px; height: 150px; border-radius: 22px; background: radial-gradient(circle at 50% 45%, #1f7a4f, #135c3a); color: #fff; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); grid-template-areas: ". n ." "o . e" ". s ."; place-items: center; font-weight: 700; font-size: 22px; }
+  .tavolo-ruoli .posto { position: absolute; width: 132px; text-align: center; background: var(--carta); border: 2px solid var(--figb); border-radius: 14px; padding: 8px 6px; }
+  .tavolo-ruoli .posto b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 30px; color: var(--figb); line-height: 1; }
+  .tavolo-ruoli .posto span { font-size: 18px; font-weight: 700; }
+  .ruoli ol { list-style: none; display: grid; gap: 18px; }
+  .ruoli li { font-size: 24px; line-height: 1.35; display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; }
+  .ruoli li .n { width: 46px; height: 46px; border-radius: 50%; background: var(--figb); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 24px; }
+  .ruoli li b { color: var(--figb); }
+
+  /* attacco */
+  .semi-grandi { display: flex; gap: 46px; font-size: 92px; line-height: 1; justify-content: center; }
+  .ranghi { display: flex; gap: 8px; justify-content: center; }
+  .ranghi span { width: 66px; height: 82px; border-radius: 10px; background: var(--carta); border: 1px solid #d6d2c7; box-shadow: 0 1px 2px rgba(26,26,46,.12); display: grid; place-items: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 34px; font-weight: 800; }
+  .sequenze { display: grid; gap: 16px; }
+  .sequenze div { display: flex; align-items: baseline; gap: 22px; font-size: 30px; }
+  .sequenze b { font-family: "Bricolage Grotesque", sans-serif; font-size: 40px; color: var(--figb); min-width: 150px; }
+  .sequenze span { color: var(--tenue); font-size: 24px; }
+  .attacco-tab td, .attacco-tab th { font-size: 26px; padding: 18px 20px; }
+  .attacco-tab th { font-size: 15px; }
+  .attacco-tab td.k { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 32px; text-align: center; }
+  .attacco-tab td.p { color: var(--verde); } .attacco-tab td.ng { color: var(--rosso); } .attacco-tab td.ne { color: var(--figb); }
+  .mani-attacco { display: flex; gap: 60px; justify-content: center; }
+  .mani-attacco .mano { --fs: 28px; gap: 4px; }
+  .mani-attacco .esito { margin-top: 14px; }
+  .lead-mini { display: grid; gap: 18px; }
+  .lead-mini div { display: flex; align-items: center; gap: 22px; font-size: 26px; }
+  .lead-mini .chip { font-size: 22px; padding: 6px 16px; }
+
+  /* deduzioni */
+  .tre { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; flex: 1; }
+  .tre .riquadro { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px; }
+  .tre .fig4 { --fs: 22px; }
+  .tre .riquadro .fig4 { margin-top: 6px; }
+  .tre p { font-size: 20px; line-height: 1.35; text-align: center; }
+  .cerchio { outline: 3px solid var(--rosso); outline-offset: 2px; border-radius: 50%; }
+  .flusso { display: grid; justify-items: center; gap: 12px; flex: 1; align-content: center; }
+  .flusso .coppia-box { display: flex; gap: 24px; }
+  .flusso .box { background: var(--figb-velo); color: var(--figb); border-radius: 14px; padding: 16px 26px; font-size: 24px; font-weight: 700; text-align: center; min-width: 360px; }
+  .flusso .box.forte { background: var(--figb); color: #fff; font-size: 40px; font-family: "Bricolage Grotesque", sans-serif; padding: 18px 60px; }
+  .flusso .box.forte small { display: block; font-family: "Inter", sans-serif; font-size: 20px; font-weight: 600; opacity: .85; margin-top: 4px; }
+  .flusso .box.oro { background: var(--oro-velo); color: #7a5a12; }
+
+  /* gioco ad atout */
+  .modi { display: grid; gap: 34px; flex: 1; align-content: center; }
+  .modi .riga { gap: 36px; }
+  .modi .etichetta { font-family: "Bricolage Grotesque", sans-serif; font-size: 36px; font-weight: 800; color: var(--figb); min-width: 380px; }
+  .modi .etichetta small { display: block; font-size: 30px; margin-top: 4px; }
+  .esito-box { flex: 1; border-radius: 16px; padding: 22px 28px; font-size: 30px; font-weight: 700; text-align: center; }
+  .esito-box.tenue { background: var(--figb-velo); color: var(--figb); }
+  .esito-box.forte { background: var(--figb); color: #fff; font-size: 36px; }
+  .presa { display: grid; grid-template-columns: auto auto auto; grid-template-areas: ". n ." "o c e" ". s ."; gap: 8px; align-items: center; justify-items: center; }
+  .presa .c { grid-area: c; width: 94px; height: 94px; border-radius: 16px; background: radial-gradient(circle at 50% 45%, #1f7a4f, #135c3a); color: #fff; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); grid-template-areas: ". n ." "o . e" ". s ."; place-items: center; font-weight: 700; font-size: 18px; }
+  .presa .attaccante { outline: 3px dashed var(--oro); outline-offset: 4px; border-radius: 8px; }
+  .taglio { display: inline-block; background: var(--rosso); color: #fff; font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 34px; border-radius: 12px; padding: 6px 20px; }
+  .punti { list-style: none; display: grid; gap: 14px; }
+  .punti li { font-size: 26px; font-weight: 600; display: flex; gap: 14px; align-items: baseline; }
+  .punti li::before { content: "✓"; color: var(--verde); font-weight: 800; }
+  .potere { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; }
+  .potere .riquadro { display: grid; gap: 14px; align-content: center; }
+  .linea-mano { font-family: "Bricolage Grotesque", sans-serif; font-size: 32px; font-weight: 800; display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+  .confronto { display: grid; grid-template-columns: 1fr auto auto; gap: 8px 16px; align-items: baseline; font-size: 24px; }
+  .confronto .r { font-weight: 800; font-family: "Bricolage Grotesque", sans-serif; font-size: 30px; }
+  .fit { display: grid; gap: 22px; justify-content: center; flex: 1; align-content: center; }
+  .fit .riga { gap: 30px; }
+  .fit .piu { color: var(--oro); font-size: 48px; font-weight: 800; }
+  .fit .tot { font-size: 22px; font-weight: 700; color: var(--figb); }
+  .decisione { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; }
+  .decisione .col { display: grid; gap: 14px; align-content: start; justify-items: center; }
+  .decisione .si-no { font-family: "Bricolage Grotesque", sans-serif; font-size: 56px; font-weight: 800; }
+  .decisione .passo { width: 100%; font-size: 30px; }
+  .piano { display: grid; grid-template-columns: auto 1fr; gap: 40px; flex: 1; align-items: center; }
+  .piano .coppia .mano { --fs: 27px; padding: 10px 20px; }
+  .piano .coppia { gap: 10px; padding: 18px 26px; }
+  .scheda { background: var(--figb-velo); border-radius: 16px; padding: 16px 24px; display: grid; gap: 4px; text-align: center; }
+  .scheda .t { font-family: "Bricolage Grotesque", sans-serif; font-size: 30px; font-weight: 800; color: var(--figb); }
+  .scheda .a { font-size: 24px; font-weight: 600; }
+  .catena { display: grid; justify-items: center; gap: 6px; margin-top: 14px; }
+  .catena .anello { width: 100%; text-align: center; border-radius: 12px; padding: 10px; font-size: 24px; font-weight: 700; color: #fff; background: var(--figb); }
+  .catena .anello.verde { background: var(--verde); }
+  .catena .freccia { font-size: 30px; }
+  .conto { margin-top: 14px; text-align: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 32px; font-weight: 800; color: var(--inchiostro); }
+  .conto small { font-family: "Inter", sans-serif; font-size: 20px; font-weight: 600; color: var(--tenue); }
+  .domanda-tagli { font-size: 28px; font-weight: 700; text-align: center; margin-top: 12px; }
+  .domanda-tagli b { color: var(--rosso); }
+  .tre-attacchi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .tre-attacchi .riquadro { display: grid; justify-items: center; gap: 10px; padding: 18px; }
+  .tre-attacchi .mano { --fs: 26px; gap: 3px; }
+  .tre-attacchi .lead { font-family: "Bricolage Grotesque", sans-serif; font-size: 38px; font-weight: 800; }
+  .tre-attacchi .prio { font-size: 20px; font-weight: 700; color: var(--tenue); text-align: center; line-height: 1.25; }
+  .scelta { display: flex; gap: 20px; justify-content: center; align-items: center; margin-bottom: 14px; }
+  .faccine { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .faccine div { border-radius: 14px; padding: 14px; text-align: center; font-size: 22px; font-weight: 700; }
+  .faccine .bene { background: var(--verde-velo); color: var(--verde); }
+  .faccine .male { background: var(--rosso-velo); color: var(--rosso); }
+</style>
+</head>
+<body>
+
+<!-- 1 · copertina -->
+<section class="slide copertina">
+  <div class="occhiello">Il gioco della carta</div>
+  <h1 class="display">Il gioco ad atout</h1>
+  <p class="sotto">Il potere del taglio e il piano di gioco quando c'è un seme privilegiato.</p>
+  <div class="logo"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 2 · modalità di gioco -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display">Due modi di giocare</h1>
+  <div class="modi">
+    <div class="riga">
+      <span class="etichetta">Gioco a senza atout</span>
+      <span class="freccia">→</span>
+      <div class="esito-box tenue">Nessun seme privilegiato, nessun «atout»</div>
+    </div>
+    <div class="riga">
+      <span class="etichetta">Gioco ad atout<small><span class="s-S">♠</span> <span class="s-H">♥</span> <span class="s-D">♦</span> <span class="s-C">♣</span></small></span>
+      <span class="freccia">→</span>
+      <div class="esito-box forte">Il potere speciale del taglio!</div>
+    </div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 3 · esempio di taglio -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display">Il taglio</h1>
+  <div class="riga" style="flex:1;gap:56px;align-items:center">
+    <div style="display:grid;justify-items:center;gap:14px">
+      <div class="presa">
+        <span style="grid-area:n"><span data-carte="C:3" style="--w:70px"></span></span>
+        <span style="grid-area:o" class="attaccante"><span data-carte="C:A" style="--w:70px"></span></span>
+        <div class="c"><span style="grid-area:n">N</span><span style="grid-area:o">O</span><span style="grid-area:e">E</span><span style="grid-area:s">S</span></div>
+        <span style="grid-area:e"><span data-carte="C:5" style="--w:70px"></span></span>
+        <span style="grid-area:s"><span data-carte="H:3" data-evid="0" style="--w:70px"></span></span>
+      </div>
+      <div class="riquadro" style="padding:12px 22px"><div data-mano="10953.KQJ973.A75." style="--fs:28px"></div></div>
+    </div>
+    <div style="display:grid;gap:24px;flex:1">
+      <p class="testo">Ipotesi: si è scelto come atout il colore di <span class="s-H">♥</span>. Ovest attacca con l'Asso di <span class="s-C">♣</span>: Sud non ha fiori.</p>
+      <span class="taglio" style="justify-self:start">Taglio!</span>
+      <ul class="punti">
+        <li>Assenza di carte nel seme giocato</li>
+        <li>Opportunità e non obbligo</li>
+        <li>Opzione valida anche per gli avversari</li>
+      </ul>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:10px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 4 · il potere dei tagli -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display" style="margin-bottom:8px">Il potere dei tagli</h1>
+  <p class="testo" style="margin-bottom:18px">Scegliere un colore come atout permette di rivalutarlo.</p>
+  <div class="potere">
+    <div class="riquadro">
+      <div class="linea-mano"><span><span class="s-S">♠</span> 543</span><span><span class="s-H">♥</span> QJ10987</span><span><span class="s-D">♦</span> 654</span><span><span class="s-C">♣</span> 2</span></div>
+      <div class="confronto">
+        <span>a senza atout</span><span class="freccia" style="font-size:28px">→</span><span class="r" style="color:var(--rosso)">0 vincenti</span>
+        <span>con atout <span class="s-H">♥</span></span><span class="freccia" style="font-size:28px">→</span><span class="r" style="color:var(--verde)">almeno 4 prese</span>
+      </div>
+    </div>
+    <div class="riquadro">
+      <div class="linea-mano"><span><span class="s-S">♠</span> AKQJ1098765432</span></div>
+      <div class="confronto">
+        <span>a senza atout (giocante)</span><span class="freccia" style="font-size:28px">→</span><span class="r" style="color:var(--rosso)">0 vincenti</span>
+        <span>con atout <span class="s-S">♠</span></span><span class="freccia" style="font-size:28px">→</span><span class="r" style="color:var(--verde)">13 prese!</span>
+      </div>
+      <p class="nota">perché l'attacco, inevitabilmente, sarà in un seme diverso dalle picche</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:14px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 5 · fit -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display">Il fit: 8 o più carte della coppia in un colore</h1>
+  <div class="fit">
+    <div class="riga"><span data-carte="S:AK975" style="--w:62px"></span><span class="piu">+</span><span data-carte="S:QJ2" style="--w:62px"></span><span class="chip" style="font-size:22px">5 + 3 = 8</span></div>
+    <div class="riga"><span data-carte="H:J987" style="--w:62px"></span><span class="piu">+</span><span data-carte="H:AK106" style="--w:62px"></span><span class="chip" style="font-size:22px">4 + 4 = 8</span></div>
+    <div class="riga"><span data-carte="C:AKJ643" style="--w:62px"></span><span class="piu">+</span><span data-carte="C:75" style="--w:62px"></span><span class="chip" style="font-size:22px">6 + 2 = 8</span></div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 6 · servono tagli immediati? -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display">Servono tagli immediati?</h1>
+  <div class="decisione">
+    <div class="col">
+      <span class="si-no" style="color:var(--verde)">Sì</span>
+      <div class="passo"><span class="n">1</span><span>Tagliare</span></div>
+      <div class="passo"><span class="n">2</span><span>Battere le atout</span></div>
+      <div class="passo"><span class="n">3</span><span>Affrancare</span></div>
+    </div>
+    <div class="col">
+      <span class="si-no" style="color:var(--rosso)">No</span>
+      <div class="passo"><span class="n">1</span><span>Battere le atout</span></div>
+      <div class="passo"><span class="n">2</span><span>Affrancare</span></div>
+      <div class="passo"><span class="n">3</span><span>Tagliare</span></div>
+    </div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 7 · piano di gioco: no tagli immediati -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display" style="margin-bottom:12px">Il piano di gioco ad atout</h1>
+  <div class="piano">
+    <div class="coppia">
+      <span class="eti">NORD · MORTO</span>
+      <div data-mano="AQ8.54.432.AJ1083"></div>
+      <div data-mano="KJ1063.8.85.KQ52" data-parziale></div>
+      <span class="eti">SUD · GIOCANTE</span>
+    </div>
+    <div>
+      <div class="scheda">
+        <span class="t">Atout <span class="s-S">♠</span> · obiettivo 10 prese</span>
+        <span class="a">Attacco: A<span class="s-D">♦</span>, K<span class="s-D">♦</span>, Q<span class="s-D">♦</span> (tagliato di mano)</span>
+      </div>
+      <p class="domanda-tagli">Servono tagli immediati? <b>No</b></p>
+      <div class="catena">
+        <div class="anello">Batto le atout</div>
+        <span class="freccia">↓</span>
+        <div class="anello verde">Incasso le fiori</div>
+      </div>
+      <p class="conto">5 <span class="s-S">♠</span> + 5 <span class="s-C">♣</span> = 10 prese!</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:8px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 8 · piano di gioco: tagli immediati, 12 prese -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display" style="margin-bottom:12px">Il piano di gioco ad atout</h1>
+  <div class="piano">
+    <div class="coppia">
+      <span class="eti">NORD · MORTO</span>
+      <div data-mano="1095.4.A762.A10842"></div>
+      <div data-mano="AKQJ73.A63.K9.65"></div>
+      <span class="eti">SUD · GIOCANTE</span>
+    </div>
+    <div>
+      <div class="scheda">
+        <span class="t">Atout <span class="s-S">♠</span> · obiettivo 12 prese</span>
+        <span class="a">Attacco: K<span class="s-C">♣</span></span>
+      </div>
+      <p class="domanda-tagli">Servono tagli immediati? <b style="color:var(--verde)">Sì</b></p>
+      <div class="catena">
+        <div class="anello">Taglio le <span style="color:#fca5a5">♥</span></div>
+        <span class="freccia">↓</span>
+        <div class="anello">Batto le atout</div>
+        <span class="freccia">↓</span>
+        <div class="anello verde">Incasso le fiori</div>
+      </div>
+      <p class="conto">8 <span class="s-S">♠</span> <small>(6 di lunga e 2 di taglio)</small> + 1 <span class="s-H">♥</span> + 2 <span class="s-D">♦</span> + 1 <span class="s-C">♣</span> = 12 prese!</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:8px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 9 · piano di gioco: tagli immediati, 10 prese -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display" style="margin-bottom:12px">Il piano di gioco ad atout</h1>
+  <div class="piano">
+    <div class="coppia">
+      <span class="eti">NORD · MORTO</span>
+      <div data-mano="82.83.A92.Q97543"></div>
+      <div data-mano="AKQJ95.A92.873.A"></div>
+      <span class="eti">SUD · GIOCANTE</span>
+    </div>
+    <div>
+      <div class="scheda">
+        <span class="t">Atout <span class="s-S">♠</span> · obiettivo 10 prese</span>
+        <span class="a">Attacco: 2<span class="s-C">♣</span></span>
+      </div>
+      <p class="domanda-tagli">Servono tagli immediati? <b style="color:var(--verde)">Sì</b></p>
+      <div class="catena">
+        <div class="anello">Taglio le <span style="color:#fca5a5">♥</span></div>
+        <span class="freccia">↓</span>
+        <div class="anello">Batto le atout</div>
+        <span class="freccia">↓</span>
+        <div class="anello verde">Incasso le fiori</div>
+      </div>
+      <p class="conto">7 <span class="s-S">♠</span> <small>(6 di lunga e 1 di taglio)</small> + 1 <span class="s-H">♥</span> + 1 <span class="s-D">♦</span> + 1 <span class="s-C">♣</span> = 10 prese!</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:8px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 10 · attacco nei contratti ad atout -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display" style="margin-bottom:14px">L'attacco nei contratti ad atout</h1>
+  <div class="scelta">
+    <span class="banda">Prese rapide</span><span class="testo">o</span><span class="banda oro">Attacco per tagliare</span>
+    <span class="chip" style="font-size:22px;margin-left:20px">Atout <span class="s-H">♥</span></span>
+  </div>
+  <div class="tre-attacchi">
+    <div class="riquadro"><div data-mano="KQ7.62.J9732.A72"></div><span class="lead">K<span class="s-S">♠</span></span><span class="prio">Priorità: incasso</span></div>
+    <div class="riquadro"><div data-mano="2.A62.J982.Q8752"></div><span class="lead">2<span class="s-S">♠</span></span><span class="prio">Priorità: taglio</span></div>
+    <div class="riquadro"><div data-mano="72.J62.J983.Q973"></div><span class="lead">7<span class="s-S">♠</span></span><span class="prio">Priorità: taglio</span></div>
+  </div>
+  <div class="massima" style="margin:16px 0 0;font-size:24px">Ad atout bastano 2 onori contigui</div>
+  <div class="piede" style="position:static;margin-top:10px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 11 · non attaccare sotto asso -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display" style="margin-bottom:14px">Un suggerimento</h1>
+  <div class="massima" style="margin:0 0 20px;font-size:30px;background:var(--rosso)">Ad atout non attaccare «sotto Asso»</div>
+  <div class="riga" style="flex:1;gap:50px">
+    <div class="riquadro"><div data-figura4="C:9732/AJ1064/Q85/K" class="fig4" style="--fs:36px"></div></div>
+    <div style="display:grid;gap:16px;flex:1">
+      <p class="testo">Atout <span class="s-H">♥</span>. Ovest attacca con il J<span class="s-C">♣</span>.</p>
+      <div class="faccine">
+        <div class="bene">Attacco perfetto a senza atout</div>
+        <div class="male">Attacco pessimo ad atout</div>
+      </div>
+      <p class="risposta">Sud realizzerà il <b>Re secco</b>… e Ovest non farà mai più l'Asso.</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:10px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 12a · deduzioni del terzo di mano: domanda -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display">Le deduzioni del terzo di mano</h1>
+  <div class="riga" style="flex:1;gap:60px">
+    <div class="coppia" style="padding:18px 26px">
+      <span class="eti">NORD · MORTO</span>
+      <div data-mano="AK65.J74.10864.32" style="--fs:28px"></div>
+      <div data-mano="872.A52.A932.654" style="--fs:28px"></div>
+      <span class="eti">EST · TU</span>
+    </div>
+    <div style="display:grid;gap:22px">
+      <p class="testo" style="font-size:30px">Atout <span class="s-H">♥</span>. Ovest attacca con il J<span class="s-D">♦</span>.</p>
+      <p class="domanda" style="font-size:40px">Che cosa devo fare?</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:10px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 12b · deduzioni del terzo di mano: risposta -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il gioco ad atout</div>
+  <h1 class="display">Le deduzioni del terzo di mano</h1>
+  <div class="riga" style="flex:1;gap:60px">
+    <div class="coppia" style="padding:18px 26px">
+      <span class="eti">NORD · MORTO</span>
+      <div data-mano="AK65.J74.10864.32" style="--fs:28px"></div>
+      <div data-mano="872.A52.A932.654" style="--fs:28px"></div>
+      <span class="eti">EST · TU</span>
+    </div>
+    <div style="display:grid;gap:22px;flex:1">
+      <p class="testo" style="font-size:30px">Atout <span class="s-H">♥</span>. Ovest attacca con il J<span class="s-D">♦</span>.</p>
+      <p class="risposta" style="font-size:28px">L'attacco viene da <b>Jx</b> o da <b>J secco</b>!</p>
+      <div class="massima" style="margin:0;font-size:30px">Prendo d'Asso e rigioco <span style="color:#fca5a5">♦</span></div>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:10px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 13 · giochiamo -->
+<section class="slide copertina">
+  <div class="occhiello">Il gioco della carta</div>
+  <h1 class="display">Giochiamo!</h1>
+  <p class="sotto">Smazzate libere</p>
+  <div class="logo"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<script src="../carte.js"></script>
+</body>
+</html>

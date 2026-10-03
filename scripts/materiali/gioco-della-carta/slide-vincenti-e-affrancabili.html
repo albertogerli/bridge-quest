@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Vincenti e affrancabili</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../slide.css">
+<style>
+  .occhiello { font-size: 16px; }
+  .piede { font-size: 15px; }
+  .conta { font-size: 21px; }
+
+  /* copertina e chiusura */
+  .copertina { background: linear-gradient(135deg, var(--figb-scuro), var(--figb) 55%, var(--figb-chiaro)); color: #fff; justify-content: center; padding-left: 96px; }
+  .copertina::before { display: none; }
+  .copertina::after { content: "♠ ♥ ♦ ♣"; position: absolute; right: -30px; top: -70px; font-size: 280px; letter-spacing: -24px; opacity: 0.07; white-space: nowrap; }
+  .copertina .occhiello { font-size: 20px; }
+  .copertina h1 { color: #fff; font-size: 82px; margin: 14px 0 20px; max-width: 980px; }
+  .copertina .sotto { font-size: 28px; opacity: 0.9; max-width: 900px; line-height: 1.35; }
+  .copertina .logo { position: absolute; right: 64px; bottom: 44px; background: #fff; border-radius: 12px; padding: 8px 14px; }
+  .copertina .logo img { height: 36px; display: block; }
+
+  /* mattoni */
+  .riquadro { background: var(--carta); border: 1px solid var(--linea); border-radius: 18px; padding: 24px 30px; }
+  .testo { font-size: 24px; line-height: 1.4; }
+  .testo b { color: var(--figb); }
+  .banda { display: inline-block; background: var(--figb); color: #fff; font-weight: 700; font-size: 22px; border-radius: 10px; padding: 8px 18px; }
+  .banda.oro { background: var(--oro-velo); color: #7a5a12; }
+  .banda.verde { background: var(--verde-velo); color: var(--verde); }
+  .centro { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .riga { display: flex; align-items: center; gap: 40px; }
+  .freccia { color: var(--oro); font-size: 46px; font-weight: 800; line-height: 1; }
+  .citazione { font-family: "Bricolage Grotesque", sans-serif; font-size: 40px; font-weight: 700; line-height: 1.2; color: var(--inchiostro); }
+  .citazione::before { content: "«"; color: var(--oro); } .citazione::after { content: "»"; color: var(--oro); }
+  .grande-fig { --fs: 46px; }
+  .fig4 { --fs: 34px; }
+  .domanda { font-size: 28px; font-weight: 700; color: var(--figb); }
+  .risposta { background: var(--verde-velo); border-radius: 14px; padding: 14px 20px; font-size: 22px; line-height: 1.4; color: #134e3a; }
+  .risposta b { color: var(--verde); }
+  .nota { font-size: 20px; color: var(--tenue); }
+
+  .passi { display: grid; gap: 16px; }
+  .passo { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 18px; background: var(--carta); border: 1px solid var(--linea); border-radius: 16px; padding: 14px 22px; font-size: 26px; font-weight: 600; }
+  .passo .n { width: 52px; height: 52px; border-radius: 50%; background: var(--figb); color: #fff; display: grid; place-items: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 28px; font-weight: 800; }
+
+  /* tavolo dei ruoli */
+  .ruoli { display: grid; grid-template-columns: 430px 1fr; gap: 50px; align-items: center; flex: 1; }
+  .tavolo-ruoli { position: relative; width: 430px; height: 430px; }
+  .tavolo-ruoli svg { position: absolute; inset: 0; }
+  .tavolo-ruoli .panno { position: absolute; left: 140px; top: 140px; width: 150px; height: 150px; border-radius: 22px; background: radial-gradient(circle at 50% 45%, #1f7a4f, #135c3a); color: #fff; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); grid-template-areas: ". n ." "o . e" ". s ."; place-items: center; font-weight: 700; font-size: 22px; }
+  .tavolo-ruoli .posto { position: absolute; width: 132px; text-align: center; background: var(--carta); border: 2px solid var(--figb); border-radius: 14px; padding: 8px 6px; }
+  .tavolo-ruoli .posto b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 30px; color: var(--figb); line-height: 1; }
+  .tavolo-ruoli .posto span { font-size: 18px; font-weight: 700; }
+  .ruoli ol { list-style: none; display: grid; gap: 18px; }
+  .ruoli li { font-size: 24px; line-height: 1.35; display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; }
+  .ruoli li .n { width: 46px; height: 46px; border-radius: 50%; background: var(--figb); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 24px; }
+  .ruoli li b { color: var(--figb); }
+
+  /* attacco */
+  .semi-grandi { display: flex; gap: 46px; font-size: 92px; line-height: 1; justify-content: center; }
+  .ranghi { display: flex; gap: 8px; justify-content: center; }
+  .ranghi span { width: 66px; height: 82px; border-radius: 10px; background: var(--carta); border: 1px solid #d6d2c7; box-shadow: 0 1px 2px rgba(26,26,46,.12); display: grid; place-items: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 34px; font-weight: 800; }
+  .sequenze { display: grid; gap: 16px; }
+  .sequenze div { display: flex; align-items: baseline; gap: 22px; font-size: 30px; }
+  .sequenze b { font-family: "Bricolage Grotesque", sans-serif; font-size: 40px; color: var(--figb); min-width: 150px; }
+  .sequenze span { color: var(--tenue); font-size: 24px; }
+  .attacco-tab td, .attacco-tab th { font-size: 26px; padding: 18px 20px; }
+  .attacco-tab th { font-size: 15px; }
+  .attacco-tab td.k { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 32px; text-align: center; }
+  .attacco-tab td.p { color: var(--verde); } .attacco-tab td.ng { color: var(--rosso); } .attacco-tab td.ne { color: var(--figb); }
+  .mani-attacco { display: flex; gap: 60px; justify-content: center; }
+  .mani-attacco .mano { --fs: 28px; gap: 4px; }
+  .mani-attacco .esito { margin-top: 14px; }
+  .lead-mini { display: grid; gap: 18px; }
+  .lead-mini div { display: flex; align-items: center; gap: 22px; font-size: 26px; }
+  .lead-mini .chip { font-size: 22px; padding: 6px 16px; }
+
+  /* deduzioni */
+  .tre { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; flex: 1; }
+  .tre .riquadro { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px; }
+  .tre .fig4 { --fs: 22px; }
+  .tre .riquadro .fig4 { margin-top: 6px; }
+  .tre p { font-size: 20px; line-height: 1.35; text-align: center; }
+  .cerchio { outline: 3px solid var(--rosso); outline-offset: 2px; border-radius: 50%; }
+  .flusso { display: grid; justify-items: center; gap: 12px; flex: 1; align-content: center; }
+  .flusso .coppia-box { display: flex; gap: 24px; }
+  .flusso .box { background: var(--figb-velo); color: var(--figb); border-radius: 14px; padding: 16px 26px; font-size: 24px; font-weight: 700; text-align: center; min-width: 360px; }
+  .flusso .box.forte { background: var(--figb); color: #fff; font-size: 40px; font-family: "Bricolage Grotesque", sans-serif; padding: 18px 60px; }
+  .flusso .box.forte small { display: block; font-family: "Inter", sans-serif; font-size: 20px; font-weight: 600; opacity: .85; margin-top: 4px; }
+  .flusso .box.oro { background: var(--oro-velo); color: #7a5a12; }
+</style>
+</head>
+<body>
+
+<!-- 1 · copertina -->
+<section class="slide copertina">
+  <div class="occhiello">Il gioco della carta</div>
+  <h1 class="display">Introduzione e vincenti e affrancabili</h1>
+  <p class="sotto">Chi gioca, chi difende, quante prese ci sono già e da dove arrivano le altre.</p>
+  <div class="logo"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 2 · senso orario -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Introduzione</div>
+  <h1 class="display">Si gioca in senso orario</h1>
+  <div class="ruoli">
+    <div class="tavolo-ruoli">
+      <svg viewBox="0 0 430 430" aria-hidden="true">
+        <defs><marker id="punta" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c8a44e"/></marker></defs>
+        <path d="M 95 120 A 160 160 0 1 1 120 335" fill="none" stroke="#c8a44e" stroke-width="10" stroke-linecap="round" marker-end="url(#punta)" opacity="0.85"/>
+      </svg>
+      <div class="panno"><span style="grid-area:n">N</span><span style="grid-area:o">O</span><span style="grid-area:e">E</span><span style="grid-area:s">S</span></div>
+      <div class="posto" style="left:149px;top:40px"><b>2</b><span>Morto</span></div>
+      <div class="posto" style="left:0;top:178px"><b>1</b><span>Attacco</span></div>
+      <div class="posto" style="right:0;top:178px"><b>4</b><span>Difensore</span></div>
+      <div class="posto" style="left:149px;bottom:40px"><b>3</b><span>Giocante</span></div>
+    </div>
+    <ol>
+      <li><span class="n">1</span><span><b>Attacco</b>: la prima carta della prima presa.</span></li>
+      <li><span class="n">2</span><span><b>Morto</b>: il giocatore alla sinistra di chi attacca. Scopre le sue carte sul tavolo.</span></li>
+      <li><span class="n">3</span><span><b>Giocante</b>: il compagno del morto. Gioca le carte di tutti e due.</span></li>
+      <li><span class="n">4</span><span><b>Difensore</b>, insieme a chi ha attaccato.</span></li>
+    </ol>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 3 · figura -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Introduzione</div>
+  <h1 class="display">La figura</h1>
+  <div class="centro">
+    <div class="riga" style="justify-content:space-between;gap:60px">
+      <p class="citazione" style="max-width:640px">L'insieme delle carte possedute dai due compagni in un colore di una smazzata</p>
+      <div class="riquadro"><div data-figura="S:AQ8/KJ10976" class="grande-fig"></div></div>
+    </div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 4 · vincenti e affrancabili -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Vincenti e affrancabili</div>
+  <h1 class="display">Che differenza c'è?</h1>
+  <div class="colonne">
+    <div class="blocco">
+      <p class="def">È <b>vincente</b> una carta che non può essere superata da nessun'altra.</p>
+      <div class="esempi">
+        <div class="es"><span data-carte="S:A753" style="--w:84px"></span><span class="conta verde">Vincenti<b>1</b></span></div>
+        <div class="es"><span data-carte="S:AKQ3" style="--w:84px"></span><span class="conta verde">Vincenti<b>3</b></span></div>
+      </div>
+    </div>
+    <div class="blocco">
+      <p class="def">È <b>affrancabile</b> una carta che potrebbe diventare vincente dopo un'opportuna manovra.</p>
+      <div class="esempi">
+        <div class="es"><span data-carte="H:KQ" data-cede="0" style="--w:84px"></span><span class="conta oro">Affrancabili<b>1</b></span></div>
+        <div class="es"><span data-carte="H:KQJ10" data-cede="0" style="--w:84px"></span><span class="conta oro">Affrancabili<b>3</b></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="massima">Bisogna far diventare vincenti le affrancabili</div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 5 · il giocante conta -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Vincenti e affrancabili</div>
+  <h1 class="display">Il giocante conta, seme per seme</h1>
+  <div class="conteggio">
+    <div class="coppia">
+      <span class="eti">NORD · MORTO</span>
+      <div data-mano="AQ2.832.753.KQ83"></div>
+      <div data-mano="KJ83.AKQJ.AK.J109"></div>
+      <span class="eti">SUD · GIOCANTE</span>
+    </div>
+    <table>
+      <tr><th>Seme</th><th style="text-align:center">Vincenti</th><th style="text-align:center">Affrancabili</th><th>Quali</th></tr>
+      <tr><td><span class="s-S">♠</span> Picche</td><td class="n v">4</td><td class="n a">0</td><td class="c">A K Q J</td></tr>
+      <tr><td><span class="s-H">♥</span> Cuori</td><td class="n v">4</td><td class="n a">0</td><td class="c">A K Q J</td></tr>
+      <tr><td><span class="s-D">♦</span> Quadri</td><td class="n v">2</td><td class="n a">0</td><td class="c">A K</td></tr>
+      <tr><td><span class="s-C">♣</span> Fiori</td><td class="n v">0</td><td class="n a">3</td><td class="c">Q J 10 · ceduto l'Asso</td></tr>
+      <tr class="tot"><td>Totale</td><td class="n v">10</td><td class="n a">3</td><td></td></tr>
+    </table>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 6 · numero massimo di prese -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Vincenti e affrancabili</div>
+  <h1 class="display">Quante prese può dare un seme?</h1>
+  <div class="riga" style="flex:1;gap:70px">
+    <div class="riquadro"><div data-figura="S:AQ8/KJ10976" class="grande-fig"></div></div>
+    <div style="display:grid;gap:26px;flex:1">
+      <div class="riga" style="justify-content:space-between;gap:24px">
+        <span class="testo">Quante <b>vincenti</b> abbiamo tra mano e morto?</span>
+        <span class="freccia">→</span><span class="display" style="font-size:64px;font-weight:800;color:var(--verde)">9</span>
+      </div>
+      <div class="riga" style="justify-content:space-between;gap:24px">
+        <span class="testo">Qual è il <b>numero massimo di prese</b> realizzabili nel seme?</span>
+        <span class="freccia">→</span><span class="display" style="font-size:64px;font-weight:800;color:var(--rosso)">6</span>
+      </div>
+    </div>
+  </div>
+  <div class="massima">Il numero massimo di prese in un seme è pari o inferiore al numero di carte del lato lungo</div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 7 · il piano di gioco -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Vincenti e affrancabili</div>
+  <h1 class="display">Il piano di gioco</h1>
+  <p class="testo" style="margin:-8px 0 20px">Dopo l'attacco, <b>prima di giocare la prima carta</b>:</p>
+  <div class="passi" style="flex:1;align-content:center">
+    <div class="passo"><span class="n">1</span><span>Contare le prese vincenti a disposizione</span></div>
+    <div class="passo"><span class="n">2</span><span>Individuare i colori dove trovare altre prese</span></div>
+    <p class="nota" style="padding-left:92px">e… generalmente…</p>
+    <div class="passo"><span class="n">3</span><span>Giocare i semi di affrancamento <span class="freccia" style="font-size:30px;margin:0 10px">→</span> poi giocare le vincenti e le carte affrancate</span></div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 8 · scopo dei difensori -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Lo scopo dei difensori è lo stesso</h1>
+  <div class="centro" style="gap:22px">
+    <div class="massima" style="margin:0;font-size:30px">Realizzare il maggior numero di prese</div>
+    <div class="riquadro testo" style="text-align:center">Anche i difensori devono fare il piano di <b>«controgioco»</b></div>
+    <div class="riquadro" style="text-align:center;background:var(--figb-velo);border-color:transparent">
+      <p class="display" style="font-size:38px;font-weight:800;color:var(--figb)">Il controgioco inizia dall'attacco</p>
+      <p class="testo" style="margin-top:8px">… e prosegue dopo che vengono mostrate le carte del morto</p>
+    </div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 9 · attacco: un vantaggio -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">L'attacco: un vantaggio da non sprecare</h1>
+  <div class="centro" style="gap:26px">
+    <div style="display:grid;gap:14px;justify-items:center">
+      <span class="banda">Il colore d'attacco</span>
+      <div class="semi-grandi"><span class="s-S">♠</span><span class="s-H">♥</span><span class="s-D">♦</span><span class="s-C">♣</span></div>
+    </div>
+    <div style="display:grid;gap:14px;justify-items:center">
+      <span class="banda">La carta d'attacco</span>
+      <div class="ranghi"><span>A</span><span>K</span><span>Q</span><span>J</span><span>10</span><span>9</span><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span></div>
+    </div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 10 · sequenza -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">La sequenza</h1>
+  <div class="riga" style="flex:1;gap:70px;align-items:center">
+    <p class="citazione" style="max-width:520px">Insieme di 3 carte avente valore contiguo o «quasi»</p>
+    <div class="riquadro sequenze" style="flex:1">
+      <div><b>KQJ…</b></div>
+      <div><b>QJ10…</b></div>
+      <div><b>KQ10…</b><span>sequenza interrotta</span></div>
+      <div><b>AQJ…</b><span>sequenza interrotta</span></div>
+    </div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 11 · attacco a senza atout -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">L'attacco senza seme privilegiato</h1>
+  <div class="colonne">
+    <div class="blocco" style="justify-content:flex-start">
+      <span class="banda" style="align-self:flex-start">In che seme?</span>
+      <p class="display" style="font-size:44px;font-weight:800;color:var(--figb)">Il più «lungo»</p>
+      <p class="testo">e, a parità di lunghezza, il meglio «onorato».</p>
+    </div>
+    <div class="blocco" style="justify-content:flex-start">
+      <span class="banda" style="align-self:flex-start">Con che carta?</span>
+      <div class="passi" style="gap:12px">
+        <div class="passo" style="font-size:24px;padding:10px 16px"><span class="n">1</span><span>Testa di sequenza</span></div>
+        <div class="passo" style="font-size:24px;padding:10px 16px"><span class="n">2</span><span>Piccola con onore</span></div>
+        <div class="passo" style="font-size:24px;padding:10px 16px"><span class="n">3</span><span>Intermedia</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:18px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 12a · esempi di attacco -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Esempi di attacco</h1>
+  <div class="riga" style="flex:1;gap:50px;align-items:center">
+    <div class="riquadro lead-mini" style="align-content:center">
+      <div><span class="display" style="font-size:34px;font-weight:800;min-width:150px">K10543</span><span class="freccia" style="font-size:30px">→</span><span class="chip verde">il 3</span></div>
+      <div><span class="display" style="font-size:34px;font-weight:800;min-width:150px">AJ952</span><span class="freccia" style="font-size:30px">→</span><span class="chip verde">il 2</span></div>
+      <div><span class="display" style="font-size:34px;font-weight:800;min-width:150px">108654</span><span class="freccia" style="font-size:30px">→</span><span class="chip verde">l'8</span></div>
+    </div>
+    <div class="mani-attacco" style="flex:1;align-items:center">
+      <div class="riquadro" style="display:grid;justify-items:center"><div data-mano="A4.94.A762.KQJ92"></div><span class="chip verde esito" style="font-size:24px">attacco K<span class="s-C">♣</span></span></div>
+      <div class="riquadro" style="display:grid;justify-items:center"><div data-mano="J104.QJ103.J762.K2"></div><span class="chip verde esito" style="font-size:24px">attacco Q<span class="s-H">♥</span></span></div>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:18px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 12b · cosa dice la carta d'attacco -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Che cosa dice l'attacco con un onore</h1>
+  <div class="centro"><table class="attacco-tab">
+    <tr><th>Figure di carte</th><th style="text-align:center">Carta</th><th style="text-align:center">Promette</th><th style="text-align:center">Nega</th><th style="text-align:center">Non esclude</th></tr>
+    <tr><td>KQJ… &nbsp; KQ10…</td><td class="k">K</td><td class="k p">Q</td><td class="k ng">A</td><td class="k ne"></td></tr>
+    <tr><td>QJ10… &nbsp; QJ9… &nbsp; AQJ…</td><td class="k">Q</td><td class="k p">J</td><td class="k ng">K</td><td class="k ne">A</td></tr>
+    <tr><td>J109… &nbsp; J108… &nbsp; AJ10… &nbsp; KJ10…</td><td class="k">J</td><td class="k p">10</td><td class="k ng">Q</td><td class="k ne">A e K</td></tr>
+    <tr><td>1098… &nbsp; Q109… &nbsp; A109… &nbsp; K109…</td><td class="k">10</td><td class="k p">9</td><td class="k ng">J</td><td class="k ne">A K Q</td></tr>
+  </table></div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 13a · terzo di mano: domanda -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Il terzo di mano</h1>
+  <div class="riga" style="gap:20px;margin-bottom:20px">
+    <span class="banda" style="font-size:24px">Attacco = interesse nel seme</span>
+    <span class="freccia">→</span>
+    <span class="banda oro" style="font-size:22px">Il terzo di mano deve cercare di vincere la presa e rigiocare nel colore</span>
+  </div>
+  <div class="colonne">
+    <div class="blocco" style="align-items:center;gap:18px">
+      <div data-figura4="C:82/4/Q96/" class="fig4" style="--fs:42px"></div>
+      <p class="domanda">Ovest attacca con il 4: che carta gioca Est?</p>
+    </div>
+    <div class="blocco" style="align-items:center;gap:18px">
+      <div data-figura4="C:J72/3/Q1064/" class="fig4" style="--fs:42px"></div>
+      <p class="domanda">Ovest attacca con il 3: che carta gioca Est?</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:16px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 13b · terzo di mano: risposta -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Il terzo di mano: le risposte</h1>
+  <div class="colonne">
+    <div class="blocco" style="align-items:center;gap:20px">
+      <div data-figura4="C:82/KJ754/Q96/A103" class="fig4"></div>
+      <div class="riga" style="gap:20px"><span data-carte="C:Q" style="--w:62px"></span>
+        <p class="risposta">Est gioca la <b>Dama</b>: con una cartina Sud vincerebbe con il 10 e farebbe 2 prese.</p></div>
+    </div>
+    <div class="blocco" style="align-items:center;gap:20px">
+      <div data-figura4="C:J72/K953/Q1064/A8" class="fig4"></div>
+      <div class="riga" style="gap:20px"><span data-carte="C:Q10" style="--w:62px"></span>
+        <p class="risposta">La <b>Dama</b> se Nord ha impegnato il J, il <b>10</b> se Nord ha giocato cartina.</p></div>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:16px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 14a · in difesa: domanda -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">In difesa: le carte equivalenti</h1>
+  <div class="massima" style="margin:0 0 22px;font-size:24px">Quando si gioca una carta in un seme mosso da altri, si gioca la più bassa delle carte equivalenti</div>
+  <div class="colonne">
+    <div class="blocco" style="align-items:center;gap:18px">
+      <div data-figura4="C:82/4/KQ96/" class="fig4" style="--fs:40px"></div>
+      <p class="domanda">Ovest attacca con il 4: che carta gioca Est?</p>
+    </div>
+    <div class="blocco" style="align-items:center;gap:18px">
+      <div data-figura4="C:1098/3/QJ64/" class="fig4" style="--fs:40px"></div>
+      <p class="domanda">Ovest attacca con il 3: che carta gioca Est?</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:16px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 14b · in difesa: risposta -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">In difesa: le risposte</h1>
+  <div class="massima" style="margin:0 0 22px;font-size:24px">Quando si gioca una carta in un seme mosso da altri, si gioca la più bassa delle carte equivalenti</div>
+  <div class="colonne">
+    <div class="blocco" style="align-items:center;gap:18px">
+      <div data-figura4="C:82/4/KQ96/" class="fig4"></div>
+      <div class="riga" style="gap:20px"><span data-carte="C:Q" style="--w:62px"></span><p class="risposta">Est gioca la <b>Dama</b>, la più bassa fra K e Q.</p></div>
+    </div>
+    <div class="blocco" style="align-items:center;gap:18px">
+      <div data-figura4="C:1098/3/QJ64/" class="fig4"></div>
+      <div class="riga" style="gap:20px"><span data-carte="C:J" style="--w:62px"></span><p class="risposta">Est gioca il <b>Fante</b>, il più basso fra Q e J.</p></div>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:16px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 15 · durante il gioco -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Durante il gioco…</h1>
+  <div class="flusso">
+    <div class="coppia-box">
+      <div class="box">Codifica</div>
+      <div class="box">Carte del morto e carte giocate (e non giocate)</div>
+    </div>
+    <span class="freccia">↓</span>
+    <div class="box forte">Deduzioni<small>del giocante e dei difensori</small></div>
+    <span class="freccia">↓</span>
+    <div class="box oro">Messa a punto del piano di gioco (dinamica)</div>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 16 · deduzioni del primo di mano -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display" style="margin-bottom:18px">Le deduzioni del primo di mano</h1>
+  <div class="tre">
+    <div class="riquadro">
+      <div data-figura4="C:842/K9653/J??/Q??" class="fig4"></div>
+      <p><b>Ovest:</b> «Ho attaccato con il 3, il mio compagno ha messo il J e Sud ha vinto con la Q…»</p>
+      <p class="domanda" style="font-size:24px">Chi ha l'Asso?</p>
+    </div>
+    <div class="riquadro">
+      <div data-figura4="C:842/K9653/J??/AQ??" class="fig4"></div>
+      <p class="risposta" style="font-size:20px">Lo ha <b>Sud</b>: Est con AJ avrebbe preso con l'Asso e giocato il J.</p>
+      <p class="domanda" style="font-size:24px">Chi ha il 10?</p>
+    </div>
+    <div class="riquadro">
+      <div data-figura4="C:842/K9653/J7/AQ10" class="fig4"></div>
+      <p class="risposta" style="font-size:20px">Lo ha <b>Sud</b>: Est con J10 avrebbe giocato il 10.</p>
+    </div>
+  </div>
+  <div class="piede" style="position:static;margin-top:14px"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 17a · evitare di bloccare: domanda -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Evitare di bloccare il colore</h1>
+  <div class="riga" style="flex:1;justify-content:center;gap:80px">
+    <div class="riquadro"><div data-figura4="C:872/K/A4/" class="fig4" style="--fs:40px"></div></div>
+    <p class="domanda" style="font-size:34px;max-width:420px">Ovest attacca con il <span style="color:var(--rosso)">Re</span>: che carta gioca Est?</p>
+  </div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 17b · evitare di bloccare: risposta -->
+<section class="slide">
+  <div class="occhiello">Il gioco della carta · Il punto di vista dei difensori</div>
+  <h1 class="display">Evitare di bloccare il colore</h1>
+  <div class="riga" style="flex:1;justify-content:center;gap:60px">
+    <div class="riquadro"><div data-figura4="C:872/KQ1053/A4/J96" class="fig4"></div></div>
+    <div style="display:grid;gap:18px;justify-items:start">
+      <p class="testo">Il Re d'attacco viene da <b>KQJ…</b> o <b>KQ10…</b>, quindi:</p>
+      <div class="riga" style="gap:18px"><span data-carte="C:A" style="--w:70px"></span><span class="testo">e poi il</span><span data-carte="C:4" style="--w:70px"></span></div>
+    </div>
+  </div>
+  <div class="massima" style="font-size:23px">A meno di casi particolari, se in presa o alla prima occasione, rigiocare nel colore d'attacco</div>
+  <div class="piede"><span>Il gioco della carta</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 18 · giochiamo -->
+<section class="slide copertina">
+  <div class="occhiello">Il gioco della carta</div>
+  <h1 class="display">Giochiamo!</h1>
+  <p class="sotto">Smazzate libere</p>
+  <div class="logo"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<script src="../carte.js"></script>
+</body>
+</html>

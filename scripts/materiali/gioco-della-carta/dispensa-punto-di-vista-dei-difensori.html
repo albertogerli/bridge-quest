@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Il punto di vista dei difensori — dispensa</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../dispensa.css">
+<style>
+  table.attacchi { border-collapse: collapse; margin: 6px 0 10px; font-size: 10pt; }
+  table.attacchi td { padding: 3px 10px; border-top: 1px solid var(--linea); vertical-align: top; }
+  table.attacchi td:first-child { font-weight: 700; white-space: nowrap; color: var(--inchiostro); }
+  table.attacchi td:nth-child(2) { font-weight: 700; color: var(--figb); white-space: nowrap; }
+  table.attacchi.terzi td:nth-child(2) { font-weight: 400; color: inherit; white-space: normal; }
+  .sequenze { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 2px 0 8px; font-weight: 700; color: var(--inchiostro); }
+  .sequenze span { background: var(--avorio); border: 1px solid var(--linea); border-radius: 6px; padding: 1px 8px; }
+  .tre-mani { display: flex; gap: 18px; justify-content: center; margin: 4px 0 10px; }
+  .tre-mani .fig .conto { font-size: 9pt; }
+  .nota-ignote { font-size: 8.5pt; color: var(--tenue); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<header class="testata">
+  <div class="occhiello">Il gioco della carta · Dispensa</div>
+  <h1 class="display">Il punto di vista dei difensori</h1>
+  <p class="sotto">L’attacco, il terzo di mano e le deduzioni che la coppia in difesa può fare carta dopo carta.</p>
+  <img src="../../../public/logo-bridgelab.svg" alt="">
+</header>
+
+<p>Analogamente al giocante, l’obiettivo dei difensori è quello di realizzare il maggior numero di prese e, se possibile, almeno quelle che consentono di non far mantenere l’impegno agli avversari (contratto, di cui parleremo in seguito).</p>
+<p>Se la linea Nord-Sud si è impegnata (successivamente vedremo come) a realizzare almeno 9 prese senza aver definito alcun seme privilegiato (di questo ne parleremo in seguito), la linea (coppia di giocatori) Est-Ovest deve cercare di realizzare almeno 5 prese, in maniera da far cadere l’impegno degli avversari.</p>
+<p>L’<b>attacco</b> (prima carta giocata della prima presa) è un diritto che spetta al giocatore seduto alla sinistra del giocante e, pertanto, rappresenta per i difensori una straordinaria opportunità per avviare l’implementazione di una propria strategia finalizzata al raggiungimento del suddetto obiettivo.</p>
+<p>A volte il colore di attacco si rivelerà quello giusto, altre volte no; dopo aver attaccato, quello che entrambi i difensori dovranno fare è guardare il morto e, in funzione delle carte possedute, giocare nei colori dove la loro coppia potrebbe realizzare immediatamente (vincere) o in un secondo momento (affrancare) il maggior numero di prese.</p>
+<p>Il dilemma a cui è sottoposto il difensore a cui spetta attaccare è caratterizzato dalle seguenti due domande:</p>
+<ul>
+  <li>«dove» (in quale seme) attaccare?</li>
+  <li>«come» (con quale carta) attaccare?</li>
+</ul>
+<p>Anche i difensori non devono aver fretta di incassare le carte vincenti, carte che possono essere utili per realizzare prese con carte che vengono affrancate mediante manovre del tipo già visto precedentemente.</p>
+<p>Quanto segue, per il momento, si riferisce a un tipo di gioco in cui non sono stati definiti semi predominanti (che vedremo in seguito).</p>
+<p>Pertanto, la strategia da adottare in fase di attacco è di giocare in un colore che può essere oggetto di affrancamento: in generale, un colore dove si possiede un numero di carte superiore alla media (colore in cui si possiedono almeno 4 carte).</p>
+<div class="regola">Scegliete il colore più lungo e, se ne avete più di uno di pari lunghezza, scegliete il più onorato.</div>
+
+<p>Se il bridge fosse un gioco individuale, chi attacca potrebbe ragionevolmente pensare che gli convenga «camuffare» le sue carte (in maniera da depistare il giocante nel formulare il suo piano di gioco), ma dovendo lavorare in coppia questa strategia non sarebbe vincente. In fase di attacco, e anche durante lo svolgimento del gioco, in controgioco, è necessario avere un comune codice di riferimento (linguaggio delle carte) affinché il compagno possa effettuare deduzioni che gli consentano a sua volta di comportarsi nel modo più vantaggioso.</p>
+<p>Per impostare il nostro linguaggio, dividiamo le 13 carte in due famiglie: una contiene le cinque carte più alte, l’altra le altre 8 carte restanti. A, K, Q, J, 10 vengono definiti <b>onori</b> e 9, 8, 7, 6, 5, 4, 3, 2 vengono definite <b>cartine</b>.</p>
+
+<h2>Con che carta attaccare</h2>
+<p>Una volta definito il colore in cui attaccare, resta da sciogliere l’altra questione e, precisamente, con che carta attaccare. Per rispondere a quest’altra domanda è bene distinguere i seguenti casi, menzionati in ordine di priorità d’attacco:</p>
+<ol type="a">
+  <li>
+    <p>nel colore possediamo una serie di carte alte (minimo 3) consecutive (o quasi), ad esempio:</p>
+    <div class="sequenze"><span>KQJ…</span><span>QJ10…</span><span>KQ10…</span><span>QJ9…</span><span>AQJ…</span></div>
+    <p>In uno dei suddetti casi (menzionati a titolo di esempio) possiamo affermare di possedere una «sequenza». Nei casi in cui possediamo 2 carte alte consecutive e una non adiacente ma superiore, o «quasi» consecutive, parleremo di sequenza «interrotta».</p>
+    <div class="regola blu">In questo caso si attacca con la <b>testa di sequenza</b>, intendendo la carta più alta tra quelle adiacenti.</div>
+  </li>
+  <li><p>Nel colore possediamo almeno il J (onore che rappresenta una «figura») ma non possediamo una sequenza. In questo caso è bene attaccare con la carta più piccola che si possiede.</p></li>
+  <li><p>Nel colore non sono presenti sequenze né carte superiori al 10. In questo caso si attacca con la seconda carta dall’alto.</p></li>
+</ol>
+
+<table class="attacchi">
+  <tr><td>KQJ103</td><td>il Re</td><td>nega l’Asso, promette la Dama</td></tr>
+  <tr><td>QJ93</td><td>la Dama</td><td>nega il Re, promette il Fante</td></tr>
+  <tr><td>Q10976</td><td>il 10</td><td>nega il Fante, non esclude Asso o Re o Dama, e promette il 9</td></tr>
+  <tr><td>J1094</td><td>il Fante</td><td>nega la Dama, non esclude Asso o Re, promette il 10</td></tr>
+  <tr><td>AJ10943</td><td>il Fante</td><td>nega la Dama, non esclude Asso o Re, promette il 10</td></tr>
+  <tr><td>K10543</td><td>il 3</td><td>possediamo almeno un onore</td></tr>
+  <tr><td>AJ952</td><td>il 2</td><td>possediamo almeno un onore</td></tr>
+  <tr><td>108654</td><td>l’8</td><td>non possediamo alcun onore</td></tr>
+</table>
+
+<div class="esempio">
+  <span class="etichetta">Esempio · dove attaccare</span>
+  <div class="tre-mani">
+    <div class="fig"><div class="mano-sola" data-mano="J104.QJ103.J762.K2"></div><span class="conto">attacco a <b>Cuori</b></span></div>
+    <div class="fig"><div class="mano-sola" data-mano="Q9732.KQ.AJ62.92"></div><span class="conto">attacco a <b>Picche</b></span></div>
+    <div class="fig"><div class="mano-sola" data-mano="A4.94.A762.KQJ92"></div><span class="conto">attacco a <b>Fiori</b></span></div>
+  </div>
+  <p>Se dovete «attaccare» con queste ultime carte, senza nessun dubbio il colore da scegliere immediatamente è Fiori. Iniziare incassando i due Assi sarebbe insensato: gli avversari ringrazierebbero, ritrovandosi Re, Dame e Fanti graziosamente affrancati, senza fatica.</p>
+</div>
+
+<h2>Il terzo di mano</h2>
+<p>A seguito dell’attacco dell’avversario, colui che diventa «morto» scopre le sue carte posizionandole sul tavolo (in gergo bridgistico si dice «scende il morto») e il giocante può impostare la strategia da adottare per realizzare il maggior numero di prese.</p>
+<p>Per i difensori, anche dopo l’attacco, la questione è differente: anche dopo aver visto le carte del morto, i difensori non sanno come sono distribuite le carte restanti tra il giocante e il proprio compagno e devono cercare di comprenderlo attraverso elementi a loro disposizione, tra i quali le carte che vengono giocate (dal giocante e dal proprio compagno) man mano che il gioco procede. In altre parole, i 3 giocatori che hanno le proprie carte coperte devono prestare molta attenzione al cosiddetto «linguaggio delle carte», per i difensori spesso frutto di accordi (leciti) tra di loro.</p>
+<p>Pertanto, il «piano di controgioco» è un piano dinamico basato essenzialmente su deduzioni che possono essere fatte durante il gioco.</p>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="corpo">
+    <div class="fig" data-figura4="S:J54/K9732/?10/?A"></div>
+    <div class="testo"><p>Attacco con il 2, 4 di Nord, 10 di Est e Asso di Sud. Con AQ… Sud avrebbe vinto con la Dama. Quindi la Dama è in Est (… e il colore è pronto per essere incassato!)</p></div>
+  </div>
+  <p class="nota-ignote">? = carte che chi difende non conosce.</p>
+</div>
+
+<p>Per quanto riguarda il difensore compagno dell’attaccante, detto «terzo di mano» (in quanto gioca la sua prima carta dopo l’attacco e la carta del morto indicata dal giocante), i suoi compiti principali derivano dalla convenienza:</p>
+
+<h3>a) Dovrà cercare di vincere la presa, ed eventualmente sacrificare i suoi onori allo scopo di affrancare quelli del suo compagno</h3>
+<div class="esempio">
+  <span class="etichetta">Esempi</span>
+  <div class="corpo">
+    <div class="fig" data-figura4="H:82/KJ754/Q96/A103"></div>
+    <div class="testo"><p>Ovest attacca con il 4: Est deve giocare la Dama; se giocasse una cartina, Sud vincerebbe con il 10 e farebbe 2 prese.</p></div>
+  </div>
+  <div class="corpo" style="margin-top:10px">
+    <div class="fig" data-figura4="D:J72/K953/Q1064/A8"></div>
+    <div class="testo"><p>Ovest attacca con il 3: Est al suo turno giocherà la Dama se Nord ha impegnato il J, e il 10 se Nord ha giocato cartina.</p></div>
+  </div>
+</div>
+
+<h3>b) Dovrà evitare di bloccare il colore di attacco, quindi se ha onori molto corti deve giocarli alla prima presa</h3>
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="corpo">
+    <div class="fig" data-figura4="C:872/KQ1053/A4/J96"></div>
+    <div class="testo"><p>Ovest attacca con il Re; Est sa che tale carta proviene da KQJ o KQ10, quindi supera subito con il suo Asso e rigioca la cartina. Ovest incasserà 5 prese al volo.</p></div>
+  </div>
+</div>
+
+<h3>c) Dovrà ricordarsi di rigiocare nel colore di attacco del compagno a ogni occasione</h3>
+<p>… a meno che la figura che vede al morto, unitamente alle carte possedute, sia tale da orientarsi su di un cambio di colore.</p>
+
+<p>Anche per il terzo di mano esistono precisi accordi, affinché la coppia possa ottenere la massima resa dalle carte:</p>
+<div class="regola">Quando ha carte «equivalenti», il difensore terzo di mano gioca la più bassa della sequenza.</div>
+<p>Si comporta, quindi, esattamente al contrario di chi muove per primo il colore (che gioca la testa della sequenza). Avendo:</p>
+<table class="attacchi terzi">
+  <tr><td>KQJ…</td><td>se siete i primi a muovere, giocate il Re; se siete terzi, il J</td></tr>
+  <tr><td>AKQ…</td><td>se siete i primi a muovere, giocate l’Asso; se siete terzi, la Q</td></tr>
+  <tr><td>J109…</td><td>se siete i primi a muovere, giocate il J; se siete terzi, il 9</td></tr>
+</table>
+
+<div class="esempio">
+  <span class="etichetta">Esempi</span>
+  <div class="corpo">
+    <div class="fig" data-figura4="S:754/2/KQ106/?"></div>
+    <div class="testo"><p>Ovest attacca con il 2: Est deve giocare la Dama (la più bassa delle equivalenti).</p></div>
+  </div>
+  <div class="corpo" style="margin-top:10px">
+    <div class="fig" data-figura4="H:543/6/AK2/?"></div>
+    <div class="testo"><p>Ovest attacca con il 6: Est deve vincere la presa con il Re (la più bassa delle equivalenti).</p></div>
+  </div>
+</div>
+
+<p>La deduzione che può fare il difensore compagno del terzo di mano è che:</p>
+<div class="regola">La carta giocata dal terzo di mano, quando è impegnata per prendere, esclude il possesso della carta immediatamente inferiore.</div>
+<p>Questo consente al partner, a volte, di avere delle certezze assolute.</p>
+
+<div class="esempio">
+  <span class="etichetta">Esempi</span>
+  <div class="corpo">
+    <div class="fig" data-figura4="D:842/K9653/?J/?Q"></div>
+    <div class="testo"><p>Avete attaccato con il 3, Est ha impegnato il Fante e Sud ha vinto con la Dama. Deduzione dovuta agli accordi: Sud ha il 10 (Est con J10 avrebbe giocato il 10). Deduzione per logica: Sud ha anche l’Asso (Est, se non ha giocato l’Asso… non ce l’ha). Morale: se entrerete in presa non muovete più questo colore! Aspettate che sia il compagno a giocarlo a vostro favore.</p></div>
+  </div>
+  <div class="corpo" style="margin-top:10px">
+    <div class="fig" data-figura4="D:842/K9653/J7/AQ10"></div>
+    <div class="testo"><p>… ecco a fianco il diagramma che dovreste immaginare.</p></div>
+  </div>
+</div>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="corpo">
+    <div class="fig" data-figura4="C:96/Q8x53/?10/?K"></div>
+    <div class="testo">
+      <p>Avete attaccato con il 3, per il 6, il 10 e il Re. Sapete che l’Asso è in Sud, ma sapete anche che il Fante è in mano al vostro compagno; se andrete in presa nuovamente potrete continuare l’affrancamento giocando piccola per il «suo» Fante. Se lo avesse Sud, avrebbe preso con quello!</p>
+      <p>Chi ha il Re? Non lo sappiamo. Può averlo Est (con KQ è corretto giocare la Dama) o Sud (con AK prende con la carta che vuole). Non sempre abbiamo certezze, ma se non altro sappiamo che Est «può» avere il Re. Se avesse giocato il Re avremmo avuto la certezza che la Dama è in mano a Sud.</p>
+    </div>
+  </div>
+  <p class="nota-ignote">? = carte che chi difende non conosce.</p>
+</div>
+
+<script src="../carte.js"></script>
+</body>
+</html>

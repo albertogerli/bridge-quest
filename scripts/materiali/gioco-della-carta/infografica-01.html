@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Vincenti e affrancabili</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Il gioco della carta</div>
+    <h1 class="display">Vincenti e affrancabili</h1>
+    <p class="sotto">Appena vede il morto, il giocante si chiede: quante prese ho già? Da dove ne prendo altre?</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">1</span><h2 class="display">Vincente</h2></div>
+        <p>Una carta che, <b>giocata adesso</b>, vince la presa. Si dice anche <b>franca</b>.</p>
+        <div class="esempio">
+          <span data-carte="S:AK32" style="--w:32px"></span>
+          <div class="esito"><span class="chip verde">2 vincenti</span><span style="font-size:11px;color:var(--tenue)">l'Asso e il Re</span></div>
+        </div>
+      </section>
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">Affrancabile</h2></div>
+        <p>Una carta che <b>diventerà</b> vincente dopo una manovra. Qui manca l'Asso: si gioca il colore finché l'avversario non lo usa.</p>
+        <div class="esempio">
+          <span data-carte="S:KQJ10" data-cede="0" style="--w:32px"></span>
+          <div class="esito"><span class="chip rosso">0 vincenti</span><span class="chip oro">3 affrancabili</span></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="riquadro" style="padding-bottom:12px">
+      <div class="due" style="gap:18px">
+        <div>
+          <div class="tit"><span class="num">3</span><h2 class="display">Affrancamento di forza</h2></div>
+          <p>Si muove il colore una carta alla volta finché gli avversari non incassano gli onori più alti. <b>È l'unica manovra che riesce sempre</b>: il cento per cento delle volte.</p>
+        </div>
+        <div>
+          <div class="tit"><span class="num">4</span><h2 class="display">Carte equivalenti</h2></div>
+          <p>Le carte di valore contiguo hanno la stessa forza: in <b>AKQJ</b> il Fante vince quanto l'Asso, 4 vincenti. E vale <b>tra mano e morto</b>: con AQ2 al morto il Re di Sud è vincente.</p>
+          <div style="display:flex;gap:14px;align-items:center;margin-top:6px">
+            <div data-figura="S:AQ2/K43" style="--fs:15px"></div>
+            <p style="font-size:11.5px"><span class="chip verde">3 vincenti</span><br>purché i tre onori non cadano nella stessa presa</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="due" style="grid-template-columns: 3fr 4fr; gap:14px">
+        <div>
+          <div class="tit"><span class="num">5</span><h2 class="display">Comanda il lato lungo</h2></div>
+          <div class="regola">Mai più prese delle carte del lato lungo.</div>
+          <div class="figure tre">
+            <div class="fig"><div data-figura="S:J109/AKQ"></div><div class="conto">3 per lato<br><b>3 prese</b></div></div>
+            <div class="fig"><div data-figura="H:109/AKQJ2"></div><div class="conto">Sud ne ha 5<br><b>5 prese</b></div></div>
+            <div class="fig"><div data-figura="D:AKJ942/Q103"></div><div class="conto">Nord ne ha 6<br><b>6 prese</b></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="tit"><span class="num">6</span><h2 class="display">Quante se ne affrancano</h2></div>
+          <div class="regola">Carte del lato lungo, meno gli onori che mancano.</div>
+          <div class="figure quattro">
+            <div class="fig"><div data-figura="C:KQ92/J103"></div><div class="conto">manca A<br>4 − 1 = <b>3</b></div></div>
+            <div class="fig"><div data-figura="C:KQ954/J103"></div><div class="conto">manca A<br>5 − 1 = <b>4</b></div></div>
+            <div class="fig"><div data-figura="H:Q9854/J1032"></div><div class="conto">mancano A K<br>5 − 2 = <b>3</b></div></div>
+            <div class="fig"><div data-figura="S:KJ9863/Q102"></div><div class="conto">manca A<br>6 − 1 = <b>5</b></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">7</span><h2 class="display">Il piano del giocante, dopo l'attacco</h2></div>
+      <div class="passi">
+        <div class="passo"><h3>1 · Conta le vincenti</h3><p>Seme per seme, tra mano e morto.</p></div>
+        <div class="passo"><h3>2 · Cerca dove affrancare</h3><p>Prima il colore che può dare <b>più prese</b>.</p></div>
+        <div class="passo"><h3>3 · Affranca, poi incassa</h3><p>Non affrettarti a giocare le vincenti: ti servono dopo.</p></div>
+      </div>
+      <p class="nota">Attenzione: a volte, finito l'affrancamento, per incassare le carte franche bisogna prima tornare in presa.</p>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">8</span><h2 class="display">Proviamo: Sud gioca, Ovest attacca</h2></div>
+      <div class="smazzata">
+        <div class="tavolo">
+          <span class="etichetta">NORD · MORTO</span>
+          <div data-mano="AQ8.76.K65.K10932" class="in-riga"></div>
+          <span class="etichetta">SUD · GIOCANTE</span>
+          <div data-mano="K62.A982.A43.QJ6" class="in-riga"></div>
+          <span class="attacco" style="grid-column:1/-1;justify-self:center">Ovest attacca con la Q♦</span>
+        </div>
+        <div>
+          <table>
+            <tr><th>Seme</th><th style="text-align:center">Vincenti</th><th style="text-align:center">Affrancabili</th><th></th></tr>
+            <tr><td><span class="s-S">♠</span> Picche</td><td class="n">3</td><td class="n">—</td><td style="font-size:11.5px;color:var(--tenue)">A K Q</td></tr>
+            <tr><td><span class="s-H">♥</span> Cuori</td><td class="n">1</td><td class="n">—</td><td style="font-size:11.5px;color:var(--tenue)">A</td></tr>
+            <tr><td><span class="s-D">♦</span> Quadri</td><td class="n">2</td><td class="n">—</td><td style="font-size:11.5px;color:var(--tenue)">A K</td></tr>
+            <tr><td><span class="s-C">♣</span> Fiori</td><td class="n">0</td><td class="n">4</td><td style="font-size:11.5px;color:var(--tenue)">5 − 1: manca l'Asso</td></tr>
+            <tr class="tot"><td>Totale</td><td class="n">6</td><td class="n">+ 4</td><td class="n" style="text-align:left">= 10 prese</td></tr>
+          </table>
+          <div class="gioco">
+            <span>Sud vince l'attacco</span><span class="freccia">→</span>
+            <span>gioca subito <b>fiori</b> finché non cade l'Asso</span><span class="freccia">→</span>
+            <span>vince qualunque ritorno e incassa</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Il gioco della carta</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

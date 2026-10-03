@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Il piano di gioco a senz'atout</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 9px; }
+  .riquadro { padding: 10px 15px; }
+  p, li { font-size: 12.5px; }
+  .domande { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  .domanda { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .domanda b { display: block; color: var(--figb); font-size: 18px; font-family: "Bricolage Grotesque", sans-serif; line-height: 1; }
+  .domanda span { font-size: 12px; font-weight: 600; }
+  .defs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-bottom: 6px; }
+  .def { padding: 6px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; }
+  .def b { color: var(--figb); }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+  ol.passi-mini { margin: 4px 0 0 16px; display: grid; gap: 2px; }
+  ol.passi-mini li { font-size: 12.5px; }
+  .fig { --fs: 13px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Il gioco della carta</div>
+    <h1 class="display">Il piano di gioco a senz'atout</h1>
+    <p class="sotto">Le vincenti di solito non bastano: il piano dice quante prese mancano, dove trovarle e come incassarle.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Quattro domande, dopo l'attacco</h2></div>
+      <div class="domande">
+        <div class="domanda"><b>1</b><span>Quante prese certe ho?</span></div>
+        <div class="domanda"><b>2</b><span>Quante ne mancano all'impegno?</span></div>
+        <div class="domanda"><b>3</b><span>In quali colori le trovo?</span></div>
+        <div class="domanda"><b>4</b><span>Come le recupero?</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Rientri e collegamenti</h2></div>
+      <div class="defs">
+        <div class="def"><b>Rientro</b>: la carta che fa vincere la presa alla mano giusta, nel momento giusto.</div>
+        <div class="def"><b>Collegamento</b>: la carta che, grazie al rientro, passa la presa da una mano all'altra.</div>
+      </div>
+      <div class="lato">
+        <div class="coppia">
+          <div class="r"><span class="chi">NORD</span><div data-mano="872.A7.J10952.J32" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SUD</span><div data-mano="AK3.K85.KQ3.A854" class="in-riga"></div></div>
+          <div class="att">3SA · Ovest attacca 2♥</div>
+        </div>
+        <div>
+          <p>Vincenti: 2 picche, 2 cuori, 1 fiori. Le quadri ne danno 4, cedendo l'Asso.</p>
+          <ol class="passi-mini">
+            <li>Vinci con il <b>Re di cuori</b>: l'Asso resta accanto alle quadri.</li>
+            <li>Muovi prima gli <b>onori di quadri di Sud</b>, il lato corto.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="regola" style="margin:6px 0 0">Salvaguarda gli ingressi accanto alla lunga che vuoi affrancare.</div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Non fare i conti senza l'oste</h2></div>
+        <div class="coppia" style="--fs:12px">
+          <div class="r"><span class="chi">NORD</span><div data-mano="653.32.AQJ109.764" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SUD</span><div data-mano="AKQ.A4.872.KQJ105" class="in-riga"></div></div>
+          <div class="att">3SA · Ovest attacca K♥</div>
+        </div>
+        <p style="margin-top:5px">5 vincenti, ne servono altre 4. Le fiori le darebbero, ma <b>cedendo l'Asso</b>: dopo l'attacco i difensori hanno almeno 4 cuori da incassare, con l'A♣ fanno 5. Si fa l'<b>impasse al Re di quadri</b>, che non cede la presa.</p>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">4</span><h2 class="display">Prendi dalla parte giusta</h2></div>
+        <div class="coppia" style="--fs:12px">
+          <div class="r"><span class="chi">NORD</span><div data-mano="763.864.A653.QJ3" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SUD</span><div data-mano="AKQ.A32.K8.A10985" class="in-riga"></div></div>
+          <div class="att">3SA · Ovest attacca 2♦</div>
+        </div>
+        <p style="margin-top:5px">Prima di vincere l'attacco, decidi la mossa dopo. Le fiori vanno mosse <b>da Nord verso Sud</b>, per sorprendere il Re in Est: allora si vince con l'<b>Asso di quadri del morto</b> e si gioca la Dama di fiori.</p>
+      </section>
+    </div>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">Il colpo in bianco</h2></div>
+        <div class="lato">
+          <div class="fig"><div data-figura="C:A72/K8653"></div></div>
+          <p>Sud ha pochi ingressi. Se gioca A, K e fiori, le due franche restano senza rientro. Meglio <b>cedere subito</b> la presa: il 2 per il 3. Poi A, fiori per il K e tutte le altre.</p>
+        </div>
+        <div class="regola blu" style="margin:6px 0 0">Cedi subito una presa che cederesti comunque, per tenere le comunicazioni nel colore.</div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">Colori bloccati</h2></div>
+        <div class="figure" style="grid-template-columns:repeat(4, minmax(0,1fr));gap:5px">
+          <div class="fig"><div data-figura="S:KQ72/AJ83"></div><div class="conto">comunica</div></div>
+          <div class="fig"><div data-figura="S:QJ109/AK"></div><div class="conto">bloccato</div></div>
+          <div class="fig"><div data-figura="H:KQ2/AJ43"></div><div class="conto">K, Q, poi<br>2 per l'A</div></div>
+          <div class="fig"><div data-figura="D:K2/AQJ43"></div><div class="conto">K, poi<br>cartina</div></div>
+        </div>
+        <div class="regola blu" style="margin:6px 0 0">Per non bloccare: prima gli onori del lato corto.</div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">7</span><h2 class="display">Rimediare a un blocco</h2></div>
+      <div class="lato">
+        <div class="coppia">
+          <div class="r"><span class="chi">NORD</span><div data-mano="6542.103.KQJ102.54" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SUD</span><div data-mano="A73.AKQJ2.A.AK32" class="in-riga"></div></div>
+          <div class="att">Ovest attacca K♠</div>
+        </div>
+        <div>
+          <p>13 vincenti, ma le quadri sono bloccate dall'Asso secco. Il rientro c'è: il <b>10 di cuori</b> del morto. Sud incassa l'A♦, gioca il 2♥ per il 10♥ e prosegue con K Q J 10 di quadri.</p>
+          <div class="regola" style="margin:6px 0 0">Colore bloccato? Fai lavorare gli altri colori per superare il blocco.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Il gioco della carta</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

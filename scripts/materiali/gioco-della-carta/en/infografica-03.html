@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Establishing Long and Positional Cards</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  .modi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .modo { border-radius: 8px; padding: 5px 10px; background: var(--figb-velo); display: flex; gap: 8px; align-items: baseline; }
+  .modo h3 { white-space: nowrap; font-size: 13px; color: var(--figb); font-weight: 700; }
+  .modo p { font-size: 11.5px; }
+  .modo.gia { background: var(--avorio); }
+  .modo.gia h3 { color: var(--tenue); }
+  .fig4 { display: grid; justify-items: center; gap: 4px; padding: 6px 6px; border-radius: 10px; background: var(--avorio); --fs: 13px; }
+  .fig4 .conto { font-size: 11px; text-align: center; color: #2c3242; line-height: 1.35; }
+  .fig4 .conto b { color: var(--figb); }
+  .smazzata-mini { --fs: 12px; padding: 6px 8px; border-radius: 10px; background: var(--avorio); display: flex; justify-content: center; }
+  .smazzata-mini .mano { gap: 0; }
+  .passi-mini { display: grid; gap: 3px; margin-top: 6px; }
+  .passi-mini li { font-size: 11.5px; margin-left: 16px; }
+  main { gap: 7px; }
+  .riquadro { padding: 8px 14px; }
+  .regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+  /* l'inglese è più lungo: un filo meno di respiro */
+  main { gap: 5px; }
+  .riquadro { padding-top: 7px; padding-bottom: 7px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Card play</div>
+    <h1 class="display">Establishing Long and Positional Cards</h1>
+    <p class="sotto">Beyond force: tricks from the length of a suit and from where the opponents' honors sit.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <div class="due">
+      <div style="display:grid;gap:8px;align-content:start">
+      <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Three ways to establish</h2></div>
+      <div class="modi" style="grid-template-columns:1fr">
+        <div class="modo gia"><h3>By force</h3><p>Equal cards: give up the higher honor. Seen already.</p></div>
+        <div class="modo"><h3>By length</h3><p>Play the suit until the opponents have none left.</p></div>
+        <div class="modo"><h3>By position</h3><p>Your honor wins if the opponents' honor is in the right place.</p></div>
+      </div>
+    </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">By length</h2></div>
+        <p>When your side holds <b>more cards than the opponents</b> (7 is enough), the last ones become winners even if low. What counts: the <b>length</b> of the long hand and how the rest <b>split</b>.</p>
+        <div class="figure" style="grid-template-columns:1fr 1fr;margin-top:7px">
+          <div class="fig4"><div data-figura4="C:762/1085/J9/AKQ43"></div><div class="conto">A K Q, then the 4 and 3<br>are good: <b>5 tricks</b></div></div>
+          <div class="fig4"><div data-figura4="D:109762/AQ/KJ/8543"></div><div class="conto">two rounds: the honors fall<br>North has <b>3 tricks</b> established</div></div>
+        </div>
+        <div class="regola" style="margin:7px 0 0">Long suits always produce tricks, even "ugly" ones.</div>
+      </section>
+      </div>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Keep your entries</h2></div>
+        <p>Established cards must be reachable. West leads the 10♥: to take 13 tricks South wins <b>with the ace or king</b>, not the jack.</p>
+        <div class="smazzata-mini" style="margin-top:6px"><div data-smazzata="963.Q4.52.A97642;J7.109865.1084.J53;Q1054.732.QJ93.108;AK82.AKJ.AK76.KQ"></div></div>
+        <ol class="passi-mini">
+          <li>K♥, then K♣ and Q♣.</li>
+          <li>J♥ to the Q♥: you're in dummy.</li>
+          <li>A♣ and the established clubs: a 3-2 split, 13 tricks.</li>
+        </ol>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">By position: where their honor sits</h2></div>
+      <div class="figure tre">
+        <div class="fig4"><div data-figura4="H:AQ5/?/?/863"></div><div class="conto"><b>Finesse</b>: low toward the queen.<br>Works if West has the king.</div></div>
+        <div class="fig4"><div data-figura4="H:K85/?/?/763"></div><div class="conto">Low toward the lone king.<br>Works if West has the ace.</div></div>
+        <div class="fig4"><div data-figura4="S:A63/?/?/QJ10"></div><div class="conto">Lead the queen: if West covers,<br>J and 10 are promoted. Works if West has the king.</div></div>
+      </div>
+      <p class="nota">If their honor is in the wrong place nothing helps: but the try works about half the time.</p>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">Honor or low card?</h2></div>
+        <div class="regola blu">Ask yourself whether you'd be glad to see your honor covered. If you gain nothing, don't lead it first.</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="fig" style="--fs:14px"><div data-figura="C:A543/Q72"></div></div>
+          <p style="font-size:11.5px">Leading the queen establishes nothing: the opponents hold the J, 10 and 9. Play <b>low toward the queen</b>, hoping East has the king.</p>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">On defense: cover an honor with an honor</h2></div>
+        <div class="regola blu">Second hand: low on low, honor on honor.</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="fig4" style="--fs:13px"><div data-figura4="D:AQ94/K83/1072/J65"></div></div>
+          <p style="font-size:11.5px">If South leads the <b>J</b>, West covers with the <b>K</b>: East's 10 becomes a winner. If South leads the 5, West plays low.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">7</span><h2 class="display">The stopper</h2></div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center">
+        <div class="fig4"><div data-figura4="S:87/9432/QJ/AK1065"></div></div>
+        <div>
+          <p>Cards that stop the opponents from taking every trick in a suit. East's queen and jack fall, but <b>West's 9 wins the fourth round</b>: one careless discard and the stopper is gone.</p>
+          <div class="regola" style="margin:7px 0 0">On defense: if dummy has a long suit and partner holds fewer cards in it than you, don't discard a single one.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Card play</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

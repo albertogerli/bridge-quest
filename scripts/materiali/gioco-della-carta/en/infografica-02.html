@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Defenders' Perspective</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 7px; }
+  .riquadro { padding: 8px 14px; }
+  .fig4 { display: grid; justify-items: center; gap: 4px; padding: 6px; border-radius: 10px; background: var(--avorio); --fs: 13px; }
+  .due .fig4 { --fs: 11px; padding: 6px 2px; }
+  .due .figura4 { column-gap: 3px; }
+  .fig4 .conto { font-size: 11px; text-align: center; color: #2c3242; line-height: 1.35; }
+  .fig4 .conto b { color: var(--figb); }
+  .mani { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .manina { display: grid; gap: 4px; justify-items: center; padding: 6px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .manina .mano { grid-template-columns: 1fr 1fr; column-gap: 12px; }
+  .manina .esito { font-size: 11px; text-align: center; }
+  .famiglie { display: flex; gap: 8px; margin-bottom: 6px; }
+  .famiglie span { font-size: 11.5px; }
+  .priorita { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .prio { padding: 6px 9px; border-radius: 9px; background: var(--figb-velo); }
+  .prio h3 { font-size: 12.5px; color: var(--figb); font-weight: 700; }
+  .prio p { font-size: 11px; }
+  .esempi-attacco { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 12px; margin-top: 6px; font-size: 11.5px; }
+  .esempi-attacco div { display: flex; justify-content: space-between; gap: 6px; border-bottom: 1px dashed var(--linea); padding: 2px 0; }
+  .esempi-attacco b { color: var(--figb); }
+  .terzo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .equiv { display: grid; grid-template-columns: auto auto auto; gap: 2px 14px; font-size: 12px; margin: 4px 0 6px; }
+  .equiv .h { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; }
+  .equiv b { color: var(--figb); }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Card play</div>
+    <h1 class="display">The Defenders' Perspective</h1>
+    <p class="sotto">The defense has a plan too: it starts with the opening lead and goes on by reading the cards as they fall.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">The goal</h2></div>
+      <div class="priorita">
+        <div class="prio"><h3>Defeat the contract</h3><p>If North-South need 9 tricks, East-West need only 5.</p></div>
+        <div class="prio"><h3>The opening lead is an edge</h3><p>The player on declarer's left makes it: it is the first move of the defensive plan.</p></div>
+        <div class="prio"><h3>No hurry</h3><p>Like declarer, the defense does not cash its winners at once: they are needed to establish tricks.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Which suit to lead</h2></div>
+      <div class="regola" style="margin-bottom:6px">Your longest suit. With two of equal length, the one with better honors.</div>
+      <div class="mani">
+        <div class="manina"><div data-mano="J104.QJ103.J762.K2"></div><div class="esito">Four hearts and four diamonds:<br>hearts, better honors → <b>Q♥</b></div></div>
+        <div class="manina"><div data-mano="Q9732.KQ.AJ62.92"></div><div class="esito">The long suit is spades<br>→ <b>2♠</b></div></div>
+        <div class="manina"><div data-mano="A4.94.A762.KQJ92"></div><div class="esito">Clubs, no doubt → <b>K♣</b>.<br>Cashing the aces gives tricks away.</div></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Which card to lead</h2></div>
+      <div class="famiglie"><span class="chip">Honors: A K Q J 10</span><span class="chip oro">Spot cards: 9 down to 2</span></div>
+      <div class="priorita">
+        <div class="prio"><h3>1 · Top of a sequence</h3><p>Three high cards in a row, or nearly: KQJ, QJ10, KQ10, AQJ. Lead the highest of the touching cards.</p></div>
+        <div class="prio"><h3>2 · Low from an honor</h3><p>At least the jack but no sequence: lead your lowest card.</p></div>
+        <div class="prio"><h3>3 · Second highest</h3><p>No sequence and nothing above the 10: lead the second card from the top.</p></div>
+      </div>
+      <div class="esempi-attacco">
+        <div><span>KQJ103</span><span><b>K</b> · denies A, shows Q</span></div>
+        <div><span>QJ93</span><span><b>Q</b> · denies K, shows J</span></div>
+        <div><span>J1094</span><span><b>J</b> · denies Q, shows 10</span></div>
+        <div><span>K10543</span><span><b>3</b> · holds an honor</span></div>
+        <div><span>AJ952</span><span><b>2</b> · holds an honor</span></div>
+        <div><span>108654</span><span><b>8</b> · no honor</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Third hand</h2></div>
+      <div class="terzo">
+        <div class="fig4"><div data-figura4="H:82/KJ754/Q96/A103"></div><div class="conto"><b>Try to win.</b> West leads the 4: East plays the queen. With a low card, South wins the 10 and takes two tricks.</div></div>
+        <div class="fig4"><div data-figura4="S:872/KQ1053/A4/J96"></div><div class="conto"><b>Don't block.</b> West leads the king: East overtakes with the ace and returns the suit. West cashes five tricks.</div></div>
+        <div class="fig4" style="align-content:center"><div class="conto" style="font-size:12px"><b>Return partner's suit</b> whenever you can, unless dummy and your own cards say to switch.</div></div>
+      </div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">Third hand: lowest</h2></div>
+        <div class="regola blu" style="border-left-color:var(--figb);background:var(--figb-velo)">With equal cards, third hand plays the lowest. The player who leads plays the highest.</div>
+        <div class="equiv">
+          <span class="h">With</span><span class="h">leading</span><span class="h">third</span>
+          <span>K Q J</span><span>K</span><b>J</b>
+          <span>A K Q</span><span>A</span><b>Q</b>
+          <span>J 10 9</span><span>J</span><b>9</b>
+        </div>
+        <div class="figure" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+          <div class="fig4"><div data-figura4="D:754/2/KQ106/?"></div><div class="conto">2 led → <b>Q</b></div></div>
+          <div class="fig4"><div data-figura4="C:543/6/AK2/?"></div><div class="conto">6 led → <b>K</b></div></div>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">The leader's inference</h2></div>
+        <div class="regola">The card third hand plays to win the trick denies the card just below it.</div>
+        <p style="font-size:11.5px">You lead the 3, East plays the <b>jack</b>, South wins with the <b>queen</b>.</p>
+        <div class="figure" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-top:5px">
+          <div class="fig4"><div data-figura4="S:842/K9653/J?/Q?"></div><div class="conto">what you see</div></div>
+          <div class="fig4"><div data-figura4="S:842/K9653/J7/AQ10"></div><div class="conto">what you infer</div></div>
+        </div>
+        <p class="nota">With J10 East would have played the 10, with the ace East would have played it: <b>South has the 10 and the ace</b>. Don't lead the suit again; wait for partner to lead it.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer><span>BridgeLab · Card play</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

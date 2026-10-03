@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Playing with Trumps</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 15px; }
+  .defs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .def { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.4; }
+  .def b { color: var(--figb); }
+  .caso { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+  .caso .att { font-size: 10.5px; color: var(--tenue); text-align: center; margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Card play</div>
+    <h1 class="display">Playing with Trumps</h1>
+    <p class="sotto">One suit gets special power: a player out of the suit led can win the trick with a trump.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Trumps, ruffs and fits</h2></div>
+      <div class="defs">
+        <div class="def"><b>To ruff</b>: to win a trick with a trump when you have no cards left in the suit led.</div>
+        <div class="def"><b>Fit</b>: your side holds at least 8 cards in a suit. A trump contract pays when your side holds more trumps than the opponents.</div>
+        <div class="def"><b>Even a weak suit</b> pays as trumps: with <span class="s-H">♥</span> QJ10987 you take at least 4 tricks.</div>
+      </div>
+      <div class="regola" style="margin:7px 0 0">In the trump suit, cards sure to be established count as winners.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Drawing trumps</h2></div>
+      <div class="caso">
+        <div>
+          <div class="tavolino"><div data-smazzata="874.109.KQJ2.AK63;AKQ92.432.63.1052;J1065.86.10987.QJ4;3.AKQJ75.A54.987"></div></div>
+          <div class="att">4♥ · West leads the A♠ and K♠</div>
+        </div>
+        <div>
+          <p>South ruffs the K♠. Cashing the diamonds at once, West would ruff the third round. First <b>three rounds of hearts</b> to draw the defenders' trumps, then the diamonds safely: <b>12 tricks</b>, 6 hearts, 4 diamonds, 2 clubs. In notrump South would have lost the first five.</p>
+          <div class="regola blu" style="margin:7px 0 6px">Side-suit winners are only relative: cash them safely only after drawing trumps.</div>
+          <p style="font-size:11.5px"><b>Control</b>: by ruffing, South stopped West's spades. No trick was gained: 5 hearts cashed plus 1 ruff still make 6.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Ruffing in the short hand</h2></div>
+      <div class="caso">
+        <div>
+          <div class="tavolino"><div data-smazzata="1095.4.A762.A10842;2.KJ87.J1054.KQJ7;864.Q10952.Q83.93;AKQJ73.A63.K9.65"></div></div>
+          <div class="att">4♠ · West leads the K♣</div>
+        </div>
+        <div>
+          <p>Winners: 6 spades, 1 heart, 2 diamonds, 1 club. But spades can produce <b>8</b> tricks instead of 6, ruffing with dummy's trumps:</p>
+          <ol class="passi-mini">
+            <li>A♣, A♥ and a heart ruffed in dummy.</li>
+            <li>A spade to a high honor in hand, then a heart ruffed in dummy.</li>
+            <li>Back to hand with the K♦, draw trumps, A♦: <b>12 tricks</b>.</li>
+          </ol>
+          <div class="regola blu" style="margin:7px 0 0">Don't always draw trumps at once: first take the ruffs in the short hand, the one with fewer trumps.</div>
+          <p class="nota">A ruff gains only if it adds at least one trick to what the suit would give anyway.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Establishing with ruffs</h2></div>
+      <div class="caso">
+        <div>
+          <div class="coppia">
+            <div class="r"><span class="chi">NORTH</span><div data-mano="KJ4.A7.65.A98753" class="in-riga"></div></div>
+            <div class="r"><span class="chi">SOUTH</span><div data-mano="AQ8652.986.A3.K2" class="in-riga"></div></div>
+            <div class="att">4♠ · West leads the K♦</div>
+          </div>
+        </div>
+        <div>
+          <p>In a trump contract you can establish a long suit <b>without losing the lead</b>: the low cards you would have to lose get ruffed instead.</p>
+          <ol class="passi-mini">
+            <li>A♦, two rounds of trumps.</li>
+            <li>K♣, A♣ and a club ruffed in hand: if the opponents' clubs split 3-2, they all fall.</li>
+            <li>Dummy's three clubs are good, with the <b>ace of hearts</b> as the entry: <b>13 tricks</b>.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Card play</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

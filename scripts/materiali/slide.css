@@ -1,0 +1,32 @@
+/* Presentazioni 1280×720: ogni <section class="slide"> è una pagina. */
+  @page { size: 1280px 720px; margin: 0; }
+  body { width: 1280px; }
+  .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: var(--avorio); padding: 46px 64px 40px; display: flex; flex-direction: column; break-after: page; }
+  .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: linear-gradient(var(--figb), var(--figb-chiaro)); }
+  .occhiello { font-size: 14px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--oro); }
+  h1 { font-size: 46px; font-weight: 800; color: var(--figb); line-height: 1.05; margin: 6px 0 26px; }
+  .piede { position: absolute; left: 64px; right: 64px; bottom: 22px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--tenue); }
+  .piede img { height: 22px; }
+
+  .colonne { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+  .blocco { background: var(--carta); border: 1px solid var(--linea); border-radius: 18px; padding: 28px 32px; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+  .def { font-size: 23px; line-height: 1.35; }
+  .def b { color: var(--figb); }
+  .esempi { display: flex; gap: 44px; justify-content: center; align-items: flex-end; }
+  .esempi .es { display: grid; gap: 10px; justify-items: start; }
+  .conta { font-size: 18px; font-weight: 600; }
+  .conta b { font-size: 30px; font-family: "Bricolage Grotesque", sans-serif; margin-left: 6px; }
+  .verde b { color: var(--verde); } .oro b { color: #9a7420; }
+  .massima { margin: 24px 0 34px; text-align: center; font-size: 24px; font-weight: 700; color: #fff; background: var(--figb); border-radius: 14px; padding: 14px; }
+
+  .conteggio { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; flex: 1; }
+  .coppia { display: grid; gap: 14px; justify-items: center; background: radial-gradient(circle at 50% 45%, #1f7a4f, #135c3a); border-radius: 22px; padding: 26px 34px; color: #fff; }
+  .coppia .mano { background: #fff; color: var(--inchiostro); border-radius: 12px; padding: 12px 22px; --fs: 24px; gap: 4px; }
+  .coppia .eti { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; opacity: 0.85; }
+  table { width: 100%; border-collapse: collapse; font-size: 22px; background: var(--carta); border-radius: 18px; overflow: hidden; }
+  th { text-align: left; padding: 16px 20px 10px; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tenue); font-weight: 600; }
+  td { padding: 11px 20px; border-top: 1px solid var(--linea); }
+  td.n { font-weight: 800; font-size: 26px; font-family: "Bricolage Grotesque", sans-serif; text-align: center; width: 120px; }
+  td.v { color: var(--verde); } td.a { color: #9a7420; }
+  td.c { color: var(--tenue); font-size: 18px; font-weight: 600; letter-spacing: 0.05em; }
+  tr.tot td { border-top: 3px solid var(--inchiostro); font-weight: 700; }

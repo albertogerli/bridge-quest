@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The No Trump Play Plan</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 9px; }
+  .riquadro { padding: 10px 15px; }
+  p, li { font-size: 12.5px; }
+  .domande { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  .domanda { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .domanda b { display: block; color: var(--figb); font-size: 18px; font-family: "Bricolage Grotesque", sans-serif; line-height: 1; }
+  .domanda span { font-size: 12px; font-weight: 600; }
+  .defs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-bottom: 6px; }
+  .def { padding: 6px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; }
+  .def b { color: var(--figb); }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+  ol.passi-mini { margin: 4px 0 0 16px; display: grid; gap: 2px; }
+  ol.passi-mini li { font-size: 12.5px; }
+  .fig { --fs: 13px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Card play</div>
+    <h1 class="display">The No Trump Play Plan</h1>
+    <p class="sotto">Your winners are rarely enough: the plan tells you how many tricks are missing, where to find them and how to cash them.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Four questions after the opening lead</h2></div>
+      <div class="domande">
+        <div class="domanda"><b>1</b><span>How many sure tricks do I have?</span></div>
+        <div class="domanda"><b>2</b><span>How many more does the contract need?</span></div>
+        <div class="domanda"><b>3</b><span>Which suits can provide them?</span></div>
+        <div class="domanda"><b>4</b><span>How do I get them?</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Entries and communication</h2></div>
+      <div class="defs">
+        <div class="def"><b>Entry</b>: the card that wins the trick in the right hand at the right time.</div>
+        <div class="def"><b>Link</b>: the card that, thanks to the entry, carries the lead from one hand to the other.</div>
+      </div>
+      <div class="lato">
+        <div class="coppia">
+          <div class="r"><span class="chi">NORTH</span><div data-mano="872.A7.J10952.J32" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SOUTH</span><div data-mano="AK3.K85.KQ3.A854" class="in-riga"></div></div>
+          <div class="att">3NT · West leads the 2♥</div>
+        </div>
+        <div>
+          <p>Winners: 2 spades, 2 hearts, 1 club. Diamonds give 4 more after losing to the ace.</p>
+          <ol class="passi-mini">
+            <li>Win with the <b>king of hearts</b>: the ace stays with the diamonds.</li>
+            <li>Lead <b>South's diamond honors</b> first, from the short side.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="regola" style="margin:6px 0 0">Protect the entries next to the long suit you want to establish.</div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Count the opponents' tricks too</h2></div>
+        <div class="coppia" style="--fs:12px">
+          <div class="r"><span class="chi">NORTH</span><div data-mano="653.32.AQJ109.764" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SOUTH</span><div data-mano="AKQ.A4.872.KQJ105" class="in-riga"></div></div>
+          <div class="att">3NT · West leads the K♥</div>
+        </div>
+        <p style="margin-top:5px">5 winners, 4 more needed. Clubs would provide them, but only <b>by losing to the ace</b>: after the lead the defenders have at least 4 hearts to cash, and with the A♣ that makes 5. Take the <b>diamond finesse</b> instead: it doesn't give up the lead.</p>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">4</span><h2 class="display">Win in the right hand</h2></div>
+        <div class="coppia" style="--fs:12px">
+          <div class="r"><span class="chi">NORTH</span><div data-mano="763.864.A653.QJ3" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SOUTH</span><div data-mano="AKQ.A32.K8.A10985" class="in-riga"></div></div>
+          <div class="att">3NT · West leads the 2♦</div>
+        </div>
+        <p style="margin-top:5px">Before winning the lead, decide your next move. Clubs must be led <b>from North toward South</b>, to catch the king with East: so win with <b>dummy's ace of diamonds</b> and lead the queen of clubs.</p>
+      </section>
+    </div>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">The duck</h2></div>
+        <div class="lato">
+          <div class="fig"><div data-figura="C:A72/K8653"></div></div>
+          <p>South has few entries. If declarer plays A, K and another club, the two good clubs have no entry. Better to <b>duck at once</b>: the 2 to the 3. Then the A, a club to the K and all the rest.</p>
+        </div>
+        <div class="regola blu" style="margin:6px 0 0">Give up early a trick you'd lose anyway, to keep communication in the suit.</div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">Blocked suits</h2></div>
+        <div class="figure" style="grid-template-columns:repeat(4, minmax(0,1fr));gap:5px">
+          <div class="fig"><div data-figura="S:KQ72/AJ83"></div><div class="conto">flows</div></div>
+          <div class="fig"><div data-figura="S:QJ109/AK"></div><div class="conto">blocked</div></div>
+          <div class="fig"><div data-figura="H:KQ2/AJ43"></div><div class="conto">K, Q, then<br>2 to the A</div></div>
+          <div class="fig"><div data-figura="D:K2/AQJ43"></div><div class="conto">K, then<br>a low card</div></div>
+        </div>
+        <div class="regola blu" style="margin:6px 0 0">To avoid blocking: honors from the short side first.</div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">7</span><h2 class="display">Unblocking a suit</h2></div>
+      <div class="lato">
+        <div class="coppia">
+          <div class="r"><span class="chi">NORTH</span><div data-mano="6542.103.KQJ102.54" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SOUTH</span><div data-mano="A73.AKQJ2.A.AK32" class="in-riga"></div></div>
+          <div class="att">West leads the K♠</div>
+        </div>
+        <div>
+          <p>13 winners, but the singleton ace blocks the diamonds. There is an entry: dummy's <b>10 of hearts</b>. South cashes the A♦, plays the 2♥ to the 10♥ and runs the K Q J 10 of diamonds.</p>
+          <div class="regola" style="margin:6px 0 0">Blocked suit? Use the other suits to get around the block.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Card play</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>
