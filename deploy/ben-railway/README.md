@@ -63,7 +63,12 @@ sarebbe una GPU/CPU gratuita per chiunque lo trovi. Davanti c'è quindi
 - risponde `404` a chi non ha il segreto, invece di `401`: a un estraneo non si
   conferma nemmeno che qui ci sia qualcosa da indovinare;
 - se BEN muore, esce, così Railway riavvia tutto invece di lasciare in piedi un
-  servizio che risponde 502 per sempre.
+  servizio che risponde 502 per sempre;
+- esce anche quando BEN è vivo ma inservibile: cinque risposte di fila con
+  l'errore «EagerTensor» (avvelenato, 29/08/2026), oppure cinque richieste di
+  fila senza risposta con la radice muta (appeso, 03/10/2026, otto ore di
+  tornei fermi). Nei primi quattro minuti dall'avvio i timeout non contano, e
+  se la radice risponde BEN è lento, non appeso: non si riavvia.
 
 `/healthz` è l'unico percorso senza segreto — serve alla sonda di Railway e
 dice solo se il processo dietro è vivo.
